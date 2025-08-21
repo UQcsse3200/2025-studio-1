@@ -1,7 +1,6 @@
 package com.csse3200.game.components.player;
 
 import com.csse3200.game.components.Component;
-import com.csse3200.game.items;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,7 +15,7 @@ import java.util.ArrayList;
 public class InventoryComponent extends Component {
   private static final Logger logger = LoggerFactory.getLogger(InventoryComponent.class);
   private int inventoryCount = 0;
-  private ArrayList<Item> items = new ArrayList<Item>();
+  private ArrayList<String> items = new ArrayList<String>(); // String for now, TODO: change later
   private int gold;
 
   public InventoryComponent(int gold) {
@@ -26,10 +25,10 @@ public class InventoryComponent extends Component {
   /**
    * Returns a copy of the players current inventory.
    *
-   * @return An ArrayList<Item> containing the players
+   * @return An ArrayList<String> containing the players
    */
-  public ArrayList<Item> getInventory() {
-    return new ArrayList<Item>(this.items);
+  public ArrayList<String> getInventory() {
+    return new ArrayList<String>(this.items);
   }
 
   /**
@@ -38,7 +37,7 @@ public class InventoryComponent extends Component {
    * @param index The position of the item in the players inventory (1..5)
    * @return The item at the given position
    */
-  public Item getItem(int index) {
+  public String getItem(int index) {
     return this.items.get(index);
   }
 
@@ -47,7 +46,7 @@ public class InventoryComponent extends Component {
    *
    * @return true if successful, false otherwise
    */
-  public Boolean addItem(Item: item) {
+  public Boolean addItem(String item) {
     if (this.inventoryCount > 5) {
       return false;
     } else {
