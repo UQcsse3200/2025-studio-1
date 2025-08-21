@@ -5,7 +5,7 @@
 *.ear
 hs_err_pid*
 
-## Robovm
+## Robovma s d s d
 /ios/robovm-build/
 
 ## GWT
