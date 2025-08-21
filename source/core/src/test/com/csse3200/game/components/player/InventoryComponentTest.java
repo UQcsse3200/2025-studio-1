@@ -10,32 +10,37 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 @ExtendWith(GameExtension.class)
 class InventoryComponentTest {
   @Test
-  void shouldSetGetGold() {
+  void shouldSetGetProcessor() {
     InventoryComponent inventory = new InventoryComponent(100);
-    assertEquals(100, inventory.getGold());
+    assertEquals(100, inventory.getProcessor());
+    inventory.setProcessor(150);
+    assertEquals(150, inventory.getProcessor());
 
-    inventory.setGold(150);
-    assertEquals(150, inventory.getGold());
-
-    inventory.setGold(-50);
-    assertEquals(0, inventory.getGold());
+    inventory.setProcessor(-50);
+    assertEquals(0, inventory.getProcessor());
   }
 
   @Test
-  void shouldCheckHasGold() {
+  void shouldCheckHasProcessors() {
     InventoryComponent inventory = new InventoryComponent(150);
-    assertTrue(inventory.hasGold(100));
-    assertFalse(inventory.hasGold(200));
+    assertTrue(inventory.hasProcessors(100));
+    assertFalse(inventory.hasProcessors(200));
   }
 
   @Test
-  void shouldAddGold() {
+  void shouldAddProcessor() {
     InventoryComponent inventory = new InventoryComponent(100);
-    inventory.addGold(-500);
-    assertEquals(0, inventory.getGold());
+    inventory.addProcessor(-500);
+    assertEquals(0, inventory.getProcessor());
 
-    inventory.addGold(100);
-    inventory.addGold(-20);
-    assertEquals(80, inventory.getGold());
+    inventory.addProcessor(100);
+    inventory.addProcessor(-20);
+    assertEquals(80, inventory.getProcessor());
+  }
+  @Test
+  void shouldRemoveProcessors() {
+    InventoryComponent inventory = new InventoryComponent(100);
+    inventory.addProcessor(-500);
+    assertEquals(0, inventory.getProcessor());
   }
 }
