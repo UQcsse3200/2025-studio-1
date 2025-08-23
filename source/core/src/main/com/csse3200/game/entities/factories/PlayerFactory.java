@@ -1,9 +1,12 @@
 package com.csse3200.game.entities.factories;
 
+import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.components.player.InventoryComponent;
 import com.csse3200.game.components.player.PlayerActions;
 import com.csse3200.game.components.player.PlayerStatsDisplay;
+import com.csse3200.game.components.player.PlayerAnimationController;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.PlayerConfig;
 import com.csse3200.game.files.FileLoader;
@@ -14,7 +17,9 @@ import com.csse3200.game.physics.components.ColliderComponent;
 import com.csse3200.game.physics.components.HitboxComponent;
 import com.csse3200.game.physics.components.PhysicsComponent;
 import com.csse3200.game.rendering.TextureRenderComponent;
+import com.csse3200.game.rendering.AnimationRenderComponent;
 import com.csse3200.game.services.ServiceLocator;
+
 
 /**
  * Factory to create a player entity.
@@ -39,9 +44,14 @@ public class PlayerFactory {
                     ServiceLocator.getResourceService()
                             .getAsset("images/player.atlas", TextureAtlas.class));
     animator.addAnimation("right_run", 0.1f, Animation.PlayMode.LOOP);
+    animator.addAnimation("left_run", 0.1f, Animation.PlayMode.LOOP);
+    animator.addAnimation("right_jump", 0.1f, Animation.PlayMode.NORMAL);
+    animator.addAnimation("left_jump", 0.1f, Animation.PlayMode.NORMAL);
+    animator.addAnimation("right_stand", 0.2f, Animation.PlayMode.LOOP);
+    animator.addAnimation("left_stand", 0.2f, Animation.PlayMode.LOOP);
+    animator.startAnimation("right_stand");
     Entity player =
         new Entity()
-            .addComponent(new TextureRenderComponent("images/box_boy_leaf.png"))
             .addComponent(new PhysicsComponent())
             .addComponent(new ColliderComponent())
             .addComponent(new HitboxComponent().setLayer(PhysicsLayer.PLAYER))
@@ -49,11 +59,13 @@ public class PlayerFactory {
             .addComponent(new CombatStatsComponent(stats.health, stats.baseAttack))
             .addComponent(new InventoryComponent(stats.gold))
             .addComponent(inputComponent)
-            .addComponent(new PlayerStatsDisplay());
+            .addComponent(new PlayerStatsDisplay())
+                .addComponent(animator)
+                .addComponent(new PlayerAnimationController());
 
     PhysicsUtils.setScaledCollider(player, 0.6f, 0.3f);
     player.getComponent(ColliderComponent.class).setDensity(1.5f);
-    player.getComponent(TextureRenderComponent.class).scaleEntity();
+    player.getComponent(AnimationRenderComponent.class).scaleEntity();
     return player;
   }
 
