@@ -76,7 +76,7 @@ public class InventoryComponent extends Component {
    *
    * @return true if the inventory is empty, false otherwise
    */
-  public Boolean isInventoryEmpty() {
+  public Boolean isEmpty() {
     return this.items.isEmpty();
   }
 
