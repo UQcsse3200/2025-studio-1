@@ -6,6 +6,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import com.csse3200.game.components.player.InventoryComponent;
+import com.csse3200.game.components.player.PlayerComponent;
+import com.csse3200.game.components.enemy.EnemyDeathRewardComponent;
+import com.csse3200.game.entities.Entity;
+import com.csse3200.game.entities.EntityService;
 
 @ExtendWith(GameExtension.class)
 class CombatStatsComponentTest {
@@ -51,5 +56,43 @@ class CombatStatsComponentTest {
 
     combat.setBaseAttack(-50);
     assertEquals(150, combat.getBaseAttack());
+  }
+
+  @Test
+  void enemyShouldBeDeadWhenHealthZero() {
+    CombatStatsComponent ghost = new CombatStatsComponent(50, 10);
+    assertFalse(ghost.isDead());
+    ghost.addHealth(-50);
+    assertEquals(0, ghost.getHealth());
+    assertTrue(ghost.isDead());
+    // Overkill
+    ghost.addHealth(-100);
+    assertEquals(0, ghost.getHealth());
+    assertTrue(ghost.isDead());
+  }
+
+  @Test
+  void playerReceivesGoldWhenEnemyDies() {
+    // Setup EntityService
+    EntityService entityService = EntityService.getInstance();
+    // Create player entity with PlayerComponent and InventoryComponent
+    Entity player = new Entity();
+    player.addComponent(new PlayerComponent());
+    InventoryComponent inventory = new InventoryComponent(0);
+    player.addComponent(inventory);
+    entityService.register(player);
+
+    // Create ghost entity with CombatStatsComponent and GhostDeathRewardComponent
+    Entity ghost = new Entity();
+    CombatStatsComponent ghostStats = new CombatStatsComponent(10, 0);
+    ghost.addComponent(ghostStats);
+    ghost.addComponent(new EnemyDeathRewardComponent(15)); // Reward: 15 gold
+    entityService.register(ghost);
+
+    // Damage ghost until it dies
+    ghostStats.addHealth(-10);
+
+    // Assert player received gold
+    assertEquals(15, inventory.getGold());
   }
 }
