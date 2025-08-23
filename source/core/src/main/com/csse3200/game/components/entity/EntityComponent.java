@@ -1,13 +1,13 @@
-package com.csse3200.game.components.items;
+package com.csse3200.game.components.entity;
 
 import com.csse3200.game.components.Component;
 
-public class ItemComponent extends Component {
+public class EntityComponent extends Component {
     private String name;
     private int id;
     private String type;
 
-    public ItemComponent(String name, int id, String type) {
+    public EntityComponent(String name, int id, String type) {
       this.name = name;
       this.id = id;
       this.type = type;
@@ -37,3 +37,4 @@ public class ItemComponent extends Component {
         this.type = type;
     }
 }
+
