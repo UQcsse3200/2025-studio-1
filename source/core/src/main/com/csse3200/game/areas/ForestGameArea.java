@@ -46,6 +46,9 @@ public class ForestGameArea extends GameArea {
   private static final String backgroundMusic = "sounds/BGM_03_mp3.mp3";
   private static final String[] forestMusic = {backgroundMusic};
 
+  private static final String playerSprite = "images/player.png";
+  private static final String playerAtlas = "images/player.atlas"
+
   private final TerrainFactory terrainFactory;
 
   private Entity player;
@@ -164,6 +167,8 @@ public class ForestGameArea extends GameArea {
     resourceService.loadSounds(forestSounds);
     resourceService.loadMusic(forestMusic);
 
+    resourceService.loadTextures(playerSprite);
+    resourceService.loadTextureAtlases(playerAtlas);
     while (!resourceService.loadForMillis(10)) {
       // This could be upgraded to a loading screen
       logger.info("Loading... {}%", resourceService.getProgress());
