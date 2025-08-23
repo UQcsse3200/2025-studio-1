@@ -9,6 +9,7 @@ import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.factories.NPCFactory;
 import com.csse3200.game.entities.factories.ObstacleFactory;
 import com.csse3200.game.entities.factories.PlayerFactory;
+import com.csse3200.game.entities.factories.WeaponsFactory;
 import com.csse3200.game.utils.math.GridPoint2Utils;
 import com.csse3200.game.utils.math.RandomUtils;
 import com.csse3200.game.services.ResourceService;
@@ -37,7 +38,8 @@ public class ForestGameArea extends GameArea {
     "images/hex_grass_3.png",
     "images/iso_grass_1.png",
     "images/iso_grass_2.png",
-    "images/iso_grass_3.png"
+    "images/iso_grass_3.png",
+    "images/templightsaber.png"
   };
   private static final String[] forestTextureAtlases = {
     "images/terrain_iso_grass.atlas", "images/ghost.atlas", "images/ghostKing.atlas"
@@ -49,6 +51,7 @@ public class ForestGameArea extends GameArea {
   private final TerrainFactory terrainFactory;
 
   private Entity player;
+  private Entity lightsaber;
 
   /**
    * Initialise this ForestGameArea to use the provided TerrainFactory.
@@ -70,9 +73,9 @@ public class ForestGameArea extends GameArea {
     spawnTerrain();
     spawnTrees();
     player = spawnPlayer();
+    lightsaber = spawnLightsaber();
     spawnGhosts();
     spawnGhostKing();
-
     playMusic();
   }
 
@@ -127,6 +130,12 @@ public class ForestGameArea extends GameArea {
     Entity newPlayer = PlayerFactory.createPlayer();
     spawnEntityAt(newPlayer, PLAYER_SPAWN, true, true);
     return newPlayer;
+  }
+
+  private Entity spawnLightsaber() {
+    Entity newLightsaber = WeaponsFactory.createLightsaber();
+    spawnEntityAt(newLightsaber, PLAYER_SPAWN, true, true);
+    return newLightsaber;
   }
 
   private void spawnGhosts() {
