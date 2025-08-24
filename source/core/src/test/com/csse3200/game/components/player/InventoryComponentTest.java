@@ -14,12 +14,12 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(GameExtension.class)
 class InventoryComponentTest {
-  private int gold = 100;
+  private int processor = 100;
 
   @Nested
   @DisplayName("Testing: addItem, setItem, get, getInventory, remove, isFull, isEmpty")
   class inventoryMethodsTest {
-    private int gold = 100;
+    private int processor = 100;
     ArrayList<Entity> testInven;
     InventoryComponent inventory;
 
@@ -29,7 +29,7 @@ class InventoryComponentTest {
       for (int idx = 0; idx < 5; idx++) {
         testInven.add(null);
       }
-      inventory = new InventoryComponent(this.gold);
+      inventory = new InventoryComponent(this.processor);
     }
 
     @Test
@@ -184,32 +184,32 @@ class InventoryComponentTest {
   }
 
   @Test
-  void shouldSetGetGold() {
+  void shouldSetGetProcessor() {
     InventoryComponent inventory = new InventoryComponent(100);
-    assertEquals(100, inventory.getGold());
+    assertEquals(100, inventory.getProcessor());
 
-    inventory.setGold(150);
-    assertEquals(150, inventory.getGold());
+    inventory.setProcessor(150);
+    assertEquals(150, inventory.getProcessor());
 
-    inventory.setGold(-50);
-    assertEquals(0, inventory.getGold());
+    inventory.setProcessor(-50);
+    assertEquals(0, inventory.getProcessor());
   }
 
   @Test
-  void shouldCheckHasGold() {
+  void shouldCheckHasProcessor() {
     InventoryComponent inventory = new InventoryComponent(150);
-    assertTrue(inventory.hasGold(100));
-    assertFalse(inventory.hasGold(200));
+    assertTrue(inventory.hasProcessor(100));
+    assertFalse(inventory.hasProcessor(200));
   }
 
   @Test
-  void shouldAddGold() {
+  void shouldAddProcessor() {
     InventoryComponent inventory = new InventoryComponent(100);
     inventory.addGold(-500);
-    assertEquals(0, inventory.getGold());
+    assertEquals(0, inventory.getProcessor());
 
     inventory.addGold(100);
     inventory.addGold(-20);
-    assertEquals(80, inventory.getGold());
+    assertEquals(80, inventory.getProcessor());
   }
 }
