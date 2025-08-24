@@ -16,6 +16,12 @@ import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Scaling;
+
 
 /**
  * The game screen containing the main menu.
@@ -24,7 +30,7 @@ public class MainMenuScreen extends ScreenAdapter {
   private static final Logger logger = LoggerFactory.getLogger(MainMenuScreen.class);
   private final GdxGame game;
   private final Renderer renderer;
-  private static final String[] mainMenuTextures = {"images/box_boy_title.png"};
+  private static final String[] mainMenuTextures = {"images/logo.png", "images/menu_background.png"};
 
   public MainMenuScreen(GdxGame game) {
     this.game = game;
@@ -95,6 +101,14 @@ public class MainMenuScreen extends ScreenAdapter {
   private void createUI() {
     logger.debug("Creating ui");
     Stage stage = ServiceLocator.getRenderService().getStage();
+
+    Texture bgTex = ServiceLocator.getResourceService()
+            .getAsset("images/menu_background.png", Texture.class);
+    Image bg = new Image(new TextureRegionDrawable(new TextureRegion(bgTex)));
+    bg.setFillParent(true);
+    bg.setScaling(Scaling.fill);
+    stage.addActor(bg);
+
     Entity ui = new Entity();
     ui.addComponent(new MainMenuDisplay())
         .addComponent(new InputDecorator(stage, 10))
@@ -102,3 +116,4 @@ public class MainMenuScreen extends ScreenAdapter {
     ServiceLocator.getEntityService().register(ui);
   }
 }
+
