@@ -13,6 +13,7 @@ import com.csse3200.game.services.ServiceLocator;
  */
 public class PlayerActions extends Component {
   private static final Vector2 MAX_SPEED = new Vector2(3f, 3f); // Metres per second
+  private static final Vector2 JUMP_VELOCITY = new Vector2(0f, 2f);
 
   private PhysicsComponent physicsComponent;
   private Vector2 walkDirection = Vector2.Zero.cpy();
@@ -24,6 +25,7 @@ public class PlayerActions extends Component {
     entity.getEvents().addListener("walk", this::walk);
     entity.getEvents().addListener("walkStop", this::stopWalking);
     entity.getEvents().addListener("attack", this::attack);
+    entity.getEvents().addListener("jump", this::jump);
   }
 
   @Override
@@ -36,10 +38,11 @@ public class PlayerActions extends Component {
   private void updateSpeed() {
     Body body = physicsComponent.getBody();
     Vector2 velocity = body.getLinearVelocity();
-    Vector2 desiredVelocity = walkDirection.cpy().scl(MAX_SPEED);
+    float targetVx = walkDirection.cpy().x * MAX_SPEED.x;
+
     // impulse = (desiredVel - currentVel) * mass
-    Vector2 impulse = desiredVelocity.sub(velocity).scl(body.getMass());
-    body.applyLinearImpulse(impulse, body.getWorldCenter(), true);
+    float impulseX = (targetVx - velocity.x) * body.getMass();
+    body.applyLinearImpulse(new Vector2(impulseX, 0f), body.getWorldCenter(), true);
   }
 
   /**
@@ -59,6 +62,11 @@ public class PlayerActions extends Component {
     this.walkDirection = Vector2.Zero.cpy();
     updateSpeed();
     moving = false;
+  }
+
+  void jump() {
+    Body body = physicsComponent.getBody();
+    body.applyLinearImpulse(JUMP_VELOCITY, body.getWorldCenter(), true);
   }
 
   /**
