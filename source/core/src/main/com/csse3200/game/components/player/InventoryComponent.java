@@ -19,10 +19,10 @@ public class InventoryComponent extends Component {
   private final int maxCapacity = 5;
   private final int minCapacity = 0;
   private ArrayList<Entity> items = new ArrayList<Entity>(maxCapacity);
-  private int gold;
+  private int processor;
 
-  public InventoryComponent(int gold) {
-    setGold(gold);
+  public InventoryComponent(int processor) {
+    setProcessor(processor);
 
     for (int idx = this.minCapacity; idx < this.maxCapacity; idx++) {
       this.items.add(idx, null);
@@ -121,36 +121,36 @@ public class InventoryComponent extends Component {
   }
 
   /**
-   * Returns the player's gold.
+   * Returns the player's processor's.
    * @return entity's health
    */
-  public int getGold() {
-    return this.gold;
+  public int getProcessor() {
+    return this.processor;
   }
 
   /**
-   * Returns if the player has a certain amount of gold.
-   * @param gold required amount of gold
-   * @return player has greater than or equal to the required amount of gold
+   * Returns if the player has a certain amount of processor's.
+   * @param processor required amount of processor's
+   * @return player has greater than or equal to the required amount of processor's
    */
-  public Boolean hasGold(int gold) {
-    return this.gold >= gold;
+  public Boolean hasProcessor(int processor) {
+    return this.processor >= processor;
   }
 
   /**
-   * Sets the player's gold. Gold has a minimum bound of 0.
-   * @param gold gold
+   * Sets the player's processor's. Processor's has a minimum bound of 0.
+   * @param processor processor
    */
-  public void setGold(int gold) {
-    this.gold = Math.max(gold, 0);
-    logger.debug("Setting gold to {}", this.gold);
+  public void setProcessor(int processor) {
+    this.processor = Math.max(processor, 0);
+    logger.debug("Setting gold to {}", this.processor);
   }
 
   /**
-   * Adds to the player's gold. The amount added can be negative.
-   * @param gold gold to add
+   * Adds to the player's processor's. The amount added can be negative.
+   * @param processor processor to add
    */
-  public void addGold(int gold) {
-    setGold(this.gold + gold);
+  public void addGold(int processor) {
+    setProcessor(this.processor + processor);
   }
 }
