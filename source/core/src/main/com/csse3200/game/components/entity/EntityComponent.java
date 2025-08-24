@@ -21,6 +21,7 @@ public class EntityComponent extends Component {
         this.name = name;
     }
 
+
     public int getId() {
         return id;
     }
@@ -35,6 +36,10 @@ public class EntityComponent extends Component {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public void display(){
+        System.out.println(getName() + " " + getType() + " " + getId());
     }
 }
 
