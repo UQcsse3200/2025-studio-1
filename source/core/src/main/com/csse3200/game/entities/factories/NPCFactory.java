@@ -12,6 +12,7 @@ import com.csse3200.game.components.tasks.WanderTask;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.BaseEntityConfig;
 import com.csse3200.game.entities.configs.GhostKingConfig;
+import com.csse3200.game.entities.configs.GhostGPTConfig;
 import com.csse3200.game.entities.configs.NPCConfigs;
 import com.csse3200.game.files.FileLoader;
 import com.csse3200.game.physics.PhysicsLayer;
@@ -96,11 +97,12 @@ public class NPCFactory {
    */
   public static Entity createGhostGPT(Entity target) {
     Entity ghostGPT = createBaseNPC(target);
-    BaseEntityConfig config = configs.ghostGPT;
+    GhostGPTConfig config = configs.ghostGPT;
 
     AnimationRenderComponent animator =
             new AnimationRenderComponent(
-                    ServiceLocator.getResourceService().getAsset("images/ghostGPT.atlas", TextureAtlas.class));
+                    ServiceLocator.getResourceService()
+                            .getAsset("images/ghostGPT.atlas", TextureAtlas.class));
     animator.addAnimation("angry_float", 0.1f, Animation.PlayMode.LOOP);
     animator.addAnimation("float", 0.1f, Animation.PlayMode.LOOP);
 
