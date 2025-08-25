@@ -52,4 +52,11 @@ class CombatStatsComponentTest {
     combat.setBaseAttack(-50);
     assertEquals(150, combat.getBaseAttack());
   }
+  
+  @Test
+  void shouldTakeDirectDamage() {
+    CombatStatsComponent combat = new CombatStatsComponent(100, 20);
+    combat.hit(20);
+    assertEquals(80, combat.getHealth()); 
+  }
 }
