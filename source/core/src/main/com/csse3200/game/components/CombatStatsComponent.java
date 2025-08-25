@@ -108,7 +108,12 @@ public class CombatStatsComponent extends Component {
 
   /**
    * Deal direct damage as an integer.
-   * Maybe for non-entity sources?
+   * <p>
+   * This is intended for non-entity sources of damage, such as traps,
+   * projectiles, or weapons. At this stage, the weapon's output power
+   * (damage) is represented as a simple {@code int}. In future, this
+   * can be extended to use a WeaponStatsComponent or DamageInfo object
+   * for more complex calculations (crit, resistances, etc.).
    */
   
   public void hit(int damage) {
