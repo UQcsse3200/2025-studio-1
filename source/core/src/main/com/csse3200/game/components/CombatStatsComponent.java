@@ -96,7 +96,12 @@ public class CombatStatsComponent extends Component {
    * @param damage Damage amount (must >= 0)
    */
 
-  private void applyDamage(int damage) {}
+  private void applyDamage(int damage) {
+    if (damage <= 0 || isDead()) {
+        return;
+    }
+    setHealth(this.health - damage);
+  }
 
   /**
    * Deal direct damage as an integer.
