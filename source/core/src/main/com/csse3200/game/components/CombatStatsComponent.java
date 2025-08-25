@@ -108,6 +108,8 @@ public class CombatStatsComponent extends Component {
    * Maybe for non-entity sources?
    */
   
-  public void hit(int damage) {}
+  public void hit(int damage) {
+    applyDamage(damage);
+  }
 
 
