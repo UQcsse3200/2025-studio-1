@@ -115,4 +115,4 @@ public class CombatStatsComponent extends Component {
     applyDamage(damage);
   }
 
-
+}
