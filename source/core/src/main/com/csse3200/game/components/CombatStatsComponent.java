@@ -88,4 +88,21 @@ public class CombatStatsComponent extends Component {
     int newHealth = this.getHealth() - attacker.getBaseAttack();
     setHealth(newHealth);
   }
-}
+
+
+  /**
+   * Apply damage to this entity.
+   *
+   * @param damage Damage amount (must >= 0)
+   */
+
+  private void applyDamage(int damage) {}
+
+  /**
+   * Deal direct damage as an integer.
+   * Maybe for non-entity sources?
+   */
+  
+  public void hit(int damage) {}
+
+
