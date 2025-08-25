@@ -85,8 +85,11 @@ public class CombatStatsComponent extends Component {
   }
 
   public void hit(CombatStatsComponent attacker) {
-    int newHealth = this.getHealth() - attacker.getBaseAttack();
-    setHealth(newHealth);
+    if (attack == null) {
+        logger.error("hit(attacker) called with null attacker");
+        return;
+    }
+    applyDamage(attack.getBaseAttack());
   }
 
 
