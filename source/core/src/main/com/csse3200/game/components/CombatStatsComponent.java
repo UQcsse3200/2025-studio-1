@@ -85,11 +85,11 @@ public class CombatStatsComponent extends Component {
   }
 
   public void hit(CombatStatsComponent attacker) {
-    if (attack == null) {
+    if (attacker == null) {
         logger.error("hit(attacker) called with null attacker");
         return;
     }
-    applyDamage(attack.getBaseAttack());
+    applyDamage(attacker.getBaseAttack());
   }
 
 
