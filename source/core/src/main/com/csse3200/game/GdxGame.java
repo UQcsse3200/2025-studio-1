@@ -4,10 +4,7 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.csse3200.game.files.UserSettings;
-import com.csse3200.game.screens.MainGameScreen;
-import com.csse3200.game.screens.MainMenuScreen;
-import com.csse3200.game.screens.SettingsScreen;
-import com.csse3200.game.screens.DeathScreen;
+import com.csse3200.game.screens.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,7 +26,7 @@ public class GdxGame extends Game {
     // Sets background to light yellow
     Gdx.gl.glClearColor(248f/255f, 249/255f, 178/255f, 1);
 
-    setScreen(ScreenType.DEATH_SCREEN);
+    setScreen(ScreenType.MAIN_MENU);
   }
 
   /**
@@ -75,13 +72,15 @@ public class GdxGame extends Game {
         return new SettingsScreen(this);
       case DEATH_SCREEN:
         return new DeathScreen(this);
+      case WIN_SCREEN:
+        return new WinScreen(this);
       default:
         return null;
     }
   }
 
   public enum ScreenType {
-    MAIN_MENU, MAIN_GAME, SETTINGS, DEATH_SCREEN
+    MAIN_MENU, MAIN_GAME, SETTINGS, DEATH_SCREEN, WIN_SCREEN
   }
 
   /**
