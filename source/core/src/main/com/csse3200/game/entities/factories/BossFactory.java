@@ -24,9 +24,39 @@ import com.csse3200.game.rendering.AnimationRenderComponent;
 import com.csse3200.game.rendering.TextureRenderComponent;
 import com.csse3200.game.services.ServiceLocator;
 
+
 public class BossFactory {
-    public static Entity createflyingBoss(Entity target) {
-        Entity flyboss = new Entity();
-        return flyboss;
+    private static final NPCConfigs configs =
+            FileLoader.readClass(NPCConfigs.class, "configs/NPCs.json");
+    //new added boss2
+    public static Entity createBoss2(Entity target) {
+        Entity boss2 = createBaseNPC(target);
+        BaseEntityConfig config = configs.boss2;
+
+        boss2
+                .addComponent(new CombatStatsComponent(config.health, config.baseAttack))
+                .addComponent(new TextureRenderComponent("images/robot-2-common.png"));
+
+        boss2.getComponent(TextureRenderComponent.class).scaleEntity();
+
+        return boss2;
+    }
+    
+    static Entity createBaseNPC(Entity target) {
+        AITaskComponent aiComponent =
+                new AITaskComponent()
+                        .addTask(new WanderTask(new Vector2(2f, 2f), 2f))
+                        .addTask(new ChaseTask(target, 10, 3f, 4f));
+        Entity npc =
+                new Entity()
+                        .addComponent(new PhysicsComponent())
+                        .addComponent(new PhysicsMovementComponent())
+                        .addComponent(new ColliderComponent())
+                        .addComponent(new HitboxComponent().setLayer(PhysicsLayer.NPC))
+                        .addComponent(new TouchAttackComponent(PhysicsLayer.PLAYER, 1.5f))
+                        .addComponent(aiComponent);
+
+        PhysicsUtils.setScaledCollider(npc, 0.9f, 0.4f);
+        return npc;
     }
 }
