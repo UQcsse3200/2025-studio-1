@@ -26,6 +26,9 @@ import com.csse3200.game.components.maingame.MainGameExitDisplay;
 import com.csse3200.game.components.gamearea.PerformanceDisplay;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+
 
 /**
  * The game screen containing the main game.
@@ -40,6 +43,9 @@ public class MainGameScreen extends ScreenAdapter {
   private final GdxGame game;
   private final Renderer renderer;
   private final PhysicsEngine physicsEngine;
+
+  private Entity pauseOverlay;
+  private boolean isPauseVisible = false;
 
   public MainGameScreen(GdxGame game) {
     this.game = game;
@@ -75,6 +81,14 @@ public class MainGameScreen extends ScreenAdapter {
     physicsEngine.update();
     ServiceLocator.getEntityService().update();
     renderer.render();
+    if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+      if (!isPauseVisible) {
+        showPauseOverlay();
+      } else {
+        hidePauseOverlay();
+      }
+      return;
+    }
   }
 
   @Override
@@ -141,4 +155,24 @@ public class MainGameScreen extends ScreenAdapter {
 
     ServiceLocator.getEntityService().register(ui);
   }
+
+  private void showPauseOverlay() {
+    Stage stage = ServiceLocator.getRenderService().getStage();
+    pauseOverlay = new Entity()
+            .addComponent(new com.csse3200.game.components.pausemenu.PauseMenuDisplay(game))
+            .addComponent(new InputDecorator(stage, 100));
+    pauseOverlay.getEvents().addListener("resume", this::hidePauseOverlay);
+    ServiceLocator.getEntityService().register(pauseOverlay);
+    isPauseVisible = true;
+  }
+
+  private void hidePauseOverlay() {
+    if (pauseOverlay != null) {
+      pauseOverlay.dispose();
+      ServiceLocator.getEntityService().unregister(pauseOverlay);
+      pauseOverlay = null;
+    }
+    isPauseVisible = false;
+  }
+
 }
