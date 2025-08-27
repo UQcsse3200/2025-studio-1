@@ -5,11 +5,14 @@ import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
+import com.csse3200.game.components.ItemHoldComponent;
+import com.csse3200.game.components.player.InventoryComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.factories.NPCFactory;
 import com.csse3200.game.entities.factories.ObstacleFactory;
 import com.csse3200.game.entities.factories.PlayerFactory;
 import com.csse3200.game.entities.factories.WeaponsFactory;
+import com.csse3200.game.rendering.TextureRenderComponent;
 import com.csse3200.game.utils.math.GridPoint2Utils;
 import com.csse3200.game.utils.math.RandomUtils;
 import com.csse3200.game.services.ResourceService;
@@ -134,7 +137,11 @@ public class ForestGameArea extends GameArea {
 
   private Entity spawnLightsaber() {
     Entity newLightsaber = WeaponsFactory.createLightsaber();
-    spawnEntityAt(newLightsaber, PLAYER_SPAWN, true, true);
+    InventoryComponent inventory = player.getComponent(InventoryComponent.class);
+    inventory.addItem(newLightsaber);
+    inventory.equipWeapon(newLightsaber);
+    newLightsaber.addComponent(new ItemHoldComponent(player));
+    ServiceLocator.getEntityService().register(newLightsaber);
     return newLightsaber;
   }
 
