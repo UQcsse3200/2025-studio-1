@@ -48,6 +48,19 @@ public class WinScreenDisplay extends UIComponent {
         table.add(victoryLabel).colspan(2).center().padBottom(50f);
         table.row();
 
+        Label.LabelStyle smallStyle = skin.get("small", Label.LabelStyle.class);
+        smallStyle.fontColor = skin.getColor("white");
+
+        Label roundLabel = new Label("Round: 1", skin, "small");
+        roundLabel.setFontScale(3.0f);
+        table.add(roundLabel).colspan(2).center().padBottom(50f);
+        table.row();
+
+        Label timeLabel = new Label("Time: 00:00", skin, "small");
+        timeLabel.setFontScale(3.0f);
+        table.add(timeLabel).colspan(2).center().padBottom(50f);
+        table.row();
+
         TextButton.TextButtonStyle style = neon.buttonRounded();
         TextButton tryAgainBtn = new TextButton("Continue", style);
         TextButton mainMenuBtn = new TextButton("Main Menu", style);
