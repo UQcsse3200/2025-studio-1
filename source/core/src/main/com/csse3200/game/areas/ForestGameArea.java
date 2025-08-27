@@ -5,14 +5,9 @@ import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
-import com.csse3200.game.components.ItemHoldComponent;
-import com.csse3200.game.components.player.InventoryComponent;
 import com.csse3200.game.entities.Entity;
-import com.csse3200.game.entities.factories.NPCFactory;
-import com.csse3200.game.entities.factories.ObstacleFactory;
-import com.csse3200.game.entities.factories.PlayerFactory;
-import com.csse3200.game.entities.factories.WeaponsFactory;
-import com.csse3200.game.rendering.TextureRenderComponent;
+import com.csse3200.game.entities.factories.*;
+import com.csse3200.game.physics.components.PhysicsProjectileComponent;
 import com.csse3200.game.utils.math.GridPoint2Utils;
 import com.csse3200.game.utils.math.RandomUtils;
 import com.csse3200.game.services.ResourceService;
@@ -42,7 +37,8 @@ public class ForestGameArea extends GameArea {
     "images/iso_grass_1.png",
     "images/iso_grass_2.png",
     "images/iso_grass_3.png",
-    "images/templightsaber.png"
+    "images/templightsaber.png",
+    "images/ammo.png"
   };
   private static final String[] forestTextureAtlases = {
     "images/terrain_iso_grass.atlas", "images/ghost.atlas", "images/ghostKing.atlas"
@@ -55,6 +51,7 @@ public class ForestGameArea extends GameArea {
 
   private Entity player;
   private Entity lightsaber;
+  private Entity bullet;
 
   /**
    * Initialise this ForestGameArea to use the provided TerrainFactory.
@@ -76,7 +73,10 @@ public class ForestGameArea extends GameArea {
     spawnTerrain();
     spawnTrees();
     player = spawnPlayer();
-    lightsaber = spawnLightsaber();
+    //lightsaber = spawnLightsaber();
+    //bullet = spawnBullet();
+    //bullet.getComponent(PhysicsProjectileComponent.class).fire(new Vector2(1, 1), 5f);
+
     spawnGhosts();
     spawnGhostKing();
     playMusic();
@@ -137,12 +137,15 @@ public class ForestGameArea extends GameArea {
 
   private Entity spawnLightsaber() {
     Entity newLightsaber = WeaponsFactory.createLightsaber();
-    InventoryComponent inventory = player.getComponent(InventoryComponent.class);
-    inventory.addItem(newLightsaber);
-    inventory.equipWeapon(newLightsaber);
-    newLightsaber.addComponent(new ItemHoldComponent(player));
-    ServiceLocator.getEntityService().register(newLightsaber);
+    spawnEntityAt(newLightsaber, PLAYER_SPAWN, true, true);
     return newLightsaber;
+  }
+
+  private Entity spawnBullet() {
+
+    Entity newBullet = ProjectileFactory.createPistolBullet();
+    spawnEntityAt(newBullet, PLAYER_SPAWN, true, true);
+    return newBullet;
   }
 
   private void spawnGhosts() {
