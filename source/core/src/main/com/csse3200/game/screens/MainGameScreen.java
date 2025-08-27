@@ -28,6 +28,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.csse3200.game.GdxGame.ScreenType;
+import com.csse3200.game.components.CombatStatsComponent;
 
 
 /**
@@ -43,6 +45,7 @@ public class MainGameScreen extends ScreenAdapter {
   private final GdxGame game;
   private final Renderer renderer;
   private final PhysicsEngine physicsEngine;
+  private final ForestGameArea forestGameArea;
 
   private Entity pauseOverlay;
   private boolean isPauseVisible = false;
@@ -72,7 +75,7 @@ public class MainGameScreen extends ScreenAdapter {
 
     logger.debug("Initialising main game screen entities");
     TerrainFactory terrainFactory = new TerrainFactory(renderer.getCamera());
-    ForestGameArea forestGameArea = new ForestGameArea(terrainFactory);
+    forestGameArea = new ForestGameArea(terrainFactory);
     forestGameArea.create();
   }
 
@@ -80,6 +83,14 @@ public class MainGameScreen extends ScreenAdapter {
   public void render(float delta) {
     physicsEngine.update();
     ServiceLocator.getEntityService().update();
+    Entity player = forestGameArea.getPlayer();
+    //show death screen when player is dead
+    if (player != null) {
+      var playerStat = player.getComponent(CombatStatsComponent.class);
+      if (playerStat != null && playerStat.isDead()) {
+        game.setScreen(ScreenType.DEATH_SCREEN);
+      }
+    }
     renderer.render();
     if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
       if (!isPauseVisible) {
