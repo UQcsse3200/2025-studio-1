@@ -7,6 +7,7 @@ import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.factories.*;
+import com.csse3200.game.physics.components.PhysicsProjectileComponent;
 import com.csse3200.game.utils.math.GridPoint2Utils;
 import com.csse3200.game.utils.math.RandomUtils;
 import com.csse3200.game.services.ResourceService;
@@ -37,6 +38,7 @@ public class ForestGameArea extends GameArea {
     "images/iso_grass_2.png",
     "images/iso_grass_3.png",
     "images/templightsaber.png",
+    "images/ammo.png"
   };
   private static final String[] forestTextureAtlases = {
     "images/terrain_iso_grass.atlas", "images/ghost.atlas", "images/ghostKing.atlas"
@@ -71,7 +73,9 @@ public class ForestGameArea extends GameArea {
     spawnTerrain();
     spawnTrees();
     player = spawnPlayer();
-    lightsaber = spawnLightsaber();
+    //lightsaber = spawnLightsaber();
+    //bullet = spawnBullet();
+    //bullet.getComponent(PhysicsProjectileComponent.class).fire(new Vector2(1, 1), 5f);
 
     spawnGhosts();
     spawnGhostKing();
@@ -135,6 +139,13 @@ public class ForestGameArea extends GameArea {
     Entity newLightsaber = WeaponsFactory.createLightsaber();
     spawnEntityAt(newLightsaber, PLAYER_SPAWN, true, true);
     return newLightsaber;
+  }
+
+  private Entity spawnBullet() {
+
+    Entity newBullet = ProjectileFactory.createPistolBullet();
+    spawnEntityAt(newBullet, PLAYER_SPAWN, true, true);
+    return newBullet;
   }
 
   private void spawnGhosts() {

@@ -15,10 +15,7 @@ import com.csse3200.game.entities.configs.*;
 import com.csse3200.game.files.FileLoader;
 import com.csse3200.game.physics.PhysicsLayer;
 import com.csse3200.game.physics.PhysicsUtils;
-import com.csse3200.game.physics.components.ColliderComponent;
-import com.csse3200.game.physics.components.HitboxComponent;
-import com.csse3200.game.physics.components.PhysicsComponent;
-import com.csse3200.game.physics.components.PhysicsMovementComponent;
+import com.csse3200.game.physics.components.*;
 import com.csse3200.game.rendering.AnimationRenderComponent;
 import com.csse3200.game.rendering.TextureRenderComponent;
 import com.csse3200.game.services.ServiceLocator;
@@ -57,11 +54,11 @@ public class ProjectileFactory {
         Entity projectile =
                 new Entity()
                         .addComponent(new PhysicsComponent())
-                        .addComponent(new PhysicsMovementComponent())
-                        .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE))
-                        .addComponent(new HitboxComponent().setLayer(PhysicsLayer.OBSTACLE));
+                        .addComponent(new PhysicsProjectileComponent())
+                        .addComponent(new ColliderComponent().setLayer(PhysicsLayer.NONE))
+                        .addComponent(new HitboxComponent().setLayer(PhysicsLayer.NONE));
 
-        projectile.getComponent(PhysicsComponent.class).setBodyType(BodyDef.BodyType.StaticBody);
+        projectile.getComponent(PhysicsComponent.class).setBodyType(BodyDef.BodyType.DynamicBody);
         PhysicsUtils.setScaledCollider(projectile, 0.5f, 0.2f);
 
         return projectile;
