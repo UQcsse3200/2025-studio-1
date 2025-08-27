@@ -13,6 +13,8 @@ public class EntityComponent extends Component {
       this.type = type;
     }
 
+    public EntityComponent() {}
+
     public String getName() {
       return name;
     }
