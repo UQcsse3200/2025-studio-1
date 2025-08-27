@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.csse3200.game.ai.tasks.AITaskComponent;
 import com.csse3200.game.components.CombatStatsComponent;
+import com.csse3200.game.components.ItemHoldComponent;
 import com.csse3200.game.components.npc.GhostAnimationController;
 import com.csse3200.game.components.TouchAttackComponent;
 import com.csse3200.game.components.tasks.ChaseTask;
@@ -34,8 +35,8 @@ import com.csse3200.game.services.ServiceLocator;
  * similar characteristics.
  */
 public class WeaponsFactory {
-    private static final WeaponsConfig configs =
-            FileLoader.readClass(WeaponsConfig.class, "configs/weapon.json");
+    private static final LightsaberConfig configs =
+            FileLoader.readClass(LightsaberConfig.class, "configs/lightsaber.json");
 
     /**
      * Creates a ghost entity.
@@ -44,17 +45,16 @@ public class WeaponsFactory {
      * @return entity
      */
     public static Entity createLightsaber() {
-        Entity tree =
+        Entity lightsaber =
                 new Entity()
                         .addComponent(new TextureRenderComponent("images/templightsaber.png"))
-                        .addComponent(new PhysicsComponent())
-                        .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
+//                        .addComponent(new PhysicsComponent())
+//                        .addComponent(new ColliderComponent())
+//                        .addComponent(new HitboxComponent().setLayer(PhysicsLayer.NONE))
+                        .addComponent(new CombatStatsComponent(0, configs.baseAttack));
 
-        tree.getComponent(PhysicsComponent.class).setBodyType(BodyDef.BodyType.StaticBody);
-        tree.getComponent(TextureRenderComponent.class).scaleEntity();
-        tree.scaleHeight(2.5f);
-        PhysicsUtils.setScaledCollider(tree, 0.5f, 0.2f);
-        return tree;
+        lightsaber.getComponent(TextureRenderComponent.class).scaleEntity();
+        return lightsaber;
     }
 
     /**

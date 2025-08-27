@@ -3,7 +3,12 @@ package com.csse3200.game.components.player;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
+import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.components.Component;
+import com.csse3200.game.entities.Entity;
+import com.csse3200.game.entities.configs.LightsaberConfig;
+import com.csse3200.game.physics.PhysicsLayer;
+import com.csse3200.game.physics.components.ColliderComponent;
 import com.csse3200.game.physics.components.PhysicsComponent;
 import com.csse3200.game.services.ServiceLocator;
 
@@ -67,5 +72,22 @@ public class PlayerActions extends Component {
   void attack() {
     Sound attackSound = ServiceLocator.getResourceService().getAsset("sounds/Impact4.ogg", Sound.class);
     attackSound.play();
+
+    float attackRange = 2f;
+    int dmg = 10; //CHANGE
+
+
+    for (Entity enemy : ServiceLocator.getEntityService().getEntities()) {
+        if (enemy != entity) {
+
+          if (enemy.getComponent(ColliderComponent.class).getLayer() == PhysicsLayer.NPC) {
+              float distance = enemy.getCenterPosition().dst(entity.getCenterPosition());
+              if (distance <= attackRange) {
+                  enemy.getComponent(CombatStatsComponent.class).hit(entity.getComponent(CombatStatsComponent.class));
+              }
+          }
+        }
+    }
+
   }
 }
