@@ -47,6 +47,19 @@ public class DeathScreenDisplay extends UIComponent  {
         table.add(defeatedLabel).colspan(2).center().padBottom(50f);
         table.row();
 
+        Label.LabelStyle smallStyle = skin.get("small", Label.LabelStyle.class);
+        smallStyle.fontColor = skin.getColor("white");
+
+        Label roundLabel = new Label("Round: 1", skin, "small");
+        roundLabel.setFontScale(3.0f);
+        table.add(roundLabel).colspan(2).center().padBottom(50f);
+        table.row();
+
+        Label timeLabel = new Label("Time: 00:00", skin, "small");
+        timeLabel.setFontScale(3.0f);
+        table.add(timeLabel).colspan(2).center().padBottom(50f);
+        table.row();
+
         TextButton.TextButtonStyle style = neon.buttonRounded();
         TextButton tryAgainBtn = new TextButton("Try Again", style);
         TextButton mainMenuBtn = new TextButton("Main Menu", style);
@@ -62,6 +75,7 @@ public class DeathScreenDisplay extends UIComponent  {
                     @Override
                     public void changed(ChangeEvent changeEvent, Actor actor) {
                         logger.debug("Try Again Button clicked");
+                        restartGame();
 
                     }
                 });
@@ -85,6 +99,9 @@ public class DeathScreenDisplay extends UIComponent  {
 
     private void backMainMenu() {
         game.setScreen(ScreenType.MAIN_MENU);
+    }
+    private void restartGame() {
+        game.setScreen(ScreenType.MAIN_GAME);
     }
 
     @Override
