@@ -33,6 +33,100 @@ public class ObstacleFactory {
     return tree;
   }
 
+  public static Entity createLongFloor() {
+    Entity longFloor =
+        new Entity()
+          .addComponent(new TextureRenderComponent("foreg_sprites/general/LongFloor.png"))
+          .addComponent(new PhysicsComponent())
+          .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
+
+    longFloor.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
+    longFloor.getComponent(TextureRenderComponent.class).scaleEntity();
+    longFloor.scaleHeight(1f);
+    PhysicsUtils.setScaledCollider(longFloor, 1f, 1f);
+    return longFloor;
+  }
+
+  public static Entity createRailing() {
+    Entity railing =
+        new Entity()
+          .addComponent(new TextureRenderComponent("foreg_sprites/general/Railing.png"));
+
+    railing.getComponent(TextureRenderComponent.class).scaleEntity();
+    railing.scaleHeight(0.7f);
+    return railing;
+  }
+
+  public static Entity createSmallSquare() {
+    Entity smallSquare =
+        new Entity()
+          .addComponent(new TextureRenderComponent("foreg_sprites/general/SmallSquare.png"))
+          .addComponent(new PhysicsComponent())
+          .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
+
+    smallSquare.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
+    smallSquare.getComponent(TextureRenderComponent.class).scaleEntity();
+    smallSquare.scaleHeight(1f);
+    PhysicsUtils.setScaledCollider(smallSquare, 1f, 1f);
+    return smallSquare;
+  }
+
+  public static Entity createSmallStair() {
+    Entity smallStair =
+        new Entity()
+          .addComponent(new TextureRenderComponent("foreg_sprites/general/LongFloor.png"))
+          .addComponent(new PhysicsComponent())
+          .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
+
+    smallStair.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
+    smallStair.getComponent(TextureRenderComponent.class).scaleEntity();
+    smallStair.scaleHeight(1f);
+    PhysicsUtils.setScaledCollider(smallStair, 1f, 1f);
+    return smallStair;
+  }
+
+  public static Entity createSquareTile() {
+    Entity squareTile =
+        new Entity()
+          .addComponent(new TextureRenderComponent("foreg_sprites/general/LongFloor.png"))
+          .addComponent(new PhysicsComponent())
+          .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
+
+    squareTile.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
+    squareTile.getComponent(TextureRenderComponent.class).scaleEntity();
+    squareTile.scaleHeight(1f);
+    PhysicsUtils.setScaledCollider(squareTile, 1f, 1f);
+    return squareTile;
+  }
+
+  public static Entity createThickFloor() {
+    Entity thickFloor =
+        new Entity()
+          .addComponent(new TextureRenderComponent("foreg_sprites/general/LongFloor.png"))
+          .addComponent(new PhysicsComponent())
+          .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
+
+    thickFloor.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
+    thickFloor.getComponent(TextureRenderComponent.class).scaleEntity();
+    thickFloor.scaleHeight(1f);
+    PhysicsUtils.setScaledCollider(thickFloor, 1f, 1f);
+    return thickFloor;
+  }
+
+  public static Entity createThinFloor() {
+    Entity thinFloor =
+        new Entity()
+          .addComponent(new TextureRenderComponent("foreg_sprites/general/LongFloor.png"))
+          .addComponent(new PhysicsComponent())
+          .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
+
+    thinFloor.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
+    thinFloor.getComponent(TextureRenderComponent.class).scaleEntity();
+    thinFloor.scaleHeight(1f);
+    PhysicsUtils.setScaledCollider(thinFloor, 1f, 1f);
+    return thinFloor;
+  }
+
   /**
    * Creates an invisible physics wall.
    * @param width Wall width in world units
