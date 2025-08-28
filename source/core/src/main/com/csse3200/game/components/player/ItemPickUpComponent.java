@@ -40,10 +40,12 @@ public class ItemPickUpComponent extends Component {
 
         }
         entity.getEvents().addListener("collisionStart", this::onCollisionStart);
-        entity.getEvents().addListener("collisionEnd", this::onCollisionEnd);
+        //entity.getEvents().addListener("collisionEnd", this::onCollisionEnd);
+
+        //entity.getEvents().addListener("pick up", this::onPickupRequest);
     }
 
-      //detects when the player touches an item entity
+    //detects when the player touches an item entity
     private void onCollisionStart(Entity other) {
         if (other.getComponent(ItemComponent.class) != null) {
             targetItem = other;
@@ -57,33 +59,33 @@ public class ItemPickUpComponent extends Component {
     }
 
 
-        //checks if a nearby item is present and checks if player presses the E key then pickup nearbyItem
-        public void update () {
-            //if (targetItem != null && Gdx.input.isKeyPressed(Input.Keys.E)) {
-            if (Gdx.input.isKeyPressed(Input.Keys.E)) {
-                System.out.println("E is pressed");
-                //pickUpItem(targetItem);
-            }
+    //checks if a nearby item is present and checks if player presses the E key then pickup nearbyItem
+    public void update() {
+        if (targetItem != null && Gdx.input.isKeyPressed(Input.Keys.E)) {
+        //if (Gdx.input.isKeyPressed(Input.Keys.E)) {
+            System.out.println("E is pressed");
+            pickUpItem(targetItem);
         }
+    }
 
         //to add item to inventory and remove it from the map/world
         private void pickUpItem (Entity item){
             if (item == null) {
                 return;
             }
-            boolean itemadded = inventory.addItem(item);   //this is checking if inventory is full
+            boolean itemAdded = inventory.addItem(item);   //this is checking if inventory is full
 
-            if (itemadded) {
-                item.dispose();
-                targetItem = null;
-                System.out.println("Picked Up :" + item);
-            } else {
-                System.out.println("Cannot pick " + item + "Inventory is full");
-            }
-        }
+        boolean added = inventory.addItem(targetItem);
+        if (added) {
+            //targetItem.dispose(); // remove from world
+            targetItem = null;
+        }  // Inventory full – optionally trigger a UI toast/hint event here
+        // entity.getEvents().trigger("uiToast", "Inventory full");
 
 
     }
+}
+
 
 
 
