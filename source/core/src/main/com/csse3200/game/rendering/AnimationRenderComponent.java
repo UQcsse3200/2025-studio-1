@@ -89,6 +89,10 @@ public class AnimationRenderComponent extends RenderComponent {
     return true;
   }
 
+  public void scaleEntity(float size) {
+    TextureRegion defaultTexture = this.atlas.findRegion("default");
+    entity.setScale(size, size * (defaultTexture.getRegionHeight() / defaultTexture.getRegionWidth()));
+  }
   /** Scale the entity to a width of 1 and a height matching the texture's ratio */
   public void scaleEntity() {
     TextureRegion defaultTexture = this.atlas.findRegion("default");

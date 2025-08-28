@@ -11,6 +11,7 @@ import com.badlogic.gdx.math.Vector2;
 public class PlayerAnimationController extends Component {
     AnimationRenderComponent animator;
     private boolean facingRight = true;
+    private boolean sprinting = false;
 
     @Override
     public void create() {
@@ -19,16 +20,24 @@ public class PlayerAnimationController extends Component {
         entity.getEvents().addListener("walk", this::animateWalk);
         entity.getEvents().addListener("walkStop", this::animateStop);
         entity.getEvents().addListener("jump", this::animateJump);
+        entity.getEvents().addListener("sprintStart", () -> sprinting = true);
+        entity.getEvents().addListener("sprintStop", () -> sprinting = false);
     }
 
     void animateWalk(Vector2 direction) {
-
-        if (direction.x > 0) {
-            facingRight = true;
-            animator.startAnimation("right_run");
+        if(!sprinting) {
+            if (direction.x > 0) {
+                animator.startAnimation("right_walk");
+            } else {
+                animator.startAnimation("left_walk");
+            }
         } else {
-            facingRight = false;
-            animator.startAnimation("left_run");
+            if (direction.x > 0) {
+                animator.startAnimation("right_run");
+            } else {
+                animator.startAnimation("left_run");
+            }
+
         }
     }
 
@@ -47,4 +56,5 @@ public class PlayerAnimationController extends Component {
             animator.startAnimation("left_stand");
         }
     }
+
 }
