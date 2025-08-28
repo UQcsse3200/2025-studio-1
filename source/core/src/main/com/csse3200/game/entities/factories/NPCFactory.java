@@ -10,10 +10,7 @@ import com.csse3200.game.components.TouchAttackComponent;
 import com.csse3200.game.components.tasks.ChaseTask;
 import com.csse3200.game.components.tasks.WanderTask;
 import com.csse3200.game.entities.Entity;
-import com.csse3200.game.entities.configs.BaseEntityConfig;
-import com.csse3200.game.entities.configs.GhostKingConfig;
-import com.csse3200.game.entities.configs.GhostGPTConfig;
-import com.csse3200.game.entities.configs.NPCConfigs;
+import com.csse3200.game.entities.configs.*;
 import com.csse3200.game.files.FileLoader;
 import com.csse3200.game.physics.PhysicsLayer;
 import com.csse3200.game.physics.PhysicsUtils;
@@ -115,6 +112,27 @@ public class NPCFactory {
 
     return ghostGPT;
   }
+
+  /**
+   * Creates an entity for explosion (death of GPT).
+   *
+   * @return entity
+   */
+  public static Entity explosion() {
+    Entity explosion = new Entity();
+    ExplosionConfig config = configs.explosion;
+
+    AnimationRenderComponent animator =
+            new AnimationRenderComponent(
+                    ServiceLocator.getResourceService()
+                            .getAsset("images/explosion_1.atlas", TextureAtlas.class));
+    animator.addAnimation("explosion_1", 0.2f, Animation.PlayMode.LOOP);
+
+    explosion.addComponent(animator);
+    explosion.getComponent(AnimationRenderComponent.class).scaleEntity();
+    return explosion;
+  }
+
   /**
    * Creates a generic NPC to be used as a base entity by more specific NPC creation methods.
    *
