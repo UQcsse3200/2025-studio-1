@@ -49,10 +49,8 @@ public class PlayerActions extends Component {
     Vector2 velocity = body.getLinearVelocity();
 
     if (walkDirection.x > 0) {
-      entity.getEvents().trigger("facingRight");
       facingRight = true;
     } else if (walkDirection.x < 0) {
-      entity.getEvents().trigger("facingLeft");
       facingRight = false;
     }
 
@@ -107,7 +105,7 @@ public class PlayerActions extends Component {
 
   void dash() {
     if (dashCooldown == 0) {
-      entity.getEvents().trigger("dash"); // To be used for animations or invulnerability checks
+      entity.getEvents().trigger("dash", facingRight); // To be used for animations or invulnerability checks
       dashCooldown = 15; // In hundredths of a second so equals 1.5 seconds
       dashing = true;
       dashDuration();
