@@ -12,6 +12,7 @@ public class CombatStatsComponent extends Component {
 
   private static final Logger logger = LoggerFactory.getLogger(CombatStatsComponent.class);
   private int health;
+  private int maxHealth;
   private int baseAttack;
 
   public CombatStatsComponent(int health, int baseAttack) {
@@ -60,6 +61,22 @@ public class CombatStatsComponent extends Component {
    */
   public void addHealth(int health) {
     setHealth(this.health + health);
+  }
+
+  /**
+   * Sets the entity's Max Health. Max Health has a minimum bound of 0.
+   *
+   * @param maxHealth the maximum health that a entity can have
+   */
+  public void setMaxHealth(int maxHealth) {
+    if (maxHealth >= 0) {
+      this.maxHealth = health;
+    } else {
+      this.maxHealth = 0;
+    }
+    if (entity != null) {
+      entity.getEvents().trigger("updateMaxHealth", this.maxHealth);
+    }
   }
 
   /**
@@ -115,7 +132,7 @@ public class CombatStatsComponent extends Component {
    * can be extended to use a WeaponStatsComponent or DamageInfo object
    * for more complex calculations (crit, resistances, etc.).
    */
-  
+
   public void hit(int damage) {
     applyDamage(damage);
   }
