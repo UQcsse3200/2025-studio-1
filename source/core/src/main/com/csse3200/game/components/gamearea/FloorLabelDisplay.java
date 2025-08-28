@@ -1,0 +1,47 @@
+package com.csse3200.game.components.gamearea;
+
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.csse3200.game.ui.UIComponent;
+
+/** Simple UI label showing the current floor name. */
+public  class FloorLabelDisplay extends UIComponent {
+  private final String floorName;
+  private Table table;
+
+  public FloorLabelDisplay(String floorName) {
+    this.floorName = floorName;
+  }
+
+  @Override
+  public void create() {
+    super.create();
+    table = new Table();
+    table.top().left();
+    table.setFillParent(true);
+    // Position below health display (health is at padTop(45f) + heart height (~30f) + padding (~10f) = ~85f)
+    table.padTop(85f).padLeft(5f);
+
+    Label label = new Label(floorName, skin);
+    table.add(label).pad(8f);
+
+    stage.addActor(table);
+  }
+
+  @Override
+  protected void draw(SpriteBatch batch) {
+    // No-op: Scene2D handles UI drawing. Kept to satisfy RenderComponent contract.
+  }
+
+  @Override
+  public void dispose() {
+    super.dispose();
+    if (table != null) {
+      table.clear();
+      table.remove();
+    }
+  }
+}
+
+
