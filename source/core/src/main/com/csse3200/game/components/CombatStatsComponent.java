@@ -85,7 +85,39 @@ public class CombatStatsComponent extends Component {
   }
 
   public void hit(CombatStatsComponent attacker) {
-    int newHealth = this.getHealth() - attacker.getBaseAttack();
-    setHealth(newHealth);
+    if (attacker == null) {
+        logger.error("hit(attacker) called with null attacker");
+        return;
+    }
+    applyDamage(attacker.getBaseAttack());
   }
+
+
+  /**
+   * Apply damage to this entity.
+   *
+   * @param damage Damage amount (must >= 0)
+   */
+
+  private void applyDamage(int damage) {
+    if (damage <= 0 || isDead()) {
+        return;
+    }
+    setHealth(this.health - damage);
+  }
+
+  /**
+   * Deal direct damage as an integer.
+   * <p>
+   * This is intended for non-entity sources of damage, such as traps,
+   * projectiles, or weapons. At this stage, the weapon's output power
+   * (damage) is represented as a simple {@code int}. In future, this
+   * can be extended to use a WeaponStatsComponent or DamageInfo object
+   * for more complex calculations (crit, resistances, etc.).
+   */
+  
+  public void hit(int damage) {
+    applyDamage(damage);
+  }
+
 }
