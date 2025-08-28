@@ -179,7 +179,6 @@ public class AnimationRenderComponent extends RenderComponent {
 
   @Override
   public void dispose() {
-    atlas.dispose();
     super.dispose();
   }
 }
