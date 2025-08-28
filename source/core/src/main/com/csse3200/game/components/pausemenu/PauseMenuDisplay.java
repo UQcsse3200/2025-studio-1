@@ -62,11 +62,11 @@ public class PauseMenuDisplay extends UIComponent {
 
         // Buttons
         TextButton resumeBtn   = new TextButton("Resume", style);
-        TextButton settingsBtn = new TextButton("Settings", style);
+        TextButton restartBtm = new TextButton("Restart", style);
         TextButton mainBtn     = new TextButton("Main Menu", style);
 
         resumeBtn.getLabel().setFontScale(1.8f);
-        settingsBtn.getLabel().setFontScale(1.8f);
+        restartBtm.getLabel().setFontScale(1.8f);
         mainBtn.getLabel().setFontScale(1.8f);
 
         Table panel = new Table();
@@ -74,7 +74,7 @@ public class PauseMenuDisplay extends UIComponent {
 
         panel.add(pausedLabel).center().padBottom(24f).row();
         panel.add(resumeBtn).row();
-        panel.add(settingsBtn).row();
+        panel.add(restartBtm).row();
         panel.add(mainBtn).row();
 
         root.add(panel);
@@ -86,9 +86,9 @@ public class PauseMenuDisplay extends UIComponent {
             }
         });
 
-        settingsBtn.addListener(new ChangeListener() {
+        restartBtm.addListener(new ChangeListener() {
             @Override public void changed(ChangeEvent event, Actor actor) {
-                game.setScreen(ScreenType.SETTINGS);
+                game.setScreen(ScreenType.MAIN_GAME);
             }
         });
 
