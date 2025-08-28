@@ -7,4 +7,5 @@ public class NPCConfigs {
   public BaseEntityConfig ghost = new BaseEntityConfig();
   public GhostKingConfig ghostKing = new GhostKingConfig();
   public GhostGPTConfig ghostGPT = new GhostGPTConfig();
+  public ExplosionConfig explosion = new ExplosionConfig();
 }
