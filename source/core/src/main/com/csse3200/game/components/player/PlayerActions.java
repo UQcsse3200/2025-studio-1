@@ -25,6 +25,12 @@ public class PlayerActions extends Component {
   private boolean facingRight = true;
   private boolean dashing = false;
   private int dashCooldown = 0;
+
+  private static final int MAX_JUMPS = 2; // allow 1 normal jump + 1 double jump
+  private int jumpsLeft = MAX_JUMPS;
+  private long lastJumpTime = 0; // timestamp of last ground jump
+  private static final long JUMP_COOLDOWN_MS = 300; // 300ms between jumps
+
   @Override
   public void create() {
     physicsComponent = entity.getComponent(PhysicsComponent.class);
@@ -41,6 +47,11 @@ public class PlayerActions extends Component {
   public void update() {
     if (moving || dashing) {
       updateSpeed();
+    }
+
+    Body body = physicsComponent.getBody();
+    if (body.getLinearVelocity().y < 0f) {
+      jumpsLeft = MAX_JUMPS;
     }
   }
 
@@ -95,12 +106,21 @@ public class PlayerActions extends Component {
 
 
   void jump() {
+    long currentTime = System.currentTimeMillis();
+    Body body = physicsComponent.getBody();
+
     if (dashing) {
       return;
     }
 
-    Body body = physicsComponent.getBody();
-    body.applyLinearImpulse(JUMP_VELOCITY, body.getWorldCenter(), true);
+    if (jumpsLeft > 0) {
+      boolean isGroundJump = (jumpsLeft == MAX_JUMPS); // first jump
+      if (!isGroundJump || (currentTime - lastJumpTime) > JUMP_COOLDOWN_MS) {
+        body.applyLinearImpulse(JUMP_VELOCITY, body.getWorldCenter(), true);
+        jumpsLeft--;
+        lastJumpTime = currentTime;
+      }
+    }
   }
 
   void dash() {
