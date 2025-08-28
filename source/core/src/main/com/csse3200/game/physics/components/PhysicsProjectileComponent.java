@@ -16,7 +16,9 @@ public class PhysicsProjectileComponent extends Component{
     private float lifetime = 5f;
     private float lived = 0f;
 
-
+    /**
+     * Manifests the physics for the projectile
+     */
     @Override
     public void create() {
 
@@ -35,6 +37,11 @@ public class PhysicsProjectileComponent extends Component{
 
     }
 
+    /**
+     * Checks how long the projectile has been alive for, adding it to the "to remove list"
+     * within entity service if it has exceeded this time.
+     */
+
     public void update() {
         float dt = ServiceLocator.getTimeSource().getDeltaTime();
         lived += dt;
@@ -49,6 +56,11 @@ public class PhysicsProjectileComponent extends Component{
 
         }
     }
+
+    /**
+     * Fires a bullet in a certain direction at a certain speed
+     *
+     */
 
     public void fire(Vector2 direction, float speed) {
 

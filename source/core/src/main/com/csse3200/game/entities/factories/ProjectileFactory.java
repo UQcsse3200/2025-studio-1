@@ -38,7 +38,10 @@ public class ProjectileFactory {
             FileLoader.readClass(ProjectileConfig.class, "configs/projectiles.json");
 
 
-
+    /**
+     * Creates a pistol bullet entity
+     * @return pistol bullet entity
+     */
     public static Entity createPistolBullet() {
         Entity pistolBullet = createBaseProjectile();
         PistolBulletConfig config = configs.pistolBullet;
@@ -48,6 +51,11 @@ public class ProjectileFactory {
         pistolBullet.scaleHeight(1.5f);
         return pistolBullet;
     }
+
+    /**
+     * Creates a base projectile entity, capable of motion
+     * @return projectile entity
+     */
 
     private static Entity createBaseProjectile() {
 
