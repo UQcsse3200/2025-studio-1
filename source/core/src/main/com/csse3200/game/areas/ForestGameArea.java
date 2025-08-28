@@ -77,7 +77,6 @@ public class ForestGameArea extends GameArea {
 
     spawnTerrain();
     player = spawnPlayer();
-    spawnGhosts();
 
     spawnFloor();
 
