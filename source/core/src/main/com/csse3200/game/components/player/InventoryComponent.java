@@ -6,6 +6,8 @@ import com.csse3200.game.entities.Entity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
+
 /**
  * A component intended to be used by the player to track their inventory.
  *
@@ -174,14 +176,13 @@ public class InventoryComponent extends Component {
     return this.gold;
   }
 
-  /**
-   * Returns if the player has a certain amount of gold.
-   * @param gold required amount of gold
-   * @return player has greater than or equal to the required amount of gold
-   */
-  public Boolean hasGold(int gold) {
-    return this.gold >= gold;
-  }
+    /**
+     * Returns a copy of the players current inventory.
+     * @return An ArrayList<Entity> containing the players
+     */
+    public ArrayList<Entity> getInventory() {
+        return new ArrayList<Entity>(this.items);
+    }
 
   /**
    * Sets the player's gold. Gold has a minimum bound of 0.
