@@ -1,5 +1,6 @@
 package com.csse3200.game.components.player;
 
+import com.badlogic.gdx.Gdx; // add for postRunnable
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -142,9 +143,10 @@ public class PlayerStatsDisplay extends UIComponent {
       CombatStatsComponent stats = e.getComponent(CombatStatsComponent.class);
       if (stats == null || !hasRewardComponent(e)) continue;
       if (stats.getHealth() <= 0) continue; // already dead
-      stats.setHealth(0); // triggers death + reward
-      // Remove enemy from game world
-      e.dispose();
+      logger.debug("Killing enemy {} via debug button", e);
+      stats.setHealth(0); // triggers death + reward + particles
+      // Defer disposal to avoid modifying structures mid-iteration
+      Gdx.app.postRunnable(e::dispose);
       break; // only kill one per click
     }
   }
