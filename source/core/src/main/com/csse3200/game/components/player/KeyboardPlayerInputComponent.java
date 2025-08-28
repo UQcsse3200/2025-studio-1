@@ -13,6 +13,7 @@ import com.csse3200.game.utils.math.Vector2Utils;
 public class KeyboardPlayerInputComponent extends InputComponent {
   private final Vector2 walkDirection = Vector2.Zero.cpy();
 
+
   public KeyboardPlayerInputComponent() {
     super(5);
   }
@@ -34,8 +35,15 @@ public class KeyboardPlayerInputComponent extends InputComponent {
         walkDirection.add(Vector2Utils.RIGHT);
         triggerWalkEvent();
         return true;
+      case Keys.Z: // sprint start (Z down)
+        entity.getEvents().trigger("sprintStart");
+        triggerWalkEvent();
+        return true;
       case Keys.SPACE:
         jump();
+        return true;
+      case Keys.Q:
+        entity.getEvents().trigger("dashAttempt");
         return true;
       // TODO: add in item/weapon usage
       default:
@@ -58,6 +66,11 @@ public class KeyboardPlayerInputComponent extends InputComponent {
         return true;
       case Keys.D:
         walkDirection.sub(Vector2Utils.RIGHT);
+        triggerWalkEvent();
+        return true;
+      case Keys.Z: // sprint stop (Z up)
+        entity.getEvents().trigger("walkStop");
+        entity.getEvents().trigger("sprintStop");
         triggerWalkEvent();
         return true;
       default:
