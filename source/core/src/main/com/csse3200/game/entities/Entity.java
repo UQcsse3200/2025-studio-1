@@ -37,6 +37,7 @@ public class Entity {
   private final EventHandler eventHandler;
   private boolean enabled = true;
   private boolean created = false;
+  private boolean toRemove = false;
   private Vector2 position = Vector2.Zero.cpy();
   private Vector2 scale = new Vector2(1, 1);
   private Array<Component> createdComponents;
@@ -75,6 +76,26 @@ public class Entity {
    */
   public Entity getCurrItem() {
     return this.currItem;
+  }
+
+  /**
+   * Marks an entity for removal, is disposed and deregistered from the entity service at
+   * the end of the next update cycle
+   * eg usage. A projectile entity which has exceeded its lifetime within an update cycle
+   */
+
+  public void setToRemove() {
+
+    this.toRemove = true;
+  }
+
+  /**
+   * Returns the flag for if the entity will be removed after the next update cycle
+   */
+
+  public boolean getToRemove() {
+
+    return this.toRemove;
   }
 
   /**

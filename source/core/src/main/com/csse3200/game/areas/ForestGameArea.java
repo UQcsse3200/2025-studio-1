@@ -155,12 +155,7 @@ public class ForestGameArea extends GameArea {
     return newLightsaber;
   }
 
-  private Entity spawnBullet() {
 
-    Entity newBullet = ProjectileFactory.createPistolBullet();
-    spawnEntityAt(newBullet, PLAYER_SPAWN, true, true);
-    return newBullet;
-  }
 
   private void spawnGhosts() {
     GridPoint2 minPos = new GridPoint2(0, 0);

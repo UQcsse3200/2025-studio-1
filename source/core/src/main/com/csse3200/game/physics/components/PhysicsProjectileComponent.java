@@ -13,8 +13,9 @@ public class PhysicsProjectileComponent extends Component{
             getLogger(PhysicsProjectileComponent.class);
     private PhysicsComponent physicsComponent;
     private Vector2 initialVelocity;
-    private float lifetime = 4f;
+    private float lifetime = 5f;
     private float lived = 0f;
+
 
     @Override
     public void create() {
@@ -39,9 +40,12 @@ public class PhysicsProjectileComponent extends Component{
         lived += dt;
 
         System.out.println(entity.getPosition());
+        System.out.println(entity.getPosition());
         if (lived > lifetime) {
 
-            ServiceLocator.getEntityService().unregister(entity);
+            entity.setToRemove();
+            Body body = physicsComponent.getBody();
+            body.setLinearVelocity(new Vector2(0f, 0f));
 
         }
     }
