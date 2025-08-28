@@ -42,6 +42,9 @@ public class KeyboardPlayerInputComponent extends InputComponent {
       case Keys.SPACE:
         jump();
         return true;
+      case Keys.Q:
+        entity.getEvents().trigger("dashAttempt");
+        return true;
       // TODO: add in item/weapon usage
       default:
         return false;
