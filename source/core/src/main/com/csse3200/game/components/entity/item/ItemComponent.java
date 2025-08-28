@@ -4,18 +4,15 @@ import com.csse3200.game.components.entity.EntityComponent;
 
 public class ItemComponent extends EntityComponent {
     private int count;
-    private String description; //describes the item
-
 
     /**
      *
      * @param count is the present count for the item
-     * @param description gives the description for the item
+     *
      */
-    public ItemComponent(int count, String description) {
+    public ItemComponent(int count) {
         super();
         this.count = count;
-        this.description = description;
     }
 
     /**
@@ -35,25 +32,11 @@ public class ItemComponent extends EntityComponent {
      */
     public void setCount(int count){this.count = count;}
 
-    /**
-     *
-     * @return the description for the
-     */
-    public void setDescription( ){
-
+    public void description(String name, int id){
+        System.out.println("This is a/an " + name + ". " +
+            "\nPresnt count : " + count +
+            "\nType :  " + getType());
     }
-
-    /**
-     *
-     * @return the full description of what the item is
-     */
-    public String getDescription(){
-        return ("Item : " + this.getName()
-            + "\nID : " + this.getId()
-            + "\nType : " + this.getType()
-            + "\nCount : " + this.getCount());
-    }
-
 }
 
 
