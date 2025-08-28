@@ -50,8 +50,9 @@ public class WeaponsFactory {
                         .addComponent(new TextureRenderComponent("images/templightsaber.png"))
 //                        .addComponent(new PhysicsComponent())
 //                        .addComponent(new ColliderComponent())
-//                        .addComponent(new HitboxComponent().setLayer(PhysicsLayer.NONE))
+//                        .addComponent(new HitboxComponent().setLayer(PhysicsLayer.PLAYER))
                         .addComponent(new CombatStatsComponent(0, configs.baseAttack));
+
 
         lightsaber.getComponent(TextureRenderComponent.class).scaleEntity();
         return lightsaber;
