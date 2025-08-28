@@ -6,6 +6,7 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.csse3200.game.components.Component;
 import com.csse3200.game.physics.components.PhysicsComponent;
 import com.csse3200.game.services.ServiceLocator;
+import com.badlogic.gdx.utils.Timer;
 
 /**
  * Action component for interacting with the player. Player events should be initialised in create()
@@ -15,11 +16,15 @@ public class PlayerActions extends Component {
   private static final Vector2 MAX_SPEED = new Vector2(3f, 3f); // Metres per second
   private static final Vector2 SPRINT_SPEED = new Vector2(20f, 3f);
   private static final Vector2 JUMP_VELOCITY = new Vector2(0f, 2f);
+  private static final Vector2 DASH_SPEED = new Vector2(12f, 9.8f);
 
   private PhysicsComponent physicsComponent;
   private Vector2 walkDirection = Vector2.Zero.cpy();
   private boolean moving = false;
   private boolean sprinting = false; // If 'Z' is held
+  private boolean facingRight = true;
+  private boolean dashing = false;
+  private int dashCooldown = 0;
   @Override
   public void create() {
     physicsComponent = entity.getComponent(PhysicsComponent.class);
@@ -29,12 +34,12 @@ public class PlayerActions extends Component {
     entity.getEvents().addListener("jump", this::jump);
     entity.getEvents().addListener("sprintStart", () -> sprinting = true);
     entity.getEvents().addListener("sprintStop",  () -> sprinting = false);
-
+    entity.getEvents().addListener("dashAttempt", this::dash);
   }
 
   @Override
   public void update() {
-    if (moving) {
+    if (moving || dashing) {
       updateSpeed();
     }
   }
@@ -43,12 +48,26 @@ public class PlayerActions extends Component {
     Body body = physicsComponent.getBody();
     Vector2 velocity = body.getLinearVelocity();
 
+    if (walkDirection.x > 0) {
+      entity.getEvents().trigger("facingRight");
+      facingRight = true;
+    } else if (walkDirection.x < 0) {
+      entity.getEvents().trigger("facingLeft");
+      facingRight = false;
+    }
+
     boolean hasDir = !walkDirection.isZero(0.0001f);
-    float maxX = (sprinting && hasDir) ? SPRINT_SPEED.x : MAX_SPEED.x;
+    float maxX;
+    float targetVx;
 
-    float targetVx = walkDirection.x * maxX;
+    if (dashing) {
+      maxX = (facingRight) ? DASH_SPEED.x : -1 * DASH_SPEED.x;
+      targetVx = 1 * maxX;
+    } else {
+      maxX = (sprinting && hasDir) ? SPRINT_SPEED.x : MAX_SPEED.x;
+      targetVx = walkDirection.x * maxX;
+    }
 
-    // impulse = (desiredVel - currentVel) * mass
     float impulseX = (targetVx - velocity.x) * body.getMass();
     body.applyLinearImpulse(new Vector2(impulseX, 0f), body.getWorldCenter(), true);
   }
@@ -59,14 +78,18 @@ public class PlayerActions extends Component {
    * @param direction direction to move in
    */
   void walk(Vector2 direction) {
-    this.walkDirection = direction;
     moving = true;
+    this.walkDirection = direction;
   }
 
   /**
    * Stops the player from walking.
    */
   void stopWalking() {
+    if (dashing) {
+      return;
+    }
+
     this.walkDirection = Vector2.Zero.cpy();
     updateSpeed();
     moving = false;
@@ -74,9 +97,48 @@ public class PlayerActions extends Component {
 
 
   void jump() {
+    if (dashing) {
+      return;
+    }
+
     Body body = physicsComponent.getBody();
     body.applyLinearImpulse(JUMP_VELOCITY, body.getWorldCenter(), true);
   }
+
+  void dash() {
+    if (dashCooldown == 0) {
+      entity.getEvents().trigger("dash"); // To be used for animations or invulnerability checks
+      dashCooldown = 15; // In hundredths of a second so equals 1.5 seconds
+      dashing = true;
+      dashDuration();
+      dashCooldown();
+    }
+  }
+
+  void dashDuration() {
+    Timer.schedule(new Timer.Task() {
+      @Override
+      public void run() {
+        dashing = false;
+        if (!moving) {
+          stopWalking();
+        }
+      }
+    }, 0.1f); // seconds
+  }
+
+  void dashCooldown() {
+    Timer.schedule(new Timer.Task() {
+      @Override
+      public void run() {
+        if (dashCooldown > 0) {
+          dashCooldown--;
+          dashCooldown(); // Reschedule until 0
+        }
+      }
+    }, 0.1f); // every 0.1 seconds
+  }
+
 
   /**
    * Makes the player attack.
