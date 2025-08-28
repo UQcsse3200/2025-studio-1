@@ -81,7 +81,9 @@ public class MainGameScreen extends ScreenAdapter {
 
   @Override
   public void render(float delta) {
-    physicsEngine.update();
+    if (!isPauseVisible) {
+      physicsEngine.update();
+    }
     ServiceLocator.getEntityService().update();
     Entity player = forestGameArea.getPlayer();
     //show death screen when player is dead
