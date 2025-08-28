@@ -16,10 +16,12 @@ public class CombatStatsComponent extends Component {
   private static final Logger logger = LoggerFactory.getLogger(CombatStatsComponent.class);
   private int health;
   private int baseAttack;
+  private int attackTimer;
 
   public CombatStatsComponent(int health, int baseAttack) {
     setHealth(health);
     setBaseAttack(baseAttack);
+
   }
 
   /**
@@ -53,6 +55,19 @@ public class CombatStatsComponent extends Component {
     }
     if (entity != null) {
       entity.getEvents().trigger("updateHealth", this.health);
+    }
+  }
+
+  /**
+   * Set the entity's hit timer.
+   *
+   * @param attackTimer attackTimer
+   */
+  public void setAttackTimer(int attackTimer) {
+    if (attackTimer >= 0) {
+      this.attackTimer = attackTimer;
+    } else {
+      this.attackTimer = 0;
     }
   }
 
@@ -92,7 +107,7 @@ public class CombatStatsComponent extends Component {
     System.out.println("GOT INTO HIT and health is now " +  newHealth);
     setHealth(newHealth);
     if (this.isDead()) {
-      entity.dispose();
+      ServiceLocator.getGameArea().removeEntity(this.entity);
     }
   }
 }
