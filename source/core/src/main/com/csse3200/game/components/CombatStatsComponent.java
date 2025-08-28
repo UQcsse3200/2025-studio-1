@@ -1,5 +1,8 @@
 package com.csse3200.game.components;
 
+import com.badlogic.gdx.graphics.Texture;
+import com.csse3200.game.rendering.TextureRenderComponent;
+import com.csse3200.game.services.ServiceLocator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,7 +28,7 @@ public class CombatStatsComponent extends Component {
    * @return is player dead
    */
   public Boolean isDead() {
-    return this.health == 0;
+    return this.health <= 0;
   }
 
   /**
@@ -86,6 +89,10 @@ public class CombatStatsComponent extends Component {
 
   public void hit(CombatStatsComponent attacker) {
     int newHealth = this.getHealth() - attacker.getBaseAttack();
+    System.out.println("GOT INTO HIT and health is now " +  newHealth);
     setHealth(newHealth);
+    if (this.isDead()) {
+      entity.dispose();
+    }
   }
 }
