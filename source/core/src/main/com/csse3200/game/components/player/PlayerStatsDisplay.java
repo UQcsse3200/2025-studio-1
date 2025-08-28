@@ -15,6 +15,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.csse3200.game.components.player.InventoryComponent;
 
 /**
  * A ui component for displaying player stats, e.g. health.
@@ -22,6 +23,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 public class PlayerStatsDisplay extends UIComponent {
   private Table table;
   private ProgressBar healthBar;
+  private ProgressBar currencyBar;
 
   /**
    * Creates reusable ui styles and adds actors to the stage.
@@ -32,6 +34,7 @@ public class PlayerStatsDisplay extends UIComponent {
     addActors();
 
     entity.getEvents().addListener("updateHealth", this::updatePlayerHealthUI);
+    entity.getEvents().addListener("updateCurrency", this::updatePlayerCurrencyUI);
   }
 
   /**
@@ -74,7 +77,23 @@ public class PlayerStatsDisplay extends UIComponent {
     healthBar.setValue(health);
     healthBar.setAnimateDuration(0.0f);
 
+    // Setting Currency bar attributes
+    ProgressBar.ProgressBarStyle currencyBarStyle = new ProgressBar.ProgressBarStyle();
+    currencyBarStyle.background = makeColorDrawable(Color.DARK_GRAY);
+    currencyBarStyle.background.setMinHeight(barHeight);
+    currencyBarStyle.knobBefore = makeColorDrawable(Color.YELLOW);
+    currencyBarStyle.knobBefore.setMinHeight(barHeight);
+    currencyBarStyle.knob = null;
+
+    int currency = entity.getComponent(InventoryComponent.class).getGold();
+    // Currency bar creation, currently hardcoded to be max of 100
+    currencyBar = new ProgressBar(0, 100, 1, false, currencyBarStyle);
+    currencyBar.setValue(currency);
+    currencyBar.setAnimateDuration(0.0f);
+
     table.add(healthBar).width(barWidth).height(barHeight).pad(5);
+    table.row();
+    table.add(currencyBar).width(barWidth).height(barHeight).pad(5);
     stage.addActor(table);
   }
 
@@ -91,10 +110,19 @@ public class PlayerStatsDisplay extends UIComponent {
     healthBar.setValue(health);
   }
 
+  /**
+   * Updates the player's currency on the UI.
+   * @param currency player currency
+   */
+  public void updatePlayerCurrencyUI(int currency) {
+    currencyBar.setValue(currency);
+  }
+
   @Override
   public void dispose() {
     super.dispose();
     healthBar.remove();
+    currencyBar.remove();
   }
 }
 
