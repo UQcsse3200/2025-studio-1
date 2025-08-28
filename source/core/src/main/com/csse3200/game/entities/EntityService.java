@@ -54,4 +54,12 @@ public class EntityService {
       entity.dispose();
     }
   }
+
+  /**
+   * Get a safe copy of the entities list. This is used for UI debug buttons to find enemies.
+   * @return a copy of the entities array.
+   */
+  public Array<Entity> getEntities() {
+    return new Array<>(entities); // return copy to avoid external mutation
+  }
 }
