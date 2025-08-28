@@ -28,14 +28,18 @@ public class PlayerAnimationController extends Component {
         if(!sprinting) {
             if (direction.x > 0) {
                 animator.startAnimation("right_walk");
+                facingRight = true;
             } else {
                 animator.startAnimation("left_walk");
+                facingRight = false;
             }
         } else {
             if (direction.x > 0) {
                 animator.startAnimation("right_run");
+                facingRight = true;
             } else {
                 animator.startAnimation("left_run");
+                facingRight = false;
             }
 
         }
