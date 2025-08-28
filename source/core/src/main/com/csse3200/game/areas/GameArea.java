@@ -45,6 +45,10 @@ public abstract class GameArea implements Disposable {
     ServiceLocator.getEntityService().register(entity);
   }
 
+  /**
+   * Remove an entity
+   * @param entity to be removed
+   */
   public void removeEntity(Entity entity) {
     entity.setEnabled(false);
     areaEntities.remove(entity);
