@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
+import com.csse3200.game.components.ItemHoldComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.factories.*;
 import com.csse3200.game.physics.components.PhysicsProjectileComponent;
@@ -73,7 +74,7 @@ public class ForestGameArea extends GameArea {
     spawnTerrain();
     spawnTrees();
     player = spawnPlayer();
-    //lightsaber = spawnLightsaber();
+    lightsaber = spawnLightsaber();
     //bullet = spawnBullet();
     //bullet.getComponent(PhysicsProjectileComponent.class).fire(new Vector2(1, 1), 5f);
 
@@ -137,6 +138,7 @@ public class ForestGameArea extends GameArea {
 
   private Entity spawnLightsaber() {
     Entity newLightsaber = WeaponsFactory.createLightsaber();
+    newLightsaber.addComponent(new ItemHoldComponent(this.player));
     spawnEntityAt(newLightsaber, PLAYER_SPAWN, true, true);
     return newLightsaber;
   }

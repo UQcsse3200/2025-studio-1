@@ -9,6 +9,7 @@ import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.LightsaberConfig;
 import com.csse3200.game.physics.PhysicsLayer;
 import com.csse3200.game.physics.components.ColliderComponent;
+import com.csse3200.game.physics.components.HitboxComponent;
 import com.csse3200.game.physics.components.PhysicsComponent;
 import com.csse3200.game.services.ServiceLocator;
 
@@ -73,19 +74,27 @@ public class PlayerActions extends Component {
     Sound attackSound = ServiceLocator.getResourceService().getAsset("sounds/Impact4.ogg", Sound.class);
     attackSound.play();
 
-    float attackRange = 2f;
+    float attackRange = 3f;
     int dmg = 10; //CHANGE
 
 
     for (Entity enemy : ServiceLocator.getEntityService().getEntities()) {
         if (enemy != entity) {
-
-          if (enemy.getComponent(ColliderComponent.class).getLayer() == PhysicsLayer.NPC) {
-              float distance = enemy.getCenterPosition().dst(entity.getCenterPosition());
-              if (distance <= attackRange) {
+          CombatStatsComponent enemyStats = enemy.getComponent(CombatStatsComponent.class);
+          CombatStatsComponent attackStats = entity.getComponent(CombatStatsComponent.class);
+          HitboxComponent enemyHitBox = enemy.getComponent(HitboxComponent.class);
+          if (enemyStats != null && attackStats != null
+                  && enemyHitBox != null) {
+            if (enemyHitBox.getLayer() == PhysicsLayer.NPC) {
+                float distance = enemy.getCenterPosition().dst(entity.getCenterPosition());
+                if (distance <= attackRange) {
+                  System.out.println("TRYING TO HIT: " + enemy);
                   enemy.getComponent(CombatStatsComponent.class).hit(entity.getComponent(CombatStatsComponent.class));
-              }
+                }
+            }
+
           }
+
         }
     }
 
