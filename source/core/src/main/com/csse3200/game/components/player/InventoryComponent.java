@@ -6,8 +6,6 @@ import com.csse3200.game.entities.Entity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-
 /**
  * A component intended to be used by the player to track their inventory.
  *
@@ -172,22 +170,23 @@ public class InventoryComponent extends Component {
    * Returns the player's processor's.
    * @return entity's health
    */
-  public int getProcessor() {
-    return this.processor;
+  public int getGold() {
+    return this.gold;
   }
 
   /**
-   * Returns if the player has a certain amount of processor's.
-   * @param processor required amount of processor's
-   * @return player has greater than or equal to the required amount of processor's
+   * Returns if the player has a certain amount of gold.
+   * @param gold required amount of gold
+   * @return player has greater than or equal to the required amount of gold
    */
-  public Boolean hasProcessor(int processor) {
-    return this.processor >= processor;
+  public Boolean hasGold(int gold) {
+    return this.gold >= gold;
   }
 
   /**
-   * Sets the player's processor's. Processor's has a minimum bound of 0.
-   * @param processor processor
+   * Sets the player's gold. Gold has a minimum bound of 0.
+   *
+   * @param gold gold
    */
   public void setProcessor(int processor) {
     int prev = this.processor;
