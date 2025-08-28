@@ -18,9 +18,14 @@ public class InventoryComponent extends Component {
   private int inventoryCount = 0;
   private final int maxCapacity = 5;
   private final int minCapacity = 0;
-  private ArrayList<Entity> items = new ArrayList<Entity>(maxCapacity);
+  private final ArrayList<Entity> items = new ArrayList<Entity>(maxCapacity);
   private int processor;
 
+  /**
+   * Constructs an inventory for the player and a beginning currency amount
+   * to start with.
+   * @param processor The number of processors that the inventory is starting with
+   */
   public InventoryComponent(int processor) {
     setProcessor(processor);
 
@@ -58,7 +63,7 @@ public class InventoryComponent extends Component {
   }
 
   /**
-   * Adds an item to the next inventory position for the player to hold
+   * Adds an item to the next free inventory position for the player to hold
    * i.e. addItem(d) [a, b, _, c] -> [a, b, _, c, d]
    * @param item An item to store in the players inventory
    * @return true if successful, false otherwise
@@ -72,7 +77,8 @@ public class InventoryComponent extends Component {
    * given item.
    * @param index The index of the inventory 0 to 4
    * @param item An item to store in the players inventory
-   * @return true if the item was successfully set, false otherwise
+   * @return true if the item was successfully set, false otherwise or if
+   * something is already there
    */
   public Boolean setItem(int index, Entity item) {
     if (this.inventoryCount >= this.maxCapacity) {
@@ -150,7 +156,7 @@ public class InventoryComponent extends Component {
    * Adds to the player's processor's. The amount added can be negative.
    * @param processor processor to add
    */
-  public void addGold(int processor) {
+  public void addProcessor(int processor) {
     setProcessor(this.processor + processor);
   }
 }
