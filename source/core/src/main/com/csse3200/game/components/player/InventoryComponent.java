@@ -1,8 +1,12 @@
 package com.csse3200.game.components.player;
 
 import com.csse3200.game.components.Component;
+import com.csse3200.game.entities.Entity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A component intended to be used by the player to track their inventory.
@@ -13,7 +17,8 @@ import org.slf4j.LoggerFactory;
 public class InventoryComponent extends Component {
   private static final Logger logger = LoggerFactory.getLogger(InventoryComponent.class);
   private int gold;
-
+  ArrayList<Entity> items = new ArrayList<>();
+  Entity currItem;
   public InventoryComponent(int gold) {
     setGold(gold);
   }
@@ -53,4 +58,19 @@ public class InventoryComponent extends Component {
   public void addGold(int gold) {
     setGold(this.gold + gold);
   }
+
+  public void addItem(Entity item) {
+      items.add(item);
+  }
+
+  public void equipWeapon(Entity item) {
+      if (items.contains(item)) {
+          currItem = item;
+      }
+  }
+
+  public Entity getCurrItem() {
+      return currItem;
+  }
+
 }
