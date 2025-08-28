@@ -21,8 +21,8 @@ import org.slf4j.LoggerFactory;
 public class ForestGameArea extends GameArea {
   private static final Logger logger = LoggerFactory.getLogger(ForestGameArea.class);
   private static final int NUM_TREES = 7;
-  private static final int NUM_GHOSTS = 2;
-  private static final GridPoint2 PLAYER_SPAWN = new GridPoint2(10, 10);
+  private static final int NUM_GHOSTS = 0;
+  private static final GridPoint2 PLAYER_SPAWN = new GridPoint2(3, 7);
   private static final float WALL_WIDTH = 0.1f;
   private static final String[] forestTextures = {
     "images/box_boy_leaf.png",
@@ -38,6 +38,10 @@ public class ForestGameArea extends GameArea {
     "images/iso_grass_1.png",
     "images/iso_grass_2.png",
     "images/iso_grass_3.png"
+  };
+  private static final String[] generalTextures = {
+      "foreg_sprites/general/LongFloor.png",
+      
   };
   private static final String[] forestTextureAtlases = {
     "images/terrain_iso_grass.atlas", "images/ghost.atlas", "images/ghostKing.atlas"
@@ -68,10 +72,10 @@ public class ForestGameArea extends GameArea {
     displayUI();
 
     spawnTerrain();
-    spawnTrees();
     player = spawnPlayer();
     spawnGhosts();
-    spawnGhostKing();
+
+    spawnFloor();
 
     playMusic();
   }
@@ -123,6 +127,17 @@ public class ForestGameArea extends GameArea {
     }
   }
 
+  private void spawnFloor() {
+
+    for (int i = 0; i < 25; i += 4) {
+      GridPoint2 floorspawn = new GridPoint2(i, 1);
+
+      Entity floor = ObstacleFactory.createLongFloor();
+      spawnEntityAt(floor, floorspawn, false, false);
+    }
+
+  }
+
   private Entity spawnPlayer() {
     Entity newPlayer = PlayerFactory.createPlayer();
     spawnEntityAt(newPlayer, PLAYER_SPAWN, true, true);
@@ -159,6 +174,7 @@ public class ForestGameArea extends GameArea {
   private void loadAssets() {
     logger.debug("Loading assets");
     ResourceService resourceService = ServiceLocator.getResourceService();
+    resourceService.loadTextures(generalTextures);
     resourceService.loadTextures(forestTextures);
     resourceService.loadTextureAtlases(forestTextureAtlases);
     resourceService.loadSounds(forestSounds);
@@ -174,6 +190,7 @@ public class ForestGameArea extends GameArea {
     logger.debug("Unloading assets");
     ResourceService resourceService = ServiceLocator.getResourceService();
     resourceService.unloadAssets(forestTextures);
+    resourceService.unloadAssets(generalTextures);
     resourceService.unloadAssets(forestTextureAtlases);
     resourceService.unloadAssets(forestSounds);
     resourceService.unloadAssets(forestMusic);
