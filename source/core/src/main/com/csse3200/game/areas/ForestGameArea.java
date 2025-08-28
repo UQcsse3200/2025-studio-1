@@ -285,7 +285,7 @@ public class ForestGameArea extends GameArea {
       spawnEntityAt(item, randomPos, true, false);
     }
   }
-  
+
   private void spawnFloor() {
 
     for (int i = 0; i < 25; i += 4) {
