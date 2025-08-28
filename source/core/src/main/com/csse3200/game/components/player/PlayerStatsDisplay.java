@@ -23,7 +23,7 @@ import com.csse3200.game.components.player.InventoryComponent;
 public class PlayerStatsDisplay extends UIComponent {
   private Table table;
   private ProgressBar healthBar;
-  private ProgressBar currencyBar;
+  private Label currencyLabel;
 
   /**
    * Creates reusable ui styles and adds actors to the stage.
@@ -77,23 +77,14 @@ public class PlayerStatsDisplay extends UIComponent {
     healthBar.setValue(health);
     healthBar.setAnimateDuration(0.0f);
 
-    // Setting Currency bar attributes
-    ProgressBar.ProgressBarStyle currencyBarStyle = new ProgressBar.ProgressBarStyle();
-    currencyBarStyle.background = makeColorDrawable(Color.DARK_GRAY);
-    currencyBarStyle.background.setMinHeight(barHeight);
-    currencyBarStyle.knobBefore = makeColorDrawable(Color.YELLOW);
-    currencyBarStyle.knobBefore.setMinHeight(barHeight);
-    currencyBarStyle.knob = null;
-
+    // Currency text
     int currency = entity.getComponent(InventoryComponent.class).getGold();
-    // Currency bar creation, currently hardcoded to be max of 100
-    currencyBar = new ProgressBar(0, 100, 1, false, currencyBarStyle);
-    currencyBar.setValue(currency);
-    currencyBar.setAnimateDuration(0.0f);
+    CharSequence currencyText = String.format("Currency: %d", currency);
+    currencyLabel = new Label(currencyText, skin, "large");
 
     table.add(healthBar).width(barWidth).height(barHeight).pad(5);
     table.row();
-    table.add(currencyBar).width(barWidth).height(barHeight).pad(5);
+    table.add(currencyLabel);
     stage.addActor(table);
   }
 
@@ -115,14 +106,15 @@ public class PlayerStatsDisplay extends UIComponent {
    * @param currency player currency
    */
   public void updatePlayerCurrencyUI(int currency) {
-    currencyBar.setValue(currency);
+    CharSequence text = String.format("Currency: %d", currency);
+    currencyLabel.setText(text);
   }
 
   @Override
   public void dispose() {
     super.dispose();
     healthBar.remove();
-    currencyBar.remove();
+    currencyLabel.remove();
   }
 }
 
