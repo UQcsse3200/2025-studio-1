@@ -35,7 +35,7 @@ public class KeyboardPlayerInputComponent extends InputComponent {
         walkDirection.add(Vector2Utils.RIGHT);
         triggerWalkEvent();
         return true;
-      case Keys.Z: // sprint start (Z down)
+      case Keys.SHIFT_LEFT: // sprint start (left shift down)
         entity.getEvents().trigger("sprintStart");
         triggerWalkEvent();
         return true;
@@ -68,7 +68,7 @@ public class KeyboardPlayerInputComponent extends InputComponent {
         walkDirection.sub(Vector2Utils.RIGHT);
         triggerWalkEvent();
         return true;
-      case Keys.Z: // sprint stop (Z up)
+      case Keys.SHIFT_LEFT: // sprint stop (left shift up)
         entity.getEvents().trigger("walkStop");
         entity.getEvents().trigger("sprintStop");
         triggerWalkEvent();
