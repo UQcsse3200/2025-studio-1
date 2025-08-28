@@ -3,6 +3,8 @@ package com.csse3200.game.components.player;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.math.Vector2;
+import com.csse3200.game.components.items.ItemComponent;
+import com.csse3200.game.entities.Entity;
 import com.csse3200.game.input.InputComponent;
 import com.csse3200.game.utils.math.Vector2Utils;
 
@@ -99,7 +101,10 @@ public class KeyboardPlayerInputComponent extends InputComponent {
         triggerSelectItem();
         focusedItem = 4;
         return true;
-      case Keys.P:
+//      case Keys.P:
+//        triggerAddItem();
+//        return true;
+      case Keys.E:
         triggerAddItem();
         return true;
       default:
@@ -120,7 +125,12 @@ public class KeyboardPlayerInputComponent extends InputComponent {
   }
 
   private void triggerAddItem() {
-    entity.getEvents().trigger("add item", "images/mud.png");
+    //entity.getEvents().trigger("add item", "images/mud.png");
+    //Entity e = new Entity().addComponent(new ItemComponent("item", "wopen", 2));
+    //entity.getEvents().trigger("collisionStart", e);
+//    //entity.getEvents().trigger("add item");
+//    entity.getEvents().trigger("pick up");
+//    entity.getEvents().trigger("collisionEnd", e);
   }
   private void triggerSelectItem() {
     entity.getEvents().trigger("focus item", focusedItem);
