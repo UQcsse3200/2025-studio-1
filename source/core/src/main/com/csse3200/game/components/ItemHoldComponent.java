@@ -1,5 +1,6 @@
 package com.csse3200.game.components;
 
+import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.entities.Entity;
 
 public class ItemHoldComponent extends Component {
@@ -11,6 +12,6 @@ public class ItemHoldComponent extends Component {
 
     @Override
     public void update() {
-        entity.setPosition(player.getPosition());
+        entity.setPosition(player.getPosition().add(new Vector2(0.7f, 0.5f)));
     }
 }

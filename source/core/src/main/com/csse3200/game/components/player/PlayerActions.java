@@ -74,9 +74,7 @@ public class PlayerActions extends Component {
     Sound attackSound = ServiceLocator.getResourceService().getAsset("sounds/Impact4.ogg", Sound.class);
     attackSound.play();
 
-    float attackRange = 3f;
-    int dmg = 10; //CHANGE
-
+    float attackRange = 3f; // CHANGE THIS
 
     for (Entity enemy : ServiceLocator.getEntityService().getEntities()) {
         if (enemy != entity) {
@@ -92,11 +90,8 @@ public class PlayerActions extends Component {
                   enemy.getComponent(CombatStatsComponent.class).hit(entity.getComponent(CombatStatsComponent.class));
                 }
             }
-
           }
-
         }
     }
-
   }
 }
