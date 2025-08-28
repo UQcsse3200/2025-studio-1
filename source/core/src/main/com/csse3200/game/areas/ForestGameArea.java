@@ -1,5 +1,6 @@
 package com.csse3200.game.areas;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Vector2;
@@ -68,13 +69,16 @@ public class ForestGameArea extends GameArea {
   @Override
   public void create() {
     loadAssets();
-
+    ServiceLocator.registerGameArea(this);
     displayUI();
 
     spawnTerrain();
     spawnTrees();
-    //player = spawnPlayer();
-    //lightsaber = spawnLightsaber();
+    player = spawnPlayer();
+    lightsaber = spawnLightsaber();
+    this.equipItem(lightsaber);
+    //bullet = spawnBullet();
+    //bullet.getComponent(PhysicsProjectileComponent.class).fire(new Vector2(1, 1), 5f);
 
     spawnGhosts();
     spawnGhostKing();
@@ -134,12 +138,22 @@ public class ForestGameArea extends GameArea {
     return newPlayer;
   }
 
+  private void equipItem(Entity item) {
+    this.player.setCurrItem(item);
+    spawnEntityAt(item, PLAYER_SPAWN, true, true);
+
+  }
+
+  private Entity getItem() {
+    return this.player.getCurrItem();
+  }
+
   private Entity spawnLightsaber() {
     Entity newLightsaber = WeaponsFactory.createLightsaber();
     newLightsaber.addComponent(new ItemHoldComponent(this.player));
-    spawnEntityAt(newLightsaber, PLAYER_SPAWN, true, true);
     return newLightsaber;
   }
+
 
 
   private void spawnGhosts() {
@@ -177,6 +191,8 @@ public class ForestGameArea extends GameArea {
     resourceService.loadSounds(forestSounds);
     resourceService.loadMusic(forestMusic);
 
+
+
     while (!resourceService.loadForMillis(10)) {
       // This could be upgraded to a loading screen
       logger.info("Loading... {}%", resourceService.getProgress());
@@ -191,6 +207,8 @@ public class ForestGameArea extends GameArea {
     resourceService.unloadAssets(forestSounds);
     resourceService.unloadAssets(forestMusic);
   }
+
+
 
   @Override
   public void dispose() {
