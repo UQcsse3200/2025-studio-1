@@ -165,4 +165,11 @@ public class PlayerActions extends Component {
     Sound attackSound = ServiceLocator.getResourceService().getAsset("sounds/Impact4.ogg", Sound.class);
     attackSound.play();
   }
+
+  /**
+   * Cheatcode: infinite jumps
+   */
+  public void infJumps() {
+    this.jumpsLeft = 9999;
+  }
 }
