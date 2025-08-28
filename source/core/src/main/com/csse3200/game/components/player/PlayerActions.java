@@ -13,12 +13,13 @@ import com.csse3200.game.services.ServiceLocator;
  */
 public class PlayerActions extends Component {
   private static final Vector2 MAX_SPEED = new Vector2(3f, 3f); // Metres per second
+  private static final Vector2 SPRINT_SPEED = new Vector2(20f, 3f);
   private static final Vector2 JUMP_VELOCITY = new Vector2(0f, 2f);
 
   private PhysicsComponent physicsComponent;
   private Vector2 walkDirection = Vector2.Zero.cpy();
   private boolean moving = false;
-
+  private boolean sprinting = false; // If 'Z' is held
   @Override
   public void create() {
     physicsComponent = entity.getComponent(PhysicsComponent.class);
@@ -26,6 +27,9 @@ public class PlayerActions extends Component {
     entity.getEvents().addListener("walkStop", this::stopWalking);
     entity.getEvents().addListener("attack", this::attack);
     entity.getEvents().addListener("jump", this::jump);
+    entity.getEvents().addListener("sprintStart", () -> sprinting = true);
+    entity.getEvents().addListener("sprintStop",  () -> sprinting = false);
+
   }
 
   @Override
@@ -38,7 +42,11 @@ public class PlayerActions extends Component {
   private void updateSpeed() {
     Body body = physicsComponent.getBody();
     Vector2 velocity = body.getLinearVelocity();
-    float targetVx = walkDirection.cpy().x * MAX_SPEED.x;
+
+    boolean hasDir = !walkDirection.isZero(0.0001f);
+    float maxX = (sprinting && hasDir) ? SPRINT_SPEED.x : MAX_SPEED.x;
+
+    float targetVx = walkDirection.x * maxX;
 
     // impulse = (desiredVel - currentVel) * mass
     float impulseX = (targetVx - velocity.x) * body.getMass();
@@ -63,6 +71,7 @@ public class PlayerActions extends Component {
     updateSpeed();
     moving = false;
   }
+
 
   void jump() {
     Body body = physicsComponent.getBody();
