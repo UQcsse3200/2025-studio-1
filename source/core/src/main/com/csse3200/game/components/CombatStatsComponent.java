@@ -102,12 +102,18 @@ public class CombatStatsComponent extends Component {
     }
   }
 
+  /**
+   * Allows the entity to be hit by some attacker and deal some damage
+   * @param attacker the entity attacking
+   */
   public void hit(CombatStatsComponent attacker) {
+
     int newHealth = this.getHealth() - attacker.getBaseAttack();
-    System.out.println("GOT INTO HIT and health is now " +  newHealth);
     setHealth(newHealth);
     if (this.isDead()) {
-      ServiceLocator.getGameArea().removeEntity(this.entity);
+      if (ServiceLocator.getGameArea() != null) {
+        ServiceLocator.getGameArea().removeEntity(this.entity);
+      }
     }
   }
 }
