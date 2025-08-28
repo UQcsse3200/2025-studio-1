@@ -73,10 +73,8 @@ public class ForestGameArea extends GameArea {
 
     spawnTerrain();
     spawnTrees();
-    player = spawnPlayer();
-    lightsaber = spawnLightsaber();
-    //bullet = spawnBullet();
-    //bullet.getComponent(PhysicsProjectileComponent.class).fire(new Vector2(1, 1), 5f);
+    //player = spawnPlayer();
+    //lightsaber = spawnLightsaber();
 
     spawnGhosts();
     spawnGhostKing();
@@ -143,12 +141,6 @@ public class ForestGameArea extends GameArea {
     return newLightsaber;
   }
 
-  private Entity spawnBullet() {
-
-    Entity newBullet = ProjectileFactory.createPistolBullet();
-    spawnEntityAt(newBullet, PLAYER_SPAWN, true, true);
-    return newBullet;
-  }
 
   private void spawnGhosts() {
     GridPoint2 minPos = new GridPoint2(0, 0);
