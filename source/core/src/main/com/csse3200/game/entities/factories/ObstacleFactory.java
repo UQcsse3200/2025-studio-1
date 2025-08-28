@@ -7,6 +7,8 @@ import com.csse3200.game.physics.PhysicsUtils;
 import com.csse3200.game.physics.components.ColliderComponent;
 import com.csse3200.game.physics.components.PhysicsComponent;
 import com.csse3200.game.rendering.TextureRenderComponent;
+import com.badlogic.gdx.graphics.Color;
+import com.csse3200.game.rendering.SolidColorRenderComponent;
 
 /**
  * Factory to create obstacle entities.
@@ -45,6 +47,24 @@ public class ObstacleFactory {
         .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
     wall.setScale(width, height);
     return wall;
+  }
+
+  /**
+   * Creates a door trigger as a thin sensor line (no collision) that can be placed at a border.
+   * The door can be detected via collisionStart events with the player's hitbox.
+   * @param width width in world units
+   * @param height height in world units
+   * @return sensor entity
+   */
+  public static Entity createDoorTrigger(float width, float height) {
+    Entity trigger = new Entity()
+        .addComponent(new PhysicsComponent().setBodyType(BodyType.StaticBody))
+        .addComponent(new ColliderComponent().setLayer(PhysicsLayer.DEFAULT))
+        .addComponent(new SolidColorRenderComponent(Color.BLACK));
+    // Make collider a sensor so it doesn't block movement
+    trigger.getComponent(ColliderComponent.class).setSensor(true);
+    trigger.setScale(width, height);
+    return trigger;
   }
 
   private ObstacleFactory() {
