@@ -12,9 +12,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Big, simple inventory bar (single row).
- * Each slot is a Stack: [background square (always visible)] + [item image (optional)].
- * Supports highlighted vs non-highlighted boxes.
+ * The UI component of the inventory.
+ * Use the triggers: "add item," "remove item," "remove all items," "focus item"
  */
 public class PlayerInventoryDisplay extends UIComponent {
     private static final Logger log = LoggerFactory.getLogger(PlayerInventoryDisplay.class);
@@ -25,7 +24,6 @@ public class PlayerInventoryDisplay extends UIComponent {
     private static final int SLOTS = 5;
     private static final float SLOT_SIZE = 96f;
     private static final float SLOT_PAD  = 10f;
-
     // Box textures (make sure both are loaded by ResourceService)
     private static final String BG_TEX          = "images/ghost_1.png";        // normal
     private static final String BG_TEX_FOCUSED  = "images/ghost_king.png";  // highlighted
@@ -36,13 +34,17 @@ public class PlayerInventoryDisplay extends UIComponent {
     public void create() {
         super.create();
         buildUI();
-
         entity.getEvents().addListener("add item", this::addInventoryItem);
         entity.getEvents().addListener("remove item", this::clearSlot);
         entity.getEvents().addListener("remove all items", this::clearAll);
         entity.getEvents().addListener("focus item", this::setFocusedIndex);
     }
 
+    /**
+     * This function will build the basic structure of the inventory on the screen of
+     * the player.
+     * This will happen on creation.
+     */
     private void buildUI() {
         table = new Table();
         table.setFillParent(true);
@@ -92,6 +94,12 @@ public class PlayerInventoryDisplay extends UIComponent {
         setFocusedIndex(-1);
     }
 
+
+    /**
+     * Function that finds the first available slot
+     * @return index of the place of the first empty spot. If none are found
+     * returns -1
+     */
     private int firstEmptySlot() {
         for (int i = 0; i < slots.size; i++) {
             if (slots.get(i).isEmpty()) return i;
