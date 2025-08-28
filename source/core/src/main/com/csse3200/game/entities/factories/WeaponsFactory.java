@@ -41,18 +41,13 @@ public class WeaponsFactory {
     /**
      * Creates a ghost entity.
      *
-     * @param target entity to chase
      * @return entity
      */
     public static Entity createLightsaber() {
         Entity lightsaber =
-                new Entity()
-                        .addComponent(new TextureRenderComponent("images/templightsaber.png"))
-//                        .addComponent(new PhysicsComponent())
-//                        .addComponent(new ColliderComponent())
-//                        .addComponent(new HitboxComponent().setLayer(PhysicsLayer.PLAYER))
-                        .addComponent(new CombatStatsComponent(0, configs.baseAttack));
-
+            new Entity()
+                .addComponent(new TextureRenderComponent("images/templightsaber.png"))
+                .addComponent(new CombatStatsComponent(0, configs.baseAttack));
 
         lightsaber.getComponent(TextureRenderComponent.class).scaleEntity();
         return lightsaber;

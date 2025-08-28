@@ -62,14 +62,21 @@ public class Entity {
     this.enabled = enabled;
   }
 
+  /**
+   * Set the entity's current item
+   * @param item item to be set
+   */
   public void setCurrItem(Entity item) {
     this.currItem = item;
   }
 
+  /**
+   * Get the entity's current item
+   * @return the current item
+   */
   public Entity getCurrItem() {
     return this.currItem;
   }
-
 
   /**
    * Marks an entity for removal, is disposed and deregistered from the entity service at
