@@ -60,15 +60,15 @@ class CombatStatsComponentTest {
 
   @Test
   void enemyShouldBeDeadWhenHealthZero() {
-    CombatStatsComponent ghost = new CombatStatsComponent(50, 10);
-    assertFalse(ghost.isDead());
-    ghost.addHealth(-50);
-    assertEquals(0, ghost.getHealth());
-    assertTrue(ghost.isDead());
+    CombatStatsComponent enemy = new CombatStatsComponent(50, 10);
+    assertFalse(enemy.isDead());
+    enemy.addHealth(-50);
+    assertEquals(0, enemy.getHealth());
+    assertTrue(enemy.isDead());
     // Overkill
-    ghost.addHealth(-100);
-    assertEquals(0, ghost.getHealth());
-    assertTrue(ghost.isDead());
+    enemy.addHealth(-100);
+    assertEquals(0, enemy.getHealth());
+    assertTrue(enemy.isDead());
   }
 
   @Test
@@ -82,15 +82,15 @@ class CombatStatsComponentTest {
     player.addComponent(inventory);
     entityService.register(player);
 
-    // Create ghost entity with CombatStatsComponent and GhostDeathRewardComponent
-    Entity ghost = new Entity();
-    CombatStatsComponent ghostStats = new CombatStatsComponent(10, 0);
-    ghost.addComponent(ghostStats);
-    ghost.addComponent(new EnemyDeathRewardComponent(15)); // Reward: 15 gold
-    entityService.register(ghost);
+    // Create enemy entity with CombatStatsComponent and EnemyDeathRewardComponent
+    Entity enemy = new Entity();
+    CombatStatsComponent enemyStats = new CombatStatsComponent(10, 0);
+    enemy.addComponent(enemyStats);
+    enemy.addComponent(new EnemyDeathRewardComponent(15)); // Reward: 15 gold
+    entityService.register(enemy);
 
     // Damage ghost until it dies
-    ghostStats.addHealth(-10);
+    enemyStats.addHealth(-10);
 
     // Assert player received gold
     assertEquals(15, inventory.getGold());
