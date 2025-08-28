@@ -23,7 +23,7 @@ import com.csse3200.game.components.player.InventoryComponent;
 public class PlayerStatsDisplay extends UIComponent {
   private Table table;
   private ProgressBar healthBar;
-  private Label currencyLabel;
+  private Label processorLabel;
 
   /**
    * Creates reusable ui styles and adds actors to the stage.
@@ -34,7 +34,7 @@ public class PlayerStatsDisplay extends UIComponent {
     addActors();
 
     entity.getEvents().addListener("updateHealth", this::updatePlayerHealthUI);
-    entity.getEvents().addListener("updateCurrency", this::updatePlayerCurrencyUI);
+    entity.getEvents().addListener("updateProcessor", this::updatePlayerProcessorUI);
   }
 
   /**
@@ -77,14 +77,14 @@ public class PlayerStatsDisplay extends UIComponent {
     healthBar.setValue(health);
     healthBar.setAnimateDuration(0.0f);
 
-    // Currency text
-    int currency = entity.getComponent(InventoryComponent.class).getGold();
-    CharSequence currencyText = String.format("Currency: %d", currency);
-    currencyLabel = new Label(currencyText, skin, "large");
+    // processor text
+    int processor = entity.getComponent(InventoryComponent.class).getProcessor();
+    CharSequence processorText = String.format("Processor: %d", processor);
+    processorLabel = new Label(processorText, skin, "large");
 
     table.add(healthBar).width(barWidth).height(barHeight).pad(5);
     table.row();
-    table.add(currencyLabel);
+    table.add(processorLabel);
     stage.addActor(table);
   }
 
@@ -102,18 +102,18 @@ public class PlayerStatsDisplay extends UIComponent {
   }
 
   /**
-   * Updates the player's currency on the UI.
-   * @param currency player currency
+   * Updates the player's processor on the UI.
+   * @param processor player processor
    */
-  public void updatePlayerCurrencyUI(int currency) {
-    CharSequence text = String.format("Currency: %d", currency);
-    currencyLabel.setText(text);
+  public void updatePlayerProcessorUI(int processor) {
+    CharSequence text = String.format("Processor: %d", processor);
+    processorLabel.setText(text);
   }
 
   @Override
   public void dispose() {
     super.dispose();
     healthBar.remove();
-    currencyLabel.remove();
+    processorLabel.remove();
   }
 }
