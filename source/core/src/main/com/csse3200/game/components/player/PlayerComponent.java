@@ -7,4 +7,3 @@ import com.csse3200.game.components.Component;
  */
 public class PlayerComponent extends Component {
 }
-
