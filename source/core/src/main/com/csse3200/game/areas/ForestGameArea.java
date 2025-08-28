@@ -35,12 +35,12 @@ public class ForestGameArea extends GameArea {
   private static final int NUM_TREES = 7;
   private static final int NUM_ROBOTS = 1;
   private static final int NUM_ITEMS = 5;//this is for ItemFactory
-  private static final int NUM_GHOSTS = 2;
   private static final int NUM_GHOST_GPTS = 4;
   private static final int NUM_DEEP_SPIN = 3;
   private static final int NUM_GROK_DROID = 3;
   private static final int NUM_VROOMBA = 3;
-  private static final GridPoint2 PLAYER_SPAWN = new GridPoint2(10, 10);
+  private static final int NUM_GHOSTS = 0;
+  private static final GridPoint2 PLAYER_SPAWN = new GridPoint2(3, 7);
   private static final float WALL_WIDTH = 0.1f;
   private static final String[] forestTextures = {
     "images/box_boy_leaf.png",
@@ -80,7 +80,10 @@ public class ForestGameArea extends GameArea {
     "images/mud.png",
     "images/heart.png"
   };
-
+  private static final String[] generalTextures = {
+      "foreg_sprites/general/LongFloor.png",
+      
+  };
   private static final String[] forestTextureAtlases = {
     "images/terrain_iso_grass.atlas", "images/ghost.atlas", "images/ghostKing.atlas",
     "images/robot-2.atlas", "images/fireball.atlas", "images/blackhole.atlas", "images/Robot_1.atlas",
@@ -131,7 +134,6 @@ public class ForestGameArea extends GameArea {
     ServiceLocator.registerGameArea(this);
     displayUI();
     spawnTerrain();
-    spawnTrees();
     player = spawnPlayer();
     dagger = spawnDagger();
     pistol = spawnPistol();
@@ -159,6 +161,9 @@ public class ForestGameArea extends GameArea {
     spawnDeepspin();
     spawnGrokDroid();
     spawnVroomba();
+
+    spawnFloor();
+
     playMusic();
     spawnItems();
   }
@@ -279,6 +284,17 @@ public class ForestGameArea extends GameArea {
       Entity item = ItemFactory.createItem();
       spawnEntityAt(item, randomPos, true, false);
     }
+  }
+  
+  private void spawnFloor() {
+
+    for (int i = 0; i < 25; i += 4) {
+      GridPoint2 floorspawn = new GridPoint2(i, 1);
+
+      Entity floor = ObstacleFactory.createLongFloor();
+      spawnEntityAt(floor, floorspawn, false, false);
+    }
+
   }
 
   private Entity spawnPlayer() {
@@ -445,6 +461,7 @@ public class ForestGameArea extends GameArea {
   private void loadAssets() {
     logger.debug("Loading assets");
     ResourceService resourceService = ServiceLocator.getResourceService();
+    resourceService.loadTextures(generalTextures);
     resourceService.loadTextures(forestTextures);
     resourceService.loadTextureAtlases(forestTextureAtlases);
     resourceService.loadSounds(forestSounds);
@@ -460,6 +477,7 @@ public class ForestGameArea extends GameArea {
     logger.debug("Unloading assets");
     ResourceService resourceService = ServiceLocator.getResourceService();
     resourceService.unloadAssets(forestTextures);
+    resourceService.unloadAssets(generalTextures);
     resourceService.unloadAssets(forestTextureAtlases);
     resourceService.unloadAssets(forestSounds);
     resourceService.unloadAssets(forestMusic);
