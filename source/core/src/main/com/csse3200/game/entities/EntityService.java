@@ -1,7 +1,6 @@
 package com.csse3200.game.entities;
 
 import com.badlogic.gdx.utils.Array;
-import com.csse3200.game.components.player.PlayerComponent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,16 +16,6 @@ public class EntityService {
   private static final int INITIAL_CAPACITY = 16;
 
   private final Array<Entity> entities = new Array<>(false, INITIAL_CAPACITY);
-
-  // Singleton instance
-  private static EntityService instance;
-
-  public static EntityService getInstance() {
-    if (instance == null) {
-      instance = new EntityService();
-    }
-    return instance;
-  }
 
   /**
    * Register a new entity with the entity service. The entity will be created and start updating.
@@ -67,14 +56,10 @@ public class EntityService {
   }
 
   /**
-   * Returns the first entity with a PlayerComponent, or null if none found.
+   * Get a safe copy of the entities list. This is used for UI debug buttons to find enemies.
+   * @return a copy of the entities array.
    */
-  public Entity getPlayer() {
-    for (Entity entity : entities) {
-      if (entity.getComponent(PlayerComponent.class) != null) {
-        return entity;
-      }
-    }
-    return null;
+  public Array<Entity> getEntities() {
+    return new Array<>(entities); // return copy to avoid external mutation
   }
 }

@@ -42,8 +42,12 @@ public class InventoryComponent extends Component {
    * @param gold gold
    */
   public void setGold(int gold) {
+    int prev = this.gold;
     this.gold = Math.max(gold, 0);
-    logger.debug("Setting gold to {}", this.gold);
+    // Fire event only after entity attached (not during constructor before setEntity)
+    if (entity != null && prev != this.gold) {
+      entity.getEvents().trigger("updateCurrency", this.gold);
+    }
   }
 
   /**
