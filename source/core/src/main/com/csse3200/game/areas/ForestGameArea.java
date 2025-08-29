@@ -78,7 +78,6 @@ public class ForestGameArea extends GameArea {
     player = spawnPlayer();
     lightsaber = spawnLightsaber();
     this.equipItem(lightsaber);
-
     spawnGhosts();
     spawnGhostKing();
     playMusic();
@@ -151,6 +150,13 @@ public class ForestGameArea extends GameArea {
     Entity newLightsaber = WeaponsFactory.createLightsaber();
     newLightsaber.addComponent(new ItemHoldComponent(this.player));
     return newLightsaber;
+  }
+
+  private Entity spawnBullet() {
+
+    Entity newBullet = ProjectileFactory.createPistolBullet();
+    spawnEntityAt(newBullet, new GridPoint2(5, 5), true, true);
+    return newBullet;
   }
 
 

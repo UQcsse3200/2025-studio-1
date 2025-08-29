@@ -43,6 +43,11 @@ public class ProjectileFactory {
                 .addComponent(new HitboxComponent().setLayer(PhysicsLayer.FRIENDLY_PROJECTILE))
                 .addComponent(new TouchAttackComponent(PhysicsLayer.NPC, 1f));
 
+        ColliderComponent collider = pistolBullet.getComponent(ColliderComponent.class);
+        collider.setLayer(PhysicsLayer.FRIENDLY_PROJECTILE)
+                .setFilter(PhysicsLayer.FRIENDLY_PROJECTILE, (short) (PhysicsLayer.NPC));
+
+
         PhysicsUtils.setScaledCollider(pistolBullet, 0.5f, 0.2f);
         pistolBullet.scaleHeight(1.5f);
         return pistolBullet;
