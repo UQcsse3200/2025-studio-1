@@ -169,6 +169,11 @@ public class MainGameScreen extends ScreenAdapter {
     ServiceLocator.getEntityService().register(ui);
   }
 
+  /**
+   * Creates and displays the pause menu overlay on top of the game.
+   * Registers the overlay entity so it can capture input and show the UI,
+   * and listens for the "resume" event to remove itself when requested.
+   */
   private void showPauseOverlay() {
     Stage stage = ServiceLocator.getRenderService().getStage();
     pauseOverlay = new Entity()
@@ -179,6 +184,10 @@ public class MainGameScreen extends ScreenAdapter {
     isPauseVisible = true;
   }
 
+  /**
+   * Removes and disposes the pause menu overlay.
+   * Unregisters the overlay entity so it is no longer drawn or receives input.
+   */
   private void hidePauseOverlay() {
     if (pauseOverlay != null) {
       pauseOverlay.dispose();
@@ -187,5 +196,4 @@ public class MainGameScreen extends ScreenAdapter {
     }
     isPauseVisible = false;
   }
-
 }
