@@ -39,13 +39,26 @@ public class EntityService {
     entities.removeValue(entity, true);
   }
 
+
+
+
   /**
    * Update all registered entities. Should only be called from the main game loop.
    */
   public void update() {
+
+    Array<Entity> toRemove = new Array<>();
     for (Entity entity : entities) {
       entity.earlyUpdate();
       entity.update();
+
+      if (entity.getToRemove()) {
+        toRemove.add(entity);
+      }
+    }
+    for (Entity entity : toRemove) {
+      entity.dispose();
+      unregister(entity);
     }
   }
 
