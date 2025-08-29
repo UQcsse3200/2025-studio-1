@@ -117,7 +117,7 @@ loadScripts(document, 'script');</script>
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(int)" class="member-name-link">InventoryComponent</a><wbr>(int&nbsp;gold)</code></div>
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(int)" class="member-name-link">InventoryComponent</a><wbr>(int&nbsp;processor)</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 </div>
 </section>
@@ -134,24 +134,68 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#addGold(int)" class="member-name-link">addGold</a><wbr>(int&nbsp;gold)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#addGold(int)" class="member-name-link">addGold</a><wbr>(int&nbsp;processor)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Adds to the player's gold.</div>
+<div class="block">Adds to the player's processor's.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Boolean.html" title="class or interface in java.lang" class="external-link">Boolean</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#addItem(com.csse3200.game.entities.Entity)" class="member-name-link">addItem</a><wbr>(<a href="../../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a>&nbsp;item)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Adds an item to the next inventory position for the player to hold
+ i.e.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#get(int)" class="member-name-link">get</a><wbr>(int&nbsp;index)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Returns the item at the given index.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/ArrayList.html" title="class or interface in java.util" class="external-link">ArrayList</a><wbr>&lt;<a href="../../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a>&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getInventory()" class="member-name-link">getInventory</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Returns a copy of the players current inventory.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getProcessor()" class="member-name-link">getProcessor</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Returns the player's processor's.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getGold()" class="member-name-link">getGold</a>()</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getSize()" class="member-name-link">getSize</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Returns the player's gold.</div>
+<div class="block">Returns the number of items currently in the inventory</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Boolean.html" title="class or interface in java.lang" class="external-link">Boolean</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#hasGold(int)" class="member-name-link">hasGold</a><wbr>(int&nbsp;gold)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#hasProcessor(int)" class="member-name-link">hasProcessor</a><wbr>(int&nbsp;processor)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Returns if the player has a certain amount of gold.</div>
+<div class="block">Returns if the player has a certain amount of processor's.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Boolean.html" title="class or interface in java.lang" class="external-link">Boolean</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isEmpty()" class="member-name-link">isEmpty</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Checks if the current inventory is empty or not</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Boolean.html" title="class or interface in java.lang" class="external-link">Boolean</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isFull()" class="member-name-link">isFull</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Returns true if the players inventory is full, false otherwise</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Boolean.html" title="class or interface in java.lang" class="external-link">Boolean</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#remove(int)" class="member-name-link">remove</a><wbr>(int&nbsp;index)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Removes the item at the given index (must be between 0 and 4) and replaces it
+ with null vlaue.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Boolean.html" title="class or interface in java.lang" class="external-link">Boolean</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setItem(int,com.csse3200.game.entities.Entity)" class="member-name-link">setItem</a><wbr>(int&nbsp;index,
+ <a href="../../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a>&nbsp;item)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">sets the provided item to the inventory in positions 0 to 4 to be the
+ given item.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setGold(int)" class="member-name-link">setGold</a><wbr>(int&nbsp;gold)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setProcessor(int)" class="member-name-link">setProcessor</a><wbr>(int&nbsp;processor)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Sets the player's gold.</div>
+<div class="block">Sets the player's processor's.</div>
 </div>
 </div>
 </div>
@@ -176,7 +220,7 @@ loadScripts(document, 'script');</script>
 <li>
 <section class="detail" id="&lt;init&gt;(int)">
 <h3>InventoryComponent</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">InventoryComponent</span><wbr><span class="parameters">(int&nbsp;gold)</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">InventoryComponent</span><wbr><span class="parameters">(int&nbsp;processor)</span></div>
 </section>
 </li>
 </ul>
@@ -188,10 +232,111 @@ loadScripts(document, 'script');</script>
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="getGold()">
-<h3>getGold</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">getGold</span>()</div>
-<div class="block">Returns the player's gold.</div>
+<section class="detail" id="getInventory()">
+<h3>getInventory</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/ArrayList.html" title="class or interface in java.util" class="external-link">ArrayList</a>&lt;<a href="../../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a>&gt;</span>&nbsp;<span class="element-name">getInventory</span>()</div>
+<div class="block">Returns a copy of the players current inventory.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>An ArrayList containing the players</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getSize()">
+<h3>getSize</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">getSize</span>()</div>
+<div class="block">Returns the number of items currently in the inventory</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>The number of items in the inventory</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="get(int)">
+<h3>get</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a></span>&nbsp;<span class="element-name">get</span><wbr><span class="parameters">(int&nbsp;index)</span></div>
+<div class="block">Returns the item at the given index.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>index</code> - The position of the item in the players inventory (0..4)</dd>
+<dt>Returns:</dt>
+<dd>The item at the given position, NULL if nothing there or index not in [0,4]</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="addItem(com.csse3200.game.entities.Entity)">
+<h3>addItem</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Boolean.html" title="class or interface in java.lang" class="external-link">Boolean</a></span>&nbsp;<span class="element-name">addItem</span><wbr><span class="parameters">(<a href="../../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a>&nbsp;item)</span></div>
+<div class="block">Adds an item to the next inventory position for the player to hold
+ i.e. addItem(d) [a, b, _, c] -&gt; [a, b, _, c, d]</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>item</code> - An item to store in the players inventory</dd>
+<dt>Returns:</dt>
+<dd>true if successful, false otherwise</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="setItem(int,com.csse3200.game.entities.Entity)">
+<h3>setItem</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Boolean.html" title="class or interface in java.lang" class="external-link">Boolean</a></span>&nbsp;<span class="element-name">setItem</span><wbr><span class="parameters">(int&nbsp;index,
+ <a href="../../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a>&nbsp;item)</span></div>
+<div class="block">sets the provided item to the inventory in positions 0 to 4 to be the
+ given item.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>index</code> - The index of the inventory 0 to 4</dd>
+<dd><code>item</code> - An item to store in the players inventory</dd>
+<dt>Returns:</dt>
+<dd>true if the item was successfully set, false otherwise</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="remove(int)">
+<h3>remove</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Boolean.html" title="class or interface in java.lang" class="external-link">Boolean</a></span>&nbsp;<span class="element-name">remove</span><wbr><span class="parameters">(int&nbsp;index)</span></div>
+<div class="block">Removes the item at the given index (must be between 0 and 4) and replaces it
+ with null vlaue.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>index</code> - the position of the item to be removed.</dd>
+<dt>Returns:</dt>
+<dd>true if successful, false otherwise</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="isEmpty()">
+<h3>isEmpty</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Boolean.html" title="class or interface in java.lang" class="external-link">Boolean</a></span>&nbsp;<span class="element-name">isEmpty</span>()</div>
+<div class="block">Checks if the current inventory is empty or not</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>true if the inventory is empty, false otherwise</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="isFull()">
+<h3>isFull</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Boolean.html" title="class or interface in java.lang" class="external-link">Boolean</a></span>&nbsp;<span class="element-name">isFull</span>()</div>
+<div class="block">Returns true if the players inventory is full, false otherwise</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>true if the inventory is full, false otherwise</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getProcessor()">
+<h3>getProcessor</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">getProcessor</span>()</div>
+<div class="block">Returns the player's processor's.</div>
 <dl class="notes">
 <dt>Returns:</dt>
 <dd>entity's health</dd>
@@ -199,37 +344,37 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="hasGold(int)">
-<h3>hasGold</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Boolean.html" title="class or interface in java.lang" class="external-link">Boolean</a></span>&nbsp;<span class="element-name">hasGold</span><wbr><span class="parameters">(int&nbsp;gold)</span></div>
-<div class="block">Returns if the player has a certain amount of gold.</div>
+<section class="detail" id="hasProcessor(int)">
+<h3>hasProcessor</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Boolean.html" title="class or interface in java.lang" class="external-link">Boolean</a></span>&nbsp;<span class="element-name">hasProcessor</span><wbr><span class="parameters">(int&nbsp;processor)</span></div>
+<div class="block">Returns if the player has a certain amount of processor's.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>gold</code> - required amount of gold</dd>
+<dd><code>processor</code> - required amount of processor's</dd>
 <dt>Returns:</dt>
-<dd>player has greater than or equal to the required amount of gold</dd>
+<dd>player has greater than or equal to the required amount of processor's</dd>
 </dl>
 </section>
 </li>
 <li>
-<section class="detail" id="setGold(int)">
-<h3>setGold</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setGold</span><wbr><span class="parameters">(int&nbsp;gold)</span></div>
-<div class="block">Sets the player's gold. Gold has a minimum bound of 0.</div>
+<section class="detail" id="setProcessor(int)">
+<h3>setProcessor</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setProcessor</span><wbr><span class="parameters">(int&nbsp;processor)</span></div>
+<div class="block">Sets the player's processor's. Processor's has a minimum bound of 0.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>gold</code> - gold</dd>
+<dd><code>processor</code> - processor</dd>
 </dl>
 </section>
 </li>
 <li>
 <section class="detail" id="addGold(int)">
 <h3>addGold</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">addGold</span><wbr><span class="parameters">(int&nbsp;gold)</span></div>
-<div class="block">Adds to the player's gold. The amount added can be negative.</div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">addGold</span><wbr><span class="parameters">(int&nbsp;processor)</span></div>
+<div class="block">Adds to the player's processor's. The amount added can be negative.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>gold</code> - gold to add</dd>
+<dd><code>processor</code> - processor to add</dd>
 </dl>
 </section>
 </li>
