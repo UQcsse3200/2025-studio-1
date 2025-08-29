@@ -37,6 +37,28 @@ public class ItemComponent extends EntityComponent {
             "\nPresnt count : " + count +
             "\nType :  " + getType());
     }
+
+    //public void updateCount() -- to increment/decrement count
+
+
+    /**
+     *
+     * @return the description for the
+     */
+    public void setDescription(){
+
+    }
+
+    /**
+     *
+     * @return
+     */
+    public String getDescription(){
+        return ("Item : " + this.getName()
+            + "\nID : " + this.getId()
+            + "\nType : " + this.getType()
+            + "\nCount : " + this.getCount());
+    }
 }
 
 

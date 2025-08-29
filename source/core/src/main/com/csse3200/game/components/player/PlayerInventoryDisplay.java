@@ -6,10 +6,14 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Scaling;
+import com.csse3200.game.entities.Entity;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.UIComponent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * The UI component of the inventory.
@@ -30,6 +34,20 @@ public class PlayerInventoryDisplay extends UIComponent {
 
     private int focusedIndex = -1;
 
+    private final InventoryComponent inventory;
+    private final Map<String, String> itemPaths = new HashMap<String, String>();
+
+    /**
+     * Constructs the PlayerInventory display, takes in an InventoryComponent
+     * so that it can handle displaying the item textures etc.
+     * @param inventory An already initialised InventoryComponent
+     */
+    public PlayerInventoryDisplay(InventoryComponent inventory) {
+        this.inventory = inventory;
+
+        itemPaths.put("mud", "imgaes/mud.png"); // populate the map with example
+    }
+
     @Override
     public void create() {
         super.create();
@@ -38,6 +56,16 @@ public class PlayerInventoryDisplay extends UIComponent {
         entity.getEvents().addListener("remove item", this::clearSlot);
         entity.getEvents().addListener("remove all items", this::clearAll);
         entity.getEvents().addListener("focus item", this::setFocusedIndex);
+
+        entity.getEvents().addListener("update display", this::checkInventory);
+    }
+
+    private void checkInventory(Array<String> inventoryTex) {
+        for (int idx = 0; idx < SLOTS; idx++) {
+            if (inventoryTex.get(idx) == null)
+                continue;
+            addItem(idx, inventoryTex.get(idx));
+        }
     }
 
     /**
@@ -52,8 +80,10 @@ public class PlayerInventoryDisplay extends UIComponent {
         table.padBottom(20f);
 
         // Preload background drawables
-        Drawable normalBg  = new Image(ServiceLocator.getResourceService().getAsset(BG_TEX, Texture.class)).getDrawable();
-        Drawable focusBg   = new Image(ServiceLocator.getResourceService().getAsset(BG_TEX_FOCUSED, Texture.class)).getDrawable();
+        Drawable normalBg  = new Image(ServiceLocator.getResourceService()
+                .getAsset(BG_TEX, Texture.class)).getDrawable();
+        Drawable focusBg   = new Image(ServiceLocator.getResourceService()
+                .getAsset(BG_TEX_FOCUSED, Texture.class)).getDrawable();
 
         for (int i = 0; i < SLOTS; i++) {
             Slot slot = new Slot(normalBg, focusBg);
