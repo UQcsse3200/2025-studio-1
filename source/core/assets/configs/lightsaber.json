@@ -1,4 +1,5 @@
 {
   "baseAttack": 10,
-  "hitTimer" : 0.8
+  "hitTimer" : 0.8,
+  "range" : 3.0
 }

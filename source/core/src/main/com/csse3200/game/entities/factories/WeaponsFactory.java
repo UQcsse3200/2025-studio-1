@@ -25,38 +25,47 @@ import com.csse3200.game.rendering.TextureRenderComponent;
  */
 public class WeaponsFactory {
     private static final LightsaberConfig lightsaberConfigs =
-            FileLoader.readClass(LightsaberConfig.class, "lightsaberConfigs/lightsaber.json");
+            FileLoader.readClass(LightsaberConfig.class, "configs/lightsaber.json");
     private static final DaggerConfig daggerConfigs =
             FileLoader.readClass(DaggerConfig.class, "configs/dagger.json");
 
     /**
-     * Creates a ghost entity.
+     * Creates a lightsaber entity.
      *
-     * @param target entity to chase
      * @return entity
      */
     public static Entity createLightsaber() {
         Entity lightsaber =
-                new Entity()
-                        .addComponent(new TextureRenderComponent("images/templightsaber.png"))
-//                        .addComponent(new PhysicsComponent())
-//                        .addComponent(new ColliderComponent())
-//                        .addComponent(new HitboxComponent().setLayer(PhysicsLayer.PLAYER))
-                        .addComponent(new CombatStatsComponent(0, lightsaberConfigs.baseAttack));
-
-
+            new Entity()
+                .addComponent(new TextureRenderComponent("images/templightsaber.png"))
+                .addComponent(new CombatStatsComponent(0, lightsaberConfigs.baseAttack));
         lightsaber.getComponent(TextureRenderComponent.class).scaleEntity();
         return lightsaber;
     }
 
+    /**
+     * Creates a dagger entity.
+     * @return A dagger entity.
+     */
     public static Entity createDagger() {
         Entity dagger= new Entity()
                 .addComponent(new TextureRenderComponent("images/dagger.png"))
                 .addComponent(new CombatStatsComponent(0, daggerConfigs.baseAttack));
-
         dagger.getComponent(TextureRenderComponent.class).scaleEntity();
-        dagger.scaleHeight(0.75f);
+        dagger.scaleHeight(0.6f);
         return dagger;
+    }
+
+    /**
+     * Creates a pistol entity.
+     * @return A pistol entity.
+     */
+    public static Entity createPistol() {
+        Entity pistol = new Entity().addComponent(new TextureRenderComponent(
+                "images/pistol.png")).addComponent(new CombatStatsComponent(0
+                , lightsaberConfigs.baseAttack));
+        pistol.getComponent(TextureRenderComponent.class).scaleEntity();
+        return pistol;
     }
 
     /**

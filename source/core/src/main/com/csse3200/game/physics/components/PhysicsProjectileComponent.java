@@ -1,7 +1,10 @@
 package com.csse3200.game.physics.components;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.Fixture;
 import com.csse3200.game.components.Component;
+import com.csse3200.game.entities.Entity;
+import com.csse3200.game.physics.BodyUserData;
 import com.csse3200.game.services.ServiceLocator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,9 +16,12 @@ public class PhysicsProjectileComponent extends Component{
             getLogger(PhysicsProjectileComponent.class);
     private PhysicsComponent physicsComponent;
     private Vector2 initialVelocity;
-    private float lifetime = 4f;
+    private float lifetime = 5f;
     private float lived = 0f;
 
+    /**
+     * Manifests the physics for the projectile
+     */
     @Override
     public void create() {
 
@@ -32,19 +38,30 @@ public class PhysicsProjectileComponent extends Component{
             body.setLinearVelocity(initialVelocity);
         }
 
+
     }
+
+    /**
+     * Checks how long the projectile has been alive for, adding it to the "to remove list"
+     * within entity service if it has exceeded this time.
+     */
 
     public void update() {
         float dt = ServiceLocator.getTimeSource().getDeltaTime();
         lived += dt;
-
-        System.out.println(entity.getPosition());
         if (lived > lifetime) {
 
-            ServiceLocator.getEntityService().unregister(entity);
+            entity.setToRemove();
+            Body body = physicsComponent.getBody();
+            body.setLinearVelocity(new Vector2(0f, 0f));
 
         }
     }
+
+    /**
+     * Fires a bullet in a certain direction at a certain speed
+     *
+     */
 
     public void fire(Vector2 direction, float speed) {
 
@@ -53,5 +70,7 @@ public class PhysicsProjectileComponent extends Component{
         body.setBullet(true);
         body.setLinearVelocity(initialVelocity);
     }
+
+
 
 }
