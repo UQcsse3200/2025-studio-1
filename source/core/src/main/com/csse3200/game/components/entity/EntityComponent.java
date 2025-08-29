@@ -8,22 +8,23 @@ public class EntityComponent extends Component {
     private String type;
 
     /**
+     * This is the constructor for the EntityComponent class, it sets up ther required information 
+     * to be used in it's methods.
      * @param id the unique id for every entity to help identify it
      * @param name of the entity
      * @param type an enity can be of several types(eg: weapons, main player, enemy, etc)
      */
-
     public EntityComponent(String name, int id, String type) {
       this.name = name;
       this.id = id;
-      id++;
+      id++; //??
       this.type = type;
     }
 
     public EntityComponent() {}
 
     /**
-     *
+     * Returns the name of the entity
      * @return the name of the entity
      */
     public String getName() {
@@ -31,9 +32,8 @@ public class EntityComponent extends Component {
     }
 
     /**
-     *
+     * Sets the name fo the entity
      * @param name takes name of the entity and set it to that
-     *
      */
     public void setName(String name) {
         this.name = name;
@@ -41,7 +41,7 @@ public class EntityComponent extends Component {
 
 
     /**
-     *
+     * Returns the id of the entity
      * @return the id of a specific entity
      */
     public int getId() {
@@ -49,7 +49,7 @@ public class EntityComponent extends Component {
     }
 
     /**
-     *
+     * Sets the id of the entity
      * @param id sets the entity id to the given value
      */
     public void setId(int id) {
@@ -57,7 +57,7 @@ public class EntityComponent extends Component {
     }
 
     /**
-     *
+     * Returns the type of the entity
      * @return the type of the selected entity
      */
     public String getType() {
@@ -65,7 +65,7 @@ public class EntityComponent extends Component {
     }
 
     /**
-     *
+     * Sets the type of the entity
      * @param type defines the type of entity(eg: weapon, player, enemy)
      */
 
