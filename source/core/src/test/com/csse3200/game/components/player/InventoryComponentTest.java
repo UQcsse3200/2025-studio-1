@@ -73,15 +73,15 @@ class InventoryComponentTest {
 
       // check full inventory
       for (int idx = 0; idx < 5; idx++) {
-        assertSame(testInven.get(idx), inventory.getInventory().get(idx),
-                "Returns full inventory");
+          assertSame(testInven.get(idx), inventory.getInventory().get(idx),
+                  "Returns full inventory");
       }
       assertTrue(inventory.isFull());
       assertFalse(inventory.isEmpty());
       assertEquals(5, inventory.getSize());
 
       for (int idx = 0; idx < 5; idx++) {
-        assertNotNull(inventory.get(idx));
+          assertNotNull(inventory.get(idx));
       }
     }
 
