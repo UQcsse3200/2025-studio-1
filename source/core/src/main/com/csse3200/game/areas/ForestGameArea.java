@@ -40,7 +40,8 @@ public class ForestGameArea extends GameArea {
         "images/iso_grass_2.png",
         "images/iso_grass_3.png",
         "images/templightsaber.png",
-        "images/ammo.png"
+        "images/ammo.png",
+        "images/pistol.png"
     };
 
   private static final String[] forestTextureAtlases = {
@@ -55,6 +56,7 @@ public class ForestGameArea extends GameArea {
   private Entity player;
   private Entity lightsaber;
   private Entity bullet;
+  private Entity pistol;
 
   /**
    * Initialise this ForestGameArea to use the provided TerrainFactory.
@@ -77,7 +79,10 @@ public class ForestGameArea extends GameArea {
     spawnTrees();
     player = spawnPlayer();
     lightsaber = spawnLightsaber();
+    bullet = spawnBullet();
+    pistol = spawnPistol();
     this.equipItem(lightsaber);
+    this.equipItem(pistol);
     spawnGhosts();
     spawnGhostKing();
     playMusic();
@@ -148,18 +153,24 @@ public class ForestGameArea extends GameArea {
 
   private Entity spawnLightsaber() {
     Entity newLightsaber = WeaponsFactory.createLightsaber();
-    newLightsaber.addComponent(new ItemHoldComponent(this.player));
+    Vector2 newLightsaberOffset = new Vector2(0.7f, 0.5f);
+    newLightsaber.addComponent(new ItemHoldComponent(this.player, newLightsaberOffset));
     return newLightsaber;
   }
 
   private Entity spawnBullet() {
-
     Entity newBullet = ProjectileFactory.createPistolBullet();
     spawnEntityAt(newBullet, new GridPoint2(5, 5), true, true);
     return newBullet;
   }
 
-
+  private Entity spawnPistol() {
+    Entity newPistol = WeaponsFactory.createPistol();
+    Vector2 newPistolOffset = new Vector2(0.45f, 0.02f);
+//    spawnEntityAt(newPistol, new GridPoint2(-5, -5), true, true);
+    newPistol.addComponent(new ItemHoldComponent(this.player, newPistolOffset));
+    return newPistol;
+  }
 
   private void spawnGhosts() {
     GridPoint2 minPos = new GridPoint2(0, 0);
@@ -170,8 +181,6 @@ public class ForestGameArea extends GameArea {
       Entity ghost = NPCFactory.createGhost(player);
       spawnEntityAt(ghost, randomPos, true, true);
     }
-
-
   }
 
   private void spawnGhostKing() {

@@ -39,7 +39,7 @@ public class WeaponsFactory {
             FileLoader.readClass(LightsaberConfig.class, "configs/lightsaber.json");
 
     /**
-     * Creates a ghost entity.
+     * Creates a lightsaber entity.
      *
      * @return entity
      */
@@ -51,6 +51,14 @@ public class WeaponsFactory {
 
         lightsaber.getComponent(TextureRenderComponent.class).scaleEntity();
         return lightsaber;
+    }
+
+    public static Entity createPistol() {
+        Entity pistol = new Entity().addComponent(new TextureRenderComponent(
+                "images/pistol.png")).addComponent(new CombatStatsComponent(0
+                , configs.baseAttack));
+        pistol.getComponent(TextureRenderComponent.class).scaleEntity();
+        return pistol;
     }
 
     /**
