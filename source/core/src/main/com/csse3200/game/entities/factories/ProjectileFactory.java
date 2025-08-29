@@ -1,24 +1,15 @@
 package com.csse3200.game.entities.factories;
 
-import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.csse3200.game.ai.tasks.AITaskComponent;
 import com.csse3200.game.components.CombatStatsComponent;
-import com.csse3200.game.components.npc.GhostAnimationController;
 import com.csse3200.game.components.TouchAttackComponent;
-import com.csse3200.game.components.tasks.ChaseTask;
-import com.csse3200.game.components.tasks.WanderTask;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.*;
 import com.csse3200.game.files.FileLoader;
 import com.csse3200.game.physics.PhysicsLayer;
 import com.csse3200.game.physics.PhysicsUtils;
 import com.csse3200.game.physics.components.*;
-import com.csse3200.game.rendering.AnimationRenderComponent;
 import com.csse3200.game.rendering.TextureRenderComponent;
-import com.csse3200.game.services.ServiceLocator;
 
 
 /**
@@ -47,7 +38,12 @@ public class ProjectileFactory {
         PistolBulletConfig config = configs.pistolBullet;
         pistolBullet
                 .addComponent(new CombatStatsComponent(config.health, config.base_attack))
-                .addComponent(new TextureRenderComponent("images/ammo.png"));
+                .addComponent(new TextureRenderComponent("images/ammo.png"))
+                .addComponent(new ColliderComponent())
+                .addComponent(new HitboxComponent().setLayer(PhysicsLayer.FRIENDLY_PROJECTILE))
+                .addComponent(new TouchAttackComponent(PhysicsLayer.NPC, 1f));
+
+        PhysicsUtils.setScaledCollider(pistolBullet, 0.5f, 0.2f);
         pistolBullet.scaleHeight(1.5f);
         return pistolBullet;
     }
@@ -63,11 +59,10 @@ public class ProjectileFactory {
                 new Entity()
                         .addComponent(new PhysicsComponent())
                         .addComponent(new PhysicsProjectileComponent())
-                        .addComponent(new ColliderComponent().setLayer(PhysicsLayer.NONE))
-                        .addComponent(new HitboxComponent().setLayer(PhysicsLayer.NONE));
+                        .addComponent(new TouchAttackComponent(PhysicsLayer.NPC, 0f));
 
         projectile.getComponent(PhysicsComponent.class).setBodyType(BodyDef.BodyType.DynamicBody);
-        PhysicsUtils.setScaledCollider(projectile, 0.5f, 0.2f);
+
 
         return projectile;
     }

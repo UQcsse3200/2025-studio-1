@@ -78,8 +78,6 @@ public class ForestGameArea extends GameArea {
     player = spawnPlayer();
     lightsaber = spawnLightsaber();
     this.equipItem(lightsaber);
-    //bullet = spawnBullet();
-    //bullet.getComponent(PhysicsProjectileComponent.class).fire(new Vector2(1, 1), 5f);
 
     spawnGhosts();
     spawnGhostKing();
@@ -166,6 +164,8 @@ public class ForestGameArea extends GameArea {
       Entity ghost = NPCFactory.createGhost(player);
       spawnEntityAt(ghost, randomPos, true, true);
     }
+
+
   }
 
   private void spawnGhostKing() {

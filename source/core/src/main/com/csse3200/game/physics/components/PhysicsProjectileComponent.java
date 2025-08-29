@@ -1,7 +1,10 @@
 package com.csse3200.game.physics.components;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.Fixture;
 import com.csse3200.game.components.Component;
+import com.csse3200.game.entities.Entity;
+import com.csse3200.game.physics.BodyUserData;
 import com.csse3200.game.services.ServiceLocator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,6 +38,7 @@ public class PhysicsProjectileComponent extends Component{
             body.setLinearVelocity(initialVelocity);
         }
 
+
     }
 
     /**
@@ -66,5 +70,7 @@ public class PhysicsProjectileComponent extends Component{
         body.setBullet(true);
         body.setLinearVelocity(initialVelocity);
     }
+
+
 
 }
