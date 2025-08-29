@@ -9,6 +9,9 @@ import com.csse3200.game.components.npc.GhostAnimationController;
 import com.csse3200.game.components.TouchAttackComponent;
 import com.csse3200.game.components.tasks.ChaseTask;
 import com.csse3200.game.components.tasks.WanderTask;
+import com.csse3200.game.components.player.InventoryComponent;
+import com.csse3200.game.components.enemy.EnemyDeathRewardComponent;
+import com.csse3200.game.components.enemy.DeathParticleSpawnerComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.*;
 import com.csse3200.game.files.FileLoader;
@@ -48,13 +51,22 @@ public class NPCFactory {
     AnimationRenderComponent animator =
         new AnimationRenderComponent(
             ServiceLocator.getResourceService().getAsset("images/ghost.atlas", TextureAtlas.class));
+//    animator.setDisposeAtlas(false);
     animator.addAnimation("angry_float", 0.1f, Animation.PlayMode.LOOP);
     animator.addAnimation("float", 0.1f, Animation.PlayMode.LOOP);
+
+    // Get player's inventory for reward system
+    InventoryComponent playerInventory = null;
+    if (target != null) {
+      playerInventory = target.getComponent(InventoryComponent.class);
+    }
 
     ghost
         .addComponent(new CombatStatsComponent(config.health, config.baseAttack))
         .addComponent(animator)
-        .addComponent(new GhostAnimationController());
+        .addComponent(new GhostAnimationController())
+        .addComponent(new EnemyDeathRewardComponent(15, playerInventory))
+        .addComponent(new DeathParticleSpawnerComponent());
 
     ghost.getComponent(AnimationRenderComponent.class).scaleEntity();
 
@@ -75,13 +87,22 @@ public class NPCFactory {
         new AnimationRenderComponent(
             ServiceLocator.getResourceService()
                 .getAsset("images/ghostKing.atlas", TextureAtlas.class));
+    animator.setDisposeAtlas(false);
     animator.addAnimation("float", 0.1f, Animation.PlayMode.LOOP);
     animator.addAnimation("angry_float", 0.1f, Animation.PlayMode.LOOP);
+
+    // Get player's inventory for reward system
+    InventoryComponent playerInventory = null;
+    if (target != null) {
+      playerInventory = target.getComponent(InventoryComponent.class);
+    }
 
     ghostKing
         .addComponent(new CombatStatsComponent(config.health, config.baseAttack))
         .addComponent(animator)
-        .addComponent(new GhostAnimationController());
+        .addComponent(new GhostAnimationController())
+        .addComponent(new EnemyDeathRewardComponent(30, playerInventory))
+        .addComponent(new DeathParticleSpawnerComponent());
 
     ghostKing.getComponent(AnimationRenderComponent.class).scaleEntity();
     return ghostKing;
@@ -100,13 +121,22 @@ public class NPCFactory {
             new AnimationRenderComponent(
                     ServiceLocator.getResourceService()
                             .getAsset("images/ghostGPT.atlas", TextureAtlas.class));
+    animator.setDisposeAtlas(false);
     animator.addAnimation("angry_float", 0.1f, Animation.PlayMode.LOOP);
     animator.addAnimation("float", 0.1f, Animation.PlayMode.LOOP);
+
+    // Get player's inventory for reward system
+    InventoryComponent playerInventory = null;
+    if (target != null) {
+      playerInventory = target.getComponent(InventoryComponent.class);
+    }
 
     ghostGPT
             .addComponent(new CombatStatsComponent(config.health, config.baseAttack))
             .addComponent(animator)
-            .addComponent(new GhostAnimationController());
+            .addComponent(new GhostAnimationController())
+            .addComponent(new EnemyDeathRewardComponent(15, playerInventory))
+            .addComponent(new DeathParticleSpawnerComponent()); // Add reward + particles
 
     ghostGPT.getComponent(AnimationRenderComponent.class).scaleEntity();
 
