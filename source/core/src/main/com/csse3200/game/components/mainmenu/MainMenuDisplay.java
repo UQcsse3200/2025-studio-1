@@ -22,6 +22,9 @@ public class MainMenuDisplay extends UIComponent {
   private Table table;
   private NeonStyles neon;
 
+  /**
+   * Initialises styles and builds the actors.
+   */
   @Override
   public void create() {
     super.create();
@@ -29,36 +32,44 @@ public class MainMenuDisplay extends UIComponent {
     addActors();
   }
 
+  /**
+   * Creates the logo and buttons, sizes them relative to the stage, and wires
+   * button events.
+   */
   private void addActors() {
     table = new Table();
     table.setFillParent(true);
 
-    // Position
+    // Column position
     float leftPad = stage.getWidth() * 0.12f;
     table.center().left().padLeft(leftPad);
 
+    // Logo image
     Image title =
         new Image(
             ServiceLocator.getResourceService()
                 .getAsset("images/logo.png", Texture.class));
 
+    // Button sizing relative to screen
     float btnW = stage.getWidth() * 0.34f;
     float btnH = Math.max(64f, stage.getHeight() * 0.08f);
     table.defaults().width(btnW).height(btnH);
 
     TextButton.TextButtonStyle style = neon.buttonRounded();
 
+    // Create buttons
     TextButton startBtn = new TextButton("Start", style);
     TextButton loadBtn = new TextButton("Load", style);
     TextButton settingsBtn = new TextButton("Settings", style);
     TextButton exitBtn = new TextButton("Exit", style);
 
+    // Label text size
     startBtn.getLabel().setFontScale(2.0f);
     loadBtn.getLabel().setFontScale(2.0f);
     settingsBtn.getLabel().setFontScale(2.0f);
     exitBtn.getLabel().setFontScale(2.0f);
 
-    // Triggers an event when the button is pressed
+    // Button actions
     startBtn.addListener(
         new ChangeListener() {
           @Override
@@ -96,6 +107,7 @@ public class MainMenuDisplay extends UIComponent {
           }
         });
 
+    // Column layout
     table.add(title).left().padBottom(40f).padLeft(-10f);
     table.row();
     table.add(startBtn).padTop(15f).left();
@@ -119,6 +131,9 @@ public class MainMenuDisplay extends UIComponent {
     return Z_INDEX;
   }
 
+  /**
+   * Removes and clears the root table.
+   */
   @Override
   public void dispose() {
     table.clear();

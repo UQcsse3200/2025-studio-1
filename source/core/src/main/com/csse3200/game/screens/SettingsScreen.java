@@ -22,7 +22,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Scaling;
 
-/** The game screen containing the settings. */
+/**
+ * The game screen containing the settings.
+ */
 public class SettingsScreen extends ScreenAdapter {
   private static final Logger logger = LoggerFactory.getLogger(SettingsScreen.class);
 
@@ -31,6 +33,10 @@ public class SettingsScreen extends ScreenAdapter {
 
   private static final String[] settingsTextures = {"images/menu_background.png"};
 
+  /**
+   * Builds the settings screen.
+   * Registers services, creates the renderer, loads assets, and builds the UI.
+   */
   public SettingsScreen(GdxGame game) {
     this.game = game;
 
@@ -48,17 +54,27 @@ public class SettingsScreen extends ScreenAdapter {
     createUI();
   }
 
+  /**
+   * Updates entities and renders the frame.
+   */
   @Override
   public void render(float delta) {
     ServiceLocator.getEntityService().update();
     renderer.render();
   }
 
+  /**
+   * Forwards new size to the renderer.
+   */
   @Override
   public void resize(int width, int height) {
     renderer.resize(width, height);
   }
 
+  /**
+   * Frees screen resources and clears registered services.
+   * Do not reuse the screen after this is called.
+   */
   @Override
   public void dispose() {
     renderer.dispose();
@@ -68,6 +84,9 @@ public class SettingsScreen extends ScreenAdapter {
     ServiceLocator.clear();
   }
 
+  /**
+   * Loads textures needed by the settings screen.
+   */
   private void loadAssets() {
     logger.debug("Loading assets");
     ResourceService resourceService = ServiceLocator.getResourceService();
@@ -75,6 +94,9 @@ public class SettingsScreen extends ScreenAdapter {
     ServiceLocator.getResourceService().loadAll();
   }
 
+  /**
+   * Unloads textures that were loaded for this screen.
+   */
   private void unloadAssets() {
     logger.debug("Unloading assets");
     ResourceService resourceService = ServiceLocator.getResourceService();

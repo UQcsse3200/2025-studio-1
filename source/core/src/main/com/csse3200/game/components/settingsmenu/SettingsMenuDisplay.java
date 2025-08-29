@@ -44,13 +44,21 @@ public class SettingsMenuDisplay extends UIComponent {
     this.game = game;
   }
 
+  /**
+   * Initialises styles and builds the actors.
+   */
   @Override
   public void create() {
     super.create();
     addActors();
   }
 
+  /**
+   * Builds the title, settings table, and action buttons,
+   * and attaches the layout to the stage.
+   */
   private void addActors() {
+    // Title label
     Label title = new Label("Settings", skin, "title");
     Label.LabelStyle titleStyle = new Label.LabelStyle(title.getStyle());
     titleStyle.fontColor = new com.badlogic.gdx.graphics.Color(0f, 0.95f, 1f, 1f);
@@ -58,23 +66,31 @@ public class SettingsMenuDisplay extends UIComponent {
 
     title.setFontScale(1.20f);
 
+    // Build the tables
     Table settingsTable = makeSettingsTable();
     Table menuBtns = makeMenuBtns();
 
     rootTable = new Table();
     rootTable.setFillParent(true);
 
+    // Title row
     rootTable.add(title).expandX().top().padTop(30f);
 
+    // Settings rows
     rootTable.row().padTop(30f);
     rootTable.add(settingsTable).expandX().expandY();
 
+    // Buttons
     rootTable.row();
     rootTable.add(menuBtns).center().padBottom(80f);
 
     stage.addActor(rootTable);
   }
 
+  /**
+   * Creates the settings controls, applies styling, binds live-updating labels,
+   * and returns a table ready to be placed in the layout.
+   */
   private Table makeSettingsTable() {
     // Get current values
     UserSettings.Settings settings = UserSettings.get();
@@ -112,6 +128,7 @@ public class SettingsMenuDisplay extends UIComponent {
             displayModeLabel
     );
 
+    // TextField style
     {
       TextField.TextFieldStyle tf = new TextField.TextFieldStyle(fpsText.getStyle());
       tf.fontColor = Color.WHITE;
@@ -123,6 +140,7 @@ public class SettingsMenuDisplay extends UIComponent {
       fpsText.setStyle(tf);
     }
 
+    // CheckBox style
     {
       CheckBox.CheckBoxStyle cb = new CheckBox.CheckBoxStyle(fullScreenCheck.getStyle());
       cb.fontColor = Color.WHITE;
@@ -133,6 +151,7 @@ public class SettingsMenuDisplay extends UIComponent {
       vsyncCheck.setStyle(cb);
     }
 
+    // Slider style
     {
       Slider.SliderStyle ss = new Slider.SliderStyle(uiScaleSlider.getStyle());
 
@@ -151,13 +170,14 @@ public class SettingsMenuDisplay extends UIComponent {
       uiScaleSlider.invalidateHierarchy();
     }
 
-
+    // SelectBox style
     {
       Drawable tfBg = fpsText.getStyle().background;
 
       SelectBox.SelectBoxStyle sb = new SelectBox.SelectBoxStyle(displayModeSelect.getStyle());
       sb.fontColor = Color.WHITE;
 
+      // Closed state backgrounds
       if (tfBg != null) {
         sb.background         = skin.newDrawable(tfBg, new Color(1f,1f,1f,0.15f));
         sb.backgroundOver     = skin.newDrawable(tfBg, new Color(1f,1f,1f,0.25f));
@@ -190,7 +210,7 @@ public class SettingsMenuDisplay extends UIComponent {
     }
 
 
-    // Position Components on table
+    // Layout table
     Table table = new Table();
 
     table.add(fpsLabel).right().padRight(15f);
@@ -227,6 +247,10 @@ public class SettingsMenuDisplay extends UIComponent {
     return table;
   }
 
+  /**
+   * Returns the display mode from the provided list that matches the current system mode,
+   * or null if no match is found.
+   */
   private StringDecorator<DisplayMode> getActiveMode(Array<StringDecorator<DisplayMode>> modes) {
     DisplayMode active = Gdx.graphics.getDisplayMode();
 
@@ -241,6 +265,9 @@ public class SettingsMenuDisplay extends UIComponent {
     return null;
   }
 
+  /**
+   * Returns all display modes for the selected monitor, wrapped for pretty printing.
+   */
   private Array<StringDecorator<DisplayMode>> getDisplayModes(Monitor monitor) {
     DisplayMode[] displayModes = Gdx.graphics.getDisplayModes(monitor);
     Array<StringDecorator<DisplayMode>> arr = new Array<>();
@@ -252,10 +279,17 @@ public class SettingsMenuDisplay extends UIComponent {
     return arr;
   }
 
+  /**
+   * Formats a display mode as a concise resolution and refresh-rate string.
+   */
   private String prettyPrint(DisplayMode displayMode) {
     return displayMode.width + "x" + displayMode.height + ", " + displayMode.refreshRate + "hz";
   }
 
+  /**
+   * Creates the buttons (Exit, Apply) with the neon style and wires
+   * their change listeners.
+   */
   private Table makeMenuBtns() {
     neon = new NeonStyles(0.70f);
     TextButton.TextButtonStyle style = neon.buttonRounded();
@@ -263,9 +297,11 @@ public class SettingsMenuDisplay extends UIComponent {
     TextButton exitBtn = new TextButton("Exit", style);
     TextButton applyBtn = new TextButton("Apply", style);
 
+    // Label text size
     exitBtn.getLabel().setFontScale(1.5f);
     applyBtn.getLabel().setFontScale(1.5f);
 
+    // Button sizing relative to screen
     float btnW = stage.getWidth()  * 0.10f;
     float btnH = Math.max(50f, stage.getHeight() * 0.06f);
     float gap  = 30f;
@@ -275,7 +311,7 @@ public class SettingsMenuDisplay extends UIComponent {
     table.add(exitBtn).width(btnW).height(btnH).padRight(gap);
     table.add(applyBtn).width(btnW).height(btnH).padLeft(gap);
 
-
+    // Button actions
     exitBtn.addListener(
         new ChangeListener() {
           @Override
@@ -297,6 +333,10 @@ public class SettingsMenuDisplay extends UIComponent {
     return table;
   }
 
+  /**
+   * Reads values from the UI controls and writes them to {@code UserSettings},
+   * persisting the changes.
+   */
   private void applyChanges() {
     UserSettings.Settings settings = UserSettings.get();
 
@@ -312,10 +352,16 @@ public class SettingsMenuDisplay extends UIComponent {
     UserSettings.set(settings, true);
   }
 
+  /**
+   * Leaves the Settings screen and returns to the main menu.
+   */
   private void exitMenu() {
     game.setScreen(ScreenType.MAIN_MENU);
   }
 
+  /**
+   * Parses an integer from a string or returns null if parsing fails.
+   */
   private Integer parseOrNull(String num) {
     try {
       return Integer.parseInt(num, 10);
@@ -329,17 +375,24 @@ public class SettingsMenuDisplay extends UIComponent {
     // draw is handled by the stage
   }
 
+  /**
+   * Ticks the stage so UI animations and input events are processed.
+   */
   @Override
   public void update() {
     stage.act(ServiceLocator.getTimeSource().getDeltaTime());
   }
 
+  /** Removes and clears the root table. */
   @Override
   public void dispose() {
     rootTable.clear();
     super.dispose();
   }
 
+  /**
+   * Sets the provided labels' font colour to white by cloning their styles.
+   */
   private static void makeWhite(Label... labels) {
     for (Label l : labels) {
       Label.LabelStyle st = new Label.LabelStyle(l.getStyle());

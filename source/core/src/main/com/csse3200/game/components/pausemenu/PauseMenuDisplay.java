@@ -17,6 +17,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
+/**
+ * Visual pause menu overlay shown on top of the main game.
+ */
 public class PauseMenuDisplay extends UIComponent {
     private static final Logger logger = LoggerFactory.getLogger(PauseMenuDisplay.class);
     private static final float Z_INDEX = 100f;
@@ -31,6 +34,9 @@ public class PauseMenuDisplay extends UIComponent {
         this.game = game;
     }
 
+    /**
+     * Initialises styles and builds the actors.
+     */
     @Override
     public void create() {
         super.create();
@@ -38,6 +44,11 @@ public class PauseMenuDisplay extends UIComponent {
         addActors();
     }
 
+    /**
+     * Builds and adds all Scene2D actors for the overlay:
+     * a semi-transparent fullscreen dimmer, a centered panel with title and buttons,
+     * and input listeners.
+     */
     private void addActors() {
         // Fullscreen dimmer
         dimTex = makeSolidTexture(1, 1, new Color(0, 0, 0, 0.6f));
@@ -49,6 +60,7 @@ public class PauseMenuDisplay extends UIComponent {
         root.setFillParent(true);
         root.center();
 
+        // Button sizing relative to screen
         float btnW = stage.getWidth() * 0.28f;
         float btnH = Math.max(56f, stage.getHeight() * 0.07f);
 
@@ -65,6 +77,7 @@ public class PauseMenuDisplay extends UIComponent {
         TextButton restartBtm = new TextButton("Restart", style);
         TextButton mainBtn     = new TextButton("Main Menu", style);
 
+        // Label text size
         resumeBtn.getLabel().setFontScale(1.8f);
         restartBtm.getLabel().setFontScale(1.8f);
         mainBtn.getLabel().setFontScale(1.8f);
@@ -72,6 +85,7 @@ public class PauseMenuDisplay extends UIComponent {
         Table panel = new Table();
         panel.defaults().pad(10f);
 
+        // Stack title and buttons vertically with padding
         panel.add(pausedLabel).center().padBottom(24f).row();
         panel.add(resumeBtn).row();
         panel.add(restartBtm).row();
@@ -98,7 +112,6 @@ public class PauseMenuDisplay extends UIComponent {
             }
         });
 
-        // Quick keyboard UX: ESC = resume
         stage.setKeyboardFocus(root);
         stage.addListener(new InputListener() {
             @Override
@@ -113,6 +126,9 @@ public class PauseMenuDisplay extends UIComponent {
         stage.addActor(root);
     }
 
+    /**
+     * Creates a solid RGBA texture.
+     */
     private static Texture makeSolidTexture(int w, int h, Color color) {
         Pixmap pm = new Pixmap(w, h, Pixmap.Format.RGBA8888);
         pm.setColor(color);
@@ -127,11 +143,17 @@ public class PauseMenuDisplay extends UIComponent {
         // Stage draws everything
     }
 
+    /**
+     * Returns the draw order for the overlay.
+     */
     @Override
     public float getZIndex() {
         return Z_INDEX;
     }
 
+    /**
+     * Removes overlay actors from the stage and disposes generated textures.
+     */
     @Override
     public void dispose() {
         if (root != null) { root.remove(); root = null; }

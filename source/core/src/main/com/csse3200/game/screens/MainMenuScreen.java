@@ -32,6 +32,10 @@ public class MainMenuScreen extends ScreenAdapter {
   private final Renderer renderer;
   private static final String[] mainMenuTextures = {"images/logo.png", "images/menu_background.png"};
 
+  /**
+   * Builds the main menu screen.
+   * Registers services, creates the renderer, loads assets, and builds the UI.
+   */
   public MainMenuScreen(GdxGame game) {
     this.game = game;
 
@@ -47,12 +51,18 @@ public class MainMenuScreen extends ScreenAdapter {
     createUI();
   }
 
+  /**
+   * Updates entities and renders the frame.
+   */
   @Override
   public void render(float delta) {
     ServiceLocator.getEntityService().update();
     renderer.render();
   }
 
+  /**
+   * Forwards new size to the renderer.
+   */
   @Override
   public void resize(int width, int height) {
     renderer.resize(width, height);
@@ -69,6 +79,10 @@ public class MainMenuScreen extends ScreenAdapter {
     logger.info("Game resumed");
   }
 
+  /**
+   * Frees screen resources and clears registered services.
+   * Do not reuse the screen after this is called.
+   */
   @Override
   public void dispose() {
     logger.debug("Disposing main menu screen");
@@ -81,6 +95,9 @@ public class MainMenuScreen extends ScreenAdapter {
     ServiceLocator.clear();
   }
 
+  /**
+   * Loads textures needed by the main menu.
+   */
   private void loadAssets() {
     logger.debug("Loading assets");
     ResourceService resourceService = ServiceLocator.getResourceService();
@@ -88,6 +105,9 @@ public class MainMenuScreen extends ScreenAdapter {
     ServiceLocator.getResourceService().loadAll();
   }
 
+  /**
+   * Unloads textures that were loaded for this screen.
+   */
   private void unloadAssets() {
     logger.debug("Unloading assets");
     ResourceService resourceService = ServiceLocator.getResourceService();
@@ -102,6 +122,7 @@ public class MainMenuScreen extends ScreenAdapter {
     logger.debug("Creating ui");
     Stage stage = ServiceLocator.getRenderService().getStage();
 
+    // Add the background image as a Stage actor
     Texture bgTex = ServiceLocator.getResourceService()
             .getAsset("images/menu_background.png", Texture.class);
     Image bg = new Image(new TextureRegionDrawable(new TextureRegion(bgTex)));
@@ -109,6 +130,7 @@ public class MainMenuScreen extends ScreenAdapter {
     bg.setScaling(Scaling.fill);
     stage.addActor(bg);
 
+    // Register the UI entity that owns the display and actions
     Entity ui = new Entity();
     ui.addComponent(new MainMenuDisplay())
         .addComponent(new InputDecorator(stage, 10))
