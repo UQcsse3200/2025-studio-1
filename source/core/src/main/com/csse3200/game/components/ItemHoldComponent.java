@@ -3,15 +3,24 @@ package com.csse3200.game.components;
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.entities.Entity;
 
+/**
+ * A component that makes an item follow the player at a given offset.
+ */
 public class ItemHoldComponent extends Component {
     private Entity player;
+    private Vector2 offset;
 
-    public ItemHoldComponent(Entity player) {
+
+    public ItemHoldComponent(Entity player, Vector2 offset) {
         this.player = player;
+        this.offset = offset;
     }
 
+    /**
+     * Updates the item's position so it follows the player
+     */
     @Override
     public void update() {
-        entity.setPosition(player.getPosition().add(new Vector2(0.7f, 0.5f)));
+        entity.setPosition(player.getPosition().add(offset));
     }
 }
