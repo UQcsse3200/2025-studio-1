@@ -31,7 +31,7 @@ public class InventoryComponent extends Component {
 
   /**
    * Returns a copy of the players current inventory.
-   * @return An ArrayList<Entity> containing the players
+   * @return An ArrayList containing the players
    */
   public ArrayList<Entity> getInventory() {
     return new ArrayList<Entity>(this.items);
