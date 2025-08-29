@@ -39,7 +39,7 @@ public class ForestGameArea extends GameArea {
     "images/iso_grass_2.png",
     "images/iso_grass_3.png",
     "images/templightsaber.png",
-    "images/ammo.png"
+    "images/ammo.png", "images/dagger.png"
   };
   private static final String[] forestTextureAtlases = {
     "images/terrain_iso_grass.atlas", "images/ghost.atlas", "images/ghostKing.atlas"
@@ -51,6 +51,7 @@ public class ForestGameArea extends GameArea {
   private final TerrainFactory terrainFactory;
 
   private Entity player;
+  private Entity dagger;
   private Entity lightsaber;
   private Entity bullet;
 
@@ -74,7 +75,8 @@ public class ForestGameArea extends GameArea {
     spawnTerrain();
     spawnTrees();
     player = spawnPlayer();
-    lightsaber = spawnLightsaber();
+    dagger = spawnDagger();
+    //lightsaber = spawnLightsaber();
     //bullet = spawnBullet();
     //bullet.getComponent(PhysicsProjectileComponent.class).fire(new Vector2(1, 1), 5f);
 
@@ -136,12 +138,19 @@ public class ForestGameArea extends GameArea {
     return newPlayer;
   }
 
-  private Entity spawnLightsaber() {
-    Entity newLightsaber = WeaponsFactory.createLightsaber();
-    newLightsaber.addComponent(new ItemHoldComponent(this.player));
-    spawnEntityAt(newLightsaber, PLAYER_SPAWN, true, true);
-    return newLightsaber;
+  private Entity spawnDagger() {
+    Entity newDagger = WeaponsFactory.createDagger();
+    newDagger.addComponent(new ItemHoldComponent(this.player));
+    spawnEntityAt(newDagger, PLAYER_SPAWN, true, true);
+    return newDagger;
   }
+
+//  private Entity spawnLightsaber() {
+//    Entity newLightsaber = WeaponsFactory.createLightsaber();
+//    newLightsaber.addComponent(new ItemHoldComponent(this.player));
+//    spawnEntityAt(newLightsaber, PLAYER_SPAWN, true, true);
+//    return newLightsaber;
+//  }
 
   private Entity spawnBullet() {
 
