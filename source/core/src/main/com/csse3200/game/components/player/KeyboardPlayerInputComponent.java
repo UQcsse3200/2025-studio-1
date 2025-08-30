@@ -4,6 +4,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.math.Vector2;
+import com.csse3200.game.components.TagComponent;
 import com.csse3200.game.input.InputComponent;
 import com.csse3200.game.utils.math.Vector2Utils;
 
@@ -54,8 +55,18 @@ public class KeyboardPlayerInputComponent extends InputComponent {
   @Override
   public boolean touchDown(int screenX, int screenY, int pointer, int button) {
     if (button == Input.Buttons.LEFT) {
-      entity.getEvents().trigger("attack");
-      return true;
+
+      if (entity.getCurrItem().getComponent(TagComponent.class).getTag().equals("ranged")){
+
+        entity.getEvents().trigger("shoot");
+        return true;
+      }
+      else {
+
+
+        entity.getEvents().trigger("attack");
+        return true;
+      }
     }
     return false;
   }

@@ -63,8 +63,7 @@ public class ProjectileFactory {
         Entity projectile =
                 new Entity()
                         .addComponent(new PhysicsComponent())
-                        .addComponent(new PhysicsProjectileComponent())
-                        .addComponent(new TouchAttackComponent(PhysicsLayer.NPC, 0f));
+                        .addComponent(new PhysicsProjectileComponent());
 
         projectile.getComponent(PhysicsComponent.class).setBodyType(BodyDef.BodyType.DynamicBody);
 
