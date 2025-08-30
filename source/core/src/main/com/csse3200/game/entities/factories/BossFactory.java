@@ -45,7 +45,6 @@ public class BossFactory {
                 6f,
                 config.baseAttack + 2
         ));
->>>>>>> 2ad7b6e (boss fireball attack)
         boss2.getComponent(TextureRenderComponent.class).scaleEntity();
 
         return boss2;
