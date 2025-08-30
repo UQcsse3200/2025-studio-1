@@ -28,18 +28,21 @@ import com.csse3200.game.services.ServiceLocator;
 public class BossFactory {
     private static final NPCConfigs configs =
             FileLoader.readClass(NPCConfigs.class, "configs/NPCs.json");
-    //new added boss2
-    public static Entity createBoss2(Entity target) {
-        Entity boss2 = createBaseNPC(target);
-        BaseEntityConfig config = configs.boss2;
+    //new added boss3
+    public static Entity createBoss3(Entity target) {
+        Entity boss3 = createBaseNPC(target);
+        BaseEntityConfig config = configs.boss3;
 
-        boss2
+        boss3
                 .addComponent(new CombatStatsComponent(config.health, config.baseAttack))
-                .addComponent(new TextureRenderComponent("images/robot-2-common.png"));
+                .addComponent(new TextureRenderComponent("images/Boss_3.png"));
 
-        boss2.getComponent(TextureRenderComponent.class).scaleEntity();
+        boss3.getComponent(TextureRenderComponent.class).scaleEntity();
 
-        return boss2;
+        boss3.setScale(new Vector2(2f, 2f));
+
+        PhysicsUtils.setScaledCollider(boss3, 2.0f, 0.8f);
+        return boss3;
     }
     
     static Entity createBaseNPC(Entity target) {

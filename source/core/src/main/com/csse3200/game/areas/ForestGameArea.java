@@ -40,7 +40,8 @@ public class ForestGameArea extends GameArea {
     "images/iso_grass_2.png",
     "images/iso_grass_3.png",
     "images/robot-2-attack.png",
-    "images/robot-2-common.png"
+    "images/robot-2-common.png",
+          "images/Boss_3.png"
   };
   private static final String[] forestTextureAtlases = {
     "images/terrain_iso_grass.atlas", "images/ghost.atlas", "images/ghostKing.atlas"
@@ -75,7 +76,7 @@ public class ForestGameArea extends GameArea {
     player = spawnPlayer();
     spawnGhosts();
     spawnGhostKing();
-    spawnBoss2();
+    spawnBoss3();
 
     playMusic();
   }
@@ -143,14 +144,14 @@ public class ForestGameArea extends GameArea {
       spawnEntityAt(ghost, randomPos, true, true);
     }
   }
-  //new added boss2
-  private void spawnBoss2() {
+  //new added boss3
+  private void spawnBoss3() {
     GridPoint2 minPos = new GridPoint2(0, 0);
     GridPoint2 maxPos = terrain.getMapBounds(0).sub(2, 2);
 
     GridPoint2 pos = RandomUtils.random(minPos, maxPos);
-    Entity boss2 = BossFactory.createBoss2(player);
-    spawnEntityAt(boss2, pos, true, true);
+    Entity boss3 = BossFactory.createBoss3(player);
+    spawnEntityAt(boss3, pos, true, true);
   }
 
   private void spawnGhostKing() {
