@@ -45,9 +45,6 @@ public class KeyboardPlayerInputComponent extends InputComponent {
         triggerWalkEvent();
         return true;
       case Keys.SPACE:
-        if (entity.getCurrItem() == null){
-          return true;
-        }
         entity.getEvents().trigger("attack");
         return true;
       default:
