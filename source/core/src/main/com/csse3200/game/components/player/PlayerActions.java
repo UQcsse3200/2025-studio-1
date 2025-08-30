@@ -2,8 +2,12 @@ package com.csse3200.game.components.player;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.utils.Array;
+import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.components.Component;
 import com.csse3200.game.entities.Entity;
@@ -26,6 +30,11 @@ public class PlayerActions extends Component {
   private PhysicsComponent physicsComponent;
   private Vector2 walkDirection = Vector2.Zero.cpy();
   private boolean moving = false;
+  /*
+  Added camera variable to allow for entities to spawn in world coordinates instead of
+  screen coordinates.
+   */
+  private Camera camera;
 
   @Override
   public void create() {
@@ -34,6 +43,13 @@ public class PlayerActions extends Component {
     entity.getEvents().addListener("walkStop", this::stopWalking);
     entity.getEvents().addListener("attack", this::attack);
     entity.getEvents().addListener("shoot", this::shoot);
+    Array<Entity> entities = ServiceLocator.getEntityService().getEntities();
+    for (Entity entity: entities) {
+
+      if (entity.getComponent(CameraComponent.class) != null) {
+        camera = entity.getComponent(CameraComponent.class).getCamera();
+      }
+    }
   }
 
   @Override
@@ -76,14 +92,23 @@ public class PlayerActions extends Component {
    */
 
   void shoot() {
-    System.out.println("shoot");
+
     Sound attackSound = ServiceLocator.getResourceService().getAsset("sounds/Impact4.ogg", Sound.class);
     attackSound.play();
+
     Entity bullet = ProjectileFactory.createPistolBullet();
+    Vector2 origin = new Vector2(entity.getPosition());
+    bullet.setPosition(origin);
+    ServiceLocator.getEntityService().register(bullet);
+
     PhysicsProjectileComponent projectilePhysics = bullet.
             getComponent(PhysicsProjectileComponent.class);
-    projectilePhysics.create();
-    projectilePhysics.fire(new Vector2(Gdx.input.getX(), Gdx.input.getY()), 5);
+
+    Vector3 destination = camera.unproject(new Vector3(Gdx.input.getX(),
+            Gdx.input.getY(), 0));
+
+    projectilePhysics.fire(new Vector2(destination.x - origin.x,
+            destination.y - origin.y), 5);
 
   }
 
