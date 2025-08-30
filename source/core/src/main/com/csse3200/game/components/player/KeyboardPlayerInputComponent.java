@@ -99,7 +99,10 @@ public class KeyboardPlayerInputComponent extends InputComponent {
         triggerSelectItem();
         focusedItem = 4;
         return true;
-      case Keys.P:
+//      case Keys.P:
+//        triggerAddItem();
+//        return true;
+      case Keys.E:
         triggerAddItem();
         return true;
       default:
@@ -120,7 +123,9 @@ public class KeyboardPlayerInputComponent extends InputComponent {
   }
 
   private void triggerAddItem() {
-    entity.getEvents().trigger("add item", "images/mud.png");
+    System.out.println("Pick up event triggered");
+    entity.getEvents().trigger("pick up");
+
   }
   private void triggerSelectItem() {
     entity.getEvents().trigger("focus item", focusedItem);

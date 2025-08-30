@@ -20,27 +20,34 @@ class InventoryComponentTest {
   @DisplayName("Testing: addItem, setItem, get, getInventory, remove, isFull, isEmpty")
   class inventoryMethodsTest {
     private int processor = 100;
+    private int MAX_INVENTORY = 5;
     ArrayList<Entity> testInven;
     InventoryComponent inventory;
 
     @BeforeEach
     void setup() {
       testInven = new ArrayList<Entity>();
-      for (int idx = 0; idx < 5; idx++) {
+      for (int idx = 0; idx < MAX_INVENTORY; idx++) {
         testInven.add(null);
       }
       inventory = new InventoryComponent(this.processor);
+      Entity test = new Entity().addComponent(inventory);
     }
 
     @Test
     void testGetInventoryEmpty() {
-      for (int idx = 0; idx < 5; idx++) {
+      for (int idx = 0; idx < MAX_INVENTORY; idx++) {
         assertNull(inventory.get(idx));
+        assertNull(inventory.getTex(idx));
       }
+      ArrayList<String> test = new ArrayList<String>();
+      for (int idx = 0; idx < MAX_INVENTORY; idx++)
+        test.add(idx, null);
 
       assertFalse(inventory.isFull(), "Starting inventory isn't full");
       assertTrue(inventory.isEmpty(), "Starting inventory is empty");
       assertEquals(testInven, inventory.getInventory(), "Starting inventory is empty");
+      assertEquals(test, inventory.getTextures(), "Starting inventory textures should be empty");
       assertEquals(0, inventory.getSize());
     }
 
@@ -52,47 +59,49 @@ class InventoryComponentTest {
 
       assertSame(testInven.get(0), inventory.getInventory().get(0),
               "Inventory of 1 item holds 1 item");
-      for (int idx = 1; idx < 5; idx++) {
+      for (int idx = 1; idx < MAX_INVENTORY; idx++) {
         assertNull(inventory.getInventory().get(idx),
                 String.format("Slot %d is null (\'empty\')", idx));
       }
       assertFalse(inventory.isEmpty());
       assertFalse(inventory.isFull());
-      assertEquals(5, inventory.getInventory().size(), "inventory size doesn't increase");
+      assertEquals(MAX_INVENTORY, inventory.getInventory().size(), "inventory size doesn't increase");
       assertEquals(1, inventory.getSize());
     }
 
     @Test
     void testGetInventoryFullInventory() {
-      Entity[] testSet = new Entity[5];
-      for (int idx = 0; idx < 5; idx++) {
+      Entity[] testSet = new Entity[MAX_INVENTORY];
+      for (int idx = 0; idx < MAX_INVENTORY; idx++) {
         testSet[idx] = new Entity();
         inventory.addItem(testSet[idx]);
         testInven.set(idx, testSet[idx]);
       }
 
       // check full inventory
-      for (int idx = 0; idx < 5; idx++) {
+      for (int idx = 0; idx < MAX_INVENTORY; idx++) {
           assertSame(testInven.get(idx), inventory.getInventory().get(idx),
                   "Returns full inventory");
       }
       assertTrue(inventory.isFull());
       assertFalse(inventory.isEmpty());
-      assertEquals(5, inventory.getSize());
+      assertEquals(MAX_INVENTORY, inventory.getSize());
 
-      for (int idx = 0; idx < 5; idx++) {
+      for (int idx = 0; idx < MAX_INVENTORY; idx++) {
           assertNotNull(inventory.get(idx));
+          assertNotNull(inventory.getTex(idx));
       }
     }
 
     @Test
     void shouldGet() {
-      Entity[] testSet = new Entity[5];
-      for (int idx = 0; idx < 5; idx++) {
+      Entity[] testSet = new Entity[MAX_INVENTORY];
+      for (int idx = 0; idx < MAX_INVENTORY; idx++) {
         assertNull(inventory.get(idx), String.format("pos: %d in inventory is Empty", idx));
+        assertNull(inventory.getTex(idx), String.format("pos: %d in inventory is Empty", idx));
       }
 
-      for (int idx = 0; idx < 5; idx++) {
+      for (int idx = 0; idx < MAX_INVENTORY; idx++) {
         testSet[idx] = new Entity();
         inventory.addItem(testSet[idx]);
         assertSame(testSet[idx], inventory.get(idx),
@@ -102,13 +111,18 @@ class InventoryComponentTest {
       assertNull(inventory.get(6), "Invalid index returns null");
       assertNull(inventory.get(5), "Invalid index returns null");
       assertNull(inventory.get(-1), "Invalid index returns null");
+      assertNull(inventory.getTex(6), "Invalid index returns null");
+      assertNull(inventory.getTex(5), "Invalid index returns null");
+      assertNull(inventory.getTex(-1), "Invalid index returns null");
       assertNotNull(inventory.get(4), "Valid index returns an Entity");
       assertNotNull(inventory.get(0), "Valid index returns an Entity");
+      assertNotNull(inventory.getTex(4), "Valid index returns a texture path");
+      assertNotNull(inventory.getTex(0), "Valid index returns a texture path");
     }
 
     @Test
     void shouldRemoveItem() {
-      for (int idx = 0; idx < 5; idx++) {
+      for (int idx = 0; idx < MAX_INVENTORY; idx++) {
         inventory.addItem(new Entity());
         testInven.set(idx, new Entity());
       }
@@ -147,15 +161,20 @@ class InventoryComponentTest {
       assertTrue(inventory.setItem(2, item4), "Should set item4");
       assertTrue(inventory.setItem(4, item5), "Should set item5");
 
-      assertEquals(5, inventory.getSize(), "Should have 5 items");
+      assertEquals(MAX_INVENTORY, inventory.getSize(), "Should have 5 items");
       assertTrue(inventory.isFull(), "Inventory should be full");
 
-      assertEquals(item1, inventory.get(0), "Item1 in slot 0") ;
-      assertEquals(item2, inventory.get(3), "Item2 in slot 3") ;
-      assertEquals(item3, inventory.get(1), "Item3 in slot 1") ;
-      assertEquals(item4, inventory.get(2), "Item4 in slot 2") ;
-      assertEquals(item5, inventory.get(4), "Item5 in slot 4") ;
+      assertEquals(item1, inventory.get(0), "Item1 in slot 0");
+      assertEquals(item2, inventory.get(3), "Item2 in slot 3");
+      assertEquals(item3, inventory.get(1), "Item3 in slot 1");
+      assertEquals(item4, inventory.get(2), "Item4 in slot 2");
+      assertEquals(item5, inventory.get(4), "Item5 in slot 4");
 
+      assertEquals("images/mud.png", inventory.getTex(0), "texture in slot 0");
+      assertEquals("images/mud.png", inventory.getTex(3), "texture in slot 3");
+      assertEquals("images/mud.png", inventory.getTex(1), "texture in slot 1");
+      assertEquals("images/mud.png", inventory.getTex(2), "texture in slot 2");
+      assertEquals("images/mud.png", inventory.getTex(4), "texture in slot 4");
     }
 
     @Test
@@ -164,11 +183,12 @@ class InventoryComponentTest {
       assertTrue(inventory.addItem(item1), "Should successfully add first item");
       assertEquals(1, inventory.getSize(), "Size should be 1 after adding first item");
       assertEquals(item1, inventory.get(0), "First item should be in slot 0");
+      assertEquals("images/mud.png", inventory.getTex(0), "First item texture should be in slot 0");
 
       Entity item2 = new Entity();
       assertTrue(inventory.addItem(item2), "Should successfully add second item");
       assertEquals(2, inventory.getSize(), "Size should be 2 after adding second item");
-      assertEquals(item2, inventory.get(1), "Second item should be in slot 1");
+      assertEquals("images/mud.png", inventory.getTex(1), "Second item texture should be in slot 1");
 
       Entity item3 = new Entity();
       Entity item4 = new Entity();
@@ -177,10 +197,9 @@ class InventoryComponentTest {
       assertTrue(inventory.addItem(item4), "Should add fourth item");
       assertTrue(inventory.addItem(item5), "Should add fifth item");
 
-      assertEquals(5, inventory.getSize(), "Should have 5 items");
+      assertEquals(MAX_INVENTORY, inventory.getSize(), "Should have 5 items");
       assertTrue(inventory.isFull(), "Inventory should be full");
     }
-
   }
 
   @Test
@@ -205,11 +224,11 @@ class InventoryComponentTest {
   @Test
   void shouldAddProcessor() {
     InventoryComponent inventory = new InventoryComponent(100);
-    inventory.addGold(-500);
+    inventory.addProcessor(-500);
     assertEquals(0, inventory.getProcessor());
 
-    inventory.addGold(100);
-    inventory.addGold(-20);
+    inventory.addProcessor(100);
+    inventory.addProcessor(-20);
     assertEquals(80, inventory.getProcessor());
   }
 }

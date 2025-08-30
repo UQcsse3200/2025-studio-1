@@ -8,30 +8,57 @@ import com.csse3200.game.physics.components.ColliderComponent;
 import com.csse3200.game.physics.components.PhysicsComponent;
 import com.csse3200.game.rendering.TextureRenderComponent;
 
+
+// TODO delete these imports when finished testing
+import com.csse3200.game.physics.components.HitboxComponent;
+import com.csse3200.game.components.entity.item.ItemComponent;
 /**
  * Factory to create obstacle entities.
  *
  * <p>Each obstacle entity type should have a creation method that returns a corresponding entity.
  */
+// TODO uncomment when finished testing --(original obstaclefactory code )
 public class ObstacleFactory {
+//
+//  /**
+//   * Creates a tree entity.
+//   * @return entity
+//   */
+//  public static Entity createTree() {
+//    Entity tree =
+//        new Entity()
+//            .addComponent(new TextureRenderComponent("images/tree.png"))
+//            .addComponent(new PhysicsComponent())
+//            .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
+//
+//    tree.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
+//    tree.getComponent(TextureRenderComponent.class).scaleEntity();
+//    tree.scaleHeight(2.5f);
+//    PhysicsUtils.setScaledCollider(tree, 0.5f, 0.2f);
+//    return tree;
+//  }
 
-  /**
-   * Creates a tree entity.
-   * @return entity
-   */
+  // TODO delete this function when finished testing
   public static Entity createTree() {
-    Entity tree =
-        new Entity()
-            .addComponent(new TextureRenderComponent("images/tree.png"))
+    Entity tree = new Entity()
+            .addComponent(new TextureRenderComponent("images/mud.png"))
             .addComponent(new PhysicsComponent())
-            .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
+            .addComponent(new ColliderComponent().setLayer(PhysicsLayer.ITEM))
+            .addComponent(new HitboxComponent())
+            .addComponent(new ItemComponent(1));
+
 
     tree.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
     tree.getComponent(TextureRenderComponent.class).scaleEntity();
     tree.scaleHeight(2.5f);
-    PhysicsUtils.setScaledCollider(tree, 0.5f, 0.2f);
+    PhysicsUtils.setScaledCollider(tree, 2.0f, 1.8f);
+
+    //new  tree.getComponent(PhysicsComponent.class).getBody().setUserData(tree);
+
     return tree;
   }
+
+
 
   /**
    * Creates an invisible physics wall.
@@ -41,8 +68,8 @@ public class ObstacleFactory {
    */
   public static Entity createWall(float width, float height) {
     Entity wall = new Entity()
-        .addComponent(new PhysicsComponent().setBodyType(BodyType.StaticBody))
-        .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
+            .addComponent(new PhysicsComponent().setBodyType(BodyType.StaticBody))
+            .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
     wall.setScale(width, height);
     return wall;
   }
@@ -51,3 +78,4 @@ public class ObstacleFactory {
     throw new IllegalStateException("Instantiating static util class");
   }
 }
+
