@@ -57,15 +57,16 @@ public class PlayerInventoryDisplay extends UIComponent {
         entity.getEvents().addListener("remove all items", this::clearAll);
         entity.getEvents().addListener("focus item", this::setFocusedIndex);
 
-        entity.getEvents().addListener("update display", this::checkInventory);
+         entity.getEvents().addListener("update display", this::checkInventory);
     }
 
-    private void checkInventory(Array<String> inventoryTex) {
-        for (int idx = 0; idx < SLOTS; idx++) {
-            if (inventoryTex.get(idx) == null)
-                continue;
-            addItem(idx, inventoryTex.get(idx));
-        }
+    /**
+     * This function goes over the inventory and updates the display
+     * @param index The position of the item to update in the display
+     * @param texturePath The texture path of the items textuer
+     */
+    private void checkInventory(int index, String texturePath) {
+        addItem(index, texturePath);
     }
 
     /**
