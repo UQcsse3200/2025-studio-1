@@ -3,6 +3,7 @@ package com.csse3200.game.ui.terminal;
 import com.csse3200.game.components.Component;
 import com.csse3200.game.ui.terminal.commands.Command;
 import com.csse3200.game.ui.terminal.commands.DebugCommand;
+import com.csse3200.game.ui.terminal.commands.WinScreenCommand;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -10,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import com.csse3200.game.GdxGame;
 
 /**
  * State tracker for a debug terminal. Any commands to be actioned through the terminal input should
@@ -20,15 +22,26 @@ public class Terminal extends Component {
   private final Map<String, Command> commands;
   private String enteredMessage = "";
   private boolean isOpen = false;
+  private final GdxGame game;
 
   public Terminal() {
-    this(new HashMap<>());
+    this(new HashMap<>(), null);
+  }
+
+  public Terminal(GdxGame game) {
+    this(new HashMap<>(), game);
   }
 
   public Terminal(Map<String, Command> commands) {
+    this(commands, null);
+  }
+
+  public Terminal(Map<String, Command> commands, GdxGame game) {
     this.commands = commands;
+    this.game = game;
 
     addCommand("debug", new DebugCommand());
+    addCommand("winscreen", new WinScreenCommand(game));
   }
 
   /** @return message entered by user */
