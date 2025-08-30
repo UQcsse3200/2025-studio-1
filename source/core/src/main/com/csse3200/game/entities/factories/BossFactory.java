@@ -7,6 +7,8 @@ import com.csse3200.game.ai.tasks.AITaskComponent;
 import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.components.npc.GhostAnimationController;
 import com.csse3200.game.components.TouchAttackComponent;
+import com.csse3200.game.components.enemy.FireballAttackComponment;
+import com.csse3200.game.components.enemy.FireballMovementComponent;
 import com.csse3200.game.components.tasks.ChaseTask;
 import com.csse3200.game.components.tasks.WanderTask;
 import com.csse3200.game.entities.Entity;
@@ -35,13 +37,31 @@ public class BossFactory {
 
         boss2
                 .addComponent(new CombatStatsComponent(config.health, config.baseAttack))
-                .addComponent(new TextureRenderComponent("images/robot-2-attack.png"));
-
+                .addComponent(new TextureRenderComponent("images/robot-2-common.png"))
+                .addComponent(new FireballAttackComponment(
+                target,
+                1.5f,
+                8f,
+                6f,
+                config.baseAttack + 2
+        ));
+>>>>>>> 2ad7b6e (boss fireball attack)
         boss2.getComponent(TextureRenderComponent.class).scaleEntity();
 
         return boss2;
     }
-    
+    public static Entity createFireball(Vector2 from, Vector2 velocity) {
+        Entity fireball = new Entity()
+                .addComponent(new PhysicsComponent())
+                .addComponent(new PhysicsMovementComponent())
+                .addComponent(new TextureRenderComponent("images/fireball.png"))
+                .addComponent(new FireballMovementComponent(velocity))
+                .addComponent(new ColliderComponent())
+                .addComponent(new HitboxComponent().setLayer(PhysicsLayer.NPC));
+        fireball.getComponent(TextureRenderComponent.class).scaleEntity();
+        fireball.setPosition(from);
+        return fireball;
+    }
     static Entity createBaseNPC(Entity target) {
         AITaskComponent aiComponent =
                 new AITaskComponent()
