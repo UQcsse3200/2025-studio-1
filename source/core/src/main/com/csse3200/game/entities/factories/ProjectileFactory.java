@@ -38,7 +38,7 @@ public class ProjectileFactory {
         PistolBulletConfig config = configs.pistolBullet;
         pistolBullet
                 .addComponent(new CombatStatsComponent(config.health, config.base_attack))
-                .addComponent(new TextureRenderComponent("images/ammo.png"))
+                .addComponent(new TextureRenderComponent("images/round.png"))
                 .addComponent(new ColliderComponent())
                 .addComponent(new HitboxComponent().setLayer(PhysicsLayer.FRIENDLY_PROJECTILE))
                 .addComponent(new TouchAttackComponent(PhysicsLayer.NPC, 1f));
@@ -48,8 +48,8 @@ public class ProjectileFactory {
                 .setFilter(PhysicsLayer.FRIENDLY_PROJECTILE, (short) (PhysicsLayer.NPC));
 
 
-        PhysicsUtils.setScaledCollider(pistolBullet, 0.5f, 0.2f);
-        pistolBullet.scaleHeight(1.5f);
+
+        pistolBullet.scaleHeight(0.85f);
         return pistolBullet;
     }
 
