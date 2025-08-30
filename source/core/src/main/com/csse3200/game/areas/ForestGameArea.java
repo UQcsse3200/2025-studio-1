@@ -81,10 +81,11 @@ public class ForestGameArea extends GameArea {
     spawnTrees();
     player = spawnPlayer();
     dagger = spawnDagger();
-    this.equipItem(dagger);
-    lightsaber = spawnLightsaber();
-    bullet = spawnBullet();
     pistol = spawnPistol();
+    this.equipItem(pistol);
+    lightsaber = spawnLightsaber();
+    //bullet = spawnBullet();
+
     //this.equipItem(lightsaber);
     //this.equipItem(pistol);
     spawnGhosts();
@@ -176,11 +177,11 @@ public class ForestGameArea extends GameArea {
 //    return newLightsaber;
 //  }
 
-  private Entity spawnBullet() {
-    Entity newBullet = ProjectileFactory.createPistolBullet();
-    spawnEntityAt(newBullet, new GridPoint2(5, 5), true, true);
-    return newBullet;
-  }
+//  private Entity spawnBullet() {
+//    Entity newBullet = ProjectileFactory.createPistolBullet();
+//    spawnEntityAt(newBullet, new GridPoint2(5, 5), true, true);
+//    return newBullet;
+//  }
 
   private Entity spawnPistol() {
     Entity newPistol = WeaponsFactory.createPistol();
