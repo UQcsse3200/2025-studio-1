@@ -77,10 +77,8 @@ public class EntityComponent extends Component {
     /**
      * displays the key information of the entity like name, type, id
      */
-    public void display(){
-        System.out.println("Name : " + getName() +
-                "\nId " + getId() +
-            "\nType :  " + getType());
+    public String display(){
+        return ("Name : " + getName() + " Id : " + getId() + " Type : " + getType());
     }
 }
 
