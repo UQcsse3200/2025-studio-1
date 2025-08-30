@@ -49,6 +49,7 @@ public class PlayerFactory {
     PhysicsUtils.setScaledCollider(player, 0.6f, 0.3f);
     player.getComponent(ColliderComponent.class).setDensity(1.5f);
     player.getComponent(TextureRenderComponent.class).scaleEntity();
+    player.getComponent(CombatStatsComponent.class).setAttackTimer(3f);
     return player;
   }
 
