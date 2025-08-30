@@ -2,27 +2,19 @@ package com.csse3200.game.components.player;
 
 
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
+
 import com.csse3200.game.components.Component;
-import com.csse3200.game.components.items.ItemComponent;
+import com.csse3200.game.components.entity.item.ItemComponent;
+import com.csse3200.game.components.player.InventoryComponent;
+import com.badlogic.gdx.physics.box2d.Fixture;
 import com.csse3200.game.entities.Entity;
-import com.csse3200.game.physics.PhysicsLayer;
+import com.csse3200.game.physics.BodyUserData;
 import com.csse3200.game.physics.components.HitboxComponent;
 
-
-
-
-/* this component allows player to pickup items or weapons from the game and
- * this is done by checking for collisions with items
- * then it checks if inventory has space it moves it to inventory
+/**
+ * Component that allows an entity to pick up items when in proximity.
+ * Listens for collision events with items and adds them to the inventory on request.
  */
-
-// Create function to determine if the player is close enough to the item to pick it up
-
-// Create a function to actually pick up
-
-// Create a function to check if inventory is full, call a function from inventoryComponent
 
 public class ItemPickUpComponent extends Component {
     private InventoryComponent inventory;
@@ -32,66 +24,54 @@ public class ItemPickUpComponent extends Component {
         this.inventory = inventory;
     }
 
-    @Override
-    public void create() {
-        HitboxComponent hitbox = entity.getComponent(HitboxComponent.class);
-        if (hitbox != null) {
-            hitbox.setLayer(PhysicsLayer.PLAYER); //this makes sure hitbox lets only Player interact with items
 
-        }
-        entity.getEvents().addListener("collisionStart", this::onCollisionStart);
-        //entity.getEvents().addListener("collisionEnd", this::onCollisionEnd);
+@Override
+public void create() {
+//    HitboxComponent hitbox = entity.getComponent(HitboxComponent.class);       //might need this later
+//    if (hitbox != null) {
+//        hitbox.setSensor(true);    //this is commented out for now as hitbox is already set as a sensor
+//    }
+    entity.getEvents().addListener("collisionStart", this::onCollisionStart);
+    entity.getEvents().addListener("collisionEnd", this::onCollisionEnd);
+    entity.getEvents().addListener("pick up", this::onPickupRequest);
+}
 
-        //entity.getEvents().addListener("pick up", this::onPickupRequest);
-    }
+private void onCollisionStart(Fixture me, Fixture other) {
+    Object data = other.getBody().getUserData();
+    if (!(data instanceof BodyUserData userData)) return;
 
-    //detects when the player touches an item entity
-    private void onCollisionStart(Entity other) {
-        if (other.getComponent(ItemComponent.class) != null) {
-            targetItem = other;
-        }
-    }
-
-    private void onCollisionEnd(Entity other) {
-        if (targetItem == other) {
-            targetItem = null;
-        }
-    }
-
-
-    //checks if a nearby item is present and checks if player presses the E key then pickup nearbyItem
-    public void update() {
-        if (targetItem != null && Gdx.input.isKeyPressed(Input.Keys.E)) {
-        //if (Gdx.input.isKeyPressed(Input.Keys.E)) {
-            System.out.println("E is pressed");
-            pickUpItem(targetItem);
-        }
-    }
-
-        //to add item to inventory and remove it from the map/world
-        private void pickUpItem (Entity item){
-            if (item == null) {
-                return;
-            }
-            boolean itemAdded = inventory.addItem(item);   //this is checking if inventory is full
-
-        boolean added = inventory.addItem(targetItem);
-        if (added) {
-            //targetItem.dispose(); // remove from world
-            targetItem = null;
-        }  // Inventory full – optionally trigger a UI toast/hint event here
-        // entity.getEvents().trigger("uiToast", "Inventory full");
-
-
+    Entity otherEntity = userData.entity;
+    if (otherEntity.getComponent(ItemComponent.class) != null) {
+        targetItem = otherEntity;
+        System.out.println("Collision with item: " + targetItem);
     }
 }
 
+private void onCollisionEnd(Fixture me, Fixture other) {
+    Object data = other.getBody().getUserData();
+    if (!(data instanceof BodyUserData userData)) return;
 
+    Entity otherEntity = userData.entity;
+    if (targetItem == otherEntity) {
+        targetItem = null;
+        System.out.println("Collision ended with item: " + otherEntity);
+    }
+}
 
+private void onPickupRequest() {
+    System.out.println("Pick up event received. targetItem = " + targetItem);
+    if (targetItem != null) {
+        pickUpItem(targetItem);
+    }
+}
+    private void pickUpItem(Entity item) {
+            if (item == null) return;
 
-
-
-
-
-
-
+            boolean added = inventory.addItem(item);
+            if (added) {
+                // item.dispose(); //to remove item from the world after being in collision/picked up
+                targetItem = null;
+                System.out.println("Item picked up and added to inventory!");
+            } else {
+                System.out.println("Inventory full. Cannot pick up item.");
+            }}}
