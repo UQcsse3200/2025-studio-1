@@ -49,6 +49,7 @@ public class PhysicsProjectileComponent extends Component{
     public void update() {
         float dt = ServiceLocator.getTimeSource().getDeltaTime();
         lived += dt;
+        System.out.println(entity.getPosition());
         if (lived > lifetime) {
 
             entity.setToRemove();
