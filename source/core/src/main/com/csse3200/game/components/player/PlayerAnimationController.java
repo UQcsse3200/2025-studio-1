@@ -5,7 +5,7 @@ import com.csse3200.game.rendering.AnimationRenderComponent;
 import com.badlogic.gdx.math.Vector2;
 
 /**
- * This class listens to events relevant to a ghost entity's state and plays the animation when one
+ * This class listens to events relevant to the players state and plays the animation when one
  * of the events is triggered.
  */
 public class PlayerAnimationController extends Component {
@@ -13,6 +13,9 @@ public class PlayerAnimationController extends Component {
     private boolean facingRight = true;
     private boolean sprinting = false;
 
+    /**
+     * Creates a new animation controller and adds event listeners for relevant events.
+     */
     @Override
     public void create() {
         super.create();
@@ -24,6 +27,11 @@ public class PlayerAnimationController extends Component {
         entity.getEvents().addListener("sprintStop", () -> sprinting = false);
     }
 
+    /**
+     * Starts a walking animation facing the specified direction
+     *
+     * @param direction direction which the player is walking
+     */
     void animateWalk(Vector2 direction) {
         if(!sprinting) {
             if (direction.x > 0) {
@@ -45,6 +53,9 @@ public class PlayerAnimationController extends Component {
         }
     }
 
+    /**
+     * Animates a player jump facing the last known direction.
+     */
     void animateJump() {
         if (facingRight) {
             animator.startAnimation("right_jump");
@@ -53,6 +64,9 @@ public class PlayerAnimationController extends Component {
         }
     }
 
+    /**
+     * Animates player standing facing the last known direction
+     */
     void animateStop() {
         if(facingRight) {
             animator.startAnimation("right_stand");
