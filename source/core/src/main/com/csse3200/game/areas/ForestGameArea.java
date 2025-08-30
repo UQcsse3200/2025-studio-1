@@ -83,7 +83,7 @@ public class ForestGameArea extends GameArea {
     player = spawnPlayer();
     dagger = spawnDagger();
     pistol = spawnPistol();
-    this.equipItem(pistol);
+    //this.equipItem(pistol);
     lightsaber = spawnLightsaber();
     //bullet = spawnBullet();
 

@@ -56,17 +56,21 @@ public class KeyboardPlayerInputComponent extends InputComponent {
   public boolean touchDown(int screenX, int screenY, int pointer, int button) {
     if (button == Input.Buttons.LEFT) {
 
+      if (entity.getCurrItem() == null){
+
+        return true;
+      }
+
       if (entity.getCurrItem().getComponent(TagComponent.class).getTag().equals("ranged")){
 
         entity.getEvents().trigger("shoot");
-        return true;
       }
       else {
 
 
         entity.getEvents().trigger("attack");
-        return true;
       }
+        return true;
     }
     return false;
   }
