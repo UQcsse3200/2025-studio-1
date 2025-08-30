@@ -25,10 +25,22 @@ import com.csse3200.game.rendering.TextureRenderComponent;
 import com.csse3200.game.services.ServiceLocator;
 
 
+/**
+ * A factory class for creating Boss and NPC entities for the game.
+ * This factory defines behavior, physics, and rendering properties for Boss-3
+ * and provides a base NPC creation method that includes movement and attack logic.
+ */
 public class BossFactory {
     private static final NPCConfigs configs =
             FileLoader.readClass(NPCConfigs.class, "configs/NPCs.json");
-    //new added boss3
+
+    /**
+     * Creates a Boss-3 entity with combat stats, rendering, scaling, and physics collider.
+     * This boss is capable of wandering, chasing, and attacking the player.
+     *
+     * @param target The player entity that the boss will chase and attack.
+     * @return A fully configured {@link Entity} representing Boss-3.
+     */
     public static Entity createBoss3(Entity target) {
         Entity boss3 = createBaseNPC(target);
         BaseEntityConfig config = configs.boss3;
@@ -44,7 +56,14 @@ public class BossFactory {
         PhysicsUtils.setScaledCollider(boss3, 2.0f, 0.8f);
         return boss3;
     }
-    
+
+    /**
+     * Creates a base NPC entity with default wandering, chasing, physics,
+     * and touch attack behavior. This is used as a template for other bosses or NPCs.
+     *
+     * @param target The player entity that the NPC should follow or chase.
+     * @return A configured {@link Entity} with AI movement and basic combat capability.
+     */
     static Entity createBaseNPC(Entity target) {
         AITaskComponent aiComponent =
                 new AITaskComponent()
