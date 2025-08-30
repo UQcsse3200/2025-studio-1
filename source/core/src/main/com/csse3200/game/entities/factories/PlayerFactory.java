@@ -1,11 +1,7 @@
 package com.csse3200.game.entities.factories;
 
-import com.badlogic.gdx.physics.box2d.Fixture;
 import com.csse3200.game.components.CombatStatsComponent;
-import com.csse3200.game.components.player.InventoryComponent;
-import com.csse3200.game.components.player.PlayerActions;
-import com.csse3200.game.components.player.PlayerInventoryDisplay;
-import com.csse3200.game.components.player.PlayerStatsDisplay;
+import com.csse3200.game.components.player.*;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.PlayerConfig;
 import com.csse3200.game.files.FileLoader;
@@ -36,7 +32,6 @@ public class PlayerFactory {
   public static Entity createPlayer() {
     InputComponent inputComponent =
         ServiceLocator.getInputService().getInputFactory().createForPlayer();
-
     InventoryComponent playerInventory = new InventoryComponent(stats.gold);
 
     Entity player =
@@ -47,12 +42,11 @@ public class PlayerFactory {
             .addComponent(new HitboxComponent().setLayer(PhysicsLayer.PLAYER))
             .addComponent(new PlayerActions())
             .addComponent(new CombatStatsComponent(stats.health, stats.baseAttack))
+            .addComponent(playerInventory)
+            .addComponent(new ItemPickUpComponent(playerInventory))
             .addComponent(inputComponent)
             .addComponent(new PlayerStatsDisplay())
-            .addComponent(new PlayerInventoryDisplay())
-            .addComponent(playerInventory)
-            .addComponent(new ItemPickUpComponent(playerInventory));
-
+            .addComponent(new PlayerInventoryDisplay(playerInventory));
 
     PhysicsUtils.setScaledCollider(player, 0.6f, 0.3f);
     player.getComponent(ColliderComponent.class).setDensity(1.5f);
