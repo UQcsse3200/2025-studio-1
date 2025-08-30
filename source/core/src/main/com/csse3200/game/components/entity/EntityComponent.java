@@ -16,7 +16,6 @@ public class EntityComponent extends Component {
     public EntityComponent(String name, int id, String type) {
       this.name = name;
       this.id = id;
-      id++;
       this.type = type;
     }
 
@@ -44,17 +43,13 @@ public class EntityComponent extends Component {
      *
      * @return the id of a specific entity
      */
-    public int getId() {
-        return id;
-    }
+    public int getId() {return id;}
 
     /**
      *
      * @param id sets the entity id to the given value
      */
-    public void setId(int id) {
-        this.id = id;
-    }
+    public void setId(int id) {this.id = id;}
 
     /**
      *
@@ -77,10 +72,10 @@ public class EntityComponent extends Component {
     /**
      * displays the key information of the entity like name, type, id
      */
-    public void display(){
-        System.out.println("Name : " + getName() +
-                "\nId " + getId() +
-            "\nType :  " + getType());
+    public String display(){
+        return("Name : " + getName() + " " +
+                "Id : " + getId() + " " +
+            "Type : " + getType());
     }
 }
 
