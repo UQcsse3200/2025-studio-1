@@ -35,7 +35,7 @@ public class BossFactory {
 
         boss2
                 .addComponent(new CombatStatsComponent(config.health, config.baseAttack))
-                .addComponent(new TextureRenderComponent("images/robot-2-common.png"));
+                .addComponent(new TextureRenderComponent("images/robot-2-attack.png"));
 
         boss2.getComponent(TextureRenderComponent.class).scaleEntity();
 
