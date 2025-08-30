@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * A component intended to be used by the player to track their inventory.
@@ -114,10 +115,11 @@ public class InventoryComponent extends Component {
       this.items.set(index, item);
 
       // TODO: This will need to be replaced with the actual item.getTexture()
-      //  or whatever other method implemented
+      //  or whatever other method implemented to get the item texture
+      String itemTex = "images/mud.png";
       this.itemTexs.set(index, "images/mud.png");
+      entity.getEvents().trigger("update display", index, "images/mud.png");
 
-      entity.getEvents().trigger("update display", this.getInventory());
       this.inventoryCount++;
     } else // There is something already there
       return false;
@@ -140,7 +142,7 @@ public class InventoryComponent extends Component {
     // set item to be empty, and then trigger display update
     this.items.set(index, null);
     this.itemTexs.set(index, null);
-    entity.getEvents().trigger("update display", this.getInventory());
+    entity.getEvents().trigger("update display", index, null);
     this.inventoryCount--;
     return true;
   }
