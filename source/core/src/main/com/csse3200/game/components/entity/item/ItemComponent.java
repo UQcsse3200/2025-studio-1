@@ -21,13 +21,12 @@ public class ItemComponent extends EntityComponent {
     public ItemComponent() {}
 
     /**
-     *
-     * @return the count for the item
+     *@return the count for the item
      */
     public int getCount(){return this.count;}
 
     /**
-     * serCount to set item_count at a given value
+     * setCount to set item_count at a given value
      * @param count sets the item count
      */
     public void setCount(int count){this.count = count;}
