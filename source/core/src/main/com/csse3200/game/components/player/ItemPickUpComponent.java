@@ -3,6 +3,7 @@ package com.csse3200.game.components.player;
 
 
 
+import com.csse3200.game.areas.ForestGameArea;
 import com.csse3200.game.components.Component;
 import com.csse3200.game.components.entity.item.ItemComponent;
 import com.csse3200.game.components.player.InventoryComponent;
@@ -24,8 +25,7 @@ public class ItemPickUpComponent extends Component {
         this.inventory = inventory;
     }
 
-
-@Override
+    @Override
 public void create() {
 //    HitboxComponent hitbox = entity.getComponent(HitboxComponent.class);       //might need this later
 //    if (hitbox != null) {
@@ -36,7 +36,7 @@ public void create() {
     entity.getEvents().addListener("pick up", this::onPickupRequest);
 }
 
-private void onCollisionStart(Fixture me, Fixture other) {
+    private void onCollisionStart(Fixture me, Fixture other) {
     Object data = other.getBody().getUserData();
     if (!(data instanceof BodyUserData userData)) return;
 
@@ -47,7 +47,7 @@ private void onCollisionStart(Fixture me, Fixture other) {
     }
 }
 
-private void onCollisionEnd(Fixture me, Fixture other) {
+    private void onCollisionEnd(Fixture me, Fixture other) {
     Object data = other.getBody().getUserData();
     if (!(data instanceof BodyUserData userData)) return;
 
@@ -58,7 +58,7 @@ private void onCollisionEnd(Fixture me, Fixture other) {
     }
 }
 
-private void onPickupRequest() {
+    private void onPickupRequest() {
     System.out.println("Pick up event received. targetItem = " + targetItem);
     if (targetItem != null) {
         pickUpItem(targetItem);
@@ -69,9 +69,11 @@ private void onPickupRequest() {
 
             boolean added = inventory.addItem(item);
             if (added) {
-                // item.dispose(); //to remove item from the world after being in collision/picked up
+                item.dispose(); //to remove item from the world after being in collision/picked up
                 targetItem = null;
                 System.out.println("Item picked up and added to inventory!");
             } else {
                 System.out.println("Inventory full. Cannot pick up item.");
-            }}}
+            }
+    }
+}
