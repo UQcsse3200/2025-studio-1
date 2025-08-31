@@ -11,7 +11,7 @@ import com.csse3200.game.rendering.DebugRenderer;
 import com.csse3200.game.services.ServiceLocator;
 
 /** Chases a target entity indefinitely and the entity being visible causes a speed increase */
-public class GPTChaseTask extends DefaultTask implements PriorityTask {
+public class GPTSlowChaseTask extends DefaultTask implements PriorityTask {
     private final Entity target;
     private final int priority;
     private final Vector2 speed;
@@ -24,7 +24,7 @@ public class GPTChaseTask extends DefaultTask implements PriorityTask {
      * @param target The entity to chase.
      * @param priority Task priority when chasing (0 when not chasing).
      */
-    public GPTChaseTask(Entity target, int priority, Vector2 speed) {
+    public GPTSlowChaseTask(Entity target, int priority, Vector2 speed) {
         this.target = target;
         this.priority = priority;
         this.speed = speed;
@@ -59,8 +59,8 @@ public class GPTChaseTask extends DefaultTask implements PriorityTask {
 
     @Override
     public int getPriority() {
-        // Only fast chase if the player is visible to the enemy
-        if (status == Status.ACTIVE && !isTargetVisible()) {
+        // Only slow chase if the player is visible to the enemy
+        if (status == Status.ACTIVE && isTargetVisible()) {
             return priority;
         }
         return -1;
