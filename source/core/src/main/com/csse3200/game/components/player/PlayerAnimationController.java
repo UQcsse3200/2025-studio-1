@@ -15,6 +15,7 @@ public class PlayerAnimationController extends Component {
     private static final Logger logger = LoggerFactory.getLogger(PlayerAnimationController.class);
     private boolean facingRight = true;
     private boolean sprinting = false;
+    private boolean crouching = false;
 
     /**
      * Creates a new animation controller and adds event listeners for relevant events.
@@ -28,6 +29,9 @@ public class PlayerAnimationController extends Component {
         entity.getEvents().addListener("jump", this::animateJump);
         entity.getEvents().addListener("sprintStart", () -> sprinting = true);
         entity.getEvents().addListener("sprintStop", () -> sprinting = false);
+        entity.getEvents().addListener("dash", this::animateDash);
+        entity.getEvents().addListener("crouchStart", () -> crouching = true);
+        entity.getEvents().addListener("crouchStop", () -> crouching = false);
     }
 
     /**
@@ -37,7 +41,10 @@ public class PlayerAnimationController extends Component {
      */
     void animateWalk(Vector2 direction) {
         if(!sprinting) {
-            if (direction.x > 0) {
+            if (crouching) {
+                animateCrouch(direction);
+            }
+            else if (direction.x > 0) {
                 logger.debug("Animating right walk");
                 animator.startAnimation("right_walk");
                 facingRight = true;
@@ -84,6 +91,34 @@ public class PlayerAnimationController extends Component {
             logger.debug("Animating left stand");
             animator.startAnimation("left_stand");
         }
+    }
+
+    /**
+     * Animates a player dashing in the relevant direction
+     * @param facingRight whether player is facing right or not
+     */
+    void animateDash(boolean facingRight) {
+        if(facingRight) {
+            logger.debug("Animating right dash");
+            animator.startAnimation("right_run");
+        } else {
+            logger.debug("Animating left dash");
+            animator.startAnimation("left_run");
+        }
+    }
+
+    /**
+     * Animates player crouching in given direction
+     *
+     * @param direction direction player is moving
+     */
+    void animateCrouch(Vector2 direction) {
+        if(direction.x > 0) {
+            animator.startAnimation("right_crouch");
+        } else {
+            animator.startAnimation("left_crouch");
+        }
+        // Need to add idle check (if direction = 0)
     }
 
 }

@@ -40,6 +40,13 @@ public class KeyboardPlayerInputComponent extends InputComponent {
         entity.getEvents().trigger("sprintStart");
         triggerWalkEvent();
         return true;
+      case Keys.S:
+        entity.getEvents().trigger("crouchAttempt");
+        return true;
+      case Keys.SHIFT_LEFT: // sprint start (left shift down)
+        entity.getEvents().trigger("sprintAttempt");
+        triggerWalkEvent();
+        return true;
       case Keys.SPACE:
         jump();
         return true;
@@ -74,6 +81,12 @@ public class KeyboardPlayerInputComponent extends InputComponent {
         entity.getEvents().trigger("sprintStop");
         triggerWalkEvent();
         return true;
+      case Keys.S:
+        entity.getEvents().trigger("crouchStop");
+        return true;
+      case Keys.SHIFT_LEFT: // sprint stop (left shift up)
+        entity.getEvents().trigger("sprintStop");
+        triggerWalkEvent();
       case Keys.Q:
         triggerRemoveItem();
         return true;

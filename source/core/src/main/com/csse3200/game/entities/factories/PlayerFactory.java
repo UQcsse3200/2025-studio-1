@@ -60,9 +60,9 @@ public class PlayerFactory {
                 .addComponent(animator)
                 .addComponent(new PlayerAnimationController());
 
-    PhysicsUtils.setScaledCollider(player, 0.6f, 0.3f);
     player.getComponent(ColliderComponent.class).setDensity(1.5f);
-    player.getComponent(AnimationRenderComponent.class).scaleEntity(3f);
+    player.getComponent(AnimationRenderComponent.class).scaleEntity(2f);
+    PhysicsUtils.setScaledCollider(player, 1f,1f);
     return player;
   }
 
