@@ -17,7 +17,7 @@ public class MovementTask extends DefaultTask {
 
   private final GameTime gameTime;
   private Vector2 target;
-  private Vector2 speed;
+  private Vector2 speed = null;
   private float stopDistance = 0.01f;
   private long lastTimeMoved;
   private Vector2 lastPos;
@@ -44,6 +44,7 @@ public class MovementTask extends DefaultTask {
     this.movementComponent = owner.getEntity().getComponent(PhysicsMovementComponent.class);
     movementComponent.setTarget(target);
     movementComponent.setMoving(true);
+    // If speed not set, use default speed
     if (speed != null) {
       movementComponent.setSpeed(speed);
     }
