@@ -13,16 +13,15 @@ import com.csse3200.game.physics.components.HitboxComponent;
 
 
 
-/* this component allows player to pickup items or weapons from the game and
- * this is done by checking for collisions with items
- * then it checks if inventory has space it moves it to inventory
+/** this component allows player to pickup items from world and put it into
+ * their inventory.
  */
 
-// Create function to determine if the player is close enough to the item to pick it up
+//To Do: Create function to determine if the player is close enough to the item to pick it up
 
-// Create a function to actually pick up
+//To Do: Create a function to actually pick up
 
-// Create a function to check if inventory is full, call a function from inventoryComponent
+//To Do: Create a function to check if inventory is full, call a function from inventoryComponent
 
 public class ItemPickUpComponent extends Component {
     private InventoryComponent inventory;
@@ -32,12 +31,14 @@ public class ItemPickUpComponent extends Component {
         this.inventory = inventory;
     }
 
+    /**
+     *  creates hitbox on player checking for item collision
+     */
     @Override
     public void create() {
         HitboxComponent hitbox = entity.getComponent(HitboxComponent.class);
         if (hitbox != null) {
             hitbox.setLayer(PhysicsLayer.PLAYER); //this makes sure hitbox lets only Player interact with items
-
         }
         entity.getEvents().addListener("collisionStart", this::onCollisionStart);
         //entity.getEvents().addListener("collisionEnd", this::onCollisionEnd);
@@ -45,21 +46,22 @@ public class ItemPickUpComponent extends Component {
         //entity.getEvents().addListener("pick up", this::onPickupRequest);
     }
 
-    //detects when the player touches an item entity
-    private void onCollisionStart(Entity other) {
-        if (other.getComponent(ItemComponent.class) != null) {
-            targetItem = other;
-        }
-    }
-
-    private void onCollisionEnd(Entity other) {
-        if (targetItem == other) {
+    /**
+     * Sets item on a collision or clears it once collision stops
+     * @param item Entity
+     */
+    private void onCollisionStart(Entity item) {
+        if (item.getComponent(ItemComponent.class) != null) {
+            targetItem = item;
+        } else if (targetItem == item) {
             targetItem = null;
         }
     }
 
-
-    //checks if a nearby item is present and checks if player presses the E key then pickup nearbyItem
+    /**
+     * Checks if Player has pressed 'E' and an item is in proximity then picks
+     * item up
+     */
     public void update() {
         if (targetItem != null && Gdx.input.isKeyPressed(Input.Keys.E)) {
         //if (Gdx.input.isKeyPressed(Input.Keys.E)) {
