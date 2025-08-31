@@ -148,13 +148,6 @@ public class PlayerActions extends Component {
     }
   }
 
-  /**
-   * Cheatcode: infinite dashes
-   */
-  public void infDash() {
-    this.DASH_COOLDOWN = 0;
-  }
-
   void dashDuration() {
     Timer.schedule(new Timer.Task() {
       @Override
@@ -194,6 +187,13 @@ public class PlayerActions extends Component {
   void attack() {
     Sound attackSound = ServiceLocator.getResourceService().getAsset("sounds/Impact4.ogg", Sound.class);
     attackSound.play();
+  }
+
+  /**
+   * Cheatcode: infinite dashes
+   */
+  public void infDash() {
+    this.DASH_COOLDOWN = 0;
   }
 
   /**
