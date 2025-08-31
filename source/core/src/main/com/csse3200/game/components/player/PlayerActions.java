@@ -13,7 +13,7 @@ import com.badlogic.gdx.utils.Timer;
  * and when triggered should call methods within this class.
  */
 public class PlayerActions extends Component {
-  private float jumpImpulse = 2f; 
+  private float jumpImpulse = 120f;
   private static final Vector2 MAX_SPEED = new Vector2(3f, 3f); // Metres per second
   private static final Vector2 CROUCH_SPEED = new Vector2(1.5f, 3f);
   private static final Vector2 SPRINT_SPEED = new Vector2(7f, 3f);
@@ -129,7 +129,7 @@ public class PlayerActions extends Component {
     if (jumpsLeft > 0) {
       boolean isGroundJump = (jumpsLeft == MAX_JUMPS); // first jump
       if (!isGroundJump || (currentTime - lastJumpTime) > JUMP_COOLDOWN_MS) {
-        body.applyLinearImpulse(JUMP_VELOCITY, body.getWorldCenter(), true);
+        body.applyLinearImpulse(new Vector2(0f, jumpImpulse), body.getWorldCenter(), true);
         jumpsLeft--;
         lastJumpTime = currentTime;
       }
