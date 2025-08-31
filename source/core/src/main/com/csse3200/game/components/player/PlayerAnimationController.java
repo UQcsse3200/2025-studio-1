@@ -15,6 +15,7 @@ public class PlayerAnimationController extends Component {
     private static final Logger logger = LoggerFactory.getLogger(PlayerAnimationController.class);
     private boolean facingRight = true;
     private boolean sprinting = false;
+    private boolean crouching = false;
 
     /**
      * Creates a new animation controller and adds event listeners for relevant events.
@@ -29,7 +30,8 @@ public class PlayerAnimationController extends Component {
         entity.getEvents().addListener("sprintStart", () -> sprinting = true);
         entity.getEvents().addListener("sprintStop", () -> sprinting = false);
         entity.getEvents().addListener("dash", this::animateDash);
-        entity.getEvents().addListener("crouch", this::animateCrouch);
+        entity.getEvents().addListener("crouchStart", () -> crouching = true);
+        entity.getEvents().addListener("crouchStop", () -> crouching = false);
     }
 
     /**
@@ -39,7 +41,10 @@ public class PlayerAnimationController extends Component {
      */
     void animateWalk(Vector2 direction) {
         if(!sprinting) {
-            if (direction.x > 0) {
+            if (crouching) {
+                animateCrouch(direction);
+            }
+            else if (direction.x > 0) {
                 logger.debug("Animating right walk");
                 animator.startAnimation("right_walk");
                 facingRight = true;
@@ -113,6 +118,7 @@ public class PlayerAnimationController extends Component {
         } else {
             animator.startAnimation("left_crouch");
         }
+        // Need to add idle check (if direction = 0)
     }
 
 }
