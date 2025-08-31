@@ -3,6 +3,7 @@ package com.csse3200.game.entities.factories;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.csse3200.game.components.CombatStatsComponent;
+import com.csse3200.game.components.TagComponent;
 import com.csse3200.game.components.TouchAttackComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.*;
@@ -41,8 +42,9 @@ public class WeaponsFactory {
     public static Entity createLightsaber() {
         Entity lightsaber =
             new Entity()
-                .addComponent(new TextureRenderComponent("images/templightsaber.png"))
-                .addComponent(new CombatStatsComponent(0, lightsaberConfigs.baseAttack));
+                .addComponent(new TextureRenderComponent("images/lightsaber.png"))
+                .addComponent(new CombatStatsComponent(0, lightsaberConfigs.baseAttack))
+                .addComponent(new TagComponent("melee"));
         lightsaber.getComponent(TextureRenderComponent.class).scaleEntity();
 
         return lightsaber;
@@ -55,7 +57,8 @@ public class WeaponsFactory {
     public static Entity createDagger() {
         Entity dagger= new Entity()
                 .addComponent(new TextureRenderComponent("images/dagger.png"))
-                .addComponent(new CombatStatsComponent(0, daggerConfigs.baseAttack));
+                .addComponent(new CombatStatsComponent(0, daggerConfigs.baseAttack))
+                .addComponent(new TagComponent("melee"));
         dagger.getComponent(TextureRenderComponent.class).scaleEntity();
         dagger.scaleHeight(0.55f);
         return dagger;
@@ -68,7 +71,8 @@ public class WeaponsFactory {
     public static Entity createPistol() {
         Entity pistol = new Entity().addComponent(new TextureRenderComponent(
                 "images/pistol.png")).addComponent(new CombatStatsComponent(0
-                , lightsaberConfigs.baseAttack));
+                , lightsaberConfigs.baseAttack))
+                .addComponent(new TagComponent("ranged"));
         pistol.getComponent(TextureRenderComponent.class).scaleEntity();
         return pistol;
     }
