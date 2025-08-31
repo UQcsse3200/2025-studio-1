@@ -63,6 +63,10 @@ public class PlayerFactory {
     return player;
   }
 
+  /**
+   * Add player animations to animation render component.
+   * @param animator animation render component for the player
+   */
   private static void add_animations(AnimationRenderComponent animator) {
     animator.addAnimation("right_run", 0.1f, Animation.PlayMode.LOOP);
     animator.addAnimation("left_run", 0.1f, Animation.PlayMode.LOOP);
