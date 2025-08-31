@@ -2,9 +2,12 @@ package com.csse3200.game.components.player;
 
 import com.csse3200.game.components.entity.item.ItemComponent;
 import com.csse3200.game.entities.Entity;
+import com.csse3200.game.entities.EntityService;
 import com.csse3200.game.extensions.GameExtension;
+import com.csse3200.game.services.ServiceLocator;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mockito;
 
 import java.lang.reflect.Field;
 
@@ -50,6 +53,8 @@ class ItemPickUpComponentTest {
     void setUp() {
         inventory = new InventoryComponent(/*processor=*/0);
         pickup = new ItemPickUpComponent(inventory);
+        ServiceLocator.registerEntityService(new EntityService());
+
 
         player = new Entity()
                 .addComponent(inventory)
@@ -65,11 +70,14 @@ class ItemPickUpComponentTest {
         @DisplayName("Picking up a valid target item adds it to inventory and clears target")
         void pickUpAddsItemAndClearsTarget() {
             Entity worldItem = new Entity().addComponent(new ItemComponent());
+            worldItem.create();
+
 
             // Simulate collision target present
             setPrivate(pickup, "targetItem", worldItem);
 
             player.getEvents().trigger("pick up");
+
 
             assertEquals(1, inventory.getSize(), "Item should be added to inventory");
             assertSame(worldItem, inventory.get(0), "First slot should contain picked up item");
