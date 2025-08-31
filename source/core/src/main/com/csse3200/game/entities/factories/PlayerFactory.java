@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.components.player.InventoryComponent;
 import com.csse3200.game.components.player.PlayerActions;
+import com.csse3200.game.components.player.PlayerInventoryDisplay;
 import com.csse3200.game.components.player.PlayerStatsDisplay;
 import com.csse3200.game.components.player.PlayerAnimationController;
 import com.csse3200.game.entities.Entity;
@@ -53,6 +54,8 @@ public class PlayerFactory {
             .addComponent(new CombatStatsComponent(stats.health, stats.baseAttack))
             .addComponent(new InventoryComponent(stats.gold))
             .addComponent(inputComponent)
+            .addComponent(new PlayerStatsDisplay())
+            .addComponent(new PlayerInventoryDisplay())
             .addComponent(new PlayerStatsDisplay())
                 .addComponent(animator)
                 .addComponent(new PlayerAnimationController());

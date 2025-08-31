@@ -104,7 +104,9 @@ public class PlayerActions extends Component {
     moving = false;
   }
 
-
+  /**
+   * Adds an upwards vertical force to the player.
+   */
   void jump() {
     long currentTime = System.currentTimeMillis();
     Body body = physicsComponent.getBody();
