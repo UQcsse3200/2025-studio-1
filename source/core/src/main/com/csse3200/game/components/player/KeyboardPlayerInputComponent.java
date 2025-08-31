@@ -15,7 +15,6 @@ public class KeyboardPlayerInputComponent extends InputComponent {
   private int focusedItem = -1;
   private int DASH_COOLDOWN = 3;
 
-
   public KeyboardPlayerInputComponent() {
     super(5);
   }
@@ -90,12 +89,12 @@ public class KeyboardPlayerInputComponent extends InputComponent {
         triggerSelectItem();
         return true;
       case Keys.NUM_5:
-        triggerSelectItem();
         focusedItem = 4;
+        triggerSelectItem();
         return true;
       case Keys.P:
         triggerAddItem();
-
+        return true;
       case Keys.SHIFT_LEFT: // sprint stop (left shift up)
         entity.getEvents().trigger("walkStop");
         entity.getEvents().trigger("sprintStop");
@@ -118,6 +117,14 @@ public class KeyboardPlayerInputComponent extends InputComponent {
     entity.getEvents().trigger("jump");
   }
 
+
+  /**
+   * Cheatcode: infinite dashes
+   */
+  public void infDash() {
+    this.DASH_COOLDOWN = 0;
+  }
+
   private void triggerRemoveItem() {
     entity.getEvents().trigger("remove item", focusedItem);
   }
@@ -127,13 +134,5 @@ public class KeyboardPlayerInputComponent extends InputComponent {
   }
   private void triggerSelectItem() {
     entity.getEvents().trigger("focus item", focusedItem);
-  }
-
-
-  /**
-   * Cheatcode: infinite dashes
-   */
-  public void infDash() {
-    this.DASH_COOLDOWN = 0;
   }
 }
