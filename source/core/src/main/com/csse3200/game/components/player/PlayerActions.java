@@ -30,6 +30,7 @@ public class PlayerActions extends Component {
   private PhysicsComponent physicsComponent;
   private Vector2 walkDirection = Vector2.Zero.cpy();
   private boolean moving = false;
+  private float timeSinceLastAttack = 0;
   /*
   Added camera variable to allow for entities to spawn in world coordinates instead of
   screen coordinates.
@@ -57,6 +58,8 @@ public class PlayerActions extends Component {
     if (moving) {
       updateSpeed();
     }
+
+    timeSinceLastAttack += ServiceLocator.getTimeSource().getDeltaTime();
   }
 
   private void updateSpeed() {
@@ -67,6 +70,8 @@ public class PlayerActions extends Component {
     Vector2 impulse = desiredVelocity.sub(velocity).scl(body.getMass());
     body.applyLinearImpulse(impulse, body.getWorldCenter(), true);
   }
+
+
 
   /**
    * Moves the player towards a given direction.
@@ -93,6 +98,11 @@ public class PlayerActions extends Component {
 
   void shoot() {
 
+    float coolDown = entity.getComponent(CombatStatsComponent.class).getCoolDown();
+    if (this.timeSinceLastAttack < coolDown) {
+      return;
+    }
+
     Sound attackSound = ServiceLocator.getResourceService().getAsset("sounds/Impact4.ogg", Sound.class);
     attackSound.play();
 
@@ -110,12 +120,19 @@ public class PlayerActions extends Component {
     projectilePhysics.fire(new Vector2(destination.x - origin.x,
             destination.y - origin.y), 5);
 
+    timeSinceLastAttack = 0;
   }
 
   /**
-   * Makes the player attack.
+   * Makes the player melee attack.
    */
   void attack() {
+
+    float coolDown = entity.getComponent(CombatStatsComponent.class).getCoolDown();
+    if (this.timeSinceLastAttack < coolDown) {
+      return;
+    }
+
     Sound attackSound = ServiceLocator.getResourceService().getAsset("sounds/Impact4.ogg", Sound.class);
     attackSound.play();
 
@@ -138,5 +155,6 @@ public class PlayerActions extends Component {
           }
         }
     }
+    timeSinceLastAttack = 0;
   }
 }
