@@ -90,7 +90,9 @@ private void onPickupRequest() {
     }
 
     private void onDropFocused() {
-        if (focusedIndex < 0) return;
+        if (focusedIndex < 0 || focusedIndex >= 5) {
+            return;
+        }
         Entity item = inventory.get(focusedIndex);
         if (item == null) {
             System.out.println("Focused slot empty, nothing to drop.");
