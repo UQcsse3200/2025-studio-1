@@ -64,6 +64,9 @@ public class PlayerActions extends Component {
     moving = false;
   }
 
+  /**
+   * Adds an upwards vertical force to the player.
+   */
   void jump() {
     Body body = physicsComponent.getBody();
     body.applyLinearImpulse(JUMP_VELOCITY, body.getWorldCenter(), true);
