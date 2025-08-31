@@ -15,7 +15,7 @@ import com.badlogic.gdx.utils.Timer;
 public class PlayerActions extends Component {
   private static final Vector2 MAX_SPEED = new Vector2(3f, 3f); // Metres per second
   private static final Vector2 SPRINT_SPEED = new Vector2(10f, 3f);
-  private static final Vector2 JUMP_VELOCITY = new Vector2(0f, 2f);
+  private static final Vector2 JUMP_VELOCITY = new Vector2(0f, 5f);
   private static final Vector2 DASH_SPEED = new Vector2(12f, 9.8f);
 
   private PhysicsComponent physicsComponent;
