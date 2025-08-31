@@ -1,24 +1,15 @@
 package com.csse3200.game.entities.factories;
 
-import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.csse3200.game.ai.tasks.AITaskComponent;
 import com.csse3200.game.components.CombatStatsComponent;
-import com.csse3200.game.components.npc.GhostAnimationController;
 import com.csse3200.game.components.TouchAttackComponent;
-import com.csse3200.game.components.tasks.ChaseTask;
-import com.csse3200.game.components.tasks.WanderTask;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.*;
 import com.csse3200.game.files.FileLoader;
 import com.csse3200.game.physics.PhysicsLayer;
 import com.csse3200.game.physics.PhysicsUtils;
 import com.csse3200.game.physics.components.*;
-import com.csse3200.game.rendering.AnimationRenderComponent;
 import com.csse3200.game.rendering.TextureRenderComponent;
-import com.csse3200.game.services.ServiceLocator;
 
 
 /**
@@ -38,28 +29,44 @@ public class ProjectileFactory {
             FileLoader.readClass(ProjectileConfig.class, "configs/projectiles.json");
 
 
-
+    /**
+     * Creates a pistol bullet entity
+     * @return pistol bullet entity
+     */
     public static Entity createPistolBullet() {
         Entity pistolBullet = createBaseProjectile();
         PistolBulletConfig config = configs.pistolBullet;
         pistolBullet
                 .addComponent(new CombatStatsComponent(config.health, config.base_attack))
-                .addComponent(new TextureRenderComponent("images/ammo.png"));
-        pistolBullet.scaleHeight(1.5f);
+                .addComponent(new TextureRenderComponent("images/round.png"))
+                .addComponent(new ColliderComponent())
+                .addComponent(new HitboxComponent().setLayer(PhysicsLayer.FRIENDLY_PROJECTILE))
+                .addComponent(new TouchAttackComponent(PhysicsLayer.NPC, 1f));
+
+        ColliderComponent collider = pistolBullet.getComponent(ColliderComponent.class);
+        collider.setLayer(PhysicsLayer.FRIENDLY_PROJECTILE)
+                .setFilter(PhysicsLayer.FRIENDLY_PROJECTILE, (short) (PhysicsLayer.NPC));
+
+
+
+        pistolBullet.scaleHeight(0.85f);
         return pistolBullet;
     }
+
+    /**
+     * Creates a base projectile entity, capable of motion
+     * @return projectile entity
+     */
 
     private static Entity createBaseProjectile() {
 
         Entity projectile =
                 new Entity()
                         .addComponent(new PhysicsComponent())
-                        .addComponent(new PhysicsProjectileComponent())
-                        .addComponent(new ColliderComponent().setLayer(PhysicsLayer.NONE))
-                        .addComponent(new HitboxComponent().setLayer(PhysicsLayer.NONE));
+                        .addComponent(new PhysicsProjectileComponent());
 
         projectile.getComponent(PhysicsComponent.class).setBodyType(BodyDef.BodyType.DynamicBody);
-        PhysicsUtils.setScaledCollider(projectile, 0.5f, 0.2f);
+
 
         return projectile;
     }
