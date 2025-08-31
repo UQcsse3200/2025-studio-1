@@ -136,31 +136,11 @@ public class NPCFactory {
             .addComponent(animator)
             .addComponent(new GhostAnimationController())
             .addComponent(new EnemyDeathRewardComponent(15, playerInventory))
-            .addComponent(new DeathParticleSpawnerComponent()); // Add reward + particles
+            .addComponent(new DeathParticleSpawnerComponent("explosion_2")); // Add reward + particles
 
     ghostGPT.getComponent(AnimationRenderComponent.class).scaleEntity();
 
     return ghostGPT;
-  }
-
-  /**
-   * Creates an entity for explosion (death of GPT).
-   *
-   * @return entity
-   */
-  public static Entity explosion() {
-    Entity explosion = new Entity();
-    ExplosionConfig config = configs.explosion;
-
-    AnimationRenderComponent animator =
-            new AnimationRenderComponent(
-                    ServiceLocator.getResourceService()
-                            .getAsset("images/explosion_1.atlas", TextureAtlas.class));
-    animator.addAnimation("explosion_1", 0.2f, Animation.PlayMode.LOOP);
-
-    explosion.addComponent(animator);
-    explosion.getComponent(AnimationRenderComponent.class).scaleEntity();
-    return explosion;
   }
 
   /**
