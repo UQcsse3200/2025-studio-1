@@ -13,6 +13,8 @@ import com.csse3200.game.utils.math.Vector2Utils;
 public class KeyboardPlayerInputComponent extends InputComponent {
   private final Vector2 walkDirection = Vector2.Zero.cpy();
   private int focusedItem = -1;
+  private int DASH_COOLDOWN = 3;
+
 
   public KeyboardPlayerInputComponent() {
     super(5);
@@ -35,8 +37,15 @@ public class KeyboardPlayerInputComponent extends InputComponent {
         walkDirection.add(Vector2Utils.RIGHT);
         triggerWalkEvent();
         return true;
+      case Keys.SHIFT_LEFT: // sprint start (left shift down)
+        entity.getEvents().trigger("sprintStart");
+        triggerWalkEvent();
+        return true;
       case Keys.SPACE:
         jump();
+        return true;
+      case Keys.Q:
+        entity.getEvents().trigger("dashAttempt");
         return true;
       // TODO: add in item/weapon usage
       default:
@@ -86,6 +95,11 @@ public class KeyboardPlayerInputComponent extends InputComponent {
         return true;
       case Keys.P:
         triggerAddItem();
+
+      case Keys.SHIFT_LEFT: // sprint stop (left shift up)
+        entity.getEvents().trigger("walkStop");
+        entity.getEvents().trigger("sprintStop");
+        triggerWalkEvent();
         return true;
       default:
         return false;
@@ -113,5 +127,13 @@ public class KeyboardPlayerInputComponent extends InputComponent {
   }
   private void triggerSelectItem() {
     entity.getEvents().trigger("focus item", focusedItem);
+  }
+
+
+  /**
+   * Cheatcode: infinite dashes
+   */
+  public void infDash() {
+    this.DASH_COOLDOWN = 0;
   }
 }
