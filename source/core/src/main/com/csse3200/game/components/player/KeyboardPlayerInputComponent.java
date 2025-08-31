@@ -36,10 +36,6 @@ public class KeyboardPlayerInputComponent extends InputComponent {
         walkDirection.add(Vector2Utils.RIGHT);
         triggerWalkEvent();
         return true;
-      case Keys.SHIFT_LEFT: // sprint start (left shift down)
-        entity.getEvents().trigger("sprintStart");
-        triggerWalkEvent();
-        return true;
       case Keys.S:
         entity.getEvents().trigger("crouchAttempt");
         return true;
@@ -84,9 +80,6 @@ public class KeyboardPlayerInputComponent extends InputComponent {
       case Keys.S:
         entity.getEvents().trigger("crouchStop");
         return true;
-      case Keys.SHIFT_LEFT: // sprint stop (left shift up)
-        entity.getEvents().trigger("sprintStop");
-        triggerWalkEvent();
       case Keys.Q:
         triggerRemoveItem();
         return true;
@@ -136,7 +129,6 @@ public class KeyboardPlayerInputComponent extends InputComponent {
   public void infDash() {
     this.DASH_COOLDOWN = 0;
   }
-}
 
   private void triggerRemoveItem() {
     entity.getEvents().trigger("remove item", focusedItem);
