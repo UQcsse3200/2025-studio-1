@@ -9,8 +9,11 @@ import com.csse3200.game.rendering.TextureRenderComponent;
 import com.csse3200.game.services.ServiceLocator;
 
 /**
- * 敌方泥球：直线移动 + 寿命，到时自动销毁。
- * 需要：同一个 Entity 上已有 TextureRenderComponent("images/mud.png") 和 TouchAttackComponent(PLAYER)
+ * Enemy mud projectile: Moves in a straight line with a set lifetime,
+ * and automatically destroys itself when the lifetime expires.
+ *
+ * Requires: The same Entity should already contain
+ * TextureRenderComponent("images/mud.png") and TouchAttackComponent(PLAYER).
  */
 public class EnemyMudProjectileComponent extends Component {
     private final Vector2 velocity;
@@ -24,7 +27,7 @@ public class EnemyMudProjectileComponent extends Component {
 
     @Override
     public void create() {
-        // 防御式检查（不强制依赖外部场景去加载）
+        // Defensive check (ensures components exist if not already added externally)
         if (entity.getComponent(TextureRenderComponent.class) == null) {
             entity.addComponent(new TextureRenderComponent("images/mud.png"));
             entity.getComponent(TextureRenderComponent.class).scaleEntity();

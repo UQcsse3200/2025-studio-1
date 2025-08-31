@@ -12,7 +12,8 @@ import com.csse3200.game.rendering.TextureRenderComponent;
 import com.csse3200.game.services.ServiceLocator;
 
 /**
- * 环形喷泥（count 发，等角度）—— Sensor + 伤害 + 寿命
+ * Circular mud spray (fires `count` projectiles evenly around a circle).
+ * Each projectile: Sensor collision + damage + limited lifetime.
  */
 public class EnemyMudRingSprayComponent extends Component {
     private final float cooldown;
@@ -21,7 +22,7 @@ public class EnemyMudRingSprayComponent extends Component {
     private final float life;
 
     private float timer = 0f;
-    private float angleOffset = 0f; // 让每次环稍微旋转，弹幕更好看
+    private float angleOffset = 0f; // Adds rotation to each ring for a better visual effect
 
     public EnemyMudRingSprayComponent(float cooldown, int count, float speed, float lifeSeconds) {
         this.cooldown = cooldown;
@@ -38,7 +39,7 @@ public class EnemyMudRingSprayComponent extends Component {
 
         spawnRing();
         timer = cooldown;
-        angleOffset += Math.toRadians(7f); // 每次旋转 7 度
+        angleOffset += Math.toRadians(7f); // Rotate the next ring by 7 degrees
     }
 
     private void spawnRing() {

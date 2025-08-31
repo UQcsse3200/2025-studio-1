@@ -12,7 +12,7 @@ import com.csse3200.game.rendering.TextureRenderComponent;
 import com.csse3200.game.services.ServiceLocator;
 
 /**
- * 追踪型泥球攻击：朝 target 发射一枚泥球
+ * Tracking mud ball attack: Fires a mud ball towards the target.
  */
 public class EnemyMudBallAttackComponent extends Component {
     private final Entity target;
@@ -50,14 +50,14 @@ public class EnemyMudBallAttackComponent extends Component {
     }
 
     private void spawnProjectile(Vector2 start, Vector2 velocity) {
-        // 以 Boss 的 baseAttack 作为弹丸伤害（没有就给个默认值）
+        // Use the boss's base attack as projectile damage (default to 10 if not available)
         int dmg = 10;
         CombatStatsComponent bossStats = entity.getComponent(CombatStatsComponent.class);
         if (bossStats != null) dmg = bossStats.getBaseAttack();
 
         Entity proj = new Entity()
                 .addComponent(new PhysicsComponent())
-                // 关键：Sensor，触发碰撞但不会被墙体“顶住”
+                // Sensor allows it to trigger collisions without being blocked by walls
                 .addComponent(new ColliderComponent().setSensor(true))
                 .addComponent(new HitboxComponent().setLayer(PhysicsLayer.NPC))
                 .addComponent(new TextureRenderComponent("images/mud_ball_1.png"))
@@ -67,7 +67,7 @@ public class EnemyMudBallAttackComponent extends Component {
         proj.setPosition(start);
         proj.getComponent(TextureRenderComponent.class).scaleEntity();
 
-        // 延迟注册，避免 #iterator() cannot be used nested
+        // Delayed registration to avoid concurrent modification (e.g., iterator issues)
         com.badlogic.gdx.Gdx.app.postRunnable(() ->
                 ServiceLocator.getEntityService().register(proj)
         );
