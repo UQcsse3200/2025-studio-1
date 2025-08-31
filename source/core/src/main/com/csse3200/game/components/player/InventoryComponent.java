@@ -142,7 +142,7 @@ public class InventoryComponent extends Component {
     // set item to be empty, and then trigger display update
     this.items.set(index, null);
     this.itemTexs.set(index, null);
-    entity.getEvents().trigger("update display", index, null);
+    entity.getEvents().trigger("remove item", index);
     this.inventoryCount--;
     return true;
   }
