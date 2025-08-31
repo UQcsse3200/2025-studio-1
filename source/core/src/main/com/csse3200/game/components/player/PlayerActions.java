@@ -14,6 +14,7 @@ import com.badlogic.gdx.utils.Timer;
  */
 public class PlayerActions extends Component {
   private static final Vector2 MAX_SPEED = new Vector2(3f, 3f); // Metres per second
+  private static final Vector2 CROUCH_SPEED = new Vector2(1.5f, 3f);
   private static final Vector2 SPRINT_SPEED = new Vector2(7f, 3f);
   private static final Vector2 JUMP_VELOCITY = new Vector2(0f, 120f);
   private static final Vector2 DASH_SPEED = new Vector2(20f, 9.8f);
@@ -45,6 +46,7 @@ public class PlayerActions extends Component {
     entity.getEvents().addListener("sprintStop",  () -> sprinting = false);
     entity.getEvents().addListener("dashAttempt", this::dash);
     entity.getEvents().addListener("crouchAttempt", this::crouchAttempt);
+    entity.getEvents().addListener("crouchStop", () -> crouching = false);
   }
 
   @Override
@@ -75,11 +77,16 @@ public class PlayerActions extends Component {
 
     if (dashing) {
       maxX = (facingRight) ? DASH_SPEED.x : -1 * DASH_SPEED.x;
-      targetVx = 1 * maxX;
+      targetVx = maxX;
     } else {
-      maxX = (sprinting && hasDir) ? SPRINT_SPEED.x : MAX_SPEED.x;
+      if (crouching) {
+        maxX = CROUCH_SPEED.x;
+      } else {
+        maxX = (sprinting && hasDir) ? SPRINT_SPEED.x : MAX_SPEED.x;
+      }
       targetVx = walkDirection.x * maxX;
     }
+
 
     float impulseX = (targetVx - velocity.x) * body.getMass();
     body.applyLinearImpulse(new Vector2(impulseX, 0f), body.getWorldCenter(), true);
