@@ -42,8 +42,9 @@ public class ForestGameArea extends GameArea {
         "images/iso_grass_1.png",
         "images/iso_grass_2.png",
         "images/iso_grass_3.png",
-        "images/templightsaber.png",
+        "images/lightsaber.png",
         "images/ammo.png",
+        "images/round.png",
         "images/pistol.png",
 	    "images/dagger.png"
     };
@@ -84,12 +85,15 @@ public class ForestGameArea extends GameArea {
     spawnTrees();
     player = spawnPlayer();
     dagger = spawnDagger();
-    this.equipItem(dagger);
-    lightsaber = spawnLightsaber();
-    bullet = spawnBullet();
     pistol = spawnPistol();
-    //this.equipItem(lightsaber);
+    lightsaber = spawnLightsaber();
+
+    //These are commented out since there is no equip feature yet
+    //bullet = spawnBullet();
     //this.equipItem(pistol);
+    this.equipItem(lightsaber);
+    //this.equipItem(pistol);
+
     spawnGhosts();
     spawnGhostKing();
     playMusic();
@@ -167,7 +171,7 @@ public class ForestGameArea extends GameArea {
 
   private Entity spawnLightsaber() {
     Entity newLightsaber = WeaponsFactory.createLightsaber();
-    Vector2 newLightsaberOffset = new Vector2(0.7f, 0.5f);
+    Vector2 newLightsaberOffset = new Vector2(0.7f, -0.1f);
     newLightsaber.addComponent(new ItemHoldComponent(this.player, newLightsaberOffset));
 
     //AnimationRenderComponent lightSaberAnimator = WeaponsFactory.createAnimation("images/lightSaber.atlas", this.player);
@@ -176,18 +180,12 @@ public class ForestGameArea extends GameArea {
     return newLightsaber;
   }
 
-//  private Entity spawnLightsaber() {
-//    Entity newLightsaber = WeaponsFactory.createLightsaber();
-//    newLightsaber.addComponent(new ItemHoldComponent(this.player));
-//    spawnEntityAt(newLightsaber, PLAYER_SPAWN, true, true);
-//    return newLightsaber;
+//Commented out since bullet functionality is in progress with guns
+//  private Entity spawnBullet() {
+//    Entity newBullet = ProjectileFactory.createPistolBullet();
+//    spawnEntityAt(newBullet, new GridPoint2(5, 5), true, true);
+//    return newBullet;
 //  }
-
-  private Entity spawnBullet() {
-    Entity newBullet = ProjectileFactory.createPistolBullet();
-    spawnEntityAt(newBullet, new GridPoint2(5, 5), true, true);
-    return newBullet;
-  }
 
   private Entity spawnPistol() {
     Entity newPistol = WeaponsFactory.createPistol();

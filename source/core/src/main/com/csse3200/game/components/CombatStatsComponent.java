@@ -16,12 +16,12 @@ public class CombatStatsComponent extends Component {
   private static final Logger logger = LoggerFactory.getLogger(CombatStatsComponent.class);
   private int health;
   private int baseAttack;
-  private int attackTimer;
+  private float coolDown;
 
   public CombatStatsComponent(int health, int baseAttack) {
     setHealth(health);
     setBaseAttack(baseAttack);
-
+    this.coolDown = 0;
   }
 
   /**
@@ -59,17 +59,29 @@ public class CombatStatsComponent extends Component {
   }
 
   /**
-   * Set the entity's hit timer.
+   * Set the entity's hit cooldown (seconds)
    *
-   * @param attackTimer attackTimer
+   * @param coolDown coolDown
    */
-  public void setAttackTimer(int attackTimer) {
-    if (attackTimer >= 0) {
-      this.attackTimer = attackTimer;
+  public void setCoolDown(float coolDown) {
+    if (coolDown >= 0) {
+      this.coolDown = coolDown;
     } else {
-      this.attackTimer = 0;
+      this.coolDown = 0;
     }
   }
+
+  /**
+   * gets the entity's cooldown between attacks (seconds).
+   *
+   */
+
+  public float getCoolDown() {
+
+    return this.coolDown;
+  }
+
+
 
   /**
    * Adds to the player's health. The amount added can be negative.
@@ -103,7 +115,8 @@ public class CombatStatsComponent extends Component {
   }
 
   /**
-   * Allows the entity to be hit by some attacker and deal some damage
+   * Allows the entity to be hit by some attacker and deal some damage, if they have waited
+   * for the designated time between attacks.
    * @param attacker the entity attacking
    */
   public void hit(CombatStatsComponent attacker) {
@@ -116,4 +129,6 @@ public class CombatStatsComponent extends Component {
       }
     }
   }
+
+
 }
