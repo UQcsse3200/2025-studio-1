@@ -1,8 +1,5 @@
 package com.csse3200.game.components.player;
 
-
-
-
 import com.csse3200.game.components.Component;
 import com.csse3200.game.components.entity.item.ItemComponent;
 import com.csse3200.game.components.player.InventoryComponent;
@@ -17,15 +14,25 @@ import com.csse3200.game.physics.components.HitboxComponent;
  */
 
 public class ItemPickUpComponent extends Component {
+    /** Reference to the player's inventory used to store picked up items. */
     private InventoryComponent inventory;
+    /** The item entity currently in collision range and eligible to be picked up. */
     private Entity targetItem;
-
+    /** The currently focused inventory slot (set via number key events). */
     private int focusedIndex = -1;
+    /** Constructs an ItemPickUpComponent with a reference to the player's inventory. */
     public ItemPickUpComponent(InventoryComponent inventory) {
         this.inventory = inventory;
     }
 
-
+/**
+ * Called when the component is created. Registers listeners for relevant player events:
+ *    - collisionStart – detects items in proximity
+ *    - collisionEnd – clears the current target item when leaving range
+ *    - pick up – attempts to add the current target item to the inventory
+ *    - focus item – updates the focused inventory slot
+ *    - drop focused – attempts to drop the currently focused item
+ */
 @Override
 public void create() {
 //    HitboxComponent hitbox = entity.getComponent(HitboxComponent.class);       //might need this later
@@ -40,6 +47,10 @@ public void create() {
     entity.getEvents().addListener("drop focused", this::onDropFocused);
 }
 
+/**
+ * Handles the start of a collision. If the colliding entity is an item, it is set as
+ * the current target for potential pickup.
+ */
 private void onCollisionStart(Fixture me, Fixture other) {
     Object data = other.getBody().getUserData();
     if (!(data instanceof BodyUserData userData)) return;
@@ -51,6 +62,10 @@ private void onCollisionStart(Fixture me, Fixture other) {
     }
 }
 
+/**
+ * Handles the end of a collision. If the player stops colliding with the currently
+ * targeted item, the target is cleared.
+ */
 private void onCollisionEnd(Fixture me, Fixture other) {
     Object data = other.getBody().getUserData();
     if (!(data instanceof BodyUserData userData)) return;
@@ -62,49 +77,69 @@ private void onCollisionEnd(Fixture me, Fixture other) {
     }
 }
 
+/**
+ * Handles a pickup request (triggered by pressing the pickup key).
+ * If there is a valid target item in range, attempts to add it to the inventory.
+ */
 private void onPickupRequest() {
     System.out.println("Pick up event received. targetItem = " + targetItem);
     if (targetItem != null) {
         pickUpItem(targetItem);
     }
 }
-    private void pickUpItem(Entity item) {
-            if (item == null) return;
 
-            boolean added = inventory.addItem(item);
-            if (added) {
-                targetItem = null;
-                System.out.println("Item picked up and added to inventory!");
-            } else {
-                System.out.println("Inventory full. Cannot pick up item.");
-            }
-    }
+/**
+ * Attempts to add an item to the player's inventory.
+ * Clears the target item reference if successful.
+ */
+private void pickUpItem(Entity item) {
+        if (item == null) return;
 
-    private void onFocusItem(int index) {
-        if (index >= 0 && index < 5) {
-            focusedIndex = index;
+        boolean added = inventory.addItem(item);
+        if (added) {
+            targetItem = null;
+            System.out.println("Item picked up and added to inventory!");
         } else {
-            focusedIndex = -1;
+            System.out.println("Inventory full. Cannot pick up item.");
         }
-        System.out.println("Focused slot: " + focusedIndex);
+}
+
+/**
+ * Updates which inventory slot is currently focused to properly drop
+ * items for the inventory bar.
+ * Only valid indices (0–4 inclusive) are accepted;
+ * otherwise, the focus is cleared.
+ */
+private void onFocusItem(int index) {
+    if (index >= 0 && index < 5) {
+        focusedIndex = index;
+    } else {
+        focusedIndex = -1;
+    }
+    System.out.println("Focused slot: " + focusedIndex);
+}
+
+/**
+ * Handles a drop request (triggered by pressing the drop key).
+ * If a valid slot is focused and contains an item, removes the item from
+ * the inventory and (eventually) spawns it back into the world.
+ */
+private void onDropFocused() {
+    if (focusedIndex < 0 || focusedIndex >= 5) {
+        return;
+    }
+    Entity item = inventory.get(focusedIndex);
+    if (item == null) {
+        System.out.println("Focused slot empty, nothing to drop.");
+        return;
     }
 
-    private void onDropFocused() {
-        if (focusedIndex < 0 || focusedIndex >= 5) {
-            return;
-        }
-        Entity item = inventory.get(focusedIndex);
-        if (item == null) {
-            System.out.println("Focused slot empty, nothing to drop.");
-            return;
-        }
-
-        boolean removed = inventory.remove(focusedIndex);
-        if (removed) {
-            // need to spawn the item to the worl
-            System.out.println("Dropped item from slot " + focusedIndex);
-        }
+    boolean removed = inventory.remove(focusedIndex);
+    if (removed) {
+        // need to spawn the item to the world eventually here
+        System.out.println("Dropped item from slot " + focusedIndex);
     }
+}
 
 }
 
