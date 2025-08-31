@@ -11,14 +11,47 @@ import com.csse3200.game.services.ServiceLocator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * Spawns a one-shot explosion particle animation when the attached enemy dies.
  */
 public class DeathParticleSpawnerComponent extends Component {
+  private static final List<String> VALID_ANIMATIONS = Arrays.asList(
+      "explosion_1",
+      "explosion_2"
+  );
   private static final Logger logger = LoggerFactory.getLogger(DeathParticleSpawnerComponent.class);
-  private static final String ATLAS_PATH = "images/explosion_1.atlas";
-  private static final String ANIM_NAME = "explosion_1"; // matches region base name in atlas
-  private static final float FRAME_DURATION = 0.08f;
+  private String atlasPath = "images/explosion_1.atlas";
+  private String animName = "explosion_1";
+  private float frameDuration = 0.08f;
+
+  /**
+   * Default constructor.
+   * Uses the default death animation ("explosion_1").
+   */
+  public DeathParticleSpawnerComponent() {}
+
+  /**
+   * Constructor with custom animation.
+   * Sets the animation to the given name if valid; adjusts frame duration if necessary.
+   * Throws IllegalArgumentException if the animation name is invalid.
+   *
+   * @param animationName the name of the death animation to use
+   */
+  public DeathParticleSpawnerComponent(String animationName) {
+    this.animName = animationName;
+    this.atlasPath = "images/explosion_2";
+    if ("explosion_2".equals(animationName)) {
+      this.frameDuration = 0.06f;
+    }
+    if (!VALID_ANIMATIONS.contains(animationName)) {
+      throw new IllegalArgumentException(
+              "Invalid animation name: " + animationName + ". Default animation is now explosion_1."
+      );
+    }
+  }
 
   @Override
   public void create() {
@@ -27,22 +60,22 @@ public class DeathParticleSpawnerComponent extends Component {
 
   private void spawnParticles() {
     try {
-      if (ServiceLocator.getResourceService() == null || !ServiceLocator.getResourceService().containsAsset(ATLAS_PATH, TextureAtlas.class)) {
+      if (ServiceLocator.getResourceService() == null || !ServiceLocator.getResourceService().containsAsset(atlasPath, TextureAtlas.class)) {
         logger.debug("Explosion atlas not loaded; skipping death particles");
         return;
       }
-      TextureAtlas atlas = ServiceLocator.getResourceService().getAsset(ATLAS_PATH, TextureAtlas.class);
+      TextureAtlas atlas = ServiceLocator.getResourceService().getAsset(atlasPath, TextureAtlas.class);
       Entity effect = new Entity();
       AnimationRenderComponent arc = new AnimationRenderComponent(atlas);
       arc.setDisposeAtlas(false); // shared atlas managed by ResourceService
-      arc.addAnimation(ANIM_NAME, FRAME_DURATION, Animation.PlayMode.NORMAL);
+      arc.addAnimation(animName, frameDuration, Animation.PlayMode.NORMAL);
       effect.addComponent(arc).addComponent(new OneShotDisposeComponent());
       effect.setPosition(entity.getPosition());
       EntityService es = ServiceLocator.getEntityService();
       if (es != null) {
         es.register(effect);
       }
-      arc.startAnimation(ANIM_NAME);
+      arc.startAnimation(animName);
       // Hide and schedule disposal of original enemy
       entity.setEnabled(false);
       // Ensure enemy animator won't dispose shared atlas
