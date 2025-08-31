@@ -20,6 +20,7 @@ public class ItemPickUpComponent extends Component {
     private InventoryComponent inventory;
     private Entity targetItem;
 
+    private int focusedIndex = -1;
     public ItemPickUpComponent(InventoryComponent inventory) {
         this.inventory = inventory;
     }
@@ -34,6 +35,9 @@ public void create() {
     entity.getEvents().addListener("collisionStart", this::onCollisionStart);
     entity.getEvents().addListener("collisionEnd", this::onCollisionEnd);
     entity.getEvents().addListener("pick up", this::onPickupRequest);
+
+    entity.getEvents().addListener("focus item", this::onFocusItem);
+    entity.getEvents().addListener("drop focused", this::onDropFocused);
 }
 
 private void onCollisionStart(Fixture me, Fixture other) {
@@ -69,9 +73,36 @@ private void onPickupRequest() {
 
             boolean added = inventory.addItem(item);
             if (added) {
-                // item.dispose(); //to remove item from the world after being in collision/picked up
                 targetItem = null;
                 System.out.println("Item picked up and added to inventory!");
             } else {
                 System.out.println("Inventory full. Cannot pick up item.");
-            }}}
+            }
+    }
+
+    private void onFocusItem(int index) {
+        if (index >= 0 && index < 5) {
+            focusedIndex = index;
+        } else {
+            focusedIndex = -1;
+        }
+        System.out.println("Focused slot: " + focusedIndex);
+    }
+
+    private void onDropFocused() {
+        if (focusedIndex < 0) return;
+        Entity item = inventory.get(focusedIndex);
+        if (item == null) {
+            System.out.println("Focused slot empty, nothing to drop.");
+            return;
+        }
+
+        boolean removed = inventory.remove(focusedIndex);
+        if (removed) {
+            // need to spawn the item to the worl
+            System.out.println("Dropped item from slot " + focusedIndex);
+        }
+    }
+
+}
+
