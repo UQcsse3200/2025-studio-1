@@ -7,6 +7,7 @@ import com.csse3200.game.GdxGame;
 import com.csse3200.game.areas.ForestGameArea;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.components.maingame.MainGameActions;
+import com.csse3200.game.components.screens.PauseMenuDisplay;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
 import com.csse3200.game.entities.factories.RenderFactory;
@@ -26,6 +27,11 @@ import com.csse3200.game.components.maingame.MainGameExitDisplay;
 import com.csse3200.game.components.gamearea.PerformanceDisplay;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.csse3200.game.GdxGame.ScreenType;
+import com.csse3200.game.components.CombatStatsComponent;
+
 
 /**
  * The game screen containing the main game.
@@ -40,6 +46,10 @@ public class MainGameScreen extends ScreenAdapter {
   private final GdxGame game;
   private final Renderer renderer;
   private final PhysicsEngine physicsEngine;
+  private final ForestGameArea forestGameArea;
+
+  private Entity pauseOverlay;
+  private boolean isPauseVisible = false;
 
   public MainGameScreen(GdxGame game) {
     this.game = game;
@@ -66,15 +76,33 @@ public class MainGameScreen extends ScreenAdapter {
 
     logger.debug("Initialising main game screen entities");
     TerrainFactory terrainFactory = new TerrainFactory(renderer.getCamera());
-    ForestGameArea forestGameArea = new ForestGameArea(terrainFactory);
+    forestGameArea = new ForestGameArea(terrainFactory);
     forestGameArea.create();
   }
 
   @Override
   public void render(float delta) {
-    physicsEngine.update();
+    if (!isPauseVisible) {
+      physicsEngine.update();
+    }
     ServiceLocator.getEntityService().update();
+    Entity player = forestGameArea.getPlayer();
+    //show death screen when player is dead
+    if (player != null) {
+      var playerStat = player.getComponent(CombatStatsComponent.class);
+      if (playerStat != null && playerStat.isDead()) {
+        game.setScreen(ScreenType.DEATH_SCREEN);
+      }
+    }
     renderer.render();
+    if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+      if (!isPauseVisible) {
+        showPauseOverlay();
+      } else {
+        hidePauseOverlay();
+      }
+      return;
+    }
   }
 
   @Override
@@ -135,10 +163,38 @@ public class MainGameScreen extends ScreenAdapter {
         .addComponent(new PerformanceDisplay())
         .addComponent(new MainGameActions(this.game))
         .addComponent(new MainGameExitDisplay())
-        .addComponent(new Terminal())
+        .addComponent(new Terminal(this.game))
         .addComponent(inputComponent)
         .addComponent(new TerminalDisplay());
 
     ServiceLocator.getEntityService().register(ui);
+  }
+
+  /**
+   * Creates and displays the pause menu overlay on top of the game.
+   * Registers the overlay entity so it can capture input and show the UI,
+   * and listens for the "resume" event to remove itself when requested.
+   */
+  private void showPauseOverlay() {
+    Stage stage = ServiceLocator.getRenderService().getStage();
+    pauseOverlay = new Entity()
+            .addComponent(new PauseMenuDisplay(game))
+            .addComponent(new InputDecorator(stage, 100));
+    pauseOverlay.getEvents().addListener("resume", this::hidePauseOverlay);
+    ServiceLocator.getEntityService().register(pauseOverlay);
+    isPauseVisible = true;
+  }
+
+  /**
+   * Removes and disposes the pause menu overlay.
+   * Unregisters the overlay entity so it is no longer drawn or receives input.
+   */
+  private void hidePauseOverlay() {
+    if (pauseOverlay != null) {
+      pauseOverlay.dispose();
+      ServiceLocator.getEntityService().unregister(pauseOverlay);
+      pauseOverlay = null;
+    }
+    isPauseVisible = false;
   }
 }
