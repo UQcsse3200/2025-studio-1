@@ -18,6 +18,7 @@ public class CombatStatsComponent extends Component {
   public CombatStatsComponent(int health, int baseAttack) {
     setHealth(health);
     setBaseAttack(baseAttack);
+    this.maxHealth = health;
   }
 
   /**
@@ -80,6 +81,13 @@ public class CombatStatsComponent extends Component {
   }
 
   /**
+   * Return entity's maximum health
+   */
+  public int getMaxHealth() {
+     return maxHealth;
+  }
+
+  /**
    * Returns the entity's base attack damage.
    *
    * @return base attack damage
@@ -101,6 +109,10 @@ public class CombatStatsComponent extends Component {
     }
   }
 
+  /**
+   *Apply damage to this entity from another attacking entity.
+   *@param attacker The attacker whose baseAttack value will be used to deal damage to this entity.
+   */
   public void hit(CombatStatsComponent attacker) {
     if (attacker == null) {
         logger.error("hit(attacker) called with null attacker");
