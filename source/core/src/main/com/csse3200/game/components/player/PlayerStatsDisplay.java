@@ -32,8 +32,8 @@ public class PlayerStatsDisplay extends UIComponent {
   private static final Logger logger = LoggerFactory.getLogger(PlayerStatsDisplay.class);
   private Table table;
   private ProgressBar healthBar;
-  private Label currencyLabel;
   private TextButton killEnemyButton;
+  private Label processorLabel;
 
   /**
    * Creates reusable ui styles and adds actors to the stage.
@@ -44,7 +44,7 @@ public class PlayerStatsDisplay extends UIComponent {
     addActors();
 
     entity.getEvents().addListener("updateHealth", this::updatePlayerHealthUI);
-    entity.getEvents().addListener("updateCurrency", this::updatePlayerCurrencyUI);
+    entity.getEvents().addListener("updateProcessor", this::updatePlayerProcessorUI);
   }
 
   /**
@@ -87,16 +87,16 @@ public class PlayerStatsDisplay extends UIComponent {
     healthBar.setValue(health);
     healthBar.setAnimateDuration(0.0f);
 
-    // Currency text
-    int currency = entity.getComponent(InventoryComponent.class).getGold();
-    CharSequence currencyText = String.format("Currency: %d", currency);
-    currencyLabel = new Label(currencyText, skin, "large");
+    // processor text
+    int processor = entity.getComponent(InventoryComponent.class).getProcessor();
+    CharSequence processorText = String.format("Processor: %d", processor);
+    processorLabel = new Label(processorText, skin, "large");
 
     table.add(healthBar).width(barWidth).height(barHeight).pad(5);
     table.row();
-    table.add(currencyLabel).left();
+    table.add(processorLabel);
+    table.row();
 
-    // Debug kill enemy button
     killEnemyButton = new TextButton("Kill Enemy", skin);
     killEnemyButton.addListener(new ChangeListener() {
       @Override
@@ -104,9 +104,7 @@ public class PlayerStatsDisplay extends UIComponent {
         killOneEnemy();
       }
     });
-    table.row();
     table.add(killEnemyButton).left().padTop(5f);
-
     stage.addActor(table);
   }
 
@@ -124,14 +122,18 @@ public class PlayerStatsDisplay extends UIComponent {
   }
 
   /**
-   * Updates the player's currency on the UI.
-   * @param currency player currency
+   * Updates the player's processor on the UI.
+   * @param processor player processor
    */
-  public void updatePlayerCurrencyUI(int currency) {
-    CharSequence text = String.format("Currency: %d", currency);
-    currencyLabel.setText(text);
+  public void updatePlayerProcessorUI(int processor) {
+    CharSequence text = String.format("Processor: %d", processor);
+    processorLabel.setText(text);
   }
 
+  /**
+   * Kills one enemy entity in the game for testing purposes.
+   * Only kills an enemy that has a reward component, and disposes it after death.
+   */
   private void killOneEnemy() {
     EntityService es = ServiceLocator.getEntityService();
     if (es == null) {
@@ -151,6 +153,9 @@ public class PlayerStatsDisplay extends UIComponent {
     }
   }
 
+  /**
+   * Checks if the entity has an EnemyDeathRewardComponent.
+   */
   private boolean hasRewardComponent(Entity e) {
     return e.getComponent(EnemyDeathRewardComponent.class) != null;
   }
@@ -159,9 +164,6 @@ public class PlayerStatsDisplay extends UIComponent {
   public void dispose() {
     super.dispose();
     healthBar.remove();
-    currencyLabel.remove();
-    if (killEnemyButton != null) {
-      killEnemyButton.remove();
-    }
+    processorLabel.remove();
   }
 }
