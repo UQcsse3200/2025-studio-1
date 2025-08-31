@@ -121,19 +121,24 @@ public class KeyboardPlayerInputComponent extends InputComponent {
     }
   }
 
+   /** Triggers an inventory removal request for the currently focused slot. */
   private void triggerRemoveItem() {
     entity.getEvents().trigger("remove item", focusedItem);
   }
 
+  /** Triggers an item pickup request. */
   private void triggerAddItem() {
     System.out.println("Pick up event triggered");
     entity.getEvents().trigger("pick up");
 
   }
+
+  /** Triggers a change in the currently focused inventory slot. */
   private void triggerSelectItem() {
     entity.getEvents().trigger("focus item", focusedItem);
   }
 
+  /** Triggers a drop request for the currently focused inventory slot. */
   private void triggerDropFocused() {
     entity.getEvents().trigger("drop focused");
   }
