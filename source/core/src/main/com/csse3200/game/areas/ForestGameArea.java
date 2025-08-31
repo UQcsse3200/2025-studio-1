@@ -16,6 +16,9 @@ import com.csse3200.game.utils.math.RandomUtils;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.components.gamearea.GameAreaDisplay;
+
+import javax.naming.spi.ObjectFactory;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,7 +46,25 @@ public class ForestGameArea extends GameArea {
   };
   private static final String[] generalTextures = {
       "foreg_sprites/general/LongFloor.png",
-      
+      "foreg_sprites/general/Railing.png",
+      "foreg_sprites/general/SmallSquare.png",
+      "foreg_sprites/general/SmallStair.png",
+      "foreg_sprites/general/SquareTile.png",
+      "foreg_sprites/general/ThickFloor.png",
+      "foreg_sprites/general/ThinFloor.png",
+  };
+  private static final String[] spawnPadTextures = {
+      "foreg_sprites/spawn_pads/SpawnPadPurple.png",
+      "foreg_sprites/spawn_pads/SpawnPadRed.png",
+  };
+  private static final String[] officeTextures = {
+    "foreg_sprites/office/CeilingLight.png",
+    "foreg_sprites/office/Crate.png",
+    "foreg_sprites/office/LargeShelf.png",
+    "foreg_sprites/office/MidShelf.png",
+    "foreg_sprites/office/LongCeilingLight.png",
+    "foreg_sprites/office/OfficeChair.png",
+    "foreg_sprites/office/officeDesk.png",
   };
   private static final String[] forestTextureAtlases = {
     "images/terrain_iso_grass.atlas", "images/ghost.atlas", "images/ghostKing.atlas"
@@ -79,6 +100,7 @@ public class ForestGameArea extends GameArea {
     player = spawnPlayer();
 
     spawnFloor();
+    spawnObject();
 
     playMusic();
   }
@@ -173,6 +195,18 @@ public class ForestGameArea extends GameArea {
     }
   }
 
+  private void spawnObject() {
+    GridPoint2 spawnPoint = new GridPoint2(15, 15);
+    GridPoint2 spawnPoint2 = new GridPoint2(15, 17);
+
+    Entity smallSquare = ObstacleFactory.createCrate();
+    Entity smallSquare2 = ObstacleFactory.createCrate();
+    spawnEntityAt(smallSquare, spawnPoint, true, true);
+    spawnEntityAt(smallSquare2, spawnPoint2, true, true);
+  }
+
+
+
   private void spawnFloor() {
 
     for (int i = 0; i < 25; i += 4) {
@@ -222,6 +256,8 @@ public class ForestGameArea extends GameArea {
     ResourceService resourceService = ServiceLocator.getResourceService();
     resourceService.loadTextures(generalTextures);
     resourceService.loadTextures(forestTextures);
+    resourceService.loadTextures(spawnPadTextures);
+    resourceService.loadTextures(officeTextures);
     resourceService.loadTextureAtlases(forestTextureAtlases);
     resourceService.loadSounds(forestSounds);
     resourceService.loadMusic(forestMusic);
@@ -240,6 +276,8 @@ public class ForestGameArea extends GameArea {
     resourceService.unloadAssets(forestTextureAtlases);
     resourceService.unloadAssets(forestSounds);
     resourceService.unloadAssets(forestMusic);
+    resourceService.unloadAssets(spawnPadTextures);
+    resourceService.unloadAssets(officeTextures);
   }
 
   @Override
