@@ -5,11 +5,8 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.ai.tasks.AITaskComponent;
 import com.csse3200.game.components.CombatStatsComponent;
-<<<<<<< HEAD
 import com.csse3200.game.components.enemy.BossChargeSkillComponent;
-=======
 import com.csse3200.game.components.enemy.BlackholeAttackComponent;
->>>>>>> 03df7d0 (add a small skill can control the player)
 import com.csse3200.game.components.npc.GhostAnimationController;
 import com.csse3200.game.components.TouchAttackComponent;
 import com.csse3200.game.components.enemy.FireballAttackComponment;
