@@ -42,21 +42,26 @@ public class BossFactory {
      * @return A fully configured {@link Entity} representing Boss-3.
      */
     public static Entity createBoss3(Entity target) {
-        Entity boss3 = createBaseNPC(target);
         BaseEntityConfig config = configs.boss3;
-
-        boss3
+        Entity boss3 = new Entity()
+                .addComponent(new PhysicsComponent())
+                .addComponent(new ColliderComponent())
+                .addComponent(new HitboxComponent().setLayer(PhysicsLayer.NPC))
                 .addComponent(new CombatStatsComponent(config.health, config.baseAttack))
                 .addComponent(new TextureRenderComponent("images/Boss_3.png"));
 
         boss3.getComponent(TextureRenderComponent.class).scaleEntity();
-
         boss3.setScale(new Vector2(2f, 2f));
-
         PhysicsUtils.setScaledCollider(boss3, 2.0f, 0.8f);
+
+        // Boss 原地不动：不加 PhysicsMovementComponent / WanderTask / ChaseTask
+        boss3.addComponent(new com.csse3200.game.components.enemy.EnemyMudBallAttackComponent(
+                target, 1.2f, 9f, 6f, 3f));
+        boss3.addComponent(new com.csse3200.game.components.enemy.EnemyMudRingSprayComponent(
+                2.5f, 12, 6f, 3f));
+
         return boss3;
     }
-
     /**
      * Creates a base NPC entity with default wandering, chasing, physics,
      * and touch attack behavior. This is used as a template for other bosses or NPCs.
