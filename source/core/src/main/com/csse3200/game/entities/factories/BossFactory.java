@@ -54,7 +54,6 @@ public class BossFactory {
         boss3.setScale(new Vector2(2f, 2f));
         PhysicsUtils.setScaledCollider(boss3, 2.0f, 0.8f);
 
-        // Boss 原地不动：不加 PhysicsMovementComponent / WanderTask / ChaseTask
         boss3.addComponent(new com.csse3200.game.components.enemy.EnemyMudBallAttackComponent(
                 target, 1.2f, 9f, 6f, 3f));
         boss3.addComponent(new com.csse3200.game.components.enemy.EnemyMudRingSprayComponent(
