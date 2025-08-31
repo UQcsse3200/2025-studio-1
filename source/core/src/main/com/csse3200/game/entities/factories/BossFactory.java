@@ -60,7 +60,7 @@ public class BossFactory {
         Entity fireball = new Entity()
                 .addComponent(new PhysicsComponent())
                 .addComponent(new PhysicsMovementComponent())
-                .addComponent(new TextureRenderComponent("images/fireball.png"))
+                .addComponent(new TextureRenderComponent("images/fireball1.png"))
                 .addComponent(new FireballMovementComponent(velocity))
                 .addComponent(new ColliderComponent())
                 .addComponent(new HitboxComponent().setLayer(PhysicsLayer.NPC));
