@@ -42,7 +42,7 @@ public class DeathParticleSpawnerComponent extends Component {
    */
   public DeathParticleSpawnerComponent(String animationName) {
     this.animName = animationName;
-    this.atlasPath = "images/explosion_2";
+    this.atlasPath = "images/explosion_2.atlas";
     if ("explosion_2".equals(animationName)) {
       this.frameDuration = 0.06f;
     }
