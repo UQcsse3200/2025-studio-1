@@ -17,20 +17,22 @@ public class PlayerActions extends Component {
   private static final Vector2 SPRINT_SPEED = new Vector2(7f, 3f);
   private static final Vector2 JUMP_VELOCITY = new Vector2(0f, 120f);
   private static final Vector2 DASH_SPEED = new Vector2(20f, 9.8f);
+  private int DASH_COOLDOWN = 15; // In hundredths of a second so equals 1.5 seconds
 
   private PhysicsComponent physicsComponent;
   private Vector2 walkDirection = Vector2.Zero.cpy();
   private boolean moving = false;
-  private boolean sprinting = false; // If 'Z' is held
+  private boolean sprinting = false; // If 'Left Shift' is held
   private boolean facingRight = true;
   private boolean dashing = false;
   private int dashCooldown = 0;
+  private boolean crouching = false;
 
   private static final int MAX_JUMPS = 2; // allow 1 normal jump + 1 double jump
   private int jumpsLeft = MAX_JUMPS;
   private long lastJumpTime = 0; // timestamp of last ground jump
   private static final long JUMP_COOLDOWN_MS = 300; // 300ms between jumps
-  private static final float DASH_DURATION = 0.125f;
+  private static final float DASH_DURATION = 0.1f;
 
   @Override
   public void create() {
@@ -39,9 +41,10 @@ public class PlayerActions extends Component {
     entity.getEvents().addListener("walkStop", this::stopWalking);
     entity.getEvents().addListener("attack", this::attack);
     entity.getEvents().addListener("jump", this::jump);
-    entity.getEvents().addListener("sprintStart", () -> sprinting = true);
+    entity.getEvents().addListener("sprintAttempt", this::sprintAttempt);
     entity.getEvents().addListener("sprintStop",  () -> sprinting = false);
     entity.getEvents().addListener("dashAttempt", this::dash);
+    entity.getEvents().addListener("crouchAttempt", this::crouchAttempt);
   }
 
   @Override
@@ -124,14 +127,32 @@ public class PlayerActions extends Component {
     }
   }
 
+  void sprintAttempt() {
+    if (!crouching) {
+      sprinting = true;
+      entity.getEvents().trigger("sprintStart");
+    }
+  }
+
   void dash() {
     if (dashCooldown == 0) {
-      entity.getEvents().trigger("dash", facingRight); // To be used for animations or invulnerability checks
-      dashCooldown = 15; // In hundredths of a second so equals 1.5 seconds
+      if (crouching) { // Need to add grounded check here as well
+        entity.getEvents().trigger("roll", facingRight); // Different animation
+      } else {
+        entity.getEvents().trigger("dash", facingRight); // To be used for animations or invulnerability checks
+      }
+      dashCooldown = DASH_COOLDOWN;
       dashing = true;
       dashDuration();
       dashCooldown();
     }
+  }
+
+  /**
+   * Cheatcode: infinite dashes
+   */
+  public void infDash() {
+    this.DASH_COOLDOWN = 0;
   }
 
   void dashDuration() {
@@ -158,6 +179,12 @@ public class PlayerActions extends Component {
         }
       }
     }, 0.1f); // every 0.1 seconds
+  }
+
+  void crouchAttempt() {
+    // Return if grounded TBA
+    entity.getEvents().trigger("crouchStart");
+    crouching = true;
   }
 
 
