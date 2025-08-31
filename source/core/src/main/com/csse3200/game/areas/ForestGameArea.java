@@ -10,7 +10,6 @@ import com.csse3200.game.components.ItemHoldComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.factories.*;
 import com.csse3200.game.physics.components.PhysicsProjectileComponent;
-import com.csse3200.game.rendering.AnimationRenderComponent;
 import com.csse3200.game.utils.math.GridPoint2Utils;
 import com.csse3200.game.utils.math.RandomUtils;
 import com.csse3200.game.services.ResourceService;
@@ -40,12 +39,15 @@ public class ForestGameArea extends GameArea {
         "images/iso_grass_1.png",
         "images/iso_grass_2.png",
         "images/iso_grass_3.png",
-        "images/lightsaber.png",
-        "images/ammo.png"
+        "images/templightsaber.png",
+        "images/ammo.png",
+        "images/round.png",
+        "images/pistol.png",
+	    "images/dagger.png"
     };
 
   private static final String[] forestTextureAtlases = {
-    "images/terrain_iso_grass.atlas", "images/ghost.atlas", "images/ghostKing.atlas", "images/lightsaber.atlas"
+    "images/terrain_iso_grass.atlas", "images/ghost.atlas", "images/ghostKing.atlas"
   };
   private static final String[] forestSounds = {"sounds/Impact4.ogg"};
   private static final String backgroundMusic = "sounds/BGM_03_mp3.mp3";
@@ -54,8 +56,10 @@ public class ForestGameArea extends GameArea {
   private final TerrainFactory terrainFactory;
 
   private Entity player;
+  private Entity dagger;
   private Entity lightsaber;
   private Entity bullet;
+  private Entity pistol;
 
   /**
    * Initialise this ForestGameArea to use the provided TerrainFactory.
@@ -77,10 +81,15 @@ public class ForestGameArea extends GameArea {
     spawnTerrain();
     spawnTrees();
     player = spawnPlayer();
+    dagger = spawnDagger();
+    pistol = spawnPistol();
     lightsaber = spawnLightsaber();
-    this.equipItem(lightsaber);
+
+    //These are commented out since there is no equip feature yet
     //bullet = spawnBullet();
-    //bullet.getComponent(PhysicsProjectileComponent.class).fire(new Vector2(1, 1), 5f);
+    //this.equipItem(pistol);
+    this.equipItem(lightsaber);
+    //this.equipItem(pistol);
 
     spawnGhosts();
     spawnGhostKing();
@@ -140,6 +149,13 @@ public class ForestGameArea extends GameArea {
     return newPlayer;
   }
 
+  private Entity spawnDagger() {
+    Entity newDagger = WeaponsFactory.createDagger();
+    Vector2 newDaggerOffset = new Vector2(0f, 0f);
+    newDagger.addComponent(new ItemHoldComponent(this.player, newDaggerOffset));
+    return newDagger;
+  }
+
   private void equipItem(Entity item) {
     this.player.setCurrItem(item);
     spawnEntityAt(item, PLAYER_SPAWN, true, true);
@@ -152,11 +168,25 @@ public class ForestGameArea extends GameArea {
 
   private Entity spawnLightsaber() {
     Entity newLightsaber = WeaponsFactory.createLightsaber();
-    newLightsaber.addComponent(new ItemHoldComponent(this.player));
+    Vector2 newLightsaberOffset = new Vector2(0.7f, -0.1f);
+    newLightsaber.addComponent(new ItemHoldComponent(this.player, newLightsaberOffset));
     return newLightsaber;
   }
 
+//Commented out since bullet functionality is in progress with guns
+//  private Entity spawnBullet() {
+//    Entity newBullet = ProjectileFactory.createPistolBullet();
+//    spawnEntityAt(newBullet, new GridPoint2(5, 5), true, true);
+//    return newBullet;
+//  }
 
+  private Entity spawnPistol() {
+    Entity newPistol = WeaponsFactory.createPistol();
+    Vector2 newPistolOffset = new Vector2(0.45f, 0.02f);
+//    spawnEntityAt(newPistol, new GridPoint2(-5, -5), true, true);
+    newPistol.addComponent(new ItemHoldComponent(this.player, newPistolOffset));
+    return newPistol;
+  }
 
   private void spawnGhosts() {
     GridPoint2 minPos = new GridPoint2(0, 0);
