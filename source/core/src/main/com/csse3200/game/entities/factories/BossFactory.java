@@ -35,9 +35,16 @@ public class BossFactory {
         Entity boss2 = createBaseNPC(target);
         BaseEntityConfig config = configs.boss2;
 
+        AnimationRenderComponent animator =
+                new AnimationRenderComponent(
+                        ServiceLocator.getResourceService().getAsset("images/robot-2.atlas", TextureAtlas.class));
+        animator.addAnimation("angry_float", 1f, Animation.PlayMode.LOOP);
+        animator.addAnimation("float", 1f, Animation.PlayMode.LOOP);
+
         boss2
                 .addComponent(new CombatStatsComponent(config.health, config.baseAttack))
-                .addComponent(new TextureRenderComponent("images/robot-2-common.png"))
+                .addComponent(animator)
+                .addComponent(new GhostAnimationController())
                 .addComponent(new FireballAttackComponment(
                 target,
                 1.5f,
@@ -45,7 +52,7 @@ public class BossFactory {
                 6f,
                 config.baseAttack + 2
         ));
-        boss2.getComponent(TextureRenderComponent.class).scaleEntity();
+        boss2.getComponent(AnimationRenderComponent.class).scaleEntity();
 
         return boss2;
     }
