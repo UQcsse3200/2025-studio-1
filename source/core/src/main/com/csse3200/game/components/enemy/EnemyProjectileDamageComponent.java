@@ -9,10 +9,10 @@ import com.csse3200.game.physics.PhysicsLayer;
 import com.csse3200.game.physics.components.HitboxComponent;
 
 /**
- * 敌方弹丸伤害（带详细日志）：
- * - 兼容 (Fixture, Fixture) / (Entity, Entity) / 混合入参
- * - 只对 PLAYER 层扣血
- * - 打印每一步的原因，方便定位“为什么没掉血”
+ * Enemy projectile damage (with detailed logging):
+ * - Handles collisions from (Fixture, Fixture) / (Entity, Entity) / mixed inputs.
+ * - Only applies damage to the PLAYER layer.
+ * - Logs each decision for debugging when damage does not occur.
  */
 public class EnemyProjectileDamageComponent extends Component {
     private static final String TAG = "EnemyProjectileDamage";
@@ -32,7 +32,7 @@ public class EnemyProjectileDamageComponent extends Component {
         Entity ea = toEntity(a);
         Entity eb = toEntity(b);
 
-        // 基础入参日志
+        // Log initial collision parameters
         Gdx.app.log(TAG, "collisionStart raw: a=" + klass(a) + " b=" + klass(b));
         Gdx.app.log(TAG, "toEntity: ea=" + idOf(ea) + " eb=" + idOf(eb));
 
@@ -41,7 +41,7 @@ public class EnemyProjectileDamageComponent extends Component {
             return;
         }
 
-        // 识别“我是谁”
+        // Identify "who am I?"
         Entity me = (ea == entity) ? ea : (eb == entity ? eb : null);
         if (me == null) {
             Gdx.app.log(TAG, "skip: neither side is this projectile (event from others)");
@@ -49,18 +49,18 @@ public class EnemyProjectileDamageComponent extends Component {
         }
         Entity other = (me == ea) ? eb : ea;
 
-        // 打印双方 layer
+        // Log both layers
         int meLayer = layerOf(me);
         int otherLayer = layerOf(other);
         Gdx.app.log(TAG, "layers: me=" + layerName(meLayer) + " other=" + layerName(otherLayer));
 
-        // 只对玩家层有效
+        // Only affect PLAYER layer
         if (otherLayer != PhysicsLayer.PLAYER) {
             Gdx.app.log(TAG, "skip: other is not PLAYER layer");
             return;
         }
 
-        // 结算伤害
+        // Apply damage
         CombatStatsComponent stats = other.getComponent(CombatStatsComponent.class);
         if (stats == null) {
             Gdx.app.log(TAG, "skip: PLAYER has no CombatStatsComponent");
@@ -69,7 +69,7 @@ public class EnemyProjectileDamageComponent extends Component {
 
         int before = stats.getHealth();
         stats.addHealth(-damage);
-        // 兼容可能被 UI/系统监听的事件名
+        // Trigger common damage events
         other.getEvents().trigger("hit", damage);
         other.getEvents().trigger("damaged", damage);
         other.getEvents().trigger("healthChange", -damage);
@@ -77,7 +77,7 @@ public class EnemyProjectileDamageComponent extends Component {
         int after = stats.getHealth();
         Gdx.app.log(TAG, "HIT player for " + damage + "hp  (" + before + " -> " + after + ")");
 
-        // 弹丸自毁
+        // Destroy projectile
         Gdx.app.postRunnable(() -> {
             if (entity != null) {
                 Gdx.app.log(TAG, "dispose projectile id=" + entity.getId());
@@ -86,17 +86,19 @@ public class EnemyProjectileDamageComponent extends Component {
         });
     }
 
-    /** 将可能的 Fixture 参数还原为其绑定的 Entity；若已是 Entity 直接返回 */
+    /**
+     * Converts a Fixture or Entity to an Entity; returns Entity directly if already one
+     */
     private Entity toEntity(Object obj) {
         if (obj instanceof Entity) return (Entity) obj;
         if (obj instanceof Fixture) {
             Fixture f = (Fixture) obj;
-            // 先看 fixture 的 userData
+            // Check fixture's userData
             Object u1 = f.getUserData();
             if (u1 instanceof Entity) {
                 return (Entity) u1;
             }
-            // 再看 body 的 userData
+            // check body userData
             Object u2 = f.getBody().getUserData();
             if (u2 instanceof Entity) {
                 return (Entity) u2;

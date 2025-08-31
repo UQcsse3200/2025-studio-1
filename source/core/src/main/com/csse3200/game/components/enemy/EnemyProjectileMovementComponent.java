@@ -5,7 +5,7 @@ import com.csse3200.game.components.Component;
 import com.csse3200.game.services.ServiceLocator;
 
 /**
- * 弹丸直线移动 + 寿命控制
+ * Projectile straight-line movement + lifetime control.
  */
 public class EnemyProjectileMovementComponent extends Component {
     private final Vector2 velocity;
@@ -21,10 +21,10 @@ public class EnemyProjectileMovementComponent extends Component {
         float dt = ServiceLocator.getTimeSource().getDeltaTime();
         if (entity == null) return;
 
-        // 位移
+        // Apply movement
         entity.setPosition(entity.getPosition().cpy().add(velocity.cpy().scl(dt)));
 
-        // 寿命
+        // Reduce lifetime
         life -= dt;
         if (life <= 0f) {
             com.badlogic.gdx.Gdx.app.postRunnable(() -> {
