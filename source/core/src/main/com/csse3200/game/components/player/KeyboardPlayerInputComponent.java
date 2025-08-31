@@ -12,6 +12,7 @@ import com.csse3200.game.utils.math.Vector2Utils;
  */
 public class KeyboardPlayerInputComponent extends InputComponent {
   private final Vector2 walkDirection = Vector2.Zero.cpy();
+  private int DASH_COOLDOWN = 3;
 
 
   public KeyboardPlayerInputComponent() {
@@ -35,7 +36,7 @@ public class KeyboardPlayerInputComponent extends InputComponent {
         walkDirection.add(Vector2Utils.RIGHT);
         triggerWalkEvent();
         return true;
-      case Keys.Z: // sprint start (Z down)
+      case Keys.SHIFT_LEFT: // sprint start (left shift down)
         entity.getEvents().trigger("sprintStart");
         triggerWalkEvent();
         return true;
@@ -68,7 +69,7 @@ public class KeyboardPlayerInputComponent extends InputComponent {
         walkDirection.sub(Vector2Utils.RIGHT);
         triggerWalkEvent();
         return true;
-      case Keys.Z: // sprint stop (Z up)
+      case Keys.SHIFT_LEFT: // sprint stop (left shift up)
         entity.getEvents().trigger("walkStop");
         entity.getEvents().trigger("sprintStop");
         triggerWalkEvent();
@@ -88,5 +89,12 @@ public class KeyboardPlayerInputComponent extends InputComponent {
 
   private void jump() {
     entity.getEvents().trigger("jump");
+  }
+
+  /**
+   * Cheatcode: infinite dashes
+   */
+  public void infDash() {
+    this.DASH_COOLDOWN = 0;
   }
 }
