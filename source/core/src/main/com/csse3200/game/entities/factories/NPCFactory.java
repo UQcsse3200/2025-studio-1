@@ -90,6 +90,19 @@ public class NPCFactory {
   }
 
   /**
+   * Creates a robot entity.
+   *
+   * @param target entity to chase (e.g. player)
+   * @return robot entity
+   */
+  public static Entity createRobot(Entity target) {
+    Entity robot = createBaseNPC(target);
+    robot.addComponent(new com.csse3200.game.rendering.TextureRenderComponent("images/Robot_1.png"));
+    robot.addComponent(new CombatStatsComponent(20, 2));
+    return robot;
+  }
+
+  /**
    * Creates a generic NPC to be used as a base entity by more specific NPC creation methods.
    *
    * @return entity
