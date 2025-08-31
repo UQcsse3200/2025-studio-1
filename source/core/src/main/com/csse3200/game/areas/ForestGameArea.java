@@ -43,6 +43,7 @@ public class ForestGameArea extends GameArea {
         "images/iso_grass_2.png",
         "images/iso_grass_3.png",
         "images/lightsaber.png",
+        "images/lightsaberSingle.png",
         "images/ammo.png",
         "images/round.png",
         "images/pistol.png",
@@ -174,6 +175,7 @@ public class ForestGameArea extends GameArea {
     Vector2 newLightsaberOffset = new Vector2(0.7f, -0.1f);
     newLightsaber.addComponent(new ItemHoldComponent(this.player, newLightsaberOffset));
 
+    //Commented out since lightsaber animation is a work in progress
     //AnimationRenderComponent lightSaberAnimator = WeaponsFactory.createAnimation("images/lightSaber.atlas", this.player);
     //newLightsaber.addComponent(lightSaberAnimator);
 
@@ -190,7 +192,6 @@ public class ForestGameArea extends GameArea {
   private Entity spawnPistol() {
     Entity newPistol = WeaponsFactory.createPistol();
     Vector2 newPistolOffset = new Vector2(0.45f, 0.02f);
-//    spawnEntityAt(newPistol, new GridPoint2(-5, -5), true, true);
     newPistol.addComponent(new ItemHoldComponent(this.player, newPistolOffset));
     return newPistol;
   }
