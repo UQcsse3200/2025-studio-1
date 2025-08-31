@@ -12,8 +12,9 @@ import com.csse3200.game.utils.math.Vector2Utils;
  */
 public class KeyboardPlayerInputComponent extends InputComponent {
   private final Vector2 walkDirection = Vector2.Zero.cpy();
+
+
   private int focusedItem = -1;
-  private int DASH_COOLDOWN = 3;
 
   public KeyboardPlayerInputComponent() {
     super(5);
@@ -36,8 +37,11 @@ public class KeyboardPlayerInputComponent extends InputComponent {
         walkDirection.add(Vector2Utils.RIGHT);
         triggerWalkEvent();
         return true;
+      case Keys.S:
+        entity.getEvents().trigger("crouchAttempt");
+        return true;
       case Keys.SHIFT_LEFT: // sprint start (left shift down)
-        entity.getEvents().trigger("sprintStart");
+        entity.getEvents().trigger("sprintAttempt");
         triggerWalkEvent();
         return true;
       case Keys.SPACE:
@@ -69,6 +73,12 @@ public class KeyboardPlayerInputComponent extends InputComponent {
         walkDirection.sub(Vector2Utils.RIGHT);
         triggerWalkEvent();
         return true;
+      case Keys.S:
+        entity.getEvents().trigger("crouchStop");
+        return true;
+      case Keys.SHIFT_LEFT: // sprint stop (left shift up)
+        entity.getEvents().trigger("sprintStop");
+        triggerWalkEvent();
       case Keys.Q:
         triggerRemoveItem();
         return true;
@@ -89,16 +99,11 @@ public class KeyboardPlayerInputComponent extends InputComponent {
         triggerSelectItem();
         return true;
       case Keys.NUM_5:
-        focusedItem = 4;
         triggerSelectItem();
+        focusedItem = 4;
         return true;
       case Keys.P:
         triggerAddItem();
-        return true;
-      case Keys.SHIFT_LEFT: // sprint stop (left shift up)
-        entity.getEvents().trigger("walkStop");
-        entity.getEvents().trigger("sprintStop");
-        triggerWalkEvent();
         return true;
       default:
         return false;
@@ -118,13 +123,7 @@ public class KeyboardPlayerInputComponent extends InputComponent {
   }
 
 
-  /**
-   * Cheatcode: infinite dashes
-   */
-  public void infDash() {
-    this.DASH_COOLDOWN = 0;
-  }
-
+}
   private void triggerRemoveItem() {
     entity.getEvents().trigger("remove item", focusedItem);
   }
