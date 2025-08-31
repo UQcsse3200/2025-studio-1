@@ -14,9 +14,9 @@ import com.badlogic.gdx.utils.Timer;
  */
 public class PlayerActions extends Component {
   private static final Vector2 MAX_SPEED = new Vector2(3f, 3f); // Metres per second
-  private static final Vector2 SPRINT_SPEED = new Vector2(10f, 3f);
-  private static final Vector2 JUMP_VELOCITY = new Vector2(0f, 5f);
-  private static final Vector2 DASH_SPEED = new Vector2(12f, 9.8f);
+  private static final Vector2 SPRINT_SPEED = new Vector2(7f, 3f);
+  private static final Vector2 JUMP_VELOCITY = new Vector2(0f, 120f);
+  private static final Vector2 DASH_SPEED = new Vector2(20f, 9.8f);
 
   private PhysicsComponent physicsComponent;
   private Vector2 walkDirection = Vector2.Zero.cpy();
@@ -30,6 +30,7 @@ public class PlayerActions extends Component {
   private int jumpsLeft = MAX_JUMPS;
   private long lastJumpTime = 0; // timestamp of last ground jump
   private static final long JUMP_COOLDOWN_MS = 300; // 300ms between jumps
+  private static final float DASH_DURATION = 0.125f;
 
   @Override
   public void create() {
@@ -144,7 +145,7 @@ public class PlayerActions extends Component {
           entity.getEvents().trigger("walk", walkDirection);
         }
       }
-    }, 0.1f); // seconds
+    }, DASH_DURATION); // seconds
   }
 
   void dashCooldown() {
