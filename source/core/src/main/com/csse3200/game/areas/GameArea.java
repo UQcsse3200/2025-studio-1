@@ -40,7 +40,7 @@ public abstract class GameArea implements Disposable {
    *
    * @param entity Entity (not yet registered)
    */
-  protected void spawnEntity(Entity entity) {
+  public void spawnEntity(Entity entity) {
     areaEntities.add(entity);
     ServiceLocator.getEntityService().register(entity);
   }
@@ -53,6 +53,14 @@ public abstract class GameArea implements Disposable {
     entity.setEnabled(false);
     areaEntities.remove(entity);
     Gdx.app.postRunnable(entity::dispose);
+  }
+
+  /**
+   * Gets all the current entities
+   * @return the entities on the map
+   */
+  public List<Entity> getEntities() {
+    return this.areaEntities;
   }
 
   /**
