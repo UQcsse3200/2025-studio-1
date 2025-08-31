@@ -122,8 +122,6 @@ public class KeyboardPlayerInputComponent extends InputComponent {
     entity.getEvents().trigger("jump");
   }
 
-
-}
   private void triggerRemoveItem() {
     entity.getEvents().trigger("remove item", focusedItem);
   }
