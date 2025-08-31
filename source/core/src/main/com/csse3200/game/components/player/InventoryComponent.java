@@ -142,15 +142,19 @@ public class InventoryComponent extends Component {
    * @param processor processor
    */
   public void setProcessor(int processor) {
+    int prev = this.processor;
     this.processor = Math.max(processor, 0);
-    logger.debug("Setting gold to {}", this.processor);
+    // Fire event only after entity attached (not during constructor before setEntity)
+    if (entity != null && prev != this.processor) {
+      entity.getEvents().trigger("updateProcessor", this.processor);
+    }
   }
 
   /**
-   * Adds to the player's processor's. The amount added can be negative.
+   * Adds to the player's processors. The amount added can be negative.
    * @param processor processor to add
    */
-  public void addGold(int processor) {
+  public void addProcessor(int processor) {
     setProcessor(this.processor + processor);
   }
 }
