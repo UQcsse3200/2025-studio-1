@@ -38,8 +38,8 @@ public class BossFactory {
         AnimationRenderComponent animator =
                 new AnimationRenderComponent(
                         ServiceLocator.getResourceService().getAsset("images/robot-2.atlas", TextureAtlas.class));
-        animator.addAnimation("angry_float", 1f, Animation.PlayMode.LOOP);
-        animator.addAnimation("float", 1f, Animation.PlayMode.LOOP);
+        animator.addAnimation("angry_float", 1.5f, Animation.PlayMode.LOOP);
+        animator.addAnimation("float", 1.5f, Animation.PlayMode.LOOP);
 
         boss2
                 .addComponent(new CombatStatsComponent(config.health, config.baseAttack))
@@ -60,12 +60,20 @@ public class BossFactory {
         Entity fireball = new Entity()
                 .addComponent(new PhysicsComponent())
                 .addComponent(new PhysicsMovementComponent())
-                .addComponent(new TextureRenderComponent("images/fireball1.png"))
                 .addComponent(new FireballMovementComponent(velocity))
                 .addComponent(new ColliderComponent())
                 .addComponent(new HitboxComponent().setLayer(PhysicsLayer.NPC));
-        fireball.getComponent(TextureRenderComponent.class).scaleEntity();
         fireball.setPosition(from);
+        AnimationRenderComponent animator =
+                new AnimationRenderComponent(
+                        ServiceLocator.getResourceService().getAsset("images/fireball.atlas", TextureAtlas.class));
+        animator.addAnimation("angry_float", 0.3f, Animation.PlayMode.LOOP);
+        animator.addAnimation("float", 0.3f, Animation.PlayMode.LOOP);
+        animator.startAnimation("float");
+        animator.startAnimation("angry_float");
+        fireball.addComponent(animator);
+        fireball.getComponent(AnimationRenderComponent.class).scaleEntity();
+
         return fireball;
     }
     static Entity createBaseNPC(Entity target) {
