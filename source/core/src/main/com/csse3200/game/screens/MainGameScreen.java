@@ -7,6 +7,7 @@ import com.csse3200.game.GdxGame;
 import com.csse3200.game.areas.ForestGameArea;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.components.maingame.MainGameActions;
+import com.csse3200.game.components.screens.PauseMenuDisplay;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
 import com.csse3200.game.entities.factories.RenderFactory;
@@ -177,7 +178,7 @@ public class MainGameScreen extends ScreenAdapter {
   private void showPauseOverlay() {
     Stage stage = ServiceLocator.getRenderService().getStage();
     pauseOverlay = new Entity()
-            .addComponent(new com.csse3200.game.components.pausemenu.PauseMenuDisplay(game))
+            .addComponent(new PauseMenuDisplay(game))
             .addComponent(new InputDecorator(stage, 100));
     pauseOverlay.getEvents().addListener("resume", this::hidePauseOverlay);
     ServiceLocator.getEntityService().register(pauseOverlay);
