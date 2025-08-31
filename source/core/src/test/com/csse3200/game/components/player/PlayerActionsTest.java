@@ -124,7 +124,7 @@ class PlayerActionsTest {
     physField.set(actions, physicsComponent);
 
     // read jumpImpulse if present
-    float jumpImpulse = reflectFloat(actions, "jumpImpulse", 2f);
+    float jumpImpulse = reflectFloat(actions, "jumpImpulse", 120f);
 
     actions.jump();
 
