@@ -52,12 +52,25 @@ class CombatStatsComponentTest {
     combat.setBaseAttack(-50);
     assertEquals(150, combat.getBaseAttack());
   }
-  
+
+  @Test
+  void enemyShouldBeDeadWhenHealthZero() {
+    CombatStatsComponent enemy = new CombatStatsComponent(50, 10);
+    assertFalse(enemy.isDead());
+    enemy.addHealth(-50);
+    assertEquals(0, enemy.getHealth());
+    assertTrue(enemy.isDead());
+    // Overkill
+    enemy.addHealth(-100);
+    assertEquals(0, enemy.getHealth());
+    assertTrue(enemy.isDead());
+  }
+
   @Test
   void shouldTakeDirectDamage() {
     CombatStatsComponent combat = new CombatStatsComponent(100, 20);
     combat.hit(20);
-    assertEquals(80, combat.getHealth()); 
+    assertEquals(80, combat.getHealth());
   }
 
   @Test
