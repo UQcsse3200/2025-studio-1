@@ -1,7 +1,10 @@
 package com.csse3200.game.entities.factories;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.csse3200.game.ai.tasks.AITaskComponent;
@@ -25,11 +28,11 @@ import com.csse3200.game.rendering.TextureRenderComponent;
 import com.csse3200.game.services.ServiceLocator;
 
 /**
- * Factory to create non-playable character (NPC) entities with predefined components.
+ * Factory to create weapon entities with predefined components.
  *
- * <p>Each NPC entity type should have a creation method that returns a corresponding entity.
+ * <p>Each weapon entity type should have a creation method that returns a corresponding entity.
  * Predefined entity properties can be loaded from configs stored as json files which are defined in
- * "NPCConfigs".
+ * "configs".
  *
  * <p>If needed, this factory can be separated into more specific factories for entities with
  * similar characteristics.
@@ -39,36 +42,18 @@ public class WeaponsFactory {
             FileLoader.readClass(LightsaberConfig.class, "configs/lightsaber.json");
 
     /**
-     * Creates a ghost entity.
+     * Creates a lightsaber entity.
      *
-     * @return entity
+     * @return lightsaber entity
      */
     public static Entity createLightsaber() {
+
         Entity lightsaber =
             new Entity()
-                .addComponent(new TextureRenderComponent("images/templightsaber.png"))
+                .addComponent(new TextureRenderComponent("images/lightsaber.png"))
                 .addComponent(new CombatStatsComponent(0, configs.baseAttack));
-
         lightsaber.getComponent(TextureRenderComponent.class).scaleEntity();
         return lightsaber;
-    }
-
-    /**
-     * Creates a generic NPC to be used as a base entity by more specific NPC creation methods.
-     *
-     * @return entity
-     */
-    private static Entity createBaseWeapon(Entity target) {
-        Entity weapon =
-                new Entity()
-                        .addComponent(new PhysicsComponent())
-                        .addComponent(new PhysicsMovementComponent())
-                        .addComponent(new ColliderComponent())
-                        .addComponent(new HitboxComponent().setLayer(PhysicsLayer.NPC))
-                        .addComponent(new TouchAttackComponent(PhysicsLayer.PLAYER, 1.5f));
-
-        PhysicsUtils.setScaledCollider(weapon, 0.9f, 0.4f);
-        return weapon;
     }
 
     private WeaponsFactory() {
