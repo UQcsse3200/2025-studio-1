@@ -44,6 +44,9 @@ public class MovementTask extends DefaultTask {
     this.movementComponent = owner.getEntity().getComponent(PhysicsMovementComponent.class);
     movementComponent.setTarget(target);
     movementComponent.setMoving(true);
+    if (speed != null) {
+      movementComponent.setSpeed(speed);
+    }
     logger.debug("Starting movement towards {}", target);
     lastTimeMoved = gameTime.getTime();
     lastPos = owner.getEntity().getPosition();

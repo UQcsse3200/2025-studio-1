@@ -35,7 +35,7 @@ public class GPTChaseTask extends DefaultTask implements PriorityTask {
     @Override
     public void start() {
         super.start();
-        movementTask = new MovementTask(target.getPosition());
+        movementTask = new MovementTask(target.getPosition(), speed);
         movementTask.create(owner);
         movementTask.start();
 
