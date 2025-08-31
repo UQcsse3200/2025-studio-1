@@ -72,6 +72,14 @@ public class PhysicsProjectileComponent extends Component{
         body.setLinearVelocity(initialVelocity);
     }
 
+    /**
+     * Setter function used for tests
+     * @param lived assigned lived time for a projectile
+     */
+    public void setLived(float lived) {
+        this.lived = lived;
+    }
+
 
 
 }
