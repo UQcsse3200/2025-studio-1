@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.ai.tasks.AITaskComponent;
 import com.csse3200.game.components.CombatStatsComponent;
+import com.csse3200.game.components.enemy.BossChargeSkillComponent;
 import com.csse3200.game.components.npc.GhostAnimationController;
 import com.csse3200.game.components.TouchAttackComponent;
 import com.csse3200.game.components.enemy.FireballAttackComponment;
@@ -50,8 +51,16 @@ public class BossFactory {
                 1.5f,
                 8f,
                 6f,
-                config.baseAttack + 2
-        ));
+                config.baseAttack + 2))
+                .addComponent(new BossChargeSkillComponent(
+                target,
+                6f,
+                5f,
+                0.4f,
+                12f,
+                0.6f,
+                1.5f
+                ));
         boss2.getComponent(AnimationRenderComponent.class).scaleEntity();
 
         return boss2;
@@ -79,8 +88,8 @@ public class BossFactory {
     static Entity createBaseNPC(Entity target) {
         AITaskComponent aiComponent =
                 new AITaskComponent()
-                        .addTask(new WanderTask(new Vector2(2f, 2f), 2f))
-                        .addTask(new ChaseTask(target, 10, 3f, 4f));
+                        .addTask(new WanderTask(new Vector2(4f, 4f), 2f))
+                        .addTask(new ChaseTask(target, 10, 6f, 8f));
         Entity npc =
                 new Entity()
                         .addComponent(new PhysicsComponent())
