@@ -16,6 +16,7 @@ import java.lang.reflect.Field;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InOrder;
 
 @ExtendWith(GameExtension.class)
 class PlayerActionsTest {
@@ -144,4 +145,92 @@ class PlayerActionsTest {
 
     verify(sound).play();
   }
+
+  @Test
+  void shouldApplySprintImpulseOnWalk() throws Exception {
+    PhysicsComponent physicsComponent = mock(PhysicsComponent.class);
+    Body body = mock(Body.class);
+    when(physicsComponent.getBody()).thenReturn(body);
+    when(body.getLinearVelocity()).thenReturn(new Vector2(0f, 0f));
+    when(body.getMass()).thenReturn(2f);
+    Vector2 worldCenter = new Vector2(1f, 1f);
+    when(body.getWorldCenter()).thenReturn(worldCenter);
+
+    PlayerActions actions = new PlayerActions();
+
+    // Inject mocked physics
+    Field physField = PlayerActions.class.getDeclaredField("physicsComponent");
+    physField.setAccessible(true);
+    physField.set(actions, physicsComponent);
+
+    // Force sprinting without needing entity/events
+    Field sprintingField = PlayerActions.class.getDeclaredField("sprinting");
+    sprintingField.setAccessible(true);
+    sprintingField.set(actions, true);
+
+    // Read the private sprint speed constant (so we don't hardcode 7f)
+    Field sprintSpeedField = PlayerActions.class.getDeclaredField("SPRINT_SPEED");
+    sprintSpeedField.setAccessible(true);
+    Vector2 sprintSpeed = (Vector2) sprintSpeedField.get(null);
+
+    // Move right while sprinting
+    Vector2 direction = new Vector2(1f, 0f);
+    actions.walk(direction);
+    actions.update();
+
+    // Impulse = (targetVx - currentVx) * mass = (SPRINT_SPEED.x - 0) * 2
+    Vector2 expectedImpulse = new Vector2(sprintSpeed.x * 2f, 0f);
+    verify(body).applyLinearImpulse(approx(expectedImpulse, 1e-3f), eq(worldCenter), eq(true));
+  }
+
+  @Test
+  void shouldUseNormalSpeedAfterSprintStop() throws Exception {
+    PhysicsComponent physicsComponent = mock(PhysicsComponent.class);
+    Body body = mock(Body.class);
+    when(physicsComponent.getBody()).thenReturn(body);
+    when(body.getLinearVelocity()).thenReturn(new Vector2(0f, 0f));
+    when(body.getMass()).thenReturn(2f);
+    Vector2 worldCenter = new Vector2(1f, 1f);
+    when(body.getWorldCenter()).thenReturn(worldCenter);
+
+    PlayerActions actions = new PlayerActions();
+
+    // Inject mocked physics
+    Field physField = PlayerActions.class.getDeclaredField("physicsComponent");
+    physField.setAccessible(true);
+    physField.set(actions, physicsComponent);
+
+    // Force sprinting on
+    Field sprintingField = PlayerActions.class.getDeclaredField("sprinting");
+    sprintingField.setAccessible(true);
+    sprintingField.set(actions, true);
+
+    // Read private constants so the test stays robust
+    Field sprintSpeedField = PlayerActions.class.getDeclaredField("SPRINT_SPEED");
+    sprintSpeedField.setAccessible(true);
+    Vector2 sprintSpeed = (Vector2) sprintSpeedField.get(null);
+
+    Field maxSpeedField = PlayerActions.class.getDeclaredField("MAX_SPEED");
+    maxSpeedField.setAccessible(true);
+    Vector2 maxSpeed = (Vector2) maxSpeedField.get(null);
+
+    // Start moving right
+    Vector2 direction = new Vector2(1f, 0f);
+    actions.walk(direction);
+
+    // 1) While sprinting
+    actions.update();
+
+    // 2) Stop sprinting
+    sprintingField.set(actions, false);
+    actions.update();
+
+    InOrder inOrder = inOrder(body);
+    Vector2 expectedSprintImpulse = new Vector2(sprintSpeed.x * 2f, 0f); // (vx - 0) * mass(2)
+    Vector2 expectedNormalImpulse = new Vector2(maxSpeed.x * 2f, 0f);
+
+    inOrder.verify(body).applyLinearImpulse(approx(expectedSprintImpulse, 1e-3f), eq(worldCenter), eq(true));
+    inOrder.verify(body).applyLinearImpulse(approx(expectedNormalImpulse, 1e-3f), eq(worldCenter), eq(true));
+  }
+
 }
