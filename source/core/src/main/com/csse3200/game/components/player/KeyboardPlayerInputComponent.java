@@ -105,6 +105,9 @@ public class KeyboardPlayerInputComponent extends InputComponent {
       case Keys.E:
         triggerAddItem();
         return true;
+      case Keys.R:
+        triggerDropFocused();
+        return true;
       default:
         return false;
     }
@@ -130,4 +133,9 @@ public class KeyboardPlayerInputComponent extends InputComponent {
   private void triggerSelectItem() {
     entity.getEvents().trigger("focus item", focusedItem);
   }
+
+  private void triggerDropFocused() {
+    entity.getEvents().trigger("drop focused");
+  }
 }
+
