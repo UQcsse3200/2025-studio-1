@@ -39,7 +39,7 @@ public class GPTSlowChaseTask extends DefaultTask implements PriorityTask {
         movementTask.create(owner);
         movementTask.start();
 
-        this.owner.getEntity().getEvents().trigger("chaseStart");
+        this.owner.getEntity().getEvents().trigger("wanderStart");
     }
 
     @Override
@@ -59,8 +59,8 @@ public class GPTSlowChaseTask extends DefaultTask implements PriorityTask {
 
     @Override
     public int getPriority() {
-        // Only slow chase if the player is visible to the enemy
-        if (status == Status.ACTIVE && isTargetVisible()) {
+        // Only slow chase if the player is not visible to the enemy
+        if (!isTargetVisible()) {
             return priority;
         }
         return -1;
