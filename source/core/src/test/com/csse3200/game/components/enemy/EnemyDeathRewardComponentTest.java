@@ -10,12 +10,12 @@ import static org.junit.jupiter.api.Assertions.*;
 public class EnemyDeathRewardComponentTest {
 
     @Test
-    @DisplayName("Awards gold to player when enemy dies")
-    void awardsGoldOnDeath() {
-        int startingGold = 10;
+    @DisplayName("Awards processor to player when enemy dies")
+    void awardsProcessorOnDeath() {
+        int startingProcessor = 10;
         int reward = 15;
 
-        Entity player = new Entity().addComponent(new InventoryComponent(startingGold));
+        Entity player = new Entity().addComponent(new InventoryComponent(startingProcessor));
         player.create();
         InventoryComponent inventory = player.getComponent(InventoryComponent.class);
 
@@ -27,16 +27,16 @@ public class EnemyDeathRewardComponentTest {
         // Kill enemy
         enemy.getComponent(CombatStatsComponent.class).setHealth(0);
 
-        assertEquals(startingGold + reward, inventory.getGold(), "Player should receive reward gold on enemy death");
+        assertEquals(startingProcessor + reward, inventory.getProcessor(), "Player should receive reward processor on enemy death");
     }
 
     @Test
     @DisplayName("Reward only applied once even if setHealth(0) called repeatedly")
     void rewardOnlyOnce() {
-        int startingGold = 5;
+        int startingProcessor = 5;
         int reward = 20;
 
-        Entity player = new Entity().addComponent(new InventoryComponent(startingGold));
+        Entity player = new Entity().addComponent(new InventoryComponent(startingProcessor));
         player.create();
         InventoryComponent inventory = player.getComponent(InventoryComponent.class);
 
@@ -49,7 +49,7 @@ public class EnemyDeathRewardComponentTest {
         stats.setHealth(0); // first death triggers reward
         stats.setHealth(0); // should not trigger again
 
-        assertEquals(startingGold + reward, inventory.getGold(), "Player should only be rewarded once");
+        assertEquals(startingProcessor + reward, inventory.getProcessor(), "Player should only be rewarded once");
     }
 
     @Test
@@ -64,4 +64,3 @@ public class EnemyDeathRewardComponentTest {
         assertDoesNotThrow(() -> enemy.getComponent(CombatStatsComponent.class).setHealth(0));
     }
 }
-

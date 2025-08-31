@@ -4,14 +4,14 @@ import com.csse3200.game.components.Component;
 import com.csse3200.game.components.player.InventoryComponent;
 
 /**
- * Awards the player gold when the ghost dies.
+ * Awards the player processor when the enemy dies.
  */
 public class EnemyDeathRewardComponent extends Component {
-    private final int rewardGold;
+    private final int rewardProcessor;
     private final InventoryComponent playerInventory;
 
-    public EnemyDeathRewardComponent(int rewardGold, InventoryComponent playerInventory) {
-        this.rewardGold = rewardGold;
+    public EnemyDeathRewardComponent(int rewardProcessor, InventoryComponent playerInventory) {
+        this.rewardProcessor = rewardProcessor;
         this.playerInventory = playerInventory;
     }
 
@@ -24,6 +24,6 @@ public class EnemyDeathRewardComponent extends Component {
         if (playerInventory == null) {
             return;
         }
-        playerInventory.addGold(rewardGold);
+        playerInventory.addProcessor(rewardProcessor);
     }
 }
