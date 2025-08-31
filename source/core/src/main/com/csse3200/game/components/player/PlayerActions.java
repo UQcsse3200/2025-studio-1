@@ -140,6 +140,8 @@ public class PlayerActions extends Component {
         dashing = false;
         if (!moving) {
           stopWalking();
+        } else if(!sprinting){
+          entity.getEvents().trigger("walk", walkDirection);
         }
       }
     }, 0.1f); // seconds

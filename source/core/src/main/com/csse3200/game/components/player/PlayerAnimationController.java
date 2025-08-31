@@ -28,6 +28,8 @@ public class PlayerAnimationController extends Component {
         entity.getEvents().addListener("jump", this::animateJump);
         entity.getEvents().addListener("sprintStart", () -> sprinting = true);
         entity.getEvents().addListener("sprintStop", () -> sprinting = false);
+        entity.getEvents().addListener("dash", this::animateDash);
+        entity.getEvents().addListener("crouch", this::animateCrouch);
     }
 
     /**
@@ -83,6 +85,33 @@ public class PlayerAnimationController extends Component {
         } else {
             logger.debug("Animating left stand");
             animator.startAnimation("left_stand");
+        }
+    }
+
+    /**
+     * Animates a player dashing in the relevant direction
+     * @param facingRight whether player is facing right or not
+     */
+    void animateDash(boolean facingRight) {
+        if(facingRight) {
+            logger.debug("Animating right dash");
+            animator.startAnimation("right_run");
+        } else {
+            logger.debug("Animating left dash");
+            animator.startAnimation("left_run");
+        }
+    }
+
+    /**
+     * Animates player crouching in given direction
+     *
+     * @param direction direction player is moving
+     */
+    void animateCrouch(Vector2 direction) {
+        if(direction.x > 0) {
+            animator.startAnimation("right_crouch");
+        } else {
+            animator.startAnimation("left_crouch");
         }
     }
 
