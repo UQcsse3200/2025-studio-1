@@ -22,10 +22,6 @@ public class PhysicsMovementComponent extends Component implements MovementContr
     speed = maxSpeed;
   }
 
-  public PhysicsMovementComponent(Vector2 speed) {
-    this.speed = speed;
-  }
-
   @Override
   public void create() {
     physicsComponent = entity.getComponent(PhysicsComponent.class);
@@ -74,6 +70,10 @@ public class PhysicsMovementComponent extends Component implements MovementContr
   public void setTarget(Vector2 target) {
     logger.trace("Setting target to {}", target);
     this.targetPosition = target;
+  }
+
+  private void setSpeed(Vector2 speed) {
+    this.speed = speed;
   }
 
   private void updateDirection(Body body) {
