@@ -12,6 +12,7 @@ import com.csse3200.game.utils.math.Vector2Utils;
  */
 public class KeyboardPlayerInputComponent extends InputComponent {
   private final Vector2 walkDirection = Vector2.Zero.cpy();
+  private int focusedItem = -1;
 
   public KeyboardPlayerInputComponent() {
     super(5);
@@ -60,6 +61,32 @@ public class KeyboardPlayerInputComponent extends InputComponent {
         walkDirection.sub(Vector2Utils.RIGHT);
         triggerWalkEvent();
         return true;
+      case Keys.Q:
+        triggerRemoveItem();
+        return true;
+      case Keys.NUM_1:
+        focusedItem = 0;
+        triggerSelectItem();
+        return true;
+      case Keys.NUM_2:
+        focusedItem = 1;
+        triggerSelectItem();
+        return true;
+      case Keys.NUM_3:
+        focusedItem = 2;
+        triggerSelectItem();
+        return true;
+      case Keys.NUM_4:
+        focusedItem = 3;
+        triggerSelectItem();
+        return true;
+      case Keys.NUM_5:
+        triggerSelectItem();
+        focusedItem = 4;
+        return true;
+      case Keys.P:
+        triggerAddItem();
+        return true;
       default:
         return false;
     }
@@ -75,5 +102,16 @@ public class KeyboardPlayerInputComponent extends InputComponent {
 
   private void jump() {
     entity.getEvents().trigger("jump");
+  }
+
+  private void triggerRemoveItem() {
+    entity.getEvents().trigger("remove item", focusedItem);
+  }
+
+  private void triggerAddItem() {
+    entity.getEvents().trigger("add item", "images/mud.png");
+  }
+  private void triggerSelectItem() {
+    entity.getEvents().trigger("focus item", focusedItem);
   }
 }
