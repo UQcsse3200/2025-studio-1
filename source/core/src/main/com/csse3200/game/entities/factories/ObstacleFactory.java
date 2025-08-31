@@ -78,7 +78,7 @@ public class ObstacleFactory {
   public static Entity createSmallStair() {
     Entity smallStair =
         new Entity()
-          .addComponent(new TextureRenderComponent("foreg_sprites/general/LongFloor.png"))
+          .addComponent(new TextureRenderComponent("foreg_sprites/general/SmallStair.png"))
           .addComponent(new PhysicsComponent())
           .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
 
@@ -92,13 +92,13 @@ public class ObstacleFactory {
   public static Entity createSquareTile() {
     Entity squareTile =
         new Entity()
-          .addComponent(new TextureRenderComponent("foreg_sprites/general/LongFloor.png"))
+          .addComponent(new TextureRenderComponent("foreg_sprites/general/SquareTile.png"))
           .addComponent(new PhysicsComponent())
           .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
 
     squareTile.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
     squareTile.getComponent(TextureRenderComponent.class).scaleEntity();
-    squareTile.scaleHeight(1f);
+    squareTile.scaleHeight(2f);
     PhysicsUtils.setScaledCollider(squareTile, 1f, 1f);
     return squareTile;
   }
@@ -106,13 +106,13 @@ public class ObstacleFactory {
   public static Entity createThickFloor() {
     Entity thickFloor =
         new Entity()
-          .addComponent(new TextureRenderComponent("foreg_sprites/general/LongFloor.png"))
+          .addComponent(new TextureRenderComponent("foreg_sprites/general/ThickFloor.png"))
           .addComponent(new PhysicsComponent())
           .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
 
     thickFloor.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
     thickFloor.getComponent(TextureRenderComponent.class).scaleEntity();
-    thickFloor.scaleHeight(1f);
+    thickFloor.scaleHeight(3f);
     PhysicsUtils.setScaledCollider(thickFloor, 1f, 1f);
     return thickFloor;
   }
@@ -120,15 +120,141 @@ public class ObstacleFactory {
   public static Entity createThinFloor() {
     Entity thinFloor =
         new Entity()
-          .addComponent(new TextureRenderComponent("foreg_sprites/general/LongFloor.png"))
+          .addComponent(new TextureRenderComponent("foreg_sprites/general/ThinFloor.png"))
           .addComponent(new PhysicsComponent())
           .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
 
     thinFloor.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
     thinFloor.getComponent(TextureRenderComponent.class).scaleEntity();
-    thinFloor.scaleHeight(1f);
+    thinFloor.scaleHeight(0.8f);
     PhysicsUtils.setScaledCollider(thinFloor, 1f, 1f);
     return thinFloor;
+  }
+
+  public static Entity createPurpleSpawnPad() {
+    Entity purpSpawn = 
+        new Entity()
+          .addComponent(new TextureRenderComponent("foreg_sprites/spawn_pads/SpawnPadPurple.png"))
+          .addComponent(new PhysicsComponent())
+          .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
+
+    purpSpawn.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
+    purpSpawn.getComponent(TextureRenderComponent.class).scaleEntity();
+    purpSpawn.scaleHeight(0.7f);
+    PhysicsUtils.setScaledCollider(purpSpawn, 1f, 1f);
+    return purpSpawn;
+  }
+
+  public static Entity createRedSpawnPad() {
+    Entity purpSpawn = 
+        new Entity()
+          .addComponent(new TextureRenderComponent("foreg_sprites/spawn_pads/SpawnPadRed.png"))
+          .addComponent(new PhysicsComponent())
+          .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
+
+    purpSpawn.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
+    purpSpawn.getComponent(TextureRenderComponent.class).scaleEntity();
+    purpSpawn.scaleHeight(0.7f);
+    PhysicsUtils.setScaledCollider(purpSpawn, 1f, 1f);
+    return purpSpawn;
+  }
+
+  public static Entity createCeilingLight() {
+    Entity ceilingLight =
+        new Entity()
+          .addComponent(new TextureRenderComponent("foreg_sprites/office/CeilingLight.png"))
+          .addComponent(new PhysicsComponent())
+          .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
+
+    ceilingLight.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
+    ceilingLight.getComponent(TextureRenderComponent.class).scaleEntity();
+    ceilingLight.scaleHeight(1f);
+    PhysicsUtils.setScaledCollider(ceilingLight, 1f, 1f);
+    return ceilingLight;
+  }
+
+  public static Entity createCrate() {
+    Entity crate =
+        new Entity()
+          .addComponent(new TextureRenderComponent("foreg_sprites/office/Crate.png"))
+          .addComponent(new PhysicsComponent())
+          .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
+
+    crate.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
+    crate.getComponent(TextureRenderComponent.class).scaleEntity();
+    crate.scaleHeight(1f);
+    PhysicsUtils.setScaledCollider(crate, 1f, 1f);
+    return crate;
+  }
+
+  public static Entity createLargeShelf() {
+    Entity largeShelf =
+        new Entity()
+          .addComponent(new TextureRenderComponent("foreg_sprites/office/LargeShelf.png"))
+          .addComponent(new PhysicsComponent())
+          .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
+
+    largeShelf.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
+    largeShelf.getComponent(TextureRenderComponent.class).scaleEntity();
+    largeShelf.scaleHeight(1f);
+    PhysicsUtils.setScaledCollider(largeShelf, 1f, 1f);
+    return largeShelf;
+  }
+
+  public static Entity createLongCeilingLight() {
+    Entity longCeilingLight =
+        new Entity()
+          .addComponent(new TextureRenderComponent("foreg_sprites/office/LongCeilingLight.png"))
+          .addComponent(new PhysicsComponent())
+          .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
+
+    longCeilingLight.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
+    longCeilingLight.getComponent(TextureRenderComponent.class).scaleEntity();
+    longCeilingLight.scaleHeight(1f);
+    PhysicsUtils.setScaledCollider(longCeilingLight, 1f, 1f);
+    return longCeilingLight;
+  }
+
+  public static Entity createMidShelf() {
+    Entity midShelf =
+        new Entity()
+          .addComponent(new TextureRenderComponent("foreg_sprites/office/MidShelf.png"))
+          .addComponent(new PhysicsComponent())
+          .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
+
+    midShelf.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
+    midShelf.getComponent(TextureRenderComponent.class).scaleEntity();
+    midShelf.scaleHeight(2f);
+    PhysicsUtils.setScaledCollider(midShelf, 1f, 1f);
+    return midShelf;
+  }
+
+  public static Entity createOfficeChair() {
+    Entity officeChair =
+        new Entity()
+          .addComponent(new TextureRenderComponent("foreg_sprites/office/OfficeChair.png"))
+          .addComponent(new PhysicsComponent())
+          .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
+
+    officeChair.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
+    officeChair.getComponent(TextureRenderComponent.class).scaleEntity();
+    officeChair.scaleHeight(1.2f);
+    PhysicsUtils.setScaledCollider(officeChair, 1f, 1f);
+    return officeChair;
+  }
+
+  public static Entity createOfficeDesk() {
+    Entity officeDesk =
+        new Entity()
+          .addComponent(new TextureRenderComponent("foreg_sprites/office/officeDesk.png"))
+          .addComponent(new PhysicsComponent())
+          .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
+
+    officeDesk.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
+    officeDesk.getComponent(TextureRenderComponent.class).scaleEntity();
+    officeDesk.scaleHeight(1f);
+    PhysicsUtils.setScaledCollider(officeDesk, 1f, 1f);
+    return officeDesk;
   }
 
   /**
