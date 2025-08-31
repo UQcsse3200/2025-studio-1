@@ -60,7 +60,7 @@ public class GPTFastChaseTask extends DefaultTask implements PriorityTask {
     @Override
     public int getPriority() {
         // Only fast chase if the player is visible to the enemy
-        if (status == Status.ACTIVE && !isTargetVisible()) {
+        if (isTargetVisible()) {
             return priority;
         }
         return -1;
