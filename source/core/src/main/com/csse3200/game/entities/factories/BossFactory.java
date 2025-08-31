@@ -5,16 +5,20 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.ai.tasks.AITaskComponent;
 import com.csse3200.game.components.CombatStatsComponent;
+<<<<<<< HEAD
 import com.csse3200.game.components.enemy.BossChargeSkillComponent;
+=======
+import com.csse3200.game.components.enemy.BlackholeAttackComponent;
+>>>>>>> 03df7d0 (add a small skill can control the player)
 import com.csse3200.game.components.npc.GhostAnimationController;
 import com.csse3200.game.components.TouchAttackComponent;
 import com.csse3200.game.components.enemy.FireballAttackComponment;
 import com.csse3200.game.components.enemy.FireballMovementComponent;
+import com.csse3200.game.components.enemy.BlackholeComponent;
 import com.csse3200.game.components.tasks.ChaseTask;
 import com.csse3200.game.components.tasks.WanderTask;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.BaseEntityConfig;
-import com.csse3200.game.entities.configs.GhostKingConfig;
 import com.csse3200.game.entities.configs.NPCConfigs;
 import com.csse3200.game.files.FileLoader;
 import com.csse3200.game.physics.PhysicsLayer;
@@ -26,6 +30,7 @@ import com.csse3200.game.physics.components.PhysicsMovementComponent;
 import com.csse3200.game.rendering.AnimationRenderComponent;
 import com.csse3200.game.rendering.TextureRenderComponent;
 import com.csse3200.game.services.ServiceLocator;
+
 
 
 public class BossFactory {
@@ -46,24 +51,20 @@ public class BossFactory {
                 .addComponent(new CombatStatsComponent(config.health, config.baseAttack))
                 .addComponent(animator)
                 .addComponent(new GhostAnimationController())
-                .addComponent(new FireballAttackComponment(
-                target,
-                1.5f,
-                8f,
-                6f,
-                config.baseAttack + 2))
-                .addComponent(new BossChargeSkillComponent(
-                target,
-                6f,
-                5f,
-                0.4f,
-                12f,
-                0.6f,
-                1.5f
-                ));
+                .addComponent(new FireballAttackComponment(target, 1.5f, 8f, 6f, config.baseAttack + 2))
+                .addComponent(new BossChargeSkillComponent(target, 6f, 5f, 0.4f, 12f, 0.6f, 1.5f))
+                .addComponent(new BlackholeComponent(target,7f,8f))
+                .addComponent(new FireballAttackComponment(target, 1.5f, 8f, 6f, config.baseAttack + 2));
         boss2.getComponent(AnimationRenderComponent.class).scaleEntity();
 
         return boss2;
+    }
+    public static Entity createBlackhole(Vector2 pos,Entity target){
+        Entity Blackhole = new Entity()
+                .addComponent(new TextureRenderComponent("images/tree.png"))
+                .addComponent(new BlackholeAttackComponent(target,1f,4f));
+        Blackhole.setPosition(pos);
+        return Blackhole;
     }
     public static Entity createFireball(Vector2 from, Vector2 velocity) {
         Entity fireball = new Entity()
