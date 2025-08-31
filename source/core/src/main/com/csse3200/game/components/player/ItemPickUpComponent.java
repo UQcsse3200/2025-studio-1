@@ -5,11 +5,11 @@ package com.csse3200.game.components.player;
 
 import com.csse3200.game.components.Component;
 import com.csse3200.game.components.entity.item.ItemComponent;
-import com.csse3200.game.components.player.InventoryComponent;
+//import com.csse3200.game.components.player.InventoryComponent;  //delete if not being used
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.physics.BodyUserData;
-import com.csse3200.game.physics.components.HitboxComponent;
+//import com.csse3200.game.physics.components.HitboxComponent;    //might be needed later or delete if not used
 
 /**
  * Component that allows an entity to pick up items when in proximity.
@@ -100,6 +100,7 @@ private void pickUpItem(Entity item) {
 
         boolean added = inventory.addItem(item);
         if (added) {
+            item.dispose();
             targetItem = null;
             System.out.println("Item picked up and added to inventory!");
         } else {
@@ -127,7 +128,7 @@ private void onFocusItem(int index) {
  * If a valid slot is focused and contains an item, removes the item from
  * the inventory and (eventually) spawns it back into the world.
  */
-private void onDropFocused() {
+    private void onDropFocused() {
     if (focusedIndex < 0 || focusedIndex >= 5) {
         return;
     }
