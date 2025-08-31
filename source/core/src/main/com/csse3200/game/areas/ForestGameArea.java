@@ -2,6 +2,8 @@ package com.csse3200.game.areas;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.areas.terrain.TerrainFactory;
@@ -10,6 +12,7 @@ import com.csse3200.game.components.ItemHoldComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.factories.*;
 import com.csse3200.game.physics.components.PhysicsProjectileComponent;
+import com.csse3200.game.rendering.AnimationRenderComponent;
 import com.csse3200.game.utils.math.GridPoint2Utils;
 import com.csse3200.game.utils.math.RandomUtils;
 import com.csse3200.game.services.ResourceService;
@@ -147,7 +150,7 @@ public class ForestGameArea extends GameArea {
 
   private Entity spawnDagger() {
     Entity newDagger = WeaponsFactory.createDagger();
-    Vector2 newDaggerOffset = new Vector2(0f, 0f);
+    Vector2 newDaggerOffset = new Vector2(0.7f, 0.3f);
     newDagger.addComponent(new ItemHoldComponent(this.player, newDaggerOffset));
     return newDagger;
   }
@@ -166,6 +169,10 @@ public class ForestGameArea extends GameArea {
     Entity newLightsaber = WeaponsFactory.createLightsaber();
     Vector2 newLightsaberOffset = new Vector2(0.7f, 0.5f);
     newLightsaber.addComponent(new ItemHoldComponent(this.player, newLightsaberOffset));
+
+    //AnimationRenderComponent lightSaberAnimator = WeaponsFactory.createAnimation("images/lightSaber.atlas", this.player);
+    //newLightsaber.addComponent(lightSaberAnimator);
+
     return newLightsaber;
   }
 
