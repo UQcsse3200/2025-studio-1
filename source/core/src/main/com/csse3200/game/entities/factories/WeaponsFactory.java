@@ -38,7 +38,7 @@ public class WeaponsFactory {
     public static Entity createLightsaber() {
         Entity lightsaber =
             new Entity()
-                .addComponent(new TextureRenderComponent("images/templightsaber.png"))
+                .addComponent(new TextureRenderComponent("images/lightsaber.png"))
                 .addComponent(new CombatStatsComponent(0, lightsaberConfigs.baseAttack))
                 .addComponent(new TagComponent("melee"));
         lightsaber.getComponent(TextureRenderComponent.class).scaleEntity();
