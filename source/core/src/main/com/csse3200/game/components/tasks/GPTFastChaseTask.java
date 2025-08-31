@@ -39,7 +39,7 @@ public class GPTFastChaseTask extends DefaultTask implements PriorityTask {
         movementTask.create(owner);
         movementTask.start();
 
-        this.owner.getEntity().getEvents().trigger("chaseFastStart");
+        this.owner.getEntity().getEvents().trigger("chaseStart");
     }
 
     @Override
