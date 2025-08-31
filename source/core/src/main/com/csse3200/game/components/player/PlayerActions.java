@@ -13,6 +13,7 @@ import com.badlogic.gdx.utils.Timer;
  * and when triggered should call methods within this class.
  */
 public class PlayerActions extends Component {
+  private float jumpImpulse = 2f; 
   private static final Vector2 MAX_SPEED = new Vector2(3f, 3f); // Metres per second
   private static final Vector2 SPRINT_SPEED = new Vector2(7f, 3f);
   private static final Vector2 JUMP_VELOCITY = new Vector2(0f, 120f);
