@@ -12,6 +12,6 @@ public class ItemHoldComponent extends Component {
 
     @Override
     public void update() {
-        entity.setPosition(player.getPosition().add(new Vector2(0.7f, 0.5f)));
+        entity.setPosition(player.getPosition().add(new Vector2(0.65f, -0.1f)));
     }
 }
