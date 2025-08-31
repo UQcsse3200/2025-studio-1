@@ -1,4 +1,4 @@
-package com.csse3200.game.components.pausemenu;
+package com.csse3200.game.components.screens;
 
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.*;

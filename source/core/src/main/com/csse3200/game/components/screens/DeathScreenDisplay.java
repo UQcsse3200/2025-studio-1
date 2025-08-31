@@ -1,4 +1,4 @@
-package com.csse3200.game.components.deathscreenmenu;
+package com.csse3200.game.components.screens;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
