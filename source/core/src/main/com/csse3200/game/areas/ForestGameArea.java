@@ -1,34 +1,16 @@
 package com.csse3200.game.areas;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.GridPoint2;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.Timer;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
-import com.csse3200.game.components.ItemHoldComponent;
-import com.csse3200.game.components.enemy.ProjectileLauncherComponent;
 import com.csse3200.game.components.CameraComponent;
-import com.csse3200.game.components.KeycardGateComponent;
 import com.csse3200.game.entities.Entity;
-import com.csse3200.game.entities.configs.BaseProjectileConfig;
-import com.csse3200.game.entities.factories.BossFactory;
 import com.csse3200.game.entities.factories.NPCFactory;
 import com.csse3200.game.entities.factories.ObstacleFactory;
 import com.csse3200.game.entities.factories.PlayerFactory;
-import com.csse3200.game.entities.factories.*;
-import com.csse3200.game.physics.components.PhysicsProjectileComponent;
-import com.csse3200.game.rendering.AnimationRenderComponent;
-import com.csse3200.game.entities.factories.KeycardFactory;
-import com.csse3200.game.physics.PhysicsLayer;
-import com.csse3200.game.physics.PhysicsUtils;
-import com.csse3200.game.physics.components.ColliderComponent;
-import com.csse3200.game.physics.components.PhysicsComponent;
 import com.csse3200.game.utils.math.GridPoint2Utils;
 import com.csse3200.game.utils.math.RandomUtils;
 import com.csse3200.game.services.ResourceService;
@@ -44,12 +26,6 @@ import org.slf4j.LoggerFactory;
 public class ForestGameArea extends GameArea {
   private static final Logger logger = LoggerFactory.getLogger(ForestGameArea.class);
   private static final int NUM_TREES = 7;
-  private static final int NUM_ROBOTS = 1;
-  private static final int NUM_ITEMS = 5;//this is for ItemFactory
-  private static final int NUM_GHOST_GPTS = 4;
-  private static final int NUM_DEEP_SPIN = 3;
-  private static final int NUM_GROK_DROID = 3;
-  private static final int NUM_VROOMBA = 3;
   private static final int NUM_GHOSTS = 0;
   private static final GridPoint2 PLAYER_SPAWN = new GridPoint2(3, 7);
   private static final float WALL_WIDTH = 0.1f;
@@ -66,30 +42,7 @@ public class ForestGameArea extends GameArea {
     "images/hex_grass_3.png",
     "images/iso_grass_1.png",
     "images/iso_grass_2.png",
-    "images/iso_grass_3.png",
-    "images/robot-2-attack.png",
-    "images/robot-2-common.png",
-          "images/fireball1.png",
-          "images/blackhole1.png",
-            "images/Robot_1.png",
-            "images/Robot_1_attack_left.png",
-            "images/Robot_1_attack_right.png",
-          "images/Boss_3.png",
-          "images/mud.png",
-          "images/mud_ball_1.png",
-          "images/mud_ball_2.png",
-          "images/mud_ball_3.png",
-    "images/lightsaber.png",
-    "images/lightsaberSingle.png",
-    "images/ammo.png",
-    "images/round.png",
-    "images/pistol.png",
-    "images/rifle.png",
-    "images/dagger.png",
-    "images/laser_shot.png",
-    "images/player.png",
-    "images/mud.png",
-    "images/heart.png"
+    "images/iso_grass_3.png"
   };
   private static final String[] generalTextures = {
       "foreg_sprites/general/LongFloor.png",
@@ -114,21 +67,7 @@ public class ForestGameArea extends GameArea {
     "foreg_sprites/office/officeDesk.png",
   };
   private static final String[] forestTextureAtlases = {
-    "images/terrain_iso_grass.atlas", "images/ghost.atlas", "images/ghostKing.atlas",
-    "images/robot-2.atlas", "images/fireball.atlas", "images/blackhole.atlas", "images/Robot_1.atlas",
-          "images/boss_idle.atlas",
-    "images/terrain_iso_grass.atlas",
-    "images/ghost.atlas",
-    "images/ghostKing.atlas",
-    "images/ghostGPT.atlas",
-    "images/Deepspin.atlas",
-    "images/Grokdroid.atlas",
-    "images/Vroomba.atlas",
-    "images/explosion_1.atlas",
-    "images/explosion_2.atlas",
-    "images/explosion_2.atlas",
-    "images/player.atlas"
-
+    "images/terrain_iso_grass.atlas", "images/ghost.atlas", "images/ghostKing.atlas"
   };
   private static final String[] forestSounds = {"sounds/Impact4.ogg"};
   private static final String backgroundMusic = "sounds/BGM_03_mp3.mp3";
@@ -138,11 +77,6 @@ public class ForestGameArea extends GameArea {
   private final CameraComponent cameraComponent;
 
   private Entity player;
-  private Entity dagger;
-  private Entity lightsaber;
-  private Entity bullet;
-  private Entity pistol;
-  private Entity rifle;
 
   /**
    * Initialise this ForestGameArea to use the provided TerrainFactory.
@@ -156,86 +90,18 @@ public class ForestGameArea extends GameArea {
   }
 
   /** Create the game area, including terrain, static entities (trees), dynamic entities (player) */
-
   @Override
   public void create() {
-
     loadAssets();
-    ServiceLocator.registerGameArea(this);
+
     displayUI();
+
     spawnTerrain();
     player = spawnPlayer();
-    dagger = spawnDagger();
-    pistol = spawnPistol();
-    rifle = spawnRifle();
-    lightsaber = spawnLightsaber();
-
-
-    //These are commented out since there is no equip feature yet
-    //this.equipItem(pistol);
-    //this.equipItem(lightsaber);
-    //this.equipItem(dagger);
-    this.equipItem(rifle);
-
-    spawnGhosts();
-    spawnGhostKing();
-    int choice = (int)(Math.random() * 3);
-    if (choice == 0) {
-      spawnBoss2();
-    } else if (choice == 1) {
-      spawnRobots();
-    } else {
-      spawnBoss3();
-    }
-    spawnGhostGPT();
-    spawnDeepspin();
-    spawnGrokDroid();
-    spawnVroomba();
 
     spawnFloor();
-    spawnObject();
 
     playMusic();
-    spawnItems();
-
-    // Spawn keycards in valid floors
-    com.csse3200.game.areas.KeycardSpawnerSystem.spawnKeycards(this);
-    playMusic();
-
-    // Spawn keycards
-    KeycardSpawnerSystem.spawnKeycards(this);
-
-    // Create gate to next floor
-    Entity gateToNextFloor = new Entity()
-            .addComponent(new PhysicsComponent())
-            .addComponent(new ColliderComponent().setLayer(PhysicsLayer.GATE))
-            .addComponent(new KeycardGateComponent(1));
-
-
-      Timer.schedule(new Timer.Task() {
-        @Override
-        public void run() {
-          PhysicsComponent physics = gateToNextFloor.getComponent(PhysicsComponent.class);
-          if (physics != null && physics.getBody() != null) {
-            PhysicsUtils.setScaledCollider(gateToNextFloor, 1f, 2f);
-            Gdx.app.log("GateSpawn", "Scaled collider applied to gate");
-          } else {
-            Gdx.app.error("GateSpawn", "Physics body not ready");
-          }
-        }
-      }, 0.3f);
-    spawnEntity(gateToNextFloor);
-  }
-
-  private void spawnRobots() {
-    GridPoint2 minPos = new GridPoint2(0, 0);
-    GridPoint2 maxPos = terrain.getMapBounds(0).sub(2, 2);
-
-    for (int i = 0; i < NUM_ROBOTS; i++) {
-      GridPoint2 randomPos = RandomUtils.random(minPos, maxPos);
-      Entity robot = NPCFactory.createRobot(player);
-      spawnEntityAt(robot, randomPos, true, true);
-    }
   }
 
   private void displayUI() {
@@ -249,7 +115,6 @@ public class ForestGameArea extends GameArea {
     // Background terrain
     terrain = terrainFactory.createTerrain(TerrainType.FOREST_DEMO);
     spawnEntity(new Entity().addComponent(terrain));
-
 
     // Screen walls (camera viewport bounds) and a simple door trigger at the bottom center
     if (cameraComponent != null) {
@@ -302,21 +167,12 @@ public class ForestGameArea extends GameArea {
       Entity door = ObstacleFactory.createDoorTrigger(doorWidth, doorHeight);
       door.setPosition(doorX, doorY);
       // When entered, request next level via event on this area
-      door.addComponent(new com.csse3200.game.components.DoorComponent(() -> {
-        Gdx.app.log("Door", "Transition triggered");
-        com.badlogic.gdx.utils.Timer.schedule(new com.badlogic.gdx.utils.Timer.Task() {
-          @Override
-          public void run() {
-            loadNextLevel();
-          }
-        }, 0.2f); // ✅ Delay to prevent freezing
-      }));
+      door.addComponent(new com.csse3200.game.components.DoorComponent(() -> this.loadNextLevel()));
       spawnEntity(door);
     }
   }
 
   private void loadNextLevel() {
-    Gdx.app.log("ForestGameArea", "Loading Floor 2...");
     // Dispose current floor and switch to Floor2GameArea
     for (Entity entity : areaEntities) {
       entity.dispose();
@@ -329,117 +185,19 @@ public class ForestGameArea extends GameArea {
 
   private void spawnTrees() {
     GridPoint2 minPos = new GridPoint2(0, 0);
-    GridPoint2 maxPos = terrain.getMapBounds(0);
+    GridPoint2 maxPos = terrain.getMapBounds(0).sub(2, 2);
 
     for (int i = 0; i < NUM_TREES; i++) {
       GridPoint2 randomPos = RandomUtils.random(minPos, maxPos);
-      randomPos.y = 2;
       Entity tree = ObstacleFactory.createTree();
       spawnEntityAt(tree, randomPos, true, false);
     }
-  }
-
-  /**
-   * Spawns several item entities at random positions in the game area.
-   * The number of items is set by NUM_ITEMS.
-   * Each item is created and placed at a random spot on the terrain.
-   */
-  private void spawnItems() {
-    GridPoint2 minPos = new GridPoint2(0, 0);
-    GridPoint2 maxPos = terrain.getMapBounds(0).sub(2, 2);
-
-    for (int i = 0; i < NUM_ITEMS; i++) {
-      GridPoint2 randomPos = RandomUtils.random(minPos, maxPos);
-      Entity item = ItemFactory.createItem();
-      spawnEntityAt(item, randomPos, true, false);
-    }
-  }
-
-  private void spawnObject() {
-    GridPoint2 spawnPoint = new GridPoint2(15, 15);
-    GridPoint2 spawnPoint2 = new GridPoint2(15, 17);
-
-    Entity smallSquare = ObstacleFactory.createCrate();
-    Entity smallSquare2 = ObstacleFactory.createCrate();
-    spawnEntityAt(smallSquare, spawnPoint, true, true);
-    spawnEntityAt(smallSquare2, spawnPoint2, true, true);
-  }
-
-
-
-  private void spawnFloor() {
-
-    for (int i = 0; i < 25; i += 4) {
-      GridPoint2 floorspawn = new GridPoint2(i, 1);
-
-      Entity floor = ObstacleFactory.createLongFloor();
-      spawnEntityAt(floor, floorspawn, false, false);
-    }
-
   }
 
   private Entity spawnPlayer() {
     Entity newPlayer = PlayerFactory.createPlayer();
     spawnEntityAt(newPlayer, PLAYER_SPAWN, true, true);
     return newPlayer;
-  }
-
-  private Entity spawnDagger() {
-    Entity newDagger = WeaponsFactory.createDagger();
-    Vector2 newDaggerOffset = new Vector2(0.7f, 0.3f);
-    newDagger.addComponent(new ItemHoldComponent(this.player, newDaggerOffset));
-    return newDagger;
-  }
-
-  private void equipItem(Entity item) {
-    this.player.setCurrItem(item);
-    spawnEntityAt(item, PLAYER_SPAWN, true, true);
-
-  }
-
-  private Entity getItem() {
-    return this.player.getCurrItem();
-  }
-
-  private Entity spawnLightsaber() {
-    Entity newLightsaber = WeaponsFactory.createLightsaber();
-    Vector2 newLightsaberOffset = new Vector2(0.7f, -0.1f);
-    newLightsaber.addComponent(new ItemHoldComponent(this.player, newLightsaberOffset));
-
-    //Commented out since lightsaber animation is a work in progress
-    //AnimationRenderComponent lightSaberAnimator = WeaponsFactory.createAnimation("images/lightSaber.atlas", this.player);
-    //newLightsaber.addComponent(lightSaberAnimator);
-
-    return newLightsaber;
-  }
-
-//Commented out since bullet functionality is in progress with guns
-//  private Entity spawnBullet() {
-//    Entity newBullet = ProjectileFactory.createPistolBullet();
-//    spawnEntityAt(newBullet, new GridPoint2(5, 5), true, true);
-//    return newBullet;
-//  }
-
-  private Entity spawnPistol() {
-    Entity newPistol = WeaponsFactory.createPistol();
-    Vector2 newPistolOffset = new Vector2(0.45f, 0.02f);
-    newPistol.addComponent(new ItemHoldComponent(this.player, newPistolOffset));
-    return newPistol;
-  }
-
-  private Entity spawnRifle() {
-    Entity newRifle = WeaponsFactory.createRifle();
-    Vector2 newRifleOffset = new Vector2(0.25f, 0.15f);
-    newRifle.addComponent(new ItemHoldComponent(this.player, newRifleOffset));
-    return newRifle;
-  }
-
-  // Enemy Projectiles
-  public Entity spawnEnemyProjectile(String texturePath, Vector2 directionToFire, BaseProjectileConfig config) {
-    Entity laser = ProjectileFactory.createEnemyProjectile(texturePath, directionToFire, config);
-    spawnEntityAt(laser, new GridPoint2(0, 0), true, true);
-
-    return laser;
   }
 
   private void spawnGhosts() {
@@ -452,23 +210,6 @@ public class ForestGameArea extends GameArea {
       spawnEntityAt(ghost, randomPos, true, true);
     }
   }
-  private void spawnBoss2() {
-    GridPoint2 minPos = new GridPoint2(0, 0);
-    GridPoint2 maxPos = terrain.getMapBounds(0).sub(2, 2);
-
-    GridPoint2 pos = RandomUtils.random(minPos, maxPos);
-    Entity boss2 = BossFactory.createBoss2(player);
-    spawnEntityAt(boss2, pos, true, true);
-  }
-  //new added boss3
-  private void spawnBoss3() {
-    GridPoint2 minPos = new GridPoint2(0, 0);
-    GridPoint2 maxPos = terrain.getMapBounds(0).sub(2, 2);
-
-    GridPoint2 pos = RandomUtils.random(minPos, maxPos);
-    Entity boss3 = BossFactory.createBoss3(player);
-    spawnEntityAt(boss3, pos, true, true);
-  }
 
   private void spawnGhostKing() {
     GridPoint2 minPos = new GridPoint2(0, 0);
@@ -477,59 +218,6 @@ public class ForestGameArea extends GameArea {
     GridPoint2 randomPos = RandomUtils.random(minPos, maxPos);
     Entity ghostKing = NPCFactory.createGhostKing(player);
     spawnEntityAt(ghostKing, randomPos, true, true);
-  }
-
-  /**
-   * Adds NUM_GHOST_GPTS amount of GhostGPT enemies onto the map.
-   */
-  private void spawnGhostGPT() {
-    GridPoint2 minPos = new GridPoint2(0, 0);
-    GridPoint2 maxPos = terrain.getMapBounds(0).sub(3, 3);
-
-    for (int i = 0; i < NUM_GHOST_GPTS; i++) {
-        GridPoint2 randomPos = RandomUtils.random(minPos, maxPos);
-        Entity ghostGPT = NPCFactory.createGhostGPT(player, this);
-        spawnEntityAt(ghostGPT, randomPos, true, true);
-    }
-  }
-  /**
-   * Adds NUM_Deep_spin amount of GhostGPT enemies onto the map.
-   */
-  private void spawnDeepspin() {
-    GridPoint2 minPos = new GridPoint2(0, 0);
-    GridPoint2 maxPos = terrain.getMapBounds(0).sub(3, 3);
-
-    for (int i = 0; i < NUM_DEEP_SPIN; i++) {
-      GridPoint2 randomPos = RandomUtils.random(minPos, maxPos);
-      Entity deepspin = NPCFactory.createDeepspin(player, this);
-      spawnEntityAt(deepspin, randomPos, true, true);
-    }
-  }
-  /**
-   * Adds NUM_GROK_DROID amount of GrokDroid enemies onto the map.
-   */
-  private void spawnGrokDroid() {
-    GridPoint2 minPos = new GridPoint2(0, 0);
-    GridPoint2 maxPos = terrain.getMapBounds(0).sub(3, 3);
-
-    for (int i = 0; i < NUM_GROK_DROID; i++) {
-      GridPoint2 randomPos = RandomUtils.random(minPos, maxPos);
-      Entity grokDroid = NPCFactory.createGrokDroid(player, this);
-      spawnEntityAt(grokDroid, randomPos, true, true);
-    }
-  }
-  /**
-   * Adds NUM_VROOMBA amount of GrokDroid enemies onto the map.
-   */
-  private void spawnVroomba() {
-    GridPoint2 minPos = new GridPoint2(0, 0);
-    GridPoint2 maxPos = terrain.getMapBounds(0).sub(3, 3);
-
-    for (int i = 0; i < NUM_VROOMBA; i++) {
-      GridPoint2 randomPos = RandomUtils.random(minPos, maxPos);
-      Entity vroomba = NPCFactory.createVroomba(player, this);
-      spawnEntityAt(vroomba, randomPos, true, true);
-    }
   }
 
   private void playMusic() {
@@ -573,9 +261,5 @@ public class ForestGameArea extends GameArea {
     super.dispose();
     ServiceLocator.getResourceService().getAsset(backgroundMusic, Music.class).stop();
     this.unloadAssets();
-  }
-
-  public Entity getPlayer() {
-    return player;
   }
 }
