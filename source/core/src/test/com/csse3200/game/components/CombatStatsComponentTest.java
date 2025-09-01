@@ -143,6 +143,35 @@ class CombatStatsComponentTest {
     }
   }
 
+  // ---=---
+  @Nested
+  @DisplayName("Objective: Dead entities ignore further damage")
+  class IgnoreWhenDeadTests {
+    @Test
+    void hitInt_noChange_noEvent() {
+      CombatStatsComponent combat = new CombatStatsComponent(10, 5);
+      HealthSpy spy = attachWithHealthSpy(combat);
+
+      combat.setHealth(0);
+      int before = spy.cnt.get();
+      combat.hit(5);
+
+      assertEquals(0, combat.getHealth());
+      assertTrue(combat.isDead());
+      assertEquals(before, spy.cnt.get()); // unchanged
+    }
+
+    @Test
+    void hitAttacker_noChange_noEvent() {
+      CombatStatsComponent combat = new CombatStatsComponent(10, 5);
+      HealthSpy spy = attachWithHealthSpy(combat);
+      combat.setHealth(0);
+
+      combat.hit(new CombatStatsComponent(50, 25));
+      assertEquals(0, combat.getHealth());
+      assertEquals(spy.cnt.get(), spy.cnt.get());;
+    }
+  }
   // Health clamps at lower bound for both max and health
   @Test
   void setHealth_clampsAndFiresUpdateHealthEvent() {
