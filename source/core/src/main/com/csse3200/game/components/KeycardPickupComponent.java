@@ -56,10 +56,8 @@ public class KeycardPickupComponent extends Component {
         collected = true;
 
         // Set the player's keycard level
-
         Gdx.app.log("KeycardPickup", "Keycard level " + level + " collected by player");
 
-        // Remove the keycard from the world
-        meEntity.dispose();
+        Gdx.app.postRunnable(meEntity::dispose);
     }
 }
