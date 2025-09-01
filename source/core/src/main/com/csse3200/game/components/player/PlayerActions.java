@@ -162,8 +162,13 @@ public class PlayerActions extends Component {
       boolean isGroundJump = (jumpsLeft == MAX_JUMPS); // first jump
       boolean withinCooldown = (currentTime - lastJumpTime) > JUMP_COOLDOWN_MS;
       if ((!isGroundJump || touchingGround())
-              && ((!isGroundJump || withinCooldown) 
-              && trySpendStamina(DOUBLE_JUMP_COST))) {
+              && (!isGroundJump || withinCooldown)) {
+        if(!isGroundJump) {
+          if(!trySpendStamina(DOUBLE_JUMP_COST)) {
+            return;
+          }
+        }
+
         entity.getEvents().trigger("jump");
         body.applyLinearImpulse(JUMP_VELOCITY, body.getWorldCenter(), true);
         jumpsLeft--;
