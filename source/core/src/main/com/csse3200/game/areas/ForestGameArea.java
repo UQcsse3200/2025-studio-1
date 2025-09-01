@@ -257,12 +257,9 @@ public class ForestGameArea extends GameArea {
   }
 
   private void spawnCrates() {
-    GridPoint2 cratePos = new GridPoint2(15, 3);
+    GridPoint2 cratePos = new GridPoint2(15, 6);
     Entity crate = ObstacleFactory.createCrate();
     spawnEntityAt(crate, cratePos, true, false);
-    GridPoint2 cratePos2 = new GridPoint2(15, 5);
-    Entity crate2 = ObstacleFactory.createCrate();
-    spawnEntityAt(crate2, cratePos2, true, false);
   }
 
   private void playMusic() {
