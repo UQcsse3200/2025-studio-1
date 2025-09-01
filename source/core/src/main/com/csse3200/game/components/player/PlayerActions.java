@@ -85,7 +85,7 @@ public class PlayerActions extends Component {
     }
 
     Body body = physicsComponent.getBody();
-    if (body.getLinearVelocity().y < 0f || touchingGround()) {
+    if (touchingGround()) {
       jumpsLeft = MAX_JUMPS;
     }
   }
