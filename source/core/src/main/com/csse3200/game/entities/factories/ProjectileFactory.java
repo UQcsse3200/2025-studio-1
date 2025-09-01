@@ -76,6 +76,7 @@ public class ProjectileFactory {
 
         laser.getComponent(PhysicsProjectileComponent.class).create(); // Not called for some reason.
         laser.getComponent(PhysicsProjectileComponent.class).fire(direction, config.speed);
+
         return laser;
     }
 
