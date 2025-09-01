@@ -9,6 +9,7 @@ import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.components.DoorComponent;
 import com.csse3200.game.entities.Entity;
+import com.csse3200.game.entities.factories.KeycardFactory;
 import com.csse3200.game.entities.factories.NPCFactory;
 import com.csse3200.game.entities.factories.ObstacleFactory;
 import com.csse3200.game.entities.factories.PlayerFactory;
@@ -109,6 +110,12 @@ public class ForestGameArea extends GameArea {
     spawnBottomRightDoor();
 
     playMusic();
+    float keycardX = 14f;
+    float keycardY = 12f;
+    Entity keycard = KeycardFactory.createKeycard(1);
+    keycard.setPosition(new Vector2(keycardX, keycardY));
+    spawnEntity(keycard);
+
   }
 
   private void displayUI() {
@@ -175,7 +182,7 @@ public class ForestGameArea extends GameArea {
 
       Entity rightDoor = ObstacleFactory.createDoorTrigger(WALL_WIDTH, rightDoorHeight);
       rightDoor.setPosition(rightX - WALL_WIDTH - 0.001f, rightDoorY);
-      rightDoor.addComponent(new com.csse3200.game.components.DoorComponent(() -> this.loadNextLevel()));
+      rightDoor.addComponent(new com.csse3200.game.components.DoorComponent(() -> this.loadNextLevel(),1));
       spawnEntity(rightDoor);
     }
   }
@@ -229,16 +236,12 @@ public class ForestGameArea extends GameArea {
     texture.scaleEntity(); // scale it to match physics body
 
     door.setPosition(doorX, doorY);
-
     door.addComponent(new DoorComponent(() -> {
       logger.info("Bottom-right platform door triggered");
-      loadNextLevel();
-    }));
+    }, 1)); // or whatever int value is appropriate
 
     spawnEntity(door);
   }
-
-
 
   private void spawnPad() {
     GridPoint2 spawnPadPos = new GridPoint2(20, 3);
