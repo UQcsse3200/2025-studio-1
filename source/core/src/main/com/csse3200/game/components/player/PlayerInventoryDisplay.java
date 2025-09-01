@@ -17,7 +17,7 @@ import java.util.Map;
 
 /**
  * The UI component of the inventory.
- * Use the triggers: "add item," "remove item," "remove all items," "focus item"
+ * Use the triggers: "add item," "remove item," "remove all items", "focus item"
  */
 public class PlayerInventoryDisplay extends UIComponent {
     private static final Logger log = LoggerFactory.getLogger(PlayerInventoryDisplay.class);
@@ -52,7 +52,8 @@ public class PlayerInventoryDisplay extends UIComponent {
     public void create() {
         super.create();
         buildUI();
-        entity.getEvents().addListener("add item", this::addInventoryItem);
+        // entity.getEvents().addListener("add item", this::addInventoryItem);
+        entity.getEvents().addListener("add item", this::addItem);
         entity.getEvents().addListener("remove item", this::clearSlot);
         entity.getEvents().addListener("remove all items", this::clearAll);
         entity.getEvents().addListener("focus item", this::setFocusedIndex);
