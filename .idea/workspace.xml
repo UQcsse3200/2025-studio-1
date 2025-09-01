@@ -134,7 +134,7 @@
       <command value="gradle build" />
     </option>
   </component>
-  <component name="RunManager" selected="Gradle.source [test]">
+  <component name="RunManager" selected="Gradle.source [run]">
     <configuration name="source [build]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
