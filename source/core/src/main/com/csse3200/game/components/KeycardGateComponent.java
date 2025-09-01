@@ -56,8 +56,7 @@ public class KeycardGateComponent extends Component {
     public void unlock() {
         Gdx.app.log("KeycardGate", "Unlock triggered for level " + requiredLevel);
 
-        // Mark unlocked first so future collisions read correct state
-        unlocked = true;
+        unlocked = true; // Always mark unlocked so logic/UI stays correct
 
         if (entity == null) {
             Gdx.app.error("KeycardGate", "Entity is null");
@@ -67,18 +66,15 @@ public class KeycardGateComponent extends Component {
         PhysicsComponent physics = entity.getComponent(PhysicsComponent.class);
         if (physics == null) {
             Gdx.app.error("KeycardGate", "Missing PhysicsComponent on gate entity");
-            return;
+            return; // Exit safely without touching Box2D
         }
 
         ColliderComponent collider = entity.getComponent(ColliderComponent.class);
         if (collider != null) {
-            // Make gate non-blocking
-            collider.setSensor(true);
+            collider.setSensor(true); // disables physical blocking
             Gdx.app.log("KeycardGate", "Gate collider set to sensor");
         } else {
             Gdx.app.error("KeycardGate", "Missing ColliderComponent on gate entity");
         }
-
-        // Optional: visual/audio effects for unlocking
     }
 }
