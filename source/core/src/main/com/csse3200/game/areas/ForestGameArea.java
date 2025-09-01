@@ -101,6 +101,8 @@ public class ForestGameArea extends GameArea {
 
     spawnFloor();
     spawnPad();
+    spawnCrates();
+    spawnPlatforms();
 
     playMusic();
   }
@@ -149,6 +151,8 @@ public class ForestGameArea extends GameArea {
       float doorHeight = WALL_WIDTH;
       float doorX = camPos.x - doorWidth / 2f;
       float doorY = bottomY + 0.001f; // slight offset to sit above border
+      float rightDoorHeight = Math.max(1f, viewHeight * 0.2f);
+      float rightDoorY = camPos.y - rightDoorHeight / 2f;
 
       // Bottom screen border split into two segments leaving a gap for the door
       float leftSegmentWidth = Math.max(0f, doorX - leftX);
@@ -165,11 +169,10 @@ public class ForestGameArea extends GameArea {
         spawnEntity(bottomRight);
       }
 
-      Entity door = ObstacleFactory.createDoorTrigger(doorWidth, doorHeight);
-      door.setPosition(doorX, doorY);
-      // When entered, request next level via event on this area
-      door.addComponent(new com.csse3200.game.components.DoorComponent(() -> this.loadNextLevel()));
-      spawnEntity(door);
+      Entity rightDoor = ObstacleFactory.createDoorTrigger(WALL_WIDTH, rightDoorHeight);
+      rightDoor.setPosition(rightX - WALL_WIDTH - 0.001f, rightDoorY);
+      rightDoor.addComponent(new com.csse3200.game.components.DoorComponent(() -> this.loadNextLevel()));
+      spawnEntity(rightDoor);
     }
   }
 
@@ -193,6 +196,21 @@ public class ForestGameArea extends GameArea {
       Entity tree = ObstacleFactory.createTree();
       spawnEntityAt(tree, randomPos, true, false);
     }
+  }
+
+  private void spawnPlatforms() {
+    for (int i = 0; i < 3; i++) {
+      GridPoint2 platformPos = new GridPoint2(i * 5, 10);
+      Entity platform = ObstacleFactory.createThinFloor();
+      spawnEntityAt(platform, platformPos, true, false);
+    }
+
+    GridPoint2 lightPos = new GridPoint2(9, 9);
+    Entity longCeilingLight = ObstacleFactory.createLongCeilingLight();
+    spawnEntityAt(longCeilingLight, lightPos, true, false);
+
+    Entity officeDesk = ObstacleFactory.createOfficeDesk();
+    spawnEntityAt(officeDesk, new GridPoint2(5, 11), true, false);
   }
 
   private void spawnPad() {
@@ -227,6 +245,15 @@ public class ForestGameArea extends GameArea {
     GridPoint2 randomPos = RandomUtils.random(minPos, maxPos);
     Entity ghostKing = NPCFactory.createGhostKing(player);
     spawnEntityAt(ghostKing, randomPos, true, true);
+  }
+
+  private void spawnCrates() {
+    GridPoint2 cratePos = new GridPoint2(15, 3);
+    Entity crate = ObstacleFactory.createCrate();
+    spawnEntityAt(crate, cratePos, true, false);
+    GridPoint2 cratePos2 = new GridPoint2(15, 5);
+    Entity crate2 = ObstacleFactory.createCrate();
+    spawnEntityAt(crate2, cratePos2, true, false);
   }
 
   private void playMusic() {
