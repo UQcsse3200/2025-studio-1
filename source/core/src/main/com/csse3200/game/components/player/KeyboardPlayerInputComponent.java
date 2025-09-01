@@ -120,7 +120,7 @@ public class KeyboardPlayerInputComponent extends InputComponent {
   }
 
   private void jump() {
-    entity.getEvents().trigger("jump");
+    entity.getEvents().trigger("jumpAttempt");
   }
 
   /**
