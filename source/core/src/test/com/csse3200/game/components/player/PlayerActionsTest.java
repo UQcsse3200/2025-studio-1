@@ -3,6 +3,7 @@ package com.csse3200.game.components.player;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.math.Vector2;
@@ -17,6 +18,7 @@ import java.lang.reflect.Field;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+
 
 @ExtendWith(GameExtension.class)
 class PlayerActionsTest {
@@ -148,4 +150,90 @@ class PlayerActionsTest {
 
     verify(sound).play();
   }
+
+  @Test
+  void shouldAllowDoubleJumpWhileFalling_andBlockThird() throws Exception {
+    PhysicsComponent physicsComponent = mock(PhysicsComponent.class);
+    Body body = mock(Body.class);
+    when(physicsComponent.getBody()).thenReturn(body);
+    Vector2 worldCenter = new Vector2(0f, 0f);
+    when(body.getWorldCenter()).thenReturn(worldCenter);
+    when(body.getLinearVelocity()).thenReturn(new Vector2(0f, 0f));
+
+    PlayerActions actions = new PlayerActions();
+    Field physField = PlayerActions.class.getDeclaredField("physicsComponent");
+    physField.setAccessible(true);
+    physField.set(actions, physicsComponent);
+    Entity player = new Entity().addComponent(actions);
+
+    actions.infStamina();
+    actions.jump();
+    when(body.getLinearVelocity()).thenReturn(new Vector2(0f, -1f));
+    actions.jump();
+
+    // Third jump should be blocked
+    actions.jump();
+
+    // Verify two impulses total
+    Vector2 expected = new Vector2(0f, 120f);
+    verify(body, times(2)).applyLinearImpulse(approx(expected, 1e-3f), eq(worldCenter), eq(true));
+  }
+
+  @Test
+  void shouldResetJumpsOnLandingTransition() throws Exception {
+    PhysicsComponent physicsComponent = mock(PhysicsComponent.class);
+    Body body = mock(Body.class);
+    when(physicsComponent.getBody()).thenReturn(body);
+    when(body.getWorldCenter()).thenReturn(new Vector2(0f, 0f));
+    when(body.getLinearVelocity()).thenReturn(new Vector2(0f, -1f));
+
+    PlayerActions actions = new PlayerActions();
+    Field physField = PlayerActions.class.getDeclaredField("physicsComponent");
+    physField.setAccessible(true);
+    physField.set(actions, physicsComponent);
+    Entity player = new Entity().addComponent(actions);
+
+    // Burn both jumps
+    Field jumpsLeftF = PlayerActions.class.getDeclaredField("jumpsLeft");
+    jumpsLeftF.setAccessible(true);
+    jumpsLeftF.setInt(actions, 0);
+
+    // Land (vy == 0) per touchingGround()
+    when(body.getLinearVelocity()).thenReturn(new Vector2(0f, 0f));
+    actions.update(); // reset jumps
+
+    // Assert reset to MAX_JUMPS
+    Field maxJumpsF = PlayerActions.class.getDeclaredField("MAX_JUMPS");
+    maxJumpsF.setAccessible(true);
+    int maxJumps = maxJumpsF.getInt(actions);
+    assertEquals(maxJumps, jumpsLeftF.getInt(actions));
+  }
+
+  @Test
+  void groundJumpCooldownShouldNotBlockImmediateAirJump() throws Exception {
+    PhysicsComponent physicsComponent = mock(PhysicsComponent.class);
+    Body body = mock(Body.class);
+    when(physicsComponent.getBody()).thenReturn(body);
+    Vector2 worldCenter = new Vector2(0f, 0f);
+    when(body.getWorldCenter()).thenReturn(worldCenter);
+
+    PlayerActions actions = new PlayerActions();
+    Field physField = PlayerActions.class.getDeclaredField("physicsComponent");
+    physField.setAccessible(true);
+    physField.set(actions, physicsComponent);
+    Entity player = new Entity().addComponent(actions);
+    actions.infStamina();
+    when(body.getLinearVelocity()).thenReturn(new Vector2(0f, 0f));
+    actions.jump();
+
+    // Immediately airborne (still within cooldown window)
+    when(body.getLinearVelocity()).thenReturn(new Vector2(0f, -1f));
+
+    // Air jump should still be allowed (no cooldown)
+    actions.jump();
+
+    Vector2 expected = new Vector2(0f, 120f);
+    verify(body, times(2)).applyLinearImpulse(approx(expected, 1e-3f), eq(worldCenter), eq(true));
+  }
 }
+
