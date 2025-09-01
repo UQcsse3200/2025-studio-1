@@ -22,6 +22,7 @@ public class ForestGameArea extends GameArea {
   private static final Logger logger = LoggerFactory.getLogger(ForestGameArea.class);
   private static final int NUM_TREES = 7;
   private static final int NUM_GHOSTS = 2;
+  private static final int NUM_GHOST_GPTS = 4;
   private static final GridPoint2 PLAYER_SPAWN = new GridPoint2(10, 10);
   private static final float WALL_WIDTH = 0.1f;
   private static final String[] forestTextures = {
@@ -76,8 +77,6 @@ public class ForestGameArea extends GameArea {
     spawnTerrain();
     spawnTrees();
     player = spawnPlayer();
-    spawnGhosts();
-    spawnGhostKing();
     spawnGhostGPT();
     playMusic();
   }
@@ -158,9 +157,11 @@ public class ForestGameArea extends GameArea {
     GridPoint2 minPos = new GridPoint2(0, 0);
     GridPoint2 maxPos = terrain.getMapBounds(0).sub(3, 3);
 
-    GridPoint2 randomPos = RandomUtils.random(minPos, maxPos);
-    Entity ghostGPT = NPCFactory.createGhostGPT(player);
-    spawnEntityAt(ghostGPT, randomPos, true, true);
+    for (int i = 0; i < NUM_GHOST_GPTS; i++) {
+        GridPoint2 randomPos = RandomUtils.random(minPos, maxPos);
+        Entity ghostGPT = NPCFactory.createGhostGPT(player);
+        spawnEntityAt(ghostGPT, randomPos, true, true);
+    }
   }
 
   private void playMusic() {
