@@ -1,5 +1,7 @@
 package com.csse3200.game.entities.factories;
 
+import com.badlogic.gdx.physics.box2d.Filter;
+import com.badlogic.gdx.physics.box2d.Fixture;
 import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.components.player.InventoryComponent;
 import com.csse3200.game.components.player.PlayerActions;
@@ -46,6 +48,7 @@ public class PlayerFactory {
             .addComponent(new InventoryComponent(stats.gold))
             .addComponent(inputComponent)
             .addComponent(new PlayerStatsDisplay());
+    player.addComponent(new InventoryComponent(10));
 
     PhysicsUtils.setScaledCollider(player, 0.6f, 0.3f);
     player.getComponent(ColliderComponent.class).setDensity(1.5f);
@@ -75,6 +78,14 @@ public class PlayerFactory {
     PhysicsUtils.setScaledCollider(player, 0.6f, 0.3f);
     player.getComponent(ColliderComponent.class).setDensity(1.5f);
     player.getComponent(TextureRenderComponent.class).scaleEntity();
+    PhysicsComponent physics = player.getComponent(PhysicsComponent.class);
+    if (physics != null) {
+      for (Fixture fixture : physics.getBody().getFixtureList()) {
+        Filter filter = fixture.getFilterData();
+        filter.maskBits = PhysicsLayer.WALL | PhysicsLayer.GATE;
+        fixture.setFilterData(filter);
+      }
+    }
     return player;
   }
 

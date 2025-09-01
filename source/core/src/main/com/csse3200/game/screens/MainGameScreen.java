@@ -34,7 +34,7 @@ import org.slf4j.LoggerFactory;
  */
 public class MainGameScreen extends ScreenAdapter {
   private static final Logger logger = LoggerFactory.getLogger(MainGameScreen.class);
-  private static final String[] mainGameTextures = {"images/heart.png"};
+  private static final String[] mainGameTextures = {};
   private static final Vector2 CAMERA_POSITION = new Vector2(7.5f, 7.5f);
 
   private final GdxGame game;
@@ -110,8 +110,10 @@ public class MainGameScreen extends ScreenAdapter {
   private void loadAssets() {
     logger.debug("Loading assets");
     ResourceService resourceService = ServiceLocator.getResourceService();
-    resourceService.loadTextures(mainGameTextures);
-    ServiceLocator.getResourceService().loadAll();
+    // Load keycard textures (images/keycard_lvl1.png to lvl4.png)
+    resourceService.loadTextures();  // This is your no-arg method in ResourceService
+    // Block until all assets are loaded
+    resourceService.loadAll();
   }
 
   private void unloadAssets() {

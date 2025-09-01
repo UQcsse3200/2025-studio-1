@@ -3,13 +3,17 @@ package com.csse3200.game.areas;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.GridPoint2;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.CameraComponent;
+import com.csse3200.game.components.KeycardGateComponent;
 import com.csse3200.game.entities.Entity;
+import com.csse3200.game.entities.factories.KeycardFactory;
 import com.csse3200.game.entities.factories.ObstacleFactory;
 import com.csse3200.game.entities.factories.PlayerFactory;
+import com.csse3200.game.physics.components.ColliderComponent;
 import com.csse3200.game.rendering.SolidColorRenderComponent;
 
 /** Room 7 placed to the left of Floor 4. */
@@ -43,7 +47,23 @@ public class Floor7GameArea extends GameArea {
     Entity ui = new Entity();
     ui.addComponent(new com.csse3200.game.components.gamearea.FloorLabelDisplay("Floor 7"));
     spawnEntity(ui);
+    // Spawn keycards in valid floors
+    com.csse3200.game.areas.KeycardSpawnerSystem.spawnKeycards(this);
+
+    // Add gate to next floor (if applicable)
+    Entity gateToNextFloor = new Entity()
+            .addComponent(new ColliderComponent())
+            .addComponent(new KeycardGateComponent(1)); // Replace X with required level
+    float x1 = MathUtils.random(4f, 18f);
+    float y1 = MathUtils.random(4f, 18f);
+    Vector2 keycardPos = new Vector2(x1, y1);
+    Entity keycard = KeycardFactory.createKeycard(1); // Level 1 keycard
+    keycard.setPosition(new Vector2(x1, y1));
+    spawnEntity(keycard);
+    spawnEntity(gateToNextFloor);
+
   }
+
 
   private void spawnBordersAndDoors() {
     OrthographicCamera cam = (OrthographicCamera) cameraComponent.getCamera();
