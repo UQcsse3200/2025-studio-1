@@ -53,6 +53,8 @@ public void create() {
 /**
  * Handles the start of a collision. If the colliding entity is an item, it is set as
  * the current target for potential pickup.
+ * @param me give small description of what this is
+ * @param other same as above
  */
 private void onCollisionStart(Fixture me, Fixture other) {
     Object data = other.getBody().getUserData();
@@ -68,6 +70,8 @@ private void onCollisionStart(Fixture me, Fixture other) {
 /**
  * Handles the end of a collision. If the player stops colliding with the currently
  * targeted item, the target is cleared.
+ * @param me give small description of what this is
+ * @param other same as above
  */
 private void onCollisionEnd(Fixture me, Fixture other) {
     Object data = other.getBody().getUserData();
@@ -94,6 +98,7 @@ private void onPickupRequest() {
 /**
  * Attempts to add an item to the player's inventory.
  * Clears the target item reference if successful.
+ * @param item that player is currently touching
  */
 private void pickUpItem(Entity item) {
         if (item == null) return;
@@ -113,6 +118,7 @@ private void pickUpItem(Entity item) {
  * items for the inventory bar.
  * Only valid indices (0–4 inclusive) are accepted;
  * otherwise, the focus is cleared.
+ * @param index the index of the focused slot in the inventory bar
  */
 private void onFocusItem(int index) {
     if (index >= 0 && index < 5) {
