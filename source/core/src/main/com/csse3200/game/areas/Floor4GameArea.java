@@ -79,7 +79,7 @@ public class Floor4GameArea extends GameArea {
     }
     Entity leftDoor = ObstacleFactory.createDoorTrigger(WALL_WIDTH, leftDoorHeight);
     leftDoor.setPosition(leftX + 0.001f, leftDoorY);
-    leftDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadFloor7,1));
+    leftDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadFloor7));
     spawnEntity(leftDoor);
 
     // Right border split with a door to return to Floor 2
@@ -99,7 +99,7 @@ public class Floor4GameArea extends GameArea {
     }
     Entity rightDoor = ObstacleFactory.createDoorTrigger(WALL_WIDTH, doorHeight);
     rightDoor.setPosition(rightX - WALL_WIDTH - 0.001f, doorY);
-    rightDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadBackToFloor2,1));
+    rightDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadBackToFloor2));
     spawnEntity(rightDoor);
     Entity top = ObstacleFactory.createWall(viewWidth, WALL_WIDTH);
     top.setPosition(leftX, topY - WALL_WIDTH);

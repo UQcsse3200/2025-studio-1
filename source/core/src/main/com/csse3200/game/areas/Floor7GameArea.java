@@ -86,7 +86,7 @@ public class Floor7GameArea extends GameArea {
     }
     Entity rightDoor = ObstacleFactory.createDoorTrigger(WALL_WIDTH, rightDoorHeight);
     rightDoor.setPosition(rightX - WALL_WIDTH - 0.001f, rightDoorY);
-    rightDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadBackToFloor4,1));
+    rightDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadBackToFloor4));
     spawnEntity(rightDoor);
   }
 
