@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.ai.tasks.AITaskComponent;
 import com.csse3200.game.components.CombatStatsComponent;
+import com.csse3200.game.components.npc.BossAnimationController;
 import com.csse3200.game.components.npc.GhostAnimationController;
 import com.csse3200.game.components.TouchAttackComponent;
 import com.csse3200.game.components.tasks.ChaseTask;
@@ -95,10 +96,21 @@ public class NPCFactory {
    * @param target entity to chase (e.g. player)
    * @return robot entity
    */
+
   public static Entity createRobot(Entity target) {
     Entity robot = createBaseNPC(target);
-    robot.addComponent(new com.csse3200.game.rendering.TextureRenderComponent("images/Robot_1.png"));
-    robot.addComponent(new CombatStatsComponent(20, 2));
+
+    AnimationRenderComponent animator = new AnimationRenderComponent(
+            ServiceLocator.getResourceService().getAsset("images/Robot_1.atlas", TextureAtlas.class));
+    animator.addAnimation("Idle",   0.12f, Animation.PlayMode.LOOP);
+    animator.addAnimation("attack", 0.06f, Animation.PlayMode.NORMAL);
+
+    robot
+            .addComponent(animator)
+            .addComponent(new CombatStatsComponent(20, 2))
+            .addComponent(new BossAnimationController()); // 事件→动画，示例见下
+
+    //animator.scaleEntity();
     return robot;
   }
 
