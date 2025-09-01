@@ -8,7 +8,7 @@ public class EntityComponent extends Component {
     private String type;
 
     /**
-     * This is the constructor for the EntityComponent class, it sets up ther required information 
+     * This is the constructor for the EntityComponent class, it sets up ther required information
      * to be used in its methods.
      * @param id the unique id for every entity to help identify it
      * @param name of the entity
@@ -17,7 +17,6 @@ public class EntityComponent extends Component {
     public EntityComponent(String name, int id, String type) {
       this.name = name;
       this.id = id;
-      id++;
       this.type = type;
     }
 
