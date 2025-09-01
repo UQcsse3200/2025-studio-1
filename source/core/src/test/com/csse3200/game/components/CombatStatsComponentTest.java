@@ -141,6 +141,21 @@ class CombatStatsComponentTest {
       // Current behaviour unspecified; assert health increased but dead state may remain or flip.
       assertEquals(10, combat.getHealth());
     }
+
+    @Test
+    void isDead_whenHealthZero_andIgnoresFurtherDamage() {
+      CombatStatsComponent c = new CombatStatsComponent(100, 20);
+      assertFalse(c.isDead());
+
+      c.setHealth(0);
+      assertTrue(c.isDead());
+      assertEquals(0, c.getHealth());
+
+      // Dead entities ignore further damage
+      c.hit(999);
+      assertTrue(c.isDead());
+      assertEquals(0, c.getHealth());
+    }
   }
 
   // ---=---
@@ -275,6 +290,18 @@ class CombatStatsComponentTest {
       CombatStatsComponent combat = new CombatStatsComponent(100, 10);
       combat.setBaseAttack(42);
       assertEquals(42, combat.getBaseAttack());
+    }
+
+    @Test
+    void baseAttack_getSet_andRejectNegative() {
+      CombatStatsComponent c = new CombatStatsComponent(100, 20);
+      assertEquals(20, c.getBaseAttack());
+
+      c.setBaseAttack(150);
+      assertEquals(150, c.getBaseAttack());
+
+      c.setBaseAttack(-50); // should be rejected
+      assertEquals(150, c.getBaseAttack());
     }
   }
 
