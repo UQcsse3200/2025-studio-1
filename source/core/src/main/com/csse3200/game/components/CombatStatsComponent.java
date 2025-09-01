@@ -142,7 +142,6 @@ public class CombatStatsComponent extends Component {
    *
    * @param damage Damage amount (must >= 0)
    */
-
   private void applyDamage(int damage) {
     if (damage <= 0 || isDead()) {
         return;
@@ -159,7 +158,6 @@ public class CombatStatsComponent extends Component {
    * can be extended to use a WeaponStatsComponent or DamageInfo object
    * for more complex calculations (crit, resistances, etc.).
    */
-
   public void hit(int damage) {
     applyDamage(damage);
   }

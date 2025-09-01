@@ -122,7 +122,7 @@ public class NPCFactory {
   }
   /**
    * Creates GhostGPT enemy type
-   * (currently a placeholder image)
+   *
    * @param target entity to chase
    * @return entity
    */
@@ -138,6 +138,7 @@ public class NPCFactory {
     animator.addAnimation("angry_float", 0.1f, Animation.PlayMode.LOOP);
     animator.addAnimation("float", 0.1f, Animation.PlayMode.LOOP);
 
+    // Create pathfinding for the GhostGPT
     AITaskComponent aiComponent =
         new AITaskComponent()
             .addTask(new GPTSlowChaseTask(target, 10, new Vector2(0.3f, 0.3f)))
