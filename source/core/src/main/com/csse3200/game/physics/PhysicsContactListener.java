@@ -51,7 +51,7 @@ public class PhysicsContactListener implements ContactListener {
     BodyUserData otherUserData = (BodyUserData) otherFixture.getBody().getUserData();
 
     if (userData.entity != null && otherUserData.entity != null) {
-      userData.entity.getEvents().trigger(evt, userData.entity, otherUserData.entity);
+      userData.entity.getEvents().trigger(evt, fixture, otherFixture);
     }
   }
 }
