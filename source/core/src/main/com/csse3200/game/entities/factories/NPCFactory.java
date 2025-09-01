@@ -4,7 +4,9 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.ai.tasks.AITaskComponent;
+import com.csse3200.game.areas.ForestGameArea;
 import com.csse3200.game.components.CombatStatsComponent;
+import com.csse3200.game.components.enemy.ProjectileLauncherComponent;
 import com.csse3200.game.components.npc.GhostAnimationController;
 import com.csse3200.game.components.TouchAttackComponent;
 import com.csse3200.game.components.tasks.ChaseTask;
@@ -112,9 +114,10 @@ public class NPCFactory {
    * Creates GhostGPT enemy type
    * (currently a placeholder image)
    * @param target entity to chase
+   * @param area the area/space it is living in
    * @return entity
    */
-  public static Entity createGhostGPT(Entity target) {
+  public static Entity createGhostGPT(Entity target, ForestGameArea area) {
     Entity ghostGPT = createBaseNPC(target);
     GhostGPTConfig config = configs.ghostGPT;
 
@@ -137,7 +140,8 @@ public class NPCFactory {
             .addComponent(animator)
             .addComponent(new GhostAnimationController())
             .addComponent(new EnemyDeathRewardComponent(15, playerInventory))
-            .addComponent(new DeathParticleSpawnerComponent("explosion_2")); // Add reward + particles
+            .addComponent(new DeathParticleSpawnerComponent("explosion_2"))
+            .addComponent(new ProjectileLauncherComponent(area)); // Add reward + particles
 
     ghostGPT.getComponent(AnimationRenderComponent.class).scaleEntity();
 
