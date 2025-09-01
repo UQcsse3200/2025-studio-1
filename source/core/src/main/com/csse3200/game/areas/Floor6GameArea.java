@@ -45,23 +45,6 @@ public class Floor6GameArea extends GameArea {
     spawnPlayer();
     spawnFloor();
 
-    Entity ui = new Entity();
-    ui.addComponent(new com.csse3200.game.components.gamearea.FloorLabelDisplay("Floor 6"));
-    spawnEntity(ui);
-    // Spawn keycards in valid floors
-    com.csse3200.game.areas.KeycardSpawnerSystem.spawnKeycards(this);
-
-    // Add gate to next floor (if applicable)
-    Entity gateToNextFloor = new Entity()
-            .addComponent(new ColliderComponent())
-            .addComponent(new KeycardGateComponent(1)); // Replace X with required level
-    float x1 = MathUtils.random(4f, 18f);
-    float y1 = MathUtils.random(4f, 18f);
-    Vector2 keycardPos = new Vector2(x1, y1);
-    Entity keycard = KeycardFactory.createKeycard(1); // Level 1 keycard
-    keycard.setPosition(new Vector2(x1, y1));
-    spawnEntity(keycard);
-    spawnEntity(gateToNextFloor);
     }
 
   private void spawnBordersAndDoors() {
@@ -102,7 +85,7 @@ public class Floor6GameArea extends GameArea {
     }
     Entity rightDoor = ObstacleFactory.createDoorTrigger(WALL_WIDTH, rightDoorHeight);
     rightDoor.setPosition(rightX - WALL_WIDTH - 0.001f, rightDoorY);
-    rightDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadBackToFloor3));
+    rightDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadBackToFloor3,1));
     spawnEntity(rightDoor);
   }
 

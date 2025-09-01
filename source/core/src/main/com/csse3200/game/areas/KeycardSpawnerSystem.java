@@ -4,23 +4,41 @@ import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.factories.KeycardFactory;
 import com.badlogic.gdx.math.MathUtils;
 
-import java.util.List;
-
 public class KeycardSpawnerSystem {
 
     public static void spawnKeycards(GameArea area) {
-        for (int level = 1; level <= 4; level++) {
-            List<String> candidateRooms = com.csse3200.game.areas.RoomAccessRegistry.getRoomsAccessibleBy(level - 1);
-            if (candidateRooms.isEmpty()) continue;
 
-            String targetRoom = candidateRooms.get(MathUtils.random(candidateRooms.size() - 1));
-            Entity keycard = KeycardFactory.createKeycard(level);
+        String areaName = area.getClass().getSimpleName();
 
-            float x = MathUtils.random(2f, 10f); // Adjust to room bounds
-            float y = MathUtils.random(2f, 6f);
-            keycard.setPosition(x, y);
+        int keycardLevel = -1;
 
-            area.spawnEntityInRoom(targetRoom, keycard); // You’ll implement this method
+        switch (areaName) {
+            case "ForestGameArea":
+                keycardLevel = 1;
+                break;
+            case "Floor2GameArea":
+                keycardLevel = 2;
+                break;
+            case "Floor3GameArea":
+                keycardLevel = 3;
+                break;
+            case "Floor4GameArea":
+                keycardLevel = 4;
+                break;
+            default:
+                // No keycard in other areas
+                return;
         }
+
+        // Create the keycard for this area
+        Entity keycard = KeycardFactory.createKeycard(keycardLevel);
+
+        // Position can be adjusted to match your room layout
+        float x = MathUtils.random(2f, 10f);
+        float y = MathUtils.random(2f, 6f);
+        keycard.setPosition(x, y);
+
+        // Spawn in the current area (no random room selection)
+        area.spawnEntity(keycard);
     }
 }
