@@ -23,6 +23,7 @@ public class InventoryComponent extends Component {
   private final int minCapacity = 0;
   private ArrayList<Entity> items = new ArrayList<Entity>(maxCapacity);
   private int processor;
+  private Entity currItem;
 
   public InventoryComponent(int processor) {
     setProcessor(processor);
@@ -155,10 +156,6 @@ public class InventoryComponent extends Component {
    */
   public void addGold(int processor) {
     setProcessor(this.processor + processor);
-  }
-
-  public void addItem(Entity item) {
-      items.add(item);
   }
 
   public void equipWeapon(Entity item) {
