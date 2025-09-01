@@ -103,6 +103,7 @@ public class ForestGameArea extends GameArea {
     spawnPad();
     spawnCrates();
     spawnPlatforms();
+    spawnBigWall();
 
     playMusic();
   }
@@ -219,6 +220,12 @@ public class ForestGameArea extends GameArea {
     Entity spawnPad = ObstacleFactory.createPurpleSpawnPad();
 
     spawnEntityAt(spawnPad, spawnPadPos, false, false);
+  }
+
+  private void spawnBigWall() {
+    GridPoint2 wallSpawn = new GridPoint2(-14, 0);
+    Entity bigWall = ObstacleFactory.createBigThickFloor();
+    spawnEntityAt(bigWall, wallSpawn, true, false);
   }
 
   private Entity spawnPlayer() {
