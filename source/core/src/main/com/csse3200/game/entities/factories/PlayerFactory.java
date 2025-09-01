@@ -44,13 +44,7 @@ public class PlayerFactory {
             new AnimationRenderComponent(
                     ServiceLocator.getResourceService()
                             .getAsset("images/player.atlas", TextureAtlas.class));
-    animator.addAnimation("right_run", 0.1f, Animation.PlayMode.LOOP);
-    animator.addAnimation("left_run", 0.1f, Animation.PlayMode.LOOP);
-    animator.addAnimation("right_jump", 0.1f, Animation.PlayMode.NORMAL);
-    animator.addAnimation("left_jump", 0.1f, Animation.PlayMode.NORMAL);
-    animator.addAnimation("right_stand", 0.2f, Animation.PlayMode.LOOP);
-    animator.addAnimation("left_stand", 0.2f, Animation.PlayMode.LOOP);
-    animator.startAnimation("right_stand");
+    add_animations(animator);
     Entity player =
         new Entity()
             .addComponent(new PhysicsComponent())
@@ -66,10 +60,28 @@ public class PlayerFactory {
                 .addComponent(animator)
                 .addComponent(new PlayerAnimationController());
 
-    PhysicsUtils.setScaledCollider(player, 0.6f, 0.3f);
     player.getComponent(ColliderComponent.class).setDensity(1.5f);
-    player.getComponent(AnimationRenderComponent.class).scaleEntity();
+    player.getComponent(AnimationRenderComponent.class).scaleEntity(2f);
+    PhysicsUtils.setScaledCollider(player, 1f,1f);
     return player;
+  }
+
+  /**
+   * Add player animations to animation render component.
+   * @param animator animation render component for the player
+   */
+  private static void add_animations(AnimationRenderComponent animator) {
+    animator.addAnimation("right_run", 0.1f, Animation.PlayMode.LOOP);
+    animator.addAnimation("left_run", 0.1f, Animation.PlayMode.LOOP);
+    animator.addAnimation("right_jump", 0.1f, Animation.PlayMode.NORMAL);
+    animator.addAnimation("left_jump", 0.1f, Animation.PlayMode.NORMAL);
+    animator.addAnimation("right_stand", 0.2f, Animation.PlayMode.LOOP);
+    animator.addAnimation("left_stand", 0.2f, Animation.PlayMode.LOOP);
+    animator.addAnimation("right_walk", 0.1f, Animation.PlayMode.LOOP);
+    animator.addAnimation("left_walk", 0.1f, Animation.PlayMode.LOOP);
+    animator.addAnimation("right_crouch", 0.2f, Animation.PlayMode.LOOP);
+    animator.addAnimation("left_crouch", 0.2f, Animation.PlayMode.LOOP);
+    animator.startAnimation("right_stand");
   }
 
   private PlayerFactory() {
