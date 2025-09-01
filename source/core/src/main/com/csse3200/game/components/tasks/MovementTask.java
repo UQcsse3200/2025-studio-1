@@ -67,6 +67,11 @@ public class MovementTask extends DefaultTask {
     movementComponent.setTarget(target);
   }
 
+  public void setSpeed(Vector2 speed) {
+    this.speed = speed;
+    movementComponent.setSpeed(speed);
+  }
+
   @Override
   public void stop() {
     super.stop();
