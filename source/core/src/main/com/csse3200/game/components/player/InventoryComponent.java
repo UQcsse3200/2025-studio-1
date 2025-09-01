@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 
+
 /**
  * A component intended to be used by the player to track their inventory.
  *
@@ -16,47 +17,144 @@ import java.util.List;
  */
 public class InventoryComponent extends Component {
   private static final Logger logger = LoggerFactory.getLogger(InventoryComponent.class);
-  private int gold;
-  ArrayList<Entity> items = new ArrayList<>();
-  Entity currItem;
-  public InventoryComponent(int gold) {
-    setGold(gold);
+
+  private int inventoryCount = 0;
+  private final int maxCapacity = 5;
+  private final int minCapacity = 0;
+  private ArrayList<Entity> items = new ArrayList<Entity>(maxCapacity);
+  private int processor;
+
+  public InventoryComponent(int processor) {
+    setProcessor(processor);
+
+    for (int idx = this.minCapacity; idx < this.maxCapacity; idx++) {
+      this.items.add(idx, null);
+    }
   }
 
   /**
-   * Returns the player's gold.
-   *
+   * Returns a copy of the players current inventory.
+   * @return An ArrayList containing the players
+   */
+  public ArrayList<Entity> getInventory() {
+    return new ArrayList<Entity>(this.items);
+  }
+
+  /**
+   * Returns the number of items currently in the inventory
+   * @return The number of items in the inventory
+   */
+  public int getSize() {
+    return this.inventoryCount;
+  }
+
+  /**
+   * Returns the item at the given index.
+   * @param index The position of the item in the players inventory (0..4)
+   * @return The item at the given position, NULL if nothing there or index not in [0,4]
+   */
+  public Entity get(int index) {
+    if (index >= this.maxCapacity || index < this.minCapacity) {
+      return null;
+    }
+    return this.items.get(index);
+  }
+
+  /**
+   * Adds an item to the next inventory position for the player to hold
+   * i.e. addItem(d) [a, b, _, c] -> [a, b, _, c, d]
+   * @param item An item to store in the players inventory
+   * @return true if successful, false otherwise
+   */
+  public Boolean addItem(Entity item) {
+    return this.setItem(this.inventoryCount, item);
+  }
+
+  /**
+   * sets the provided item to the inventory in positions 0 to 4 to be the
+   * given item.
+   * @param index The index of the inventory 0 to 4
+   * @param item An item to store in the players inventory
+   * @return true if the item was successfully set, false otherwise
+   */
+  public Boolean setItem(int index, Entity item) {
+    if (this.inventoryCount >= this.maxCapacity) {
+      return false;
+    }
+    if (this.get(index) == null) { // if there is something there
+      this.items.set(index, item);
+      this.inventoryCount++;
+    } else { // There is something already there
+      return false;
+    }
+    return true;
+  }
+
+  /**
+   * Removes the item at the given index (must be between 0 and 4) and replaces it
+   * with null vlaue.
+   * @param index the position of the item to be removed.
+   * @return true if successful, false otherwise
+   */
+  public Boolean remove(int index) {
+    if (this.inventoryCount == this.minCapacity ||
+            (index >= this.maxCapacity || index < this.minCapacity)) {
+      return false;
+    }
+
+    this.items.set(index, null);
+    this.inventoryCount--;
+    return true;
+  }
+
+  /**
+   * Checks if the current inventory is empty or not
+   * @return true if the inventory is empty, false otherwise
+   */
+  public Boolean isEmpty() {
+    return this.inventoryCount == this.minCapacity;
+  }
+
+  /**
+   * Returns true if the players inventory is full, false otherwise
+   * @return true if the inventory is full, false otherwise
+   */
+  public Boolean isFull() {
+    return this.inventoryCount == this.maxCapacity;
+  }
+
+  /**
+   * Returns the player's processor's.
    * @return entity's health
    */
-  public int getGold() {
-    return this.gold;
+  public int getProcessor() {
+    return this.processor;
   }
 
   /**
-   * Returns if the player has a certain amount of gold.
-   * @param gold required amount of gold
-   * @return player has greater than or equal to the required amount of gold
+   * Returns if the player has a certain amount of processor's.
+   * @param processor required amount of processor's
+   * @return player has greater than or equal to the required amount of processor's
    */
-  public Boolean hasGold(int gold) {
-    return this.gold >= gold;
+  public Boolean hasProcessor(int processor) {
+    return this.processor >= processor;
   }
 
   /**
-   * Sets the player's gold. Gold has a minimum bound of 0.
-   *
-   * @param gold gold
+   * Sets the player's processor's. Processor's has a minimum bound of 0.
+   * @param processor processor
    */
-  public void setGold(int gold) {
-    this.gold = Math.max(gold, 0);
-    logger.debug("Setting gold to {}", this.gold);
+  public void setProcessor(int processor) {
+    this.processor = Math.max(processor, 0);
+    logger.debug("Setting gold to {}", this.processor);
   }
 
   /**
-   * Adds to the player's gold. The amount added can be negative.
-   * @param gold gold to add
+   * Adds to the player's processor's. The amount added can be negative.
+   * @param processor processor to add
    */
-  public void addGold(int gold) {
-    setGold(this.gold + gold);
+  public void addGold(int processor) {
+    setProcessor(this.processor + processor);
   }
 
   public void addItem(Entity item) {
@@ -74,3 +172,4 @@ public class InventoryComponent extends Component {
   }
 
 }
+
