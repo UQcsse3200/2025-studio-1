@@ -9,12 +9,19 @@ import com.csse3200.game.physics.components.PhysicsComponent;
 import com.csse3200.game.rendering.TextureRenderComponent;
 import com.badlogic.gdx.graphics.Color;
 import com.csse3200.game.rendering.SolidColorRenderComponent;
+import com.csse3200.game.rendering.DoorRenderComponent;
 
 /**
  * Factory to create obstacle entities.
+ *
+ * <p>Each obstacle entity type should have a creation method that returns a corresponding entity.
  */
 public class ObstacleFactory {
 
+  /**
+   * Creates a tree entity.
+   * @return entity
+   */
   public static Entity createTree() {
     Entity tree =
             new Entity()
