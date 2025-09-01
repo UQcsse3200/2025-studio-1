@@ -10,6 +10,7 @@ import com.csse3200.game.files.FileLoader;
 import com.csse3200.game.physics.PhysicsLayer;
 import com.csse3200.game.physics.PhysicsUtils;
 import com.csse3200.game.physics.components.*;
+import com.csse3200.game.rendering.SpriteRenderComponent;
 import com.csse3200.game.rendering.TextureRenderComponent;
 
 
@@ -56,22 +57,23 @@ public class ProjectileFactory {
         Entity laser = createBaseProjectile();
         LaserConfig config = configs.laser;
         laser
-                .addComponent(new TextureRenderComponent("images/laser_shot.png"))
+                .addComponent(new SpriteRenderComponent("images/laser_shot.png"))
                 .addComponent(new CombatStatsComponent(config.health, config.base_attack))
                 .addComponent(new ColliderComponent())
                 .addComponent(new HitboxComponent().setLayer(PhysicsLayer.ENEMY_PROJECTILE))
-                .addComponent(new TouchAttackComponent(PhysicsLayer.PLAYER)) // Knockback??
-                .addComponent(new PhysicsMovementComponent());
+                .addComponent(new TouchAttackComponent(PhysicsLayer.PLAYER)); // Knockback??
 
         ColliderComponent collider = laser.getComponent(ColliderComponent.class);
         collider.setLayer(PhysicsLayer.ENEMY_PROJECTILE)
                 .setFilter(PhysicsLayer.ENEMY_PROJECTILE, (short) (PhysicsLayer.PLAYER));
 
-        laser.getComponent(TextureRenderComponent.class).scaleEntity();
-        laser.scaleWidth(1f);
-        laser.scaleHeight(1f);
+        float angleToFire = direction.angleDeg() + 90;
 
-        System.out.println("EXISTS: " + laser.getComponent(PhysicsProjectileComponent.class));
+        laser.getComponent(SpriteRenderComponent.class).setRotation(angleToFire);
+        laser.getComponent(SpriteRenderComponent.class).scaleEntity();
+        laser.scaleWidth(0.5f);
+        laser.scaleHeight(0.5f);
+
         laser.getComponent(PhysicsProjectileComponent.class).create(); // Not called for some reason.
         laser.getComponent(PhysicsProjectileComponent.class).fire(direction, config.speed);
         return laser;

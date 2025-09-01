@@ -209,7 +209,7 @@ public class ForestGameArea extends GameArea {
   // Enemy Projectiles
   public Entity spawnLaserProjectile(Vector2 directionToFire) {
     Entity laser = ProjectileFactory.createLaserShot(directionToFire);
-    spawnEntityAt(laser, new GridPoint2(9, 8), true, true);
+    spawnEntityAt(laser, new GridPoint2(0, 0), true, true);
 
     return laser;
   }
