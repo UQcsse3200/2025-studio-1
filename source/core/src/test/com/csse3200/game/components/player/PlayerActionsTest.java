@@ -79,6 +79,7 @@ class PlayerActionsTest {
     Field physField = PlayerActions.class.getDeclaredField("physicsComponent");
     physField.setAccessible(true);
     physField.set(actions, physicsComponent);
+    Entity player = new Entity().addComponent(actions);
 
     // read walkSpeed if present
     float walkSpeed = reflectFloat(actions, "walkSpeed", 3f);
