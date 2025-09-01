@@ -343,7 +343,7 @@ class CombatStatsComponentTest {
     @Test
     void firesOncePerEffectiveChange_andNotWhenDead() {
       CombatStatsComponent combat = new CombatStatsComponent(100, 20);
-      HealthSpy spy = attachWithHealthSpy(c);
+      HealthSpy spy = attachWithHealthSpy(combat);
 
       combat.hit(10);             // effective
       combat.hit(0);              // ignored
@@ -358,7 +358,7 @@ class CombatStatsComponentTest {
 
       assertTrue(beforeDeath >= 1);
       assertEquals(atDeath, spy.cnt.get(), "No events after dead");
-      assertEquals(0, c.getHealth());
+      assertEquals(0, combat.getHealth());
     }
   }
 
