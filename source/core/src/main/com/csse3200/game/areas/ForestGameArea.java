@@ -44,7 +44,8 @@ public class ForestGameArea extends GameArea {
     "images/iso_grass_2.png",
     "images/iso_grass_3.png",
     "images/Spawn.png",
-    "images/SpawnResize.png"
+    "images/SpawnResize.png",
+    "images/LobbyWIP.png"
   };
   private static final String[] generalTextures = {
       "foreg_sprites/general/LongFloor.png",
@@ -119,7 +120,7 @@ public class ForestGameArea extends GameArea {
 
   private void spawnTerrain() {
     // Background terrain
-    terrain = terrainFactory.createTerrain(TerrainType.FOREST_DEMO);
+    terrain = terrainFactory.createTerrain(TerrainType.SPAWN_ROOM);
     spawnEntity(new Entity().addComponent(terrain));
 
     // Screen walls (camera viewport bounds) and a simple door trigger at the bottom center
