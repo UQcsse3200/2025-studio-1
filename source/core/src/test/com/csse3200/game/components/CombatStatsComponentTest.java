@@ -278,6 +278,24 @@ class CombatStatsComponentTest {
     }
   }
 
+  // ---=---
+  @Nested
+  @DisplayName("Objective: setMaxHealth behaviour and event (known defect)")
+  class MaxHealthTests {
+    @Test
+    void updatesMax_andFiresEvent() {
+      CombatStatsComponent combat = new CombatStatsComponent(100, 20);
+      AtomicInteger lastMax = new AtomicInteger(-1);
+      Entity entity = new Entity().addComponent(combat);
+      entity.getEvents().addListener("updateMaxHealth", lastMax::set);
+      entity.create();
+
+      combat.setMaxHealth(250);
+      assertEquals(250, combat.getMaxHealth());
+      assertEquals(250, lastMax.get());
+    }
+  }
+
   // Health clamps at lower bound for both max and health
   @Test
   void setHealth_clampsAndFiresUpdateHealthEvent() {
