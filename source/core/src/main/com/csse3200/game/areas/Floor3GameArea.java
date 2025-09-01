@@ -3,13 +3,17 @@ package com.csse3200.game.areas;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.GridPoint2;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.CameraComponent;
+import com.csse3200.game.components.KeycardGateComponent;
 import com.csse3200.game.entities.Entity;
+import com.csse3200.game.entities.factories.KeycardFactory;
 import com.csse3200.game.entities.factories.ObstacleFactory;
 import com.csse3200.game.entities.factories.PlayerFactory;
+import com.csse3200.game.physics.components.ColliderComponent;
 import com.csse3200.game.rendering.SolidColorRenderComponent;
 
 /** Room 3 with its own background styling. */
@@ -42,9 +46,12 @@ public class Floor3GameArea extends GameArea {
     spawnPlayer();
     spawnFloor();
 
-    Entity ui = new Entity();
-    ui.addComponent(new com.csse3200.game.components.gamearea.FloorLabelDisplay("Floor 3"));
-    spawnEntity(ui);
+    float keycardX = 14f;
+    float keycardY = 12f;
+    Entity keycard = KeycardFactory.createKeycard(3);
+    keycard.setPosition(new Vector2(keycardX, keycardY));
+    spawnEntity(keycard);
+
   }
 
   private void spawnBordersAndReturnDoor() {
@@ -59,7 +66,7 @@ public class Floor3GameArea extends GameArea {
 
     // Left border split with a vertical door -> Floor 6
     float leftDoorHeight = Math.max(1f, viewHeight * 0.2f);
-    float leftDoorY = camPos.y - leftDoorHeight / 0.4f;
+    float leftDoorY = camPos.y - leftDoorHeight / 2f;
     float leftTopSegHeight = Math.max(0f, (topY) - (leftDoorY + leftDoorHeight));
     if (leftTopSegHeight > 0f) {
       Entity leftTop = ObstacleFactory.createWall(WALL_WIDTH, leftTopSegHeight);
@@ -99,7 +106,7 @@ public class Floor3GameArea extends GameArea {
       spawnEntity(bottomRight);
     }
     Entity bottomDoor = ObstacleFactory.createDoorTrigger(doorWidth, WALL_WIDTH);
-    bottomDoor.setPosition(doorX, bottomY + 0.1f); // Position above floor level
+    bottomDoor.setPosition(doorX, bottomY + 0.001f);
     bottomDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadBackToFloor2));
     spawnEntity(bottomDoor);
   }

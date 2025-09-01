@@ -7,10 +7,14 @@ import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.CameraComponent;
+import com.csse3200.game.components.DoorComponent;
+import com.csse3200.game.components.KeycardGateComponent;
 import com.csse3200.game.entities.Entity;
+import com.csse3200.game.entities.factories.KeycardFactory;
 import com.csse3200.game.entities.factories.NPCFactory;
 import com.csse3200.game.entities.factories.ObstacleFactory;
 import com.csse3200.game.entities.factories.PlayerFactory;
+import com.csse3200.game.rendering.TextureRenderComponent;
 import com.csse3200.game.utils.math.GridPoint2Utils;
 import com.csse3200.game.utils.math.RandomUtils;
 import com.csse3200.game.services.ResourceService;
@@ -43,38 +47,29 @@ public class ForestGameArea extends GameArea {
     "images/iso_grass_1.png",
     "images/iso_grass_2.png",
     "images/iso_grass_3.png",
-    "images/Spawn.png",
-    "images/SpawnResize.png",
-    "images/LobbyWIP.png"
+          "images/door.png"
   };
   private static final String[] generalTextures = {
-          "foreg_sprites/general/LongFloor.png",
-          "foreg_sprites/general/Railing.png",
-          "foreg_sprites/general/SmallSquare.png",
-          "foreg_sprites/general/SmallStair.png",
-          "foreg_sprites/general/SquareTile.png",
-          "foreg_sprites/general/ThickFloor.png",
-          "foreg_sprites/general/ThinFloor3.png",
+      "foreg_sprites/general/LongFloor.png",
+      "foreg_sprites/general/Railing.png",
+      "foreg_sprites/general/SmallSquare.png",
+      "foreg_sprites/general/SmallStair.png",
+      "foreg_sprites/general/SquareTile.png",
+      "foreg_sprites/general/ThickFloor.png",
+      "foreg_sprites/general/ThinFloor.png",
   };
   private static final String[] spawnPadTextures = {
-          "foreg_sprites/spawn_pads/SpawnPadPurple.png",
-          "foreg_sprites/spawn_pads/SpawnPadRed.png",
+      "foreg_sprites/spawn_pads/SpawnPadPurple.png",
+      "foreg_sprites/spawn_pads/SpawnPadRed.png",
   };
   private static final String[] officeTextures = {
-          "foreg_sprites/office/CeilingLight.png",
-          "foreg_sprites/office/Crate.png",
-          "foreg_sprites/office/LargeShelf.png",
-          "foreg_sprites/office/MidShelf.png",
-          "foreg_sprites/office/LongCeilingLight.png",
-          "foreg_sprites/office/OfficeChair.png",
-          "foreg_sprites/office/officeDesk4.png",
-
-  };
-  private static final String[] futuristicTextures = {
-          "foreg_sprites/futuristic/SecurityCamera3.png",
-          "foreg_sprites/futuristic/EnergyPod.png",
-          "foreg_sprites/futuristic/storage_crate_green2.png",
-          "foreg_sprites/futuristic/storage_crate_dark2.png",
+    "foreg_sprites/office/CeilingLight.png",
+    "foreg_sprites/office/Crate.png",
+    "foreg_sprites/office/LargeShelf.png",
+    "foreg_sprites/office/MidShelf.png",
+    "foreg_sprites/office/LongCeilingLight.png",
+    "foreg_sprites/office/OfficeChair.png",
+    "foreg_sprites/office/officeDesk.png",
   };
   private static final String[] forestTextureAtlases = {
     "images/terrain_iso_grass.atlas", "images/ghost.atlas", "images/ghostKing.atlas"
@@ -113,13 +108,15 @@ public class ForestGameArea extends GameArea {
     spawnPad();
     spawnCrates();
     spawnPlatforms();
-
-    spawnSecurityCamera();
-    spawnEnergyPod();
-    spawnStorageCrates();
-    spawnBigWall();
+    spawnBottomRightDoor();
 
     playMusic();
+    float keycardX = 14f;
+    float keycardY = 12f;
+    Entity keycard = KeycardFactory.createKeycard(1);
+    keycard.setPosition(new Vector2(keycardX, keycardY));
+    spawnEntity(keycard);
+
   }
 
   private void displayUI() {
@@ -131,7 +128,7 @@ public class ForestGameArea extends GameArea {
 
   private void spawnTerrain() {
     // Background terrain
-    terrain = terrainFactory.createTerrain(TerrainType.SPAWN_ROOM);
+    terrain = terrainFactory.createTerrain(TerrainType.FOREST_DEMO);
     spawnEntity(new Entity().addComponent(terrain));
 
     // Screen walls (camera viewport bounds) and a simple door trigger at the bottom center
@@ -146,29 +143,37 @@ public class ForestGameArea extends GameArea {
       float bottomY = camPos.y - viewHeight / 2f;
       float topY = camPos.y + viewHeight / 2f;
 
+      // Left screen border
       Entity left = ObstacleFactory.createWall(WALL_WIDTH, viewHeight);
       left.setPosition(leftX, bottomY);
       spawnEntity(left);
 
+      // Right screen border
       Entity right = ObstacleFactory.createWall(WALL_WIDTH, viewHeight);
       right.setPosition(rightX - WALL_WIDTH, bottomY);
       spawnEntity(right);
 
+      // Top screen border
       Entity top = ObstacleFactory.createWall(viewWidth, WALL_WIDTH);
       top.setPosition(leftX, topY - WALL_WIDTH);
       spawnEntity(top);
 
+      // Door trigger: a thin black line at bottom center
       float doorWidth = Math.max(1f, viewWidth * 0.2f);
+      float doorHeight = WALL_WIDTH;
+      float doorX = camPos.x - doorWidth / 2f;
+      float doorY = bottomY + 0.001f; // slight offset to sit above border
       float rightDoorHeight = Math.max(1f, viewHeight * 0.2f);
       float rightDoorY = camPos.y - rightDoorHeight / 2f;
 
-      float leftSegmentWidth = Math.max(0f, (camPos.x - doorWidth/2f) - leftX);
+      // Bottom screen border split into two segments leaving a gap for the door
+      float leftSegmentWidth = Math.max(0f, doorX - leftX);
       if (leftSegmentWidth > 0f) {
         Entity bottomLeft = ObstacleFactory.createWall(leftSegmentWidth, WALL_WIDTH);
         bottomLeft.setPosition(leftX, bottomY);
         spawnEntity(bottomLeft);
       }
-      float rightSegmentStart = camPos.x + doorWidth/2f;
+      float rightSegmentStart = doorX + doorWidth;
       float rightSegmentWidth = Math.max(0f, (leftX + viewWidth) - rightSegmentStart);
       if (rightSegmentWidth > 0f) {
         Entity bottomRight = ObstacleFactory.createWall(rightSegmentWidth, WALL_WIDTH);
@@ -182,6 +187,7 @@ public class ForestGameArea extends GameArea {
       spawnEntity(rightDoor);
     }
   }
+
 
   private void loadNextLevel() {
     // Dispose current floor and switch to Floor2GameArea
@@ -207,29 +213,48 @@ public class ForestGameArea extends GameArea {
 
   private void spawnPlatforms() {
     for (int i = 0; i < 3; i++) {
-      GridPoint2 platformPos = new GridPoint2(i * 5, 11);
+      GridPoint2 platformPos = new GridPoint2(i * 5, 10);
       Entity platform = ObstacleFactory.createThinFloor();
       spawnEntityAt(platform, platformPos, true, false);
     }
 
-    GridPoint2 lightPos = new GridPoint2(9, 10);
+    GridPoint2 lightPos = new GridPoint2(9, 9);
     Entity longCeilingLight = ObstacleFactory.createLongCeilingLight();
     spawnEntityAt(longCeilingLight, lightPos, true, false);
 
     Entity officeDesk = ObstacleFactory.createOfficeDesk();
-    spawnEntityAt(officeDesk, new GridPoint2(5, 12), true, false);
+    spawnEntityAt(officeDesk, new GridPoint2(5, 11), true, false);
   }
+  private void spawnBottomRightDoor() {
+    float doorX = 13.5f;
+    float doorY = 1.25f;
+
+    // Create a door trigger with physics body
+    Entity door = ObstacleFactory.createDoorTrigger(20f, 40f);
+
+    // Add visual sprite
+    TextureRenderComponent texture = new TextureRenderComponent("images/door.png");
+    door.addComponent(texture);
+    texture.scaleEntity();
+
+    door.setPosition(doorX, doorY);
+
+    // Add keycard gate logic — only opens if player has level 1 card
+    door.addComponent(new KeycardGateComponent(1, () -> {
+      logger.info("Bottom-right platform door unlocked — loading next level");
+      loadNextLevel();
+    }));
+
+    spawnEntity(door);
+  }
+
 
   private void spawnPad() {
     GridPoint2 spawnPadPos = new GridPoint2(20, 3);
-    Entity spawnPad = ObstacleFactory.createPurpleSpawnPad();
-    spawnEntityAt(spawnPad, spawnPadPos, false, false);
-  }
 
-  private void spawnBigWall() {
-    GridPoint2 wallSpawn = new GridPoint2(-14, 0);
-    Entity bigWall = ObstacleFactory.createBigThickFloor();
-    spawnEntityAt(bigWall, wallSpawn, true, false);
+    Entity spawnPad = ObstacleFactory.createPurpleSpawnPad();
+
+    spawnEntityAt(spawnPad, spawnPadPos, false, false);
   }
 
   private Entity spawnPlayer() {
@@ -259,37 +284,12 @@ public class ForestGameArea extends GameArea {
   }
 
   private void spawnCrates() {
-    GridPoint2 cratePos = new GridPoint2(15, 6);
+    GridPoint2 cratePos = new GridPoint2(15, 3);
     Entity crate = ObstacleFactory.createCrate();
     spawnEntityAt(crate, cratePos, true, false);
-  }
-
-
-  private void spawnSecurityCamera() {
-    GridPoint2 cameraPos = new GridPoint2(27, 19);
-    Entity securityCamera = ObstacleFactory.createLargeSecurityCamera();
-    spawnEntityAt(securityCamera, cameraPos, true, false);
-  }
-
-  private void spawnEnergyPod() {
-    GridPoint2 energyPodPos = new GridPoint2(20, 6);
-    Entity energyPod = ObstacleFactory.createLargeEnergyPod();
-    spawnEntityAt(energyPod, energyPodPos, false, false);
-  }
-
-
-
-  private void spawnStorageCrates() {
-    // Green crate - left side of energy pod
-    GridPoint2 greenCratePos = new GridPoint2(5, 5);
-    Entity greenCrate = ObstacleFactory.createStorageCrateGreen();
-    spawnEntityAt(greenCrate, greenCratePos, true, false);
-    greenCrate.setPosition(greenCrate.getPosition().x, greenCrate.getPosition().y + 0.25f);
-    // Dark crate - also left side, slightly offset
-    GridPoint2 darkCratePos = new GridPoint2(25, 5);
-    Entity darkCrate = ObstacleFactory.createStorageCrateDark();
-    spawnEntityAt(darkCrate, darkCratePos, true, false);
-    darkCrate.setPosition(darkCrate.getPosition().x, darkCrate.getPosition().y + 0.25f);
+    GridPoint2 cratePos2 = new GridPoint2(15, 5);
+    Entity crate2 = ObstacleFactory.createCrate();
+    spawnEntityAt(crate2, cratePos2, true, false);
   }
 
   private void playMusic() {
@@ -306,7 +306,6 @@ public class ForestGameArea extends GameArea {
     resourceService.loadTextures(forestTextures);
     resourceService.loadTextures(spawnPadTextures);
     resourceService.loadTextures(officeTextures);
-    resourceService.loadTextures(futuristicTextures);
     resourceService.loadTextureAtlases(forestTextureAtlases);
     resourceService.loadSounds(forestSounds);
     resourceService.loadMusic(forestMusic);
@@ -327,7 +326,6 @@ public class ForestGameArea extends GameArea {
     resourceService.unloadAssets(forestMusic);
     resourceService.unloadAssets(spawnPadTextures);
     resourceService.unloadAssets(officeTextures);
-    resourceService.unloadAssets(futuristicTextures);
   }
 
   @Override
