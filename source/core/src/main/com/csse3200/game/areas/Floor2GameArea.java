@@ -50,7 +50,7 @@ public class Floor2GameArea extends GameArea {
 
   private void spawnTerrain() {
     // Use a different terrain/tileset as a base
-    terrain = terrainFactory.createTerrain(TerrainType.SPAWN_ROOM);
+    terrain = terrainFactory.createTerrain(TerrainType.LOBBY);
     spawnEntity(new Entity().addComponent(terrain));
 
     // Add a semi-transparent overlay to tint background color differently
