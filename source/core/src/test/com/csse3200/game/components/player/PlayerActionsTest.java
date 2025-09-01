@@ -82,6 +82,7 @@ class PlayerActionsTest {
     physField.set(actions, physicsComponent);
     Entity player = new Entity().addComponent(actions);
 
+
     // read walkSpeed if present
     float walkSpeed = reflectFloat(actions, "walkSpeed", 3f);
 
@@ -254,6 +255,7 @@ class PlayerActionsTest {
     Field physField = PlayerActions.class.getDeclaredField("physicsComponent");
     physField.setAccessible(true);
     physField.set(actions, physicsComponent);
+    Entity player = new Entity().addComponent(actions);
 
     // Force sprinting without needing entity/events
     Field sprintingField = PlayerActions.class.getDeclaredField("sprinting");
@@ -291,6 +293,7 @@ class PlayerActionsTest {
     Field physField = PlayerActions.class.getDeclaredField("physicsComponent");
     physField.setAccessible(true);
     physField.set(actions, physicsComponent);
+    Entity player = new Entity().addComponent(actions);
 
     // Force sprinting on
     Field sprintingField = PlayerActions.class.getDeclaredField("sprinting");
