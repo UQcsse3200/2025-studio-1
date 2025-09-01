@@ -120,7 +120,7 @@ public class ForestGameArea extends GameArea {
 
     for (int i = 0; i < 1000; i++) {
       GridPoint2 randomPos = RandomUtils.random(minPos, maxPos);
-      randomPos.y = 0;
+      randomPos.y = 2;
       Entity tree = ObstacleFactory.createTree();
       spawnEntityAt(tree, randomPos, true, false);
     }
@@ -187,5 +187,9 @@ public class ForestGameArea extends GameArea {
     super.dispose();
     ServiceLocator.getResourceService().getAsset(backgroundMusic, Music.class).stop();
     this.unloadAssets();
+  }
+
+  public Entity getPlayer() {
+    return player;
   }
 }

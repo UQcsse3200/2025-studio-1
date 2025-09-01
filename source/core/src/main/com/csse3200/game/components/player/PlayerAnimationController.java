@@ -24,7 +24,7 @@ public class PlayerAnimationController extends Component {
     public void create() {
         super.create();
         animator = this.entity.getComponent(AnimationRenderComponent.class);
-        entity.getEvents().addListener("walk", this::animateWalk);
+        entity.getEvents().addListener("walkAnimate", this::animateWalk);
         entity.getEvents().addListener("walkStop", this::animateStop);
         entity.getEvents().addListener("jump", this::animateJump);
         entity.getEvents().addListener("sprintStart", () -> sprinting = true);
@@ -32,6 +32,7 @@ public class PlayerAnimationController extends Component {
         entity.getEvents().addListener("dash", this::animateDash);
         entity.getEvents().addListener("crouchStart", () -> crouching = true);
         entity.getEvents().addListener("crouchStop", () -> crouching = false);
+        entity.getEvents().addListener("fall", this::animateFall);
     }
 
     /**
@@ -113,12 +114,34 @@ public class PlayerAnimationController extends Component {
      * @param direction direction player is moving
      */
     void animateCrouch(Vector2 direction) {
-        if(direction.x > 0) {
+        if(direction == Vector2.Zero) {
+            if(facingRight) {
+                logger.debug("Animating right stand crouch");
+                animator.startAnimation("right_stand_crouch");
+            } else {
+                logger.debug("Animating left stand crouch");
+                animator.startAnimation("left_stand_crouch");
+            }
+        } else if(direction.x > 0) {
+            logger.debug("Animating right crouch");
             animator.startAnimation("right_crouch");
+            facingRight = true;
         } else {
+            logger.debug("Animating left crouch");
             animator.startAnimation("left_crouch");
+            facingRight = false;
         }
         // Need to add idle check (if direction = 0)
+    }
+
+    void animateFall(Vector2 direction) {
+        if(direction.x > 0) {
+            facingRight = true;
+            animator.startAnimation("right_fall");
+        } else {
+            facingRight = false;
+            animator.startAnimation("left_fall");
+        }
     }
 
 }
