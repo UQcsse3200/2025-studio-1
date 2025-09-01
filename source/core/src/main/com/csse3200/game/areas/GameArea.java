@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Disposable;
 import com.csse3200.game.areas.terrain.TerrainComponent;
 import com.csse3200.game.entities.Entity;
+import com.csse3200.game.entities.factories.ObstacleFactory;
 import com.csse3200.game.services.ServiceLocator;
 
 import java.util.ArrayList;
@@ -42,6 +43,15 @@ public abstract class GameArea implements Disposable {
   protected void spawnEntity(Entity entity) {
     areaEntities.add(entity);
     ServiceLocator.getEntityService().register(entity);
+  }
+
+  protected void spawnFloor() {
+    for (int i = 0; i < 25; i += 4) {
+      GridPoint2 floorspawn = new GridPoint2(i, 1);
+
+      Entity floor = ObstacleFactory.createLongFloor();
+      spawnEntityAt(floor, floorspawn, false, false);
+    }
   }
 
   /**

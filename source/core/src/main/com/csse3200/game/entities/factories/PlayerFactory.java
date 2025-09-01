@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.components.player.InventoryComponent;
 import com.csse3200.game.components.player.PlayerActions;
-import com.csse3200.game.components.player.PlayerInventoryDisplay;
+import com.csse3200.game.components.player.TouchPlayerInputComponent;
 import com.csse3200.game.components.player.PlayerStatsDisplay;
 import com.csse3200.game.components.player.PlayerAnimationController;
 import com.csse3200.game.entities.Entity;
