@@ -245,6 +245,19 @@ class CombatStatsComponentTest {
     }
   }
 
+  // ---=---
+  @Nested
+  @DisplayName("Objective: Damage ignored when already dead (int and attacker)")
+  class IgnoreBothPathsWhenDeadTests {
+    @Test
+    void ignoreBothVariants() {
+      CombatStatsComponent def = new CombatStatsComponent(0, 20);
+      def.hit(999);
+      def.hit(new CombatStatsComponent(10, 10));
+      assertEquals(0, def.getHealth());
+      assertTrue(def.isDead());
+    }
+  }
   // Health clamps at lower bound for both max and health
   @Test
   void setHealth_clampsAndFiresUpdateHealthEvent() {
