@@ -11,7 +11,7 @@ public class ItemComponent extends EntityComponent {
      * will take in a count of current existing items of the same
      * type and store it
      * @param count is the present count for the item
-     *
+     * @param texture is the texture path to the texture of the item
      */
     public ItemComponent(int count, String texture) {
         super();
