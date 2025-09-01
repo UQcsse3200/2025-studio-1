@@ -1,5 +1,6 @@
 package com.csse3200.game.components.player;
 
+import com.csse3200.game.components.entity.item.ItemComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.extensions.GameExtension;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,6 +22,7 @@ class InventoryComponentTest {
   class inventoryMethodsTest {
     private int processor = 100;
     private int MAX_INVENTORY = 5;
+    private String texture = "images/mud.png";
     ArrayList<Entity> testInven;
     InventoryComponent inventory;
 
@@ -53,7 +55,7 @@ class InventoryComponentTest {
 
     @Test
     void testGetInventorySingleItem() {
-      Entity item = new Entity();
+      Entity item = new Entity().addComponent(new ItemComponent(1, texture));
       inventory.addItem(item);
       testInven.set(0, item);
 
@@ -73,7 +75,7 @@ class InventoryComponentTest {
     void testGetInventoryFullInventory() {
       Entity[] testSet = new Entity[MAX_INVENTORY];
       for (int idx = 0; idx < MAX_INVENTORY; idx++) {
-        testSet[idx] = new Entity();
+        testSet[idx] = new Entity().addComponent(new ItemComponent(1, texture));
         inventory.addItem(testSet[idx]);
         testInven.set(idx, testSet[idx]);
       }
@@ -102,7 +104,7 @@ class InventoryComponentTest {
       }
 
       for (int idx = 0; idx < MAX_INVENTORY; idx++) {
-        testSet[idx] = new Entity();
+        testSet[idx] = new Entity().addComponent(new ItemComponent(1, texture));
         inventory.addItem(testSet[idx]);
         assertSame(testSet[idx], inventory.get(idx),
                 String.format("inventory should have an \'item\' with an id of: %d", idx));
@@ -123,8 +125,8 @@ class InventoryComponentTest {
     @Test
     void shouldRemoveItem() {
       for (int idx = 0; idx < MAX_INVENTORY; idx++) {
-        inventory.addItem(new Entity());
-        testInven.set(idx, new Entity());
+        inventory.addItem(new Entity().addComponent(new ItemComponent(1, texture)));
+        testInven.set(idx, new Entity().addComponent(new ItemComponent(1, texture)));
       }
 
       assertTrue(inventory.remove(0), "Removing works");
@@ -144,19 +146,19 @@ class InventoryComponentTest {
 
     @Test
     void shouldSetItem() {
-      Entity item1 = new Entity();
+      Entity item1 = new Entity().addComponent(new ItemComponent(1, texture));
       assertTrue(inventory.setItem(0, item1), "Successfully set first item");
       assertEquals(1, inventory.getSize(), "Size should be 1 after adding first item");
       assertEquals(item1, inventory.get(0), "First item should be in slot 0");
 
-      Entity item2 = new Entity();
+      Entity item2 = new Entity().addComponent(new ItemComponent(1, texture));
       assertTrue(inventory.setItem(3, item2), "Successfully set second item");
       assertEquals(2, inventory.getSize(), "Size should be 2 after adding second item");
       assertEquals(item2, inventory.get(3), "Second item in slot 3");
 
-      Entity item3 = new Entity();
-      Entity item4 = new Entity();
-      Entity item5 = new Entity();
+      Entity item3 = new Entity().addComponent(new ItemComponent(1, texture));
+      Entity item4 = new Entity().addComponent(new ItemComponent(1, texture));
+      Entity item5 = new Entity().addComponent(new ItemComponent(1, texture));
       assertTrue(inventory.setItem(1, item3), "Should set item3");
       assertTrue(inventory.setItem(2, item4), "Should set item4");
       assertTrue(inventory.setItem(4, item5), "Should set item5");
@@ -170,29 +172,29 @@ class InventoryComponentTest {
       assertEquals(item4, inventory.get(2), "Item4 in slot 2");
       assertEquals(item5, inventory.get(4), "Item5 in slot 4");
 
-      assertEquals("images/mud.png", inventory.getTex(0), "texture in slot 0");
-      assertEquals("images/mud.png", inventory.getTex(3), "texture in slot 3");
-      assertEquals("images/mud.png", inventory.getTex(1), "texture in slot 1");
-      assertEquals("images/mud.png", inventory.getTex(2), "texture in slot 2");
-      assertEquals("images/mud.png", inventory.getTex(4), "texture in slot 4");
+      assertEquals(texture, inventory.getTex(0), "texture in slot 0");
+      assertEquals(texture, inventory.getTex(3), "texture in slot 3");
+      assertEquals(texture, inventory.getTex(1), "texture in slot 1");
+      assertEquals(texture, inventory.getTex(2), "texture in slot 2");
+      assertEquals(texture, inventory.getTex(4), "texture in slot 4");
     }
 
     @Test
     void shouldAddItem() {
-      Entity item1 = new Entity();
+      Entity item1 = new Entity().addComponent(new ItemComponent(1, texture));
       assertTrue(inventory.addItem(item1), "Should successfully add first item");
       assertEquals(1, inventory.getSize(), "Size should be 1 after adding first item");
       assertEquals(item1, inventory.get(0), "First item should be in slot 0");
-      assertEquals("images/mud.png", inventory.getTex(0), "First item texture should be in slot 0");
+      assertEquals(texture, inventory.getTex(0), "First item texture should be in slot 0");
 
-      Entity item2 = new Entity();
+      Entity item2 = new Entity().addComponent(new ItemComponent(1, texture));
       assertTrue(inventory.addItem(item2), "Should successfully add second item");
       assertEquals(2, inventory.getSize(), "Size should be 2 after adding second item");
-      assertEquals("images/mud.png", inventory.getTex(1), "Second item texture should be in slot 1");
+      assertEquals(texture, inventory.getTex(1), "Second item texture should be in slot 1");
 
-      Entity item3 = new Entity();
-      Entity item4 = new Entity();
-      Entity item5 = new Entity();
+      Entity item3 = new Entity().addComponent(new ItemComponent(1, texture));
+      Entity item4 = new Entity().addComponent(new ItemComponent(1, texture));
+      Entity item5 = new Entity().addComponent(new ItemComponent(1, texture));
       assertTrue(inventory.addItem(item3), "Should add third item");
       assertTrue(inventory.addItem(item4), "Should add fourth item");
       assertTrue(inventory.addItem(item5), "Should add fifth item");
