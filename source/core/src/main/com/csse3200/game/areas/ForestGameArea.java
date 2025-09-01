@@ -65,6 +65,7 @@ public class ForestGameArea extends GameArea {
   private Entity lightsaber;
   private Entity bullet;
   private Entity pistol;
+  private Entity rifle;
 
   /**
    * Initialise this ForestGameArea to use the provided TerrainFactory.
@@ -88,12 +89,14 @@ public class ForestGameArea extends GameArea {
     player = spawnPlayer();
     dagger = spawnDagger();
     pistol = spawnPistol();
+    rifle = spawnRifle();
     lightsaber = spawnLightsaber();
 
     //These are commented out since there is no equip feature yet
-    this.equipItem(pistol);
+    //this.equipItem(pistol);
     //this.equipItem(lightsaber);
     //this.equipItem(dagger);
+    this.equipItem(rifle);
 
     spawnGhosts();
     spawnGhostKing();
@@ -194,6 +197,13 @@ public class ForestGameArea extends GameArea {
     Vector2 newPistolOffset = new Vector2(0.45f, 0.02f);
     newPistol.addComponent(new ItemHoldComponent(this.player, newPistolOffset));
     return newPistol;
+  }
+
+  private Entity spawnRifle() {
+    Entity newRifle = WeaponsFactory.createRifle();
+    Vector2 newRifleOffset = new Vector2(0.45f, 0.02f);
+    newRifle.addComponent(new ItemHoldComponent(this.player, newRifleOffset));
+    return newRifle;
   }
 
   private void spawnGhosts() {
