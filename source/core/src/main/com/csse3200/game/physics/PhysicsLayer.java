@@ -9,6 +9,9 @@ public class PhysicsLayer {
   // NPC (Non-Playable Character) colliders
   public static final short NPC = (1 << 3);
   public static final short ALL = ~0;
+  public static final short ITEM = 0x10;
+  public static final short WALL = 0x2;
+  public static final short GATE = 0x8; // ← Add this
 
   public static boolean contains(short filterBits, short layer) {
     return (filterBits & layer) != 0;

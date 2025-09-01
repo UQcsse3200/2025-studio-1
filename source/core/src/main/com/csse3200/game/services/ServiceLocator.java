@@ -1,6 +1,7 @@
 package com.csse3200.game.services;
 
 import com.csse3200.game.entities.EntityService;
+import com.csse3200.game.events.EventHandler;
 import com.csse3200.game.input.InputService;
 import com.csse3200.game.physics.PhysicsService;
 import com.csse3200.game.rendering.RenderService;
@@ -87,7 +88,11 @@ public class ServiceLocator {
     inputService = null;
     resourceService = null;
   }
+  private static final com.csse3200.game.events.EventHandler globalEvents = new com.csse3200.game.events.EventHandler();
 
+  public static com.csse3200.game.events.EventHandler getGlobalEvents() {
+    return globalEvents;
+  }
   private ServiceLocator() {
     throw new IllegalStateException("Instantiating static util class");
   }
