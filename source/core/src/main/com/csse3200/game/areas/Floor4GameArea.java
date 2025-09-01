@@ -44,24 +44,11 @@ public class Floor4GameArea extends GameArea {
     spawnPlayer();
     spawnFloor();
 
-    Entity ui = new Entity();
-    ui.addComponent(new com.csse3200.game.components.gamearea.FloorLabelDisplay("Floor 4"));
-    spawnEntity(ui);
-    // Spawn keycards in valid floors
-    com.csse3200.game.areas.KeycardSpawnerSystem.spawnKeycards(this);
-
-    // Add gate to next floor (if applicable)
-    Entity gateToNextFloor = new Entity()
-            .addComponent(new ColliderComponent())
-            .addComponent(new KeycardGateComponent(1)); // Replace X with required level
-    float x1 = MathUtils.random(4f, 18f);
-    float y1 = MathUtils.random(4f, 18f);
-    Vector2 keycardPos = new Vector2(x1, y1);
-    Entity keycard = KeycardFactory.createKeycard(1); // Level 1 keycard
-    keycard.setPosition(new Vector2(x1, y1));
+    float keycardX = 14f;
+    float keycardY = 12f;
+    Entity keycard = KeycardFactory.createKeycard(4);
+    keycard.setPosition(new Vector2(keycardX, keycardY));
     spawnEntity(keycard);
-    spawnEntity(gateToNextFloor);
-
   }
 
 
@@ -92,7 +79,7 @@ public class Floor4GameArea extends GameArea {
     }
     Entity leftDoor = ObstacleFactory.createDoorTrigger(WALL_WIDTH, leftDoorHeight);
     leftDoor.setPosition(leftX + 0.001f, leftDoorY);
-    leftDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadFloor7));
+    leftDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadFloor7,1));
     spawnEntity(leftDoor);
 
     // Right border split with a door to return to Floor 2
@@ -112,7 +99,7 @@ public class Floor4GameArea extends GameArea {
     }
     Entity rightDoor = ObstacleFactory.createDoorTrigger(WALL_WIDTH, doorHeight);
     rightDoor.setPosition(rightX - WALL_WIDTH - 0.001f, doorY);
-    rightDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadBackToFloor2));
+    rightDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadBackToFloor2,1));
     spawnEntity(rightDoor);
     Entity top = ObstacleFactory.createWall(viewWidth, WALL_WIDTH);
     top.setPosition(leftX, topY - WALL_WIDTH);

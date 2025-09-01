@@ -6,8 +6,18 @@
   <component name="ChangeListManager">
     <list default="true" id="78acdbef-b972-46a4-a50a-31b47a1e7ab6" name="Changes" comment="This is the second commit trial 2b">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/wiki/foreg_sprites/industrial/ChatGPT Image Aug 25, 2025, 01_04_58 PM.png:Zone.Identifier" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/core/src/main/com/csse3200/game/areas/Floor2GameArea.java" beforeDir="false" afterPath="$PROJECT_DIR$/source/core/src/main/com/csse3200/game/areas/Floor2GameArea.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/core/src/main/com/csse3200/game/areas/Floor3GameArea.java" beforeDir="false" afterPath="$PROJECT_DIR$/source/core/src/main/com/csse3200/game/areas/Floor3GameArea.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/core/src/main/com/csse3200/game/areas/Floor4GameArea.java" beforeDir="false" afterPath="$PROJECT_DIR$/source/core/src/main/com/csse3200/game/areas/Floor4GameArea.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/core/src/main/com/csse3200/game/areas/Floor5GameArea.java" beforeDir="false" afterPath="$PROJECT_DIR$/source/core/src/main/com/csse3200/game/areas/Floor5GameArea.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/core/src/main/com/csse3200/game/areas/Floor6GameArea.java" beforeDir="false" afterPath="$PROJECT_DIR$/source/core/src/main/com/csse3200/game/areas/Floor6GameArea.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/core/src/main/com/csse3200/game/areas/Floor7GameArea.java" beforeDir="false" afterPath="$PROJECT_DIR$/source/core/src/main/com/csse3200/game/areas/Floor7GameArea.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/source/core/src/main/com/csse3200/game/areas/ForestGameArea.java" beforeDir="false" afterPath="$PROJECT_DIR$/source/core/src/main/com/csse3200/game/areas/ForestGameArea.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/core/src/main/com/csse3200/game/areas/KeycardSpawnerSystem.java" beforeDir="false" afterPath="$PROJECT_DIR$/source/core/src/main/com/csse3200/game/areas/KeycardSpawnerSystem.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/core/src/main/com/csse3200/game/components/DoorComponent.java" beforeDir="false" afterPath="$PROJECT_DIR$/source/core/src/main/com/csse3200/game/components/DoorComponent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/core/src/main/com/csse3200/game/components/InventoryComponent.java" beforeDir="false" afterPath="$PROJECT_DIR$/source/core/src/main/com/csse3200/game/components/InventoryComponent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/core/src/main/com/csse3200/game/components/KeycardGateComponent.java" beforeDir="false" afterPath="$PROJECT_DIR$/source/core/src/main/com/csse3200/game/components/KeycardGateComponent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/core/src/main/com/csse3200/game/components/KeycardPickupComponent.java" beforeDir="false" afterPath="$PROJECT_DIR$/source/core/src/main/com/csse3200/game/components/KeycardPickupComponent.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -97,30 +107,30 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Gradle.source [build].executor": "Run",
-    "Gradle.source [run].executor": "Run",
-    "Gradle.source [test].executor": "Run",
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "Team-3-Map",
-    "ignore.virus.scanning.warn.message": "true",
-    "last_opened_file_path": "C:/Users/zdhil/2025-studio-1",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "project.structure.last.edited": "Project",
-    "project.structure.proportion": "0.15",
-    "project.structure.side.proportion": "0.0",
-    "settings.editor.selected.configurable": "preferences.lookFeel",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Gradle.source [build].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.source [run].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.source [test].executor&quot;: &quot;Run&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;Team-3-Map&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/zdhil/2025-studio-1&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\zdhil\2025-studio-1\source\core\assets\images" />
@@ -238,7 +248,7 @@
       <workItem from="1756605935324" duration="22133000" />
       <workItem from="1756691950279" duration="2302000" />
       <workItem from="1756695088637" duration="1280000" />
-      <workItem from="1756715619337" duration="5301000" />
+      <workItem from="1756715619337" duration="11972000" />
     </task>
     <task id="LOCAL-00001" summary="This is the second commit trial 2">
       <option name="closed" value="true" />
@@ -312,7 +322,15 @@
       <option name="project" value="LOCAL" />
       <updated>1756715648204</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="This is the second commit trial 2b">
+      <option name="closed" value="true" />
+      <created>1756721324000</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1756721324000</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -323,20 +341,5 @@
     <MESSAGE value="This is the second commit trial 2a" />
     <MESSAGE value="This is the second commit trial 2b" />
     <option name="LAST_COMMIT_MESSAGE" value="This is the second commit trial 2b" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-method">
-          <url>file://$PROJECT_DIR$/source/core/src/main/com/csse3200/game/areas/KeycardSpawnerSystem.java</url>
-          <line>10</line>
-          <properties class="com.csse3200.game.areas.KeycardSpawnerSystem" method="spawnKeycards">
-            <option name="EMULATED" value="true" />
-            <option name="WATCH_EXIT" value="false" />
-          </properties>
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
 </project>

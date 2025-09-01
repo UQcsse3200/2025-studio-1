@@ -12,7 +12,7 @@ public class DoorFactory {
                 .addComponent(new ColliderComponent()
                         .setLayer(PhysicsLayer.OBSTACLE)
                         .setSensor(true)) // so it doesn't block movement
-                .addComponent(new DoorComponent(onEntered))
+                .addComponent(new DoorComponent(onEntered,1))
                 .addComponent(new TextureRenderComponent("images/door.png"));
 
         door.getComponent(TextureRenderComponent.class).scaleEntity();

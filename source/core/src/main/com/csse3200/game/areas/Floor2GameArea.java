@@ -46,24 +46,11 @@ public class Floor2GameArea extends GameArea {
     spawnPlayer();
     spawnFloor();
 
-    // UI label
-    Entity ui = new Entity();
-    ui.addComponent(new com.csse3200.game.components.gamearea.FloorLabelDisplay("Floor 2"));
-    spawnEntity(ui);
-    // Spawn keycards in valid floors
-    com.csse3200.game.areas.KeycardSpawnerSystem.spawnKeycards(this);
-
-    // Add gate to next floor (if applicable)
-    Entity gateToNextFloor = new Entity()
-            .addComponent(new ColliderComponent())
-            .addComponent(new KeycardGateComponent(1)); // Replace X with required level
-    float x1 = MathUtils.random(4f, 18f);
-    float y1 = MathUtils.random(4f, 18f);
-    Vector2 keycardPos = new Vector2(x1, y1);
-    Entity keycard = KeycardFactory.createKeycard(1); // Level 2 keycard
-    keycard.setPosition(new Vector2(x1, y1));
+    float keycardX = 2f;
+    float keycardY = 12f;
+    Entity keycard = KeycardFactory.createKeycard(2);
+    keycard.setPosition(new Vector2(keycardX, keycardY));
     spawnEntity(keycard);
-    spawnEntity(gateToNextFloor);
   }
 
 
@@ -120,7 +107,7 @@ public class Floor2GameArea extends GameArea {
     }
     Entity topDoor = ObstacleFactory.createDoorTrigger(topDoorWidth, WALL_WIDTH);
     topDoor.setPosition(topDoorX, topY - WALL_WIDTH + 0.001f);
-    topDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadRoom3));
+    topDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadRoom3,1));
     spawnEntity(topDoor);
 
     // Bottom border split with a door in the middle -> Back to Floor 1
@@ -145,7 +132,7 @@ public class Floor2GameArea extends GameArea {
     Entity bottomDoor = ObstacleFactory.createDoorTrigger(doorWidth, doorHeight);
     bottomDoor.setPosition(doorX, bottomY + 0.001f);
     // Door returns to floor 1
-    bottomDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadPreviousLevel));
+    bottomDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadPreviousLevel,0));
     spawnEntity(bottomDoor);
 
     // Left border split with a vertical door -> Room 4
@@ -165,7 +152,7 @@ public class Floor2GameArea extends GameArea {
     }
     Entity leftDoor = ObstacleFactory.createDoorTrigger(WALL_WIDTH, leftDoorHeight);
     leftDoor.setPosition(leftX + 0.001f, leftDoorY);
-    leftDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadRoom4));
+    leftDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadRoom4,1));
     spawnEntity(leftDoor);
 
     // Right border split with a vertical door -> Room 5
@@ -185,7 +172,7 @@ public class Floor2GameArea extends GameArea {
     }
     Entity rightDoor = ObstacleFactory.createDoorTrigger(WALL_WIDTH, rightDoorHeight);
     rightDoor.setPosition(rightX - WALL_WIDTH - 0.001f, rightDoorY);
-    rightDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadRoom5));
+    rightDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadRoom5,1));
     spawnEntity(rightDoor);
   }
 
