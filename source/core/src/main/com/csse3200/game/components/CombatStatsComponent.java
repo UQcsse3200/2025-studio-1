@@ -85,7 +85,7 @@ public class CombatStatsComponent extends Component {
   }
 
   public void hit(CombatStatsComponent attacker) {
-    int newHealth = getHealth() - attacker.getBaseAttack();
+    int newHealth = this.getHealth() - attacker.getBaseAttack();
     setHealth(newHealth);
   }
 }
