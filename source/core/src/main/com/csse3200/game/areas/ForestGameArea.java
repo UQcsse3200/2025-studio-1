@@ -47,7 +47,8 @@ public class ForestGameArea extends GameArea {
         "images/ammo.png",
         "images/round.png",
         "images/pistol.png",
-	      "images/dagger.png",
+        "images/rifle.png",
+	    "images/dagger.png",
         "images/mud.png"
     };
 
@@ -201,7 +202,7 @@ public class ForestGameArea extends GameArea {
 
   private Entity spawnRifle() {
     Entity newRifle = WeaponsFactory.createRifle();
-    Vector2 newRifleOffset = new Vector2(0.45f, 0.02f);
+    Vector2 newRifleOffset = new Vector2(0.25f, 0.15f);
     newRifle.addComponent(new ItemHoldComponent(this.player, newRifleOffset));
     return newRifle;
   }
