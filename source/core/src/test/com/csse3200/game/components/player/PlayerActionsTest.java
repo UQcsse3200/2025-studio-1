@@ -12,6 +12,7 @@ import com.csse3200.game.physics.PhysicsService;
 import com.csse3200.game.physics.components.PhysicsComponent;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
+import com.csse3200.game.entities.Entity;
 import java.lang.reflect.Field;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -122,6 +123,9 @@ class PlayerActionsTest {
     Field physField = PlayerActions.class.getDeclaredField("physicsComponent");
     physField.setAccessible(true);
     physField.set(actions, physicsComponent);
+    Entity player = new Entity().addComponent(actions);
+    actions.infStamina();
+    actions.infJumps();
 
     // read jumpImpulse if present
     float jumpImpulse = reflectFloat(actions, "jumpImpulse", 120f);
