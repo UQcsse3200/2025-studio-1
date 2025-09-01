@@ -208,7 +208,7 @@ public class ObstacleFactory {
 
     longCeilingLight.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
     longCeilingLight.getComponent(TextureRenderComponent.class).scaleEntity();
-    longCeilingLight.scaleHeight(1f);
+    longCeilingLight.scaleHeight(0.5f);
     PhysicsUtils.setScaledCollider(longCeilingLight, 1f, 1f);
     return longCeilingLight;
   }
@@ -250,7 +250,7 @@ public class ObstacleFactory {
 
     officeDesk.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
     officeDesk.getComponent(TextureRenderComponent.class).scaleEntity();
-    officeDesk.scaleHeight(1f);
+    officeDesk.scaleHeight(1.7f);
     PhysicsUtils.setScaledCollider(officeDesk, 1f, 1f);
     return officeDesk;
   }
