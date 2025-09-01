@@ -39,10 +39,12 @@ public class ForestGameArea extends GameArea {
     "images/iso_grass_1.png",
     "images/iso_grass_2.png",
     "images/iso_grass_3.png",
-          "images/Robot_1.png"
+          "images/Robot_1.png",
+          "images/Robot_1_attack_left.png",
+          "images/Robot_1_attack_right.png"
   };
   private static final String[] forestTextureAtlases = {
-    "images/terrain_iso_grass.atlas", "images/ghost.atlas", "images/ghostKing.atlas"
+    "images/terrain_iso_grass.atlas", "images/ghost.atlas", "images/ghostKing.atlas", "images/Robot_1.atlas"
   };
   private static final String[] forestSounds = {"sounds/Impact4.ogg"};
   private static final String backgroundMusic = "sounds/BGM_03_mp3.mp3";
@@ -84,8 +86,8 @@ public class ForestGameArea extends GameArea {
 
     for (int i = 0; i < NUM_ROBOTS; i++) {
       GridPoint2 randomPos = RandomUtils.random(minPos, maxPos);
-      Entity robot = NPCFactory.createRobot(player);          // 传玩家做追击目标
-      spawnEntityAt(robot, randomPos, true, true);            // 按瓦片坐标生成
+      Entity robot = NPCFactory.createRobot(player);
+      spawnEntityAt(robot, randomPos, true, true);
     }
   }
 
