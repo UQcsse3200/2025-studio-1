@@ -47,10 +47,24 @@ public class ProjectileFactory {
         collider.setLayer(PhysicsLayer.FRIENDLY_PROJECTILE)
                 .setFilter(PhysicsLayer.FRIENDLY_PROJECTILE, (short) (PhysicsLayer.NPC));
 
-
-
         pistolBullet.scaleHeight(0.85f);
         return pistolBullet;
+    }
+
+    public static Entity createLaserShot() {
+        Entity laser = createBaseProjectile();
+        LaserConfig config = configs.laser;
+        laser
+                .addComponent(new TextureRenderComponent("images/laser_shot.png"))
+                .addComponent(new CombatStatsComponent(config.health, config.base_attack));
+                //.addComponent(new ColliderComponent())
+                //.addComponent(new HitboxComponent().setLayer(PhysicsLayer.ENEMY_PROJECTILE))
+               // .addComponent(new TouchAttackComponent(PhysicsLayer.PLAYER)); // Knockback??
+
+        laser.getComponent(TextureRenderComponent.class).scaleEntity();
+        laser.scaleWidth(5f);
+        laser.scaleHeight(5f);
+        return laser;
     }
 
     /**

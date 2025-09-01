@@ -9,6 +9,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.ItemHoldComponent;
+import com.csse3200.game.components.enemy.ProjectileLauncherComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.factories.*;
 import com.csse3200.game.physics.components.PhysicsProjectileComponent;
@@ -47,7 +48,8 @@ public class ForestGameArea extends GameArea {
         "images/ammo.png",
         "images/round.png",
         "images/pistol.png",
-	      "images/dagger.png",
+	    "images/dagger.png",
+        "images/laser_shot.png",
         "images/mud.png"
     };
 
@@ -94,6 +96,9 @@ public class ForestGameArea extends GameArea {
     dagger = spawnDagger();
     pistol = spawnPistol();
     lightsaber = spawnLightsaber();
+
+    spawnLaserProjectile();
+
 
     //These are commented out since there is no equip feature yet
     //bullet = spawnBullet();
@@ -203,6 +208,18 @@ public class ForestGameArea extends GameArea {
     return newPistol;
   }
 
+  // Enemy Projectiles
+  public Entity spawnLaserProjectile() {
+    Entity laser = ProjectileFactory.createLaserShot();
+    spawnEntityAt(laser, new GridPoint2(9, 8), true, true);
+
+    return laser;
+  }
+
+
+
+
+
   private void spawnGhosts() {
     GridPoint2 minPos = new GridPoint2(0, 0);
     GridPoint2 maxPos = terrain.getMapBounds(0).sub(2, 2);
@@ -227,7 +244,7 @@ public class ForestGameArea extends GameArea {
     GridPoint2 maxPos = terrain.getMapBounds(0).sub(3, 3);
 
     GridPoint2 randomPos = RandomUtils.random(minPos, maxPos);
-    Entity ghostGPT = NPCFactory.createGhostGPT(player);
+    Entity ghostGPT = NPCFactory.createGhostGPT(player, this);
     spawnEntityAt(ghostGPT, randomPos, true, true);
   }
 
