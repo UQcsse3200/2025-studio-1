@@ -63,13 +63,20 @@ public class ForestGameArea extends GameArea {
       "foreg_sprites/spawn_pads/SpawnPadRed.png",
   };
   private static final String[] officeTextures = {
-    "foreg_sprites/office/CeilingLight.png",
-    "foreg_sprites/office/Crate.png",
-    "foreg_sprites/office/LargeShelf.png",
-    "foreg_sprites/office/MidShelf.png",
-    "foreg_sprites/office/LongCeilingLight.png",
-    "foreg_sprites/office/OfficeChair.png",
-    "foreg_sprites/office/officeDesk.png",
+          "foreg_sprites/office/CeilingLight.png",
+          "foreg_sprites/office/Crate.png",
+          "foreg_sprites/office/LargeShelf.png",
+          "foreg_sprites/office/MidShelf.png",
+          "foreg_sprites/office/LongCeilingLight2.png",
+          "foreg_sprites/office/OfficeChair.png",
+          "foreg_sprites/office/officeDesk4.png",
+
+  };
+  private static final String[] futuristicTextures = {
+          "foreg_sprites/futuristic/SecurityCamera3.png",
+          "foreg_sprites/futuristic/EnergyPod.png",
+          "foreg_sprites/futuristic/storage_crate_green2.png",
+          "foreg_sprites/futuristic/storage_crate_dark2.png",
   };
   private static final String[] forestTextureAtlases = {
     "images/terrain_iso_grass.atlas", "images/ghost.atlas", "images/ghostKing.atlas"
@@ -284,12 +291,37 @@ public class ForestGameArea extends GameArea {
   }
 
   private void spawnCrates() {
-    GridPoint2 cratePos = new GridPoint2(15, 3);
+    GridPoint2 cratePos = new GridPoint2(17, 6);
     Entity crate = ObstacleFactory.createCrate();
     spawnEntityAt(crate, cratePos, true, false);
-    GridPoint2 cratePos2 = new GridPoint2(15, 5);
-    Entity crate2 = ObstacleFactory.createCrate();
-    spawnEntityAt(crate2, cratePos2, true, false);
+  }
+
+
+  private void spawnSecurityCamera() {
+    GridPoint2 cameraPos = new GridPoint2(27, 19);
+    Entity securityCamera = ObstacleFactory.createLargeSecurityCamera();
+    spawnEntityAt(securityCamera, cameraPos, true, false);
+  }
+
+  private void spawnEnergyPod() {
+    GridPoint2 energyPodPos = new GridPoint2(20, 6);
+    Entity energyPod = ObstacleFactory.createLargeEnergyPod();
+    spawnEntityAt(energyPod, energyPodPos, false, false);
+  }
+
+
+
+  private void spawnStorageCrates() {
+    // Green crate
+    GridPoint2 greenCratePos = new GridPoint2(5, 5);
+    Entity greenCrate = ObstacleFactory.createStorageCrateGreen();
+    spawnEntityAt(greenCrate, greenCratePos, true, false);
+    greenCrate.setPosition(greenCrate.getPosition().x, greenCrate.getPosition().y + 0.25f);
+    // Dark crate
+    GridPoint2 darkCratePos = new GridPoint2(26, 5);
+    Entity darkCrate = ObstacleFactory.createStorageCrateDark();
+    spawnEntityAt(darkCrate, darkCratePos, true, false);
+    darkCrate.setPosition(darkCrate.getPosition().x, darkCrate.getPosition().y + 0.25f);
   }
 
   private void playMusic() {
