@@ -96,5 +96,19 @@ class CombatStatsComponentTest {
     victim.getComponent(CombatStatsComponent.class).hit(new CombatStatsComponent(0, 10));
     assertTrue(victim.getComponent(CombatStatsComponent.class).isDead());
     assertEquals(new ArrayList<>(), area.getEntities());
+  
+  @Test
+  void shouldTakeDirectDamage() {
+    CombatStatsComponent combat = new CombatStatsComponent(100, 20);
+    combat.hit(20);
+    assertEquals(80, combat.getHealth()); 
+  }
+
+  @Test
+  void shouldTakeDamageFromAttacker(){
+    CombatStatsComponent combat = new CombatStatsComponent(100, 20);
+    CombatStatsComponent attacker = new CombatStatsComponent(50, 15);
+    combat.hit(attacker);
+    assertEquals(85, combat.getHealth());
   }
 }

@@ -47,7 +47,8 @@ public class ForestGameArea extends GameArea {
         "images/ammo.png",
         "images/round.png",
         "images/pistol.png",
-	    "images/dagger.png"
+	      "images/dagger.png",
+        "images/mud.png"
     };
 
   private static final String[] forestTextureAtlases = {
@@ -255,5 +256,9 @@ public class ForestGameArea extends GameArea {
     super.dispose();
     ServiceLocator.getResourceService().getAsset(backgroundMusic, Music.class).stop();
     this.unloadAssets();
+  }
+
+  public Entity getPlayer() {
+    return player;
   }
 }
