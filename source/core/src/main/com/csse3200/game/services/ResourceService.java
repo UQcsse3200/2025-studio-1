@@ -1,5 +1,6 @@
 package com.csse3200.game.services;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
@@ -8,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.utils.Disposable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import com.csse3200.game.events.EventHandler;
 
 /**
  * Service for loading resources, e.g. textures, texture atlases, sounds, music, etc. Add new load
@@ -16,6 +18,15 @@ import org.slf4j.LoggerFactory;
 public class ResourceService implements Disposable {
 
   private static final Logger logger = LoggerFactory.getLogger(ResourceService.class);
+  private static final String[] mainGameTextures = {
+          "images/heart.png"
+  };
+  private static final String[] keycardTextures = {
+          "images/keycard_lvl1.png",
+          "images/keycard_lvl2.png",
+          "images/keycard_lvl3.png",
+          "images/keycard_lvl4.png"
+  };
   private final AssetManager assetManager;
 
   public ResourceService() {
@@ -152,6 +163,19 @@ public class ResourceService implements Disposable {
     loadAssets(textureAtlasNames, TextureAtlas.class);
   }
 
+  /**
+   * Loads a list of sounds into the asset manager.
+   *
+   * @param soundNames sound filenames
+   */
+  public void loadTextures() {
+    for (String texture : mainGameTextures) {
+      assetManager.load(texture, Texture.class);
+    }
+    for (String texture : keycardTextures) {
+      assetManager.load(texture, Texture.class);
+    }
+  }
   public void loadSounds(String[] soundNames) {
     loadAssets(soundNames, Sound.class);
   }

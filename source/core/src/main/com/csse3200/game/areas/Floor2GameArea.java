@@ -4,13 +4,17 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.GridPoint2;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.CameraComponent;
+import com.csse3200.game.components.KeycardGateComponent;
 import com.csse3200.game.entities.Entity;
+import com.csse3200.game.entities.factories.KeycardFactory;
 import com.csse3200.game.entities.factories.ObstacleFactory;
 import com.csse3200.game.entities.factories.PlayerFactory;
+import com.csse3200.game.physics.components.ColliderComponent;
 import com.csse3200.game.rendering.SolidColorRenderComponent;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
@@ -45,7 +49,23 @@ public class Floor2GameArea extends GameArea {
     Entity ui = new Entity();
     ui.addComponent(new com.csse3200.game.components.gamearea.FloorLabelDisplay("Floor 2"));
     spawnEntity(ui);
+    // Spawn keycards in valid floors
+    com.csse3200.game.areas.KeycardSpawnerSystem.spawnKeycards(this);
+
+    // Add gate to next floor (if applicable)
+    Entity gateToNextFloor = new Entity()
+            .addComponent(new ColliderComponent())
+            .addComponent(new KeycardGateComponent(1)); // Replace X with required level
+    float x1 = MathUtils.random(4f, 18f);
+    float y1 = MathUtils.random(4f, 18f);
+    Vector2 keycardPos = new Vector2(x1, y1);
+    Entity keycard = KeycardFactory.createKeycard(1); // Level 2 keycard
+    keycard.setPosition(new Vector2(x1, y1));
+    spawnEntity(keycard);
+    spawnEntity(gateToNextFloor);
   }
+
+
 
   private void spawnTerrain() {
     // Use a different terrain/tileset as a base
@@ -187,6 +207,7 @@ public class Floor2GameArea extends GameArea {
     ForestGameArea floor1 = new ForestGameArea(terrainFactory, cameraComponent);
     floor1.create();
   }
+
 
   private void loadRoom3() {
     for (Entity entity : areaEntities) {

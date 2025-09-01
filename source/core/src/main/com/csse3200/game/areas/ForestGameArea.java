@@ -6,12 +6,14 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.GridPoint2;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.ItemHoldComponent;
 import com.csse3200.game.components.enemy.ProjectileLauncherComponent;
 import com.csse3200.game.components.CameraComponent;
+import com.csse3200.game.components.KeycardGateComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.BaseProjectileConfig;
 import com.csse3200.game.entities.factories.BossFactory;
@@ -21,6 +23,10 @@ import com.csse3200.game.entities.factories.PlayerFactory;
 import com.csse3200.game.entities.factories.*;
 import com.csse3200.game.physics.components.PhysicsProjectileComponent;
 import com.csse3200.game.rendering.AnimationRenderComponent;
+import com.csse3200.game.entities.factories.KeycardFactory;
+import com.csse3200.game.physics.PhysicsLayer;
+import com.csse3200.game.physics.components.ColliderComponent;
+import com.csse3200.game.physics.components.PhysicsComponent;
 import com.csse3200.game.utils.math.GridPoint2Utils;
 import com.csse3200.game.utils.math.RandomUtils;
 import com.csse3200.game.services.ResourceService;
@@ -148,6 +154,7 @@ public class ForestGameArea extends GameArea {
   }
 
   /** Create the game area, including terrain, static entities (trees), dynamic entities (player) */
+
   @Override
   public void create() {
 
@@ -188,6 +195,16 @@ public class ForestGameArea extends GameArea {
 
     playMusic();
     spawnItems();
+
+    // Spawn keycards in valid floors
+    com.csse3200.game.areas.KeycardSpawnerSystem.spawnKeycards(this);
+
+    // Add gate to next floor (if applicable)
+    Entity gateToNextFloor = new Entity()
+            .addComponent(new PhysicsComponent()) // ✅ Required
+            .addComponent(new ColliderComponent().setLayer(PhysicsLayer.GATE))
+            .addComponent(new KeycardGateComponent(1));
+    spawnEntity(gateToNextFloor);
   }
 
   private void spawnRobots() {
