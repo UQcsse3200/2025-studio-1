@@ -11,10 +11,13 @@ import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.factories.NPCFactory;
 import com.csse3200.game.entities.factories.ObstacleFactory;
 import com.csse3200.game.entities.factories.PlayerFactory;
+import com.csse3200.game.utils.math.GridPoint2Utils;
 import com.csse3200.game.utils.math.RandomUtils;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.components.gamearea.GameAreaDisplay;
+
+import javax.naming.spi.ObjectFactory;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,19 +30,22 @@ public class ForestGameArea extends GameArea {
   private static final GridPoint2 PLAYER_SPAWN = new GridPoint2(3, 7);
   private static final float WALL_WIDTH = 0.1f;
   private static final String[] forestTextures = {
-          "images/box_boy_leaf.png",
-          "images/tree.png",
-          "images/ghost_king.png",
-          "images/ghost_1.png",
-          "images/grass_1.png",
-          "images/grass_2.png",
-          "images/grass_3.png",
-          "images/hex_grass_1.png",
-          "images/hex_grass_2.png",
-          "images/hex_grass_3.png",
-          "images/iso_grass_1.png",
-          "images/iso_grass_2.png",
-          "images/iso_grass_3.png"
+    "images/box_boy_leaf.png",
+    "images/tree.png",
+    "images/ghost_king.png",
+    "images/ghost_1.png",
+    "images/grass_1.png",
+    "images/grass_2.png",
+    "images/grass_3.png",
+    "images/hex_grass_1.png",
+    "images/hex_grass_2.png",
+    "images/hex_grass_3.png",
+    "images/iso_grass_1.png",
+    "images/iso_grass_2.png",
+    "images/iso_grass_3.png",
+    "images/Spawn.png",
+    "images/SpawnResize.png",
+    "images/LobbyWIP.png"
   };
   private static final String[] generalTextures = {
           "foreg_sprites/general/LongFloor.png",
@@ -82,12 +88,18 @@ public class ForestGameArea extends GameArea {
 
   private Entity player;
 
+  /**
+   * Initialise this ForestGameArea to use the provided TerrainFactory.
+   * @param terrainFactory TerrainFactory used to create the terrain for the GameArea.
+   * @requires terrainFactory != null
+   */
   public ForestGameArea(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
     super();
     this.terrainFactory = terrainFactory;
     this.cameraComponent = cameraComponent;
   }
 
+  /** Create the game area, including terrain, static entities (trees), dynamic entities (player) */
   @Override
   public void create() {
     loadAssets();
@@ -105,6 +117,7 @@ public class ForestGameArea extends GameArea {
     spawnSecurityCamera();
     spawnEnergyPod();
     spawnStorageCrates();
+    spawnBigWall();
 
     playMusic();
   }
@@ -112,14 +125,16 @@ public class ForestGameArea extends GameArea {
   private void displayUI() {
     Entity ui = new Entity();
     ui.addComponent(new GameAreaDisplay("Box Forest"))
-            .addComponent(new com.csse3200.game.components.gamearea.FloorLabelDisplay("Floor 1"));
+      .addComponent(new com.csse3200.game.components.gamearea.FloorLabelDisplay("Floor 1"));
     spawnEntity(ui);
   }
 
   private void spawnTerrain() {
-    terrain = terrainFactory.createTerrain(TerrainType.FOREST_DEMO);
+    // Background terrain
+    terrain = terrainFactory.createTerrain(TerrainType.SPAWN_ROOM);
     spawnEntity(new Entity().addComponent(terrain));
 
+    // Screen walls (camera viewport bounds) and a simple door trigger at the bottom center
     if (cameraComponent != null) {
       OrthographicCamera cam = (OrthographicCamera) cameraComponent.getCamera();
       Vector2 camPos = cameraComponent.getEntity().getPosition();
@@ -169,6 +184,7 @@ public class ForestGameArea extends GameArea {
   }
 
   private void loadNextLevel() {
+    // Dispose current floor and switch to Floor2GameArea
     for (Entity entity : areaEntities) {
       entity.dispose();
     }
@@ -176,6 +192,17 @@ public class ForestGameArea extends GameArea {
 
     Floor2GameArea floor2 = new Floor2GameArea(terrainFactory, cameraComponent);
     floor2.create();
+  }
+
+  private void spawnTrees() {
+    GridPoint2 minPos = new GridPoint2(0, 0);
+    GridPoint2 maxPos = terrain.getMapBounds(0).sub(2, 2);
+
+    for (int i = 0; i < NUM_TREES; i++) {
+      GridPoint2 randomPos = RandomUtils.random(minPos, maxPos);
+      Entity tree = ObstacleFactory.createTree();
+      spawnEntityAt(tree, randomPos, true, false);
+    }
   }
 
   private void spawnPlatforms() {
@@ -189,7 +216,8 @@ public class ForestGameArea extends GameArea {
     Entity longCeilingLight = ObstacleFactory.createLongCeilingLight();
     spawnEntityAt(longCeilingLight, lightPos, true, false);
 
-    // Aditya - Removed conveyor belt completely
+    Entity officeDesk = ObstacleFactory.createOfficeDesk();
+    spawnEntityAt(officeDesk, new GridPoint2(5, 11), true, false);
   }
 
   private void spawnPad() {
@@ -198,19 +226,42 @@ public class ForestGameArea extends GameArea {
     spawnEntityAt(spawnPad, spawnPadPos, false, false);
   }
 
+  private void spawnBigWall() {
+    GridPoint2 wallSpawn = new GridPoint2(-14, 0);
+    Entity bigWall = ObstacleFactory.createBigThickFloor();
+    spawnEntityAt(bigWall, wallSpawn, true, false);
+  }
+
   private Entity spawnPlayer() {
     Entity newPlayer = PlayerFactory.createPlayer();
     spawnEntityAt(newPlayer, PLAYER_SPAWN, true, true);
     return newPlayer;
   }
 
+  private void spawnGhosts() {
+    GridPoint2 minPos = new GridPoint2(0, 0);
+    GridPoint2 maxPos = terrain.getMapBounds(0).sub(2, 2);
+
+    for (int i = 0; i < NUM_GHOSTS; i++) {
+      GridPoint2 randomPos = RandomUtils.random(minPos, maxPos);
+      Entity ghost = NPCFactory.createGhost(player);
+      spawnEntityAt(ghost, randomPos, true, true);
+    }
+  }
+
+  private void spawnGhostKing() {
+    GridPoint2 minPos = new GridPoint2(0, 0);
+    GridPoint2 maxPos = terrain.getMapBounds(0).sub(2, 2);
+
+    GridPoint2 randomPos = RandomUtils.random(minPos, maxPos);
+    Entity ghostKing = NPCFactory.createGhostKing(player);
+    spawnEntityAt(ghostKing, randomPos, true, true);
+  }
+
   private void spawnCrates() {
-    GridPoint2 cratePos = new GridPoint2(15, 3);
+    GridPoint2 cratePos = new GridPoint2(15, 6);
     Entity crate = ObstacleFactory.createCrate();
     spawnEntityAt(crate, cratePos, true, false);
-    GridPoint2 cratePos2 = new GridPoint2(15, 5);
-    Entity crate2 = ObstacleFactory.createCrate();
-    spawnEntityAt(crate2, cratePos2, true, false);
   }
 
   // Aditya - Security camera moved to right side and up, now collidable
@@ -262,6 +313,7 @@ public class ForestGameArea extends GameArea {
     resourceService.loadMusic(forestMusic);
 
     while (!resourceService.loadForMillis(10)) {
+      // This could be upgraded to a loading screen
       logger.info("Loading... {}%", resourceService.getProgress());
     }
   }
