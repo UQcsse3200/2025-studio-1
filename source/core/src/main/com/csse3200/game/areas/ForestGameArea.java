@@ -54,7 +54,7 @@ public class ForestGameArea extends GameArea {
           "foreg_sprites/general/SmallStair.png",
           "foreg_sprites/general/SquareTile.png",
           "foreg_sprites/general/ThickFloor.png",
-          "foreg_sprites/general/ThinFloor.png",
+          "foreg_sprites/general/ThinFloor3.png",
   };
   private static final String[] spawnPadTextures = {
           "foreg_sprites/spawn_pads/SpawnPadPurple.png",
@@ -67,14 +67,14 @@ public class ForestGameArea extends GameArea {
           "foreg_sprites/office/MidShelf.png",
           "foreg_sprites/office/LongCeilingLight.png",
           "foreg_sprites/office/OfficeChair.png",
-          "foreg_sprites/office/officeDesk.png",
+          "foreg_sprites/office/officeDesk4.png",
+
   };
-  // Aditya - Futuristic textures (only 2 storage crates now)
   private static final String[] futuristicTextures = {
-          "foreg_sprites/futuristic/SecurityCamera.png",
+          "foreg_sprites/futuristic/SecurityCamera3.png",
           "foreg_sprites/futuristic/EnergyPod.png",
-          "foreg_sprites/futuristic/storage_crate_green.png",
-          "foreg_sprites/futuristic/storage_crate_dark.png",
+          "foreg_sprites/futuristic/storage_crate_green2.png",
+          "foreg_sprites/futuristic/storage_crate_dark2.png",
   };
   private static final String[] forestTextureAtlases = {
           "images/terrain_iso_grass.atlas", "images/ghost.atlas", "images/ghostKing.atlas"
@@ -113,7 +113,7 @@ public class ForestGameArea extends GameArea {
     spawnPad();
     spawnCrates();
     spawnPlatforms();
-    // Aditya - Futuristic elements
+
     spawnSecurityCamera();
     spawnEnergyPod();
     spawnStorageCrates();
@@ -217,7 +217,7 @@ public class ForestGameArea extends GameArea {
     spawnEntityAt(longCeilingLight, lightPos, true, false);
 
     Entity officeDesk = ObstacleFactory.createOfficeDesk();
-    spawnEntityAt(officeDesk, new GridPoint2(5, 11), true, false);
+    spawnEntityAt(officeDesk, new GridPoint2(5, 12), true, false);
   }
 
   private void spawnPad() {
@@ -264,30 +264,29 @@ public class ForestGameArea extends GameArea {
     spawnEntityAt(crate, cratePos, true, false);
   }
 
-  // Aditya - Security camera moved to right side and up, now collidable
+
   private void spawnSecurityCamera() {
-    GridPoint2 cameraPos = new GridPoint2(27, 21);
+    GridPoint2 cameraPos = new GridPoint2(27, 19);
     Entity securityCamera = ObstacleFactory.createLargeSecurityCamera();
     spawnEntityAt(securityCamera, cameraPos, true, false);
   }
 
-  // Aditya - Energy pod placed on floor
   private void spawnEnergyPod() {
-    GridPoint2 energyPodPos = new GridPoint2(8, 3);
+    GridPoint2 energyPodPos = new GridPoint2(20, 6);
     Entity energyPod = ObstacleFactory.createLargeEnergyPod();
     spawnEntityAt(energyPod, energyPodPos, false, false);
   }
 
 
-  // Aditya - Only 2 storage crates on left side of energy pod, lower floor
+
   private void spawnStorageCrates() {
     // Green crate - left side of energy pod
-    GridPoint2 greenCratePos = new GridPoint2(6, 2);
+    GridPoint2 greenCratePos = new GridPoint2(5, 5);
     Entity greenCrate = ObstacleFactory.createStorageCrateGreen();
     spawnEntityAt(greenCrate, greenCratePos, true, false);
     greenCrate.setPosition(greenCrate.getPosition().x, greenCrate.getPosition().y + 0.25f);
     // Dark crate - also left side, slightly offset
-    GridPoint2 darkCratePos = new GridPoint2(2, 2);
+    GridPoint2 darkCratePos = new GridPoint2(25, 5);
     Entity darkCrate = ObstacleFactory.createStorageCrateDark();
     spawnEntityAt(darkCrate, darkCratePos, true, false);
     darkCrate.setPosition(darkCrate.getPosition().x, darkCrate.getPosition().y + 0.25f);

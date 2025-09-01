@@ -126,7 +126,7 @@ public class ObstacleFactory {
   public static Entity createThinFloor() {
     Entity thinFloor =
             new Entity()
-                    .addComponent(new TextureRenderComponent("foreg_sprites/general/ThinFloor.png"))
+                    .addComponent(new TextureRenderComponent("foreg_sprites/general/ThinFloor3.png"))
                     .addComponent(new PhysicsComponent())
                     .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
 
@@ -252,28 +252,25 @@ public class ObstacleFactory {
   public static Entity createOfficeDesk() {
     Entity officeDesk =
             new Entity()
-                    .addComponent(new TextureRenderComponent("foreg_sprites/office/officeDesk.png"))
+                    .addComponent(new TextureRenderComponent("foreg_sprites/office/officeDesk4.png"))
                     .addComponent(new PhysicsComponent())
                     .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
 
     officeDesk.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
     officeDesk.getComponent(TextureRenderComponent.class).scaleEntity();
-    officeDesk.scaleHeight(1.7f);
+    officeDesk.scaleHeight(2.0f);
     PhysicsUtils.setScaledCollider(officeDesk, 1f, 1f);
     return officeDesk;
   }
-
-  // Aditya - Security camera now collidable and bigger
-  // Aditya - Security camera as a visual-only sprite (no physics, no collision)
   public static Entity createLargeSecurityCamera() {
     Entity cam = new Entity()
-            .addComponent(new TextureRenderComponent("foreg_sprites/futuristic/SecurityCamera.png"));
+            .addComponent(new TextureRenderComponent("foreg_sprites/futuristic/SecurityCamera3.png"));
     cam.getComponent(TextureRenderComponent.class).scaleEntity();
-    cam.scaleHeight(2.5f); // keep your visual size
-    return cam; // no PhysicsComponent, no ColliderComponent => never collides
+    cam.scaleHeight(1.9f);
+    return cam;
   }
 
-  // Aditya - Large energy pod (2x size, collidable)
+
   public static Entity createLargeEnergyPod() {
     Entity energyPod =
             new Entity()
@@ -283,37 +280,37 @@ public class ObstacleFactory {
 
     energyPod.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
     energyPod.getComponent(TextureRenderComponent.class).scaleEntity();
-    energyPod.scaleHeight(2.0f);
+    energyPod.scaleHeight(1.5f);
     PhysicsUtils.setScaledCollider(energyPod, 1f, 0.9f);
     return energyPod;
   }
 
-  // Aditya - Green storage crate (simple sprite, collidable)
+  //Green storage crate
   public static Entity createStorageCrateGreen() {
     Entity crate =
             new Entity()
-                    .addComponent(new TextureRenderComponent("foreg_sprites/futuristic/storage_crate_green.png"))
+                    .addComponent(new TextureRenderComponent("foreg_sprites/futuristic/storage_crate_green2.png"))
                     .addComponent(new PhysicsComponent())
                     .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
 
     crate.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
     crate.getComponent(TextureRenderComponent.class).scaleEntity();
-    crate.scaleHeight(2.0f);
+    crate.scaleHeight(1.5f);
     PhysicsUtils.setScaledCollider(crate, 1f, 1f);
     return crate;
   }
 
-  // Aditya - Dark storage crate (simple sprite, collidable)
+  //Dark storage crate
   public static Entity createStorageCrateDark() {
     Entity crate =
             new Entity()
-                    .addComponent(new TextureRenderComponent("foreg_sprites/futuristic/storage_crate_dark.png"))
+                    .addComponent(new TextureRenderComponent("foreg_sprites/futuristic/storage_crate_dark2.png"))
                     .addComponent(new PhysicsComponent())
                     .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
 
     crate.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
     crate.getComponent(TextureRenderComponent.class).scaleEntity();
-    crate.scaleHeight(2.0f);
+    crate.scaleHeight(1.5f);
     PhysicsUtils.setScaledCollider(crate, 1f, 1f);
     return crate;
   }
