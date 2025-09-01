@@ -165,7 +165,7 @@ public class ForestGameArea extends GameArea {
       float doorX = camPos.x - doorWidth / 2f;
       float doorY = bottomY + 0.001f; // slight offset to sit above border
       float rightDoorHeight = Math.max(1f, viewHeight * 0.2f);
-      float rightDoorY = camPos.y - rightDoorHeight / 2f;
+      float rightDoorY = camPos.y - rightDoorHeight / 0.4f;
 
       // Bottom screen border split into two segments leaving a gap for the door
       float leftSegmentWidth = Math.max(0f, doorX - leftX);
