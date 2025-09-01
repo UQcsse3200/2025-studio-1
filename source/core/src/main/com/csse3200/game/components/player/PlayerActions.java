@@ -40,7 +40,7 @@ public class PlayerActions extends Component {
     entity.getEvents().addListener("walk", this::walk);
     entity.getEvents().addListener("walkStop", this::stopWalking);
     entity.getEvents().addListener("attack", this::attack);
-    entity.getEvents().addListener("jump", this::jump);
+    entity.getEvents().addListener("jumpAttempt", this::jump);
     entity.getEvents().addListener("sprintAttempt", this::sprintAttempt);
     entity.getEvents().addListener("dashAttempt", this::dash);
     entity.getEvents().addListener("crouchAttempt", this::crouchAttempt);
@@ -56,7 +56,7 @@ public class PlayerActions extends Component {
     }
 
     Body body = physicsComponent.getBody();
-    if (body.getLinearVelocity().y < 0f) {
+    if (body.getLinearVelocity().y < 0f || touchingGround()) {
       jumpsLeft = MAX_JUMPS;
     }
   }
@@ -130,7 +130,9 @@ public class PlayerActions extends Component {
 
     if (jumpsLeft > 0) {
       boolean isGroundJump = (jumpsLeft == MAX_JUMPS); // first jump
-      if (!isGroundJump || (currentTime - lastJumpTime) > JUMP_COOLDOWN_MS) {
+      if ((!isGroundJump || touchingGround())
+              && (!isGroundJump || (currentTime - lastJumpTime) > JUMP_COOLDOWN_MS)) {
+        entity.getEvents().trigger("jump");
         body.applyLinearImpulse(JUMP_VELOCITY, body.getWorldCenter(), true);
         jumpsLeft--;
         lastJumpTime = currentTime;
@@ -146,16 +148,18 @@ public class PlayerActions extends Component {
   }
 
   void dash() {
-    if (dashCooldown == 0) {
-      if (crouching) { // Need to add grounded check here as well
-        entity.getEvents().trigger("roll", facingRight); // Different animation
-      } else {
-        entity.getEvents().trigger("dash", facingRight); // To be used for animations or invulnerability checks
+    if(touchingGround()) { // player must be grounded to dash
+      if (dashCooldown == 0) {
+        if (crouching) { // Need to add grounded check here as well
+          entity.getEvents().trigger("roll", facingRight); // Different animation
+        } else {
+          entity.getEvents().trigger("dash", facingRight); // To be used for animations or invulnerability checks
+        }
+        dashCooldown = DASH_COOLDOWN;
+        dashing = true;
+        dashDuration();
+        dashCooldown();
       }
-      dashCooldown = DASH_COOLDOWN;
-      dashing = true;
-      dashDuration();
-      dashCooldown();
     }
   }
 
@@ -187,11 +191,20 @@ public class PlayerActions extends Component {
 
   void crouchAttempt() {
     // Return if grounded TBA
-    entity.getEvents().trigger("crouchStart");
-    crouching = true;
+    if(touchingGround()) { // must be grounded
+      entity.getEvents().trigger("crouchStart");
+      crouching = true;
+    }
   }
 
-
+  /**
+   * Checks if player is touching ground (ie. y velocity = 0)
+   * @return if player is touching ground or not
+   */
+  boolean touchingGround() {
+    // return true for infinite jumps
+    return (physicsComponent.getBody().getLinearVelocity().y == 0f);
+  }
   /**
    * Makes the player attack.
    */
