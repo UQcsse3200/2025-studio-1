@@ -53,6 +53,7 @@ public class NPCFactory {
     animator.addAnimation("angry_float", 0.1f, Animation.PlayMode.LOOP);
     animator.addAnimation("float", 0.1f, Animation.PlayMode.LOOP);
 
+    // Create the dash attack AI component
     AITaskComponent aiComponent =
         new AITaskComponent()
             .addTask(new WanderTask(new Vector2(2f, 2f), 1000L))
@@ -96,6 +97,7 @@ public class NPCFactory {
     animator.addAnimation("float", 0.1f, Animation.PlayMode.LOOP);
     animator.addAnimation("angry_float", 0.1f, Animation.PlayMode.LOOP);
 
+    // Create the constant chase AI task
     AITaskComponent aiComponent =
         new AITaskComponent()
           .addTask(new WanderTask(new Vector2(2f, 2f), 2000L))
@@ -137,6 +139,7 @@ public class NPCFactory {
     animator.addAnimation("angry_float", 0.1f, Animation.PlayMode.LOOP);
     animator.addAnimation("float", 0.1f, Animation.PlayMode.LOOP);
 
+    // Create the constant chase AI task
     AITaskComponent aiComponent =
         new AITaskComponent()
             .addTask(new GPTSlowChaseTask(target, 10, new Vector2(0.3f, 0.3f)))
