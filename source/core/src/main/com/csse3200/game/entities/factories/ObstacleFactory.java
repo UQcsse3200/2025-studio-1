@@ -8,6 +8,10 @@ import com.csse3200.game.physics.components.ColliderComponent;
 import com.csse3200.game.physics.components.PhysicsComponent;
 import com.csse3200.game.rendering.TextureRenderComponent;
 
+
+// TODO delete these imports when finished testing
+import com.csse3200.game.physics.components.HitboxComponent;
+import com.csse3200.game.components.entity.item.ItemComponent;
 /**
  * Factory to create obstacle entities.
  *
@@ -33,6 +37,28 @@ public class ObstacleFactory {
     return tree;
   }
 
+  // This function was used for testing the itemPickUp functionality, and might be useful later for further testing
+//  public static Entity createTree() {
+//    String texture = "images/heart.png";
+//    Entity tree = new Entity()
+//            .addComponent(new TextureRenderComponent(texture))
+//            .addComponent(new PhysicsComponent())
+//            .addComponent(new ColliderComponent().setLayer(PhysicsLayer.ITEM))
+//            .addComponent(new HitboxComponent())
+//            .addComponent(new ItemComponent(1, texture));
+//
+//    tree.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
+//    tree.getComponent(TextureRenderComponent.class).scaleEntity();
+//    tree.scaleHeight(2.5f);
+//    PhysicsUtils.setScaledCollider(tree, 2.0f, 1.8f);
+//
+//    //new  tree.getComponent(PhysicsComponent.class).getBody().setUserData(tree);
+//
+//    return tree;
+//  }
+
+
+
   /**
    * Creates an invisible physics wall.
    * @param width Wall width in world units
@@ -41,8 +67,8 @@ public class ObstacleFactory {
    */
   public static Entity createWall(float width, float height) {
     Entity wall = new Entity()
-        .addComponent(new PhysicsComponent().setBodyType(BodyType.StaticBody))
-        .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
+            .addComponent(new PhysicsComponent().setBodyType(BodyType.StaticBody))
+            .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
     wall.setScale(width, height);
     return wall;
   }
@@ -51,3 +77,4 @@ public class ObstacleFactory {
     throw new IllegalStateException("Instantiating static util class");
   }
 }
+
