@@ -43,6 +43,20 @@ public class ObstacleFactory {
     return longFloor;
   }
 
+  public static Entity createBigThickFloor() {
+    Entity bigThickFloor =
+        new Entity()
+          .addComponent(new TextureRenderComponent("foreg_sprites/general/ThickFloor.png"))
+          .addComponent(new PhysicsComponent())
+          .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
+
+    bigThickFloor.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
+    bigThickFloor.getComponent(TextureRenderComponent.class).scaleEntity();
+    bigThickFloor.scaleHeight(20f);
+    PhysicsUtils.setScaledCollider(bigThickFloor, 1f, 1f);
+    return bigThickFloor;
+  }
+
   public static Entity createRailing() {
     Entity railing =
             new Entity()
