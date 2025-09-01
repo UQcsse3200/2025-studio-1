@@ -81,7 +81,7 @@ public class Floor3GameArea extends GameArea {
     }
     Entity leftDoor = ObstacleFactory.createDoorTrigger(WALL_WIDTH, leftDoorHeight);
     leftDoor.setPosition(leftX + 0.001f, leftDoorY);
-    leftDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadFloor6,1));
+    leftDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadFloor6));
     spawnEntity(leftDoor);
     Entity right = ObstacleFactory.createWall(WALL_WIDTH, viewHeight);
     right.setPosition(rightX - WALL_WIDTH, bottomY);
@@ -107,7 +107,7 @@ public class Floor3GameArea extends GameArea {
     }
     Entity bottomDoor = ObstacleFactory.createDoorTrigger(doorWidth, WALL_WIDTH);
     bottomDoor.setPosition(doorX, bottomY + 0.001f);
-    bottomDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadBackToFloor2,1));
+    bottomDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadBackToFloor2));
     spawnEntity(bottomDoor);
   }
 

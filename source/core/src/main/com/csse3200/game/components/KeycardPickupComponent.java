@@ -2,10 +2,8 @@ package com.csse3200.game.components;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.physics.box2d.Fixture;
-import com.badlogic.gdx.utils.Timer;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.components.player.InventoryComponent;
-import com.csse3200.game.components.player.PlayerActions;
 import com.csse3200.game.physics.BodyUserData;
 
 public class KeycardPickupComponent extends Component {
@@ -18,47 +16,28 @@ public class KeycardPickupComponent extends Component {
 
     @Override
     public void create() {
-        // Delay to ensure physics setup is complete
-        Timer.schedule(new Timer.Task() {
-            @Override
-            public void run() {
-                entity.getEvents().addListener("collisionStart", KeycardPickupComponent.this::onCollisionStart);
-            }
-        }, 0.2f);
+        entity.getEvents().addListener("collisionStart", this::onCollisionStart);
     }
 
     private void onCollisionStart(Fixture me, Fixture other) {
         if (collected) return;
 
-        Object meUd = me.getBody().getUserData();
+        // Get the other entity from BodyUserData
         Object otherUd = other.getBody().getUserData();
-        if (!(meUd instanceof BodyUserData) || !(otherUd instanceof BodyUserData)) {
-            Gdx.app.error("KeycardPickup", "Missing BodyUserData on collision bodies");
-            return;
-        }
+        if (!(otherUd instanceof BodyUserData)) return;
 
-        Entity meEntity = ((BodyUserData) meUd).entity;
         Entity otherEntity = ((BodyUserData) otherUd).entity;
+        if (otherEntity == null) return;
 
-        if (meEntity == null || otherEntity == null) return;
-        if (otherEntity == meEntity) return; // self-collision guard
-        if (meEntity != entity) return;      // ensure 'me' is the keycard entity
-
-        PlayerActions player = otherEntity.getComponent(PlayerActions.class);
-        if (player == null) return;
-
+        // Get the player's inventory
         InventoryComponent inventory = otherEntity.getComponent(InventoryComponent.class);
-        if (inventory == null) {
-            Gdx.app.error("KeycardPickup", "Player missing InventoryComponent, entityId=" + otherEntity.getId());
-            return;
+        if (inventory != null) {
+            inventory.setKeycardLevel(level);
+            Gdx.app.log("KeycardPickup", "Keycard level " + level + " collected by player");
+            collected = true;
+
+            // Remove the keycard entity safely after physics step
+            Gdx.app.postRunnable(() -> entity.dispose());
         }
-
-        collected = true;
-
-        // Set the player's keycard level
-        inventory.setKeycardLevel(level);
-        Gdx.app.log("KeycardPickup", "Keycard level " + level + " collected by player");
-
-        Gdx.app.postRunnable(meEntity::dispose);
     }
 }

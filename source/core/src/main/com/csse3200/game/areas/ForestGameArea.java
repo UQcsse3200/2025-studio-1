@@ -8,6 +8,7 @@ import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.components.DoorComponent;
+import com.csse3200.game.components.KeycardGateComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.factories.KeycardFactory;
 import com.csse3200.game.entities.factories.NPCFactory;
@@ -182,7 +183,7 @@ public class ForestGameArea extends GameArea {
 
       Entity rightDoor = ObstacleFactory.createDoorTrigger(WALL_WIDTH, rightDoorHeight);
       rightDoor.setPosition(rightX - WALL_WIDTH - 0.001f, rightDoorY);
-      rightDoor.addComponent(new com.csse3200.game.components.DoorComponent(() -> this.loadNextLevel(),1));
+      rightDoor.addComponent(new com.csse3200.game.components.DoorComponent(() -> this.loadNextLevel()));
       spawnEntity(rightDoor);
     }
   }
@@ -228,20 +229,25 @@ public class ForestGameArea extends GameArea {
     float doorX = 13.5f;
     float doorY = 1.25f;
 
-    Entity door = ObstacleFactory.createDoorTrigger(20f, 40f); // physics size
+    // Create a door trigger with physics body
+    Entity door = ObstacleFactory.createDoorTrigger(20f, 40f);
 
-    // Add visual sprite ONCE
+    // Add visual sprite
     TextureRenderComponent texture = new TextureRenderComponent("images/door.png");
     door.addComponent(texture);
-    texture.scaleEntity(); // scale it to match physics body
+    texture.scaleEntity();
 
     door.setPosition(doorX, doorY);
-    door.addComponent(new DoorComponent(() -> {
-      logger.info("Bottom-right platform door triggered");
-    }, 1)); // or whatever int value is appropriate
+
+    // Add keycard gate logic — only opens if player has level 1 card
+    door.addComponent(new KeycardGateComponent(1, () -> {
+      logger.info("Bottom-right platform door unlocked — loading next level");
+      loadNextLevel();
+    }));
 
     spawnEntity(door);
   }
+
 
   private void spawnPad() {
     GridPoint2 spawnPadPos = new GridPoint2(20, 3);
