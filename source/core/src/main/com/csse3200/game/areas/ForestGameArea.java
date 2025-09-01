@@ -23,8 +23,8 @@ import org.slf4j.LoggerFactory;
 public class ForestGameArea extends GameArea {
   private static final Logger logger = LoggerFactory.getLogger(ForestGameArea.class);
   private static final int NUM_TREES = 7;
-  private static final int NUM_GHOSTS = 2;
-  private static final GridPoint2 PLAYER_SPAWN = new GridPoint2(10, 10);
+  private static final int NUM_GHOSTS = 0;
+  private static final GridPoint2 PLAYER_SPAWN = new GridPoint2(3, 7);
   private static final float WALL_WIDTH = 0.1f;
   private static final String[] forestTextures = {
     "images/box_boy_leaf.png",
@@ -42,6 +42,28 @@ public class ForestGameArea extends GameArea {
     "images/iso_grass_3.png",
     "images/Spawn.png",
     "images/SpawnResize.png"
+  };
+  private static final String[] generalTextures = {
+      "foreg_sprites/general/LongFloor.png",
+      "foreg_sprites/general/Railing.png",
+      "foreg_sprites/general/SmallSquare.png",
+      "foreg_sprites/general/SmallStair.png",
+      "foreg_sprites/general/SquareTile.png",
+      "foreg_sprites/general/ThickFloor.png",
+      "foreg_sprites/general/ThinFloor.png",
+  };
+  private static final String[] spawnPadTextures = {
+      "foreg_sprites/spawn_pads/SpawnPadPurple.png",
+      "foreg_sprites/spawn_pads/SpawnPadRed.png",
+  };
+  private static final String[] officeTextures = {
+    "foreg_sprites/office/CeilingLight.png",
+    "foreg_sprites/office/Crate.png",
+    "foreg_sprites/office/LargeShelf.png",
+    "foreg_sprites/office/MidShelf.png",
+    "foreg_sprites/office/LongCeilingLight.png",
+    "foreg_sprites/office/OfficeChair.png",
+    "foreg_sprites/office/officeDesk.png",
   };
   private static final String[] forestTextureAtlases = {
     "images/terrain_iso_grass.atlas", "images/ghost.atlas", "images/ghostKing.atlas"
@@ -74,10 +96,12 @@ public class ForestGameArea extends GameArea {
     displayUI();
 
     spawnTerrain();
-    spawnTrees();
     player = spawnPlayer();
-    spawnGhosts();
-    spawnGhostKing();
+
+    spawnFloor();
+    spawnPad();
+    spawnCrates();
+    spawnPlatforms();
 
     playMusic();
   }
@@ -126,6 +150,8 @@ public class ForestGameArea extends GameArea {
       float doorHeight = WALL_WIDTH;
       float doorX = camPos.x - doorWidth / 2f;
       float doorY = bottomY + 0.001f; // slight offset to sit above border
+      float rightDoorHeight = Math.max(1f, viewHeight * 0.2f);
+      float rightDoorY = camPos.y - rightDoorHeight / 2f;
 
       // Bottom screen border split into two segments leaving a gap for the door
       float leftSegmentWidth = Math.max(0f, doorX - leftX);
@@ -142,11 +168,10 @@ public class ForestGameArea extends GameArea {
         spawnEntity(bottomRight);
       }
 
-      Entity door = ObstacleFactory.createDoorTrigger(doorWidth, doorHeight);
-      door.setPosition(doorX, doorY);
-      // When entered, request next level via event on this area
-      door.addComponent(new com.csse3200.game.components.DoorComponent(() -> this.loadNextLevel()));
-      spawnEntity(door);
+      Entity rightDoor = ObstacleFactory.createDoorTrigger(WALL_WIDTH, rightDoorHeight);
+      rightDoor.setPosition(rightX - WALL_WIDTH - 0.001f, rightDoorY);
+      rightDoor.addComponent(new com.csse3200.game.components.DoorComponent(() -> this.loadNextLevel()));
+      spawnEntity(rightDoor);
     }
   }
 
@@ -170,6 +195,29 @@ public class ForestGameArea extends GameArea {
       Entity tree = ObstacleFactory.createTree();
       spawnEntityAt(tree, randomPos, true, false);
     }
+  }
+
+  private void spawnPlatforms() {
+    for (int i = 0; i < 3; i++) {
+      GridPoint2 platformPos = new GridPoint2(i * 5, 10);
+      Entity platform = ObstacleFactory.createThinFloor();
+      spawnEntityAt(platform, platformPos, true, false);
+    }
+
+    GridPoint2 lightPos = new GridPoint2(9, 9);
+    Entity longCeilingLight = ObstacleFactory.createLongCeilingLight();
+    spawnEntityAt(longCeilingLight, lightPos, true, false);
+
+    Entity officeDesk = ObstacleFactory.createOfficeDesk();
+    spawnEntityAt(officeDesk, new GridPoint2(5, 11), true, false);
+  }
+
+  private void spawnPad() {
+    GridPoint2 spawnPadPos = new GridPoint2(20, 3);
+
+    Entity spawnPad = ObstacleFactory.createPurpleSpawnPad();
+
+    spawnEntityAt(spawnPad, spawnPadPos, false, false);
   }
 
   private Entity spawnPlayer() {
@@ -198,6 +246,15 @@ public class ForestGameArea extends GameArea {
     spawnEntityAt(ghostKing, randomPos, true, true);
   }
 
+  private void spawnCrates() {
+    GridPoint2 cratePos = new GridPoint2(15, 3);
+    Entity crate = ObstacleFactory.createCrate();
+    spawnEntityAt(crate, cratePos, true, false);
+    GridPoint2 cratePos2 = new GridPoint2(15, 5);
+    Entity crate2 = ObstacleFactory.createCrate();
+    spawnEntityAt(crate2, cratePos2, true, false);
+  }
+
   private void playMusic() {
     Music music = ServiceLocator.getResourceService().getAsset(backgroundMusic, Music.class);
     music.setLooping(true);
@@ -208,7 +265,10 @@ public class ForestGameArea extends GameArea {
   private void loadAssets() {
     logger.debug("Loading assets");
     ResourceService resourceService = ServiceLocator.getResourceService();
+    resourceService.loadTextures(generalTextures);
     resourceService.loadTextures(forestTextures);
+    resourceService.loadTextures(spawnPadTextures);
+    resourceService.loadTextures(officeTextures);
     resourceService.loadTextureAtlases(forestTextureAtlases);
     resourceService.loadSounds(forestSounds);
     resourceService.loadMusic(forestMusic);
@@ -223,9 +283,12 @@ public class ForestGameArea extends GameArea {
     logger.debug("Unloading assets");
     ResourceService resourceService = ServiceLocator.getResourceService();
     resourceService.unloadAssets(forestTextures);
+    resourceService.unloadAssets(generalTextures);
     resourceService.unloadAssets(forestTextureAtlases);
     resourceService.unloadAssets(forestSounds);
     resourceService.unloadAssets(forestMusic);
+    resourceService.unloadAssets(spawnPadTextures);
+    resourceService.unloadAssets(officeTextures);
   }
 
   @Override
@@ -233,5 +296,9 @@ public class ForestGameArea extends GameArea {
     super.dispose();
     ServiceLocator.getResourceService().getAsset(backgroundMusic, Music.class).stop();
     this.unloadAssets();
+  }
+
+  public Entity getPlayer() {
+    return player;
   }
 }
