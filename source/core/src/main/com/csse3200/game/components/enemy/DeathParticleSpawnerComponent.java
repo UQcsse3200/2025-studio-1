@@ -58,6 +58,11 @@ public class DeathParticleSpawnerComponent extends Component {
     entity.getEvents().addListener("death", this::spawnParticles);
   }
 
+  /**
+   * Spawns the particles on the map upon triggering the animation.
+   *
+   * <p>Logs an error if unable to spawn the particles.</p>
+   */
   private void spawnParticles() {
     try {
       if (ServiceLocator.getResourceService() == null || !ServiceLocator.getResourceService().containsAsset(atlasPath, TextureAtlas.class)) {

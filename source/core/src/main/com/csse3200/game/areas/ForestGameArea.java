@@ -153,6 +153,10 @@ public class ForestGameArea extends GameArea {
     Entity ghostKing = NPCFactory.createGhostKing(player);
     spawnEntityAt(ghostKing, randomPos, true, true);
   }
+
+  /**
+   * Adds NUM_GHOST_GPTS amount of GhostGPT enemies onto the map.
+   */
   private void spawnGhostGPT() {
     GridPoint2 minPos = new GridPoint2(0, 0);
     GridPoint2 maxPos = terrain.getMapBounds(0).sub(3, 3);
