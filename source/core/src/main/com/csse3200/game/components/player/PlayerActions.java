@@ -47,6 +47,7 @@ public class PlayerActions extends Component {
   private boolean facingRight = true;
   private boolean dashing = false;
   private boolean crouching = false;
+  private boolean grounded = true;
 
   // Ability cooldowns / counters
   private int dashCooldown= 0;
@@ -87,6 +88,7 @@ public class PlayerActions extends Component {
     Body body = physicsComponent.getBody();
     if (touchingGround()) {
       jumpsLeft = MAX_JUMPS;
+
     }
   }
 
@@ -120,6 +122,19 @@ public class PlayerActions extends Component {
     // impulse = (desiredVel - currentVel) * mass
     float impulseX = (targetVx - velocity.x) * body.getMass();
     body.applyLinearImpulse(new Vector2(impulseX, 0f), body.getWorldCenter(), true);
+
+    if(grounded != touchingGround()) {
+      if(touchingGround()) {
+        grounded = true;
+        entity.getEvents().trigger("walk", walkDirection);
+      } else {
+        grounded = false;
+        entity.getEvents().trigger("fall", walkDirection);
+      }
+    }
+   // if((!dashing) && (!crouching) && touchingGround() && hasDir) {
+  //    entity.getEvents().trigger("walk", walkDirection);
+  //  }
   }
 
   /**
@@ -130,6 +145,12 @@ public class PlayerActions extends Component {
   void walk(Vector2 direction) {
     moving = true;
     this.walkDirection = direction;
+    facingRight = this.walkDirection.x > 0;
+    if(touchingGround()) {
+      entity.getEvents().trigger("walkAnimate", walkDirection);
+    } else {
+      entity.getEvents().trigger("fall", walkDirection);
+    }
   }
 
   /**
@@ -173,6 +194,7 @@ public class PlayerActions extends Component {
         body.applyLinearImpulse(JUMP_VELOCITY, body.getWorldCenter(), true);
         jumpsLeft--;
         lastJumpTime = currentTime;
+        grounded = false;
     }
   }
 }
