@@ -43,6 +43,7 @@ public class Floor6GameArea extends GameArea {
 
     spawnBordersAndDoors();
     spawnPlayer();
+    spawnFloor();
 
     Entity ui = new Entity();
     ui.addComponent(new com.csse3200.game.components.gamearea.FloorLabelDisplay("Floor 6"));
