@@ -48,36 +48,29 @@ public class ForestGameArea extends GameArea {
     "images/LobbyWIP.png"
   };
   private static final String[] generalTextures = {
-          "foreg_sprites/general/LongFloor.png",
-          "foreg_sprites/general/Railing.png",
-          "foreg_sprites/general/SmallSquare.png",
-          "foreg_sprites/general/SmallStair.png",
-          "foreg_sprites/general/SquareTile.png",
-          "foreg_sprites/general/ThickFloor.png",
-          "foreg_sprites/general/ThinFloor.png",
+      "foreg_sprites/general/LongFloor.png",
+      "foreg_sprites/general/Railing.png",
+      "foreg_sprites/general/SmallSquare.png",
+      "foreg_sprites/general/SmallStair.png",
+      "foreg_sprites/general/SquareTile.png",
+      "foreg_sprites/general/ThickFloor.png",
+      "foreg_sprites/general/ThinFloor.png",
   };
   private static final String[] spawnPadTextures = {
-          "foreg_sprites/spawn_pads/SpawnPadPurple.png",
-          "foreg_sprites/spawn_pads/SpawnPadRed.png",
+      "foreg_sprites/spawn_pads/SpawnPadPurple.png",
+      "foreg_sprites/spawn_pads/SpawnPadRed.png",
   };
   private static final String[] officeTextures = {
-          "foreg_sprites/office/CeilingLight.png",
-          "foreg_sprites/office/Crate.png",
-          "foreg_sprites/office/LargeShelf.png",
-          "foreg_sprites/office/MidShelf.png",
-          "foreg_sprites/office/LongCeilingLight.png",
-          "foreg_sprites/office/OfficeChair.png",
-          "foreg_sprites/office/officeDesk.png",
-  };
-  // Aditya - Futuristic textures (only 2 storage crates now)
-  private static final String[] futuristicTextures = {
-          "foreg_sprites/futuristic/SecurityCamera.png",
-          "foreg_sprites/futuristic/EnergyPod.png",
-          "foreg_sprites/futuristic/storage_crate_green.png",
-          "foreg_sprites/futuristic/storage_crate_dark.png",
+    "foreg_sprites/office/CeilingLight.png",
+    "foreg_sprites/office/Crate.png",
+    "foreg_sprites/office/LargeShelf.png",
+    "foreg_sprites/office/MidShelf.png",
+    "foreg_sprites/office/LongCeilingLight.png",
+    "foreg_sprites/office/OfficeChair.png",
+    "foreg_sprites/office/officeDesk.png",
   };
   private static final String[] forestTextureAtlases = {
-          "images/terrain_iso_grass.atlas", "images/ghost.atlas", "images/ghostKing.atlas"
+    "images/terrain_iso_grass.atlas", "images/ghost.atlas", "images/ghostKing.atlas"
   };
   private static final String[] forestSounds = {"sounds/Impact4.ogg"};
   private static final String backgroundMusic = "sounds/BGM_03_mp3.mp3";
@@ -113,10 +106,6 @@ public class ForestGameArea extends GameArea {
     spawnPad();
     spawnCrates();
     spawnPlatforms();
-    // Aditya - Futuristic elements
-    spawnSecurityCamera();
-    spawnEnergyPod();
-    spawnStorageCrates();
     spawnBigWall();
 
     playMusic();
@@ -146,29 +135,37 @@ public class ForestGameArea extends GameArea {
       float bottomY = camPos.y - viewHeight / 2f;
       float topY = camPos.y + viewHeight / 2f;
 
+      // Left screen border
       Entity left = ObstacleFactory.createWall(WALL_WIDTH, viewHeight);
       left.setPosition(leftX, bottomY);
       spawnEntity(left);
 
+      // Right screen border
       Entity right = ObstacleFactory.createWall(WALL_WIDTH, viewHeight);
       right.setPosition(rightX - WALL_WIDTH, bottomY);
       spawnEntity(right);
 
+      // Top screen border
       Entity top = ObstacleFactory.createWall(viewWidth, WALL_WIDTH);
       top.setPosition(leftX, topY - WALL_WIDTH);
       spawnEntity(top);
 
+      // Door trigger: a thin black line at bottom center
       float doorWidth = Math.max(1f, viewWidth * 0.2f);
+      float doorHeight = WALL_WIDTH;
+      float doorX = camPos.x - doorWidth / 2f;
+      float doorY = bottomY + 1.0f; // Position above floor level
       float rightDoorHeight = Math.max(1f, viewHeight * 0.2f);
       float rightDoorY = camPos.y - rightDoorHeight / 2f;
 
-      float leftSegmentWidth = Math.max(0f, (camPos.x - doorWidth/2f) - leftX);
+      // Bottom screen border split into two segments leaving a gap for the door
+      float leftSegmentWidth = Math.max(0f, doorX - leftX);
       if (leftSegmentWidth > 0f) {
         Entity bottomLeft = ObstacleFactory.createWall(leftSegmentWidth, WALL_WIDTH);
         bottomLeft.setPosition(leftX, bottomY);
         spawnEntity(bottomLeft);
       }
-      float rightSegmentStart = camPos.x + doorWidth/2f;
+      float rightSegmentStart = doorX + doorWidth;
       float rightSegmentWidth = Math.max(0f, (leftX + viewWidth) - rightSegmentStart);
       if (rightSegmentWidth > 0f) {
         Entity bottomRight = ObstacleFactory.createWall(rightSegmentWidth, WALL_WIDTH);
@@ -207,12 +204,12 @@ public class ForestGameArea extends GameArea {
 
   private void spawnPlatforms() {
     for (int i = 0; i < 3; i++) {
-      GridPoint2 platformPos = new GridPoint2(i * 5, 11);
+      GridPoint2 platformPos = new GridPoint2(i * 5, 10);
       Entity platform = ObstacleFactory.createThinFloor();
       spawnEntityAt(platform, platformPos, true, false);
     }
 
-    GridPoint2 lightPos = new GridPoint2(9, 10);
+    GridPoint2 lightPos = new GridPoint2(9, 9);
     Entity longCeilingLight = ObstacleFactory.createLongCeilingLight();
     spawnEntityAt(longCeilingLight, lightPos, true, false);
 
@@ -222,7 +219,9 @@ public class ForestGameArea extends GameArea {
 
   private void spawnPad() {
     GridPoint2 spawnPadPos = new GridPoint2(20, 3);
+
     Entity spawnPad = ObstacleFactory.createPurpleSpawnPad();
+
     spawnEntityAt(spawnPad, spawnPadPos, false, false);
   }
 
@@ -264,35 +263,6 @@ public class ForestGameArea extends GameArea {
     spawnEntityAt(crate, cratePos, true, false);
   }
 
-  // Aditya - Security camera moved to right side and up, now collidable
-  private void spawnSecurityCamera() {
-    GridPoint2 cameraPos = new GridPoint2(27, 21);
-    Entity securityCamera = ObstacleFactory.createLargeSecurityCamera();
-    spawnEntityAt(securityCamera, cameraPos, true, false);
-  }
-
-  // Aditya - Energy pod placed on floor
-  private void spawnEnergyPod() {
-    GridPoint2 energyPodPos = new GridPoint2(8, 3);
-    Entity energyPod = ObstacleFactory.createLargeEnergyPod();
-    spawnEntityAt(energyPod, energyPodPos, false, false);
-  }
-
-
-  // Aditya - Only 2 storage crates on left side of energy pod, lower floor
-  private void spawnStorageCrates() {
-    // Green crate - left side of energy pod
-    GridPoint2 greenCratePos = new GridPoint2(6, 2);
-    Entity greenCrate = ObstacleFactory.createStorageCrateGreen();
-    spawnEntityAt(greenCrate, greenCratePos, true, false);
-    greenCrate.setPosition(greenCrate.getPosition().x, greenCrate.getPosition().y + 0.25f);
-    // Dark crate - also left side, slightly offset
-    GridPoint2 darkCratePos = new GridPoint2(2, 2);
-    Entity darkCrate = ObstacleFactory.createStorageCrateDark();
-    spawnEntityAt(darkCrate, darkCratePos, true, false);
-    darkCrate.setPosition(darkCrate.getPosition().x, darkCrate.getPosition().y + 0.25f);
-  }
-
   private void playMusic() {
     Music music = ServiceLocator.getResourceService().getAsset(backgroundMusic, Music.class);
     music.setLooping(true);
@@ -307,7 +277,6 @@ public class ForestGameArea extends GameArea {
     resourceService.loadTextures(forestTextures);
     resourceService.loadTextures(spawnPadTextures);
     resourceService.loadTextures(officeTextures);
-    resourceService.loadTextures(futuristicTextures);
     resourceService.loadTextureAtlases(forestTextureAtlases);
     resourceService.loadSounds(forestSounds);
     resourceService.loadMusic(forestMusic);
@@ -328,7 +297,6 @@ public class ForestGameArea extends GameArea {
     resourceService.unloadAssets(forestMusic);
     resourceService.unloadAssets(spawnPadTextures);
     resourceService.unloadAssets(officeTextures);
-    resourceService.unloadAssets(futuristicTextures);
   }
 
   @Override

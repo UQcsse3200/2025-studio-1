@@ -20,8 +20,8 @@ public  class FloorLabelDisplay extends UIComponent {
     table = new Table();
     table.top().left();
     table.setFillParent(true);
-    // Position below health display (health is at padTop(45f) + heart height (~30f) + padding (~10f) = ~85f)
-    table.padTop(85f).padLeft(5f);
+    // Position below game area display with clear spacing
+    table.padTop(120f).padLeft(5f);
 
     Label label = new Label(floorName, skin);
     table.add(label).pad(8f);
