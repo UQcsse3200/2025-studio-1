@@ -7,10 +7,7 @@ import com.csse3200.game.ai.tasks.AITaskComponent;
 import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.components.npc.GhostAnimationController;
 import com.csse3200.game.components.TouchAttackComponent;
-import com.csse3200.game.components.tasks.ChaseTask;
-import com.csse3200.game.components.tasks.GPTFastChaseTask;
-import com.csse3200.game.components.tasks.GPTSlowChaseTask;
-import com.csse3200.game.components.tasks.WanderTask;
+import com.csse3200.game.components.tasks.*;
 import com.csse3200.game.components.player.InventoryComponent;
 import com.csse3200.game.components.enemy.EnemyDeathRewardComponent;
 import com.csse3200.game.components.enemy.DeathParticleSpawnerComponent;
@@ -57,6 +54,12 @@ public class NPCFactory {
     animator.addAnimation("angry_float", 0.1f, Animation.PlayMode.LOOP);
     animator.addAnimation("float", 0.1f, Animation.PlayMode.LOOP);
 
+    AITaskComponent aiComponent =
+        new AITaskComponent()
+            .addTask(new WanderTask(new Vector2(2f, 2f), 1000L))
+            .addTask(new DashAttackTask(target, 15, new Vector2(7f, 7f), 1000L, 200L));
+
+
     // Get player's inventory for reward system
     InventoryComponent playerInventory = null;
     if (target != null) {
@@ -68,7 +71,8 @@ public class NPCFactory {
         .addComponent(animator)
         .addComponent(new GhostAnimationController())
         .addComponent(new EnemyDeathRewardComponent(15, playerInventory))
-        .addComponent(new DeathParticleSpawnerComponent());
+        .addComponent(new DeathParticleSpawnerComponent())
+        .addComponent(aiComponent);
 
     ghost.getComponent(AnimationRenderComponent.class).scaleEntity();
 
@@ -93,6 +97,12 @@ public class NPCFactory {
     animator.addAnimation("float", 0.1f, Animation.PlayMode.LOOP);
     animator.addAnimation("angry_float", 0.1f, Animation.PlayMode.LOOP);
 
+    AITaskComponent aiComponent =
+        new AITaskComponent()
+          .addTask(new WanderTask(new Vector2(2f, 2f), 2000L))
+          .addTask(new DashAttackTask(target, 15, new Vector2(15f, 15f), 500L, 300L));
+
+
     // Get player's inventory for reward system
     InventoryComponent playerInventory = null;
     if (target != null) {
@@ -104,7 +114,8 @@ public class NPCFactory {
         .addComponent(animator)
         .addComponent(new GhostAnimationController())
         .addComponent(new EnemyDeathRewardComponent(30, playerInventory))
-        .addComponent(new DeathParticleSpawnerComponent());
+        .addComponent(new DeathParticleSpawnerComponent())
+        .addComponent(aiComponent);
 
     ghostKing.getComponent(AnimationRenderComponent.class).scaleEntity();
     return ghostKing;
@@ -127,6 +138,11 @@ public class NPCFactory {
     animator.addAnimation("angry_float", 0.1f, Animation.PlayMode.LOOP);
     animator.addAnimation("float", 0.1f, Animation.PlayMode.LOOP);
 
+    AITaskComponent aiComponent =
+        new AITaskComponent()
+            .addTask(new GPTSlowChaseTask(target, 10, new Vector2(0.3f, 0.3f)))
+            .addTask(new GPTFastChaseTask(target, 10, new Vector2(1.2f, 1.2f)));
+
     // Get player's inventory for reward system
     InventoryComponent playerInventory = null;
     if (target != null) {
@@ -138,7 +154,8 @@ public class NPCFactory {
             .addComponent(animator)
             .addComponent(new GhostAnimationController())
             .addComponent(new EnemyDeathRewardComponent(15, playerInventory))
-            .addComponent(new DeathParticleSpawnerComponent("explosion_2")); // Add reward + particles
+            .addComponent(new DeathParticleSpawnerComponent("explosion_2"))
+            .addComponent(aiComponent); // Add reward + particles
 
     ghostGPT.getComponent(AnimationRenderComponent.class).scaleEntity();
 
@@ -151,18 +168,13 @@ public class NPCFactory {
    * @return entity
    */
   private static Entity createBaseNPC(Entity target) {
-    AITaskComponent aiComponent =
-        new AITaskComponent()
-            .addTask(new GPTSlowChaseTask(target, 10, new Vector2(0.5f, 0.5f)))
-            .addTask(new GPTFastChaseTask(target, 10, new Vector2(1.2f, 1.2f)));
     Entity npc =
         new Entity()
             .addComponent(new PhysicsComponent())
             .addComponent(new PhysicsMovementComponent())
             .addComponent(new ColliderComponent())
             .addComponent(new HitboxComponent().setLayer(PhysicsLayer.NPC))
-            .addComponent(new TouchAttackComponent(PhysicsLayer.PLAYER, 1.5f))
-            .addComponent(aiComponent);
+            .addComponent(new TouchAttackComponent(PhysicsLayer.PLAYER, 1.5f));
 
     PhysicsUtils.setScaledCollider(npc, 0.9f, 0.4f);
     return npc;
