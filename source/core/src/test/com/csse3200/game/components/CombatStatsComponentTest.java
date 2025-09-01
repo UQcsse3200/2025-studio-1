@@ -97,6 +97,31 @@ class CombatStatsComponentTest {
     }
   }
 
+  // ---=---
+  @Nested
+  @DisplayName("Objective: addHealth adjusts via setHealth (heal and damage)")
+  class AddHealthTests {
+    @Test
+    void idempotentSet_sameValue_mayNotFireDuplicateEvent() {
+      CombatStatsComponent combat = new CombatStatsComponent(100, 20);
+      HealthSpy spy = attachWithHealthSpy(combat);
+
+      combat.addHealth(+25);
+      assertEquals(125, combat.getHealth());
+      assertEquals(125, spy.last.get());
+    }
+
+    void bigDamage_overkill_clampsToZero() {
+      CombatStatsComponent combat = new CombatStatsComponent(100, 20);
+      HealthSpy spy = attachWithHealthSpy(combat);
+
+      combat.addHealth(-200);
+      assertEquals(0, combat.getHealth());
+      assertEquals(0, spy.last.get());
+      assertTrue(combat.isDead());
+    }
+  }
+
   // Health clamps at lower bound for both max and health
   @Test
   void setHealth_clampsAndFiresUpdateHealthEvent() {
