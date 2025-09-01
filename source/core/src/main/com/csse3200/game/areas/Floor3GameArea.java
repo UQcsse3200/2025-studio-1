@@ -59,7 +59,7 @@ public class Floor3GameArea extends GameArea {
 
     // Left border split with a vertical door -> Floor 6
     float leftDoorHeight = Math.max(1f, viewHeight * 0.2f);
-    float leftDoorY = camPos.y - leftDoorHeight / 2f;
+    float leftDoorY = camPos.y - leftDoorHeight / 0.4f;
     float leftTopSegHeight = Math.max(0f, (topY) - (leftDoorY + leftDoorHeight));
     if (leftTopSegHeight > 0f) {
       Entity leftTop = ObstacleFactory.createWall(WALL_WIDTH, leftTopSegHeight);
@@ -99,7 +99,7 @@ public class Floor3GameArea extends GameArea {
       spawnEntity(bottomRight);
     }
     Entity bottomDoor = ObstacleFactory.createDoorTrigger(doorWidth, WALL_WIDTH);
-    bottomDoor.setPosition(doorX, bottomY + 0.001f);
+    bottomDoor.setPosition(doorX, bottomY + 0.1f); // Position above floor level
     bottomDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadBackToFloor2));
     spawnEntity(bottomDoor);
   }
