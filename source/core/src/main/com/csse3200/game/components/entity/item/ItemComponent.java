@@ -4,6 +4,7 @@ import com.csse3200.game.components.entity.EntityComponent;
 
 public class ItemComponent extends EntityComponent {
     private int count;
+    private String texture;
 
     /**
      * This is the constructor for the ItemComponent class, it
@@ -12,9 +13,10 @@ public class ItemComponent extends EntityComponent {
      * @param count is the present count for the item
      *
      */
-    public ItemComponent(int count) {
+    public ItemComponent(int count, String texture) {
         super();
         this.count = count;
+        this.texture = texture;
     }
 
     /**
@@ -45,6 +47,11 @@ public class ItemComponent extends EntityComponent {
             "\nPresnt count : " + count +
             "\nType :  " + getType());
     }
+
+    /**
+     * Returns the texture path of the current item
+     */
+    public String getTexture() { return this.texture; }
 }
 
 
