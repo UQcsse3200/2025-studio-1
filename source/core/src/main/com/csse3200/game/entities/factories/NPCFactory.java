@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.ai.tasks.AITaskComponent;
 import com.csse3200.game.components.CombatStatsComponent;
+import com.csse3200.game.components.enemy.LowHealthAttackBuff;
 import com.csse3200.game.components.npc.GhostAnimationController;
 import com.csse3200.game.components.TouchAttackComponent;
 import com.csse3200.game.components.tasks.*;
@@ -148,10 +149,13 @@ public class NPCFactory {
       playerInventory = target.getComponent(InventoryComponent.class);
     }
 
+    CombatStatsComponent ghostGPTStats = new CombatStatsComponent(config.health, config.baseAttack);
+
     ghostGPT
-            .addComponent(new CombatStatsComponent(config.health, config.baseAttack))
+            .addComponent(ghostGPTStats)
             .addComponent(animator)
             .addComponent(new GhostAnimationController())
+            .addComponent(new LowHealthAttackBuff(10, ghostGPTStats))
             .addComponent(new EnemyDeathRewardComponent(15, playerInventory))
             .addComponent(new DeathParticleSpawnerComponent("explosion_2"))
             .addComponent(aiComponent); // Add reward + particles
