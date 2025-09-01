@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.utils.Timer;
 import com.csse3200.game.entities.Entity;
-import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.components.player.InventoryComponent;
 import com.csse3200.game.components.player.PlayerActions;
 import com.csse3200.game.physics.BodyUserData;
@@ -19,7 +18,7 @@ public class KeycardPickupComponent extends Component {
 
     @Override
     public void create() {
-        // Delay to ensure physics setup is complete (matches your existing pattern)
+        // Delay to ensure physics setup is complete
         Timer.schedule(new Timer.Task() {
             @Override
             public void run() {
@@ -28,7 +27,6 @@ public class KeycardPickupComponent extends Component {
         }, 0.2f);
     }
 
-    // Fixture-based listener (matches PhysicsContactListener + tests)
     private void onCollisionStart(Fixture me, Fixture other) {
         if (collected) return;
 
@@ -56,9 +54,12 @@ public class KeycardPickupComponent extends Component {
         }
 
         collected = true;
-        inventory.addItem(meEntity);
-        ServiceLocator.getGlobalEvents().trigger("keycard_lvl" + level + "_collected");
+
+        // Set the player's keycard level
+
         Gdx.app.log("KeycardPickup", "Keycard level " + level + " collected by player");
+
+        // Remove the keycard from the world
         meEntity.dispose();
     }
 }
