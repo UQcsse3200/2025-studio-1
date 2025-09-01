@@ -4,9 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="78acdbef-b972-46a4-a50a-31b47a1e7ab6" name="Changes" comment="This is the second commit trial 2">
+    <list default="true" id="78acdbef-b972-46a4-a50a-31b47a1e7ab6" name="Changes" comment="This is the second commit trial 2a">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/source/core/src/test/com/csse3200/game/physics/PhysicsContactListenerTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/source/core/src/test/com/csse3200/game/physics/PhysicsContactListenerTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/core/src/main/com/csse3200/game/components/KeycardGateComponent.java" beforeDir="false" afterPath="$PROJECT_DIR$/source/core/src/main/com/csse3200/game/components/KeycardGateComponent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/core/src/main/com/csse3200/game/components/KeycardPickupComponent.java" beforeDir="false" afterPath="$PROJECT_DIR$/source/core/src/main/com/csse3200/game/components/KeycardPickupComponent.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -129,12 +130,14 @@
   </component>
   <component name="RunAnythingCache">
     <option name="myCommands">
-      <command value="gradle test" />
       <command value="gradle run" />
+      <command value="gradle test" />
+      <command value="gradle run --scan" />
       <command value="gradle build" />
+      <command value="gradle build --scan" />
     </option>
   </component>
-  <component name="RunManager" selected="Gradle.source [run]">
+  <component name="RunManager" selected="Gradle.source [build]">
     <configuration name="source [build]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
@@ -244,7 +247,31 @@
       <option name="project" value="LOCAL" />
       <updated>1756707705520</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="This is the second commit trial 2a">
+      <option name="closed" value="true" />
+      <created>1756707974244</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1756707974244</updated>
+    </task>
+    <task id="LOCAL-00003" summary="This is the second commit trial 2a">
+      <option name="closed" value="true" />
+      <created>1756708120241</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1756708120241</updated>
+    </task>
+    <task id="LOCAL-00004" summary="This is the second commit trial 2a">
+      <option name="closed" value="true" />
+      <created>1756708237185</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1756708237185</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -252,7 +279,8 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="This is the second commit trial 2" />
-    <option name="LAST_COMMIT_MESSAGE" value="This is the second commit trial 2" />
+    <MESSAGE value="This is the second commit trial 2a" />
+    <option name="LAST_COMMIT_MESSAGE" value="This is the second commit trial 2a" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

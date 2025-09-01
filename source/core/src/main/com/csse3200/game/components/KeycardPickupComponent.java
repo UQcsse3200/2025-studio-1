@@ -1,11 +1,13 @@
 package com.csse3200.game.components;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.utils.Timer;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.components.player.InventoryComponent;
 import com.csse3200.game.components.player.PlayerActions;
+import com.csse3200.game.physics.BodyUserData;
 
 public class KeycardPickupComponent extends Component {
     private final int level;
@@ -17,28 +19,46 @@ public class KeycardPickupComponent extends Component {
 
     @Override
     public void create() {
+        // Delay to ensure physics setup is complete (matches your existing pattern)
         Timer.schedule(new Timer.Task() {
             @Override
             public void run() {
                 entity.getEvents().addListener("collisionStart", KeycardPickupComponent.this::onCollisionStart);
             }
-        }, 0.2f); // delay by 0.2 seconds
+        }, 0.2f);
     }
-    private void onCollisionStart(Entity me, Entity other) {
-        if (collected || other == entity) return;
 
-        PlayerActions player = other.getComponent(PlayerActions.class);
-        InventoryComponent inventory = other.getComponent(InventoryComponent.class);
+    // Fixture-based listener (matches PhysicsContactListener + tests)
+    private void onCollisionStart(Fixture me, Fixture other) {
+        if (collected) return;
 
-        if (player == null || inventory == null) {
-            Gdx.app.error("KeycardPickup", "Collision entity is not a valid player");
+        Object meUd = me.getBody().getUserData();
+        Object otherUd = other.getBody().getUserData();
+        if (!(meUd instanceof BodyUserData) || !(otherUd instanceof BodyUserData)) {
+            Gdx.app.error("KeycardPickup", "Missing BodyUserData on collision bodies");
+            return;
+        }
+
+        Entity meEntity = ((BodyUserData) meUd).entity;
+        Entity otherEntity = ((BodyUserData) otherUd).entity;
+
+        if (meEntity == null || otherEntity == null) return;
+        if (otherEntity == meEntity) return; // self-collision guard
+        if (meEntity != entity) return;      // ensure 'me' is the keycard entity
+
+        PlayerActions player = otherEntity.getComponent(PlayerActions.class);
+        if (player == null) return;
+
+        InventoryComponent inventory = otherEntity.getComponent(InventoryComponent.class);
+        if (inventory == null) {
+            Gdx.app.error("KeycardPickup", "Player missing InventoryComponent, entityId=" + otherEntity.getId());
             return;
         }
 
         collected = true;
-        inventory.addItem(entity);
+        inventory.addItem(meEntity);
         ServiceLocator.getGlobalEvents().trigger("keycard_lvl" + level + "_collected");
         Gdx.app.log("KeycardPickup", "Keycard level " + level + " collected by player");
-        entity.dispose();
+        meEntity.dispose();
     }
 }
