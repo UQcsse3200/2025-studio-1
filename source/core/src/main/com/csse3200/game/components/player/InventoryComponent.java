@@ -20,6 +20,7 @@ public class InventoryComponent extends Component {
     private final int minCapacity = 0;
     private ArrayList<Entity> items = new ArrayList<Entity>(maxCapacity);
     private int processor;
+    private int Level;
 
     public InventoryComponent(int processor) {
         setProcessor(processor);
@@ -152,5 +153,13 @@ public class InventoryComponent extends Component {
      */
     public void addGold(int processor) {
         setProcessor(this.processor + processor);
+    }
+
+    public void setKeycardLevel(int keycardLevel) {
+        this.Level = keycardLevel;
+    }
+
+    public int getKeycardLevel() {
+        return Level;
     }
 }
