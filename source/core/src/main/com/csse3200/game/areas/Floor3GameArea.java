@@ -46,22 +46,11 @@ public class Floor3GameArea extends GameArea {
     spawnPlayer();
     spawnFloor();
 
-    Entity ui = new Entity();
-    ui.addComponent(new com.csse3200.game.components.gamearea.FloorLabelDisplay("Floor 3"));
-    spawnEntity(ui);
-    com.csse3200.game.areas.KeycardSpawnerSystem.spawnKeycards(this);
-
-    // Add gate to next floor (if applicable)
-    Entity gateToNextFloor = new Entity()
-            .addComponent(new ColliderComponent())
-            .addComponent(new KeycardGateComponent(1)); // Replace X with required level
-    float x1 = MathUtils.random(4f, 18f);
-    float y1 = MathUtils.random(4f, 18f);
-    Vector2 keycardPos = new Vector2(x1, y1);
-    Entity keycard = KeycardFactory.createKeycard(1); // Level 1 keycard
-    keycard.setPosition(new Vector2(x1, y1));
+    float keycardX = 14f;
+    float keycardY = 12f;
+    Entity keycard = KeycardFactory.createKeycard(3);
+    keycard.setPosition(new Vector2(keycardX, keycardY));
     spawnEntity(keycard);
-    spawnEntity(gateToNextFloor);
 
   }
 
@@ -92,7 +81,7 @@ public class Floor3GameArea extends GameArea {
     }
     Entity leftDoor = ObstacleFactory.createDoorTrigger(WALL_WIDTH, leftDoorHeight);
     leftDoor.setPosition(leftX + 0.001f, leftDoorY);
-    leftDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadFloor6));
+    leftDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadFloor6,1));
     spawnEntity(leftDoor);
     Entity right = ObstacleFactory.createWall(WALL_WIDTH, viewHeight);
     right.setPosition(rightX - WALL_WIDTH, bottomY);
@@ -118,7 +107,7 @@ public class Floor3GameArea extends GameArea {
     }
     Entity bottomDoor = ObstacleFactory.createDoorTrigger(doorWidth, WALL_WIDTH);
     bottomDoor.setPosition(doorX, bottomY + 0.001f);
-    bottomDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadBackToFloor2));
+    bottomDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadBackToFloor2,1));
     spawnEntity(bottomDoor);
   }
 
