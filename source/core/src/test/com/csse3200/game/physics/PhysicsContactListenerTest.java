@@ -20,8 +20,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
+@SuppressWarnings("unchecked")
 @ExtendWith(GameExtension.class)
 class PhysicsContactListenerTest {
+
   @BeforeEach
   void beforeEach() {
     // Set up services and time
@@ -38,21 +40,19 @@ class PhysicsContactListenerTest {
     Entity entity2 = createPhysicsEntity();
     entity1.setPosition(0f, 0f);
     entity2.setPosition(0f, 0f);
-    Fixture fixture1 = entity1.getComponent(ColliderComponent.class).getFixture();
-    Fixture fixture2 = entity2.getComponent(ColliderComponent.class).getFixture();
 
-    // Register collision callbacks
-    EventListener2<Fixture, Fixture> callback1 = mock(EventListener2.class);
-    EventListener2<Fixture, Fixture> callback2 = mock(EventListener2.class);
+    // Register collision callbacks (Entity-based now)
+    EventListener2<Entity, Entity> callback1 = (EventListener2<Entity, Entity>) mock(EventListener2.class);
+    EventListener2<Entity, Entity> callback2 = (EventListener2<Entity, Entity>) mock(EventListener2.class);
     entity1.getEvents().addListener("collisionStart", callback1);
     entity2.getEvents().addListener("collisionStart", callback2);
 
     // Trigger collisions
     ServiceLocator.getPhysicsService().getPhysics().update();
 
-    // Verify callbacks invoked correctly
-    verify(callback1).handle(fixture1, fixture2);
-    verify(callback2).handle(fixture2, fixture1);
+    // Verify callbacks invoked correctly with Entities
+    verify(callback1).handle(entity1, entity2);
+    verify(callback2).handle(entity2, entity1);
   }
 
   @Test
@@ -62,30 +62,39 @@ class PhysicsContactListenerTest {
     Entity entity2 = createPhysicsEntity();
     entity1.setPosition(0f, 0f);
     entity2.setPosition(0f, 0f);
-    Fixture fixture1 = entity1.getComponent(ColliderComponent.class).getFixture();
-    Fixture fixture2 = entity2.getComponent(ColliderComponent.class).getFixture();
 
-    // Register end collision callbacks
-    EventListener2<Fixture, Fixture> endCallback1 = mock(EventListener2.class);
-    EventListener2<Fixture, Fixture> endCallback2 = mock(EventListener2.class);
+    // Register end collision callbacks (Entity-based now)
+    EventListener2<Entity, Entity> endCallback1 = (EventListener2<Entity, Entity>) mock(EventListener2.class);
+    EventListener2<Entity, Entity> endCallback2 = (EventListener2<Entity, Entity>) mock(EventListener2.class);
     entity1.getEvents().addListener("collisionEnd", endCallback1);
     entity2.getEvents().addListener("collisionEnd", endCallback2);
 
+    // First update: still colliding, so no end events
     ServiceLocator.getPhysicsService().getPhysics().update();
     verifyNoInteractions(endCallback1);
     verifyNoInteractions(endCallback2);
 
+    // Move entities apart to end collision
     entity1.setPosition(10f, 10f);
     entity2.setPosition(-10f, -10f);
     ServiceLocator.getPhysicsService().getPhysics().update();
-    verify(endCallback1).handle(fixture1, fixture2);
-    verify(endCallback2).handle(fixture2, fixture1);
+
+    // Verify end collision callbacks invoked with Entities
+    verify(endCallback1).handle(entity1, entity2);
+    verify(endCallback2).handle(entity2, entity1);
   }
 
   Entity createPhysicsEntity() {
     Entity entity =
-        new Entity().addComponent(new PhysicsComponent()).addComponent(new ColliderComponent());
+            new Entity().addComponent(new PhysicsComponent()).addComponent(new ColliderComponent());
     entity.create();
+
+    // Ensure BodyUserData is set so PhysicsContactListener can find the Entity
+    PhysicsComponent physics = entity.getComponent(PhysicsComponent.class);
+    BodyUserData userData = new BodyUserData();
+    userData.entity = entity;
+    physics.getBody().setUserData(userData);
+
     return entity;
   }
 
