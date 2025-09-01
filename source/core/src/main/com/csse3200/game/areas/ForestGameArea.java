@@ -65,7 +65,7 @@ public class ForestGameArea extends GameArea {
           "foreg_sprites/office/Crate.png",
           "foreg_sprites/office/LargeShelf.png",
           "foreg_sprites/office/MidShelf.png",
-          "foreg_sprites/office/LongCeilingLight.png",
+          "foreg_sprites/office/LongCeilingLight2.png",
           "foreg_sprites/office/OfficeChair.png",
           "foreg_sprites/office/officeDesk4.png",
 
@@ -212,7 +212,7 @@ public class ForestGameArea extends GameArea {
       spawnEntityAt(platform, platformPos, true, false);
     }
 
-    GridPoint2 lightPos = new GridPoint2(9, 10);
+    GridPoint2 lightPos = new GridPoint2(11, 8);
     Entity longCeilingLight = ObstacleFactory.createLongCeilingLight();
     spawnEntityAt(longCeilingLight, lightPos, true, false);
 
@@ -259,7 +259,7 @@ public class ForestGameArea extends GameArea {
   }
 
   private void spawnCrates() {
-    GridPoint2 cratePos = new GridPoint2(15, 6);
+    GridPoint2 cratePos = new GridPoint2(17, 6);
     Entity crate = ObstacleFactory.createCrate();
     spawnEntityAt(crate, cratePos, true, false);
   }
@@ -280,13 +280,13 @@ public class ForestGameArea extends GameArea {
 
 
   private void spawnStorageCrates() {
-    // Green crate - left side of energy pod
+    // Green crate
     GridPoint2 greenCratePos = new GridPoint2(5, 5);
     Entity greenCrate = ObstacleFactory.createStorageCrateGreen();
     spawnEntityAt(greenCrate, greenCratePos, true, false);
     greenCrate.setPosition(greenCrate.getPosition().x, greenCrate.getPosition().y + 0.25f);
-    // Dark crate - also left side, slightly offset
-    GridPoint2 darkCratePos = new GridPoint2(25, 5);
+    // Dark crate
+    GridPoint2 darkCratePos = new GridPoint2(26, 5);
     Entity darkCrate = ObstacleFactory.createStorageCrateDark();
     spawnEntityAt(darkCrate, darkCratePos, true, false);
     darkCrate.setPosition(darkCrate.getPosition().x, darkCrate.getPosition().y + 0.25f);
