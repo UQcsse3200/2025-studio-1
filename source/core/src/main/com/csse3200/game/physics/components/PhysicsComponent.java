@@ -1,6 +1,5 @@
 package com.csse3200.game.physics.components;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -67,11 +66,7 @@ public class PhysicsComponent extends Component {
 
   @Override
   public void create() {
-    PhysicsComponent physics = entity.getComponent(PhysicsComponent.class);
-    if (physics == null) {
-      Gdx.app.error("ColliderComponent", "Requires PhysicsComponent, but none found on " + entity);
-      return; // Prevents Box2D crash
-    }
+
     body.setTransform(entity.getPosition(), 0f);
     body.setActive(true);
 
@@ -91,6 +86,11 @@ public class PhysicsComponent extends Component {
     Vector2 bodyPos = body.getPosition();
     // Don't notify position changes due to physics
     entity.setPosition(bodyPos, false);
+  }
+
+  @Override
+  public void dispose() {
+    physics.destroyBody(body);
   }
 
   @Override
