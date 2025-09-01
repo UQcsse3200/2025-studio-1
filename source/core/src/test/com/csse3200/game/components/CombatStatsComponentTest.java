@@ -67,4 +67,10 @@ class CombatStatsComponentTest {
     combat.hit(attacker);
     assertEquals(85, combat.getHealth());
   }
+
+  @Test
+  void initialMaxHealthEqualsStartingHealth() {
+    CombatStatsComponent combat = new CombatStatsComponent(100, 20);
+    assertEquals(100, combat.getMaxHealth());
+  }
 }

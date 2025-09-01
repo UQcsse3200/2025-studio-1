@@ -11,10 +11,22 @@ import org.slf4j.LoggerFactory;
 public class CombatStatsComponent extends Component {
 
   private static final Logger logger = LoggerFactory.getLogger(CombatStatsComponent.class);
+
+  /** Current health points (HP). Never negative. */
   private int health;
+
+  /** Maximum health points. Caller-controlled; not enforced as an upper bound on {@link #setHealth(int)}. */
   private int maxHealth;
+
+  /** Base attack damage used when this component attacks another. Non-negative */
   private int baseAttack;
 
+  /**
+   * Construct a combat Stats Component (Health + Attack System)
+   *
+   * @param health     initial health (values {@code < 0} are clamped to {@code 0})
+   * @param baseAttack base attack damage (must be {@code >= 0})
+   */
   public CombatStatsComponent(int health, int baseAttack) {
     setHealth(health);
     setBaseAttack(baseAttack);
@@ -35,8 +47,7 @@ public class CombatStatsComponent extends Component {
    *
    * @return entity's health
    */
-  public int getHealth() {
-    return this.health;
+  public int getHealth() {return this.health;
   }
 
   /**
@@ -71,7 +82,7 @@ public class CombatStatsComponent extends Component {
    */
   public void setMaxHealth(int maxHealth) {
     if (maxHealth >= 0) {
-      this.maxHealth = health;
+      this.maxHealth = maxHealth;
     } else {
       this.maxHealth = 0;
     }
@@ -81,10 +92,12 @@ public class CombatStatsComponent extends Component {
   }
 
   /**
-   * Return entity's maximum health
+   * Sets the entity's maximum health
+   *
+   * @return the entity's maximum health (never negative)
    */
   public int getMaxHealth() {
-     return maxHealth;
+     return this.maxHealth;
   }
 
   /**
@@ -110,8 +123,13 @@ public class CombatStatsComponent extends Component {
   }
 
   /**
-   *Apply damage to this entity from another attacking entity.
-   *@param attacker The attacker whose baseAttack value will be used to deal damage to this entity.
+   * Apply damage to this entity from another attacking entity.
+   *
+   * <p>If {@code attacker} is {@code null}, an error is logged and the call is a no-op.</p>
+   * <p>If this entity is already dead or the attacker's base attack is {@code <= 0}, no damage is applied.</p>
+   *
+   * @param attacker the attacking entity providing {@linkplain #getBaseAttack() base attack} damage; may be {@code null}
+   * @see #applyDamage(int)
    */
   public void hit(CombatStatsComponent attacker) {
     if (attacker == null) {
@@ -125,9 +143,12 @@ public class CombatStatsComponent extends Component {
   /**
    * Apply damage to this entity.
    *
-   * @param damage Damage amount (must >= 0)
+   * <p>Damage {@code <= 0} is ignored. If the entity is dead, the call is a no-op.</p>
+   *
+   * @param damage damage amount (must be {@code >= 0} to have any effect)
+   * @implSpec Implementations must not reduce health below {@code 0}.
+   * @see #setHealth(int)
    */
-
   private void applyDamage(int damage) {
     if (damage <= 0 || isDead()) {
         return;
@@ -137,14 +158,18 @@ public class CombatStatsComponent extends Component {
 
   /**
    * Deal direct damage as an integer.
+   *
    * <p>
-   * This is intended for non-entity sources of damage, such as traps,
-   * projectiles, or weapons. At this stage, the weapon's output power
-   * (damage) is represented as a simple {@code int}. In future, this
-   * can be extended to use a WeaponStatsComponent or DamageInfo object
-   * for more complex calculations (crit, resistances, etc.).
+   *  Intended for non-entity sources (e.g., traps, projectiles, environmental hazards).
+   *  This delegates to {@link #applyDamage(int)} and therefore follows the same validation and dead-entity behavior.
+   * </p>
+   *
+   * @param damage raw damage amount (non-negative to take effect)
+   * projectiles, or weapons.
    */
-
+  // Note: At this stage, the weapon's output power (damage) is represented as a simple {@code int}.
+  //  In future, this can be extended to use a {@code WeaponStatsComponent} or {@code DamageInfo}
+  //  for features like critical hits or resistances.
   public void hit(int damage) {
     applyDamage(damage);
   }
