@@ -8,9 +8,8 @@ import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.*;
 import com.csse3200.game.files.FileLoader;
 import com.csse3200.game.physics.PhysicsLayer;
-import com.csse3200.game.physics.PhysicsUtils;
 import com.csse3200.game.physics.components.*;
-import com.csse3200.game.rendering.SpriteRenderComponent;
+import com.csse3200.game.rendering.TextureRenderWithRotationComponent;
 import com.csse3200.game.rendering.TextureRenderComponent;
 
 
@@ -53,11 +52,16 @@ public class ProjectileFactory {
         return pistolBullet;
     }
 
+    /**
+     * Creates a laser shot entity
+     * @param direction The direction to fire at
+     * @return The laser entity
+     */
     public static Entity createLaserShot(Vector2 direction) {
         Entity laser = createBaseProjectile();
         LaserConfig config = configs.laser;
         laser
-                .addComponent(new SpriteRenderComponent("images/laser_shot.png"))
+                .addComponent(new TextureRenderWithRotationComponent("images/laser_shot.png"))
                 .addComponent(new CombatStatsComponent(config.health, config.base_attack))
                 .addComponent(new ColliderComponent())
                 .addComponent(new HitboxComponent().setLayer(PhysicsLayer.ENEMY_PROJECTILE))
@@ -69,8 +73,8 @@ public class ProjectileFactory {
 
         float angleToFire = direction.angleDeg() + 90;
 
-        laser.getComponent(SpriteRenderComponent.class).setRotation(angleToFire);
-        laser.getComponent(SpriteRenderComponent.class).scaleEntity();
+        laser.getComponent(TextureRenderWithRotationComponent.class).setRotation(angleToFire);
+        laser.getComponent(TextureRenderWithRotationComponent.class).scaleEntity();
         laser.scaleWidth(0.5f);
         laser.scaleHeight(0.5f);
 
