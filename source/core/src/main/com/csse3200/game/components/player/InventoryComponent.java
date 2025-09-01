@@ -29,13 +29,13 @@ public class InventoryComponent extends Component {
         }
     }
 
-    /**
-     * Returns a copy of the players current inventory.
-     * @return An ArrayList<Entity> containing the players
-     */
-    public ArrayList<Entity> getInventory() {
-        return new ArrayList<Entity>(this.items);
-    }
+  /**
+   * Returns a copy of the players current inventory.
+   * @return An ArrayList containing the players
+   */
+  public ArrayList<Entity> getInventory() {
+    return new ArrayList<Entity>(this.items);
+  }
 
     /**
      * Returns the number of items currently in the inventory
@@ -67,25 +67,25 @@ public class InventoryComponent extends Component {
         return this.setItem(this.inventoryCount, item);
     }
 
-    /**
-     * sets the provided item to the inventory in positions 0 to 4 to be the
-     * given item.
-     * @param index The index of the inventory 0 to 4
-     * @param item An item to store in the players inventory
-     * @return true if the item was successfully set, false otherwise
-     */
-    public Boolean setItem(int index, Entity item) {
-        if (this.inventoryCount >= this.maxCapacity) {
-            return false;
-        }
-        if (this.get(index) == null) { // if there is something there
-            this.items.set(index, item);
-            this.inventoryCount++;
-        } else { // There is something already there
-            return false;
-        }
-        return true;
+  /**
+   * sets the provided item to the inventory in positions 0 to 4 to be the
+   * given item.
+   * @param index The index of the inventory 0 to 4
+   * @param item An item to store in the players inventory
+   * @return true if the item was successfully set, false otherwise
+   */
+  public Boolean setItem(int index, Entity item) {
+    if (this.inventoryCount >= this.maxCapacity) {
+      return false;
     }
+    if (this.get(index) == null) { // if there is something there
+      this.items.set(index, item);
+      this.inventoryCount++;
+    } else { // There is something already there
+      return false;
+    }
+    return true;
+  }
 
     /**
      * Removes the item at the given index (must be between 0 and 4) and replaces it
