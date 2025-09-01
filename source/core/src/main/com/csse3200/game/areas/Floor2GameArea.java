@@ -1,5 +1,6 @@
 package com.csse3200.game.areas;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -9,6 +10,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.CameraComponent;
+import com.csse3200.game.components.InventoryComponent;
 import com.csse3200.game.components.KeycardGateComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.factories.KeycardFactory;
@@ -52,8 +54,6 @@ public class Floor2GameArea extends GameArea {
     keycard.setPosition(new Vector2(keycardX, keycardY));
     spawnEntity(keycard);
   }
-
-
 
   private void spawnTerrain() {
     // Use a different terrain/tileset as a base
@@ -107,7 +107,7 @@ public class Floor2GameArea extends GameArea {
     }
     Entity topDoor = ObstacleFactory.createDoorTrigger(topDoorWidth, WALL_WIDTH);
     topDoor.setPosition(topDoorX, topY - WALL_WIDTH + 0.001f);
-    topDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadRoom3,1));
+    topDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadRoom3, 1));
     spawnEntity(topDoor);
 
     // Bottom border split with a door in the middle -> Back to Floor 1
@@ -131,8 +131,7 @@ public class Floor2GameArea extends GameArea {
 
     Entity bottomDoor = ObstacleFactory.createDoorTrigger(doorWidth, doorHeight);
     bottomDoor.setPosition(doorX, bottomY + 0.001f);
-    // Door returns to floor 1
-    bottomDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadPreviousLevel,0));
+    bottomDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadPreviousLevel, 0));
     spawnEntity(bottomDoor);
 
     // Left border split with a vertical door -> Room 4
@@ -152,7 +151,7 @@ public class Floor2GameArea extends GameArea {
     }
     Entity leftDoor = ObstacleFactory.createDoorTrigger(WALL_WIDTH, leftDoorHeight);
     leftDoor.setPosition(leftX + 0.001f, leftDoorY);
-    leftDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadRoom4,1));
+    leftDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadRoom4, 1));
     spawnEntity(leftDoor);
 
     // Right border split with a vertical door -> Room 5
@@ -172,29 +171,34 @@ public class Floor2GameArea extends GameArea {
     }
     Entity rightDoor = ObstacleFactory.createDoorTrigger(WALL_WIDTH, rightDoorHeight);
     rightDoor.setPosition(rightX - WALL_WIDTH - 0.001f, rightDoorY);
-    rightDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadRoom5,1));
+    rightDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadRoom5, 1));
     spawnEntity(rightDoor);
   }
+
+
 
   private void spawnPlayer() {
     Entity player = PlayerFactory.createPlayerWithArrowKeys();
     spawnEntityAt(player, PLAYER_SPAWN, true, true);
   }
 
-  private void loadPreviousLevel() {
+  public void loadPreviousLevel() {
     for (Entity entity : areaEntities) {
       entity.dispose();
     }
     areaEntities.clear();
-    // Ensure ghost atlases are loaded before recreating Floor 1 to avoid missing textures
-    com.csse3200.game.services.ResourceService rs = ServiceLocator.getResourceService();
+
+    // Ensure ghost atlases are loaded before recreating Floor 1
+    ResourceService rs = ServiceLocator.getResourceService();
     if (!rs.containsAsset("images/ghost.atlas", com.badlogic.gdx.graphics.g2d.TextureAtlas.class)) {
       rs.loadTextureAtlases(new String[]{"images/ghost.atlas", "images/ghostKing.atlas"});
       rs.loadAll();
     }
+
     ForestGameArea floor1 = new ForestGameArea(terrainFactory, cameraComponent);
     floor1.create();
   }
+
 
 
   private void loadRoom3() {

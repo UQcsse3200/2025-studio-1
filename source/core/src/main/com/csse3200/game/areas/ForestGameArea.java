@@ -8,6 +8,7 @@ import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.components.DoorComponent;
+import com.csse3200.game.components.InventoryComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.factories.KeycardFactory;
 import com.csse3200.game.entities.factories.NPCFactory;
@@ -116,6 +117,7 @@ public class ForestGameArea extends GameArea {
     keycard.setPosition(new Vector2(keycardX, keycardY));
     spawnEntity(keycard);
 
+
   }
 
   private void displayUI() {
@@ -186,7 +188,6 @@ public class ForestGameArea extends GameArea {
       spawnEntity(rightDoor);
     }
   }
-
 
   private void loadNextLevel() {
     // Dispose current floor and switch to Floor2GameArea
