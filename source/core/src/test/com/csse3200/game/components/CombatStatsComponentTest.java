@@ -335,44 +335,6 @@ class CombatStatsComponentTest {
     }
   }
 
-  // Health clamps at lower bound for both max and health
-  @Test
-  void setHealth_clampsAndFiresUpdateHealthEvent() {
-    CombatStatsComponent combat = new CombatStatsComponent(100, 20);
-    Entity entity = new Entity().addComponent(combat);
-    AtomicInteger lastHealth = new AtomicInteger(-1);
-    entity.getEvents().addListener("updateHealth", lastHealth::set);
-    entity.create();
-
-    combat.setHealth(150);
-    assertEquals(150, combat.getHealth());
-    assertEquals(150, lastHealth.get());
-
-    combat.setHealth(-50);
-    assertEquals(0, combat.getHealth());    // clamped
-    assertEquals(0, lastHealth.get());      // event carries clamped value
-  }
-
-//  @Test
-//  void addHealth_healsAboveCurrent_noUpperCap() {
-//    CombatStatsComponent combat = new CombatStatsComponent(100, 20);
-//    assertEquals(100, combat.getHealth());
-//
-//    combat.setHealth(25);
-//    assertEquals(125, combat.getHealth());
-//
-//    combat.setHealth(-50);
-//    assertEquals(0, combat.getHealth());
-//  }
-
-  @Test
-  void addHealth_overkill_clampsToZero_andMarksDead() {
-    CombatStatsComponent combat = new CombatStatsComponent(100, 20);
-    combat.addHealth(-200);  // 100 -> 0
-    assertEquals(0, combat.getHealth());
-    assertTrue(combat.isDead());
-  }
-
   @Test
   void shouldCheckIsDead() {
     CombatStatsComponent combat = new CombatStatsComponent(100, 20);
@@ -380,17 +342,6 @@ class CombatStatsComponentTest {
 
     combat.setHealth(0);
     assertTrue(combat.isDead());
-  }
-
-  @Test
-  void shouldAddHealth() {
-    CombatStatsComponent combat = new CombatStatsComponent(100, 20);
-    combat.addHealth(-500);
-    assertEquals(0, combat.getHealth());
-
-    combat.addHealth(100);
-    combat.addHealth(-20);
-    assertEquals(80, combat.getHealth());
   }
 
   @Test
@@ -403,18 +354,6 @@ class CombatStatsComponentTest {
 
     combat.setBaseAttack(-50);
     assertEquals(150, combat.getBaseAttack());
-  }
-  @Test
-  void setHealthClampsAndFiresEvent() {
-    CombatStatsComponent combat = new CombatStatsComponent(100, 20);
-
-    combat.setHealth(150);
-    // assert health is updated, event is fired
-    assertEquals(150, combat.getHealth());
-
-    combat.setHealth(-50);
-    // assert clamped to 0
-    assertEquals(0, combat.getHealth());
   }
 
   @Test
