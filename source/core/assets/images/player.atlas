@@ -129,6 +129,13 @@ right_jump
   orig: 64, 64
   offset: 0, 0
   index: 2
+right_fall
+  rotate: false
+  xy: 448,128
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: 0
 left_jump
   rotate: false
   xy: 320,192
@@ -150,6 +157,13 @@ left_jump
   orig: 64, 64
   offset: 0, 0
   index: 2
+left_fall
+  rotate: false
+  xy: 448,192
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: 0
 right_crouch
   rotate: false
   xy: 128,0
@@ -164,6 +178,13 @@ right_crouch
   orig:64,64
   offset: 0,0
   index: 1
+right_stand_crouch
+  rotate: false
+  xy: 128,0
+  size:64,64
+  orig:64,64
+  offset: 0,0
+  index: 0
 left_crouch
   rotate: false
   xy: 128,64
@@ -178,6 +199,13 @@ left_crouch
   orig:64,64
   offset: 0,0
   index: 1
+left_stand_crouch
+  rotate: false
+  xy: 128,64
+  size:64,64
+  orig:64,64
+  offset: 0,0
+  index: 0
 right_walk
   rotate: false
   xy: 0, 384

@@ -81,6 +81,10 @@ public class PlayerFactory {
     animator.addAnimation("left_walk", 0.1f, Animation.PlayMode.LOOP);
     animator.addAnimation("right_crouch", 0.2f, Animation.PlayMode.LOOP);
     animator.addAnimation("left_crouch", 0.2f, Animation.PlayMode.LOOP);
+    animator.addAnimation("right_stand_crouch", 0.1f, Animation.PlayMode.NORMAL);
+    animator.addAnimation("left_stand_crouch", 0.1f, Animation.PlayMode.NORMAL);
+    animator.addAnimation("right_fall", 0.1f, Animation.PlayMode.NORMAL);
+    animator.addAnimation("left_fall", 0.1f, Animation.PlayMode.NORMAL);
     animator.startAnimation("right_stand");
   }
 
