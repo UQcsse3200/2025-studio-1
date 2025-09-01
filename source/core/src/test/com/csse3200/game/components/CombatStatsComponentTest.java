@@ -6,6 +6,7 @@ import com.csse3200.game.entities.Entity;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
@@ -34,14 +35,25 @@ class CombatStatsComponentTest {
     return spy;
   }
 
-  // verify initialisation
-  @Test
-  void initialisation_defaultsAreSane() {
-    CombatStatsComponent combat = new CombatStatsComponent(100, 20);
-    assertEquals(100, combat.getHealth());
-    assertEquals(20, combat.getBaseAttack());
-    assertEquals(100, combat.getMaxHealth());
-    assertFalse(combat.isDead());
+  // ---=---
+  @Nested
+  @DisplayName("Objective: Verify initialisation")
+  class InitTests {
+    @Test
+    void healthAttackMax_areInitialised() {
+      CombatStatsComponent combat = new CombatStatsComponent(100, 20);
+      assertEquals(100, combat.getHealth());
+      assertEquals(20, combat.getBaseAttack());
+      assertEquals(100, combat.getMaxHealth());
+      assertFalse(combat.isDead());
+    }
+
+    @Test
+    void zeroHealth_isDeadImmediately() {
+      CombatStatsComponent combat = new CombatStatsComponent(0, 5);
+      assertEquals(0, combat.getHealth());
+      assertTrue(combat.isDead());
+    }
   }
 
   // Health clamps at lower bound for both max and health
