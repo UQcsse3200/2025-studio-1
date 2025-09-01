@@ -16,10 +16,6 @@ public class ProjectileLauncherComponent extends Component {
     private static ForestGameArea forestGameArea;
     private Entity target;
 
-    private static final String[] textures = new String[] {
-            "images/laser_shot.png"
-    };
-
     // area: The area it is living in
     public ProjectileLauncherComponent(ForestGameArea area, Entity target)
     {
@@ -30,7 +26,9 @@ public class ProjectileLauncherComponent extends Component {
     public void FireLaserProjectile(Vector2 directionToFire)
     {
         Entity laser = forestGameArea.spawnLaserProjectile(directionToFire);
-        laser.setPosition(getEntity().getPosition());
+        Vector2 laserOffset = new Vector2(0.2f, 0.8f);
+        Vector2 pos = new Vector2(getEntity().getPosition().x + laserOffset.x, getEntity().getPosition().y + laserOffset.y);
+        laser.setPosition(pos);
     }
 
     @Override
