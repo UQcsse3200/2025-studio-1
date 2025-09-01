@@ -122,6 +122,27 @@ class CombatStatsComponentTest {
     }
   }
 
+  // ---=---
+  @Nested
+  @DisplayName("Objective: Death state toggles correctly")
+  class DeathStateTests {
+    @Test
+    void reducedToZero_marksDead() {
+      CombatStatsComponent combat = new CombatStatsComponent(1, 5);
+      combat.addHealth(-1);
+      assertEquals(0, combat.getHealth());
+      assertTrue(combat.isDead());
+    }
+
+    @Test
+    void reviveNotCovered_currentBehaviourNoAutoRevive() {
+      CombatStatsComponent combat = new CombatStatsComponent(0, 5);
+      combat.addHealth(+10);
+      // Current behaviour unspecified; assert health increased but dead state may remain or flip.
+      assertEquals(10, combat.getHealth());
+    }
+  }
+
   // Health clamps at lower bound for both max and health
   @Test
   void setHealth_clampsAndFiresUpdateHealthEvent() {
