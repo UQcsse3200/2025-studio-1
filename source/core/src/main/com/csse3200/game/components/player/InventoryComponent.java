@@ -96,7 +96,12 @@ public class InventoryComponent extends Component {
    * @return true if successful, false otherwise
    */
   public Boolean addItem(Entity item) {
-    return this.setItem(this.inventoryCount, item);
+    for (int idx = 0; idx < maxCapacity; idx++) {
+      if (this.get(idx) == null) {
+        return this.setItem(idx, item);
+      }
+    }
+    return false;
   }
 
   /**
