@@ -1,6 +1,7 @@
 package com.csse3200.game.components.player;
 
 import com.csse3200.game.components.Component;
+import com.csse3200.game.components.entity.item.ItemComponent;
 import com.csse3200.game.entities.Entity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -119,11 +120,9 @@ public class InventoryComponent extends Component {
     if (this.get(index) == null) { // if there is something there
       this.items.set(index, item);
 
-      // TODO: This will need to be replaced with the actual item.getTexture()
-      //  or whatever other method implemented to get the item texture
-      String itemTex = "images/mud.png";
-      this.itemTexs.set(index, "images/mud.png");
-      entity.getEvents().trigger("add item", index, "images/mud.png");
+      String itemTex = item.getComponent(ItemComponent.class).getTexture();
+      this.itemTexs.set(index, itemTex);
+      entity.getEvents().trigger("add item", index, itemTex);
 
       this.inventoryCount++;
     } else // There is something already there

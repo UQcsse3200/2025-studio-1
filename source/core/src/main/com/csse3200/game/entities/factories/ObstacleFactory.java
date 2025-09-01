@@ -39,13 +39,13 @@ public class ObstacleFactory {
 
   // This function was used for testing the itemPickUp functionality, and might be useful later for further testing
 //  public static Entity createTree() {
+//    String texture = "images/heart.png";
 //    Entity tree = new Entity()
-//            .addComponent(new TextureRenderComponent("images/mud.png"))
+//            .addComponent(new TextureRenderComponent(texture))
 //            .addComponent(new PhysicsComponent())
 //            .addComponent(new ColliderComponent().setLayer(PhysicsLayer.ITEM))
 //            .addComponent(new HitboxComponent())
-//            .addComponent(new ItemComponent(1));
-//
+//            .addComponent(new ItemComponent(1, texture));
 //
 //    tree.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
 //    tree.getComponent(TextureRenderComponent.class).scaleEntity();
