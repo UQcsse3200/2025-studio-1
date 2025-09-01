@@ -20,7 +20,6 @@ public class InventoryComponent extends Component {
     private final int minCapacity = 0;
     private ArrayList<Entity> items = new ArrayList<Entity>(maxCapacity);
     private int processor;
-    private int Level;
 
     public InventoryComponent(int processor) {
         setProcessor(processor);
@@ -142,6 +141,16 @@ public class InventoryComponent extends Component {
      * Sets the player's processor's. Processor's has a minimum bound of 0.
      * @param processor processor
      */
+    private int keycardLevel;
+
+    public void setKeycardLevel(int level) {
+        this.keycardLevel = level;
+    }
+
+    public int getKeycardLevel() {
+        return keycardLevel;
+    }
+
     public void setProcessor(int processor) {
         this.processor = Math.max(processor, 0);
         logger.debug("Setting gold to {}", this.processor);
@@ -153,13 +162,5 @@ public class InventoryComponent extends Component {
      */
     public void addGold(int processor) {
         setProcessor(this.processor + processor);
-    }
-
-    public void setKeycardLevel(int keycardLevel) {
-        this.Level = keycardLevel;
-    }
-
-    public int getKeycardLevel() {
-        return Level;
     }
 }
