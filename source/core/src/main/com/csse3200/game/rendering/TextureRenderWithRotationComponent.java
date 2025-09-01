@@ -4,32 +4,31 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
-import com.csse3200.game.services.ServiceLocator;
 
-public class SpriteRenderComponent extends TextureRenderComponent {
-    private final Sprite sprite;
+/**
+ * An extension of the TextureRenderComponent, which allows rotation of your textures.
+ * Just need to specify the angle of rotation in terms of degrees.
+ */
+public class TextureRenderWithRotationComponent extends TextureRenderComponent {
     private final TextureRegion region;
     private float rotation = 0;
     private boolean hasSetRotation = false;
 
-    private static int id;
-    private int ownID;
-
-    public SpriteRenderComponent(String texturePath) {
+    public TextureRenderWithRotationComponent(String texturePath) {
         super(texturePath); // still loads the Texture
         region = new TextureRegion(super.getTexture());
-        this.sprite = new Sprite(super.getTexture()); // wrap it in a Sprite
-        sprite.setOriginCenter(); // rotate around center by default
     }
 
+    /**
+     * Set the rotation value this rendering component will use to rotate the texture.
+     * @param value The rotation value, in degrees.
+     */
     public void setRotation(float value) {
         if (!hasSetRotation)
         {
             rotation = value;
             hasSetRotation = true;
-            ownID = id++;
         }
-
     }
 
     @Override

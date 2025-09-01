@@ -11,19 +11,30 @@ import com.csse3200.game.services.ServiceLocator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * A class containing methods that allow entities to fire projectiles essentially.
+ */
 public class ProjectileLauncherComponent extends Component {
     private long timeSinceFiring;
     private static final Logger projectileLogger = LoggerFactory.getLogger(ProjectileLauncherComponent.class);
     private static ForestGameArea forestGameArea;
     private Entity target;
 
-    // area: The area it is living in
+    /**
+     * Constructor for the class.
+     * @param area The area, such as ForestGameArea, in which the entity is residing in.
+     * @param target The target entity, that this component's entity wants to hit.
+     */
     public ProjectileLauncherComponent(ForestGameArea area, Entity target)
     {
         forestGameArea = area;
         this.target = target;
     }
 
+    /**
+     * Fires a laser projectile in the direction specified.
+     * @param directionToFire The direction to fire at.
+     */
     public void FireLaserProjectile(Vector2 directionToFire)
     {
         Entity laser = forestGameArea.spawnLaserProjectile(directionToFire);
@@ -32,6 +43,13 @@ public class ProjectileLauncherComponent extends Component {
         laser.setPosition(pos);
     }
 
+    /**
+     * Fires multiple laser projectiles at once
+     * @param amount The amount of projectiles to fire in one go
+     * @param angleDifferences The angle differences, in degrees, between lasers. For example, passing in 10 means
+     *                         10 degree difference in the rotation of each laser projectile.
+     * @param directionToFire The direction to fire at.
+     */
     public void FireLaserProjectileMultishot(int amount, float angleDifferences, Vector2 directionToFire)
     {
         directionToFire = directionToFire.rotateDeg(-angleDifferences * ((float)amount/2));
@@ -43,6 +61,13 @@ public class ProjectileLauncherComponent extends Component {
             }
     }
 
+    /**
+     * A quick burst of repeated laser projectile firings. Note that all lasers will head in the same direction, even if
+     * the player has moved during the burst duration.
+     * @param burstAmount The amount of projectiles to fire in a burst.
+     * @param timeBetweenShots The time, in seconds, between each laser fired within one burst sequence.
+     * @param directionToFire The direction to fire at.
+     */
     public void FireLaserProjectileBurstFire(int burstAmount, float timeBetweenShots, Vector2 directionToFire)
     {
         Timer.Task burstFireTask = new Timer.Task() {
@@ -66,11 +91,12 @@ public class ProjectileLauncherComponent extends Component {
         Timer.schedule(burstFireTask, 0f, timeBetweenShots);
     }
 
+    /*
     @Override
     public void update() {
-        long currentTime = ServiceLocator.getTimeSource().getTime();
+        //long currentTime = ServiceLocator.getTimeSource().getTime();
 
-        /* SAMPLE USE OF ATTACKING WITH THESE METHODS
+        SAMPLE USE OF ATTACKING WITH THESE METHODS
         if (currentTime - timeSinceFiring >= 1000L) {
             timeSinceFiring = currentTime;
 
@@ -80,6 +106,7 @@ public class ProjectileLauncherComponent extends Component {
             FireLaserProjectileBurstFire(4, 0.2f, dirToFire);
             //FireLaserProjectileMultishot(5, 10, dirToFire);
         }
-         */
+
     }
+    */
 }

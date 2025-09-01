@@ -140,8 +140,8 @@ public class NPCFactory {
             .addComponent(animator)
             .addComponent(new GhostAnimationController())
             .addComponent(new EnemyDeathRewardComponent(15, playerInventory))
-            .addComponent(new DeathParticleSpawnerComponent("explosion_2"))
-            .addComponent(new ProjectileLauncherComponent(area, target)); // Add reward + particles
+            .addComponent(new DeathParticleSpawnerComponent("explosion_2")) // Add reward + particles
+            .addComponent(new ProjectileLauncherComponent(area, target)); // Add the ability to fire projectiles
 
     ghostGPT.getComponent(AnimationRenderComponent.class).scaleEntity();
 
