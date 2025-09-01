@@ -172,6 +172,51 @@ class CombatStatsComponentTest {
       assertEquals(spy.cnt.get(), spy.cnt.get());;
     }
   }
+
+  // ---=---
+  @Nested
+  @DisplayName("Objective: Direct damage via hit(int)")
+  class HitIntTests {
+    @Test
+    void positiveDamage_reducesHealth_andFiresEvent() {
+      CombatStatsComponent combat = new CombatStatsComponent(100, 20);
+      HealthSpy spy = attachWithHealthSpy(combat);
+
+      combat.hit(30);
+      assertEquals(70, combat.getHealth());
+      assertEquals(70, spy.last.get());
+      assertEquals(1, spy.cnt.get());
+    }
+
+    @Test
+    void nonPositiveDamage_isIgnored() {
+      CombatStatsComponent combat = new CombatStatsComponent(100, 20);
+      HealthSpy spy = attachWithHealthSpy(combat);
+
+      combat.hit(0);
+      combat.hit(-10);
+      assertEquals(100, combat.getHealth());
+      assertEquals(0, spy.cnt.get());
+    }
+
+    @Test
+    void multipleHits_accumulate() {
+      CombatStatsComponent combat = new CombatStatsComponent(100, 10);
+      combat.hit(15);
+      combat.hit(5);
+      combat.hit(10);
+      assertEquals(70, combat.getHealth());
+    }
+
+    @Test
+    void overkill_clampsToZero_andMarksDead() {
+      CombatStatsComponent combat = new CombatStatsComponent(30, 20);
+      combat.hit(100);
+      assertEquals(0, combat.getHealth());
+      assertTrue(combat.isDead());
+    }
+  }
+
   // Health clamps at lower bound for both max and health
   @Test
   void setHealth_clampsAndFiresUpdateHealthEvent() {
