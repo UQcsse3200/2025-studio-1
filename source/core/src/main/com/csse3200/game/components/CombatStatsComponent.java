@@ -30,7 +30,7 @@ public class CombatStatsComponent extends Component {
   public CombatStatsComponent(int health, int baseAttack) {
     setHealth(health);
     setBaseAttack(baseAttack);
-    this.maxHealth = health;
+    setMaxHealth(health);
   }
 
   /**
@@ -81,11 +81,7 @@ public class CombatStatsComponent extends Component {
    * @param maxHealth the maximum health that a entity can have
    */
   public void setMaxHealth(int maxHealth) {
-    if (maxHealth >= 0) {
-      this.maxHealth = maxHealth;
-    } else {
-      this.maxHealth = 0;
-    }
+    this.maxHealth = Math.max(maxHealth, 0);
     if (entity != null) {
       entity.getEvents().trigger("updateMaxHealth", this.maxHealth);
     }
