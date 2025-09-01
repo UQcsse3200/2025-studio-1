@@ -91,10 +91,9 @@ public class ForestGameArea extends GameArea {
     lightsaber = spawnLightsaber();
 
     //These are commented out since there is no equip feature yet
-    //bullet = spawnBullet();
-    //this.equipItem(pistol);
-    this.equipItem(lightsaber);
-    //this.equipItem(pistol);
+    this.equipItem(pistol);
+    //this.equipItem(lightsaber);
+    //this.equipItem(dagger);
 
     spawnGhosts();
     spawnGhostKing();
