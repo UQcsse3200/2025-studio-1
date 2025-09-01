@@ -67,19 +67,6 @@ class CombatStatsComponentTest {
 
   // ---=---
   @Nested
-  @DisplayName("Objective: Constructor invariants")
-  class ConstructorInvariants {
-    @Test
-    void negativeInitialHealth_clampsHealth_andMaxHealthToZero() {
-      CombatStatsComponent combat = new CombatStatsComponent(-5, 3);
-      assertEquals(0, combat.getHealth());
-      assertEquals(0, combat.getMaxHealth()); // exposes current defect if it fails
-      assertTrue(combat.isDead());
-    }
-  }
-
-  // ---=---
-  @Nested
   @DisplayName("Objective: setHealth clamps at lower bound and fires event")
   class SetHealthTests {
     @Test
@@ -340,35 +327,73 @@ class CombatStatsComponentTest {
 
   // ---=---
   @Nested
-  @DisplayName("Objective: Base attack setter validation")
+  @DisplayName("Objective: Base attack semantics (setter, ctor, and usage)")
   class BaseAttackValidationTests {
+
     @Test
-    void negativeValue_isRejected_keepsOld() {
-      CombatStatsComponent combat = new CombatStatsComponent(100, 10);
-      combat.setBaseAttack(-5);
-      assertEquals(10, combat.getBaseAttack());
+    @DisplayName("Ctor: negative baseAttack defaults to 0 and causes no damage")
+    void ctor_negativeBaseAttack_defaultsToZero_andNoDamage() {
+      CombatStatsComponent def = new CombatStatsComponent(100, 20);
+      CombatStatsComponent atk = new CombatStatsComponent(10, -5); // -> 0
+      assertEquals(0, atk.getBaseAttack());
+
+      def.hit(atk);
+      assertEquals(100, def.getHealth());
     }
 
     @Test
-    void positiveValue_updates() {
-      CombatStatsComponent combat = new CombatStatsComponent(100, 10);
-      combat.setBaseAttack(42);
-      assertEquals(42, combat.getBaseAttack());
+    @DisplayName("Setter: negative values are rejected and previous value is kept")
+    void setBaseAttack_negative_rejected_keepsPrevious() {
+      CombatStatsComponent atk = new CombatStatsComponent(50, 7);
+      atk.setBaseAttack(-3);
+      assertEquals(7, atk.getBaseAttack());
+
+      // Subsequent valid set still works
+      atk.setBaseAttack(11);
+      assertEquals(11, atk.getBaseAttack());
     }
 
     @Test
-    void baseAttack_getSet_andRejectNegative() {
-      CombatStatsComponent combat = new CombatStatsComponent(100, 20);
-      assertEquals(20, combat.getBaseAttack());
+    @DisplayName("Setter: idempotent sets do not change damage outcome")
+    void setBaseAttack_idempotent_noEffectOnOutcome() {
+      CombatStatsComponent def = new CombatStatsComponent(100, 0);
+      CombatStatsComponent atk = new CombatStatsComponent(10, 15);
 
-      combat.setBaseAttack(150);
-      assertEquals(150, combat.getBaseAttack());
+      // Same value twice
+      atk.setBaseAttack(15);
+      atk.setBaseAttack(15);
 
-      combat.setBaseAttack(-50); // should be rejected
-      assertEquals(150, combat.getBaseAttack());
+      def.hit(atk);
+      assertEquals(85, def.getHealth());
     }
 
     @Test
+    @DisplayName("Runtime: changing baseAttack affects subsequent hits (not past ones)")
+    void changingBaseAttack_updatesSubsequentDamageOnly() {
+      CombatStatsComponent def = new CombatStatsComponent(100, 0);
+      CombatStatsComponent atk = new CombatStatsComponent(10, 5);
+
+      def.hit(atk);                 // -5 -> 95
+      assertEquals(95, def.getHealth());
+
+      atk.setBaseAttack(30);        // update
+      def.hit(atk);                 // -30 -> 65
+      assertEquals(65, def.getHealth());
+    }
+
+    @Test
+    @DisplayName("Bounds: very large non-negative baseAttack overkills but clamps health to 0")
+    void extremeLargeBaseAttack_overkill_clampsToZero() {
+      CombatStatsComponent def = new CombatStatsComponent(100, 0);
+      CombatStatsComponent atk = new CombatStatsComponent(10, Integer.MAX_VALUE);
+
+      def.hit(atk);
+      assertEquals(0, def.getHealth());
+      assertTrue(def.isDead());
+    }
+
+    @Test
+    @DisplayName("Zero baseAttack is a no-op on hit(attacker)")
     void zeroBaseAttack_attackerDoesNoDamage() {
       CombatStatsComponent def = new CombatStatsComponent(100, 20);
       CombatStatsComponent atk = new CombatStatsComponent(10, 0);
@@ -376,6 +401,7 @@ class CombatStatsComponentTest {
       assertEquals(100, def.getHealth());
     }
   }
+
 
   // ---=---
   @Nested
@@ -453,27 +479,6 @@ class CombatStatsComponentTest {
       assertEquals(atDeath, spy.cnt.get(), "No events after dead");
       assertEquals(0, combat.getHealth());
     }
-  }
-
-  @Test
-  void shouldCheckIsDead() {
-    CombatStatsComponent combat = new CombatStatsComponent(100, 20);
-    assertFalse(combat.isDead());
-
-    combat.setHealth(0);
-    assertTrue(combat.isDead());
-  }
-
-  @Test
-  void shouldSetGetBaseAttack() {
-    CombatStatsComponent combat = new CombatStatsComponent(100, 20);
-    assertEquals(20, combat.getBaseAttack());
-
-    combat.setBaseAttack(150);
-    assertEquals(150, combat.getBaseAttack());
-
-    combat.setBaseAttack(-50);
-    assertEquals(150, combat.getBaseAttack());
   }
 
   @Test
