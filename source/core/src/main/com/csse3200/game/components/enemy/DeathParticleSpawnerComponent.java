@@ -43,9 +43,11 @@ public class DeathParticleSpawnerComponent extends Component {
   public DeathParticleSpawnerComponent(String animationName) {
     this.animName = animationName;
     this.atlasPath = "images/explosion_2.atlas";
+
     if ("explosion_2".equals(animationName)) {
       this.frameDuration = 0.06f;
     }
+
     if (!VALID_ANIMATIONS.contains(animationName)) {
       throw new IllegalArgumentException(
               "Invalid animation name: " + animationName + ". Default animation is now explosion_1."
@@ -58,12 +60,18 @@ public class DeathParticleSpawnerComponent extends Component {
     entity.getEvents().addListener("death", this::spawnParticles);
   }
 
+  /**
+   * Spawns the particles on the map upon triggering the animation.
+   *
+   * <p>Logs an error if unable to spawn the particles.</p>
+   */
   private void spawnParticles() {
     try {
       if (ServiceLocator.getResourceService() == null || !ServiceLocator.getResourceService().containsAsset(atlasPath, TextureAtlas.class)) {
         logger.debug("Explosion atlas not loaded; skipping death particles");
         return;
       }
+
       TextureAtlas atlas = ServiceLocator.getResourceService().getAsset(atlasPath, TextureAtlas.class);
       Entity effect = new Entity();
       AnimationRenderComponent arc = new AnimationRenderComponent(atlas);
@@ -72,17 +80,22 @@ public class DeathParticleSpawnerComponent extends Component {
       effect.addComponent(arc).addComponent(new OneShotDisposeComponent());
       effect.setPosition(entity.getPosition());
       EntityService es = ServiceLocator.getEntityService();
+
       if (es != null) {
         es.register(effect);
       }
       arc.startAnimation(animName);
+
       // Hide and schedule disposal of original enemy
       entity.setEnabled(false);
+
       // Ensure enemy animator won't dispose shared atlas
       AnimationRenderComponent enemyArc = entity.getComponent(AnimationRenderComponent.class);
+
       if (enemyArc != null) {
         enemyArc.setDisposeAtlas(false);
       }
+
       Gdx.app.postRunnable(() -> entity.dispose());
     } catch (Exception e) {
       logger.error("Failed to spawn death particles", e);
@@ -96,6 +109,7 @@ public class DeathParticleSpawnerComponent extends Component {
     public void update() {
       if (scheduled) return; // already scheduled for removal
       AnimationRenderComponent arc = entity.getComponent(AnimationRenderComponent.class);
+
       if (arc != null && arc.getCurrentAnimation() != null && arc.isFinished()) {
         scheduled = true;
         // Defer disposal to after current frame to avoid nested iteration over components array

@@ -20,6 +20,9 @@ public class EnemyDeathRewardComponent extends Component {
         entity.getEvents().addListener("death", this::onDeath);
     }
 
+    /**
+     * Adds processor to the player inventory if inventory is present.
+     */
     private void onDeath() {
         if (playerInventory == null) {
             return;
