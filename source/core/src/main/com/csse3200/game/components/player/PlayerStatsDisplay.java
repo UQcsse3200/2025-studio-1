@@ -2,11 +2,9 @@ package com.csse3200.game.components.player;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.csse3200.game.components.CombatStatsComponent;
-import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.UIComponent;
 
 import com.badlogic.gdx.graphics.Color;
@@ -17,12 +15,28 @@ import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.csse3200.game.components.player.InventoryComponent;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * A ui component for displaying player stats, e.g. health.
  */
 public class PlayerStatsDisplay extends UIComponent {
+  // UI constants
+  private static final float BAR_WIDTH = 200f;
+  private static final float BAR_HEIGHT = 30f;
+
+  // Colours
+  private static final Color COLOR_BG  = Color.DARK_GRAY;
+  private static final Color COLOR_HEALTH = Color.RED;
+  private static final Color COLOR_STAMINA = Color.GREEN;
+
+  // Track textures we create so we can dispose them explicitly
+  private final List<Texture> disposableTextures = new ArrayList<>();
+
   private Table table;
   private ProgressBar healthBar;
+  private ProgressBar staminaBar;
   private Label processorLabel;
 
   /**
@@ -35,6 +49,7 @@ public class PlayerStatsDisplay extends UIComponent {
 
     entity.getEvents().addListener("updateHealth", this::updatePlayerHealthUI);
     entity.getEvents().addListener("updateProcessor", this::updatePlayerProcessorUI);
+    entity.getEvents().addListener("staminaChanged", this::updatePlayerStaminaUI);
   }
 
   /**
@@ -46,7 +61,19 @@ public class PlayerStatsDisplay extends UIComponent {
     pixmap.fill();
     Texture texture = new Texture(pixmap);
     pixmap.dispose();
+    disposableTextures.add(texture);
     return new TextureRegionDrawable(new TextureRegion(texture));
+  }
+
+  /** Creates a simple horizontal bar style with a colored fill and dark background. */
+  private ProgressBar.ProgressBarStyle makeBarStyle(Color fill, float barHeight) {
+    ProgressBar.ProgressBarStyle style = new ProgressBar.ProgressBarStyle();
+    style.background = makeColorDrawable(COLOR_BG);
+    style.background.setMinHeight(barHeight);
+    style.knobBefore = makeColorDrawable(fill);
+    style.knobBefore.setMinHeight(barHeight);
+    style.knob = null;
+    return style;
   }
 
   /**
@@ -59,32 +86,34 @@ public class PlayerStatsDisplay extends UIComponent {
     table.setFillParent(true);
     table.padTop(45f).padLeft(5f);
 
-    // Health bar size
-    float barWidth = 200f;
-    float barHeight = 30f;
-
-    // Setting health bar attributes
-    ProgressBar.ProgressBarStyle healthBarStyle = new ProgressBar.ProgressBarStyle();
-    healthBarStyle.background = makeColorDrawable(Color.DARK_GRAY);
-    healthBarStyle.background.setMinHeight(barHeight);
-    healthBarStyle.knobBefore = makeColorDrawable(Color.RED);
-    healthBarStyle.knobBefore.setMinHeight(barHeight);
-    healthBarStyle.knob = null;
-
+    // Health bar
+    ProgressBar.ProgressBarStyle healthBarStyle = makeBarStyle(COLOR_HEALTH, BAR_HEIGHT);
     int health = entity.getComponent(CombatStatsComponent.class).getHealth();
-    // Health bar creation, currently hardcoded to be max of 100
     healthBar = new ProgressBar(0, 100, 1, false, healthBarStyle);
     healthBar.setValue(health);
-    healthBar.setAnimateDuration(0.0f);
+    healthBar.setAnimateDuration(0f);
 
-    // processor text
+    // Stamina bar (0..100 shows percent so UI is decoupled from gameplay max)
+    ProgressBar.ProgressBarStyle staminaStyle = makeBarStyle(COLOR_STAMINA, BAR_HEIGHT);
+    staminaBar = new ProgressBar(0, 100, 1, false, staminaStyle);
+    staminaBar.setValue(100);
+    staminaBar.setAnimateDuration(0f);
+
+    // Processor label
     int processor = entity.getComponent(InventoryComponent.class).getProcessor();
     CharSequence processorText = String.format("Processor: %d", processor);
     processorLabel = new Label(processorText, skin, "large");
 
-    table.add(healthBar).width(barWidth).height(barHeight).pad(5);
+    // Layout:
+    // Row 1: Health bar
+    table.add(healthBar).width(BAR_WIDTH).height(BAR_HEIGHT).pad(5);
     table.row();
-    table.add(processorLabel);
+    // Row 2: Stamina bar
+    table.add(staminaBar).width(BAR_WIDTH).height(BAR_HEIGHT).pad(5);
+    table.row();
+    // Row 3: Processor label
+    table.add(processorLabel).left().padLeft(10f);
+
     stage.addActor(table);
   }
 
@@ -102,6 +131,18 @@ public class PlayerStatsDisplay extends UIComponent {
   }
 
   /**
+   * Updates the player's stamina on the UI.
+   * @param current the current stamina value
+   * @param max the max stamina
+   */
+  public void updatePlayerStaminaUI(int current, int max) {
+    float pct = (current * 100f) / max;
+    if (pct < 0f) pct = 0f;
+    if (pct > 100f) pct = 100f;
+    staminaBar.setValue(pct);
+  }
+
+  /**
    * Updates the player's processor on the UI.
    * @param processor player processor
    */
@@ -113,7 +154,15 @@ public class PlayerStatsDisplay extends UIComponent {
   @Override
   public void dispose() {
     super.dispose();
-    healthBar.remove();
-    processorLabel.remove();
+    if (healthBar != null) healthBar.remove();
+    if (staminaBar != null) staminaBar.remove();
+    if (processorLabel != null) processorLabel.remove();
+    // Dispose textures we created for the drawables
+    for (Texture tex : disposableTextures) {
+      if (tex != null) {
+        tex.dispose();
+      }
+    }
+    disposableTextures.clear();
   }
 }
