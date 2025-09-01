@@ -55,6 +55,14 @@ class CombatStatsComponentTest {
       assertEquals(0, combat.getHealth());
       assertTrue(combat.isDead());
     }
+
+    @Test
+    void negativeInitialHealth_clampsHealth_andMaxHealthToZero() {
+      CombatStatsComponent combat = new CombatStatsComponent(-5, 3);
+      assertEquals(0, combat.getHealth());
+      assertEquals(0, combat.getMaxHealth()); // exposes ctor bug if it fails
+      assertTrue(combat.isDead());
+    }
   }
 
   // ---=---
@@ -63,10 +71,10 @@ class CombatStatsComponentTest {
   class ConstructorInvariants {
     @Test
     void negativeInitialHealth_clampsHealth_andMaxHealthToZero() {
-      CombatStatsComponent c = new CombatStatsComponent(-5, 3);
-      assertEquals(0, c.getHealth());
-      assertEquals(0, c.getMaxHealth()); // exposes current defect if it fails
-      assertTrue(c.isDead());
+      CombatStatsComponent combat = new CombatStatsComponent(-5, 3);
+      assertEquals(0, combat.getHealth());
+      assertEquals(0, combat.getMaxHealth()); // exposes current defect if it fails
+      assertTrue(combat.isDead());
     }
   }
 
@@ -108,6 +116,15 @@ class CombatStatsComponentTest {
       assertTrue(spy.cnt.get() == afterFirst || spy.cnt.get() == afterFirst + 1,
               "Implementation may de-duplicate identical sets; allow either.");
     }
+
+    @Test
+    void setHealthZero_whenAlreadyZero_mayNotFireDuplicateEvent() {
+      CombatStatsComponent combat = new CombatStatsComponent(0, 5);
+      HealthSpy spy = attachWithHealthSpy(combat);
+      combat.setHealth(0);
+      assertTrue(spy.cnt.get() <= 1); // allow implementation differences
+    }
+
   }
 
   // ---=---
@@ -137,11 +154,11 @@ class CombatStatsComponentTest {
 
     @Test
     void addHealthZero_andHitZero_doNotFireEvent() {
-      CombatStatsComponent c = new CombatStatsComponent(100, 10);
-      HealthSpy spy = attachWithHealthSpy(c);
-      c.addHealth(0);
-      c.hit(0);
-      assertEquals(100, c.getHealth());
+      CombatStatsComponent combat = new CombatStatsComponent(100, 10);
+      HealthSpy spy = attachWithHealthSpy(combat);
+      combat.addHealth(0);
+      combat.hit(0);
+      assertEquals(100, combat.getHealth());
       assertEquals(0, spy.cnt.get());
     }
 
@@ -169,17 +186,17 @@ class CombatStatsComponentTest {
 
     @Test
     void isDead_whenHealthZero_andIgnoresFurtherDamage() {
-      CombatStatsComponent c = new CombatStatsComponent(100, 20);
-      assertFalse(c.isDead());
+      CombatStatsComponent combat = new CombatStatsComponent(100, 20);
+      assertFalse(combat.isDead());
 
-      c.setHealth(0);
-      assertTrue(c.isDead());
-      assertEquals(0, c.getHealth());
+      combat.setHealth(0);
+      assertTrue(combat.isDead());
+      assertEquals(0, combat.getHealth());
 
       // Dead entities ignore further damage
-      c.hit(999);
-      assertTrue(c.isDead());
-      assertEquals(0, c.getHealth());
+      combat.hit(999);
+      assertTrue(combat.isDead());
+      assertEquals(0, combat.getHealth());
     }
   }
 
@@ -278,6 +295,13 @@ class CombatStatsComponentTest {
     }
 
     @Test
+    void negativeInitialBaseAttack_defaultsToZero() {
+      CombatStatsComponent combat = new CombatStatsComponent(10, -5);
+      assertEquals(0, combat.getBaseAttack());
+    }
+
+
+    @Test
     void negativeBaseAttack_isIgnored_currentBehaviour() {
       CombatStatsComponent def = new CombatStatsComponent(100, 20);
       CombatStatsComponent weird = new CombatStatsComponent(20, -5); // normalised to 0 in setter
@@ -320,14 +344,14 @@ class CombatStatsComponentTest {
 
     @Test
     void baseAttack_getSet_andRejectNegative() {
-      CombatStatsComponent c = new CombatStatsComponent(100, 20);
-      assertEquals(20, c.getBaseAttack());
+      CombatStatsComponent combat = new CombatStatsComponent(100, 20);
+      assertEquals(20, combat.getBaseAttack());
 
-      c.setBaseAttack(150);
-      assertEquals(150, c.getBaseAttack());
+      combat.setBaseAttack(150);
+      assertEquals(150, combat.getBaseAttack());
 
-      c.setBaseAttack(-50); // should be rejected
-      assertEquals(150, c.getBaseAttack());
+      combat.setBaseAttack(-50); // should be rejected
+      assertEquals(150, combat.getBaseAttack());
     }
 
     @Test
@@ -380,6 +404,14 @@ class CombatStatsComponentTest {
       assertEquals(50, combat.getMaxHealth());
       combat.addHealth(200);
       assertTrue(combat.getHealth() > combat.getMaxHealth()); // e.g., 250 > 50
+    }
+
+    @Test
+    void setHealthAboveMax_allowsOverheal() {
+      CombatStatsComponent combat = new CombatStatsComponent(50, 10);
+      combat.setMaxHealth(50);
+      combat.setHealth(100);
+      assertEquals(100, combat.getHealth()); // current behaviour: no cap
     }
   }
 
