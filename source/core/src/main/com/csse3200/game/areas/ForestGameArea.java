@@ -100,6 +100,7 @@ public class ForestGameArea extends GameArea {
     player = spawnPlayer();
 
     spawnFloor();
+    spawnPad();
 
     playMusic();
   }
@@ -192,6 +193,14 @@ public class ForestGameArea extends GameArea {
       Entity tree = ObstacleFactory.createTree();
       spawnEntityAt(tree, randomPos, true, false);
     }
+  }
+
+  private void spawnPad() {
+    GridPoint2 spawnPadPos = new GridPoint2(20, 3);
+
+    Entity spawnPad = ObstacleFactory.createPurpleSpawnPad();
+
+    spawnEntityAt(spawnPad, spawnPadPos, false, false);
   }
 
   private Entity spawnPlayer() {
