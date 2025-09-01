@@ -123,7 +123,7 @@ public class Floor2GameArea extends GameArea {
     }
 
     Entity bottomDoor = ObstacleFactory.createDoorTrigger(doorWidth, doorHeight);
-    bottomDoor.setPosition(doorX, bottomY + 0.001f);
+    bottomDoor.setPosition(doorX, bottomY + 0.1f); // Position above floor level
     // Door returns to floor 1
     bottomDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadPreviousLevel));
     spawnEntity(bottomDoor);
