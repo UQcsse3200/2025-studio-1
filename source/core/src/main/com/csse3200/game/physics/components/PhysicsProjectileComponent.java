@@ -37,8 +37,6 @@ public class PhysicsProjectileComponent extends Component{
         if (initialVelocity != null) {
             body.setLinearVelocity(initialVelocity);
         }
-
-
     }
 
     /**

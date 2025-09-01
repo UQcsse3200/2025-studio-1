@@ -1,4 +1,5 @@
 package com.csse3200.game.components.enemy;
+import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.areas.ForestGameArea;
 import com.csse3200.game.components.Component;
 import com.csse3200.game.entities.Entity;
@@ -13,29 +14,36 @@ public class ProjectileLauncherComponent extends Component {
     private long timeSinceFiring;
     private static final Logger projectileLogger = LoggerFactory.getLogger(ProjectileLauncherComponent.class);
     private static ForestGameArea forestGameArea;
+    private Entity target;
 
     private static final String[] textures = new String[] {
             "images/laser_shot.png"
     };
 
     // area: The area it is living in
-    public ProjectileLauncherComponent(ForestGameArea area)
+    public ProjectileLauncherComponent(ForestGameArea area, Entity target)
     {
         forestGameArea = area;
+        this.target = target;
     }
 
-    public void FireLaserProjectile()
+    public void FireLaserProjectile(Vector2 directionToFire)
     {
-        Entity laser = forestGameArea.spawnLaserProjectile();
+        Entity laser = forestGameArea.spawnLaserProjectile(directionToFire);
         laser.setPosition(getEntity().getPosition());
     }
 
     @Override
     public void update() {
         long currentTime = ServiceLocator.getTimeSource().getTime();
+
         if (currentTime - timeSinceFiring >= 1000L) {
             timeSinceFiring = currentTime;
-            FireLaserProjectile();
+
+            Vector2 dirToFire = new Vector2(target.getPosition().x - getEntity().getPosition().x,
+            target.getPosition().y - getEntity().getPosition().y);
+
+            FireLaserProjectile(dirToFire);
         }
     }
 }
