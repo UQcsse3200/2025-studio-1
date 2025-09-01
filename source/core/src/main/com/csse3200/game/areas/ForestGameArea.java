@@ -100,7 +100,6 @@ public class ForestGameArea extends GameArea {
     player = spawnPlayer();
 
     spawnFloor();
-    spawnObject();
 
     playMusic();
   }
@@ -193,29 +192,6 @@ public class ForestGameArea extends GameArea {
       Entity tree = ObstacleFactory.createTree();
       spawnEntityAt(tree, randomPos, true, false);
     }
-  }
-
-  private void spawnObject() {
-    GridPoint2 spawnPoint = new GridPoint2(15, 15);
-    GridPoint2 spawnPoint2 = new GridPoint2(15, 17);
-
-    Entity smallSquare = ObstacleFactory.createCrate();
-    Entity smallSquare2 = ObstacleFactory.createCrate();
-    spawnEntityAt(smallSquare, spawnPoint, true, true);
-    spawnEntityAt(smallSquare2, spawnPoint2, true, true);
-  }
-
-
-
-  private void spawnFloor() {
-
-    for (int i = 0; i < 25; i += 4) {
-      GridPoint2 floorspawn = new GridPoint2(i, 1);
-
-      Entity floor = ObstacleFactory.createLongFloor();
-      spawnEntityAt(floor, floorspawn, false, false);
-    }
-
   }
 
   private Entity spawnPlayer() {

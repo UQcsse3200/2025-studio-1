@@ -40,6 +40,7 @@ public class Floor2GameArea extends GameArea {
     spawnWallsAndDoor();
     spawnTrees(); // Add tree spawning
     spawnPlayer();
+    spawnFloor();
 
     // UI label
     Entity ui = new Entity();
