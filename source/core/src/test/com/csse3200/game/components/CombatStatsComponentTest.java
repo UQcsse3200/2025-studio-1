@@ -258,6 +258,26 @@ class CombatStatsComponentTest {
       assertTrue(def.isDead());
     }
   }
+
+  // ---=---
+  @Nested
+  @DisplayName("Objective: Base attack setter validation")
+  class BaseAttackValidationTests {
+    @Test
+    void negativeValue_isRejected_keepsOld() {
+      CombatStatsComponent combat = new CombatStatsComponent(100, 10);
+      combat.setBaseAttack(-5);
+      assertEquals(10, combat.getBaseAttack());
+    }
+
+    @Test
+    void positiveValue_updates() {
+      CombatStatsComponent combat = new CombatStatsComponent(100, 10);
+      combat.setBaseAttack(42);
+      assertEquals(42, combat.getBaseAttack());
+    }
+  }
+
   // Health clamps at lower bound for both max and health
   @Test
   void setHealth_clampsAndFiresUpdateHealthEvent() {
