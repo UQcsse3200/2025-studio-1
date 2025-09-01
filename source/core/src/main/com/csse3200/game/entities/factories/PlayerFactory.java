@@ -3,11 +3,7 @@ package com.csse3200.game.entities.factories;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.csse3200.game.components.CombatStatsComponent;
-import com.csse3200.game.components.player.InventoryComponent;
-import com.csse3200.game.components.player.PlayerActions;
-import com.csse3200.game.components.player.TouchPlayerInputComponent;
-import com.csse3200.game.components.player.PlayerStatsDisplay;
-import com.csse3200.game.components.player.PlayerAnimationController;
+import com.csse3200.game.components.player.*;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.PlayerConfig;
 import com.csse3200.game.files.FileLoader;
@@ -91,4 +87,5 @@ public class PlayerFactory {
   private PlayerFactory() {
     throw new IllegalStateException("Instantiating static util class");
   }
+
 }

@@ -89,7 +89,7 @@ public class Floor7GameArea extends GameArea {
   }
 
   private void spawnPlayer() {
-    Entity player = PlayerFactory.createPlayerWithArrowKeys();
+    Entity player = PlayerFactory.createPlayer();
     spawnEntityAt(player, PLAYER_SPAWN, true, true);
   }
 

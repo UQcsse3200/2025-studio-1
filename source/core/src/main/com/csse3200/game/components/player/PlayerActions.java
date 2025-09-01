@@ -15,12 +15,11 @@ import com.badlogic.gdx.utils.Timer;
 public class PlayerActions extends Component {
   // Managers
   private Timer.Task staminaTask;
-  private static final Vector2 MAX_SPEED = new Vector2(18f, 18f); // Metres per second (doubled)
 
   private PhysicsComponent physicsComponent;
 
   // Movement Constants
-  private static final Vector2 MAX_SPEED    = new Vector2(3f, 3f);
+  private static final Vector2 MAX_SPEED = new Vector2(3f, 3f);
   private static final Vector2 CROUCH_SPEED = new Vector2(1.5f, 3f);
   private static final Vector2 SPRINT_SPEED = new Vector2(7f, 3f);
   private static final Vector2 JUMP_VELOCITY = new Vector2(0f, 120f);
