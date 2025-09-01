@@ -113,10 +113,22 @@ public class PlayerAnimationController extends Component {
      * @param direction direction player is moving
      */
     void animateCrouch(Vector2 direction) {
-        if(direction.x > 0) {
+        if(direction == Vector2.Zero) {
+            if(facingRight) {
+                logger.debug("Animating right stand crouch");
+                animator.startAnimation("right_stand_crouch");
+            } else {
+                logger.debug("Animating left stand crouch");
+                animator.startAnimation("left_stand_crouch");
+            }
+        } else if(direction.x > 0) {
+            logger.debug("Animating right crouch");
             animator.startAnimation("right_crouch");
+            facingRight = true;
         } else {
+            logger.debug("Animating left crouch");
             animator.startAnimation("left_crouch");
+            facingRight = false;
         }
         // Need to add idle check (if direction = 0)
     }
