@@ -37,16 +37,14 @@ public class WeaponsFactory {
     /**
      * Creates a lightsaber entity.
      *
-     * @return entity
+     * @return lightsaber entity
      */
     public static Entity createLightsaber() {
-        Entity lightsaber =
-            new Entity()
-                .addComponent(new TextureRenderComponent("images/lightsaberSingle.png"))
-                .addComponent(new CombatStatsComponent(0, lightsaberConfigs.baseAttack))
-                .addComponent(new TagComponent("melee"));
-        lightsaber.getComponent(TextureRenderComponent.class).scaleEntity();
 
+        Entity lightsaber = createBaseWeapon("melee");
+        lightsaber.addComponent(new TextureRenderComponent("images/lightsaberSingle.png"))
+            .addComponent(new CombatStatsComponent(0, lightsaberConfigs.baseAttack));
+        lightsaber.getComponent(TextureRenderComponent.class).scaleEntity();
         return lightsaber;
     }
 
@@ -55,10 +53,10 @@ public class WeaponsFactory {
      * @return A dagger entity.
      */
     public static Entity createDagger() {
-        Entity dagger= new Entity()
-                .addComponent(new TextureRenderComponent("images/dagger.png"))
-                .addComponent(new CombatStatsComponent(0, daggerConfigs.baseAttack))
-                .addComponent(new TagComponent("melee"));
+
+        Entity dagger = createBaseWeapon("melee");
+        dagger.addComponent(new TextureRenderComponent("images/dagger.png"))
+          .addComponent(new CombatStatsComponent(0, daggerConfigs.baseAttack));
         dagger.getComponent(TextureRenderComponent.class).scaleEntity();
         dagger.scaleHeight(0.55f);
         return dagger;
@@ -69,27 +67,25 @@ public class WeaponsFactory {
      * @return A pistol entity.
      */
     public static Entity createPistol() {
-        Entity pistol = new Entity().addComponent(new TextureRenderComponent(
-                "images/pistol.png")).addComponent(new CombatStatsComponent(0
-                , lightsaberConfigs.baseAttack))
-                .addComponent(new TagComponent("ranged"));
+        Entity pistol = createBaseWeapon("ranged");
+        pistol.addComponent(new TextureRenderComponent("images/pistol.png"))
+                .addComponent(new CombatStatsComponent(0, lightsaberConfigs.baseAttack));
         pistol.getComponent(TextureRenderComponent.class).scaleEntity();
         return pistol;
     }
 
     /**
-     * Creates a generic NPC to be used as a base entity by more specific NPC creation methods.
-     *
-     * @return entity
+     * Create a generic base weapon
+     * @param type "melee" or "ranged"
+     * @return the base weapon
      */
-    private static Entity createBaseWeapon(Entity target) {
+    private static Entity createBaseWeapon(String type) {
         Entity weapon =
                 new Entity()
                         .addComponent(new PhysicsComponent())
-                        .addComponent(new PhysicsMovementComponent())
-                        .addComponent(new ColliderComponent())
-                        .addComponent(new HitboxComponent().setLayer(PhysicsLayer.NPC))
-                        .addComponent(new TouchAttackComponent(PhysicsLayer.PLAYER, 1.5f));
+                        .addComponent(new ColliderComponent().setLayer(PhysicsLayer.NONE))
+                        .addComponent(new HitboxComponent())
+                        .addComponent(new TagComponent(type));
 
         PhysicsUtils.setScaledCollider(weapon, 0.9f, 0.4f);
         return weapon;
