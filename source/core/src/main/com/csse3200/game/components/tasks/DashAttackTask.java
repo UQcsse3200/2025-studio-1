@@ -53,10 +53,10 @@ public class DashAttackTask extends DefaultTask implements PriorityTask {
         movementTask.setTarget(target.getPosition());
         movementTask.update();
         if (ServiceLocator.getTimeSource().getTime() - lastDashTime > cooldown + dashTime) {
-            //dash again
+            movementTask.setSpeed(new Vector2(5f, 5f)); // Dash
             lastDashTime = ServiceLocator.getTimeSource().getTime();
         } else if (ServiceLocator.getTimeSource().getTime() - lastDashTime > dashTime){
-            // Stop
+            movementTask.setSpeed(new Vector2(0f, 0f)); // Stand still
         }
         if (movementTask.getStatus() != Status.ACTIVE) {
             movementTask.start();
