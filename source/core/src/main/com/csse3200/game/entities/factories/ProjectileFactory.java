@@ -1,5 +1,6 @@
 package com.csse3200.game.entities.factories;
 
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.components.TouchAttackComponent;
@@ -51,19 +52,28 @@ public class ProjectileFactory {
         return pistolBullet;
     }
 
-    public static Entity createLaserShot() {
+    public static Entity createLaserShot(Vector2 direction) {
         Entity laser = createBaseProjectile();
         LaserConfig config = configs.laser;
         laser
                 .addComponent(new TextureRenderComponent("images/laser_shot.png"))
-                .addComponent(new CombatStatsComponent(config.health, config.base_attack));
-                //.addComponent(new ColliderComponent())
-                //.addComponent(new HitboxComponent().setLayer(PhysicsLayer.ENEMY_PROJECTILE))
-               // .addComponent(new TouchAttackComponent(PhysicsLayer.PLAYER)); // Knockback??
+                .addComponent(new CombatStatsComponent(config.health, config.base_attack))
+                .addComponent(new ColliderComponent())
+                .addComponent(new HitboxComponent().setLayer(PhysicsLayer.ENEMY_PROJECTILE))
+                .addComponent(new TouchAttackComponent(PhysicsLayer.PLAYER)) // Knockback??
+                .addComponent(new PhysicsMovementComponent());
+
+        ColliderComponent collider = laser.getComponent(ColliderComponent.class);
+        collider.setLayer(PhysicsLayer.ENEMY_PROJECTILE)
+                .setFilter(PhysicsLayer.ENEMY_PROJECTILE, (short) (PhysicsLayer.PLAYER));
 
         laser.getComponent(TextureRenderComponent.class).scaleEntity();
-        laser.scaleWidth(5f);
-        laser.scaleHeight(5f);
+        laser.scaleWidth(1f);
+        laser.scaleHeight(1f);
+
+        System.out.println("EXISTS: " + laser.getComponent(PhysicsProjectileComponent.class));
+        laser.getComponent(PhysicsProjectileComponent.class).create(); // Not called for some reason.
+        laser.getComponent(PhysicsProjectileComponent.class).fire(direction, config.speed);
         return laser;
     }
 

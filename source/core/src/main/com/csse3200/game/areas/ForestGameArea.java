@@ -97,8 +97,6 @@ public class ForestGameArea extends GameArea {
     pistol = spawnPistol();
     lightsaber = spawnLightsaber();
 
-    spawnLaserProjectile();
-
 
     //These are commented out since there is no equip feature yet
     //bullet = spawnBullet();
@@ -209,8 +207,8 @@ public class ForestGameArea extends GameArea {
   }
 
   // Enemy Projectiles
-  public Entity spawnLaserProjectile() {
-    Entity laser = ProjectileFactory.createLaserShot();
+  public Entity spawnLaserProjectile(Vector2 directionToFire) {
+    Entity laser = ProjectileFactory.createLaserShot(directionToFire);
     spawnEntityAt(laser, new GridPoint2(9, 8), true, true);
 
     return laser;
