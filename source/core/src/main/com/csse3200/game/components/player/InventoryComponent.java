@@ -118,7 +118,7 @@ public class InventoryComponent extends Component {
       //  or whatever other method implemented to get the item texture
       String itemTex = "images/mud.png";
       this.itemTexs.set(index, "images/mud.png");
-      entity.getEvents().trigger("update display", index, "images/mud.png");
+      entity.getEvents().trigger("add item", index, "images/mud.png");
 
       this.inventoryCount++;
     } else // There is something already there
