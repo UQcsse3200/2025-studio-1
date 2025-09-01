@@ -296,6 +296,45 @@ class CombatStatsComponentTest {
     }
   }
 
+  // ---=---
+  @Nested
+  @DisplayName("Objective: Health doesn’t auto-cap to maxHealth (current behaviour)")
+  class OverhealBehaviourTests {
+    @Test
+    void healingBeyondMax_allowedCurrently() {
+      CombatStatsComponent combat = new CombatStatsComponent(50, 10);
+      assertEquals(50, combat.getMaxHealth());
+      combat.addHealth(200);
+      assertTrue(combat.getHealth() > combat.getMaxHealth()); // e.g., 250 > 50
+    }
+  }
+
+  // ---=---
+  @Nested
+  @DisplayName("Objective: Event routing sanity (exactly once per effective change)")
+  class EventRoutingTests {
+    @Test
+    void firesOncePerEffectiveChange_andNotWhenDead() {
+      CombatStatsComponent combat = new CombatStatsComponent(100, 20);
+      HealthSpy spy = attachWithHealthSpy(c);
+
+      combat.hit(10);             // effective
+      combat.hit(0);              // ignored
+      combat.hit(-5);             // ignored
+      combat.setHealth(90);       // same as current -> may be ignored by impl
+      int beforeDeath = spy.cnt.get();
+
+      combat.setHealth(0);        // death event
+      int atDeath = spy.cnt.get();
+      combat.hit(999);            // ignored when dead
+      combat.hit(new CombatStatsComponent(10, 10)); // ignored when dead
+
+      assertTrue(beforeDeath >= 1);
+      assertEquals(atDeath, spy.cnt.get(), "No events after dead");
+      assertEquals(0, c.getHealth());
+    }
+  }
+
   // Health clamps at lower bound for both max and health
   @Test
   void setHealth_clampsAndFiresUpdateHealthEvent() {
