@@ -1,14 +1,18 @@
 package com.csse3200.game.areas;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
+import com.csse3200.game.components.ItemHoldComponent;
 import com.csse3200.game.entities.Entity;
-import com.csse3200.game.entities.factories.NPCFactory;
-import com.csse3200.game.entities.factories.ObstacleFactory;
-import com.csse3200.game.entities.factories.PlayerFactory;
+import com.csse3200.game.entities.factories.*;
+import com.csse3200.game.physics.components.PhysicsProjectileComponent;
+import com.csse3200.game.rendering.AnimationRenderComponent;
 import com.csse3200.game.utils.math.GridPoint2Utils;
 import com.csse3200.game.utils.math.RandomUtils;
 import com.csse3200.game.services.ResourceService;
@@ -19,27 +23,34 @@ import org.slf4j.LoggerFactory;
 
 /** Forest area for the demo game with trees, a player, and some enemies. */
 public class ForestGameArea extends GameArea {
-  private static final Logger logger = LoggerFactory.getLogger(ForestGameArea.class);
-  private static final int NUM_TREES = 7;
-  private static final int NUM_GHOSTS = 2;
-  private static final GridPoint2 PLAYER_SPAWN = new GridPoint2(10, 10);
-  private static final float WALL_WIDTH = 0.1f;
-  private static final String[] forestTextures = {
-    "images/box_boy_leaf.png",
-    "images/tree.png",
-    "images/ghost_king.png",
-    "images/ghost_1.png",
-    "images/grass_1.png",
-    "images/grass_2.png",
-    "images/grass_3.png",
-    "images/hex_grass_1.png",
-    "images/hex_grass_2.png",
-    "images/hex_grass_3.png",
-    "images/iso_grass_1.png",
-    "images/iso_grass_2.png",
-    "images/iso_grass_3.png",
-    "images/mud.png",
-  };
+    private static final Logger logger = LoggerFactory.getLogger(ForestGameArea.class);
+    private static final int NUM_TREES = 7;
+    private static final int NUM_GHOSTS = 2;
+    private static final GridPoint2 PLAYER_SPAWN = new GridPoint2(10, 10);
+    private static final float WALL_WIDTH = 0.1f;
+    private static final String[] forestTextures = {
+        "images/box_boy_leaf.png",
+        "images/tree.png",
+        "images/ghost_king.png",
+        "images/ghost_1.png",
+        "images/grass_1.png",
+        "images/grass_2.png",
+        "images/grass_3.png",
+        "images/hex_grass_1.png",
+        "images/hex_grass_2.png",
+        "images/hex_grass_3.png",
+        "images/iso_grass_1.png",
+        "images/iso_grass_2.png",
+        "images/iso_grass_3.png",
+        "images/lightsaber.png",
+        "images/lightsaberSingle.png",
+        "images/ammo.png",
+        "images/round.png",
+        "images/pistol.png",
+	      "images/dagger.png",
+        "images/mud.png"
+    };
+
   private static final String[] forestTextureAtlases = {
     "images/terrain_iso_grass.atlas",
     "images/ghost.atlas",
@@ -55,6 +66,10 @@ public class ForestGameArea extends GameArea {
   private final TerrainFactory terrainFactory;
 
   private Entity player;
+  private Entity dagger;
+  private Entity lightsaber;
+  private Entity bullet;
+  private Entity pistol;
 
   /**
    * Initialise this ForestGameArea to use the provided TerrainFactory.
@@ -69,13 +84,23 @@ public class ForestGameArea extends GameArea {
   /** Create the game area, including terrain, static entities (trees), dynamic entities (player) */
   @Override
   public void create() {
+
     loadAssets();
-
+    ServiceLocator.registerGameArea(this);
     displayUI();
-
     spawnTerrain();
     spawnTrees();
     player = spawnPlayer();
+    dagger = spawnDagger();
+    pistol = spawnPistol();
+    lightsaber = spawnLightsaber();
+
+    //These are commented out since there is no equip feature yet
+    //bullet = spawnBullet();
+    //this.equipItem(pistol);
+    this.equipItem(lightsaber);
+    //this.equipItem(pistol);
+
     spawnGhosts();
     spawnGhostKing();
     spawnGhostGPT();
@@ -135,6 +160,49 @@ public class ForestGameArea extends GameArea {
     return newPlayer;
   }
 
+  private Entity spawnDagger() {
+    Entity newDagger = WeaponsFactory.createDagger();
+    Vector2 newDaggerOffset = new Vector2(0.7f, 0.3f);
+    newDagger.addComponent(new ItemHoldComponent(this.player, newDaggerOffset));
+    return newDagger;
+  }
+
+  private void equipItem(Entity item) {
+    this.player.setCurrItem(item);
+    spawnEntityAt(item, PLAYER_SPAWN, true, true);
+
+  }
+
+  private Entity getItem() {
+    return this.player.getCurrItem();
+  }
+
+  private Entity spawnLightsaber() {
+    Entity newLightsaber = WeaponsFactory.createLightsaber();
+    Vector2 newLightsaberOffset = new Vector2(0.7f, -0.1f);
+    newLightsaber.addComponent(new ItemHoldComponent(this.player, newLightsaberOffset));
+
+    //Commented out since lightsaber animation is a work in progress
+    //AnimationRenderComponent lightSaberAnimator = WeaponsFactory.createAnimation("images/lightSaber.atlas", this.player);
+    //newLightsaber.addComponent(lightSaberAnimator);
+
+    return newLightsaber;
+  }
+
+//Commented out since bullet functionality is in progress with guns
+//  private Entity spawnBullet() {
+//    Entity newBullet = ProjectileFactory.createPistolBullet();
+//    spawnEntityAt(newBullet, new GridPoint2(5, 5), true, true);
+//    return newBullet;
+//  }
+
+  private Entity spawnPistol() {
+    Entity newPistol = WeaponsFactory.createPistol();
+    Vector2 newPistolOffset = new Vector2(0.45f, 0.02f);
+    newPistol.addComponent(new ItemHoldComponent(this.player, newPistolOffset));
+    return newPistol;
+  }
+
   private void spawnGhosts() {
     GridPoint2 minPos = new GridPoint2(0, 0);
     GridPoint2 maxPos = terrain.getMapBounds(0).sub(2, 2);
@@ -178,6 +246,8 @@ public class ForestGameArea extends GameArea {
     resourceService.loadSounds(forestSounds);
     resourceService.loadMusic(forestMusic);
 
+
+
     while (!resourceService.loadForMillis(10)) {
       // This could be upgraded to a loading screen
       logger.info("Loading... {}%", resourceService.getProgress());
@@ -192,6 +262,8 @@ public class ForestGameArea extends GameArea {
     resourceService.unloadAssets(forestSounds);
     resourceService.unloadAssets(forestMusic);
   }
+
+
 
   @Override
   public void dispose() {
