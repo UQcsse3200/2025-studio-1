@@ -69,7 +69,7 @@ public class Floor6GameArea extends GameArea {
 
     // Right border split with a vertical door -> back to Floor 3
     float rightDoorHeight = Math.max(1f, viewHeight * 0.2f);
-    float rightDoorY = camPos.y - rightDoorHeight / 2f;
+    float rightDoorY = camPos.y - rightDoorHeight / 0.7f;
     float rightTopSegHeight = Math.max(0f, (topY) - (rightDoorY + rightDoorHeight));
     if (rightTopSegHeight > 0f) {
       Entity rightTop = ObstacleFactory.createWall(WALL_WIDTH, rightTopSegHeight);
