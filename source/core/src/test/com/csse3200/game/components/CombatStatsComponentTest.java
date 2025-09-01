@@ -8,6 +8,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestClassOrder;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -53,6 +54,46 @@ class CombatStatsComponentTest {
       CombatStatsComponent combat = new CombatStatsComponent(0, 5);
       assertEquals(0, combat.getHealth());
       assertTrue(combat.isDead());
+    }
+  }
+
+  // ---=---
+  @Nested
+  @DisplayName("Objective: setHealth clamps at lower bound and fires event")
+  class SetHealthTests {
+    @Test
+    void postiveSet_updatesAndFiresEvent() {
+      CombatStatsComponent combat = new CombatStatsComponent(100, 20);
+      HealthSpy spy = attachWithHealthSpy(combat);
+
+      combat.setHealth(150);
+      assertEquals(150, combat.getHealth());
+      assertEquals(150, spy.last.get());
+      assertEquals(1, spy.cnt.get());
+    }
+
+    @Test
+    void negativeSet_clampsToZero_andFiresEventOnce() {
+      CombatStatsComponent combat = new CombatStatsComponent(100, 20);
+      HealthSpy spy = attachWithHealthSpy(combat);
+
+      combat.setHealth(-50);
+      assertEquals(0, combat.getHealth());
+      assertEquals(0, spy.last.get());
+      assertEquals(1, spy.cnt.get());
+      assertTrue(combat.isDead());
+    }
+
+    @Test
+    void idempotentSet_sameValue_mayNotFireDuplicateEvent() {
+      CombatStatsComponent combat = new CombatStatsComponent(100, 20);
+      HealthSpy spy = attachWithHealthSpy(combat);
+
+      combat.setHealth(100);
+      int afterFirst = spy.cnt.get();
+      combat.setHealth(100);
+      assertTrue(spy.cnt.get() == afterFirst || spy.cnt.get() == afterFirst + 1,
+              "Implementation may de-duplicate identical sets; allow either.");
     }
   }
 
