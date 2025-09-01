@@ -18,7 +18,7 @@ public class ItemComponentTest {
     class ConstructorTest{
         @Test
         void testParameterisedConstructor(){
-            ItemComponent item = new ItemComponent(2);
+            ItemComponent item = new ItemComponent(2, "images/mud.png");
 
             assertEquals(2, item.getCount());
         }
@@ -33,8 +33,7 @@ public class ItemComponentTest {
 
     @Nested
     @DisplayName("Testing Getters and Setters")
-
-    public static class GetterSetterTest{
+    class GetterSetterTest{
         private ItemComponent item;
 
         @BeforeEach
@@ -51,8 +50,7 @@ public class ItemComponentTest {
 
     @Nested
     @DisplayName("Testing Edge cases")
-
-    public static class EdgeTest{
+    class EdgeTest{
 
         private ItemComponent item;
 
