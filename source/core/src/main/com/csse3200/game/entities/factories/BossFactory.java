@@ -58,9 +58,10 @@ public class BossFactory {
     }
     public static Entity createBlackhole(Vector2 pos,Entity target){
         Entity Blackhole = new Entity()
-                .addComponent(new TextureRenderComponent("images/tree.png"))
+                .addComponent(new TextureRenderComponent("images/blackhole1.png"))
                 .addComponent(new BlackholeAttackComponent(target,1f,4f));
         Blackhole.setPosition(pos);
+        Blackhole.getComponent(TextureRenderComponent.class).scaleEntity();
         return Blackhole;
     }
     public static Entity createFireball(Vector2 from, Vector2 velocity) {
