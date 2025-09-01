@@ -118,6 +118,7 @@ private void pickUpItem(Entity item) {
  * items for the inventory bar.
  * Only valid indices (0–4 inclusive) are accepted;
  * otherwise, the focus is cleared.
+ * @param index the index of the focused slot in the inventory bar
  */
 private void onFocusItem(int index) {
     if (index >= 0 && index < 5) {
