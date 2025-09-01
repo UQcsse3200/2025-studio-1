@@ -63,7 +63,7 @@ public class Floor5GameArea extends GameArea {
     spawnEntity(right);
     // Left border split with a door to return to Floor 2
     float doorHeight = Math.max(1f, viewHeight * 0.2f);
-    float doorY = camPos.y - doorHeight / 2f;
+    float doorY = camPos.y - doorHeight / 0.7f;
     float leftTopSegHeight = Math.max(0f, (topY) - (doorY + doorHeight));
     if (leftTopSegHeight > 0f) {
       Entity leftTop = ObstacleFactory.createWall(WALL_WIDTH, leftTopSegHeight);
