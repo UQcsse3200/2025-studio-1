@@ -217,6 +217,34 @@ class CombatStatsComponentTest {
     }
   }
 
+  // ---=---
+  @Nested
+  @DisplayName("Objective: Entity damage via hit(attacker)")
+  class HitFromAttackerTests {
+    @Test
+    void usesAttackersBaseAttack() {
+      CombatStatsComponent def = new CombatStatsComponent(100, 20);
+      CombatStatsComponent atk = new CombatStatsComponent(50, 25);
+      def.hit(atk);
+      assertEquals(75, def.getHealth());
+    }
+
+    @Test
+    void nullAttacker_isNoOp() {
+      CombatStatsComponent def = new CombatStatsComponent(100, 20);
+      def.hit((CombatStatsComponent) null);
+      assertEquals(100, def.getHealth());
+    }
+
+    @Test
+    void negativeBaseAttack_isIgnored_currentBehaviour() {
+      CombatStatsComponent def = new CombatStatsComponent(100, 20);
+      CombatStatsComponent weird = new CombatStatsComponent(20, -5); // normalised to 0 in setter
+      def.hit(weird);
+      assertEquals(100, def.getHealth());
+    }
+  }
+
   // Health clamps at lower bound for both max and health
   @Test
   void setHealth_clampsAndFiresUpdateHealthEvent() {
