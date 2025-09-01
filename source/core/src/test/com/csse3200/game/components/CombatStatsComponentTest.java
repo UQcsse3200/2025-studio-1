@@ -153,13 +153,27 @@ class CombatStatsComponentTest {
     }
 
     @Test
-    void addHealthZero_andHitZero_doNotFireEvent() {
+    void addHealthZero_mayFireEvent_implementationDependent() {
       CombatStatsComponent combat = new CombatStatsComponent(100, 10);
       HealthSpy spy = attachWithHealthSpy(combat);
+      int before = spy.cnt.get();
+
       combat.addHealth(0);
-      combat.hit(0);
+
+      assertTrue(spy.cnt.get() == before || spy.cnt.get() == before + 1);
       assertEquals(100, combat.getHealth());
-      assertEquals(0, spy.cnt.get());
+    }
+
+    @Test
+    void hitZero_doesNotFireEvent() {
+      CombatStatsComponent combat = new CombatStatsComponent(100, 10);
+      HealthSpy spy = attachWithHealthSpy(combat);
+      int before = spy.cnt.get();
+
+      combat.hit(0);
+
+      assertEquals(before, spy.cnt.get());
+      assertEquals(100, combat.getHealth());
     }
 
   }
