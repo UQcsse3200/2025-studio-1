@@ -2,6 +2,8 @@ package com.csse3200.game.entities.factories;
 
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.physics.box2d.Filter;
+import com.badlogic.gdx.physics.box2d.Fixture;
 import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.components.player.*;
 import com.csse3200.game.components.StaminaComponent;
@@ -63,6 +65,7 @@ public class PlayerFactory {
             .addComponent(animator)
             .addComponent(new PlayerAnimationController());
             .addComponent(new PlayerStatsDisplay());
+    player.addComponent(new InventoryComponent(10));
 
     PhysicsUtils.setScaledCollider(player, 0.6f, 0.3f);
     player.getComponent(ColliderComponent.class).setDensity(1.5f);
@@ -93,6 +96,15 @@ public class PlayerFactory {
     player.getComponent(ColliderComponent.class).setDensity(1.5f);
     PhysicsUtils.setScaledCollider(player, 0.3f,0.5f);
     player.getComponent(CombatStatsComponent.class).setCoolDown(0.2f);
+    player.getComponent(TextureRenderComponent.class).scaleEntity();
+    PhysicsComponent physics = player.getComponent(PhysicsComponent.class);
+    if (physics != null) {
+      for (Fixture fixture : physics.getBody().getFixtureList()) {
+        Filter filter = fixture.getFilterData();
+        filter.maskBits = PhysicsLayer.WALL | PhysicsLayer.GATE;
+        fixture.setFilterData(filter);
+      }
+    }
     return player;
   }
 
