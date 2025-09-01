@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.components.TagComponent;
 import com.csse3200.game.components.TouchAttackComponent;
+import com.csse3200.game.components.entity.item.ItemComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.*;
 import com.csse3200.game.files.FileLoader;
@@ -43,8 +44,10 @@ public class WeaponsFactory {
 
         Entity lightsaber = createBaseWeapon("melee");
         lightsaber.addComponent(new TextureRenderComponent("images/lightsaberSingle.png"))
-            .addComponent(new CombatStatsComponent(0, lightsaberConfigs.baseAttack));
+            .addComponent(new CombatStatsComponent(0, lightsaberConfigs.baseAttack))
+            .addComponent(new ItemComponent(1, "Lightsaber weapon"));
         lightsaber.getComponent(TextureRenderComponent.class).scaleEntity();
+        lightsaber.getComponent(PhysicsComponent.class).getBody().setUserData(lightsaber);
         return lightsaber;
     }
 
@@ -56,9 +59,11 @@ public class WeaponsFactory {
 
         Entity dagger = createBaseWeapon("melee");
         dagger.addComponent(new TextureRenderComponent("images/dagger.png"))
-          .addComponent(new CombatStatsComponent(0, daggerConfigs.baseAttack));
+          .addComponent(new CombatStatsComponent(0, daggerConfigs.baseAttack))
+          .addComponent(new ItemComponent(1, "Dagger weapon"));
         dagger.getComponent(TextureRenderComponent.class).scaleEntity();
         dagger.scaleHeight(0.55f);
+        dagger.getComponent(PhysicsComponent.class).getBody().setUserData(dagger);
         return dagger;
     }
 
@@ -69,8 +74,10 @@ public class WeaponsFactory {
     public static Entity createPistol() {
         Entity pistol = createBaseWeapon("ranged");
         pistol.addComponent(new TextureRenderComponent("images/pistol.png"))
-                .addComponent(new CombatStatsComponent(0, lightsaberConfigs.baseAttack));
+                .addComponent(new CombatStatsComponent(0, lightsaberConfigs.baseAttack))
+                .addComponent(new ItemComponent(1, "Pistol weapon"));
         pistol.getComponent(TextureRenderComponent.class).scaleEntity();
+        pistol.getComponent(PhysicsComponent.class).getBody().setUserData(pistol);
         return pistol;
     }
 
