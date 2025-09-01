@@ -56,6 +56,7 @@ public class KeycardPickupComponent extends Component {
         collected = true;
 
         // Set the player's keycard level
+        inventory.setKeycardLevel(level);
         Gdx.app.log("KeycardPickup", "Keycard level " + level + " collected by player");
 
         Gdx.app.postRunnable(meEntity::dispose);
