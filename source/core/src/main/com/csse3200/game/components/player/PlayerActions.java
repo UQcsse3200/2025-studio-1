@@ -18,7 +18,6 @@ public class PlayerActions extends Component {
   private PhysicsComponent physicsComponent;
 
   // Movement Constants
-  private static final float jumpImpulse = 120f;
   private static final Vector2 MAX_SPEED    = new Vector2(3f, 3f);
   private static final Vector2 CROUCH_SPEED = new Vector2(1.5f, 3f);
   private static final Vector2 SPRINT_SPEED = new Vector2(7f, 3f);
@@ -58,7 +57,7 @@ public class PlayerActions extends Component {
   // Stamina management
   private float stamina = INITIAL_STAMINA;
   private long  lastStaminaSpendMs = 0L;
-  private boolean infiniteStamina = false;  // used for cheatcodes
+  private boolean infiniteStamina = false;  // used for cheat codes
   // Tracks the last integer stamina value we pushed to UI to avoid redundant events
   private int lastEmittedStamina = -1;
 
@@ -86,9 +85,10 @@ public class PlayerActions extends Component {
       updateSpeed();
     }
 
-    Body body = physicsComponent.getBody();
     if (touchingGround()) {
       jumpsLeft = MAX_JUMPS;
+    } else {
+      crouching = false;
     }
   }
 
@@ -103,24 +103,7 @@ public class PlayerActions extends Component {
     }
 
     boolean hasDir = !walkDirection.isZero(0.0001f);
-    float maxX;
-    float targetVx;
-
-    if (dashing) {
-      maxX = (facingRight) ? DASH_SPEED.x : -1 * DASH_SPEED.x;
-      targetVx = maxX;
-    } else {
-      if (crouching) {
-        maxX = CROUCH_SPEED.x;
-      } else {
-        boolean allowSprint = sprinting && hasDir && stamina > 0f;
-        maxX = allowSprint ? SPRINT_SPEED.x : MAX_SPEED.x;
-      }
-      targetVx = walkDirection.x * maxX;
-    }
-
-    // impulse = (desiredVel - currentVel) * mass
-    float impulseX = (targetVx - velocity.x) * body.getMass();
+    float impulseX = getImpulseX(hasDir, velocity, body);
     body.applyLinearImpulse(new Vector2(impulseX, 0f), body.getWorldCenter(), true);
 
     if(grounded != touchingGround()) {
@@ -135,6 +118,27 @@ public class PlayerActions extends Component {
    // if((!dashing) && (!crouching) && touchingGround() && hasDir) {
   //    entity.getEvents().trigger("walk", walkDirection);
   //  }
+  }
+
+  private float getImpulseX(boolean hasDir, Vector2 velocity, Body body) {
+    float maxX;
+    float targetVx;
+
+    if (dashing) {
+      maxX = (facingRight) ? DASH_SPEED.x : -1 * DASH_SPEED.x;
+      targetVx = maxX;
+    } else {
+      if (crouching && touchingGround()) {
+        maxX = CROUCH_SPEED.x;
+      } else {
+        boolean allowSprint = sprinting && hasDir && stamina > 0f && touchingGround();
+        maxX = allowSprint ? SPRINT_SPEED.x : MAX_SPEED.x;
+      }
+      targetVx = walkDirection.x * maxX;
+    }
+
+    // impulse = (desiredVel - currentVel) * mass
+      return (targetVx - velocity.x) * body.getMass();
   }
 
   /**
@@ -204,18 +208,16 @@ public class PlayerActions extends Component {
   }
 
   void dash() {
-    if(touchingGround()) { // player must be grounded to dash
-      if (dashCooldown == 0 && trySpendStamina(DASH_COST)) {
-        if (crouching) { // Need to add grounded check here as well
-          entity.getEvents().trigger("roll", facingRight); // Different animation
-        } else {
-          entity.getEvents().trigger("dash", facingRight); // To be used for animations or invulnerability checks
-        }
-        dashCooldown = DASH_COOLDOWN;
-        dashing = true;
-        dashDuration();
-        dashCooldown();
+    if (dashCooldown == 0 && trySpendStamina(DASH_COST)) {
+      if (crouching) { // Need to add grounded check here as well
+        entity.getEvents().trigger("slide", facingRight); // Different animation
+      } else {
+        entity.getEvents().trigger("dash", facingRight); // To be used for animations or invulnerability checks
       }
+      dashCooldown = DASH_COOLDOWN;
+      dashing = true;
+      dashDuration();
+      dashCooldown();
     }
   }
 
@@ -312,7 +314,7 @@ public class PlayerActions extends Component {
    * One stamina "tick". Called at a fixed cadence by {@link #startStaminaTask()}.
    * Checks for horizontal movement. Jumps, dashes and other special movement actions
    * stamina changes are implemented in the handlers respectively.
-   *
+   * <p>
    * Rules:
    * - If {@code infiniteStamina} is enabled, keep stamina pegged at MAX and notify UI.
    * - While sprinting and moving horizontally (and not dashing), drain stamina.
@@ -333,7 +335,7 @@ public class PlayerActions extends Component {
     final boolean actuallySprinting =
         sprinting && moving && Math.abs(walkDirection.x) > 0.0001f && !dashing;
 
-    if (actuallySprinting && stamina > 0f) {
+    if (actuallySprinting && stamina > 0f && touchingGround()) {
       final float drainPerTick = SPRINT_DRAIN_PER_SEC * STAMINA_TICK_SEC;
       stamina = Math.max(0f, stamina - drainPerTick);
       lastStaminaSpendMs = now;

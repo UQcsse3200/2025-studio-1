@@ -12,8 +12,10 @@ import com.csse3200.game.utils.math.Vector2Utils;
  */
 public class KeyboardPlayerInputComponent extends InputComponent {
   private final Vector2 walkDirection = Vector2.Zero.cpy();
-  private int DASH_COOLDOWN = 3;
-  private int focusedItem = -1;
+    private int focusedItem = -1;
+
+  private long timeSinceKeyPress = 0;
+  private int doublePressKeyCode = -1;
 
   public KeyboardPlayerInputComponent() {
     super(5);
@@ -31,10 +33,16 @@ public class KeyboardPlayerInputComponent extends InputComponent {
       case Keys.A:
         walkDirection.add(Vector2Utils.LEFT);
         triggerWalkEvent();
+        if (isDoubleKeyPress(keycode)) {
+          entity.getEvents().trigger("dashAttempt");
+        }
         return true;
       case Keys.D:
         walkDirection.add(Vector2Utils.RIGHT);
         triggerWalkEvent();
+        if (isDoubleKeyPress(keycode)) {
+          entity.getEvents().trigger("dashAttempt");
+        }
         return true;
       case Keys.S:
         entity.getEvents().trigger("crouchAttempt");
@@ -45,9 +53,6 @@ public class KeyboardPlayerInputComponent extends InputComponent {
         return true;
       case Keys.SPACE:
         jump();
-        return true;
-      case Keys.Q:
-        entity.getEvents().trigger("dashAttempt");
         return true;
       // TODO: add in item/weapon usage
       default:
@@ -111,6 +116,22 @@ public class KeyboardPlayerInputComponent extends InputComponent {
     }
   }
 
+  private boolean isDoubleKeyPress(int keycode) {
+    boolean result = false;
+    long timeDif = System.currentTimeMillis() - timeSinceKeyPress;
+    long DOUBLE_KEY_INTERVAL = 300;
+    if (keycode == doublePressKeyCode || timeDif < DOUBLE_KEY_INTERVAL) {
+      result = true;
+    }
+    updateDoubleKeyPress(keycode);
+    return result;
+  }
+
+  private void updateDoubleKeyPress(int keycode) {
+    timeSinceKeyPress = System.currentTimeMillis();
+    doublePressKeyCode = keycode;
+  }
+
   private void triggerWalkEvent() {
     if (walkDirection.epsilonEquals(Vector2.Zero)) {
       entity.getEvents().trigger("walkStop");
@@ -121,13 +142,6 @@ public class KeyboardPlayerInputComponent extends InputComponent {
 
   private void jump() {
     entity.getEvents().trigger("jumpAttempt");
-  }
-
-  /**
-   * Cheatcode: infinite dashes
-   */
-  public void infDash() {
-    this.DASH_COOLDOWN = 0;
   }
 
   private void triggerRemoveItem() {
