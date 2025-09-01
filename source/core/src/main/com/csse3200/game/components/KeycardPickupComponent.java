@@ -25,21 +25,20 @@ public class KeycardPickupComponent extends Component {
         }, 0.2f); // delay by 0.2 seconds
     }
     private void onCollisionStart(Entity me, Entity other) {
-        Gdx.app.log("KeycardPickup", "Collision with entity: " + other.getClass().getSimpleName() + ", ID: " + other.getId());
-        Gdx.app.log("KeycardPickup", "Collected: " + collected);
-        if (collected) return;
+        if (collected || other == entity) return;
 
-        if (other == entity) return; // ✅ Prevent self-collision
-
-        if (other.getComponent(PlayerActions.class) == null) return;
-
+        PlayerActions player = other.getComponent(PlayerActions.class);
         InventoryComponent inventory = other.getComponent(InventoryComponent.class);
-        if (inventory != null) {
-            collected = true;
-            inventory.addItem(entity);
-            ServiceLocator.getGlobalEvents().trigger("keycard_lvl" + level + "_collected");
-            Gdx.app.log("KeycardPickup", "Keycard level " + level + " collected by player");
-            entity.dispose();
+
+        if (player == null || inventory == null) {
+            Gdx.app.error("KeycardPickup", "Collision entity is not a valid player");
+            return;
         }
+
+        collected = true;
+        inventory.addItem(entity);
+        ServiceLocator.getGlobalEvents().trigger("keycard_lvl" + level + "_collected");
+        Gdx.app.log("KeycardPickup", "Keycard level " + level + " collected by player");
+        entity.dispose();
     }
 }
