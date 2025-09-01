@@ -83,6 +83,20 @@ public class WeaponsFactory {
     }
 
     /**
+     * Creates a rifle entity.
+     * @return A rifle entity.
+     */
+    public static Entity createRifle() {
+        Entity rifle = createBaseWeapon("ranged");
+        rifle.addComponent(new TextureRenderComponent("images/rifle.png"))
+                .addComponent(new CombatStatsComponent(0, lightsaberConfigs.baseAttack))
+                .addComponent(new ItemComponent(1));
+        rifle.getComponent(TextureRenderComponent.class).scaleEntity();
+        rifle.getComponent(PhysicsComponent.class).getBody().setUserData(rifle);
+        return rifle;
+    }
+
+    /**
      * Create a generic base weapon
      * @param type "melee" or "ranged"
      * @return the base weapon
@@ -116,4 +130,6 @@ public class WeaponsFactory {
     private WeaponsFactory() {
         throw new IllegalStateException("Instantiating static util class");
     }
+
+
 }
