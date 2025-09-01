@@ -1,10 +1,12 @@
 package com.csse3200.game.areas;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Timer;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.CameraComponent;
@@ -15,6 +17,7 @@ import com.csse3200.game.entities.factories.NPCFactory;
 import com.csse3200.game.entities.factories.ObstacleFactory;
 import com.csse3200.game.entities.factories.PlayerFactory;
 import com.csse3200.game.physics.PhysicsLayer;
+import com.csse3200.game.physics.PhysicsUtils;
 import com.csse3200.game.physics.components.ColliderComponent;
 import com.csse3200.game.physics.components.PhysicsComponent;
 import com.csse3200.game.utils.math.GridPoint2Utils;
@@ -75,24 +78,36 @@ public class ForestGameArea extends GameArea {
   @Override
   public void create() {
     loadAssets();
-
     displayUI();
-
     spawnTerrain();
     spawnTrees();
     player = spawnPlayer();
     spawnGhosts();
     spawnGhostKing();
-
     playMusic();
-    // Spawn keycards in valid floors
-    com.csse3200.game.areas.KeycardSpawnerSystem.spawnKeycards(this);
 
-    // Add gate to next floor (if applicable)
+    // Spawn keycards
+    KeycardSpawnerSystem.spawnKeycards(this);
+
+    // Create gate to next floor
     Entity gateToNextFloor = new Entity()
-            .addComponent(new PhysicsComponent()) // ✅ Required
+            .addComponent(new PhysicsComponent())
             .addComponent(new ColliderComponent().setLayer(PhysicsLayer.GATE))
             .addComponent(new KeycardGateComponent(1));
+
+
+      Timer.schedule(new Timer.Task() {
+        @Override
+        public void run() {
+          PhysicsComponent physics = gateToNextFloor.getComponent(PhysicsComponent.class);
+          if (physics != null && physics.getBody() != null) {
+            PhysicsUtils.setScaledCollider(gateToNextFloor, 1f, 2f);
+            Gdx.app.log("GateSpawn", "Scaled collider applied to gate");
+          } else {
+            Gdx.app.error("GateSpawn", "Physics body not ready");
+          }
+        }
+      }, 0.3f);
     spawnEntity(gateToNextFloor);
 
   }
@@ -108,6 +123,7 @@ public class ForestGameArea extends GameArea {
     // Background terrain
     terrain = terrainFactory.createTerrain(TerrainType.FOREST_DEMO);
     spawnEntity(new Entity().addComponent(terrain));
+
 
     // Screen walls (camera viewport bounds) and a simple door trigger at the bottom center
     if (cameraComponent != null) {
@@ -160,12 +176,21 @@ public class ForestGameArea extends GameArea {
       Entity door = ObstacleFactory.createDoorTrigger(doorWidth, doorHeight);
       door.setPosition(doorX, doorY);
       // When entered, request next level via event on this area
-      door.addComponent(new com.csse3200.game.components.DoorComponent(() -> this.loadNextLevel()));
+      door.addComponent(new com.csse3200.game.components.DoorComponent(() -> {
+        Gdx.app.log("Door", "Transition triggered");
+        com.badlogic.gdx.utils.Timer.schedule(new com.badlogic.gdx.utils.Timer.Task() {
+          @Override
+          public void run() {
+            loadNextLevel();
+          }
+        }, 0.2f); // ✅ Delay to prevent freezing
+      }));
       spawnEntity(door);
     }
   }
 
   private void loadNextLevel() {
+    Gdx.app.log("ForestGameArea", "Loading Floor 2...");
     // Dispose current floor and switch to Floor2GameArea
     for (Entity entity : areaEntities) {
       entity.dispose();
