@@ -4,7 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="78acdbef-b972-46a4-a50a-31b47a1e7ab6" name="Changes" comment="This is the second commit trial 2b" />
+    <list default="true" id="78acdbef-b972-46a4-a50a-31b47a1e7ab6" name="Changes" comment="This is the second commit trial 2b">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/core/src/main/com/csse3200/game/components/KeycardPickupComponent.java" beforeDir="false" afterPath="$PROJECT_DIR$/source/core/src/main/com/csse3200/game/components/KeycardPickupComponent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/core/src/main/com/csse3200/game/components/player/InventoryComponent.java" beforeDir="false" afterPath="$PROJECT_DIR$/source/core/src/main/com/csse3200/game/components/player/InventoryComponent.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -234,7 +238,7 @@
       <workItem from="1756605935324" duration="22133000" />
       <workItem from="1756691950279" duration="2302000" />
       <workItem from="1756695088637" duration="1280000" />
-      <workItem from="1756715619337" duration="12953000" />
+      <workItem from="1756715619337" duration="14858000" />
     </task>
     <task id="LOCAL-00001" summary="This is the second commit trial 2">
       <option name="closed" value="true" />
@@ -332,7 +336,15 @@
       <option name="project" value="LOCAL" />
       <updated>1756733764327</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="This is the second commit trial 2b">
+      <option name="closed" value="true" />
+      <created>1756735127925</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1756735127925</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
