@@ -217,13 +217,13 @@ public class ObstacleFactory {
   public static Entity createLongCeilingLight() {
     Entity longCeilingLight =
             new Entity()
-                    .addComponent(new TextureRenderComponent("foreg_sprites/office/LongCeilingLight.png"))
+                    .addComponent(new TextureRenderComponent("foreg_sprites/office/LongCeilingLight2.png"))
                     .addComponent(new PhysicsComponent())
                     .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
 
     longCeilingLight.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
     longCeilingLight.getComponent(TextureRenderComponent.class).scaleEntity();
-    longCeilingLight.scaleHeight(0.5f);
+    longCeilingLight.scaleHeight(2.7f);
     PhysicsUtils.setScaledCollider(longCeilingLight, 1f, 1f);
     return longCeilingLight;
   }
