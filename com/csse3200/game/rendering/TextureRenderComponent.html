@@ -96,6 +96,10 @@ loadScripts(document, 'script');</script>
 <dt>All Implemented Interfaces:</dt>
 <dd><code>com.badlogic.gdx.utils.Disposable</code>, <code><a href="Renderable.html" title="interface in com.csse3200.game.rendering">Renderable</a></code>, <code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Comparable.html" title="class or interface in java.lang" class="external-link">Comparable</a>&lt;<a href="Renderable.html" title="interface in com.csse3200.game.rendering">Renderable</a>&gt;</code></dd>
 </dl>
+<dl class="notes">
+<dt>Direct Known Subclasses:</dt>
+<dd><code><a href="TextureRenderWithRotationComponent.html" title="class in com.csse3200.game.rendering">TextureRenderWithRotationComponent</a></code></dd>
+</dl>
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">TextureRenderComponent</span>
 <span class="extends-implements">extends <a href="RenderComponent.html" title="class in com.csse3200.game.rendering">RenderComponent</a></span></div>
@@ -143,9 +147,12 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Draw the renderable.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#scaleEntity()" class="member-name-link">scaleEntity</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected com.badlogic.gdx.graphics.Texture</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getTexture()" class="member-name-link">getTexture</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#scaleEntity()" class="member-name-link">scaleEntity</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Scale the entity to a width of 1 and a height matching the texture's ratio</div>
 </div>
 </div>
@@ -205,6 +212,12 @@ loadScripts(document, 'script');</script>
 <h3>scaleEntity</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">scaleEntity</span>()</div>
 <div class="block">Scale the entity to a width of 1 and a height matching the texture's ratio</div>
+</section>
+</li>
+<li>
+<section class="detail" id="getTexture()">
+<h3>getTexture</h3>
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">com.badlogic.gdx.graphics.Texture</span>&nbsp;<span class="element-name">getTexture</span>()</div>
 </section>
 </li>
 <li>
