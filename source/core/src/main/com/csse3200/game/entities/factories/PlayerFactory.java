@@ -3,6 +3,7 @@ package com.csse3200.game.entities.factories;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.csse3200.game.components.CombatStatsComponent;
+import com.csse3200.game.components.StaminaComponent;
 import com.csse3200.game.components.player.InventoryComponent;
 import com.csse3200.game.components.player.PlayerActions;
 import com.csse3200.game.components.player.PlayerInventoryDisplay;
@@ -57,8 +58,9 @@ public class PlayerFactory {
             .addComponent(new PlayerStatsDisplay())
             .addComponent(new PlayerInventoryDisplay())
             .addComponent(new PlayerStatsDisplay())
-                .addComponent(animator)
-                .addComponent(new PlayerAnimationController());
+            .addComponent(new StaminaComponent())
+            .addComponent(animator)
+            .addComponent(new PlayerAnimationController());
 
     player.getComponent(AnimationRenderComponent.class).scaleEntity(2f);
     player.getComponent(ColliderComponent.class).setDensity(1.5f);
