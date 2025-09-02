@@ -15,7 +15,6 @@ import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.components.KeycardGateComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.factories.KeycardFactory;
-import com.csse3200.game.entities.factories.BossFactory;
 import com.csse3200.game.entities.factories.NPCFactory;
 import com.csse3200.game.entities.factories.ObstacleFactory;
 import com.csse3200.game.entities.factories.PlayerFactory;
@@ -171,11 +170,11 @@ public class ForestGameArea extends GameArea {
     // spawnGhostKing();
     int choice = (int)(Math.random() * 3);
     if (choice == 0) {
-      spawnBoss2();
+      // spawnBoss2();
     } else if (choice == 1) {
-      spawnRobots();
+      // spawnRobots();
     } else {
-      spawnBoss3();
+      // spawnBoss3();
     }
     spawnGhostGPT();
     playMusic();
@@ -189,12 +188,12 @@ public class ForestGameArea extends GameArea {
     spawnItems();
   }
 
-  private void spawnRobots() {
-    GridPoint2 spawnPos = new GridPoint2(20, 20);
+  // private void spawnRobots() {
+  //   GridPoint2 spawnPos = new GridPoint2(20, 20);
 
-    Entity robot = NPCFactory.createRobot(player);
-    spawnEntityAt(robot, spawnPos, true, true);
-  }
+  //   Entity robot = NPCFactory.createRobot(player);
+  //   spawnEntityAt(robot, spawnPos, true, true);
+  // }
 
   private void displayUI() {
     Entity ui = new Entity();
@@ -411,18 +410,18 @@ public class ForestGameArea extends GameArea {
   //   }
   // }
 
-  private void spawnBoss2() {
-    GridPoint2 pos = new GridPoint2(22, 20);
+  // private void spawnBoss2() {
+  //   GridPoint2 pos = new GridPoint2(22, 20);
 
-    Entity boss2 = BossFactory.createBoss2(player);
-    spawnEntityAt(boss2, pos, true, true);
-  }
-  //new added boss3
-  private void spawnBoss3() {
-    GridPoint2 pos = new GridPoint2(20, 20);
-    Entity boss3 = BossFactory.createBoss3(player);
-    spawnEntityAt(boss3, pos, true, true);
-  }
+  //   Entity boss2 = BossFactory.createBoss2(player);
+  //   spawnEntityAt(boss2, pos, true, true);
+  // }
+  // //new added boss3
+  // private void spawnBoss3() {
+  //   GridPoint2 pos = new GridPoint2(20, 20);
+  //   Entity boss3 = BossFactory.createBoss3(player);
+  //   spawnEntityAt(boss3, pos, true, true);
+  // }
 
   // private void spawnGhostKing() {
   //   GridPoint2 minPos = new GridPoint2(0, 0);
