@@ -15,6 +15,7 @@ import com.csse3200.game.utils.math.Vector2Utils;
  */
 public class KeyboardPlayerInputComponent extends InputComponent {
   private final Vector2 walkDirection = Vector2.Zero.cpy();
+  private int focusedItem = -1;
 
   public KeyboardPlayerInputComponent() {
     super(5);
