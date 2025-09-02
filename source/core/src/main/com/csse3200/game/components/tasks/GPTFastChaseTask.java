@@ -25,7 +25,7 @@ public class GPTFastChaseTask extends DefaultTask implements PriorityTask {
     // Projectile configurations
     private final ProjectileLauncherComponent projectileLauncher;
     private final GameTime timeSource;
-    private final float firingCooldown = 2f;
+    private final float firingCooldown = 4f;
     private float currentCooldown = 2f;
     private final Entity shooter;
 
@@ -75,8 +75,8 @@ public class GPTFastChaseTask extends DefaultTask implements PriorityTask {
                 Vector2 dirToFire = new Vector2(target.getPosition().x - shooter.getPosition().x,
                         target.getPosition().y - shooter.getPosition().y);
 
-                projectileLauncher.FireProjectile("images/lightsaber.png", dirToFire,
-                        new Vector2(0.2f, 0.8f), new Vector2(2f, 2f));
+                projectileLauncher.FireProjectileBurstFire("images/laser_shot.png", 10, 0.2f, dirToFire,
+                        new Vector2(0.2f, 0.8f), new Vector2(1f, 1f));
             }
         }
     }
