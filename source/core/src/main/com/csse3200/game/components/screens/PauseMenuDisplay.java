@@ -51,26 +51,23 @@ public class PauseMenuDisplay extends UIComponent {
      */
     private void addActors() {
         // Fullscreen dimmer
-        dimTex = makeSolidTexture(1, 1, new Color(0, 0, 0, 0.6f));
+        dimTex = makeSolidTexture( new Color(0, 0, 0, 0.6f));
         dimmer = new Image(new TextureRegionDrawable(new TextureRegion(dimTex)));
         dimmer.setFillParent(true);
         stage.addActor(dimmer);
+        logger.debug("Semi-transparent dimmer added");
 
         root = new Table();
         root.setFillParent(true);
         root.center();
 
-        // Button sizing relative to screen
-        float btnW = stage.getWidth() * 0.28f;
-        float btnH = Math.max(56f, stage.getHeight() * 0.07f);
-
-        NeonStyles neon = new NeonStyles(0.70f);
         TextButton.TextButtonStyle style = neon.buttonRounded();
 
         // Title
         Label pausedLabel = new Label("Game Paused", skin, "title");
         pausedLabel.setFontScale(2.0f);
         pausedLabel.getStyle().fontColor = Color.WHITE;
+        logger.debug("Title label created");
 
         // Buttons
         TextButton resumeBtn   = new TextButton("Resume", style);
@@ -81,6 +78,7 @@ public class PauseMenuDisplay extends UIComponent {
         resumeBtn.getLabel().setFontScale(1.8f);
         restartBtm.getLabel().setFontScale(1.8f);
         mainBtn.getLabel().setFontScale(1.8f);
+        logger.debug("Buttons created");
 
         Table panel = new Table();
         panel.defaults().pad(10f);
@@ -96,18 +94,21 @@ public class PauseMenuDisplay extends UIComponent {
         // Button handlers
         resumeBtn.addListener(new ChangeListener() {
             @Override public void changed(ChangeEvent event, Actor actor) {
+                logger.debug("Resume button clicked");
                 entity.getEvents().trigger("resume");
             }
         });
 
         restartBtm.addListener(new ChangeListener() {
             @Override public void changed(ChangeEvent event, Actor actor) {
+                logger.debug("Restart button clicked");
                 game.setScreen(ScreenType.MAIN_GAME);
             }
         });
 
         mainBtn.addListener(new ChangeListener() {
             @Override public void changed(ChangeEvent event, Actor actor) {
+                logger.debug("Main Menu button clicked");
                 game.setScreen(ScreenType.MAIN_MENU);
             }
         });
@@ -117,6 +118,7 @@ public class PauseMenuDisplay extends UIComponent {
             @Override
             public boolean keyDown(InputEvent event, int keycode) {
                 if (keycode == Input.Keys.ESCAPE) {
+                    logger.debug("ESC pressed");
                     entity.getEvents().trigger("resume");
                     return true;
                 }
@@ -129,8 +131,8 @@ public class PauseMenuDisplay extends UIComponent {
     /**
      * Creates a solid RGBA texture.
      */
-    private static Texture makeSolidTexture(int w, int h, Color color) {
-        Pixmap pm = new Pixmap(w, h, Pixmap.Format.RGBA8888);
+    private static Texture makeSolidTexture(Color color) {
+        Pixmap pm = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
         pm.setColor(color);
         pm.fill();
         Texture t = new Texture(pm);
@@ -159,6 +161,7 @@ public class PauseMenuDisplay extends UIComponent {
         if (root != null) { root.remove(); root = null; }
         if (dimmer != null) { dimmer.remove(); dimmer = null; }
         if (dimTex != null) { dimTex.dispose(); dimTex = null; }
+        logger.debug("Pause menu disposed");
         super.dispose();
     }
 }
