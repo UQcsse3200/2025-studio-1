@@ -11,10 +11,15 @@ import com.badlogic.gdx.math.MathUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+/**
+ * Factory class for creating keycard entities used in gated access gameplay.
+ * Provides methods to create specific, random, or all keycard levels with appropriate components.
+ */
 
 public class KeycardFactory {
 
     public static Entity createKeycard(int level) {
+        /** Creates a keycard entity with the specified level, physics, rendering, and pickup logic.*/
         Entity keycard = new Entity()
                 .addComponent(new TextureRenderComponent("images/keycard_lvl" + level + ".png"))
                 .addComponent(new PhysicsComponent())
@@ -29,6 +34,7 @@ public class KeycardFactory {
     }
 
     public static List<Entity> createAllKeycards() {
+        /** Generates a list of keycard entities for levels 1 through 4.*/
         List<Entity> keycards = new ArrayList<>();
         for (int level = 1; level <= 4; level++) {
             keycards.add(createKeycard(level));
@@ -37,6 +43,7 @@ public class KeycardFactory {
     }
 
     public static Entity createRandomKeycard() {
+        //not needed for this sprint just for future refrences
         int level = MathUtils.random(1, 4);
         return createKeycard(level);
     }
