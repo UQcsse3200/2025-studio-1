@@ -42,30 +42,30 @@ public class ForestGameArea extends GameArea {
   private static final GridPoint2 PLAYER_SPAWN = new GridPoint2(3, 7);
   private static final float WALL_WIDTH = 0.1f;
   private static final String[] forestTextures = {
-    "images/box_boy_leaf.png",
-    "images/tree.png",
-    "images/ghost_king.png",
-    "images/ghost_1.png",
-    "images/grass_1.png",
-    "images/grass_2.png",
-    "images/grass_3.png",
-    "images/hex_grass_1.png",
-    "images/hex_grass_2.png",
-    "images/hex_grass_3.png",
-    "images/iso_grass_1.png",
-    "images/iso_grass_2.png",
-    "images/iso_grass_3.png",
-    "images/lightsaber.png",
-    "images/lightsaberSingle.png",
-    "images/ammo.png",
-    "images/round.png",
-    "images/pistol.png",
-    "images/rifle.png",
-    "images/dagger.png",
-    "images/laser_shot.png",
-    "images/Spawn.png",
-    "images/SpawnResize.png",
-    "images/LobbyWIP.png",
+          "images/box_boy_leaf.png",
+          "images/tree.png",
+          "images/ghost_king.png",
+          "images/ghost_1.png",
+          "images/grass_1.png",
+          "images/grass_2.png",
+          "images/grass_3.png",
+          "images/hex_grass_1.png",
+          "images/hex_grass_2.png",
+          "images/hex_grass_3.png",
+          "images/iso_grass_1.png",
+          "images/iso_grass_2.png",
+          "images/iso_grass_3.png",
+          "images/lightsaber.png",
+          "images/lightsaberSingle.png",
+          "images/ammo.png",
+          "images/round.png",
+          "images/pistol.png",
+          "images/rifle.png",
+          "images/dagger.png",
+          "images/laser_shot.png",
+          "images/Spawn.png",
+          "images/SpawnResize.png",
+          "images/LobbyWIP.png",
           "images/door.png"
   };
   private static final String[] generalTextures = {
@@ -97,14 +97,14 @@ public class ForestGameArea extends GameArea {
           "foreg_sprites/futuristic/storage_crate_green2.png",
           "foreg_sprites/futuristic/storage_crate_dark2.png"
   };
-  
+
   private static final String[] forestTextureAtlases = {
-    "images/terrain_iso_grass.atlas",
-    "images/ghost.atlas",
-    "images/ghostKing.atlas",
-    "images/ghostGPT.atlas",
-    "images/explosion_1.atlas",
-    "images/explosion_2.atlas"
+          "images/terrain_iso_grass.atlas",
+          "images/ghost.atlas",
+          "images/ghostKing.atlas",
+          "images/ghostGPT.atlas",
+          "images/explosion_1.atlas",
+          "images/explosion_2.atlas"
   };
   private static final String[] forestSounds = {"sounds/Impact4.ogg"};
   private static final String backgroundMusic = "sounds/BGM_03_mp3.mp3";
@@ -121,9 +121,11 @@ public class ForestGameArea extends GameArea {
   private Entity rifle;
 
   /**
-   * Initialise this ForestGameArea to use the provided TerrainFactory.
-   * @param terrainFactory TerrainFactory used to create the terrain for the GameArea.
-   * @requires terrainFactory != null
+   * Initialise this ForestGameArea to use the provided TerrainFactory and camera helper.
+   * The camera is used to size the screen-edge walls and place the right-side door trigger.
+   *
+   * @param terrainFactory TerrainFactory used to create the terrain for the GameArea (required).
+   * @param cameraComponent Camera helper supplying an OrthographicCamera (optional but used here).
    */
   public ForestGameArea(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
     super();
@@ -131,7 +133,7 @@ public class ForestGameArea extends GameArea {
     this.cameraComponent = cameraComponent;
   }
 
-  /** Create the game area, including terrain, static entities (trees), dynamic entities (player) */
+
   @Override
   public void create() {
 
@@ -173,13 +175,18 @@ public class ForestGameArea extends GameArea {
 
   }
 
+
   private void displayUI() {
     Entity ui = new Entity();
     ui.addComponent(new GameAreaDisplay("Box Forest"))
-      .addComponent(new com.csse3200.game.components.gamearea.FloorLabelDisplay("Floor 1"));
+            .addComponent(new com.csse3200.game.components.gamearea.FloorLabelDisplay("Floor 1"));
     spawnEntity(ui);
   }
 
+  /**
+   * Builds terrain for SPAWN_ROOM and wraps the visible screen with thin physics walls
+   * based on the camera viewport. Also adds a right-side door trigger that loads next level.
+   */
   private void spawnTerrain() {
     // Background terrain
     terrain = terrainFactory.createTerrain(TerrainType.SPAWN_ROOM);
@@ -234,6 +241,10 @@ public class ForestGameArea extends GameArea {
     }
   }
 
+  /**
+   * Disposes current entities and switches to Floor2GameArea.
+   * This is called by the door/keycard logic when the player exits.
+   */
   private void loadNextLevel() {
     // Dispose current floor and switch to Floor2GameArea
     for (Entity entity : areaEntities) {
@@ -244,6 +255,7 @@ public class ForestGameArea extends GameArea {
     Floor2GameArea floor2 = new Floor2GameArea(terrainFactory, cameraComponent);
     floor2.create();
   }
+
 
   private void spawnTrees() {
     GridPoint2 minPos = new GridPoint2(0, 0);
@@ -256,6 +268,9 @@ public class ForestGameArea extends GameArea {
     }
   }
 
+  /**
+   * Builds the upper walkway: three thin floors, a long ceiling light, and a front-facing desk.
+   */
   private void spawnPlatforms() {
     for (int i = 0; i < 3; i++) {
       GridPoint2 platformPos = new GridPoint2(i * 5, 11);
@@ -287,23 +302,31 @@ public class ForestGameArea extends GameArea {
     spawnEntity(door);
   }
 
+  /**
+   * Places the purple spawn pad on the lower floor (visual prop).
+   */
   private void spawnPad() {
     GridPoint2 spawnPadPos = new GridPoint2(20, 3);
     Entity spawnPad = ObstacleFactory.createPurpleSpawnPad();
     spawnEntityAt(spawnPad, spawnPadPos, false, false);
   }
 
+  /**
+   * Adds a very tall thick-floor as a background wall/divider.
+   */
   private void spawnBigWall() {
     GridPoint2 wallSpawn = new GridPoint2(-14, 0);
     Entity bigWall = ObstacleFactory.createBigThickFloor();
     spawnEntityAt(bigWall, wallSpawn, true, false);
   }
 
+
   private Entity spawnPlayer() {
     Entity newPlayer = PlayerFactory.createPlayer();
     spawnEntityAt(newPlayer, PLAYER_SPAWN, true, true);
     return newPlayer;
   }
+
 
   private Entity spawnDagger() {
     Entity newDagger = WeaponsFactory.createDagger();
@@ -312,15 +335,18 @@ public class ForestGameArea extends GameArea {
     return newDagger;
   }
 
+
   private void equipItem(Entity item) {
     this.player.setCurrItem(item);
     spawnEntityAt(item, PLAYER_SPAWN, true, true);
 
   }
 
+
   private Entity getItem() {
     return this.player.getCurrItem();
   }
+
 
   private Entity spawnLightsaber() {
     Entity newLightsaber = WeaponsFactory.createLightsaber();
@@ -341,12 +367,14 @@ public class ForestGameArea extends GameArea {
 //    return newBullet;
 //  }
 
+
   private Entity spawnPistol() {
     Entity newPistol = WeaponsFactory.createPistol();
     Vector2 newPistolOffset = new Vector2(0.45f, 0.02f);
     newPistol.addComponent(new ItemHoldComponent(this.player, newPistolOffset));
     return newPistol;
   }
+
 
   private Entity spawnRifle() {
     Entity newRifle = WeaponsFactory.createRifle();
@@ -355,6 +383,7 @@ public class ForestGameArea extends GameArea {
     return newRifle;
   }
 
+
   // Enemy Projectiles
   public Entity spawnLaserProjectile(Vector2 directionToFire) {
     Entity laser = ProjectileFactory.createLaserShot(directionToFire);
@@ -362,6 +391,7 @@ public class ForestGameArea extends GameArea {
 
     return laser;
   }
+
 
   private void spawnGhosts() {
     GridPoint2 minPos = new GridPoint2(0, 0);
@@ -374,6 +404,7 @@ public class ForestGameArea extends GameArea {
     }
   }
 
+
   private void spawnGhostKing() {
     GridPoint2 minPos = new GridPoint2(0, 0);
     GridPoint2 maxPos = terrain.getMapBounds(0).sub(2, 2);
@@ -384,19 +415,8 @@ public class ForestGameArea extends GameArea {
   }
 
   /**
-   * Adds NUM_GHOST_GPTS amount of GhostGPT enemies onto the map.
+   * Spawns two GhostGPT enemies at fixed locations for predictable behaviour.
    */
-  // private void spawnGhostGPT() {
-  //   GridPoint2 minPos = new GridPoint2(0, 0);
-  //   GridPoint2 maxPos = terrain.getMapBounds(0).sub(3, 3);
-
-  //   for (int i = 0; i < NUM_GHOST_GPTS; i++) {
-  //       GridPoint2 randomPos = RandomUtils.random(minPos, maxPos);
-  //       Entity ghostGPT = NPCFactory.createGhostGPT(player, this);
-  //       spawnEntityAt(ghostGPT, randomPos, true, true);
-  //   }
-  // }
-
   private void spawnGhostGPT() {
     GridPoint2 spawn1 = new GridPoint2(20, 20);
     GridPoint2 spawn2 = new GridPoint2(25, 20);
@@ -407,6 +427,9 @@ public class ForestGameArea extends GameArea {
     spawnEntityAt(ghostGPT2, spawn2, true, true);
   }
 
+  /**
+   * Adds a single crate to the lower platform for cover/decoration.
+   */
   private void spawnCrates() {
     GridPoint2 cratePos = new GridPoint2(17, 6);
     Entity crate = ObstacleFactory.createCrate();
@@ -414,12 +437,18 @@ public class ForestGameArea extends GameArea {
   }
 
 
+  /**
+   * Places a visual-only security camera in the top-right area.
+   */
   private void spawnSecurityCamera() {
     GridPoint2 cameraPos = new GridPoint2(27, 19);
     Entity securityCamera = ObstacleFactory.createLargeSecurityCamera();
     spawnEntityAt(securityCamera, cameraPos, true, false);
   }
 
+  /**
+   * Places the collidable energy pod on the floor using bottom-left alignment.
+   */
   private void spawnEnergyPod() {
     GridPoint2 energyPodPos = new GridPoint2(20, 6);
     Entity energyPod = ObstacleFactory.createLargeEnergyPod();
@@ -427,7 +456,10 @@ public class ForestGameArea extends GameArea {
   }
 
 
-
+  /**
+   * Spawns two storage crates (green and dark) and nudges them slightly up
+   * so they appear seated on the ground visually.
+   */
   private void spawnStorageCrates() {
     // Green crate
     GridPoint2 greenCratePos = new GridPoint2(5, 5);
@@ -447,6 +479,7 @@ public class ForestGameArea extends GameArea {
     music.setVolume(0.3f);
     music.play();
   }
+
 
   private void loadAssets() {
     logger.debug("Loading assets");
@@ -483,12 +516,14 @@ public class ForestGameArea extends GameArea {
 
 
 
+
   @Override
   public void dispose() {
     super.dispose();
     ServiceLocator.getResourceService().getAsset(backgroundMusic, Music.class).stop();
     this.unloadAssets();
   }
+
 
   public Entity getPlayer() {
     return player;
