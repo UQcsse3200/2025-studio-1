@@ -14,7 +14,7 @@ import com.csse3200.game.physics.components.ColliderComponent;
  */
 public class KeycardGateComponent extends Component {
     private final int requiredLevel;
-    private final Runnable onUnlock; // optional callback
+    private final Runnable onUnlock;
     private boolean unlocked = false;
 
     public KeycardGateComponent(int requiredLevel, Runnable onUnlock) {

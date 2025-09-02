@@ -7,10 +7,13 @@ import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.CameraComponent;
+import com.csse3200.game.components.KeycardGateComponent;
 import com.csse3200.game.entities.Entity;
+import com.csse3200.game.entities.factories.KeycardFactory;
 import com.csse3200.game.entities.factories.NPCFactory;
 import com.csse3200.game.entities.factories.ObstacleFactory;
 import com.csse3200.game.entities.factories.PlayerFactory;
+import com.csse3200.game.rendering.TextureRenderComponent;
 import com.csse3200.game.utils.math.GridPoint2Utils;
 import com.csse3200.game.utils.math.RandomUtils;
 import com.csse3200.game.services.ResourceService;
@@ -45,7 +48,8 @@ public class ForestGameArea extends GameArea {
     "images/iso_grass_3.png",
     "images/Spawn.png",
     "images/SpawnResize.png",
-    "images/LobbyWIP.png"
+    "images/LobbyWIP.png",
+          "images/door.png"
   };
   private static final String[] generalTextures = {
           "foreg_sprites/general/LongFloor.png",
@@ -113,13 +117,20 @@ public class ForestGameArea extends GameArea {
     spawnPad();
     spawnCrates();
     spawnPlatforms();
-
+    spawnBottomRightDoor();
     spawnSecurityCamera();
     spawnEnergyPod();
     spawnStorageCrates();
     spawnBigWall();
 
     playMusic();
+    float keycardX = 1f;
+    float keycardY = 6f;
+
+    Entity keycard = KeycardFactory.createKeycard(1); // assuming level 1
+    keycard.setPosition(new Vector2(keycardX, keycardY));
+    spawnEntity(keycard);
+
   }
 
   private void displayUI() {
@@ -179,7 +190,7 @@ public class ForestGameArea extends GameArea {
       Entity rightDoor = ObstacleFactory.createDoorTrigger(WALL_WIDTH, rightDoorHeight);
       rightDoor.setPosition(rightX - WALL_WIDTH - 0.001f, rightDoorY);
       rightDoor.addComponent(new com.csse3200.game.components.DoorComponent(() -> this.loadNextLevel()));
-      spawnEntity(rightDoor);
+
     }
   }
 
@@ -218,6 +229,22 @@ public class ForestGameArea extends GameArea {
 
     Entity officeDesk = ObstacleFactory.createOfficeDesk();
     spawnEntityAt(officeDesk, new GridPoint2(5, 12), true, false);
+  }
+  private void spawnBottomRightDoor() {
+    float doorX = 14f;
+    float doorY = 3f;
+
+    Entity door = ObstacleFactory.createDoorTrigger(20f, 40f);
+    TextureRenderComponent texture = new TextureRenderComponent("images/door.png");
+    door.addComponent(texture);
+    texture.scaleEntity();
+    door.setPosition(doorX, doorY);
+    door.addComponent(new KeycardGateComponent(1, () -> {
+      logger.info("Bottom-right platform door unlocked — loading next level");
+      loadNextLevel();
+    }));
+
+    spawnEntity(door);
   }
 
   private void spawnPad() {
