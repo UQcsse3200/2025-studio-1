@@ -50,6 +50,7 @@ public class SettingsMenuDisplay extends UIComponent {
   @Override
   public void create() {
     super.create();
+    neon = new NeonStyles(0.70f);
     addActors();
   }
 
@@ -139,6 +140,7 @@ public class SettingsMenuDisplay extends UIComponent {
       if (tf.background != null) tf.background = skin.newDrawable(tf.background, new Color(1f,1f,1f,0.15f));
       fpsText.setStyle(tf);
     }
+    logger.debug("TextField styled");
 
     // CheckBox style
     {
@@ -150,6 +152,7 @@ public class SettingsMenuDisplay extends UIComponent {
       fullScreenCheck.setStyle(cb);
       vsyncCheck.setStyle(cb);
     }
+    logger.debug("CheckBox styled");
 
     // Slider style
     {
@@ -169,6 +172,7 @@ public class SettingsMenuDisplay extends UIComponent {
       uiScaleSlider.setStyle(ss);
       uiScaleSlider.invalidateHierarchy();
     }
+    logger.debug("Slider styled");
 
     // SelectBox style
     {
@@ -184,6 +188,7 @@ public class SettingsMenuDisplay extends UIComponent {
         sb.backgroundOpen     = skin.newDrawable(tfBg, new Color(1f,1f,1f,0.25f));
         sb.backgroundDisabled = skin.newDrawable(tfBg, new Color(1f,1f,1f,0.10f));
       }
+      logger.debug("SelectBox styled");
 
       // Dropdown list
       List.ListStyle ls = new List.ListStyle(sb.listStyle);
@@ -193,10 +198,12 @@ public class SettingsMenuDisplay extends UIComponent {
       if (ls.background != null) ls.background = skin.newDrawable(ls.background, new Color(1f,1f,1f,0.08f));
       else if (tfBg != null)     ls.background = skin.newDrawable(tfBg,          new Color(1f,1f,1f,0.08f));
       sb.listStyle = ls;
+      logger.debug("Dropdown list styled");
 
       // ScrollPane inside the dropdown
       if (sb.scrollStyle != null) {
         ScrollPane.ScrollPaneStyle sp = new ScrollPane.ScrollPaneStyle(sb.scrollStyle);
+        logger.debug("Dropdown scroll styled");
         if (sp.background  != null) sp.background  = skin.newDrawable(sp.background,  new Color(1f,1f,1f,0.05f));
         if (sp.vScrollKnob != null) sp.vScrollKnob = skin.newDrawable(sp.vScrollKnob, Color.WHITE);
         if (sp.vScroll     != null) sp.vScroll     = skin.newDrawable(sp.vScroll,     new Color(1f,1f,1f,0.15f));
@@ -204,7 +211,6 @@ public class SettingsMenuDisplay extends UIComponent {
         if (sp.hScroll     != null) sp.hScroll     = skin.newDrawable(sp.hScroll,     new Color(1f,1f,1f,0.15f));
         sb.scrollStyle = sp;
       }
-
       displayModeSelect.setStyle(sb);
       displayModeSelect.invalidateHierarchy();
     }
@@ -291,7 +297,6 @@ public class SettingsMenuDisplay extends UIComponent {
    * their change listeners.
    */
   private Table makeMenuBtns() {
-    neon = new NeonStyles(0.70f);
     TextButton.TextButtonStyle style = neon.buttonRounded();
 
     TextButton exitBtn = new TextButton("Exit", style);
@@ -356,6 +361,7 @@ public class SettingsMenuDisplay extends UIComponent {
    * Leaves the Settings screen and returns to the main menu.
    */
   private void exitMenu() {
+    logger.debug("Switching to Main Menu screen");
     game.setScreen(ScreenType.MAIN_MENU);
   }
 
@@ -398,6 +404,7 @@ public class SettingsMenuDisplay extends UIComponent {
       Label.LabelStyle st = new Label.LabelStyle(l.getStyle());
       st.fontColor = Color.WHITE;
       l.setStyle(st);
+      logger.debug("Label styled to white");
     }
   }
 }
