@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.ai.tasks.AITaskComponent;
 import com.csse3200.game.components.CombatStatsComponent;
-import com.csse3200.game.components.enemy.FireballAttackComponment;
+import com.csse3200.game.components.npc.BossAnimationController;
 import com.csse3200.game.components.npc.GhostAnimationController;
 import com.csse3200.game.components.TouchAttackComponent;
 import com.csse3200.game.components.tasks.ChaseTask;
@@ -91,6 +91,31 @@ public class NPCFactory {
     return ghostKing;
   }
 
+
+  /**
+   * Creates a robot entity.
+   *
+   * @param target entity to chase (e.g. player)
+   * @return robot entity
+   */
+
+  public static Entity createRobot(Entity target) {
+    Entity robot = createBaseNPC(target);
+
+    AnimationRenderComponent animator = new AnimationRenderComponent(
+            ServiceLocator.getResourceService().getAsset("images/Robot_1.atlas", TextureAtlas.class));
+    animator.addAnimation("Idle",   0.12f, Animation.PlayMode.LOOP);
+    animator.addAnimation("attack", 0.06f, Animation.PlayMode.LOOP);
+    animator.addAnimation("fury",   0.10f, Animation.PlayMode.LOOP);
+    animator.addAnimation("die",    0.10f, Animation.PlayMode.NORMAL);
+
+    robot
+            .addComponent(animator)
+            .addComponent(new CombatStatsComponent(100, 5))
+            .addComponent(new BossAnimationController());
+
+    return robot;
+  }
 
   /**
    * Creates a generic NPC to be used as a base entity by more specific NPC creation methods.
