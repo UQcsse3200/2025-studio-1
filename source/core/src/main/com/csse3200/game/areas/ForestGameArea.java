@@ -126,7 +126,7 @@ public class ForestGameArea extends GameArea {
 
     playMusic();
     float keycardX = 1f;
-    float keycardY = 6f;
+    float keycardY = 7f;
 
     Entity keycard = KeycardFactory.createKeycard(1); // assuming level 1
     keycard.setPosition(new Vector2(keycardX, keycardY));
