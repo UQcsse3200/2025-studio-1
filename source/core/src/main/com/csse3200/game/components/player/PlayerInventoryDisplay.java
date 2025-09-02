@@ -9,14 +9,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Scaling;
-import com.csse3200.game.entities.Entity;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.UIComponent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * The UI component of the inventory.
@@ -31,14 +27,10 @@ public class PlayerInventoryDisplay extends UIComponent {
     private static final int SLOTS = 5;
     private static final float SLOT_SIZE = 96f;
     private static final float SLOT_PAD  = 10f;
-    // Box textures (make sure both are loaded by ResourceService)
-//    private static final String BG_TEX          = "images/ghost_1.png";        // normal
-//    private static final String BG_TEX_FOCUSED  = "images/ghost_king.png";  // highlighted
 
     private int focusedIndex = -1;
 
-    private final InventoryComponent inventory; // this is also included
-    private final Map<String, String> itemPaths = new HashMap<String, String>(); // this too
+    private final InventoryComponent inventory;
 
     /** TODO what happens if this is gone, along with the
      * Constructs the PlayerInventory display, takes in an InventoryComponent
@@ -47,8 +39,6 @@ public class PlayerInventoryDisplay extends UIComponent {
      */
     public PlayerInventoryDisplay(InventoryComponent inventory) {
         this.inventory = inventory;
-
-        itemPaths.put("mud", "imgaes/mud.png"); // populate the map with example
     }
 
     @Override
@@ -95,11 +85,6 @@ public class PlayerInventoryDisplay extends UIComponent {
         table.center().bottom();
         table.padBottom(20f);
 
-        // Preload background drawables
-//        Drawable normalBg  = new Image(ServiceLocator.getResourceService()
-//                .getAsset(BG_TEX, Texture.class)).getDrawable();
-//        Drawable focusBg   = new Image(ServiceLocator.getResourceService()
-//                .getAsset(BG_TEX_FOCUSED, Texture.class)).getDrawable();
         Drawable normalBg = createSlotBg(0.2f, 0.2f, 0.2f, 0.6f, 2, 1f, 1f, 1f, 1f);
         Drawable focusBg  = createSlotBg(1f, 1f, 0f, 0.6f, 2, 1f, 1f, 0f, 1f);
 
