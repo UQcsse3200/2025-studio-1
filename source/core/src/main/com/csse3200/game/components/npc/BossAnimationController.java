@@ -14,21 +14,18 @@ public class BossAnimationController extends Component {
         }
 
         entity.getEvents().addListener("wanderStart", this::playIdle);
-        entity.getEvents().addListener("chaseStart",  this::playAngry);
+        entity.getEvents().addListener("chaseStart",  this::playAttack);
 
         // Boss event
-        entity.getEvents().addListener("boss:attackStart", this::playAngry);
-        entity.getEvents().addListener("boss:enraged", this::playAttack);
+        entity.getEvents().addListener("boss:attackStart", this::playAttack);
+        entity.getEvents().addListener("boss:enraged", this::playFury);
+        entity.getEvents().addListener("boss:death", this::playDeath);
 
         playIdle();
     }
 
     private void playIdle()  { if (animator != null) animator.startAnimation("Idle"); }
-    private void playAngry() { if (animator != null) animator.startAnimation("attack"); }
-
-    private void playAttack() {
-        if (animator == null) return;
-        animator.startAnimation("attack");
-        //animator.startAnimation("angry_float");
-    }
+    private void playAttack() { if (animator != null) animator.startAnimation("attack"); }
+    private void playFury() { if (animator != null) animator.startAnimation("fury");}
+    private void playDeath() { if (animator != null) animator.startAnimation("death"); }
 }

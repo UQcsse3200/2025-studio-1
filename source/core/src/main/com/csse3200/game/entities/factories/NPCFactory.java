@@ -103,14 +103,15 @@ public class NPCFactory {
     AnimationRenderComponent animator = new AnimationRenderComponent(
             ServiceLocator.getResourceService().getAsset("images/Robot_1.atlas", TextureAtlas.class));
     animator.addAnimation("Idle",   0.12f, Animation.PlayMode.LOOP);
-    animator.addAnimation("attack", 0.06f, Animation.PlayMode.NORMAL);
+    animator.addAnimation("attack", 0.06f, Animation.PlayMode.LOOP);
+    animator.addAnimation("fury",   0.10f, Animation.PlayMode.LOOP);
+    animator.addAnimation("die",    0.10f, Animation.PlayMode.NORMAL);
 
     robot
             .addComponent(animator)
-            .addComponent(new CombatStatsComponent(20, 2))
-            .addComponent(new BossAnimationController()); // 事件→动画，示例见下
+            .addComponent(new CombatStatsComponent(100, 5))
+            .addComponent(new BossAnimationController());
 
-    //animator.scaleEntity();
     return robot;
   }
 
