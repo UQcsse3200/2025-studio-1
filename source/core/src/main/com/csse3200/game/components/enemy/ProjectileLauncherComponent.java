@@ -29,26 +29,33 @@ public class ProjectileLauncherComponent extends Component {
     }
 
     /**
-     * Fires a laser projectile in the direction specified.
-     * @param directionToFire The direction to fire at.
+     * Fires a projectile, classified as an enemy projectile, in the direction specified.
+     * @param texturePath The texture/sprite of the projectile
+     * @param directionToFire The direction to fire in
+     * @param offset Offset (from the center) where the projectile is fired
+     * @param scale The size of the projectile. "x" value represents width, and "y" value represnets height.
      */
     public void FireProjectile(String texturePath, Vector2 directionToFire, Vector2 offset, Vector2 scale)
     {
         Entity projectile = forestGameArea.spawnEnemyProjectile(texturePath, directionToFire);
-        Vector2 pos = new Vector2(getEntity().getPosition().x + offset.x, getEntity().getPosition().y + offset.y);
+        Vector2 pos = new Vector2(getEntity().getPosition().x + offset.x,
+                                getEntity().getPosition().y + offset.y);
         projectile.setPosition(pos);
         projectile.scaleWidth(scale.x);
         projectile.scaleHeight(scale.y);
     }
 
     /**
-     * Fires multiple laser projectiles at once
+     * Fires multiple laser projectiles, classified as enemy projectiles, at once
+     * @param texturePath The texture/sprite of the projectile
      * @param amount The amount of projectiles to fire in one go
      * @param angleDifferences The angle differences, in degrees, between lasers. For example, passing in 10 means
-     *                         10 degree difference in the rotation of each laser projectile.
+     *                          10 degree difference in the rotation of each laser projectile.
      * @param directionToFire The direction to fire at.
+     * @param offset Offset (from the center) where the projectile is fired
+     * @param scale The size of the projectile. "x" value represents width, and "y" value represnets height.
      */
-    public void FireLaserProjectileMultishot(String texturePath, int amount, float angleDifferences,
+    public void FireProjectileMultishot(String texturePath, int amount, float angleDifferences,
                                              Vector2 directionToFire, Vector2 offset, Vector2 scale)
     {
         directionToFire = directionToFire.rotateDeg(-angleDifferences * ((float)amount/2));
@@ -63,11 +70,14 @@ public class ProjectileLauncherComponent extends Component {
     /**
      * A quick burst of repeated laser projectile firings. Note that all lasers will head in the same direction, even if
      * the player has moved during the burst duration.
+     * @param texturePath The texture/sprite of the projectile
      * @param burstAmount The amount of projectiles to fire in a burst.
      * @param timeBetweenShots The time, in seconds, between each laser fired within one burst sequence.
      * @param directionToFire The direction to fire at.
+     * @param offset Offset (from the center) where the projectile is fired
+     * @param scale The size of the projectile. "x" value represents width, and "y" value represnets height.
      */
-    public void FireLaserProjectileBurstFire(String texturePath, int burstAmount, float timeBetweenShots,
+    public void FireProjectileBurstFire(String texturePath, int burstAmount, float timeBetweenShots,
                                              Vector2 directionToFire, Vector2 offset, Vector2 scale)
     {
         Timer.Task burstFireTask = new Timer.Task() {
@@ -90,22 +100,4 @@ public class ProjectileLauncherComponent extends Component {
 
         Timer.schedule(burstFireTask, 0f, timeBetweenShots);
     }
-
-    /*
-    @Override
-    public void update() {
-        //long currentTime = ServiceLocator.getTimeSource().getTime();
-
-        SAMPLE USE OF ATTACKING WITH THESE METHODS
-        if (currentTime - timeSinceFiring >= 1000L) {
-            timeSinceFiring = currentTime;
-
-            Vector2 dirToFire = new Vector2(target.getPosition().x - getEntity().getPosition().x,
-            target.getPosition().y - getEntity().getPosition().y);
-
-            FireLaserProjectileBurstFire(4, 0.2f, dirToFire);
-            //FireLaserProjectileMultishot(5, 10, dirToFire);
-        }
-    }
-    */
 }

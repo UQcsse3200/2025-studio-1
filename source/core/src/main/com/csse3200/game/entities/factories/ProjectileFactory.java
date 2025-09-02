@@ -54,6 +54,7 @@ public class ProjectileFactory {
 
     /**
      * Creates a laser shot entity
+     * @param texturePath the path of the texture that's going to be used as the projectile's sprite
      * @param direction The direction to fire at
      * @return The laser entity
      */
