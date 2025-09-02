@@ -5,7 +5,6 @@ package com.csse3200.game.components.player;
 
 import com.csse3200.game.components.Component;
 import com.csse3200.game.components.entity.item.ItemComponent;
-//import com.csse3200.game.components.player.InventoryComponent;  //delete if not being used
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.physics.BodyUserData;
@@ -53,8 +52,8 @@ public class ItemPickUpComponent extends Component {
     /**
      * Handles the start of a collision. If the colliding entity is an item, it is set as
      * the current target for potential pickup.
-     * @param me give small description of what this is
-     * @param other same as above
+     * @param me Fixture to retrieve entity data
+     * @param other Fixture to retrieve entity data
      */
     private void onCollisionStart(Fixture me, Fixture other) {
         Object data = other.getBody().getUserData();
@@ -70,8 +69,8 @@ public class ItemPickUpComponent extends Component {
     /**
      * Handles the end of a collision. If the player stops colliding with the currently
      * targeted item, the target is cleared.
-     * @param me give small description of what this is
-     * @param other same as above
+     * @param me Fixture to retrieve entity data
+     * @param other Fixture to retrieve entity data
      */
     private void onCollisionEnd(Fixture me, Fixture other) {
         Object data = other.getBody().getUserData();
