@@ -48,8 +48,10 @@ public class ItemComponent extends EntityComponent {
             "\nType :  " + getType());
     }
 
+    //public void updateCount() -- to increment/decrement count
+
     /**
-     *
+     * Sets the texture path of the current item
      * @param texture sets the texture path of the current item
      */
     public void setTexture(String texture){this.texture = texture;}
@@ -58,4 +60,23 @@ public class ItemComponent extends EntityComponent {
      * Returns the texture path of the current item
      */
     public String getTexture() { return this.texture; }
+
+    /**
+     * TODO: implement functionality and add docstrings
+     */
+    public void setDescription(){ }
+
+    /**
+     * Gets the description for the item
+     * @return A formatted description of the item
+     * with its; name, id, type, and current count.
+     */
+    public String getDescription(){
+        return ("Item : " + this.getName()
+                + "\nID : " + this.getId()
+                + "\nType : " + this.getType()
+                + "\nCount : " + this.getCount());
+    }
 }
+
+
