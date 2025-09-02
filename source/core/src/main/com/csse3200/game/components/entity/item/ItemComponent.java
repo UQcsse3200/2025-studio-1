@@ -38,17 +38,6 @@ public class ItemComponent extends EntityComponent {
     public void setCount(int count){this.count = count;}
 
     /**
-     * Outputs the description of the provided item with id
-     * @param name The name of the item that you want the description of
-     * @param id The id of the item that you want the description of
-     */
-    public void description(String name, int id){
-        System.out.println("This is a/an " + name + ". " +
-            "\nPresent count : " + count +
-            "\nType :  " + getType());
-    }
-
-    /**
      *
      * @param texture sets the texture path of the current item
      */
