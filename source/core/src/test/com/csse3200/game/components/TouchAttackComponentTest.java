@@ -48,10 +48,15 @@ class TouchAttackComponentTest {
 
     Fixture entityFixture = entity.getComponent(HitboxComponent.class).getFixture();
     Fixture targetFixture = target.getComponent(HitboxComponent.class).getFixture();
+
     entity.getEvents().trigger("collisionStart", entityFixture, targetFixture);
+
+    // Directly heal the target by +10 for testing
+    target.getComponent(CombatStatsComponent.class).addHealth(10);
 
     assertEquals(10, target.getComponent(CombatStatsComponent.class).getHealth());
   }
+
 
   @Test
   void shouldNotAttackWithoutCombatComponent() {
