@@ -205,11 +205,11 @@ class InventoryComponentTest {
   @Test
   void shouldAddProcessor() {
     InventoryComponent inventory = new InventoryComponent(100);
-    inventory.addGold(-500);
+    inventory.addProcessor(-500);
     assertEquals(0, inventory.getProcessor());
 
-    inventory.addGold(100);
-    inventory.addGold(-20);
+    inventory.addProcessor(100);
+    inventory.addProcessor(-20);
     assertEquals(80, inventory.getProcessor());
   }
 }

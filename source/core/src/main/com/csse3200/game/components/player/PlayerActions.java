@@ -1,10 +1,23 @@
 package com.csse3200.game.components.player;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.utils.Array;
+import com.csse3200.game.components.CameraComponent;
+import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.components.Component;
+import com.csse3200.game.entities.Entity;
+import com.csse3200.game.entities.configs.LightsaberConfig;
+import com.csse3200.game.entities.factories.ProjectileFactory;
+import com.csse3200.game.physics.PhysicsLayer;
+import com.csse3200.game.physics.components.ColliderComponent;
+import com.csse3200.game.physics.components.HitboxComponent;
 import com.csse3200.game.physics.components.PhysicsComponent;
+import com.csse3200.game.physics.components.PhysicsProjectileComponent;
 import com.csse3200.game.services.ServiceLocator;
 import com.badlogic.gdx.utils.Timer;
 
@@ -60,6 +73,12 @@ public class PlayerActions extends Component {
   private boolean infiniteStamina = false;  // used for cheat codes
   // Tracks the last integer stamina value we pushed to UI to avoid redundant events
   private int lastEmittedStamina = -1;
+  private float timeSinceLastAttack = 0;
+  /*
+  Added camera variable to allow for entities to spawn in world coordinates instead of
+  screen coordinates.
+   */
+  private Camera camera;
 
   @Override
   public void create() {
@@ -67,6 +86,7 @@ public class PlayerActions extends Component {
     entity.getEvents().addListener("walk", this::walk);
     entity.getEvents().addListener("walkStop", this::stopWalking);
     entity.getEvents().addListener("attack", this::attack);
+    entity.getEvents().addListener("shoot", this::shoot);
     entity.getEvents().addListener("jumpAttempt", this::jump);
     entity.getEvents().addListener("sprintAttempt", this::sprintAttempt);
     entity.getEvents().addListener("dashAttempt", this::dash);
@@ -74,6 +94,13 @@ public class PlayerActions extends Component {
     entity.getEvents().addListener("crouchStop", () -> crouching = false);
     entity.getEvents().addListener("sprintStart", () -> sprinting = true);
     entity.getEvents().addListener("sprintStop",  () -> sprinting = false);
+    Array<Entity> entities = ServiceLocator.getEntityService().getEntities();
+    for (Entity entity: entities) {
+
+      if (entity.getComponent(CameraComponent.class) != null) {
+        camera = entity.getComponent(CameraComponent.class).getCamera();
+      }
+    }
 
     startStaminaTask();
     emitStaminaChanged();
@@ -90,6 +117,8 @@ public class PlayerActions extends Component {
     } else {
       crouching = false;
     }
+
+    timeSinceLastAttack += ServiceLocator.getTimeSource().getDeltaTime();
   }
 
   private void updateSpeed() {
@@ -140,6 +169,8 @@ public class PlayerActions extends Component {
     // impulse = (desiredVel - currentVel) * mass
       return (targetVx - velocity.x) * body.getMass();
   }
+
+
 
   /**
    * Moves the player towards a given direction.
@@ -264,11 +295,69 @@ public class PlayerActions extends Component {
     return (physicsComponent.getBody().getLinearVelocity().y == 0f);
   }
   /**
-   * Makes the player attack.
+   * Fires a bullet from the player at wherever they click
    */
-  void attack() {
+
+  void shoot() {
+
+    float coolDown = entity.getComponent(CombatStatsComponent.class).getCoolDown();
+    if (this.timeSinceLastAttack < coolDown) {
+      return;
+    }
+
     Sound attackSound = ServiceLocator.getResourceService().getAsset("sounds/Impact4.ogg", Sound.class);
     attackSound.play();
+
+    Entity bullet = ProjectileFactory.createPistolBullet();
+    Vector2 origin = new Vector2(entity.getPosition());
+    bullet.setPosition(origin);
+    ServiceLocator.getEntityService().register(bullet);
+
+    PhysicsProjectileComponent projectilePhysics = bullet.
+            getComponent(PhysicsProjectileComponent.class);
+
+    Vector3 destination = camera.unproject(new Vector3(Gdx.input.getX(),
+            Gdx.input.getY(), 0));
+
+    projectilePhysics.fire(new Vector2(destination.x - origin.x,
+            destination.y - origin.y), 5);
+
+    timeSinceLastAttack = 0;
+  }
+
+  /**
+   * Makes the player melee attack.
+   */
+  void attack() {
+
+    float coolDown = entity.getComponent(CombatStatsComponent.class).getCoolDown();
+    if (this.timeSinceLastAttack < coolDown) {
+      return;
+    }
+
+    Sound attackSound = ServiceLocator.getResourceService().getAsset("sounds/Impact4.ogg", Sound.class);
+    attackSound.play();
+
+    float attackRange = 3f; // CHANGE THIS
+
+    for (Entity enemy : ServiceLocator.getEntityService().getEntities()) {
+        if (enemy != entity) {
+          CombatStatsComponent enemyStats = enemy.getComponent(CombatStatsComponent.class);
+          CombatStatsComponent attackStats = entity.getComponent(CombatStatsComponent.class);
+          HitboxComponent enemyHitBox = enemy.getComponent(HitboxComponent.class);
+          if (enemyStats != null && attackStats != null
+                  && enemyHitBox != null) {
+            if (enemyHitBox.getLayer() == PhysicsLayer.NPC) {
+                float distance = enemy.getCenterPosition().dst(entity.getCenterPosition());
+                if (distance <= attackRange) {
+                  System.out.println("TRYING TO HIT: " + enemy);
+                  enemy.getComponent(CombatStatsComponent.class).hit(entity.getComponent(CombatStatsComponent.class));
+                }
+            }
+          }
+        }
+    }
+    timeSinceLastAttack = 0;
   }
 
   /**

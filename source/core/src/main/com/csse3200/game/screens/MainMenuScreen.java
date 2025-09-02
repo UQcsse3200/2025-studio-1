@@ -46,6 +46,7 @@ public class MainMenuScreen extends ScreenAdapter {
     ServiceLocator.registerRenderService(new RenderService());
 
     renderer = RenderFactory.createRenderer();
+    logger.debug("Main menu screen renderer created");
 
     loadAssets();
     createUI();
@@ -56,6 +57,7 @@ public class MainMenuScreen extends ScreenAdapter {
    */
   @Override
   public void render(float delta) {
+    logger.debug("Rendering main menu screen frame");
     ServiceLocator.getEntityService().update();
     renderer.render();
   }
@@ -86,12 +88,10 @@ public class MainMenuScreen extends ScreenAdapter {
   @Override
   public void dispose() {
     logger.debug("Disposing main menu screen");
-
     renderer.dispose();
     unloadAssets();
     ServiceLocator.getRenderService().dispose();
     ServiceLocator.getEntityService().dispose();
-
     ServiceLocator.clear();
   }
 
@@ -125,10 +125,12 @@ public class MainMenuScreen extends ScreenAdapter {
     // Add the background image as a Stage actor
     Texture bgTex = ServiceLocator.getResourceService()
             .getAsset("images/menu_background.png", Texture.class);
+    logger.debug("Main menu screen background texture asset loaded");
     Image bg = new Image(new TextureRegionDrawable(new TextureRegion(bgTex)));
     bg.setFillParent(true);
     bg.setScaling(Scaling.fill);
     stage.addActor(bg);
+    logger.debug("Main menu screen background added");
 
     // Register the UI entity that owns the display and actions
     Entity ui = new Entity();
@@ -136,6 +138,7 @@ public class MainMenuScreen extends ScreenAdapter {
         .addComponent(new InputDecorator(stage, 10))
         .addComponent(new MainMenuActions(game));
     ServiceLocator.getEntityService().register(ui);
+    logger.debug("Main menu screen ui created and registered");
   }
 }
 

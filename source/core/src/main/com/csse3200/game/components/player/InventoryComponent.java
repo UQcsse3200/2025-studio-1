@@ -6,6 +6,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.List;
+
 
 /**
  * A component intended to be used by the player to track their inventory.
@@ -15,11 +17,13 @@ import java.util.ArrayList;
  */
 public class InventoryComponent extends Component {
   private static final Logger logger = LoggerFactory.getLogger(InventoryComponent.class);
+
   private int inventoryCount = 0;
   private final int maxCapacity = 5;
   private final int minCapacity = 0;
   private ArrayList<Entity> items = new ArrayList<Entity>(maxCapacity);
   private int processor;
+  private Entity currItem;
 
   public InventoryComponent(int processor) {
     setProcessor(processor);
@@ -142,15 +146,31 @@ public class InventoryComponent extends Component {
    * @param processor processor
    */
   public void setProcessor(int processor) {
+    int prev = this.processor;
     this.processor = Math.max(processor, 0);
-    logger.debug("Setting gold to {}", this.processor);
+    // Fire event only after entity attached (not during constructor before setEntity)
+    if (entity != null && prev != this.processor) {
+      entity.getEvents().trigger("updateProcessor", this.processor);
+    }
   }
 
   /**
-   * Adds to the player's processor's. The amount added can be negative.
+   * Adds to the player's processors. The amount added can be negative.
    * @param processor processor to add
    */
-  public void addGold(int processor) {
+  public void addProcessor(int processor) {
     setProcessor(this.processor + processor);
   }
+
+  public void equipWeapon(Entity item) {
+      if (items.contains(item)) {
+          currItem = item;
+      }
+  }
+
+  public Entity getCurrItem() {
+      return currItem;
+  }
+
 }
+
