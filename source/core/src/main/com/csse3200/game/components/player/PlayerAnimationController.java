@@ -29,8 +29,8 @@ public class PlayerAnimationController extends Component {
         entity.getEvents().addListener("walkAnimate", this::animateMove);
         entity.getEvents().addListener("walkStop", this::stopMoving);
         entity.getEvents().addListener("jump", this::animateJump);
-        entity.getEvents().addListener("sprintStart", () -> sprinting = true);
-        entity.getEvents().addListener("sprintStop", () -> sprinting = false);
+        entity.getEvents().addListener("sprintStart", this::startSprinting);
+        entity.getEvents().addListener("sprintStop", this::stopSprinting);
         entity.getEvents().addListener("dash", this::animateDash);
         entity.getEvents().addListener("crouchStart", this::startCrouching);
         entity.getEvents().addListener("crouchStop", this::stopCrouching);
@@ -180,6 +180,22 @@ public class PlayerAnimationController extends Component {
     void stopCrouching() {
         crouching = false;
         animateIdle();
+    }
+
+    void startSprinting() {
+        sprinting = true;
+        if (!stopped) {
+            animateMove();
+        }
+    }
+
+    void stopSprinting() {
+        sprinting = false;
+        if (!stopped) {
+            animateMove();
+        } else  {
+            animateIdle();
+        }
     }
 
     void startFalling(Vector2 direction) {
