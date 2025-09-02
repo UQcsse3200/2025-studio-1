@@ -12,10 +12,8 @@ import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.components.Component;
 import com.csse3200.game.components.StaminaComponent;
 import com.csse3200.game.entities.Entity;
-import com.csse3200.game.entities.configs.LightsaberConfig;
 import com.csse3200.game.entities.factories.ProjectileFactory;
 import com.csse3200.game.physics.PhysicsLayer;
-import com.csse3200.game.physics.components.ColliderComponent;
 import com.csse3200.game.physics.components.HitboxComponent;
 import com.csse3200.game.physics.components.PhysicsComponent;
 import com.csse3200.game.physics.components.PhysicsProjectileComponent;
@@ -88,14 +86,8 @@ public class PlayerActions extends Component {
     entity.getEvents().addListener("dashAttempt", this::dash);
     entity.getEvents().addListener("crouchAttempt", this::crouchAttempt);
     entity.getEvents().addListener("crouchStop", () -> crouching = false);
-    entity.getEvents().addListener("sprintStart", () -> {
-      sprinting = true;
-      stamina.setSprinting(true);
-    });
-    entity.getEvents().addListener("sprintStop", () -> {
-      sprinting = false;
-      stamina.setSprinting(false);
-    });
+    entity.getEvents().addListener("sprintStart", this::startSprinting);
+    entity.getEvents().addListener("sprintStop", this::stopSprinting);
 
     Array<Entity> entities = ServiceLocator.getEntityService().getEntities();
     for (Entity entity: entities) {
@@ -113,14 +105,31 @@ public class PlayerActions extends Component {
     }
 
     if (touchingGround()) {
-      // Reset jumps
-      jumpsLeft = MAX_JUMPS;
+      updateGrounded();
+
     } else {
-      // Cannot be crouching whilst in the air
-      crouching = false;
+      updateMidair();
     }
 
     timeSinceLastAttack += ServiceLocator.getTimeSource().getDeltaTime();
+  }
+
+  private void updateGrounded() {
+    if (!grounded) {
+      setGrounded(true);
+      entity.getEvents().trigger("groundTouched", walkDirection);
+    }
+
+    jumpsLeft = MAX_JUMPS;
+  }
+
+  private void updateMidair() {
+    if (grounded) {
+      setGrounded(false);
+      entity.getEvents().trigger("groundLeft", walkDirection);
+    }
+
+    crouching = false;
   }
 
   private void updateSpeed() {
@@ -133,22 +142,11 @@ public class PlayerActions extends Component {
       facingRight = false;
     }
 
-    boolean hasDir = !walkDirection.isZero(0.0001f);
-    float impulseX = getImpulseX(hasDir, velocity, body);
+    float impulseX = getImpulseX(velocity, body);
     body.applyLinearImpulse(new Vector2(impulseX, 0f), body.getWorldCenter(), true);
-
-    if(grounded != touchingGround()) {
-      if(touchingGround()) {
-        setGrounded(true);
-        entity.getEvents().trigger("walk", walkDirection);
-      } else {
-        setGrounded(false);
-        entity.getEvents().trigger("fall", walkDirection);
-      }
-    }
   }
 
-  private float getImpulseX(boolean hasDir, Vector2 velocity, Body body) {
+  private float getImpulseX(Vector2 velocity, Body body) {
     float maxX;
     float targetVx;
 
@@ -184,11 +182,8 @@ public class PlayerActions extends Component {
     this.walkDirection = direction;
     facingRight = this.walkDirection.x > 0;
 
-    if (touchingGround()) {
-      entity.getEvents().trigger("walkAnimate", walkDirection);
-    } else {
-      entity.getEvents().trigger("fall", walkDirection);
-    }
+    entity.getEvents().trigger("move", facingRight);
+    entity.getEvents().trigger("walkAnimate");
   }
 
   /**
@@ -230,7 +225,6 @@ public class PlayerActions extends Component {
         body.applyLinearImpulse(JUMP_VELOCITY, body.getWorldCenter(), true);
         jumpsLeft--;
         lastJumpTime = currentTime;
-        setGrounded(true);
     }
   }
 }
@@ -246,9 +240,9 @@ public class PlayerActions extends Component {
   void dash() {
     if (dashCooldown == 0 && stamina.trySpend(DASH_COST)) {
       if (crouching && touchingGround()) {
-        entity.getEvents().trigger("slide", facingRight);
+        entity.getEvents().trigger("slide");
       } else {
-        entity.getEvents().trigger("dash", facingRight);
+        entity.getEvents().trigger("dash");
       }
       dashCooldown = DASH_COOLDOWN;
       dashing = true;
@@ -262,11 +256,7 @@ public class PlayerActions extends Component {
       @Override
       public void run() {
         dashing = false;
-        if (!moving) {
-          stopWalking();
-        } else if (!sprinting){
-          entity.getEvents().trigger("walk", walkDirection);
-        }
+        grounded = true; // Set grounded as true so set to falling afterwards
       }
     }, DASH_DURATION); // seconds
   }
@@ -300,8 +290,17 @@ public class PlayerActions extends Component {
    * @return if player is touching ground or not
    */
   boolean touchingGround() {
-    // return true for infinite jumps
     return (physicsComponent.getBody().getLinearVelocity().y == 0f);
+  }
+
+  void startSprinting() {
+    sprinting = true;
+    stamina.setSprinting(true);
+  }
+
+  void stopSprinting() {
+    sprinting = false;
+    stamina.setSprinting(false);
   }
 
   /**
