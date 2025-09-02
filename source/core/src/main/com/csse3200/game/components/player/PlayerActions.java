@@ -34,7 +34,7 @@ public class PlayerActions extends Component {
   private static final Vector2 MAX_SPEED    = new Vector2(3f, 3f);
   private static final Vector2 CROUCH_SPEED = new Vector2(1.5f, 3f);
   private static final Vector2 SPRINT_SPEED = new Vector2(7f, 3f);
-  private static final Vector2 JUMP_VELOCITY = new Vector2(0f, 120f);
+  private static final Vector2 JUMP_VELOCITY = new Vector2(0f, 30f);
   private static final Vector2 DASH_SPEED = new Vector2(20f, 9.8f);
   private static final float DASH_DURATION = 0.1f;
   private int DASH_COOLDOWN = 15; // hundredths of a second (1.5s)
@@ -292,6 +292,7 @@ public class PlayerActions extends Component {
    */
   boolean touchingGround() {
     // return true for infinite jumps
+
     return (physicsComponent.getBody().getLinearVelocity().y == 0f);
   }
   /**
