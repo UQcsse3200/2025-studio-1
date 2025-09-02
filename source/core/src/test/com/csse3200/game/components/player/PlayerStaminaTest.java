@@ -9,6 +9,7 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.csse3200.game.extensions.GameExtension;
 import com.csse3200.game.physics.PhysicsService;
 import com.csse3200.game.physics.components.PhysicsComponent;
+import com.csse3200.game.components.StaminaComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.events.EventHandler;
 import com.csse3200.game.services.ServiceLocator;
@@ -33,34 +34,23 @@ class PlayerStaminaTest {
     @Test
     void sprintingDrainsStamina() {
         PlayerActions actions = new PlayerActions();
-
         attachEntity(actions);
-        PhysicsComponent physics = mock(PhysicsComponent.class);
+        StaminaComponent stamina = attachStamina(actions);
 
-        // If methods like getBody() are called, mock them too
-        Body body = mock(Body.class);
-        when(physics.getBody()).thenReturn(body);
-        when(body.getLinearVelocity()).thenReturn(new Vector2(0f, 0f));
+        stamina.setSprinting(true);
+        stamina.setMoving(true);
+        stamina.setDashing(false);
+        stamina.setGrounded(true);
 
-        // Inject the component into your player/actions object
-        setField(actions, "physicsComponent", physics);
+        setField(stamina, "stamina", 100f);
 
-        // Arrange: pretend we are sprinting and moving right, not dashing
-        setField(actions, "sprinting", true);
-        setField(actions, "moving", true);
-        setField(actions, "dashing", false);
-        setField(actions, "walkDirection", new Vector2(1f, 0f));
-        setField(actions, "stamina", 50f);
+        float tick = reflectFloatConst(StaminaComponent.class, "TICK_SEC", 0.1f);
+        float drainPerSec = reflectFloatConst(StaminaComponent.class, "DRAIN_PER_SEC", 30f);
 
-        float tick = reflectFloatConst(PlayerActions.class, "STAMINA_TICK_SEC", 0.1f);
-        float drainPerSec = reflectFloatConst(PlayerActions.class, "SPRINT_DRAIN_PER_SEC", 15f);
+        callPrivate(stamina, "tick");
 
-        // Act
-        callPrivate(actions, "staminaTick");
-
-        // Assert: drained by (drain/sec * tick)
-        float staminaAfter = reflectFloat(actions, "stamina");
-        float expected = Math.max(0f, 50f - drainPerSec * tick);
+        float staminaAfter = reflectFloat(stamina, "stamina");
+        float expected = Math.max(0f, 100f - drainPerSec * tick);
         assertEquals(expected, staminaAfter, 1e-4);
     }
 
@@ -68,20 +58,21 @@ class PlayerStaminaTest {
     void notMovingDoesNotDrain() {
         PlayerActions actions = new PlayerActions();
         attachEntity(actions);
+        StaminaComponent stamina = attachStamina(actions);
 
-        setField(actions, "sprinting", true);
-        setField(actions, "moving", false); // stationary
-        setField(actions, "dashing", false);
-        setField(actions, "walkDirection", new Vector2(0f, 0f));
-        setField(actions, "stamina", 40f);
+        stamina.setSprinting(true);
+        stamina.setMoving(false); // stationary
+        stamina.setDashing(false);
+        stamina.setGrounded(true);
+        setField(stamina, "stamina", 40f);
 
         // Make regen NOT trigger yet by pretending we just spent
         long now = System.currentTimeMillis();
-        setField(actions, "lastStaminaSpendMs", now);
+        setField(stamina, "lastStaminaSpendMs", now);
 
-        callPrivate(actions, "staminaTick");
+        callPrivate(stamina, "tick");
 
-        float staminaAfter = reflectFloat(actions, "stamina");
+        float staminaAfter = reflectFloat(stamina, "stamina");
         assertEquals(40f, staminaAfter, 1e-4);
     }
 
@@ -89,46 +80,46 @@ class PlayerStaminaTest {
     void regeneratesAfterDelay() {
         PlayerActions actions = new PlayerActions();
         attachEntity(actions);
+        StaminaComponent stamina = attachStamina(actions);
 
-        setField(actions, "sprinting", false);
-        setField(actions, "moving", false);
-        setField(actions, "dashing", false);
-        setField(actions, "walkDirection", new Vector2(0f, 0f));
-        setField(actions, "stamina", 60f);
+        stamina.setSprinting(false);
+        stamina.setMoving(false);
+        stamina.setDashing(false);
+        stamina.setGrounded(true);
+        setField(stamina, "stamina", 60f);
 
-        long delayMs = reflectLongConst(PlayerActions.class, "STAMINA_REGEN_DELAY_MS", 800L);
+        long delayMs = reflectLongConst(StaminaComponent.class, "REGEN_DELAY_MS", 800L);
         // Pretend we last spent long enough ago
-        setField(actions, "lastStaminaSpendMs", System.currentTimeMillis() - delayMs - 1);
+        setField(stamina, "lastStaminaSpendMs", System.currentTimeMillis() - delayMs - 1);
 
-        float tick = reflectFloatConst(PlayerActions.class, "STAMINA_TICK_SEC", 0.1f);
-        float regenPerSec = reflectFloatConst(PlayerActions.class, "SPRINT_REGEN_PER_SEC", 10f);
+        float tick = reflectFloatConst(StaminaComponent.class, "TICK_SEC", 0.1f);
+        float regenPerSec = reflectFloatConst(StaminaComponent.class, "REGEN_PER_SEC", 10f);
+        int max = reflectIntConst(StaminaComponent.class, "MAX_STAMINA", 100);
 
-        callPrivate(actions, "staminaTick");
+        callPrivate(stamina, "tick");
 
-        float staminaAfter = reflectFloat(actions, "stamina");
-        float expected = Math.min(
-                reflectIntConst(PlayerActions.class, "MAX_STAMINA", 100),
-                60f + regenPerSec * tick
-        );
+        float staminaAfter = reflectFloat(stamina, "stamina");
+        float expected = Math.min(max, 60f + regenPerSec * tick);
         assertEquals(expected, staminaAfter, 1e-4);
     }
 
     @Test
-    void trySpendStaminaFailsWhenInsufficient_andSucceedsWhenEnough() {
+    void trySpendStaminaFailsWhenInsufficientAndSucceedsWhenEnough() {
         PlayerActions actions = new PlayerActions();
         attachEntity(actions);
+        StaminaComponent stamina = attachStamina(actions);
 
-        setField(actions, "stamina", 5f);
-        assertFalse(callTrySpend(actions, 10)); // not enough -> false
-        assertEquals(5f, reflectFloat(actions, "stamina"), 1e-4);
+        setField(stamina, "stamina", 5f);
+        assertFalse(stamina.trySpend(10)); // not enough -> false
+        assertEquals(5f, reflectFloat(stamina, "stamina"), 1e-4);
 
-        setField(actions, "stamina", 20f);
-        assertTrue(callTrySpend(actions, 10)); // enough -> true and reduced
-        assertEquals(10f, reflectFloat(actions, "stamina"), 1e-4);
+        setField(stamina, "stamina", 20f);
+        assertTrue(stamina.trySpend(10)); // enough -> true and reduced
+        assertEquals(10f, reflectFloat(stamina, "stamina"), 1e-4);
     }
 
     @Test
-    void doubleJumpSpendsStamina_andBlocksWithoutIt() throws Exception {
+    void doubleJumpSpendsStaminaAndBlocksWithoutIt() throws Exception {
         // Mock physics so jump can apply impulses safely
         PhysicsComponent physicsComponent = mock(PhysicsComponent.class);
         Body body = mock(Body.class);
@@ -137,6 +128,7 @@ class PlayerStaminaTest {
 
         PlayerActions actions = new PlayerActions();
         attachEntity(actions);
+        StaminaComponent stamina = attachStamina(actions);
         Field physField = PlayerActions.class.getDeclaredField("physicsComponent");
         physField.setAccessible(true);
         physField.set(actions, physicsComponent);
@@ -147,18 +139,18 @@ class PlayerStaminaTest {
         int doubleCost = reflectIntConst(PlayerActions.class, "DOUBLE_JUMP_COST", 10);
 
         // Case 1: Not enough stamina -> no impulse
-        setField(actions, "stamina", (float) (doubleCost - 1));
+        setField(stamina, "stamina", (float) (doubleCost - 1));
         actions.jump();
         verify(body, never()).applyLinearImpulse(any(Vector2.class), any(Vector2.class), anyBoolean());
 
         // Case 2: Enough stamina -> impulse applied and stamina reduced by cost
         reset(body);
         setField(actions, "jumpsLeft", 1); // reset for another air jump
-        setField(actions, "stamina", (float) (doubleCost + 5));
+        setField(stamina, "stamina", (float) (doubleCost + 5));
         actions.jump();
 
         verify(body, times(1)).applyLinearImpulse(any(Vector2.class), nullable(Vector2.class), eq(true));
-        float staminaAfter = reflectFloat(actions, "stamina");
+        float staminaAfter = reflectFloat(stamina, "stamina");
         assertEquals(doubleCost + 5 - doubleCost, staminaAfter, 1e-4);
     }
 
@@ -166,22 +158,37 @@ class PlayerStaminaTest {
     void infiniteStaminaCheatLocksStaminaAtMax() {
         PlayerActions actions = new PlayerActions();
         attachEntity(actions);
+        StaminaComponent stamina = attachStamina(actions);
 
-        int max = reflectIntConst(PlayerActions.class, "MAX_STAMINA", 100);
+        int max = reflectIntConst(StaminaComponent.class, "MAX_STAMINA", 100);
         // Drop stamina, then enable cheat
-        setField(actions, "stamina", 1f);
+        setField(stamina, "stamina", 1f);
         actions.infStamina();
 
         // Even if we try to "spend", it should succeed and not reduce
-        assertTrue(callTrySpend(actions, 9999));
-        assertEquals(max, (int) reflectFloat(actions, "stamina"));
+        assertTrue(stamina.trySpend(9999));
+        assertEquals(max, (int) reflectFloat(stamina, "stamina"));
 
         // A tick pegs it at MAX too
-        callPrivate(actions, "staminaTick");
-        assertEquals(max, (int) reflectFloat(actions, "stamina"));
+        callPrivate(stamina, "tick");
+        assertEquals(max, (int) reflectFloat(stamina, "stamina"));
     }
 
     // Helpers
+    private static StaminaComponent attachStamina(PlayerActions actions) {
+        StaminaComponent stamina = new StaminaComponent();
+
+        // Give the stamina component a mock entity + events so it can emit safely
+        Entity staminaEnt = mock(Entity.class);
+        EventHandler ev = mock(EventHandler.class);
+        when(staminaEnt.getEvents()).thenReturn(ev);
+        setField(stamina, "entity", staminaEnt);
+
+        // Inject into PlayerActions so its methods (jump/dash/etc.) can use it
+        setField(actions, "stamina", stamina);
+        return stamina;
+    }
+
     private static void attachEntity(PlayerActions actions) {
         Entity ent = mock(Entity.class);
         //EventHandler events = new EventHandler();
