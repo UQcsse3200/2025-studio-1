@@ -52,10 +52,12 @@ public class ForestGameArea extends GameArea {
     "images/ammo.png",
     "images/round.png",
     "images/pistol.png",
+    "images/rifle.png",
     "images/dagger.png",
     "images/laser_shot.png",
     "images/mud.png"
   };
+  
   private static final String[] forestTextureAtlases = {
     "images/terrain_iso_grass.atlas",
     "images/ghost.atlas",
@@ -75,6 +77,7 @@ public class ForestGameArea extends GameArea {
   private Entity lightsaber;
   private Entity bullet;
   private Entity pistol;
+  private Entity rifle;
 
   /**
    * Initialise this ForestGameArea to use the provided TerrainFactory.
@@ -98,14 +101,15 @@ public class ForestGameArea extends GameArea {
     player = spawnPlayer();
     dagger = spawnDagger();
     pistol = spawnPistol();
+    rifle = spawnRifle();
     lightsaber = spawnLightsaber();
 
 
     //These are commented out since there is no equip feature yet
-    //bullet = spawnBullet();
     //this.equipItem(pistol);
-    this.equipItem(lightsaber);
-    //this.equipItem(pistol);
+    //this.equipItem(lightsaber);
+    //this.equipItem(dagger);
+    this.equipItem(rifle);
 
     spawnGhosts();
     spawnGhostKing();
@@ -209,6 +213,13 @@ public class ForestGameArea extends GameArea {
     return newPistol;
   }
 
+  private Entity spawnRifle() {
+    Entity newRifle = WeaponsFactory.createRifle();
+    Vector2 newRifleOffset = new Vector2(0.25f, 0.15f);
+    newRifle.addComponent(new ItemHoldComponent(this.player, newRifleOffset));
+    return newRifle;
+  }
+
   // Enemy Projectiles
   public Entity spawnLaserProjectile(Vector2 directionToFire) {
     Entity laser = ProjectileFactory.createLaserShot(directionToFire);
@@ -216,10 +227,6 @@ public class ForestGameArea extends GameArea {
 
     return laser;
   }
-
-
-
-
 
   private void spawnGhosts() {
     GridPoint2 minPos = new GridPoint2(0, 0);
