@@ -18,6 +18,11 @@
     "health": 100,
     "baseAttack": 20
 
+  },
+
+  "boss1": {
+    "health": 100,
+    "baseAttack": 50
   }
 }
 
