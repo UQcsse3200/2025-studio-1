@@ -78,10 +78,10 @@ public class ObstacleFactory {
    */
   public static Entity createBigThickFloor() {
     Entity bigThickFloor =
-            new Entity()
-                    .addComponent(new TextureRenderComponent("foreg_sprites/general/ThickFloor.png"))
-                    .addComponent(new PhysicsComponent())
-                    .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
+        new Entity()
+          .addComponent(new TextureRenderComponent("foreg_sprites/general/ThickFloor.png"))
+          .addComponent(new PhysicsComponent())
+          .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
 
     bigThickFloor.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
     bigThickFloor.getComponent(TextureRenderComponent.class).scaleEntity();
@@ -175,8 +175,7 @@ public class ObstacleFactory {
     PhysicsUtils.setScaledCollider(thickFloor, 1f, 1f);
     return thickFloor;
   }
-
-  // Added the thin floor on the map where the computer is placed
+// Added the thin floor on the map where the computer is placed
   public static Entity createThinFloor() {
     Entity thinFloor =
             new Entity()
