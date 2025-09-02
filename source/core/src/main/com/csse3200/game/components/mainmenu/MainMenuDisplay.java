@@ -49,6 +49,7 @@ public class MainMenuDisplay extends UIComponent {
         new Image(
             ServiceLocator.getResourceService()
                 .getAsset("images/logo.png", Texture.class));
+    logger.debug("Logo image added");
 
     // Button sizing relative to screen
     float btnW = stage.getWidth() * 0.34f;
@@ -101,7 +102,6 @@ public class MainMenuDisplay extends UIComponent {
         new ChangeListener() {
           @Override
           public void changed(ChangeEvent changeEvent, Actor actor) {
-
             logger.debug("Exit button clicked");
             entity.getEvents().trigger("exit");
           }
