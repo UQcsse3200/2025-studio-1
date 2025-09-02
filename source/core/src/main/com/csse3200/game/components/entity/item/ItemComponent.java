@@ -38,6 +38,7 @@ public class ItemComponent extends EntityComponent {
     public void setCount(int count){this.count = count;}
 
     /**
+<<<<<<< HEAD
      * Outputs the description of the provided item with id
      * @param name The name of the item that you want the description of
      * @param id The id of the item that you want the description of
@@ -52,6 +53,9 @@ public class ItemComponent extends EntityComponent {
 
     /**
      * Sets the texture path of the current item
+=======
+     *
+>>>>>>> 660727b6d09bc1e1ff075b62432dd4aae92dad77
      * @param texture sets the texture path of the current item
      */
     public void setTexture(String texture){this.texture = texture;}
