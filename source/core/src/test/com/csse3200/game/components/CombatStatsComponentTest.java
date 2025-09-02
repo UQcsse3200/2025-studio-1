@@ -21,83 +21,83 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 
 @ExtendWith(GameExtension.class)
 class CombatStatsComponentTest {
-    @Test
-    void shouldSetGetHealth() {
-        CombatStatsComponent combat = new CombatStatsComponent(100, 20);
-        assertEquals(100, combat.getHealth());
+  @Test
+  void shouldSetGetHealth() {
+    CombatStatsComponent combat = new CombatStatsComponent(100, 20);
+    assertEquals(100, combat.getHealth());
 
-        combat.setHealth(150);
-        assertEquals(150, combat.getHealth());
+    combat.setHealth(150);
+    assertEquals(150, combat.getHealth());
 
-        combat.setHealth(-50);
-        assertEquals(0, combat.getHealth());
-    }
+    combat.setHealth(-50);
+    assertEquals(0, combat.getHealth());
+  }
 
-    @Test
-    void shouldCheckIsDead() {
-        CombatStatsComponent combat = new CombatStatsComponent(100, 20);
-        assertFalse(combat.isDead());
+  @Test
+  void shouldCheckIsDead() {
+    CombatStatsComponent combat = new CombatStatsComponent(100, 20);
+    assertFalse(combat.isDead());
 
-        combat.setHealth(0);
-        assertTrue(combat.isDead());
-    }
+    combat.setHealth(0);
+    assertTrue(combat.isDead());
+  }
 
-    @Test
-    void shouldAddHealth() {
-        CombatStatsComponent combat = new CombatStatsComponent(100, 20);
-        combat.addHealth(-500);
-        assertEquals(0, combat.getHealth());
+  @Test
+  void shouldAddHealth() {
+    CombatStatsComponent combat = new CombatStatsComponent(100, 20);
+    combat.addHealth(-500);
+    assertEquals(0, combat.getHealth());
 
-        combat.addHealth(100);
-        combat.addHealth(-20);
-        assertEquals(80, combat.getHealth());
-    }
+    combat.addHealth(100);
+    combat.addHealth(-20);
+    assertEquals(80, combat.getHealth());
+  }
 
-    @Test
-    void shouldSetGetBaseAttack() {
-        CombatStatsComponent combat = new CombatStatsComponent(100, 20);
-        assertEquals(20, combat.getBaseAttack());
+  @Test
+  void shouldSetGetBaseAttack() {
+    CombatStatsComponent combat = new CombatStatsComponent(100, 20);
+    assertEquals(20, combat.getBaseAttack());
 
-        combat.setBaseAttack(150);
-        assertEquals(150, combat.getBaseAttack());
+    combat.setBaseAttack(150);
+    assertEquals(150, combat.getBaseAttack());
 
-        combat.setBaseAttack(-50);
-        assertEquals(150, combat.getBaseAttack());
-    }
+    combat.setBaseAttack(-50);
+    assertEquals(150, combat.getBaseAttack());
+  }
 
-    @Test
-    void enemyShouldBeDeadWhenHealthZero() {
-        CombatStatsComponent enemy = new CombatStatsComponent(50, 10);
-        assertFalse(enemy.isDead());
-        enemy.addHealth(-50);
-        assertEquals(0, enemy.getHealth());
-        assertTrue(enemy.isDead());
-        // Overkill
-        enemy.addHealth(-100);
-        assertEquals(0, enemy.getHealth());
-        assertTrue(enemy.isDead());
-    }
+  @Test
+  void enemyShouldBeDeadWhenHealthZero() {
+    CombatStatsComponent enemy = new CombatStatsComponent(50, 10);
+    assertFalse(enemy.isDead());
+    enemy.addHealth(-50);
+    assertEquals(0, enemy.getHealth());
+    assertTrue(enemy.isDead());
+    // Overkill
+    enemy.addHealth(-100);
+    assertEquals(0, enemy.getHealth());
+    assertTrue(enemy.isDead());
+  }
 
 
-    @Test
-    void hitRemovesHealth() {
-        //Damage an entity and check the new health is correct
-        Entity victim = new Entity();
-        victim.addComponent(new CombatStatsComponent(100, 0));
-        assertEquals(100, victim.getComponent(CombatStatsComponent.class).getHealth());
-        victim.getComponent(CombatStatsComponent.class).hit(new CombatStatsComponent(0, 50));
-        assertEquals(50, victim.getComponent(CombatStatsComponent.class).getHealth());
-    }
+  @Test
+  void hitRemovesHealth() {
+    //Damage an entity and check the new health is correct
+    Entity victim = new Entity();
+    victim.addComponent(new CombatStatsComponent(100, 0));
+    assertEquals(100, victim.getComponent(CombatStatsComponent.class).getHealth());
+    victim.getComponent(CombatStatsComponent.class).hit(new CombatStatsComponent(0, 50));
+    assertEquals(50, victim.getComponent(CombatStatsComponent.class).getHealth());
+  }
 
-    @Test
-    void shouldSetGetCooldown() {
-        CombatStatsComponent combat = new CombatStatsComponent(100, 10);
-        assertEquals(0, combat.getCoolDown());
-        combat.setCoolDown(100);
-        assertEquals(100, combat.getCoolDown());
-        combat.setCoolDown(-100);
-        assertEquals(0, combat.getCoolDown());
-    }
+  @Test
+  void shouldSetGetCooldown() {
+    CombatStatsComponent combat = new CombatStatsComponent(100, 10);
+    assertEquals(0, combat.getCoolDown());
+    combat.setCoolDown(100);
+    assertEquals(100, combat.getCoolDown());
+    combat.setCoolDown(-100);
+    assertEquals(0, combat.getCoolDown());
+  }
 
     // @Test
     // void deathHitRemovesEntity() {
@@ -115,18 +115,18 @@ class CombatStatsComponentTest {
     //     assertEquals(new ArrayList<>(), area.getEntities());
     // }
 
-    @Test
-    void shouldTakeDirectDamage() {
-        CombatStatsComponent combat = new CombatStatsComponent(100, 20);
-        combat.hit(20);
-        assertEquals(80, combat.getHealth());
-    }
+  @Test
+  void shouldTakeDirectDamage() {
+    CombatStatsComponent combat = new CombatStatsComponent(100, 20);
+    combat.hit(20);
+    assertEquals(80, combat.getHealth()); 
+  }
 
-    @Test
-    void shouldTakeDamageFromAttacker(){
-        CombatStatsComponent combat = new CombatStatsComponent(100, 20);
-        CombatStatsComponent attacker = new CombatStatsComponent(50, 15);
-        combat.hit(attacker);
-        assertEquals(85, combat.getHealth());
-    }
+  @Test
+  void shouldTakeDamageFromAttacker(){
+    CombatStatsComponent combat = new CombatStatsComponent(100, 20);
+    CombatStatsComponent attacker = new CombatStatsComponent(50, 15);
+    combat.hit(attacker);
+    assertEquals(85, combat.getHealth());
+  }
 }
