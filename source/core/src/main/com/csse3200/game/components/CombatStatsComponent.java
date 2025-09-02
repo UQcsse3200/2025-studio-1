@@ -63,6 +63,7 @@ public class CombatStatsComponent extends Component {
    * @param health new health value
    */
   public void setHealth(int health) {
+    int prevHealth = this.health;
     this.health = Math.max(0, Math.min(health, this.maxHealth));
     if (entity != null) {
       entity.getEvents().trigger("updateHealth", this.health);

@@ -505,6 +505,7 @@ class CombatStatsComponentTest {
       assertEquals(atDeath, spy.cnt.get(), "No events after dead");
       assertEquals(0, combat.getHealth());
     }
+  }
   
   @Test
   void enemyShouldBeDeadWhenHealthZero() {
