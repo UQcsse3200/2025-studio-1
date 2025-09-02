@@ -37,8 +37,6 @@ public class PhysicsProjectileComponent extends Component{
         if (initialVelocity != null) {
             body.setLinearVelocity(initialVelocity);
         }
-
-
     }
 
     /**
@@ -51,11 +49,9 @@ public class PhysicsProjectileComponent extends Component{
         lived += dt;
 
         if (lived > lifetime) {
-
             entity.setToRemove();
             Body body = physicsComponent.getBody();
             body.setLinearVelocity(new Vector2(0f, 0f));
-
         }
     }
 
