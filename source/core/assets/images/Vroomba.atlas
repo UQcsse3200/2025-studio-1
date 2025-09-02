@@ -1,0 +1,68 @@
+Vroomba.png
+size: 1000, 1000
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+angry_float
+  rotate: false
+  xy: 0, 0
+  size: 172, 164
+  orig: 86, 82
+  offset: 79, 150
+  index: 0
+angry_float
+  rotate: false
+  xy: 0, 0
+  size: 172, 164
+  orig: 86, 82
+  offset: 189, 150
+  index: 1
+angry_float
+  rotate: false
+  xy: 0, 0
+  size: 172, 164
+  orig: 86, 82
+  offset: 299, 150
+  index: 2
+angry_float
+  rotate: false
+  xy: 0, 0
+  size: 172, 164
+  orig: 86, 82
+  offset: 400, 150
+  index: 3
+default
+  rotate: false
+  xy: 0, 0
+  size: 172, 164
+  orig: 86, 82
+  offset: 79, 50
+  index: 0
+float
+  rotate: false
+  xy: 0, 0
+  size: 172, 164
+  orig: 86, 82
+  offset: 79, 50
+  index: 0
+float
+  rotate: false
+  xy: 0, 0
+  size: 172, 164
+  orig: 86, 82
+  offset: 189, 50
+  index: 1
+float
+  rotate: false
+  xy: 0, 0
+  size: 172, 164
+  orig: 86, 82
+  offset: 299, 50
+  index: 2
+float
+  rotate: false
+  xy: 0, 0
+  size: 172, 164
+  orig: 86, 82
+  offset: 400, 50
+  index: 3

@@ -1,0 +1,68 @@
+Deepspin.png
+size: 1000, 1000
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+angry_float
+  rotate: false
+  xy: 0, 0
+  size: 210, 200
+  orig: 210, 200
+  offset: 37, 260
+  index: 0
+angry_float
+  rotate: false
+  xy: 400, 0
+  size: 210, 200
+  orig: 210, 200
+  offset: 285, 260
+  index: 1
+angry_float
+  rotate: false
+  xy: 800, 0
+  size: 210, 200
+  orig: 210, 200
+  offset: 516, 260
+  index: 2
+angry_float
+  rotate: false
+  xy: 1200, 0
+  size: 210, 200
+  orig: 210, 200
+  offset: 760, 260
+  index: 3
+default
+  rotate: false
+  xy: 0, 0
+  size: 210, 200
+  orig: 210, 200
+  offset: 40, 37
+  index: 0
+float
+  rotate: false
+  xy: 0, 0
+  size: 210, 200
+  orig: 210, 200
+  offset: 40, 37
+  index: 0
+float
+  rotate: false
+  xy: 400, 0
+  size: 210, 200
+  orig: 210, 200
+  offset: 287, 37
+  index: 1
+float
+  rotate: false
+  xy: 800, 0
+  size: 210, 200
+  orig: 210, 200
+  offset: 510, 37
+  index: 2
+float
+  rotate: false
+  xy: 1200, 0
+  size: 210, 200
+  orig: 210, 200
+  offset: 768, 37
+  index: 3
