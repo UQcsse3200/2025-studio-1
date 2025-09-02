@@ -64,6 +64,18 @@ public class KeyboardPlayerInputComponent extends InputComponent {
     }
   }
 
+  /**
+   * Handles mouse button presses.
+   * If the player clicks the left mouse button, this
+   * triggers a ranged or melee attack depending on
+   * the currently equipped item.
+   *
+   * @param screenX the x-coordinate of the touch in screen space
+   * @param screenY the y-coordinate of the touch in screen space
+   * @param pointer the pointer index for the event
+   * @param button  the mouse button pressed
+   * @return true if the input was handled, false otherwise
+   */
   @Override
   public boolean touchDown(int screenX, int screenY, int pointer, int button) {
     if (button == Input.Buttons.LEFT) {
@@ -145,12 +157,25 @@ public class KeyboardPlayerInputComponent extends InputComponent {
     }
   }
 
+  /**
+   * Checks if the current key press should trigger a dash action.
+   * Uses timing between consecutive presses of the same key.
+   *
+   * @param keycode the code of the key that was pressed
+   */
   private void checkForDashInput(int keycode) {
     if (isDoubleKeyPress(keycode)) {
       entity.getEvents().trigger("dashAttempt");
     }
   }
 
+  /**
+   * Determines if a key press is a valid double press
+   * based on timing and key code.
+   *
+   * @param keycode the code of the key being checked
+   * @return true if the key press qualifies as a double press
+   */
   private boolean isDoubleKeyPress(int keycode) {
     boolean validDoubleKey = false;
     long timeDif = System.currentTimeMillis() - timeSinceKeyPress;
@@ -162,11 +187,20 @@ public class KeyboardPlayerInputComponent extends InputComponent {
     return validDoubleKey;
   }
 
+  /**
+   * Updates tracking data for double key press detection.
+   *
+   * @param keycode the key code that was just pressed
+   */
   private void updateDoubleKeyPress(int keycode) {
     timeSinceKeyPress = System.currentTimeMillis();
     doublePressKeyCode = keycode;
   }
 
+  /**
+   * Triggers either a walk or stop walking event based
+   * on the current walking direction.
+   */
   private void triggerWalkEvent() {
     if (walkDirection.epsilonEquals(Vector2.Zero)) {
       entity.getEvents().trigger("walkStop");
@@ -175,34 +209,58 @@ public class KeyboardPlayerInputComponent extends InputComponent {
     }
   }
 
+  /**
+   * Triggers crouch attempt event.
+   */
   private void triggerCrouchEvent() {
     entity.getEvents().trigger("crouchAttempt");
   }
 
+  /**
+   * Triggers stop crouching event.
+   */
   private void triggerStopCrouchingEvent() {
     entity.getEvents().trigger("crouchStop");
   }
 
+  /**
+   * Triggers sprint attempt event.
+   */
   private void triggerSprintEvent() {
     entity.getEvents().trigger("sprintAttempt");
   }
 
+  /**
+   * Triggers sprint stop event.
+   */
   private void triggerStopSprintingEvent() {
     entity.getEvents().trigger("sprintStop");
   }
 
+  /**
+   * Triggers jump attempt event.
+   */
   private void triggerJumpEvent() {
     entity.getEvents().trigger("jumpAttempt");
   }
 
+  /**
+   * Triggers event to remove an item from the inventory.
+   */
   private void triggerRemoveItem() {
     entity.getEvents().trigger("remove item", focusedItem);
   }
 
+  /**
+   * Triggers event to add a test item (mud.png) to the inventory.
+   */
   private void triggerAddItem() {
     entity.getEvents().trigger("add item", "images/mud.png");
   }
 
+  /**
+   * Triggers event to select/focus the currently chosen item slot.
+   */
   private void triggerSelectItem() {
     entity.getEvents().trigger("focus item", focusedItem);
   }
