@@ -8,6 +8,8 @@ import com.csse3200.game.physics.components.ColliderComponent;
 import com.csse3200.game.physics.components.PhysicsComponent;
 import com.csse3200.game.rendering.TextureRenderComponent;
 
+
+
 /**
  * Factory to create obstacle entities.
  *
@@ -41,8 +43,8 @@ public class ObstacleFactory {
    */
   public static Entity createWall(float width, float height) {
     Entity wall = new Entity()
-        .addComponent(new PhysicsComponent().setBodyType(BodyType.StaticBody))
-        .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
+            .addComponent(new PhysicsComponent().setBodyType(BodyType.StaticBody))
+            .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
     wall.setScale(width, height);
     return wall;
   }
