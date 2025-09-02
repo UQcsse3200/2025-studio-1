@@ -49,9 +49,9 @@ public class BossFactory {
 
         AnimationRenderComponent animator =
                 new AnimationRenderComponent(
-                        ServiceLocator.getResourceService().getAsset("images/robot-2.atlas", TextureAtlas.class));
-        animator.addAnimation("angry_float", 1.5f, Animation.PlayMode.LOOP);
-        animator.addAnimation("float", 1.5f, Animation.PlayMode.LOOP);
+                        ServiceLocator.getResourceService().getAsset("images/boss_idle.atlas", TextureAtlas.class));
+        animator.addAnimation("angry_float", 0.1f, Animation.PlayMode.LOOP);
+        animator.addAnimation("float", 0.1f, Animation.PlayMode.LOOP);
 
         boss2
                 .addComponent(new CombatStatsComponent(config.health, config.baseAttack))
@@ -62,6 +62,10 @@ public class BossFactory {
                 .addComponent(new BlackholeComponent(target,7f,8f))
                 .addComponent(new FireballAttackComponment(target, 1.5f, 8f, 6f, config.baseAttack + 2));
         boss2.getComponent(AnimationRenderComponent.class).scaleEntity();
+        float k = 2.0f;
+        Vector2 s = boss2.getScale();
+        boss2.setScale(s.x * k, s.y * k);
+
 
         return boss2;
     }

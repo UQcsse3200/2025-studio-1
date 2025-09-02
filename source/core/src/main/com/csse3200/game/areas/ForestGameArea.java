@@ -51,11 +51,12 @@ public class ForestGameArea extends GameArea {
           "images/mud.png",
           "images/mud_ball_1.png",
           "images/mud_ball_2.png",
-          "images/mud_ball_3.png"
+          "images/mud_ball_3.png",
   };
   private static final String[] forestTextureAtlases = {
     "images/terrain_iso_grass.atlas", "images/ghost.atlas", "images/ghostKing.atlas",
-    "images/robot-2.atlas", "images/fireball.atlas", "images/blackhole.atlas", "images/Robot_1.atlas"
+    "images/robot-2.atlas", "images/fireball.atlas", "images/blackhole.atlas", "images/Robot_1.atlas",
+          "images/boss_idle.atlas"
   };
   private static final String[] forestSounds = {"sounds/Impact4.ogg"};
   private static final String backgroundMusic = "sounds/BGM_03_mp3.mp3";
