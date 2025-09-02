@@ -155,3 +155,147 @@ mover.setLinearVelocity(v); // <-- 若没有这个方法，换成你项目里的
 }
 }
 }
+
+
+Ling Fang
+: I use the ChatGpt file to talk about the work about the time record in our team.
+timer -= ServiceLocator.getTimeSource().getDeltaTime();
+asking the way to get the game time,
+copy code
+timer -= ServiceLocator.getTimeSource().getDeltaTime();
+here’s your full update() method explained in one go:
+
+public void update() {
+// Decrease the cooldown timer by the time elapsed since the last frame
+timer -= ServiceLocator.getTimeSource().getDeltaTime();
+
+    // If the cooldown hasn't finished yet, do nothing
+    if (timer > 0) {
+        return;
+    }
+
+    // Get positions of the boss (this entity) and the target
+    Vector2 from = entity.getCenterPosition();
+    Vector2 to = target.getCenterPosition();
+
+    // Check if the target is within attack range
+    if (from.dst2(to) <= range * range) {
+        // Fire a projectile toward the target
+        shoot(from, to);
+        // Reset the cooldown timer
+        timer = cooldown;
+    }
+}
+
+
+This method keeps track of attack timing, checks if the target is in range, and fires when the cooldown has expired.
+。
+
+Lingfang in fireball Componment
+I talk about ai how to track the position of the player, some form the origin code some from the 
+chargpt
+cp code
+Vector2 velocity = new Vector2(to).sub(from).nor().scl(speed);
+to get the direction
+pos.add(new Vector2(velocity).scl(deltaTime));
+to get move 
+
+Ling Fang
+talk with Gpt about how to get a random distance
+cp code float offset = MathUtils.randomSign() * MathUtils.random(1f, 3f);
+
+Ling Fang
+check out other group work 
+gat the idea about using the dispose
+if (timer >= lifeTime) {
+Gdx.app.postRunnable(() -> {
+if (entity != null) {
+entity.dispose();
+}
+});
+}
+
+Ling Fang
+talk about the gdp about the test code in the black hole
+明白了，你是说 就在这个文件里直接构造一个“射程内会生成”的逻辑测试，而不是搞什么假服务/子类。
+
+问题是：现在 BlackholeComponent.update() 调用的 spawnBlackholeNearPlayer() 会走进 BossFactory.createBlackhole()，最终触发贴图 → NPE。你前面已经遇过了。
+
+最简单的解决办法（不用子类、不用贴图）
+
+既然你这里已经自己写了 CountingEntityService，那我们完全可以靠它来观察是否调用了 register()。也就是说：
+
+当玩家在射程内时 → entities.registered 应该大于 0；
+
+当玩家在射程外时 → entities.registered 应该等于 0。
+
+这就是逻辑验证，不需要 spawn 出实际的黑洞对象。
+
+完整文件（包含两个测试）
+package com.csse3200.game.components;
+
+import com.badlogic.gdx.math.Vector2;
+import com.csse3200.game.components.enemy.BlackholeComponent;
+import com.csse3200.game.entities.Entity;
+import com.csse3200.game.extensions.GameExtension;
+import com.csse3200.game.entities.EntityService;
+import com.csse3200.game.services.GameTime;
+import com.csse3200.game.services.ServiceLocator;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+@ExtendWith(GameExtension.class)
+class BlackholeConponmentTest {
+
+static class TestGameTime extends GameTime {
+private float dt = 0f;
+public void tick(float dt) { this.dt = dt; }
+@Override public float getDeltaTime() { return dt; }
+}
+
+static class CountingEntityService extends EntityService {
+public int registered = 0;
+@Override
+public void register(Entity entity) {
+registered++;
+// 不调用 super.register(...)，避免贴图/渲染逻辑
+}
+}
+
+private TestGameTime time;
+private CountingEntityService entities;
+
+@BeforeEach
+void setUp() {
+time = new TestGameTime();
+ServiceLocator.registerTimeSource(time);
+
+    entities = new CountingEntityService();
+    ServiceLocator.registerEntityService(entities);
+}
+
+@Test
+void doesNotSpawnWhenOutOfRange() {
+Entity boss = new Entity();
+boss.setPosition(new Vector2(0f, 0f));
+
+    Entity player = new Entity();
+    player.setPosition(new Vector2(100f, 0f));  // 射程外
+
+    float range = 10f;
+    float cooldown = 1.0f;
+    BlackholeComponent comp = new BlackholeComponent(player, cooldown, range);
+    boss.addComponent(comp);
+    boss.create();
+
+    for (int i = 0; i < 5; i++) {
+      time.tick(0.2f);
+      comp.update();
+    }
+
+    assertEquals(0, entities.registered, "Out of range: should not spawn");
+}
+
