@@ -143,10 +143,12 @@ public class NPCFactory {
     animator.addAnimation("angry_float", 0.1f, Animation.PlayMode.LOOP);
     animator.addAnimation("float", 0.1f, Animation.PlayMode.LOOP);
 
+
+    ProjectileLauncherComponent projComp = new ProjectileLauncherComponent(area, target);
     AITaskComponent aiComponent =
         new AITaskComponent()
             .addTask(new GPTSlowChaseTask(target, 10, new Vector2(0.3f, 0.3f)))
-            .addTask(new GPTFastChaseTask(target, 10, new Vector2(1.2f, 1.2f)));
+            .addTask(new GPTFastChaseTask(target, 10, new Vector2(1.2f, 1.2f), projComp, ghostGPT));
 
     // Get player's inventory for reward system
     InventoryComponent playerInventory = null;
@@ -164,7 +166,7 @@ public class NPCFactory {
             .addComponent(new EnemyDeathRewardComponent(15, playerInventory))
             .addComponent(new DeathParticleSpawnerComponent("explosion_2"))
             .addComponent(aiComponent) // Add reward + particles
-            .addComponent(new ProjectileLauncherComponent(area, target)); // Add the ability to fire projectiles
+            .addComponent(projComp); // Add the ability to fire projectiles
 
     ghostGPT.getComponent(AnimationRenderComponent.class).scaleEntity();
 
