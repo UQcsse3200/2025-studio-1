@@ -118,7 +118,9 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(int,int)" class="member-name-link">CombatStatsComponent</a><wbr>(int&nbsp;health,
  int&nbsp;baseAttack)</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">Construct a combat Stats Component (Health + Attack System)</div>
+</div>
 </div>
 </section>
 </li>
@@ -156,7 +158,7 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getMaxHealth()" class="member-name-link">getMaxHealth</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Return entity's maximum health</div>
+<div class="block">Sets the entity's maximum health</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#hit(int)" class="member-name-link">hit</a><wbr>(int&nbsp;damage)</code></div>
@@ -166,13 +168,12 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#hit(com.csse3200.game.components.CombatStatsComponent)" class="member-name-link">hit</a><wbr>(<a href="CombatStatsComponent.html" title="class in com.csse3200.game.components">CombatStatsComponent</a>&nbsp;attacker)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Allows the entity to be hit by some attacker and deal some damage, if they have waited
- for the designated time between attacks.</div>
+<div class="block">Apply damage to this entity from another attacking entity.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Boolean.html" title="class or interface in java.lang" class="external-link">Boolean</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isDead()" class="member-name-link">isDead</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Returns true if the entity's has 0 health, otherwise false.</div>
+<div class="block">Checks whether this entity is dead.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setBaseAttack(int)" class="member-name-link">setBaseAttack</a><wbr>(int&nbsp;attack)</code></div>
@@ -219,6 +220,12 @@ loadScripts(document, 'script');</script>
 <h3>CombatStatsComponent</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">CombatStatsComponent</span><wbr><span class="parameters">(int&nbsp;health,
  int&nbsp;baseAttack)</span></div>
+<div class="block">Construct a combat Stats Component (Health + Attack System)</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>health</code> - initial health (values <code>&lt; 0</code> are clamped to <code>0</code>)</dd>
+<dd><code>baseAttack</code> - base attack damage (must be <code>&gt;= 0</code>)</dd>
+</dl>
 </section>
 </li>
 </ul>
@@ -233,10 +240,12 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="isDead()">
 <h3>isDead</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Boolean.html" title="class or interface in java.lang" class="external-link">Boolean</a></span>&nbsp;<span class="element-name">isDead</span>()</div>
-<div class="block">Returns true if the entity's has 0 health, otherwise false.</div>
+<div class="block">Checks whether this entity is dead.
+ <p>
+ An entity is considered dead if its health is less than or equal to zero.</div>
 <dl class="notes">
 <dt>Returns:</dt>
-<dd>is player dead</dd>
+<dd><code>true</code> if the entity has 0 or less health, <code>false</code> otherwise</dd>
 </dl>
 </section>
 </li>
@@ -255,10 +264,10 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="setHealth(int)">
 <h3>setHealth</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setHealth</span><wbr><span class="parameters">(int&nbsp;health)</span></div>
-<div class="block">Sets the entity's health. Health has a minimum bound of 0.</div>
+<div class="block">Sets the entity's health. Health is always clamped between 0 and maxHealth.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>health</code> - health</dd>
+<dd><code>health</code> - new health value</dd>
 </dl>
 </section>
 </li>
@@ -306,7 +315,11 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="getMaxHealth()">
 <h3>getMaxHealth</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">getMaxHealth</span>()</div>
-<div class="block">Return entity's maximum health</div>
+<div class="block">Sets the entity's maximum health</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>the entity's maximum health (never negative)</dd>
+</dl>
 </section>
 </li>
 <li>
@@ -335,11 +348,22 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="hit(com.csse3200.game.components.CombatStatsComponent)">
 <h3>hit</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">hit</span><wbr><span class="parameters">(<a href="CombatStatsComponent.html" title="class in com.csse3200.game.components">CombatStatsComponent</a>&nbsp;attacker)</span></div>
-<div class="block">Allows the entity to be hit by some attacker and deal some damage, if they have waited
- for the designated time between attacks.</div>
+<div class="block">Apply damage to this entity from another attacking entity.
+
+ <p>If <code>attacker</code> is <code>null</code>, an error is logged and the call is a no-op.</p>
+ <p>If this entity is already dead or the attacker's base attack is <code>&lt;= 0</code>, no damage is applied.</p>
+
+ <p>Allows the entity to be hit by some attacker and deal damage, provided they have
+ waited for the designated time between attacks.</p></div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>attacker</code> - the entity attacking</dd>
+<dd><code>attacker</code> - the attacking entity providing <a href="#getBaseAttack()">base attack</a> damage; may be <code>null</code></dd>
+<dt>See Also:</dt>
+<dd>
+<ul class="tag-list">
+<li><code>applyDamage(int)</code></li>
+</ul>
+</dd>
 </dl>
 </section>
 </li>
@@ -348,12 +372,16 @@ loadScripts(document, 'script');</script>
 <h3>hit</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">hit</span><wbr><span class="parameters">(int&nbsp;damage)</span></div>
 <div class="block">Deal direct damage as an integer.
+
  <p>
- This is intended for non-entity sources of damage, such as traps,
- projectiles, or weapons. At this stage, the weapon's output power
- (damage) is represented as a simple <code>int</code>. In future, this
- can be extended to use a WeaponStatsComponent or DamageInfo object
- for more complex calculations (crit, resistances, etc.).</div>
+  Intended for non-entity sources (e.g., traps, projectiles, environmental hazards).
+  This delegates to <code>applyDamage(int)</code> and therefore follows the same validation and dead-entity behavior.
+ </p></div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>damage</code> - raw damage amount (non-negative to take effect)
+ projectiles, or weapons.</dd>
+</dl>
 </section>
 </li>
 </ul>

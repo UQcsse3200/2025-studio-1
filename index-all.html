@@ -324,7 +324,9 @@ loadScripts(document, 'script');</script>
 <div class="block">Component used to store information related to combat such as health, attack, etc.</div>
 </dd>
 <dt><a href="com/csse3200/game/components/CombatStatsComponent.html#%3Cinit%3E(int,int)" class="member-name-link">CombatStatsComponent(int, int)</a> - Constructor for class com.csse3200.game.components.<a href="com/csse3200/game/components/CombatStatsComponent.html" title="class in com.csse3200.game.components">CombatStatsComponent</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Construct a combat Stats Component (Health + Attack System)</div>
+</dd>
 <dt><a href="com/csse3200/game/ui/terminal/commands/Command.html" class="type-name-link" title="interface in com.csse3200.game.ui.terminal.commands">Command</a> - Interface in <a href="com/csse3200/game/ui/terminal/commands/package-summary.html">com.csse3200.game.ui.terminal.commands</a></dt>
 <dd>
 <div class="block">A generic command class.</div>
@@ -1120,7 +1122,7 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/components/CombatStatsComponent.html#getMaxHealth()" class="member-name-link">getMaxHealth()</a> - Method in class com.csse3200.game.components.<a href="com/csse3200/game/components/CombatStatsComponent.html" title="class in com.csse3200.game.components">CombatStatsComponent</a></dt>
 <dd>
-<div class="block">Return entity's maximum health</div>
+<div class="block">Sets the entity's maximum health</div>
 </dd>
 <dt><a href="com/csse3200/game/ai/movement/MovementController.html#getMoving()" class="member-name-link">getMoving()</a> - Method in interface com.csse3200.game.ai.movement.<a href="com/csse3200/game/ai/movement/MovementController.html" title="interface in com.csse3200.game.ai.movement">MovementController</a></dt>
 <dd>&nbsp;</dd>
@@ -1358,8 +1360,7 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/csse3200/game/components/CombatStatsComponent.html#hit(com.csse3200.game.components.CombatStatsComponent)" class="member-name-link">hit(CombatStatsComponent)</a> - Method in class com.csse3200.game.components.<a href="com/csse3200/game/components/CombatStatsComponent.html" title="class in com.csse3200.game.components">CombatStatsComponent</a></dt>
 <dd>
-<div class="block">Allows the entity to be hit by some attacker and deal some damage, if they have waited
- for the designated time between attacks.</div>
+<div class="block">Apply damage to this entity from another attacking entity.</div>
 </dd>
 <dt><a href="com/csse3200/game/physics/components/HitboxComponent.html" class="type-name-link" title="class in com.csse3200.game.physics.components">HitboxComponent</a> - Class in <a href="com/csse3200/game/physics/components/package-summary.html">com.csse3200.game.physics.components</a></dt>
 <dd>
@@ -1437,7 +1438,7 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/csse3200/game/components/CombatStatsComponent.html#isDead()" class="member-name-link">isDead()</a> - Method in class com.csse3200.game.components.<a href="com/csse3200/game/components/CombatStatsComponent.html" title="class in com.csse3200.game.components">CombatStatsComponent</a></dt>
 <dd>
-<div class="block">Returns true if the entity's has 0 health, otherwise false.</div>
+<div class="block">Checks whether this entity is dead.</div>
 </dd>
 <dt><a href="com/csse3200/game/components/player/InventoryComponent.html#isEmpty()" class="member-name-link">isEmpty()</a> - Method in class com.csse3200.game.components.player.<a href="com/csse3200/game/components/player/InventoryComponent.html" title="class in com.csse3200.game.components.player">InventoryComponent</a></dt>
 <dd>
