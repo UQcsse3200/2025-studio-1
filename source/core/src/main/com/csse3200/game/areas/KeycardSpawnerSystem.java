@@ -7,7 +7,7 @@ import com.badlogic.gdx.math.MathUtils;
 public class KeycardSpawnerSystem {
 
     public static void spawnKeycards(GameArea area) {
-//spawns keycards in the rooms and can define what level of keycard needs to be spawned
+/** spawns keycards in the rooms and can define what level of keycard needs to be spawned */
         String areaName = area.getClass().getSimpleName();
 
         int keycardLevel = -1;
@@ -30,15 +30,15 @@ public class KeycardSpawnerSystem {
                 return;
         }
 
-        // Create the keycard for this area
+        /** Create the keycard for this area */
         Entity keycard = KeycardFactory.createKeycard(keycardLevel);
 
-        // Position can be adjusted to match your room layout
+        /** Position can be adjusted to match your room layout */
         float x = MathUtils.random(2f, 10f);
         float y = MathUtils.random(2f, 6f);
         keycard.setPosition(x, y);
 
-        // Spawn in the current area (no random room selection)
+        /** Spawn in the current area (no random room selection) */
         area.spawnEntity(keycard);
     }
 }
