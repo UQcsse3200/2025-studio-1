@@ -2,17 +2,17 @@ package com.csse3200.game.components.enemy;
 
 import com.csse3200.game.components.Component;
 import com.csse3200.game.components.player.InventoryComponent;
-import com.csse3200.game.entities.Entity;
-import com.csse3200.game.entities.EntityService;
 
 /**
- * Awards the player gold when the ghost dies.
+ * Awards the player processor when the enemy dies.
  */
 public class EnemyDeathRewardComponent extends Component {
-    private final int rewardGold;
+    private final int rewardProcessor;
+    private final InventoryComponent playerInventory;
 
-    public EnemyDeathRewardComponent(int rewardGold) {
-        this.rewardGold = rewardGold;
+    public EnemyDeathRewardComponent(int rewardProcessor, InventoryComponent playerInventory) {
+        this.rewardProcessor = rewardProcessor;
+        this.playerInventory = playerInventory;
     }
 
     @Override
@@ -20,15 +20,13 @@ public class EnemyDeathRewardComponent extends Component {
         entity.getEvents().addListener("death", this::onDeath);
     }
 
+    /**
+     * Adds processor to the player inventory if inventory is present.
+     */
     private void onDeath() {
-        // Find the player entity
-        EntityService entityService = EntityService.getInstance();
-        Entity player = entityService.getPlayer();
-        if (player != null) {
-            InventoryComponent inventory = player.getComponent(InventoryComponent.class);
-            if (inventory != null) {
-                inventory.addGold(rewardGold);
-            }
+        if (playerInventory == null) {
+            return;
         }
+        playerInventory.addProcessor(rewardProcessor);
     }
 }
