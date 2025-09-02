@@ -4,9 +4,6 @@ import com.badlogic.gdx.utils.Timer;
 import com.csse3200.game.areas.ForestGameArea;
 import com.csse3200.game.components.Component;
 import com.csse3200.game.entities.Entity;
-import com.csse3200.game.entities.factories.ProjectileFactory;
-import com.csse3200.game.rendering.RenderComponent;
-import com.csse3200.game.screens.MainGameScreen;
 import com.csse3200.game.services.ServiceLocator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,12 +32,13 @@ public class ProjectileLauncherComponent extends Component {
      * Fires a laser projectile in the direction specified.
      * @param directionToFire The direction to fire at.
      */
-    public void FireLaserProjectile(Vector2 directionToFire)
+    public void FireProjectile(String texturePath, Vector2 directionToFire, Vector2 offset, Vector2 scale)
     {
-        Entity laser = forestGameArea.spawnLaserProjectile(directionToFire);
-        Vector2 laserOffset = new Vector2(0.2f, 0.8f);
-        Vector2 pos = new Vector2(getEntity().getPosition().x + laserOffset.x, getEntity().getPosition().y + laserOffset.y);
-        laser.setPosition(pos);
+        Entity projectile = forestGameArea.spawnEnemyProjectile(texturePath, directionToFire);
+        Vector2 pos = new Vector2(getEntity().getPosition().x + offset.x, getEntity().getPosition().y + offset.y);
+        projectile.setPosition(pos);
+        projectile.scaleWidth(scale.x);
+        projectile.scaleHeight(scale.y);
     }
 
     /**
@@ -50,13 +48,14 @@ public class ProjectileLauncherComponent extends Component {
      *                         10 degree difference in the rotation of each laser projectile.
      * @param directionToFire The direction to fire at.
      */
-    public void FireLaserProjectileMultishot(int amount, float angleDifferences, Vector2 directionToFire)
+    public void FireLaserProjectileMultishot(String texturePath, int amount, float angleDifferences,
+                                             Vector2 directionToFire, Vector2 offset, Vector2 scale)
     {
         directionToFire = directionToFire.rotateDeg(-angleDifferences * ((float)amount/2));
 
             for (int i = 0; i < amount; i++)
             {
-                FireLaserProjectile(directionToFire);
+                FireProjectile(texturePath, directionToFire, offset, scale);
                 directionToFire.rotateDeg(angleDifferences);
             }
     }
@@ -68,7 +67,8 @@ public class ProjectileLauncherComponent extends Component {
      * @param timeBetweenShots The time, in seconds, between each laser fired within one burst sequence.
      * @param directionToFire The direction to fire at.
      */
-    public void FireLaserProjectileBurstFire(int burstAmount, float timeBetweenShots, Vector2 directionToFire)
+    public void FireLaserProjectileBurstFire(String texturePath, int burstAmount, float timeBetweenShots,
+                                             Vector2 directionToFire, Vector2 offset, Vector2 scale)
     {
         Timer.Task burstFireTask = new Timer.Task() {
             int currentCount = 0;
@@ -82,7 +82,7 @@ public class ProjectileLauncherComponent extends Component {
                     return;
                 }
 
-                FireLaserProjectile(directionToFire);
+                FireProjectile(texturePath, directionToFire, offset, scale);
                 currentCount++;
                 if (currentCount >= burstAmount) { cancel(); };
             }
@@ -106,7 +106,6 @@ public class ProjectileLauncherComponent extends Component {
             FireLaserProjectileBurstFire(4, 0.2f, dirToFire);
             //FireLaserProjectileMultishot(5, 10, dirToFire);
         }
-
     }
     */
 }
