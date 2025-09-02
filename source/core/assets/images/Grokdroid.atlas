@@ -1,0 +1,55 @@
+Grokdroid.png
+size: 1000, 1000
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+angry_float
+  rotate: false
+  xy: 55, 189
+  size: 245, 155
+  orig: 245, 155
+  offset: 0, 0
+  index: 0
+angry_float
+  rotate: false
+  xy: 324, 189
+  size: 245, 155
+  orig: 245, 155
+  offset: 0, 0
+  index: 1
+angry_float
+  rotate: false
+  xy: 582, 189
+  size: 245, 155
+  orig: 245, 155
+  offset: 0, 0
+  index: 2
+default
+  rotate: false
+  xy: 55, 29
+  size: 245, 155
+  orig: 245, 155
+  offset: 0, 0
+  index: 0
+float
+  rotate: false
+  xy: 55, 29
+  size: 245, 155
+  orig: 245, 155
+  offset: 0, 0
+  index: 0
+float
+  rotate: false
+  xy: 324, 29
+  size: 245, 155
+  orig: 245, 155
+  offset: 0, 0
+  index: 1
+float
+  rotate: false
+  xy: 582, 29
+  size: 245, 155
+  orig: 245, 155
+  offset: 0, 0
+  index: 2
+
