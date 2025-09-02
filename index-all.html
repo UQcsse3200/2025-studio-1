@@ -390,7 +390,15 @@ loadScripts(document, 'script');</script>
 <div class="block">Called when the component is created.</div>
 </dd>
 <dt><a href="com/csse3200/game/components/player/PlayerActions.html#create()" class="member-name-link">create()</a> - Method in class com.csse3200.game.components.player.<a href="com/csse3200/game/components/player/PlayerActions.html" title="class in com.csse3200.game.components.player">PlayerActions</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Initializes the component by setting required components and
+ registering event listeners for all player actions.</div>
+</dd>
+<dt><a href="com/csse3200/game/components/player/PlayerAnimationController.html#create()" class="member-name-link">create()</a> - Method in class com.csse3200.game.components.player.<a href="com/csse3200/game/components/player/PlayerAnimationController.html" title="class in com.csse3200.game.components.player">PlayerAnimationController</a></dt>
+<dd>
+<div class="block">Creates a new animation controller, retrieves the animator component,
+ and registers event listeners for relevant player actions.</div>
+</dd>
 <dt><a href="com/csse3200/game/components/player/PlayerInventoryDisplay.html#create()" class="member-name-link">create()</a> - Method in class com.csse3200.game.components.player.<a href="com/csse3200/game/components/player/PlayerInventoryDisplay.html" title="class in com.csse3200.game.components.player">PlayerInventoryDisplay</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/components/player/PlayerStatsDisplay.html#create()" class="member-name-link">create()</a> - Method in class com.csse3200.game.components.player.<a href="com/csse3200/game/components/player/PlayerStatsDisplay.html" title="class in com.csse3200.game.components.player">PlayerStatsDisplay</a></dt>
@@ -413,6 +421,8 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Initialises styles and builds the actors.</div>
 </dd>
+<dt><a href="com/csse3200/game/components/StaminaComponent.html#create()" class="member-name-link">create()</a> - Method in class com.csse3200.game.components.<a href="com/csse3200/game/components/StaminaComponent.html" title="class in com.csse3200.game.components">StaminaComponent</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/components/TouchAttackComponent.html#create()" class="member-name-link">create()</a> - Method in class com.csse3200.game.components.<a href="com/csse3200/game/components/TouchAttackComponent.html" title="class in com.csse3200.game.components">TouchAttackComponent</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/entities/Entity.html#create()" class="member-name-link">create()</a> - Method in class com.csse3200.game.entities.<a href="com/csse3200/game/entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a></dt>
@@ -671,6 +681,10 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/csse3200/game/components/settingsmenu/SettingsMenuDisplay.html#dispose()" class="member-name-link">dispose()</a> - Method in class com.csse3200.game.components.settingsmenu.<a href="com/csse3200/game/components/settingsmenu/SettingsMenuDisplay.html" title="class in com.csse3200.game.components.settingsmenu">SettingsMenuDisplay</a></dt>
 <dd>
 <div class="block">Removes and clears the root table.</div>
+</dd>
+<dt><a href="com/csse3200/game/components/StaminaComponent.html#dispose()" class="member-name-link">dispose()</a> - Method in class com.csse3200.game.components.<a href="com/csse3200/game/components/StaminaComponent.html" title="class in com.csse3200.game.components">StaminaComponent</a></dt>
+<dd>
+<div class="block">Cancels the repeating stamina task when this component is disposed to prevent leaks.</div>
 </dd>
 <dt><a href="com/csse3200/game/entities/Entity.html#dispose()" class="member-name-link">dispose()</a> - Method in class com.csse3200.game.entities.<a href="com/csse3200/game/entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a></dt>
 <dd>
@@ -1322,6 +1336,10 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Returns if the player has a certain amount of processor's.</div>
 </dd>
+<dt><a href="com/csse3200/game/components/StaminaComponent.html#hasStamina(float)" class="member-name-link">hasStamina(float)</a> - Method in class com.csse3200.game.components.<a href="com/csse3200/game/components/StaminaComponent.html" title="class in com.csse3200.game.components">StaminaComponent</a></dt>
+<dd>
+<div class="block">Returns whether the player has enough stamina to perform the movement.</div>
+</dd>
 <dt><a href="com/csse3200/game/entities/configs/BaseEntityConfig.html#health" class="member-name-link">health</a> - Variable in class com.csse3200.game.entities.configs.<a href="com/csse3200/game/entities/configs/BaseEntityConfig.html" title="class in com.csse3200.game.entities.configs">BaseEntityConfig</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/entities/configs/LaserConfig.html#health" class="member-name-link">health</a> - Variable in class com.csse3200.game.entities.configs.<a href="com/csse3200/game/entities/configs/LaserConfig.html" title="class in com.csse3200.game.entities.configs">LaserConfig</a></dt>
@@ -1358,6 +1376,18 @@ loadScripts(document, 'script');</script>
 <dl class="index">
 <dt><a href="com/csse3200/game/ai/tasks/Task.Status.html#INACTIVE" class="member-name-link">INACTIVE</a> - Enum constant in enum class com.csse3200.game.ai.tasks.<a href="com/csse3200/game/ai/tasks/Task.Status.html" title="enum class in com.csse3200.game.ai.tasks">Task.Status</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/components/player/PlayerActions.html#infDash()" class="member-name-link">infDash()</a> - Method in class com.csse3200.game.components.player.<a href="com/csse3200/game/components/player/PlayerActions.html" title="class in com.csse3200.game.components.player">PlayerActions</a></dt>
+<dd>
+<div class="block">Cheat: infinite dashes.</div>
+</dd>
+<dt><a href="com/csse3200/game/components/player/PlayerActions.html#infJumps()" class="member-name-link">infJumps()</a> - Method in class com.csse3200.game.components.player.<a href="com/csse3200/game/components/player/PlayerActions.html" title="class in com.csse3200.game.components.player">PlayerActions</a></dt>
+<dd>
+<div class="block">Cheat: infinite jumps.</div>
+</dd>
+<dt><a href="com/csse3200/game/components/player/PlayerActions.html#infStamina()" class="member-name-link">infStamina()</a> - Method in class com.csse3200.game.components.player.<a href="com/csse3200/game/components/player/PlayerActions.html" title="class in com.csse3200.game.components.player">PlayerActions</a></dt>
+<dd>
+<div class="block">Cheat: infinite stamina.</div>
+</dd>
 <dt><a href="com/csse3200/game/input/InputComponent.html" class="type-name-link" title="class in com.csse3200.game.input">InputComponent</a> - Class in <a href="com/csse3200/game/input/package-summary.html">com.csse3200.game.input</a></dt>
 <dd>
 <div class="block">An InputComponent that supports keyboard and touch input and touch gestures.</div>
@@ -1875,9 +1905,17 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/components/player/PlayerActions.html" class="type-name-link" title="class in com.csse3200.game.components.player">PlayerActions</a> - Class in <a href="com/csse3200/game/components/player/package-summary.html">com.csse3200.game.components.player</a></dt>
 <dd>
-<div class="block">Action component for interacting with the player.</div>
+<div class="block">Component that handles all player actions including movement, jumping, sprinting,
+ dashing, crouching, attacking, and shooting.</div>
 </dd>
 <dt><a href="com/csse3200/game/components/player/PlayerActions.html#%3Cinit%3E()" class="member-name-link">PlayerActions()</a> - Constructor for class com.csse3200.game.components.player.<a href="com/csse3200/game/components/player/PlayerActions.html" title="class in com.csse3200.game.components.player">PlayerActions</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/components/player/PlayerAnimationController.html" class="type-name-link" title="class in com.csse3200.game.components.player">PlayerAnimationController</a> - Class in <a href="com/csse3200/game/components/player/package-summary.html">com.csse3200.game.components.player</a></dt>
+<dd>
+<div class="block">Controls player animations by listening to relevant events and
+ updating the AnimationRenderComponent accordingly.</div>
+</dd>
+<dt><a href="com/csse3200/game/components/player/PlayerAnimationController.html#%3Cinit%3E()" class="member-name-link">PlayerAnimationController()</a> - Constructor for class com.csse3200.game.components.player.<a href="com/csse3200/game/components/player/PlayerAnimationController.html" title="class in com.csse3200.game.components.player">PlayerAnimationController</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/entities/configs/PlayerConfig.html" class="type-name-link" title="class in com.csse3200.game.entities.configs">PlayerConfig</a> - Class in <a href="com/csse3200/game/entities/configs/package-summary.html">com.csse3200.game.entities.configs</a></dt>
 <dd>
@@ -2164,6 +2202,10 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Scale the entity to a width of 1 and a height matching the texture's ratio</div>
 </dd>
+<dt><a href="com/csse3200/game/rendering/AnimationRenderComponent.html#scaleEntity(float)" class="member-name-link">scaleEntity(float)</a> - Method in class com.csse3200.game.rendering.<a href="com/csse3200/game/rendering/AnimationRenderComponent.html" title="class in com.csse3200.game.rendering">AnimationRenderComponent</a></dt>
+<dd>
+<div class="block">Scale the entity to a specified width and height matching the textures ratio</div>
+</dd>
 <dt><a href="com/csse3200/game/entities/Entity.html#scaleHeight(float)" class="member-name-link">scaleHeight(float)</a> - Method in class com.csse3200.game.entities.<a href="com/csse3200/game/entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a></dt>
 <dd>
 <div class="block">Set the entity's height and scale the width to maintain aspect ratio.</div>
@@ -2234,6 +2276,10 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Set the entity's current item</div>
 </dd>
+<dt><a href="com/csse3200/game/components/StaminaComponent.html#setDashing(boolean)" class="member-name-link">setDashing(boolean)</a> - Method in class com.csse3200.game.components.<a href="com/csse3200/game/components/StaminaComponent.html" title="class in com.csse3200.game.components">StaminaComponent</a></dt>
+<dd>
+<div class="block">Set if the player is dashing</div>
+</dd>
 <dt><a href="com/csse3200/game/rendering/RenderService.html#setDebug(com.csse3200.game.rendering.DebugRenderer)" class="member-name-link">setDebug(DebugRenderer)</a> - Method in class com.csse3200.game.rendering.<a href="com/csse3200/game/rendering/RenderService.html" title="class in com.csse3200.game.rendering">RenderService</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/physics/components/ColliderComponent.html#setDensity(float)" class="member-name-link">setDensity(float)</a> - Method in class com.csse3200.game.physics.components.<a href="com/csse3200/game/physics/components/ColliderComponent.html" title="class in com.csse3200.game.physics.components">ColliderComponent</a></dt>
@@ -2277,6 +2323,10 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Set friction.</div>
 </dd>
+<dt><a href="com/csse3200/game/components/StaminaComponent.html#setGrounded(boolean)" class="member-name-link">setGrounded(boolean)</a> - Method in class com.csse3200.game.components.<a href="com/csse3200/game/components/StaminaComponent.html" title="class in com.csse3200.game.components">StaminaComponent</a></dt>
+<dd>
+<div class="block">Set if the player is grounded</div>
+</dd>
 <dt><a href="com/csse3200/game/components/CombatStatsComponent.html#setHealth(int)" class="member-name-link">setHealth(int)</a> - Method in class com.csse3200.game.components.<a href="com/csse3200/game/components/CombatStatsComponent.html" title="class in com.csse3200.game.components">CombatStatsComponent</a></dt>
 <dd>
 <div class="block">Sets the entity's health.</div>
@@ -2290,6 +2340,10 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/csse3200/game/components/entity/EntityComponent.html#setId(int)" class="member-name-link">setId(int)</a> - Method in class com.csse3200.game.components.entity.<a href="com/csse3200/game/components/entity/EntityComponent.html" title="class in com.csse3200.game.components.entity">EntityComponent</a></dt>
 <dd>
 <div class="block">Sets the id of the entity</div>
+</dd>
+<dt><a href="com/csse3200/game/components/StaminaComponent.html#setInfiniteStamina(boolean)" class="member-name-link">setInfiniteStamina(boolean)</a> - Method in class com.csse3200.game.components.<a href="com/csse3200/game/components/StaminaComponent.html" title="class in com.csse3200.game.components">StaminaComponent</a></dt>
+<dd>
+<div class="block">Updates the infiniteStamina parameter</div>
 </dd>
 <dt><a href="com/csse3200/game/components/player/InventoryComponent.html#setItem(int,com.csse3200.game.entities.Entity)" class="member-name-link">setItem(int, Entity)</a> - Method in class com.csse3200.game.components.player.<a href="com/csse3200/game/components/player/InventoryComponent.html" title="class in com.csse3200.game.components.player">InventoryComponent</a></dt>
 <dd>
@@ -2310,6 +2364,10 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/csse3200/game/ai/movement/MovementController.html#setMoving(boolean)" class="member-name-link">setMoving(boolean)</a> - Method in interface com.csse3200.game.ai.movement.<a href="com/csse3200/game/ai/movement/MovementController.html" title="interface in com.csse3200.game.ai.movement">MovementController</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/components/StaminaComponent.html#setMoving(boolean)" class="member-name-link">setMoving(boolean)</a> - Method in class com.csse3200.game.components.<a href="com/csse3200/game/components/StaminaComponent.html" title="class in com.csse3200.game.components">StaminaComponent</a></dt>
+<dd>
+<div class="block">Set if the player is moving</div>
+</dd>
 <dt><a href="com/csse3200/game/physics/components/PhysicsMovementComponent.html#setMoving(boolean)" class="member-name-link">setMoving(boolean)</a> - Method in class com.csse3200.game.physics.components.<a href="com/csse3200/game/physics/components/PhysicsMovementComponent.html" title="class in com.csse3200.game.physics.components">PhysicsMovementComponent</a></dt>
 <dd>
 <div class="block">Enable/disable movement for the controller.</div>
@@ -2382,6 +2440,10 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/physics/components/PhysicsMovementComponent.html#setSpeed(com.badlogic.gdx.math.Vector2)" class="member-name-link">setSpeed(Vector2)</a> - Method in class com.csse3200.game.physics.components.<a href="com/csse3200/game/physics/components/PhysicsMovementComponent.html" title="class in com.csse3200.game.physics.components">PhysicsMovementComponent</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/components/StaminaComponent.html#setSprinting(boolean)" class="member-name-link">setSprinting(boolean)</a> - Method in class com.csse3200.game.components.<a href="com/csse3200/game/components/StaminaComponent.html" title="class in com.csse3200.game.components">StaminaComponent</a></dt>
+<dd>
+<div class="block">Set if the player is sprinting</div>
+</dd>
 <dt><a href="com/csse3200/game/rendering/RenderService.html#setStage(com.badlogic.gdx.scenes.scene2d.Stage)" class="member-name-link">setStage(Stage)</a> - Method in class com.csse3200.game.rendering.<a href="com/csse3200/game/rendering/RenderService.html" title="class in com.csse3200.game.rendering">RenderService</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/ai/movement/MovementController.html#setTarget(com.badlogic.gdx.math.Vector2)" class="member-name-link">setTarget(Vector2)</a> - Method in interface com.csse3200.game.ai.movement.<a href="com/csse3200/game/ai/movement/MovementController.html" title="interface in com.csse3200.game.ai.movement">MovementController</a></dt>
@@ -2469,6 +2531,10 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/csse3200/game/entities/configs/GhostKingConfig.html#spookyFactor" class="member-name-link">spookyFactor</a> - Variable in class com.csse3200.game.entities.configs.<a href="com/csse3200/game/entities/configs/GhostKingConfig.html" title="class in com.csse3200.game.entities.configs">GhostKingConfig</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/ui/UIComponent.html#stage" class="member-name-link">stage</a> - Variable in class com.csse3200.game.ui.<a href="com/csse3200/game/ui/UIComponent.html" title="class in com.csse3200.game.ui">UIComponent</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/components/StaminaComponent.html" class="type-name-link" title="class in com.csse3200.game.components">StaminaComponent</a> - Class in <a href="com/csse3200/game/components/package-summary.html">com.csse3200.game.components</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/components/StaminaComponent.html#%3Cinit%3E()" class="member-name-link">StaminaComponent()</a> - Constructor for class com.csse3200.game.components.<a href="com/csse3200/game/components/StaminaComponent.html" title="class in com.csse3200.game.components">StaminaComponent</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/ai/tasks/DefaultTask.html#start()" class="member-name-link">start()</a> - Method in class com.csse3200.game.ai.tasks.<a href="com/csse3200/game/ai/tasks/DefaultTask.html" title="class in com.csse3200.game.ai.tasks">DefaultTask</a></dt>
 <dd>&nbsp;</dd>
@@ -2657,7 +2723,9 @@ loadScripts(document, 'script');</script>
  processed</div>
 </dd>
 <dt><a href="com/csse3200/game/components/player/KeyboardPlayerInputComponent.html#touchDown(int,int,int,int)" class="member-name-link">touchDown(int, int, int, int)</a> - Method in class com.csse3200.game.components.player.<a href="com/csse3200/game/components/player/KeyboardPlayerInputComponent.html" title="class in com.csse3200.game.components.player">KeyboardPlayerInputComponent</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Handles mouse button presses.</div>
+</dd>
 <dt><a href="com/csse3200/game/components/player/TouchPlayerInputComponent.html#touchDown(int,int,int,int)" class="member-name-link">touchDown(int, int, int, int)</a> - Method in class com.csse3200.game.components.player.<a href="com/csse3200/game/components/player/TouchPlayerInputComponent.html" title="class in com.csse3200.game.components.player">TouchPlayerInputComponent</a></dt>
 <dd>
 <div class="block">Triggers the player attack.</div>
@@ -2731,6 +2799,10 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Used to trigger the component to update itself.</div>
 </dd>
+<dt><a href="com/csse3200/game/components/StaminaComponent.html#trySpend(float)" class="member-name-link">trySpend(float)</a> - Method in class com.csse3200.game.components.<a href="com/csse3200/game/components/StaminaComponent.html" title="class in com.csse3200.game.components">StaminaComponent</a></dt>
+<dd>
+<div class="block">Attempt to execute a movement.</div>
+</dd>
 </dl>
 <h2 class="title" id="I:U">U</h2>
 <dl class="index">
@@ -2781,7 +2853,9 @@ loadScripts(document, 'script');</script>
 <div class="block">Updates the item's position so it follows the player</div>
 </dd>
 <dt><a href="com/csse3200/game/components/player/PlayerActions.html#update()" class="member-name-link">update()</a> - Method in class com.csse3200.game.components.player.<a href="com/csse3200/game/components/player/PlayerActions.html" title="class in com.csse3200.game.components.player">PlayerActions</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Updates player movement, speed, and grounded status.</div>
+</dd>
 <dt><a href="com/csse3200/game/components/settingsmenu/SettingsMenuDisplay.html#update()" class="member-name-link">update()</a> - Method in class com.csse3200.game.components.settingsmenu.<a href="com/csse3200/game/components/settingsmenu/SettingsMenuDisplay.html" title="class in com.csse3200.game.components.settingsmenu">SettingsMenuDisplay</a></dt>
 <dd>
 <div class="block">Ticks the stage so UI animations and input events are processed.</div>
@@ -2824,6 +2898,10 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/csse3200/game/components/player/PlayerStatsDisplay.html#updatePlayerProcessorUI(int)" class="member-name-link">updatePlayerProcessorUI(int)</a> - Method in class com.csse3200.game.components.player.<a href="com/csse3200/game/components/player/PlayerStatsDisplay.html" title="class in com.csse3200.game.components.player">PlayerStatsDisplay</a></dt>
 <dd>
 <div class="block">Updates the player's processor on the UI.</div>
+</dd>
+<dt><a href="com/csse3200/game/components/player/PlayerStatsDisplay.html#updatePlayerStaminaUI(int,int)" class="member-name-link">updatePlayerStaminaUI(int, int)</a> - Method in class com.csse3200.game.components.player.<a href="com/csse3200/game/components/player/PlayerStatsDisplay.html" title="class in com.csse3200.game.components.player">PlayerStatsDisplay</a></dt>
+<dd>
+<div class="block">Updates the player's stamina on the UI.</div>
 </dd>
 <dt><a href="com/csse3200/game/files/UserSettings.html" class="type-name-link" title="class in com.csse3200.game.files">UserSettings</a> - Class in <a href="com/csse3200/game/files/package-summary.html">com.csse3200.game.files</a></dt>
 <dd>
