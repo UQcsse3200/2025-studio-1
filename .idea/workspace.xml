@@ -4,8 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="78acdbef-b972-46a4-a50a-31b47a1e7ab6" name="Changes" comment="Merge branch 'keycard-fix' into Team-3-Map&#10;&#10;# Conflicts:&#10;#&#9;.idea/workspace.xml&#10;#&#9;source/core/src/main/com/csse3200/game/areas/Floor3GameArea.java&#10;#&#9;source/core/src/main/com/csse3200/game/areas/ForestGameArea.java&#10;#&#9;source/core/src/main/com/csse3200/game/components/KeycardGateComponent.java&#10;#&#9;source/core/src/main/com/csse3200/game/components/KeycardPickupComponent.java&#10;#&#9;source/core/src/main/com/csse3200/game/components/player/InventoryComponent.java&#10;#&#9;source/core/src/main/com/csse3200/game/entities/factories/PlayerFactory.java">
+    <list default="true" id="78acdbef-b972-46a4-a50a-31b47a1e7ab6" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/core/src/main/com/csse3200/game/areas/ForestGameArea.java" beforeDir="false" afterPath="$PROJECT_DIR$/source/core/src/main/com/csse3200/game/areas/ForestGameArea.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/core/src/main/com/csse3200/game/areas/KeycardSpawnerSystem.java" beforeDir="false" afterPath="$PROJECT_DIR$/source/core/src/main/com/csse3200/game/areas/KeycardSpawnerSystem.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/core/src/main/com/csse3200/game/components/KeycardGateComponent.java" beforeDir="false" afterPath="$PROJECT_DIR$/source/core/src/main/com/csse3200/game/components/KeycardGateComponent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/core/src/main/com/csse3200/game/components/KeycardPickupComponent.java" beforeDir="false" afterPath="$PROJECT_DIR$/source/core/src/main/com/csse3200/game/components/KeycardPickupComponent.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -121,7 +126,7 @@
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;Team-3-Map&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;#80 on Team-3-Map&quot;,
     &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
     &quot;last_opened_file_path&quot;: &quot;C:/Users/zdhil/2025-studio-1&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
@@ -255,6 +260,8 @@
       <workItem from="1756695088637" duration="1280000" />
       <workItem from="1756715619337" duration="14858000" />
       <workItem from="1756779313882" duration="44000" />
+      <workItem from="1756805026931" duration="272000" />
+      <workItem from="1756824314652" duration="1392000" />
     </task>
     <task id="LOCAL-00001" summary="This is the second commit trial 2">
       <option name="closed" value="true" />

@@ -270,7 +270,7 @@ public class ForestGameArea extends GameArea {
     Entity officeDesk = ObstacleFactory.createOfficeDesk();
     spawnEntityAt(officeDesk, new GridPoint2(5, 12), true, false);
   }
-  private void spawnBottomRightDoor() {
+  private void spawnBottomRightDoor() {//Function to spawn the door on the bottom right which works with the keycard logic
     float doorX = 14f;
     float doorY = 3f;
 
