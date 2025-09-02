@@ -108,6 +108,8 @@ class CombatStatsComponentTest {
     ServiceLocator.registerGameArea(area);
     ServiceLocator.registerEntityService(new EntityService());
     area.spawnEntity(victim);
+    // Add a listener to simulate death removal as in the real game
+    victim.getEvents().addListener("death", () -> area.removeEntity(victim));
     victim.getComponent(CombatStatsComponent.class).hit(new CombatStatsComponent(0, 10));
     assertTrue(victim.getComponent(CombatStatsComponent.class).isDead());
     assertEquals(new ArrayList<>(), area.getEntities());
