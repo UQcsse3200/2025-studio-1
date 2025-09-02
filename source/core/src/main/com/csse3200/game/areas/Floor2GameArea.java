@@ -9,6 +9,7 @@ import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.entities.Entity;
+import com.csse3200.game.entities.factories.KeycardFactory;
 import com.csse3200.game.entities.factories.ObstacleFactory;
 import com.csse3200.game.entities.factories.PlayerFactory;
 import com.csse3200.game.rendering.SolidColorRenderComponent;
@@ -41,6 +42,11 @@ public class Floor2GameArea extends GameArea {
     spawnTrees(); // Add tree spawning
     spawnPlayer();
     spawnFloor();
+    float keycardX = 13f;
+    float keycardY = 10f;
+    Entity keycard = KeycardFactory.createKeycard(2);
+    keycard.setPosition(new Vector2(keycardX, keycardY));
+    spawnEntity(keycard);
 
     // UI label
     Entity ui = new Entity();
