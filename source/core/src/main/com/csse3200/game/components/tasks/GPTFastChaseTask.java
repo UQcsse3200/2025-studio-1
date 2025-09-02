@@ -5,6 +5,7 @@ import com.csse3200.game.ai.tasks.DefaultTask;
 import com.csse3200.game.ai.tasks.PriorityTask;
 import com.csse3200.game.components.enemy.ProjectileLauncherComponent;
 import com.csse3200.game.entities.Entity;
+import com.csse3200.game.entities.configs.ProjectileConfig;
 import com.csse3200.game.physics.PhysicsEngine;
 import com.csse3200.game.physics.PhysicsLayer;
 import com.csse3200.game.physics.raycast.RaycastHit;
@@ -25,8 +26,8 @@ public class GPTFastChaseTask extends DefaultTask implements PriorityTask {
     // Projectile configurations
     private final ProjectileLauncherComponent projectileLauncher;
     private final GameTime timeSource;
-    private final float firingCooldown = 4f;
-    private float currentCooldown = 2f;
+    private final float firingCooldown = 3f;
+    private float currentCooldown = 3f;
     private final Entity shooter;
 
     /**
@@ -65,6 +66,10 @@ public class GPTFastChaseTask extends DefaultTask implements PriorityTask {
             movementTask.start();
         }
 
+        FireLasers();
+    }
+
+    public void FireLasers() {
         // Projectile launcher related
         if (isTargetVisible()) {
             currentCooldown += timeSource.getDeltaTime();
@@ -75,8 +80,8 @@ public class GPTFastChaseTask extends DefaultTask implements PriorityTask {
                 Vector2 dirToFire = new Vector2(target.getPosition().x - shooter.getPosition().x,
                         target.getPosition().y - shooter.getPosition().y);
 
-                projectileLauncher.FireProjectileBurstFire("images/laser_shot.png", 10, 0.2f, dirToFire,
-                        new Vector2(0.2f, 0.8f), new Vector2(1f, 1f));
+                projectileLauncher.FireProjectile("images/laser_shot.png", dirToFire,
+                        new Vector2(0.2f, 0.8f), new Vector2(0.5f, 0.5f), ProjectileConfig.laser);
             }
         }
     }
