@@ -43,7 +43,7 @@ public class CombatStatsComponent extends Component {
    * @return entity's health
    */
   public int getHealth() {
-    return this.health;
+    return health;
   }
 
   /**
@@ -138,7 +138,7 @@ public class CombatStatsComponent extends Component {
    * @return base attack damage
    */
   public int getBaseAttack() {
-    return this.baseAttack;
+    return baseAttack;
   }
 
   /**
