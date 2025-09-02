@@ -13,6 +13,7 @@ public class CombatStatsComponent extends Component {
   private static final Logger logger = LoggerFactory.getLogger(CombatStatsComponent.class);
   private int health;
   private int baseAttack;
+  private boolean disableDamage = false;
 
   public CombatStatsComponent(int health, int baseAttack) {
     setHealth(health);
@@ -87,5 +88,15 @@ public class CombatStatsComponent extends Component {
   public void hit(CombatStatsComponent attacker) {
     int newHealth = this.getHealth() - attacker.getBaseAttack();
     setHealth(newHealth);
+  }
+
+  /**
+   * Sets whether the player can receive any damage. True means no damage received
+   * and false means damage can be received.
+   *
+   * @param status Status of whether entity can be damaged
+   */
+  public void setDisableDamage(boolean status) {
+    this.disableDamage = status;
   }
 }
