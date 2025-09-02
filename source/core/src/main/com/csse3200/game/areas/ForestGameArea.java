@@ -11,6 +11,7 @@ import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.ItemHoldComponent;
 import com.csse3200.game.components.enemy.ProjectileLauncherComponent;
 import com.csse3200.game.entities.Entity;
+import com.csse3200.game.entities.configs.BaseProjectileConfig;
 import com.csse3200.game.entities.factories.NPCFactory;
 import com.csse3200.game.entities.factories.ObstacleFactory;
 import com.csse3200.game.entities.factories.PlayerFactory;
@@ -221,8 +222,8 @@ public class ForestGameArea extends GameArea {
   }
 
   // Enemy Projectiles
-  public Entity spawnEnemyProjectile(String texturePath, Vector2 directionToFire) {
-    Entity laser = ProjectileFactory.createEnemyProjectile(texturePath, directionToFire);
+  public Entity spawnEnemyProjectile(String texturePath, Vector2 directionToFire, BaseProjectileConfig config) {
+    Entity laser = ProjectileFactory.createEnemyProjectile(texturePath, directionToFire, config);
     spawnEntityAt(laser, new GridPoint2(0, 0), true, true);
 
     return laser;

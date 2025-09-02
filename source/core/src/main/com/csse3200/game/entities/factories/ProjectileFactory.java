@@ -56,11 +56,11 @@ public class ProjectileFactory {
      * Creates a laser shot entity
      * @param texturePath the path of the texture that's going to be used as the projectile's sprite
      * @param direction The direction to fire at
+     * @param config The configuration about the damage and speed of the projectile
      * @return The laser entity
      */
-    public static Entity createEnemyProjectile(String texturePath, Vector2 direction) {
+    public static Entity createEnemyProjectile(String texturePath, Vector2 direction, BaseProjectileConfig config) {
         Entity projectile = createBaseProjectile();
-        LaserConfig config = configs.laser;
         projectile
                 .addComponent(new TextureRenderWithRotationComponent(texturePath))
                 .addComponent(new CombatStatsComponent(config.health, config.base_attack))
