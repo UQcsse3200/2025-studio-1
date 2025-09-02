@@ -162,7 +162,7 @@ public class ForestGameArea extends GameArea {
     GridPoint2 minPos = new GridPoint2(0, 0);
     GridPoint2 maxPos = terrain.getMapBounds(0);
 
-    for (int i = 0; i < 1000; i++) {
+    for (int i = 0; i < NUM_TREES; i++) {
       GridPoint2 randomPos = RandomUtils.random(minPos, maxPos);
       randomPos.y = 2;
       Entity tree = ObstacleFactory.createTree();
