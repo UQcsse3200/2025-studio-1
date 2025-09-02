@@ -35,9 +35,6 @@ public class ObstacleFactory {
     return tree;
   }
 
-
-
-
   /**
    * Creates an invisible physics wall.
    * @param width Wall width in world units
@@ -56,4 +53,3 @@ public class ObstacleFactory {
     throw new IllegalStateException("Instantiating static util class");
   }
 }
-

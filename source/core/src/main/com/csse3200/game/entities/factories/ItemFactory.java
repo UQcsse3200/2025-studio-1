@@ -22,22 +22,23 @@ public class ItemFactory {
      * @return entity representing an item
      */
     public static Entity createItem() {
-        Entity itemtest = new Entity()
-                .addComponent(new TextureRenderComponent("images/heart.png"))
+        String texture = "images/heart.png";
+        Entity itemTest = new Entity()
+                .addComponent(new TextureRenderComponent(texture))
                 .addComponent(new PhysicsComponent())
                 .addComponent(new ColliderComponent().setLayer(PhysicsLayer.NONE))
                 .addComponent(new HitboxComponent())
-                .addComponent(new ItemComponent(1, "images/heart.png"));
+                .addComponent(new ItemComponent(1, texture));
 
 
-        itemtest.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
-        itemtest.getComponent(TextureRenderComponent.class).scaleEntity();
-        itemtest.scaleHeight(1.0f);
-        PhysicsUtils.setScaledCollider(itemtest, 1.0f, 1.0f);
+        itemTest.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
+        itemTest.getComponent(TextureRenderComponent.class).scaleEntity();
+        itemTest.scaleHeight(1.0f);
+        PhysicsUtils.setScaledCollider(itemTest, 1.0f, 1.0f);
 
-        itemtest.getComponent(PhysicsComponent.class).getBody().setUserData(itemtest);
+        itemTest.getComponent(PhysicsComponent.class).getBody().setUserData(itemTest);
 
-        return itemtest;
+        return itemTest;
     }
     /**
      * Stops you from making an ItemFactory object.
