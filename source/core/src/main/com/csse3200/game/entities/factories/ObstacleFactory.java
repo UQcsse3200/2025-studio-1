@@ -11,6 +11,8 @@ import com.badlogic.gdx.graphics.Color;
 import com.csse3200.game.rendering.SolidColorRenderComponent;
 import com.csse3200.game.rendering.DoorRenderComponent;
 
+
+
 /**
  * Factory to create obstacle entities.
  *
