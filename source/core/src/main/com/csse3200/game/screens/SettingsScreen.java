@@ -48,7 +48,9 @@ public class SettingsScreen extends ScreenAdapter {
     ServiceLocator.registerTimeSource(new GameTime());
 
     renderer = RenderFactory.createRenderer();
+    logger.debug("Settings screen renderer created");
     renderer.getCamera().getEntity().setPosition(5f, 5f);
+    logger.debug("Settings screen renderer camera position set");
 
     loadAssets();
     createUI();
@@ -59,6 +61,7 @@ public class SettingsScreen extends ScreenAdapter {
    */
   @Override
   public void render(float delta) {
+    logger.debug("Rendering settings screen frame");
     ServiceLocator.getEntityService().update();
     renderer.render();
   }
@@ -69,6 +72,7 @@ public class SettingsScreen extends ScreenAdapter {
   @Override
   public void resize(int width, int height) {
     renderer.resize(width, height);
+    logger.trace("Resized renderer: ({} x {})", width, height);
   }
 
   /**
@@ -78,9 +82,9 @@ public class SettingsScreen extends ScreenAdapter {
   @Override
   public void dispose() {
     renderer.dispose();
+    unloadAssets();
     ServiceLocator.getRenderService().dispose();
     ServiceLocator.getEntityService().dispose();
-
     ServiceLocator.clear();
   }
 
@@ -113,13 +117,16 @@ public class SettingsScreen extends ScreenAdapter {
 
     Texture bgTex = ServiceLocator.getResourceService()
             .getAsset("images/menu_background.png", Texture.class);
+    logger.debug("Settings screen background texture asset loaded");
     Image bg = new Image(new TextureRegionDrawable(new TextureRegion(bgTex)));
     bg.setFillParent(true);
     bg.setScaling(Scaling.fill);
     stage.addActor(bg);
+    logger.debug("Settings screen background added");
 
     Entity ui = new Entity();
     ui.addComponent(new SettingsMenuDisplay(game)).addComponent(new InputDecorator(stage, 10));
     ServiceLocator.getEntityService().register(ui);
+    logger.debug("Settings screen ui created and registered");
   }
 }
