@@ -5,6 +5,7 @@ import com.csse3200.game.ai.tasks.DefaultTask;
 import com.csse3200.game.physics.components.PhysicsMovementComponent;
 import com.csse3200.game.services.GameTime;
 import com.csse3200.game.services.ServiceLocator;
+import com.csse3200.game.utils.math.Vector2Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,6 +18,7 @@ public class MovementTask extends DefaultTask {
 
   private final GameTime gameTime;
   private Vector2 target;
+  private Vector2 speed = Vector2Utils.ONE; // Default speed
   private float stopDistance = 0.01f;
   private long lastTimeMoved;
   private Vector2 lastPos;
@@ -32,12 +34,18 @@ public class MovementTask extends DefaultTask {
     this.stopDistance = stopDistance;
   }
 
+  public MovementTask(Vector2 target, Vector2 speed) {
+    this(target);
+    this.speed = speed;
+  }
+
   @Override
   public void start() {
     super.start();
     this.movementComponent = owner.getEntity().getComponent(PhysicsMovementComponent.class);
     movementComponent.setTarget(target);
     movementComponent.setMoving(true);
+    movementComponent.setSpeed(speed);
     logger.debug("Starting movement towards {}", target);
     lastTimeMoved = gameTime.getTime();
     lastPos = owner.getEntity().getPosition();
@@ -57,6 +65,11 @@ public class MovementTask extends DefaultTask {
   public void setTarget(Vector2 target) {
     this.target = target;
     movementComponent.setTarget(target);
+  }
+
+  public void setSpeed(Vector2 speed) {
+    this.speed = speed;
+    movementComponent.setSpeed(speed);
   }
 
   @Override

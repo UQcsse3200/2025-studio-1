@@ -1,8 +1,8 @@
 package com.csse3200.game.components.player;
 
+import com.badlogic.gdx.Gdx; // add for postRunnable
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.csse3200.game.components.CombatStatsComponent;
@@ -16,13 +16,23 @@ import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.csse3200.game.components.player.InventoryComponent;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.csse3200.game.entities.Entity;
+import com.csse3200.game.entities.EntityService;
+import com.csse3200.game.components.enemy.EnemyDeathRewardComponent;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A ui component for displaying player stats, e.g. health.
  */
 public class PlayerStatsDisplay extends UIComponent {
+  private static final Logger logger = LoggerFactory.getLogger(PlayerStatsDisplay.class);
   private Table table;
   private ProgressBar healthBar;
+  private TextButton killEnemyButton;
   private Label processorLabel;
 
   /**
@@ -85,6 +95,16 @@ public class PlayerStatsDisplay extends UIComponent {
     table.add(healthBar).width(barWidth).height(barHeight).pad(5);
     table.row();
     table.add(processorLabel);
+    table.row();
+
+    killEnemyButton = new TextButton("Kill Enemy", skin);
+    killEnemyButton.addListener(new ChangeListener() {
+      @Override
+      public void changed(ChangeEvent event, Actor actor) {
+        killOneEnemy();
+      }
+    });
+    table.add(killEnemyButton).left().padTop(5f);
     stage.addActor(table);
   }
 
@@ -108,6 +128,50 @@ public class PlayerStatsDisplay extends UIComponent {
   public void updatePlayerProcessorUI(int processor) {
     CharSequence text = String.format("Processor: %d", processor);
     processorLabel.setText(text);
+  }
+
+  /**
+   * Kills one enemy entity in the game for testing purposes.
+   * Only kills an enemy that has a reward component, and disposes it after death.
+   */
+  private void killOneEnemy() {
+    EntityService es = ServiceLocator.getEntityService();
+    if (es == null) {
+      logger.debug("No EntityService registered; cannot kill enemy");
+      return;
+    }
+    for (Entity e : es.getEntities()) {
+      if (e == this.entity) continue; // skip player self
+      CombatStatsComponent stats = e.getComponent(CombatStatsComponent.class);
+      if (stats == null || !hasRewardComponent(e)) continue;
+      if (stats.getHealth() <= 0) continue; // already dead
+      logger.debug("Killing enemy {} via debug button", e);
+      stats.setHealth(0); // triggers death + reward + particles
+      // Defer disposal to avoid modifying structures mid-iteration
+      Gdx.app.postRunnable(e::dispose);
+      break; // only kill one per click
+    }
+  }
+
+  /**
+   * Checks if the entity has an EnemyDeathRewardComponent.
+   */
+  private boolean hasRewardComponent(Entity e) {
+    return e.getComponent(EnemyDeathRewardComponent.class) != null;
+  }
+  
+  /**
+   * For use in test code
+   */
+  protected void setHealthBar(ProgressBar bar) {
+    this.healthBar = bar;
+  }
+
+  /**
+   * For use in test code
+   */
+  protected void setProcessorLabel(Label label) {
+    this.processorLabel = label;
   }
 
   @Override
