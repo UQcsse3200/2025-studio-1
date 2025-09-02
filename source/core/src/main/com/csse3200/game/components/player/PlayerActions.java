@@ -210,6 +210,7 @@ public class PlayerActions extends Component {
     }
 
     if (jumpsLeft > 0) {
+      setGrounded(false);
       boolean isGroundJump = (jumpsLeft == MAX_JUMPS); // first jump
       boolean withinCooldown = (currentTime - lastJumpTime) > JUMP_COOLDOWN_MS;
       if ((!isGroundJump || touchingGround())
