@@ -68,6 +68,7 @@ public class ForestGameArea extends GameArea {
     "images/LobbyWIP.png",
           "images/door.png"
   };
+  //General Sprites for the game
   private static final String[] generalTextures = {
           "foreg_sprites/general/LongFloor.png",
           "foreg_sprites/general/Railing.png",
@@ -413,21 +414,20 @@ public class ForestGameArea extends GameArea {
     spawnEntityAt(crate, cratePos, true, false);
   }
 
-
+//Spawning Camera to the right top of map
   private void spawnSecurityCamera() {
     GridPoint2 cameraPos = new GridPoint2(27, 19);
     Entity securityCamera = ObstacleFactory.createLargeSecurityCamera();
     spawnEntityAt(securityCamera, cameraPos, true, false);
   }
-
+//Adding Energy pod sprite at the floor
   private void spawnEnergyPod() {
     GridPoint2 energyPodPos = new GridPoint2(20, 6);
     Entity energyPod = ObstacleFactory.createLargeEnergyPod();
     spawnEntityAt(energyPod, energyPodPos, false, false);
   }
 
-
-
+  //Two Storage crates sprites on the floor
   private void spawnStorageCrates() {
     // Green crate
     GridPoint2 greenCratePos = new GridPoint2(5, 5);
