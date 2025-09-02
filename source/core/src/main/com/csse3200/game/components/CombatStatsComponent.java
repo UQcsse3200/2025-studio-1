@@ -12,11 +12,13 @@ public class CombatStatsComponent extends Component {
 
   private static final Logger logger = LoggerFactory.getLogger(CombatStatsComponent.class);
   private int health;
+  private int maxHealth;
   private int baseAttack;
 
   public CombatStatsComponent(int health, int baseAttack) {
     setHealth(health);
     setBaseAttack(baseAttack);
+    this.maxHealth = health;
   }
 
   /**
@@ -25,7 +27,7 @@ public class CombatStatsComponent extends Component {
    * @return is player dead
    */
   public Boolean isDead() {
-    return this.health == 0;
+    return health == 0;
   }
 
   /**
@@ -34,7 +36,7 @@ public class CombatStatsComponent extends Component {
    * @return entity's health
    */
   public int getHealth() {
-    return this.health;
+    return health;
   }
 
   /**
@@ -63,12 +65,35 @@ public class CombatStatsComponent extends Component {
   }
 
   /**
+   * Sets the entity's Max Health. Max Health has a minimum bound of 0.
+   *
+   * @param maxHealth the maximum health that a entity can have
+   */
+  public void setMaxHealth(int maxHealth) {
+    if (maxHealth >= 0) {
+      this.maxHealth = health;
+    } else {
+      this.maxHealth = 0;
+    }
+    if (entity != null) {
+      entity.getEvents().trigger("updateMaxHealth", this.maxHealth);
+    }
+  }
+
+  /**
+   * Return entity's maximum health
+   */
+  public int getMaxHealth() {
+     return maxHealth;
+  }
+
+  /**
    * Returns the entity's base attack damage.
    *
    * @return base attack damage
    */
   public int getBaseAttack() {
-    return this.baseAttack;
+    return baseAttack;
   }
 
   /**
@@ -84,8 +109,44 @@ public class CombatStatsComponent extends Component {
     }
   }
 
+  /**
+   *Apply damage to this entity from another attacking entity.
+   *@param attacker The attacker whose baseAttack value will be used to deal damage to this entity.
+   */
   public void hit(CombatStatsComponent attacker) {
-    int newHealth = this.getHealth() - attacker.getBaseAttack();
-    setHealth(newHealth);
+    if (attacker == null) {
+        logger.error("hit(attacker) called with null attacker");
+        return;
+    }
+    applyDamage(attacker.getBaseAttack());
   }
+
+
+  /**
+   * Apply damage to this entity.
+   *
+   * @param damage Damage amount (must >= 0)
+   */
+
+  private void applyDamage(int damage) {
+    if (damage <= 0 || isDead()) {
+        return;
+    }
+    setHealth(this.health - damage);
+  }
+
+  /**
+   * Deal direct damage as an integer.
+   * <p>
+   * This is intended for non-entity sources of damage, such as traps,
+   * projectiles, or weapons. At this stage, the weapon's output power
+   * (damage) is represented as a simple {@code int}. In future, this
+   * can be extended to use a WeaponStatsComponent or DamageInfo object
+   * for more complex calculations (crit, resistances, etc.).
+   */
+
+  public void hit(int damage) {
+    applyDamage(damage);
+  }
+
 }

@@ -7,7 +7,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 /**
  * A component intended to be used by the player to track their inventory.
@@ -166,7 +165,6 @@ public class InventoryComponent extends Component {
   public Boolean isFull() {
     return this.inventoryCount == this.maxCapacity;
   }
-
 
   /**
    * Returns the player's processor's.

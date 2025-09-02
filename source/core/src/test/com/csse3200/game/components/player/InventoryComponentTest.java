@@ -208,6 +208,8 @@ class InventoryComponentTest {
   void shouldSetGetProcessor() {
     InventoryComponent inventory = new InventoryComponent(100);
     assertEquals(100, inventory.getProcessor());
+    inventory.setProcessor(150);
+    assertEquals(150, inventory.getProcessor());
 
     inventory.setProcessor(150);
     assertEquals(150, inventory.getProcessor());
