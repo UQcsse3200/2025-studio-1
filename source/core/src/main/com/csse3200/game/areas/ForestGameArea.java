@@ -83,6 +83,7 @@ public class ForestGameArea extends GameArea {
     "images/SpawnResize.png",
     "images/LobbyWIP.png",
     "images/door.png",
+    "images/player.png",
     "images/mud.png",
     "images/heart.png"
   };
@@ -125,6 +126,13 @@ public class ForestGameArea extends GameArea {
 
   /** Animation atlases used by enemies/effects. */
   private static final String[] forestTextureAtlases = {
+    "images/terrain_iso_grass.atlas",
+    "images/ghost.atlas",
+    "images/ghostKing.atlas",
+    "images/ghostGPT.atlas",
+    "images/explosion_1.atlas",
+    "images/explosion_2.atlas",
+    "images/player.atlas"
           "images/terrain_iso_grass.atlas",
           "images/ghost.atlas",
           "images/ghostKing.atlas",
@@ -318,10 +326,11 @@ public class ForestGameArea extends GameArea {
 
   private void spawnTrees() {
     GridPoint2 minPos = new GridPoint2(0, 0);
-    GridPoint2 maxPos = terrain.getMapBounds(0).sub(2, 2);
+    GridPoint2 maxPos = terrain.getMapBounds(0);
 
     for (int i = 0; i < NUM_TREES; i++) {
       GridPoint2 randomPos = RandomUtils.random(minPos, maxPos);
+      randomPos.y = 2;
       Entity tree = ObstacleFactory.createTree();
       spawnEntityAt(tree, randomPos, true, false);
     }
