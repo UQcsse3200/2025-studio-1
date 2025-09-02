@@ -7,7 +7,7 @@ import com.badlogic.gdx.math.MathUtils;
 public class KeycardSpawnerSystem {
 
     public static void spawnKeycards(GameArea area) {
-
+//spawns keycards in the rooms and can define what level of keycard needs to be spawned
         String areaName = area.getClass().getSimpleName();
 
         int keycardLevel = -1;
