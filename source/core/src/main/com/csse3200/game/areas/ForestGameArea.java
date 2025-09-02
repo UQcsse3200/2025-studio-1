@@ -48,6 +48,8 @@ public class ForestGameArea extends GameArea {
 
   private static final int NUM_TREES = 7;
   private static final int NUM_GHOSTS = 0;
+  private static final int NUM_ROBOTS = 1;
+  private static final int NUM_ITEMS = 5;//this is for ItemFactory
   private static final int NUM_GHOST_GPTS = 4;
 
   private static final GridPoint2 PLAYER_SPAWN = new GridPoint2(3, 7);
@@ -56,31 +58,33 @@ public class ForestGameArea extends GameArea {
 
   /** Files or pictures used by the game (enemy/props,etc.). */
   private static final String[] forestTextures = {
-          "images/box_boy_leaf.png",
-          "images/tree.png",
-          "images/ghost_king.png",
-          "images/ghost_1.png",
-          "images/grass_1.png",
-          "images/grass_2.png",
-          "images/grass_3.png",
-          "images/hex_grass_1.png",
-          "images/hex_grass_2.png",
-          "images/hex_grass_3.png",
-          "images/iso_grass_1.png",
-          "images/iso_grass_2.png",
-          "images/iso_grass_3.png",
-          "images/lightsaber.png",
-          "images/lightsaberSingle.png",
-          "images/ammo.png",
-          "images/round.png",
-          "images/pistol.png",
-          "images/rifle.png",
-          "images/dagger.png",
-          "images/laser_shot.png",
-          "images/Spawn.png",
-          "images/SpawnResize.png",
-          "images/LobbyWIP.png",
-          "images/door.png"
+    "images/box_boy_leaf.png",
+    "images/tree.png",
+    "images/ghost_king.png",
+    "images/ghost_1.png",
+    "images/grass_1.png",
+    "images/grass_2.png",
+    "images/grass_3.png",
+    "images/hex_grass_1.png",
+    "images/hex_grass_2.png",
+    "images/hex_grass_3.png",
+    "images/iso_grass_1.png",
+    "images/iso_grass_2.png",
+    "images/iso_grass_3.png",
+    "images/lightsaber.png",
+    "images/lightsaberSingle.png",
+    "images/ammo.png",
+    "images/round.png",
+    "images/pistol.png",
+    "images/rifle.png",
+    "images/dagger.png",
+    "images/laser_shot.png",
+    "images/Spawn.png",
+    "images/SpawnResize.png",
+    "images/LobbyWIP.png",
+    "images/door.png",
+    "images/mud.png",
+    "images/heart.png"
   };
 
   /** General prop textures (floors, tiles, etc.). */
@@ -128,19 +132,12 @@ public class ForestGameArea extends GameArea {
           "images/explosion_1.atlas",
           "images/explosion_2.atlas"
   };
-
-
   private static final String[] forestSounds = {"sounds/Impact4.ogg"};
-
   private static final String backgroundMusic = "sounds/BGM_03_mp3.mp3";
-
   private static final String[] forestMusic = {backgroundMusic};
 
-
   private final TerrainFactory terrainFactory;
-
   private final CameraComponent cameraComponent;
-
 
   private Entity player;
   private Entity dagger;
@@ -154,7 +151,6 @@ public class ForestGameArea extends GameArea {
    * @param terrainFactory TerrainFactory used to create the terrain for the GameArea.
    * @requires terrainFactory != null
    */
-
   public ForestGameArea(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
     super();
     this.terrainFactory = terrainFactory;
@@ -171,6 +167,7 @@ public class ForestGameArea extends GameArea {
 
   @Override
   public void create() {
+
     loadAssets();
     ServiceLocator.registerGameArea(this);
     displayUI();
@@ -181,11 +178,13 @@ public class ForestGameArea extends GameArea {
     rifle = spawnRifle();
     lightsaber = spawnLightsaber();
 
+
     //These are commented out since there is no equip feature yet
-    // this.equipItem(pistol);
-    // this.equipItem(lightsaber);
-    // this.equipItem(dagger);
+    //this.equipItem(pistol);
+    //this.equipItem(lightsaber);
+    //this.equipItem(dagger);
     this.equipItem(rifle);
+
 
     spawnFloor();
     spawnPad();
@@ -196,15 +195,35 @@ public class ForestGameArea extends GameArea {
     spawnEnergyPod();
     spawnStorageCrates();
     spawnBigWall();
+    // spawnGhosts();
+    // spawnGhostKing();
+    int choice = (int)(Math.random() * 3);
+    if (choice == 0) {
+      // spawnBoss2();
+    } else if (choice == 1) {
+      // spawnRobots();
+    } else {
+      // spawnBoss3();
+    }
     spawnGhostGPT();
     playMusic();
+    float keycardX = 1f;
+    float keycardY = 7f;
 
     // Place a keycard on the floor so the player can unlock the door
-    float keycardX = 1f, keycardY = 7f;
     Entity keycard = KeycardFactory.createKeycard(1);
     keycard.setPosition(new Vector2(keycardX, keycardY));
     spawnEntity(keycard);
+
+    spawnItems();
   }
+
+  // private void spawnRobots() {
+  //   GridPoint2 spawnPos = new GridPoint2(20, 20);
+
+  //   Entity robot = NPCFactory.createRobot(player);
+  //   spawnEntityAt(robot, spawnPos, true, true);
+  // }
 
   /**
    * Shows a simple UI overlay with the room name and floor.
@@ -213,7 +232,7 @@ public class ForestGameArea extends GameArea {
   private void displayUI() {
     Entity ui = new Entity();
     ui.addComponent(new GameAreaDisplay("Box Forest"))
-            .addComponent(new com.csse3200.game.components.gamearea.FloorLabelDisplay("Floor 1"));
+      .addComponent(new com.csse3200.game.components.gamearea.FloorLabelDisplay("Floor 1"));
     spawnEntity(ui);
   }
 
@@ -224,11 +243,11 @@ public class ForestGameArea extends GameArea {
    * Note: This uses camera viewport width/height, so it adapts to different resolutions.
    */
   private void spawnTerrain() {
-    // Build the ground
+    // Background terrain
     terrain = terrainFactory.createTerrain(TerrainType.SPAWN_ROOM);
     spawnEntity(new Entity().addComponent(terrain));
 
-    // Build screen edges and the right-side door if a camera is available
+    // Screen walls (camera viewport bounds) and a simple door trigger at the bottom center
     if (cameraComponent != null) {
       OrthographicCamera cam = (OrthographicCamera) cameraComponent.getCamera();
       Vector2 camPos = cameraComponent.getEntity().getPosition();
@@ -286,6 +305,7 @@ public class ForestGameArea extends GameArea {
    * - Instantiates and creates Floor2GameArea
    */
   private void loadNextLevel() {
+    // Dispose current floor and switch to Floor2GameArea
     for (Entity entity : areaEntities) {
       entity.dispose();
     }
@@ -365,14 +385,26 @@ public class ForestGameArea extends GameArea {
     Entity bigWall = ObstacleFactory.createBigThickFloor();
     spawnEntityAt(bigWall, wallSpawn, true, false);
   }
+  /**
+   * Spawns several item entities at random positions in the game area.
+   * The number of items is set by NUM_ITEMS.
+   * Each item is created and placed at a random spot on the terrain.
+   */
+  private void spawnItems() {
+    GridPoint2 firstPos = new GridPoint2(5, 25);
+    GridPoint2 secondPos = new GridPoint2(10, 25);
+    GridPoint2 thirdPos = new GridPoint2(15, 25);
 
+    spawnEntityAt(ItemFactory.createItem(), firstPos, true, false);
+    spawnEntityAt(ItemFactory.createItem(), secondPos, true, false);
+    spawnEntityAt(ItemFactory.createItem(), thirdPos, true, false);
+  }
 
   private Entity spawnPlayer() {
     Entity newPlayer = PlayerFactory.createPlayer();
     spawnEntityAt(newPlayer, PLAYER_SPAWN, true, true);
     return newPlayer;
   }
-
 
   private Entity spawnDagger() {
     Entity newDagger = WeaponsFactory.createDagger();
@@ -381,34 +413,34 @@ public class ForestGameArea extends GameArea {
     return newDagger;
   }
 
-
   private void equipItem(Entity item) {
     this.player.setCurrItem(item);
     spawnEntityAt(item, PLAYER_SPAWN, true, true);
-  }
 
+  }
 
   private Entity getItem() {
     return this.player.getCurrItem();
   }
 
-
   private Entity spawnLightsaber() {
     Entity newLightsaber = WeaponsFactory.createLightsaber();
     Vector2 newLightsaberOffset = new Vector2(0.7f, -0.1f);
     newLightsaber.addComponent(new ItemHoldComponent(this.player, newLightsaberOffset));
+
     //Commented out since lightsaber animation is a work in progress
     //AnimationRenderComponent lightSaberAnimator = WeaponsFactory.createAnimation("images/lightSaber.atlas", this.player);
     //newLightsaber.addComponent(lightSaberAnimator);
     return newLightsaber;
   }
 
-  //Commented out since bullet functionality is in progress with guns
+//Commented out since bullet functionality is in progress with guns
 //  private Entity spawnBullet() {
 //    Entity newBullet = ProjectileFactory.createPistolBullet();
 //    spawnEntityAt(newBullet, new GridPoint2(5, 5), true, true);
 //    return newBullet;
 //  }
+
   private Entity spawnPistol() {
     Entity newPistol = WeaponsFactory.createPistol();
     Vector2 newPistolOffset = new Vector2(0.45f, 0.02f);
@@ -428,30 +460,42 @@ public class ForestGameArea extends GameArea {
   public Entity spawnLaserProjectile(Vector2 directionToFire) {
     Entity laser = ProjectileFactory.createLaserShot(directionToFire);
     spawnEntityAt(laser, new GridPoint2(0, 0), true, true);
+
     return laser;
   }
 
+  // private void spawnGhosts() {
+  //   GridPoint2 minPos = new GridPoint2(0, 0);
+  //   GridPoint2 maxPos = terrain.getMapBounds(0).sub(2, 2);
 
-  private void spawnGhosts() {
-    GridPoint2 minPos = new GridPoint2(0, 0);
-    GridPoint2 maxPos = terrain.getMapBounds(0).sub(2, 2);
+  //   for (int i = 0; i < NUM_GHOSTS; i++) {
+  //     GridPoint2 randomPos = RandomUtils.random(minPos, maxPos);
+  //     Entity ghost = NPCFactory.createGhost(player);
+  //     spawnEntityAt(ghost, randomPos, true, true);
+  //   }
+  // }
 
-    for (int i = 0; i < NUM_GHOSTS; i++) {
-      GridPoint2 randomPos = RandomUtils.random(minPos, maxPos);
-      Entity ghost = NPCFactory.createGhost(player);
-      spawnEntityAt(ghost, randomPos, true, true);
-    }
-  }
+  // private void spawnBoss2() {
+  //   GridPoint2 pos = new GridPoint2(22, 20);
 
+  //   Entity boss2 = BossFactory.createBoss2(player);
+  //   spawnEntityAt(boss2, pos, true, true);
+  // }
+  // //new added boss3
+  // private void spawnBoss3() {
+  //   GridPoint2 pos = new GridPoint2(20, 20);
+  //   Entity boss3 = BossFactory.createBoss3(player);
+  //   spawnEntityAt(boss3, pos, true, true);
+  // }
 
-  private void spawnGhostKing() {
-    GridPoint2 minPos = new GridPoint2(0, 0);
-    GridPoint2 maxPos = terrain.getMapBounds(0).sub(2, 2);
+  // private void spawnGhostKing() {
+  //   GridPoint2 minPos = new GridPoint2(0, 0);
+  //   GridPoint2 maxPos = terrain.getMapBounds(0).sub(2, 2);
 
-    GridPoint2 randomPos = RandomUtils.random(minPos, maxPos);
-    Entity ghostKing = NPCFactory.createGhostKing(player);
-    spawnEntityAt(ghostKing, randomPos, true, true);
-  }
+  //   GridPoint2 randomPos = RandomUtils.random(minPos, maxPos);
+  //   Entity ghostKing = NPCFactory.createGhostKing(player);
+  //   spawnEntityAt(ghostKing, randomPos, true, true);
+  // }
 
   /**
    * Adds NUM_GHOST_GPTS amount of GhostGPT enemies onto the map.
@@ -510,17 +554,17 @@ public class ForestGameArea extends GameArea {
    * to visually sit on top of the ground tiles.
    */
   private void spawnStorageCrates() {
+    // Green crate
     GridPoint2 greenCratePos = new GridPoint2(5, 5);
     Entity greenCrate = ObstacleFactory.createStorageCrateGreen();
     spawnEntityAt(greenCrate, greenCratePos, true, false);
     greenCrate.setPosition(greenCrate.getPosition().x, greenCrate.getPosition().y + 0.25f);
-
+    // Dark crate
     GridPoint2 darkCratePos = new GridPoint2(26, 5);
     Entity darkCrate = ObstacleFactory.createStorageCrateDark();
     spawnEntityAt(darkCrate, darkCratePos, true, false);
     darkCrate.setPosition(darkCrate.getPosition().x, darkCrate.getPosition().y + 0.25f);
   }
-
 
   private void playMusic() {
     Music music = ServiceLocator.getResourceService().getAsset(backgroundMusic, Music.class);
