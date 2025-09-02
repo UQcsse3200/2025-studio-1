@@ -33,7 +33,8 @@ class PlayerStaminaTest {
     // Helpers
     private static void attachEntity(PlayerActions actions) {
         Entity ent = mock(Entity.class);
-        EventHandler events = new EventHandler();
+        //EventHandler events = new EventHandler();
+        EventHandler events = mock(EventHandler.class);
         when(ent.getEvents()).thenReturn(events);
         setField(actions, "entity", ent);
     }
@@ -125,7 +126,17 @@ class PlayerStaminaTest {
     @Test
     void sprintingDrainsStamina() {
         PlayerActions actions = new PlayerActions();
+
         attachEntity(actions);
+        PhysicsComponent physics = mock(PhysicsComponent.class);
+
+        // If methods like getBody() are called, mock them too
+        Body body = mock(Body.class);
+        when(physics.getBody()).thenReturn(body);
+        when(body.getLinearVelocity()).thenReturn(new Vector2(0f, 0f));
+
+        // Inject the component into your player/actions object
+        setField(actions, "physicsComponent", physics);
 
         // Arrange: pretend we are sprinting and moving right, not dashing
         setField(actions, "sprinting", true);
