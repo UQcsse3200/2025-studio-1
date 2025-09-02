@@ -47,8 +47,6 @@ public class ProjectileFactory {
         collider.setLayer(PhysicsLayer.FRIENDLY_PROJECTILE)
                 .setFilter(PhysicsLayer.FRIENDLY_PROJECTILE, (short) (PhysicsLayer.NPC));
 
-
-
         pistolBullet.scaleHeight(0.85f);
         return pistolBullet;
     }
