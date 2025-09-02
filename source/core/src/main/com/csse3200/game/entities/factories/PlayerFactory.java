@@ -19,12 +19,19 @@ import com.csse3200.game.physics.components.PhysicsComponent;
 import com.csse3200.game.rendering.TextureRenderComponent;
 import com.csse3200.game.services.ServiceLocator;
 
+/**
+ * Factory to create a player entity.
+ *
+ * <p>Predefined player properties are loaded from a config stored as a json file and should have
+ * the properties stored in 'PlayerConfig'.
+ */
 public class PlayerFactory {
   private static final PlayerConfig stats =
           FileLoader.readClass(PlayerConfig.class, "configs/player.json");
 
   /**
-   * Create a player entity with default input.
+   * Create a player entity.
+   * @return entity
    */
   public static Entity createPlayer() {
     InputComponent inputComponent =
@@ -38,6 +45,7 @@ public class PlayerFactory {
                     .addComponent(new HitboxComponent().setLayer(PhysicsLayer.PLAYER))
                     .addComponent(new PlayerActions())
                     .addComponent(new CombatStatsComponent(stats.health, stats.baseAttack))
+                    // ✅ Only ONE InventoryComponent
                     .addComponent(new InventoryComponent(stats.gold))
                     .addComponent(inputComponent)
                     .addComponent(new PlayerStatsDisplay());
@@ -50,6 +58,7 @@ public class PlayerFactory {
 
   /**
    * Create a player entity that uses arrow keys for movement.
+   * @return entity
    */
   public static Entity createPlayerWithArrowKeys() {
     InputComponent inputComponent = new TouchPlayerInputComponent();
@@ -62,6 +71,7 @@ public class PlayerFactory {
                     .addComponent(new HitboxComponent().setLayer(PhysicsLayer.PLAYER))
                     .addComponent(new PlayerActions())
                     .addComponent(new CombatStatsComponent(stats.health, stats.baseAttack))
+                    // ✅ Only ONE InventoryComponent
                     .addComponent(new InventoryComponent(stats.gold))
                     .addComponent(inputComponent)
                     .addComponent(new PlayerStatsDisplay());
