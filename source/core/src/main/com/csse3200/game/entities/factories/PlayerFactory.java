@@ -2,7 +2,11 @@ package com.csse3200.game.entities.factories;
 
 import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.Fixture;
+import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.csse3200.game.components.CombatStatsComponent;
+import com.csse3200.game.components.player.*;
+import com.csse3200.game.components.StaminaComponent;
 import com.csse3200.game.components.player.InventoryComponent;
 import com.csse3200.game.components.player.PlayerActions;
 import com.csse3200.game.components.player.TouchPlayerInputComponent;
@@ -16,8 +20,9 @@ import com.csse3200.game.physics.PhysicsUtils;
 import com.csse3200.game.physics.components.ColliderComponent;
 import com.csse3200.game.physics.components.HitboxComponent;
 import com.csse3200.game.physics.components.PhysicsComponent;
-import com.csse3200.game.rendering.TextureRenderComponent;
+import com.csse3200.game.rendering.AnimationRenderComponent;
 import com.csse3200.game.services.ServiceLocator;
+
 
 /**
  * Factory to create a player entity.
@@ -37,6 +42,11 @@ public class PlayerFactory {
     InputComponent inputComponent =
             ServiceLocator.getInputService().getInputFactory().createForPlayer();
 
+    AnimationRenderComponent animator =
+            new AnimationRenderComponent(
+                    ServiceLocator.getResourceService()
+                            .getAsset("images/player.atlas", TextureAtlas.class));
+    add_animations(animator);
     Entity player =
             new Entity()
                     .addComponent(new TextureRenderComponent("images/box_boy_leaf.png"))
@@ -48,12 +58,48 @@ public class PlayerFactory {
                     .addComponent(new InventoryComponent(stats.gold))
                     .addComponent(inputComponent)
                     .addComponent(new PlayerStatsDisplay());
+        new Entity()
+            .addComponent(new PhysicsComponent())
+            .addComponent(new ColliderComponent())
+            .addComponent(new HitboxComponent().setLayer(PhysicsLayer.PLAYER))
+            .addComponent(new PlayerActions())
+            .addComponent(new CombatStatsComponent(stats.health, stats.baseAttack))
+            .addComponent(playerInventory)
+            .addComponent(new ItemPickUpComponent(playerInventory))
+            .addComponent(inputComponent)
+            .addComponent(new PlayerStatsDisplay())
+            .addComponent(new PlayerInventoryDisplay(playerInventory))
+            .addComponent(new StaminaComponent())
+            .addComponent(animator)
+            .addComponent(new PlayerAnimationController());
 
-    PhysicsUtils.setScaledCollider(player, 0.6f, 0.3f);
+    player.getComponent(AnimationRenderComponent.class).scaleEntity(2f);
     player.getComponent(ColliderComponent.class).setDensity(1.5f);
-    player.getComponent(TextureRenderComponent.class).scaleEntity();
+    PhysicsUtils.setScaledCollider(player, 0.3f,0.5f);
     player.getComponent(CombatStatsComponent.class).setCoolDown(0.2f);
     return player;
+    }
+
+   /**
+   * Add player animations to animation render component.
+   * @param animator animation render component for the player
+   */
+  private static void add_animations(AnimationRenderComponent animator) {
+    animator.addAnimation("right_run", 0.1f, Animation.PlayMode.LOOP);
+    animator.addAnimation("left_run", 0.1f, Animation.PlayMode.LOOP);
+    animator.addAnimation("right_jump", 0.1f, Animation.PlayMode.NORMAL);
+    animator.addAnimation("left_jump", 0.1f, Animation.PlayMode.NORMAL);
+    animator.addAnimation("right_stand", 0.2f, Animation.PlayMode.LOOP);
+    animator.addAnimation("left_stand", 0.2f, Animation.PlayMode.LOOP);
+    animator.addAnimation("right_walk", 0.1f, Animation.PlayMode.LOOP);
+    animator.addAnimation("left_walk", 0.1f, Animation.PlayMode.LOOP);
+    animator.addAnimation("right_crouch", 0.2f, Animation.PlayMode.LOOP);
+    animator.addAnimation("left_crouch", 0.2f, Animation.PlayMode.LOOP);
+    animator.addAnimation("right_stand_crouch", 0.1f, Animation.PlayMode.NORMAL);
+    animator.addAnimation("left_stand_crouch", 0.1f, Animation.PlayMode.NORMAL);
+    animator.addAnimation("right_fall", 0.1f, Animation.PlayMode.NORMAL);
+    animator.addAnimation("left_fall", 0.1f, Animation.PlayMode.NORMAL);
+    animator.startAnimation("right_stand");
   }
 
   /**
@@ -88,6 +134,28 @@ public class PlayerFactory {
       }
     }
     return player;
+  }
+
+  /**
+   * Add player animations to animation render component.
+   * @param animator animation render component for the player
+   */
+  private static void add_animations(AnimationRenderComponent animator) {
+    animator.addAnimation("right_run", 0.1f, Animation.PlayMode.LOOP);
+    animator.addAnimation("left_run", 0.1f, Animation.PlayMode.LOOP);
+    animator.addAnimation("right_jump", 0.1f, Animation.PlayMode.NORMAL);
+    animator.addAnimation("left_jump", 0.1f, Animation.PlayMode.NORMAL);
+    animator.addAnimation("right_stand", 0.2f, Animation.PlayMode.LOOP);
+    animator.addAnimation("left_stand", 0.2f, Animation.PlayMode.LOOP);
+    animator.addAnimation("right_walk", 0.1f, Animation.PlayMode.LOOP);
+    animator.addAnimation("left_walk", 0.1f, Animation.PlayMode.LOOP);
+    animator.addAnimation("right_crouch", 0.2f, Animation.PlayMode.LOOP);
+    animator.addAnimation("left_crouch", 0.2f, Animation.PlayMode.LOOP);
+    animator.addAnimation("right_stand_crouch", 0.1f, Animation.PlayMode.NORMAL);
+    animator.addAnimation("left_stand_crouch", 0.1f, Animation.PlayMode.NORMAL);
+    animator.addAnimation("right_fall", 0.1f, Animation.PlayMode.NORMAL);
+    animator.addAnimation("left_fall", 0.1f, Animation.PlayMode.NORMAL);
+    animator.startAnimation("right_stand");
   }
 
   private PlayerFactory() {
