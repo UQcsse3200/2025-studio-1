@@ -12,6 +12,7 @@ public class StaminaComponent extends Component {
     private static final float DRAIN_PER_SEC = 30f;
     private static final float REGEN_PER_SEC = 10f; // stamina/sec when not spending
     private static final float TICK_SEC = 0.1f;
+    private static final long REGEN_DELAY_MS = 800; // time between last spend to regen
 
     // Stamina management
     private float stamina = INITIAL_STAMINA;
@@ -189,7 +190,7 @@ public class StaminaComponent extends Component {
      */
     private void regenerateStamina() {
         final long now = System.currentTimeMillis();
-        if (!dashing && (now - lastStaminaSpendMs) >= REGEN_PER_SEC) {
+        if (!dashing && (now - lastStaminaSpendMs) >= REGEN_DELAY_MS) {
             // No stamina expending event occurred
             final float before = stamina;
             stamina = Math.min(MAX_STAMINA, stamina + REGEN_PER_SEC * TICK_SEC);
