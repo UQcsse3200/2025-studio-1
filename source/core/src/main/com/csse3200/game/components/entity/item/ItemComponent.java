@@ -44,15 +44,33 @@ public class ItemComponent extends EntityComponent {
      */
     public void description(String name, int id){
         System.out.println("This is a/an " + name + ". " +
-            "\nPresnt count : " + count +
-            "\nType :  " + getType());
+                "\nPresnt count : " + count +
+                "\nType :  " + getType());
     }
+
+    //public void updateCount() -- to increment/decrement count
 
     /**
      * Returns the texture path of the current item
      */
     public String getTexture() { return this.texture; }
-}
 
+    /**
+     * TODO: implement functionality and add docstrings
+     */
+    public void setDescription(){ }
+
+    /**
+     * Gets the description for the item
+     * @return A formatted description of the item
+     * with its; name, id, type, and current count.
+     */
+    public String getDescription(){
+        return ("Item : " + this.getName()
+                + "\nID : " + this.getId()
+                + "\nType : " + this.getType()
+                + "\nCount : " + this.getCount());
+    }
+}
 
 
