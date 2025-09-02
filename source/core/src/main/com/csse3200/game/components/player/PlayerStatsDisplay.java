@@ -125,8 +125,6 @@ public class PlayerStatsDisplay extends UIComponent {
     table.row();
     // Row 3: Processor label
     table.add(processorLabel).left().padLeft(10f);
-
-    table.add(processorLabel);
     table.row();
 
     killEnemyButton = new TextButton("Kill Enemy", skin);
