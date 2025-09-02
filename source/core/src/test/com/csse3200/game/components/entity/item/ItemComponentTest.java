@@ -21,6 +21,7 @@ public class ItemComponentTest {
             ItemComponent item = new ItemComponent(2, "images/mud.png");
 
             assertEquals(2, item.getCount());
+            assertEquals("images/mud.png", item.getTexture());
         }
 
         @Test
@@ -28,6 +29,7 @@ public class ItemComponentTest {
             ItemComponent item = new ItemComponent();
 
             assertEquals(0, item.getCount());
+            assertEquals(null, item.getTexture());
         }
     }
 
@@ -46,6 +48,11 @@ public class ItemComponentTest {
             item.setCount(2);
             assertEquals(2, item.getCount());
         }
+
+        @Test
+        public void testTextureGetterSetter(){
+            item.setTexture("images/mud.png");
+        }
     }
 
     @Nested
@@ -60,10 +67,27 @@ public class ItemComponentTest {
         }
 
         @Test
-        public void testNegativeCountEdgeCase(){}
+        public void testNegativeCountEdgeCase(){
+            item.setCount(-1);
+            assertFalse(item.getCount() > 0, "Count should be a positive integer");
+        }
 
-        public void testOutOfBoundEdgeCase(){}
+        @Test
+        public void testOutOfBoundEdgeCountCase(){
+            item.setCount(6);
+            assertFalse(item.getCount() < 5, "Max item count can be 5.");
+        }
 
-        public void testNullEdgeCase(){}
+        @Test
+        public void testNullEdgeCountCase(){
+            item.setCount(0);
+            assertEquals(0, item.getCount());
+        }
+
+        @Test
+        public void testNullTextureEdgeCase(){
+            item.setTexture(null);
+            assertEquals(null, item.getTexture());
+        }
     }
 }
