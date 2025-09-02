@@ -4,7 +4,99 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="78acdbef-b972-46a4-a50a-31b47a1e7ab6" name="Changes" comment="This is the second commit trial 2b" />
+    <list default="true" id="78acdbef-b972-46a4-a50a-31b47a1e7ab6" name="Changes" comment="Final Commit with keycard logic(not using all keycards since full map is not made yet)">
+      <change afterPath="$PROJECT_DIR$/assets/wiki/foreg_sprites/Futuristic sprites/EnergyPod.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/wiki/foreg_sprites/Futuristic sprites/SecurityCamera3.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/wiki/foreg_sprites/Futuristic sprites/StorageCrate.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/wiki/foreg_sprites/Futuristic sprites/storage_crate_cyan.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/wiki/foreg_sprites/Futuristic sprites/storage_crate_dark.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/wiki/foreg_sprites/Futuristic sprites/storage_crate_dark2.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/wiki/foreg_sprites/Futuristic sprites/storage_crate_green.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/wiki/foreg_sprites/Futuristic sprites/storage_crate_green2.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/wiki/foreg_sprites/Futuristic sprites/storage_crate_orange.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/wiki/foreg_sprites/extras/Beakers.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/wiki/foreg_sprites/extras/Camera.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/wiki/foreg_sprites/extras/Fan.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/wiki/foreg_sprites/extras/Fire.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/wiki/foreg_sprites/extras/Railing2.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/wiki/foreg_sprites/extras/SimpleFactArm.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/wiki/foreg_sprites/extras/Spikes.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/wiki/foreg_sprites/furniture/BigChair.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/wiki/foreg_sprites/furniture/BlackWindow.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/wiki/foreg_sprites/furniture/ChairSideView.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/wiki/foreg_sprites/furniture/ControlPanel1.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/wiki/foreg_sprites/furniture/Desk1.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/wiki/foreg_sprites/furniture/LabDesk.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/wiki/foreg_sprites/furniture/LabPlant1.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/wiki/foreg_sprites/furniture/LabPlant2.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/wiki/foreg_sprites/furniture/LabPlant3.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/wiki/foreg_sprites/furniture/LabPlants.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/wiki/foreg_sprites/furniture/LabPods.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/wiki/foreg_sprites/furniture/Plant1.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/wiki/foreg_sprites/furniture/Plant2.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/wiki/foreg_sprites/furniture/Plant3.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/wiki/foreg_sprites/furniture/Plant4.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/wiki/foreg_sprites/furniture/PurpleWindow.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/wiki/foreg_sprites/furniture/ServerRack.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/wiki/foreg_sprites/furniture/ServerRack2.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/wiki/foreg_sprites/furniture/Vent.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/wiki/foreg_sprites/general/ThinFloor2.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/wiki/foreg_sprites/general/ThinFloor3.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/wiki/foreg_sprites/industrial/ShutterDoor.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/wiki/foreg_sprites/industrial/SimpleCompDesk.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/wiki/foreg_sprites/industrial/SimpleContPanel.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/wiki/foreg_sprites/industrial/SimpleForklift.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/wiki/foreg_sprites/industrial/SimpleShelf.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/wiki/foreg_sprites/office/officeDesk3.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/wiki/foreg_sprites/office/officeDesk4.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/source/core/assets/foreg_sprites/futuristic/ConveyorBelt.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/source/core/assets/foreg_sprites/futuristic/EnergyPod.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/source/core/assets/foreg_sprites/futuristic/LaserGate.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/source/core/assets/foreg_sprites/futuristic/SecurityCamera.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/source/core/assets/foreg_sprites/futuristic/SecurityCamera2.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/source/core/assets/foreg_sprites/futuristic/SecurityCamera3.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/source/core/assets/foreg_sprites/futuristic/StorageCrate.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/source/core/assets/foreg_sprites/futuristic/storage_crate_cyan.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/source/core/assets/foreg_sprites/futuristic/storage_crate_dark.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/source/core/assets/foreg_sprites/futuristic/storage_crate_dark2.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/source/core/assets/foreg_sprites/futuristic/storage_crate_green.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/source/core/assets/foreg_sprites/futuristic/storage_crate_green2.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/source/core/assets/foreg_sprites/futuristic/storage_crate_orange.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/source/core/assets/foreg_sprites/general/ThinFloor2.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/source/core/assets/foreg_sprites/general/ThinFloor3.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/source/core/assets/foreg_sprites/office/LongCeilingLight2.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/source/core/assets/foreg_sprites/office/officeDesk2.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/source/core/assets/foreg_sprites/office/officeDesk3.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/source/core/assets/foreg_sprites/office/officeDesk4.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/source/core/assets/images/LobbyWIP.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/source/core/assets/images/Spawn.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/source/core/assets/images/SpawnResize.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/source/core/src/main/com/csse3200/game/rendering/DoorRenderComponent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/wiki/foreg_sprites/extras/ChatGPT Image Aug 27, 2025, 01_17_38 PM.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/wiki/foreg_sprites/industrial/ChatGPT Image Aug 25, 2025, 01_04_58 PM.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/core/assets/foreg_sprites/Futuristic sprites/WhatsApp Image 2025-08-28 at 14.41.55.jpeg" beforeDir="false" afterPath="$PROJECT_DIR$/source/core/assets/foreg_sprites/futuristic/WhatsApp Image 2025-08-28 at 14.41.55.jpeg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/core/assets/foreg_sprites/Futuristic sprites/WhatsApp Image 2025-08-28 at 14.49.26.jpeg" beforeDir="false" afterPath="$PROJECT_DIR$/source/core/assets/foreg_sprites/futuristic/WhatsApp Image 2025-08-28 at 14.49.26.jpeg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/core/assets/foreg_sprites/Futuristic sprites/WhatsApp Image 2025-08-28 at 14.49.27.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/core/assets/foreg_sprites/Futuristic sprites/WhatsApp Image 2025-08-28 at 14.49.28 2.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/core/assets/foreg_sprites/Futuristic sprites/WhatsApp Image 2025-08-28 at 14.49.28 3.jpeg" beforeDir="false" afterPath="$PROJECT_DIR$/source/core/assets/foreg_sprites/futuristic/WhatsApp Image 2025-08-28 at 14.49.28 3.jpeg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/core/assets/foreg_sprites/Futuristic sprites/WhatsApp Image 2025-08-28 at 14.49.28.jpeg" beforeDir="false" afterPath="$PROJECT_DIR$/source/core/assets/foreg_sprites/futuristic/WhatsApp Image 2025-08-28 at 14.49.28.jpeg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/core/assets/foreg_sprites/Futuristic sprites/WhatsApp Image 2025-08-28 at 14.49.30 2.jpeg" beforeDir="false" afterPath="$PROJECT_DIR$/source/core/assets/foreg_sprites/futuristic/WhatsApp Image 2025-08-28 at 14.49.30 2.jpeg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/core/assets/foreg_sprites/Futuristic sprites/WhatsApp Image 2025-08-28 at 14.49.30.jpeg" beforeDir="false" afterPath="$PROJECT_DIR$/source/core/assets/foreg_sprites/futuristic/WhatsApp Image 2025-08-28 at 14.49.30.jpeg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/core/assets/foreg_sprites/Futuristic sprites/WhatsApp Image 2025-08-28 at 14.49.31.jpeg" beforeDir="false" afterPath="$PROJECT_DIR$/source/core/assets/foreg_sprites/futuristic/WhatsApp Image 2025-08-28 at 14.49.31.jpeg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/core/src/main/com/csse3200/game/areas/Floor2GameArea.java" beforeDir="false" afterPath="$PROJECT_DIR$/source/core/src/main/com/csse3200/game/areas/Floor2GameArea.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/core/src/main/com/csse3200/game/areas/Floor3GameArea.java" beforeDir="false" afterPath="$PROJECT_DIR$/source/core/src/main/com/csse3200/game/areas/Floor3GameArea.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/core/src/main/com/csse3200/game/areas/Floor4GameArea.java" beforeDir="false" afterPath="$PROJECT_DIR$/source/core/src/main/com/csse3200/game/areas/Floor4GameArea.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/core/src/main/com/csse3200/game/areas/Floor5GameArea.java" beforeDir="false" afterPath="$PROJECT_DIR$/source/core/src/main/com/csse3200/game/areas/Floor5GameArea.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/core/src/main/com/csse3200/game/areas/Floor6GameArea.java" beforeDir="false" afterPath="$PROJECT_DIR$/source/core/src/main/com/csse3200/game/areas/Floor6GameArea.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/core/src/main/com/csse3200/game/areas/Floor7GameArea.java" beforeDir="false" afterPath="$PROJECT_DIR$/source/core/src/main/com/csse3200/game/areas/Floor7GameArea.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/core/src/main/com/csse3200/game/areas/ForestGameArea.java" beforeDir="false" afterPath="$PROJECT_DIR$/source/core/src/main/com/csse3200/game/areas/ForestGameArea.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/core/src/main/com/csse3200/game/areas/GameArea.java" beforeDir="false" afterPath="$PROJECT_DIR$/source/core/src/main/com/csse3200/game/areas/GameArea.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/core/src/main/com/csse3200/game/areas/terrain/TerrainFactory.java" beforeDir="false" afterPath="$PROJECT_DIR$/source/core/src/main/com/csse3200/game/areas/terrain/TerrainFactory.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/core/src/main/com/csse3200/game/components/gamearea/FloorLabelDisplay.java" beforeDir="false" afterPath="$PROJECT_DIR$/source/core/src/main/com/csse3200/game/components/gamearea/FloorLabelDisplay.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/core/src/main/com/csse3200/game/entities/factories/ObstacleFactory.java" beforeDir="false" afterPath="$PROJECT_DIR$/source/core/src/main/com/csse3200/game/entities/factories/ObstacleFactory.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/core/src/main/com/csse3200/game/rendering/Renderer.java" beforeDir="false" afterPath="$PROJECT_DIR$/source/core/src/main/com/csse3200/game/rendering/Renderer.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -107,7 +199,7 @@
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;Team-3-Map&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;Merging Team-3-Map&quot;,
     &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
     &quot;last_opened_file_path&quot;: &quot;C:/Users/zdhil/2025-studio-1&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
@@ -127,6 +219,9 @@
       <recent name="C:\Users\zdhil\2025-studio-1\source\core\assets\images" />
       <recent name="C:\Users\zdhil\2025-studio-1\source\.idea" />
       <recent name="C:\Users\zdhil\2025-studio-1\source" />
+    </key>
+    <key name="MoveInnerDialog.RECENTS_KEY">
+      <recent name="com.csse3200.game.areas.terrain" />
     </key>
   </component>
   <component name="RunAnythingCache">
@@ -345,7 +440,15 @@
       <option name="project" value="LOCAL" />
       <updated>1756735127925</updated>
     </task>
-    <option name="localTasksCounter" value="14" />
+    <task id="LOCAL-00014" summary="Final Commit with keycard logic(not using all keycards since full map is not made yet)">
+      <option name="closed" value="true" />
+      <created>1756776355464</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1756776355464</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -355,6 +458,7 @@
     <MESSAGE value="This is the second commit trial 2" />
     <MESSAGE value="This is the second commit trial 2a" />
     <MESSAGE value="This is the second commit trial 2b" />
-    <option name="LAST_COMMIT_MESSAGE" value="This is the second commit trial 2b" />
+    <MESSAGE value="Final Commit with keycard logic(not using all keycards since full map is not made yet)" />
+    <option name="LAST_COMMIT_MESSAGE" value="Final Commit with keycard logic(not using all keycards since full map is not made yet)" />
   </component>
 </project>
