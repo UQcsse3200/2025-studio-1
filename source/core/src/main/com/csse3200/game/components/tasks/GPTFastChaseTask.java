@@ -3,11 +3,13 @@ package com.csse3200.game.components.tasks;
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.ai.tasks.DefaultTask;
 import com.csse3200.game.ai.tasks.PriorityTask;
+import com.csse3200.game.components.enemy.ProjectileLauncherComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.physics.PhysicsEngine;
 import com.csse3200.game.physics.PhysicsLayer;
 import com.csse3200.game.physics.raycast.RaycastHit;
 import com.csse3200.game.rendering.DebugRenderer;
+import com.csse3200.game.services.GameTime;
 import com.csse3200.game.services.ServiceLocator;
 
 /** Chases a target entity indefinitely and the entity being visible causes a speed increase */
@@ -20,16 +22,29 @@ public class GPTFastChaseTask extends DefaultTask implements PriorityTask {
     private final RaycastHit hit = new RaycastHit();
     private MovementTask movementTask;
 
+    // Projectile configurations
+    private final ProjectileLauncherComponent projectileLauncher;
+    private final GameTime timeSource;
+    private final float firingCooldown = 2f;
+    private float currentCooldown = 2f;
+    private final Entity shooter;
+
     /**
      * @param target The entity to chase.
      * @param priority Task priority when chasing (0 when not chasing).
      */
-    public GPTFastChaseTask(Entity target, int priority, Vector2 speed) {
+    public GPTFastChaseTask(Entity target, int priority, Vector2 speed,
+                            ProjectileLauncherComponent projectileLauncher, Entity shooter) {
         this.target = target;
         this.priority = priority;
         this.speed = speed;
         physics = ServiceLocator.getPhysicsService().getPhysics();
         debugRenderer = ServiceLocator.getRenderService().getDebug();
+
+        // Projectile launcher
+        this.projectileLauncher = projectileLauncher;
+        timeSource = ServiceLocator.getTimeSource();
+        this.shooter = shooter;
     }
 
     @Override
@@ -48,6 +63,21 @@ public class GPTFastChaseTask extends DefaultTask implements PriorityTask {
         movementTask.update();
         if (movementTask.getStatus() != Status.ACTIVE) {
             movementTask.start();
+        }
+
+        // Projectile launcher related
+        if (isTargetVisible()) {
+            currentCooldown += timeSource.getDeltaTime();
+
+            if (currentCooldown >= firingCooldown) {
+                currentCooldown = currentCooldown % firingCooldown;
+
+                Vector2 dirToFire = new Vector2(target.getPosition().x - shooter.getPosition().x,
+                        target.getPosition().y - shooter.getPosition().y);
+
+                projectileLauncher.FireProjectile("images/lightsaber.png", dirToFire,
+                        new Vector2(0.2f, 0.8f), new Vector2(2f, 2f));
+            }
         }
     }
 

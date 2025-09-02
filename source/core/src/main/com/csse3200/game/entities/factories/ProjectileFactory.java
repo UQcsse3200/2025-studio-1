@@ -57,31 +57,29 @@ public class ProjectileFactory {
      * @param direction The direction to fire at
      * @return The laser entity
      */
-    public static Entity createLaserShot(Vector2 direction) {
-        Entity laser = createBaseProjectile();
+    public static Entity createEnemyProjectile(String texturePath, Vector2 direction) {
+        Entity projectile = createBaseProjectile();
         LaserConfig config = configs.laser;
-        laser
-                .addComponent(new TextureRenderWithRotationComponent("images/laser_shot.png"))
+        projectile
+                .addComponent(new TextureRenderWithRotationComponent(texturePath))
                 .addComponent(new CombatStatsComponent(config.health, config.base_attack))
                 .addComponent(new ColliderComponent())
                 .addComponent(new HitboxComponent().setLayer(PhysicsLayer.ENEMY_PROJECTILE))
                 .addComponent(new TouchAttackComponent(PhysicsLayer.PLAYER)); // Knockback??
 
-        ColliderComponent collider = laser.getComponent(ColliderComponent.class);
+        ColliderComponent collider = projectile.getComponent(ColliderComponent.class);
         collider.setLayer(PhysicsLayer.ENEMY_PROJECTILE)
                 .setFilter(PhysicsLayer.ENEMY_PROJECTILE, (short) (PhysicsLayer.PLAYER));
 
         float angleToFire = direction.angleDeg() + 90;
 
-        laser.getComponent(TextureRenderWithRotationComponent.class).setRotation(angleToFire);
-        laser.getComponent(TextureRenderWithRotationComponent.class).scaleEntity();
-        laser.scaleWidth(0.5f);
-        laser.scaleHeight(0.5f);
+        projectile.getComponent(TextureRenderWithRotationComponent.class).setRotation(angleToFire);
+        projectile.getComponent(TextureRenderWithRotationComponent.class).scaleEntity();
 
-        laser.getComponent(PhysicsProjectileComponent.class).create(); // Not called for some reason.
-        laser.getComponent(PhysicsProjectileComponent.class).fire(direction, config.speed);
+        projectile.getComponent(PhysicsProjectileComponent.class).create(); // Not called for some reason.
+        projectile.getComponent(PhysicsProjectileComponent.class).fire(direction, config.speed);
 
-        return laser;
+        return projectile;
     }
 
     /**
