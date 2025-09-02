@@ -4,6 +4,7 @@ import com.badlogic.gdx.utils.Timer;
 import com.csse3200.game.areas.ForestGameArea;
 import com.csse3200.game.components.Component;
 import com.csse3200.game.entities.Entity;
+import com.csse3200.game.entities.configs.BaseProjectileConfig;
 import com.csse3200.game.services.ServiceLocator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,11 +34,13 @@ public class ProjectileLauncherComponent extends Component {
      * @param texturePath The texture/sprite of the projectile
      * @param directionToFire The direction to fire in
      * @param offset Offset (from the center) where the projectile is fired
-     * @param scale The size of the projectile. "x" value represents width, and "y" value represnets height.
+     * @param scale The size of the projectile. "x" value represents width, and "y" value represents height.\
+     * @param config The configuration about the damage and speed of the projectile
      */
-    public void FireProjectile(String texturePath, Vector2 directionToFire, Vector2 offset, Vector2 scale)
+    public void FireProjectile(String texturePath, Vector2 directionToFire, Vector2 offset, Vector2 scale,
+                                    BaseProjectileConfig config)
     {
-        Entity projectile = forestGameArea.spawnEnemyProjectile(texturePath, directionToFire);
+        Entity projectile = forestGameArea.spawnEnemyProjectile(texturePath, directionToFire, config);
         Vector2 pos = new Vector2(getEntity().getPosition().x + offset.x,
                                 getEntity().getPosition().y + offset.y);
         projectile.setPosition(pos);
@@ -53,16 +56,18 @@ public class ProjectileLauncherComponent extends Component {
      *                          10 degree difference in the rotation of each laser projectile.
      * @param directionToFire The direction to fire at.
      * @param offset Offset (from the center) where the projectile is fired
-     * @param scale The size of the projectile. "x" value represents width, and "y" value represnets height.
+     * @param scale The size of the projectile. "x" value represents width, and "y" value represents height.
+     * @param config The configuration about the damage and speed of the projectile
      */
     public void FireProjectileMultishot(String texturePath, int amount, float angleDifferences,
-                                             Vector2 directionToFire, Vector2 offset, Vector2 scale)
+                                            Vector2 directionToFire, Vector2 offset, Vector2 scale,
+                                            BaseProjectileConfig config)
     {
         directionToFire = directionToFire.rotateDeg(-angleDifferences * ((float)amount/2));
 
             for (int i = 0; i < amount; i++)
             {
-                FireProjectile(texturePath, directionToFire, offset, scale);
+                FireProjectile(texturePath, directionToFire, offset, scale, config);
                 directionToFire.rotateDeg(angleDifferences);
             }
     }
@@ -75,10 +80,12 @@ public class ProjectileLauncherComponent extends Component {
      * @param timeBetweenShots The time, in seconds, between each laser fired within one burst sequence.
      * @param directionToFire The direction to fire at.
      * @param offset Offset (from the center) where the projectile is fired
-     * @param scale The size of the projectile. "x" value represents width, and "y" value represnets height.
+     * @param scale The size of the projectile. "x" value represents width, and "y" value represents height.
+     * @param config The configuration about the damage and speed of the projectile
      */
     public void FireProjectileBurstFire(String texturePath, int burstAmount, float timeBetweenShots,
-                                             Vector2 directionToFire, Vector2 offset, Vector2 scale)
+                                             Vector2 directionToFire, Vector2 offset, Vector2 scale,
+                                             BaseProjectileConfig config)
     {
         Timer.Task burstFireTask = new Timer.Task() {
             int currentCount = 0;
@@ -92,7 +99,7 @@ public class ProjectileLauncherComponent extends Component {
                     return;
                 }
 
-                FireProjectile(texturePath, directionToFire, offset, scale);
+                FireProjectile(texturePath, directionToFire, offset, scale, config);
                 currentCount++;
                 if (currentCount >= burstAmount) { cancel(); };
             }
