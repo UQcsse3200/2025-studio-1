@@ -1,5 +1,6 @@
 package com.csse3200.game.entities.factories;
 
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.components.TouchAttackComponent;
@@ -7,8 +8,8 @@ import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.*;
 import com.csse3200.game.files.FileLoader;
 import com.csse3200.game.physics.PhysicsLayer;
-import com.csse3200.game.physics.PhysicsUtils;
 import com.csse3200.game.physics.components.*;
+import com.csse3200.game.rendering.TextureRenderWithRotationComponent;
 import com.csse3200.game.rendering.TextureRenderComponent;
 
 
@@ -47,10 +48,40 @@ public class ProjectileFactory {
         collider.setLayer(PhysicsLayer.FRIENDLY_PROJECTILE)
                 .setFilter(PhysicsLayer.FRIENDLY_PROJECTILE, (short) (PhysicsLayer.NPC));
 
-
-
         pistolBullet.scaleHeight(0.85f);
         return pistolBullet;
+    }
+
+    /**
+     * Creates a laser shot entity
+     * @param direction The direction to fire at
+     * @return The laser entity
+     */
+    public static Entity createLaserShot(Vector2 direction) {
+        Entity laser = createBaseProjectile();
+        LaserConfig config = configs.laser;
+        laser
+                .addComponent(new TextureRenderWithRotationComponent("images/laser_shot.png"))
+                .addComponent(new CombatStatsComponent(config.health, config.base_attack))
+                .addComponent(new ColliderComponent())
+                .addComponent(new HitboxComponent().setLayer(PhysicsLayer.ENEMY_PROJECTILE))
+                .addComponent(new TouchAttackComponent(PhysicsLayer.PLAYER)); // Knockback??
+
+        ColliderComponent collider = laser.getComponent(ColliderComponent.class);
+        collider.setLayer(PhysicsLayer.ENEMY_PROJECTILE)
+                .setFilter(PhysicsLayer.ENEMY_PROJECTILE, (short) (PhysicsLayer.PLAYER));
+
+        float angleToFire = direction.angleDeg() + 90;
+
+        laser.getComponent(TextureRenderWithRotationComponent.class).setRotation(angleToFire);
+        laser.getComponent(TextureRenderWithRotationComponent.class).scaleEntity();
+        laser.scaleWidth(0.5f);
+        laser.scaleHeight(0.5f);
+
+        laser.getComponent(PhysicsProjectileComponent.class).create(); // Not called for some reason.
+        laser.getComponent(PhysicsProjectileComponent.class).fire(direction, config.speed);
+
+        return laser;
     }
 
     /**
