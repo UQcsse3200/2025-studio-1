@@ -10,6 +10,7 @@ import com.badlogic.gdx.utils.Array;
 import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.components.Component;
+import com.csse3200.game.components.StaminaComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.LightsaberConfig;
 import com.csse3200.game.entities.factories.ProjectileFactory;
@@ -26,12 +27,16 @@ import com.badlogic.gdx.utils.Timer;
  * and when triggered should call methods within this class.
  */
 public class PlayerActions extends Component {
-  // Managers
-  private Timer.Task staminaTask;
+  // Components
+  private StaminaComponent stamina;
   private PhysicsComponent physicsComponent;
 
+  // Added camera variable to allow for entities to spawn in world coordinates instead of
+  // screen coordinates.
+  private Camera camera;
+
   // Movement Constants
-  private static final Vector2 MAX_SPEED    = new Vector2(3f, 3f);
+  private static final Vector2 MAX_SPEED = new Vector2(3f, 3f);
   private static final Vector2 CROUCH_SPEED = new Vector2(1.5f, 3f);
   private static final Vector2 SPRINT_SPEED = new Vector2(7f, 3f);
   private static final Vector2 JUMP_VELOCITY = new Vector2(0f, 30f);
@@ -39,15 +44,11 @@ public class PlayerActions extends Component {
   private static final float DASH_DURATION = 0.1f;
   private int DASH_COOLDOWN = 15; // hundredths of a second (1.5s)
 
-  // Stamina Constants
-  private static final int MAX_STAMINA = 100;
-  private static final int INITIAL_STAMINA = 100;
-  private static final float SPRINT_DRAIN_PER_SEC = 15f; // whilst moving or jumping normally
-  private static final float SPRINT_REGEN_PER_SEC = 10f; // stamina/sec when not spending
-  private static final int DASH_COST = 30; // stamina instantly consumed on dash
-  private static final int DOUBLE_JUMP_COST = 10; // stamina consumed on air jump
-  private static final long STAMINA_REGEN_DELAY_MS = 800; // time between last spend to regen
-  private static final float STAMINA_TICK_SEC = 0.1f;
+  // Stamina Costs
+  private static final int DASH_COST = 30;
+  private static final int DOUBLE_JUMP_COST = 10;
+  private static final int SPRINT_COST = 1;
+
 
   // Jumping Limits
   private static final int MAX_JUMPS = 2;
@@ -63,26 +64,21 @@ public class PlayerActions extends Component {
   private boolean grounded = true;
 
   // Ability cooldowns / counters
-  private int dashCooldown= 0;
+  private int dashCooldown = 0;
   private int jumpsLeft = MAX_JUMPS;
   private long lastJumpTime = 0; // timestamp of last ground jump
 
-  // Stamina management
-  private float stamina = INITIAL_STAMINA;
-  private long  lastStaminaSpendMs = 0L;
-  private boolean infiniteStamina = false;  // used for cheat codes
+
   // Tracks the last integer stamina value we pushed to UI to avoid redundant events
-  private int lastEmittedStamina = -1;
   private float timeSinceLastAttack = 0;
-  /*
-  Added camera variable to allow for entities to spawn in world coordinates instead of
-  screen coordinates.
-   */
-  private Camera camera;
+
 
   @Override
   public void create() {
+
     physicsComponent = entity.getComponent(PhysicsComponent.class);
+    stamina = entity.getComponent(StaminaComponent.class);
+
     entity.getEvents().addListener("walk", this::walk);
     entity.getEvents().addListener("walkStop", this::stopWalking);
     entity.getEvents().addListener("attack", this::attack);
@@ -92,29 +88,35 @@ public class PlayerActions extends Component {
     entity.getEvents().addListener("dashAttempt", this::dash);
     entity.getEvents().addListener("crouchAttempt", this::crouchAttempt);
     entity.getEvents().addListener("crouchStop", () -> crouching = false);
-    entity.getEvents().addListener("sprintStart", () -> sprinting = true);
-    entity.getEvents().addListener("sprintStop",  () -> sprinting = false);
+    entity.getEvents().addListener("sprintStart", () -> {
+      sprinting = true;
+      stamina.setSprinting(true);
+    });
+    entity.getEvents().addListener("sprintStop", () -> {
+      sprinting = false;
+      stamina.setSprinting(false);
+    });
+
     Array<Entity> entities = ServiceLocator.getEntityService().getEntities();
     for (Entity entity: entities) {
-
       if (entity.getComponent(CameraComponent.class) != null) {
         camera = entity.getComponent(CameraComponent.class).getCamera();
       }
     }
-
-    startStaminaTask();
-    emitStaminaChanged();
   }
 
   @Override
   public void update() {
     if (moving || dashing) {
+      // An event changing the player's location occurred
       updateSpeed();
     }
 
     if (touchingGround()) {
+      // Reset jumps
       jumpsLeft = MAX_JUMPS;
     } else {
+      // Cannot be crouching whilst in the air
       crouching = false;
     }
 
@@ -137,16 +139,13 @@ public class PlayerActions extends Component {
 
     if(grounded != touchingGround()) {
       if(touchingGround()) {
-        grounded = true;
+        setGrounded(true);
         entity.getEvents().trigger("walk", walkDirection);
       } else {
-        grounded = false;
+        setGrounded(false);
         entity.getEvents().trigger("fall", walkDirection);
       }
     }
-   // if((!dashing) && (!crouching) && touchingGround() && hasDir) {
-  //    entity.getEvents().trigger("walk", walkDirection);
-  //  }
   }
 
   private float getImpulseX(boolean hasDir, Vector2 velocity, Body body) {
@@ -160,14 +159,16 @@ public class PlayerActions extends Component {
       if (crouching && touchingGround()) {
         maxX = CROUCH_SPEED.x;
       } else {
-        boolean allowSprint = sprinting && hasDir && stamina > 0f && touchingGround();
+        boolean allowSprint = (
+                sprinting && touchingGround() && stamina.hasStamina(SPRINT_COST)
+        );
         maxX = allowSprint ? SPRINT_SPEED.x : MAX_SPEED.x;
       }
       targetVx = walkDirection.x * maxX;
     }
 
     // impulse = (desiredVel - currentVel) * mass
-      return (targetVx - velocity.x) * body.getMass();
+    return (targetVx - velocity.x) * body.getMass();
   }
 
 
@@ -179,9 +180,11 @@ public class PlayerActions extends Component {
    */
   void walk(Vector2 direction) {
     moving = true;
+    stamina.setMoving(true);
     this.walkDirection = direction;
     facingRight = this.walkDirection.x > 0;
-    if(touchingGround()) {
+
+    if (touchingGround()) {
       entity.getEvents().trigger("walkAnimate", walkDirection);
     } else {
       entity.getEvents().trigger("fall", walkDirection);
@@ -198,6 +201,7 @@ public class PlayerActions extends Component {
     this.walkDirection = Vector2.Zero.cpy();
     updateSpeed();
     moving = false;
+    stamina.setMoving(false);
   }
 
   /**
@@ -217,7 +221,7 @@ public class PlayerActions extends Component {
       if ((!isGroundJump || touchingGround())
               && (!isGroundJump || withinCooldown)) {
         if(!isGroundJump) {
-          if(!trySpendStamina(DOUBLE_JUMP_COST)) {
+          if (!stamina.trySpend(DOUBLE_JUMP_COST)) {
             return;
           }
         }
@@ -226,24 +230,25 @@ public class PlayerActions extends Component {
         body.applyLinearImpulse(JUMP_VELOCITY, body.getWorldCenter(), true);
         jumpsLeft--;
         lastJumpTime = currentTime;
-        grounded = false;
+        setGrounded(true);
     }
   }
 }
 
   void sprintAttempt() {
-    if (!crouching && hasStamina()) {
+    if (!crouching && stamina.hasStamina(SPRINT_COST)) {
       sprinting = true;
+      stamina.setSprinting(true);
       entity.getEvents().trigger("sprintStart");
     }
   }
 
   void dash() {
-    if (dashCooldown == 0 && trySpendStamina(DASH_COST)) {
-      if (crouching) { // Need to add grounded check here as well
-        entity.getEvents().trigger("slide", facingRight); // Different animation
+    if (dashCooldown == 0 && stamina.trySpend(DASH_COST)) {
+      if (crouching && touchingGround()) {
+        entity.getEvents().trigger("slide", facingRight);
       } else {
-        entity.getEvents().trigger("dash", facingRight); // To be used for animations or invulnerability checks
+        entity.getEvents().trigger("dash", facingRight);
       }
       dashCooldown = DASH_COOLDOWN;
       dashing = true;
@@ -259,7 +264,7 @@ public class PlayerActions extends Component {
         dashing = false;
         if (!moving) {
           stopWalking();
-        } else if(!sprinting){
+        } else if (!sprinting){
           entity.getEvents().trigger("walk", walkDirection);
         }
       }
@@ -279,11 +284,15 @@ public class PlayerActions extends Component {
   }
 
   void crouchAttempt() {
-    // Return if grounded TBA
-    if(touchingGround()) { // must be grounded
+    if (touchingGround()) {
       entity.getEvents().trigger("crouchStart");
       crouching = true;
     }
+  }
+
+  void setGrounded(boolean grounded) {
+    this.grounded = grounded;
+    this.stamina.setGrounded(grounded);
   }
 
   /**
@@ -292,9 +301,30 @@ public class PlayerActions extends Component {
    */
   boolean touchingGround() {
     // return true for infinite jumps
-
     return (physicsComponent.getBody().getLinearVelocity().y == 0f);
   }
+
+  /**
+   * Cheatcode: infinite dashes
+   */
+  public void infDash() {
+    this.DASH_COOLDOWN = 0;
+  }
+
+  /**
+   * Cheatcode: infinite jumps
+   */
+  public void infJumps() {
+    this.jumpsLeft = 9999;
+  }
+
+  /**
+   * Cheatcode: infinite stamina
+   */
+  public void infStamina() {
+    stamina.setInfiniteStamina(true);
+  }
+
   /**
    * Fires a bullet from the player at wherever they click
    */
@@ -342,171 +372,22 @@ public class PlayerActions extends Component {
     float attackRange = 3f; // CHANGE THIS
 
     for (Entity enemy : ServiceLocator.getEntityService().getEntities()) {
-        if (enemy != entity) {
-          CombatStatsComponent enemyStats = enemy.getComponent(CombatStatsComponent.class);
-          CombatStatsComponent attackStats = entity.getComponent(CombatStatsComponent.class);
-          HitboxComponent enemyHitBox = enemy.getComponent(HitboxComponent.class);
-          if (enemyStats != null && attackStats != null
-                  && enemyHitBox != null) {
-            if (enemyHitBox.getLayer() == PhysicsLayer.NPC) {
-                float distance = enemy.getCenterPosition().dst(entity.getCenterPosition());
-                if (distance <= attackRange) {
-                  System.out.println("TRYING TO HIT: " + enemy);
-                  enemy.getComponent(CombatStatsComponent.class).hit(entity.getComponent(CombatStatsComponent.class));
-                }
+      if (enemy != entity) {
+        CombatStatsComponent enemyStats = enemy.getComponent(CombatStatsComponent.class);
+        CombatStatsComponent attackStats = entity.getComponent(CombatStatsComponent.class);
+        HitboxComponent enemyHitBox = enemy.getComponent(HitboxComponent.class);
+        if (enemyStats != null && attackStats != null
+                && enemyHitBox != null) {
+          if (enemyHitBox.getLayer() == PhysicsLayer.NPC) {
+            float distance = enemy.getCenterPosition().dst(entity.getCenterPosition());
+            if (distance <= attackRange) {
+              System.out.println("TRYING TO HIT: " + enemy);
+              enemy.getComponent(CombatStatsComponent.class).hit(entity.getComponent(CombatStatsComponent.class));
             }
           }
         }
+      }
     }
     timeSinceLastAttack = 0;
-  }
-
-  /**
-   * Checks if the player has any stamina left.
-   * @return boolean indicating if the player has stamina.
-   */
-  private boolean hasStamina() {
-    return stamina > 0f;
-  }
-
-  /**
-   * Starts (or restarts) the repeating stamina update task.
-   * Uses libGDX {@link Timer} so that ticks are posted onto the main render thread.
-   * Idempotent: if a task is already running it will be cancelled and replaced.
-   */
-  private void startStaminaTask() {
-    // Ensure there is only ever one repeating task running
-    if (staminaTask != null) {
-      staminaTask.cancel();
-      staminaTask = null;
-    }
-    staminaTask = Timer.schedule(new Timer.Task() {
-      @Override
-      public void run() {
-        staminaTick();
-      }
-    }, STAMINA_TICK_SEC, STAMINA_TICK_SEC); // initial delay, then fixed interval
-  }
-
-  /**
-   * Cancels the repeating stamina task when this component is disposed to prevent leaks.
-   */
-  @Override
-  public void dispose() {
-    super.dispose();
-    if (staminaTask != null) {
-      staminaTask.cancel();
-      staminaTask = null;
-    }
-  }
-
-  /**
-   * One stamina "tick". Called at a fixed cadence by {@link #startStaminaTask()}.
-   * Checks for horizontal movement. Jumps, dashes and other special movement actions
-   * stamina changes are implemented in the handlers respectively.
-   * <p>
-   * Rules:
-   * - If {@code infiniteStamina} is enabled, keep stamina pegged at MAX and notify UI.
-   * - While sprinting and moving horizontally (and not dashing), drain stamina.
-   * - If not spending for {@code STAMINA_REGEN_DELAY_MS}, regenerate up to MAX.
-   * - UI is only notified when the integer stamina value actually changes.
-   */
-  private void staminaTick() {
-    final long now = System.currentTimeMillis();
-
-    // Cheat mode: keep stamina maxed and notify UI if it changed.
-    if (infiniteStamina) {
-      stamina = MAX_STAMINA;
-      emitStaminaChanged();
-      return;
-    }
-
-    // Drain if actively sprinting and actually moving horizontally (not dashing)
-    final boolean actuallySprinting =
-        sprinting && moving && Math.abs(walkDirection.x) > 0.0001f && !dashing;
-
-    if (actuallySprinting && stamina > 0f && touchingGround()) {
-      final float drainPerTick = SPRINT_DRAIN_PER_SEC * STAMINA_TICK_SEC;
-      stamina = Math.max(0f, stamina - drainPerTick);
-      lastStaminaSpendMs = now;
-
-      if ((int) stamina == 0) {
-        // Auto-cancel sprint when we run dry.
-        sprinting = false;
-        entity.getEvents().trigger("sprintStop");
-        entity.getEvents().trigger("outOfStamina");
-      }
-      emitStaminaChanged(); // only emits if value changed
-      return; // If draining we don't regen in the same tick.
-    }
-
-    // Regenerate if we haven't spent for a while and we're not dashing.
-    if (!dashing && (now - lastStaminaSpendMs) >= STAMINA_REGEN_DELAY_MS) {
-      final float regenPerTick = SPRINT_REGEN_PER_SEC * STAMINA_TICK_SEC;
-      final float before = stamina;
-      stamina = Math.min(MAX_STAMINA, stamina + regenPerTick);
-      if ((int) stamina != (int) before) {
-        emitStaminaChanged();
-      }
-    }
-  }
-
-  /**
-   * Attempts to spend the given amount of stamina.
-   *
-   * @param amount positive stamina cost
-   * @return true if the cost was paid (or stamina is infinite); false if not enough stamina
-   */
-  private boolean trySpendStamina(int amount) {
-    if (infiniteStamina) {
-      return true;
-    }
-    if (amount <= 0) {
-      // Non-positive costs are considered free.
-      return true;
-    }
-    if (stamina >= amount) {
-      stamina -= amount;
-      lastStaminaSpendMs = System.currentTimeMillis();
-      emitStaminaChanged();
-      return true;
-    }
-    return false;
-  }
-
-  /**
-   * Emits a stamina change event to the UI layer, but only if the integer value
-   * has actually changed since the last emission. This avoids redundant UI work.
-   */
-  private void emitStaminaChanged() {
-    final int current = (int) stamina;
-    if (current == lastEmittedStamina) {
-      return;
-    }
-    lastEmittedStamina = current;
-    entity.getEvents().trigger("staminaChanged", current, MAX_STAMINA);
-  }
-
-  /**
-   * Cheatcode: infinite dashes
-   */
-  public void infDash() {
-    this.DASH_COOLDOWN = 0;
-  }
-
-  /**
-   * Cheatcode: infinite jumps
-   */
-  public void infJumps() {
-    this.jumpsLeft = 9999;
-  }
-
-  /**
-   * Cheatcode: infinite stamina
-   */
-  public void infStamina() {
-    this.infiniteStamina = true;
-    this.stamina = MAX_STAMINA;
-    emitStaminaChanged();
   }
 }
