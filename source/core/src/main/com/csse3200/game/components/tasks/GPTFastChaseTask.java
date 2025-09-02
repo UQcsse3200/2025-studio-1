@@ -13,7 +13,8 @@ import com.csse3200.game.rendering.DebugRenderer;
 import com.csse3200.game.services.GameTime;
 import com.csse3200.game.services.ServiceLocator;
 
-/** Chases a target entity indefinitely and the entity being visible causes a speed increase */
+/** Chases a target entity indefinitely and the entity being visible causes a speed increase
+ *  CAN have added functionality to launch projectiles at the player too if wanted. */
 public class GPTFastChaseTask extends DefaultTask implements PriorityTask {
     private final Entity target;
     private final int priority;
@@ -24,16 +25,31 @@ public class GPTFastChaseTask extends DefaultTask implements PriorityTask {
     private MovementTask movementTask;
 
     // Projectile configurations
-    private final ProjectileLauncherComponent projectileLauncher;
-    private final GameTime timeSource;
+    private ProjectileLauncherComponent projectileLauncher = null;
+    private GameTime timeSource = null;
     private final float firingCooldown = 3f;
     private float currentCooldown = 3f;
-    private final Entity shooter;
+    private Entity shooter = null;
 
     /**
      * @param target The entity to chase.
      * @param priority Task priority when chasing (0 when not chasing).
      * @param speed The speed at which the enemy will chase the player
+     */
+    public GPTFastChaseTask(Entity target, int priority, Vector2 speed) {
+        this.target = target;
+        this.priority = priority;
+        this.speed = speed;
+        physics = ServiceLocator.getPhysicsService().getPhysics();
+        debugRenderer = ServiceLocator.getRenderService().getDebug();
+    }
+
+    /**
+     * @param target The entity to chase.
+     * @param priority Task priority when chasing (0 when not chasing).
+     * @param speed The speed at which the enemy will chase the player
+     * @param projectileLauncher the projectile launcher component used to launch projectiles at the player
+     * @param shooter the enemy that is shooting the projectiles
      */
     public GPTFastChaseTask(Entity target, int priority, Vector2 speed,
                             ProjectileLauncherComponent projectileLauncher, Entity shooter) {
@@ -70,9 +86,12 @@ public class GPTFastChaseTask extends DefaultTask implements PriorityTask {
         FireLasers();
     }
 
+    /**
+     * If there is a projectile launcher present, fire lasers. If not, this does nothing.
+     */
     public void FireLasers() {
         // Projectile launcher related
-        if (isTargetVisible()) {
+        if (isTargetVisible() && projectileLauncher != null) {
             currentCooldown += timeSource.getDeltaTime();
 
             if (currentCooldown >= firingCooldown) {
