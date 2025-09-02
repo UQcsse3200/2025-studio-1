@@ -5,11 +5,10 @@ import com.csse3200.game.areas.GameArea;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
-import com.csse3200.game.entities.factories.NPCFactory;
-import com.csse3200.game.entities.factories.PlayerFactory;
 import com.csse3200.game.extensions.GameExtension;
-import com.csse3200.game.physics.components.HitboxComponent;
 import com.csse3200.game.services.ServiceLocator;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
@@ -21,9 +20,17 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 
 @ExtendWith(GameExtension.class)
 class CombatStatsComponentTest {
+  CombatStatsComponent combat;
+  CombatStatsComponent enemy;
+
+  @BeforeEach
+  void setup() {
+    combat = new CombatStatsComponent(100, 20);
+    enemy = new CombatStatsComponent(100, 20);
+  }
+
   @Test
   void shouldSetGetHealth() {
-    CombatStatsComponent combat = new CombatStatsComponent(100, 20);
     assertEquals(100, combat.getHealth());
 
     combat.setHealth(150);
@@ -35,7 +42,6 @@ class CombatStatsComponentTest {
 
   @Test
   void shouldCheckIsDead() {
-    CombatStatsComponent combat = new CombatStatsComponent(100, 20);
     assertFalse(combat.isDead());
 
     combat.setHealth(0);
@@ -44,7 +50,6 @@ class CombatStatsComponentTest {
 
   @Test
   void shouldAddHealth() {
-    CombatStatsComponent combat = new CombatStatsComponent(100, 20);
     combat.addHealth(-500);
     assertEquals(0, combat.getHealth());
 
@@ -55,7 +60,6 @@ class CombatStatsComponentTest {
 
   @Test
   void shouldSetGetBaseAttack() {
-    CombatStatsComponent combat = new CombatStatsComponent(100, 20);
     assertEquals(20, combat.getBaseAttack());
 
     combat.setBaseAttack(150);
@@ -67,9 +71,8 @@ class CombatStatsComponentTest {
 
   @Test
   void enemyShouldBeDeadWhenHealthZero() {
-    CombatStatsComponent enemy = new CombatStatsComponent(50, 10);
     assertFalse(enemy.isDead());
-    enemy.addHealth(-50);
+    enemy.addHealth(-100);
     assertEquals(0, enemy.getHealth());
     assertTrue(enemy.isDead());
     // Overkill
@@ -91,7 +94,6 @@ class CombatStatsComponentTest {
 
   @Test
   void shouldSetGetCooldown() {
-    CombatStatsComponent combat = new CombatStatsComponent(100, 10);
     assertEquals(0, combat.getCoolDown());
     combat.setCoolDown(100);
     assertEquals(100, combat.getCoolDown());
@@ -118,16 +120,41 @@ class CombatStatsComponentTest {
 
   @Test
   void shouldTakeDirectDamage() {
-    CombatStatsComponent combat = new CombatStatsComponent(100, 20);
     combat.hit(20);
     assertEquals(80, combat.getHealth()); 
   }
 
   @Test
   void shouldTakeDamageFromAttacker(){
+    combat.hit(enemy);
+    assertEquals(80, combat.getHealth());
+  }
+
+  @Test
+  void shouldSetGetMaxHealth() {
     CombatStatsComponent combat = new CombatStatsComponent(100, 20);
-    CombatStatsComponent attacker = new CombatStatsComponent(50, 15);
-    combat.hit(attacker);
-    assertEquals(85, combat.getHealth());
+    assertEquals(100, combat.getMaxHealth());
+    combat.setMaxHealth(200);
+    assertEquals(200, combat.getMaxHealth());
+  }
+
+  @Test
+  void nullAttackerDoesNothing() {
+    combat.hit(null);
+    assertEquals(100, combat.getHealth());
+  }
+
+  @Test
+  void applyDamageToDeadDoesNothing() {
+    combat.hit(100);
+    assertTrue(combat.isDead());
+    assertEquals(0, combat.getHealth());
+    combat.hit(1000);
+    assertEquals(0, combat.getHealth());
+  }
+
+  @AfterEach
+  void cleanup() {
+    ServiceLocator.clear();
   }
 }
