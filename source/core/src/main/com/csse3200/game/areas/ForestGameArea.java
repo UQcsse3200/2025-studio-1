@@ -302,6 +302,7 @@ public class ForestGameArea extends GameArea {
     GridPoint2 wallSpawn = new GridPoint2(-14, 0);
     Entity bigWall = ObstacleFactory.createBigThickFloor();
     spawnEntityAt(bigWall, wallSpawn, true, false);
+  }
   /**
    * Spawns several item entities at random positions in the game area.
    * The number of items is set by NUM_ITEMS.
