@@ -3,6 +3,7 @@ package com.csse3200.game.components;
 import com.badlogic.gdx.graphics.Texture;
 import com.csse3200.game.rendering.TextureRenderComponent;
 import com.csse3200.game.services.ServiceLocator;
+import com.csse3200.game.components.enemy.LowHealthAttackBuff;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,6 +18,7 @@ public class CombatStatsComponent extends Component {
   private int health;
   private int maxHealth;
   private int baseAttack;
+  private int thresholdForBuff = 20;
   private float coolDown;
 
   public CombatStatsComponent(int health, int baseAttack) {
@@ -50,28 +52,41 @@ public class CombatStatsComponent extends Component {
    * @param health health
    */
   public void setHealth(int health) {
+    int prevHealth = this.health;
     if (health >= 0) {
       this.health = health;
     } else {
       this.health = 0;
     }
+
     if (entity != null) {
       entity.getEvents().trigger("updateHealth", this.health);
+
+      // Apply attack buff on low health if the entity has that component
+      if (this.health <= thresholdForBuff && (!isDead())) {
+          if (entity.getComponent(LowHealthAttackBuff.class) != null) {
+              entity.getEvents().trigger("buff");
+          }
+      }
+
+      if (prevHealth > 0 && this.health == 0) {
+        entity.getEvents().trigger("death");
+      }
     }
   }
 
-  /**
-   * Set the entity's hit cooldown (seconds)
-   *
-   * @param coolDown coolDown
-   */
-  public void setCoolDown(float coolDown) {
-    if (coolDown >= 0) {
-      this.coolDown = coolDown;
-    } else {
-      this.coolDown = 0;
+    /**
+     * Set the entity's hit cooldown (seconds)
+     *
+     * @param coolDown coolDown
+     */
+    public void setCoolDown(float coolDown) {
+        if (coolDown >= 0) {
+            this.coolDown = coolDown;
+        } else {
+            this.coolDown = 0;
+        }
     }
-  }
 
   /**
    * gets the entity's cooldown between attacks (seconds).
@@ -150,7 +165,7 @@ public class CombatStatsComponent extends Component {
         return;
     }
     applyDamage(attacker.getBaseAttack());
-   
+
     if (this.isDead()) {
       if (ServiceLocator.getGameArea() != null) {
         ServiceLocator.getGameArea().removeEntity(this.entity);
