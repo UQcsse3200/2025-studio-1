@@ -95,7 +95,8 @@ loadScripts(document, 'script');</script>
 <span class="extends-implements">extends <a href="../Component.html" title="class in com.csse3200.game.components">Component</a></span></div>
 <div class="block">A component intended to be used by the player to track their inventory.
 
- Currently only stores the gold amount but can be extended for more advanced functionality such as storing items.
+ Currently, has functionality for indexing, getting, setting, and removing from
+ the players inventory, also stores the processor amount.
  Can also be used as a more generic component for other entities.</div>
 </section>
 <section class="summary">
@@ -118,7 +119,10 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
 <div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(int)" class="member-name-link">InventoryComponent</a><wbr>(int&nbsp;processor)</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">Constructs an inventory for the player and a beginning currency amount
+ to start with.</div>
+</div>
 </div>
 </section>
 </li>
@@ -136,7 +140,7 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Boolean.html" title="class or interface in java.lang" class="external-link">Boolean</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#addItem(com.csse3200.game.entities.Entity)" class="member-name-link">addItem</a><wbr>(<a href="../../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a>&nbsp;item)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Adds an item to the next inventory position for the player to hold
+<div class="block">Adds an item to the next free inventory position for the player to hold
  i.e.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
@@ -169,6 +173,16 @@ loadScripts(document, 'script');</script>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getSize()" class="member-name-link">getSize</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns the number of items currently in the inventory</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getTex(int)" class="member-name-link">getTex</a><wbr>(int&nbsp;index)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Returns the texture for the item at the given index</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/ArrayList.html" title="class or interface in java.util" class="external-link">ArrayList</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getTextures()" class="member-name-link">getTextures</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Returns a copy of the current inventory textures</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Boolean.html" title="class or interface in java.lang" class="external-link">Boolean</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#hasProcessor(int)" class="member-name-link">hasProcessor</a><wbr>(int&nbsp;processor)</code></div>
@@ -227,6 +241,12 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="&lt;init&gt;(int)">
 <h3>InventoryComponent</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">InventoryComponent</span><wbr><span class="parameters">(int&nbsp;processor)</span></div>
+<div class="block">Constructs an inventory for the player and a beginning currency amount
+ to start with.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>processor</code> - The number of processors that the inventory is starting with</dd>
+</dl>
 </section>
 </li>
 </ul>
@@ -244,7 +264,20 @@ loadScripts(document, 'script');</script>
 <div class="block">Returns a copy of the players current inventory.</div>
 <dl class="notes">
 <dt>Returns:</dt>
-<dd>An ArrayList containing the players</dd>
+<dd>An <code>ArrayList&lt;Entity&gt;</code> containing the entities in the
+ players inventory.</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getTextures()">
+<h3>getTextures</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/ArrayList.html" title="class or interface in java.util" class="external-link">ArrayList</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</span>&nbsp;<span class="element-name">getTextures</span>()</div>
+<div class="block">Returns a copy of the current inventory textures</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>An <code>ArrayList&lt;String&gt;</code> containing the texture paths of
+ the players inventory</dd>
 </dl>
 </section>
 </li>
@@ -273,10 +306,23 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
+<section class="detail" id="getTex(int)">
+<h3>getTex</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">getTex</span><wbr><span class="parameters">(int&nbsp;index)</span></div>
+<div class="block">Returns the texture for the item at the given index</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>index</code> - The position of the item in the players inventory (0..4)</dd>
+<dt>Returns:</dt>
+<dd>The item at the given position, NULL if nothing there or index not in [0,4]</dd>
+</dl>
+</section>
+</li>
+<li>
 <section class="detail" id="addItem(com.csse3200.game.entities.Entity)">
 <h3>addItem</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Boolean.html" title="class or interface in java.lang" class="external-link">Boolean</a></span>&nbsp;<span class="element-name">addItem</span><wbr><span class="parameters">(<a href="../../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a>&nbsp;item)</span></div>
-<div class="block">Adds an item to the next inventory position for the player to hold
+<div class="block">Adds an item to the next free inventory position for the player to hold
  i.e. addItem(d) [a, b, _, c] -&gt; [a, b, _, c, d]</div>
 <dl class="notes">
 <dt>Parameters:</dt>
@@ -298,7 +344,8 @@ loadScripts(document, 'script');</script>
 <dd><code>index</code> - The index of the inventory 0 to 4</dd>
 <dd><code>item</code> - An item to store in the players inventory</dd>
 <dt>Returns:</dt>
-<dd>true if the item was successfully set, false otherwise</dd>
+<dd>true if the item was successfully set, false otherwise or if
+ something is already there</dd>
 </dl>
 </section>
 </li>

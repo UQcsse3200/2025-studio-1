@@ -102,7 +102,7 @@ loadScripts(document, 'script');</script>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">PlayerInventoryDisplay</span>
 <span class="extends-implements">extends <a href="../../ui/UIComponent.html" title="class in com.csse3200.game.ui">UIComponent</a></span></div>
 <div class="block">The UI component of the inventory.
- Use the triggers: "add item," "remove item," "remove all items," "focus item"</div>
+ Use the triggers: "add item," "remove item," "remove all items", "focus item"</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -126,8 +126,12 @@ loadScripts(document, 'script');</script>
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E()" class="member-name-link">PlayerInventoryDisplay</a>()</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(com.csse3200.game.components.player.InventoryComponent)" class="member-name-link">PlayerInventoryDisplay</a><wbr>(<a href="InventoryComponent.html" title="class in com.csse3200.game.components.player">InventoryComponent</a>&nbsp;inventory)</code></div>
+<div class="col-last even-row-color">
+<div class="block">TODO what happens if this is gone, along with the
+ Constructs the PlayerInventory display, takes in an InventoryComponent
+ so that it can handle displaying the item textures etc.</div>
+</div>
 </div>
 </section>
 </li>
@@ -216,9 +220,16 @@ loadScripts(document, 'script');</script>
 <h2>Constructor Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="&lt;init&gt;()">
+<section class="detail" id="&lt;init&gt;(com.csse3200.game.components.player.InventoryComponent)">
 <h3>PlayerInventoryDisplay</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">PlayerInventoryDisplay</span>()</div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">PlayerInventoryDisplay</span><wbr><span class="parameters">(<a href="InventoryComponent.html" title="class in com.csse3200.game.components.player">InventoryComponent</a>&nbsp;inventory)</span></div>
+<div class="block">TODO what happens if this is gone, along with the
+ Constructs the PlayerInventory display, takes in an InventoryComponent
+ so that it can handle displaying the item textures etc.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>inventory</code> - An already initialised InventoryComponent</dd>
+</dl>
 </section>
 </li>
 </ul>

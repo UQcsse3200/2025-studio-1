@@ -119,7 +119,8 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color">
 <div class="block">default constructor gets called if no value is passed</div>
 </div>
-<div class="col-constructor-name odd-row-color"><code><a href="#%3Cinit%3E(int)" class="member-name-link">ItemComponent</a><wbr>(int&nbsp;count)</code></div>
+<div class="col-constructor-name odd-row-color"><code><a href="#%3Cinit%3E(int,java.lang.String)" class="member-name-link">ItemComponent</a><wbr>(int&nbsp;count,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;texture)</code></div>
 <div class="col-last odd-row-color">
 <div class="block">This is the constructor for the ItemComponent class, it
  will take in a count of current existing items of the same
@@ -156,15 +157,25 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Gets the description for the item</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setCount(int)" class="member-name-link">setCount</a><wbr>(int&nbsp;count)</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getTexture()" class="member-name-link">getTexture</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">setCount to set item_count at a given value</div>
+<div class="block">Returns the texture path of the current item</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setDescription()" class="member-name-link">setDescription</a>()</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setCount(int)" class="member-name-link">setCount</a><wbr>(int&nbsp;count)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">setCount to set item_count at a given value</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setDescription()" class="member-name-link">setDescription</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">TODO: implement functionality and add docstrings</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setTexture(java.lang.String)" class="member-name-link">setTexture</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;texture)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Sets the texture path of the current item</div>
 </div>
 </div>
 </div>
@@ -190,15 +201,17 @@ loadScripts(document, 'script');</script>
 <h2>Constructor Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="&lt;init&gt;(int)">
+<section class="detail" id="&lt;init&gt;(int,java.lang.String)">
 <h3>ItemComponent</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">ItemComponent</span><wbr><span class="parameters">(int&nbsp;count)</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">ItemComponent</span><wbr><span class="parameters">(int&nbsp;count,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;texture)</span></div>
 <div class="block">This is the constructor for the ItemComponent class, it
  will take in a count of current existing items of the same
  type and store it</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>count</code> - is the present count for the item</dd>
+<dd><code>texture</code> - is the texture path to the texture of the item</dd>
 </dl>
 </section>
 </li>
@@ -251,6 +264,24 @@ loadScripts(document, 'script');</script>
 <dd><code>name</code> - The name of the item that you want the description of</dd>
 <dd><code>id</code> - The id of the item that you want the description of</dd>
 </dl>
+</section>
+</li>
+<li>
+<section class="detail" id="setTexture(java.lang.String)">
+<h3>setTexture</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setTexture</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;texture)</span></div>
+<div class="block">Sets the texture path of the current item</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>texture</code> - sets the texture path of the current item</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getTexture()">
+<h3>getTexture</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">getTexture</span>()</div>
+<div class="block">Returns the texture path of the current item</div>
 </section>
 </li>
 <li>
