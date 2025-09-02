@@ -2,17 +2,18 @@ package com.csse3200.game.components.entity;
 
 import com.csse3200.game.components.Component;
 
+
 public class EntityComponent extends Component {
     private String name;
     private int id;
     private String type;
 
     /**
-     * This is the constructor for the EntityComponent class, it sets up ther required information
+     * This is the constructor for the EntityComponent class, it sets up the required information
      * to be used in its methods.
      * @param id the unique id for every entity to help identify it
      * @param name of the entity
-     * @param type an enity can be of several types(eg: weapons, main player, enemy, etc)
+     * @param type an entity can be of several types(eg: weapons, main player, enemy, etc)
      */
     public EntityComponent(String name, int id, String type) {
       this.name = name;
