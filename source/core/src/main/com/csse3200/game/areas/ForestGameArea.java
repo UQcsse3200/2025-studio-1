@@ -266,6 +266,27 @@ public class ForestGameArea extends GameArea {
     spawnEntityAt(spawnPad, spawnPadPos, false, false);
   }
 
+  private void spawnBigWall() {
+    GridPoint2 wallSpawn = new GridPoint2(-14, 0);
+    Entity bigWall = ObstacleFactory.createBigThickFloor();
+    spawnEntityAt(bigWall, wallSpawn, true, false);
+  }
+  /**
+   * Spawns several item entities at random positions in the game area.
+   * The number of items is set by NUM_ITEMS.
+   * Each item is created and placed at a random spot on the terrain.
+   */
+  private void spawnItems() {
+    GridPoint2 minPos = new GridPoint2(0, 0);
+    GridPoint2 maxPos = terrain.getMapBounds(0).sub(2, 2);
+
+    for (int i = 0; i < NUM_ITEMS; i++) {
+      GridPoint2 randomPos = RandomUtils.random(minPos, maxPos);
+      Entity item = ItemFactory.createItem();
+      spawnEntityAt(item, randomPos, true, false);
+    }
+  }
+
   private Entity spawnPlayer() {
     Entity newPlayer = PlayerFactory.createPlayer();
     spawnEntityAt(newPlayer, PLAYER_SPAWN, true, true);
