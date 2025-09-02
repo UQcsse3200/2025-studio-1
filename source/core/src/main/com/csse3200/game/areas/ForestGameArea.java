@@ -70,10 +70,11 @@ public class ForestGameArea extends GameArea {
     "images/rifle.png",
     "images/dagger.png",
     "images/laser_shot.png",
+    "images/player.png",
     "images/mud.png",
     "images/heart.png"
   };
-  
+
   private static final String[] forestTextureAtlases = {
     "images/terrain_iso_grass.atlas", "images/ghost.atlas", "images/ghostKing.atlas",
     "images/robot-2.atlas", "images/fireball.atlas", "images/blackhole.atlas", "images/Robot_1.atlas",
@@ -83,7 +84,9 @@ public class ForestGameArea extends GameArea {
     "images/ghostKing.atlas",
     "images/ghostGPT.atlas",
     "images/explosion_1.atlas",
-    "images/explosion_2.atlas"
+    "images/explosion_2.atlas",
+    "images/explosion_2.atlas",
+    "images/player.atlas"
 
   };
   private static final String[] forestSounds = {"sounds/Impact4.ogg"};
@@ -195,10 +198,11 @@ public class ForestGameArea extends GameArea {
 
   private void spawnTrees() {
     GridPoint2 minPos = new GridPoint2(0, 0);
-    GridPoint2 maxPos = terrain.getMapBounds(0).sub(2, 2);
+    GridPoint2 maxPos = terrain.getMapBounds(0);
 
     for (int i = 0; i < NUM_TREES; i++) {
       GridPoint2 randomPos = RandomUtils.random(minPos, maxPos);
+      randomPos.y = 2;
       Entity tree = ObstacleFactory.createTree();
       spawnEntityAt(tree, randomPos, true, false);
     }
@@ -350,8 +354,6 @@ public class ForestGameArea extends GameArea {
     resourceService.loadSounds(forestSounds);
     resourceService.loadMusic(forestMusic);
 
-
-
     while (!resourceService.loadForMillis(10)) {
       // This could be upgraded to a loading screen
       logger.info("Loading... {}%", resourceService.getProgress());
@@ -366,8 +368,6 @@ public class ForestGameArea extends GameArea {
     resourceService.unloadAssets(forestSounds);
     resourceService.unloadAssets(forestMusic);
   }
-
-
 
   @Override
   public void dispose() {
