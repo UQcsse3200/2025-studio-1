@@ -6,7 +6,6 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.components.TagComponent;
 import com.csse3200.game.input.InputComponent;
-import com.csse3200.game.rendering.TextureRenderComponent;
 import com.csse3200.game.utils.math.Vector2Utils;
 
 /**
@@ -15,7 +14,8 @@ import com.csse3200.game.utils.math.Vector2Utils;
  */
 public class KeyboardPlayerInputComponent extends InputComponent {
   private final Vector2 walkDirection = Vector2.Zero.cpy();
-    private int focusedItem = -1;
+
+  private int focusedItem = -1;
 
   private long timeSinceKeyPress = 0;
   private int doublePressKeyCode = -1;
@@ -36,29 +36,29 @@ public class KeyboardPlayerInputComponent extends InputComponent {
       case Keys.A:
         walkDirection.add(Vector2Utils.LEFT);
         triggerWalkEvent();
-        if (isDoubleKeyPress(keycode)) {
-          entity.getEvents().trigger("dashAttempt");
-        }
+        checkForDashInput(keycode);
         return true;
+
       case Keys.D:
         walkDirection.add(Vector2Utils.RIGHT);
         triggerWalkEvent();
-        if (isDoubleKeyPress(keycode)) {
-          entity.getEvents().trigger("dashAttempt");
-        }
+        checkForDashInput(keycode);
         return true;
+
       case Keys.S:
-        entity.getEvents().trigger("crouchAttempt");
+        triggerCrouchEvent();
         return true;
-      case Keys.SHIFT_LEFT: // sprint start (left shift down)
-        entity.getEvents().trigger("sprintAttempt");
-        triggerWalkEvent();
+
+      case Keys.SHIFT_LEFT:
+        triggerSprintEvent();
         return true;
+
       case Keys.SPACE:
-        jump();
+        triggerJumpEvent();
         entity.getEvents().trigger("attack");
         entity.getEvents().trigger("anim");
         return true;
+
       default:
         return false;
     }
@@ -100,18 +100,20 @@ public class KeyboardPlayerInputComponent extends InputComponent {
         walkDirection.sub(Vector2Utils.LEFT);
         triggerWalkEvent();
         return true;
+
       case Keys.D:
         walkDirection.sub(Vector2Utils.RIGHT);
         triggerWalkEvent();
         return true;
-      case Keys.SHIFT_LEFT: // sprint stop (left shift up)
-        entity.getEvents().trigger("walkStop");
-        entity.getEvents().trigger("sprintStop");
-        triggerWalkEvent();
+
+      case Keys.SHIFT_LEFT:
+        triggerStopSprintingEvent();
         return true;
+
       case Keys.S:
-        entity.getEvents().trigger("crouchStop");
+        triggerStopCrouchingEvent();
         return true;
+
       case Keys.Q:
         triggerRemoveItem();
         return true;
@@ -143,6 +145,12 @@ public class KeyboardPlayerInputComponent extends InputComponent {
     }
   }
 
+  private void checkForDashInput(int keycode) {
+    if (isDoubleKeyPress(keycode)) {
+      entity.getEvents().trigger("dashAttempt");
+    }
+  }
+
   private boolean isDoubleKeyPress(int keycode) {
     boolean result = false;
     long timeDif = System.currentTimeMillis() - timeSinceKeyPress;
@@ -167,7 +175,23 @@ public class KeyboardPlayerInputComponent extends InputComponent {
     }
   }
 
-  private void jump() {
+  private void triggerCrouchEvent() {
+    entity.getEvents().trigger("crouchAttempt");
+  }
+
+  private void triggerStopCrouchingEvent() {
+    entity.getEvents().trigger("crouchStop");
+  }
+
+  private void triggerSprintEvent() {
+    entity.getEvents().trigger("sprintAttempt");
+  }
+
+  private void triggerStopSprintingEvent() {
+    entity.getEvents().trigger("sprintStop");
+  }
+
+  private void triggerJumpEvent() {
     entity.getEvents().trigger("jumpAttempt");
   }
 
@@ -178,6 +202,7 @@ public class KeyboardPlayerInputComponent extends InputComponent {
   private void triggerAddItem() {
     entity.getEvents().trigger("add item", "images/mud.png");
   }
+
   private void triggerSelectItem() {
     entity.getEvents().trigger("focus item", focusedItem);
   }
