@@ -16,7 +16,7 @@ public class PlayerAnimationController extends Component {
     private boolean facingRight = true;
     private boolean sprinting = false;
     private boolean crouching = false;
-
+    //private boolean falling = false;
     /**
      * Creates a new animation controller and adds event listeners for relevant events.
      */
@@ -30,8 +30,8 @@ public class PlayerAnimationController extends Component {
         entity.getEvents().addListener("sprintStart", () -> sprinting = true);
         entity.getEvents().addListener("sprintStop", () -> sprinting = false);
         entity.getEvents().addListener("dash", this::animateDash);
-        entity.getEvents().addListener("crouchStart", () -> crouching = true);
-        entity.getEvents().addListener("crouchStop", () -> crouching = false);
+        entity.getEvents().addListener("crouchStart", this::startCrouching);
+        entity.getEvents().addListener("crouchStop", this::stopCrouching);
         entity.getEvents().addListener("fall", this::animateFall);
     }
 
@@ -106,6 +106,16 @@ public class PlayerAnimationController extends Component {
             logger.debug("Animating left dash");
             animator.startAnimation("left_run");
         }
+    }
+
+    void startCrouching() {
+        crouching = true;
+        animateCrouch(Vector2.Zero);
+    }
+
+    void stopCrouching() {
+        crouching = false;
+
     }
 
     /**
