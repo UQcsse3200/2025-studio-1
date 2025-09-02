@@ -4,8 +4,16 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="78acdbef-b972-46a4-a50a-31b47a1e7ab6" name="Changes" comment="This is the second commit trial 2b">
+    <list default="true" id="78acdbef-b972-46a4-a50a-31b47a1e7ab6" name="Changes" comment="Merge branch 'keycard-fix' into Team-3-Map&#10;&#10;# Conflicts:&#10;#&#9;.idea/workspace.xml&#10;#&#9;source/core/src/main/com/csse3200/game/areas/Floor3GameArea.java&#10;#&#9;source/core/src/main/com/csse3200/game/areas/ForestGameArea.java&#10;#&#9;source/core/src/main/com/csse3200/game/components/KeycardGateComponent.java&#10;#&#9;source/core/src/main/com/csse3200/game/components/KeycardPickupComponent.java&#10;#&#9;source/core/src/main/com/csse3200/game/components/player/InventoryComponent.java&#10;#&#9;source/core/src/main/com/csse3200/game/entities/factories/PlayerFactory.java">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/core/src/main/com/csse3200/game/areas/Floor2GameArea.java" beforeDir="false" afterPath="$PROJECT_DIR$/source/core/src/main/com/csse3200/game/areas/Floor2GameArea.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/core/src/main/com/csse3200/game/areas/Floor3GameArea.java" beforeDir="false" afterPath="$PROJECT_DIR$/source/core/src/main/com/csse3200/game/areas/Floor3GameArea.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/core/src/main/com/csse3200/game/areas/Floor4GameArea.java" beforeDir="false" afterPath="$PROJECT_DIR$/source/core/src/main/com/csse3200/game/areas/Floor4GameArea.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/core/src/main/com/csse3200/game/areas/ForestGameArea.java" beforeDir="false" afterPath="$PROJECT_DIR$/source/core/src/main/com/csse3200/game/areas/ForestGameArea.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/core/src/main/com/csse3200/game/areas/terrain/ForestGameArea.java" beforeDir="false" afterPath="$PROJECT_DIR$/source/core/src/main/com/csse3200/game/areas/terrain/ForestGameArea.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/core/src/main/com/csse3200/game/components/player/InventoryComponent.java" beforeDir="false" afterPath="$PROJECT_DIR$/source/core/src/main/com/csse3200/game/components/player/InventoryComponent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/core/src/main/com/csse3200/game/entities/factories/KeycardFactory.java" beforeDir="false" afterPath="$PROJECT_DIR$/source/core/src/main/com/csse3200/game/entities/factories/KeycardFactory.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/core/src/main/com/csse3200/game/entities/factories/PlayerFactory.java" beforeDir="false" afterPath="$PROJECT_DIR$/source/core/src/main/com/csse3200/game/entities/factories/PlayerFactory.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -115,7 +123,7 @@
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;keycard-fix&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;Team-3-Map&quot;,
     &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
     &quot;last_opened_file_path&quot;: &quot;C:/Users/zdhil/2025-studio-1&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
