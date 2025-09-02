@@ -50,8 +50,8 @@ public class BossFactory {
         AnimationRenderComponent animator =
                 new AnimationRenderComponent(
                         ServiceLocator.getResourceService().getAsset("images/boss_idle.atlas", TextureAtlas.class));
-        animator.addAnimation("angry_float", 0.1f, Animation.PlayMode.LOOP);
-        animator.addAnimation("float", 0.1f, Animation.PlayMode.LOOP);
+        animator.addAnimation("angry_float", 0.3f, Animation.PlayMode.LOOP);
+        animator.addAnimation("float", 0.3f, Animation.PlayMode.LOOP);
 
         boss2
                 .addComponent(new CombatStatsComponent(config.health, config.baseAttack))
