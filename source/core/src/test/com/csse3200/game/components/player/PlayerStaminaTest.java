@@ -30,99 +30,6 @@ class PlayerStaminaTest {
         ServiceLocator.registerPhysicsService(new PhysicsService());
     }
 
-    // Helpers
-    private static void attachEntity(PlayerActions actions) {
-        Entity ent = mock(Entity.class);
-        //EventHandler events = new EventHandler();
-        EventHandler events = mock(EventHandler.class);
-        when(ent.getEvents()).thenReturn(events);
-        setField(actions, "entity", ent);
-    }
-
-    private static Field findField(Class<?> clazz, String name) {
-        Class<?> c = clazz;
-        while (c != null) {
-            try {
-                Field f = c.getDeclaredField(name);
-                f.setAccessible(true);
-                return f;
-            } catch (NoSuchFieldException ignored) {
-                c = c.getSuperclass();
-            }
-        }
-        throw new RuntimeException(new NoSuchFieldException(name));
-    }
-
-    private static float reflectFloat(Object target, String name) {
-        try {
-            Field f = findField(target.getClass(), name);
-            return f.getFloat(target);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private static int reflectIntConst(Class<?> clazz, String name, int fallback) {
-        try {
-            Field f = clazz.getDeclaredField(name);
-            f.setAccessible(true);
-            return f.getInt(null);
-        } catch (Exception ignored) {
-            return fallback;
-        }
-    }
-
-    private static float reflectFloatConst(Class<?> clazz, String name, float fallback) {
-        try {
-            Field f = clazz.getDeclaredField(name);
-            f.setAccessible(true);
-            return f.getFloat(null);
-        } catch (Exception ignored) {
-            return fallback;
-        }
-    }
-
-    private static long reflectLongConst(Class<?> clazz, String name, long fallback) {
-        try {
-            Field f = clazz.getDeclaredField(name);
-            f.setAccessible(true);
-            return f.getLong(null);
-        } catch (Exception ignored) {
-            return fallback;
-        }
-    }
-
-    private static void setField(Object target, String name, Object value) {
-        try {
-            Field f = findField(target.getClass(), name);
-            f.set(target, value);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private static void callPrivate(Object target, String method) {
-        try {
-            Method m = target.getClass().getDeclaredMethod(method);
-            m.setAccessible(true);
-            m.invoke(target);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private static boolean callTrySpend(Object target, int amount) {
-        try {
-            Method m = target.getClass().getDeclaredMethod("trySpendStamina", int.class);
-            m.setAccessible(true);
-            Object out = m.invoke(target, amount);
-            return (Boolean) out;
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-    // -----------------------------------------------
-
     @Test
     void sprintingDrainsStamina() {
         PlayerActions actions = new PlayerActions();
@@ -272,5 +179,97 @@ class PlayerStaminaTest {
         // A tick pegs it at MAX too
         callPrivate(actions, "staminaTick");
         assertEquals(max, (int) reflectFloat(actions, "stamina"));
+    }
+
+    // Helpers
+    private static void attachEntity(PlayerActions actions) {
+        Entity ent = mock(Entity.class);
+        //EventHandler events = new EventHandler();
+        EventHandler events = mock(EventHandler.class);
+        when(ent.getEvents()).thenReturn(events);
+        setField(actions, "entity", ent);
+    }
+
+    private static Field findField(Class<?> clazz, String name) {
+        Class<?> c = clazz;
+        while (c != null) {
+            try {
+                Field f = c.getDeclaredField(name);
+                f.setAccessible(true);
+                return f;
+            } catch (NoSuchFieldException ignored) {
+                c = c.getSuperclass();
+            }
+        }
+        throw new RuntimeException(new NoSuchFieldException(name));
+    }
+
+    private static float reflectFloat(Object target, String name) {
+        try {
+            Field f = findField(target.getClass(), name);
+            return f.getFloat(target);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private static int reflectIntConst(Class<?> clazz, String name, int fallback) {
+        try {
+            Field f = clazz.getDeclaredField(name);
+            f.setAccessible(true);
+            return f.getInt(null);
+        } catch (Exception ignored) {
+            return fallback;
+        }
+    }
+
+    private static float reflectFloatConst(Class<?> clazz, String name, float fallback) {
+        try {
+            Field f = clazz.getDeclaredField(name);
+            f.setAccessible(true);
+            return f.getFloat(null);
+        } catch (Exception ignored) {
+            return fallback;
+        }
+    }
+
+    private static long reflectLongConst(Class<?> clazz, String name, long fallback) {
+        try {
+            Field f = clazz.getDeclaredField(name);
+            f.setAccessible(true);
+            return f.getLong(null);
+        } catch (Exception ignored) {
+            return fallback;
+        }
+    }
+
+    private static void setField(Object target, String name, Object value) {
+        try {
+            Field f = findField(target.getClass(), name);
+            f.set(target, value);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private static void callPrivate(Object target, String method) {
+        try {
+            Method m = target.getClass().getDeclaredMethod(method);
+            m.setAccessible(true);
+            m.invoke(target);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private static boolean callTrySpend(Object target, int amount) {
+        try {
+            Method m = target.getClass().getDeclaredMethod("trySpendStamina", int.class);
+            m.setAccessible(true);
+            Object out = m.invoke(target, amount);
+            return (Boolean) out;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }
