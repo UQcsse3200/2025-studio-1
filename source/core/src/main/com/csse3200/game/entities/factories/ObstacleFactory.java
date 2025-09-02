@@ -129,7 +129,7 @@ public class ObstacleFactory {
     PhysicsUtils.setScaledCollider(thickFloor, 1f, 1f);
     return thickFloor;
   }
-
+// Added the thin floor on the map where the computer is placed
   public static Entity createThinFloor() {
     Entity thinFloor =
             new Entity()
@@ -213,7 +213,7 @@ public class ObstacleFactory {
     PhysicsUtils.setScaledCollider(largeShelf, 1f, 1f);
     return largeShelf;
   }
-
+  // Added ceiling lights on under the ThinFloor
   public static Entity createLongCeilingLight() {
     Entity longCeilingLight =
             new Entity()
@@ -255,7 +255,7 @@ public class ObstacleFactory {
     PhysicsUtils.setScaledCollider(officeChair, 1f, 1f);
     return officeChair;
   }
-
+//Added the office desk on the thin floor
   public static Entity createOfficeDesk() {
     Entity officeDesk =
             new Entity()
@@ -269,6 +269,7 @@ public class ObstacleFactory {
     PhysicsUtils.setScaledCollider(officeDesk, 1f, 1f);
     return officeDesk;
   }
+  //Added camera on top right of the main map
   public static Entity createLargeSecurityCamera() {
     Entity cam = new Entity()
             .addComponent(new TextureRenderComponent("foreg_sprites/futuristic/SecurityCamera3.png"));
