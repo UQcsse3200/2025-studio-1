@@ -1,22 +1,16 @@
 package com.csse3200.game.areas;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.GridPoint2;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.CameraComponent;
-import com.csse3200.game.components.InventoryComponent;
-import com.csse3200.game.components.KeycardGateComponent;
 import com.csse3200.game.entities.Entity;
-import com.csse3200.game.entities.factories.KeycardFactory;
 import com.csse3200.game.entities.factories.ObstacleFactory;
 import com.csse3200.game.entities.factories.PlayerFactory;
-import com.csse3200.game.physics.components.ColliderComponent;
 import com.csse3200.game.rendering.SolidColorRenderComponent;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
@@ -48,16 +42,15 @@ public class Floor2GameArea extends GameArea {
     spawnPlayer();
     spawnFloor();
 
-    float keycardX = 2f;
-    float keycardY = 12f;
-    Entity keycard = KeycardFactory.createKeycard(2);
-    keycard.setPosition(new Vector2(keycardX, keycardY));
-    spawnEntity(keycard);
+    // UI label
+    Entity ui = new Entity();
+    ui.addComponent(new com.csse3200.game.components.gamearea.FloorLabelDisplay("Floor 2"));
+    spawnEntity(ui);
   }
 
   private void spawnTerrain() {
     // Use a different terrain/tileset as a base
-    terrain = terrainFactory.createTerrain(TerrainType.FOREST_DEMO_HEX);
+    terrain = terrainFactory.createTerrain(TerrainType.LOBBY);
     spawnEntity(new Entity().addComponent(terrain));
 
     // Add a semi-transparent overlay to tint background color differently
@@ -107,7 +100,7 @@ public class Floor2GameArea extends GameArea {
     }
     Entity topDoor = ObstacleFactory.createDoorTrigger(topDoorWidth, WALL_WIDTH);
     topDoor.setPosition(topDoorX, topY - WALL_WIDTH + 0.001f);
-    topDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadRoom3, 1));
+    topDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadRoom3));
     spawnEntity(topDoor);
 
     // Bottom border split with a door in the middle -> Back to Floor 1
@@ -130,13 +123,14 @@ public class Floor2GameArea extends GameArea {
     }
 
     Entity bottomDoor = ObstacleFactory.createDoorTrigger(doorWidth, doorHeight);
-    bottomDoor.setPosition(doorX, bottomY + 0.001f);
-    bottomDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadPreviousLevel, 0));
+    bottomDoor.setPosition(doorX, bottomY + 0.1f); // Position above floor level
+    // Door returns to floor 1
+    bottomDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadPreviousLevel));
     spawnEntity(bottomDoor);
 
     // Left border split with a vertical door -> Room 4
     float leftDoorHeight = Math.max(1f, viewHeight * 0.2f);
-    float leftDoorY = camPos.y - leftDoorHeight / 2f;
+    float leftDoorY = camPos.y - leftDoorHeight / 0.4f;
     float leftTopSegHeight = Math.max(0f, (topY) - (leftDoorY + leftDoorHeight));
     if (leftTopSegHeight > 0f) {
       Entity leftTop = ObstacleFactory.createWall(WALL_WIDTH, leftTopSegHeight);
@@ -151,12 +145,12 @@ public class Floor2GameArea extends GameArea {
     }
     Entity leftDoor = ObstacleFactory.createDoorTrigger(WALL_WIDTH, leftDoorHeight);
     leftDoor.setPosition(leftX + 0.001f, leftDoorY);
-    leftDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadRoom4, 1));
+    leftDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadRoom4));
     spawnEntity(leftDoor);
 
     // Right border split with a vertical door -> Room 5
     float rightDoorHeight = Math.max(1f, viewHeight * 0.2f);
-    float rightDoorY = camPos.y - rightDoorHeight / 2f;
+    float rightDoorY = camPos.y - rightDoorHeight / 0.4f;
     float rightTopSegHeight = Math.max(0f, (topY) - (rightDoorY + rightDoorHeight));
     if (rightTopSegHeight > 0f) {
       Entity rightTop = ObstacleFactory.createWall(WALL_WIDTH, rightTopSegHeight);
@@ -171,35 +165,29 @@ public class Floor2GameArea extends GameArea {
     }
     Entity rightDoor = ObstacleFactory.createDoorTrigger(WALL_WIDTH, rightDoorHeight);
     rightDoor.setPosition(rightX - WALL_WIDTH - 0.001f, rightDoorY);
-    rightDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadRoom5, 1));
+    rightDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadRoom5));
     spawnEntity(rightDoor);
   }
-
-
 
   private void spawnPlayer() {
     Entity player = PlayerFactory.createPlayerWithArrowKeys();
     spawnEntityAt(player, PLAYER_SPAWN, true, true);
   }
 
-  public void loadPreviousLevel() {
+  private void loadPreviousLevel() {
     for (Entity entity : areaEntities) {
       entity.dispose();
     }
     areaEntities.clear();
-
-    // Ensure ghost atlases are loaded before recreating Floor 1
-    ResourceService rs = ServiceLocator.getResourceService();
+    // Ensure ghost atlases are loaded before recreating Floor 1 to avoid missing textures
+    com.csse3200.game.services.ResourceService rs = ServiceLocator.getResourceService();
     if (!rs.containsAsset("images/ghost.atlas", com.badlogic.gdx.graphics.g2d.TextureAtlas.class)) {
       rs.loadTextureAtlases(new String[]{"images/ghost.atlas", "images/ghostKing.atlas"});
       rs.loadAll();
     }
-
     ForestGameArea floor1 = new ForestGameArea(terrainFactory, cameraComponent);
     floor1.create();
   }
-
-
 
   private void loadRoom3() {
     for (Entity entity : areaEntities) {

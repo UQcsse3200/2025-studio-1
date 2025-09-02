@@ -48,7 +48,7 @@ public abstract class GameArea implements Disposable {
 
   protected void spawnFloor() {
     for (int i = 0; i < 25; i += 4) {
-      GridPoint2 floorspawn = new GridPoint2(i, 1);
+      GridPoint2 floorspawn = new GridPoint2(i, 4);
 
       Entity floor = ObstacleFactory.createLongFloor();
       spawnEntityAt(floor, floorspawn, false, false);
