@@ -1,5 +1,6 @@
 package com.csse3200.game.physics.components;
 
+import com.badlogic.gdx.math.Octree;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.csse3200.game.components.Component;
@@ -190,6 +191,32 @@ public class ColliderComponent extends Component {
     } else {
       Filter filter = fixture.getFilterData();
       filter.categoryBits = layerMask;
+      fixture.setFilterData(filter);
+    }
+    return this;
+  }
+
+  /**
+   * Masks the collider component to ensure that collision events are only triggered
+   * with certain entities
+   * @param layerBits the category bits (see physics layer for categories)
+   * @param maskBits the bitmask composed of category bits of entities which the bullet
+   *                 should collide with (see physics layer for categories)
+   * @return self
+   */
+  public ColliderComponent setFilter(short layerBits, short maskBits) {
+
+    if (fixture == null) {
+
+      fixtureDef.filter.categoryBits = layerBits;
+      fixtureDef.filter.maskBits = maskBits;
+
+    }
+    else {
+
+      Filter filter = fixture.getFilterData();
+      filter.categoryBits = layerBits;
+      filter.maskBits = maskBits;
       fixture.setFilterData(filter);
     }
     return this;
