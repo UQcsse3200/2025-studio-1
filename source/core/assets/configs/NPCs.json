@@ -8,9 +8,16 @@
     "baseAttack": 25,
     "spookyFactor": 7
   },
+
+  "boss3": {
+    "health": 100,
+    "baseAttack": 50
+  },
+
   "ghostGPT": {
     "health": 100,
     "baseAttack": 20
+
   }
 }
 
