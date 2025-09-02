@@ -44,8 +44,8 @@ public class Floor4GameArea extends GameArea {
     spawnPlayer();
     spawnFloor();
 
-    float keycardX = 14f;
-    float keycardY = 12f;
+    float keycardX = 13f;
+    float keycardY = 10f;
     Entity keycard = KeycardFactory.createKeycard(4);
     keycard.setPosition(new Vector2(keycardX, keycardY));
     spawnEntity(keycard);
