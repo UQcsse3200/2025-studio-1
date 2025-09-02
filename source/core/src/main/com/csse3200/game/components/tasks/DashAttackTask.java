@@ -52,11 +52,13 @@ public class DashAttackTask extends DefaultTask implements PriorityTask {
     public void update() {
         movementTask.setTarget(target.getPosition());
         movementTask.update();
+        // If the enemy has dashed and the cooldown has passed, dash again
         if (ServiceLocator.getTimeSource().getTime() - lastDashTime > cooldown + dashTime) {
             movementTask.setSpeed(new Vector2(5f, 5f)); // Dash
             lastDashTime = ServiceLocator.getTimeSource().getTime();
+        // If the enemy has run out of dash time and is now on cooldown, stand still
         } else if (ServiceLocator.getTimeSource().getTime() - lastDashTime > dashTime){
-            movementTask.setSpeed(new Vector2(0f, 0f)); // Stand still
+            movementTask.setSpeed(new Vector2(0f, 0f));
         }
         if (movementTask.getStatus() != Status.ACTIVE) {
             movementTask.start();
@@ -71,7 +73,7 @@ public class DashAttackTask extends DefaultTask implements PriorityTask {
 
     @Override
     public int getPriority() {
-        // Only fast chase if the player is visible to the enemy
+        // Only dash when the player is visible
         if (isTargetVisible()) {
             return priority;
         }
