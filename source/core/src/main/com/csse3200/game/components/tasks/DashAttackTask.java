@@ -26,6 +26,9 @@ public class DashAttackTask extends DefaultTask implements PriorityTask {
     /**
      * @param target The entity to chase.
      * @param priority Task priority when chasing (0 when not chasing).
+     * @param speed The vector representing the speed of the dash.
+     * @param cooldown The cooldown time in milliseconds
+     * @param dashTime The amount of timme the enemy will dash for in milliseconds
      */
     public DashAttackTask(Entity target, int priority, Vector2 speed, long cooldown, long dashTime) {
         this.target = target;
