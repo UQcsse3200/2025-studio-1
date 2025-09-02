@@ -47,6 +47,9 @@ public class ForestGameArea extends GameArea {
     "images/iso_grass_1.png",
     "images/iso_grass_2.png",
     "images/iso_grass_3.png",
+    "images/Spawn.png",
+    "images/SpawnResize.png",
+    "images/LobbyWIP.png",
           "images/door.png"
   };
   private static final String[] generalTextures = {
@@ -116,11 +119,16 @@ public class ForestGameArea extends GameArea {
     spawnCrates();
     spawnPlatforms();
     spawnBottomRightDoor();
+    spawnSecurityCamera();
+    spawnEnergyPod();
+    spawnStorageCrates();
+    spawnBigWall();
 
     playMusic();
-    float keycardX = 14f;
-    float keycardY = 12f;
-    Entity keycard = KeycardFactory.createKeycard(1);
+    float keycardX = 1f;
+    float keycardY = 6f;
+
+    Entity keycard = KeycardFactory.createKeycard(1); // assuming level 1
     keycard.setPosition(new Vector2(keycardX, keycardY));
     spawnEntity(keycard);
 
@@ -191,7 +199,7 @@ public class ForestGameArea extends GameArea {
       Entity rightDoor = ObstacleFactory.createDoorTrigger(WALL_WIDTH, rightDoorHeight);
       rightDoor.setPosition(rightX - WALL_WIDTH - 0.001f, rightDoorY);
       rightDoor.addComponent(new com.csse3200.game.components.DoorComponent(() -> this.loadNextLevel()));
-      spawnEntity(rightDoor);
+
     }
   }
 
@@ -233,20 +241,14 @@ public class ForestGameArea extends GameArea {
     spawnEntityAt(officeDesk, new GridPoint2(5, 11), true, false);
   }
   private void spawnBottomRightDoor() {
-    float doorX = 13.5f;
-    float doorY = 1.25f;
+    float doorX = 14f;
+    float doorY = 3f;
 
-    // Create a door trigger with physics body
     Entity door = ObstacleFactory.createDoorTrigger(20f, 40f);
-
-    // Add visual sprite
     TextureRenderComponent texture = new TextureRenderComponent("images/door.png");
     door.addComponent(texture);
     texture.scaleEntity();
-
     door.setPosition(doorX, doorY);
-
-    // Add keycard gate logic — only opens if player has level 1 card
     door.addComponent(new KeycardGateComponent(1, () -> {
       logger.info("Bottom-right platform door unlocked — loading next level");
       loadNextLevel();
@@ -254,7 +256,6 @@ public class ForestGameArea extends GameArea {
 
     spawnEntity(door);
   }
-
 
   private void spawnPad() {
     GridPoint2 spawnPadPos = new GridPoint2(20, 3);
