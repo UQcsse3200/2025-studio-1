@@ -58,18 +58,6 @@ public class ForestGameArea extends GameArea {
     "images/iso_grass_1.png",
     "images/iso_grass_2.png",
     "images/iso_grass_3.png",
-    "images/robot-2-attack.png",
-    "images/robot-2-common.png",
-          "images/fireball1.png",
-          "images/blackhole1.png",
-            "images/Robot_1.png",
-            "images/Robot_1_attack_left.png",
-            "images/Robot_1_attack_right.png",
-          "images/Boss_3.png",
-          "images/mud.png",
-          "images/mud_ball_1.png",
-          "images/mud_ball_2.png",
-          "images/mud_ball_3.png",
     "images/lightsaber.png",
     "images/lightsaberSingle.png",
     "images/ammo.png",
@@ -117,16 +105,12 @@ public class ForestGameArea extends GameArea {
   };
   
   private static final String[] forestTextureAtlases = {
-    "images/terrain_iso_grass.atlas", "images/ghost.atlas", "images/ghostKing.atlas",
-    "images/robot-2.atlas", "images/fireball.atlas", "images/blackhole.atlas", "images/Robot_1.atlas",
-          "images/boss_idle.atlas",
     "images/terrain_iso_grass.atlas",
     "images/ghost.atlas",
     "images/ghostKing.atlas",
     "images/ghostGPT.atlas",
     "images/explosion_1.atlas",
     "images/explosion_2.atlas"
-
   };
   private static final String[] forestSounds = {"sounds/Impact4.ogg"};
   private static final String backgroundMusic = "sounds/BGM_03_mp3.mp3";
