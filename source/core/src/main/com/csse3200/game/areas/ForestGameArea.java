@@ -112,7 +112,6 @@ public class ForestGameArea extends GameArea {
           "foreg_sprites/futuristic/storage_crate_dark2.png",
   };
 
-  /** Animation atlases used by enemies/effects. */
   private static final String[] forestTextureAtlases = {
           "images/terrain_iso_grass.atlas",
           "images/ghost.atlas",
@@ -138,9 +137,11 @@ public class ForestGameArea extends GameArea {
   private Entity player;
 
   /**
-   * Initialise this ForestGameArea to use the provided TerrainFactory.
-   * @param terrainFactory TerrainFactory used to create the terrain for the GameArea.
-   * @requires terrainFactory != null
+   * Initialise this ForestGameArea to use the provided TerrainFactory and camera helper.
+   * The camera is used to size the screen-edge walls and place the right-side door trigger.
+   *
+   * @param terrainFactory TerrainFactory used to create the terrain for the GameArea (required).
+   * @param cameraComponent Camera helper supplying an OrthographicCamera (optional but used here).
    */
 
   public ForestGameArea(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
@@ -207,17 +208,6 @@ public class ForestGameArea extends GameArea {
     spawnItems();
   }
 
-  private void spawnRobots() {
-    GridPoint2 spawnPos = new GridPoint2(20, 20);
-
-    Entity robot = NPCFactory.createRobot(player);
-    spawnEntityAt(robot, spawnPos, true, true);
-  }
-
-  /**
-   * Shows a simple UI overlay with the room name and floor.
-   * Purely visual; does not block gameplay.
-   */
   private void displayUI() {
     Entity ui = new Entity();
     ui.addComponent(new GameAreaDisplay("Box Forest"))
@@ -226,10 +216,8 @@ public class ForestGameArea extends GameArea {
   }
 
   /**
-   * Builds the terrain and creates four invisible “screen edge” walls sized to the camera view.
-   * Also inserts a right-hand door trigger (a sensor) that loads the next level.
-   *
-   * Note: This uses camera viewport width/height, so it adapts to different resolutions.
+   * Builds terrain for SPAWN_ROOM and wraps the visible screen with thin physics walls
+   * based on the camera viewport. Also adds a right-side door trigger that loads next level.
    */
   private void spawnTerrain() {
     // Build the ground
@@ -294,11 +282,8 @@ public class ForestGameArea extends GameArea {
   }
 
   /**
-   * Clears the current room and creates the next one (Floor2).
-   * Side effects:
-   * - Disposes all current entities
-   * - Empties the areaEntities list
-   * - Instantiates and creates Floor2GameArea
+   * Disposes current entities and switches to Floor2GameArea.
+   * This is called by the door/keycard logic when the player exits.
    */
   private void loadNextLevel() {
     for (Entity entity : areaEntities) {
@@ -323,8 +308,7 @@ public class ForestGameArea extends GameArea {
   }
 
   /**
-   * Builds the upper walkway: three thin floor tiles, a ceiling light, and an office desk.
-   * All are static props used to decorate the scene and add platform variety.
+   * Builds the upper walkway: three thin floors, a long ceiling light, and a front-facing desk.
    */
   private void spawnPlatforms() {
     for (int i = 0; i < 3; i++) {
@@ -363,8 +347,7 @@ public class ForestGameArea extends GameArea {
   }
 
   /**
-   * Spawns the spawn pad prop on the floor (visual spawn point).
-   * This is a static collidable prop; it doesn’t teleport.
+   * Places the purple spawn pad on the lower floor (visual prop).
    */
   private void spawnPad() {
     GridPoint2 spawnPadPos = new GridPoint2(20, 3);
@@ -375,7 +358,7 @@ public class ForestGameArea extends GameArea {
   }
 
   /**
-   * Adds one very tall “thick floor” segment to act as a big wall in the scene’s background.
+   * Adds a very tall thick-floor as a background wall/divider.
    */
   private void spawnBigWall() {
     GridPoint2 wallSpawn = new GridPoint2(-14, 0);
@@ -396,6 +379,7 @@ public class ForestGameArea extends GameArea {
     spawnEntityAt(ItemFactory.createItem(), secondPos, true, false);
     spawnEntityAt(ItemFactory.createItem(), thirdPos, true, false);
   }
+
 
 
   private Entity spawnPlayer() {
@@ -440,6 +424,8 @@ public class ForestGameArea extends GameArea {
 //    spawnEntityAt(newBullet, new GridPoint2(5, 5), true, true);
 //    return newBullet;
 //  }
+
+
   private Entity spawnPistol() {
     Entity newPistol = WeaponsFactory.createPistol();
     Vector2 newPistolOffset = new Vector2(0.45f, 0.02f);
@@ -455,7 +441,8 @@ public class ForestGameArea extends GameArea {
     return newRifle;
   }
 
- // Enemy Projectiles
+
+  // Enemy Projectiles
   public Entity spawnLaserProjectile(Vector2 directionToFire) {
     Entity laser = ProjectileFactory.createLaserShot(directionToFire);
     spawnEntityAt(laser, new GridPoint2(0, 0), true, true);
@@ -488,6 +475,7 @@ public class ForestGameArea extends GameArea {
   }
 
 
+
   private void spawnGhostKing() {
     GridPoint2 minPos = new GridPoint2(0, 0);
     GridPoint2 maxPos = terrain.getMapBounds(0).sub(2, 2);
@@ -498,19 +486,8 @@ public class ForestGameArea extends GameArea {
   // }
 
   /**
-   * Adds NUM_GHOST_GPTS amount of GhostGPT enemies onto the map.
+   * Spawns two GhostGPT enemies at fixed locations for predictable behaviour.
    */
-  // private void spawnGhostGPT() {
-  //   GridPoint2 minPos = new GridPoint2(0, 0);
-  //   GridPoint2 maxPos = terrain.getMapBounds(0).sub(3, 3);
-
-  //   for (int i = 0; i < NUM_GHOST_GPTS; i++) {
-  //       GridPoint2 randomPos = RandomUtils.random(minPos, maxPos);
-  //       Entity ghostGPT = NPCFactory.createGhostGPT(player, this);
-  //       spawnEntityAt(ghostGPT, randomPos, true, true);
-  //   }
-  // }
-
   private void spawnGhostGPT() {
     GridPoint2 spawn1 = new GridPoint2(20, 20);
     GridPoint2 spawn2 = new GridPoint2(25, 20);
@@ -522,7 +499,7 @@ public class ForestGameArea extends GameArea {
   }
 
   /**
-   * Adds a small crate on the lower platform — handy for cover or decoration.
+   * Adds a single crate to the lower platform for cover/decoration.
    */
   private void spawnCrates() {
     GridPoint2 cratePos = new GridPoint2(17, 6);
@@ -530,8 +507,9 @@ public class ForestGameArea extends GameArea {
     spawnEntityAt(crate, cratePos, true, false);
   }
 
+
   /**
-   * Places the security camera sprite in the top-right area (visual only, no collision).
+   * Places a visual-only security camera in the top-right area.
    */
   private void spawnSecurityCamera() {
     GridPoint2 cameraPos = new GridPoint2(27, 19);
@@ -540,8 +518,7 @@ public class ForestGameArea extends GameArea {
   }
 
   /**
-   * Places the energy pod on the floor (collidable, so the player can’t walk through it).
-   * Bottom-left aligned so it sits cleanly on the ground.
+   * Places the collidable energy pod on the floor using bottom-left alignment.
    */
   private void spawnEnergyPod() {
     GridPoint2 energyPodPos = new GridPoint2(20, 6);
@@ -549,9 +526,10 @@ public class ForestGameArea extends GameArea {
     spawnEntityAt(energyPod, energyPodPos, false, false);
   }
 
+
   /**
-   * Adds two storage crates (green, dark) on the floor and nudges them up slightly
-   * to visually sit on top of the ground tiles.
+   * Spawns two storage crates (green and dark) and nudges them slightly up
+   * so they appear seated on the ground visually.
    */
   private void spawnStorageCrates() {
     GridPoint2 greenCratePos = new GridPoint2(5, 5);
@@ -609,6 +587,9 @@ public class ForestGameArea extends GameArea {
     resourceService.unloadAssets(spawnPadTextures);
     resourceService.unloadAssets(officeTextures);
   }
+
+
+
 
   @Override
   public void dispose() {
