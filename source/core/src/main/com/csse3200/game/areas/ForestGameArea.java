@@ -86,8 +86,8 @@ public class ForestGameArea extends GameArea {
 
     for (int i = 0; i < NUM_ROBOTS; i++) {
       GridPoint2 randomPos = RandomUtils.random(minPos, maxPos);
-      Entity robot = NPCFactory.createRobot(player);          // 传玩家做追击目标
-      spawnEntityAt(robot, randomPos, true, true);            // 按瓦片坐标生成
+      Entity robot = NPCFactory.createRobot(player);
+      spawnEntityAt(robot, randomPos, true, true);
     }
   }
 
