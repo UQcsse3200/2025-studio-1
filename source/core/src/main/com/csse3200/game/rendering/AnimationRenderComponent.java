@@ -41,6 +41,7 @@ public class AnimationRenderComponent extends RenderComponent {
   private Animation<TextureRegion> currentAnimation;
   private String currentAnimationName;
   private float animationPlayTime;
+  private boolean disposeAtlas = true;
 
   /**
    * Create the component for a given texture atlas.
@@ -177,9 +178,18 @@ public class AnimationRenderComponent extends RenderComponent {
     animationPlayTime += timeSource.getDeltaTime();
   }
 
+  /**
+   * @param disposeAtlas the disposeAtlas to set
+   */
+  public void setDisposeAtlas(boolean disposeAtlas) {
+    this.disposeAtlas = disposeAtlas;
+  }
+
   @Override
   public void dispose() {
-    atlas.dispose();
+    if (disposeAtlas) {
+      atlas.dispose();
+    }
     super.dispose();
   }
 }

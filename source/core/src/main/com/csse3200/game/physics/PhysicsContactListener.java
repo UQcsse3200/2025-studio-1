@@ -39,6 +39,8 @@ public class PhysicsContactListener implements ContactListener {
     // Nothing to do after resolving contact
   }
 
+
+
   private void triggerEventOn(Fixture fixture, String evt, Fixture otherFixture) {
     BodyUserData userData = (BodyUserData) fixture.getBody().getUserData();
     if (userData != null && userData.entity != null) {
