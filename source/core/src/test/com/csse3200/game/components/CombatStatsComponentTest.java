@@ -8,6 +8,7 @@ import com.csse3200.game.entities.EntityService;
 import com.csse3200.game.entities.factories.NPCFactory;
 import com.csse3200.game.entities.factories.PlayerFactory;
 import com.csse3200.game.extensions.GameExtension;
+import com.csse3200.game.physics.components.HitboxComponent;
 import com.csse3200.game.services.ServiceLocator;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -110,6 +111,7 @@ class CombatStatsComponentTest {
     victim.getComponent(CombatStatsComponent.class).hit(new CombatStatsComponent(0, 10));
     assertTrue(victim.getComponent(CombatStatsComponent.class).isDead());
     assertEquals(new ArrayList<>(), area.getEntities());
+
   }
 
   @Test
