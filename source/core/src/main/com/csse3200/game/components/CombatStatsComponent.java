@@ -165,12 +165,6 @@ public class CombatStatsComponent extends Component {
         return;
     }
     applyDamage(attacker.getBaseAttack());
-
-    if (this.isDead()) {
-      if (ServiceLocator.getGameArea() != null) {
-        ServiceLocator.getGameArea().removeEntity(this.entity);
-      }
-    }
   }
 
   /**
