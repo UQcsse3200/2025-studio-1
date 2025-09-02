@@ -124,7 +124,17 @@ public class ForestGameArea extends GameArea {
     spawnEnergyPod();
     spawnStorageCrates();
     spawnBigWall();
-
+    // spawnGhosts();
+    // spawnGhostKing();
+    int choice = (int)(Math.random() * 3);
+    if (choice == 0) {
+      spawnBoss2();
+    } else if (choice == 1) {
+      spawnRobots();
+    } else {
+      spawnBoss3();
+    }
+    spawnGhostGPT();
     playMusic();
     float keycardX = 1f;
     float keycardY = 7f;
@@ -133,6 +143,14 @@ public class ForestGameArea extends GameArea {
     keycard.setPosition(new Vector2(keycardX, keycardY));
     spawnEntity(keycard);
 
+    spawnItems();
+  }
+
+  private void spawnRobots() {
+    GridPoint2 spawnPos = new GridPoint2(20, 20);
+
+    Entity robot = NPCFactory.createRobot(player);
+    spawnEntityAt(robot, spawnPos, true, true);
   }
 
   private void displayUI() {
@@ -292,25 +310,96 @@ public class ForestGameArea extends GameArea {
     return newPlayer;
   }
 
-  private void spawnGhosts() {
-    GridPoint2 minPos = new GridPoint2(0, 0);
-    GridPoint2 maxPos = terrain.getMapBounds(0).sub(2, 2);
-
-    for (int i = 0; i < NUM_GHOSTS; i++) {
-      GridPoint2 randomPos = RandomUtils.random(minPos, maxPos);
-      Entity ghost = NPCFactory.createGhost(player);
-      spawnEntityAt(ghost, randomPos, true, true);
-    }
+  private Entity spawnDagger() {
+    Entity newDagger = WeaponsFactory.createDagger();
+    Vector2 newDaggerOffset = new Vector2(0.7f, 0.3f);
+    newDagger.addComponent(new ItemHoldComponent(this.player, newDaggerOffset));
+    return newDagger;
   }
 
-  private void spawnGhostKing() {
-    GridPoint2 minPos = new GridPoint2(0, 0);
-    GridPoint2 maxPos = terrain.getMapBounds(0).sub(2, 2);
+  private void equipItem(Entity item) {
+    this.player.setCurrItem(item);
+    spawnEntityAt(item, PLAYER_SPAWN, true, true);
 
-    GridPoint2 randomPos = RandomUtils.random(minPos, maxPos);
-    Entity ghostKing = NPCFactory.createGhostKing(player);
-    spawnEntityAt(ghostKing, randomPos, true, true);
   }
+
+  private Entity getItem() {
+    return this.player.getCurrItem();
+  }
+
+  private Entity spawnLightsaber() {
+    Entity newLightsaber = WeaponsFactory.createLightsaber();
+    Vector2 newLightsaberOffset = new Vector2(0.7f, -0.1f);
+    newLightsaber.addComponent(new ItemHoldComponent(this.player, newLightsaberOffset));
+
+    //Commented out since lightsaber animation is a work in progress
+    //AnimationRenderComponent lightSaberAnimator = WeaponsFactory.createAnimation("images/lightSaber.atlas", this.player);
+    //newLightsaber.addComponent(lightSaberAnimator);
+
+    return newLightsaber;
+  }
+
+//Commented out since bullet functionality is in progress with guns
+//  private Entity spawnBullet() {
+//    Entity newBullet = ProjectileFactory.createPistolBullet();
+//    spawnEntityAt(newBullet, new GridPoint2(5, 5), true, true);
+//    return newBullet;
+//  }
+
+  private Entity spawnPistol() {
+    Entity newPistol = WeaponsFactory.createPistol();
+    Vector2 newPistolOffset = new Vector2(0.45f, 0.02f);
+    newPistol.addComponent(new ItemHoldComponent(this.player, newPistolOffset));
+    return newPistol;
+  }
+
+  private Entity spawnRifle() {
+    Entity newRifle = WeaponsFactory.createRifle();
+    Vector2 newRifleOffset = new Vector2(0.25f, 0.15f);
+    newRifle.addComponent(new ItemHoldComponent(this.player, newRifleOffset));
+    return newRifle;
+  }
+
+  // Enemy Projectiles
+  public Entity spawnLaserProjectile(Vector2 directionToFire) {
+    Entity laser = ProjectileFactory.createLaserShot(directionToFire);
+    spawnEntityAt(laser, new GridPoint2(0, 0), true, true);
+
+    return laser;
+  }
+
+  // private void spawnGhosts() {
+  //   GridPoint2 minPos = new GridPoint2(0, 0);
+  //   GridPoint2 maxPos = terrain.getMapBounds(0).sub(2, 2);
+
+  //   for (int i = 0; i < NUM_GHOSTS; i++) {
+  //     GridPoint2 randomPos = RandomUtils.random(minPos, maxPos);
+  //     Entity ghost = NPCFactory.createGhost(player);
+  //     spawnEntityAt(ghost, randomPos, true, true);
+  //   }
+  // }
+
+  private void spawnBoss2() {
+    GridPoint2 pos = new GridPoint2(22, 20);
+
+    Entity boss2 = BossFactory.createBoss2(player);
+    spawnEntityAt(boss2, pos, true, true);
+  }
+  //new added boss3
+  private void spawnBoss3() {
+    GridPoint2 pos = new GridPoint2(20, 20);
+    Entity boss3 = BossFactory.createBoss3(player);
+    spawnEntityAt(boss3, pos, true, true);
+  }
+
+  // private void spawnGhostKing() {
+  //   GridPoint2 minPos = new GridPoint2(0, 0);
+  //   GridPoint2 maxPos = terrain.getMapBounds(0).sub(2, 2);
+
+  //   GridPoint2 randomPos = RandomUtils.random(minPos, maxPos);
+  //   Entity ghostKing = NPCFactory.createGhostKing(player);
+  //   spawnEntityAt(ghostKing, randomPos, true, true);
+  // }
 
   /**
    * Adds NUM_GHOST_GPTS amount of GhostGPT enemies onto the map.
