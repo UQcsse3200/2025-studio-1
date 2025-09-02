@@ -18,6 +18,8 @@ public class BossStateMachineComponent extends Component {
     private CombatStatsComponent combat;
     private int maxHp = 1;
     private Entity target;
+    private boolean enragedOnce = false;
+    private float furyCooldownMul = 0.6f;
 
     public BossStateMachineComponent(float aggroRange, float attackRange,
                                      float attackCooldown, float enrageThresholdRatio) {
@@ -56,6 +58,11 @@ public class BossStateMachineComponent extends Component {
 
         boolean enraged = (combat != null) && combat.getHealth() <= maxHp * enrageThresholdRatio;
 
+        if (enraged && !enragedOnce) {
+            enragedOnce = true;
+            enter(State.ENRAGED);
+        }
+
         switch (state) {
             case WANDER:
                 if (enraged) { enter(State.ENRAGED); break; }
@@ -74,8 +81,9 @@ public class BossStateMachineComponent extends Component {
                 break;
 
             case ATTACK:
+                entity.getEvents().trigger("boss:attackStart");
                 entity.getEvents().trigger("boss:doAttack");
-                cd = attackCooldown;
+                cd = enragedOnce ? attackCooldown * furyCooldownMul : attackCooldown;
 
                 if (enraged) enter(State.ENRAGED);
                 else if (dist <= aggroRange) enter(State.CHASE);

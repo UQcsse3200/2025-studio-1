@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.ai.tasks.AITaskComponent;
 import com.csse3200.game.components.CombatStatsComponent;
+import com.csse3200.game.components.npc.BossAnimationController;
 import com.csse3200.game.components.npc.GhostAnimationController;
 import com.csse3200.game.components.TouchAttackComponent;
 import com.csse3200.game.components.tasks.ChaseTask;
@@ -97,8 +98,19 @@ public class NPCFactory {
    */
   public static Entity createRobot(Entity target) {
     Entity robot = createBaseNPC(target);
-    robot.addComponent(new com.csse3200.game.rendering.TextureRenderComponent("images/Robot_1.png"));
-    robot.addComponent(new CombatStatsComponent(20, 2));
+
+    AnimationRenderComponent animator = new AnimationRenderComponent(
+            ServiceLocator.getResourceService().getAsset("images/Robot_1.atlas", TextureAtlas.class));
+    animator.addAnimation("Idle",   0.12f, Animation.PlayMode.LOOP);
+    animator.addAnimation("attack", 0.06f, Animation.PlayMode.LOOP);
+    animator.addAnimation("fury",   0.10f, Animation.PlayMode.LOOP);
+    animator.addAnimation("die",    0.10f, Animation.PlayMode.NORMAL);
+
+    robot
+            .addComponent(animator)
+            .addComponent(new CombatStatsComponent(100, 5))
+            .addComponent(new BossAnimationController());
+
     return robot;
   }
 
