@@ -59,6 +59,3 @@ public class ItemComponent extends EntityComponent {
      */
     public String getTexture() { return this.texture; }
 }
-
-
-
