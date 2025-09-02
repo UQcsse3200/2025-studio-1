@@ -116,7 +116,7 @@ public class CombatStatsComponent extends Component {
    */
   public void setMaxHealth(int maxHealth) {
     if (maxHealth >= 0) {
-      this.maxHealth = health;
+      this.maxHealth = maxHealth;
     } else {
       this.maxHealth = 0;
     }
