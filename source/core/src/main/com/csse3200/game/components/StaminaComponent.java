@@ -41,10 +41,20 @@ public class StaminaComponent extends Component {
         }
     }
 
+    /**
+     * Returns whether the player has enough stamina to perform the movement.
+     * @param amount the stamina cost
+     * @return if the player has sufficient stamina
+     */
     public boolean hasStamina(float amount) {
         return infiniteStamina || stamina >= amount;
     }
 
+    /**
+     * Attempt to execute a movement.
+     * @param amount the amount of stamina required.
+     * @return whether the movement can be completed.
+     */
     public boolean trySpend(float amount) {
         // Check edge case or debug mode
         if (amount <= 0 || infiniteStamina) {
@@ -62,10 +72,10 @@ public class StaminaComponent extends Component {
         return true;
     }
 
-    public float getStamina() {
-        return stamina;
-    }
-
+    /**
+     * Updates the infiniteStamina parameter
+     * @param infiniteStamina whether the player should have infinite stamina.
+     */
     public void setInfiniteStamina(boolean infiniteStamina) {
         this.infiniteStamina = infiniteStamina;
         if (infiniteStamina) {
@@ -73,31 +83,46 @@ public class StaminaComponent extends Component {
             emitChanged();
         }
     }
-    public void setMoving(boolean v) {
-        moving = v;
+
+    /**
+     * Set if the player is moving
+     */
+    public void setMoving(boolean moving) {
+        this.moving = moving;
     }
 
-    public void setSprinting(boolean v) {
-        sprinting = v;
+    /**
+     * Set if the player is sprinting
+     */
+    public void setSprinting(boolean sprinting) {
+        this.sprinting = sprinting;
     }
 
-    public void setDashing(boolean v) {
-        dashing = v;
+    /**
+     * Set if the player is dashing
+     */
+    public void setDashing(boolean dashing) {
+        this.dashing = dashing;
     }
 
-    public void setGrounded(boolean v) {
-        grounded = v;
+    /**
+     * Set if the player is grounded
+     */
+    public void setGrounded(boolean grounded) {
+        this.grounded = grounded;
     }
 
     /**
      * Starts (or restarts) the repeating stamina update task.
      * Uses libGDX Timer so that ticks are posted onto the main render thread.
-     * Idempotent: if a task is already running it will be cancelled and replaced.
+     * If a task is already running it will be cancelled and replaced.
      */
     private void startTask() {
         if (task != null) task.cancel();
         task = Timer.schedule(new Timer.Task() {
-            @Override public void run() { tick(); }
+            @Override public void run() {
+                tick();
+            }
         }, TICK_SEC, TICK_SEC);
     }
 
@@ -114,35 +139,13 @@ public class StaminaComponent extends Component {
      * - UI is only notified when the integer stamina value actually changes.
      */
     private void tick() {
-        final long now = System.currentTimeMillis();
-
         if (infiniteStamina) {
             stamina = MAX_STAMINA;
             emitChanged();
             return;
         }
-
-        final boolean draining = sprinting && moving && grounded && !dashing;
-        if (draining && stamina > 0f) {
-            final float drain = DRAIN_PER_SEC * TICK_SEC;
-            stamina = Math.max(0f, stamina - drain);
-            lastStaminaSpendMs = now;
-            if ((int) stamina == 0) {
-                entity.getEvents().trigger("outOfStamina");
-                sprinting = false;
-                entity.getEvents().trigger("sprintStop");
-            }
-            emitChanged();
-            return;
-        }
-
-        if (!dashing && (now - lastStaminaSpendMs) >= REGEN_PER_SEC) {
-            final float before = stamina;
-            stamina = Math.min(MAX_STAMINA, stamina + REGEN_PER_SEC * TICK_SEC);
-            if ((int) stamina != (int) before) {
-                emitChanged();
-            }
-        }
+        checkDrainStamina();
+        regenerateStamina();
     }
 
     /**
@@ -156,5 +159,43 @@ public class StaminaComponent extends Component {
         }
         lastEmittedStamina = curr;
         entity.getEvents().trigger("staminaChanged", curr, MAX_STAMINA);
+    }
+
+    /**
+     * Drains the player's stamina if they have executed a movement.
+     */
+    private void checkDrainStamina() {
+        final long now = System.currentTimeMillis();
+
+        final boolean draining = sprinting && moving && grounded && !dashing;
+        if (draining && stamina > 0f) {
+            // Drain the player's stamina
+            final float drain = DRAIN_PER_SEC * TICK_SEC;
+            // Ensure stamina is not below 0.
+            stamina = Math.max(0f, stamina - drain);
+            lastStaminaSpendMs = now;
+            if ((int) stamina == 0) {
+                // No stamina, ensure sprint is stopped
+                entity.getEvents().trigger("outOfStamina");
+                sprinting = false;
+                entity.getEvents().trigger("sprintStop");
+            }
+            emitChanged();
+        }
+    }
+
+    /**
+     * Regenerate stamina if player is standing or walking.
+     */
+    private void regenerateStamina() {
+        final long now = System.currentTimeMillis();
+        if (!dashing && (now - lastStaminaSpendMs) >= REGEN_PER_SEC) {
+            // No stamina expending event occurred
+            final float before = stamina;
+            stamina = Math.min(MAX_STAMINA, stamina + REGEN_PER_SEC * TICK_SEC);
+            if ((int) stamina != (int) before) {
+                emitChanged();
+            }
+        }
     }
 }
