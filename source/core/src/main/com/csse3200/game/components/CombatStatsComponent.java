@@ -51,16 +51,14 @@ public class CombatStatsComponent extends Component {
   }
 
   /**
-   * Sets the entity's health. Health has a minimum bound of 0.
+   * Sets the entity's health. Health is always clamped between 0 and maxHealth.
    *
-   * @param health health
+   * @param health new health value
    */
   public void setHealth(int health) {
-    if (health >= 0) {
-      this.health = health;
-    } else {
-      this.health = 0;
-    }
+    // clamp between 0 and maxHealth
+    this.health = Math.max(0, Math.min(health, this.maxHealth));
+
     if (entity != null) {
       entity.getEvents().trigger("updateHealth", this.health);
     }
