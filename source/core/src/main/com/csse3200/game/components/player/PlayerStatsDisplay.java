@@ -159,6 +159,20 @@ public class PlayerStatsDisplay extends UIComponent {
   private boolean hasRewardComponent(Entity e) {
     return e.getComponent(EnemyDeathRewardComponent.class) != null;
   }
+  
+  /**
+   * For use in test code
+   */
+  protected void setHealthBar(ProgressBar bar) {
+    this.healthBar = bar;
+  }
+
+  /**
+   * For use in test code
+   */
+  protected void setProcessorLabel(Label label) {
+    this.processorLabel = label;
+  }
 
   @Override
   public void dispose() {
