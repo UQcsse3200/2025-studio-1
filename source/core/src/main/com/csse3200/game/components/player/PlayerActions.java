@@ -212,18 +212,25 @@ public class PlayerActions extends Component {
 
     if (jumpsLeft > 0) {
       setGrounded(false);
-      boolean isGroundJump = (jumpsLeft == MAX_JUMPS);
-      boolean withinCooldown = (currentTime - lastJumpTime) > JUMP_COOLDOWN_MS;
 
-      if ((!isGroundJump || touchingGround()) && (!isGroundJump || withinCooldown)) {
-        if (!isGroundJump) {
-          if (!stamina.trySpend(DOUBLE_JUMP_COST)) return;
-        }
+      boolean isGroundJump = (jumpsLeft == MAX_JUMPS);
+      boolean canJump = true;
+
+      // Check cooldown for ground jumps
+      if (isGroundJump) {
+        if (!touchingGround()) canJump = false;
+        if (currentTime - lastJumpTime < JUMP_COOLDOWN_MS) canJump = false;
+      } else {
+        if (!stamina.trySpend(DOUBLE_JUMP_COST)) return;
+      }
+
+      if (canJump) {
         entity.getEvents().trigger("jump");
         body.applyLinearImpulse(JUMP_VELOCITY, body.getWorldCenter(), true);
         jumpsLeft--;
         lastJumpTime = currentTime;
       }
+
     }
   }
 
