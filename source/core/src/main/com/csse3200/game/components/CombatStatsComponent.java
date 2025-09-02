@@ -28,9 +28,9 @@ public class CombatStatsComponent extends Component {
    * @param baseAttack base attack damage (must be {@code >= 0})
    */
   public CombatStatsComponent(int health, int baseAttack) {
+    setMaxHealth(health);
     setHealth(health);
     setBaseAttack(baseAttack);
-    setMaxHealth(health);
   }
 
   /**
@@ -56,14 +56,11 @@ public class CombatStatsComponent extends Component {
    * @param health new health value
    */
   public void setHealth(int health) {
-    // clamp between 0 and maxHealth
     this.health = Math.max(0, Math.min(health, this.maxHealth));
-
     if (entity != null) {
       entity.getEvents().trigger("updateHealth", this.health);
     }
   }
-
   /**
    * Adds to the player's health. The amount added can be negative.
    *
@@ -80,6 +77,10 @@ public class CombatStatsComponent extends Component {
    */
   public void setMaxHealth(int maxHealth) {
     this.maxHealth = Math.max(maxHealth, 0);
+    // If current health is above the new cap, clamp it (and emit updateHealth)
+    if (this.health > this.maxHealth) {
+      setHealth(this.maxHealth);
+    }
     if (entity != null) {
       entity.getEvents().trigger("updateMaxHealth", this.maxHealth);
     }
