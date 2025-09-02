@@ -1,5 +1,9 @@
 package com.csse3200.game.components;
 
+import com.badlogic.gdx.graphics.Texture;
+import com.csse3200.game.rendering.TextureRenderComponent;
+import com.csse3200.game.services.ServiceLocator;
+import com.csse3200.game.components.enemy.LowHealthAttackBuff;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,6 +24,8 @@ public class CombatStatsComponent extends Component {
 
   /** Base attack damage used when this component attacks another. Non-negative */
   private int baseAttack;
+  private int thresholdForBuff = 20;
+  private float coolDown;
 
   /**
    * Construct a combat Stats Component (Health + Attack System)
@@ -31,6 +37,7 @@ public class CombatStatsComponent extends Component {
     setMaxHealth(health);
     setHealth(health);
     setBaseAttack(baseAttack);
+    this.coolDown = 0;
   }
 
   /**
@@ -39,7 +46,7 @@ public class CombatStatsComponent extends Component {
    * @return is player dead
    */
   public Boolean isDead() {
-    return this.health == 0;
+    return this.health <= 0;
   }
 
   /**
@@ -59,8 +66,44 @@ public class CombatStatsComponent extends Component {
     this.health = Math.max(0, Math.min(health, this.maxHealth));
     if (entity != null) {
       entity.getEvents().trigger("updateHealth", this.health);
+
+      // Apply attack buff on low health if the entity has that component
+      if (this.health <= thresholdForBuff && (!isDead())) {
+          if (entity.getComponent(LowHealthAttackBuff.class) != null) {
+              entity.getEvents().trigger("buff");
+          }
+      }
+
+      if (prevHealth > 0 && this.health == 0) {
+        entity.getEvents().trigger("death");
+      }
     }
   }
+
+    /**
+     * Set the entity's hit cooldown (seconds)
+     *
+     * @param coolDown coolDown
+     */
+    public void setCoolDown(float coolDown) {
+        if (coolDown >= 0) {
+            this.coolDown = coolDown;
+        } else {
+            this.coolDown = 0;
+        }
+    }
+
+  /**
+   * gets the entity's cooldown between attacks (seconds).
+   *
+   */
+
+  public float getCoolDown() {
+
+    return this.coolDown;
+  }
+
+
   /**
    * Adds to the player's health. The amount added can be negative.
    *
@@ -123,6 +166,9 @@ public class CombatStatsComponent extends Component {
    * <p>If {@code attacker} is {@code null}, an error is logged and the call is a no-op.</p>
    * <p>If this entity is already dead or the attacker's base attack is {@code <= 0}, no damage is applied.</p>
    *
+   * <p>Allows the entity to be hit by some attacker and deal damage, provided they have
+   * waited for the designated time between attacks.</p>
+   *
    * @param attacker the attacking entity providing {@linkplain #getBaseAttack() base attack} damage; may be {@code null}
    * @see #applyDamage(int)
    */
@@ -132,8 +178,13 @@ public class CombatStatsComponent extends Component {
         return;
     }
     applyDamage(attacker.getBaseAttack());
-  }
 
+    if (this.isDead()) {
+      if (ServiceLocator.getGameArea() != null) {
+        ServiceLocator.getGameArea().removeEntity(this.entity);
+      }
+    }
+  }
 
   /**
    * Apply damage to this entity.
