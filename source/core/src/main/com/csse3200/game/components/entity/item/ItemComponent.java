@@ -44,9 +44,15 @@ public class ItemComponent extends EntityComponent {
      */
     public void description(String name, int id){
         System.out.println("This is a/an " + name + ". " +
-            "\nPresnt count : " + count +
+            "\nPresent count : " + count +
             "\nType :  " + getType());
     }
+
+    /**
+     *
+     * @param texture sets the texture path of the current item
+     */
+    public void setTexture(String texture){this.texture = texture;}
 
     /**
      * Returns the texture path of the current item
