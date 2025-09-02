@@ -11,12 +11,28 @@ import com.badlogic.gdx.graphics.Color;
 import com.csse3200.game.rendering.SolidColorRenderComponent;
 import com.csse3200.game.rendering.DoorRenderComponent;
 
-/**
+
+ /**
  * Factory to create obstacle entities.
  *
  * <p>Each obstacle entity type should have a creation method that returns a corresponding entity.
  */
+
+/**
+ * Builds common static props and triggers used by the level (trees, floors, desks, crates, etc.).
+ * Each method returns a ready-to-place Entity with the right components already attached.
+ * Where needed we set a StaticBody so the object does not move, and assign a collider layer
+ * to decide if it should block the player (OBSTACLE) or just detect overlap (DEFAULT + sensor).
+ */
 public class ObstacleFactory {
+
+  /**
+   * Makes a tree that the player can run into (it blocks like a rock).
+   * - Texture: images/tree.png
+   * - Physics: StaticBody + OBSTACLE collider (solid)
+   * - Scale: slightly taller for better readability
+   * @return a solid tree Entity
+   */
 
   /**
    * Creates a tree entity.
@@ -36,6 +52,11 @@ public class ObstacleFactory {
     return tree;
   }
 
+  /**
+   * Long, thin floor piece for platforms/walkways.
+   * Solid so the player can stand on it.
+   * @return a static floor Entity
+   */
   public static Entity createLongFloor() {
     Entity longFloor =
             new Entity()
@@ -50,12 +71,17 @@ public class ObstacleFactory {
     return longFloor;
   }
 
+  /**
+   * A very tall wall-like block (same art as thick floor but much taller).
+   * Good for visual dividers in the background.
+   * @return a tall static prop
+   */
   public static Entity createBigThickFloor() {
     Entity bigThickFloor =
-        new Entity()
-          .addComponent(new TextureRenderComponent("foreg_sprites/general/ThickFloor.png"))
-          .addComponent(new PhysicsComponent())
-          .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
+            new Entity()
+                    .addComponent(new TextureRenderComponent("foreg_sprites/general/ThickFloor.png"))
+                    .addComponent(new PhysicsComponent())
+                    .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
 
     bigThickFloor.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
     bigThickFloor.getComponent(TextureRenderComponent.class).scaleEntity();
@@ -64,6 +90,10 @@ public class ObstacleFactory {
     return bigThickFloor;
   }
 
+  /**
+   * Decorative railing. Visual-only: no physics/collision so it never blocks the player.
+   * @return a simple sprite Entity
+   */
   public static Entity createRailing() {
     Entity railing =
             new Entity()
@@ -74,6 +104,10 @@ public class ObstacleFactory {
     return railing;
   }
 
+  /**
+   * Small, solid square tile useful as a step or blocker.
+   * @return a static solid tile
+   */
   public static Entity createSmallSquare() {
     Entity smallSquare =
             new Entity()
@@ -88,6 +122,10 @@ public class ObstacleFactory {
     return smallSquare;
   }
 
+  /**
+   * Short stair-like prop the player cannot pass through.
+   * @return a static solid stair block
+   */
   public static Entity createSmallStair() {
     Entity smallStair =
             new Entity()
@@ -102,6 +140,10 @@ public class ObstacleFactory {
     return smallStair;
   }
 
+  /**
+   * Square floor tile, collidable so it behaves like ground.
+   * @return a static square tile
+   */
   public static Entity createSquareTile() {
     Entity squareTile =
             new Entity()
@@ -116,6 +158,10 @@ public class ObstacleFactory {
     return squareTile;
   }
 
+  /**
+   * Regular thick floor block (short version of the big wall).
+   * @return a static ground piece
+   */
   public static Entity createThickFloor() {
     Entity thickFloor =
             new Entity()
@@ -129,7 +175,8 @@ public class ObstacleFactory {
     PhysicsUtils.setScaledCollider(thickFloor, 1f, 1f);
     return thickFloor;
   }
-// Added the thin floor on the map where the computer is placed
+
+  // Added the thin floor on the map where the computer is placed
   public static Entity createThinFloor() {
     Entity thinFloor =
             new Entity()
@@ -144,6 +191,10 @@ public class ObstacleFactory {
     return thinFloor;
   }
 
+  /**
+   * Purple spawn pad prop. Solid so it rests on the ground like other props.
+   * @return a static pad entity
+   */
   public static Entity createPurpleSpawnPad() {
     Entity purpSpawn =
             new Entity()
@@ -158,6 +209,10 @@ public class ObstacleFactory {
     return purpSpawn;
   }
 
+  /**
+   * Red spawn pad prop. Identical behaviour to the purple pad.
+   * @return a static pad entity
+   */
   public static Entity createRedSpawnPad() {
     Entity purpSpawn =
             new Entity()
@@ -172,6 +227,10 @@ public class ObstacleFactory {
     return purpSpawn;
   }
 
+  /**
+   * Small ceiling light prop. Solid only so it can be positioned consistently — it’s decorative.
+   * @return a static light entity
+   */
   public static Entity createCeilingLight() {
     Entity ceilingLight =
             new Entity()
@@ -186,6 +245,10 @@ public class ObstacleFactory {
     return ceilingLight;
   }
 
+  /**
+   * Wooden crate that blocks the player (useful for cover or decoration).
+   * @return a static crate entity
+   */
   public static Entity createCrate() {
     Entity crate =
             new Entity()
@@ -200,6 +263,10 @@ public class ObstacleFactory {
     return crate;
   }
 
+  /**
+   * Large shelf prop that blocks movement (like furniture in the way).
+   * @return a static shelf entity
+   */
   public static Entity createLargeShelf() {
     Entity largeShelf =
             new Entity()
@@ -213,6 +280,7 @@ public class ObstacleFactory {
     PhysicsUtils.setScaledCollider(largeShelf, 1f, 1f);
     return largeShelf;
   }
+
   // Added ceiling lights on under the ThinFloor
   public static Entity createLongCeilingLight() {
     Entity longCeilingLight =
@@ -228,6 +296,10 @@ public class ObstacleFactory {
     return longCeilingLight;
   }
 
+  /**
+   * Mid-height shelf prop that blocks movement.
+   * @return a static shelf entity
+   */
   public static Entity createMidShelf() {
     Entity midShelf =
             new Entity()
@@ -242,6 +314,10 @@ public class ObstacleFactory {
     return midShelf;
   }
 
+  /**
+   * Office chair prop that the player cannot pass through.
+   * @return a static chair entity
+   */
   public static Entity createOfficeChair() {
     Entity officeChair =
             new Entity()
@@ -255,7 +331,11 @@ public class ObstacleFactory {
     PhysicsUtils.setScaledCollider(officeChair, 1f, 1f);
     return officeChair;
   }
-//Added the office desk on the thin floor
+
+  /**
+   * Front-facing office desk placed on the thin floor. Solid to act like furniture.
+   * @return a static desk entity
+   */
   public static Entity createOfficeDesk() {
     Entity officeDesk =
             new Entity()
@@ -269,7 +349,11 @@ public class ObstacleFactory {
     PhysicsUtils.setScaledCollider(officeDesk, 1f, 1f);
     return officeDesk;
   }
-  //Added camera on top right of the main map
+
+  /**
+   * Security camera sprite (visual only). No physics/collider, so it never blocks the player.
+   * @return a decorative camera entity
+   */
   public static Entity createLargeSecurityCamera() {
     Entity cam = new Entity()
             .addComponent(new TextureRenderComponent("foreg_sprites/futuristic/SecurityCamera3.png"));
@@ -278,7 +362,11 @@ public class ObstacleFactory {
     return cam;
   }
 
-
+  /**
+   * Glowing energy pod that acts as a solid prop on the floor.
+   * Collider is slightly shorter (0.9) so it seats nicely on tiles when scaled.
+   * @return a static energy pod entity
+   */
   public static Entity createLargeEnergyPod() {
     Entity energyPod =
             new Entity()
@@ -293,7 +381,10 @@ public class ObstacleFactory {
     return energyPod;
   }
 
-  //Green storage crate
+  /**
+   * Green futuristic storage crate.
+   * @return a static crate entity (green)
+   */
   public static Entity createStorageCrateGreen() {
     Entity crate =
             new Entity()
@@ -308,7 +399,10 @@ public class ObstacleFactory {
     return crate;
   }
 
-  //Dark storage crate
+  /**
+   * Dark futuristic storage crate.
+   * @return a static crate entity (dark)
+   */
   public static Entity createStorageCrateDark() {
     Entity crate =
             new Entity()
@@ -331,6 +425,16 @@ public class ObstacleFactory {
     return wall;
   }
 
+  /**
+   * Thin trigger line used for doors/exits.
+   * - Layer: DEFAULT
+   * - Sensor: true (detects overlap, does not push)
+   * You can attach your own component to react on contact (e.g., change room).
+   *
+   * @param width world width of the trigger
+   * @param height world height of the trigger
+   * @return a non-blocking trigger entity
+   */
   public static Entity createDoorTrigger(float width, float height) {
     Entity trigger = new Entity()
             .addComponent(new PhysicsComponent().setBodyType(BodyType.StaticBody))
