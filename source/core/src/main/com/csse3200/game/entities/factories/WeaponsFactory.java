@@ -75,15 +75,8 @@ public class WeaponsFactory {
      * @return A pistol entity.
      */
     public static Entity createPistol() {
-
-        String tex = "images/pistol.png";
-        Entity pistol = createBaseWeapon("ranged");
-        pistol.addComponent(new TextureRenderComponent(tex))
-                .addComponent(new CombatStatsComponent(0, lightsaberConfigs.baseAttack))
-                .addComponent(new ItemComponent(1, tex));
-        pistol.getComponent(TextureRenderComponent.class).scaleEntity();
-        pistol.getComponent(PhysicsComponent.class).getBody().setUserData(pistol);
-        return pistol;
+        String texture = "images/pistol.png";
+        return createRanged(texture);
     }
 
     /**
@@ -92,14 +85,24 @@ public class WeaponsFactory {
      */
     public static Entity createRifle() {
         String tex = "images/rifle.png";
+        return createRanged(tex);
+    }
 
-        Entity rifle = createBaseWeapon("ranged");
-        rifle.addComponent(new TextureRenderComponent(tex))
+    /**
+     * Creates a ranged weapon with the given texturePath
+     * @param texture is a valid texture path to be used to create a
+     * ranged weapon
+     * @return A ranged weapon entity.
+     */
+    private static Entity createRanged(String texture) {
+       Entity weapon = createBaseWeapon("ranged");
+        weapon.addComponent(new TextureRenderComponent(texture))
                 .addComponent(new CombatStatsComponent(0, lightsaberConfigs.baseAttack))
-                .addComponent(new ItemComponent(1, tex));
-        rifle.getComponent(TextureRenderComponent.class).scaleEntity();
-        rifle.getComponent(PhysicsComponent.class).getBody().setUserData(rifle);
-        return rifle;
+                .addComponent(new ItemComponent(1, texture));
+        weapon.getComponent(TextureRenderComponent.class).scaleEntity();
+        weapon.getComponent(PhysicsComponent.class).getBody().setUserData(weapon);
+
+        return weapon;
     }
 
     /**
