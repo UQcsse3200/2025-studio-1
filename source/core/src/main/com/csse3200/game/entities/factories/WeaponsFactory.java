@@ -2,9 +2,11 @@ package com.csse3200.game.entities.factories;
 
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.components.TagComponent;
 import com.csse3200.game.components.TouchAttackComponent;
+import com.csse3200.game.components.entity.item.ItemComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.*;
 import com.csse3200.game.files.FileLoader;
@@ -37,16 +39,17 @@ public class WeaponsFactory {
     /**
      * Creates a lightsaber entity.
      *
-     * @return entity
+     * @return lightsaber entity
      */
     public static Entity createLightsaber() {
-        Entity lightsaber =
-            new Entity()
-                .addComponent(new TextureRenderComponent("images/lightsaberSingle.png"))
-                .addComponent(new CombatStatsComponent(0, lightsaberConfigs.baseAttack))
-                .addComponent(new TagComponent("melee"));
-        lightsaber.getComponent(TextureRenderComponent.class).scaleEntity();
+        String tex = "images/lightsaberSingle.png";
 
+        Entity lightsaber = createBaseWeapon("melee");
+        lightsaber.addComponent(new TextureRenderComponent(tex))
+            .addComponent(new CombatStatsComponent(0, lightsaberConfigs.baseAttack))
+            .addComponent(new ItemComponent(1, tex));
+        lightsaber.getComponent(TextureRenderComponent.class).scaleEntity();
+        lightsaber.getComponent(PhysicsComponent.class).getBody().setUserData(lightsaber);
         return lightsaber;
     }
 
@@ -55,12 +58,15 @@ public class WeaponsFactory {
      * @return A dagger entity.
      */
     public static Entity createDagger() {
-        Entity dagger= new Entity()
-                .addComponent(new TextureRenderComponent("images/dagger.png"))
-                .addComponent(new CombatStatsComponent(0, daggerConfigs.baseAttack))
-                .addComponent(new TagComponent("melee"));
+        String tex = "images/dagger.png";
+
+        Entity dagger = createBaseWeapon("melee");
+        dagger.addComponent(new TextureRenderComponent(tex))
+          .addComponent(new CombatStatsComponent(0, daggerConfigs.baseAttack))
+          .addComponent(new ItemComponent(1, tex));
         dagger.getComponent(TextureRenderComponent.class).scaleEntity();
         dagger.scaleHeight(0.55f);
+        dagger.getComponent(PhysicsComponent.class).getBody().setUserData(dagger);
         return dagger;
     }
 
@@ -69,27 +75,48 @@ public class WeaponsFactory {
      * @return A pistol entity.
      */
     public static Entity createPistol() {
-        Entity pistol = new Entity().addComponent(new TextureRenderComponent(
-                "images/pistol.png")).addComponent(new CombatStatsComponent(0
-                , lightsaberConfigs.baseAttack))
-                .addComponent(new TagComponent("ranged"));
-        pistol.getComponent(TextureRenderComponent.class).scaleEntity();
-        return pistol;
+        String texture = "images/pistol.png";
+        return createRanged(texture);
     }
 
     /**
-     * Creates a generic NPC to be used as a base entity by more specific NPC creation methods.
-     *
-     * @return entity
+     * Creates a rifle entity.
+     * @return A rifle entity.
      */
-    private static Entity createBaseWeapon(Entity target) {
+    public static Entity createRifle() {
+        String tex = "images/rifle.png";
+        return createRanged(tex);
+    }
+
+    /**
+     * Creates a ranged weapon with the given texturePath
+     * @param texture is a valid texture path to be used to create a
+     * ranged weapon
+     * @return A ranged weapon entity.
+     */
+    private static Entity createRanged(String texture) {
+       Entity weapon = createBaseWeapon("ranged");
+        weapon.addComponent(new TextureRenderComponent(texture))
+                .addComponent(new CombatStatsComponent(0, lightsaberConfigs.baseAttack))
+                .addComponent(new ItemComponent(1, texture));
+        weapon.getComponent(TextureRenderComponent.class).scaleEntity();
+        weapon.getComponent(PhysicsComponent.class).getBody().setUserData(weapon);
+
+        return weapon;
+    }
+
+    /**
+     * Create a generic base weapon
+     * @param type "melee" or "ranged"
+     * @return the base weapon
+     */
+    private static Entity createBaseWeapon(String type) {
         Entity weapon =
                 new Entity()
                         .addComponent(new PhysicsComponent())
-                        .addComponent(new PhysicsMovementComponent())
-                        .addComponent(new ColliderComponent())
-                        .addComponent(new HitboxComponent().setLayer(PhysicsLayer.NPC))
-                        .addComponent(new TouchAttackComponent(PhysicsLayer.PLAYER, 1.5f));
+                        .addComponent(new ColliderComponent().setLayer(PhysicsLayer.NONE))
+                        .addComponent(new HitboxComponent())
+                        .addComponent(new TagComponent(type));
 
         PhysicsUtils.setScaledCollider(weapon, 0.9f, 0.4f);
         return weapon;

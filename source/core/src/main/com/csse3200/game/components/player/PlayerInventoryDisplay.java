@@ -1,5 +1,8 @@
 package com.csse3200.game.components.player;
 
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
@@ -29,15 +32,15 @@ public class PlayerInventoryDisplay extends UIComponent {
     private static final float SLOT_SIZE = 96f;
     private static final float SLOT_PAD  = 10f;
     // Box textures (make sure both are loaded by ResourceService)
-    private static final String BG_TEX          = "images/ghost_1.png";        // normal
-    private static final String BG_TEX_FOCUSED  = "images/ghost_king.png";  // highlighted
+//    private static final String BG_TEX          = "images/ghost_1.png";        // normal
+//    private static final String BG_TEX_FOCUSED  = "images/ghost_king.png";  // highlighted
 
     private int focusedIndex = -1;
 
-    private final InventoryComponent inventory;
-    private final Map<String, String> itemPaths = new HashMap<String, String>();
+    private final InventoryComponent inventory; // this is also included
+    private final Map<String, String> itemPaths = new HashMap<String, String>(); // this too
 
-    /**
+    /** TODO what happens if this is gone, along with the
      * Constructs the PlayerInventory display, takes in an InventoryComponent
      * so that it can handle displaying the item textures etc.
      * @param inventory An already initialised InventoryComponent
@@ -59,6 +62,29 @@ public class PlayerInventoryDisplay extends UIComponent {
     }
 
     /**
+     * Function to draw the inventory boxes
+     * @param r,g,b,a fill color + transparency
+     * @param borderWidth width of box border
+     * @param br,bg,bb,ba border color + transparency
+     */
+    private Drawable createSlotBg(float r, float g, float b, float a,
+                                  int borderWidth, float br, float bg, float bb, float ba) {
+        int size = 32;
+        Pixmap pixmap = new Pixmap(size, size, Pixmap.Format.RGBA8888);
+        // Setting actual box colour
+        pixmap.setColor(r, g, b, a);
+        pixmap.fill();
+        // Setting box border colour
+        pixmap.setColor(br, bg, bb, ba);
+        for (int i = 0; i < borderWidth; i++) {
+            pixmap.drawRectangle(i, i, size - i * 2, size - i * 2);
+        }
+        Texture texture = new Texture(pixmap);
+        pixmap.dispose();
+        return new TextureRegionDrawable(new TextureRegion(texture));
+    }
+
+    /**
      * This function will build the basic structure of the inventory on the screen of
      * the player.
      * This will happen on creation.
@@ -70,10 +96,12 @@ public class PlayerInventoryDisplay extends UIComponent {
         table.padBottom(20f);
 
         // Preload background drawables
-        Drawable normalBg  = new Image(ServiceLocator.getResourceService()
-                .getAsset(BG_TEX, Texture.class)).getDrawable();
-        Drawable focusBg   = new Image(ServiceLocator.getResourceService()
-                .getAsset(BG_TEX_FOCUSED, Texture.class)).getDrawable();
+//        Drawable normalBg  = new Image(ServiceLocator.getResourceService()
+//                .getAsset(BG_TEX, Texture.class)).getDrawable();
+//        Drawable focusBg   = new Image(ServiceLocator.getResourceService()
+//                .getAsset(BG_TEX_FOCUSED, Texture.class)).getDrawable();
+        Drawable normalBg = createSlotBg(0.2f, 0.2f, 0.2f, 0.6f, 2, 1f, 1f, 1f, 1f);
+        Drawable focusBg  = createSlotBg(1f, 1f, 0f, 0.6f, 2, 1f, 1f, 0f, 1f);
 
         for (int i = 0; i < SLOTS; i++) {
             Slot slot = new Slot(normalBg, focusBg);
@@ -113,7 +141,6 @@ public class PlayerInventoryDisplay extends UIComponent {
         for (int i = 0; i < slots.size; i++) clearSlot(i);
         setFocusedIndex(-1);
     }
-
 
     /**
      * Function that finds the first available slot
