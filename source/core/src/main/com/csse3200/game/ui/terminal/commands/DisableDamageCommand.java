@@ -1,16 +1,22 @@
 package com.csse3200.game.ui.terminal.commands;
 
+import com.badlogic.gdx.utils.Null;
+import com.csse3200.game.entities.Entity;
 import com.csse3200.game.services.ServiceLocator;
+import com.csse3200.game.components.player.PlayerActions;
+import com.csse3200.game.components.CombatStatsComponent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import com.badlogic.gdx.utils.Array;
 
 /**
  * A command for toggling whether a player takes damage
  */
 public class DisableDamageCommand implements Command {
-    private ArrayList<Entity> EntityList;
+    private Array<Entity> entityList;
+    private static final Logger logger = LoggerFactory.getLogger(DebugCommand.class);
 
 
     public boolean action(ArrayList<String> args) {
@@ -20,13 +26,13 @@ public class DisableDamageCommand implements Command {
         }
 
         String arg = args.get(0);
-        EntityList = ServiceLocator.getEntityService().getEntities();
+        entityList = ServiceLocator.getEntityService().getEntities();
         switch (arg) {
             case "on":
-                setDisableDamageStatus(EntityList, true);
+                setDisableDamageStatus(entityList, true);
                 return true;
             case "off":
-                setDisableDamageStatus(EntityList, false);
+                setDisableDamageStatus(entityList, false);
                 return true;
             default:
                 logger.debug("Unrecognised argument received for 'disable_damage' command: {}", args);
@@ -38,11 +44,11 @@ public class DisableDamageCommand implements Command {
         return args.size() == 1;
     }
 
-    void setDisableDamageStatus(ArrayList<Entity> EntityList, boolean status) {
-        for(Entity entity : EntityList) {
-            if (entity.getComponent(PlayerActions.class)
-                    && entity.getComponent(CombatStatsComponent.class)) {
-                entity.getComponent(CombatStatsComponent.class).setDisableDamageStatus(status);
+    void setDisableDamageStatus(Array<Entity> entityList, boolean status) {
+        for(Entity entity : entityList) {
+            if (entity.getComponent(PlayerActions.class) != null
+                    && entity.getComponent(CombatStatsComponent.class) != null) {
+                entity.getComponent(CombatStatsComponent.class).setDisableDamage(status);
             }
         }
     }
