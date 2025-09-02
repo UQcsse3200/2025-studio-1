@@ -52,7 +52,6 @@ public class PlayerInventoryDisplay extends UIComponent {
     public void create() {
         super.create();
         buildUI();
-        // entity.getEvents().addListener("add item", this::addInventoryItem);
         entity.getEvents().addListener("add item", this::addItem);
         entity.getEvents().addListener("remove item", this::clearSlot);
         entity.getEvents().addListener("remove all items", this::clearAll);
