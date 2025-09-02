@@ -1,0 +1,54 @@
+explosion_2.png
+size: 1536, 1024
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+explosion_2
+  rotate: false
+  xy: 189, 173
+  size: 288, 273
+  orig: 288, 273
+  offset: 0, 0
+  index: 0
+explosion_2
+  rotate: false
+  xy: 542, 105
+  size: 430, 396
+  orig: 430, 396
+  offset: 0, 0
+  index: 1
+explosion_2
+  rotate: false
+  xy: 1019, 105
+  size: 408, 385
+  orig: 408, 385
+  offset: 0, 0
+  index: 2
+explosion_2
+  rotate: false
+  xy: 143, 553
+  size: 403, 371
+  orig: 403, 371
+  offset: 0, 0
+  index: 3
+explosion_2
+    rotate: false
+    xy: 585, 550
+    size: 404, 382
+    orig: 404, 382
+    offset: 0, 0
+    index: 4
+explosion_2
+    rotate: false
+    xy: 1036, 548
+    size: 402, 389
+    orig: 402, 389
+    offset: 0, 0
+    index: 5
+default
+  rotate: false
+  xy: 358, 78
+  size: 286, 256
+  orig: 286, 256
+  offset: 0, 0
+  index: 1
