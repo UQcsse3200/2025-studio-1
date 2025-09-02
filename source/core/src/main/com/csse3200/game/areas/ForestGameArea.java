@@ -38,6 +38,7 @@ public class ForestGameArea extends GameArea {
   private static final Logger logger = LoggerFactory.getLogger(ForestGameArea.class);
   private static final int NUM_TREES = 7;
   private static final int NUM_GHOSTS = 0;
+  private static final int NUM_ITEMS = 5;//this is for ItemFactory
   private static final int NUM_GHOST_GPTS = 4;
   private static final GridPoint2 PLAYER_SPAWN = new GridPoint2(3, 7);
   private static final float WALL_WIDTH = 0.1f;
@@ -66,7 +67,9 @@ public class ForestGameArea extends GameArea {
     "images/Spawn.png",
     "images/SpawnResize.png",
     "images/LobbyWIP.png",
-          "images/door.png"
+    "images/door.png",
+    "images/mud.png",
+    "images/heart.png"
   };
   //General Sprites for the game
   private static final String[] generalTextures = {
@@ -172,6 +175,7 @@ public class ForestGameArea extends GameArea {
     keycard.setPosition(new Vector2(keycardX, keycardY));
     spawnEntity(keycard);
 
+    spawnItems();
   }
 
   private void displayUI() {
@@ -298,6 +302,20 @@ public class ForestGameArea extends GameArea {
     GridPoint2 wallSpawn = new GridPoint2(-14, 0);
     Entity bigWall = ObstacleFactory.createBigThickFloor();
     spawnEntityAt(bigWall, wallSpawn, true, false);
+  /**
+   * Spawns several item entities at random positions in the game area.
+   * The number of items is set by NUM_ITEMS.
+   * Each item is created and placed at a random spot on the terrain.
+   */
+  private void spawnItems() {
+    GridPoint2 minPos = new GridPoint2(0, 0);
+    GridPoint2 maxPos = terrain.getMapBounds(0).sub(2, 2);
+
+    for (int i = 0; i < NUM_ITEMS; i++) {
+      GridPoint2 randomPos = RandomUtils.random(minPos, maxPos);
+      Entity item = ItemFactory.createItem();
+      spawnEntityAt(item, randomPos, true, false);
+    }
   }
 
   private Entity spawnPlayer() {
