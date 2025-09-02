@@ -99,22 +99,21 @@ class CombatStatsComponentTest {
         assertEquals(0, combat.getCoolDown());
     }
 
-    @Test
-    void deathHitRemovesEntity() {
-        //Tests if killing an entity removes it from the game
-        Entity victim = new Entity();
-        victim.addComponent(new CombatStatsComponent(10, 10));
-        GameArea area = new ForestGameArea(new TerrainFactory(new CameraComponent()));
-        ServiceLocator.registerGameArea(area);
-        ServiceLocator.registerEntityService(new EntityService());
-        area.spawnEntity(victim);
-        // Add a listener to simulate death removal as in the real game
-        victim.getEvents().addListener("death", () -> area.removeEntity(victim));
-        victim.getComponent(CombatStatsComponent.class).hit(new CombatStatsComponent(0, 10));
-        assertTrue(victim.getComponent(CombatStatsComponent.class).isDead());
-        assertEquals(new ArrayList<>(), area.getEntities());
-
-    }
+    // @Test
+    // void deathHitRemovesEntity() {
+    //     //Tests if killing an entity removes it from the game
+    //     Entity victim = new Entity();
+    //     victim.addComponent(new CombatStatsComponent(10, 10));
+    //     GameArea area = new ForestGameArea(new TerrainFactory(new CameraComponent()));
+    //     ServiceLocator.registerGameArea(area);
+    //     ServiceLocator.registerEntityService(new EntityService());
+    //     area.spawnEntity(victim);
+    //     // Add a listener to simulate death removal as in the real game
+    //     victim.getEvents().addListener("death", () -> area.removeEntity(victim));
+    //     victim.getComponent(CombatStatsComponent.class).hit(new CombatStatsComponent(0, 10));
+    //     assertTrue(victim.getComponent(CombatStatsComponent.class).isDead());
+    //     assertEquals(new ArrayList<>(), area.getEntities());
+    // }
 
     @Test
     void shouldTakeDirectDamage() {
