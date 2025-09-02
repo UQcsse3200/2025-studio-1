@@ -22,21 +22,21 @@ public class KeycardPickupComponent extends Component {
     private void onCollisionStart(Fixture me, Fixture other) {
         if (collected) return;
 
-        // Get the other entity from BodyUserData
+
         Object otherUd = other.getBody().getUserData();
         if (!(otherUd instanceof BodyUserData)) return;
 
         Entity otherEntity = ((BodyUserData) otherUd).entity;
         if (otherEntity == null) return;
 
-        // Get the player's inventory
+
         InventoryComponent inventory = otherEntity.getComponent(InventoryComponent.class);
         if (inventory != null) {
             inventory.setKeycardLevel(level);
             Gdx.app.log("KeycardPickup", "Keycard level " + level + " collected by player");
             collected = true;
 
-            // Remove the keycard entity safely after physics step
+
             Gdx.app.postRunnable(() -> entity.dispose());
         }
     }

@@ -228,18 +228,11 @@ public class ForestGameArea extends GameArea {
   private void spawnBottomRightDoor() {
     float doorX = 13.5f;
     float doorY = 1.25f;
-
-    // Create a door trigger with physics body
     Entity door = ObstacleFactory.createDoorTrigger(20f, 40f);
-
-    // Add visual sprite
     TextureRenderComponent texture = new TextureRenderComponent("images/door.png");
     door.addComponent(texture);
     texture.scaleEntity();
-
     door.setPosition(doorX, doorY);
-
-    // Add keycard gate logic — only opens if player has level 1 card
     door.addComponent(new KeycardGateComponent(1, () -> {
       logger.info("Bottom-right platform door unlocked — loading next level");
       loadNextLevel();

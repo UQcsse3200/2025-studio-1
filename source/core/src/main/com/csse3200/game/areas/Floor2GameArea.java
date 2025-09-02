@@ -53,8 +53,6 @@ public class Floor2GameArea extends GameArea {
     spawnEntity(keycard);
   }
 
-
-
   private void spawnTerrain() {
     // Use a different terrain/tileset as a base
     terrain = terrainFactory.createTerrain(TerrainType.FOREST_DEMO_HEX);

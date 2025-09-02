@@ -45,7 +45,6 @@ public class PlayerFactory {
                     .addComponent(new HitboxComponent().setLayer(PhysicsLayer.PLAYER))
                     .addComponent(new PlayerActions())
                     .addComponent(new CombatStatsComponent(stats.health, stats.baseAttack))
-                    // ✅ Only ONE InventoryComponent
                     .addComponent(new InventoryComponent(stats.gold))
                     .addComponent(inputComponent)
                     .addComponent(new PlayerStatsDisplay());
@@ -71,7 +70,6 @@ public class PlayerFactory {
                     .addComponent(new HitboxComponent().setLayer(PhysicsLayer.PLAYER))
                     .addComponent(new PlayerActions())
                     .addComponent(new CombatStatsComponent(stats.health, stats.baseAttack))
-                    // ✅ Only ONE InventoryComponent
                     .addComponent(new InventoryComponent(stats.gold))
                     .addComponent(inputComponent)
                     .addComponent(new PlayerStatsDisplay());

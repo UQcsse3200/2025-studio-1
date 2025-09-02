@@ -7,7 +7,7 @@ public class InventoryComponent extends Component {
     private final Set<String> items = new HashSet<>();
     private int keycardLevel = 0; // 0 = no keycard
 
-    // --- Generic item handling ---
+
     public void addItem(String itemId) {
         items.add(itemId);
     }
@@ -16,7 +16,7 @@ public class InventoryComponent extends Component {
         return items.contains(itemId);
     }
 
-    // --- Keycard-specific handling ---
+
     public void setKeycardLevel(int level) {
         this.keycardLevel = level;
     }

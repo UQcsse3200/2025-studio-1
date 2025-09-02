@@ -26,19 +26,15 @@ public class KeycardSpawnerSystem {
                 keycardLevel = 4;
                 break;
             default:
-                // No keycard in other areas
+                // No keycard in other areas for now
                 return;
         }
-
-        // Create the keycard for this area
         Entity keycard = KeycardFactory.createKeycard(keycardLevel);
 
-        // Position can be adjusted to match your room layout
         float x = MathUtils.random(2f, 10f);
         float y = MathUtils.random(2f, 6f);
         keycard.setPosition(x, y);
 
-        // Spawn in the current area (no random room selection)
         area.spawnEntity(keycard);
     }
 }

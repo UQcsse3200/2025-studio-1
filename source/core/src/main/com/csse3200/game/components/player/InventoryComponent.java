@@ -21,7 +21,7 @@ public class InventoryComponent extends Component {
     private final ArrayList<Entity> items = new ArrayList<>(maxCapacity);
 
     private int processor;
-    private int keycardLevel = 0; // ✅ keycard level storage
+    private int keycardLevel = 0;
 
     public InventoryComponent(int processor) {
         setProcessor(processor);
@@ -109,7 +109,6 @@ public class InventoryComponent extends Component {
         setProcessor(this.processor + processor);
     }
 
-    // ✅ Keycard level methods
     public int getKeycardLevel() {
         return keycardLevel;
     }

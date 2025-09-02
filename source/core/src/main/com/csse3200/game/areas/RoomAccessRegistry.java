@@ -6,7 +6,7 @@ public class RoomAccessRegistry {
     private static final Map<String, Integer> roomAccessLevels = new HashMap<>();
 
     static {
-        roomAccessLevels.put("Floor1", 0); // Starting floor, no keycard needed
+        roomAccessLevels.put("Floor1", 0);
         roomAccessLevels.put("Floor2", 1);
         roomAccessLevels.put("Floor3", 1);
         roomAccessLevels.put("Floor4", 1);
