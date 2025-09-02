@@ -29,6 +29,7 @@ import org.slf4j.LoggerFactory;
 public class ForestGameArea extends GameArea {
   private static final Logger logger = LoggerFactory.getLogger(ForestGameArea.class);
   private static final int NUM_TREES = 7;
+  private static final int NUM_ITEMS = 5;//this is for ItemFactory
   private static final int NUM_GHOSTS = 2;
   private static final int NUM_GHOST_GPTS = 4;
   private static final GridPoint2 PLAYER_SPAWN = new GridPoint2(10, 10);
@@ -57,6 +58,7 @@ public class ForestGameArea extends GameArea {
     "images/laser_shot.png",
     "images/player.png",
     "images/mud.png",
+    "images/heart.png"
   };
 
   private static final String[] forestTextureAtlases = {
@@ -117,6 +119,7 @@ public class ForestGameArea extends GameArea {
     spawnGhostKing();
     spawnGhostGPT();
     playMusic();
+    spawnItems();
   }
 
   private void displayUI() {
@@ -164,6 +167,22 @@ public class ForestGameArea extends GameArea {
       randomPos.y = 2;
       Entity tree = ObstacleFactory.createTree();
       spawnEntityAt(tree, randomPos, true, false);
+    }
+  }
+
+  /**
+   * Spawns several item entities at random positions in the game area.
+   * The number of items is set by NUM_ITEMS.
+   * Each item is created and placed at a random spot on the terrain.
+   */
+  private void spawnItems() {
+    GridPoint2 minPos = new GridPoint2(0, 0);
+    GridPoint2 maxPos = terrain.getMapBounds(0).sub(2, 2);
+
+    for (int i = 0; i < NUM_ITEMS; i++) {
+      GridPoint2 randomPos = RandomUtils.random(minPos, maxPos);
+      Entity item = ItemFactory.createItem();
+      spawnEntityAt(item, randomPos, true, false);
     }
   }
 

@@ -9,14 +9,18 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Scaling;
+import com.csse3200.game.entities.Entity;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.UIComponent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * The UI component of the inventory.
- * Use the triggers: "add item," "remove item," "remove all items," "focus item"
+ * Use the triggers: "add item," "remove item," "remove all items", "focus item"
  */
 public class PlayerInventoryDisplay extends UIComponent {
     private static final Logger log = LoggerFactory.getLogger(PlayerInventoryDisplay.class);
@@ -27,14 +31,31 @@ public class PlayerInventoryDisplay extends UIComponent {
     private static final int SLOTS = 5;
     private static final float SLOT_SIZE = 96f;
     private static final float SLOT_PAD  = 10f;
+    // Box textures (make sure both are loaded by ResourceService)
+//    private static final String BG_TEX          = "images/ghost_1.png";        // normal
+//    private static final String BG_TEX_FOCUSED  = "images/ghost_king.png";  // highlighted
 
     private int focusedIndex = -1;
+
+    private final InventoryComponent inventory; // this is also included
+    private final Map<String, String> itemPaths = new HashMap<String, String>(); // this too
+
+    /** TODO what happens if this is gone, along with the
+     * Constructs the PlayerInventory display, takes in an InventoryComponent
+     * so that it can handle displaying the item textures etc.
+     * @param inventory An already initialised InventoryComponent
+     */
+    public PlayerInventoryDisplay(InventoryComponent inventory) {
+        this.inventory = inventory;
+
+        itemPaths.put("mud", "imgaes/mud.png"); // populate the map with example
+    }
 
     @Override
     public void create() {
         super.create();
         buildUI();
-        entity.getEvents().addListener("add item", this::addInventoryItem);
+        entity.getEvents().addListener("add item", this::addItem);
         entity.getEvents().addListener("remove item", this::clearSlot);
         entity.getEvents().addListener("remove all items", this::clearAll);
         entity.getEvents().addListener("focus item", this::setFocusedIndex);
@@ -75,6 +96,10 @@ public class PlayerInventoryDisplay extends UIComponent {
         table.padBottom(20f);
 
         // Preload background drawables
+//        Drawable normalBg  = new Image(ServiceLocator.getResourceService()
+//                .getAsset(BG_TEX, Texture.class)).getDrawable();
+//        Drawable focusBg   = new Image(ServiceLocator.getResourceService()
+//                .getAsset(BG_TEX_FOCUSED, Texture.class)).getDrawable();
         Drawable normalBg = createSlotBg(0.2f, 0.2f, 0.2f, 0.6f, 2, 1f, 1f, 1f, 1f);
         Drawable focusBg  = createSlotBg(1f, 1f, 0f, 0.6f, 2, 1f, 1f, 0f, 1f);
 

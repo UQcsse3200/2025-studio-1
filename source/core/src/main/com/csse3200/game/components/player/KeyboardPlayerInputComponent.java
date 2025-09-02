@@ -149,8 +149,11 @@ public class KeyboardPlayerInputComponent extends InputComponent {
         triggerSelectItem();
         focusedItem = 4;
         return true;
-      case Keys.P:
+      case Keys.E:
         triggerAddItem();
+        return true;
+      case Keys.R:
+        triggerDropFocused();
         return true;
       default:
         return false;
@@ -244,24 +247,26 @@ public class KeyboardPlayerInputComponent extends InputComponent {
     entity.getEvents().trigger("jumpAttempt");
   }
 
-  /**
-   * Triggers event to remove an item from the inventory.
-   */
+   /** Triggers an inventory removal request for the currently focused slot. */
   private void triggerRemoveItem() {
     entity.getEvents().trigger("remove item", focusedItem);
   }
 
-  /**
-   * Triggers event to add a test item (mud.png) to the inventory.
-   */
+  /** Triggers an item pickup request. */
   private void triggerAddItem() {
-    entity.getEvents().trigger("add item", "images/mud.png");
+    System.out.println("Pick up event triggered");
+    entity.getEvents().trigger("pick up");
+
   }
 
-  /**
-   * Triggers event to select/focus the currently chosen item slot.
-   */
+  /** Triggers a change in the currently focused inventory slot. */
   private void triggerSelectItem() {
     entity.getEvents().trigger("focus item", focusedItem);
   }
+
+  /** Triggers a drop request for the currently focused inventory slot. */
+  private void triggerDropFocused() {
+    entity.getEvents().trigger("drop focused");
+  }
 }
+
