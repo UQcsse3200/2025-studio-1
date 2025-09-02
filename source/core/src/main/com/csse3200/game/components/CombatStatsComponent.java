@@ -41,9 +41,11 @@ public class CombatStatsComponent extends Component {
   }
 
   /**
-   * Returns true if the entity's has 0 health, otherwise false.
+   * Checks whether this entity is dead.
+   * <p>
+   * An entity is considered dead if its health is less than or equal to zero.
    *
-   * @return is player dead
+   * @return {@code true} if the entity has 0 or less health, {@code false} otherwise
    */
   public Boolean isDead() {
     return this.health <= 0;
@@ -54,7 +56,8 @@ public class CombatStatsComponent extends Component {
    *
    * @return entity's health
    */
-  public int getHealth() {return this.health;
+  public int getHealth() {
+    return this.health;
   }
 
   /**
@@ -100,7 +103,6 @@ public class CombatStatsComponent extends Component {
    */
 
   public float getCoolDown() {
-
     return this.coolDown;
   }
 
@@ -220,5 +222,4 @@ public class CombatStatsComponent extends Component {
   public void hit(int damage) {
     applyDamage(damage);
   }
-
 }
