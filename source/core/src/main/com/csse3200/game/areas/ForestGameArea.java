@@ -11,6 +11,7 @@ import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.ItemHoldComponent;
 import com.csse3200.game.components.enemy.ProjectileLauncherComponent;
 import com.csse3200.game.entities.Entity;
+import com.csse3200.game.entities.factories.BossFactory;
 import com.csse3200.game.entities.factories.NPCFactory;
 import com.csse3200.game.entities.factories.ObstacleFactory;
 import com.csse3200.game.entities.factories.PlayerFactory;
@@ -29,6 +30,7 @@ import org.slf4j.LoggerFactory;
 public class ForestGameArea extends GameArea {
   private static final Logger logger = LoggerFactory.getLogger(ForestGameArea.class);
   private static final int NUM_TREES = 7;
+  private static final int NUM_ROBOTS = 1;
   private static final int NUM_ITEMS = 5;//this is for ItemFactory
   private static final int NUM_GHOSTS = 2;
   private static final int NUM_GHOST_GPTS = 4;
@@ -48,6 +50,18 @@ public class ForestGameArea extends GameArea {
     "images/iso_grass_1.png",
     "images/iso_grass_2.png",
     "images/iso_grass_3.png",
+    "images/robot-2-attack.png",
+    "images/robot-2-common.png",
+          "images/fireball1.png",
+          "images/blackhole1.png",
+            "images/Robot_1.png",
+            "images/Robot_1_attack_left.png",
+            "images/Robot_1_attack_right.png",
+          "images/Boss_3.png",
+          "images/mud.png",
+          "images/mud_ball_1.png",
+          "images/mud_ball_2.png",
+          "images/mud_ball_3.png",
     "images/lightsaber.png",
     "images/lightsaberSingle.png",
     "images/ammo.png",
@@ -61,12 +75,16 @@ public class ForestGameArea extends GameArea {
   };
   
   private static final String[] forestTextureAtlases = {
+    "images/terrain_iso_grass.atlas", "images/ghost.atlas", "images/ghostKing.atlas",
+    "images/robot-2.atlas", "images/fireball.atlas", "images/blackhole.atlas", "images/Robot_1.atlas",
+          "images/boss_idle.atlas",
     "images/terrain_iso_grass.atlas",
     "images/ghost.atlas",
     "images/ghostKing.atlas",
     "images/ghostGPT.atlas",
     "images/explosion_1.atlas",
     "images/explosion_2.atlas"
+
   };
   private static final String[] forestSounds = {"sounds/Impact4.ogg"};
   private static final String backgroundMusic = "sounds/BGM_03_mp3.mp3";
@@ -115,9 +133,28 @@ public class ForestGameArea extends GameArea {
 
     spawnGhosts();
     spawnGhostKing();
+    int choice = (int)(Math.random() * 3);
+    if (choice == 0) {
+      spawnBoss2();
+    } else if (choice == 1) {
+      spawnRobots();
+    } else {
+      spawnBoss3();
+    }
     spawnGhostGPT();
     playMusic();
     spawnItems();
+  }
+
+  private void spawnRobots() {
+    GridPoint2 minPos = new GridPoint2(0, 0);
+    GridPoint2 maxPos = terrain.getMapBounds(0).sub(2, 2);
+
+    for (int i = 0; i < NUM_ROBOTS; i++) {
+      GridPoint2 randomPos = RandomUtils.random(minPos, maxPos);
+      Entity robot = NPCFactory.createRobot(player);
+      spawnEntityAt(robot, randomPos, true, true);
+    }
   }
 
   private void displayUI() {
@@ -256,6 +293,23 @@ public class ForestGameArea extends GameArea {
       Entity ghost = NPCFactory.createGhost(player);
       spawnEntityAt(ghost, randomPos, true, true);
     }
+  }
+  private void spawnBoss2() {
+    GridPoint2 minPos = new GridPoint2(0, 0);
+    GridPoint2 maxPos = terrain.getMapBounds(0).sub(2, 2);
+
+    GridPoint2 pos = RandomUtils.random(minPos, maxPos);
+    Entity boss2 = BossFactory.createBoss2(player);
+    spawnEntityAt(boss2, pos, true, true);
+  }
+  //new added boss3
+  private void spawnBoss3() {
+    GridPoint2 minPos = new GridPoint2(0, 0);
+    GridPoint2 maxPos = terrain.getMapBounds(0).sub(2, 2);
+
+    GridPoint2 pos = RandomUtils.random(minPos, maxPos);
+    Entity boss3 = BossFactory.createBoss3(player);
+    spawnEntityAt(boss3, pos, true, true);
   }
 
   private void spawnGhostKing() {
