@@ -4,9 +4,6 @@ import com.badlogic.gdx.utils.Array;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Provides a global access point for entities to register themselves. This allows for iterating
  * over entities to perform updates each loop. All game entities should be registered here.
@@ -39,26 +36,13 @@ public class EntityService {
     entities.removeValue(entity, true);
   }
 
-
-
-
   /**
    * Update all registered entities. Should only be called from the main game loop.
    */
   public void update() {
-
-    Array<Entity> toRemove = new Array<>();
     for (Entity entity : entities) {
       entity.earlyUpdate();
       entity.update();
-
-      if (entity.getToRemove()) {
-        toRemove.add(entity);
-      }
-    }
-    for (Entity entity : toRemove) {
-      entity.dispose();
-      unregister(entity);
     }
   }
 
@@ -69,13 +53,5 @@ public class EntityService {
     for (Entity entity : entities) {
       entity.dispose();
     }
-  }
-
-  /**
-   * Get a safe copy of the entities list. This is used for UI debug buttons to find enemies.
-   * @return a copy of the entities array.
-   */
-  public Array<Entity> getEntities() {
-    return new Array<>(entities); // return copy to avoid external mutation
   }
 }

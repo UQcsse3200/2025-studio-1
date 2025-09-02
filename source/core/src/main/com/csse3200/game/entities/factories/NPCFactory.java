@@ -4,19 +4,15 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.ai.tasks.AITaskComponent;
-import com.csse3200.game.areas.ForestGameArea;
 import com.csse3200.game.components.CombatStatsComponent;
-import com.csse3200.game.components.npc.BossAnimationController;
-import com.csse3200.game.components.enemy.LowHealthAttackBuff;
-import com.csse3200.game.components.enemy.ProjectileLauncherComponent;
 import com.csse3200.game.components.npc.GhostAnimationController;
 import com.csse3200.game.components.TouchAttackComponent;
-import com.csse3200.game.components.tasks.*;
-import com.csse3200.game.components.player.InventoryComponent;
-import com.csse3200.game.components.enemy.EnemyDeathRewardComponent;
-import com.csse3200.game.components.enemy.DeathParticleSpawnerComponent;
+import com.csse3200.game.components.tasks.ChaseTask;
+import com.csse3200.game.components.tasks.WanderTask;
 import com.csse3200.game.entities.Entity;
-import com.csse3200.game.entities.configs.*;
+import com.csse3200.game.entities.configs.BaseEntityConfig;
+import com.csse3200.game.entities.configs.GhostKingConfig;
+import com.csse3200.game.entities.configs.NPCConfigs;
 import com.csse3200.game.files.FileLoader;
 import com.csse3200.game.physics.PhysicsLayer;
 import com.csse3200.game.physics.PhysicsUtils;
@@ -26,7 +22,6 @@ import com.csse3200.game.physics.components.PhysicsComponent;
 import com.csse3200.game.physics.components.PhysicsMovementComponent;
 import com.csse3200.game.rendering.AnimationRenderComponent;
 import com.csse3200.game.services.ServiceLocator;
-
 
 /**
  * Factory to create non-playable character (NPC) entities with predefined components.
@@ -58,26 +53,10 @@ public class NPCFactory {
     animator.addAnimation("angry_float", 0.1f, Animation.PlayMode.LOOP);
     animator.addAnimation("float", 0.1f, Animation.PlayMode.LOOP);
 
-    // Create the dash attack AI component
-    AITaskComponent aiComponent =
-        new AITaskComponent()
-            .addTask(new WanderTask(new Vector2(2f, 2f), 1000L))
-            .addTask(new DashAttackTask(target, 15, new Vector2(7f, 7f), 1000L, 200L));
-
-
-    // Get player's inventory for reward system
-    InventoryComponent playerInventory = null;
-    if (target != null) {
-      playerInventory = target.getComponent(InventoryComponent.class);
-    }
-
     ghost
         .addComponent(new CombatStatsComponent(config.health, config.baseAttack))
         .addComponent(animator)
-        .addComponent(new GhostAnimationController())
-        .addComponent(new EnemyDeathRewardComponent(15, playerInventory))
-        .addComponent(new DeathParticleSpawnerComponent())
-        .addComponent(aiComponent);
+        .addComponent(new GhostAnimationController());
 
     ghost.getComponent(AnimationRenderComponent.class).scaleEntity();
 
@@ -98,79 +77,16 @@ public class NPCFactory {
         new AnimationRenderComponent(
             ServiceLocator.getResourceService()
                 .getAsset("images/ghostKing.atlas", TextureAtlas.class));
-    animator.setDisposeAtlas(false);
     animator.addAnimation("float", 0.1f, Animation.PlayMode.LOOP);
     animator.addAnimation("angry_float", 0.1f, Animation.PlayMode.LOOP);
-
-    // Create the constant chase AI task
-    AITaskComponent aiComponent =
-        new AITaskComponent()
-          .addTask(new WanderTask(new Vector2(2f, 2f), 2000L))
-          .addTask(new DashAttackTask(target, 15, new Vector2(15f, 15f), 500L, 300L));
-
-
-    // Get player's inventory for reward system
-    InventoryComponent playerInventory = null;
-    if (target != null) {
-      playerInventory = target.getComponent(InventoryComponent.class);
-    }
 
     ghostKing
         .addComponent(new CombatStatsComponent(config.health, config.baseAttack))
         .addComponent(animator)
-        .addComponent(new GhostAnimationController())
-        .addComponent(new EnemyDeathRewardComponent(30, playerInventory))
-        .addComponent(new DeathParticleSpawnerComponent())
-        .addComponent(aiComponent);
+        .addComponent(new GhostAnimationController());
 
     ghostKing.getComponent(AnimationRenderComponent.class).scaleEntity();
     return ghostKing;
-  }
-  /**
-   * Creates GhostGPT enemy type
-   *
-   * @param target entity to chase
-   * @param area the area/space it is living in
-   * @return entity
-   */
-  public static Entity createGhostGPT(Entity target, ForestGameArea area) {
-    Entity ghostGPT = createBaseNPC(target);
-    GhostGPTConfig config = configs.ghostGPT;
-
-    AnimationRenderComponent animator =
-            new AnimationRenderComponent(
-                    ServiceLocator.getResourceService()
-                            .getAsset("images/ghostGPT.atlas", TextureAtlas.class));
-    animator.setDisposeAtlas(false);
-    animator.addAnimation("angry_float", 0.1f, Animation.PlayMode.LOOP);
-    animator.addAnimation("float", 0.1f, Animation.PlayMode.LOOP);
-
-    AITaskComponent aiComponent =
-        new AITaskComponent()
-            .addTask(new GPTSlowChaseTask(target, 10, new Vector2(0.3f, 0.3f)))
-            .addTask(new GPTFastChaseTask(target, 10, new Vector2(1.2f, 1.2f)));
-
-    // Get player's inventory for reward system
-    InventoryComponent playerInventory = null;
-    if (target != null) {
-      playerInventory = target.getComponent(InventoryComponent.class);
-    }
-
-    CombatStatsComponent ghostGPTStats = new CombatStatsComponent(config.health, config.baseAttack);
-
-    ghostGPT
-            .addComponent(ghostGPTStats)
-            .addComponent(animator)
-            .addComponent(new GhostAnimationController())
-            .addComponent(new LowHealthAttackBuff(10, ghostGPTStats))
-            .addComponent(new EnemyDeathRewardComponent(15, playerInventory))
-            .addComponent(new DeathParticleSpawnerComponent("explosion_2"))
-            .addComponent(aiComponent) // Add reward + particles
-            .addComponent(new ProjectileLauncherComponent(area, target)); // Add the ability to fire projectiles
-
-    ghostGPT.getComponent(AnimationRenderComponent.class).scaleEntity();
-
-    return ghostGPT;
   }
 
   /**
@@ -179,22 +95,10 @@ public class NPCFactory {
    * @param target entity to chase (e.g. player)
    * @return robot entity
    */
-
   public static Entity createRobot(Entity target) {
     Entity robot = createBaseNPC(target);
-
-    AnimationRenderComponent animator = new AnimationRenderComponent(
-            ServiceLocator.getResourceService().getAsset("images/Robot_1.atlas", TextureAtlas.class));
-    animator.addAnimation("Idle",   0.12f, Animation.PlayMode.LOOP);
-    animator.addAnimation("attack", 0.06f, Animation.PlayMode.LOOP);
-    animator.addAnimation("fury",   0.10f, Animation.PlayMode.LOOP);
-    animator.addAnimation("die",    0.10f, Animation.PlayMode.NORMAL);
-
-    robot
-            .addComponent(animator)
-            .addComponent(new CombatStatsComponent(100, 5))
-            .addComponent(new BossAnimationController());
-
+    robot.addComponent(new com.csse3200.game.rendering.TextureRenderComponent("images/Robot_1.png"));
+    robot.addComponent(new CombatStatsComponent(20, 2));
     return robot;
   }
 
@@ -204,13 +108,18 @@ public class NPCFactory {
    * @return entity
    */
   private static Entity createBaseNPC(Entity target) {
+    AITaskComponent aiComponent =
+        new AITaskComponent()
+            .addTask(new WanderTask(new Vector2(2f, 2f), 2f))
+            .addTask(new ChaseTask(target, 10, 3f, 4f));
     Entity npc =
         new Entity()
             .addComponent(new PhysicsComponent())
             .addComponent(new PhysicsMovementComponent())
             .addComponent(new ColliderComponent())
             .addComponent(new HitboxComponent().setLayer(PhysicsLayer.NPC))
-            .addComponent(new TouchAttackComponent(PhysicsLayer.PLAYER, 1.5f));
+            .addComponent(new TouchAttackComponent(PhysicsLayer.PLAYER, 1.5f))
+            .addComponent(aiComponent);
 
     PhysicsUtils.setScaledCollider(npc, 0.9f, 0.4f);
     return npc;

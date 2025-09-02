@@ -18,9 +18,6 @@ public class BossStateMachineComponent extends Component {
     private CombatStatsComponent combat;
     private int maxHp = 1;
     private Entity target;
-    private boolean enragedOnce = false;
-    private float furyCooldownMul = 0.6f;
-
 
     public BossStateMachineComponent(float aggroRange, float attackRange,
                                      float attackCooldown, float enrageThresholdRatio) {
@@ -59,61 +56,30 @@ public class BossStateMachineComponent extends Component {
 
         boolean enraged = (combat != null) && combat.getHealth() <= maxHp * enrageThresholdRatio;
 
-        if (enraged && !enragedOnce) {
-            enragedOnce = true;
-            enter(State.ENRAGED);
-        }
-
         switch (state) {
             case WANDER:
-                if (enraged) {
-                    enter(State.ENRAGED);
-                    break;
-                }
-                if (dist <= attackRange && cd <= 0f) {
-                    enter(State.ATTACK);
-                }
-                else if (dist <= aggroRange) {
-                    enter(State.CHASE);
-                }
+                if (enraged) { enter(State.ENRAGED); break; }
+                if (dist <= attackRange && cd <= 0f) { enter(State.ATTACK); }
+                else if (dist <= aggroRange) { enter(State.CHASE); }
                 break;
 
             case CHASE:
-                if (enraged) {
-                    enter(State.ENRAGED);
-                    break;
-                }
-                if (dist <= attackRange && cd <= 0f) {
-                    enter(State.ATTACK);
-                }
-                else if (dist > aggroRange * 1.2f) {
-                    enter(State.WANDER);
-                }
+                if (enraged) { enter(State.ENRAGED); break; }
+                if (dist <= attackRange && cd <= 0f) { enter(State.ATTACK); }
+                else if (dist > aggroRange * 1.2f) { enter(State.WANDER); }
                 break;
 
             case ENRAGED:
-                if (dist <= attackRange && cd <= 0f) {
-                    enter(State.ATTACK);
-                }
-                else if (dist > attackRange) {
-                    enter(State.WANDER);
-                }
+                if (dist <= attackRange && cd <= 0f) { enter(State.ATTACK); }
                 break;
 
             case ATTACK:
-                entity.getEvents().trigger("boss:attackStart");
                 entity.getEvents().trigger("boss:doAttack");
-                cd = enragedOnce ? attackCooldown * furyCooldownMul : attackCooldown;
+                cd = attackCooldown;
 
-                if (enraged) {
-                    enter(State.ENRAGED);
-                }
-                else if (dist <= aggroRange) {
-                    enter(State.CHASE);
-                }
-                else {
-                    enter(State.WANDER);
-                }
+                if (enraged) enter(State.ENRAGED);
+                else if (dist <= aggroRange) enter(State.CHASE);
+                else enter(State.WANDER);
                 break;
 
             case DEAD:
@@ -122,9 +88,7 @@ public class BossStateMachineComponent extends Component {
     }
 
     private void enter(State next) {
-        if (state == next) {
-            return;
-        }
+        if (state == next) return;
         state = next;
 
         switch (state) {
@@ -141,7 +105,7 @@ public class BossStateMachineComponent extends Component {
             case ATTACK:
                 break;
             case DEAD:
-                entity.getEvents().trigger("boss:death");
+                entity.getEvents().trigger("death");
                 break;
         }
     }

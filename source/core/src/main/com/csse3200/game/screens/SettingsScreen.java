@@ -16,27 +16,14 @@ import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.badlogic.gdx.utils.Scaling;
 
-/**
- * The game screen containing the settings.
- */
+/** The game screen containing the settings. */
 public class SettingsScreen extends ScreenAdapter {
   private static final Logger logger = LoggerFactory.getLogger(SettingsScreen.class);
 
   private final GdxGame game;
   private final Renderer renderer;
 
-  private static final String[] settingsTextures = {"images/menu_background.png"};
-
-  /**
-   * Builds the settings screen.
-   * Registers services, creates the renderer, loads assets, and builds the UI.
-   */
   public SettingsScreen(GdxGame game) {
     this.game = game;
 
@@ -48,63 +35,29 @@ public class SettingsScreen extends ScreenAdapter {
     ServiceLocator.registerTimeSource(new GameTime());
 
     renderer = RenderFactory.createRenderer();
-    logger.debug("Settings screen renderer created");
     renderer.getCamera().getEntity().setPosition(5f, 5f);
-    logger.debug("Settings screen renderer camera position set");
 
-    loadAssets();
     createUI();
   }
 
-  /**
-   * Updates entities and renders the frame.
-   */
   @Override
   public void render(float delta) {
-    logger.debug("Rendering settings screen frame");
     ServiceLocator.getEntityService().update();
     renderer.render();
   }
 
-  /**
-   * Forwards new size to the renderer.
-   */
   @Override
   public void resize(int width, int height) {
     renderer.resize(width, height);
-    logger.trace("Resized renderer: ({} x {})", width, height);
   }
 
-  /**
-   * Frees screen resources and clears registered services.
-   * Do not reuse the screen after this is called.
-   */
   @Override
   public void dispose() {
     renderer.dispose();
-    unloadAssets();
     ServiceLocator.getRenderService().dispose();
     ServiceLocator.getEntityService().dispose();
+
     ServiceLocator.clear();
-  }
-
-  /**
-   * Loads textures needed by the settings screen.
-   */
-  private void loadAssets() {
-    logger.debug("Loading assets");
-    ResourceService resourceService = ServiceLocator.getResourceService();
-    resourceService.loadTextures(settingsTextures);
-    ServiceLocator.getResourceService().loadAll();
-  }
-
-  /**
-   * Unloads textures that were loaded for this screen.
-   */
-  private void unloadAssets() {
-    logger.debug("Unloading assets");
-    ResourceService resourceService = ServiceLocator.getResourceService();
-    resourceService.unloadAssets(settingsTextures);
   }
 
   /**
@@ -114,19 +67,8 @@ public class SettingsScreen extends ScreenAdapter {
   private void createUI() {
     logger.debug("Creating ui");
     Stage stage = ServiceLocator.getRenderService().getStage();
-
-    Texture bgTex = ServiceLocator.getResourceService()
-            .getAsset("images/menu_background.png", Texture.class);
-    logger.debug("Settings screen background texture asset loaded");
-    Image bg = new Image(new TextureRegionDrawable(new TextureRegion(bgTex)));
-    bg.setFillParent(true);
-    bg.setScaling(Scaling.fill);
-    stage.addActor(bg);
-    logger.debug("Settings screen background added");
-
     Entity ui = new Entity();
     ui.addComponent(new SettingsMenuDisplay(game)).addComponent(new InputDecorator(stage, 10));
     ServiceLocator.getEntityService().register(ui);
-    logger.debug("Settings screen ui created and registered");
   }
 }

@@ -1,8 +1,0 @@
-{
-  "pistolBullet": {
-    "base_attack": 8,
-    "health": 10000,
-    "speed": 3.0
-  }
-}
-

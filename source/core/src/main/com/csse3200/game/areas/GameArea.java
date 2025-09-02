@@ -1,6 +1,5 @@
 package com.csse3200.game.areas;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Disposable;
@@ -40,27 +39,9 @@ public abstract class GameArea implements Disposable {
    *
    * @param entity Entity (not yet registered)
    */
-  public void spawnEntity(Entity entity) {
+  protected void spawnEntity(Entity entity) {
     areaEntities.add(entity);
     ServiceLocator.getEntityService().register(entity);
-  }
-
-  /**
-   * Remove an entity
-   * @param entity to be removed
-   */
-  public void removeEntity(Entity entity) {
-    entity.setEnabled(false);
-    areaEntities.remove(entity);
-    Gdx.app.postRunnable(entity::dispose);
-  }
-
-  /**
-   * Gets all the current entities
-   * @return the entities on the map
-   */
-  public List<Entity> getEntities() {
-    return this.areaEntities;
   }
 
   /**

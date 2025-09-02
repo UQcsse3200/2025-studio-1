@@ -13,18 +13,9 @@ public class PhysicsMovementComponent extends Component implements MovementContr
   private static final Logger logger = LoggerFactory.getLogger(PhysicsMovementComponent.class);
   private static final Vector2 maxSpeed = Vector2Utils.ONE;
 
-  private Vector2 speed;
   private PhysicsComponent physicsComponent;
   private Vector2 targetPosition;
   private boolean movementEnabled = true;
-
-  public PhysicsMovementComponent() {
-    speed = maxSpeed;
-  }
-
-  public PhysicsMovementComponent(Vector2 speed) {
-    this.speed = speed;
-  }
 
   @Override
   public void create() {
@@ -76,12 +67,8 @@ public class PhysicsMovementComponent extends Component implements MovementContr
     this.targetPosition = target;
   }
 
-  public void setSpeed(Vector2 speed) {
-    this.speed = speed;
-  }
-
   private void updateDirection(Body body) {
-    Vector2 desiredVelocity = getDirection().scl(speed);
+    Vector2 desiredVelocity = getDirection().scl(maxSpeed);
     setToVelocity(body, desiredVelocity);
   }
 

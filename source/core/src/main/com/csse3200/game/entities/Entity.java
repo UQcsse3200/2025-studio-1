@@ -3,15 +3,12 @@ package com.csse3200.game.entities;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.IntMap;
-import com.csse3200.game.areas.GameArea;
 import com.csse3200.game.components.Component;
 import com.csse3200.game.components.ComponentType;
 import com.csse3200.game.events.EventHandler;
 import com.csse3200.game.services.ServiceLocator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.security.Provider;
 
 /**
  * Core entity class. Entities exist in the game and are updated each frame. All entities have a
@@ -37,11 +34,9 @@ public class Entity {
   private final EventHandler eventHandler;
   private boolean enabled = true;
   private boolean created = false;
-  private boolean toRemove = false;
   private Vector2 position = Vector2.Zero.cpy();
   private Vector2 scale = new Vector2(1, 1);
   private Array<Component> createdComponents;
-  private Entity currItem;
 
   public Entity() {
     id = nextId;
@@ -60,42 +55,6 @@ public class Entity {
   public void setEnabled(boolean enabled) {
     logger.debug("Setting enabled={} on entity {}", enabled, this);
     this.enabled = enabled;
-  }
-
-  /**
-   * Set the entity's current item
-   * @param item item to be set
-   */
-  public void setCurrItem(Entity item) {
-    this.currItem = item;
-  }
-
-  /**
-   * Get the entity's current item
-   * @return the current item
-   */
-  public Entity getCurrItem() {
-    return this.currItem;
-  }
-
-  /**
-   * Marks an entity for removal, is disposed and deregistered from the entity service at
-   * the end of the next update cycle
-   * eg usage. A projectile entity which has exceeded its lifetime within an update cycle
-   */
-
-  public void setToRemove() {
-
-    this.toRemove = true;
-  }
-
-  /**
-   * Returns the flag for if the entity will be removed after the next update cycle
-   */
-
-  public boolean getToRemove() {
-
-    return this.toRemove;
   }
 
   /**

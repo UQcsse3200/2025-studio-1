@@ -1,12 +1,9 @@
 package com.csse3200.game.components.player;
 
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.math.Vector2;
-import com.csse3200.game.components.TagComponent;
 import com.csse3200.game.input.InputComponent;
-import com.csse3200.game.rendering.TextureRenderComponent;
 import com.csse3200.game.utils.math.Vector2Utils;
 
 /**
@@ -15,7 +12,6 @@ import com.csse3200.game.utils.math.Vector2Utils;
  */
 public class KeyboardPlayerInputComponent extends InputComponent {
   private final Vector2 walkDirection = Vector2.Zero.cpy();
-  private int focusedItem = -1;
 
   public KeyboardPlayerInputComponent() {
     super(5);
@@ -48,34 +44,10 @@ public class KeyboardPlayerInputComponent extends InputComponent {
         return true;
       case Keys.SPACE:
         entity.getEvents().trigger("attack");
-        entity.getEvents().trigger("anim");
         return true;
       default:
         return false;
     }
-  }
-
-  @Override
-  public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-    if (button == Input.Buttons.LEFT) {
-
-      if (entity.getCurrItem() == null){
-
-        return true;
-      }
-
-      if (entity.getCurrItem().getComponent(TagComponent.class).getTag().equals("ranged")){
-
-        entity.getEvents().trigger("shoot");
-      }
-      else {
-
-
-        entity.getEvents().trigger("attack");
-      }
-        return true;
-    }
-    return false;
   }
 
   /**
@@ -103,32 +75,6 @@ public class KeyboardPlayerInputComponent extends InputComponent {
         walkDirection.sub(Vector2Utils.RIGHT);
         triggerWalkEvent();
         return true;
-      case Keys.Q:
-        triggerRemoveItem();
-        return true;
-      case Keys.NUM_1:
-        focusedItem = 0;
-        triggerSelectItem();
-        return true;
-      case Keys.NUM_2:
-        focusedItem = 1;
-        triggerSelectItem();
-        return true;
-      case Keys.NUM_3:
-        focusedItem = 2;
-        triggerSelectItem();
-        return true;
-      case Keys.NUM_4:
-        focusedItem = 3;
-        triggerSelectItem();
-        return true;
-      case Keys.NUM_5:
-        triggerSelectItem();
-        focusedItem = 4;
-        return true;
-      case Keys.P:
-        triggerAddItem();
-        return true;
       default:
         return false;
     }
@@ -140,16 +86,5 @@ public class KeyboardPlayerInputComponent extends InputComponent {
     } else {
       entity.getEvents().trigger("walk", walkDirection);
     }
-  }
-
-  private void triggerRemoveItem() {
-    entity.getEvents().trigger("remove item", focusedItem);
-  }
-
-  private void triggerAddItem() {
-    entity.getEvents().trigger("add item", "images/mud.png");
-  }
-  private void triggerSelectItem() {
-    entity.getEvents().trigger("focus item", focusedItem);
   }
 }
