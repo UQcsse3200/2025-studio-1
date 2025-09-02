@@ -30,10 +30,19 @@ import com.csse3200.game.services.ServiceLocator;
 
 
 
+
+
+/**
+ * A factory class for creating Boss and NPC entities for the game.
+ * This factory defines behavior, physics, and rendering properties for Boss-3
+ * and provides a base NPC creation method that includes movement and attack logic.
+ */
+
 public class BossFactory {
     private static final NPCConfigs configs =
             FileLoader.readClass(NPCConfigs.class, "configs/NPCs.json");
-    //new added boss2
+
+
     public static Entity createBoss2(Entity target) {
         Entity boss2 = createBaseNPC(target);
         BaseEntityConfig config = configs.boss2;
@@ -56,6 +65,36 @@ public class BossFactory {
 
         return boss2;
     }
+
+    /**
+     * Creates a Boss-3 entity with combat stats, rendering, scaling, and physics collider.
+     * This boss is capable of wandering, chasing, and attacking the player.
+     *
+     * @param target The player entity that the boss will chase and attack.
+     * @return A fully configured {@link Entity} representing Boss-3.
+     */
+    public static Entity createBoss3(Entity target) {
+        BaseEntityConfig config = configs.boss3;
+        Entity boss3 = new Entity()
+                .addComponent(new PhysicsComponent())
+                .addComponent(new ColliderComponent())
+                .addComponent(new HitboxComponent().setLayer(PhysicsLayer.NPC))
+                .addComponent(new CombatStatsComponent(config.health, config.baseAttack))
+                .addComponent(new TextureRenderComponent("images/Boss_3.png"));
+
+        boss3.getComponent(TextureRenderComponent.class).scaleEntity();
+        boss3.setScale(new Vector2(2f, 2f));
+        PhysicsUtils.setScaledCollider(boss3, 2.0f, 0.8f);
+
+
+        boss3.addComponent(new com.csse3200.game.components.enemy.EnemyMudBallAttackComponent(
+                target, 1.2f, 9f, 6f, 3f));
+        boss3.addComponent(new com.csse3200.game.components.enemy.EnemyMudRingSprayComponent(
+                2.5f, 12, 6f, 3f));
+
+        return boss3;
+    }
+
     public static Entity createBlackhole(Vector2 pos,Entity target){
         Entity Blackhole = new Entity()
                 .addComponent(new TextureRenderComponent("images/blackhole1.png"))
@@ -84,6 +123,15 @@ public class BossFactory {
 
         return fireball;
     }
+
+    /**
+     * Creates a base NPC entity with default wandering, chasing, physics,
+     * and touch attack behavior. This is used as a template for other bosses or NPCs.
+     *
+     * @param target The player entity that the NPC should follow or chase.
+     * @return A configured {@link Entity} with AI movement and basic combat capability.
+     */
+
     static Entity createBaseNPC(Entity target) {
         AITaskComponent aiComponent =
                 new AITaskComponent()
