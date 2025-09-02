@@ -31,10 +31,6 @@ public class PlayerActions extends Component {
   private StaminaComponent stamina;
   private PhysicsComponent physicsComponent;
 
-  // Added camera variable to allow for entities to spawn in world coordinates instead of
-  // screen coordinates.
-  private Camera camera;
-
   // Movement Constants
   private static final Vector2 MAX_SPEED = new Vector2(3f, 3f);
   private static final Vector2 CROUCH_SPEED = new Vector2(1.5f, 3f);
@@ -42,7 +38,7 @@ public class PlayerActions extends Component {
   private static final Vector2 JUMP_VELOCITY = new Vector2(0f, 30f);
   private static final Vector2 DASH_SPEED = new Vector2(20f, 9.8f);
   private static final float DASH_DURATION = 0.1f;
-  private int DASH_COOLDOWN = 15; // hundredths of a second (1.5s)
+  private int DASH_COOLDOWN = 15;
 
   // Stamina Costs
   private static final int DASH_COST = 30;
@@ -68,17 +64,22 @@ public class PlayerActions extends Component {
   private int jumpsLeft = MAX_JUMPS;
   private long lastJumpTime = 0; // timestamp of last ground jump
 
-
   // Tracks the last integer stamina value we pushed to UI to avoid redundant events
   private float timeSinceLastAttack = 0;
+
+  // Added camera variable to allow for entities to spawn in world coordinates instead of
+  // screen coordinates.
+  private Camera camera;
 
 
   @Override
   public void create() {
 
+    // Set components
     physicsComponent = entity.getComponent(PhysicsComponent.class);
     stamina = entity.getComponent(StaminaComponent.class);
 
+    // Add all event listeners
     entity.getEvents().addListener("walk", this::walk);
     entity.getEvents().addListener("walkStop", this::stopWalking);
     entity.getEvents().addListener("attack", this::attack);
@@ -171,8 +172,6 @@ public class PlayerActions extends Component {
     return (targetVx - velocity.x) * body.getMass();
   }
 
-
-
   /**
    * Moves the player towards a given direction.
    *
@@ -225,7 +224,6 @@ public class PlayerActions extends Component {
             return;
           }
         }
-
         entity.getEvents().trigger("jump");
         body.applyLinearImpulse(JUMP_VELOCITY, body.getWorldCenter(), true);
         jumpsLeft--;
@@ -252,6 +250,7 @@ public class PlayerActions extends Component {
       }
       dashCooldown = DASH_COOLDOWN;
       dashing = true;
+      stamina.setDashing(true);
       dashDuration();
       dashCooldown();
     }
@@ -262,6 +261,7 @@ public class PlayerActions extends Component {
       @Override
       public void run() {
         dashing = false;
+        stamina.setDashing(false);
         if (!moving) {
           stopWalking();
         } else if (!sprinting){
