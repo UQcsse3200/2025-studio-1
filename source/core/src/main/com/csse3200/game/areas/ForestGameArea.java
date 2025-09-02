@@ -386,15 +386,25 @@ public class ForestGameArea extends GameArea {
   /**
    * Adds NUM_GHOST_GPTS amount of GhostGPT enemies onto the map.
    */
-  private void spawnGhostGPT() {
-    GridPoint2 minPos = new GridPoint2(0, 0);
-    GridPoint2 maxPos = terrain.getMapBounds(0).sub(3, 3);
+  // private void spawnGhostGPT() {
+  //   GridPoint2 minPos = new GridPoint2(0, 0);
+  //   GridPoint2 maxPos = terrain.getMapBounds(0).sub(3, 3);
 
-    for (int i = 0; i < NUM_GHOST_GPTS; i++) {
-        GridPoint2 randomPos = RandomUtils.random(minPos, maxPos);
-        Entity ghostGPT = NPCFactory.createGhostGPT(player, this);
-        spawnEntityAt(ghostGPT, randomPos, true, true);
-    }
+  //   for (int i = 0; i < NUM_GHOST_GPTS; i++) {
+  //       GridPoint2 randomPos = RandomUtils.random(minPos, maxPos);
+  //       Entity ghostGPT = NPCFactory.createGhostGPT(player, this);
+  //       spawnEntityAt(ghostGPT, randomPos, true, true);
+  //   }
+  // }
+
+  private void spawnGhostGPT() {
+    GridPoint2 spawn1 = new GridPoint2(20, 20);
+    GridPoint2 spawn2 = new GridPoint2(25, 20);
+
+    Entity ghostGPT = NPCFactory.createGhostGPT(player, this);
+    spawnEntityAt(ghostGPT, spawn1, true, true);
+    Entity ghostGPT2 = NPCFactory.createGhostGPT(player, this);
+    spawnEntityAt(ghostGPT2, spawn2, true, true);
   }
 
   private void spawnCrates() {
