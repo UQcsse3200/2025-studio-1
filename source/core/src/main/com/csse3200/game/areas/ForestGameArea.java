@@ -277,14 +277,13 @@ public class ForestGameArea extends GameArea {
    * Each item is created and placed at a random spot on the terrain.
    */
   private void spawnItems() {
-    GridPoint2 minPos = new GridPoint2(0, 0);
-    GridPoint2 maxPos = terrain.getMapBounds(0).sub(2, 2);
+    GridPoint2 firstPos = new GridPoint2(5, 25);
+    GridPoint2 secondPos = new GridPoint2(10, 25);
+    GridPoint2 thirdPos = new GridPoint2(15, 25);
 
-    for (int i = 0; i < NUM_ITEMS; i++) {
-      GridPoint2 randomPos = RandomUtils.random(minPos, maxPos);
-      Entity item = ItemFactory.createItem();
-      spawnEntityAt(item, randomPos, true, false);
-    }
+    spawnEntityAt(ItemFactory.createItem(), firstPos, true, false);
+    spawnEntityAt(ItemFactory.createItem(), secondPos, true, false);
+    spawnEntityAt(ItemFactory.createItem(), thirdPos, true, false);
   }
 
   private Entity spawnPlayer() {
