@@ -5,51 +5,51 @@ filter: Nearest,Nearest
 repeat: none
 angry_float
   rotate: false
-  xy: 0, 0
+  xy: 55, 189
   size: 245, 155
   orig: 245, 155
-  offset: 55, 189
+  offset: 0, 0
   index: 0
 angry_float
   rotate: false
-  xy: 400, 0
+  xy: 324, 189
   size: 245, 155
   orig: 245, 155
-  offset: 324, 189
+  offset: 0, 0
   index: 1
 angry_float
   rotate: false
-  xy: 800, 0
+  xy: 582, 189
   size: 245, 155
   orig: 245, 155
-  offset: 582, 189
+  offset: 0, 0
   index: 2
 default
   rotate: false
-  xy: 0, 0
+  xy: 55, 29
   size: 245, 155
   orig: 245, 155
-  offset: 55, 29
+  offset: 0, 0
   index: 0
 float
   rotate: false
-  xy: 0, 0
+  xy: 55, 29
   size: 245, 155
   orig: 245, 155
-  offset: 55, 29
+  offset: 0, 0
   index: 0
 float
   rotate: false
-  xy: 400, 0
+  xy: 324, 29
   size: 245, 155
   orig: 245, 155
-  offset: 324, 29
+  offset: 0, 0
   index: 1
 float
   rotate: false
-  xy: 800, 0
+  xy: 582, 29
   size: 245, 155
   orig: 245, 155
-  offset: 582, 29
+  offset: 0, 0
   index: 2
 
