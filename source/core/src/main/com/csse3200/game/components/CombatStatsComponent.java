@@ -1,8 +1,5 @@
 package com.csse3200.game.components;
 
-import com.badlogic.gdx.graphics.Texture;
-import com.csse3200.game.rendering.TextureRenderComponent;
-import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.components.enemy.LowHealthAttackBuff;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
