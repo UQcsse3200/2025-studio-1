@@ -291,7 +291,7 @@ public class ObstacleFactory {
     longCeilingLight.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
     longCeilingLight.getComponent(TextureRenderComponent.class).scaleEntity();
     longCeilingLight.scaleHeight(2.7f);
-    PhysicsUtils.setScaledCollider(longCeilingLight, 1f, 1f);
+    PhysicsUtils.setScaledCollider(longCeilingLight, 1f, 0.1f);
     return longCeilingLight;
   }
 
