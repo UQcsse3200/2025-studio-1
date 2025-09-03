@@ -3,10 +3,12 @@ package com.csse3200.game.entities.factories;
 import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.csse3200.game.components.CombatStatsComponent;
-import com.csse3200.game.components.player.InventoryComponent;
-import com.csse3200.game.components.player.PlayerActions;
-import com.csse3200.game.components.player.TouchPlayerInputComponent;
-import com.csse3200.game.components.player.PlayerStatsDisplay;
+import com.csse3200.game.components.player.*;
+import com.csse3200.game.components.StaminaComponent;
+// import com.csse3200.game.components.player.InventoryComponent;
+// import com.csse3200.game.components.player.PlayerActions;
+// import com.csse3200.game.components.player.TouchPlayerInputComponent;
+// import com.csse3200.game.components.player.PlayerStatsDisplay;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.PlayerConfig;
 import com.csse3200.game.files.FileLoader;
@@ -16,6 +18,7 @@ import com.csse3200.game.physics.PhysicsUtils;
 import com.csse3200.game.physics.components.ColliderComponent;
 import com.csse3200.game.physics.components.HitboxComponent;
 import com.csse3200.game.physics.components.PhysicsComponent;
+import com.csse3200.game.rendering.AnimationRenderComponent;
 import com.csse3200.game.rendering.TextureRenderComponent;
 import com.csse3200.game.services.ServiceLocator;
 
@@ -36,18 +39,23 @@ public class PlayerFactory {
   public static Entity createPlayer() {
     InputComponent inputComponent =
             ServiceLocator.getInputService().getInputFactory().createForPlayer();
+    InventoryComponent playerInventory = new InventoryComponent(stats.gold);
 
     Entity player =
-            new Entity()
-                    .addComponent(new TextureRenderComponent("images/box_boy_leaf.png"))
-                    .addComponent(new PhysicsComponent())
-                    .addComponent(new ColliderComponent())
-                    .addComponent(new HitboxComponent().setLayer(PhysicsLayer.PLAYER))
-                    .addComponent(new PlayerActions())
-                    .addComponent(new CombatStatsComponent(stats.health, stats.baseAttack))
-                    .addComponent(new InventoryComponent(stats.gold))
-                    .addComponent(inputComponent)
-                    .addComponent(new PlayerStatsDisplay());
+        new Entity()
+            .addComponent(new PhysicsComponent())
+            .addComponent(new ColliderComponent())
+            .addComponent(new HitboxComponent().setLayer(PhysicsLayer.PLAYER))
+            .addComponent(new PlayerActions())
+            .addComponent(new CombatStatsComponent(stats.health, stats.baseAttack))
+            .addComponent(playerInventory)
+            .addComponent(new ItemPickUpComponent(playerInventory))
+            .addComponent(inputComponent)
+            .addComponent(new PlayerStatsDisplay())
+            .addComponent(new PlayerInventoryDisplay(playerInventory))
+            .addComponent(new StaminaComponent())
+            .addComponent(animator)
+            .addComponent(new PlayerAnimationController());
 
     PhysicsUtils.setScaledCollider(player, 0.6f, 0.3f);
     player.getComponent(ColliderComponent.class).setDensity(1.5f);

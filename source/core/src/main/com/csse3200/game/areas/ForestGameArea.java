@@ -42,38 +42,54 @@ public class ForestGameArea extends GameArea {
   private static final int NUM_TREES = 7;
   private static final int NUM_GHOSTS = 0;
   private static final int NUM_GHOST_GPTS = 4;
-
-  private static final GridPoint2 PLAYER_SPAWN = new GridPoint2(3, 7);
-
+  private static final int NUM_DEEP_SPIN = 3;
+  private static final int NUM_GROK_DROID = 3;
+  private static final int NUM_VROOMBA = 3;
+  private static final GridPoint2 PLAYER_SPAWN = new GridPoint2(3, 20);
   private static final float WALL_WIDTH = 0.1f;
 
   /** Files or pictures used by the game (enemy/props,etc.). */
   private static final String[] forestTextures = {
-          "images/box_boy_leaf.png",
-          "images/tree.png",
-          "images/ghost_king.png",
-          "images/ghost_1.png",
-          "images/grass_1.png",
-          "images/grass_2.png",
-          "images/grass_3.png",
-          "images/hex_grass_1.png",
-          "images/hex_grass_2.png",
-          "images/hex_grass_3.png",
-          "images/iso_grass_1.png",
-          "images/iso_grass_2.png",
-          "images/iso_grass_3.png",
-          "images/lightsaber.png",
-          "images/lightsaberSingle.png",
-          "images/ammo.png",
-          "images/round.png",
-          "images/pistol.png",
-          "images/rifle.png",
-          "images/dagger.png",
-          "images/laser_shot.png",
-          "images/Spawn.png",
-          "images/SpawnResize.png",
-          "images/LobbyWIP.png",
-          "images/door.png"
+    "images/box_boy_leaf.png",
+    "images/tree.png",
+    "images/ghost_king.png",
+    "images/ghost_1.png",
+    "images/grass_1.png",
+    "images/grass_2.png",
+    "images/grass_3.png",
+    "images/hex_grass_1.png",
+    "images/hex_grass_2.png",
+    "images/hex_grass_3.png",
+    "images/iso_grass_1.png",
+    "images/iso_grass_2.png",
+    "images/iso_grass_3.png",
+    "images/robot-2-attack.png",
+    "images/robot-2-common.png",
+    "images/fireball1.png",
+    "images/blackhole1.png",
+    "images/Robot_1.png",
+    "images/Robot_1_attack_left.png",
+    "images/Robot_1_attack_right.png",
+    "images/Boss_3.png",
+    "images/mud.png",
+    "images/mud_ball_1.png",
+    "images/mud_ball_2.png",
+    "images/mud_ball_3.png",
+    "images/lightsaber.png",
+    "images/lightsaberSingle.png",
+    "images/ammo.png",
+    "images/round.png",
+    "images/pistol.png",
+    "images/rifle.png",
+    "images/dagger.png",
+    "images/laser_shot.png",
+    "images/Spawn.png",
+    "images/SpawnResize.png",
+    "images/LobbyWIP.png",
+    "images/door.png",
+    "images/player.png",
+    "images/mud.png",
+    "images/heart.png"
   };
 
   /** General prop textures (floors, tiles, etc.). */
@@ -113,12 +129,26 @@ public class ForestGameArea extends GameArea {
   };
 
   private static final String[] forestTextureAtlases = {
-          "images/terrain_iso_grass.atlas",
-          "images/ghost.atlas",
-          "images/ghostKing.atlas",
-          "images/ghostGPT.atlas",
-          "images/explosion_1.atlas",
-          "images/explosion_2.atlas"
+    "images/terrain_iso_grass.atlas", "images/ghost.atlas", "images/ghostKing.atlas",
+    "images/robot-2.atlas", "images/fireball.atlas", "images/blackhole.atlas", "images/Robot_1.atlas",
+          "images/boss_idle.atlas",
+    "images/terrain_iso_grass.atlas",
+    "images/ghost.atlas",
+    "images/ghostKing.atlas",
+    "images/ghostGPT.atlas",
+    "images/Deepspin.atlas",
+    "images/Grokdroid.atlas",
+    "images/Vroomba.atlas",
+    "images/explosion_1.atlas",
+    "images/explosion_2.atlas",
+    "images/explosion_2.atlas",
+    "images/player.atlas",
+    "images/terrain_iso_grass.atlas",
+    "images/ghost.atlas",
+    "images/ghostKing.atlas",
+    "images/ghostGPT.atlas",
+    "images/explosion_1.atlas",
+    "images/explosion_2.atlas",
   };
 
 
@@ -208,6 +238,13 @@ public class ForestGameArea extends GameArea {
     spawnItems();
   }
 
+  private void spawnRobots() {
+    GridPoint2 pos = new GridPoint2(0, 0);
+    Entity robot = NPCFactory.createRobot(player);
+    spawnEntityAt(robot, pos, true, true);
+  }
+
+
   private void displayUI() {
     Entity ui = new Entity();
     ui.addComponent(new GameAreaDisplay("Box Forest"))
@@ -296,16 +333,17 @@ public class ForestGameArea extends GameArea {
   }
 
 
-  private void spawnTrees() {
-    GridPoint2 minPos = new GridPoint2(0, 0);
-    GridPoint2 maxPos = terrain.getMapBounds(0).sub(2, 2);
+  // private void spawnTrees() {
+  //   GridPoint2 minPos = new GridPoint2(0, 0);
+  //   GridPoint2 maxPos = terrain.getMapBounds(0);
 
-    for (int i = 0; i < NUM_TREES; i++) {
-      GridPoint2 randomPos = RandomUtils.random(minPos, maxPos);
-      Entity tree = ObstacleFactory.createTree();
-      spawnEntityAt(tree, randomPos, true, false);
-    }
-  }
+  //   for (int i = 0; i < NUM_TREES; i++) {
+  //     GridPoint2 randomPos = RandomUtils.random(minPos, maxPos);
+  //     randomPos.y = 2;
+  //     Entity tree = ObstacleFactory.createTree();
+  //     spawnEntityAt(tree, randomPos, true, false);
+  //   }
+  // }
 
   /**
    * Builds the upper walkway: three thin floors, a long ceiling light, and a front-facing desk.
@@ -450,9 +488,9 @@ public class ForestGameArea extends GameArea {
   }
 
 
-  private void spawnGhosts() {
-    GridPoint2 minPos = new GridPoint2(0, 0);
-    GridPoint2 maxPos = terrain.getMapBounds(0).sub(2, 2);
+  // private void spawnGhosts() {
+  //   GridPoint2 minPos = new GridPoint2(0, 0);
+  //   GridPoint2 maxPos = terrain.getMapBounds(0).sub(2, 2);
 
   //   for (int i = 0; i < NUM_GHOSTS; i++) {
   //     GridPoint2 randomPos = RandomUtils.random(minPos, maxPos);
@@ -462,23 +500,23 @@ public class ForestGameArea extends GameArea {
   // }
 
   private void spawnBoss2() {
-    GridPoint2 pos = new GridPoint2(22, 20);
+    GridPoint2 pos = new GridPoint2(25, 25);
 
     Entity boss2 = BossFactory.createBoss2(player);
     spawnEntityAt(boss2, pos, true, true);
   }
   //new added boss3
   private void spawnBoss3() {
-    GridPoint2 pos = new GridPoint2(20, 20);
+    GridPoint2 pos = new GridPoint2(27, 25);
+
     Entity boss3 = BossFactory.createBoss3(player);
     spawnEntityAt(boss3, pos, true, true);
   }
 
 
-
-  private void spawnGhostKing() {
-    GridPoint2 minPos = new GridPoint2(0, 0);
-    GridPoint2 maxPos = terrain.getMapBounds(0).sub(2, 2);
+  // private void spawnGhostKing() {
+  //   GridPoint2 minPos = new GridPoint2(0, 0);
+  //   GridPoint2 maxPos = terrain.getMapBounds(0).sub(2, 2);
 
   //   GridPoint2 randomPos = RandomUtils.random(minPos, maxPos);
   //   Entity ghostKing = NPCFactory.createGhostKing(player);
@@ -542,7 +580,43 @@ public class ForestGameArea extends GameArea {
     spawnEntityAt(darkCrate, darkCratePos, true, false);
     darkCrate.setPosition(darkCrate.getPosition().x, darkCrate.getPosition().y + 0.25f);
   }
+  /**
+   * Adds NUM_Deep_spin amount of GhostGPT enemies onto the map.
+   */
+  private void spawnDeepspin() {
+    GridPoint2 pos = new GridPoint2(10,20);
 
+    // for (int i = 0; i < NUM_DEEP_SPIN; i++) {
+    //   GridPoint2 randomPos = RandomUtils.random(minPos, maxPos);
+    //   Entity deepspin = NPCFactory.createDeepspin(player, this);
+    //   spawnEntityAt(deepspin, randomPos, true, true);
+    // }
+
+    Entity deepspin = NPCFactory.createDeepspin(player, this);
+    spawnEntityAt(deepspin, pos, true, true);
+  }
+  /**
+   * Adds NUM_GROK_DROID amount of GrokDroid enemies onto the map.
+   */
+  private void spawnGrokDroid() {
+    GridPoint2 pos1 = new GridPoint2(20, 15);
+    GridPoint2 pos2 = new GridPoint2(25, 15);
+
+    Entity grokDroid = NPCFactory.createGrokDroid(player, this);
+    Entity grokDroid2 = NPCFactory.createGrokDroid(player, this);
+
+    spawnEntityAt(grokDroid, pos1, true, true);
+    spawnEntityAt(grokDroid2, pos2, true, true);
+
+  }
+  /**
+   * Adds NUM_VROOMBA amount of GrokDroid enemies onto the map.
+   */
+  private void spawnVroomba() {
+    GridPoint2 pos = new GridPoint2(25, 5);
+    Entity vroomba = NPCFactory.createVroomba(player, this);
+    spawnEntityAt(vroomba, pos, true, true);
+  }
 
   private void playMusic() {
     Music music = ServiceLocator.getResourceService().getAsset(backgroundMusic, Music.class);
