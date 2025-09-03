@@ -213,7 +213,7 @@ public class ForestGameArea extends GameArea {
     spawnVroomba();
     playMusic();
     float keycardX = 1f;
-    float keycardY = 7f;
+    float keycardY = 25f;
 
     Entity keycard = KeycardFactory.createKeycard(1); // assuming level 1
     keycard.setPosition(new Vector2(keycardX, keycardY));
