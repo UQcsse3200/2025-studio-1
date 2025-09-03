@@ -8,6 +8,8 @@ import com.csse3200.game.physics.components.ColliderComponent;
 import com.csse3200.game.physics.components.PhysicsComponent;
 import com.csse3200.game.rendering.TextureRenderComponent;
 
+
+
 /**
  * Factory to create obstacle entities.
  *
@@ -28,7 +30,7 @@ public class ObstacleFactory {
 
     tree.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
     tree.getComponent(TextureRenderComponent.class).scaleEntity();
-    tree.scaleHeight(2.5f);
+    tree.scaleHeight(1f);
     PhysicsUtils.setScaledCollider(tree, 0.5f, 0.2f);
     return tree;
   }
@@ -41,8 +43,8 @@ public class ObstacleFactory {
    */
   public static Entity createWall(float width, float height) {
     Entity wall = new Entity()
-        .addComponent(new PhysicsComponent().setBodyType(BodyType.StaticBody))
-        .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
+            .addComponent(new PhysicsComponent().setBodyType(BodyType.StaticBody))
+            .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
     wall.setScale(width, height);
     return wall;
   }
