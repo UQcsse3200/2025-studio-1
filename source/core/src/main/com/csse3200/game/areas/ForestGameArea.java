@@ -45,7 +45,7 @@ public class ForestGameArea extends GameArea {
   private static final int NUM_DEEP_SPIN = 3;
   private static final int NUM_GROK_DROID = 3;
   private static final int NUM_VROOMBA = 3;
-  private static final GridPoint2 PLAYER_SPAWN = new GridPoint2(3, 7);
+  private static final GridPoint2 PLAYER_SPAWN = new GridPoint2(3, 20);
   private static final float WALL_WIDTH = 0.1f;
   private static final String[] forestTextures = {
     "images/box_boy_leaf.png",
@@ -63,16 +63,16 @@ public class ForestGameArea extends GameArea {
     "images/iso_grass_3.png",
     "images/robot-2-attack.png",
     "images/robot-2-common.png",
-          "images/fireball1.png",
-          "images/blackhole1.png",
-            "images/Robot_1.png",
-            "images/Robot_1_attack_left.png",
-            "images/Robot_1_attack_right.png",
-          "images/Boss_3.png",
-          "images/mud.png",
-          "images/mud_ball_1.png",
-          "images/mud_ball_2.png",
-          "images/mud_ball_3.png",
+    "images/fireball1.png",
+    "images/blackhole1.png",
+    "images/Robot_1.png",
+    "images/Robot_1_attack_left.png",
+    "images/Robot_1_attack_right.png",
+    "images/Boss_3.png",
+    "images/mud.png",
+    "images/mud_ball_1.png",
+    "images/mud_ball_2.png",
+    "images/mud_ball_3.png",
     "images/lightsaber.png",
     "images/lightsaberSingle.png",
     "images/ammo.png",
@@ -133,14 +133,13 @@ public class ForestGameArea extends GameArea {
     "images/explosion_1.atlas",
     "images/explosion_2.atlas",
     "images/explosion_2.atlas",
-    "images/player.atlas"
-
-          "images/terrain_iso_grass.atlas",
-          "images/ghost.atlas",
-          "images/ghostKing.atlas",
-          "images/ghostGPT.atlas",
-          "images/explosion_1.atlas",
-          "images/explosion_2.atlas"
+    "images/player.atlas",
+    "images/terrain_iso_grass.atlas",
+    "images/ghost.atlas",
+    "images/ghostKing.atlas",
+    "images/ghostGPT.atlas",
+    "images/explosion_1.atlas",
+    "images/explosion_2.atlas",
   };
   private static final String[] forestSounds = {"sounds/Impact4.ogg"};
   private static final String backgroundMusic = "sounds/BGM_03_mp3.mp3";
@@ -223,14 +222,9 @@ public class ForestGameArea extends GameArea {
   }
 
   private void spawnRobots() {
-    GridPoint2 minPos = new GridPoint2(0, 0);
-    GridPoint2 maxPos = terrain.getMapBounds(0).sub(2, 2);
-
-    for (int i = 0; i < NUM_ROBOTS; i++) {
-      GridPoint2 randomPos = RandomUtils.random(minPos, maxPos);
-      Entity robot = NPCFactory.createRobot(player);
-      spawnEntityAt(robot, randomPos, true, true);
-    }
+    GridPoint2 pos = new GridPoint2(0, 0);
+    Entity robot = NPCFactory.createRobot(player);
+    spawnEntityAt(robot, pos, true, true);
   }
 
 
@@ -315,17 +309,17 @@ public class ForestGameArea extends GameArea {
   }
 
 
-  private void spawnTrees() {
-    GridPoint2 minPos = new GridPoint2(0, 0);
-    GridPoint2 maxPos = terrain.getMapBounds(0);
+  // private void spawnTrees() {
+  //   GridPoint2 minPos = new GridPoint2(0, 0);
+  //   GridPoint2 maxPos = terrain.getMapBounds(0);
 
-    for (int i = 0; i < NUM_TREES; i++) {
-      GridPoint2 randomPos = RandomUtils.random(minPos, maxPos);
-      randomPos.y = 2;
-      Entity tree = ObstacleFactory.createTree();
-      spawnEntityAt(tree, randomPos, true, false);
-    }
-  }
+  //   for (int i = 0; i < NUM_TREES; i++) {
+  //     GridPoint2 randomPos = RandomUtils.random(minPos, maxPos);
+  //     randomPos.y = 2;
+  //     Entity tree = ObstacleFactory.createTree();
+  //     spawnEntityAt(tree, randomPos, true, false);
+  //   }
+  // }
 
   /**
    * Builds the upper walkway: three thin floors, a long ceiling light, and a front-facing desk.
@@ -452,43 +446,40 @@ public class ForestGameArea extends GameArea {
   }
 
 
-  private void spawnGhosts() {
-    GridPoint2 minPos = new GridPoint2(0, 0);
-    GridPoint2 maxPos = terrain.getMapBounds(0).sub(2, 2);
+  // private void spawnGhosts() {
+  //   GridPoint2 minPos = new GridPoint2(0, 0);
+  //   GridPoint2 maxPos = terrain.getMapBounds(0).sub(2, 2);
 
-    for (int i = 0; i < NUM_GHOSTS; i++) {
-      GridPoint2 randomPos = RandomUtils.random(minPos, maxPos);
-      Entity ghost = NPCFactory.createGhost(player);
-      spawnEntityAt(ghost, randomPos, true, true);
-    }
-  }
+  //   for (int i = 0; i < NUM_GHOSTS; i++) {
+  //     GridPoint2 randomPos = RandomUtils.random(minPos, maxPos);
+  //     Entity ghost = NPCFactory.createGhost(player);
+  //     spawnEntityAt(ghost, randomPos, true, true);
+  //   }
+  // }
+
   private void spawnBoss2() {
-    GridPoint2 minPos = new GridPoint2(0, 0);
-    GridPoint2 maxPos = terrain.getMapBounds(0).sub(2, 2);
+    GridPoint2 pos = new GridPoint2(25, 25);
 
-    GridPoint2 pos = RandomUtils.random(minPos, maxPos);
     Entity boss2 = BossFactory.createBoss2(player);
     spawnEntityAt(boss2, pos, true, true);
   }
   //new added boss3
   private void spawnBoss3() {
-    GridPoint2 minPos = new GridPoint2(0, 0);
-    GridPoint2 maxPos = terrain.getMapBounds(0).sub(2, 2);
+    GridPoint2 pos = new GridPoint2(27, 25);
 
-    GridPoint2 pos = RandomUtils.random(minPos, maxPos);
     Entity boss3 = BossFactory.createBoss3(player);
     spawnEntityAt(boss3, pos, true, true);
   }
 
 
-  private void spawnGhostKing() {
-    GridPoint2 minPos = new GridPoint2(0, 0);
-    GridPoint2 maxPos = terrain.getMapBounds(0).sub(2, 2);
+  // private void spawnGhostKing() {
+  //   GridPoint2 minPos = new GridPoint2(0, 0);
+  //   GridPoint2 maxPos = terrain.getMapBounds(0).sub(2, 2);
 
-    GridPoint2 randomPos = RandomUtils.random(minPos, maxPos);
-    Entity ghostKing = NPCFactory.createGhostKing(player);
-    spawnEntityAt(ghostKing, randomPos, true, true);
-  }
+  //   GridPoint2 randomPos = RandomUtils.random(minPos, maxPos);
+  //   Entity ghostKing = NPCFactory.createGhostKing(player);
+  //   spawnEntityAt(ghostKing, randomPos, true, true);
+  // }
 
   /**
    * Spawns two GhostGPT enemies at fixed locations for predictable behaviour.
@@ -552,40 +543,38 @@ public class ForestGameArea extends GameArea {
    * Adds NUM_Deep_spin amount of GhostGPT enemies onto the map.
    */
   private void spawnDeepspin() {
-    GridPoint2 minPos = new GridPoint2(0, 0);
-    GridPoint2 maxPos = terrain.getMapBounds(0).sub(3, 3);
+    GridPoint2 pos = new GridPoint2(10,20);
 
-    for (int i = 0; i < NUM_DEEP_SPIN; i++) {
-      GridPoint2 randomPos = RandomUtils.random(minPos, maxPos);
-      Entity deepspin = NPCFactory.createDeepspin(player, this);
-      spawnEntityAt(deepspin, randomPos, true, true);
-    }
+    // for (int i = 0; i < NUM_DEEP_SPIN; i++) {
+    //   GridPoint2 randomPos = RandomUtils.random(minPos, maxPos);
+    //   Entity deepspin = NPCFactory.createDeepspin(player, this);
+    //   spawnEntityAt(deepspin, randomPos, true, true);
+    // }
+
+    Entity deepspin = NPCFactory.createDeepspin(player, this);
+    spawnEntityAt(deepspin, pos, true, true);
   }
   /**
    * Adds NUM_GROK_DROID amount of GrokDroid enemies onto the map.
    */
   private void spawnGrokDroid() {
-    GridPoint2 minPos = new GridPoint2(0, 0);
-    GridPoint2 maxPos = terrain.getMapBounds(0).sub(3, 3);
+    GridPoint2 pos1 = new GridPoint2(20, 15);
+    GridPoint2 pos2 = new GridPoint2(25, 15);
 
-    for (int i = 0; i < NUM_GROK_DROID; i++) {
-      GridPoint2 randomPos = RandomUtils.random(minPos, maxPos);
-      Entity grokDroid = NPCFactory.createGrokDroid(player, this);
-      spawnEntityAt(grokDroid, randomPos, true, true);
-    }
+    Entity grokDroid = NPCFactory.createGrokDroid(player, this);
+    Entity grokDroid2 = NPCFactory.createGrokDroid(player, this);
+
+    spawnEntityAt(grokDroid, pos1, true, true);
+    spawnEntityAt(grokDroid2, pos2, true, true);
+
   }
   /**
    * Adds NUM_VROOMBA amount of GrokDroid enemies onto the map.
    */
   private void spawnVroomba() {
-    GridPoint2 minPos = new GridPoint2(0, 0);
-    GridPoint2 maxPos = terrain.getMapBounds(0).sub(3, 3);
-
-    for (int i = 0; i < NUM_VROOMBA; i++) {
-      GridPoint2 randomPos = RandomUtils.random(minPos, maxPos);
-      Entity vroomba = NPCFactory.createVroomba(player, this);
-      spawnEntityAt(vroomba, randomPos, true, true);
-    }
+    GridPoint2 pos = new GridPoint2(25, 5);
+    Entity vroomba = NPCFactory.createVroomba(player, this);
+    spawnEntityAt(vroomba, pos, true, true);
   }
 
   private void playMusic() {
