@@ -1,9 +1,11 @@
 package com.csse3200.game.entities.configs;
 
-public class LaserConfig {
-    public int base_attack = 5;
-    public float speed = 5f;
-
-    //High health to ensure bullet does not "die" before hitting target
-    public int health = 10000;
+/**
+ * Configuration for the laser shot projectiles
+ */
+public class LaserConfig extends BaseProjectileConfig {
+    public LaserConfig() {
+        this.base_attack = 5;
+        this.speed = 5f;
+    }
 }
