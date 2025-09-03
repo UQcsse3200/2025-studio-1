@@ -6,5 +6,10 @@ package com.csse3200.game.entities.configs;
 public class NPCConfigs {
   public BaseEntityConfig ghost = new BaseEntityConfig();
   public GhostKingConfig ghostKing = new GhostKingConfig();
+  public BaseEntityConfig boss3 = new BaseEntityConfig();
+  public BaseEntityConfig boss2 = new BaseEntityConfig();
   public GhostGPTConfig ghostGPT = new GhostGPTConfig();
+  public DeepspinConfig deepSpin = new DeepspinConfig();
+  public GrokDroidConfig grokDroid = new GrokDroidConfig();
+  public VroombaConfig vroomba = new VroombaConfig();
 }
