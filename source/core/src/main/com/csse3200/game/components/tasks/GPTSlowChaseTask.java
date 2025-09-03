@@ -23,6 +23,7 @@ public class GPTSlowChaseTask extends DefaultTask implements PriorityTask {
     /**
      * @param target The entity to chase.
      * @param priority Task priority when chasing (0 when not chasing).
+     * @param speed The speed at which the enemy will chase the player.
      */
     public GPTSlowChaseTask(Entity target, int priority, Vector2 speed) {
         this.target = target;
