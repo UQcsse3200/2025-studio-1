@@ -51,7 +51,7 @@ public class WinScreen extends ScreenAdapter {
         renderer = RenderFactory.createRenderer();
         logger.debug("Win Screen renderer created");
         renderer.getCamera().getEntity().setPosition(5f, 5f);
-        logger.debug("Win Screen renderer camera position setted");
+        logger.debug("Win Screen renderer camera position set");
 
         loadAssets();
         createUI();
@@ -76,7 +76,7 @@ public class WinScreen extends ScreenAdapter {
     }
 
     /**
-     * Cleans up and diaposes of resources when the win screen is no longer used
+     * Cleans up and disposes of resources when the win screen is no longer used
      */
     @Override
     public void dispose() {
