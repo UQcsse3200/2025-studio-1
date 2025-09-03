@@ -132,7 +132,6 @@ class CombatStatsComponentTest {
 
   @Test
   void shouldSetGetMaxHealth() {
-    CombatStatsComponent combat = new CombatStatsComponent(100, 20);
     assertEquals(100, combat.getMaxHealth());
     combat.setMaxHealth(200);
     assertEquals(200, combat.getMaxHealth());

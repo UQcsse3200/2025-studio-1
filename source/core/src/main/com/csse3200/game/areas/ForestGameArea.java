@@ -1,22 +1,16 @@
 package com.csse3200.game.areas;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.ItemHoldComponent;
-import com.csse3200.game.components.enemy.ProjectileLauncherComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.factories.NPCFactory;
 import com.csse3200.game.entities.factories.ObstacleFactory;
 import com.csse3200.game.entities.factories.PlayerFactory;
 import com.csse3200.game.entities.factories.*;
-import com.csse3200.game.physics.components.PhysicsProjectileComponent;
-import com.csse3200.game.rendering.AnimationRenderComponent;
 import com.csse3200.game.utils.math.GridPoint2Utils;
 import com.csse3200.game.utils.math.RandomUtils;
 import com.csse3200.game.services.ResourceService;
@@ -73,11 +67,7 @@ public class ForestGameArea extends GameArea {
   private final TerrainFactory terrainFactory;
 
   private Entity player;
-  private Entity dagger;
-  private Entity lightsaber;
-  private Entity bullet;
-  private Entity pistol;
-  private Entity rifle;
+
 
   /**
    * Initialise this ForestGameArea to use the provided TerrainFactory.
@@ -99,16 +89,15 @@ public class ForestGameArea extends GameArea {
     spawnTerrain();
     spawnTrees();
     player = spawnPlayer();
-    dagger = spawnDagger();
-    pistol = spawnPistol();
-    rifle = spawnRifle();
-    lightsaber = spawnLightsaber();
-
+    Entity dagger = spawnDagger();
+    Entity pistol = spawnPistol();
+    Entity rifle = spawnRifle();
+    Entity lightsaber = spawnLightsaber();
 
     //These are commented out since there is no equip feature yet
-    //this.equipItem(pistol);
-    //this.equipItem(lightsaber);
-    //this.equipItem(dagger);
+//    this.equipItem(pistol);
+//    this.equipItem(lightsaber);
+//    this.equipItem(dagger);
     this.equipItem(rifle);
 
     spawnGhosts();
