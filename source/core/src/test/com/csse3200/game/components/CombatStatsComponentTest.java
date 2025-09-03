@@ -5,7 +5,10 @@ import com.csse3200.game.areas.GameArea;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
+import com.csse3200.game.entities.factories.NPCFactory;
+import com.csse3200.game.entities.factories.PlayerFactory;
 import com.csse3200.game.extensions.GameExtension;
+import com.csse3200.game.physics.components.HitboxComponent;
 import com.csse3200.game.services.ServiceLocator;
 
 import java.util.ArrayList;
@@ -16,6 +19,7 @@ import org.junit.jupiter.api.Nested;
 
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestClassOrder;
 import org.junit.jupiter.api.extension.ExtendWith;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -143,7 +147,7 @@ class CombatStatsComponentTest {
 
       // Health remains at maxHealth
       assertEquals(100, combat.getHealth());
-      // Depending on implementation, event may or may not fire on the same value
+      // Depending on implementation, event may or may not fire on same value
       assertTrue(spy.cnt.get() == afterFirst || spy.cnt.get() == afterFirst + 1);
     }
 
