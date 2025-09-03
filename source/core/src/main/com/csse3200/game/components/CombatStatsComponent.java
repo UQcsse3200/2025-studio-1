@@ -26,6 +26,7 @@ public class CombatStatsComponent extends Component {
   private int baseAttack;
   private int thresholdForBuff = 20;
   private float coolDown;
+  private boolean disableDamage;
 
   /**
    * Construct a combat Stats Component (Health + Attack System)
@@ -38,6 +39,7 @@ public class CombatStatsComponent extends Component {
     setHealth(health);
     setBaseAttack(baseAttack);
     this.coolDown = 0;
+    setDisableDamage(false);
   }
 
   /**
@@ -147,7 +149,7 @@ public class CombatStatsComponent extends Component {
    * @return base attack damage
    */
   public int getBaseAttack() {
-    return baseAttack;
+    return this.baseAttack;
   }
 
   /**
@@ -193,7 +195,7 @@ public class CombatStatsComponent extends Component {
    * @see #setHealth(int)
    */
   private void applyDamage(int damage) {
-    if (damage <= 0 || isDead()) {
+    if (damage <= 0 || isDead() || !disableDamage) {
         return;
     }
     setHealth(this.health - damage);
@@ -215,5 +217,15 @@ public class CombatStatsComponent extends Component {
   //  for features like critical hits or resistances.
   public void hit(int damage) {
     applyDamage(damage);
+  }
+
+  /**
+   * Sets whether the player can receive any damage. True means no damage received
+   * and false means damage can be received.
+   *
+   * @param status Status of whether entity can be damaged
+   */
+  public void setDisableDamage(boolean status) {
+    this.disableDamage = status;
   }
 }
