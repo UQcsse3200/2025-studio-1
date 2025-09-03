@@ -11,17 +11,20 @@ public class KeycardPickupComponent extends Component {
     private boolean collected = false;
 
     public KeycardPickupComponent(int level) {
+        /** Initializes the component with a specific keycard level to grant on pickup. */
         this.level = level;
     }
 
     @Override
     public void create() {
+        /** Registers a listener for collision events when the component is created. */
         entity.getEvents().addListener("collisionStart", this::onCollisionStart);
     }
 
-    private void onCollisionStart(Fixture me, Fixture other) {
+    private void onCollisionStart(Fixture me, Fixture other)
+    {
+/** Handles collision: checks if the player collided, updates their inventory, and disposes the keycard entity.  */
         if (collected) return;
-
         Object otherUd = other.getBody().getUserData();
         if (!(otherUd instanceof BodyUserData)) return;
 

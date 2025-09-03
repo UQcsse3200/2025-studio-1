@@ -28,7 +28,7 @@ public class DoorComponent extends Component {
 
     short otherLayer = otherFixture.getFilterData().categoryBits;
     if (PhysicsLayer.contains(otherLayer, PhysicsLayer.PLAYER)) {
-      // Get the colliding entity
+      /** Get the colliding entity */
       Object userData = otherFixture.getBody().getUserData();
       Entity otherEntity = null;
 
@@ -42,7 +42,7 @@ public class DoorComponent extends Component {
         triggered = true;
         Gdx.app.log("DoorComponent", "Door triggered by player");
         if (onEntered != null) {
-          // Defer to avoid Box2D world locked crash
+          /** Defer to avoid Box2D world locked crash */
           Gdx.app.postRunnable(onEntered);
         }
       }
