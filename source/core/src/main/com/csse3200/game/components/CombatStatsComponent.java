@@ -83,11 +83,7 @@ public class CombatStatsComponent extends Component {
      * @param coolDown coolDown
      */
     public void setCoolDown(float coolDown) {
-        if (coolDown >= 0) {
-            this.coolDown = coolDown;
-        } else {
-            this.coolDown = 0;
-        }
+      this.coolDown = Math.max(0, coolDown);
     }
 
   /**
