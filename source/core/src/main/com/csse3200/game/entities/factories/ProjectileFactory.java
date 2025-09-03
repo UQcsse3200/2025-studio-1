@@ -26,7 +26,8 @@ import com.csse3200.game.rendering.TextureRenderComponent;
 
 public class ProjectileFactory {
 
-    private static final ProjectileConfig configs =
+    //removed final modifier to allow for class to be tested
+    private static ProjectileConfig configs =
             FileLoader.readClass(ProjectileConfig.class, "configs/projectiles.json");
 
 
@@ -54,34 +55,33 @@ public class ProjectileFactory {
 
     /**
      * Creates a laser shot entity
+     * @param texturePath the path of the texture that's going to be used as the projectile's sprite
      * @param direction The direction to fire at
+     * @param config The configuration about the damage and speed of the projectile
      * @return The laser entity
      */
-    public static Entity createLaserShot(Vector2 direction) {
-        Entity laser = createBaseProjectile();
-        LaserConfig config = configs.laser;
-        laser
-                .addComponent(new TextureRenderWithRotationComponent("images/laser_shot.png"))
+    public static Entity createEnemyProjectile(String texturePath, Vector2 direction, BaseProjectileConfig config) {
+        Entity projectile = createBaseProjectile();
+        projectile
+                .addComponent(new TextureRenderWithRotationComponent(texturePath))
                 .addComponent(new CombatStatsComponent(config.health, config.base_attack))
                 .addComponent(new ColliderComponent())
                 .addComponent(new HitboxComponent().setLayer(PhysicsLayer.ENEMY_PROJECTILE))
                 .addComponent(new TouchAttackComponent(PhysicsLayer.PLAYER)); // Knockback??
 
-        ColliderComponent collider = laser.getComponent(ColliderComponent.class);
+        ColliderComponent collider = projectile.getComponent(ColliderComponent.class);
         collider.setLayer(PhysicsLayer.ENEMY_PROJECTILE)
                 .setFilter(PhysicsLayer.ENEMY_PROJECTILE, (short) (PhysicsLayer.PLAYER));
 
         float angleToFire = direction.angleDeg() + 90;
 
-        laser.getComponent(TextureRenderWithRotationComponent.class).setRotation(angleToFire);
-        laser.getComponent(TextureRenderWithRotationComponent.class).scaleEntity();
-        laser.scaleWidth(0.5f);
-        laser.scaleHeight(0.5f);
+        projectile.getComponent(TextureRenderWithRotationComponent.class).setRotation(angleToFire);
+        projectile.getComponent(TextureRenderWithRotationComponent.class).scaleEntity();
 
-        laser.getComponent(PhysicsProjectileComponent.class).create(); // Not called for some reason.
-        laser.getComponent(PhysicsProjectileComponent.class).fire(direction, config.speed);
+        projectile.getComponent(PhysicsProjectileComponent.class).create(); // Not called for some reason.
+        projectile.getComponent(PhysicsProjectileComponent.class).fire(direction, config.speed);
 
-        return laser;
+        return projectile;
     }
 
     /**
@@ -101,6 +101,8 @@ public class ProjectileFactory {
 
         return projectile;
     }
+
+
 
     private ProjectileFactory() {
         throw new IllegalStateException("Instantiating static util class");
