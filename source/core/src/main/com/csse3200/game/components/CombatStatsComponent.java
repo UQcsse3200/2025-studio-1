@@ -1,8 +1,5 @@
 package com.csse3200.game.components;
 
-import com.badlogic.gdx.graphics.Texture;
-import com.csse3200.game.rendering.TextureRenderComponent;
-import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.components.enemy.LowHealthAttackBuff;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,7 +34,7 @@ public class CombatStatsComponent extends Component {
     setMaxHealth(health);
     setHealth(health);
     setBaseAttack(baseAttack);
-    this.coolDown = 0;
+    setCoolDown(0);
   }
 
   /**
@@ -47,18 +44,14 @@ public class CombatStatsComponent extends Component {
    *
    * @return {@code true} if the entity has 0 or less health, {@code false} otherwise
    */
-  public Boolean isDead() {
-    return this.health <= 0;
-  }
+  public Boolean isDead() { return this.health <= 0; }
 
   /**
    * Returns the entity's health.
    *
    * @return entity's health
    */
-  public int getHealth() {
-    return this.health;
-  }
+  public int getHealth() { return health; }
 
   /**
    * Sets the entity's health. Health is always clamped between 0 and maxHealth.
@@ -67,7 +60,7 @@ public class CombatStatsComponent extends Component {
    */
   public void setHealth(int health) {
     int prevHealth = this.health;
-    this.health = Math.max(0, Math.min(health, this.maxHealth));
+    this.health = Math.clamp(health, 0, this.maxHealth);
     if (entity != null) {
       entity.getEvents().trigger("updateHealth", this.health);
 
@@ -89,13 +82,7 @@ public class CombatStatsComponent extends Component {
      *
      * @param coolDown coolDown
      */
-    public void setCoolDown(float coolDown) {
-        if (coolDown >= 0) {
-            this.coolDown = coolDown;
-        } else {
-            this.coolDown = 0;
-        }
-    }
+    public void setCoolDown(float coolDown) { this.coolDown = Math.max(0, coolDown); }
 
   /**
    * gets the entity's cooldown between attacks (seconds).
@@ -119,7 +106,7 @@ public class CombatStatsComponent extends Component {
   /**
    * Sets the entity's Max Health. Max Health has a minimum bound of 0.
    *
-   * @param maxHealth the maximum health that a entity can have
+   * @param maxHealth the maximum health that an entity can have
    */
   public void setMaxHealth(int maxHealth) {
     this.maxHealth = Math.max(maxHealth, 0);
@@ -203,8 +190,8 @@ public class CombatStatsComponent extends Component {
    * Deal direct damage as an integer.
    *
    * <p>
-   *  Intended for non-entity sources (e.g., traps, projectiles, environmental hazards).
-   *  This delegates to {@link #applyDamage(int)} and therefore follows the same validation and dead-entity behavior.
+   *  Intended for non-entity sources (e.g. traps, projectiles, environmental hazards).
+   *  This delegates to {@link #applyDamage(int)} and therefore follows the same validation and dead-entity behaviour.
    * </p>
    *
    * @param damage raw damage amount (non-negative to take effect)
