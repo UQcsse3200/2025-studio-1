@@ -82,9 +82,7 @@ public class CombatStatsComponent extends Component {
      *
      * @param coolDown coolDown
      */
-    public void setCoolDown(float coolDown) {
-      this.coolDown = Math.max(0, coolDown);
-    }
+    public void setCoolDown(float coolDown) { this.coolDown = Math.max(0, coolDown); }
 
   /**
    * gets the entity's cooldown between attacks (seconds).
