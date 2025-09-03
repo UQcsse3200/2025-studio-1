@@ -13,6 +13,8 @@ public class PhysicsLayer {
   public static final short ENEMY_PROJECTILE = (1 << 5);
 
   public static final short ALL = ~0;
+  public static final short ITEM = (1 << 4);
+
 
   public static boolean contains(short filterBits, short layer) {
     return (filterBits & layer) != 0;

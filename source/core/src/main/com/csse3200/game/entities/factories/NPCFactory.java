@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.ai.tasks.AITaskComponent;
 import com.csse3200.game.areas.ForestGameArea;
 import com.csse3200.game.components.CombatStatsComponent;
+import com.csse3200.game.components.npc.BossAnimationController;
 import com.csse3200.game.components.enemy.LowHealthAttackBuff;
 import com.csse3200.game.components.enemy.ProjectileLauncherComponent;
 import com.csse3200.game.components.npc.GhostAnimationController;
@@ -24,6 +25,7 @@ import com.csse3200.game.physics.components.HitboxComponent;
 import com.csse3200.game.physics.components.PhysicsComponent;
 import com.csse3200.game.physics.components.PhysicsMovementComponent;
 import com.csse3200.game.rendering.AnimationRenderComponent;
+import com.csse3200.game.rendering.TextureRenderComponent;
 import com.csse3200.game.services.ServiceLocator;
 
 /**
@@ -173,6 +175,32 @@ public class NPCFactory {
     return ghostGPT;
   }
 
+
+  /**
+   * Creates a robot entity.
+   *
+   * @param target entity to chase (e.g. player)
+   * @return robot entity
+   */
+
+  public static Entity createRobot(Entity target) {
+    Entity robot = createBaseNPC(target);
+
+    AnimationRenderComponent animator = new AnimationRenderComponent(
+            ServiceLocator.getResourceService().getAsset("images/Robot_1.atlas", TextureAtlas.class));
+    animator.addAnimation("Idle",   0.12f, Animation.PlayMode.LOOP);
+    animator.addAnimation("attack", 0.06f, Animation.PlayMode.LOOP);
+    animator.addAnimation("fury",   0.10f, Animation.PlayMode.LOOP);
+    animator.addAnimation("die",    0.10f, Animation.PlayMode.NORMAL);
+
+    robot
+            .addComponent(animator)
+            .addComponent(new CombatStatsComponent(100, 5))
+            .addComponent(new BossAnimationController());
+
+    return robot;
+  }
+
   /**
    * Creates Deepspin enemy type
    *
@@ -312,7 +340,11 @@ public class NPCFactory {
    *
    * @return entity
    */
-  private static Entity createBaseNPC(Entity target) {
+  static Entity createBaseNPC(Entity target) {
+    AITaskComponent aiComponent =
+        new AITaskComponent()
+            .addTask(new WanderTask(new Vector2(2f, 2f), 2f))
+            .addTask(new ChaseTask(target, 10, 3f, 4f));
     Entity npc =
         new Entity()
             .addComponent(new PhysicsComponent())

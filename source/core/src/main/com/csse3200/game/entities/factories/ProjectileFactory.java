@@ -26,7 +26,8 @@ import com.csse3200.game.rendering.TextureRenderComponent;
 
 public class ProjectileFactory {
 
-    private static final ProjectileConfig configs =
+    //removed final modifier to allow for class to be tested
+    private static ProjectileConfig configs =
             FileLoader.readClass(ProjectileConfig.class, "configs/projectiles.json");
 
 
@@ -100,6 +101,8 @@ public class ProjectileFactory {
 
         return projectile;
     }
+
+
 
     private ProjectileFactory() {
         throw new IllegalStateException("Instantiating static util class");
