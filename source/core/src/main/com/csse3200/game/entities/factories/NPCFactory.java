@@ -145,10 +145,12 @@ public class NPCFactory {
     animator.addAnimation("angry_float", 0.1f, Animation.PlayMode.LOOP);
     animator.addAnimation("float", 0.1f, Animation.PlayMode.LOOP);
 
+
+    ProjectileLauncherComponent projComp = new ProjectileLauncherComponent(area, target);
     AITaskComponent aiComponent =
         new AITaskComponent()
             .addTask(new GPTSlowChaseTask(target, 10, new Vector2(0.3f, 0.3f)))
-            .addTask(new GPTFastChaseTask(target, 10, new Vector2(1.2f, 1.2f)));
+            .addTask(new GPTFastChaseTask(target, 10, new Vector2(1.2f, 1.2f), projComp, ghostGPT));
 
     // Get player's inventory for reward system
     InventoryComponent playerInventory = null;
@@ -166,7 +168,7 @@ public class NPCFactory {
             .addComponent(new EnemyDeathRewardComponent(15, playerInventory))
             .addComponent(new DeathParticleSpawnerComponent("explosion_2"))
             .addComponent(aiComponent) // Add reward + particles
-            .addComponent(new ProjectileLauncherComponent(area, target)); // Add the ability to fire projectiles
+            .addComponent(projComp); // Add the ability to fire projectiles
 
     ghostGPT.getComponent(AnimationRenderComponent.class).scaleEntity();
 
@@ -199,6 +201,140 @@ public class NPCFactory {
     return robot;
   }
 
+  /**
+   * Creates Deepspin enemy type
+   *
+   * @param target entity to chase
+   * @param area the area/space it is living in
+   * @return entity
+   */
+  public static Entity createDeepspin(Entity target, ForestGameArea area) {
+    Entity deepspin = createBaseNPC(target);
+    DeepspinConfig config = configs.deepSpin;
+
+    AnimationRenderComponent animator =
+            new AnimationRenderComponent(
+                    ServiceLocator.getResourceService()
+                            .getAsset("images/Deepspin.atlas", TextureAtlas.class));
+    animator.setDisposeAtlas(false);
+    animator.addAnimation("angry_float", 0.1f, Animation.PlayMode.LOOP);
+    animator.addAnimation("float", 0.1f, Animation.PlayMode.LOOP);
+
+    AITaskComponent aiComponent =
+            new AITaskComponent()
+                    .addTask(new GPTSlowChaseTask(target, 10, new Vector2(0.3f, 0.3f)))
+                    .addTask(new GPTFastChaseTask(target, 10, new Vector2(1.2f, 1.2f)));
+
+    // Get player's inventory for reward system
+    InventoryComponent playerInventory = null;
+    if (target != null) {
+      playerInventory = target.getComponent(InventoryComponent.class);
+    }
+
+    CombatStatsComponent deepspinStats = new CombatStatsComponent(config.health, config.baseAttack);
+
+    deepspin
+            .addComponent(deepspinStats)
+            .addComponent(animator)
+            .addComponent(new GhostAnimationController())
+            .addComponent(new LowHealthAttackBuff(10, deepspinStats))
+            .addComponent(new EnemyDeathRewardComponent(15, playerInventory))
+            .addComponent(new DeathParticleSpawnerComponent("explosion_2"))
+            .addComponent(aiComponent) // Add reward + particles
+            .addComponent(new ProjectileLauncherComponent(area, target)); // Add the ability to fire projectiles
+
+    deepspin.getComponent(AnimationRenderComponent.class).scaleEntity();
+
+    return deepspin;
+  }
+
+  /**
+   * Creates Deepspin enemy type
+   *
+   * @param target entity to chase
+   * @param area the area/space it is living in
+   * @return entity
+   */
+  public static Entity createGrokDroid(Entity target, ForestGameArea area) {
+    Entity grokDroid = createBaseNPC(target);
+    GrokDroidConfig config = configs.grokDroid;
+
+    AnimationRenderComponent animator =
+            new AnimationRenderComponent(
+                    ServiceLocator.getResourceService()
+                            .getAsset("images/Grokdroid.atlas", TextureAtlas.class));
+    animator.setDisposeAtlas(false);
+    animator.addAnimation("angry_float", 0.1f, Animation.PlayMode.LOOP);
+    animator.addAnimation("float", 0.1f, Animation.PlayMode.LOOP);
+
+    AITaskComponent aiComponent =
+            new AITaskComponent()
+                    .addTask(new GPTSlowChaseTask(target, 10, new Vector2(0.3f, 0.3f)))
+                    .addTask(new GPTFastChaseTask(target, 10, new Vector2(1.2f, 1.2f)));
+
+    // Get player's inventory for reward system
+    InventoryComponent playerInventory = null;
+    if (target != null) {
+      playerInventory = target.getComponent(InventoryComponent.class);
+    }
+
+    CombatStatsComponent grokDroidStats = new CombatStatsComponent(config.health, config.baseAttack);
+
+    grokDroid
+            .addComponent(grokDroidStats)
+            .addComponent(animator)
+            .addComponent(new GhostAnimationController())
+            .addComponent(new LowHealthAttackBuff(10, grokDroidStats))
+            .addComponent(new EnemyDeathRewardComponent(15, playerInventory))
+            .addComponent(new DeathParticleSpawnerComponent("explosion_2"))
+            .addComponent(aiComponent) // Add reward + particles
+            .addComponent(new ProjectileLauncherComponent(area, target)); // Add the ability to fire projectiles
+
+    grokDroid.getComponent(AnimationRenderComponent.class).scaleEntity();
+
+    return grokDroid;
+  }
+  /**
+   * Creates a Vroomba entity.
+   *
+   * @param target entity to chase
+   * @return entity
+   */
+  public static Entity createVroomba(Entity target, ForestGameArea area) {
+    Entity vroomba = createBaseNPC(target);
+    VroombaConfig config = configs.vroomba;
+
+    AnimationRenderComponent animator =
+            new AnimationRenderComponent(
+                    ServiceLocator.getResourceService().getAsset("images/Vroomba.atlas", TextureAtlas.class));
+    animator.addAnimation("angry_float", 0.1f, Animation.PlayMode.LOOP);
+    animator.addAnimation("float", 0.1f, Animation.PlayMode.LOOP);
+
+    // Create the dash attack AI component
+    AITaskComponent aiComponent =
+            new AITaskComponent()
+                    .addTask(new GPTSlowChaseTask(target, 10, new Vector2(0.3f, 0.3f)))
+                    .addTask(new GPTFastChaseTask(target, 10, new Vector2(1.2f, 1.2f)));
+
+
+    // Get player's inventory for reward system
+    InventoryComponent playerInventory = null;
+    if (target != null) {
+      playerInventory = target.getComponent(InventoryComponent.class);
+    }
+
+    vroomba
+            .addComponent(new CombatStatsComponent(config.health, config.baseAttack))
+            .addComponent(animator)
+            .addComponent(new GhostAnimationController())
+            .addComponent(new EnemyDeathRewardComponent(15, playerInventory))
+            .addComponent(new DeathParticleSpawnerComponent())
+            .addComponent(aiComponent);
+
+    vroomba.getComponent(AnimationRenderComponent.class).scaleEntity();
+
+    return vroomba;
+  }
   /**
    * Creates a generic NPC to be used as a base entity by more specific NPC creation methods.
    *

@@ -9,4 +9,7 @@ public class NPCConfigs {
   public BaseEntityConfig boss3 = new BaseEntityConfig();
   public BaseEntityConfig boss2 = new BaseEntityConfig();
   public GhostGPTConfig ghostGPT = new GhostGPTConfig();
+  public DeepspinConfig deepSpin = new DeepspinConfig();
+  public GrokDroidConfig grokDroid = new GrokDroidConfig();
+  public VroombaConfig vroomba = new VroombaConfig();
 }
