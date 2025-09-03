@@ -171,10 +171,14 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/components/npc/BossStateMachineComponent.State.html#ATTACK" class="member-name-link">ATTACK</a> - Enum constant in enum class com.csse3200.game.components.npc.<a href="com/csse3200/game/components/npc/BossStateMachineComponent.State.html" title="enum class in com.csse3200.game.components.npc">BossStateMachineComponent.State</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/entities/configs/DeepspinConfig.html#AttackSpeed" class="member-name-link">AttackSpeed</a> - Variable in class com.csse3200.game.entities.configs.<a href="com/csse3200/game/entities/configs/DeepspinConfig.html" title="class in com.csse3200.game.entities.configs">DeepspinConfig</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/entities/configs/GrokDroidConfig.html#AttackSpeed" class="member-name-link">AttackSpeed</a> - Variable in class com.csse3200.game.entities.configs.<a href="com/csse3200/game/entities/configs/GrokDroidConfig.html" title="class in com.csse3200.game.entities.configs">GrokDroidConfig</a></dt>
+<dd>&nbsp;</dd>
 </dl>
 <h2 class="title" id="I:B">B</h2>
 <dl class="index">
-<dt><a href="com/csse3200/game/entities/configs/LaserConfig.html#base_attack" class="member-name-link">base_attack</a> - Variable in class com.csse3200.game.entities.configs.<a href="com/csse3200/game/entities/configs/LaserConfig.html" title="class in com.csse3200.game.entities.configs">LaserConfig</a></dt>
+<dt><a href="com/csse3200/game/entities/configs/BaseProjectileConfig.html#base_attack" class="member-name-link">base_attack</a> - Variable in class com.csse3200.game.entities.configs.<a href="com/csse3200/game/entities/configs/BaseProjectileConfig.html" title="class in com.csse3200.game.entities.configs">BaseProjectileConfig</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/entities/configs/PistolBulletConfig.html#base_attack" class="member-name-link">base_attack</a> - Variable in class com.csse3200.game.entities.configs.<a href="com/csse3200/game/entities/configs/PistolBulletConfig.html" title="class in com.csse3200.game.entities.configs">PistolBulletConfig</a></dt>
 <dd>&nbsp;</dd>
@@ -189,6 +193,12 @@ loadScripts(document, 'script');</script>
 <div class="block">Defines a basic set of properties stored in entities config files to be loaded by Entity Factories.</div>
 </dd>
 <dt><a href="com/csse3200/game/entities/configs/BaseEntityConfig.html#%3Cinit%3E()" class="member-name-link">BaseEntityConfig()</a> - Constructor for class com.csse3200.game.entities.configs.<a href="com/csse3200/game/entities/configs/BaseEntityConfig.html" title="class in com.csse3200.game.entities.configs">BaseEntityConfig</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/entities/configs/BaseProjectileConfig.html" class="type-name-link" title="class in com.csse3200.game.entities.configs">BaseProjectileConfig</a> - Class in <a href="com/csse3200/game/entities/configs/package-summary.html">com.csse3200.game.entities.configs</a></dt>
+<dd>
+<div class="block">Base class for all configurations of projectiles</div>
+</dd>
+<dt><a href="com/csse3200/game/entities/configs/BaseProjectileConfig.html#%3Cinit%3E()" class="member-name-link">BaseProjectileConfig()</a> - Constructor for class com.csse3200.game.entities.configs.<a href="com/csse3200/game/entities/configs/BaseProjectileConfig.html" title="class in com.csse3200.game.entities.configs">BaseProjectileConfig</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/physics/PhysicsContactListener.html#beginContact(com.badlogic.gdx.physics.box2d.Contact)" class="member-name-link">beginContact(Contact)</a> - Method in class com.csse3200.game.physics.<a href="com/csse3200/game/physics/PhysicsContactListener.html" title="class in com.csse3200.game.physics">PhysicsContactListener</a></dt>
 <dd>&nbsp;</dd>
@@ -258,6 +268,8 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/csse3200/game/components/tasks/ChaseTask.html#%3Cinit%3E(com.csse3200.game.entities.Entity,int,float,float)" class="member-name-link">ChaseTask(Entity, int, float, float)</a> - Constructor for class com.csse3200.game.components.tasks.<a href="com/csse3200/game/components/tasks/ChaseTask.html" title="class in com.csse3200.game.components.tasks">ChaseTask</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/files/FileLoader.Location.html#CLASSPATH" class="member-name-link">CLASSPATH</a> - Enum constant in enum class com.csse3200.game.files.<a href="com/csse3200/game/files/FileLoader.Location.html" title="enum class in com.csse3200.game.files">FileLoader.Location</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/entities/configs/VroombaConfig.html#cleaningFactor" class="member-name-link">cleaningFactor</a> - Variable in class com.csse3200.game.entities.configs.<a href="com/csse3200/game/entities/configs/VroombaConfig.html" title="class in com.csse3200.game.entities.configs">VroombaConfig</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/services/ServiceLocator.html#clear()" class="member-name-link">clear()</a> - Static method in class com.csse3200.game.services.<a href="com/csse3200/game/services/ServiceLocator.html" title="class in com.csse3200.game.services">ServiceLocator</a></dt>
 <dd>&nbsp;</dd>
@@ -529,6 +541,14 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Creates a dagger entity.</div>
 </dd>
+<dt><a href="com/csse3200/game/entities/factories/NPCFactory.html#createDeepspin(com.csse3200.game.entities.Entity,com.csse3200.game.areas.ForestGameArea)" class="member-name-link">createDeepspin(Entity, ForestGameArea)</a> - Static method in class com.csse3200.game.entities.factories.<a href="com/csse3200/game/entities/factories/NPCFactory.html" title="class in com.csse3200.game.entities.factories">NPCFactory</a></dt>
+<dd>
+<div class="block">Creates Deepspin enemy type</div>
+</dd>
+<dt><a href="com/csse3200/game/entities/factories/ProjectileFactory.html#createEnemyProjectile(java.lang.String,com.badlogic.gdx.math.Vector2,com.csse3200.game.entities.configs.BaseProjectileConfig)" class="member-name-link">createEnemyProjectile(String, Vector2, BaseProjectileConfig)</a> - Static method in class com.csse3200.game.entities.factories.<a href="com/csse3200/game/entities/factories/ProjectileFactory.html" title="class in com.csse3200.game.entities.factories">ProjectileFactory</a></dt>
+<dd>
+<div class="block">Creates a laser shot entity</div>
+</dd>
 <dt><a href="com/csse3200/game/entities/factories/BossFactory.html#createFireball(com.badlogic.gdx.math.Vector2,com.badlogic.gdx.math.Vector2)" class="member-name-link">createFireball(Vector2, Vector2)</a> - Static method in class com.csse3200.game.entities.factories.<a href="com/csse3200/game/entities/factories/BossFactory.html" title="class in com.csse3200.game.entities.factories">BossFactory</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/input/InputFactory.html#createForPlayer()" class="member-name-link">createForPlayer()</a> - Method in class com.csse3200.game.input.<a href="com/csse3200/game/input/InputFactory.html" title="class in com.csse3200.game.input">InputFactory</a></dt>
@@ -569,16 +589,16 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Creates a ghost king entity.</div>
 </dd>
+<dt><a href="com/csse3200/game/entities/factories/NPCFactory.html#createGrokDroid(com.csse3200.game.entities.Entity,com.csse3200.game.areas.ForestGameArea)" class="member-name-link">createGrokDroid(Entity, ForestGameArea)</a> - Static method in class com.csse3200.game.entities.factories.<a href="com/csse3200/game/entities/factories/NPCFactory.html" title="class in com.csse3200.game.entities.factories">NPCFactory</a></dt>
+<dd>
+<div class="block">Creates Deepspin enemy type</div>
+</dd>
 <dt><a href="com/csse3200/game/entities/factories/ItemFactory.html#createItem()" class="member-name-link">createItem()</a> - Static method in class com.csse3200.game.entities.factories.<a href="com/csse3200/game/entities/factories/ItemFactory.html" title="class in com.csse3200.game.entities.factories">ItemFactory</a></dt>
 <dd>
 <div class="block">Creates and configures a new item entity.</div>
 </dd>
 <dt><a href="com/csse3200/game/physics/PhysicsEngine.html#createJoint(com.badlogic.gdx.physics.box2d.JointDef)" class="member-name-link">createJoint(JointDef)</a> - Method in class com.csse3200.game.physics.<a href="com/csse3200/game/physics/PhysicsEngine.html" title="class in com.csse3200.game.physics">PhysicsEngine</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/csse3200/game/entities/factories/ProjectileFactory.html#createLaserShot(com.badlogic.gdx.math.Vector2)" class="member-name-link">createLaserShot(Vector2)</a> - Static method in class com.csse3200.game.entities.factories.<a href="com/csse3200/game/entities/factories/ProjectileFactory.html" title="class in com.csse3200.game.entities.factories">ProjectileFactory</a></dt>
-<dd>
-<div class="block">Creates a laser shot entity</div>
-</dd>
 <dt><a href="com/csse3200/game/entities/factories/WeaponsFactory.html#createLightsaber()" class="member-name-link">createLightsaber()</a> - Static method in class com.csse3200.game.entities.factories.<a href="com/csse3200/game/entities/factories/WeaponsFactory.html" title="class in com.csse3200.game.entities.factories">WeaponsFactory</a></dt>
 <dd>
 <div class="block">Creates a lightsaber entity.</div>
@@ -612,6 +632,10 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/csse3200/game/entities/factories/ObstacleFactory.html#createTree()" class="member-name-link">createTree()</a> - Static method in class com.csse3200.game.entities.factories.<a href="com/csse3200/game/entities/factories/ObstacleFactory.html" title="class in com.csse3200.game.entities.factories">ObstacleFactory</a></dt>
 <dd>
 <div class="block">Creates a tree entity.</div>
+</dd>
+<dt><a href="com/csse3200/game/entities/factories/NPCFactory.html#createVroomba(com.csse3200.game.entities.Entity,com.csse3200.game.areas.ForestGameArea)" class="member-name-link">createVroomba(Entity, ForestGameArea)</a> - Static method in class com.csse3200.game.entities.factories.<a href="com/csse3200/game/entities/factories/NPCFactory.html" title="class in com.csse3200.game.entities.factories">NPCFactory</a></dt>
+<dd>
+<div class="block">Creates a Vroomba entity.</div>
 </dd>
 <dt><a href="com/csse3200/game/entities/factories/ObstacleFactory.html#createWall(float,float)" class="member-name-link">createWall(float, float)</a> - Static method in class com.csse3200.game.entities.factories.<a href="com/csse3200/game/entities/factories/ObstacleFactory.html" title="class in com.csse3200.game.entities.factories">ObstacleFactory</a></dt>
 <dd>
@@ -676,6 +700,14 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/csse3200/game/rendering/DebugRenderer.html#%3Cinit%3E()" class="member-name-link">DebugRenderer()</a> - Constructor for class com.csse3200.game.rendering.<a href="com/csse3200/game/rendering/DebugRenderer.html" title="class in com.csse3200.game.rendering">DebugRenderer</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/rendering/DebugRenderer.html#%3Cinit%3E(com.badlogic.gdx.physics.box2d.Box2DDebugRenderer,com.badlogic.gdx.graphics.glutils.ShapeRenderer)" class="member-name-link">DebugRenderer(Box2DDebugRenderer, ShapeRenderer)</a> - Constructor for class com.csse3200.game.rendering.<a href="com/csse3200/game/rendering/DebugRenderer.html" title="class in com.csse3200.game.rendering">DebugRenderer</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/entities/configs/NPCConfigs.html#deepSpin" class="member-name-link">deepSpin</a> - Variable in class com.csse3200.game.entities.configs.<a href="com/csse3200/game/entities/configs/NPCConfigs.html" title="class in com.csse3200.game.entities.configs">NPCConfigs</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/entities/configs/DeepspinConfig.html" class="type-name-link" title="class in com.csse3200.game.entities.configs">DeepspinConfig</a> - Class in <a href="com/csse3200/game/entities/configs/package-summary.html">com.csse3200.game.entities.configs</a></dt>
+<dd>
+<div class="block">Defines the properties stored in ghost GPT config files to be loaded by the NPC Factory.</div>
+</dd>
+<dt><a href="com/csse3200/game/entities/configs/DeepspinConfig.html#%3Cinit%3E()" class="member-name-link">DeepspinConfig()</a> - Constructor for class com.csse3200.game.entities.configs.<a href="com/csse3200/game/entities/configs/DeepspinConfig.html" title="class in com.csse3200.game.entities.configs">DeepspinConfig</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/physics/PhysicsLayer.html#DEFAULT" class="member-name-link">DEFAULT</a> - Static variable in class com.csse3200.game.physics.<a href="com/csse3200/game/physics/PhysicsLayer.html" title="class in com.csse3200.game.physics">PhysicsLayer</a></dt>
 <dd>&nbsp;</dd>
@@ -1007,17 +1039,21 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/components/enemy/FireballMovementComponent.html#%3Cinit%3E(com.badlogic.gdx.math.Vector2)" class="member-name-link">FireballMovementComponent(Vector2)</a> - Constructor for class com.csse3200.game.components.enemy.<a href="com/csse3200/game/components/enemy/FireballMovementComponent.html" title="class in com.csse3200.game.components.enemy">FireballMovementComponent</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/csse3200/game/components/enemy/ProjectileLauncherComponent.html#FireLaserProjectile(com.badlogic.gdx.math.Vector2)" class="member-name-link">FireLaserProjectile(Vector2)</a> - Method in class com.csse3200.game.components.enemy.<a href="com/csse3200/game/components/enemy/ProjectileLauncherComponent.html" title="class in com.csse3200.game.components.enemy">ProjectileLauncherComponent</a></dt>
+<dt><a href="com/csse3200/game/components/tasks/GPTFastChaseTask.html#FireLasers()" class="member-name-link">FireLasers()</a> - Method in class com.csse3200.game.components.tasks.<a href="com/csse3200/game/components/tasks/GPTFastChaseTask.html" title="class in com.csse3200.game.components.tasks">GPTFastChaseTask</a></dt>
 <dd>
-<div class="block">Fires a laser projectile in the direction specified.</div>
+<div class="block">If there is a projectile launcher present, fire lasers.</div>
 </dd>
-<dt><a href="com/csse3200/game/components/enemy/ProjectileLauncherComponent.html#FireLaserProjectileBurstFire(int,float,com.badlogic.gdx.math.Vector2)" class="member-name-link">FireLaserProjectileBurstFire(int, float, Vector2)</a> - Method in class com.csse3200.game.components.enemy.<a href="com/csse3200/game/components/enemy/ProjectileLauncherComponent.html" title="class in com.csse3200.game.components.enemy">ProjectileLauncherComponent</a></dt>
+<dt><a href="com/csse3200/game/components/enemy/ProjectileLauncherComponent.html#FireProjectile(java.lang.String,com.badlogic.gdx.math.Vector2,com.badlogic.gdx.math.Vector2,com.badlogic.gdx.math.Vector2,com.csse3200.game.entities.configs.BaseProjectileConfig)" class="member-name-link">FireProjectile(String, Vector2, Vector2, Vector2, BaseProjectileConfig)</a> - Method in class com.csse3200.game.components.enemy.<a href="com/csse3200/game/components/enemy/ProjectileLauncherComponent.html" title="class in com.csse3200.game.components.enemy">ProjectileLauncherComponent</a></dt>
+<dd>
+<div class="block">Fires a projectile, classified as an enemy projectile, in the direction specified.</div>
+</dd>
+<dt><a href="com/csse3200/game/components/enemy/ProjectileLauncherComponent.html#FireProjectileBurstFire(java.lang.String,int,float,com.badlogic.gdx.math.Vector2,com.badlogic.gdx.math.Vector2,com.badlogic.gdx.math.Vector2,com.csse3200.game.entities.configs.BaseProjectileConfig)" class="member-name-link">FireProjectileBurstFire(String, int, float, Vector2, Vector2, Vector2, BaseProjectileConfig)</a> - Method in class com.csse3200.game.components.enemy.<a href="com/csse3200/game/components/enemy/ProjectileLauncherComponent.html" title="class in com.csse3200.game.components.enemy">ProjectileLauncherComponent</a></dt>
 <dd>
 <div class="block">A quick burst of repeated laser projectile firings.</div>
 </dd>
-<dt><a href="com/csse3200/game/components/enemy/ProjectileLauncherComponent.html#FireLaserProjectileMultishot(int,float,com.badlogic.gdx.math.Vector2)" class="member-name-link">FireLaserProjectileMultishot(int, float, Vector2)</a> - Method in class com.csse3200.game.components.enemy.<a href="com/csse3200/game/components/enemy/ProjectileLauncherComponent.html" title="class in com.csse3200.game.components.enemy">ProjectileLauncherComponent</a></dt>
+<dt><a href="com/csse3200/game/components/enemy/ProjectileLauncherComponent.html#FireProjectileMultishot(java.lang.String,int,float,com.badlogic.gdx.math.Vector2,com.badlogic.gdx.math.Vector2,com.badlogic.gdx.math.Vector2,com.csse3200.game.entities.configs.BaseProjectileConfig)" class="member-name-link">FireProjectileMultishot(String, int, float, Vector2, Vector2, Vector2, BaseProjectileConfig)</a> - Method in class com.csse3200.game.components.enemy.<a href="com/csse3200/game/components/enemy/ProjectileLauncherComponent.html" title="class in com.csse3200.game.components.enemy">ProjectileLauncherComponent</a></dt>
 <dd>
-<div class="block">Fires multiple laser projectiles at once</div>
+<div class="block">Fires multiple laser projectiles, classified as enemy projectiles, at once</div>
 </dd>
 <dt><a href="com/csse3200/game/physics/raycast/RaycastHit.html#fixture" class="member-name-link">fixture</a> - Variable in class com.csse3200.game.physics.raycast.<a href="com/csse3200/game/physics/raycast/RaycastHit.html" title="class in com.csse3200.game.physics.raycast">RaycastHit</a></dt>
 <dd>
@@ -1403,9 +1439,12 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/components/tasks/GPTFastChaseTask.html" class="type-name-link" title="class in com.csse3200.game.components.tasks">GPTFastChaseTask</a> - Class in <a href="com/csse3200/game/components/tasks/package-summary.html">com.csse3200.game.components.tasks</a></dt>
 <dd>
-<div class="block">Chases a target entity indefinitely and the entity being visible causes a speed increase</div>
+<div class="block">Chases a target entity indefinitely and the entity being visible causes a speed increase
+  CAN have added functionality to launch projectiles at the player too if wanted.</div>
 </dd>
 <dt><a href="com/csse3200/game/components/tasks/GPTFastChaseTask.html#%3Cinit%3E(com.csse3200.game.entities.Entity,int,com.badlogic.gdx.math.Vector2)" class="member-name-link">GPTFastChaseTask(Entity, int, Vector2)</a> - Constructor for class com.csse3200.game.components.tasks.<a href="com/csse3200/game/components/tasks/GPTFastChaseTask.html" title="class in com.csse3200.game.components.tasks">GPTFastChaseTask</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/components/tasks/GPTFastChaseTask.html#%3Cinit%3E(com.csse3200.game.entities.Entity,int,com.badlogic.gdx.math.Vector2,com.csse3200.game.components.enemy.ProjectileLauncherComponent,com.csse3200.game.entities.Entity)" class="member-name-link">GPTFastChaseTask(Entity, int, Vector2, ProjectileLauncherComponent, Entity)</a> - Constructor for class com.csse3200.game.components.tasks.<a href="com/csse3200/game/components/tasks/GPTFastChaseTask.html" title="class in com.csse3200.game.components.tasks">GPTFastChaseTask</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/components/tasks/GPTSlowChaseTask.html" class="type-name-link" title="class in com.csse3200.game.components.tasks">GPTSlowChaseTask</a> - Class in <a href="com/csse3200/game/components/tasks/package-summary.html">com.csse3200.game.components.tasks</a></dt>
 <dd>
@@ -1417,6 +1456,14 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Contains additional utility constants and functions for common GridPoint2 operations.</div>
 </dd>
+<dt><a href="com/csse3200/game/entities/configs/NPCConfigs.html#grokDroid" class="member-name-link">grokDroid</a> - Variable in class com.csse3200.game.entities.configs.<a href="com/csse3200/game/entities/configs/NPCConfigs.html" title="class in com.csse3200.game.entities.configs">NPCConfigs</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/entities/configs/GrokDroidConfig.html" class="type-name-link" title="class in com.csse3200.game.entities.configs">GrokDroidConfig</a> - Class in <a href="com/csse3200/game/entities/configs/package-summary.html">com.csse3200.game.entities.configs</a></dt>
+<dd>
+<div class="block">Defines the properties stored in ghost GPT config files to be loaded by the NPC Factory.</div>
+</dd>
+<dt><a href="com/csse3200/game/entities/configs/GrokDroidConfig.html#%3Cinit%3E()" class="member-name-link">GrokDroidConfig()</a> - Constructor for class com.csse3200.game.entities.configs.<a href="com/csse3200/game/entities/configs/GrokDroidConfig.html" title="class in com.csse3200.game.entities.configs">GrokDroidConfig</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/entities/factories/GroundBossFactory.html" class="type-name-link" title="class in com.csse3200.game.entities.factories">GroundBossFactory</a> - Class in <a href="com/csse3200/game/entities/factories/package-summary.html">com.csse3200.game.entities.factories</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/entities/factories/GroundBossFactory.html#%3Cinit%3E()" class="member-name-link">GroundBossFactory()</a> - Constructor for class com.csse3200.game.entities.factories.<a href="com/csse3200/game/entities/factories/GroundBossFactory.html" title="class in com.csse3200.game.entities.factories">GroundBossFactory</a></dt>
@@ -1452,7 +1499,7 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/csse3200/game/entities/configs/BaseEntityConfig.html#health" class="member-name-link">health</a> - Variable in class com.csse3200.game.entities.configs.<a href="com/csse3200/game/entities/configs/BaseEntityConfig.html" title="class in com.csse3200.game.entities.configs">BaseEntityConfig</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/csse3200/game/entities/configs/LaserConfig.html#health" class="member-name-link">health</a> - Variable in class com.csse3200.game.entities.configs.<a href="com/csse3200/game/entities/configs/LaserConfig.html" title="class in com.csse3200.game.entities.configs">LaserConfig</a></dt>
+<dt><a href="com/csse3200/game/entities/configs/BaseProjectileConfig.html#health" class="member-name-link">health</a> - Variable in class com.csse3200.game.entities.configs.<a href="com/csse3200/game/entities/configs/BaseProjectileConfig.html" title="class in com.csse3200.game.entities.configs">BaseProjectileConfig</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/entities/configs/PistolBulletConfig.html#health" class="member-name-link">health</a> - Variable in class com.csse3200.game.entities.configs.<a href="com/csse3200/game/entities/configs/PistolBulletConfig.html" title="class in com.csse3200.game.entities.configs">PistolBulletConfig</a></dt>
 <dd>&nbsp;</dd>
@@ -1698,10 +1745,12 @@ loadScripts(document, 'script');</script>
 </dl>
 <h2 class="title" id="I:L">L</h2>
 <dl class="index">
-<dt><a href="com/csse3200/game/entities/configs/ProjectileConfig.html#laser" class="member-name-link">laser</a> - Variable in class com.csse3200.game.entities.configs.<a href="com/csse3200/game/entities/configs/ProjectileConfig.html" title="class in com.csse3200.game.entities.configs">ProjectileConfig</a></dt>
+<dt><a href="com/csse3200/game/entities/configs/ProjectileConfig.html#laser" class="member-name-link">laser</a> - Static variable in class com.csse3200.game.entities.configs.<a href="com/csse3200/game/entities/configs/ProjectileConfig.html" title="class in com.csse3200.game.entities.configs">ProjectileConfig</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/entities/configs/LaserConfig.html" class="type-name-link" title="class in com.csse3200.game.entities.configs">LaserConfig</a> - Class in <a href="com/csse3200/game/entities/configs/package-summary.html">com.csse3200.game.entities.configs</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Configuration for the laser shot projectiles</div>
+</dd>
 <dt><a href="com/csse3200/game/entities/configs/LaserConfig.html#%3Cinit%3E()" class="member-name-link">LaserConfig()</a> - Constructor for class com.csse3200.game.entities.configs.<a href="com/csse3200/game/entities/configs/LaserConfig.html" title="class in com.csse3200.game.entities.configs">LaserConfig</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/concurrency/JobSystem.html#launch(java.util.function.Supplier)" class="member-name-link">launch(Supplier&lt;T&gt;)</a> - Static method in class com.csse3200.game.concurrency.<a href="com/csse3200/game/concurrency/JobSystem.html" title="class in com.csse3200.game.concurrency">JobSystem</a></dt>
@@ -2621,6 +2670,8 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Create a sorted intmap with the specified capacity</div>
 </dd>
+<dt><a href="com/csse3200/game/areas/ForestGameArea.html#spawnEnemyProjectile(java.lang.String,com.badlogic.gdx.math.Vector2,com.csse3200.game.entities.configs.BaseProjectileConfig)" class="member-name-link">spawnEnemyProjectile(String, Vector2, BaseProjectileConfig)</a> - Method in class com.csse3200.game.areas.<a href="com/csse3200/game/areas/ForestGameArea.html" title="class in com.csse3200.game.areas">ForestGameArea</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/areas/GameArea.html#spawnEntity(com.csse3200.game.entities.Entity)" class="member-name-link">spawnEntity(Entity)</a> - Method in class com.csse3200.game.areas.<a href="com/csse3200/game/areas/GameArea.html" title="class in com.csse3200.game.areas">GameArea</a></dt>
 <dd>
 <div class="block">Spawn entity at its current position</div>
@@ -2629,9 +2680,7 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Spawn entity on a given tile.</div>
 </dd>
-<dt><a href="com/csse3200/game/areas/ForestGameArea.html#spawnLaserProjectile(com.badlogic.gdx.math.Vector2)" class="member-name-link">spawnLaserProjectile(Vector2)</a> - Method in class com.csse3200.game.areas.<a href="com/csse3200/game/areas/ForestGameArea.html" title="class in com.csse3200.game.areas">ForestGameArea</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="com/csse3200/game/entities/configs/LaserConfig.html#speed" class="member-name-link">speed</a> - Variable in class com.csse3200.game.entities.configs.<a href="com/csse3200/game/entities/configs/LaserConfig.html" title="class in com.csse3200.game.entities.configs">LaserConfig</a></dt>
+<dt><a href="com/csse3200/game/entities/configs/BaseProjectileConfig.html#speed" class="member-name-link">speed</a> - Variable in class com.csse3200.game.entities.configs.<a href="com/csse3200/game/entities/configs/BaseProjectileConfig.html" title="class in com.csse3200.game.entities.configs">BaseProjectileConfig</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/entities/configs/PistolBulletConfig.html#speed" class="member-name-link">speed</a> - Variable in class com.csse3200.game.entities.configs.<a href="com/csse3200/game/entities/configs/PistolBulletConfig.html" title="class in com.csse3200.game.entities.configs">PistolBulletConfig</a></dt>
 <dd>&nbsp;</dd>
@@ -3132,6 +3181,14 @@ the order they are declared.</div>
 <dd>
 <div class="block">Contains additional utility constants and functions for common Vector2 operations.</div>
 </dd>
+<dt><a href="com/csse3200/game/entities/configs/NPCConfigs.html#vroomba" class="member-name-link">vroomba</a> - Variable in class com.csse3200.game.entities.configs.<a href="com/csse3200/game/entities/configs/NPCConfigs.html" title="class in com.csse3200.game.entities.configs">NPCConfigs</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/entities/configs/VroombaConfig.html" class="type-name-link" title="class in com.csse3200.game.entities.configs">VroombaConfig</a> - Class in <a href="com/csse3200/game/entities/configs/package-summary.html">com.csse3200.game.entities.configs</a></dt>
+<dd>
+<div class="block">Defines the properties stored in ghost king config files to be loaded by the NPC Factory.</div>
+</dd>
+<dt><a href="com/csse3200/game/entities/configs/VroombaConfig.html#%3Cinit%3E()" class="member-name-link">VroombaConfig()</a> - Constructor for class com.csse3200.game.entities.configs.<a href="com/csse3200/game/entities/configs/VroombaConfig.html" title="class in com.csse3200.game.entities.configs">VroombaConfig</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/files/UserSettings.Settings.html#vsync" class="member-name-link">vsync</a> - Variable in class com.csse3200.game.files.<a href="com/csse3200/game/files/UserSettings.Settings.html" title="class in com.csse3200.game.files">UserSettings.Settings</a></dt>
 <dd>&nbsp;</dd>
 </dl>
