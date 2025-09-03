@@ -1,4 +1,6 @@
-.idea/
+source/.idea/
 
 ### Gradle ###
 .gradle/
+
+.DS_Store

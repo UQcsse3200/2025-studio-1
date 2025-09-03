@@ -15,23 +15,37 @@ import org.slf4j.LoggerFactory;
 public class CombatStatsComponent extends Component {
 
   private static final Logger logger = LoggerFactory.getLogger(CombatStatsComponent.class);
+
+  /** Current health points (HP). Never negative. */
   private int health;
+
+  /** Maximum health points. Caller-controlled; not enforced as an upper bound on {@link #setHealth(int)}. */
   private int maxHealth;
+
+  /** Base attack damage used when this component attacks another. Non-negative */
   private int baseAttack;
   private int thresholdForBuff = 20;
   private float coolDown;
 
+  /**
+   * Construct a combat Stats Component (Health + Attack System)
+   *
+   * @param health     initial health (values {@code < 0} are clamped to {@code 0})
+   * @param baseAttack base attack damage (must be {@code >= 0})
+   */
   public CombatStatsComponent(int health, int baseAttack) {
+    setMaxHealth(health);
     setHealth(health);
     setBaseAttack(baseAttack);
     this.coolDown = 0;
-    this.maxHealth = health;
   }
 
   /**
-   * Returns true if the entity's has 0 health, otherwise false.
+   * Checks whether this entity is dead.
+   * <p>
+   * An entity is considered dead if its health is less than or equal to zero.
    *
-   * @return is player dead
+   * @return {@code true} if the entity has 0 or less health, {@code false} otherwise
    */
   public Boolean isDead() {
     return this.health <= 0;
@@ -43,22 +57,17 @@ public class CombatStatsComponent extends Component {
    * @return entity's health
    */
   public int getHealth() {
-    return health;
+    return this.health;
   }
 
   /**
-   * Sets the entity's health. Health has a minimum bound of 0.
+   * Sets the entity's health. Health is always clamped between 0 and maxHealth.
    *
-   * @param health health
+   * @param health new health value
    */
   public void setHealth(int health) {
     int prevHealth = this.health;
-    if (health >= 0) {
-      this.health = health;
-    } else {
-      this.health = 0;
-    }
-
+    this.health = Math.max(0, Math.min(health, this.maxHealth));
     if (entity != null) {
       entity.getEvents().trigger("updateHealth", this.health);
 
@@ -94,10 +103,8 @@ public class CombatStatsComponent extends Component {
    */
 
   public float getCoolDown() {
-
     return this.coolDown;
   }
-
 
 
   /**
@@ -115,10 +122,10 @@ public class CombatStatsComponent extends Component {
    * @param maxHealth the maximum health that a entity can have
    */
   public void setMaxHealth(int maxHealth) {
-    if (maxHealth >= 0) {
-      this.maxHealth = health;
-    } else {
-      this.maxHealth = 0;
+    this.maxHealth = Math.max(maxHealth, 0);
+    // If current health is above the new cap, clamp it (and emit updateHealth)
+    if (this.health > this.maxHealth) {
+      setHealth(this.maxHealth);
     }
     if (entity != null) {
       entity.getEvents().trigger("updateMaxHealth", this.maxHealth);
@@ -126,10 +133,12 @@ public class CombatStatsComponent extends Component {
   }
 
   /**
-   * Return entity's maximum health
+   * Sets the entity's maximum health
+   *
+   * @return the entity's maximum health (never negative)
    */
   public int getMaxHealth() {
-     return maxHealth;
+     return this.maxHealth;
   }
 
   /**
@@ -138,7 +147,7 @@ public class CombatStatsComponent extends Component {
    * @return base attack damage
    */
   public int getBaseAttack() {
-    return baseAttack;
+    return this.baseAttack;
   }
 
   /**
@@ -155,9 +164,16 @@ public class CombatStatsComponent extends Component {
   }
 
   /**
-   * Allows the entity to be hit by some attacker and deal some damage, if they have waited
-   * for the designated time between attacks.
-   * @param attacker the entity attacking
+   * Apply damage to this entity from another attacking entity.
+   *
+   * <p>If {@code attacker} is {@code null}, an error is logged and the call is a no-op.</p>
+   * <p>If this entity is already dead or the attacker's base attack is {@code <= 0}, no damage is applied.</p>
+   *
+   * <p>Allows the entity to be hit by some attacker and deal damage, provided they have
+   * waited for the designated time between attacks.</p>
+   *
+   * @param attacker the attacking entity providing {@linkplain #getBaseAttack() base attack} damage; may be {@code null}
+   * @see #applyDamage(int)
    */
   public void hit(CombatStatsComponent attacker) {
     if (attacker == null) {
@@ -170,9 +186,12 @@ public class CombatStatsComponent extends Component {
   /**
    * Apply damage to this entity.
    *
-   * @param damage Damage amount (must >= 0)
+   * <p>Damage {@code <= 0} is ignored. If the entity is dead, the call is a no-op.</p>
+   *
+   * @param damage damage amount (must be {@code >= 0} to have any effect)
+   * @implSpec Implementations must not reduce health below {@code 0}.
+   * @see #setHealth(int)
    */
-
   private void applyDamage(int damage) {
     if (damage <= 0 || isDead()) {
         return;
@@ -182,16 +201,19 @@ public class CombatStatsComponent extends Component {
 
   /**
    * Deal direct damage as an integer.
+   *
    * <p>
-   * This is intended for non-entity sources of damage, such as traps,
-   * projectiles, or weapons. At this stage, the weapon's output power
-   * (damage) is represented as a simple {@code int}. In future, this
-   * can be extended to use a WeaponStatsComponent or DamageInfo object
-   * for more complex calculations (crit, resistances, etc.).
+   *  Intended for non-entity sources (e.g., traps, projectiles, environmental hazards).
+   *  This delegates to {@link #applyDamage(int)} and therefore follows the same validation and dead-entity behavior.
+   * </p>
+   *
+   * @param damage raw damage amount (non-negative to take effect)
+   * projectiles, or weapons.
    */
-
+  // Note: At this stage, the weapon's output power (damage) is represented as a simple {@code int}.
+  //  In future, this can be extended to use a {@code WeaponStatsComponent} or {@code DamageInfo}
+  //  for features like critical hits or resistances.
   public void hit(int damage) {
     applyDamage(damage);
   }
-
 }

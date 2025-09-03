@@ -4,19 +4,16 @@ import com.csse3200.game.components.entity.EntityComponent;
 
 public class ItemComponent extends EntityComponent {
     private int count;
-    private String texture;
 
     /**
      * This is the constructor for the ItemComponent class, it
      * will take in a count of current existing items of the same
      * type and store it
      * @param count is the present count for the item
-     * @param texture is the texture path to the texture of the item
      */
-    public ItemComponent(int count, String texture) {
+    public ItemComponent(int count) {
         super();
         this.count = count;
-        this.texture = texture;
     }
 
     /**
@@ -38,24 +35,19 @@ public class ItemComponent extends EntityComponent {
     public void setCount(int count){this.count = count;}
 
     /**
-<<<<<<< HEAD
      * Outputs the description of the provided item with id
      * @param name The name of the item that you want the description of
      * @param id The id of the item that you want the description of
      */
     public void description(String name, int id){
         System.out.println("This is a/an " + name + ". " +
-            "\nPresent count : " + count +
-            "\nType :  " + getType());
+                "\nPresnt count : " + count +
+                "\nType :  " + getType());
     }
-
-    //public void updateCount() -- to increment/decrement count
-
+  
     /**
      * Sets the texture path of the current item
-=======
      *
->>>>>>> 660727b6d09bc1e1ff075b62432dd4aae92dad77
      * @param texture sets the texture path of the current item
      */
     public void setTexture(String texture){this.texture = texture;}
@@ -68,7 +60,9 @@ public class ItemComponent extends EntityComponent {
     /**
      * TODO: implement functionality and add docstrings
      */
-    public void setDescription(){ }
+    public void setDescription(){
+
+    }
 
     /**
      * Gets the description for the item
