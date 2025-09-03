@@ -228,6 +228,8 @@ public class ForestGameArea extends GameArea {
     }
     spawnGhostGPT();
     playMusic();
+    float keycardX = 1f;
+    float keycardY = 25f;
 
     // Place a keycard on the floor so the player can unlock the door
     float keycardX = 1f, keycardY = 7f;
