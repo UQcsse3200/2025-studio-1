@@ -16,7 +16,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * The UI component of the inventory.
- * Use the triggers: "add item," "remove item," "remove all items," "focus item"
+ * Use the triggers: "add item," "remove item," "remove all items", "focus item"
  */
 public class PlayerInventoryDisplay extends UIComponent {
     private static final Logger log = LoggerFactory.getLogger(PlayerInventoryDisplay.class);
@@ -45,7 +45,7 @@ public class PlayerInventoryDisplay extends UIComponent {
     public void create() {
         super.create();
         buildUI();
-        entity.getEvents().addListener("add item", this::addInventoryItem);
+        entity.getEvents().addListener("add item", this::addItem);
         entity.getEvents().addListener("remove item", this::clearSlot);
         entity.getEvents().addListener("remove all items", this::clearAll);
         entity.getEvents().addListener("focus item", this::setFocusedIndex);
@@ -85,7 +85,6 @@ public class PlayerInventoryDisplay extends UIComponent {
         table.center().bottom();
         table.padBottom(20f);
 
-        // Preload background drawables
         Drawable normalBg = createSlotBg(0.2f, 0.2f, 0.2f, 0.6f, 2, 1f, 1f, 1f, 1f);
         Drawable focusBg  = createSlotBg(1f, 1f, 0f, 0.6f, 2, 1f, 1f, 0f, 1f);
 

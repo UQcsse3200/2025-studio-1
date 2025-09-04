@@ -151,3 +151,4 @@ public class ItemPickUpComponent extends Component {
     }
 
 }
+

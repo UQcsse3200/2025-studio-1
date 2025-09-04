@@ -32,13 +32,7 @@ public class ColliderComponent extends Component {
       fixtureDef.shape = makeBoundingBox();
     }
 
-    PhysicsComponent physics = entity.getComponent(PhysicsComponent.class);
-    if (physics == null) {
-      logger.error("ColliderComponent requires PhysicsComponent, but none was found on entity: {}", entity);
-      return; // Prevent crash
-    }
-
-    Body physBody = physics.getBody();
+    Body physBody = entity.getComponent(PhysicsComponent.class).getBody();
     fixture = physBody.createFixture(fixtureDef);
   }
 
@@ -241,14 +235,8 @@ public class ColliderComponent extends Component {
   @Override
   public void dispose() {
     super.dispose();
-    PhysicsComponent physics = entity.getComponent(PhysicsComponent.class);
-    if (physics == null) {
-      logger.error("ColliderComponent requires PhysicsComponent during dispose, but none was found on entity: {}", entity);
-      return;
-    }
-
-    Body physBody = physics.getBody();
-    if (physBody != null && physBody.getFixtureList().contains(fixture, true)) {
+    Body physBody = entity.getComponent(PhysicsComponent.class).getBody();
+    if (physBody.getFixtureList().contains(fixture, true)) {
       physBody.destroyFixture(fixture);
     }
   }
