@@ -164,9 +164,7 @@ public class ResourceService implements Disposable {
   }
 
   /**
-   * Loads a list of sounds into the asset manager.
-   *
-   * @param soundNames sound filenames
+   * Loads all textures into the asset manager, including main game and keycard textures.
    */
   public void loadTextures() {
     for (String texture : mainGameTextures) {
@@ -176,6 +174,7 @@ public class ResourceService implements Disposable {
       assetManager.load(texture, Texture.class);
     }
   }
+
   public void loadSounds(String[] soundNames) {
     loadAssets(soundNames, Sound.class);
   }
