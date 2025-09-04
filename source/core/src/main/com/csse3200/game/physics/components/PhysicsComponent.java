@@ -66,12 +66,11 @@ public class PhysicsComponent extends Component {
 
   @Override
   public void create() {
-
     body.setTransform(entity.getPosition(), 0f);
     body.setActive(true);
 
     BodyUserData userData = new BodyUserData();
-    userData.entity = this.entity;
+    userData.entity = entity;
     body.setUserData(userData);
 
     entity.getEvents().addListener("setPosition", (Vector2 pos) -> body.setTransform(pos, 0f));
@@ -88,6 +87,10 @@ public class PhysicsComponent extends Component {
     entity.setPosition(bodyPos, false);
   }
 
+  @Override
+  public void dispose() {
+    physics.destroyBody(body);
+  }
 
   @Override
   public void setEnabled(boolean enabled) {

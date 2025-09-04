@@ -56,14 +56,6 @@ public class TerrainFactory {
   public TerrainComponent createTerrain(TerrainType terrainType) {
     ResourceService resourceService = ServiceLocator.getResourceService();
     switch (terrainType) {
-      case SPAWN_ROOM:
-        TextureRegion spawnBackground =
-            new TextureRegion(resourceService.getAsset("images/SpawnResize.png", Texture.class));
-        return createGameRooms(0.5f, spawnBackground);
-      case LOBBY:
-        TextureRegion lobbyBackground =
-            new TextureRegion(resourceService.getAsset("images/LobbyWIP.png", Texture.class));
-        return createGameRooms(0.5f, lobbyBackground);
       case FOREST_DEMO:
         TextureRegion orthoGrass =
             new TextureRegion(resourceService.getAsset("images/grass_1.png", Texture.class));
@@ -101,14 +93,6 @@ public class TerrainFactory {
     return new TerrainComponent(camera, tiledMap, renderer, orientation, tileWorldSize);
   }
 
-    private TerrainComponent createGameRooms(
-        float tileWorldSize, TextureRegion background) {
-      GridPoint2 tilePixelSize = new GridPoint2(background.getRegionWidth(), background.getRegionHeight());
-      TiledMap tiledMap = createGameRoomsBackground(tilePixelSize, background);
-      TiledMapRenderer renderer = createRenderer(tiledMap, tileWorldSize / 30);
-      return new TerrainComponent(camera, tiledMap, renderer, orientation, tileWorldSize);
-    }
-
   private TiledMapRenderer createRenderer(TiledMap tiledMap, float tileScale) {
     switch (orientation) {
       case ORTHOGONAL:
@@ -141,19 +125,6 @@ public class TerrainFactory {
     return tiledMap;
   }
 
-  private TiledMap createGameRoomsBackground(
-      GridPoint2 tileSize, TextureRegion background) {
-    TiledMap tiledMap = new TiledMap();
-    TiledMapTileLayer layer = new TiledMapTileLayer(1, 1, tileSize.x, tileSize.y);
-    TerrainTile backgroundTile = new TerrainTile(background);
-
-
-    fillBackground(layer, MAP_SIZE, backgroundTile);
-
-    tiledMap.getLayers().add(layer);
-    return tiledMap;
-    }
-
   private static void fillTilesAtRandom(
       TiledMapTileLayer layer, GridPoint2 mapSize, TerrainTile tile, int amount) {
     GridPoint2 min = new GridPoint2(0, 0);
@@ -176,12 +147,6 @@ public class TerrainFactory {
     }
   }
 
-  private static void fillBackground(TiledMapTileLayer layer, GridPoint2 mapSize, TerrainTile tile) {
-    Cell cell = new Cell();
-    cell.setTile(tile);
-    layer.setCell(0, 0,cell);
-  }
-
   /**
    * This enum should contain the different terrains in your game, e.g. forest, cave, home, all with
    * the same oerientation. But for demonstration purposes, the base code has the same level in 3
@@ -190,8 +155,6 @@ public class TerrainFactory {
   public enum TerrainType {
     FOREST_DEMO,
     FOREST_DEMO_ISO,
-    FOREST_DEMO_HEX,
-    SPAWN_ROOM,
-    LOBBY
+    FOREST_DEMO_HEX
   }
 }
