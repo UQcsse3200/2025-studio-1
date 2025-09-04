@@ -186,13 +186,18 @@ loadScripts(document, 'script');</script>
 <div class="block">Set the entity's hit cooldown (seconds)</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setHealth(int)" class="member-name-link">setHealth</a><wbr>(int&nbsp;health)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setDisableDamage(boolean)" class="member-name-link">setDisableDamage</a><wbr>(boolean&nbsp;status)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Sets the entity's health.</div>
+<div class="block">Sets whether the player can receive any damage.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setMaxHealth(int)" class="member-name-link">setMaxHealth</a><wbr>(int&nbsp;maxHealth)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setHealth(int)" class="member-name-link">setHealth</a><wbr>(int&nbsp;health)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Sets the entity's health.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setMaxHealth(int)" class="member-name-link">setMaxHealth</a><wbr>(int&nbsp;maxHealth)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Sets the entity's Max Health.</div>
 </div>
 </div>
@@ -307,7 +312,7 @@ loadScripts(document, 'script');</script>
 <div class="block">Sets the entity's Max Health. Max Health has a minimum bound of 0.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>maxHealth</code> - the maximum health that a entity can have</dd>
+<dd><code>maxHealth</code> - the maximum health that an entity can have</dd>
 </dl>
 </section>
 </li>
@@ -374,13 +379,25 @@ loadScripts(document, 'script');</script>
 <div class="block">Deal direct damage as an integer.
 
  <p>
-  Intended for non-entity sources (e.g., traps, projectiles, environmental hazards).
-  This delegates to <code>applyDamage(int)</code> and therefore follows the same validation and dead-entity behavior.
+  Intended for non-entity sources (e.g. traps, projectiles, environmental hazards).
+  This delegates to <code>applyDamage(int)</code> and therefore follows the same validation and dead-entity behaviour.
  </p></div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>damage</code> - raw damage amount (non-negative to take effect)
  projectiles, or weapons.</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="setDisableDamage(boolean)">
+<h3>setDisableDamage</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setDisableDamage</span><wbr><span class="parameters">(boolean&nbsp;status)</span></div>
+<div class="block">Sets whether the player can receive any damage. True means no damage received
+ and false means damage can be received.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>status</code> - Status of whether entity can be damaged</dd>
 </dl>
 </section>
 </li>

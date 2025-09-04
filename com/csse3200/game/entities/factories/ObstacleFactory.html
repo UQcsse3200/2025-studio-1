@@ -91,9 +91,10 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">ObstacleFactory</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
-<div class="block">Factory to create obstacle entities.
-
- <p>Each obstacle entity type should have a creation method that returns a corresponding entity.</div>
+<div class="block">Builds common static props and triggers used by the level (trees, floors, desks, crates, etc.).
+ Each method returns a ready-to-place Entity with the right components already attached.
+ Where needed we set a StaticBody so the object does not move, and assign a collider layer
+ to decide if it should block the player (OBSTACLE) or just detect overlap (DEFAULT + sensor).</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -109,6 +110,113 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../Entity.html" title="class in com.csse3200.game.entities">Entity</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#createBigThickFloor()" class="member-name-link">createBigThickFloor</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">A very tall wall-like block (same art as thick floor but much taller).</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../Entity.html" title="class in com.csse3200.game.entities">Entity</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#createCeilingLight()" class="member-name-link">createCeilingLight</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Small ceiling light prop.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../Entity.html" title="class in com.csse3200.game.entities">Entity</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#createCrate()" class="member-name-link">createCrate</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Wooden crate that blocks the player (useful for cover or decoration).</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../Entity.html" title="class in com.csse3200.game.entities">Entity</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#createDoorTrigger(float,float)" class="member-name-link">createDoorTrigger</a><wbr>(float&nbsp;width,
+ float&nbsp;height)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Thin trigger line used for doors/exits.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../Entity.html" title="class in com.csse3200.game.entities">Entity</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#createLargeEnergyPod()" class="member-name-link">createLargeEnergyPod</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Glowing energy pod that acts as a solid prop on the floor.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../Entity.html" title="class in com.csse3200.game.entities">Entity</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#createLargeSecurityCamera()" class="member-name-link">createLargeSecurityCamera</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Security camera sprite (visual only).</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../Entity.html" title="class in com.csse3200.game.entities">Entity</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#createLargeShelf()" class="member-name-link">createLargeShelf</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Large shelf prop that blocks movement (like furniture in the way).</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../Entity.html" title="class in com.csse3200.game.entities">Entity</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#createLongCeilingLight()" class="member-name-link">createLongCeilingLight</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../Entity.html" title="class in com.csse3200.game.entities">Entity</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#createLongFloor()" class="member-name-link">createLongFloor</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Long, thin floor piece for platforms/walkways.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../Entity.html" title="class in com.csse3200.game.entities">Entity</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#createMidShelf()" class="member-name-link">createMidShelf</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Mid-height shelf prop that blocks movement.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../Entity.html" title="class in com.csse3200.game.entities">Entity</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#createOfficeChair()" class="member-name-link">createOfficeChair</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Office chair prop that the player cannot pass through.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../Entity.html" title="class in com.csse3200.game.entities">Entity</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#createOfficeDesk()" class="member-name-link">createOfficeDesk</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Front-facing office desk placed on the thin floor.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../Entity.html" title="class in com.csse3200.game.entities">Entity</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#createPurpleSpawnPad()" class="member-name-link">createPurpleSpawnPad</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Purple spawn pad prop.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../Entity.html" title="class in com.csse3200.game.entities">Entity</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#createRailing()" class="member-name-link">createRailing</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Decorative railing.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../Entity.html" title="class in com.csse3200.game.entities">Entity</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#createRedSpawnPad()" class="member-name-link">createRedSpawnPad</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Red spawn pad prop.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../Entity.html" title="class in com.csse3200.game.entities">Entity</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#createSmallSquare()" class="member-name-link">createSmallSquare</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Small, solid square tile useful as a step or blocker.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../Entity.html" title="class in com.csse3200.game.entities">Entity</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#createSmallStair()" class="member-name-link">createSmallStair</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Short stair-like prop the player cannot pass through.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../Entity.html" title="class in com.csse3200.game.entities">Entity</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#createSquareTile()" class="member-name-link">createSquareTile</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Square floor tile, collidable so it behaves like ground.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../Entity.html" title="class in com.csse3200.game.entities">Entity</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#createStorageCrateDark()" class="member-name-link">createStorageCrateDark</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Dark futuristic storage crate.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../Entity.html" title="class in com.csse3200.game.entities">Entity</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#createStorageCrateGreen()" class="member-name-link">createStorageCrateGreen</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Green futuristic storage crate.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../Entity.html" title="class in com.csse3200.game.entities">Entity</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#createThickFloor()" class="member-name-link">createThickFloor</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Regular thick floor block (short version of the big wall).</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../Entity.html" title="class in com.csse3200.game.entities">Entity</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#createThinFloor()" class="member-name-link">createThinFloor</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../Entity.html" title="class in com.csse3200.game.entities">Entity</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#createTree()" class="member-name-link">createTree</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Creates a tree entity.</div>
@@ -116,9 +224,7 @@ loadScripts(document, 'script');</script>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../Entity.html" title="class in com.csse3200.game.entities">Entity</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#createWall(float,float)" class="member-name-link">createWall</a><wbr>(float&nbsp;width,
  float&nbsp;height)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Creates an invisible physics wall.</div>
-</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
 </div>
@@ -148,17 +254,251 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
+<section class="detail" id="createLongFloor()">
+<h3>createLongFloor</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../Entity.html" title="class in com.csse3200.game.entities">Entity</a></span>&nbsp;<span class="element-name">createLongFloor</span>()</div>
+<div class="block">Long, thin floor piece for platforms/walkways.
+ Solid so the player can stand on it.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>a static floor Entity</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="createBigThickFloor()">
+<h3>createBigThickFloor</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../Entity.html" title="class in com.csse3200.game.entities">Entity</a></span>&nbsp;<span class="element-name">createBigThickFloor</span>()</div>
+<div class="block">A very tall wall-like block (same art as thick floor but much taller).
+ Good for visual dividers in the background.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>a tall static prop</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="createRailing()">
+<h3>createRailing</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../Entity.html" title="class in com.csse3200.game.entities">Entity</a></span>&nbsp;<span class="element-name">createRailing</span>()</div>
+<div class="block">Decorative railing. Visual-only: no physics/collision so it never blocks the player.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>a simple sprite Entity</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="createSmallSquare()">
+<h3>createSmallSquare</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../Entity.html" title="class in com.csse3200.game.entities">Entity</a></span>&nbsp;<span class="element-name">createSmallSquare</span>()</div>
+<div class="block">Small, solid square tile useful as a step or blocker.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>a static solid tile</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="createSmallStair()">
+<h3>createSmallStair</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../Entity.html" title="class in com.csse3200.game.entities">Entity</a></span>&nbsp;<span class="element-name">createSmallStair</span>()</div>
+<div class="block">Short stair-like prop the player cannot pass through.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>a static solid stair block</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="createSquareTile()">
+<h3>createSquareTile</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../Entity.html" title="class in com.csse3200.game.entities">Entity</a></span>&nbsp;<span class="element-name">createSquareTile</span>()</div>
+<div class="block">Square floor tile, collidable so it behaves like ground.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>a static square tile</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="createThickFloor()">
+<h3>createThickFloor</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../Entity.html" title="class in com.csse3200.game.entities">Entity</a></span>&nbsp;<span class="element-name">createThickFloor</span>()</div>
+<div class="block">Regular thick floor block (short version of the big wall).</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>a static ground piece</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="createThinFloor()">
+<h3>createThinFloor</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../Entity.html" title="class in com.csse3200.game.entities">Entity</a></span>&nbsp;<span class="element-name">createThinFloor</span>()</div>
+</section>
+</li>
+<li>
+<section class="detail" id="createPurpleSpawnPad()">
+<h3>createPurpleSpawnPad</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../Entity.html" title="class in com.csse3200.game.entities">Entity</a></span>&nbsp;<span class="element-name">createPurpleSpawnPad</span>()</div>
+<div class="block">Purple spawn pad prop. Solid so it rests on the ground like other props.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>a static pad entity</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="createRedSpawnPad()">
+<h3>createRedSpawnPad</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../Entity.html" title="class in com.csse3200.game.entities">Entity</a></span>&nbsp;<span class="element-name">createRedSpawnPad</span>()</div>
+<div class="block">Red spawn pad prop. Identical behaviour to the purple pad.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>a static pad entity</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="createCeilingLight()">
+<h3>createCeilingLight</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../Entity.html" title="class in com.csse3200.game.entities">Entity</a></span>&nbsp;<span class="element-name">createCeilingLight</span>()</div>
+<div class="block">Small ceiling light prop. Solid only so it can be positioned consistently — it’s decorative.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>a static light entity</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="createCrate()">
+<h3>createCrate</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../Entity.html" title="class in com.csse3200.game.entities">Entity</a></span>&nbsp;<span class="element-name">createCrate</span>()</div>
+<div class="block">Wooden crate that blocks the player (useful for cover or decoration).</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>a static crate entity</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="createLargeShelf()">
+<h3>createLargeShelf</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../Entity.html" title="class in com.csse3200.game.entities">Entity</a></span>&nbsp;<span class="element-name">createLargeShelf</span>()</div>
+<div class="block">Large shelf prop that blocks movement (like furniture in the way).</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>a static shelf entity</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="createLongCeilingLight()">
+<h3>createLongCeilingLight</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../Entity.html" title="class in com.csse3200.game.entities">Entity</a></span>&nbsp;<span class="element-name">createLongCeilingLight</span>()</div>
+</section>
+</li>
+<li>
+<section class="detail" id="createMidShelf()">
+<h3>createMidShelf</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../Entity.html" title="class in com.csse3200.game.entities">Entity</a></span>&nbsp;<span class="element-name">createMidShelf</span>()</div>
+<div class="block">Mid-height shelf prop that blocks movement.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>a static shelf entity</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="createOfficeChair()">
+<h3>createOfficeChair</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../Entity.html" title="class in com.csse3200.game.entities">Entity</a></span>&nbsp;<span class="element-name">createOfficeChair</span>()</div>
+<div class="block">Office chair prop that the player cannot pass through.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>a static chair entity</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="createOfficeDesk()">
+<h3>createOfficeDesk</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../Entity.html" title="class in com.csse3200.game.entities">Entity</a></span>&nbsp;<span class="element-name">createOfficeDesk</span>()</div>
+<div class="block">Front-facing office desk placed on the thin floor. Solid to act like furniture.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>a static desk entity</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="createLargeSecurityCamera()">
+<h3>createLargeSecurityCamera</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../Entity.html" title="class in com.csse3200.game.entities">Entity</a></span>&nbsp;<span class="element-name">createLargeSecurityCamera</span>()</div>
+<div class="block">Security camera sprite (visual only). No physics/collider, so it never blocks the player.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>a decorative camera entity</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="createLargeEnergyPod()">
+<h3>createLargeEnergyPod</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../Entity.html" title="class in com.csse3200.game.entities">Entity</a></span>&nbsp;<span class="element-name">createLargeEnergyPod</span>()</div>
+<div class="block">Glowing energy pod that acts as a solid prop on the floor.
+ Collider is slightly shorter (0.9) so it seats nicely on tiles when scaled.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>a static energy pod entity</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="createStorageCrateGreen()">
+<h3>createStorageCrateGreen</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../Entity.html" title="class in com.csse3200.game.entities">Entity</a></span>&nbsp;<span class="element-name">createStorageCrateGreen</span>()</div>
+<div class="block">Green futuristic storage crate.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>a static crate entity (green)</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="createStorageCrateDark()">
+<h3>createStorageCrateDark</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../Entity.html" title="class in com.csse3200.game.entities">Entity</a></span>&nbsp;<span class="element-name">createStorageCrateDark</span>()</div>
+<div class="block">Dark futuristic storage crate.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>a static crate entity (dark)</dd>
+</dl>
+</section>
+</li>
+<li>
 <section class="detail" id="createWall(float,float)">
 <h3>createWall</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../Entity.html" title="class in com.csse3200.game.entities">Entity</a></span>&nbsp;<span class="element-name">createWall</span><wbr><span class="parameters">(float&nbsp;width,
  float&nbsp;height)</span></div>
-<div class="block">Creates an invisible physics wall.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="createDoorTrigger(float,float)">
+<h3>createDoorTrigger</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../Entity.html" title="class in com.csse3200.game.entities">Entity</a></span>&nbsp;<span class="element-name">createDoorTrigger</span><wbr><span class="parameters">(float&nbsp;width,
+ float&nbsp;height)</span></div>
+<div class="block">Thin trigger line used for doors/exits.
+ - Layer: DEFAULT
+ - Sensor: true (detects overlap, does not push)
+ You can attach your own component to react on contact (e.g., change room).</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>width</code> - Wall width in world units</dd>
-<dd><code>height</code> - Wall height in world units</dd>
+<dd><code>width</code> - world width of the trigger</dd>
+<dd><code>height</code> - world height of the trigger</dd>
 <dt>Returns:</dt>
-<dd>Wall entity of given width and height</dd>
+<dd>a non-blocking trigger entity</dd>
 </dl>
 </section>
 </li>
