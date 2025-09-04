@@ -75,12 +75,10 @@ public abstract class GameArea implements Disposable {
   }
 
   /**
-   * Spawn entity on a given tile. Requires the terrain to be set first.
+   * Spawn an entity inside the specified room. Requires the terrain to be set first.
    *
-   * @param entity Entity (not yet registered)
-   * @param tilePos tile position to spawn at
-   * @param centerX true to center entity X on the tile, false to align the bottom left corner
-   * @param centerY true to center entity Y on the tile, false to align the bottom left corner
+   * @param roomName name of the room where the entity should spawn
+   * @param entity   entity to spawn (not yet registered)
    */
   public void spawnEntityInRoom(String roomName, Entity entity) {
     Vector2 pos = getRoomSpawnPosition(roomName);
