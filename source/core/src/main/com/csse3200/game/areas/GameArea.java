@@ -66,7 +66,6 @@ public abstract class GameArea implements Disposable {
   /**
    * Spawn an entity inside the specified room. Requires the terrain to be set first.
    *
-   * @param roomName name of the room where the entity should spawn
    * @param entity   entity to spawn (not yet registered)
    */
   protected void spawnEntityAt(
