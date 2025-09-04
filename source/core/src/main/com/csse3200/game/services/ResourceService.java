@@ -152,18 +152,6 @@ public class ResourceService implements Disposable {
     loadAssets(textureAtlasNames, TextureAtlas.class);
   }
 
-  /**
-   * Loads all textures into the asset manager, including main game and keycard textures.
-   */
-  public void loadTextures() {
-    for (String texture : mainGameTextures) {
-      assetManager.load(texture, Texture.class);
-    }
-    for (String texture : keycardTextures) {
-      assetManager.load(texture, Texture.class);
-    }
-  }
-
   public void loadSounds(String[] soundNames) {
     loadAssets(soundNames, Sound.class);
   }
