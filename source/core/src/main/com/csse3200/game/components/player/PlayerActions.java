@@ -49,6 +49,7 @@ public class PlayerActions extends Component {
 
       if (entity.getComponent(CameraComponent.class) != null) {
         camera = entity.getComponent(CameraComponent.class).getCamera();
+
       }
     }
   }
@@ -107,8 +108,10 @@ public class PlayerActions extends Component {
     attackSound.play();
 
     Entity bullet = ProjectileFactory.createPistolBullet();
-    Vector2 origin = new Vector2(entity.getPosition());
-    bullet.setPosition(origin);
+    Vector2 origin = new Vector2(entity.getCenterPosition());
+
+    bullet.setPosition(new Vector2(origin.x - bullet.getScale().x / 2f,
+            origin.y - bullet.getScale().y / 2f));
     ServiceLocator.getEntityService().register(bullet);
 
     PhysicsProjectileComponent projectilePhysics = bullet.
