@@ -100,10 +100,10 @@ public class ForestGameArea extends GameArea {
 //    this.equipItem(dagger);
     this.equipItem(rifle);
 
-    spawnGhosts();
-    spawnGhostKing();
-    spawnGhostGPT();
-    playMusic();
+//    spawnGhosts();
+//    spawnGhostKing();
+//    spawnGhostGPT();
+//    playMusic();
   }
 
   private void displayUI() {
