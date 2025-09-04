@@ -137,7 +137,7 @@ public class CombatStatsComponent extends Component {
    * @return base attack damage
    */
   public int getBaseAttack() {
-    return this.baseAttack;
+    return baseAttack;
   }
 
   /**

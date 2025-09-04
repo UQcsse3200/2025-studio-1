@@ -269,3 +269,4 @@ public class KeyboardPlayerInputComponent extends InputComponent {
     entity.getEvents().trigger("drop focused");
   }
 }
+

@@ -40,7 +40,7 @@ import com.csse3200.game.components.CombatStatsComponent;
  */
 public class MainGameScreen extends ScreenAdapter {
   private static final Logger logger = LoggerFactory.getLogger(MainGameScreen.class);
-  private static final String[] mainGameTextures = {};
+  private static final String[] mainGameTextures = {"images/heart.png"};
   private static final Vector2 CAMERA_POSITION = new Vector2(7.5f, 7.5f);
 
   private final GdxGame game;
@@ -76,7 +76,7 @@ public class MainGameScreen extends ScreenAdapter {
 
     logger.debug("Initialising main game screen entities");
     TerrainFactory terrainFactory = new TerrainFactory(renderer.getCamera());
-    forestGameArea = new ForestGameArea(terrainFactory, renderer.getCamera());
+    forestGameArea = new ForestGameArea(terrainFactory);
     forestGameArea.create();
   }
 
@@ -137,10 +137,8 @@ public class MainGameScreen extends ScreenAdapter {
   private void loadAssets() {
     logger.debug("Loading assets");
     ResourceService resourceService = ServiceLocator.getResourceService();
-    // Load keycard textures (images/keycard_lvl1.png to lvl4.png)
-    resourceService.loadTextures();  // This is your no-arg method in ResourceService
-    // Block until all assets are loaded
-    resourceService.loadAll();
+    resourceService.loadTextures(mainGameTextures);
+    ServiceLocator.getResourceService().loadAll();
   }
 
   private void unloadAssets() {
