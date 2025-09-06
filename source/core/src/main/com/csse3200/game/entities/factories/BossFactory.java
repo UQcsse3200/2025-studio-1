@@ -5,13 +5,10 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.ai.tasks.AITaskComponent;
 import com.csse3200.game.components.CombatStatsComponent;
-import com.csse3200.game.components.enemy.BossChargeSkillComponent;
-import com.csse3200.game.components.enemy.BlackholeAttackComponent;
+import com.csse3200.game.components.enemy.*;
 import com.csse3200.game.components.npc.GhostAnimationController;
 import com.csse3200.game.components.TouchAttackComponent;
-import com.csse3200.game.components.enemy.FireballAttackComponment;
-import com.csse3200.game.components.enemy.FireballMovementComponent;
-import com.csse3200.game.components.enemy.BlackholeComponent;
+import com.csse3200.game.components.player.InventoryComponent;
 import com.csse3200.game.components.tasks.ChaseTask;
 import com.csse3200.game.components.tasks.WanderTask;
 import com.csse3200.game.entities.Entity;
@@ -46,6 +43,10 @@ public class BossFactory {
     public static Entity createBoss2(Entity target) {
         Entity boss2 = createBaseNPC(target);
         BaseEntityConfig config = configs.boss2;
+        InventoryComponent playerInventory = null;
+        if (target != null) {
+            playerInventory = target.getComponent(InventoryComponent.class);
+        }
 
         AnimationRenderComponent animator =
                 new AnimationRenderComponent(
@@ -60,6 +61,8 @@ public class BossFactory {
                 .addComponent(new FireballAttackComponment(target, 1.5f, 8f, 6f, config.baseAttack + 2))
                 .addComponent(new BossChargeSkillComponent(target, 6f, 5f, 0.4f, 12f, 0.6f, 1.5f))
                 .addComponent(new BlackholeComponent(target,7f,8f))
+                .addComponent(new EnemyDeathRewardComponent(100, playerInventory))
+                .addComponent(new DeathParticleSpawnerComponent())
                 .addComponent(new FireballAttackComponment(target, 1.5f, 8f, 6f, config.baseAttack + 2));
         boss2.getComponent(AnimationRenderComponent.class).scaleEntity();
         float k = 2.0f;
@@ -79,11 +82,17 @@ public class BossFactory {
      */
     public static Entity createBoss3(Entity target) {
         BaseEntityConfig config = configs.boss3;
+        InventoryComponent playerInventory = null;
+        if (target != null) {
+            playerInventory = target.getComponent(InventoryComponent.class);
+        }
         Entity boss3 = new Entity()
                 .addComponent(new PhysicsComponent())
                 .addComponent(new ColliderComponent())
                 .addComponent(new HitboxComponent().setLayer(PhysicsLayer.NPC))
                 .addComponent(new CombatStatsComponent(config.health, config.baseAttack))
+                .addComponent(new EnemyDeathRewardComponent(100, playerInventory))
+                .addComponent(new DeathParticleSpawnerComponent())
                 .addComponent(new TextureRenderComponent("images/Boss_3.png"));
 
         boss3.getComponent(TextureRenderComponent.class).scaleEntity();

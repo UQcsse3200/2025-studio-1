@@ -189,8 +189,6 @@ public class PlayerStatsDisplay extends UIComponent {
       if (stats.getHealth() <= 0) continue; // already dead
       logger.debug("Killing enemy {} via debug button", e);
       stats.setHealth(0); // triggers death + reward + particles
-      // Defer disposal to avoid modifying structures mid-iteration
-      Gdx.app.postRunnable(e::dispose);
       break; // only kill one per click
     }
   }
