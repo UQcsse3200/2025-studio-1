@@ -6,6 +6,9 @@ on:
     branches:
       # Push events on main branch
       - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
   build_game:
@@ -37,11 +40,14 @@ jobs:
           cd $GRADLE_DIR
           chmod +x ./gradlew
           ./gradlew --stacktrace build sonarqube --info
-          ls -al
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           GRADLE_DIR: 'source' # Modify this to wherever './gradlew' is
+          SONAR_SCANNER_PARAMS: >
+            -Dsonar.pullrequest.key=${{ github.event.pull_request.number }}
+            -Dsonar.pullrequest.branch=${{ github.head_ref }}
+            -Dsonar.pullrequest.base=${{ github.base_ref }}
 
       - name: Automatic Release # note the path for the files on this one
         uses: marvinpinto/action-automatic-releases@v1.2.1
