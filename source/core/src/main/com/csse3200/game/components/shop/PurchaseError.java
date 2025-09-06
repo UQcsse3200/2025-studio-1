@@ -7,6 +7,7 @@ public enum PurchaseError {
     INSUFFICIENT_FUNDS,
     INVENTORY_FULL,
     LIMIT_REACHED,
-    INVALID_ITEM
+    INVALID_ITEM,
+    UNEXPECTED,
 }
 

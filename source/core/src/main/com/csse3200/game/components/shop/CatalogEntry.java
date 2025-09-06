@@ -1,16 +1,16 @@
 package com.csse3200.game.components.shop;
 
 public final class CatalogEntry {
-    public final String itemId;
+    public final String itemKey;
     public final int price;  // in processors
     public final boolean enabled;
     public final boolean stackable;  // for consumable items
     public final int maxStack;
     public final int bundleQty;
 
-    public CatalogEntry(String itemId, int price, boolean enabled,
+    public CatalogEntry(String itemKey, int price, boolean enabled,
                         boolean stackable, int maxStack, int bundleQty) {
-        this.itemId = itemId;
+        this.itemKey = itemKey;
         this.price = Math.max(0, price);
         this.enabled = enabled;
         this.stackable = stackable;
