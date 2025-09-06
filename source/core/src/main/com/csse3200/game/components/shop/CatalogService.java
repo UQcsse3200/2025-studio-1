@@ -14,11 +14,11 @@ public class CatalogService {
         this.factory = factory;
     }
 
-    public CatalogEntry get(String itemId) {
-        return entries.get(itemId);
+    public CatalogEntry get(String itemKey) {
+        return entries.get(itemKey);
     }
 
-    public Entity spawnEntity(String itemId) {
-        return factory.apply(itemId);
+    public Entity spawnEntity(String itemKey) {
+        return factory.apply(itemKey);
     }
 }
