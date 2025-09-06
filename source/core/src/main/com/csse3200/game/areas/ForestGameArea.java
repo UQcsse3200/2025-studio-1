@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.ItemHoldComponent;
@@ -17,6 +18,7 @@ import com.csse3200.game.entities.factories.NPCFactory;
 import com.csse3200.game.entities.factories.ObstacleFactory;
 import com.csse3200.game.entities.factories.PlayerFactory;
 import com.csse3200.game.entities.factories.*;
+import com.csse3200.game.physics.components.PhysicsComponent;
 import com.csse3200.game.physics.components.PhysicsProjectileComponent;
 import com.csse3200.game.rendering.AnimationRenderComponent;
 import com.csse3200.game.utils.math.GridPoint2Utils;
@@ -157,6 +159,8 @@ public class ForestGameArea extends GameArea {
     spawnVroomba();
     playMusic();
     spawnItems();
+    spawnWeapons();
+
   }
 
   private void spawnRobots() {
@@ -232,6 +236,41 @@ public class ForestGameArea extends GameArea {
       Entity item = ItemFactory.createItem();
       spawnEntityAt(item, randomPos, true, false);
     }
+  }
+
+  /**
+   * Spawns several weapon entities at random positions in the game area.
+   * Each weapon type dagger, pistol, rifle, lightsaber is spawned.
+   */
+  private void spawnWeapons() {
+    GridPoint2 minPos = new GridPoint2(0, 0);
+    GridPoint2 maxPos = terrain.getMapBounds(0).sub(2, 2);
+
+
+      //Spawning dagger on map
+      GridPoint2 posDagger = RandomUtils.random(minPos, maxPos);
+      Entity dagger = WeaponsFactory.createDagger();
+      spawnEntityAt(dagger, posDagger, false, false);
+
+
+      //Spawning pistol on map
+      GridPoint2 posPistol = RandomUtils.random(minPos, maxPos);
+      Entity pistol = WeaponsFactory.createPistol();
+      spawnEntityAt(pistol, posPistol, false, false);
+
+
+      //Spawning riffle on map
+      GridPoint2 posRifle = RandomUtils.random(minPos, maxPos);
+      Entity rifle = WeaponsFactory.createRifle();
+      spawnEntityAt(rifle, posRifle, false, false);
+
+
+      //Spawning dagger on map
+      GridPoint2 posLightsaber = RandomUtils.random(minPos, maxPos);
+      Entity lightsaber = WeaponsFactory.createLightsaber();
+      spawnEntityAt(lightsaber, posLightsaber, false, false);
+
+
   }
 
   private Entity spawnPlayer() {
