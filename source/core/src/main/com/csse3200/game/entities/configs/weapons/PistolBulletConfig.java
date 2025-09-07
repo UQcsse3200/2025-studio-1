@@ -1,4 +1,4 @@
-package com.csse3200.game.entities.configs;
+package com.csse3200.game.entities.configs.weapons;
 
 /**
  * Defines all Pistol Bullet configs to be loaded by the projectile Factory.

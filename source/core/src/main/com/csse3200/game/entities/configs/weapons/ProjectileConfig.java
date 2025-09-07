@@ -1,4 +1,6 @@
-package com.csse3200.game.entities.configs;
+package com.csse3200.game.entities.configs.weapons;
+
+import com.csse3200.game.entities.configs.LaserConfig;
 
 /**
  * Defines all projectile configs to be loaded by the projectile Factory.
