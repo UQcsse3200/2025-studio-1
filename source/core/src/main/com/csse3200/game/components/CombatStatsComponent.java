@@ -65,11 +65,10 @@ public class CombatStatsComponent extends Component {
       entity.getEvents().trigger("updateHealth", this.health);
 
       // Apply attack buff on low health if the entity has that component
-      if (this.health <= thresholdForBuff && (!isDead())) {
-          if (entity.getComponent(LowHealthAttackBuff.class) != null) {
+      if (this.health <= thresholdForBuff && (!isDead()) && entity.getComponent(LowHealthAttackBuff.class) != null) {
               entity.getEvents().trigger("buff");
           }
-      }
+
 
       if (prevHealth > 0 && this.health == 0) {
         entity.getEvents().trigger("death");
@@ -180,7 +179,7 @@ public class CombatStatsComponent extends Component {
    * @see #setHealth(int)
    */
   private void applyDamage(int damage) {
-    if (damage <= 0 || isDead()) {
+    if (damage <= 0 || Boolean.TRUE.equals(isDead())) {
         return;
     }
     setHealth(this.health - damage);
