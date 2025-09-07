@@ -100,8 +100,8 @@ public class GPTFastChaseTask extends DefaultTask implements PriorityTask {
                 Vector2 dirToFire = new Vector2(target.getPosition().x - shooter.getPosition().x,
                         target.getPosition().y - shooter.getPosition().y);
 
-                projectileLauncher.FireProjectile("images/laser_shot.png", dirToFire,
-                        new Vector2(0.2f, 0.8f), new Vector2(0.5f, 0.5f), ProjectileConfig.laser);
+                projectileLauncher.FireProjectile(dirToFire,
+                        new Vector2(0.2f, 0.8f), new Vector2(0.5f, 0.5f));
             }
         }
     }

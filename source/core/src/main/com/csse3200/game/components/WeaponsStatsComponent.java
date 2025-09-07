@@ -37,6 +37,12 @@ public class WeaponsStatsComponent extends Component {
         setCoolDown(0);
     }
 
+    public WeaponsStatsComponent(int baseAttack) {
+        setBaseAttack(baseAttack);
+        setDisableDamage(false);
+        setCoolDown(0);
+    }
+
     /**
      * Set the entity's hit cooldown (seconds)
      *

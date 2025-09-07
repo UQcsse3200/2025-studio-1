@@ -30,10 +30,6 @@ import com.csse3200.game.rendering.TextureRenderComponent;
 
 public class ProjectileFactory {
 
-    //removed final modifier to allow for class to be tested
-    private static ProjectileConfig configs =
-            FileLoader.readClass(ProjectileConfig.class, "configs/projectiles.json");
-
     public static Entity createProjectile(Class<? extends ProjectileConfig> configClass) {
         ProjectileConfig config;
         try {
@@ -59,7 +55,6 @@ public class ProjectileFactory {
         return projectile;
     }
 
-
     /**
      * Creates a pistol bullet entity
      * @return pistol bullet entity
@@ -83,7 +78,7 @@ public class ProjectileFactory {
         projectile.getComponent(TextureRenderWithRotationComponent.class).scaleEntity();
 
         projectile.getComponent(PhysicsProjectileComponent.class).create(); // Not called for some reason.
-        projectile.getComponent(PhysicsProjectileComponent.class).fire(direction, LaserConfig.speed);
+        projectile.getComponent(PhysicsProjectileComponent.class).fire(direction, new LaserConfig().speed);
 
         return projectile;
     }
