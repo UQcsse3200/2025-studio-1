@@ -38,12 +38,26 @@ public class ItemFactory {
 
         itemTest.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
         itemTest.getComponent(TextureRenderComponent.class).scaleEntity();
-        itemTest.scaleHeight(1.0f);
-        PhysicsUtils.setScaledCollider(itemTest, 1.0f, 1.0f);
+        itemTest.scaleHeight(1.0f);  // redundant
+        PhysicsUtils.setScaledCollider(itemTest, 1.0f, 1.0f);  // redundant
 
         itemTest.getComponent(PhysicsComponent.class).getBody().setUserData(itemTest);
 
         return itemTest;
+    }
+
+    public static Entity createItem(String texture) {
+        Entity item = new Entity()
+                .addComponent(new ItemComponent())
+                .addComponent(new TextureRenderComponent(texture))
+                .addComponent(new PhysicsComponent())
+                .addComponent(new EntityComponent());
+
+        item.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
+        item.getComponent(TextureRenderComponent.class).scaleEntity();
+        item.getComponent(PhysicsComponent.class).getBody().setUserData(item);
+
+        return item;
     }
 
     /**
