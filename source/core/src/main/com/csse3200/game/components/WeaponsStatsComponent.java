@@ -1,6 +1,7 @@
 package com.csse3200.game.components;
 
 import com.csse3200.game.components.enemy.LowHealthAttackBuff;
+import com.csse3200.game.entities.configs.weapons.WeaponConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,16 +17,15 @@ public class WeaponsStatsComponent extends Component {
     /** Base attack damage used when this component attacks another. Non-negative */
     private int baseAttack;
     private float coolDown;
-
     private boolean disableDamage;
 
     /**
      * Construct a Weapons Stats Component (Attack System)
      *
-     * @param baseAttack base attack damage (must be {@code >= 0})
+     * @param config attack damage (must be {@code >= 0})
      */
-    public WeaponsStatsComponent(int baseAttack) {
-        setBaseAttack(baseAttack);
+    public WeaponsStatsComponent(WeaponConfig config) {
+        setBaseAttack(config.damage);
         setDisableDamage(false);
         setCoolDown(0);
     }
