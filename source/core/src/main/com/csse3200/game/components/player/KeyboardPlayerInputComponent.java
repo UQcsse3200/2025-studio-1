@@ -5,6 +5,7 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.components.TagComponent;
+import com.csse3200.game.entities.factories.PowerupsFactory;
 import com.csse3200.game.input.InputComponent;
 import com.csse3200.game.rendering.TextureRenderComponent;
 import com.csse3200.game.utils.math.Vector2Utils;
@@ -125,6 +126,9 @@ public class KeyboardPlayerInputComponent extends InputComponent {
       case Keys.NUM_5:
         triggerSelectItem();
         focusedItem = 4;
+        return true;
+      case Keys.NUM_6:
+        PowerupsFactory.applyRapidFire(entity, 1f);
         return true;
       case Keys.P:
         triggerAddItem();
