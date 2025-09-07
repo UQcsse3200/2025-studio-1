@@ -1,6 +1,8 @@
 package com.csse3200.game.entities.factories;
 
 import com.csse3200.game.components.CombatStatsComponent;
+import com.csse3200.game.components.Component;
+import com.csse3200.game.components.TagComponent;
 import com.csse3200.game.components.player.InventoryComponent;
 import com.csse3200.game.components.player.PlayerActions;
 import com.csse3200.game.components.player.PlayerInventoryDisplay;
@@ -52,6 +54,28 @@ public class PlayerFactory {
     player.getComponent(ColliderComponent.class).setDensity(1.5f);
     player.getComponent(TextureRenderComponent.class).scaleEntity();
     player.getComponent(CombatStatsComponent.class).setCoolDown(0.2f);
+
+    // pick up rapid fire powerup
+    // remove this if we have item pickup available
+    // (disposes entity when player go near it)
+    player.addComponent(new Component() {
+      @Override
+      public void update() {
+        var entities = ServiceLocator.getEntityService().getEntities();
+        for (int i = 0; i < entities.size; i++) {
+          Entity entityRapidFirePowerup = entities.get(i);
+          TagComponent tag = entityRapidFirePowerup.getComponent(TagComponent.class);
+
+          if (tag != null && tag.getTag().equals("rapidfire")) {
+            if (entityRapidFirePowerup.getCenterPosition().dst(player.getCenterPosition()) < 1f) {
+              PowerupsFactory.applyRapidFire(player, 2f);
+              entityRapidFirePowerup.dispose();
+            }
+          }
+        }
+      }
+    });
+
     return player;
   }
 

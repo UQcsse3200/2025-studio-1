@@ -93,12 +93,16 @@ public class ForestGameArea extends GameArea {
     Entity pistol = spawnPistol();
     Entity rifle = spawnRifle();
     Entity lightsaber = spawnLightsaber();
+    Entity rapidFirePowerup = spawnRapidFirePowerup();
+    Entity bullet = spawnBullet();
 
     //These are commented out since there is no equip feature yet
 //    this.equipItem(pistol);
 //    this.equipItem(lightsaber);
 //    this.equipItem(dagger);
     this.equipItem(rifle);
+
+    spawnBullet();
 
 //    spawnGhosts();
 //    spawnGhostKing();
@@ -189,11 +193,11 @@ public class ForestGameArea extends GameArea {
   }
 
 //Commented out since bullet functionality is in progress with guns
-//  private Entity spawnBullet() {
-//    Entity newBullet = ProjectileFactory.createPistolBullet();
-//    spawnEntityAt(newBullet, new GridPoint2(5, 5), true, true);
-//    return newBullet;
-//  }
+  private Entity spawnBullet() {
+    Entity newBullet = ProjectileFactory.createPistolBullet();
+    spawnEntityAt(newBullet, new GridPoint2(5, 5), true, true);
+    return newBullet;
+  }
 
   private Entity spawnPistol() {
     Entity newPistol = WeaponsFactory.createPistol();
@@ -207,6 +211,12 @@ public class ForestGameArea extends GameArea {
     Vector2 newRifleOffset = new Vector2(0.25f, 0.15f);
     newRifle.addComponent(new ItemHoldComponent(this.player, newRifleOffset));
     return newRifle;
+  }
+
+  private Entity spawnRapidFirePowerup() {
+    Entity newRapidFirePowerup = PowerupsFactory.createRapidFire();
+    spawnEntityAt(newRapidFirePowerup, new GridPoint2(25, 20), true, true);
+    return newRapidFirePowerup;
   }
 
   // Enemy Projectiles
