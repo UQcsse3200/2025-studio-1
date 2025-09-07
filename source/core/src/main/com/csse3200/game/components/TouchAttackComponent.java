@@ -63,12 +63,14 @@ public class TouchAttackComponent extends Component {
 
     // Try to attack target.
     Entity target = ((BodyUserData) other.getBody().getUserData()).entity;
+    Entity attacker = ((BodyUserData) me.getBody().getUserData()).entity;
+
     CombatStatsComponent targetStats = target.getComponent(CombatStatsComponent.class);
+    WeaponsStatsComponent targetWeapons = attacker.getComponent(WeaponsStatsComponent.class);
+
     if (targetStats != null) {
-      targetStats.hit(combatStats);
+      targetStats.takeDamage(targetWeapons.getBaseAttack());
     }
-
-
 
     // Apply knockback
     PhysicsComponent physicsComponent = target.getComponent(PhysicsComponent.class);

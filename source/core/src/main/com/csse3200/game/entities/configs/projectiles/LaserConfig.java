@@ -6,11 +6,11 @@ import com.csse3200.game.physics.PhysicsLayer;
  * Configuration for the laser shot projectiles
  */
 public class LaserConfig extends ProjectileConfig {
-    public short projectileType = PhysicsLayer.ENEMY_PROJECTILE;
-    public short target = PhysicsLayer.PLAYER;
-
-    public static int baseAttack = 5;
-    public static float speed = 5f;
-
-    public String texturePath = "images/laser_shot.png";
+    public LaserConfig() {
+        this.projectileType = PhysicsLayer.PLAYER;
+        this.target = PhysicsLayer.PLAYER;
+        this.baseAttack = 5;
+        this.speed = 3f;
+        this.texturePath = "images/laser_shot.png";
+    }
 }

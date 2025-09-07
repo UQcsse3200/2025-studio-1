@@ -49,6 +49,10 @@ public class CombatStatsComponent extends Component {
    */
   public int getHealth() { return health; }
 
+  public void takeDamage(int damage) {
+    applyDamage(damage);
+  }
+
   /**
    * Sets the entity's health. Health is always clamped between 0 and maxHealth.
    *

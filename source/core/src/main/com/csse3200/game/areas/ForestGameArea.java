@@ -7,6 +7,10 @@ import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.ItemHoldComponent;
 import com.csse3200.game.entities.Entity;
+import com.csse3200.game.entities.configs.weapons.DaggerConfig;
+import com.csse3200.game.entities.configs.weapons.LightsaberConfig;
+import com.csse3200.game.entities.configs.weapons.PistolConfig;
+import com.csse3200.game.entities.configs.weapons.RifleConfig;
 import com.csse3200.game.entities.factories.BossFactory;
 import com.csse3200.game.entities.factories.NPCFactory;
 import com.csse3200.game.entities.factories.ObstacleFactory;
@@ -121,7 +125,9 @@ public class ForestGameArea extends GameArea {
     displayUI();
     spawnTerrain();
     spawnTrees();
+
     player = spawnPlayer();
+
     dagger = spawnDagger();
     pistol = spawnPistol();
     rifle = spawnRifle();
@@ -135,34 +141,34 @@ public class ForestGameArea extends GameArea {
     this.equipItem(rifle);
 
     spawnGhosts();
-    spawnGhostKing();
-    int choice = (int)(Math.random() * 3);
-    if (choice == 0) {
-      spawnBoss2();
-    } else if (choice == 1) {
-      spawnRobots();
-    } else {
-      spawnBoss3();
-    }
-    spawnGhostGPT();
-    spawnDeepspin();
-    spawnGrokDroid();
-    spawnVroomba();
+//    spawnGhostKing();
+//    int choice = (int)(Math.random() * 3);
+//    if (choice == 0) {
+//      spawnBoss2();
+//    } else if (choice == 1) {
+//      spawnRobots();
+//    } else {
+//      spawnBoss3();
+//    }
+//    spawnGhostGPT();
+//    spawnDeepspin();
+//    spawnGrokDroid();
+//    spawnVroomba();
     playMusic();
     spawnItems();
   }
-
-  private void spawnRobots() {
-    GridPoint2 minPos = new GridPoint2(0, 0);
-    GridPoint2 maxPos = terrain.getMapBounds(0).sub(2, 2);
-
-    for (int i = 0; i < NUM_ROBOTS; i++) {
-      GridPoint2 randomPos = RandomUtils.random(minPos, maxPos);
-      Entity robot = NPCFactory.createRobot(player);
-      spawnEntityAt(robot, randomPos, true, true);
-    }
-  }
-
+//
+//  private void spawnRobots() {
+//    GridPoint2 minPos = new GridPoint2(0, 0);
+//    GridPoint2 maxPos = terrain.getMapBounds(0).sub(2, 2);
+//
+//    for (int i = 0; i < NUM_ROBOTS; i++) {
+//      GridPoint2 randomPos = RandomUtils.random(minPos, maxPos);
+//      Entity robot = NPCFactory.createRobot(player);
+//      spawnEntityAt(robot, randomPos, true, true);
+//    }
+//  }
+//
   private void displayUI() {
     Entity ui = new Entity();
     ui.addComponent(new GameAreaDisplay("Box Forest"));
@@ -234,9 +240,10 @@ public class ForestGameArea extends GameArea {
   }
 
   private Entity spawnDagger() {
-    Entity newDagger = WeaponsFactory.createDagger();
+    Entity newDagger = WeaponsFactory.createWeapon(new DaggerConfig());
     Vector2 newDaggerOffset = new Vector2(0.7f, 0.3f);
     newDagger.addComponent(new ItemHoldComponent(this.player, newDaggerOffset));
+
     return newDagger;
   }
 
@@ -251,7 +258,7 @@ public class ForestGameArea extends GameArea {
   }
 
   private Entity spawnLightsaber() {
-    Entity newLightsaber = WeaponsFactory.createLightsaber();
+    Entity newLightsaber = WeaponsFactory.createWeapon(new LightsaberConfig());
     Vector2 newLightsaberOffset = new Vector2(0.7f, -0.1f);
     newLightsaber.addComponent(new ItemHoldComponent(this.player, newLightsaberOffset));
 
@@ -270,22 +277,22 @@ public class ForestGameArea extends GameArea {
 //  }
 
   private Entity spawnPistol() {
-    Entity newPistol = WeaponsFactory.createPistol();
+    Entity newPistol = WeaponsFactory.createWeapon(new PistolConfig());
     Vector2 newPistolOffset = new Vector2(0.45f, 0.02f);
     newPistol.addComponent(new ItemHoldComponent(this.player, newPistolOffset));
     return newPistol;
   }
 
   private Entity spawnRifle() {
-    Entity newRifle = WeaponsFactory.createRifle();
+    Entity newRifle = WeaponsFactory.createWeapon(new RifleConfig());
     Vector2 newRifleOffset = new Vector2(0.25f, 0.15f);
     newRifle.addComponent(new ItemHoldComponent(this.player, newRifleOffset));
     return newRifle;
   }
 
   // Enemy Projectiles
-  public Entity spawnEnemyProjectile(String texturePath, Vector2 directionToFire, BaseProjectileConfig config) {
-    Entity laser = ProjectileFactory.createEnemyProjectile(texturePath, directionToFire, config);
+  public Entity spawnEnemyProjectile(Vector2 directionToFire) {
+    Entity laser = ProjectileFactory.createEnemyProjectile(directionToFire);
     spawnEntityAt(laser, new GridPoint2(0, 0), true, true);
 
     return laser;
@@ -301,85 +308,85 @@ public class ForestGameArea extends GameArea {
       spawnEntityAt(ghost, randomPos, true, true);
     }
   }
-  private void spawnBoss2() {
-    GridPoint2 minPos = new GridPoint2(0, 0);
-    GridPoint2 maxPos = terrain.getMapBounds(0).sub(2, 2);
-
-    GridPoint2 pos = RandomUtils.random(minPos, maxPos);
-    Entity boss2 = BossFactory.createBoss2(player);
-    spawnEntityAt(boss2, pos, true, true);
-  }
-  //new added boss3
-  private void spawnBoss3() {
-    GridPoint2 minPos = new GridPoint2(0, 0);
-    GridPoint2 maxPos = terrain.getMapBounds(0).sub(2, 2);
-
-    GridPoint2 pos = RandomUtils.random(minPos, maxPos);
-    Entity boss3 = BossFactory.createBoss3(player);
-    spawnEntityAt(boss3, pos, true, true);
-  }
-
-  private void spawnGhostKing() {
-    GridPoint2 minPos = new GridPoint2(0, 0);
-    GridPoint2 maxPos = terrain.getMapBounds(0).sub(2, 2);
-
-    GridPoint2 randomPos = RandomUtils.random(minPos, maxPos);
-    Entity ghostKing = NPCFactory.createGhostKing(player);
-    spawnEntityAt(ghostKing, randomPos, true, true);
-  }
-
-  /**
-   * Adds NUM_GHOST_GPTS amount of GhostGPT enemies onto the map.
-   */
-  private void spawnGhostGPT() {
-    GridPoint2 minPos = new GridPoint2(0, 0);
-    GridPoint2 maxPos = terrain.getMapBounds(0).sub(3, 3);
-
-    for (int i = 0; i < NUM_GHOST_GPTS; i++) {
-        GridPoint2 randomPos = RandomUtils.random(minPos, maxPos);
-        Entity ghostGPT = NPCFactory.createGhostGPT(player, this);
-        spawnEntityAt(ghostGPT, randomPos, true, true);
-    }
-  }
-  /**
-   * Adds NUM_Deep_spin amount of GhostGPT enemies onto the map.
-   */
-  private void spawnDeepspin() {
-    GridPoint2 minPos = new GridPoint2(0, 0);
-    GridPoint2 maxPos = terrain.getMapBounds(0).sub(3, 3);
-
-    for (int i = 0; i < NUM_DEEP_SPIN; i++) {
-      GridPoint2 randomPos = RandomUtils.random(minPos, maxPos);
-      Entity deepspin = NPCFactory.createDeepspin(player, this);
-      spawnEntityAt(deepspin, randomPos, true, true);
-    }
-  }
-  /**
-   * Adds NUM_GROK_DROID amount of GrokDroid enemies onto the map.
-   */
-  private void spawnGrokDroid() {
-    GridPoint2 minPos = new GridPoint2(0, 0);
-    GridPoint2 maxPos = terrain.getMapBounds(0).sub(3, 3);
-
-    for (int i = 0; i < NUM_GROK_DROID; i++) {
-      GridPoint2 randomPos = RandomUtils.random(minPos, maxPos);
-      Entity grokDroid = NPCFactory.createGrokDroid(player, this);
-      spawnEntityAt(grokDroid, randomPos, true, true);
-    }
-  }
-  /**
-   * Adds NUM_VROOMBA amount of GrokDroid enemies onto the map.
-   */
-  private void spawnVroomba() {
-    GridPoint2 minPos = new GridPoint2(0, 0);
-    GridPoint2 maxPos = terrain.getMapBounds(0).sub(3, 3);
-
-    for (int i = 0; i < NUM_VROOMBA; i++) {
-      GridPoint2 randomPos = RandomUtils.random(minPos, maxPos);
-      Entity vroomba = NPCFactory.createVroomba(player, this);
-      spawnEntityAt(vroomba, randomPos, true, true);
-    }
-  }
+//  private void spawnBoss2() {
+//    GridPoint2 minPos = new GridPoint2(0, 0);
+//    GridPoint2 maxPos = terrain.getMapBounds(0).sub(2, 2);
+//
+//    GridPoint2 pos = RandomUtils.random(minPos, maxPos);
+//    Entity boss2 = BossFactory.createBoss2(player);
+//    spawnEntityAt(boss2, pos, true, true);
+//  }
+//  //new added boss3
+//  private void spawnBoss3() {
+//    GridPoint2 minPos = new GridPoint2(0, 0);
+//    GridPoint2 maxPos = terrain.getMapBounds(0).sub(2, 2);
+//
+//    GridPoint2 pos = RandomUtils.random(minPos, maxPos);
+//    Entity boss3 = BossFactory.createBoss3(player);
+//    spawnEntityAt(boss3, pos, true, true);
+//  }
+//
+//  private void spawnGhostKing() {
+//    GridPoint2 minPos = new GridPoint2(0, 0);
+//    GridPoint2 maxPos = terrain.getMapBounds(0).sub(2, 2);
+//
+//    GridPoint2 randomPos = RandomUtils.random(minPos, maxPos);
+//    Entity ghostKing = NPCFactory.createGhostKing(player);
+//    spawnEntityAt(ghostKing, randomPos, true, true);
+//  }
+//
+//  /**
+//   * Adds NUM_GHOST_GPTS amount of GhostGPT enemies onto the map.
+//   */
+//  private void spawnGhostGPT() {
+//    GridPoint2 minPos = new GridPoint2(0, 0);
+//    GridPoint2 maxPos = terrain.getMapBounds(0).sub(3, 3);
+//
+//    for (int i = 0; i < NUM_GHOST_GPTS; i++) {
+//        GridPoint2 randomPos = RandomUtils.random(minPos, maxPos);
+//        Entity ghostGPT = NPCFactory.createGhostGPT(player, this);
+//        spawnEntityAt(ghostGPT, randomPos, true, true);
+//    }
+//  }
+//  /**
+//   * Adds NUM_Deep_spin amount of GhostGPT enemies onto the map.
+//   */
+//  private void spawnDeepspin() {
+//    GridPoint2 minPos = new GridPoint2(0, 0);
+//    GridPoint2 maxPos = terrain.getMapBounds(0).sub(3, 3);
+//
+//    for (int i = 0; i < NUM_DEEP_SPIN; i++) {
+//      GridPoint2 randomPos = RandomUtils.random(minPos, maxPos);
+//      Entity deepspin = NPCFactory.createDeepspin(player, this);
+//      spawnEntityAt(deepspin, randomPos, true, true);
+//    }
+//  }
+//  /**
+//   * Adds NUM_GROK_DROID amount of GrokDroid enemies onto the map.
+//   */
+//  private void spawnGrokDroid() {
+//    GridPoint2 minPos = new GridPoint2(0, 0);
+//    GridPoint2 maxPos = terrain.getMapBounds(0).sub(3, 3);
+//
+//    for (int i = 0; i < NUM_GROK_DROID; i++) {
+//      GridPoint2 randomPos = RandomUtils.random(minPos, maxPos);
+//      Entity grokDroid = NPCFactory.createGrokDroid(player, this);
+//      spawnEntityAt(grokDroid, randomPos, true, true);
+//    }
+//  }
+//  /**
+//   * Adds NUM_VROOMBA amount of GrokDroid enemies onto the map.
+//   */
+//  private void spawnVroomba() {
+//    GridPoint2 minPos = new GridPoint2(0, 0);
+//    GridPoint2 maxPos = terrain.getMapBounds(0).sub(3, 3);
+//
+//    for (int i = 0; i < NUM_VROOMBA; i++) {
+//      GridPoint2 randomPos = RandomUtils.random(minPos, maxPos);
+//      Entity vroomba = NPCFactory.createVroomba(player, this);
+//      spawnEntityAt(vroomba, randomPos, true, true);
+//    }
+//  }
 
   private void playMusic() {
     Music music = ServiceLocator.getResourceService().getAsset(backgroundMusic, Music.class);

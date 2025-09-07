@@ -60,6 +60,11 @@ public class ItemFactory {
         return item;
     }
 
+    public static Entity createItem() {
+        String defaultTexture = "images/heart.png";
+        return createItem(defaultTexture);
+    }
+
     /**
      * Stops you from making an ItemFactory object.
      * If you try, it throws an error.

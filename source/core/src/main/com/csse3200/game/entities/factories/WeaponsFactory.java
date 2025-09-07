@@ -10,6 +10,8 @@ import com.csse3200.game.entities.configs.weapons.WeaponConfig;
 import com.csse3200.game.files.FileLoader;
 import com.csse3200.game.rendering.AnimationRenderComponent;
 
+import java.lang.reflect.InvocationTargetException;
+
 /**
  * Factory to create non-playable character (NPC) entities with predefined components.
  *
@@ -22,8 +24,7 @@ import com.csse3200.game.rendering.AnimationRenderComponent;
  */
 public class WeaponsFactory {
 
-    public static Entity createWeapon(String configPath) {
-        WeaponConfig config = FileLoader.readClass(WeaponConfig.class, configPath);
+    public static Entity createWeapon(WeaponConfig config) {
         Entity weapon = ItemFactory.createItem(config.texturePath);
         weapon.getComponent(EntityComponent.class).setType(config.weaponType.getString());
         weapon.addComponent(new WeaponsStatsComponent(config));
