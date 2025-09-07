@@ -1,7 +1,17 @@
 package com.csse3200.game.entities.configs.weapons;
 
 public enum WeaponTypes {
-    MELEE,
-    RANGED,
-    CONSUMABLE
+    MELEE("melee"),
+    RANGED("ranged"),
+    CONSUMABLE("consumable");
+
+    private final String string;
+
+    WeaponTypes(String string) {
+        this.string = string;
+    }
+
+    public String getString() {
+        return string;
+    }
 }

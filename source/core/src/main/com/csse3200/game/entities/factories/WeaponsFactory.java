@@ -4,11 +4,13 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.components.TagComponent;
+import com.csse3200.game.components.WeaponsStatsComponent;
 import com.csse3200.game.components.entity.EntityComponent;
 import com.csse3200.game.components.entity.item.ItemComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.*;
 import com.csse3200.game.entities.configs.weapons.LightsaberConfig;
+import com.csse3200.game.entities.configs.weapons.WeaponConfig;
 import com.csse3200.game.files.FileLoader;
 import com.csse3200.game.physics.PhysicsLayer;
 import com.csse3200.game.physics.PhysicsUtils;
@@ -29,103 +31,12 @@ import com.csse3200.game.rendering.TextureRenderComponent;
  * similar characteristics.
  */
 public class WeaponsFactory {
-    private static final LightsaberConfig lightsaberConfigs =
-            FileLoader.readClass(LightsaberConfig.class, "configs/lightsaber.json");
-    private static final DaggerConfig daggerConfigs =
-            FileLoader.readClass(DaggerConfig.class, "configs/dagger.json");
-
 
     public static Entity createWeapon(String configPath) {
-        FileLoader.readClass(, "configs/dagger.json");
-        Entity weapon = ItemFactory.createItem(texture);
-        weapon.getComponent(EntityComponent.class).setType("weapon");
-        weapon.getComponent(new WeaponStatsComponent());
-        return weapon;
-    }
-
-    /**
-     * Creates a lightsaber entity.
-     *
-     * @return lightsaber entity
-     */
-    public static Entity createLightsaber() {
-        String tex = "images/lightsaberSingle.png";
-
-        Entity lightsaber = createBaseWeapon("melee");
-        lightsaber.addComponent(new TextureRenderComponent(tex))
-            .addComponent(new CombatStatsComponent(0, lightsaberConfigs.baseAttack))
-            .addComponent(new ItemComponent(1, tex));
-        lightsaber.getComponent(TextureRenderComponent.class).scaleEntity();
-        lightsaber.getComponent(PhysicsComponent.class).getBody().setUserData(lightsaber);
-        return lightsaber;
-    }
-
-    /**
-     * Creates a dagger entity.
-     * @return A dagger entity.
-     */
-    public static Entity createDagger() {
-        String tex = "images/dagger.png";
-
-        Entity dagger = createBaseWeapon("melee");
-        dagger.addComponent(new TextureRenderComponent(tex))
-          .addComponent(new CombatStatsComponent(0, daggerConfigs.baseAttack))
-          .addComponent(new ItemComponent(1, tex));
-        dagger.getComponent(TextureRenderComponent.class).scaleEntity();
-        dagger.scaleHeight(0.55f);
-        dagger.getComponent(PhysicsComponent.class).getBody().setUserData(dagger);
-        return dagger;
-    }
-
-    /**
-     * Creates a pistol entity.
-     * @return A pistol entity.
-     */
-    public static Entity createPistol() {
-        String texture = "images/pistol.png";
-        return createRanged(texture);
-    }
-
-    /**
-     * Creates a rifle entity.
-     * @return A rifle entity.
-     */
-    public static Entity createRifle() {
-        String tex = "images/rifle.png";
-        return createRanged(tex);
-    }
-
-    /**
-     * Creates a ranged weapon with the given texturePath
-     * @param texture is a valid texture path to be used to create a
-     * ranged weapon
-     * @return A ranged weapon entity.
-     */
-    private static Entity createRanged(String texture) {
-       Entity weapon = createBaseWeapon("ranged");
-        weapon.addComponent(new TextureRenderComponent(texture))
-                .addComponent(new CombatStatsComponent(0, lightsaberConfigs.baseAttack))
-                .addComponent(new ItemComponent(1, texture));
-        weapon.getComponent(TextureRenderComponent.class).scaleEntity();
-        weapon.getComponent(PhysicsComponent.class).getBody().setUserData(weapon);
-
-        return weapon;
-    }
-
-    /**
-     * Create a generic base weapon
-     * @param type "melee" or "ranged"
-     * @return the base weapon
-     */
-    private static Entity createBaseWeapon(String type) {
-        Entity weapon =
-                new Entity()
-                        .addComponent(new PhysicsComponent())
-                        .addComponent(new ColliderComponent().setLayer(PhysicsLayer.NONE))
-                        .addComponent(new HitboxComponent())
-                        .addComponent(new TagComponent(type));
-
-        PhysicsUtils.setScaledCollider(weapon, 0.9f, 0.4f);
+        WeaponConfig config = FileLoader.readClass(WeaponConfig.class, configPath);
+        Entity weapon = ItemFactory.createItem(config.texturePath);
+        weapon.getComponent(EntityComponent.class).setType(config.weaponType.getString());
+        weapon.addComponent(new WeaponsStatsComponent(config));
         return weapon;
     }
 
