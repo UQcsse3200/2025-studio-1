@@ -9,8 +9,8 @@ public class LaserConfig extends ProjectileConfig {
     public short projectileType = PhysicsLayer.ENEMY_PROJECTILE;
     public short target = PhysicsLayer.PLAYER;
 
-    public int baseAttack = 5;
-    public float speed = 5f;
+    public static int baseAttack = 5;
+    public static float speed = 5f;
 
     public String texturePath = "images/laser_shot.png";
 }
