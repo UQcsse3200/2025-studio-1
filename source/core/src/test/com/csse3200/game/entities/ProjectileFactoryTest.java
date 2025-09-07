@@ -15,8 +15,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.components.TouchAttackComponent;
-import com.csse3200.game.entities.configs.weapons.PistolBulletConfig;
-import com.csse3200.game.entities.configs.weapons.ProjectileConfig;
+import com.csse3200.game.entities.configs.projectiles.PistolBulletConfig;
+import com.csse3200.game.entities.configs.projectiles.ProjectileConfig;
 import com.csse3200.game.entities.factories.ProjectileFactory;
 import com.csse3200.game.extensions.GameExtension;
 import com.csse3200.game.physics.PhysicsEngine;
@@ -71,7 +71,7 @@ public class ProjectileFactoryTest {
         when(Gdx.files.internal(anyString())).thenReturn(mock(FileHandle.class));
 
         pistolBulletConfig = new PistolBulletConfig();
-        pistolBulletConfig.base_attack = 8;
+        pistolBulletConfig.baseAttack = 8;
         pistolBulletConfig.health = 10000;
         pistolBulletConfig.speed = 3.0f;
 
