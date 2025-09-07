@@ -1,7 +1,6 @@
 package com.csse3200.game.entities.configs.projectiles;
 
 import com.csse3200.game.entities.configs.ItemTypes;
-import com.csse3200.game.physics.PhysicsLayer;
 
 /**
  * Defines all projectile configs to be loaded by the projectile Factory.

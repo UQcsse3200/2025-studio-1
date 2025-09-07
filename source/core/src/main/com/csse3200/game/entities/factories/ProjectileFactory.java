@@ -6,6 +6,8 @@ import com.csse3200.game.components.TouchAttackComponent;
 import com.csse3200.game.components.WeaponsStatsComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.*;
+import com.csse3200.game.entities.configs.projectiles.LaserConfig;
+import com.csse3200.game.entities.configs.projectiles.PistolBulletConfig;
 import com.csse3200.game.entities.configs.projectiles.ProjectileConfig;
 import com.csse3200.game.entities.configs.weapons.WeaponConfig;
 import com.csse3200.game.files.FileLoader;
@@ -32,8 +34,14 @@ public class ProjectileFactory {
     private static ProjectileConfig configs =
             FileLoader.readClass(ProjectileConfig.class, "configs/projectiles.json");
 
-    public static Entity createProjectile(String configPath) {
-        ProjectileConfig config = FileLoader.readClass(ProjectileConfig.class, configPath);
+    public static Entity createProjectile(Class<? extends ProjectileConfig> configClass) {
+        ProjectileConfig config;
+        try {
+            config = configClass.getDeclaredConstructor().newInstance();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
         Entity projectile = new Entity()
                 .addComponent(new PhysicsComponent())
                 .addComponent(new PhysicsProjectileComponent())
@@ -42,7 +50,11 @@ public class ProjectileFactory {
                 .addComponent(new ColliderComponent())
                 .addComponent(new HitboxComponent().setLayer(config.projectileType))
                 .addComponent(new TouchAttackComponent(config.target, 1f));
+
         projectile.getComponent(PhysicsComponent.class).setBodyType(BodyDef.BodyType.DynamicBody);
+        ColliderComponent collider = projectile.getComponent(ColliderComponent.class);
+        collider.setLayer(config.projectileType)
+                .setFilter(config.projectileType, config.target);
 
         return projectile;
     }
@@ -53,41 +65,17 @@ public class ProjectileFactory {
      * @return pistol bullet entity
      */
     public static Entity createPistolBullet() {
-        Entity pistolBullet = createBaseProjectile();
-        pistolBullet
-                .addComponent(new WeaponsStatsComponent(config.base_attack))
-                .addComponent(new TextureRenderComponent("images/round.png"))
-                .addComponent(new ColliderComponent())
-                .addComponent(new HitboxComponent().setLayer(PhysicsLayer.FRIENDLY_PROJECTILE))
-                .addComponent(new TouchAttackComponent(PhysicsLayer.NPC, 1f));
-
-        ColliderComponent collider = pistolBullet.getComponent(ColliderComponent.class);
-        collider.setLayer(PhysicsLayer.FRIENDLY_PROJECTILE)
-                .setFilter(PhysicsLayer.FRIENDLY_PROJECTILE, (short) (PhysicsLayer.NPC));
-
+        Entity pistolBullet = createProjectile(PistolBulletConfig.class);
         pistolBullet.scaleHeight(0.85f);
         return pistolBullet;
     }
 
     /**
      * Creates a laser shot entity
-     * @param texturePath the path of the texture that's going to be used as the projectile's sprite
-     * @param direction The direction to fire at
-     * @param config The configuration about the damage and speed of the projectile
      * @return The laser entity
      */
-    public static Entity createEnemyProjectile(String texturePath, Vector2 direction, BaseProjectileConfig config) {
-        Entity projectile = createBaseProjectile();
-        projectile
-                .addComponent(new TextureRenderWithRotationComponent(texturePath))
-                .addComponent(new WeaponsStatsComponent(config.base_attack))
-                .addComponent(new ColliderComponent())
-                .addComponent(new HitboxComponent().setLayer(PhysicsLayer.ENEMY_PROJECTILE))
-                .addComponent(new TouchAttackComponent(PhysicsLayer.PLAYER)); // Knockback??
-
-        ColliderComponent collider = projectile.getComponent(ColliderComponent.class);
-        collider.setLayer(PhysicsLayer.ENEMY_PROJECTILE)
-                .setFilter(PhysicsLayer.ENEMY_PROJECTILE, (short) (PhysicsLayer.PLAYER));
+    public static Entity createEnemyProjectile(Vector2 direction) {
+        Entity projectile = createProjectile(LaserConfig.class);
 
         float angleToFire = direction.angleDeg() + 90;
 
@@ -95,29 +83,10 @@ public class ProjectileFactory {
         projectile.getComponent(TextureRenderWithRotationComponent.class).scaleEntity();
 
         projectile.getComponent(PhysicsProjectileComponent.class).create(); // Not called for some reason.
-        projectile.getComponent(PhysicsProjectileComponent.class).fire(direction, config.speed);
+        projectile.getComponent(PhysicsProjectileComponent.class).fire(direction, LaserConfig.speed);
 
         return projectile;
     }
-
-    /**
-     * Creates a base projectile entity, capable of motion
-     * @return projectile entity
-     */
-
-    private static Entity createBaseProjectile() {
-
-        Entity projectile =
-                new Entity()
-                        .addComponent(new PhysicsComponent())
-                        .addComponent(new PhysicsProjectileComponent());
-
-        projectile.getComponent(PhysicsComponent.class).setBodyType(BodyDef.BodyType.DynamicBody);
-
-
-        return projectile;
-    }
-
 
 
     private ProjectileFactory() {
