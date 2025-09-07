@@ -1,6 +1,7 @@
 package com.csse3200.game.components;
 
 import com.csse3200.game.components.enemy.LowHealthAttackBuff;
+import com.csse3200.game.entities.configs.projectiles.ProjectileConfig;
 import com.csse3200.game.entities.configs.weapons.WeaponConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,6 +27,12 @@ public class WeaponsStatsComponent extends Component {
      */
     public WeaponsStatsComponent(WeaponConfig config) {
         setBaseAttack(config.damage);
+        setDisableDamage(false);
+        setCoolDown(0);
+    }
+
+    public WeaponsStatsComponent(ProjectileConfig config) {
+        setBaseAttack(config.baseAttack);
         setDisableDamage(false);
         setCoolDown(0);
     }
