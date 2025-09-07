@@ -17,6 +17,7 @@ public class ShopManager {
 
 
     public PurchaseResult purchase(Entity player, String itemKey) {
+        // TODO: refactor this
          InventoryComponent inventory = player.getComponent(InventoryComponent.class);
          if (inventory == null) {
              return fail(player, itemKey, PurchaseError.UNEXPECTED);
@@ -26,13 +27,13 @@ public class ShopManager {
          if (entry == null) {
              return fail(player, itemKey, PurchaseError.NOT_FOUND);
          }
-         if (!entry.enabled ) {
+         if (!entry.enabled()) {
              return fail(player, itemKey, PurchaseError.DISABLED);
          }
 
          // TODO: make a way for user to input how many to purchase
-         final int amount = entry.bundleQty;
-         final int cost = entry.price;
+         final int amount = entry.bundleQuantity();
+         final int cost = entry.price();
 
          // Check user has sufficient funds
         if (!hasSufficientFunds(inventory, amount, cost)) {
@@ -47,14 +48,14 @@ public class ShopManager {
 
         // Add item to Inventory
         int idx = InventoryOperations.addOrStack(inventory, item, amount,
-                entry.stackable, entry.maxStack);
+                entry.stackable(), entry.maxStack());
         if (idx < 0) {
             return fail(player, itemKey, PurchaseError.INVENTORY_FULL);
         }
 
         chargePlayer(inventory, amount, cost);
 
-        // Success hooks
+        // TODO: Success hooks
 
         return PurchaseResult.ok(itemKey, 1);
     }

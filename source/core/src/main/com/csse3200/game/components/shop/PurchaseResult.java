@@ -1,5 +1,12 @@
 package com.csse3200.game.components.shop;
 
+/**
+ * Stores the result of a purchase event.
+ * @param ok
+ * @param error
+ * @param itemId
+ * @param qty
+ */
 public record PurchaseResult(boolean ok, PurchaseError error, String itemId, int qty) {
     public static PurchaseResult ok(String itemId, int qty) {
         return new PurchaseResult(true, PurchaseError.NONE, itemId, qty);
