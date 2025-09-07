@@ -2,13 +2,12 @@ package com.csse3200.game.entities.factories;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.components.TouchAttackComponent;
 import com.csse3200.game.components.WeaponsStatsComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.*;
-import com.csse3200.game.entities.configs.weapons.PistolBulletConfig;
-import com.csse3200.game.entities.configs.weapons.ProjectileConfig;
+import com.csse3200.game.entities.configs.projectiles.ProjectileConfig;
+import com.csse3200.game.entities.configs.weapons.WeaponConfig;
 import com.csse3200.game.files.FileLoader;
 import com.csse3200.game.physics.PhysicsLayer;
 import com.csse3200.game.physics.components.*;
@@ -33,6 +32,21 @@ public class ProjectileFactory {
     private static ProjectileConfig configs =
             FileLoader.readClass(ProjectileConfig.class, "configs/projectiles.json");
 
+    public static Entity createProjectile(String configPath) {
+        ProjectileConfig config = FileLoader.readClass(ProjectileConfig.class, configPath);
+        Entity projectile = new Entity()
+                .addComponent(new PhysicsComponent())
+                .addComponent(new PhysicsProjectileComponent())
+                .addComponent(new WeaponsStatsComponent(config))
+                .addComponent(new TextureRenderComponent(config.texturePath))
+                .addComponent(new ColliderComponent())
+                .addComponent(new HitboxComponent().setLayer(config.projectileType))
+                .addComponent(new TouchAttackComponent(config.target, 1f));
+        projectile.getComponent(PhysicsComponent.class).setBodyType(BodyDef.BodyType.DynamicBody);
+
+        return projectile;
+    }
+
 
     /**
      * Creates a pistol bullet entity
@@ -40,7 +54,6 @@ public class ProjectileFactory {
      */
     public static Entity createPistolBullet() {
         Entity pistolBullet = createBaseProjectile();
-        PistolBulletConfig config = configs.pistolBullet;
         pistolBullet
                 .addComponent(new WeaponsStatsComponent(config.base_attack))
                 .addComponent(new TextureRenderComponent("images/round.png"))
