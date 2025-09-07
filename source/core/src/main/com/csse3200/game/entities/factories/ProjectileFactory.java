@@ -4,8 +4,11 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.components.TouchAttackComponent;
+import com.csse3200.game.components.WeaponsStatsComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.*;
+import com.csse3200.game.entities.configs.weapons.PistolBulletConfig;
+import com.csse3200.game.entities.configs.weapons.ProjectileConfig;
 import com.csse3200.game.files.FileLoader;
 import com.csse3200.game.physics.PhysicsLayer;
 import com.csse3200.game.physics.components.*;
@@ -39,7 +42,7 @@ public class ProjectileFactory {
         Entity pistolBullet = createBaseProjectile();
         PistolBulletConfig config = configs.pistolBullet;
         pistolBullet
-                .addComponent(new CombatStatsComponent(config.health, config.base_attack))
+                .addComponent(new WeaponsStatsComponent(config.base_attack))
                 .addComponent(new TextureRenderComponent("images/round.png"))
                 .addComponent(new ColliderComponent())
                 .addComponent(new HitboxComponent().setLayer(PhysicsLayer.FRIENDLY_PROJECTILE))
@@ -64,7 +67,7 @@ public class ProjectileFactory {
         Entity projectile = createBaseProjectile();
         projectile
                 .addComponent(new TextureRenderWithRotationComponent(texturePath))
-                .addComponent(new CombatStatsComponent(config.health, config.base_attack))
+                .addComponent(new WeaponsStatsComponent(config.base_attack))
                 .addComponent(new ColliderComponent())
                 .addComponent(new HitboxComponent().setLayer(PhysicsLayer.ENEMY_PROJECTILE))
                 .addComponent(new TouchAttackComponent(PhysicsLayer.PLAYER)); // Knockback??

@@ -2,23 +2,21 @@ package com.csse3200.game.entities.factories;
 
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.components.TagComponent;
-import com.csse3200.game.components.TouchAttackComponent;
+import com.csse3200.game.components.entity.EntityComponent;
 import com.csse3200.game.components.entity.item.ItemComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.*;
+import com.csse3200.game.entities.configs.weapons.LightsaberConfig;
 import com.csse3200.game.files.FileLoader;
 import com.csse3200.game.physics.PhysicsLayer;
 import com.csse3200.game.physics.PhysicsUtils;
 import com.csse3200.game.physics.components.ColliderComponent;
 import com.csse3200.game.physics.components.HitboxComponent;
 import com.csse3200.game.physics.components.PhysicsComponent;
-import com.csse3200.game.physics.components.PhysicsMovementComponent;
 import com.csse3200.game.rendering.AnimationRenderComponent;
 import com.csse3200.game.rendering.TextureRenderComponent;
-import com.csse3200.game.services.ServiceLocator;
 
 /**
  * Factory to create non-playable character (NPC) entities with predefined components.
@@ -35,6 +33,15 @@ public class WeaponsFactory {
             FileLoader.readClass(LightsaberConfig.class, "configs/lightsaber.json");
     private static final DaggerConfig daggerConfigs =
             FileLoader.readClass(DaggerConfig.class, "configs/dagger.json");
+
+
+    public static Entity createWeapon(String configPath) {
+        FileLoader.readClass(, "configs/dagger.json");
+        Entity weapon = ItemFactory.createItem(texture);
+        weapon.getComponent(EntityComponent.class).setType("weapon");
+        weapon.getComponent(new WeaponStatsComponent());
+        return weapon;
+    }
 
     /**
      * Creates a lightsaber entity.
