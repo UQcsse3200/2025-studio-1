@@ -159,7 +159,7 @@ public class ForestGameArea extends GameArea {
     spawnVroomba();
     playMusic();
     spawnItems();
-    spawnWeapons();
+    spawnWeapons(3);
 
   }
 
@@ -240,37 +240,46 @@ public class ForestGameArea extends GameArea {
 
   /**
    * Spawns several weapon entities at random positions in the game area.
+   * The number of weapons spawned is set by numberofweapons.
    * Each weapon type dagger, pistol, rifle, lightsaber is spawned.
    */
-  private void spawnWeapons() {
+  private void spawnWeapons(int numberofweapons) {
     GridPoint2 minPos = new GridPoint2(0, 0);
     GridPoint2 maxPos = terrain.getMapBounds(0).sub(2, 2);
 
-
+    for (int i = 0; i < numberofweapons; i++) {
       //Spawning dagger on map
       GridPoint2 posDagger = RandomUtils.random(minPos, maxPos);
       Entity dagger = WeaponsFactory.createDagger();
       spawnEntityAt(dagger, posDagger, false, false);
-
+      dagger.getComponent(PhysicsComponent.class)
+              .setBodyType(BodyDef.BodyType.StaticBody);
 
       //Spawning pistol on map
       GridPoint2 posPistol = RandomUtils.random(minPos, maxPos);
       Entity pistol = WeaponsFactory.createPistol();
       spawnEntityAt(pistol, posPistol, false, false);
+      pistol.getComponent(PhysicsComponent.class)
+              .setBodyType(BodyDef.BodyType.StaticBody);
 
 
       //Spawning riffle on map
       GridPoint2 posRifle = RandomUtils.random(minPos, maxPos);
       Entity rifle = WeaponsFactory.createRifle();
       spawnEntityAt(rifle, posRifle, false, false);
+      rifle.getComponent(PhysicsComponent.class)
+              .setBodyType(BodyDef.BodyType.StaticBody);
 
 
       //Spawning dagger on map
       GridPoint2 posLightsaber = RandomUtils.random(minPos, maxPos);
       Entity lightsaber = WeaponsFactory.createLightsaber();
       spawnEntityAt(lightsaber, posLightsaber, false, false);
+      lightsaber.getComponent(PhysicsComponent.class)
+              .setBodyType(BodyDef.BodyType.StaticBody);
 
 
+    }
   }
 
   private Entity spawnPlayer() {
