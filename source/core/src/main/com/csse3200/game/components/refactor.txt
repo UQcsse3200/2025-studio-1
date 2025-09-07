@@ -39,4 +39,6 @@ Refactoring Plan
 
 10. Steps:
     - Decided to make itemFactory a more basic class that weapons extends from
-    - stats
+    - Split up CombatStatsComponent into WeaponsStatComponent + CombatStatsComponent to adhere to SRP
+    - Made WeaponConfigs a base class that Melee and Ranged weapon classes inherit from
+    - Refactored Factories to take WeaponConfig, instead of having to pass around strings and ints pertaining to the config

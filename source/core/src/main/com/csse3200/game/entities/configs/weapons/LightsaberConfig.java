@@ -7,4 +7,6 @@ public class LightsaberConfig extends MeleeWeaponConfig {
     public int baseAttack = 10;
     public double hitTimer = 0.8;
     public float range = 3f;
+
+    public String texturePath = "images/lightsaberSingle.png";
 }
