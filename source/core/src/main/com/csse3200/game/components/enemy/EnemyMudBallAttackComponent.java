@@ -3,6 +3,7 @@ package com.csse3200.game.components.enemy;
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.components.Component;
+import com.csse3200.game.components.WeaponsStatsComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.physics.PhysicsLayer;
 import com.csse3200.game.physics.components.ColliderComponent;
@@ -52,7 +53,7 @@ public class EnemyMudBallAttackComponent extends Component {
     private void spawnProjectile(Vector2 start, Vector2 velocity) {
         // Use the boss's base attack as projectile damage (default to 10 if not available)
         int dmg = 10;
-        CombatStatsComponent bossStats = entity.getComponent(CombatStatsComponent.class);
+        WeaponsStatsComponent bossStats = entity.getComponent(WeaponsStatsComponent.class);
         if (bossStats != null) dmg = bossStats.getBaseAttack();
 
         Entity proj = new Entity()

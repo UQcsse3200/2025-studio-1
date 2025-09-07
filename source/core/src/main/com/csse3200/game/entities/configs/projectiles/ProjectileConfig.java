@@ -15,4 +15,6 @@ public class ProjectileConfig {
     public float speed;
 
     public String texturePath;
+
+    public ProjectileConfig() {}
 }

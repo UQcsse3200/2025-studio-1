@@ -7,10 +7,12 @@ import com.csse3200.game.physics.PhysicsLayer;
  */
 
 public class PistolBulletConfig extends ProjectileConfig {
-    public short projectileType = PhysicsLayer.FRIENDLY_PROJECTILE;
-    public short target = PhysicsLayer.NPC;
-    public int baseAttack = 8;
-    public float speed = 3f;
 
-    public String texturePath = "images/round.png";
+    public PistolBulletConfig() {
+        this.projectileType = PhysicsLayer.FRIENDLY_PROJECTILE;
+        this.target = PhysicsLayer.NPC;
+        this.baseAttack = 8;
+        this.speed = 3f;
+        this.texturePath = "images/round.png";
+    }
 }

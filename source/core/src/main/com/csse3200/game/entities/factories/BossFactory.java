@@ -55,7 +55,7 @@ public class BossFactory {
         animator.addAnimation("float", 0.3f, Animation.PlayMode.LOOP);
 
         boss2
-                .addComponent(new CombatStatsComponent(config.health, config.baseAttack))
+                .addComponent(new CombatStatsComponent(config.health))
                 .addComponent(animator)
                 .addComponent(new GhostAnimationController())
                 .addComponent(new FireballAttackComponment(target, 1.5f, 8f, 6f, config.baseAttack + 2))
@@ -90,7 +90,7 @@ public class BossFactory {
                 .addComponent(new PhysicsComponent())
                 .addComponent(new ColliderComponent())
                 .addComponent(new HitboxComponent().setLayer(PhysicsLayer.NPC))
-                .addComponent(new CombatStatsComponent(config.health, config.baseAttack))
+                .addComponent(new CombatStatsComponent(config.health))
                 .addComponent(new EnemyDeathRewardComponent(100, playerInventory))
                 .addComponent(new DeathParticleSpawnerComponent())
                 .addComponent(new TextureRenderComponent("images/Boss_3.png"));

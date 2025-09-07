@@ -3,6 +3,7 @@ package com.csse3200.game.entities.factories;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.csse3200.game.components.CombatStatsComponent;
+import com.csse3200.game.components.WeaponsStatsComponent;
 import com.csse3200.game.components.player.*;
 import com.csse3200.game.components.StaminaComponent;
 import com.csse3200.game.entities.Entity;
@@ -49,7 +50,8 @@ public class PlayerFactory {
             .addComponent(new ColliderComponent())
             .addComponent(new HitboxComponent().setLayer(PhysicsLayer.PLAYER))
             .addComponent(new PlayerActions())
-            .addComponent(new CombatStatsComponent(stats.health, stats.baseAttack))
+            .addComponent(new CombatStatsComponent(stats.health))
+            .addComponent(new WeaponsStatsComponent(stats.baseAttack))
             .addComponent(playerInventory)
             .addComponent(new ItemPickUpComponent(playerInventory))
             .addComponent(inputComponent)
@@ -62,7 +64,7 @@ public class PlayerFactory {
     player.getComponent(AnimationRenderComponent.class).scaleEntity(2f);
     player.getComponent(ColliderComponent.class).setDensity(1.5f);
     PhysicsUtils.setScaledCollider(player, 0.3f,0.5f);
-    player.getComponent(CombatStatsComponent.class).setCoolDown(0.2f);
+    player.getComponent(WeaponsStatsComponent.class).setCoolDown(0.2f);
     return player;
   }
 

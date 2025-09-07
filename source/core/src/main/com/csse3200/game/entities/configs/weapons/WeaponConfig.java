@@ -6,4 +6,6 @@ public class WeaponConfig {
     public ItemTypes weaponType;
     public int damage;
     public String texturePath;
+
+    public WeaponConfig() {}
 }

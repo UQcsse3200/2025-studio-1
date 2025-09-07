@@ -36,10 +36,9 @@ public class ProjectileLauncherComponent extends Component {
      * @param scale The size of the projectile. "x" value represents width, and "y" value represents height.\
      * @param config The configuration about the damage and speed of the projectile
      */
-    public void FireProjectile(String texturePath, Vector2 directionToFire, Vector2 offset, Vector2 scale,
-                                    BaseProjectileConfig config)
+    public void FireProjectile(Vector2 directionToFire, Vector2 offset, Vector2 scale)
     {
-        Entity projectile = forestGameArea.spawnEnemyProjectile(texturePath, directionToFire, config);
+        Entity projectile = forestGameArea.spawnEnemyProjectile(directionToFire);
         Vector2 pos = new Vector2(getEntity().getPosition().x + offset.x,
                                 getEntity().getPosition().y + offset.y);
         projectile.setPosition(pos);
@@ -58,15 +57,14 @@ public class ProjectileLauncherComponent extends Component {
      * @param scale The size of the projectile. "x" value represents width, and "y" value represents height.
      * @param config The configuration about the damage and speed of the projectile
      */
-    public void FireProjectileMultishot(String texturePath, int amount, float angleDifferences,
-                                            Vector2 directionToFire, Vector2 offset, Vector2 scale,
-                                            BaseProjectileConfig config)
+    public void FireProjectileMultishot(int amount, float angleDifferences,
+                                            Vector2 directionToFire, Vector2 offset, Vector2 scale)
     {
         directionToFire = directionToFire.rotateDeg(-angleDifferences * ((float)amount/2));
 
             for (int i = 0; i < amount; i++)
             {
-                FireProjectile(texturePath, directionToFire, offset, scale, config);
+                FireProjectile(directionToFire, offset, scale);
                 directionToFire.rotateDeg(angleDifferences);
             }
     }
@@ -82,9 +80,9 @@ public class ProjectileLauncherComponent extends Component {
      * @param scale The size of the projectile. "x" value represents width, and "y" value represents height.
      * @param config The configuration about the damage and speed of the projectile
      */
-    public void FireProjectileBurstFire(String texturePath, int burstAmount, float timeBetweenShots,
-                                             Vector2 directionToFire, Vector2 offset, Vector2 scale,
-                                             BaseProjectileConfig config)
+    public void FireProjectileBurstFire(int burstAmount, float timeBetweenShots,
+                                             Vector2 directionToFire, Vector2 offset, Vector2 scale)
+
     {
         Timer.Task burstFireTask = new Timer.Task() {
             int currentCount = 0;
@@ -98,7 +96,7 @@ public class ProjectileLauncherComponent extends Component {
                     return;
                 }
 
-                FireProjectile(texturePath, directionToFire, offset, scale, config);
+                FireProjectile(directionToFire, offset, scale);
                 currentCount++;
                 if (currentCount >= burstAmount) { cancel(); };
             }
