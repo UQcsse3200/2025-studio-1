@@ -1,6 +1,8 @@
 package com.csse3200.game.components.shop;
 
 import com.csse3200.game.entities.Entity;
+
+import java.util.Collection;
 import java.util.Map;
 import java.util.function.Function;
 
@@ -16,6 +18,14 @@ public class CatalogService {
 
     public CatalogEntry get(String itemKey) {
         return entries.get(itemKey);
+    }
+
+    public Collection<CatalogEntry> list() {
+        return entries.values();
+    }
+
+    public boolean exists(String itemKey) {
+        return entries.containsKey(itemKey);
     }
 
     public Entity spawnEntity(String itemKey) {

@@ -4,25 +4,21 @@ import com.csse3200.game.components.entity.item.ItemComponent;
 import com.csse3200.game.components.player.InventoryComponent;
 import com.csse3200.game.entities.Entity;
 
+/**
+ * Manages updating a player's inventory after an event (e.g., item purchase).
+ */
 public class InventoryOperations {
     private InventoryOperations() {}
 
-    private static String keyOf(Entity entity) {
-        ItemComponent item = entity.getComponent(ItemComponent.class);
-        if (item == null) {
-            return null;
-        }
-
-        String name = item.getName();
-        String type = item.getType();
-        if (name == null || type == null) {
-            return null;
-        }
-        return type + ":"  + name;
-    }
-
+    /**
+     * Returns the index of the slot containing the item, if any.
+     *
+     * @param inventory the player's inventory
+     * @param key the item's unique key ([type]:[name])
+     * @return the index or -1 if not found.
+     */
     public static int findIndexByKey(InventoryComponent inventory, String key) {
-        int n = inventory.getTextures().size();
+        int n = inventory.getInventory().size();
         for (int i = 0; i < n; i++) {
             Entity entity = inventory.get(i);
             if (entity == null) {
@@ -48,6 +44,7 @@ public class InventoryOperations {
             return -1;
         }
 
+        // TODO: refactor this
         if (stackable) {
             int idx = findIndexByKey(inventory, key);
             if (idx >= 0) {
@@ -58,9 +55,10 @@ public class InventoryOperations {
                 if (toAdd > 0) {
                     slotItemComponent.setCount(before + toAdd);
                     itemComponent.getEntity().getEvents().trigger(
-                            "stack_updated", idx, slotItemComponent.getCount());
+                            "inventoryUpdated", idx, slotItemComponent.getCount());
                     return idx;
                 }
+                // TODO: consider case where cannot be added to current slot. Attempt to add to new slot
             }
         }
         boolean ok = inventory.addItem(item);
@@ -88,5 +86,19 @@ public class InventoryOperations {
         }
         inventory.getEntity().getEvents().trigger("consumed", itemName, amount);
         return true;
+    }
+
+    private static String keyOf(Entity entity) {
+        ItemComponent item = entity.getComponent(ItemComponent.class);
+        if (item == null) {
+            return null;
+        }
+
+        String name = item.getName();
+        String type = item.getType();
+        if (name == null || type == null) {
+            return null;
+        }
+        return type + ":"  + name;
     }
 }
