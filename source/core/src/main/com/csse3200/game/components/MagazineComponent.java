@@ -83,4 +83,5 @@ public class MagazineComponent extends Component{
         combatStats.setAmmo(ammoReserves - reloadedAmmo);
         return true;
     }
+
 }
