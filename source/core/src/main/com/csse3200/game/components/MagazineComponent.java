@@ -23,14 +23,6 @@ public class MagazineComponent extends Component{
         this.currentAmmo = maxAmmo;
     }
 
-    /**
-     * Adds listener for reload event
-     */
-    @Override
-    public void create() {
-
-        entity.getEvents().addListener("reload", this::reload);
-    }
 
     /**
      * Returns current amount of ammo in magazine
@@ -57,14 +49,14 @@ public class MagazineComponent extends Component{
      * @return true if reload is successful and adds ammunition to the magazine, false otherwise
      */
 
-    public boolean reload() {
+    public boolean reload(Entity player) {
 
         if (currentAmmo == maxAmmo) {
 
             return false;
         }
 
-        CombatStatsComponent combatStats =  entity.getComponent(CombatStatsComponent.class);
+        CombatStatsComponent combatStats =  player.getComponent(CombatStatsComponent.class);
         int ammoReserves = combatStats.getAmmo();
         if (ammoReserves <= 0) {
 

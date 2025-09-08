@@ -151,7 +151,7 @@ public class KeyboardPlayerInputComponent extends InputComponent {
 
   private void triggerReloadEvent() {
 
-    entity.getCurrItem().getEvents().trigger("reload");
+    entity.getEvents().trigger("reload");
   }
 
   private void triggerRemoveItem() {
