@@ -39,9 +39,6 @@ public class EntityService {
     entities.removeValue(entity, true);
   }
 
-
-
-
   /**
    * Update all registered entities. Should only be called from the main game loop.
    */

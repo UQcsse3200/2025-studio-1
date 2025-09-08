@@ -6,7 +6,7 @@ import com.csse3200.game.entities.Entity;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.entities.factories.BossFactory;
 
-public class FireballAttackComponment extends Component {
+public class FireballAttackComponent extends Component {
     private final Entity target;
     private final float cooldown;
     private final float range;
@@ -15,7 +15,7 @@ public class FireballAttackComponment extends Component {
 
     private float timer = 0f;
 
-    public FireballAttackComponment(Entity target, float cooldown, float range,
+    public FireballAttackComponent(Entity target, float cooldown, float range,
                                    float speed, int damage) {
         this.target = target;
         this.cooldown = cooldown;
