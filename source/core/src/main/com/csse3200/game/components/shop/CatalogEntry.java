@@ -94,7 +94,7 @@ public record CatalogEntry(
         }
     }
 
-    private TextureRegionDrawable loadIcon(String path) {
+    public static TextureRegionDrawable loadIcon(String path) {
         Texture texture = new Texture(Gdx.files.internal(path));
         return new TextureRegionDrawable(new TextureRegion(texture));
     }
