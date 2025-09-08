@@ -2,7 +2,7 @@ package com.csse3200.game.components.entity;
 
 import com.csse3200.game.components.Component;
 
-
+// DEPRECATED CLASS DO NOT USE LEFT FOR REFERENCE
 public class EntityComponent extends Component {
     private String name;
     private int id;

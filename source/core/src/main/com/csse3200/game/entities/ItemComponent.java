@@ -1,6 +1,7 @@
 package com.csse3200.game.entities;
 
 import com.csse3200.game.components.Component;
+import com.csse3200.game.components.player.InventoryComponent;
 import com.csse3200.game.entities.configs.ItemTypes;
 
 public class ItemComponent extends Component {
@@ -49,7 +50,7 @@ public class ItemComponent extends Component {
      * the game
      * @return the count for the item
      */
-    public int getCount(){return this.count;}
+    public int getCount() {return this.count;}
 
     /**
      * setCount to set item_count at a given value
@@ -57,24 +58,11 @@ public class ItemComponent extends Component {
      */
     public void setCount(int count){this.count = count;}
 
-//    /**
-//     * Outputs the description of the provided item with id
-//     * @param name The name of the item that you want the description of
-//     * @param id The id of the item that you want the description of
-//     */
-//    public void description(String name, int id){
-//        System.out.println("This is a/an " + name + ". " +
-//            "\nPresent count : " + count +
-//            "\nType :  " + getType());
-//    }
-
-    //public void updateCount() -- to increment/decrement count
-
     /**
      * Sets the texture path of the current item
      * @param texture sets the texture path of the current item
      */
-    public void setTexture(String texture){this.texture = texture;}
+    public void setTexture(String texture) {this.texture = texture;}
 
     /**
      * Returns the texture path of the current item
@@ -93,6 +81,7 @@ public class ItemComponent extends Component {
      */
     public String getDescription(){
         return ("Item : " + this.getName()
+                + "\nId : " + entity.getId()
                 + "\nType : " + this.getType()
                 + "\nCount : " + this.getCount());
     }

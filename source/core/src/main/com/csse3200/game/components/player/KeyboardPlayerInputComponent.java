@@ -4,7 +4,9 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.math.Vector2;
-import com.csse3200.game.components.TagComponent;
+import com.csse3200.game.entities.Entity;
+import com.csse3200.game.entities.ItemComponent;
+import com.csse3200.game.entities.configs.ItemTypes;
 import com.csse3200.game.input.InputComponent;
 import com.csse3200.game.utils.math.Vector2Utils;
 
@@ -55,8 +57,8 @@ public class KeyboardPlayerInputComponent extends InputComponent {
 
       case Keys.SPACE:
         triggerJumpEvent();
-        entity.getEvents().trigger("attack");
-        entity.getEvents().trigger("anim");
+//        entity.getEvents().trigger("attack");
+//        entity.getEvents().trigger("anim");
         return true;
 
       default:
@@ -79,15 +81,18 @@ public class KeyboardPlayerInputComponent extends InputComponent {
   @Override
   public boolean touchDown(int screenX, int screenY, int pointer, int button) {
     if (button == Input.Buttons.LEFT) {
-      if (entity.getCurrItem() == null){
-        return true;
+      int currItemIdx = focusedItem;
+      InventoryComponent inventory = entity.getComponent(InventoryComponent.class);
+      Entity item = inventory.get(focusedItem);
+      if (item == null){
+        return false;
       }
 
-      TagComponent tags = entity.getCurrItem().getComponent(TagComponent.class);
-
-      if (tags != null && tags.has(TagComponent.Tag.RANGED)) {
+      ItemComponent itemInfo = item.getComponent(ItemComponent.class);
+      if (itemInfo.getType() == ItemTypes.RANGED) {
         entity.getEvents().trigger("shoot");
-      } else {
+
+      } else if (itemInfo.getType() != ItemTypes.MELEE) {
         entity.getEvents().trigger("attack");
       }
       return true;
@@ -142,8 +147,8 @@ public class KeyboardPlayerInputComponent extends InputComponent {
         triggerSelectItem();
         return true;
       case Keys.NUM_5:
-        triggerSelectItem();
         focusedItem = 4;
+        triggerSelectItem();
         return true;
       case Keys.E:
         triggerAddItem();
