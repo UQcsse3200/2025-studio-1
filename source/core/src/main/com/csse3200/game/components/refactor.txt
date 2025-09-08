@@ -41,4 +41,8 @@ Refactoring Plan
     - Decided to make itemFactory a more basic class that weapons extends from
     - Split up CombatStatsComponent into WeaponsStatComponent + CombatStatsComponent to adhere to SRP
     - Made WeaponConfigs a base class that Melee and Ranged weapon classes inherit from
-    - Refactored Factories to take WeaponConfig, instead of having to pass around strings and ints pertaining to the config
+    - Updated each WeaponConfig to initalise the weapon as before in WeaponFactory
+    - Refactored Factories to take WeaponConfig, instead of having to pass around strings and ints pertaining to the weapon's config.
+        This allows us to create all weapons in the same function.
+    - Made a base ProjectileConfig, which PistolBulletConfig and LaserConfig inherit from
+    - Updated entity spawning (both for weapons and projectiles)

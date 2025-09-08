@@ -2,6 +2,7 @@ package com.csse3200.game.entities.factories;
 
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.csse3200.game.components.TagComponent;
 import com.csse3200.game.components.WeaponsStatsComponent;
 import com.csse3200.game.components.entity.EntityComponent;
 import com.csse3200.game.entities.Entity;
@@ -28,6 +29,15 @@ public class WeaponsFactory {
         Entity weapon = ItemFactory.createItem(config.texturePath);
         weapon.getComponent(EntityComponent.class).setType(config.weaponType.getString());
         weapon.addComponent(new WeaponsStatsComponent(config));
+
+        TagComponent tag = new TagComponent();
+        weapon.addComponent(tag);
+
+        switch (config.weaponType) {
+            case RANGED -> tag.add(TagComponent.Tag.RANGED);
+            case MELEE -> tag.add(TagComponent.Tag.MELEE);
+        }
+
         return weapon;
     }
 
