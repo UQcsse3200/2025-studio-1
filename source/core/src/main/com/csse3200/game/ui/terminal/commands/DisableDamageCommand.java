@@ -1,6 +1,5 @@
 package com.csse3200.game.ui.terminal.commands;
 
-import com.badlogic.gdx.utils.Null;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.components.player.PlayerActions;

@@ -88,9 +88,7 @@ public class ProjectileFactory {
      * Creates a base projectile entity, capable of motion
      * @return projectile entity
      */
-
     private static Entity createBaseProjectile() {
-
         Entity projectile =
                 new Entity()
                         .addComponent(new PhysicsComponent())
@@ -98,11 +96,8 @@ public class ProjectileFactory {
 
         projectile.getComponent(PhysicsComponent.class).setBodyType(BodyDef.BodyType.DynamicBody);
 
-
         return projectile;
     }
-
-
 
     private ProjectileFactory() {
         throw new IllegalStateException("Instantiating static util class");
