@@ -75,7 +75,7 @@ public class NPCFactory {
         .addComponent(new CombatStatsComponent(config.health, config.baseAttack))
         .addComponent(animator)
         .addComponent(new GhostAnimationController())
-        .addComponent(new EnemyDeathRewardComponent(15, playerInventory))
+        .addComponent(new EnemyDeathRewardComponent(15, playerInventory)) // Add reward + particles
         .addComponent(new DeathParticleSpawnerComponent())
         .addComponent(aiComponent);
 
@@ -119,7 +119,7 @@ public class NPCFactory {
         .addComponent(new CombatStatsComponent(config.health, config.baseAttack))
         .addComponent(animator)
         .addComponent(new GhostAnimationController())
-        .addComponent(new EnemyDeathRewardComponent(30, playerInventory))
+        .addComponent(new EnemyDeathRewardComponent(30, playerInventory)) // Add reward + particles
         .addComponent(new DeathParticleSpawnerComponent())
         .addComponent(aiComponent);
 
@@ -165,9 +165,9 @@ public class NPCFactory {
             .addComponent(animator)
             .addComponent(new GhostAnimationController())
             .addComponent(new LowHealthAttackBuff(10, ghostGPTStats))
-            .addComponent(new EnemyDeathRewardComponent(15, playerInventory))
+            .addComponent(new EnemyDeathRewardComponent(15, playerInventory)) // Add reward + particles
             .addComponent(new DeathParticleSpawnerComponent("explosion_2"))
-            .addComponent(aiComponent) // Add reward + particles
+            .addComponent(aiComponent)
             .addComponent(projComp); // Add the ability to fire projectiles
 
     ghostGPT.getComponent(AnimationRenderComponent.class).scaleEntity();
@@ -238,9 +238,9 @@ public class NPCFactory {
             .addComponent(animator)
             .addComponent(new GhostAnimationController())
             .addComponent(new LowHealthAttackBuff(10, deepspinStats))
-            .addComponent(new EnemyDeathRewardComponent(15, playerInventory))
+            .addComponent(new EnemyDeathRewardComponent(15, playerInventory)) // Add reward + particles
             .addComponent(new DeathParticleSpawnerComponent("explosion_2"))
-            .addComponent(aiComponent) // Add reward + particles
+            .addComponent(aiComponent)
             .addComponent(new ProjectileLauncherComponent(area, target)); // Add the ability to fire projectiles
 
     deepspin.getComponent(AnimationRenderComponent.class).scaleEntity();
@@ -285,9 +285,9 @@ public class NPCFactory {
             .addComponent(animator)
             .addComponent(new GhostAnimationController())
             .addComponent(new LowHealthAttackBuff(10, grokDroidStats))
-            .addComponent(new EnemyDeathRewardComponent(15, playerInventory))
+            .addComponent(new EnemyDeathRewardComponent(15, playerInventory)) // Add reward + particles
             .addComponent(new DeathParticleSpawnerComponent("explosion_2"))
-            .addComponent(aiComponent) // Add reward + particles
+            .addComponent(aiComponent)
             .addComponent(new ProjectileLauncherComponent(area, target)); // Add the ability to fire projectiles
 
     grokDroid.getComponent(AnimationRenderComponent.class).scaleEntity();
@@ -327,7 +327,7 @@ public class NPCFactory {
             .addComponent(new CombatStatsComponent(config.health, config.baseAttack))
             .addComponent(animator)
             .addComponent(new GhostAnimationController())
-            .addComponent(new EnemyDeathRewardComponent(15, playerInventory))
+            .addComponent(new EnemyDeathRewardComponent(15, playerInventory)) // Add reward + particles
             .addComponent(new DeathParticleSpawnerComponent())
             .addComponent(aiComponent);
 
