@@ -81,7 +81,6 @@ public class KeyboardPlayerInputComponent extends InputComponent {
   @Override
   public boolean touchDown(int screenX, int screenY, int pointer, int button) {
     if (button == Input.Buttons.LEFT) {
-      int currItemIdx = focusedItem;
       InventoryComponent inventory = entity.getComponent(InventoryComponent.class);
       Entity item = inventory.get(focusedItem);
       if (item == null){

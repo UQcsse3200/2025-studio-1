@@ -6,11 +6,9 @@ import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.ItemHoldComponent;
+import com.csse3200.game.components.player.InventoryComponent;
 import com.csse3200.game.entities.Entity;
-import com.csse3200.game.entities.configs.weapons.DaggerConfig;
-import com.csse3200.game.entities.configs.weapons.LightsaberConfig;
-import com.csse3200.game.entities.configs.weapons.PistolConfig;
-import com.csse3200.game.entities.configs.weapons.RifleConfig;
+import com.csse3200.game.entities.configs.Weapons;
 import com.csse3200.game.entities.factories.characters.NPCFactory;
 import com.csse3200.game.entities.factories.items.ItemFactory;
 import com.csse3200.game.entities.factories.items.WeaponsFactory;
@@ -241,7 +239,7 @@ public class ForestGameArea extends GameArea {
   }
 
   private Entity spawnDagger() {
-    Entity newDagger = WeaponsFactory.createWeapon(new DaggerConfig());
+    Entity newDagger = WeaponsFactory.createWeapon(Weapons.DAGGER);
     Vector2 newDaggerOffset = new Vector2(0.7f, 0.3f);
     newDagger.addComponent(new ItemHoldComponent(this.player, newDaggerOffset));
 
@@ -249,17 +247,13 @@ public class ForestGameArea extends GameArea {
   }
 
   private void equipItem(Entity item) {
-    this.player.setCurrItem(item);
+    InventoryComponent inventory = this.player.getComponent(InventoryComponent.class);
+    inventory.addItem(item);
     spawnEntityAt(item, PLAYER_SPAWN, true, true);
-
-  }
-
-  private Entity getItem() {
-    return this.player.getCurrItem();
   }
 
   private Entity spawnLightsaber() {
-    Entity newLightsaber = WeaponsFactory.createWeapon(new LightsaberConfig());
+    Entity newLightsaber = WeaponsFactory.createWeapon(Weapons.LIGHTSABER);
     Vector2 newLightsaberOffset = new Vector2(0.7f, -0.1f);
     newLightsaber.addComponent(new ItemHoldComponent(this.player, newLightsaberOffset));
 
@@ -278,14 +272,14 @@ public class ForestGameArea extends GameArea {
 //  }
 
   private Entity spawnPistol() {
-    Entity newPistol = WeaponsFactory.createWeapon(new PistolConfig());
+    Entity newPistol = WeaponsFactory.createWeapon(Weapons.PISTOL);
     Vector2 newPistolOffset = new Vector2(0.45f, 0.02f);
     newPistol.addComponent(new ItemHoldComponent(this.player, newPistolOffset));
     return newPistol;
   }
 
   private Entity spawnRifle() {
-    Entity newRifle = WeaponsFactory.createWeapon(new RifleConfig());
+    Entity newRifle = WeaponsFactory.createWeapon(Weapons.RIFLE);
     Vector2 newRifleOffset = new Vector2(0.25f, 0.15f);
     newRifle.addComponent(new ItemHoldComponent(this.player, newRifleOffset));
     return newRifle;

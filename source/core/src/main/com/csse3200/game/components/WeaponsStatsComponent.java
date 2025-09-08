@@ -31,11 +31,11 @@ public class WeaponsStatsComponent extends Component {
         setCoolDown(0);
     }
 
-    public WeaponsStatsComponent(ProjectileConfig config) {
-        setBaseAttack(config.baseAttack);
-        setDisableDamage(false);
-        setCoolDown(0);
-    }
+//    public WeaponsStatsComponent(ProjectileConfig config) {
+//        setBaseAttack(config.baseAttack);
+//        setDisableDamage(false);
+//        setCoolDown(0);
+//    }
 
     public WeaponsStatsComponent(int baseAttack) {
         setBaseAttack(baseAttack);
