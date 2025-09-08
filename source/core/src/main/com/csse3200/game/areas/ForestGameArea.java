@@ -88,6 +88,8 @@ public class ForestGameArea extends GameArea {
     displayUI();
     spawnTerrain();
     spawnTrees();
+    playMusic();
+
     player = spawnPlayer();
     Entity dagger = spawnDagger();
     Entity pistol = spawnPistol();
