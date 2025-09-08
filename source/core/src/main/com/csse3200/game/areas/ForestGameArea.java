@@ -2,6 +2,7 @@ package com.csse3200.game.areas;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.GridPoint2;
@@ -202,6 +203,21 @@ public class ForestGameArea extends GameArea {
     // Bottom
     spawnEntityAt(
         ObstacleFactory.createWall(worldBounds.x, WALL_WIDTH), GridPoint2Utils.ZERO, false, false);
+
+    // After computing worldBounds
+    OrthographicCamera gameCamera = new OrthographicCamera();
+    gameCamera.setToOrtho(
+            false,
+            worldBounds.x, // width in world units
+            worldBounds.y  // height in world units
+    );
+
+// Optional: center the camera on the world
+//    gameCamera.position.set(worldBounds.x / 2f, worldBounds.y / 2f, 0);
+//    gameCamera.update();
+
+// Register it in RenderService so other components can use it
+    ServiceLocator.getRenderService().setCamera(gameCamera);
   }
 
   private void spawnTrees() {
