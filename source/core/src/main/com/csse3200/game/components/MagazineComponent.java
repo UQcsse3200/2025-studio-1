@@ -24,6 +24,15 @@ public class MagazineComponent extends Component{
     }
 
     /**
+     * Adds listener for reload event
+     */
+    @Override
+    public void create() {
+
+        entity.getEvents().addListener("reload", this::reload);
+    }
+
+    /**
      * Returns current amount of ammo in magazine
      * @return ammo in magazine
      */

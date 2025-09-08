@@ -3,6 +3,7 @@ package com.csse3200.game.entities.factories;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.csse3200.game.components.CombatStatsComponent;
+import com.csse3200.game.components.MagazineComponent;
 import com.csse3200.game.components.TagComponent;
 import com.csse3200.game.components.entity.item.ItemComponent;
 import com.csse3200.game.entities.Entity;
@@ -72,7 +73,8 @@ public class WeaponsFactory {
         Entity pistol = createBaseWeapon("ranged");
         pistol.addComponent(new TextureRenderComponent("images/pistol.png"))
                 .addComponent(new CombatStatsComponent(0, lightsaberConfigs.baseAttack))
-                .addComponent(new ItemComponent(1));
+                .addComponent(new ItemComponent(1))
+                .addComponent(new MagazineComponent(12));
         pistol.getComponent(TextureRenderComponent.class).scaleEntity();
         pistol.getComponent(PhysicsComponent.class).getBody().setUserData(pistol);
         return pistol;
@@ -86,7 +88,8 @@ public class WeaponsFactory {
         Entity rifle = createBaseWeapon("ranged");
         rifle.addComponent(new TextureRenderComponent("images/rifle.png"))
                 .addComponent(new CombatStatsComponent(0, lightsaberConfigs.baseAttack))
-                .addComponent(new ItemComponent(1));
+                .addComponent(new ItemComponent(1))
+                .addComponent(new MagazineComponent(12));
         rifle.getComponent(TextureRenderComponent.class).scaleEntity();
         rifle.getComponent(PhysicsComponent.class).getBody().setUserData(rifle);
         return rifle;

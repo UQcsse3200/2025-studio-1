@@ -47,6 +47,9 @@ public class KeyboardPlayerInputComponent extends InputComponent {
         walkDirection.add(Vector2Utils.RIGHT);
         triggerWalkEvent();
         return true;
+      case Keys.R:
+        triggerReloadEvent();
+        return true;
       case Keys.SPACE:
         entity.getEvents().trigger("attack");
         entity.getEvents().trigger("anim");
@@ -144,6 +147,11 @@ public class KeyboardPlayerInputComponent extends InputComponent {
     } else {
       entity.getEvents().trigger("walk", walkDirection);
     }
+  }
+
+  private void triggerReloadEvent() {
+
+    entity.getCurrItem().getEvents().trigger("reload");
   }
 
   private void triggerRemoveItem() {
