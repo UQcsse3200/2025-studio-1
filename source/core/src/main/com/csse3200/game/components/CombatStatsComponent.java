@@ -17,11 +17,14 @@ public class CombatStatsComponent extends Component {
   private int baseAttack;
   private int thresholdForBuff = 20;
   private float coolDown;
+  private int ammo;
 
   public CombatStatsComponent(int health, int baseAttack) {
     setHealth(health);
     setBaseAttack(baseAttack);
     this.coolDown = 0;
+    //placeholder value
+    this.ammo = 1000;
     this.maxHealth = health;
   }
 
@@ -190,5 +193,24 @@ public class CombatStatsComponent extends Component {
   public void hit(int damage) {
     applyDamage(damage);
   }
+
+  /**
+   * Gets the player's current amount off ammo (bullets they can fire)
+   * @return player's ammo.
+   */
+  public int getAmmo() {
+
+    return this.ammo;
+  }
+
+  /**
+   * Sets the player's current ammo count to a new value
+   * @param ammo the desired amount  ammo for the player to carry
+   */
+  public void setAmmo(int ammo) {
+
+    this.ammo = ammo;
+  }
+
 
 }
