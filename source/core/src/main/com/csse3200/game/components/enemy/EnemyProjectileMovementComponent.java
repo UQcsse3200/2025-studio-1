@@ -18,18 +18,20 @@ public class EnemyProjectileMovementComponent extends Component {
 
     @Override
     public void update() {
-        float dt = ServiceLocator.getTimeSource().getDeltaTime();
-        if (entity == null) return;
+        if (!ServiceLocator.getTimeSource().isPaused()) {
+            float dt = ServiceLocator.getTimeSource().getDeltaTime();
+            if (entity == null) return;
 
-        // Apply movement
-        entity.setPosition(entity.getPosition().cpy().add(velocity.cpy().scl(dt)));
+            // Apply movement
+            entity.setPosition(entity.getPosition().cpy().add(velocity.cpy().scl(dt)));
 
-        // Reduce lifetime
-        life -= dt;
-        if (life <= 0f) {
-            com.badlogic.gdx.Gdx.app.postRunnable(() -> {
-                if (entity != null) entity.dispose();
-            });
+            // Reduce lifetime
+            life -= dt;
+            if (life <= 0f) {
+                com.badlogic.gdx.Gdx.app.postRunnable(() -> {
+                    if (entity != null) entity.dispose();
+                });
+            }
         }
     }
 }

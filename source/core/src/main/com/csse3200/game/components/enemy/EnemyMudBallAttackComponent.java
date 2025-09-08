@@ -11,6 +11,8 @@ import com.csse3200.game.physics.components.PhysicsComponent;
 import com.csse3200.game.rendering.TextureRenderComponent;
 import com.csse3200.game.services.ServiceLocator;
 
+import java.util.ServiceConfigurationError;
+
 /**
  * Tracking mud ball attack: Fires a mud ball towards the target.
  */
@@ -33,20 +35,22 @@ public class EnemyMudBallAttackComponent extends Component {
 
     @Override
     public void update() {
-        float dt = ServiceLocator.getTimeSource().getDeltaTime();
-        timer -= dt;
+        if (!ServiceLocator.getTimeSource().isPaused()) {
+            float dt = ServiceLocator.getTimeSource().getDeltaTime();
+            timer -= dt;
 
-        if (timer > 0f || entity == null || target == null) return;
+            if (timer > 0f || entity == null || target == null) return;
 
-        Vector2 from = entity.getCenterPosition();
-        Vector2 to = target.getCenterPosition();
+            Vector2 from = entity.getCenterPosition();
+            Vector2 to = target.getCenterPosition();
 
-        if (from.dst2(to) > range * range) return;
+            if (from.dst2(to) > range * range) return;
 
-        Vector2 dir = to.cpy().sub(from).nor();
-        Vector2 vel = dir.scl(speed);
-        spawnProjectile(from, vel);
-        timer = cooldown;
+            Vector2 dir = to.cpy().sub(from).nor();
+            Vector2 vel = dir.scl(speed);
+            spawnProjectile(from, vel);
+            timer = cooldown;
+        }
     }
 
     private void spawnProjectile(Vector2 start, Vector2 velocity) {
