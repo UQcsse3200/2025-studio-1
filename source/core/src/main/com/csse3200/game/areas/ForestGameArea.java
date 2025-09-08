@@ -17,6 +17,7 @@ import com.csse3200.game.entities.factories.NPCFactory;
 import com.csse3200.game.entities.factories.ObstacleFactory;
 import com.csse3200.game.entities.factories.PlayerFactory;
 import com.csse3200.game.entities.factories.*;
+import com.csse3200.game.components.enemy.EnemyWaves;
 import com.csse3200.game.physics.components.PhysicsProjectileComponent;
 import com.csse3200.game.rendering.AnimationRenderComponent;
 import com.csse3200.game.utils.math.GridPoint2Utils;
@@ -34,10 +35,6 @@ public class ForestGameArea extends GameArea {
   private static final int NUM_ROBOTS = 1;
   private static final int NUM_ITEMS = 5;//this is for ItemFactory
   private static final int NUM_GHOSTS = 1;
-  private static final int NUM_GHOST_GPTS = 1;
-  private static final int NUM_DEEP_SPIN = 1;
-  private static final int NUM_GROK_DROID = 1;
-  private static final int NUM_VROOMBA = 1;
   private static final GridPoint2 PLAYER_SPAWN = new GridPoint2(10, 10);
   private static final float WALL_WIDTH = 0.1f;
   private static final String[] forestTextures = {
@@ -141,8 +138,8 @@ public class ForestGameArea extends GameArea {
     //this.equipItem(dagger);
     this.equipItem(rifle);
 
-    spawnGhosts();
-    spawnGhostKing();
+    //spawnGhosts();
+    //spawnGhostKing();
     int choice = (int)(Math.random() * 3);
     if (choice == 0) {
       spawnBoss2();
@@ -151,10 +148,11 @@ public class ForestGameArea extends GameArea {
     } else {
       spawnBoss3();
     }
-    spawnGhostGPT();
-    spawnDeepspin();
-    spawnGrokDroid();
-    spawnVroomba();
+    //spawnGhostGPT();
+    //spawnDeepspin();
+    //spawnGrokDroid();
+    //spawnVroomba();
+      spawnWaves();
     playMusic();
     spawnItems();
   }
@@ -336,54 +334,73 @@ public class ForestGameArea extends GameArea {
   }
 
   /**
-   * Adds NUM_GHOST_GPTS amount of GhostGPT enemies onto the map.
+   * Adds GhostGPT enemies onto the map.
+   * @param total The total number of GhostGPT to be spawned.
+   * @param scaleFactor The scale of increase in difficulty of the GhostGPT
    */
-  private void spawnGhostGPT() {
+  public void spawnGhostGPT(int total, float scaleFactor) {
     GridPoint2 minPos = new GridPoint2(0, 0);
     GridPoint2 maxPos = terrain.getMapBounds(0).sub(3, 3);
 
-    for (int i = 0; i < NUM_GHOST_GPTS; i++) {
+    for (int i = 0; i < total; i++) {
         GridPoint2 randomPos = RandomUtils.random(minPos, maxPos);
-        Entity ghostGPT = NPCFactory.createGhostGPT(player, this);
+        Entity ghostGPT = NPCFactory.createGhostGPT(player, this, scaleFactor);
         spawnEntityAt(ghostGPT, randomPos, true, true);
     }
   }
+
   /**
-   * Adds NUM_DEEP_SPIN amount of GhostGPT enemies onto the map.
+   * Spawns a wave of enemies on the map based on {@link EnemyWaves}.
    */
-  private void spawnDeepspin() {
+  private void spawnWaves() {
+      EnemyWaves wave = new EnemyWaves(1, this);
+      wave.startWave();
+  }
+
+  /**
+   * Adds DeepSpin enemies onto the map.
+   * @param total The total number of DeepSpins to be spawned.
+   * @param scaleFactor The scale of increase in difficulty of the DeepSpin
+   */
+  public void spawnDeepspin(int total, float scaleFactor) {
     GridPoint2 minPos = new GridPoint2(0, 0);
     GridPoint2 maxPos = terrain.getMapBounds(0).sub(3, 3);
 
-    for (int i = 0; i < NUM_DEEP_SPIN; i++) {
+    for (int i = 0; i < total; i++) {
       GridPoint2 randomPos = RandomUtils.random(minPos, maxPos);
-      Entity deepspin = NPCFactory.createDeepspin(player, this);
+      Entity deepspin = NPCFactory.createDeepspin(player, this, scaleFactor);
       spawnEntityAt(deepspin, randomPos, true, true);
     }
   }
+
   /**
-   * Adds NUM_GROK_DROID amount of GrokDroid enemies onto the map.
+   * Adds GrokDroid enemies onto the map.
+   * @param total The total number of GrokDroid to be spawned.
+   * @param scaleFactor The scale of increase in difficulty of the GrokDroid
    */
-  private void spawnGrokDroid() {
+  public void spawnGrokDroid(int total, float scaleFactor) {
     GridPoint2 minPos = new GridPoint2(0, 0);
     GridPoint2 maxPos = terrain.getMapBounds(0).sub(3, 3);
 
-    for (int i = 0; i < NUM_GROK_DROID; i++) {
+    for (int i = 0; i < total; i++) {
       GridPoint2 randomPos = RandomUtils.random(minPos, maxPos);
-      Entity grokDroid = NPCFactory.createGrokDroid(player, this);
+      Entity grokDroid = NPCFactory.createGrokDroid(player, this, scaleFactor);
       spawnEntityAt(grokDroid, randomPos, true, true);
     }
   }
+
   /**
-   * Adds NUM_VROOMBA amount of GrokDroid enemies onto the map.
+   * Adds Vroomba enemies onto the map.
+   * @param total The total number of Vroomba to be spawned.
+   * @param scaleFactor The scale of increase in difficulty of the Vroomba
    */
-  private void spawnVroomba() {
+  public void spawnVroomba(int total, float scaleFactor) {
     GridPoint2 minPos = new GridPoint2(0, 0);
     GridPoint2 maxPos = terrain.getMapBounds(0).sub(3, 3);
 
-    for (int i = 0; i < NUM_VROOMBA; i++) {
+    for (int i = 0; i < total; i++) {
       GridPoint2 randomPos = RandomUtils.random(minPos, maxPos);
-      Entity vroomba = NPCFactory.createVroomba(player, this);
+      Entity vroomba = NPCFactory.createVroomba(player, scaleFactor);
       spawnEntityAt(vroomba, randomPos, true, true);
     }
   }
