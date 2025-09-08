@@ -106,7 +106,18 @@ public class PlayerActions extends Component {
       return;
     }
 
-    Sound attackSound = ServiceLocator.getResourceService().getAsset("sounds/Impact4.ogg", Sound.class);
+    Entity weapon = entity.getCurrItem();
+    MagazineComponent mag = weapon.getComponent(MagazineComponent.class);
+
+    if (mag.getCurrentAmmo() <= 0) {
+      Sound attackSound = ServiceLocator.getResourceService()
+              .getAsset("sounds/shot_failed.mp3", Sound.class);
+      attackSound.play();
+      return;
+    }
+
+    Sound attackSound = ServiceLocator.getResourceService()
+            .getAsset("sounds/laser_blast.mp3", Sound.class);
     attackSound.play();
 
     Entity bullet = ProjectileFactory.createPistolBullet();
@@ -125,8 +136,7 @@ public class PlayerActions extends Component {
     projectilePhysics.fire(new Vector2(destination.x - origin.x,
             destination.y - origin.y), 5);
 
-    Entity weapon = entity.getCurrItem();
-    MagazineComponent mag = weapon.getComponent(MagazineComponent.class);
+
     mag.setCurrentAmmo(mag.getCurrentAmmo() - 1);
 
     timeSinceLastAttack = 0;
@@ -177,9 +187,20 @@ public class PlayerActions extends Component {
     if (equippedItem != null) {
       MagazineComponent mag = equippedItem.getComponent(MagazineComponent.class);
       if (mag != null) {
-        mag.reload(entity);
-      }
+        Sound reloadSound;
 
+        if (mag.reload(entity)) {
+          reloadSound = ServiceLocator.getResourceService()
+                  .getAsset("sounds/reload.mp3", Sound.class);
+        }
+
+        else {
+          reloadSound = ServiceLocator.getResourceService()
+                  .getAsset("sounds/shot_failed.mp3", Sound.class);
+        }
+
+        reloadSound.play();
+      }
     }
   }
 }
