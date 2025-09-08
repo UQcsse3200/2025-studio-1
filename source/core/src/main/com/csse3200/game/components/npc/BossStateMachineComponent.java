@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.csse3200.game.components.Component;
 import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.entities.Entity;
+import com.csse3200.game.services.ServiceLocator;
 
 public class BossStateMachineComponent extends Component {
     public enum State { WANDER, CHASE, ATTACK, ENRAGED, DEAD }
@@ -51,7 +52,7 @@ public class BossStateMachineComponent extends Component {
             return;
         }
 
-        cd -= Gdx.graphics.getDeltaTime();
+        cd -= ServiceLocator.getTimeSource().getDeltaTime();
 
         float dist = (target != null)
                 ? entity.getPosition().dst(target.getPosition())
