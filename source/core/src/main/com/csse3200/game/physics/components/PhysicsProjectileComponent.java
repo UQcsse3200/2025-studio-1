@@ -46,15 +46,13 @@ public class PhysicsProjectileComponent extends Component{
      */
 
     public void update() {
-        if (!ServiceLocator.getTimeSource().isPaused()) {
-            float dt = ServiceLocator.getTimeSource().getDeltaTime();
-            lived += dt;
+        float dt = ServiceLocator.getTimeSource().getDeltaTime();
+        lived += dt;
 
-            if (lived > lifetime) {
-                entity.setToRemove();
-                Body body = physicsComponent.getBody();
-                body.setLinearVelocity(new Vector2(0f, 0f));
-            }
+        if (lived > lifetime) {
+            entity.setToRemove();
+            Body body = physicsComponent.getBody();
+            body.setLinearVelocity(new Vector2(0f, 0f));
         }
     }
 

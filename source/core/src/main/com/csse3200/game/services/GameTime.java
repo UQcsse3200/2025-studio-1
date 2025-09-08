@@ -45,6 +45,9 @@ public class GameTime {
 
   /** @return time passed since the last frame in seconds, scaled by time scale. */
   public float getDeltaTime() {
+      if (paused) {
+         return 0;
+      }
     return Gdx.graphics.getDeltaTime() * timeScale;
   }
 
