@@ -33,15 +33,13 @@ public class EnemyMudRingSprayComponent extends Component {
 
     @Override
     public void update() {
-        if (!ServiceLocator.getTimeSource().isPaused()) {
-            float dt = ServiceLocator.getTimeSource().getDeltaTime();
-            timer -= dt;
-            if (timer > 0f || entity == null) return;
+        float dt = ServiceLocator.getTimeSource().getDeltaTime();
+        timer -= dt;
+        if (timer > 0f || entity == null) return;
 
-            spawnRing();
-            timer = cooldown;
-            angleOffset += Math.toRadians(7f); // Rotate the next ring by 7 degrees
-        }
+        spawnRing();
+        timer = cooldown;
+        angleOffset += Math.toRadians(7f); // Rotate the next ring by 7 degrees
     }
 
     private void spawnRing() {
