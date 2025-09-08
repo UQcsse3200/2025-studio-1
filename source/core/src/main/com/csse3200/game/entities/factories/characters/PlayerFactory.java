@@ -1,13 +1,13 @@
-package com.csse3200.game.entities.factories;
+package com.csse3200.game.entities.factories.characters;
 
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.components.WeaponsStatsComponent;
 import com.csse3200.game.components.player.*;
-import com.csse3200.game.components.StaminaComponent;
+import com.csse3200.game.components.player.StaminaComponent;
 import com.csse3200.game.entities.Entity;
-import com.csse3200.game.entities.configs.PlayerConfig;
+import com.csse3200.game.entities.configs.characters.PlayerConfig;
 import com.csse3200.game.files.FileLoader;
 import com.csse3200.game.input.InputComponent;
 import com.csse3200.game.physics.PhysicsLayer;

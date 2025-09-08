@@ -3,15 +3,12 @@ package com.csse3200.game.entities;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.IntMap;
-import com.csse3200.game.areas.GameArea;
 import com.csse3200.game.components.Component;
 import com.csse3200.game.components.ComponentType;
 import com.csse3200.game.events.EventHandler;
 import com.csse3200.game.services.ServiceLocator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.security.Provider;
 
 /**
  * Core entity class. Entities exist in the game and are updated each frame. All entities have a
@@ -238,6 +235,11 @@ public class Entity {
     component.setEntity(this);
 
     return this;
+  }
+
+  public <T extends Component> boolean hasComponent(Class<T> type) {
+    ComponentType componentType = ComponentType.getFrom(type);
+    return components.get(componentType.getId()) != null;
   }
 
   /** Dispose of the entity. This will dispose of all components on this entity. */

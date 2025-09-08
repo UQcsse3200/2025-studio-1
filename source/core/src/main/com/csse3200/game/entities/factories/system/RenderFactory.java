@@ -1,4 +1,4 @@
-package com.csse3200.game.entities.factories;
+package com.csse3200.game.entities.factories.system;
 
 import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.entities.Entity;
