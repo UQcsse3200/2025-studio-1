@@ -125,6 +125,7 @@ public class ForestGameArea extends GameArea {
     ServiceLocator.registerGameArea(this);
     displayUI();
     spawnTerrain();
+    spawnTestPlatforms(); // Added: test platforms for ground movement testing
     spawnTrees();
     player = spawnPlayer();
     dagger = spawnDagger();
@@ -153,7 +154,7 @@ public class ForestGameArea extends GameArea {
     //spawnDeepspin();
     //spawnGrokDroid();
     //spawnVroomba();
-      spawnWaves();
+    spawnWaves();
     playMusic();
     spawnItems();
   }
@@ -369,7 +370,8 @@ public class ForestGameArea extends GameArea {
    * Spawns a wave of enemies on the map based on {@link EnemyWaves}.
    */
   private void spawnWaves() {
-      EnemyWaves wave = new EnemyWaves(1, this);
+      // Use a higher room number so EnemyWaves logic spawns GhostGPT instead of airborne Deepspin
+      EnemyWaves wave = new EnemyWaves(5, this); // was 1
       wave.startWave();
   }
 
@@ -460,5 +462,22 @@ public class ForestGameArea extends GameArea {
 
   public Entity getPlayer() {
     return player;
+  }
+
+  /**
+   * Spawns a small set of static platforms for testing player/enemy gravity & ground movement.
+   */
+  private void spawnTestPlatforms() {
+    // Ground-level wide platform (acts like a raised floor segment)
+    Entity basePlatform = ObstacleFactory.createPlatform(12f, 0.6f);
+    spawnEntityAt(basePlatform, new GridPoint2(4, 4), true, false);
+
+    // Mid-air narrow ledge
+    Entity midPlatform = ObstacleFactory.createPlatform(6f, 0.5f);
+    spawnEntityAt(midPlatform, new GridPoint2(10, 9), true, false);
+
+    // Higher small platform for jump testing
+    Entity highPlatform = ObstacleFactory.createPlatform(4f, 0.5f);
+    spawnEntityAt(highPlatform, new GridPoint2(16, 13), true, false);
   }
 }
