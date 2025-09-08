@@ -26,15 +26,17 @@ public class FireballAttackComponent extends Component {
 
     @Override
     public void update() {
-        timer -= ServiceLocator.getTimeSource().getDeltaTime();
-        if (timer > 0) {
-            return;
-        }
-        Vector2 from = entity.getCenterPosition();
-        Vector2 to = target.getCenterPosition();
-        if (from.dst2(to) <= range * range) {
-            shoot(from, to);
-            timer = cooldown;
+        if (!ServiceLocator.getTimeSource().isPaused()) {
+            timer -= ServiceLocator.getTimeSource().getDeltaTime();
+            if (timer > 0) {
+                return;
+            }
+            Vector2 from = entity.getCenterPosition();
+            Vector2 to = target.getCenterPosition();
+            if (from.dst2(to) <= range * range) {
+                shoot(from, to);
+                timer = cooldown;
+            }
         }
     }
 

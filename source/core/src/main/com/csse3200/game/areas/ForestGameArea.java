@@ -143,14 +143,15 @@ public class ForestGameArea extends GameArea {
 
     spawnGhosts();
     spawnGhostKing();
-    int choice = (int)(Math.random() * 3);
-    if (choice == 0) {
-      spawnBoss2();
-    } else if (choice == 1) {
-      spawnRobots();
-    } else {
-      spawnBoss3();
-    }
+    spawnBoss2();
+//    int choice = (int)(Math.random() * 3);
+//    if (choice == 0) {
+//      spawnBoss2();
+//    } else if (choice == 1) {
+//      spawnRobots();
+//    } else {
+//      spawnBoss3();
+//    }
     spawnGhostGPT();
     spawnDeepspin();
     spawnGrokDroid();

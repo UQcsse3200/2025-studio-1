@@ -54,7 +54,9 @@ public class BossChargeSkillComponent extends Component {
 
     @Override
     public void update() {
-        float dt = time.getDeltaTime();
+        float dt = 0;
+        if (!ServiceLocator.getTimeSource().isPaused())
+            dt = time.getDeltaTime();
 
         switch (state) {
             case IDLE: {
@@ -73,7 +75,6 @@ public class BossChargeSkillComponent extends Component {
                 }
                 break;
             }
-
             case PREP: {
                 timer -= dt;
                 if (timer <= 0f) {
@@ -86,7 +87,6 @@ public class BossChargeSkillComponent extends Component {
                 }
                 break;
             }
-
             case CHARGING: {
                 Vector2 pos = entity.getPosition();
                 pos.add(chargeVel.x * dt, chargeVel.y * dt);
@@ -101,7 +101,6 @@ public class BossChargeSkillComponent extends Component {
                 }
                 break;
             }
-
             case COOLDOWN: {
                 timer -= dt;
                 if (timer <= 0f) {
