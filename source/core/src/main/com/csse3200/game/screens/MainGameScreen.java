@@ -8,6 +8,7 @@ import com.csse3200.game.areas.ForestGameArea;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.components.maingame.MainGameActions;
 import com.csse3200.game.components.screens.PauseMenuDisplay;
+import com.csse3200.game.components.screens.ShopScreenDisplay;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
 import com.csse3200.game.entities.factories.RenderFactory;
@@ -50,6 +51,8 @@ public class MainGameScreen extends ScreenAdapter {
 
   private Entity pauseOverlay;
   private boolean isPauseVisible = false;
+  private Entity shopOverlay;
+  private boolean isShopVisible = false;
 
   public MainGameScreen(GdxGame game) {
     this.game = game;
@@ -196,4 +199,5 @@ public class MainGameScreen extends ScreenAdapter {
     }
     isPauseVisible = false;
   }
+
 }
