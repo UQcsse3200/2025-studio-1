@@ -7,6 +7,7 @@ import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
 import com.csse3200.game.extensions.GameExtension;
 import com.csse3200.game.services.ServiceLocator;
+import org.junit.Assert;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -150,6 +151,16 @@ class CombatStatsComponentTest {
     assertEquals(0, combat.getHealth());
     combat.hit(1000);
     assertEquals(0, combat.getHealth());
+  }
+
+  @Test
+  void testAmmo() {
+
+    combat.setAmmo(0);
+    Assert.assertEquals(combat.getAmmo(), 0);
+
+    combat.setAmmo(100);
+    Assert.assertEquals(combat.getAmmo(), 100);
   }
 
   @AfterEach
