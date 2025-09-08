@@ -349,7 +349,7 @@ public class ForestGameArea extends GameArea {
     }
   }
   /**
-   * Adds NUM_Deep_spin amount of GhostGPT enemies onto the map.
+   * Adds NUM_DEEP_SPIN amount of GhostGPT enemies onto the map.
    */
   private void spawnDeepspin() {
     GridPoint2 minPos = new GridPoint2(0, 0);
