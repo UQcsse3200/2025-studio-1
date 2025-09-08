@@ -4,6 +4,8 @@ import java.util.Collection;
 import java.util.EnumSet;
 import java.util.Set;
 
+// DEPRECATED CLASS DO NOT USE KEPT FOR REFERENCE
+
 /**
  * Component which can be used to assign a "tag" to an entity, thus allowing its category
  * to be identified
