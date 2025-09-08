@@ -18,6 +18,7 @@ public class PhysicsProjectileComponent extends Component{
     private Vector2 initialVelocity;
     private float lifetime = 5f;
     private float lived = 0f;
+    private boolean paused = false;
 
     /**
      * Manifests the physics for the projectile
@@ -45,13 +46,15 @@ public class PhysicsProjectileComponent extends Component{
      */
 
     public void update() {
-        float dt = ServiceLocator.getTimeSource().getDeltaTime();
-        lived += dt;
+        if (!ServiceLocator.getTimeSource().isPaused()) {
+            float dt = ServiceLocator.getTimeSource().getDeltaTime();
+            lived += dt;
 
-        if (lived > lifetime) {
-            entity.setToRemove();
-            Body body = physicsComponent.getBody();
-            body.setLinearVelocity(new Vector2(0f, 0f));
+            if (lived > lifetime) {
+                entity.setToRemove();
+                Body body = physicsComponent.getBody();
+                body.setLinearVelocity(new Vector2(0f, 0f));
+            }
         }
     }
 
