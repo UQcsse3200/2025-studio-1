@@ -26,9 +26,6 @@ import com.csse3200.game.rendering.TextureRenderComponent;
 import com.csse3200.game.services.ServiceLocator;
 
 
-
-
-
 /**
  * A factory class for creating Boss and NPC entities for the game.
  * This factory defines behavior, physics, and rendering properties for Boss-3

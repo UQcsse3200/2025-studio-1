@@ -183,7 +183,8 @@ public class CombatStatsComponent extends Component {
    * @see #setHealth(int)
    */
   private void applyDamage(int damage) {
-    if (damage <= 0 || isDead() || disableDamage) {
+    Boolean dead = isDead();
+    if (damage <= 0 || dead || disableDamage) {
         return;
     }
     setHealth(this.health - damage);
