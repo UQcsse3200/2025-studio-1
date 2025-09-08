@@ -1,6 +1,6 @@
 package com.csse3200.game.components.entity.item;
 
-import com.csse3200.game.components.entity.EntityComponent;
+import com.csse3200.game.entities.ItemComponent;
 import com.csse3200.game.extensions.GameExtension;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;

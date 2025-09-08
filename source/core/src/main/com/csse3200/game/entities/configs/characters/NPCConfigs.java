@@ -1,4 +1,4 @@
-package com.csse3200.game.entities.configs;
+package com.csse3200.game.entities.configs.characters;
 
 /**
  * Defines all NPC configs to be loaded by the NPC Factory.

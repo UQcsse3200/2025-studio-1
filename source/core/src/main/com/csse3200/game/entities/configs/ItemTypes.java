@@ -1,6 +1,7 @@
 package com.csse3200.game.entities.configs;
 
 public enum ItemTypes {
+    NONE("none"),
     MELEE("melee"),
     RANGED("ranged"),
     PROJECTILE("projectile"),

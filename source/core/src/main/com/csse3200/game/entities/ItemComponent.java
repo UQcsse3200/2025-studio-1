@@ -1,9 +1,12 @@
-package com.csse3200.game.components.entity.item;
+package com.csse3200.game.entities;
 
-import com.csse3200.game.components.entity.EntityComponent;
+import com.csse3200.game.components.Component;
+import com.csse3200.game.entities.configs.ItemTypes;
 
-public class ItemComponent extends EntityComponent {
-    private int count;
+public class ItemComponent extends Component {
+    private String name;
+    private ItemTypes type = ItemTypes.NONE;
+    private int count = 1;
     private String texture;
 
     /**
@@ -13,8 +16,9 @@ public class ItemComponent extends EntityComponent {
      * @param count is the present count for the item
      * @param texture is the texture path to the texture of the item
      */
-    public ItemComponent(int count, String texture) {
-        super();
+    public ItemComponent(String name, ItemTypes type, int count, String texture) {
+        this.name = name;
+        this.type = type;
         this.count = count;
         this.texture = texture;
     }
@@ -23,6 +27,22 @@ public class ItemComponent extends EntityComponent {
      * default constructor gets called if no value is passed
      */
     public ItemComponent() {}
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public ItemTypes getType() {
+        return type;
+    }
+
+    public void setType(ItemTypes type) {
+        this.type = type;
+    }
 
     /**
      * Gets the current number of existing items that are the same within
@@ -37,16 +57,16 @@ public class ItemComponent extends EntityComponent {
      */
     public void setCount(int count){this.count = count;}
 
-    /**
-     * Outputs the description of the provided item with id
-     * @param name The name of the item that you want the description of
-     * @param id The id of the item that you want the description of
-     */
-    public void description(String name, int id){
-        System.out.println("This is a/an " + name + ". " +
-            "\nPresent count : " + count +
-            "\nType :  " + getType());
-    }
+//    /**
+//     * Outputs the description of the provided item with id
+//     * @param name The name of the item that you want the description of
+//     * @param id The id of the item that you want the description of
+//     */
+//    public void description(String name, int id){
+//        System.out.println("This is a/an " + name + ". " +
+//            "\nPresent count : " + count +
+//            "\nType :  " + getType());
+//    }
 
     //public void updateCount() -- to increment/decrement count
 
@@ -64,7 +84,7 @@ public class ItemComponent extends EntityComponent {
     /**
      * TODO: implement functionality and add docstrings
      */
-    public void setDescription(){ }
+//    public void setDescription(){ }
 
     /**
      * Gets the description for the item
@@ -73,7 +93,6 @@ public class ItemComponent extends EntityComponent {
      */
     public String getDescription(){
         return ("Item : " + this.getName()
-                + "\nID : " + this.getId()
                 + "\nType : " + this.getType()
                 + "\nCount : " + this.getCount());
     }

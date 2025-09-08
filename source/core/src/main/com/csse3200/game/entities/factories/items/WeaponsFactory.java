@@ -1,4 +1,4 @@
-package com.csse3200.game.entities.factories;
+package com.csse3200.game.entities.factories.items;
 
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -6,12 +6,10 @@ import com.csse3200.game.components.TagComponent;
 import com.csse3200.game.components.WeaponsStatsComponent;
 import com.csse3200.game.components.entity.EntityComponent;
 import com.csse3200.game.entities.Entity;
-import com.csse3200.game.entities.configs.*;
+import com.csse3200.game.entities.ItemComponent;
+import com.csse3200.game.entities.configs.ItemTypes;
 import com.csse3200.game.entities.configs.weapons.WeaponConfig;
-import com.csse3200.game.files.FileLoader;
 import com.csse3200.game.rendering.AnimationRenderComponent;
-
-import java.lang.reflect.InvocationTargetException;
 
 /**
  * Factory to create non-playable character (NPC) entities with predefined components.
@@ -27,15 +25,13 @@ public class WeaponsFactory {
 
     public static Entity createWeapon(WeaponConfig config) {
         Entity weapon = ItemFactory.createItem(config.texturePath);
-        weapon.getComponent(EntityComponent.class).setType(config.weaponType.getString());
         weapon.addComponent(new WeaponsStatsComponent(config));
 
-        TagComponent tag = new TagComponent();
-        weapon.addComponent(tag);
+        ItemComponent item = weapon.getComponent(ItemComponent.class);
 
         switch (config.weaponType) {
-            case RANGED -> tag.add(TagComponent.Tag.RANGED);
-            case MELEE -> tag.add(TagComponent.Tag.MELEE);
+            case RANGED -> item.setType(ItemTypes.RANGED);
+            case MELEE -> item.setType(ItemTypes.MELEE);
         }
 
         return weapon;
