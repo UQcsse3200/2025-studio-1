@@ -49,6 +49,22 @@ public class ObstacleFactory {
     return wall;
   }
 
+  /**
+   * Creates a simple static platform for player/enemy to stand on (testing only).
+   * @param width platform width in world units
+   * @param height platform thickness in world units (e.g. 0.5f)
+   * @return platform entity
+   */
+  public static Entity createPlatform(float width, float height) {
+    Entity platform = new Entity()
+            .addComponent(new TextureRenderComponent("images/mud.png"))
+            .addComponent(new PhysicsComponent().setBodyType(BodyType.StaticBody))
+            .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
+    platform.setScale(width, height);
+    // Collider will match entity scale similar to createWall usage
+    return platform;
+  }
+
   private ObstacleFactory() {
     throw new IllegalStateException("Instantiating static util class");
   }
