@@ -10,6 +10,7 @@ import com.badlogic.gdx.utils.Array;
 import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.components.Component;
+import com.csse3200.game.components.MagazineComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.LightsaberConfig;
 import com.csse3200.game.entities.factories.ProjectileFactory;
@@ -122,6 +123,10 @@ public class PlayerActions extends Component {
 
     projectilePhysics.fire(new Vector2(destination.x - origin.x,
             destination.y - origin.y), 5);
+
+    Entity weapon = entity.getCurrItem();
+    MagazineComponent magazine = weapon.getComponent(MagazineComponent.class);
+    magazine.setCurrentAmmo(magazine.getCurrentAmmo() - 1);
 
     timeSinceLastAttack = 0;
   }

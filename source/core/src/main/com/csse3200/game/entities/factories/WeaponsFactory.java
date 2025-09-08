@@ -89,7 +89,7 @@ public class WeaponsFactory {
         rifle.addComponent(new TextureRenderComponent("images/rifle.png"))
                 .addComponent(new CombatStatsComponent(0, lightsaberConfigs.baseAttack))
                 .addComponent(new ItemComponent(1))
-                .addComponent(new MagazineComponent(12));
+                .addComponent(new MagazineComponent(30));
         rifle.getComponent(TextureRenderComponent.class).scaleEntity();
         rifle.getComponent(PhysicsComponent.class).getBody().setUserData(rifle);
         return rifle;
