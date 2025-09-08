@@ -18,7 +18,6 @@ public class PhysicsProjectileComponent extends Component{
     private Vector2 initialVelocity;
     private float lifetime = 5f;
     private float lived = 0f;
-    private boolean paused = false;
 
     /**
      * Manifests the physics for the projectile
