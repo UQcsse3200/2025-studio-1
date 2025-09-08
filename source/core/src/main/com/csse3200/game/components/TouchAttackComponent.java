@@ -70,6 +70,7 @@ public class TouchAttackComponent extends Component {
 
     if (targetStats != null) {
       targetStats.takeDamage(targetWeapons.getBaseAttack());
+      System.out.println(targetStats.getHealth());
     }
 
     // Apply knockback
@@ -82,9 +83,8 @@ public class TouchAttackComponent extends Component {
     }
 
     //disposes entity if it is a projectile
-    if (entity.getComponent(PhysicsProjectileComponent.class) != null) {
+    if (entity.hasComponent(PhysicsProjectileComponent.class)) {
       entity.setToRemove();
     }
-
   }
 }

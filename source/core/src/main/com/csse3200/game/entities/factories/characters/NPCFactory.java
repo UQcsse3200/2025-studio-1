@@ -4,6 +4,8 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.ai.tasks.AITaskComponent;
+import com.csse3200.game.components.CombatStatsComponent;
+import com.csse3200.game.components.WeaponsStatsComponent;
 import com.csse3200.game.components.npc.GhostAnimationController;
 import com.csse3200.game.components.TouchAttackComponent;
 import com.csse3200.game.components.tasks.*;
@@ -67,7 +69,8 @@ public class NPCFactory {
     }
 
     ghost
-//        .addComponent(new CombatStatsComponent(config.health, config.baseAttack))
+        .addComponent(new CombatStatsComponent(config.health))
+        .addComponent(new WeaponsStatsComponent(config.baseAttack))
         .addComponent(animator)
         .addComponent(new GhostAnimationController())
         .addComponent(new EnemyDeathRewardComponent(15, playerInventory))

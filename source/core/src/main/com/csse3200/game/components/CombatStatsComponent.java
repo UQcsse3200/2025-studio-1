@@ -40,14 +40,18 @@ public class CombatStatsComponent extends Component {
    *
    * @return {@code true} if the entity has 0 or less health, {@code false} otherwise
    */
-  public Boolean isDead() { return this.health <= 0; }
+  public Boolean isDead() {
+    return this.health <= 0;
+  }
 
   /**
    * Returns the entity's health.
    *
    * @return entity's health
    */
-  public int getHealth() { return health; }
+  public int getHealth() {
+    return health;
+  }
 
   public void takeDamage(int damage) {
     applyDamage(damage);

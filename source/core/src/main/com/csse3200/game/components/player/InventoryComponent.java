@@ -119,6 +119,8 @@ public class InventoryComponent extends Component {
       return false;
 
     if (this.get(index) == null) { // if there is something there
+      currItem = item;
+
       this.items.set(index, item);
 
       String itemTex = item.getComponent(ItemComponent.class).getTexture();

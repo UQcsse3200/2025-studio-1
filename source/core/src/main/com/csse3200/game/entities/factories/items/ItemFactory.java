@@ -47,6 +47,7 @@ public class ItemFactory {
                 .addComponent(new TextureRenderComponent(texture))
                 .addComponent(new PhysicsComponent());
 
+        item.getComponent(ItemComponent.class).setTexture(texture);
         item.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
         item.getComponent(TextureRenderComponent.class).scaleEntity();
         item.getComponent(PhysicsComponent.class).getBody().setUserData(item);

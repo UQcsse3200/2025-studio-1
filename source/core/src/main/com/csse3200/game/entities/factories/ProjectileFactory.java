@@ -6,8 +6,7 @@ import com.csse3200.game.components.TouchAttackComponent;
 import com.csse3200.game.components.WeaponsStatsComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.*;
-import com.csse3200.game.entities.configs.projectiles.LaserConfig;
-import com.csse3200.game.entities.configs.projectiles.PistolBulletConfig;
+
 import com.csse3200.game.entities.configs.projectiles.ProjectileConfig;
 import com.csse3200.game.entities.configs.weapons.WeaponConfig;
 import com.csse3200.game.files.FileLoader;
@@ -30,18 +29,13 @@ import com.csse3200.game.rendering.TextureRenderComponent;
 
 public class ProjectileFactory {
 
-    public static Entity createProjectile(Class<? extends ProjectileConfig> configClass) {
-        ProjectileConfig config;
-        try {
-            config = configClass.getDeclaredConstructor().newInstance();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+    public static Entity createProjectile(ProjectileConfig.ProjectileTarget target, String texturePath) {
+        ProjectileConfig config = new ProjectileConfig(target, texturePath);
 
         Entity projectile = new Entity()
                 .addComponent(new PhysicsComponent())
                 .addComponent(new PhysicsProjectileComponent())
-                .addComponent(new WeaponsStatsComponent(config))
+                .addComponent(new WeaponsStatsComponent(1000))
                 .addComponent(new TextureRenderComponent(config.texturePath))
                 .addComponent(new ColliderComponent())
                 .addComponent(new HitboxComponent().setLayer(config.projectileType))
@@ -60,7 +54,8 @@ public class ProjectileFactory {
      * @return pistol bullet entity
      */
     public static Entity createPistolBullet() {
-        Entity pistolBullet = createProjectile(PistolBulletConfig.class);
+        ProjectileConfig.ProjectileTarget target = ProjectileConfig.ProjectileTarget.ENEMY;
+        Entity pistolBullet = createProjectile(target, "images/round.png");
         pistolBullet.scaleHeight(0.85f);
         return pistolBullet;
     }
@@ -70,16 +65,15 @@ public class ProjectileFactory {
      * @return The laser entity
      */
     public static Entity createEnemyProjectile(Vector2 direction) {
-        Entity projectile = createProjectile(LaserConfig.class);
+        ProjectileConfig.ProjectileTarget target = ProjectileConfig.ProjectileTarget.PLAYER;
+        Entity projectile = createProjectile(target, "images/laser_shot.png");
 
         float angleToFire = direction.angleDeg() + 90;
 
         projectile.getComponent(TextureRenderWithRotationComponent.class).setRotation(angleToFire);
         projectile.getComponent(TextureRenderWithRotationComponent.class).scaleEntity();
-
-        projectile.getComponent(PhysicsProjectileComponent.class).create(); // Not called for some reason.
-        projectile.getComponent(PhysicsProjectileComponent.class).fire(direction, new LaserConfig().speed);
-
+//        projectile.getComponent(PhysicsProjectileComponent.class).create(); // Not called for some reason.
+//        projectile.getComponent(PhysicsProjectileComponent.class).fire(direction, new LaserConfig().speed);
         return projectile;
     }
 
