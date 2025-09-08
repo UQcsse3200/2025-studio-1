@@ -25,14 +25,6 @@ public class GameTime {
     this.paused = paused;
   }
 
-    /**
-     * Gets the current status of the game (i.e. if it is paused or not)
-     * @return True if the game is currently pauesd, False otherwise.
-     */
-  public boolean isPaused() {
-      return this.paused;
-  }
-
   /**
    * Set the speed of time passing. This affects getDeltaTime()
    *
