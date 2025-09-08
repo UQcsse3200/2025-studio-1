@@ -64,7 +64,9 @@ public class TutorialScreen extends ScreenAdapter {
         stage.addActor(bg);
 
         List<TutorialStep> steps = List.of(
-                new TutorialStep("Welcome!", "Use WASD to move your character.", null)
+                new TutorialStep("Welcome!", "Use WASD to move your character.", null),
+                new TutorialStep("Attack", "Use space to attack enemies.", null),
+                new TutorialStep("Pick up item", "Walk on an item to pick it up", null)
         );
 
         Entity ui = new Entity();
