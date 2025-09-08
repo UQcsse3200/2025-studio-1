@@ -54,9 +54,7 @@ public class BossChargeSkillComponent extends Component {
 
     @Override
     public void update() {
-        float dt = 0;
-        if (!ServiceLocator.getTimeSource().isPaused())
-            dt = time.getDeltaTime();
+        float dt = time.getDeltaTime();
 
         switch (state) {
             case IDLE: {
