@@ -11,7 +11,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.csse3200.game.components.shop.CatalogEntry;
 import com.csse3200.game.components.shop.CatalogService;
-import com.csse3200.game.components.shop.ShopAssets;
 import com.csse3200.game.components.shop.ShopManager;
 import com.csse3200.game.areas.ForestGameArea;
 import com.csse3200.game.ui.*;
@@ -20,16 +19,15 @@ import com.csse3200.game.ui.*;
 public class ShopScreenDisplay extends UIComponent {
     private final ForestGameArea game;
     private final CatalogService catalog;
-    private final ShopAssets assets;
     private final ShopManager manager;
     private Table root;
     private Image dimmer;
     private Texture dimTex;
+    private Table grid;
 
-    public ShopScreenDisplay(ForestGameArea area, CatalogService catalog, ShopAssets assets, ShopManager manager) {
+    public ShopScreenDisplay(ForestGameArea area, CatalogService catalog, ShopManager manager) {
         this.game = area;
         this.catalog = catalog;
-        this.assets = assets;
         this.manager = manager;
     }
     @Override
@@ -54,35 +52,14 @@ public class ShopScreenDisplay extends UIComponent {
         root.add(title).padBottom(20).row();
 
         // --- Grid ---
-        Table grid = new Table();
+        grid = new Table();
         grid.defaults().pad(10);
 
         int columns = 4;
         int count = 0;
 
         for (CatalogEntry entry : catalog.list()) {
-            Actor actor = assets.getIconActor(entry.itemKey(), skin);
-
-            // Add name & price below icon
-            Table itemTable = new Table();
-            itemTable.add(actor).size(100, 100).row();
-            itemTable.add(new Label(entry.itemKey(), skin)).row();
-            itemTable.add(new Label("$" + entry.price(), skin));
-
-            // Gray out if disabled
-            if (!entry.enabled()) {
-                itemTable.getChildren().forEach(child -> child.setColor(Color.GRAY));
-            }
-
-            // Click to purchase
-            actor.addListener(new ChangeListener() {
-                @Override
-                public void changed(ChangeEvent event, Actor actor) {
-                    manager.purchase(game.getPlayer(), entry.itemKey());
-                }
-            });
-
-            grid.add(itemTable).size(120, 140);
+            makeButton(entry);
             count++;
             if (count % columns == 0) grid.row();
         }
@@ -113,6 +90,33 @@ public class ShopScreenDisplay extends UIComponent {
         if (dimmer != null) { dimmer.remove(); dimmer = null; }
         if (dimTex != null) { dimTex.dispose(); dimTex = null; }
         super.dispose();
+    }
+
+    private void makeButton(CatalogEntry entry) {
+        Actor actor = entry.getIconActor(skin);
+
+        // Add name & price below icon
+        Table itemTable = new Table();
+        itemTable.add(actor).size(100, 100).row();
+        itemTable.add(new Label(entry.itemKey(), skin)).row();
+        itemTable.add(new Label("$" + entry.price(), skin));
+
+        // Gray out if disabled
+        if (!entry.enabled()) {
+            itemTable.getChildren().forEach(child -> child.setColor(Color.GRAY));
+        }
+
+        // Click to purchase
+        if(entry.enabled()){
+        actor.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                manager.purchase(game.getPlayer(), entry.itemKey());
+            }
+        });}
+
+        grid.add(itemTable).size(120, 140);
+
     }
 
     // --- Helper: create solid texture for dimmer ---
