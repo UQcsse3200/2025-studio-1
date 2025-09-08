@@ -70,8 +70,8 @@ public class EnemyWaves {
         logger.debug("Spawning wave {}, with scaling factor {}", waveNumber, scalingFactor);
 
         if (roomNumber > 3) {
-            gameArea.spawnGhostGPT(1, scalingFactor);
-            gameArea.spawnVroomba(2, scalingFactor);
+            gameArea.spawnGhostGPT(3, scalingFactor);
+//            gameArea.spawnVroomba(2, scalingFactor);
         } else {
             gameArea.spawnDeepspin(maxEnemies, scalingFactor);
         }
