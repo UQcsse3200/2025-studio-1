@@ -126,14 +126,16 @@ public class NPCFactory {
     ghostKing.getComponent(AnimationRenderComponent.class).scaleEntity();
     return ghostKing;
   }
+
   /**
    * Creates GhostGPT enemy type
    *
    * @param target entity to chase
    * @param area the area/space it is living in
+   * @param scalingFactor The scale of increase in health & attack of the GhostGPT
    * @return entity
    */
-  public static Entity createGhostGPT(Entity target, ForestGameArea area) {
+  public static Entity createGhostGPT(Entity target, ForestGameArea area, float scalingFactor) {
     Entity ghostGPT = createBaseNPC(target);
     GhostGPTConfig config = configs.ghostGPT;
 
@@ -158,7 +160,8 @@ public class NPCFactory {
       playerInventory = target.getComponent(InventoryComponent.class);
     }
 
-    CombatStatsComponent ghostGPTStats = new CombatStatsComponent(config.health, config.baseAttack);
+    CombatStatsComponent ghostGPTStats = new CombatStatsComponent((int) (config.health * scalingFactor),
+            (int) (config.baseAttack * scalingFactor));
 
     ghostGPT
             .addComponent(ghostGPTStats)
@@ -206,9 +209,10 @@ public class NPCFactory {
    *
    * @param target entity to chase
    * @param area the area/space it is living in
+   * @param scalingFactor The scale of increase in health & attack of the DeepSpin
    * @return entity
    */
-  public static Entity createDeepspin(Entity target, ForestGameArea area) {
+  public static Entity createDeepspin(Entity target, ForestGameArea area, float scalingFactor) {
     Entity deepspin = createBaseNPC(target);
     DeepspinConfig config = configs.deepSpin;
 
@@ -231,7 +235,8 @@ public class NPCFactory {
       playerInventory = target.getComponent(InventoryComponent.class);
     }
 
-    CombatStatsComponent deepspinStats = new CombatStatsComponent(config.health, config.baseAttack);
+    CombatStatsComponent deepspinStats = new CombatStatsComponent((int) (config.health * scalingFactor),
+            (int) (config.baseAttack * scalingFactor));
 
     deepspin
             .addComponent(deepspinStats)
@@ -249,13 +254,14 @@ public class NPCFactory {
   }
 
   /**
-   * Creates Deepspin enemy type
+   * Creates GrokDroid enemy type
    *
    * @param target entity to chase
    * @param area the area/space it is living in
+   * @param scalingFactor The scale of increase in health & attack of the GrokDroid
    * @return entity
    */
-  public static Entity createGrokDroid(Entity target, ForestGameArea area) {
+  public static Entity createGrokDroid(Entity target, ForestGameArea area, float scalingFactor) {
     Entity grokDroid = createBaseNPC(target);
     GrokDroidConfig config = configs.grokDroid;
 
@@ -278,7 +284,8 @@ public class NPCFactory {
       playerInventory = target.getComponent(InventoryComponent.class);
     }
 
-    CombatStatsComponent grokDroidStats = new CombatStatsComponent(config.health, config.baseAttack);
+    CombatStatsComponent grokDroidStats = new CombatStatsComponent((int) (config.health * scalingFactor),
+            (int) (config.baseAttack * scalingFactor));
 
     grokDroid
             .addComponent(grokDroidStats)
@@ -294,13 +301,15 @@ public class NPCFactory {
 
     return grokDroid;
   }
+
   /**
    * Creates a Vroomba entity.
    *
    * @param target entity to chase
+   * @param scalingFactor The scale of increase in health & attack of the Vroomba
    * @return entity
    */
-  public static Entity createVroomba(Entity target, ForestGameArea area) {
+  public static Entity createVroomba(Entity target, float scalingFactor) {
     Entity vroomba = createBaseNPC(target);
     VroombaConfig config = configs.vroomba;
 
@@ -324,7 +333,8 @@ public class NPCFactory {
     }
 
     vroomba
-            .addComponent(new CombatStatsComponent(config.health, config.baseAttack))
+            .addComponent(new CombatStatsComponent((int) (config.health * scalingFactor),
+                    (int) (config.baseAttack * scalingFactor)))
             .addComponent(animator)
             .addComponent(new GhostAnimationController())
             .addComponent(new EnemyDeathRewardComponent(15, playerInventory)) // Add reward + particles
@@ -335,9 +345,11 @@ public class NPCFactory {
 
     return vroomba;
   }
+
   /**
    * Creates a generic NPC to be used as a base entity by more specific NPC creation methods.
    *
+   * @param target entity to chase
    * @return entity
    */
   static Entity createBaseNPC(Entity target) {
