@@ -1,6 +1,17 @@
 package com.csse3200.game.components.shop;
 
 
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.Gdx;
+
 /**
  * Models one purchasable catalog item that can be found in the shop.
  */
@@ -10,7 +21,8 @@ public record CatalogEntry(
         boolean enabled,
         boolean stackable,
         int maxStack,
-        int bundleQuantity
+        int bundleQuantity,
+        TextureRegionDrawable icon
 ) {
 
     /**
@@ -60,5 +72,30 @@ public record CatalogEntry(
         if (!stackable && maxStack < 1) {
             throw new IllegalArgumentException("maxStack cannot be negative for stackables");
         }
+    }
+
+    /**
+     * Get icon for entry
+     *
+     * @param skin game skin to use
+     * @return actor of icon
+     **/
+    public Actor getIconActor(Skin skin) {
+        if (icon != null) {
+            return new ImageButton(icon);
+        } else {
+            // Create a Table with a dark background and a label showing the key
+            Table table = new Table();
+            table.setBackground(skin.newDrawable("white", Color.DARK_GRAY));
+            Label label = new Label(itemKey, skin);
+            label.setColor(Color.WHITE);
+            table.add(label).pad(5);
+            return table;
+        }
+    }
+
+    private TextureRegionDrawable loadIcon(String path) {
+        Texture texture = new Texture(Gdx.files.internal(path));
+        return new TextureRegionDrawable(new TextureRegion(texture));
     }
 }
