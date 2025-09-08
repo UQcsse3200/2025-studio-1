@@ -61,8 +61,33 @@ public class TutorialScreenDisplay extends UIComponent {
         table.row();
 
         TextButton.TextButtonStyle style = neon.buttonRounded();
+        TextButton nextBtn = new TextButton("Next", style);
+        TextButton prevBtn = new TextButton("Previous", style);
         TextButton mainMenuBtn = new TextButton("Main Menu", style);
-        mainMenuBtn.getLabel().setFontScale(2f);
+
+        nextBtn.getLabel().setFontScale(2f);
+        prevBtn.getLabel().setFontScale(2f);
+        mainMenuBtn.getLabel().setFontScale(2.0f);
+
+        nextBtn.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                if (currentStep < steps.size() - 1) {
+                    currentStep++;
+                    showStep(currentStep);
+                }
+            }
+        });
+
+        prevBtn.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                if (currentStep > 0) {
+                    currentStep--;
+                    showStep(currentStep);
+                }
+            }
+        });
 
         mainMenuBtn.addListener(
                 new ChangeListener() {
@@ -72,7 +97,15 @@ public class TutorialScreenDisplay extends UIComponent {
                         backMainMenu();
                     }
                 });
-        table.add(mainMenuBtn).left();
+
+        if (currentStep > 0) {
+            table.add(prevBtn).left();
+        }
+        if (currentStep < steps.size() - 1) {
+            table.add(nextBtn).left();
+        }
+        table.row();
+        table.add(mainMenuBtn).colspan(2).center().padTop(20f);
 
     }
 
