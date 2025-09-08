@@ -58,12 +58,12 @@ public class BossFactory {
                 .addComponent(new CombatStatsComponent(config.health, config.baseAttack))
                 .addComponent(animator)
                 .addComponent(new GhostAnimationController())
-                .addComponent(new FireballAttackComponment(target, 1.5f, 8f, 6f, config.baseAttack + 2))
+                .addComponent(new FireballAttackComponent(target, 1.5f, 8f, 6f, config.baseAttack + 2))
                 .addComponent(new BossChargeSkillComponent(target, 6f, 5f, 0.4f, 12f, 0.6f, 1.5f))
                 .addComponent(new BlackholeComponent(target,7f,8f))
                 .addComponent(new EnemyDeathRewardComponent(100, playerInventory))
                 .addComponent(new DeathParticleSpawnerComponent())
-                .addComponent(new FireballAttackComponment(target, 1.5f, 8f, 6f, config.baseAttack + 2));
+                .addComponent(new FireballAttackComponent(target, 1.5f, 8f, 6f, config.baseAttack + 2));
         boss2.getComponent(AnimationRenderComponent.class).scaleEntity();
         float k = 2.0f;
         Vector2 s = boss2.getScale();
