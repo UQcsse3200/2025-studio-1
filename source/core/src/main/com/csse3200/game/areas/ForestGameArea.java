@@ -60,7 +60,10 @@ public class ForestGameArea extends GameArea {
     "images/explosion_1.atlas",
     "images/explosion_2.atlas"
   };
-  private static final String[] forestSounds = {"sounds/Impact4.ogg"};
+  private static final String[] forestSounds = {"sounds/Impact4.ogg",
+          "sounds/shot_failed.mp3",
+          "sounds/reload.mp3",
+          "sounds/laser_blast.mp3"};
   private static final String backgroundMusic = "sounds/BGM_03_mp3.mp3";
   private static final String[] forestMusic = {backgroundMusic};
 
@@ -100,8 +103,8 @@ public class ForestGameArea extends GameArea {
     //These are commented out since there is no equip feature yet
 //    this.equipItem(pistol);
 //    this.equipItem(lightsaber);
-    this.equipItem(dagger);
-    //this.equipItem(rifle);
+//    this.equipItem(dagger);
+      this.equipItem(rifle);
 
 //    spawnBullet();
 

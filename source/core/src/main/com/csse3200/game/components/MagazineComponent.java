@@ -67,12 +67,15 @@ public class MagazineComponent extends Component{
 
             this.setCurrentAmmo(currentAmmo + ammoReserves);
             combatStats.setAmmo(0);
-            return true;
         }
 
-        int reloadedAmmo = maxAmmo - currentAmmo;
-        this.setCurrentAmmo(maxAmmo);
-        combatStats.setAmmo(ammoReserves - reloadedAmmo);
+        else {
+            int reloadedAmmo = maxAmmo - currentAmmo;
+            this.setCurrentAmmo(maxAmmo);
+            combatStats.setAmmo(ammoReserves - reloadedAmmo);
+        }
+
+
         return true;
     }
 
