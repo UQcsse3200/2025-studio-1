@@ -45,6 +45,7 @@ public class PlayerActions extends Component {
     entity.getEvents().addListener("walkStop", this::stopWalking);
     entity.getEvents().addListener("attack", this::attack);
     entity.getEvents().addListener("shoot", this::shoot);
+    entity.getEvents().addListener("reload", this::reload);
     Array<Entity> entities = ServiceLocator.getEntityService().getEntities();
     for (Entity entity: entities) {
 
@@ -125,8 +126,8 @@ public class PlayerActions extends Component {
             destination.y - origin.y), 5);
 
     Entity weapon = entity.getCurrItem();
-    MagazineComponent magazine = weapon.getComponent(MagazineComponent.class);
-    magazine.setCurrentAmmo(magazine.getCurrentAmmo() - 1);
+    MagazineComponent mag = weapon.getComponent(MagazineComponent.class);
+    mag.setCurrentAmmo(mag.getCurrentAmmo() - 1);
 
     timeSinceLastAttack = 0;
   }
@@ -164,5 +165,21 @@ public class PlayerActions extends Component {
         }
     }
     timeSinceLastAttack = 0;
+  }
+
+  /**
+   * Makes player reload their equipped weapon
+   */
+  void reload() {
+
+
+    Entity equippedItem = entity.getCurrItem();
+    if (equippedItem != null) {
+      MagazineComponent mag = equippedItem.getComponent(MagazineComponent.class);
+      if (mag != null) {
+        mag.reload(entity);
+      }
+
+    }
   }
 }
