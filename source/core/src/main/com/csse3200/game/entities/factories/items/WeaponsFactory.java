@@ -6,6 +6,7 @@ import com.csse3200.game.components.WeaponsStatsComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.ItemComponent;
 import com.csse3200.game.entities.configs.ItemTypes;
+import com.csse3200.game.entities.configs.Weapons;
 import com.csse3200.game.entities.configs.weapons.WeaponConfig;
 import com.csse3200.game.rendering.AnimationRenderComponent;
 
@@ -21,7 +22,8 @@ import com.csse3200.game.rendering.AnimationRenderComponent;
  */
 public class WeaponsFactory {
 
-    public static Entity createWeapon(WeaponConfig config) {
+    public static Entity createWeapon(Weapons weaponType) {
+        WeaponConfig config = weaponType.getConfig();
         Entity weapon = ItemFactory.createItem(config.texturePath);
         weapon.addComponent(new WeaponsStatsComponent(config));
 
