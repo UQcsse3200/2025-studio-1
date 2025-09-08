@@ -1,6 +1,7 @@
-package com.csse3200.game.components;
+package com.csse3200.game.components.player;
 
 import com.badlogic.gdx.utils.Timer;
+import com.csse3200.game.components.Component;
 
 public class StaminaComponent extends Component {
 

@@ -1,15 +1,9 @@
-package com.csse3200.game.entities.factories;
+package com.csse3200.game.entities.factories.characters;
 
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.ai.tasks.AITaskComponent;
-import com.csse3200.game.areas.ForestGameArea;
-import com.csse3200.game.components.CombatStatsComponent;
-import com.csse3200.game.components.WeaponsStatsComponent;
-import com.csse3200.game.components.npc.BossAnimationController;
-import com.csse3200.game.components.enemy.LowHealthAttackBuff;
-import com.csse3200.game.components.enemy.ProjectileLauncherComponent;
 import com.csse3200.game.components.npc.GhostAnimationController;
 import com.csse3200.game.components.TouchAttackComponent;
 import com.csse3200.game.components.tasks.*;
@@ -17,7 +11,8 @@ import com.csse3200.game.components.player.InventoryComponent;
 import com.csse3200.game.components.enemy.EnemyDeathRewardComponent;
 import com.csse3200.game.components.enemy.DeathParticleSpawnerComponent;
 import com.csse3200.game.entities.Entity;
-import com.csse3200.game.entities.configs.*;
+import com.csse3200.game.entities.configs.characters.BaseEntityConfig;
+import com.csse3200.game.entities.configs.characters.NPCConfigs;
 import com.csse3200.game.files.FileLoader;
 import com.csse3200.game.physics.PhysicsLayer;
 import com.csse3200.game.physics.PhysicsUtils;
@@ -26,7 +21,6 @@ import com.csse3200.game.physics.components.HitboxComponent;
 import com.csse3200.game.physics.components.PhysicsComponent;
 import com.csse3200.game.physics.components.PhysicsMovementComponent;
 import com.csse3200.game.rendering.AnimationRenderComponent;
-import com.csse3200.game.rendering.TextureRenderComponent;
 import com.csse3200.game.services.ServiceLocator;
 
 /**

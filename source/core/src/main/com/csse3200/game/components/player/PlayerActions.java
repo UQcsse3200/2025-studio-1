@@ -10,7 +10,6 @@ import com.badlogic.gdx.utils.Array;
 import com.csse3200.game.components.*;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.factories.ProjectileFactory;
-import com.csse3200.game.entities.factories.WeaponsFactory;
 import com.csse3200.game.physics.PhysicsLayer;
 import com.csse3200.game.physics.components.HitboxComponent;
 import com.csse3200.game.physics.components.PhysicsComponent;
