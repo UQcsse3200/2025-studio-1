@@ -14,9 +14,11 @@ public class FireballMovementComponent extends Component {
 
     @Override
     public void update() {
-        float deltaTime = ServiceLocator.getTimeSource().getDeltaTime();
-        Vector2 pos = entity.getPosition();
-        pos.add(new Vector2(velocity).scl(deltaTime));
-        entity.setPosition(pos);
+        if (!ServiceLocator.getTimeSource().isPaused()) {
+            float deltaTime = ServiceLocator.getTimeSource().getDeltaTime();
+            Vector2 pos = entity.getPosition();
+            pos.add(new Vector2(velocity).scl(deltaTime));
+            entity.setPosition(pos);
+        }
     }
 }
