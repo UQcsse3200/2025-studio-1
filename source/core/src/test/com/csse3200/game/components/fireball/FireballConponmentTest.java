@@ -1,4 +1,4 @@
-package com.csse3200.game.components.Fireball;
+package com.csse3200.game.components.fireball;
 
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.components.enemy.FireballAttackComponent;

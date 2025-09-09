@@ -1,8 +1,5 @@
 package com.csse3200.game.entities;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
@@ -13,11 +10,11 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.physics.box2d.Body;
-import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.components.TouchAttackComponent;
-import com.csse3200.game.entities.configs.projectiles.PistolBulletConfig;
-import com.csse3200.game.entities.configs.projectiles.ProjectileConfig;
+import com.csse3200.game.components.WeaponsStatsComponent;
+import com.csse3200.game.entities.configs.Weapons;
 import com.csse3200.game.entities.factories.ProjectileFactory;
+import com.csse3200.game.entities.factories.items.WeaponsFactory;
 import com.csse3200.game.extensions.GameExtension;
 import com.csse3200.game.physics.PhysicsEngine;
 import com.csse3200.game.physics.PhysicsService;
@@ -28,15 +25,12 @@ import com.csse3200.game.physics.components.PhysicsProjectileComponent;
 import com.csse3200.game.rendering.TextureRenderComponent;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
-import org.junit.Assert;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.lang.reflect.Field;
 
 @ExtendWith(GameExtension.class)
 @ExtendWith(MockitoExtension.class)
@@ -47,9 +41,7 @@ public class ProjectileFactoryTest {
     @Mock
     Body body;
     @Mock
-    static ProjectileConfig configs;
-    @Mock
-    static PistolBulletConfig pistolBulletConfig;
+    static Entity pistolBullet;
 
 
 
@@ -70,31 +62,19 @@ public class ProjectileFactoryTest {
         Gdx.files = mock(Files.class);
         when(Gdx.files.internal(anyString())).thenReturn(mock(FileHandle.class));
 
-        pistolBulletConfig = new PistolBulletConfig();
-        pistolBulletConfig.baseAttack = 8;
-        pistolBulletConfig.health = 10000;
-        pistolBulletConfig.speed = 3.0f;
-
-        configs = new ProjectileConfig();
-        configs.pistolBullet = pistolBulletConfig;
-
-        Field configsField = ProjectileFactory.class.getDeclaredField("configs");
-        configsField.setAccessible(true);
-        configsField.set(null, configs);
+        Entity pistol = WeaponsFactory.createWeapon(Weapons.PISTOL);
+        pistolBullet = ProjectileFactory.createPistolBullet(pistol.getComponent(WeaponsStatsComponent.class));
     }
 
 
    @Test
     void correctPistolBulletComponents() {
-        Entity bullet = ProjectileFactory.createPistolBullet();
-        Assert.assertNotNull(bullet.getComponent(PhysicsComponent.class));
-        Assert.assertNotNull(bullet.getComponent(PhysicsProjectileComponent.class));
-        Assert.assertNotNull(bullet.getComponent(CombatStatsComponent.class));
-        Assert.assertNotNull(bullet.getComponent(TextureRenderComponent.class));
-        Assert.assertNotNull(bullet.getComponent(ColliderComponent.class));
-        Assert.assertNotNull(bullet.getComponent(HitboxComponent.class));
-        Assert.assertNotNull(bullet.getComponent(TouchAttackComponent.class));
+        assertTrue(pistolBullet.hasComponent(PhysicsComponent.class));
+        assertTrue(pistolBullet.hasComponent(PhysicsProjectileComponent.class));
+        assertTrue(pistolBullet.hasComponent(WeaponsStatsComponent.class));
+        assertTrue(pistolBullet.hasComponent(TextureRenderComponent.class));
+        assertTrue(pistolBullet.hasComponent(ColliderComponent.class));
+        assertTrue(pistolBullet.hasComponent(HitboxComponent.class));
+        assertTrue(pistolBullet.hasComponent(TouchAttackComponent.class));
     }
-
-
 }
