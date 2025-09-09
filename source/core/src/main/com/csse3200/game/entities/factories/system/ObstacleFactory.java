@@ -9,7 +9,6 @@ import com.csse3200.game.physics.components.PhysicsComponent;
 import com.csse3200.game.rendering.TextureRenderComponent;
 
 
-
 /**
  * Factory to create obstacle entities.
  *
