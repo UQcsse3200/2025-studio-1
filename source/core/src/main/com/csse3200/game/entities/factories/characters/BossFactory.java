@@ -140,7 +140,7 @@ public class BossFactory {
      * @return A configured {@link Entity} with AI movement and basic combat capability.
      */
 
-    static Entity createBaseNPC(Entity target) {
+    public static Entity createBaseNPC(Entity target) {
         AITaskComponent aiComponent =
                 new AITaskComponent()
                         .addTask(new WanderTask(new Vector2(4f, 4f), 2f))

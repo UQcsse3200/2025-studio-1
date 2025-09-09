@@ -132,7 +132,7 @@ class PlayerActionsTest {
     Entity player = new Entity()
             .addComponent(actions)
             .addComponent(new StaminaComponent())
-            .addComponent(new com.csse3200.game.components.CombatStatsComponent(100, 10)); // hp, atk
+            .addComponent(new com.csse3200.game.components.CombatStatsComponent(100)); // hp, atk
     player.create();
 
     actions.attack();
