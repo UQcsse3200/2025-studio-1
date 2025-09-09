@@ -121,15 +121,26 @@ public class TutorialScreenDisplay extends UIComponent {
                     }
                 });
 
-        if (currentStep > 0) {
-            table.add(prevBtn).left();
+        boolean hasPrev = currentStep > 0;
+        boolean hasNext = currentStep < steps.size() - 1;
+
+        Table btnRow = new Table();
+        btnRow.defaults().pad(4f);
+
+        if (hasPrev && hasNext) {
+            btnRow.add(prevBtn).left();
+            btnRow.add(nextBtn).right();
+        } else if (hasPrev) {
+            btnRow.add(prevBtn).center();
+        } else if (hasNext) {
+            btnRow.add();
+            btnRow.add(nextBtn).center();
+            btnRow.add();
         }
-        if (currentStep < steps.size() - 1) {
-            table.add(nextBtn).left();
-        }
+
+        table.add(btnRow).colspan(2).growX().padTop(10f);
         table.row();
         table.add(mainMenuBtn).colspan(2).center().padTop(20f);
-
     }
 
     private void backMainMenu() {
