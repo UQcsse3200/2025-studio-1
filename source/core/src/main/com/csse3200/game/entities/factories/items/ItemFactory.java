@@ -3,6 +3,7 @@ package com.csse3200.game.entities.factories.items;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.csse3200.game.entities.ItemComponent;
 import com.csse3200.game.entities.Entity;
+import com.csse3200.game.physics.components.HitboxComponent;
 import com.csse3200.game.physics.components.PhysicsComponent;
 import com.csse3200.game.rendering.TextureRenderComponent;
 import org.slf4j.Logger;
@@ -26,6 +27,7 @@ public class ItemFactory {
     public static Entity createItem(String texture) {
         Entity item = new Entity()
                 .addComponent(new ItemComponent())
+                .addComponent(new HitboxComponent())
                 .addComponent(new TextureRenderComponent(texture))
                 .addComponent(new PhysicsComponent());
 
