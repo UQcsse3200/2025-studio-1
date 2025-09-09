@@ -10,7 +10,6 @@ import com.csse3200.game.entities.configs.projectiles.ProjectileConfig;
 import com.csse3200.game.entities.configs.projectiles.ProjectileTarget;
 import com.csse3200.game.physics.components.*;
 import com.csse3200.game.rendering.TextureRenderWithRotationComponent;
-import com.csse3200.game.rendering.TextureRenderComponent;
 
 
 /**
@@ -41,7 +40,7 @@ public class ProjectileFactory {
                 .addComponent(new PhysicsComponent())
                 .addComponent(new PhysicsProjectileComponent())
                 .addComponent(new WeaponsStatsComponent(source.getBaseAttack()))
-                .addComponent(new TextureRenderComponent(config.texturePath))
+                .addComponent(new TextureRenderWithRotationComponent(config.texturePath))
                 .addComponent(new ColliderComponent())
                 .addComponent(new HitboxComponent().setLayer(config.projectileType))
                 .addComponent(new TouchAttackComponent(config.target, 1f));
