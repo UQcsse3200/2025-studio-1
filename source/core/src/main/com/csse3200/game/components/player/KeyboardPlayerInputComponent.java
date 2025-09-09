@@ -130,9 +130,9 @@ public class KeyboardPlayerInputComponent extends InputComponent {
         triggerSelectItem();
         focusedItem = 4;
         return true;
-      case Keys.NUM_6:
-        PowerupsFactory.applyRapidFire(entity, 1f);
-        return true;
+//      case Keys.NUM_6:
+//        PowerupsFactory.applyRapidFire(entity, 1f);
+//        return true;
       case Keys.P:
         triggerAddItem();
         return true;

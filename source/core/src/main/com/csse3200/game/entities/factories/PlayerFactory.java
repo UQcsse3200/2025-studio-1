@@ -2,6 +2,7 @@ package com.csse3200.game.entities.factories;
 
 import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.components.Component;
+import com.csse3200.game.components.PowerupComponent;
 import com.csse3200.game.components.TagComponent;
 import com.csse3200.game.components.player.InventoryComponent;
 import com.csse3200.game.components.player.PlayerActions;
@@ -48,7 +49,8 @@ public class PlayerFactory {
             .addComponent(new InventoryComponent(stats.gold))
             .addComponent(inputComponent)
             .addComponent(new PlayerStatsDisplay())
-            .addComponent(new PlayerInventoryDisplay());
+            .addComponent(new PlayerInventoryDisplay())
+            .addComponent(new PowerupComponent());
 
     PhysicsUtils.setScaledCollider(player, 0.6f, 0.3f);
     player.getComponent(ColliderComponent.class).setDensity(1.5f);
@@ -68,7 +70,11 @@ public class PlayerFactory {
 
           if (tag != null && tag.getTag().equals("rapidfire")) {
             if (entityRapidFirePowerup.getCenterPosition().dst(player.getCenterPosition()) < 1f) {
-              PowerupsFactory.applyRapidFire(player, 2f);
+              CombatStatsComponent statsComp = player.getComponent(CombatStatsComponent.class);
+              PowerupComponent powerup = player.getComponent(PowerupComponent.class);
+
+              powerup.applyRapidFire(statsComp, 2f);
+
               entityRapidFirePowerup.dispose();
             }
           }
