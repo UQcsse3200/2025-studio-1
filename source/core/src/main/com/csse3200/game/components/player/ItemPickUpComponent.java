@@ -21,7 +21,7 @@ public class ItemPickUpComponent extends Component {
 //     The item entity currently in collision range and eligible to be picked up.
     private Entity targetItem;
 //     The currently focused inventory slot (set via number key events).
-    private int focusedIndex = -1;
+    private int focusedIndex = 0;
 //     Constructs an ItemPickUpComponent with a reference to the player's inventory.
     public ItemPickUpComponent(InventoryComponent inventory) {
         this.inventory = inventory;

@@ -1,7 +1,6 @@
 package com.csse3200.game.entities;
 
 import com.csse3200.game.components.Component;
-import com.csse3200.game.components.player.InventoryComponent;
 import com.csse3200.game.entities.configs.ItemTypes;
 
 public class ItemComponent extends Component {
