@@ -16,6 +16,11 @@ public class ProjectileConfig {
 
     public String texturePath;
 
+    /**
+     * Creates a ProjectileConfig for a projectile.
+     * @param target The target of the projectile
+     * @param texturePath The path to the projectile's texture
+     */
     public ProjectileConfig(ProjectileTarget target, String texturePath) {
         switch (target) {
             case PLAYER -> {
