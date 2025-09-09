@@ -5,6 +5,6 @@ import com.csse3200.game.entities.Entity;
 public class ConsumableFactory {
 
     public static Entity createConsumable() {
-
+        return new Entity();
     }
 }
