@@ -22,6 +22,17 @@ import com.csse3200.game.rendering.AnimationRenderComponent;
  */
 public class WeaponsFactory {
 
+    /**
+     * Creates a new weapon entity based on the given weapon type.
+     * <p>
+     * This method retrieves the {@link WeaponConfig} for the provided {@link Weapons} type,
+     * builds an {@link Entity} using its texture, and attaches the appropriate
+     * components to configure its stats and item type (melee or ranged).
+     * </p>
+     *
+     * @param weaponType the type of weapon to create (defines stats and configuration)
+     * @return a fully configured {@link Entity} representing the weapon
+     */
     public static Entity createWeapon(Weapons weaponType) {
         WeaponConfig config = weaponType.getConfig();
         Entity weapon = ItemFactory.createItem(config.texturePath);
@@ -29,6 +40,7 @@ public class WeaponsFactory {
 
         ItemComponent item = weapon.getComponent(ItemComponent.class);
 
+        // Attach type to weapon
         switch (config.weaponType) {
             case RANGED -> item.setType(ItemTypes.RANGED);
             case MELEE -> item.setType(ItemTypes.MELEE);

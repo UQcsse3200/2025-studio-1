@@ -45,10 +45,9 @@ public class InventoryComponent extends Component {
    * Returns a copy of the players current inventory.
    * @return An {@code ArrayList<Entity>} containing the entities in the
    * players inventory.
-   * @return An ArrayList containing the players
    */
   public ArrayList<Entity> getInventory() {
-    return new ArrayList<Entity>(this.items);
+    return new ArrayList<>(this.items);
   }
 
   /**
@@ -57,7 +56,7 @@ public class InventoryComponent extends Component {
    * the players inventory
    */
   public ArrayList<String> getTextures() {
-    return new ArrayList<String>(this.itemTexs);
+    return new ArrayList<>(this.itemTexs);
   }
 
   /**
@@ -119,7 +118,7 @@ public class InventoryComponent extends Component {
     if (this.inventoryCount >= this.maxCapacity)
       return false;
 
-    if (this.get(index) == null) { // if there is something there
+    if (this.get(index) == null) {
       currItem = item;
       this.items.set(index, item);
 
@@ -128,8 +127,10 @@ public class InventoryComponent extends Component {
       entity.getEvents().trigger("add item", index, itemTex);
 
       this.inventoryCount++;
-    } else // There is something already there
+    } else {
+      // There is something already there
       return false;
+    }
 
     return true;
   }
@@ -172,7 +173,7 @@ public class InventoryComponent extends Component {
 
   /**
    * Returns the player's processor's.
-   * @return entity's health
+   * @return how much processor player has
    */
   public int getProcessor() {
     return this.processor;
@@ -208,16 +209,10 @@ public class InventoryComponent extends Component {
     setProcessor(this.processor + processor);
   }
 
-  public void equipWeapon(Entity item) {
-      if (items.contains(item)) {
-          currItem = item;
-      }
-  }
-
-  public Entity getCurrItem() {
-      return currItem;
-  }
-
+  /**
+   * Get the WeaponsStatsComponent for the current item
+   * @return Weapon Stats of current item
+   */
   public WeaponsStatsComponent getCurrItemStats() {
       return currItem.getComponent(WeaponsStatsComponent.class);
   }

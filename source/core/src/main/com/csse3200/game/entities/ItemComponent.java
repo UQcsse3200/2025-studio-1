@@ -9,37 +9,40 @@ public class ItemComponent extends Component {
     private int count = 1;
     private String texture;
 
-    /**
-     * This is the constructor for the ItemComponent class, it
-     * will take in a count of current existing items of the same
-     * type and store it
-     * @param count is the present count for the item
-     * @param texture is the texture path to the texture of the item
-     */
-    public ItemComponent(String name, ItemTypes type, int count, String texture) {
-        this.name = name;
-        this.type = type;
-        this.count = count;
-        this.texture = texture;
-    }
-
-    /**
-     * default constructor gets called if no value is passed
-     */
     public ItemComponent() {}
 
+    /**
+     * Returns the name of this item.
+     *
+     * @return the item's name
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * Sets the name of this item.
+     *
+     * @param name the new name for the item
+     */
     public void setName(String name) {
         this.name = name;
     }
 
+    /**
+     * Returns the type of this item.
+     *
+     * @return the item's {@link ItemTypes} type
+     */
     public ItemTypes getType() {
         return type;
     }
 
+    /**
+     * Sets the type of this item.
+     *
+     * @param type the {@link ItemTypes} to assign to this item
+     */
     public void setType(ItemTypes type) {
         this.type = type;
     }
@@ -67,11 +70,6 @@ public class ItemComponent extends Component {
      * Returns the texture path of the current item
      */
     public String getTexture() { return this.texture; }
-
-    /**
-     * TODO: implement functionality and add docstrings
-     */
-//    public void setDescription(){ }
 
     /**
      * Gets the description for the item

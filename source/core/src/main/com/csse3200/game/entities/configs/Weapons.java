@@ -14,6 +14,11 @@ public enum Weapons {
         this.config = config;
     }
 
+    /**
+     * Returns the configuration details associated with this weapon type.
+     *
+     * @return the {@link WeaponConfig} for this weapon
+     */
     public WeaponConfig getConfig() {
         return config;
     }
