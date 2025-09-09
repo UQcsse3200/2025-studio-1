@@ -133,7 +133,14 @@ public class NPCFactory {
    * @return entity
    */
   public static Entity createGhostGPT(Entity target, ForestGameArea area, float scalingFactor) {
-    Entity ghostGPT = createBaseNPC(target);
+    // Build GhostGPT as a ground enemy (do not use createBaseNPC to avoid floating movement)
+    Entity ghostGPT = new Entity()
+            .addComponent(new PhysicsComponent())
+            .addComponent(new ColliderComponent())
+            .addComponent(new HitboxComponent().setLayer(PhysicsLayer.NPC))
+            .addComponent(new TouchAttackComponent(PhysicsLayer.PLAYER, 1.5f));
+    PhysicsUtils.setScaledCollider(ghostGPT, 0.9f, 0.4f);
+
     GhostGPTConfig config = configs.ghostGPT;
 
     AnimationRenderComponent animator =
@@ -146,10 +153,11 @@ public class NPCFactory {
 
 
     ProjectileLauncherComponent projComp = new ProjectileLauncherComponent(area, target);
+    // Use ground chase tasks for gravity-based movement
     AITaskComponent aiComponent =
         new AITaskComponent()
-            .addTask(new GPTSlowChaseTask(target, 10, new Vector2(0.3f, 0.3f)))
-            .addTask(new GPTFastChaseTask(target, 10, new Vector2(1.2f, 1.2f), projComp, ghostGPT));
+            .addTask(new GPTGroundSlowChaseTask(target, 10, 0.3f))
+            .addTask(new GPTGroundFastChaseTask(target, 10, 1.2f, projComp, ghostGPT));
 
     // Get player's inventory for reward system
     InventoryComponent playerInventory = null;
