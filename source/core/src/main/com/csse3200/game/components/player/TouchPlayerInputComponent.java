@@ -3,6 +3,7 @@ package com.csse3200.game.components.player;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.input.InputComponent;
+import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.utils.math.Vector2Utils;
 import com.badlogic.gdx.InputProcessor;
 
@@ -24,7 +25,7 @@ public class TouchPlayerInputComponent extends InputComponent {
    * @see InputProcessor#keyDown(int)
    */
   @Override
-  public boolean keyDown(int keycode) {
+  public boolean keyPressed(int keycode) {
     switch (keycode) {
       case Input.Keys.UP:
         walkDirection.add(Vector2Utils.UP);
@@ -54,7 +55,7 @@ public class TouchPlayerInputComponent extends InputComponent {
    * @see InputProcessor#keyUp(int)
    */
   @Override
-  public boolean keyUp(int keycode) {
+  public boolean keyReleased(int keycode) {
     switch (keycode) {
       case Input.Keys.UP:
         walkDirection.sub(Vector2Utils.UP);

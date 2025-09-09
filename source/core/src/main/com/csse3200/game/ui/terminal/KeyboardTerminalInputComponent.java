@@ -31,6 +31,17 @@ public class KeyboardTerminalInputComponent extends InputComponent {
     terminal = entity.getComponent(Terminal.class);
   }
 
+    /**
+     * Returns false because this component is not one intended to
+     * be paused
+     * @return False, as this is a component not affected by pause
+     * functionality
+     */
+  @Override
+  protected boolean isPauseable() {
+      return false;
+  }
+
   /**
    * If the toggle key is pressed, the terminal will open / close.
    *
@@ -42,7 +53,7 @@ public class KeyboardTerminalInputComponent extends InputComponent {
    * @see InputProcessor#keyDown(int)
    */
   @Override
-  public boolean keyDown(int keycode) {
+  public boolean keyPressed(int keycode) {
     // handle open and close terminal
     if (keycode == TOGGLE_OPEN_KEY) {
       terminal.toggleIsOpen();
@@ -91,7 +102,7 @@ public class KeyboardTerminalInputComponent extends InputComponent {
    * @see InputProcessor#keyUp(int)
    */
   @Override
-  public boolean keyUp(int keycode) {
+  public boolean keyReleased(int keycode) {
     return terminal.isOpen();
   }
 }
