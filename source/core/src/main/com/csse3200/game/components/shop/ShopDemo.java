@@ -21,7 +21,7 @@ public class ShopDemo {
         demoEntries.put("Dagger", new CatalogEntry(
                 "Dagger",   // itemKey
                 200,               // price
-                true,             // enabled
+                false,             // enabled
                 true,             // stackable
                 10,               // maxStack
                 1,                // bundleQuantity
