@@ -2,6 +2,7 @@ package com.csse3200.game.components;
 
 
 import com.csse3200.game.entities.Entity;
+import com.csse3200.game.services.ServiceLocator;
 
 /**
  * Stores and manages a given weapon's magazine information
@@ -11,6 +12,7 @@ public class MagazineComponent extends Component{
 
     private int currentAmmo;
     private int maxAmmo;
+    private float timeSinceLastReload;
 
     /**
      * Constructs an magazine component
@@ -21,6 +23,18 @@ public class MagazineComponent extends Component{
 
         this.maxAmmo = maxAmmo;
         this.currentAmmo = maxAmmo;
+        this.timeSinceLastReload = 1.69f;
+    }
+
+    /**
+     * Updates the reload cooldown
+     */
+
+    public void update() {
+
+        float dt = ServiceLocator.getTimeSource().getDeltaTime();
+        timeSinceLastReload += dt;
+        System.out.println(timeSinceLastReload);
     }
 
 
@@ -75,8 +89,25 @@ public class MagazineComponent extends Component{
             combatStats.setAmmo(ammoReserves - reloadedAmmo);
         }
 
-
+        timeSinceLastReload = 0;
         return true;
+    }
+
+    /**
+     * Determines if the weapon is currently reloading
+     * @return true if the weapon is undergoing a reload, false otherwise
+     */
+
+    public boolean reloading() {
+
+        float reloadDuration = 1.5f;
+        if (this.timeSinceLastReload <= reloadDuration) {
+
+            return true;
+        }
+
+        return false;
+
     }
 
 }

@@ -101,13 +101,18 @@ public class PlayerActions extends Component {
 
   void shoot() {
 
+
     float coolDown = entity.getComponent(CombatStatsComponent.class).getCoolDown();
-    if (this.timeSinceLastAttack < coolDown) {
+    Entity weapon = entity.getCurrItem();
+    MagazineComponent mag = weapon.getComponent(MagazineComponent.class);
+
+    System.out.println(mag.reloading());
+
+    if (this.timeSinceLastAttack < coolDown || mag.reloading()) {
       return;
     }
 
-    Entity weapon = entity.getCurrItem();
-    MagazineComponent mag = weapon.getComponent(MagazineComponent.class);
+
 
     if (mag.getCurrentAmmo() <= 0) {
       Sound attackSound = ServiceLocator.getResourceService()
@@ -187,6 +192,12 @@ public class PlayerActions extends Component {
     if (equippedItem != null) {
       MagazineComponent mag = equippedItem.getComponent(MagazineComponent.class);
       if (mag != null) {
+
+        if (mag.reloading()) {
+
+          return;
+        }
+
         Sound reloadSound;
 
         if (mag.reload(entity)) {
