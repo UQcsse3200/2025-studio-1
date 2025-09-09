@@ -392,7 +392,7 @@ public class ForestGameArea extends GameArea {
     resourceService.loadSounds(forestSounds);
     resourceService.loadMusic(forestMusic);
 
-    while (!resourceService.loadForMillis(10)) {
+    while (resourceService.loadForMillis(10)) {
       // This could be upgraded to a loading screen
       logger.info("Loading... {}%", resourceService.getProgress());
     }
