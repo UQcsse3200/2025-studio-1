@@ -125,7 +125,6 @@ public class KeyboardPlayerInputComponent extends InputComponent {
       case Keys.S:
         triggerStopCrouchingEvent();
         return true;
-
       case Keys.Q:
         triggerRemoveItem();
         return true;

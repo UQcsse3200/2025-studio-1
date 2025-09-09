@@ -3,6 +3,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Timer;
 import com.csse3200.game.areas.ForestGameArea;
 import com.csse3200.game.components.Component;
+import com.csse3200.game.components.WeaponsStatsComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.services.ServiceLocator;
 import org.slf4j.Logger;
@@ -38,7 +39,8 @@ public class ProjectileLauncherComponent extends Component {
      */
     public void FireProjectile(Vector2 directionToFire, Vector2 offset, Vector2 scale)
     {
-        Entity projectile = forestGameArea.spawnEnemyProjectile(directionToFire);
+        WeaponsStatsComponent weapon = entity.getComponent(WeaponsStatsComponent.class);
+        Entity projectile = forestGameArea.spawnEnemyProjectile(directionToFire, weapon);
         Vector2 pos = new Vector2(getEntity().getPosition().x + offset.x,
                                 getEntity().getPosition().y + offset.y);
         projectile.setPosition(pos);
