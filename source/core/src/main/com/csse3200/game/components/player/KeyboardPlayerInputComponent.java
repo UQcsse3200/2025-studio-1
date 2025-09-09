@@ -17,7 +17,7 @@ import com.csse3200.game.utils.math.Vector2Utils;
 public class KeyboardPlayerInputComponent extends InputComponent {
   private final Vector2 walkDirection = Vector2.Zero.cpy();
 
-  private int focusedItem = -1;
+  private int focusedItem = 0;
 
   private long timeSinceKeyPress = 0;
   private int doublePressKeyCode = -1;
