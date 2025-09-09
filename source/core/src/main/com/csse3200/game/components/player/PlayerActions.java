@@ -336,6 +336,9 @@ public class PlayerActions extends Component {
 
   /** Fires a projectile towards the mouse cursor. */
   void shoot() {
+      if (ServiceLocator.getTimeSource().isPaused())
+          return;
+
     float coolDown = entity.getComponent(CombatStatsComponent.class).getCoolDown();
     if (this.timeSinceLastAttack < coolDown) return;
 
@@ -357,6 +360,9 @@ public class PlayerActions extends Component {
 
   /** Performs a melee attack against nearby enemies. */
   void attack() {
+      if (ServiceLocator.getTimeSource().isPaused())
+          return;
+
     float coolDown = entity.getComponent(CombatStatsComponent.class).getCoolDown();
     if (this.timeSinceLastAttack < coolDown) return;
 
