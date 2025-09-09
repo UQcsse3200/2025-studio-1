@@ -228,7 +228,7 @@ public class ForestGameArea extends GameArea {
 
     for (int i = 0; i < NUM_ITEMS; i++) {
       GridPoint2 randomPos = RandomUtils.random(minPos, maxPos);
-      Entity item = ItemFactory.createItem();
+      Entity item = ItemFactory.createItem("images/heart.png");
       spawnEntityAt(item, randomPos, true, false);
     }
   }

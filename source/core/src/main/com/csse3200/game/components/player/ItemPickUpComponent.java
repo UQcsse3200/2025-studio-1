@@ -1,14 +1,11 @@
 package com.csse3200.game.components.player;
 
-
-
-
 import com.csse3200.game.components.Component;
 import com.csse3200.game.entities.ItemComponent;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.physics.BodyUserData;
-//import com.csse3200.game.physics.components.HitboxComponent;    //might be needed later or delete if not used
+
 
 /**
  * Component that allows an entity to pick up items when in proximity.
@@ -37,10 +34,6 @@ public class ItemPickUpComponent extends Component {
      */
     @Override
     public void create() {
-    //    HitboxComponent hitbox = entity.getComponent(HitboxComponent.class);       //might need this later
-    //    if (hitbox != null) {
-    //        hitbox.setSensor(true);    //this is commented out for now as hitbox is already set as a sensor
-    //    }
         entity.getEvents().addListener("collisionStart", this::onCollisionStart);
         entity.getEvents().addListener("collisionEnd", this::onCollisionEnd);
         entity.getEvents().addListener("pick up", this::onPickupRequest);

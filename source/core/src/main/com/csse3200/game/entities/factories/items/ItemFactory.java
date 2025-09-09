@@ -16,31 +16,13 @@ import org.slf4j.LoggerFactory;
 public class ItemFactory {
     private static final Logger log = LoggerFactory.getLogger(ItemFactory.class);
 
-//    /**
-//     * Creates and configures a new item entity.
-//     * The item has a texture, physics, and other needed parts.
-//     * @return entity representing an item
-//     */
-//    public static Entity createItem() {
-//        String texture = "images/heart.png";
-//        Entity itemTest = new Entity()
-//                .addComponent(new TextureRenderComponent(texture))
-//                .addComponent(new PhysicsComponent())
-//                .addComponent(new ColliderComponent().setLayer(PhysicsLayer.NONE))
-//                .addComponent(new HitboxComponent())
-//                .addComponent(new ItemComponent(1, texture));
-//
-//
-//        itemTest.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
-//        itemTest.getComponent(TextureRenderComponent.class).scaleEntity();
-//        itemTest.scaleHeight(1.0f);  // redundant
-//        PhysicsUtils.setScaledCollider(itemTest, 1.0f, 1.0f);  // redundant
-//
-//        itemTest.getComponent(PhysicsComponent.class).getBody().setUserData(itemTest);
-//
-//        return itemTest;
-//    }
-//
+    /**
+     * Creates and configures a new item entity.
+     * The item has a texture, physics, and other needed parts.
+     * This class is called by other Factories, to add other components as needed.
+     * @param texture texture path of the item's texture
+     * @return entity representing an item
+     */
     public static Entity createItem(String texture) {
         Entity item = new Entity()
                 .addComponent(new ItemComponent())
@@ -55,11 +37,6 @@ public class ItemFactory {
         return item;
     }
 
-    public static Entity createItem() {
-        String defaultTexture = "images/heart.png";
-        return createItem(defaultTexture);
-    }
-
     /**
      * Stops you from making an ItemFactory object.
      * If you try, it throws an error.
@@ -68,6 +45,3 @@ public class ItemFactory {
         throw new IllegalStateException("Instantiating static util class");
     }
 }
-
-
-
