@@ -38,7 +38,6 @@ public class Entity {
   private Vector2 position = Vector2.Zero.cpy();
   private Vector2 scale = new Vector2(1, 1);
   private Array<Component> createdComponents;
-  private Entity currItem;
 
   public Entity() {
     id = nextId;
@@ -59,21 +58,6 @@ public class Entity {
     this.enabled = enabled;
   }
 
-  /**
-   * Set the entity's current item
-   * @param item item to be set
-   */
-  public void setCurrItem(Entity item) {
-    this.currItem = item;
-  }
-
-  /**
-   * Get the entity's current item
-   * @return the current item
-   */
-  public Entity getCurrItem() {
-    return this.currItem;
-  }
 
   /**
    * Marks an entity for removal, is disposed and deregistered from the entity service at

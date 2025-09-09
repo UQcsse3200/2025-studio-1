@@ -5,6 +5,7 @@ public class PistolConfig extends RangedWeaponConfig {
         this.ammoCapacity = 30;
         this.reloadTimer = 1.0;
         this.shootTimer = 0.5;
+        this.damage = 10;
         this.texturePath = "images/pistol.png";
     }
 }
