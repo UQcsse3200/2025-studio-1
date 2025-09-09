@@ -26,9 +26,6 @@ import com.csse3200.game.rendering.TextureRenderComponent;
 import com.csse3200.game.services.ServiceLocator;
 
 
-
-
-
 /**
  * A factory class for creating Boss and NPC entities for the game.
  * This factory defines behavior, physics, and rendering properties for Boss-3
@@ -58,12 +55,11 @@ public class BossFactory {
                 .addComponent(new CombatStatsComponent(config.health))
                 .addComponent(animator)
                 .addComponent(new GhostAnimationController())
-                .addComponent(new FireballAttackComponment(target, 1.5f, 8f, 6f, config.baseAttack + 2))
+                .addComponent(new FireballAttackComponent(target, 1.5f, 8f, 6f, config.baseAttack + 2))
                 .addComponent(new BossChargeSkillComponent(target, 6f, 5f, 0.4f, 12f, 0.6f, 1.5f))
                 .addComponent(new BlackholeComponent(target,7f,8f))
                 .addComponent(new EnemyDeathRewardComponent(100, playerInventory))
-                .addComponent(new DeathParticleSpawnerComponent())
-                .addComponent(new FireballAttackComponment(target, 1.5f, 8f, 6f, config.baseAttack + 2));
+                .addComponent(new DeathParticleSpawnerComponent());
         boss2.getComponent(AnimationRenderComponent.class).scaleEntity();
         float k = 2.0f;
         Vector2 s = boss2.getScale();
@@ -99,10 +95,9 @@ public class BossFactory {
         boss3.setScale(new Vector2(2f, 2f));
         PhysicsUtils.setScaledCollider(boss3, 2.0f, 0.8f);
 
-
-        boss3.addComponent(new com.csse3200.game.components.enemy.EnemyMudBallAttackComponent(
+        boss3.addComponent(new EnemyMudBallAttackComponent(
                 target, 1.2f, 9f, 6f, 3f));
-        boss3.addComponent(new com.csse3200.game.components.enemy.EnemyMudRingSprayComponent(
+        boss3.addComponent(new EnemyMudRingSprayComponent(
                 2.5f, 12, 6f, 3f));
 
         return boss3;
