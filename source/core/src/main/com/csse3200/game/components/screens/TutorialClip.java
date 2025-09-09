@@ -1,4 +1,4 @@
-package com.csse3200.game.screens;
+package com.csse3200.game.components.screens;
 
 public class TutorialClip {
     public final String folder;
