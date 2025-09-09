@@ -1,6 +1,7 @@
 package com.csse3200.game.components.player;
 
 import com.csse3200.game.components.Component;
+import com.csse3200.game.components.WeaponsStatsComponent;
 import com.csse3200.game.entities.ItemComponent;
 import com.csse3200.game.entities.Entity;
 import org.slf4j.Logger;
@@ -120,7 +121,6 @@ public class InventoryComponent extends Component {
 
     if (this.get(index) == null) { // if there is something there
       currItem = item;
-
       this.items.set(index, item);
 
       String itemTex = item.getComponent(ItemComponent.class).getTexture();
@@ -216,6 +216,10 @@ public class InventoryComponent extends Component {
 
   public Entity getCurrItem() {
       return currItem;
+  }
+
+  public WeaponsStatsComponent getCurrItemStats() {
+      return currItem.getComponent(WeaponsStatsComponent.class);
   }
 
 }
