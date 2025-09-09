@@ -50,7 +50,9 @@ public class ItemPickUpComponent extends Component {
      */
     private void onCollisionStart(Fixture me, Fixture other) {
         Object data = other.getBody().getUserData();
-        if (!(data instanceof BodyUserData userData)) return;
+        if (!(data instanceof BodyUserData userData)) {
+            return;
+        }
 
         Entity otherEntity = userData.entity;
         if (otherEntity.getComponent(ItemComponent.class) != null) {
