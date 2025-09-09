@@ -10,6 +10,7 @@ import com.csse3200.game.components.WeaponsStatsComponent;
 import com.csse3200.game.components.player.InventoryComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.Weapons;
+import com.csse3200.game.entities.factories.characters.BossFactory;
 import com.csse3200.game.entities.factories.characters.NPCFactory;
 import com.csse3200.game.entities.factories.items.ItemFactory;
 import com.csse3200.game.entities.factories.items.WeaponsFactory;
@@ -141,34 +142,34 @@ public class ForestGameArea extends GameArea {
     this.equipItem(rifle);
 
     spawnGhosts();
-//    spawnGhostKing();
-//    int choice = (int)(Math.random() * 3);
-//    if (choice == 0) {
-//      spawnBoss2();
-//    } else if (choice == 1) {
-//      spawnRobots();
-//    } else {
-//      spawnBoss3();
-//    }
-//    spawnGhostGPT();
-//    spawnDeepspin();
-//    spawnGrokDroid();
-//    spawnVroomba();
+    spawnGhostKing();
+    int choice = (int)(Math.random() * 3);
+    if (choice == 0) {
+      spawnBoss2();
+    } else if (choice == 1) {
+      spawnRobots();
+    } else {
+      spawnBoss3();
+    }
+    spawnGhostGPT();
+    spawnDeepspin();
+    spawnGrokDroid();
+    spawnVroomba();
     playMusic();
     spawnItems();
   }
-//
-//  private void spawnRobots() {
-//    GridPoint2 minPos = new GridPoint2(0, 0);
-//    GridPoint2 maxPos = terrain.getMapBounds(0).sub(2, 2);
-//
-//    for (int i = 0; i < NUM_ROBOTS; i++) {
-//      GridPoint2 randomPos = RandomUtils.random(minPos, maxPos);
-//      Entity robot = NPCFactory.createRobot(player);
-//      spawnEntityAt(robot, randomPos, true, true);
-//    }
-//  }
-//
+
+  private void spawnRobots() {
+    GridPoint2 minPos = new GridPoint2(0, 0);
+    GridPoint2 maxPos = terrain.getMapBounds(0).sub(2, 2);
+
+    for (int i = 0; i < NUM_ROBOTS; i++) {
+      GridPoint2 randomPos = RandomUtils.random(minPos, maxPos);
+      Entity robot = NPCFactory.createRobot(player);
+      spawnEntityAt(robot, randomPos, true, true);
+    }
+  }
+
   private void displayUI() {
     Entity ui = new Entity();
     ui.addComponent(new GameAreaDisplay("Box Forest"));
@@ -297,85 +298,85 @@ public class ForestGameArea extends GameArea {
       spawnEntityAt(ghost, randomPos, true, true);
     }
   }
-//  private void spawnBoss2() {
-//    GridPoint2 minPos = new GridPoint2(0, 0);
-//    GridPoint2 maxPos = terrain.getMapBounds(0).sub(2, 2);
-//
-//    GridPoint2 pos = RandomUtils.random(minPos, maxPos);
-//    Entity boss2 = BossFactory.createBoss2(player);
-//    spawnEntityAt(boss2, pos, true, true);
-//  }
-//  //new added boss3
-//  private void spawnBoss3() {
-//    GridPoint2 minPos = new GridPoint2(0, 0);
-//    GridPoint2 maxPos = terrain.getMapBounds(0).sub(2, 2);
-//
-//    GridPoint2 pos = RandomUtils.random(minPos, maxPos);
-//    Entity boss3 = BossFactory.createBoss3(player);
-//    spawnEntityAt(boss3, pos, true, true);
-//  }
-//
-//  private void spawnGhostKing() {
-//    GridPoint2 minPos = new GridPoint2(0, 0);
-//    GridPoint2 maxPos = terrain.getMapBounds(0).sub(2, 2);
-//
-//    GridPoint2 randomPos = RandomUtils.random(minPos, maxPos);
-//    Entity ghostKing = NPCFactory.createGhostKing(player);
-//    spawnEntityAt(ghostKing, randomPos, true, true);
-//  }
-//
-//  /**
-//   * Adds NUM_GHOST_GPTS amount of GhostGPT enemies onto the map.
-//   */
-//  private void spawnGhostGPT() {
-//    GridPoint2 minPos = new GridPoint2(0, 0);
-//    GridPoint2 maxPos = terrain.getMapBounds(0).sub(3, 3);
-//
-//    for (int i = 0; i < NUM_GHOST_GPTS; i++) {
-//        GridPoint2 randomPos = RandomUtils.random(minPos, maxPos);
-//        Entity ghostGPT = NPCFactory.createGhostGPT(player, this);
-//        spawnEntityAt(ghostGPT, randomPos, true, true);
-//    }
-//  }
-//  /**
-//   * Adds NUM_Deep_spin amount of GhostGPT enemies onto the map.
-//   */
-//  private void spawnDeepspin() {
-//    GridPoint2 minPos = new GridPoint2(0, 0);
-//    GridPoint2 maxPos = terrain.getMapBounds(0).sub(3, 3);
-//
-//    for (int i = 0; i < NUM_DEEP_SPIN; i++) {
-//      GridPoint2 randomPos = RandomUtils.random(minPos, maxPos);
-//      Entity deepspin = NPCFactory.createDeepspin(player, this);
-//      spawnEntityAt(deepspin, randomPos, true, true);
-//    }
-//  }
-//  /**
-//   * Adds NUM_GROK_DROID amount of GrokDroid enemies onto the map.
-//   */
-//  private void spawnGrokDroid() {
-//    GridPoint2 minPos = new GridPoint2(0, 0);
-//    GridPoint2 maxPos = terrain.getMapBounds(0).sub(3, 3);
-//
-//    for (int i = 0; i < NUM_GROK_DROID; i++) {
-//      GridPoint2 randomPos = RandomUtils.random(minPos, maxPos);
-//      Entity grokDroid = NPCFactory.createGrokDroid(player, this);
-//      spawnEntityAt(grokDroid, randomPos, true, true);
-//    }
-//  }
-//  /**
-//   * Adds NUM_VROOMBA amount of GrokDroid enemies onto the map.
-//   */
-//  private void spawnVroomba() {
-//    GridPoint2 minPos = new GridPoint2(0, 0);
-//    GridPoint2 maxPos = terrain.getMapBounds(0).sub(3, 3);
-//
-//    for (int i = 0; i < NUM_VROOMBA; i++) {
-//      GridPoint2 randomPos = RandomUtils.random(minPos, maxPos);
-//      Entity vroomba = NPCFactory.createVroomba(player, this);
-//      spawnEntityAt(vroomba, randomPos, true, true);
-//    }
-//  }
+  private void spawnBoss2() {
+    GridPoint2 minPos = new GridPoint2(0, 0);
+    GridPoint2 maxPos = terrain.getMapBounds(0).sub(2, 2);
+
+    GridPoint2 pos = RandomUtils.random(minPos, maxPos);
+    Entity boss2 = BossFactory.createBoss2(player);
+    spawnEntityAt(boss2, pos, true, true);
+  }
+  //new added boss3
+  private void spawnBoss3() {
+    GridPoint2 minPos = new GridPoint2(0, 0);
+    GridPoint2 maxPos = terrain.getMapBounds(0).sub(2, 2);
+
+    GridPoint2 pos = RandomUtils.random(minPos, maxPos);
+    Entity boss3 = BossFactory.createBoss3(player);
+    spawnEntityAt(boss3, pos, true, true);
+  }
+
+  private void spawnGhostKing() {
+    GridPoint2 minPos = new GridPoint2(0, 0);
+    GridPoint2 maxPos = terrain.getMapBounds(0).sub(2, 2);
+
+    GridPoint2 randomPos = RandomUtils.random(minPos, maxPos);
+    Entity ghostKing = NPCFactory.createGhostKing(player);
+    spawnEntityAt(ghostKing, randomPos, true, true);
+  }
+
+  /**
+   * Adds NUM_GHOST_GPTS amount of GhostGPT enemies onto the map.
+   */
+  private void spawnGhostGPT() {
+    GridPoint2 minPos = new GridPoint2(0, 0);
+    GridPoint2 maxPos = terrain.getMapBounds(0).sub(3, 3);
+
+    for (int i = 0; i < NUM_GHOST_GPTS; i++) {
+        GridPoint2 randomPos = RandomUtils.random(minPos, maxPos);
+        Entity ghostGPT = NPCFactory.createGhostGPT(player, this);
+        spawnEntityAt(ghostGPT, randomPos, true, true);
+    }
+  }
+  /**
+   * Adds NUM_Deep_spin amount of GhostGPT enemies onto the map.
+   */
+  private void spawnDeepspin() {
+    GridPoint2 minPos = new GridPoint2(0, 0);
+    GridPoint2 maxPos = terrain.getMapBounds(0).sub(3, 3);
+
+    for (int i = 0; i < NUM_DEEP_SPIN; i++) {
+      GridPoint2 randomPos = RandomUtils.random(minPos, maxPos);
+      Entity deepspin = NPCFactory.createDeepspin(player, this);
+      spawnEntityAt(deepspin, randomPos, true, true);
+    }
+  }
+  /**
+   * Adds NUM_GROK_DROID amount of GrokDroid enemies onto the map.
+   */
+  private void spawnGrokDroid() {
+    GridPoint2 minPos = new GridPoint2(0, 0);
+    GridPoint2 maxPos = terrain.getMapBounds(0).sub(3, 3);
+
+    for (int i = 0; i < NUM_GROK_DROID; i++) {
+      GridPoint2 randomPos = RandomUtils.random(minPos, maxPos);
+      Entity grokDroid = NPCFactory.createGrokDroid(player, this);
+      spawnEntityAt(grokDroid, randomPos, true, true);
+    }
+  }
+  /**
+   * Adds NUM_VROOMBA amount of GrokDroid enemies onto the map.
+   */
+  private void spawnVroomba() {
+    GridPoint2 minPos = new GridPoint2(0, 0);
+    GridPoint2 maxPos = terrain.getMapBounds(0).sub(3, 3);
+
+    for (int i = 0; i < NUM_VROOMBA; i++) {
+      GridPoint2 randomPos = RandomUtils.random(minPos, maxPos);
+      Entity vroomba = NPCFactory.createVroomba(player, this);
+      spawnEntityAt(vroomba, randomPos, true, true);
+    }
+  }
 
   private void playMusic() {
     Music music = ServiceLocator.getResourceService().getAsset(backgroundMusic, Music.class);
