@@ -13,11 +13,13 @@ import com.csse3200.game.components.ItemHoldComponent;
 import com.csse3200.game.components.enemy.ProjectileLauncherComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.BaseProjectileConfig;
+import com.csse3200.game.entities.configs.ItemSpawnConfig;
 import com.csse3200.game.entities.factories.BossFactory;
 import com.csse3200.game.entities.factories.NPCFactory;
 import com.csse3200.game.entities.factories.ObstacleFactory;
 import com.csse3200.game.entities.factories.PlayerFactory;
 import com.csse3200.game.entities.factories.*;
+import com.csse3200.game.entities.spawner.ItemSpawner;
 import com.csse3200.game.physics.components.PhysicsComponent;
 import com.csse3200.game.physics.components.PhysicsProjectileComponent;
 import com.csse3200.game.rendering.AnimationRenderComponent;
@@ -158,8 +160,10 @@ public class ForestGameArea extends GameArea {
     spawnGrokDroid();
     spawnVroomba();
     playMusic();
-    spawnItems();
-    spawnWeapons(3);
+
+    // Initialize ItemSpawner and spawn configured items
+    ItemSpawner itemSpawner = new ItemSpawner(this);
+    itemSpawner.spawnItems(ItemSpawnConfig.FOREST_MAP());
 
   }
 
@@ -222,65 +226,15 @@ public class ForestGameArea extends GameArea {
     }
   }
 
+  public void spawnItem(Entity item, GridPoint2 position) {
+    spawnEntityAt(item, position, false, false);
+  }
+
   /**
    * Spawns several item entities at random positions in the game area.
    * The number of items is set by NUM_ITEMS.
    * Each item is created and placed at a random spot on the terrain.
    */
-  private void spawnItems() {
-    GridPoint2 minPos = new GridPoint2(0, 0);
-    GridPoint2 maxPos = terrain.getMapBounds(0).sub(2, 2);
-
-    for (int i = 0; i < NUM_ITEMS; i++) {
-      GridPoint2 randomPos = RandomUtils.random(minPos, maxPos);
-      Entity item = ItemFactory.createItem();
-      spawnEntityAt(item, randomPos, true, false);
-    }
-  }
-
-  /**
-   * Spawns several weapon entities at random positions in the game area.
-   * The number of weapons spawned is set by numberofweapons.
-   * Each weapon type dagger, pistol, rifle, lightsaber is spawned.
-   */
-  private void spawnWeapons(int numberofweapons) {
-    GridPoint2 minPos = new GridPoint2(0, 0);
-    GridPoint2 maxPos = terrain.getMapBounds(0).sub(2, 2);
-
-    for (int i = 0; i < numberofweapons; i++) {
-      //Spawning dagger on map
-      GridPoint2 posDagger = RandomUtils.random(minPos, maxPos);
-      Entity dagger = WeaponsFactory.createDagger();
-      spawnEntityAt(dagger, posDagger, false, false);
-      dagger.getComponent(PhysicsComponent.class)
-              .setBodyType(BodyDef.BodyType.StaticBody);
-
-      //Spawning pistol on map
-      GridPoint2 posPistol = RandomUtils.random(minPos, maxPos);
-      Entity pistol = WeaponsFactory.createPistol();
-      spawnEntityAt(pistol, posPistol, false, false);
-      pistol.getComponent(PhysicsComponent.class)
-              .setBodyType(BodyDef.BodyType.StaticBody);
-
-
-      //Spawning riffle on map
-      GridPoint2 posRifle = RandomUtils.random(minPos, maxPos);
-      Entity rifle = WeaponsFactory.createRifle();
-      spawnEntityAt(rifle, posRifle, false, false);
-      rifle.getComponent(PhysicsComponent.class)
-              .setBodyType(BodyDef.BodyType.StaticBody);
-
-
-      //Spawning dagger on map
-      GridPoint2 posLightsaber = RandomUtils.random(minPos, maxPos);
-      Entity lightsaber = WeaponsFactory.createLightsaber();
-      spawnEntityAt(lightsaber, posLightsaber, false, false);
-      lightsaber.getComponent(PhysicsComponent.class)
-              .setBodyType(BodyDef.BodyType.StaticBody);
-
-
-    }
-  }
 
   private Entity spawnPlayer() {
     Entity newPlayer = PlayerFactory.createPlayer();
