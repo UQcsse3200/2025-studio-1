@@ -29,6 +29,17 @@ public class TouchTerminalInputComponent extends InputComponent {
     terminal = entity.getComponent(Terminal.class);
   }
 
+    /**
+     * Returns false because this component is not one intended to
+     * be paused
+     * @return False, as this is a component not affected by pause
+     * functionality
+     */
+    @Override
+    protected boolean isPauseable() {
+        return false;
+    }
+
   /**
    * Handles input if the terminal is open. This is because keyDown events are
    * triggered alongside keyTyped events. If the user is typing in the terminal, the input shouldn't
@@ -38,7 +49,7 @@ public class TouchTerminalInputComponent extends InputComponent {
    * @see InputProcessor#keyDown(int)
    */
   @Override
-  public boolean keyDown(int keycode) {
+  public boolean keyPressed(int keycode) {
     return terminal.isOpen();
   }
 
@@ -81,7 +92,7 @@ public class TouchTerminalInputComponent extends InputComponent {
    * @see InputProcessor#keyUp(int)
    */
   @Override
-  public boolean keyUp(int keycode) {
+  public boolean keyReleased(int keycode) {
     return terminal.isOpen();
   }
 

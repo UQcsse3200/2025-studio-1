@@ -31,7 +31,7 @@ public class KeyboardPlayerInputComponent extends InputComponent {
    * @see InputProcessor#keyDown(int)
    */
   @Override
-  public boolean keyDown(int keycode) {
+  public boolean keyPressed(int keycode) {
     switch (keycode) {
       case Keys.A:
         walkDirection.add(Vector2Utils.LEFT);
@@ -55,7 +55,7 @@ public class KeyboardPlayerInputComponent extends InputComponent {
 
       case Keys.SPACE:
         triggerJumpEvent();
-        entity.getEvents().trigger("attack");
+//        entity.getEvents().trigger("attack");
         entity.getEvents().trigger("anim");
         return true;
 
@@ -79,19 +79,12 @@ public class KeyboardPlayerInputComponent extends InputComponent {
   @Override
   public boolean touchDown(int screenX, int screenY, int pointer, int button) {
     if (button == Input.Buttons.LEFT) {
-
-      if (entity.getCurrItem() == null){
-
+      if (entity.getCurrItem() == null)
         return true;
-      }
 
       if (entity.getCurrItem().getComponent(TagComponent.class).getTag().equals("ranged")){
-
         entity.getEvents().trigger("shoot");
-      }
-      else {
-
-
+      } else {
         entity.getEvents().trigger("attack");
       }
         return true;
@@ -106,7 +99,7 @@ public class KeyboardPlayerInputComponent extends InputComponent {
    * @see InputProcessor#keyUp(int)
    */
   @Override
-  public boolean keyUp(int keycode) {
+  public boolean keyReleased(int keycode) {
     switch (keycode) {
       case Keys.A:
         walkDirection.sub(Vector2Utils.LEFT);
@@ -256,7 +249,6 @@ public class KeyboardPlayerInputComponent extends InputComponent {
   private void triggerAddItem() {
     System.out.println("Pick up event triggered");
     entity.getEvents().trigger("pick up");
-
   }
 
   /** Triggers a change in the currently focused inventory slot. */

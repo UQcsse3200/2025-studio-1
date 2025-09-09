@@ -1,8 +1,5 @@
 package com.csse3200.game.components.player;
 
-
-
-
 import com.csse3200.game.components.Component;
 import com.csse3200.game.components.entity.item.ItemComponent;
 import com.badlogic.gdx.physics.box2d.Fixture;
