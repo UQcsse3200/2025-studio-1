@@ -76,7 +76,9 @@ public class ForestGameArea extends GameArea {
     "images/laser_shot.png",
     "images/player.png",
     "images/mud.png",
-    "images/heart.png"
+    "images/heart.png",
+    "images/computerBench.png"
+
   };
 
   private static final String[] forestTextureAtlases = {
@@ -128,6 +130,7 @@ public class ForestGameArea extends GameArea {
     displayUI();
     spawnTerrain();
     spawnTrees();
+    spawnComputerBench();
     player = spawnPlayer();
     dagger = spawnDagger();
     pistol = spawnPistol();
@@ -216,6 +219,12 @@ public class ForestGameArea extends GameArea {
       Entity tree = ObstacleFactory.createTree();
       spawnEntityAt(tree, randomPos, true, false);
     }
+  }
+
+  private void spawnComputerBench() {
+    Entity bench = InteractableStationFactory.createComputerBench();
+    spawnEntityAt(bench, new GridPoint2(10, 7), true, true);
+
   }
 
   /**
