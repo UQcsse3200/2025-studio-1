@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.ItemHoldComponent;
+import com.csse3200.game.components.WeaponsStatsComponent;
 import com.csse3200.game.components.player.InventoryComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.Weapons;
@@ -264,13 +265,6 @@ public class ForestGameArea extends GameArea {
     return newLightsaber;
   }
 
-//Commented out since bullet functionality is in progress with guns
-//  private Entity spawnBullet() {
-//    Entity newBullet = ProjectileFactory.createPistolBullet();
-//    spawnEntityAt(newBullet, new GridPoint2(5, 5), true, true);
-//    return newBullet;
-//  }
-
   private Entity spawnPistol() {
     Entity newPistol = WeaponsFactory.createWeapon(Weapons.PISTOL);
     Vector2 newPistolOffset = new Vector2(0.45f, 0.02f);
@@ -286,8 +280,8 @@ public class ForestGameArea extends GameArea {
   }
 
   // Enemy Projectiles
-  public Entity spawnEnemyProjectile(Vector2 directionToFire) {
-    Entity laser = ProjectileFactory.createEnemyProjectile(directionToFire);
+  public Entity spawnEnemyProjectile(Vector2 directionToFire, WeaponsStatsComponent source) {
+    Entity laser = ProjectileFactory.createEnemyProjectile(directionToFire, source);
     spawnEntityAt(laser, new GridPoint2(0, 0), true, true);
 
     return laser;

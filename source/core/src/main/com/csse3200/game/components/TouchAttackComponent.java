@@ -4,7 +4,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.csse3200.game.entities.Entity;
-import com.csse3200.game.entities.EntityService;
 import com.csse3200.game.physics.BodyUserData;
 import com.csse3200.game.physics.PhysicsLayer;
 import com.csse3200.game.physics.components.HitboxComponent;
@@ -66,10 +65,10 @@ public class TouchAttackComponent extends Component {
     Entity attacker = ((BodyUserData) me.getBody().getUserData()).entity;
 
     CombatStatsComponent targetStats = target.getComponent(CombatStatsComponent.class);
-    WeaponsStatsComponent targetWeapons = attacker.getComponent(WeaponsStatsComponent.class);
+    WeaponsStatsComponent attackerWeapon = attacker.getComponent(WeaponsStatsComponent.class);
 
     if (targetStats != null) {
-      targetStats.takeDamage(targetWeapons.getBaseAttack());
+      targetStats.takeDamage(attackerWeapon.getBaseAttack());
       System.out.println(targetStats.getHealth());
     }
 
