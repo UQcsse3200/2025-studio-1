@@ -339,7 +339,11 @@ public class PlayerActions extends Component {
     Sound attackSound = ServiceLocator.getResourceService().getAsset("sounds/Impact4.ogg", Sound.class);
     attackSound.play();
 
-    Entity bullet = ProjectileFactory.createPistolBullet();
+    WeaponsStatsComponent weapon = entity.getComponent(InventoryComponent.class).getCurrItemStats();
+    if (weapon == null) {
+      return;
+    }
+    Entity bullet = ProjectileFactory.createPistolBullet(weapon);
     Vector2 origin = new Vector2(entity.getPosition());
     bullet.setPosition(origin);
     ServiceLocator.getEntityService().register(bullet);
