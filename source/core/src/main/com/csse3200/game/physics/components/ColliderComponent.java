@@ -1,6 +1,5 @@
 package com.csse3200.game.physics.components;
 
-import com.badlogic.gdx.math.Octree;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.csse3200.game.components.Component;
