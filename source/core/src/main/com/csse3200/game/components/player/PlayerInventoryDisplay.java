@@ -28,7 +28,7 @@ public class PlayerInventoryDisplay extends UIComponent {
     private static final float SLOT_SIZE = 96f;
     private static final float SLOT_PAD  = 10f;
 
-    private int focusedIndex = -1;
+    private int focusedIndex = 0;
 
     private final InventoryComponent inventory;
 
@@ -143,8 +143,6 @@ public class PlayerInventoryDisplay extends UIComponent {
 
     /** Focus a specific slot; pass -1 to clear focus. */
     public void setFocusedIndex(int index) {
-        if (index == focusedIndex) return;
-
         // clear previous focus
         if (focusedIndex >= 0 && focusedIndex < slots.size) {
             slots.get(focusedIndex).setHighlighted(false);
