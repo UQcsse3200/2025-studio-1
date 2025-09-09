@@ -2,12 +2,20 @@ package com.csse3200.game.components.player;
 
 
 
-
+import com.badlogic.gdx.math.GridPoint2;
+import com.badlogic.gdx.math.Vector2;
+import com.csse3200.game.areas.GameArea;
+import com.csse3200.game.areas.ForestGameArea;
 import com.csse3200.game.components.Component;
 import com.csse3200.game.components.entity.item.ItemComponent;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.physics.BodyUserData;
+import com.csse3200.game.entities.factories.WeaponsFactory;
+import com.csse3200.game.entities.factories.ObstacleFactory;
+import com.csse3200.game.services.ServiceLocator;
+import com.csse3200.game.physics.components.PhysicsComponent;
+import com.badlogic.gdx.physics.box2d.BodyDef;
 //import com.csse3200.game.physics.components.HitboxComponent;    //might be needed later or delete if not used
 
 /**
@@ -143,11 +151,46 @@ public class ItemPickUpComponent extends Component {
             return;
         }
 
+        ItemComponent ic = item.getComponent(ItemComponent.class);
+        if (ic == null || ic.getTexture() == null) {
+            System.out.println("Cannot drop: item has no ItemComponent/texture");
+            return;
+        }
+        String tex = ic.getTexture();
+
+        Entity newItem = createItemFromTexture(tex);
+        if (newItem == null) {
+            System.out.println("Cannot drop: unknown texture " + tex);
+            return;
+        }
+
+        Vector2 playerPos = entity.getCenterPosition();
+        GridPoint2 dropTile = new GridPoint2(Math.round(playerPos.x), Math.round(playerPos.y));
+
+        PhysicsComponent phys = newItem.getComponent(PhysicsComponent.class);
+        if (phys != null) phys.setBodyType(BodyDef.BodyType.StaticBody);
+
+        GameArea area = ServiceLocator.getGameArea();
+        if (area instanceof ForestGameArea forest) {
+            forest.spawnItem(newItem, dropTile);
+        } else if (area != null) {
+            System.out.println("No active GameArea; cannot drop item.");
+            return;
+        }
+
         boolean removed = inventory.remove(focusedIndex);
         if (removed) {
-            // need to spawn the item to the world eventually here
             System.out.println("Dropped item from slot " + focusedIndex);
         }
+    }
+
+    private Entity createItemFromTexture(String texture) {
+        if (texture.endsWith("dagger.png"))            return WeaponsFactory.createDagger();
+        if (texture.endsWith("pistol.png"))            return WeaponsFactory.createPistol();
+        if (texture.endsWith("rifle.png"))             return WeaponsFactory.createRifle();
+        if (texture.endsWith("lightsaberSingle.png"))  return WeaponsFactory.createLightsaber();
+        if (texture.endsWith("tree.png"))              return ObstacleFactory.createTree();
+        return null;
     }
 
 }
