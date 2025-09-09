@@ -334,8 +334,11 @@ public class PlayerActions extends Component {
   /** Fires a projectile towards the mouse cursor. */
   void shoot() {
     WeaponsStatsComponent weapon = getCurrentWeaponStats();
+    if (weapon == null) {
+      return;
+    }
     // Check for cooldown, defaulting to zero if no current weapon
-    float coolDown = weapon != null ? weapon.getCoolDown() : 0;
+    float coolDown = weapon.getCoolDown();
     if (this.timeSinceLastAttack < coolDown) return;
 
     Sound attackSound = ServiceLocator.getResourceService().getAsset("sounds/Impact4.ogg", Sound.class);

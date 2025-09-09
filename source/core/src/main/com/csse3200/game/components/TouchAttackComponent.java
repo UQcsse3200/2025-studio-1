@@ -19,9 +19,8 @@ import com.csse3200.game.physics.components.PhysicsProjectileComponent;
  * if target entity has a PhysicsComponent.
  */
 public class TouchAttackComponent extends Component {
-  private short targetLayer;
+  private final short targetLayer;
   private float knockbackForce = 0f;
-  private CombatStatsComponent combatStats;
   private HitboxComponent hitboxComponent;
 
   /**
@@ -45,7 +44,6 @@ public class TouchAttackComponent extends Component {
   @Override
   public void create() {
     entity.getEvents().addListener("collisionStart", this::onCollisionStart);
-    combatStats = entity.getComponent(CombatStatsComponent.class);
     hitboxComponent = entity.getComponent(HitboxComponent.class);
   }
 
@@ -67,7 +65,7 @@ public class TouchAttackComponent extends Component {
     CombatStatsComponent targetStats = target.getComponent(CombatStatsComponent.class);
     WeaponsStatsComponent attackerWeapon = attacker.getComponent(WeaponsStatsComponent.class);
 
-    if (targetStats != null) {
+    if (targetStats != null && attackerWeapon != null) {
       targetStats.takeDamage(attackerWeapon.getBaseAttack());
     }
 

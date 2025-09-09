@@ -89,7 +89,7 @@ public class KeyboardPlayerInputComponent extends InputComponent {
       if (itemInfo.getType() == ItemTypes.RANGED) {
         entity.getEvents().trigger("shoot");
 
-      } else if (itemInfo.getType() != ItemTypes.MELEE) {
+      } else if (itemInfo.getType() == ItemTypes.MELEE) {
         entity.getEvents().trigger("attack");
       }
       return true;

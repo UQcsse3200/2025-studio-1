@@ -11,7 +11,6 @@ import java.util.ArrayList;
 
 /**
  * A component intended to be used by the player to track their inventory.
- *
  * Currently, has functionality for indexing, getting, setting, and removing from
  * the players inventory, also stores the processor amount.
  * Can also be used as a more generic component for other entities.
@@ -22,8 +21,8 @@ public class InventoryComponent extends Component {
   private int inventoryCount = 0;
   private final int maxCapacity = 5;
   private final int minCapacity = 0;
-  private final ArrayList<Entity> items = new ArrayList<Entity>(maxCapacity);
-  private final ArrayList<String> itemTexs = new ArrayList<String>(maxCapacity);
+  private final ArrayList<Entity> items = new ArrayList<>(maxCapacity);
+  private final ArrayList<String> itemTexs = new ArrayList<>(maxCapacity);
   private int processor;
   private Entity currItem;
 
@@ -214,7 +213,7 @@ public class InventoryComponent extends Component {
    * @return Weapon Stats of current item
    */
   public WeaponsStatsComponent getCurrItemStats() {
-      return currItem.getComponent(WeaponsStatsComponent.class);
+      return currItem != null ? currItem.getComponent(WeaponsStatsComponent.class) : null;
   }
 
 }
