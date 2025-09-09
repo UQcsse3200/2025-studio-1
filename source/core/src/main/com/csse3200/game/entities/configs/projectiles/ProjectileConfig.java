@@ -9,17 +9,10 @@ import com.csse3200.game.physics.PhysicsLayer;
 
 public class ProjectileConfig {
 
-    public enum ProjectileTarget {
-        PLAYER,
-        ENEMY
-    }
-
     public ItemTypes itemType = ItemTypes.PROJECTILE;
 
     public short projectileType;
     public short target;
-//    public int baseAttack;
-//    public float speed;
 
     public String texturePath;
 

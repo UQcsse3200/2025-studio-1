@@ -1,7 +1,5 @@
 package com.csse3200.game.components;
 
-import com.csse3200.game.components.enemy.LowHealthAttackBuff;
-import com.csse3200.game.entities.configs.projectiles.ProjectileConfig;
 import com.csse3200.game.entities.configs.weapons.WeaponConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,6 +13,9 @@ public class WeaponsStatsComponent extends Component {
 
     private static final Logger logger = LoggerFactory.getLogger(WeaponsStatsComponent.class);
 
+    private static final int DEFAULT_COOLDOWN = 0;
+    private static final boolean DEFAULT_DISABLE_DAMAGE = false;
+
     /** Base attack damage used when this component attacks another. Non-negative */
     private int baseAttack;
     private float coolDown;
@@ -27,20 +28,14 @@ public class WeaponsStatsComponent extends Component {
      */
     public WeaponsStatsComponent(WeaponConfig config) {
         setBaseAttack(config.damage);
-        setDisableDamage(false);
-        setCoolDown(0);
+        setDisableDamage(DEFAULT_DISABLE_DAMAGE);
+        setCoolDown(DEFAULT_COOLDOWN);
     }
-
-//    public WeaponsStatsComponent(ProjectileConfig config) {
-//        setBaseAttack(config.baseAttack);
-//        setDisableDamage(false);
-//        setCoolDown(0);
-//    }
 
     public WeaponsStatsComponent(int baseAttack) {
         setBaseAttack(baseAttack);
-        setDisableDamage(false);
-        setCoolDown(0);
+        setDisableDamage(DEFAULT_DISABLE_DAMAGE);
+        setCoolDown(DEFAULT_COOLDOWN);
     }
 
     /**
@@ -48,7 +43,9 @@ public class WeaponsStatsComponent extends Component {
      *
      * @param coolDown coolDown
      */
-    public void setCoolDown(float coolDown) { this.coolDown = Math.max(0, coolDown); }
+    public void setCoolDown(float coolDown) {
+        this.coolDown = Math.max(0, coolDown);
+    }
 
     /**
      * gets the entity's cooldown between attacks (seconds).

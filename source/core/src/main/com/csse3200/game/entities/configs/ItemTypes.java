@@ -13,6 +13,11 @@ public enum ItemTypes {
         this.string = string;
     }
 
+    /**
+     * Returns the string representation of this item type.
+     *
+     * @return the string value associated with this {@link ItemTypes} constant
+     */
     public String getString() {
         return string;
     }

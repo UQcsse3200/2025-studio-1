@@ -69,7 +69,6 @@ public class TouchAttackComponent extends Component {
 
     if (targetStats != null) {
       targetStats.takeDamage(attackerWeapon.getBaseAttack());
-      System.out.println(targetStats.getHealth());
     }
 
     // Apply knockback
