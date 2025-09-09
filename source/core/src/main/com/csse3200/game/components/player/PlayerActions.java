@@ -333,16 +333,13 @@ public class PlayerActions extends Component {
 
   /** Fires a projectile towards the mouse cursor. */
   void shoot() {
-    float coolDown = entity.getComponent(WeaponsStatsComponent.class).getCoolDown();
+    WeaponsStatsComponent weapon = getCurrentWeaponStats();
+    float coolDown = weapon != null ? weapon.getCoolDown() : 0;
     if (this.timeSinceLastAttack < coolDown) return;
 
     Sound attackSound = ServiceLocator.getResourceService().getAsset("sounds/Impact4.ogg", Sound.class);
     attackSound.play();
 
-    WeaponsStatsComponent weapon = entity.getComponent(InventoryComponent.class).getCurrItemStats();
-    if (weapon == null) {
-      return;
-    }
     Entity bullet = ProjectileFactory.createPistolBullet(weapon);
     Vector2 origin = new Vector2(entity.getPosition());
     bullet.setPosition(origin);
@@ -358,7 +355,8 @@ public class PlayerActions extends Component {
 
   /** Performs a melee attack against nearby enemies. */
   void attack() {
-    float coolDown = entity.getComponent(WeaponsStatsComponent.class).getCoolDown();
+    WeaponsStatsComponent weapon = getCurrentWeaponStats();
+    float coolDown = weapon != null ? weapon.getCoolDown() : 0;
     if (this.timeSinceLastAttack < coolDown) return;
 
     Sound attackSound = ServiceLocator.getResourceService().getAsset("sounds/Impact4.ogg", Sound.class);
@@ -376,7 +374,6 @@ public class PlayerActions extends Component {
           if (enemyHitBox.getLayer() == PhysicsLayer.NPC) {
             float distance = enemy.getCenterPosition().dst(entity.getCenterPosition());
             if (distance <= attackRange) {
-              System.out.println("TRYING TO HIT: " + enemy);
               enemyStats.takeDamage(attackStats.getBaseAttack());
             }
           }
@@ -385,5 +382,14 @@ public class PlayerActions extends Component {
     }
 
     timeSinceLastAttack = 0;
+  }
+
+  private WeaponsStatsComponent getCurrentWeaponStats() {
+    InventoryComponent inv = entity.getComponent(InventoryComponent.class);
+    if (inv != null) {
+      WeaponsStatsComponent curr = inv.getCurrItemStats();
+      if (curr != null) return curr;
+    }
+    return entity.getComponent(WeaponsStatsComponent.class);
   }
 }
