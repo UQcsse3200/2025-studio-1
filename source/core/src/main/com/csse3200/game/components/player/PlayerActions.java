@@ -334,6 +334,7 @@ public class PlayerActions extends Component {
   /** Fires a projectile towards the mouse cursor. */
   void shoot() {
     WeaponsStatsComponent weapon = getCurrentWeaponStats();
+    // Check for cooldown, defaulting to zero if no current weapon
     float coolDown = weapon != null ? weapon.getCoolDown() : 0;
     if (this.timeSinceLastAttack < coolDown) return;
 
