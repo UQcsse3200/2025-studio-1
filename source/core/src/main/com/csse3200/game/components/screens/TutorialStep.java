@@ -1,7 +1,5 @@
 package com.csse3200.game.components.screens;
 
-import com.csse3200.game.screens.TutorialClip;
-
 public class TutorialStep {
     private final String title;
     private final String description;
