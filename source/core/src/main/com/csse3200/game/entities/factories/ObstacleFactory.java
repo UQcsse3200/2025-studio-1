@@ -12,7 +12,7 @@ import com.csse3200.game.rendering.SolidColorRenderComponent;
 import com.csse3200.game.rendering.DoorRenderComponent;
 
 
- /**
+/**
  * Factory to create obstacle entities.
  *
  * <p>Each obstacle entity type should have a creation method that returns a corresponding entity.

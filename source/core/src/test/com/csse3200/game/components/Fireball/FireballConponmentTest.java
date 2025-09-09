@@ -1,7 +1,7 @@
 package com.csse3200.game.components.Fireball;
 
 import com.badlogic.gdx.math.Vector2;
-import com.csse3200.game.components.enemy.FireballAttackComponment;
+import com.csse3200.game.components.enemy.FireballAttackComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.extensions.GameExtension;
 import com.csse3200.game.entities.EntityService;
@@ -42,8 +42,8 @@ class FireballConponmentTest {
         shooter.setPosition(new Vector2(0f, 0f));
         Entity target = new Entity();
         target.setPosition(new Vector2(100f, 0f)); // 射程外
-        FireballAttackComponment comp =
-                new FireballAttackComponment(target, 1f, 10f, 5f, 1);
+        FireballAttackComponent comp =
+                new FireballAttackComponent(target, 1f, 10f, 5f, 1);
         shooter.addComponent(comp);
         shooter.create();
         time.tick();
