@@ -1,6 +1,6 @@
-package com.csse3200.game.components.entity.item;
+package com.csse3200.game.entities;
 
-import com.csse3200.game.entities.ItemComponent;
+import com.csse3200.game.entities.factories.items.ItemFactory;
 import com.csse3200.game.extensions.GameExtension;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
@@ -18,10 +18,11 @@ public class ItemComponentTest {
     class ConstructorTest{
         @Test
         void testParameterisedConstructor(){
-            ItemComponent item = new ItemComponent(2, "images/mud.png");
+            Entity item = ItemFactory.createItem("images/mud.png");
+            ItemComponent itemComponent = item.getComponent(ItemComponent.class);
 
-            assertEquals(2, item.getCount());
-            assertEquals("images/mud.png", item.getTexture());
+            assertEquals(2, itemComponent.getCount());
+            assertEquals("images/mud.png", itemComponent.getTexture());
         }
 
         @Test
@@ -29,7 +30,7 @@ public class ItemComponentTest {
             ItemComponent item = new ItemComponent();
 
             assertEquals(0, item.getCount());
-            assertEquals(null, item.getTexture());
+            assertNull(item.getTexture());
         }
     }
 
@@ -87,7 +88,7 @@ public class ItemComponentTest {
         @Test
         public void testNullTextureEdgeCase(){
             item.setTexture(null);
-            assertEquals(null, item.getTexture());
+            assertNull(item.getTexture());
         }
     }
 }
