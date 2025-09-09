@@ -134,7 +134,7 @@ public class InventoryComponent extends Component {
 
   /**
    * Removes the item at the given index (must be between 0 and 4) and replaces it
-   * with null vlaue.
+   * with null value.
    * @param index the position of the item to be removed.
    * @return true if successful, false otherwise
    */
