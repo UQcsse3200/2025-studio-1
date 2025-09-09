@@ -1,9 +1,16 @@
 package com.csse3200.game.components.player;
 
+import com.badlogic.gdx.Files;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.physics.box2d.Body;
 import com.csse3200.game.entities.ItemComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.factories.items.ItemFactory;
 import com.csse3200.game.extensions.GameExtension;
+import com.csse3200.game.physics.PhysicsEngine;
+import com.csse3200.game.physics.PhysicsService;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,6 +23,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(GameExtension.class)
 class InventoryComponentTest {
@@ -37,10 +48,23 @@ class InventoryComponentTest {
         testInven.add(null);
       }
       inventory = new InventoryComponent(this.processor);
-      Entity test = new Entity().addComponent(inventory);
+      Entity owner = new Entity();
+      owner.addComponent(inventory);
+      Gdx.files = mock(Files.class);
+      when(Gdx.files.internal(anyString())).thenReturn(mock(FileHandle.class));
 
-      ServiceLocator.registerResourceService(new ResourceService());
-      ServiceLocator.getResourceService().loadTexture(texture);
+      // Physics needed by ItemFactory -> PhysicsComponent
+      PhysicsEngine physicsEngine = mock(PhysicsEngine.class);
+      Body physicsBody = mock(Body.class);
+      when(physicsEngine.createBody(org.mockito.ArgumentMatchers.any())).thenReturn(physicsBody);
+      ServiceLocator.registerPhysicsService(new PhysicsService(physicsEngine));
+
+      // Mock ResourceService so any texture fetch succeeds
+      ResourceService resourceService = mock(ResourceService.class);
+      ServiceLocator.registerResourceService(resourceService);
+      Texture texture = mock(Texture.class);
+      when(resourceService.getAsset(anyString(), eq(Texture.class))).thenReturn(texture);
+      owner.create();
     }
 
     @Test
