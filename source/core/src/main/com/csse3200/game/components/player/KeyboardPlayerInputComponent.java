@@ -119,9 +119,6 @@ public class KeyboardPlayerInputComponent extends InputComponent {
         triggerStopCrouchingEvent();
         return true;
 
-      case Keys.Q:
-        triggerRemoveItem();
-        return true;
       case Keys.NUM_1:
         focusedItem = 0;
         triggerSelectItem();
@@ -238,11 +235,6 @@ public class KeyboardPlayerInputComponent extends InputComponent {
    */
   private void triggerJumpEvent() {
     entity.getEvents().trigger("jumpAttempt");
-  }
-
-   /** Triggers an inventory removal request for the currently focused slot. */
-  private void triggerRemoveItem() {
-    entity.getEvents().trigger("remove item", focusedItem);
   }
 
   /** Triggers an item pickup request. */
