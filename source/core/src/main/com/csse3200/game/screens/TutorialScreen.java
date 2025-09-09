@@ -2,12 +2,12 @@ package com.csse3200.game.screens;
 
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Scaling;
 import com.csse3200.game.GdxGame;
+import com.csse3200.game.components.screens.TutorialClip;
 import com.csse3200.game.components.screens.TutorialScreenDisplay;
 import com.csse3200.game.components.screens.TutorialStep;
 import com.csse3200.game.entities.Entity;
@@ -64,9 +64,12 @@ public class TutorialScreen extends ScreenAdapter {
         stage.addActor(bg);
 
         List<TutorialStep> steps = List.of(
-                new TutorialStep("Welcome!", "Use WASD to move your character.", null),
-                new TutorialStep("Attack", "Use space to attack enemies.", null),
-                new TutorialStep("Pick up item", "Walk on an item to pick it up", null)
+                new TutorialStep("Welcome!", "Use WASD to move your character.",
+                        new TutorialClip("images/tutorial/move", "frame_%04d.png", 25, 12f, true)),
+                new TutorialStep("Attack", "Use space to attack enemies.",
+                        new TutorialClip("images/tutorial/move", "frame_%04d.png", 25, 12f, true)),
+                new TutorialStep("Pick up item", "Walk on an item to pick it up",
+                        new TutorialClip("images/tutorial/move", "frame_%04d.png", 25, 12f, true))
         );
 
         Entity ui = new Entity();
