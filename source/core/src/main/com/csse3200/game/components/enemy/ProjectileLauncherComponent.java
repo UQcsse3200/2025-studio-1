@@ -31,11 +31,9 @@ public class ProjectileLauncherComponent extends Component {
 
     /**
      * Fires a projectile, classified as an enemy projectile, in the direction specified.
-     * @param texturePath The texture/sprite of the projectile
      * @param directionToFire The direction to fire in
      * @param offset Offset (from the center) where the projectile is fired
      * @param scale The size of the projectile. "x" value represents width, and "y" value represents height.\
-     * @param config The configuration about the damage and speed of the projectile
      */
     public void FireProjectile(Vector2 directionToFire, Vector2 offset, Vector2 scale)
     {
@@ -74,13 +72,11 @@ public class ProjectileLauncherComponent extends Component {
     /**
      * A quick burst of repeated laser projectile firings. Note that all lasers will head in the same direction, even if
      * the player has moved during the burst duration.
-     * @param texturePath The texture/sprite of the projectile
      * @param burstAmount The amount of projectiles to fire in a burst.
      * @param timeBetweenShots The time, in seconds, between each laser fired within one burst sequence.
      * @param directionToFire The direction to fire at.
      * @param offset Offset (from the center) where the projectile is fired
      * @param scale The size of the projectile. "x" value represents width, and "y" value represents height.
-     * @param config The configuration about the damage and speed of the projectile
      */
     public void FireProjectileBurstFire(int burstAmount, float timeBetweenShots,
                                              Vector2 directionToFire, Vector2 offset, Vector2 scale)
