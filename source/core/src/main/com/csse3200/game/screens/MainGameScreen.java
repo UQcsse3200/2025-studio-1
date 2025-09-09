@@ -181,6 +181,7 @@ public class MainGameScreen extends ScreenAdapter {
             .addComponent(new InputDecorator(stage, 100));
     pauseOverlay.getEvents().addListener("resume", this::hidePauseOverlay);
     ServiceLocator.getEntityService().register(pauseOverlay);
+    ServiceLocator.getTimeSource().setPaused(true);
     isPauseVisible = true;
   }
 
@@ -192,6 +193,7 @@ public class MainGameScreen extends ScreenAdapter {
     if (pauseOverlay != null) {
       pauseOverlay.dispose();
       ServiceLocator.getEntityService().unregister(pauseOverlay);
+      ServiceLocator.getTimeSource().setPaused(false);
       pauseOverlay = null;
     }
     isPauseVisible = false;
