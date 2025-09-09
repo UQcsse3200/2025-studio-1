@@ -48,14 +48,12 @@ public class ProjectileLauncherComponent extends Component {
 
     /**
      * Fires multiple laser projectiles, classified as enemy projectiles, at once
-     * @param texturePath The texture/sprite of the projectile
      * @param amount The amount of projectiles to fire in one go
      * @param angleDifferences The angle differences, in degrees, between lasers. For example, passing in 10 means
      *                          10 degree difference in the rotation of each laser projectile.
      * @param directionToFire The direction to fire at.
      * @param offset Offset (from the center) where the projectile is fired
      * @param scale The size of the projectile. "x" value represents width, and "y" value represents height.
-     * @param config The configuration about the damage and speed of the projectile
      */
     public void FireProjectileMultishot(int amount, float angleDifferences,
                                             Vector2 directionToFire, Vector2 offset, Vector2 scale)
