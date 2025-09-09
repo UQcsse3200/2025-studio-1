@@ -17,6 +17,7 @@ import com.csse3200.game.entities.factories.items.WeaponsFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.entities.factories.characters.PlayerFactory;
 import com.csse3200.game.entities.factories.*;
+import com.csse3200.game.physics.components.PhysicsProjectileComponent;
 import com.csse3200.game.utils.math.GridPoint2Utils;
 import com.csse3200.game.utils.math.RandomUtils;
 import com.csse3200.game.services.ResourceService;
@@ -284,7 +285,9 @@ public class ForestGameArea extends GameArea {
   public Entity spawnEnemyProjectile(Vector2 directionToFire, WeaponsStatsComponent source) {
     Entity laser = ProjectileFactory.createEnemyProjectile(directionToFire, source);
     spawnEntityAt(laser, new GridPoint2(0, 0), true, true);
-
+    PhysicsProjectileComponent laserPhysics = laser.getComponent(PhysicsProjectileComponent.class);
+    int projectileSpeed = 5; // Should be abstracted from WeaponsStatsComponent in future implementation
+    laserPhysics.fire(directionToFire, projectileSpeed);
     return laser;
   }
 
