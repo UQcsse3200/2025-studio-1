@@ -226,6 +226,7 @@ public class MainGameScreen extends ScreenAdapter {
 
     shopOverlay.getEvents().addListener("closeShop", this::hideShopOverlay);
     ServiceLocator.getEntityService().register(shopOverlay);
+    ServiceLocator.getTimeSource().setPaused(true);
     isShopVisible = true;
   }
 
@@ -238,6 +239,7 @@ public class MainGameScreen extends ScreenAdapter {
       ServiceLocator.getEntityService().unregister(shopOverlay);
       shopOverlay = null;
     }
+    ServiceLocator.getTimeSource().setPaused(false);
     isShopVisible = false;
   }
 
