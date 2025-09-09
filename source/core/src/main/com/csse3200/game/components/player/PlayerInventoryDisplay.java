@@ -95,6 +95,8 @@ public class PlayerInventoryDisplay extends UIComponent {
         }
 
         stage.addActor(table);
+
+        setFocusedIndex(focusedIndex);
     }
 
     /** Add an item to the first empty slot. */
