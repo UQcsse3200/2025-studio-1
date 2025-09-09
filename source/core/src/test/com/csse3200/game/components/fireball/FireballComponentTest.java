@@ -14,7 +14,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(GameExtension.class)
-class FireballConponmentTest {
+class FireballComponentTest {
     static class TestGameTime extends GameTime {
         private float dt = 0f;
         void tick() { this.dt = (float) 0.1; }
