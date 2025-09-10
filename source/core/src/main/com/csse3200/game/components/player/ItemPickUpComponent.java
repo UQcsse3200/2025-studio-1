@@ -137,48 +137,51 @@ public class ItemPickUpComponent extends Component {
     }
 
     /**
-     * Handles a drop request (triggered by pressing the drop key).
-     * If a valid slot is focused and contains an item, removes the item from
-     * the inventory and (eventually) spawns it back into the world.
-     */
+     * Handles the drop action for the currently focused inventory slot.
+     *  When the player presses the drop key ('R'), this method:
+     *  - Checks whether a valid slot is focused (0–4).
+     *  - If the slot contains an item, removes it from the inventory.
+     *  - Clears the focused index so another accidental drop does not occur.
+     *  - Attempts to respawn the dropped item back into the game world near the player,
+     *    using the texture to reconstruct the item entity.
+     * */
     private void onDropFocused() {
+        // do nothing if no valid slot is currently focused
         if (focusedIndex < 0 || focusedIndex >= 5) {
             return;
         }
+        // Get the entity stored in the currently focused inventory slot
         Entity item = inventory.get(focusedIndex);
         if (item == null) {
-            System.out.println("Focused slot empty, nothing to drop.");
+            // Focused slot empty, nothing to drop
             return;
         }
-
+        // Extract the texture path from the item
         ItemComponent ic = item.getComponent(ItemComponent.class);
         String tex = (ic != null) ? ic.getTexture() : null;
-
+        // Remove the item from the inventory
         boolean removed = inventory.remove(focusedIndex);
         if (!removed) {
-            System.out.println("Failed to remove from inventory at index " + focusedIndex);
+            //Failed to remove from inventory at index
             return;
         }
-        System.out.println("Dropped item from slot " + focusedIndex);
         focusedIndex = -1;
-
+        // If no texture info was stored, skip respawning to the world
         if (tex == null) {
-            System.out.println("No texture info; skip world respawn.");
             return;
         }
-
+        // Attempt to recreate a new item entity from the stored texture
         Entity newItem = createItemFromTexture(tex);
         if (newItem == null) {
-            System.out.println("Cannot drop: unknown texture " + tex);
             return;
         }
-
+        // Make dropped items static so they behave like map-placed items
         PhysicsComponent phys = newItem.getComponent(PhysicsComponent.class);
         if (phys != null) phys.setBodyType(BodyDef.BodyType.StaticBody);
 
         Vector2 playerPos = entity.getCenterPosition();
         GridPoint2 dropTile = new GridPoint2(Math.round(playerPos.x), Math.round(playerPos.y));
-
+        // Spawn the item into the active game area if available
         GameArea area = ServiceLocator.getGameArea();
         if (area instanceof ForestGameArea forest) {
             forest.spawnItem(newItem, dropTile);
@@ -188,6 +191,15 @@ public class ItemPickUpComponent extends Component {
 
     }
 
+    /**
+     * The method recreates an item entity based on its texture path.
+     * This method is used when dropping items from the inventory back into the world.
+     * Since inventory only stores the texture reference the texture string is used here
+     * as a lookup key to recreate the appropriate entity using the relevant factory class.
+     * @param texture the texture file path associated with the item in inventory
+     * @return a new {@link Entity} matching the texture, or {@code null} if the
+     * texture does not correspond to a known item type.
+     */
     private Entity createItemFromTexture(String texture) {
         if (texture.endsWith("dagger.png"))            return WeaponsFactory.createDagger();
         if (texture.endsWith("pistol.png"))            return WeaponsFactory.createPistol();
