@@ -116,8 +116,7 @@ loadScripts(document, 'script');</script>
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(int,int)" class="member-name-link">CombatStatsComponent</a><wbr>(int&nbsp;health,
- int&nbsp;baseAttack)</code></div>
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(int)" class="member-name-link">CombatStatsComponent</a><wbr>(int&nbsp;health)</code></div>
 <div class="col-last even-row-color">
 <div class="block">Construct a combat Stats Component (Health + Attack System)</div>
 </div>
@@ -141,16 +140,6 @@ loadScripts(document, 'script');</script>
 <div class="block">Adds to the player's health.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getBaseAttack()" class="member-name-link">getBaseAttack</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Returns the entity's base attack damage.</div>
-</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>float</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getCoolDown()" class="member-name-link">getCoolDown</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">gets the entity's cooldown between attacks (seconds).</div>
-</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getHealth()" class="member-name-link">getHealth</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns the entity's health.</div>
@@ -160,46 +149,24 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Sets the entity's maximum health</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#hit(int)" class="member-name-link">hit</a><wbr>(int&nbsp;damage)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Deal direct damage as an integer.</div>
-</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#hit(com.csse3200.game.components.CombatStatsComponent)" class="member-name-link">hit</a><wbr>(<a href="CombatStatsComponent.html" title="class in com.csse3200.game.components">CombatStatsComponent</a>&nbsp;attacker)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Apply damage to this entity from another attacking entity.</div>
-</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Boolean.html" title="class or interface in java.lang" class="external-link">Boolean</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isDead()" class="member-name-link">isDead</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Checks whether this entity is dead.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setBaseAttack(int)" class="member-name-link">setBaseAttack</a><wbr>(int&nbsp;attack)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setHealth(int)" class="member-name-link">setHealth</a><wbr>(int&nbsp;health)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Sets the entity's attack damage.</div>
-</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setCoolDown(float)" class="member-name-link">setCoolDown</a><wbr>(float&nbsp;coolDown)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Set the entity's hit cooldown (seconds)</div>
-</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setDisableDamage(boolean)" class="member-name-link">setDisableDamage</a><wbr>(boolean&nbsp;status)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Sets whether the player can receive any damage.</div>
-</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setHealth(int)" class="member-name-link">setHealth</a><wbr>(int&nbsp;health)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Sets the entity's health.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setMaxHealth(int)" class="member-name-link">setMaxHealth</a><wbr>(int&nbsp;maxHealth)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setMaxHealth(int)" class="member-name-link">setMaxHealth</a><wbr>(int&nbsp;maxHealth)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Sets the entity's Max Health.</div>
 </div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#takeDamage(int)" class="member-name-link">takeDamage</a><wbr>(int&nbsp;damage)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
 </div>
@@ -221,15 +188,13 @@ loadScripts(document, 'script');</script>
 <h2>Constructor Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="&lt;init&gt;(int,int)">
+<section class="detail" id="&lt;init&gt;(int)">
 <h3>CombatStatsComponent</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">CombatStatsComponent</span><wbr><span class="parameters">(int&nbsp;health,
- int&nbsp;baseAttack)</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">CombatStatsComponent</span><wbr><span class="parameters">(int&nbsp;health)</span></div>
 <div class="block">Construct a combat Stats Component (Health + Attack System)</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>health</code> - initial health (values <code>&lt; 0</code> are clamped to <code>0</code>)</dd>
-<dd><code>baseAttack</code> - base attack damage (must be <code>&gt;= 0</code>)</dd>
 </dl>
 </section>
 </li>
@@ -266,6 +231,12 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
+<section class="detail" id="takeDamage(int)">
+<h3>takeDamage</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">takeDamage</span><wbr><span class="parameters">(int&nbsp;damage)</span></div>
+</section>
+</li>
+<li>
 <section class="detail" id="setHealth(int)">
 <h3>setHealth</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setHealth</span><wbr><span class="parameters">(int&nbsp;health)</span></div>
@@ -274,24 +245,6 @@ loadScripts(document, 'script');</script>
 <dt>Parameters:</dt>
 <dd><code>health</code> - new health value</dd>
 </dl>
-</section>
-</li>
-<li>
-<section class="detail" id="setCoolDown(float)">
-<h3>setCoolDown</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setCoolDown</span><wbr><span class="parameters">(float&nbsp;coolDown)</span></div>
-<div class="block">Set the entity's hit cooldown (seconds)</div>
-<dl class="notes">
-<dt>Parameters:</dt>
-<dd><code>coolDown</code> - coolDown</dd>
-</dl>
-</section>
-</li>
-<li>
-<section class="detail" id="getCoolDown()">
-<h3>getCoolDown</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">getCoolDown</span>()</div>
-<div class="block">gets the entity's cooldown between attacks (seconds).</div>
 </section>
 </li>
 <li>
@@ -324,80 +277,6 @@ loadScripts(document, 'script');</script>
 <dl class="notes">
 <dt>Returns:</dt>
 <dd>the entity's maximum health (never negative)</dd>
-</dl>
-</section>
-</li>
-<li>
-<section class="detail" id="getBaseAttack()">
-<h3>getBaseAttack</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">getBaseAttack</span>()</div>
-<div class="block">Returns the entity's base attack damage.</div>
-<dl class="notes">
-<dt>Returns:</dt>
-<dd>base attack damage</dd>
-</dl>
-</section>
-</li>
-<li>
-<section class="detail" id="setBaseAttack(int)">
-<h3>setBaseAttack</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setBaseAttack</span><wbr><span class="parameters">(int&nbsp;attack)</span></div>
-<div class="block">Sets the entity's attack damage. Attack damage has a minimum bound of 0.</div>
-<dl class="notes">
-<dt>Parameters:</dt>
-<dd><code>attack</code> - Attack damage</dd>
-</dl>
-</section>
-</li>
-<li>
-<section class="detail" id="hit(com.csse3200.game.components.CombatStatsComponent)">
-<h3>hit</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">hit</span><wbr><span class="parameters">(<a href="CombatStatsComponent.html" title="class in com.csse3200.game.components">CombatStatsComponent</a>&nbsp;attacker)</span></div>
-<div class="block">Apply damage to this entity from another attacking entity.
-
- <p>If <code>attacker</code> is <code>null</code>, an error is logged and the call is a no-op.</p>
- <p>If this entity is already dead or the attacker's base attack is <code>&lt;= 0</code>, no damage is applied.</p>
-
- <p>Allows the entity to be hit by some attacker and deal damage, provided they have
- waited for the designated time between attacks.</p></div>
-<dl class="notes">
-<dt>Parameters:</dt>
-<dd><code>attacker</code> - the attacking entity providing <a href="#getBaseAttack()">base attack</a> damage; may be <code>null</code></dd>
-<dt>See Also:</dt>
-<dd>
-<ul class="tag-list">
-<li><code>applyDamage(int)</code></li>
-</ul>
-</dd>
-</dl>
-</section>
-</li>
-<li>
-<section class="detail" id="hit(int)">
-<h3>hit</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">hit</span><wbr><span class="parameters">(int&nbsp;damage)</span></div>
-<div class="block">Deal direct damage as an integer.
-
- <p>
-  Intended for non-entity sources (e.g. traps, projectiles, environmental hazards).
-  This delegates to <code>applyDamage(int)</code> and therefore follows the same validation and dead-entity behaviour.
- </p></div>
-<dl class="notes">
-<dt>Parameters:</dt>
-<dd><code>damage</code> - raw damage amount (non-negative to take effect)
- projectiles, or weapons.</dd>
-</dl>
-</section>
-</li>
-<li>
-<section class="detail" id="setDisableDamage(boolean)">
-<h3>setDisableDamage</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setDisableDamage</span><wbr><span class="parameters">(boolean&nbsp;status)</span></div>
-<div class="block">Sets whether the player can receive any damage. True means no damage received
- and false means damage can be received.</div>
-<dl class="notes">
-<dt>Parameters:</dt>
-<dd><code>status</code> - Status of whether entity can be damaged</dd>
 </dl>
 </section>
 </li>

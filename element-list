@@ -5,8 +5,6 @@ com.csse3200.game.areas
 com.csse3200.game.areas.terrain
 com.csse3200.game.components
 com.csse3200.game.components.enemy
-com.csse3200.game.components.entity
-com.csse3200.game.components.entity.item
 com.csse3200.game.components.gamearea
 com.csse3200.game.components.maingame
 com.csse3200.game.components.mainmenu
@@ -18,7 +16,13 @@ com.csse3200.game.components.tasks
 com.csse3200.game.concurrency
 com.csse3200.game.entities
 com.csse3200.game.entities.configs
+com.csse3200.game.entities.configs.characters
+com.csse3200.game.entities.configs.projectiles
+com.csse3200.game.entities.configs.weapons
 com.csse3200.game.entities.factories
+com.csse3200.game.entities.factories.characters
+com.csse3200.game.entities.factories.items
+com.csse3200.game.entities.factories.system
 com.csse3200.game.events
 com.csse3200.game.events.listeners
 com.csse3200.game.files

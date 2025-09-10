@@ -94,8 +94,7 @@ loadScripts(document, 'script');</script>
 <div class="block">Factory to projectile entities with predefined components.
 
  <p>Each projectile entity type should have a creation method that returns a corresponding entity.
- Predefined entity properties can be loaded from configs stored as json files which are defined in
- "ProjectileConfig".
+ Predefined entity properties can be loaded from the config classes
 
  <p>If needed, this factory can be separated into more specific factories for projectiles with
  similar characteristics.</div>
@@ -114,16 +113,22 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../Entity.html" title="class in com.csse3200.game.entities">Entity</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#createEnemyProjectile(java.lang.String,com.badlogic.gdx.math.Vector2,com.csse3200.game.entities.configs.BaseProjectileConfig)" class="member-name-link">createEnemyProjectile</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;texturePath,
- com.badlogic.gdx.math.Vector2&nbsp;direction,
- <a href="../configs/BaseProjectileConfig.html" title="class in com.csse3200.game.entities.configs">BaseProjectileConfig</a>&nbsp;config)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#createEnemyProjectile(com.badlogic.gdx.math.Vector2,com.csse3200.game.components.WeaponsStatsComponent)" class="member-name-link">createEnemyProjectile</a><wbr>(com.badlogic.gdx.math.Vector2&nbsp;direction,
+ <a href="../../components/WeaponsStatsComponent.html" title="class in com.csse3200.game.components">WeaponsStatsComponent</a>&nbsp;source)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Creates a laser shot entity</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../Entity.html" title="class in com.csse3200.game.entities">Entity</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#createPistolBullet()" class="member-name-link">createPistolBullet</a>()</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#createPistolBullet(com.csse3200.game.components.WeaponsStatsComponent)" class="member-name-link">createPistolBullet</a><wbr>(<a href="../../components/WeaponsStatsComponent.html" title="class in com.csse3200.game.components">WeaponsStatsComponent</a>&nbsp;source)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Creates a pistol bullet entity</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../Entity.html" title="class in com.csse3200.game.entities">Entity</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#createProjectile(com.csse3200.game.entities.configs.projectiles.ProjectileTarget,com.csse3200.game.components.WeaponsStatsComponent,java.lang.String)" class="member-name-link">createProjectile</a><wbr>(<a href="../configs/projectiles/ProjectileTarget.html" title="enum class in com.csse3200.game.entities.configs.projectiles">ProjectileTarget</a>&nbsp;target,
+ <a href="../../components/WeaponsStatsComponent.html" title="class in com.csse3200.game.components">WeaponsStatsComponent</a>&nbsp;source,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;texturePath)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Base class to create a projectile.</div>
 </div>
 </div>
 </div>
@@ -143,9 +148,26 @@ loadScripts(document, 'script');</script>
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="createPistolBullet()">
+<section class="detail" id="createProjectile(com.csse3200.game.entities.configs.projectiles.ProjectileTarget,com.csse3200.game.components.WeaponsStatsComponent,java.lang.String)">
+<h3>createProjectile</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../Entity.html" title="class in com.csse3200.game.entities">Entity</a></span>&nbsp;<span class="element-name">createProjectile</span><wbr><span class="parameters">(<a href="../configs/projectiles/ProjectileTarget.html" title="enum class in com.csse3200.game.entities.configs.projectiles">ProjectileTarget</a>&nbsp;target,
+ <a href="../../components/WeaponsStatsComponent.html" title="class in com.csse3200.game.components">WeaponsStatsComponent</a>&nbsp;source,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;texturePath)</span></div>
+<div class="block">Base class to create a projectile.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>target</code> - The physics layer the projectile can collide with</dd>
+<dd><code>source</code> - The stats of the weapon that shot the projectile.</dd>
+<dd><code>texturePath</code> - The texture of the projectile</dd>
+<dt>Returns:</dt>
+<dd>An entity for the projectile</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="createPistolBullet(com.csse3200.game.components.WeaponsStatsComponent)">
 <h3>createPistolBullet</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../Entity.html" title="class in com.csse3200.game.entities">Entity</a></span>&nbsp;<span class="element-name">createPistolBullet</span>()</div>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../Entity.html" title="class in com.csse3200.game.entities">Entity</a></span>&nbsp;<span class="element-name">createPistolBullet</span><wbr><span class="parameters">(<a href="../../components/WeaponsStatsComponent.html" title="class in com.csse3200.game.components">WeaponsStatsComponent</a>&nbsp;source)</span></div>
 <div class="block">Creates a pistol bullet entity</div>
 <dl class="notes">
 <dt>Returns:</dt>
@@ -154,17 +176,15 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="createEnemyProjectile(java.lang.String,com.badlogic.gdx.math.Vector2,com.csse3200.game.entities.configs.BaseProjectileConfig)">
+<section class="detail" id="createEnemyProjectile(com.badlogic.gdx.math.Vector2,com.csse3200.game.components.WeaponsStatsComponent)">
 <h3>createEnemyProjectile</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../Entity.html" title="class in com.csse3200.game.entities">Entity</a></span>&nbsp;<span class="element-name">createEnemyProjectile</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;texturePath,
- com.badlogic.gdx.math.Vector2&nbsp;direction,
- <a href="../configs/BaseProjectileConfig.html" title="class in com.csse3200.game.entities.configs">BaseProjectileConfig</a>&nbsp;config)</span></div>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../Entity.html" title="class in com.csse3200.game.entities">Entity</a></span>&nbsp;<span class="element-name">createEnemyProjectile</span><wbr><span class="parameters">(com.badlogic.gdx.math.Vector2&nbsp;direction,
+ <a href="../../components/WeaponsStatsComponent.html" title="class in com.csse3200.game.components">WeaponsStatsComponent</a>&nbsp;source)</span></div>
 <div class="block">Creates a laser shot entity</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>texturePath</code> - the path of the texture that's going to be used as the projectile's sprite</dd>
-<dd><code>direction</code> - The direction to fire at</dd>
-<dd><code>config</code> - The configuration about the damage and speed of the projectile</dd>
+<dd><code>direction</code> - direction in which the projectile is shot</dd>
+<dd><code>source</code> - </dd>
 <dt>Returns:</dt>
 <dd>The laser entity</dd>
 </dl>
