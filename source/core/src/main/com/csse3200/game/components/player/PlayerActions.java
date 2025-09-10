@@ -91,7 +91,6 @@ public class PlayerActions extends Component {
     entity.getEvents().addListener("crouchStop", () -> crouching = false);
     entity.getEvents().addListener("sprintStart", this::startSprinting);
     entity.getEvents().addListener("sprintStop", this::stopSprinting);
-
     // Find camera from any entity with CameraComponent
     Array<Entity> entities = ServiceLocator.getEntityService().getEntities();
     for (Entity entity: entities) {
