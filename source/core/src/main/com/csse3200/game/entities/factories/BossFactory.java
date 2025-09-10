@@ -26,6 +26,7 @@ import com.csse3200.game.physics.components.PhysicsProjectileComponent;
 import com.csse3200.game.rendering.AnimationRenderComponent;
 import com.csse3200.game.rendering.TextureRenderComponent;
 import com.csse3200.game.services.ServiceLocator;
+import com.csse3200.game.components.player.BossStatusDisplay;
 
 
 /**
@@ -51,7 +52,8 @@ public class BossFactory {
         robot
                 .addComponent(animator)
                 .addComponent(new CombatStatsComponent(100, 5))
-                .addComponent(new BossAnimationController());
+                .addComponent(new BossAnimationController())
+                .addComponent(new BossStatusDisplay("Boss_1"));
 
         return robot;
     }
@@ -79,7 +81,8 @@ public class BossFactory {
                 .addComponent(new BossChargeSkillComponent(target, 6f, 5f, 0.4f, 12f, 0.6f, 1.5f))
                 .addComponent(new BlackholeComponent(target,7f,8f))
                 .addComponent(new EnemyDeathRewardComponent(100, playerInventory))
-                .addComponent(new DeathParticleSpawnerComponent());
+                .addComponent(new DeathParticleSpawnerComponent())
+                .addComponent(new BossStatusDisplay("Boss_2"));;
         boss2.getComponent(AnimationRenderComponent.class).scaleEntity();
         float k = 2.0f;
         Vector2 s = boss2.getScale();
@@ -109,7 +112,8 @@ public class BossFactory {
                 .addComponent(new CombatStatsComponent(config.health, config.baseAttack))
                 .addComponent(new EnemyDeathRewardComponent(100, playerInventory))
                 .addComponent(new DeathParticleSpawnerComponent())
-                .addComponent(new TextureRenderComponent("images/Boss_3.png"));
+                .addComponent(new TextureRenderComponent("images/Boss_3.png"))
+                .addComponent(new BossStatusDisplay("Boss_3"));;
 
         boss3.getComponent(TextureRenderComponent.class).scaleEntity();
         boss3.setScale(new Vector2(2f, 2f));
