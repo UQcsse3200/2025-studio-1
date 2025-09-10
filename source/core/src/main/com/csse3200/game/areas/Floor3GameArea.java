@@ -80,60 +80,11 @@ public class Floor3GameArea extends GameArea {
   }
 
   private void spawnBordersAndReturnDoor() {
-    OrthographicCamera cam = (OrthographicCamera) cameraComponent.getCamera();
-    Vector2 camPos = cameraComponent.getEntity().getPosition();
-    float viewWidth = cam.viewportWidth;
-    float viewHeight = cam.viewportHeight;
-    float leftX = camPos.x - viewWidth / 2f;
-    float rightX = camPos.x + viewWidth / 2f;
-    float bottomY = camPos.y - viewHeight / 2f;
-    float topY = camPos.y + viewHeight / 2f;
-
-    // Left border split with a vertical door -> Floor 6
-    float leftDoorHeight = Math.max(1f, viewHeight * 0.2f);
-    float leftDoorY = camPos.y - leftDoorHeight / 2f;
-    float leftTopSegHeight = Math.max(0f, (topY) - (leftDoorY + leftDoorHeight));
-    if (leftTopSegHeight > 0f) {
-      Entity leftTop = ObstacleFactory.createWall(WALL_WIDTH, leftTopSegHeight);
-      leftTop.setPosition(leftX, leftDoorY + leftDoorHeight);
-      spawnEntity(leftTop);
-    }
-    float leftBottomSegHeight = Math.max(0f, (leftDoorY - bottomY));
-    if (leftBottomSegHeight > 0f) {
-      Entity leftBottom = ObstacleFactory.createWall(WALL_WIDTH, leftBottomSegHeight);
-      leftBottom.setPosition(leftX, bottomY);
-      spawnEntity(leftBottom);
-    }
-    Entity leftDoor = ObstacleFactory.createDoorTrigger(WALL_WIDTH, leftDoorHeight);
-    leftDoor.setPosition(leftX + 0.001f, leftDoorY);
-    leftDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadFloor6));
-    spawnEntity(leftDoor);
-    Entity right = ObstacleFactory.createWall(WALL_WIDTH, viewHeight);
-    right.setPosition(rightX - WALL_WIDTH, bottomY);
-    spawnEntity(right);
-    Entity top = ObstacleFactory.createWall(viewWidth, WALL_WIDTH);
-    top.setPosition(leftX, topY - WALL_WIDTH);
-    spawnEntity(top);
-    // Bottom border split with a door in the middle -> back to Floor 2
-    float doorWidth = Math.max(1f, viewWidth * 0.2f);
-    float doorX = camPos.x - doorWidth / 2f;
-    float leftSegWidth = Math.max(0f, doorX - leftX);
-    if (leftSegWidth > 0f) {
-      Entity bottomLeft = ObstacleFactory.createWall(leftSegWidth, WALL_WIDTH);
-      bottomLeft.setPosition(leftX, bottomY);
-      spawnEntity(bottomLeft);
-    }
-    float rightSegStart = doorX + doorWidth;
-    float rightSegWidth = Math.max(0f, (leftX + viewWidth) - rightSegStart);
-    if (rightSegWidth > 0f) {
-      Entity bottomRight = ObstacleFactory.createWall(rightSegWidth, WALL_WIDTH);
-      bottomRight.setPosition(rightSegStart, bottomY);
-      spawnEntity(bottomRight);
-    }
-    Entity bottomDoor = ObstacleFactory.createDoorTrigger(doorWidth, WALL_WIDTH);
-    bottomDoor.setPosition(doorX, bottomY + 0.001f);
-    bottomDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadBackToFloor2));
-    spawnEntity(bottomDoor);
+    Bounds b = getCameraBounds(cameraComponent);
+    addVerticalDoorLeft(b, WALL_WIDTH, this::loadFloor6);
+    addSolidWallRight(b, WALL_WIDTH);
+    addSolidWallTop(b, WALL_WIDTH);
+    addHorizontalDoorBottom(b, WALL_WIDTH, this::loadBackToFloor2);
   }
 
   private void spawnPlayer() {
@@ -142,33 +93,11 @@ public class Floor3GameArea extends GameArea {
   }
 
   private void loadBackToFloor2() {
-    if (!beginTransition()) return;
-    try {
-      for (Entity entity : areaEntities) {
-        entity.dispose();
-      }
-      areaEntities.clear();
-      dispose();
-      Floor2GameArea floor2 = new Floor2GameArea(terrainFactory, cameraComponent);
-      floor2.create();
-    } finally {
-      endTransition();
-    }
+    clearAndLoad(() -> new Floor2GameArea(terrainFactory, cameraComponent));
   }
 
   private void loadFloor6() {
-    if (!beginTransition()) return;
-    try {
-      for (Entity entity : areaEntities) {
-        entity.dispose();
-      }
-      areaEntities.clear();
-      dispose();
-      Floor6GameArea room6 = new Floor6GameArea(terrainFactory, cameraComponent);
-      room6.create();
-    } finally {
-      endTransition();
-    }
+    clearAndLoad(() -> new Floor6GameArea(terrainFactory, cameraComponent));
   }
 }
 
