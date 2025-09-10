@@ -22,6 +22,7 @@ import com.csse3200.game.physics.components.ColliderComponent;
 import com.csse3200.game.physics.components.HitboxComponent;
 import com.csse3200.game.physics.components.PhysicsComponent;
 import com.csse3200.game.physics.components.PhysicsMovementComponent;
+import com.csse3200.game.physics.components.PhysicsProjectileComponent;
 import com.csse3200.game.rendering.AnimationRenderComponent;
 import com.csse3200.game.rendering.TextureRenderComponent;
 import com.csse3200.game.services.ServiceLocator;
@@ -136,7 +137,10 @@ public class BossFactory {
                 .addComponent(new PhysicsMovementComponent())
                 .addComponent(new FireballMovementComponent(velocity))
                 .addComponent(new ColliderComponent())
-                .addComponent(new HitboxComponent().setLayer(PhysicsLayer.NPC));
+                .addComponent(new HitboxComponent().setLayer(PhysicsLayer.NPC))
+                .addComponent(new CombatStatsComponent(1, 5))
+                .addComponent(new PhysicsProjectileComponent())
+                .addComponent(new TouchAttackComponent(PhysicsLayer.PLAYER, 0f));
         fireball.setPosition(from);
         AnimationRenderComponent animator =
                 new AnimationRenderComponent(
