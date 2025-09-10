@@ -18,6 +18,7 @@ import java.util.List;
 
 public class KeycardFactory {
 
+
     public static Entity createKeycard(int level) {
         /** Creates a keycard entity with the specified level, physics, rendering, and pickup logic.*/
         Entity keycard = new Entity()
@@ -29,7 +30,7 @@ public class KeycardFactory {
 
 
         com.csse3200.game.physics.PhysicsUtils.setScaledCollider(keycard, 0.5f, 0.5f);
-
+       // keycard.getComponent(PhysicsComponent.class).BodyUserData(keycard);
         return keycard;
     }
 

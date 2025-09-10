@@ -1,12 +1,18 @@
 package com.csse3200.game.components;
 
+import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.areas.ForestGameArea;
 import com.csse3200.game.areas.GameArea;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
+import com.csse3200.game.entities.factories.RenderFactory;
 import com.csse3200.game.extensions.GameExtension;
 import com.csse3200.game.services.ServiceLocator;
+import com.csse3200.game.rendering.RenderService;
+import com.csse3200.game.rendering.Renderer;
+import com.csse3200.game.physics.PhysicsEngine;
+import com.csse3200.game.physics.PhysicsService;
 
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -543,7 +549,7 @@ class CombatStatsComponentTest {
     //Tests if killing an entity removes it from the game
     Entity victim = new Entity();
     victim.addComponent(new CombatStatsComponent(10, 10));
-    GameArea area = new ForestGameArea(new TerrainFactory(new CameraComponent()));
+    GameArea area = new ForestGameArea(new TerrainFactory(new CameraComponent()), new CameraComponent());
     ServiceLocator.registerGameArea(area);
     ServiceLocator.registerEntityService(new EntityService());
     area.spawnEntity(victim);

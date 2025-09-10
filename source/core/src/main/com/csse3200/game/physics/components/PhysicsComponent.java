@@ -88,6 +88,10 @@ public class PhysicsComponent extends Component {
     entity.setPosition(bodyPos, false);
   }
 
+  @Override
+  public void dispose() {
+    physics.destroyBody(body);
+  }
 
   @Override
   public void setEnabled(boolean enabled) {

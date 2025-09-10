@@ -2,7 +2,7 @@ package com.csse3200.game.components;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.physics.box2d.Fixture;
-import com.csse3200.game.components.player.InventoryComponent;
+import com.csse3200.game.components.InventoryComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.physics.BodyUserData;
 import com.csse3200.game.physics.components.ColliderComponent;
