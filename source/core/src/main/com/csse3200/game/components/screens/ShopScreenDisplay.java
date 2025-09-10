@@ -152,17 +152,14 @@ public class ShopScreenDisplay extends UIComponent {
         infoBtn.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                // For now just print to terminal
-                System.out.println("INFO for " + entry.itemKey() + ":");
-                System.out.println("  Price: $" + entry.price());
-                System.out.println("  Enabled: " + entry.enabled());
-                System.out.println("  Stackable: " + entry.stackable());
-                System.out.println("  MaxStack: " + entry.maxStack());
-                System.out.println("  BundleQuantity: " + entry.bundleQuantity());
+                // Open mini screen in the middle
+                ItemScreenDisplay mini = new ItemScreenDisplay(entry);
+                mini.show(stage, skin);
             }
         });
         return infoBtn;
     }
+
 
 
     // --- Helper: create solid texture for dimmer ---
