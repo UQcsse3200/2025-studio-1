@@ -5,7 +5,9 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.math.Vector2;
-import com.csse3200.game.components.TagComponent;
+import com.csse3200.game.entities.Entity;
+import com.csse3200.game.components.ItemComponent;
+import com.csse3200.game.entities.configs.ItemTypes;
 import com.csse3200.game.input.InputComponent;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.utils.math.Vector2Utils;
@@ -17,7 +19,7 @@ import com.csse3200.game.utils.math.Vector2Utils;
 public class KeyboardPlayerInputComponent extends InputComponent {
   private final Vector2 walkDirection = Vector2.Zero.cpy();
 
-  private int focusedItem = -1;
+  private int focusedItem = 0;
 
   private long timeSinceKeyPress = 0;
   private int doublePressKeyCode = -1;
@@ -83,15 +85,20 @@ public class KeyboardPlayerInputComponent extends InputComponent {
   @Override
   public boolean touchDown(int screenX, int screenY, int pointer, int button) {
     if (button == Input.Buttons.LEFT) {
-      if (entity.getCurrItem() == null)
-        return true;
+      InventoryComponent inventory = entity.getComponent(InventoryComponent.class);
+      Entity item = inventory.get(focusedItem);
+      if (item == null){
+        return false;
+      }
 
-      if (entity.getCurrItem().getComponent(TagComponent.class).getTag().equals("ranged")){
+      ItemComponent itemInfo = item.getComponent(ItemComponent.class);
+      if (itemInfo.getType() == ItemTypes.RANGED) {
         entity.getEvents().trigger("shoot");
-      } else {
+
+      } else if (itemInfo.getType() == ItemTypes.MELEE) {
         entity.getEvents().trigger("attack");
       }
-        return true;
+      return true;
     }
     return false;
   }
@@ -122,7 +129,6 @@ public class KeyboardPlayerInputComponent extends InputComponent {
       case Keys.S:
         triggerStopCrouchingEvent();
         return true;
-
       case Keys.NUM_1:
         focusedItem = 0;
         triggerSelectItem();
@@ -140,8 +146,8 @@ public class KeyboardPlayerInputComponent extends InputComponent {
         triggerSelectItem();
         return true;
       case Keys.NUM_5:
-        triggerSelectItem();
         focusedItem = 4;
+        triggerSelectItem();
         return true;
       case Keys.E:
         triggerAddItem();
