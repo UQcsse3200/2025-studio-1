@@ -40,9 +40,9 @@ class InputComponentTest {
   }
 
   @Test
-  void shouldHandleKeyDown(){
+  void shouldHandleKeyPressed(){
     InputComponent inputComponent = spy(InputComponent.class);
-    assertFalse(inputComponent.keyDown(1));
+    assertFalse(inputComponent.keyPressed(1));
   }
 
   @Test
@@ -52,9 +52,9 @@ class InputComponentTest {
   }
 
   @Test
-  void shouldHandleKeyUp() {
+  void shouldHandleKeyReleased() { // TODO also need tests for the keyPressed, and keyUp etc
   InputComponent inputComponent = spy(InputComponent.class);
-  assertFalse(inputComponent.keyUp(1));
+  assertFalse(inputComponent.keyReleased(1));
   }
 
   @Test
