@@ -28,6 +28,15 @@ class GameTimeTest {
   }
 
   @Test
+  void shouldPause() {
+      gameTime.setPaused(true);
+      shouldScale(1, 0, 10f);
+
+      gameTime.setPaused(false);
+      shouldScale(1, 10f, 10f);
+  }
+
+  @Test
   void shouldGiveCorrectDelta() {
     shouldScale(1f, 10f, 10f);
   }

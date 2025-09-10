@@ -5,13 +5,10 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.ai.tasks.AITaskComponent;
 import com.csse3200.game.components.CombatStatsComponent;
-import com.csse3200.game.components.enemy.BossChargeSkillComponent;
-import com.csse3200.game.components.enemy.BlackholeAttackComponent;
+import com.csse3200.game.components.enemy.*;
 import com.csse3200.game.components.npc.GhostAnimationController;
 import com.csse3200.game.components.TouchAttackComponent;
-import com.csse3200.game.components.enemy.FireballAttackComponment;
-import com.csse3200.game.components.enemy.FireballMovementComponent;
-import com.csse3200.game.components.enemy.BlackholeComponent;
+import com.csse3200.game.components.player.InventoryComponent;
 import com.csse3200.game.components.tasks.ChaseTask;
 import com.csse3200.game.components.tasks.WanderTask;
 import com.csse3200.game.entities.Entity;
@@ -29,9 +26,6 @@ import com.csse3200.game.rendering.TextureRenderComponent;
 import com.csse3200.game.services.ServiceLocator;
 
 
-
-
-
 /**
  * A factory class for creating Boss and NPC entities for the game.
  * This factory defines behavior, physics, and rendering properties for Boss-3
@@ -46,6 +40,10 @@ public class BossFactory {
     public static Entity createBoss2(Entity target) {
         Entity boss2 = createBaseNPC(target);
         BaseEntityConfig config = configs.boss2;
+        InventoryComponent playerInventory = null;
+        if (target != null) {
+            playerInventory = target.getComponent(InventoryComponent.class);
+        }
 
         AnimationRenderComponent animator =
                 new AnimationRenderComponent(
@@ -57,10 +55,11 @@ public class BossFactory {
                 .addComponent(new CombatStatsComponent(config.health, config.baseAttack))
                 .addComponent(animator)
                 .addComponent(new GhostAnimationController())
-                .addComponent(new FireballAttackComponment(target, 1.5f, 8f, 6f, config.baseAttack + 2))
+                .addComponent(new FireballAttackComponent(target, 1.5f, 8f, 6f, config.baseAttack + 2))
                 .addComponent(new BossChargeSkillComponent(target, 6f, 5f, 0.4f, 12f, 0.6f, 1.5f))
                 .addComponent(new BlackholeComponent(target,7f,8f))
-                .addComponent(new FireballAttackComponment(target, 1.5f, 8f, 6f, config.baseAttack + 2));
+                .addComponent(new EnemyDeathRewardComponent(100, playerInventory))
+                .addComponent(new DeathParticleSpawnerComponent());
         boss2.getComponent(AnimationRenderComponent.class).scaleEntity();
         float k = 2.0f;
         Vector2 s = boss2.getScale();
@@ -79,21 +78,26 @@ public class BossFactory {
      */
     public static Entity createBoss3(Entity target) {
         BaseEntityConfig config = configs.boss3;
+        InventoryComponent playerInventory = null;
+        if (target != null) {
+            playerInventory = target.getComponent(InventoryComponent.class);
+        }
         Entity boss3 = new Entity()
                 .addComponent(new PhysicsComponent())
                 .addComponent(new ColliderComponent())
                 .addComponent(new HitboxComponent().setLayer(PhysicsLayer.NPC))
                 .addComponent(new CombatStatsComponent(config.health, config.baseAttack))
+                .addComponent(new EnemyDeathRewardComponent(100, playerInventory))
+                .addComponent(new DeathParticleSpawnerComponent())
                 .addComponent(new TextureRenderComponent("images/Boss_3.png"));
 
         boss3.getComponent(TextureRenderComponent.class).scaleEntity();
         boss3.setScale(new Vector2(2f, 2f));
         PhysicsUtils.setScaledCollider(boss3, 2.0f, 0.8f);
 
-
-        boss3.addComponent(new com.csse3200.game.components.enemy.EnemyMudBallAttackComponent(
+        boss3.addComponent(new EnemyMudBallAttackComponent(
                 target, 1.2f, 9f, 6f, 3f));
-        boss3.addComponent(new com.csse3200.game.components.enemy.EnemyMudRingSprayComponent(
+        boss3.addComponent(new EnemyMudRingSprayComponent(
                 2.5f, 12, 6f, 3f));
 
         return boss3;
