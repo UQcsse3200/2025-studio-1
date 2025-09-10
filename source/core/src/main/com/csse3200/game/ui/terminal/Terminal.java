@@ -4,6 +4,7 @@ import com.csse3200.game.components.Component;
 import com.csse3200.game.ui.terminal.commands.Command;
 import com.csse3200.game.ui.terminal.commands.DebugCommand;
 import com.csse3200.game.ui.terminal.commands.WinScreenCommand;
+import com.csse3200.game.ui.terminal.commands.WavesCommand;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,6 +43,7 @@ public class Terminal extends Component {
 
     addCommand("debug", new DebugCommand());
     addCommand("winscreen", new WinScreenCommand(game));
+    addCommand("waves", new WavesCommand());
   }
 
   /** @return message entered by user */
