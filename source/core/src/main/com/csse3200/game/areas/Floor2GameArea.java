@@ -17,13 +17,16 @@ import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.utils.math.GridPoint2Utils;
 import com.csse3200.game.utils.math.RandomUtils;
+import com.badlogic.gdx.graphics.Texture;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import java.util.ArrayList;
+import java.util.List;
 
 /** Second floor with different background and arrow-key controls. */
 public class Floor2GameArea extends GameArea {
   private static final Logger logger = LoggerFactory.getLogger(Floor2GameArea.class);
-  private static final GridPoint2 PLAYER_SPAWN = new GridPoint2(10, 10);
+  private static final GridPoint2 PLAYER_SPAWN = new GridPoint2(8, 10);
   private static final float WALL_WIDTH = 0.1f;
   private static final int NUM_TREES = 8; // Number of trees to spawn
 
@@ -37,6 +40,7 @@ public class Floor2GameArea extends GameArea {
 
   @Override
   public void create() {
+    ensureAssets();
     spawnTerrain();
     spawnWallsAndDoor();
     spawnTrees(); // Add tree spawning
@@ -52,6 +56,55 @@ public class Floor2GameArea extends GameArea {
     Entity ui = new Entity();
     ui.addComponent(new com.csse3200.game.components.gamearea.FloorLabelDisplay("Floor 2"));
     spawnEntity(ui);
+  }
+
+  /** Ensure Floor 2 specific textures/atlases are loaded before use */
+  private void ensureAssets() {
+    ResourceService rs = ServiceLocator.getResourceService();
+    String[] needed = new String[] {
+        "images/LobbyWIP.png",               // background used by TerrainFactory.LOBBY
+        "images/tree.png",                   // ObstacleFactory.createTree
+        "foreg_sprites/general/LongFloor.png", // GameArea.spawnFloor -> long floor pieces
+        "foreg_sprites/general/ThickFloor.png",
+        "foreg_sprites/general/SmallSquare.png",
+        "foreg_sprites/general/SmallStair.png",
+        "foreg_sprites/general/SquareTile.png",
+        "images/keycard_lvl2.png"            // KeycardFactory (level 2)
+    };
+
+    List<String> toLoad = new ArrayList<>();
+    for (String path : needed) {
+      if (!rs.containsAsset(path, Texture.class)) {
+        toLoad.add(path);
+      }
+    }
+    if (!toLoad.isEmpty()) {
+      rs.loadTextures(toLoad.toArray(new String[0]));
+      rs.loadAll();
+    }
+
+    // Player uses images/player.atlas; Forest unloads it on transition, so reload here if needed
+    if (!rs.containsAsset("images/player.atlas", com.badlogic.gdx.graphics.g2d.TextureAtlas.class)) {
+      rs.loadTextureAtlases(new String[] {"images/player.atlas"});
+      rs.loadAll();
+    }
+  }
+
+  @Override
+  public void dispose() {
+    super.dispose();
+    ResourceService rs = ServiceLocator.getResourceService();
+    // Keep shared assets (like player atlas) loaded; unload only local visuals.
+    rs.unloadAssets(new String[] {
+        "images/LobbyWIP.png",
+        "images/tree.png",
+        "foreg_sprites/general/LongFloor.png",
+        "foreg_sprites/general/ThickFloor.png",
+        "foreg_sprites/general/SmallSquare.png",
+        "foreg_sprites/general/SmallStair.png",
+        "foreg_sprites/general/SquareTile.png",
+        "images/keycard_lvl2.png"
+    });
   }
 
   private void spawnTerrain() {
@@ -129,8 +182,7 @@ public class Floor2GameArea extends GameArea {
     }
 
     Entity bottomDoor = ObstacleFactory.createDoorTrigger(doorWidth, doorHeight);
-    bottomDoor.setPosition(doorX, bottomY + 0.1f); // Position above floor level
-    // Door returns to floor 1
+    bottomDoor.setPosition(doorX, bottomY + 0.1f);
     bottomDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadPreviousLevel));
     spawnEntity(bottomDoor);
 
@@ -176,23 +228,30 @@ public class Floor2GameArea extends GameArea {
   }
 
   private void spawnPlayer() {
-    Entity player = PlayerFactory.createPlayer();
+    Entity player = PlayerFactory.createPlayerWithArrowKeys();
     spawnEntityAt(player, PLAYER_SPAWN, true, true);
   }
 
   private void loadPreviousLevel() {
-    for (Entity entity : areaEntities) {
-      entity.dispose();
+    if (!beginTransition()) return;
+    try {
+      for (Entity entity : areaEntities) {
+        entity.dispose();
+      }
+      areaEntities.clear();
+      // Ensure ghost atlases are loaded before recreating Floor 1 to avoid missing textures
+      com.csse3200.game.services.ResourceService rs = ServiceLocator.getResourceService();
+      if (!rs.containsAsset("images/ghost.atlas", com.badlogic.gdx.graphics.g2d.TextureAtlas.class)) {
+        rs.loadTextureAtlases(new String[]{"images/ghost.atlas", "images/ghostKing.atlas"});
+        rs.loadAll();
+      }
+      // unload floor2 assets
+      dispose();
+      ForestGameArea floor1 = new ForestGameArea(terrainFactory, cameraComponent);
+      floor1.create();
+    } finally {
+      endTransition();
     }
-    areaEntities.clear();
-    // Ensure ghost atlases are loaded before recreating Floor 1 to avoid missing textures
-    com.csse3200.game.services.ResourceService rs = ServiceLocator.getResourceService();
-    if (!rs.containsAsset("images/ghost.atlas", com.badlogic.gdx.graphics.g2d.TextureAtlas.class)) {
-      rs.loadTextureAtlases(new String[]{"images/ghost.atlas", "images/ghostKing.atlas"});
-      rs.loadAll();
-    }
-    ForestGameArea floor1 = new ForestGameArea(terrainFactory, cameraComponent);
-    floor1.create();
   }
 
   private void loadRoom3() {
