@@ -7,11 +7,13 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.components.WeaponsStatsComponent;
 import com.csse3200.game.components.player.*;
+import com.csse3200.game.components.player.InventoryComponent;
 import com.csse3200.game.components.player.StaminaComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.characters.PlayerConfig;
 import com.csse3200.game.files.FileLoader;
 import com.csse3200.game.input.InputComponent;
+import com.csse3200.game.physics.BodyUserData;
 import com.csse3200.game.physics.PhysicsLayer;
 import com.csse3200.game.physics.PhysicsUtils;
 import com.csse3200.game.physics.components.ColliderComponent;
@@ -60,6 +62,8 @@ public class PlayerFactory {
             .addComponent(new StaminaComponent())
             .addComponent(animator)
             .addComponent(new PlayerAnimationController());
+    player.getComponent(PhysicsComponent.class).getBody().setUserData(new BodyUserData());
+    ((BodyUserData) player.getComponent(PhysicsComponent.class).getBody().getUserData()).entity = player;
 
     player.getComponent(AnimationRenderComponent.class).scaleEntity(2f);
     PhysicsUtils.setScaledCollider(player, 0.6f, 0.3f);
@@ -97,18 +101,23 @@ public class PlayerFactory {
    */
   public static Entity createPlayerWithArrowKeys() {
     InputComponent inputComponent = new TouchPlayerInputComponent();
+    InventoryComponent playerInventory = new InventoryComponent(stats.gold);
 
-    Entity player =
-            new Entity()
-                    .addComponent(new TextureRenderComponent("images/box_boy_leaf.png"))
-                    .addComponent(new PhysicsComponent())
-                    .addComponent(new ColliderComponent())
-                    .addComponent(new HitboxComponent().setLayer(PhysicsLayer.PLAYER))
-                    .addComponent(new PlayerActions())
-                    .addComponent(new CombatStatsComponent(stats.health))
-                    .addComponent(new InventoryComponent(stats.gold))
-                    .addComponent(inputComponent)
-                    .addComponent(new PlayerStatsDisplay());
+    Entity player = new Entity()
+            .addComponent(new TextureRenderComponent("images/box_boy_leaf.png"))
+            .addComponent(new PhysicsComponent())
+            .addComponent(new ColliderComponent())
+            .addComponent(new HitboxComponent().setLayer(PhysicsLayer.PLAYER))
+            .addComponent(new PlayerActions())
+            .addComponent(new CombatStatsComponent(stats.health))
+            .addComponent(playerInventory)
+            .addComponent(new ItemPickUpComponent(playerInventory))
+            .addComponent(new PlayerInventoryDisplay(playerInventory))
+            .addComponent(inputComponent)
+            .addComponent(new PlayerStatsDisplay());
+
+    player.getComponent(PhysicsComponent.class).getBody().setUserData(new BodyUserData());
+    ((BodyUserData) player.getComponent(PhysicsComponent.class).getBody().getUserData()).entity = player;
 
     PhysicsUtils.setScaledCollider(player, 0.6f, 0.3f);
     player.getComponent(ColliderComponent.class).setDensity(1.5f);
@@ -122,6 +131,7 @@ public class PlayerFactory {
         fixture.setFilterData(filter);
       }
     }
+
     return player;
   }
 
