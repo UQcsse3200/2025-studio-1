@@ -31,6 +31,7 @@ public class Floor3GameArea extends GameArea {
 
   @Override
   public void create() {
+    ensureAssets();
     // Different base terrain
     terrain = terrainFactory.createTerrain(TerrainType.FOREST_DEMO);
     spawnEntity(new Entity().addComponent(terrain));
@@ -54,61 +55,36 @@ public class Floor3GameArea extends GameArea {
 
   }
 
-  private void spawnBordersAndReturnDoor() {
-    OrthographicCamera cam = (OrthographicCamera) cameraComponent.getCamera();
-    Vector2 camPos = cameraComponent.getEntity().getPosition();
-    float viewWidth = cam.viewportWidth;
-    float viewHeight = cam.viewportHeight;
-    float leftX = camPos.x - viewWidth / 2f;
-    float rightX = camPos.x + viewWidth / 2f;
-    float bottomY = camPos.y - viewHeight / 2f;
-    float topY = camPos.y + viewHeight / 2f;
+  /** Ensure textures/atlases needed by Floor 3 are available */
+  private void ensureAssets() {
+    com.csse3200.game.services.ResourceService rs = com.csse3200.game.services.ServiceLocator.getResourceService();
+    String[] textures = new String[] {
+      "images/grass_1.png", "images/grass_2.png", "images/grass_3.png",
+      "foreg_sprites/general/LongFloor.png",
+      "images/keycard_lvl3.png"
+    };
+    java.util.List<String> toLoad = new java.util.ArrayList<>();
+    for (String t : textures) {
+      if (!rs.containsAsset(t, com.badlogic.gdx.graphics.Texture.class)) {
+        toLoad.add(t);
+      }
+    }
+    if (!toLoad.isEmpty()) {
+      rs.loadTextures(toLoad.toArray(new String[0]));
+      rs.loadAll();
+    }
+    if (!rs.containsAsset("images/player.atlas", com.badlogic.gdx.graphics.g2d.TextureAtlas.class)) {
+      rs.loadTextureAtlases(new String[] {"images/player.atlas"});
+      rs.loadAll();
+    }
+  }
 
-    // Left border split with a vertical door -> Floor 6
-    float leftDoorHeight = Math.max(1f, viewHeight * 0.2f);
-    float leftDoorY = camPos.y - leftDoorHeight / 2f;
-    float leftTopSegHeight = Math.max(0f, (topY) - (leftDoorY + leftDoorHeight));
-    if (leftTopSegHeight > 0f) {
-      Entity leftTop = ObstacleFactory.createWall(WALL_WIDTH, leftTopSegHeight);
-      leftTop.setPosition(leftX, leftDoorY + leftDoorHeight);
-      spawnEntity(leftTop);
-    }
-    float leftBottomSegHeight = Math.max(0f, (leftDoorY - bottomY));
-    if (leftBottomSegHeight > 0f) {
-      Entity leftBottom = ObstacleFactory.createWall(WALL_WIDTH, leftBottomSegHeight);
-      leftBottom.setPosition(leftX, bottomY);
-      spawnEntity(leftBottom);
-    }
-    Entity leftDoor = ObstacleFactory.createDoorTrigger(WALL_WIDTH, leftDoorHeight);
-    leftDoor.setPosition(leftX + 0.001f, leftDoorY);
-    leftDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadFloor6));
-    spawnEntity(leftDoor);
-    Entity right = ObstacleFactory.createWall(WALL_WIDTH, viewHeight);
-    right.setPosition(rightX - WALL_WIDTH, bottomY);
-    spawnEntity(right);
-    Entity top = ObstacleFactory.createWall(viewWidth, WALL_WIDTH);
-    top.setPosition(leftX, topY - WALL_WIDTH);
-    spawnEntity(top);
-    // Bottom border split with a door in the middle -> back to Floor 2
-    float doorWidth = Math.max(1f, viewWidth * 0.2f);
-    float doorX = camPos.x - doorWidth / 2f;
-    float leftSegWidth = Math.max(0f, doorX - leftX);
-    if (leftSegWidth > 0f) {
-      Entity bottomLeft = ObstacleFactory.createWall(leftSegWidth, WALL_WIDTH);
-      bottomLeft.setPosition(leftX, bottomY);
-      spawnEntity(bottomLeft);
-    }
-    float rightSegStart = doorX + doorWidth;
-    float rightSegWidth = Math.max(0f, (leftX + viewWidth) - rightSegStart);
-    if (rightSegWidth > 0f) {
-      Entity bottomRight = ObstacleFactory.createWall(rightSegWidth, WALL_WIDTH);
-      bottomRight.setPosition(rightSegStart, bottomY);
-      spawnEntity(bottomRight);
-    }
-    Entity bottomDoor = ObstacleFactory.createDoorTrigger(doorWidth, WALL_WIDTH);
-    bottomDoor.setPosition(doorX, bottomY + 0.001f);
-    bottomDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadBackToFloor2));
-    spawnEntity(bottomDoor);
+  private void spawnBordersAndReturnDoor() {
+    Bounds b = getCameraBounds(cameraComponent);
+    addVerticalDoorLeft(b, WALL_WIDTH, this::loadFloor6);
+    addSolidWallRight(b, WALL_WIDTH);
+    addSolidWallTop(b, WALL_WIDTH);
+    addHorizontalDoorBottom(b, WALL_WIDTH, this::loadBackToFloor2);
   }
 
   private void spawnPlayer() {
@@ -117,21 +93,11 @@ public class Floor3GameArea extends GameArea {
   }
 
   private void loadBackToFloor2() {
-    for (Entity entity : areaEntities) {
-      entity.dispose();
-    }
-    areaEntities.clear();
-    Floor2GameArea floor2 = new Floor2GameArea(terrainFactory, cameraComponent);
-    floor2.create();
+    clearAndLoad(() -> new Floor2GameArea(terrainFactory, cameraComponent));
   }
 
   private void loadFloor6() {
-    for (Entity entity : areaEntities) {
-      entity.dispose();
-    }
-    areaEntities.clear();
-    Floor6GameArea room6 = new Floor6GameArea(terrainFactory, cameraComponent);
-    room6.create();
+    clearAndLoad(() -> new Floor6GameArea(terrainFactory, cameraComponent));
   }
 }
 
