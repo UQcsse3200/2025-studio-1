@@ -12,7 +12,8 @@ import com.csse3200.game.rendering.SolidColorRenderComponent;
 import com.csse3200.game.rendering.DoorRenderComponent;
 
 
- /**
+
+/**
  * Factory to create obstacle entities.
  *
  * <p>Each obstacle entity type should have a creation method that returns a corresponding entity.
@@ -50,8 +51,7 @@ public class ObstacleFactory {
     tree.scaleHeight(2.5f);
     PhysicsUtils.setScaledCollider(tree, 0.5f, 0.2f);
     return tree;
-  }
-
+  
   /**
    * Long, thin floor piece for platforms/walkways.
    * Solid so the player can stand on it.
