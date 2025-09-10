@@ -6,12 +6,18 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.ItemHoldComponent;
 import com.csse3200.game.components.enemy.ProjectileLauncherComponent;
 import com.csse3200.game.entities.Entity;
+import com.csse3200.game.entities.configs.Weapons;
+import com.csse3200.game.entities.factories.characters.BossFactory;
+import com.csse3200.game.entities.factories.characters.NPCFactory;
+import com.csse3200.game.entities.factories.items.ItemFactory;
+import com.csse3200.game.entities.factories.items.WeaponsFactory;
+import com.csse3200.game.entities.factories.system.ObstacleFactory;
+import com.csse3200.game.entities.factories.characters.PlayerFactory;
 import com.csse3200.game.entities.configs.BaseProjectileConfig;
 import com.csse3200.game.entities.configs.ItemSpawnConfig;
 import com.csse3200.game.entities.factories.BossFactory;
@@ -132,7 +138,9 @@ public class ForestGameArea extends GameArea {
     displayUI();
     spawnTerrain();
     spawnTrees();
+
     player = spawnPlayer();
+
     dagger = spawnDagger();
     pistol = spawnPistol();
     rifle = spawnRifle();
@@ -235,6 +243,16 @@ public class ForestGameArea extends GameArea {
    * The number of items is set by NUM_ITEMS.
    * Each item is created and placed at a random spot on the terrain.
    */
+  private void spawnItems() {
+    GridPoint2 minPos = new GridPoint2(0, 0);
+    GridPoint2 maxPos = terrain.getMapBounds(0).sub(2, 2);
+
+    for (int i = 0; i < NUM_ITEMS; i++) {
+      GridPoint2 randomPos = RandomUtils.random(minPos, maxPos);
+      Entity item = ItemFactory.createItem("images/heart.png");
+      spawnEntityAt(item, randomPos, true, false);
+    }
+  }
 
   private Entity spawnPlayer() {
     Entity newPlayer = PlayerFactory.createPlayer();
@@ -243,24 +261,21 @@ public class ForestGameArea extends GameArea {
   }
 
   private Entity spawnDagger() {
-    Entity newDagger = WeaponsFactory.createDagger();
+    Entity newDagger = WeaponsFactory.createWeapon(Weapons.DAGGER);
     Vector2 newDaggerOffset = new Vector2(0.7f, 0.3f);
     newDagger.addComponent(new ItemHoldComponent(this.player, newDaggerOffset));
+
     return newDagger;
   }
 
   private void equipItem(Entity item) {
-    this.player.setCurrItem(item);
+    InventoryComponent inventory = this.player.getComponent(InventoryComponent.class);
+    inventory.addItem(item);
     spawnEntityAt(item, PLAYER_SPAWN, true, true);
-
-  }
-
-  private Entity getItem() {
-    return this.player.getCurrItem();
   }
 
   private Entity spawnLightsaber() {
-    Entity newLightsaber = WeaponsFactory.createLightsaber();
+    Entity newLightsaber = WeaponsFactory.createWeapon(Weapons.LIGHTSABER);
     Vector2 newLightsaberOffset = new Vector2(0.7f, -0.1f);
     newLightsaber.addComponent(new ItemHoldComponent(this.player, newLightsaberOffset));
 
@@ -271,32 +286,27 @@ public class ForestGameArea extends GameArea {
     return newLightsaber;
   }
 
-//Commented out since bullet functionality is in progress with guns
-//  private Entity spawnBullet() {
-//    Entity newBullet = ProjectileFactory.createPistolBullet();
-//    spawnEntityAt(newBullet, new GridPoint2(5, 5), true, true);
-//    return newBullet;
-//  }
-
   private Entity spawnPistol() {
-    Entity newPistol = WeaponsFactory.createPistol();
+    Entity newPistol = WeaponsFactory.createWeapon(Weapons.PISTOL);
     Vector2 newPistolOffset = new Vector2(0.45f, 0.02f);
     newPistol.addComponent(new ItemHoldComponent(this.player, newPistolOffset));
     return newPistol;
   }
 
   private Entity spawnRifle() {
-    Entity newRifle = WeaponsFactory.createRifle();
+    Entity newRifle = WeaponsFactory.createWeapon(Weapons.RIFLE);
     Vector2 newRifleOffset = new Vector2(0.25f, 0.15f);
     newRifle.addComponent(new ItemHoldComponent(this.player, newRifleOffset));
     return newRifle;
   }
 
   // Enemy Projectiles
-  public Entity spawnEnemyProjectile(String texturePath, Vector2 directionToFire, BaseProjectileConfig config) {
-    Entity laser = ProjectileFactory.createEnemyProjectile(texturePath, directionToFire, config);
+  public Entity spawnEnemyProjectile(Vector2 directionToFire, WeaponsStatsComponent source) {
+    Entity laser = ProjectileFactory.createEnemyProjectile(directionToFire, source);
     spawnEntityAt(laser, new GridPoint2(0, 0), true, true);
-
+    PhysicsProjectileComponent laserPhysics = laser.getComponent(PhysicsProjectileComponent.class);
+    int projectileSpeed = 5; // Should be abstracted from WeaponsStatsComponent in future implementation
+    laserPhysics.fire(directionToFire, projectileSpeed);
     return laser;
   }
 
@@ -405,7 +415,7 @@ public class ForestGameArea extends GameArea {
     resourceService.loadSounds(forestSounds);
     resourceService.loadMusic(forestMusic);
 
-    while (!resourceService.loadForMillis(10)) {
+    while (resourceService.loadForMillis(10)) {
       // This could be upgraded to a loading screen
       logger.info("Loading... {}%", resourceService.getProgress());
     }
