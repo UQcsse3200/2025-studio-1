@@ -5,7 +5,7 @@ import com.csse3200.game.ai.tasks.DefaultTask;
 import com.csse3200.game.ai.tasks.PriorityTask;
 import com.csse3200.game.components.enemy.ProjectileLauncherComponent;
 import com.csse3200.game.entities.Entity;
-import com.csse3200.game.entities.configs.ProjectileConfig;
+import com.csse3200.game.entities.configs.projectiles.ProjectileConfig;
 import com.csse3200.game.physics.PhysicsEngine;
 import com.csse3200.game.physics.PhysicsLayer;
 import com.csse3200.game.physics.raycast.RaycastHit;
@@ -100,8 +100,8 @@ public class GPTFastChaseTask extends DefaultTask implements PriorityTask {
                 Vector2 dirToFire = new Vector2(target.getPosition().x - shooter.getPosition().x,
                         target.getPosition().y - shooter.getPosition().y);
 
-                projectileLauncher.FireProjectile("images/laser_shot.png", dirToFire,
-                        new Vector2(0.2f, 0.8f), new Vector2(0.5f, 0.5f), ProjectileConfig.laser);
+                projectileLauncher.FireProjectile(dirToFire,
+                        new Vector2(0.2f, 0.8f), new Vector2(0.5f, 0.5f));
             }
         }
     }
