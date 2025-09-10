@@ -106,6 +106,8 @@ public class ForestGameArea extends GameArea {
     "foreg_sprites/general/SquareTile.png",
     "foreg_sprites/general/ThickFloor.png",
     "foreg_sprites/general/ThinFloor.png",
+    "foreg_sprites/general/ThinFloor2.png",
+    "foreg_sprites/general/ThinFloor3.png",
   };
 
   /** Spawn pad textures. */
@@ -131,6 +133,14 @@ public class ForestGameArea extends GameArea {
     "foreg_sprites/futuristic/EnergyPod.png",
     "foreg_sprites/futuristic/storage_crate_green2.png",
     "foreg_sprites/futuristic/storage_crate_dark2.png",
+  };
+
+  /** keycard textures  */
+  private static final String[] keycardTextures = {
+    "images/keycard_lvl1.png",
+    "images/keycard_lvl2.png",
+    "images/keycard_lvl3.png",
+    "images/keycard_lvl4.png",
   };
 
   private static final String[] forestTextureAtlases = {
@@ -238,14 +248,14 @@ public class ForestGameArea extends GameArea {
     } else {
       spawnBoss3();
     }
-    spawnGhostGPT();
-    spawnDeepspin();
-    spawnGrokDroid();
-    spawnVroomba();
+    // spawnGhostGPT();
+    // spawnDeepspin();
+    // spawnGrokDroid();
+    // spawnVroomba();
     playMusic();
 
     // Place a keycard on the floor so the player can unlock the door
-    float keycardX = 1f, keycardY = 7f;
+    float keycardX = 1f, keycardY = 15f;
     Entity keycard = KeycardFactory.createKeycard(1);
     keycard.setPosition(new Vector2(keycardX, keycardY));
     spawnEntity(keycard);
@@ -261,7 +271,6 @@ public class ForestGameArea extends GameArea {
     spawnEntityAt(robot, pos, true, true);
     spawnEntityAt(robot2, pos2, true, true);
   }
-
 
   private void displayUI() {
     Entity ui = new Entity();
@@ -519,14 +528,14 @@ public class ForestGameArea extends GameArea {
   // }
 
   private void spawnBoss2() {
-    GridPoint2 pos = new GridPoint2(25, 25);
+    GridPoint2 pos = new GridPoint2(20, 12);
 
     Entity boss2 = BossFactory.createBoss2(player);
     spawnEntityAt(boss2, pos, true, true);
   }
   //new added boss3
   private void spawnBoss3() {
-    GridPoint2 pos = new GridPoint2(27, 25);
+    GridPoint2 pos = new GridPoint2(20, 12);
 
     Entity boss3 = BossFactory.createBoss3(player);
     spawnEntityAt(boss3, pos, true, true);
@@ -654,6 +663,8 @@ public class ForestGameArea extends GameArea {
   private void loadAssets() {
     logger.debug("Loading assets");
     ResourceService resourceService = ServiceLocator.getResourceService();
+    resourceService.loadTextures(futuristicTextures);
+    resourceService.loadTextures(keycardTextures);
     resourceService.loadTextures(generalTextures);
     resourceService.loadTextures(forestTextures);
     resourceService.loadTextures(spawnPadTextures);
@@ -675,6 +686,8 @@ public class ForestGameArea extends GameArea {
   private void unloadAssets() {
     logger.debug("Unloading assets");
     ResourceService resourceService = ServiceLocator.getResourceService();
+    resourceService.unloadAssets(keycardTextures);
+    resourceService.unloadAssets(futuristicTextures);
     resourceService.unloadAssets(forestTextures);
     resourceService.unloadAssets(generalTextures);
     resourceService.unloadAssets(forestTextureAtlases);
