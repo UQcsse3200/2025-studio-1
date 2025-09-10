@@ -68,8 +68,6 @@ public class TouchAttackComponent extends Component {
       targetStats.hit(combatStats);
     }
 
-
-
     // Apply knockback
     PhysicsComponent physicsComponent = target.getComponent(PhysicsComponent.class);
     if (physicsComponent != null && knockbackForce > 0f) {
