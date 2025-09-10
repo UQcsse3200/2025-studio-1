@@ -58,11 +58,6 @@ public class EnemyWaves {
      * Spawns the enemies in a wave on the {@link com.csse3200.game.areas.GameArea}.
      */
     public void spawnWave() {
-        long now = System.currentTimeMillis();
-        if (waveEndTime != 0 && (now - this.waveEndTime) < WAVE_DELAY_MS) {
-            return;
-        }
-
         if (waveNumber == maxWaves) {
             return;
         }
@@ -70,8 +65,8 @@ public class EnemyWaves {
         logger.debug("Spawning wave {}, with scaling factor {}", waveNumber, scalingFactor);
 
         if (roomNumber > 3) {
-            gameArea.spawnGhostGPT(3, scalingFactor);
-//            gameArea.spawnVroomba(2, scalingFactor);
+            gameArea.spawnGhostGPT(2, scalingFactor);
+            gameArea.spawnVroomba(1, scalingFactor);
         } else {
             gameArea.spawnDeepspin(maxEnemies, scalingFactor);
         }
@@ -82,7 +77,7 @@ public class EnemyWaves {
 
     /**
      * One wave "tick". Called at a fixed cadence by {@link #startWave()}.
-     * Checks if all the enemies are dead and if so, calls {@link #spawnWave()}
+     * Checks if all the enemies are dead and if so, waits WAVE_DELAY_MS then calls {@link #spawnWave()}.
      */
     private void tick() {
         EntityService es = ServiceLocator.getEntityService();
@@ -90,17 +85,32 @@ public class EnemyWaves {
             logger.debug("No EntityService registered; cannot kill enemy");
             return;
         }
+
+        boolean anyEnemyAlive = false;
         for (Entity e : es.getEntities()) {
             CombatStatsComponent stats = e.getComponent(CombatStatsComponent.class);
             if (stats == null || !isEnemy(e)) {
                 continue;
             }
             if (stats.getHealth() > 0) {
-                return; // if any enemy is alive then wave has not ended
+                anyEnemyAlive = true;
+                break;
             }
         }
-        waveEndTime = System.currentTimeMillis();
-        spawnWave();
+
+        long now = System.currentTimeMillis();
+        if (!anyEnemyAlive) {
+            // Start delay once per wave end; don't reset each tick
+            if (waveEndTime == 0) {
+                waveEndTime = now;
+            } else if (now - waveEndTime >= WAVE_DELAY_MS) {
+                waveEndTime = 0; // reset timer gate
+                spawnWave();
+            }
+        } else {
+            // Enemies still alive; ensure timer gate is cleared
+            waveEndTime = 0;
+        }
     }
 
     /**
