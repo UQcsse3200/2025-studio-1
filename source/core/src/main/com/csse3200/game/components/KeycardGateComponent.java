@@ -22,7 +22,13 @@ public class KeycardGateComponent extends Component {
         this.requiredLevel = requiredLevel;
         this.onUnlock = onUnlock;
     }
+    public void simulateCollisionWith(Entity otherEntity) {
+        InventoryComponent inventory = otherEntity.getComponent(InventoryComponent.class);
+        if (inventory != null) {
+            inventory.setKeycardLevel(requiredLevel);
 
+        }
+    }
     @Override
     public void create() {
         /** Registers a listener for collision events when the component is created. */

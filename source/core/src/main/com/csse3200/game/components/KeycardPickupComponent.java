@@ -27,7 +27,13 @@ public class KeycardPickupComponent extends Component {
 
         }
     }
+    public void simulateCollisionWith(Entity otherEntity) {
+        InventoryComponent inventory = otherEntity.getComponent(InventoryComponent.class);
+        if (inventory != null) {
+            inventory.setKeycardLevel(level);
 
+        }
+    }
     private void onCollisionStart(Fixture me, Fixture other) {
         Gdx.app.log("KeycardPickup", "Collision started with fixture: " + other);
 
