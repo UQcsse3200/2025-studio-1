@@ -124,7 +124,10 @@ public class ShopScreenDisplay extends UIComponent {
         Table itemTable = new Table();
         itemTable.add(actor).size(100, 100).row();
         itemTable.add(new Label(entry.itemKey(), skin)).row();
-        itemTable.add(new Label("$" + entry.price(), skin));
+        itemTable.add(new Label("$" + entry.price(), skin)).padBottom(6).row();
+
+        // --- Add Info button ---
+        itemTable.add(infoButton(entry)).padTop(4).row();
 
         // Gray out if disabled
         if (!entry.enabled()) {
@@ -143,6 +146,24 @@ public class ShopScreenDisplay extends UIComponent {
         grid.add(itemTable).size(120, 140);
 
     }
+
+    private TextButton infoButton(CatalogEntry entry) {
+        TextButton infoBtn = new TextButton("Info", skin);
+        infoBtn.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                // For now just print to terminal
+                System.out.println("INFO for " + entry.itemKey() + ":");
+                System.out.println("  Price: $" + entry.price());
+                System.out.println("  Enabled: " + entry.enabled());
+                System.out.println("  Stackable: " + entry.stackable());
+                System.out.println("  MaxStack: " + entry.maxStack());
+                System.out.println("  BundleQuantity: " + entry.bundleQuantity());
+            }
+        });
+        return infoBtn;
+    }
+
 
     // --- Helper: create solid texture for dimmer ---
     private static Texture makeSolidTexture(Color color) {
