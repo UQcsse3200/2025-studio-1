@@ -4,7 +4,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.csse3200.game.entities.Entity;
-import com.csse3200.game.entities.EntityService;
 import com.csse3200.game.physics.BodyUserData;
 import com.csse3200.game.physics.PhysicsLayer;
 import com.csse3200.game.physics.components.HitboxComponent;
@@ -20,9 +19,8 @@ import com.csse3200.game.physics.components.PhysicsProjectileComponent;
  * if target entity has a PhysicsComponent.
  */
 public class TouchAttackComponent extends Component {
-  private short targetLayer;
+  private final short targetLayer;
   private float knockbackForce = 0f;
-  private CombatStatsComponent combatStats;
   private HitboxComponent hitboxComponent;
 
   /**
@@ -46,7 +44,6 @@ public class TouchAttackComponent extends Component {
   @Override
   public void create() {
     entity.getEvents().addListener("collisionStart", this::onCollisionStart);
-    combatStats = entity.getComponent(CombatStatsComponent.class);
     hitboxComponent = entity.getComponent(HitboxComponent.class);
   }
 
@@ -63,12 +60,14 @@ public class TouchAttackComponent extends Component {
 
     // Try to attack target.
     Entity target = ((BodyUserData) other.getBody().getUserData()).entity;
+    Entity attacker = ((BodyUserData) me.getBody().getUserData()).entity;
+
     CombatStatsComponent targetStats = target.getComponent(CombatStatsComponent.class);
-    if (targetStats != null) {
-      targetStats.hit(combatStats);
+    WeaponsStatsComponent attackerWeapon = attacker.getComponent(WeaponsStatsComponent.class);
+
+    if (targetStats != null && attackerWeapon != null) {
+      targetStats.takeDamage(attackerWeapon.getBaseAttack());
     }
-
-
 
     // Apply knockback
     PhysicsComponent physicsComponent = target.getComponent(PhysicsComponent.class);
@@ -80,9 +79,8 @@ public class TouchAttackComponent extends Component {
     }
 
     //disposes entity if it is a projectile
-    if (entity.getComponent(PhysicsProjectileComponent.class) != null) {
+    if (entity.hasComponent(PhysicsProjectileComponent.class)) {
       entity.setToRemove();
     }
-
   }
 }
