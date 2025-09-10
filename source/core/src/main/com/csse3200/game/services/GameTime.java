@@ -29,7 +29,7 @@ public class GameTime {
      * Gets the current pause state of the game
      * @return True if the game is paused, false if not
      */
-  public Boolean isPaused() {
+  public boolean isPaused() {
       return this.paused;
   }
 
