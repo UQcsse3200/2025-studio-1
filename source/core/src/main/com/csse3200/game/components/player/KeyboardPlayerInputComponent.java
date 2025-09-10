@@ -146,8 +146,8 @@ public class KeyboardPlayerInputComponent extends InputComponent {
         triggerSelectItem();
         return true;
       case Keys.NUM_5:
-        triggerSelectItem();
         focusedItem = 4;
+        triggerSelectItem();
         return true;
       case Keys.E:
         triggerAddItem();
