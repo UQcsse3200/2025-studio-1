@@ -7,10 +7,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.utils.Array;
-import com.csse3200.game.components.CameraComponent;
-import com.csse3200.game.components.CombatStatsComponent;
-import com.csse3200.game.components.Component;
-import com.csse3200.game.components.StaminaComponent;
+import com.csse3200.game.components.*;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.factories.ProjectileFactory;
 import com.csse3200.game.physics.PhysicsLayer;
@@ -335,13 +332,18 @@ public class PlayerActions extends Component {
 
   /** Fires a projectile towards the mouse cursor. */
   void shoot() {
-    float coolDown = entity.getComponent(CombatStatsComponent.class).getCoolDown();
+    WeaponsStatsComponent weapon = getCurrentWeaponStats();
+    if (weapon == null) {
+      return;
+    }
+    // Check for cooldown, defaulting to zero if no current weapon
+    float coolDown = weapon.getCoolDown();
     if (this.timeSinceLastAttack < coolDown) return;
 
     Sound attackSound = ServiceLocator.getResourceService().getAsset("sounds/Impact4.ogg", Sound.class);
     attackSound.play();
 
-    Entity bullet = ProjectileFactory.createPistolBullet();
+    Entity bullet = ProjectileFactory.createPistolBullet(weapon);
     Vector2 origin = new Vector2(entity.getPosition());
     bullet.setPosition(origin);
     ServiceLocator.getEntityService().register(bullet);
@@ -356,7 +358,8 @@ public class PlayerActions extends Component {
 
   /** Performs a melee attack against nearby enemies. */
   void attack() {
-    float coolDown = entity.getComponent(CombatStatsComponent.class).getCoolDown();
+    WeaponsStatsComponent weapon = getCurrentWeaponStats();
+    float coolDown = weapon != null ? weapon.getCoolDown() : 0;
     if (this.timeSinceLastAttack < coolDown) return;
 
     Sound attackSound = ServiceLocator.getResourceService().getAsset("sounds/Impact4.ogg", Sound.class);
@@ -367,15 +370,14 @@ public class PlayerActions extends Component {
     for (Entity enemy : ServiceLocator.getEntityService().getEntities()) {
       if (enemy != entity) {
         CombatStatsComponent enemyStats = enemy.getComponent(CombatStatsComponent.class);
-        CombatStatsComponent attackStats = entity.getComponent(CombatStatsComponent.class);
+        WeaponsStatsComponent attackStats = entity.getComponent(WeaponsStatsComponent.class);
         HitboxComponent enemyHitBox = enemy.getComponent(HitboxComponent.class);
 
         if (enemyStats != null && attackStats != null && enemyHitBox != null) {
           if (enemyHitBox.getLayer() == PhysicsLayer.NPC) {
             float distance = enemy.getCenterPosition().dst(entity.getCenterPosition());
             if (distance <= attackRange) {
-              System.out.println("TRYING TO HIT: " + enemy);
-              enemyStats.hit(attackStats);
+              enemyStats.takeDamage(attackStats.getBaseAttack());
             }
           }
         }
@@ -383,5 +385,14 @@ public class PlayerActions extends Component {
     }
 
     timeSinceLastAttack = 0;
+  }
+
+  private WeaponsStatsComponent getCurrentWeaponStats() {
+    InventoryComponent inv = entity.getComponent(InventoryComponent.class);
+    if (inv != null) {
+      WeaponsStatsComponent curr = inv.getCurrItemStats();
+      if (curr != null) return curr;
+    }
+    return entity.getComponent(WeaponsStatsComponent.class);
   }
 }
