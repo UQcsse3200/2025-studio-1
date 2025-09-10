@@ -1,6 +1,6 @@
 package com.csse3200.game.components.shop;
 
-import com.csse3200.game.entities.ItemComponent;
+import com.csse3200.game.components.ItemComponent;
 import com.csse3200.game.components.player.InventoryComponent;
 import com.csse3200.game.entities.Entity;
 import org.slf4j.Logger;
