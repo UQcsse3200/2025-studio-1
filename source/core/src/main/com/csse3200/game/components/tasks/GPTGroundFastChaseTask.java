@@ -91,9 +91,8 @@ public class GPTGroundFastChaseTask extends DefaultTask implements PriorityTask 
       currentCooldown %= firingCooldown;
       Vector2 dirToFire = new Vector2(target.getPosition().x - shooter.getPosition().x,
               target.getPosition().y - shooter.getPosition().y);
-      projectileLauncher.FireProjectile("images/laser_shot.png", dirToFire,
-              new Vector2(0.2f, 0.8f), new Vector2(0.5f, 0.5f),
-              com.csse3200.game.entities.configs.ProjectileConfig.laser);
+      projectileLauncher.FireProjectile(dirToFire,
+              new Vector2(0.2f, 0.8f), new Vector2(0.5f, 0.5f));
     }
   }
 

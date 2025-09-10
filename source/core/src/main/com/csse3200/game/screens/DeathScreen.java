@@ -6,7 +6,7 @@ import com.csse3200.game.GdxGame;
 import com.csse3200.game.components.screens.DeathScreenDisplay;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
-import com.csse3200.game.entities.factories.RenderFactory;
+import com.csse3200.game.entities.factories.system.RenderFactory;
 import com.csse3200.game.input.InputDecorator;
 import com.csse3200.game.input.InputService;
 import com.csse3200.game.rendering.RenderService;
@@ -51,7 +51,7 @@ public class DeathScreen extends ScreenAdapter {
         renderer = RenderFactory.createRenderer();
         logger.debug("Death Screen renderer created");
         renderer.getCamera().getEntity().setPosition(5f, 5f);
-        logger.debug("Death Screen renderer camera position setted");
+        logger.debug("Death Screen renderer camera position set");
 
         loadAssets();
         createUI();
@@ -76,7 +76,7 @@ public class DeathScreen extends ScreenAdapter {
     }
 
     /**
-     * Cleans up and diaposes of resources when the death screen is no longer used
+     * Cleans up and disposes of resources when the death screen is no longer used
      */
     @Override
     public void dispose() {

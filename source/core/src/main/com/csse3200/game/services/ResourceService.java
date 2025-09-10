@@ -88,11 +88,11 @@ public class ResourceService implements Disposable {
   public boolean loadForMillis(int duration) {
     logger.debug("Loading assets for {} ms", duration);
     try {
-      return assetManager.update(duration);
+      return !assetManager.update(duration);
     } catch (Exception e) {
       logger.error(e.getMessage());
     }
-    return assetManager.isFinished();
+    return !assetManager.isFinished();
   }
 
   /**
@@ -135,6 +135,15 @@ public class ResourceService implements Disposable {
   }
 
   /**
+   * Loads a texture asset into the asset manager.
+   *
+   * @param textureName texture filename
+   */
+  public void loadTexture(String textureName) {
+    loadAsset(textureName, Texture.class);
+  }
+
+  /**
    * Loads a list of texture assets into the asset manager.
    *
    * @param textureNames texture filenames
@@ -152,11 +161,6 @@ public class ResourceService implements Disposable {
     loadAssets(textureAtlasNames, TextureAtlas.class);
   }
 
-  /**
-   * Loads a list of sounds into the asset manager.
-   *
-   * @param soundNames sound filenames
-   */
   public void loadSounds(String[] soundNames) {
     loadAssets(soundNames, Sound.class);
   }

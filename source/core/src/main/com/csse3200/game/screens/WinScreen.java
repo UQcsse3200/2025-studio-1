@@ -11,7 +11,7 @@ import com.csse3200.game.GdxGame;
 import com.csse3200.game.components.screens.WinScreenDisplay;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
-import com.csse3200.game.entities.factories.RenderFactory;
+import com.csse3200.game.entities.factories.system.RenderFactory;
 import com.csse3200.game.input.InputDecorator;
 import com.csse3200.game.input.InputService;
 import com.csse3200.game.rendering.RenderService;
@@ -51,7 +51,7 @@ public class WinScreen extends ScreenAdapter {
         renderer = RenderFactory.createRenderer();
         logger.debug("Win Screen renderer created");
         renderer.getCamera().getEntity().setPosition(5f, 5f);
-        logger.debug("Win Screen renderer camera position setted");
+        logger.debug("Win Screen renderer camera position set");
 
         loadAssets();
         createUI();
@@ -76,7 +76,7 @@ public class WinScreen extends ScreenAdapter {
     }
 
     /**
-     * Cleans up and diaposes of resources when the win screen is no longer used
+     * Cleans up and disposes of resources when the win screen is no longer used
      */
     @Override
     public void dispose() {
