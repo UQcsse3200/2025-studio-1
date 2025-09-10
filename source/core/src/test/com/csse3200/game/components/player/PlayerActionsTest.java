@@ -7,7 +7,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
-import com.csse3200.game.components.StaminaComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
 import com.csse3200.game.extensions.GameExtension;
@@ -61,7 +60,7 @@ class PlayerActionsTest {
     actions.update();
 
     Vector2 expectedImpulse = new Vector2(6f, 0f); // (3 - 0) * mass(2)
-    verify(body).applyLinearImpulse(approx(expectedImpulse, 1e-3f), eq(worldCenter), eq(true));
+    verify(body).applyLinearImpulse(approx(expectedImpulse), eq(worldCenter), eq(true));
   }
 
   @Test
@@ -87,7 +86,7 @@ class PlayerActionsTest {
     actions.stopWalking();
 
     Vector2 expectedImpulse = new Vector2(-10f, 0f); // (0 - 5) * 2
-    verify(body).applyLinearImpulse(approx(expectedImpulse, 1e-3f), eq(worldCenter), eq(true));
+    verify(body).applyLinearImpulse(approx(expectedImpulse), eq(worldCenter), eq(true));
   }
 
   @Test
@@ -119,7 +118,7 @@ class PlayerActionsTest {
     actions.jump();
 
     Vector2 expectedJump = new Vector2(0f, jv.y);
-    verify(body).applyLinearImpulse(approx(expectedJump, 1e-3f), eq(worldCenter), eq(true));
+    verify(body).applyLinearImpulse(approx(expectedJump), eq(worldCenter), eq(true));
   }
 
   @Test
@@ -133,7 +132,7 @@ class PlayerActionsTest {
     Entity player = new Entity()
             .addComponent(actions)
             .addComponent(new StaminaComponent())
-            .addComponent(new com.csse3200.game.components.CombatStatsComponent(100, 10)); // hp, atk
+            .addComponent(new com.csse3200.game.components.CombatStatsComponent(100)); // hp, atk
     player.create();
 
     actions.attack();
@@ -174,7 +173,7 @@ class PlayerActionsTest {
     jvField.setAccessible(true);
     Vector2 jv = (Vector2) jvField.get(null);
     Vector2 expected = new Vector2(0f, jv.y);
-    verify(body, times(2)).applyLinearImpulse(approx(expected, 1e-3f), eq(worldCenter), eq(true));
+    verify(body, times(2)).applyLinearImpulse(approx(expected), eq(worldCenter), eq(true));
   }
 
   @Test
@@ -241,7 +240,7 @@ class PlayerActionsTest {
     jvField.setAccessible(true);
     Vector2 jv = (Vector2) jvField.get(null);
     Vector2 expected = new Vector2(0f, jv.y);
-    verify(body, times(2)).applyLinearImpulse(approx(expected, 1e-3f), eq(worldCenter), eq(true));
+    verify(body, times(2)).applyLinearImpulse(approx(expected), eq(worldCenter), eq(true));
   }
 
   @Test
@@ -278,7 +277,7 @@ class PlayerActionsTest {
     actions.update();
 
     Vector2 expectedImpulse = new Vector2(sprintSpeed.x * 2f, 0f);
-    verify(body).applyLinearImpulse(approx(expectedImpulse, 1e-3f), eq(worldCenter), eq(true));
+    verify(body).applyLinearImpulse(approx(expectedImpulse), eq(worldCenter), eq(true));
   }
 
   @Test
@@ -326,26 +325,15 @@ class PlayerActionsTest {
     Vector2 expectedSprintImpulse = new Vector2(sprintSpeed.x * 2f, 0f);
     Vector2 expectedNormalImpulse = new Vector2(maxSpeed.x * 2f, 0f);
 
-    inOrder.verify(body).applyLinearImpulse(approx(expectedSprintImpulse, 1e-3f), eq(worldCenter), eq(true));
-    inOrder.verify(body).applyLinearImpulse(approx(expectedNormalImpulse, 1e-3f), eq(worldCenter), eq(true));
+    inOrder.verify(body).applyLinearImpulse(approx(expectedSprintImpulse), eq(worldCenter), eq(true));
+    inOrder.verify(body).applyLinearImpulse(approx(expectedNormalImpulse), eq(worldCenter), eq(true));
   }
 
-
-  private static float reflectFloat(Object target, String fieldName, float fallback) {
-    try {
-      Field f = target.getClass().getDeclaredField(fieldName);
-      f.setAccessible(true);
-      return f.getFloat(target);
-    } catch (Exception e) {
-      return fallback;
-    }
-  }
-
-  private static Vector2 approx(Vector2 expected, float eps) {
+  private static Vector2 approx(Vector2 expected) {
     return org.mockito.ArgumentMatchers.argThat(v ->
             v != null &&
-                    Math.abs(v.x - expected.x) <= eps &&
-                    Math.abs(v.y - expected.y) <= eps
+                    Math.abs(v.x - expected.x) <= (float) 0.001 &&
+                    Math.abs(v.y - expected.y) <= (float) 0.001
     );
   }
 }

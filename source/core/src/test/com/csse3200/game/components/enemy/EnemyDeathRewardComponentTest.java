@@ -20,7 +20,7 @@ public class EnemyDeathRewardComponentTest {
         InventoryComponent inventory = player.getComponent(InventoryComponent.class);
 
         Entity enemy = new Entity()
-                .addComponent(new CombatStatsComponent(5, 1))
+                .addComponent(new CombatStatsComponent(5))
                 .addComponent(new EnemyDeathRewardComponent(reward, inventory));
         enemy.create();
 
@@ -41,7 +41,7 @@ public class EnemyDeathRewardComponentTest {
         InventoryComponent inventory = player.getComponent(InventoryComponent.class);
 
         Entity enemy = new Entity()
-                .addComponent(new CombatStatsComponent(3, 1))
+                .addComponent(new CombatStatsComponent(3))
                 .addComponent(new EnemyDeathRewardComponent(reward, inventory));
         enemy.create();
 
@@ -56,7 +56,7 @@ public class EnemyDeathRewardComponentTest {
     @DisplayName("Handles null player inventory without crashing")
     void handlesNullInventory() {
         Entity enemy = new Entity()
-                .addComponent(new CombatStatsComponent(4, 1))
+                .addComponent(new CombatStatsComponent(4))
                 .addComponent(new EnemyDeathRewardComponent(50, null));
         enemy.create();
 
