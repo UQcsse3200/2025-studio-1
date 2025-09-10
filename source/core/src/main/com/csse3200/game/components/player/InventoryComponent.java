@@ -1,7 +1,8 @@
 package com.csse3200.game.components.player;
 
 import com.csse3200.game.components.Component;
-import com.csse3200.game.components.entity.item.ItemComponent;
+import com.csse3200.game.components.WeaponsStatsComponent;
+import com.csse3200.game.components.ItemComponent;
 import com.csse3200.game.entities.Entity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,7 +11,6 @@ import java.util.ArrayList;
 
 /**
  * A component intended to be used by the player to track their inventory.
- *
  * Currently, has functionality for indexing, getting, setting, and removing from
  * the players inventory, also stores the processor amount.
  * Can also be used as a more generic component for other entities.
@@ -21,8 +21,8 @@ public class InventoryComponent extends Component {
   private int inventoryCount = 0;
   private final int maxCapacity = 5;
   private final int minCapacity = 0;
-  private final ArrayList<Entity> items = new ArrayList<Entity>(maxCapacity);
-  private final ArrayList<String> itemTexs = new ArrayList<String>(maxCapacity);
+  private final ArrayList<Entity> items = new ArrayList<>(maxCapacity);
+  private final ArrayList<String> itemTexs = new ArrayList<>(maxCapacity);
   private int processor;
   private Entity currItem;
 
@@ -44,10 +44,9 @@ public class InventoryComponent extends Component {
    * Returns a copy of the players current inventory.
    * @return An {@code ArrayList<Entity>} containing the entities in the
    * players inventory.
-   * @return An ArrayList containing the players
    */
   public ArrayList<Entity> getInventory() {
-    return new ArrayList<Entity>(this.items);
+    return new ArrayList<>(this.items);
   }
 
   /**
@@ -56,7 +55,7 @@ public class InventoryComponent extends Component {
    * the players inventory
    */
   public ArrayList<String> getTextures() {
-    return new ArrayList<String>(this.itemTexs);
+    return new ArrayList<>(this.itemTexs);
   }
 
   /**
@@ -118,7 +117,8 @@ public class InventoryComponent extends Component {
     if (this.inventoryCount >= this.maxCapacity)
       return false;
 
-    if (this.get(index) == null) { // if there is something there
+    if (this.get(index) == null) {
+      currItem = item;
       this.items.set(index, item);
 
       String itemTex = item.getComponent(ItemComponent.class).getTexture();
@@ -126,8 +126,10 @@ public class InventoryComponent extends Component {
       entity.getEvents().trigger("add item", index, itemTex);
 
       this.inventoryCount++;
-    } else // There is something already there
+    } else {
+      // There is something already there
       return false;
+    }
 
     return true;
   }
@@ -170,7 +172,7 @@ public class InventoryComponent extends Component {
 
   /**
    * Returns the player's processor's.
-   * @return entity's health
+   * @return how much processor player has
    */
   public int getProcessor() {
     return this.processor;
@@ -206,14 +208,12 @@ public class InventoryComponent extends Component {
     setProcessor(this.processor + processor);
   }
 
-  public void equipWeapon(Entity item) {
-      if (items.contains(item)) {
-          currItem = item;
-      }
-  }
-
-  public Entity getCurrItem() {
-      return currItem;
+  /**
+   * Get the WeaponsStatsComponent for the current item
+   * @return Weapon Stats of current item
+   */
+  public WeaponsStatsComponent getCurrItemStats() {
+      return currItem != null ? currItem.getComponent(WeaponsStatsComponent.class) : null;
   }
 
 }
