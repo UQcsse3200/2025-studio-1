@@ -104,4 +104,14 @@ public class MagazineComponent extends Component{
         return this.timeSinceLastReload <= reloadDuration;
     }
 
+    /**
+     * Sets the time since last reload, used for testing purposes
+     * @param timeSinceLastReload designated time since last reload
+     */
+
+    public void seTimeSinceLastReload(float timeSinceLastReload) {
+
+        this.timeSinceLastReload = timeSinceLastReload;
+    }
+
 }
