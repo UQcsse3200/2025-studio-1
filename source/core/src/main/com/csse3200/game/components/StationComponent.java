@@ -8,7 +8,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.Align;
-import com.csse3200.game.components.entity.item.ItemComponent;
+import com.csse3200.game.components.player.InventoryComponent;
 import com.csse3200.game.components.player.PlayerActions;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.physics.BodyUserData;
@@ -17,6 +17,7 @@ import com.csse3200.game.services.ServiceLocator;
 
 public class StationComponent extends Component {
     private boolean playerNear = false;
+    private Entity player = null;
     private Label buyPrompt;
 
     @Override
@@ -49,6 +50,8 @@ public class StationComponent extends Component {
 
         Entity otherEntity = userData.entity;
         if (otherEntity.getComponent(PlayerActions.class) != null) {
+            player = otherEntity;
+
             playerNear = true;
             otherEntity.getEvents().addListener("interact", this::upgrade);
             buyPrompt.setVisible(true);
@@ -72,8 +75,19 @@ public class StationComponent extends Component {
     }
 
     public void upgrade() {
-        if (playerNear) {
-            System.out.println("UPGRDAAE");
+        if (playerNear && player != null) {
+
+            Entity currItem = player.getComponent(InventoryComponent.class).getCurrItem();
+
+            WeaponsStatsComponent currItemStats = currItem.getComponent(WeaponsStatsComponent.class);
+            if (currItemStats != null) {
+                currItemStats.upgrade();
+                buyPrompt.setText("Item has been upgraded");
+            } else {
+                buyPrompt.setText("Item is already fully upgraded!");
+            }
         }
+
+
     }
 }

@@ -145,8 +145,8 @@ public class ForestGameArea extends GameArea {
     //this.equipItem(dagger);
     this.equipItem(rifle);
 
-//    spawnGhosts();
-//    spawnGhostKing();
+    spawnGhosts();
+    spawnGhostKing();
 //    int choice = (int)(Math.random() * 3);
 //    if (choice == 0) {
 //      spawnBoss2();
@@ -261,6 +261,7 @@ public class ForestGameArea extends GameArea {
   private void equipItem(Entity item) {
     InventoryComponent inventory = this.player.getComponent(InventoryComponent.class);
     inventory.addItem(item);
+    inventory.setCurrItem(item);
     spawnEntityAt(item, PLAYER_SPAWN, true, true);
   }
 
