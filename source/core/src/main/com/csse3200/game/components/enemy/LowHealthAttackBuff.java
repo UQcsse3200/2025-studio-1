@@ -2,6 +2,7 @@ package com.csse3200.game.components.enemy;
 
 import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.components.Component;
+import com.csse3200.game.components.WeaponsStatsComponent;
 
 /**
  * Gives an attack buff to the entity when used.
@@ -10,10 +11,10 @@ import com.csse3200.game.components.Component;
  */
 public class LowHealthAttackBuff extends Component {
     private final int attackBuff;
-    private final CombatStatsComponent stats;
+    private final WeaponsStatsComponent stats;
     private boolean triggered = false;
 
-    public LowHealthAttackBuff(int attackBuff, CombatStatsComponent stats) {
+    public LowHealthAttackBuff(int attackBuff, WeaponsStatsComponent stats) {
         this.attackBuff = attackBuff;
         this.stats = stats;
     }
