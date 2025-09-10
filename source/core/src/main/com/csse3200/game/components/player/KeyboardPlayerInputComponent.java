@@ -57,7 +57,9 @@ public class KeyboardPlayerInputComponent extends InputComponent {
 
       case Keys.SPACE:
         triggerJumpEvent();
-//        entity.getEvents().trigger("attack"); TODO is this supposed to be here (jumping has the attack sound effect)???
+        Sound jump = ServiceLocator.getResourceService().getAsset("sounds/jump.mp3", Sound.class);
+        jump.play();
+//        entity.getEvents().trigger("attack"); // TODO is this supposed to be here (jumping has the attack sound effect)???
         entity.getEvents().trigger("anim");
         return true;
 
