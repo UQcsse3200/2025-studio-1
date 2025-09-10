@@ -1,8 +1,0 @@
-package com.csse3200.game.entities.configs;
-
-/**
- * Defines the properties stored in ghost GPT config files to be loaded by the NPC Factory.
- */
-public class DeepspinConfig extends BaseEntityConfig {
-  public int AttackSpeed = 1;
-}

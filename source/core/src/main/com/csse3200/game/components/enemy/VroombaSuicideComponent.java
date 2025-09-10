@@ -62,7 +62,7 @@ public class VroombaSuicideComponent extends Component {
     if (dist2 <= damageRadius * damageRadius) {
       CombatStatsComponent playerStats = target.getComponent(CombatStatsComponent.class);
       if (playerStats != null) {
-        playerStats.hit(damage);
+        playerStats.takeDamage(damage);
       }
     }
 
