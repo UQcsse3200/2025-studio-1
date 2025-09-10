@@ -5,13 +5,19 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Box2D collision events fire globally on the physics world, not per-object. The contact listener
- * receives these events, finds the entities involved in the collision, and triggers events on them.
+ * Box2D collision events fire globally on the physics world, not per-object.
+ * The contact listener
+ * receives these events, finds the entities involved in the collision, and
+ * triggers events on them.
  *
- * <p>On contact start: evt = "collisionStart", params = ({@link Fixture} thisFixture, {@link
+ * <p>
+ * On contact start: evt = "collisionStart", params = ({@link Fixture}
+ * thisFixture, {@link
  * Fixture} otherFixture)
  *
- * <p>On contact end: evt = "collisionEnd", params = ({@link Fixture} thisFixture, {@link Fixture}
+ * <p>
+ * On contact end: evt = "collisionEnd", params = ({@link Fixture} thisFixture,
+ * {@link Fixture}
  * otherFixture)
  */
 public class PhysicsContactListener implements ContactListener {
@@ -39,18 +45,15 @@ public class PhysicsContactListener implements ContactListener {
     // Nothing to do after resolving contact
   }
 
-
-
   private void triggerEventOn(Fixture fixture, String evt, Fixture otherFixture) {
     if (!(fixture.getBody().getUserData() instanceof BodyUserData) ||
-            !(otherFixture.getBody().getUserData() instanceof BodyUserData)) {
+        !(otherFixture.getBody().getUserData() instanceof BodyUserData)) {
       return; // Safety: skip if no entity data
     }
 
     BodyUserData userData = (BodyUserData) fixture.getBody().getUserData();
-    BodyUserData otherUserData = (BodyUserData) otherFixture.getBody().getUserData();
-
-    if (userData.entity != null && otherUserData.entity != null) {
+    if (userData != null && userData.entity != null) {
+      logger.debug("{} on entity {}", evt, userData.entity);
       userData.entity.getEvents().trigger(evt, fixture, otherFixture);
     }
   }
