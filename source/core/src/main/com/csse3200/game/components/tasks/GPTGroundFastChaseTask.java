@@ -15,8 +15,8 @@ import com.csse3200.game.services.GameTime;
 import com.csse3200.game.services.ServiceLocator;
 
 /**
- * Ground-based fast chase task for GhostGPT. Only moves horizontally while gravity acts naturally.
- * Active when the player IS visible. Optionally fires projectiles at the player.
+ * Ground fast-chase for GhostGPT: drive X only; Box2D gravity/collisions control Y.
+ * Not using MovementTask (it sets X&Y -> flying). See Box2D manual on Forces/Impulses.
  */
 public class GPTGroundFastChaseTask extends DefaultTask implements PriorityTask {
   private final Entity target;
@@ -68,11 +68,13 @@ public class GPTGroundFastChaseTask extends DefaultTask implements PriorityTask 
     if (target == null || physicsComponent == null) return;
     Body body = physicsComponent.getBody();
 
-    // Gravity integration handled by the physics world; do not touch Y here.
+    // Gravity integration handled by physics world; don't modify Y here.
     float dx = target.getPosition().x - owner.getEntity().getPosition().x;
     float dirX = Math.signum(dx);
     float desiredVx = dirX * speedX; // target horizontal speed
 
+    // Impulse formula: Jx = m * (vx_des - vx_cur). We nudge X toward desired speed in one step.
+    // Refs: https://box2d.org/files/Box2D_Manual.pdf  https://www.iforce2d.net/b2dtut/force  https://en.wikipedia.org/wiki/Impulse_(physics)
     float currentVx = body.getLinearVelocity().x;
     float impulseX = (desiredVx - currentVx) * body.getMass();
     body.applyLinearImpulse(new Vector2(impulseX, 0f), body.getWorldCenter(), true);
