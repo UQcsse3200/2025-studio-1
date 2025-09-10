@@ -5,9 +5,9 @@ package com.csse3200.game.entities.configs.weapons;
  */
 public class LightsaberConfig extends MeleeWeaponConfig {
     public LightsaberConfig() {
-        this.damage = 10;
-        this.hitTimer = 0.8;
-        this.range = 3f;
-        this.texturePath = "images/lightsaberSingle.png";
+        damage = 10;
+        hitTimer = 0.8;
+        range = 3f;
+        texturePath = "images/lightsaberSingle.png";
     }
 }
