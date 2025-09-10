@@ -6,7 +6,7 @@ import com.csse3200.game.areas.GameArea;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
-import com.csse3200.game.entities.factories.RenderFactory;
+import com.csse3200.game.entities.factories.system.RenderFactory;
 import com.csse3200.game.extensions.GameExtension;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.rendering.RenderService;
@@ -203,7 +203,7 @@ class CombatStatsComponentTest {
   @Test
   void deathHitRemovesEntity() {
     Entity victim = new Entity();
-    victim.addComponent(new CombatStatsComponent(10, 10));
+    victim.addComponent(new CombatStatsComponent(10));
     GameArea area = new ForestGameArea(new TerrainFactory(new CameraComponent()), new CameraComponent());
     ServiceLocator.registerGameArea(area);
     ServiceLocator.registerEntityService(new EntityService());
