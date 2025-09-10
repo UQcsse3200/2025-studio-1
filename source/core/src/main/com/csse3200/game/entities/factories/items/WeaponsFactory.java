@@ -44,6 +44,7 @@ public class WeaponsFactory {
         switch (config.weaponType) {
             case RANGED -> item.setType(ItemTypes.RANGED);
             case MELEE -> item.setType(ItemTypes.MELEE);
+            default -> item.setType(ItemTypes.NONE);
         }
 
         return weapon;
