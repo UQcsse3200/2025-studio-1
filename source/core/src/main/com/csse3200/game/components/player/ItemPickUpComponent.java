@@ -152,11 +152,19 @@ public class ItemPickUpComponent extends Component {
         }
 
         ItemComponent ic = item.getComponent(ItemComponent.class);
-        if (ic == null || ic.getTexture() == null) {
-            System.out.println("Cannot drop: item has no ItemComponent/texture");
+        String tex = (ic != null) ? ic.getTexture() : null;
+
+        boolean removed = inventory.remove(focusedIndex);
+        if (!removed) {
+            System.out.println("Failed to remove from inventory at index " + focusedIndex);
             return;
         }
-        String tex = ic.getTexture();
+        System.out.println("Dropped item from slot " + focusedIndex);
+
+        if (tex == null) {
+            System.out.println("No texture info; skip world respawn.");
+            return;
+        }
 
         Entity newItem = createItemFromTexture(tex);
         if (newItem == null) {
@@ -164,24 +172,19 @@ public class ItemPickUpComponent extends Component {
             return;
         }
 
-        Vector2 playerPos = entity.getCenterPosition();
-        GridPoint2 dropTile = new GridPoint2(Math.round(playerPos.x), Math.round(playerPos.y));
-
         PhysicsComponent phys = newItem.getComponent(PhysicsComponent.class);
         if (phys != null) phys.setBodyType(BodyDef.BodyType.StaticBody);
+
+        Vector2 playerPos = entity.getCenterPosition();
+        GridPoint2 dropTile = new GridPoint2(Math.round(playerPos.x), Math.round(playerPos.y));
 
         GameArea area = ServiceLocator.getGameArea();
         if (area instanceof ForestGameArea forest) {
             forest.spawnItem(newItem, dropTile);
         } else if (area != null) {
             System.out.println("No active GameArea; cannot drop item.");
-            return;
         }
 
-        boolean removed = inventory.remove(focusedIndex);
-        if (removed) {
-            System.out.println("Dropped item from slot " + focusedIndex);
-        }
     }
 
     private Entity createItemFromTexture(String texture) {
