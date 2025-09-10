@@ -6,8 +6,6 @@ import com.csse3200.game.entities.Entity;
 import com.csse3200.game.physics.components.HitboxComponent;
 import com.csse3200.game.physics.components.PhysicsComponent;
 import com.csse3200.game.rendering.TextureRenderComponent;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Utility factory class for creating item entities in the game.
@@ -15,7 +13,6 @@ import org.slf4j.LoggerFactory;
  * <p>Each item entity type should have a creation method that returns a corresponding entity.
  */
 public class ItemFactory {
-    private static final Logger log = LoggerFactory.getLogger(ItemFactory.class);
 
     /**
      * Creates and configures a new item entity.
