@@ -1,11 +1,11 @@
 package com.csse3200.game.components.player;
 
 import com.csse3200.game.components.Component;
-import com.csse3200.game.components.entity.item.ItemComponent;
+import com.csse3200.game.components.ItemComponent;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.physics.BodyUserData;
-//import com.csse3200.game.physics.components.HitboxComponent;    //might be needed later or delete if not used
+
 
 /**
  * Component that allows an entity to pick up items when in proximity.
@@ -18,7 +18,7 @@ public class ItemPickUpComponent extends Component {
 //     The item entity currently in collision range and eligible to be picked up.
     private Entity targetItem;
 //     The currently focused inventory slot (set via number key events).
-    private int focusedIndex = -1;
+    private int focusedIndex = 0;
 //     Constructs an ItemPickUpComponent with a reference to the player's inventory.
     public ItemPickUpComponent(InventoryComponent inventory) {
         this.inventory = inventory;
@@ -34,10 +34,6 @@ public class ItemPickUpComponent extends Component {
      */
     @Override
     public void create() {
-    //    HitboxComponent hitbox = entity.getComponent(HitboxComponent.class);       //might need this later
-    //    if (hitbox != null) {
-    //        hitbox.setSensor(true);    //this is commented out for now as hitbox is already set as a sensor
-    //    }
         entity.getEvents().addListener("collisionStart", this::onCollisionStart);
         entity.getEvents().addListener("collisionEnd", this::onCollisionEnd);
         entity.getEvents().addListener("pick up", this::onPickupRequest);
@@ -54,7 +50,9 @@ public class ItemPickUpComponent extends Component {
      */
     private void onCollisionStart(Fixture me, Fixture other) {
         Object data = other.getBody().getUserData();
-        if (!(data instanceof BodyUserData userData)) return;
+        if (!(data instanceof BodyUserData userData)) {
+            return;
+        }
 
         Entity otherEntity = userData.entity;
         if (otherEntity.getComponent(ItemComponent.class) != null) {
