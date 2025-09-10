@@ -351,6 +351,7 @@ public class ForestGameArea extends GameArea {
       Entity rightDoor = ObstacleFactory.createDoorTrigger(WALL_WIDTH, rightDoorHeight);
       rightDoor.setPosition(rightX - WALL_WIDTH - 0.001f, rightDoorY);
       rightDoor.addComponent(new com.csse3200.game.components.DoorComponent(() -> this.loadNextLevel()));
+      spawnEntity(rightDoor);
     }
   }
 
@@ -359,13 +360,20 @@ public class ForestGameArea extends GameArea {
    * This is called by the door/keycard logic when the player exits.
    */
   private void loadNextLevel() {
-    for (Entity entity : areaEntities) {
-      entity.dispose();
-    }
-    areaEntities.clear();
+    if (!beginTransition()) return;
+    try {
+      for (Entity entity : areaEntities) {
+        entity.dispose();
+      }
+      areaEntities.clear();
+      // stop music and unload assets before switching
+      dispose();
 
-    Floor2GameArea floor2 = new Floor2GameArea(terrainFactory, cameraComponent);
-    floor2.create();
+      Floor2GameArea floor2 = new Floor2GameArea(terrainFactory, cameraComponent);
+      floor2.create();
+    } finally {
+      endTransition();
+    }
   }
 
 
