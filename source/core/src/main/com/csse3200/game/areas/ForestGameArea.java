@@ -107,6 +107,8 @@ public class ForestGameArea extends GameArea {
   private Entity pistol;
   private Entity rifle;
 
+  private EnemyWaves wavesManager; // manage waves via terminal command
+
   /**
    * Initialise this ForestGameArea to use the provided TerrainFactory.
    * @param terrainFactory TerrainFactory used to create the terrain for the GameArea.
@@ -125,7 +127,7 @@ public class ForestGameArea extends GameArea {
     ServiceLocator.registerGameArea(this);
     displayUI();
     spawnTerrain();
-    spawnTestPlatforms(); // Added: test platforms for ground movement testing
+    spawnTestPlatforms(); // test platforms for ground movement testing
     spawnTrees();
     player = spawnPlayer();
     dagger = spawnDagger();
@@ -140,21 +142,11 @@ public class ForestGameArea extends GameArea {
     //this.equipItem(dagger);
     this.equipItem(rifle);
 
-    //spawnGhosts();
-    //spawnGhostKing();
-//    int choice = (int)(Math.random() * 3);
-//    if (choice == 0) {
-//      spawnBoss2();
-//    } else if (choice == 1) {
-//      spawnRobots();
-//    } else {
-//      spawnBoss3();
-//    }
-//    //spawnGhostGPT();
-    //spawnDeepspin();
-    //spawnGrokDroid();
-    //spawnVroomba();
-    spawnWaves();
+    // Remove auto enemy spawns on startup; use terminal commands to spawn instead
+    // int choice = (int)(Math.random() * 3);
+    // if (choice == 0) { spawnBoss2(); } else if (choice == 1) { spawnRobots(); } else { spawnBoss3(); }
+    // spawnWaves();
+
     playMusic();
     spawnItems();
   }
@@ -367,12 +359,14 @@ public class ForestGameArea extends GameArea {
   }
 
   /**
-   * Spawns a wave of enemies on the map based on {@link EnemyWaves}.
+   * Start enemy waves from terminal command by typing "waves".
    */
-  private void spawnWaves() {
+  public void startWaves() {
+    if (wavesManager == null) {
       // Use a higher room number so EnemyWaves logic spawns GhostGPT instead of airborne Deepspin
-      EnemyWaves wave = new EnemyWaves(5, this); // was 1
-      wave.startWave();
+      wavesManager = new EnemyWaves(5, this);
+    }
+    wavesManager.startWave();
   }
 
   /**
