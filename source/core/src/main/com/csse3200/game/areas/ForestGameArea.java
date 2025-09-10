@@ -144,20 +144,20 @@ public class ForestGameArea extends GameArea {
     //this.equipItem(dagger);
     this.equipItem(rifle);
 
-    spawnGhosts();
-    spawnGhostKing();
-    int choice = (int)(Math.random() * 3);
-    if (choice == 0) {
-      spawnBoss2();
-    } else if (choice == 1) {
-      spawnRobots();
-    } else {
-      spawnBoss3();
-    }
-    spawnGhostGPT();
-    spawnDeepspin();
-    spawnGrokDroid();
-    spawnVroomba();
+//    spawnGhosts();
+//    spawnGhostKing();
+//    int choice = (int)(Math.random() * 3);
+//    if (choice == 0) {
+//      spawnBoss2();
+//    } else if (choice == 1) {
+//      spawnRobots();
+//    } else {
+//      spawnBoss3();
+//    }
+//    spawnGhostGPT();
+//    spawnDeepspin();
+//    spawnGrokDroid();
+//    spawnVroomba();
     playMusic();
     spawnItems();
   }
