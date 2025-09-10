@@ -160,6 +160,7 @@ public class ItemPickUpComponent extends Component {
             return;
         }
         System.out.println("Dropped item from slot " + focusedIndex);
+        focusedIndex = -1;
 
         if (tex == null) {
             System.out.println("No texture info; skip world respawn.");
