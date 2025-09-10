@@ -1,19 +1,24 @@
 package com.csse3200.game.areas;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
+import com.csse3200.game.components.ItemHoldComponent;
+import com.csse3200.game.components.enemy.ProjectileLauncherComponent;
 import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.components.DoorComponent;
 import com.csse3200.game.components.KeycardGateComponent;
 import com.csse3200.game.entities.Entity;
-import com.csse3200.game.entities.factories.KeycardFactory;
-import com.csse3200.game.entities.factories.NPCFactory;
-import com.csse3200.game.entities.factories.ObstacleFactory;
-import com.csse3200.game.entities.factories.PlayerFactory;
+import com.csse3200.game.entities.configs.BaseProjectileConfig;
+import com.csse3200.game.entities.factories.*;
+import com.csse3200.game.physics.components.PhysicsProjectileComponent;
+import com.csse3200.game.rendering.AnimationRenderComponent;
 import com.csse3200.game.rendering.TextureRenderComponent;
 import com.csse3200.game.utils.math.GridPoint2Utils;
 import com.csse3200.game.utils.math.RandomUtils;
@@ -40,6 +45,7 @@ public class ForestGameArea extends GameArea {
 
 
   private static final int NUM_TREES = 7;
+  private static final GridPoint2 PLAYER_SPAWN = new GridPoint2(3, 20);
   private static final int NUM_ROBOTS = 1;
   private static final int NUM_ITEMS = 5;//this is for ItemFactory
   private static final int NUM_GHOSTS = 1;
@@ -47,7 +53,6 @@ public class ForestGameArea extends GameArea {
   private static final int NUM_DEEP_SPIN = 1;
   private static final int NUM_GROK_DROID = 1;
   private static final int NUM_VROOMBA = 1;
-  private static final GridPoint2 PLAYER_SPAWN = new GridPoint2(10, 10);
   private static final float WALL_WIDTH = 0.1f;
 
   /** Files or pictures used by the game (enemy/props,etc.). */
@@ -96,44 +101,54 @@ public class ForestGameArea extends GameArea {
 
   /** General prop textures (floors, tiles, etc.). */
   private static final String[] generalTextures = {
-      "foreg_sprites/general/LongFloor.png",
-      "foreg_sprites/general/Railing.png",
-      "foreg_sprites/general/SmallSquare.png",
-      "foreg_sprites/general/SmallStair.png",
-      "foreg_sprites/general/SquareTile.png",
-      "foreg_sprites/general/ThickFloor.png",
-      "foreg_sprites/general/ThinFloor.png",
+    "foreg_sprites/general/LongFloor.png",
+    "foreg_sprites/general/Railing.png",
+    "foreg_sprites/general/SmallSquare.png",
+    "foreg_sprites/general/SmallStair.png",
+    "foreg_sprites/general/SquareTile.png",
+    "foreg_sprites/general/ThickFloor.png",
+    "foreg_sprites/general/ThinFloor.png",
+    "foreg_sprites/general/ThinFloor2.png",
+    "foreg_sprites/general/ThinFloor3.png",
   };
 
   /** Spawn pad textures. */
   private static final String[] spawnPadTextures = {
-      "foreg_sprites/spawn_pads/SpawnPadPurple.png",
-      "foreg_sprites/spawn_pads/SpawnPadRed.png",
+    "foreg_sprites/spawn_pads/SpawnPadPurple.png",
+    "foreg_sprites/spawn_pads/SpawnPadRed.png",
   };
 
   /** Office furniture textures used on the upper platform. */
   private static final String[] officeTextures = {
-          "foreg_sprites/office/CeilingLight.png",
-          "foreg_sprites/office/Crate.png",
-          "foreg_sprites/office/LargeShelf.png",
-          "foreg_sprites/office/MidShelf.png",
-          "foreg_sprites/office/LongCeilingLight2.png",
-          "foreg_sprites/office/OfficeChair.png",
-          "foreg_sprites/office/officeDesk4.png",
+    "foreg_sprites/office/CeilingLight.png",
+    "foreg_sprites/office/Crate.png",
+    "foreg_sprites/office/LargeShelf.png",
+    "foreg_sprites/office/MidShelf.png",
+    "foreg_sprites/office/LongCeilingLight2.png",
+    "foreg_sprites/office/OfficeChair.png",
+    "foreg_sprites/office/officeDesk4.png",
   };
 
   /** Futuristic props used in this room (camera, energy pod, crates). */
   private static final String[] futuristicTextures = {
-          "foreg_sprites/futuristic/SecurityCamera3.png",
-          "foreg_sprites/futuristic/EnergyPod.png",
-          "foreg_sprites/futuristic/storage_crate_green2.png",
-          "foreg_sprites/futuristic/storage_crate_dark2.png",
+    "foreg_sprites/futuristic/SecurityCamera3.png",
+    "foreg_sprites/futuristic/EnergyPod.png",
+    "foreg_sprites/futuristic/storage_crate_green2.png",
+    "foreg_sprites/futuristic/storage_crate_dark2.png",
+  };
+
+  /** keycard textures  */
+  private static final String[] keycardTextures = {
+    "images/keycard_lvl1.png",
+    "images/keycard_lvl2.png",
+    "images/keycard_lvl3.png",
+    "images/keycard_lvl4.png",
   };
 
   private static final String[] forestTextureAtlases = {
     "images/terrain_iso_grass.atlas", "images/ghost.atlas", "images/ghostKing.atlas",
     "images/robot-2.atlas", "images/fireball.atlas", "images/blackhole.atlas", "images/Robot_1.atlas",
-          "images/boss_idle.atlas",
+    "images/boss_idle.atlas",
     "images/terrain_iso_grass.atlas",
     "images/ghost.atlas",
     "images/ghostKing.atlas",
@@ -144,6 +159,7 @@ public class ForestGameArea extends GameArea {
     "images/explosion_1.atlas",
     "images/explosion_2.atlas",
     "images/explosion_2.atlas",
+    "images/player.atlas",
     "images/player.atlas",
     "images/terrain_iso_grass.atlas",
     "images/ghost.atlas",
@@ -167,6 +183,11 @@ public class ForestGameArea extends GameArea {
 
 
   private Entity player;
+  private Entity dagger;
+  private Entity lightsaber;
+  private Entity bullet;
+  private Entity pistol;
+  private Entity rifle;
 
   /**
    * Initialise this ForestGameArea to use the provided TerrainFactory and camera helper.
@@ -174,6 +195,7 @@ public class ForestGameArea extends GameArea {
    *
    * @param terrainFactory TerrainFactory used to create the terrain for the GameArea (required).
    * @param cameraComponent Camera helper supplying an OrthographicCamera (optional but used here).
+   * @requires terrainFactory != null
    */
 
   public ForestGameArea(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
@@ -228,13 +250,14 @@ public class ForestGameArea extends GameArea {
     } else {
       spawnBoss3();
     }
-    spawnGhostGPT();
+    // spawnGhostGPT();
+    // spawnDeepspin();
+    // spawnGrokDroid();
+    // spawnVroomba();
     playMusic();
-    float keycardX = 1f;
-    float keycardY = 25f;
 
     // Place a keycard on the floor so the player can unlock the door
-    float keycardX = 1f, keycardY = 7f;
+    float keycardX = 1f, keycardY = 15f;
     Entity keycard = KeycardFactory.createKeycard(1);
     keycard.setPosition(new Vector2(keycardX, keycardY));
     spawnEntity(keycard);
@@ -243,11 +266,13 @@ public class ForestGameArea extends GameArea {
   }
 
   private void spawnRobots() {
-    GridPoint2 pos = new GridPoint2(0, 0);
+    GridPoint2 pos = new GridPoint2(6, 10);
+    GridPoint2 pos2 = new GridPoint2(8, 10);
     Entity robot = NPCFactory.createRobot(player);
+    Entity robot2 = NPCFactory.createRobot(player);
     spawnEntityAt(robot, pos, true, true);
+    spawnEntityAt(robot2, pos2, true, true);
   }
-
 
   private void displayUI() {
     Entity ui = new Entity();
@@ -485,9 +510,10 @@ public class ForestGameArea extends GameArea {
 
 
   // Enemy Projectiles
-  public Entity spawnLaserProjectile(Vector2 directionToFire) {
-    Entity laser = ProjectileFactory.createLaserShot(directionToFire);
+  public Entity spawnEnemyProjectile(String texturePath, Vector2 directionToFire, BaseProjectileConfig config) {
+    Entity laser = ProjectileFactory.createEnemyProjectile(texturePath, directionToFire, config);
     spawnEntityAt(laser, new GridPoint2(0, 0), true, true);
+
     return laser;
   }
 
@@ -504,14 +530,14 @@ public class ForestGameArea extends GameArea {
   // }
 
   private void spawnBoss2() {
-    GridPoint2 pos = new GridPoint2(25, 25);
+    GridPoint2 pos = new GridPoint2(20, 12);
 
     Entity boss2 = BossFactory.createBoss2(player);
     spawnEntityAt(boss2, pos, true, true);
   }
   //new added boss3
   private void spawnBoss3() {
-    GridPoint2 pos = new GridPoint2(27, 25);
+    GridPoint2 pos = new GridPoint2(20, 12);
 
     Entity boss3 = BossFactory.createBoss3(player);
     spawnEntityAt(boss3, pos, true, true);
@@ -588,7 +614,8 @@ public class ForestGameArea extends GameArea {
    * Adds NUM_Deep_spin amount of GhostGPT enemies onto the map.
    */
   private void spawnDeepspin() {
-    GridPoint2 pos = new GridPoint2(10,20);
+    GridPoint2 pos = new GridPoint2(10, 20);
+    GridPoint2 pos2 = new GridPoint2(12, 20);
 
     // for (int i = 0; i < NUM_DEEP_SPIN; i++) {
     //   GridPoint2 randomPos = RandomUtils.random(minPos, maxPos);
@@ -597,7 +624,9 @@ public class ForestGameArea extends GameArea {
     // }
 
     Entity deepspin = NPCFactory.createDeepspin(player, this);
+    Entity deepspin2 = NPCFactory.createDeepspin(player, this);
     spawnEntityAt(deepspin, pos, true, true);
+    spawnEntityAt(deepspin2, pos2, true, true);
   }
   /**
    * Adds NUM_GROK_DROID amount of GrokDroid enemies onto the map.
@@ -636,6 +665,8 @@ public class ForestGameArea extends GameArea {
   private void loadAssets() {
     logger.debug("Loading assets");
     ResourceService resourceService = ServiceLocator.getResourceService();
+    resourceService.loadTextures(futuristicTextures);
+    resourceService.loadTextures(keycardTextures);
     resourceService.loadTextures(generalTextures);
     resourceService.loadTextures(forestTextures);
     resourceService.loadTextures(spawnPadTextures);
@@ -657,6 +688,8 @@ public class ForestGameArea extends GameArea {
   private void unloadAssets() {
     logger.debug("Unloading assets");
     ResourceService resourceService = ServiceLocator.getResourceService();
+    resourceService.unloadAssets(keycardTextures);
+    resourceService.unloadAssets(futuristicTextures);
     resourceService.unloadAssets(forestTextures);
     resourceService.unloadAssets(generalTextures);
     resourceService.unloadAssets(forestTextureAtlases);
