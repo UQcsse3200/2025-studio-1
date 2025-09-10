@@ -22,6 +22,8 @@ import java.util.List;
 public abstract class GameArea implements Disposable {
   protected TerrainComponent terrain;
   protected List<Entity> areaEntities;
+  /** Prevents re-entrant room transitions across areas */
+  protected static boolean isTransitioning = false;
 
   protected GameArea() {
     areaEntities = new ArrayList<>();
@@ -35,6 +37,18 @@ public abstract class GameArea implements Disposable {
     for (Entity entity : areaEntities) {
       entity.dispose();
     }
+  }
+
+  /** Attempt to start a room transition. Returns false if one is already in progress. */
+  protected boolean beginTransition() {
+    if (isTransitioning) return false;
+    isTransitioning = true;
+    return true;
+  }
+
+  /** Mark the end of a room transition. */
+  protected void endTransition() {
+    isTransitioning = false;
   }
 
   /**
