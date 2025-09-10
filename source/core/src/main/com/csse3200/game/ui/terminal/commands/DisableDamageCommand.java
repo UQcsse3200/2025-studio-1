@@ -1,5 +1,7 @@
 package com.csse3200.game.ui.terminal.commands;
 
+import com.badlogic.gdx.utils.Null;
+import com.csse3200.game.components.WeaponsStatsComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.components.player.PlayerActions;
@@ -46,8 +48,8 @@ public class DisableDamageCommand implements Command {
     void setDisableDamageStatus(Array<Entity> entityList, boolean status) {
         for(Entity entity : entityList) {
             if (entity.getComponent(PlayerActions.class) != null
-                    && entity.getComponent(CombatStatsComponent.class) != null) {
-                entity.getComponent(CombatStatsComponent.class).setDisableDamage(status);
+                    && entity.getComponent(WeaponsStatsComponent.class) != null) {
+                entity.getComponent(WeaponsStatsComponent.class).setDisableDamage(status);
             }
         }
     }

@@ -4,7 +4,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.components.Component;
 import com.csse3200.game.entities.Entity;
-import com.csse3200.game.entities.factories.BossFactory;
+import com.csse3200.game.entities.factories.characters.BossFactory;
 import com.csse3200.game.services.ServiceLocator;
 
 public class BlackholeComponent extends Component {
