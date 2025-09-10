@@ -38,6 +38,9 @@ public class PlayerFactory {
         ServiceLocator.getInputService().getInputFactory().createForPlayer();
     InventoryComponent playerInventory = new InventoryComponent(stats.gold);
 
+    //to make sure the player spawns unequipped at the start of the game
+    playerInventory.equipWeapon(null);
+
     AnimationRenderComponent animator =
             new AnimationRenderComponent(
                     ServiceLocator.getResourceService()
