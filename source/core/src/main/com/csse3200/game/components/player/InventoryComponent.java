@@ -25,6 +25,7 @@ public class InventoryComponent extends Component {
   private final ArrayList<String> itemTexs = new ArrayList<>(maxCapacity);
   private int processor;
   private Entity currItem;
+  private int selectedSlot = -1; // -1 = no selectedSlot
 
   /**
    * Constructs an inventory for the player and a beginning currency amount
@@ -215,6 +216,45 @@ public class InventoryComponent extends Component {
   public WeaponsStatsComponent getCurrItemStats() {
       return currItem != null ? currItem.getComponent(WeaponsStatsComponent.class) : null;
   }
+
+
+
+  public void getCurrItem(Entity item){
+      this.currItem = item;
+  }
+
+    /**
+     *
+     * @param slotIndex takes the index of the slot from which the player selects the weapon
+     */
+  public void selectSlot(int slotIndex){
+      if(slotIndex >= 0 && slotIndex < this.items.size()){
+          this.selectedSlot = slotIndex;
+      }
+  }
+
+    /**
+     *
+     * @return the slot which is currently selected in the inventory
+     */
+  public int getSelectedSlot(){return this.selectedSlot;}
+
+
+    @Override
+    /**
+     * When the player presses a keyboard key the KeyboardInputComponent fires "focus item"
+     * InventoryComponent receives the event and update the selectedSlot
+     */
+    public void create() {
+        super.create();
+        entity.getEvents().addListener("focus item", this::onFocusItem);
+    }
+
+    private void onFocusItem(int slotIndex) {
+        selectSlot(slotIndex);
+        entity.getEvents().trigger("inventoryItemSelected", slotIndex);
+    }
+
 
 }
 
