@@ -6,11 +6,11 @@ import com.csse3200.game.input.InputComponent;
 public abstract class BaseTerminalInputComponent extends InputComponent {
     protected Terminal terminal;
 
-    public BaseTerminalInputComponent() {
+    protected BaseTerminalInputComponent() {
         super(10);
     }
 
-    public BaseTerminalInputComponent(Terminal terminal) {
+    protected BaseTerminalInputComponent(Terminal terminal) {
         this();
         this.terminal = terminal;
     }
