@@ -101,13 +101,7 @@ public class MagazineComponent extends Component{
     public boolean reloading() {
 
         float reloadDuration = 1.5f;
-        if (this.timeSinceLastReload <= reloadDuration) {
-
-            return true;
-        }
-
-        return false;
-
+        return this.timeSinceLastReload <= reloadDuration;
     }
 
 }
