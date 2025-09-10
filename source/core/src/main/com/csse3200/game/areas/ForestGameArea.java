@@ -45,12 +45,14 @@ public class ForestGameArea extends GameArea {
 
 
   private static final int NUM_TREES = 7;
-  private static final int NUM_GHOSTS = 0;
-  private static final int NUM_GHOST_GPTS = 4;
-  private static final int NUM_DEEP_SPIN = 3;
-  private static final int NUM_GROK_DROID = 3;
-  private static final int NUM_VROOMBA = 3;
   private static final GridPoint2 PLAYER_SPAWN = new GridPoint2(3, 20);
+  private static final int NUM_ROBOTS = 1;
+  private static final int NUM_ITEMS = 5;//this is for ItemFactory
+  private static final int NUM_GHOSTS = 1;
+  private static final int NUM_GHOST_GPTS = 1;
+  private static final int NUM_DEEP_SPIN = 1;
+  private static final int NUM_GROK_DROID = 1;
+  private static final int NUM_VROOMBA = 1;
   private static final float WALL_WIDTH = 0.1f;
 
   /** Files or pictures used by the game (enemy/props,etc.). */

@@ -152,6 +152,9 @@ public class ResourceService implements Disposable {
    */
   public void loadTextures(String[] textureNames) {
     loadAssets(textureNames, Texture.class);
+    for (String texture : keycardTextures) {
+      assetManager.load(texture, Texture.class);
+    }
   }
 
   /**
@@ -168,14 +171,6 @@ public class ResourceService implements Disposable {
    *
    * @param soundNames sound filenames
    */
-  public void loadTextures() {
-    for (String texture : mainGameTextures) {
-      assetManager.load(texture, Texture.class);
-    }
-    for (String texture : keycardTextures) {
-      assetManager.load(texture, Texture.class);
-    }
-  }
   public void loadSounds(String[] soundNames) {
     loadAssets(soundNames, Sound.class);
   }

@@ -5,106 +5,64 @@ filter: Nearest,Nearest
 repeat: none
 angry_float
   rotate: false
-  xy: 37, 52
-  size: 110, 175
-  orig: 110, 175
+  xy: 7, 40
+  size: 18, 30
+  orig: 170, 300
   offset: 0, 0
   index: 0
 angry_float
   rotate: false
-  xy: 181, 52
-  size: 110, 175
-  orig: 110, 175
+  xy: 29, 40
+  size: 18, 30
+  orig: 170, 300
   offset: 0, 0
   index: 1
 angry_float
   rotate: false
-  xy: 305, 52
-  size: 110, 175
-  orig: 110, 175
+  xy: 7, 40
+  size: 18, 30
+  orig: 170, 300
   offset: 0, 0
   index: 2
 angry_float
   rotate: false
-  xy: 428, 52
-  size: 110, 175
-  orig: 110, 175
+  xy: 51, 40
+  size: 18, 30
+  orig: 170, 300
   offset: 0, 0
   index: 3
-angry_float
-  rotate: false
-  xy: 555, 52
-  size: 110, 175
-  orig: 110, 175
-  offset: 0, 0
-  index: 4
-angry_float
-  rotate: false
-  xy: 666, 52
-  size: 110, 175
-  orig: 110, 175
-  offset: 0, 0
-  index: 5
-angry_float
-  rotate: false
-  xy: 760, 52
-  size: 110, 175
-  orig: 110, 175
-  offset: 0, 0
-  index: 6
 default
   rotate: false
-  xy: 37, 52
-  size: 110, 175
-  orig: 110, 175
+  xy: 7, 7
+  size: 18, 30
+  orig: 170, 300
   offset: 0, 0
   index: 0
 float
   rotate: false
-  xy: 37, 243
-  size: 110, 175
-  orig: 110, 175
+  xy: 7, 7
+  size: 18, 30
+  orig: 170, 300
   offset: 0, 0
   index: 0
 float
   rotate: false
-  xy: 181, 243
-  size: 110, 175
-  orig: 110, 175
+  xy: 29, 7
+  size: 18, 30
+  orig: 170, 300
   offset: 0, 0
   index: 1
 float
   rotate: false
-  xy: 305, 243
-  size: 110, 175
-  orig: 110, 175
+  xy: 7, 7
+  size: 18, 30
+  orig: 170, 300
   offset: 0, 0
   index: 2
 float
   rotate: false
-  xy: 428, 243
-  size: 110, 175
-  orig: 110, 175
+  xy: 51, 7
+  size: 18, 30
+  orig: 170, 300
   offset: 0, 0
   index: 3
-float
-  rotate: false
-  xy: 555, 243
-  size: 110, 175
-  orig: 110, 175
-  offset: 0, 0
-  index: 4
-float
-  rotate: false
-  xy: 666, 243
-  size: 110, 175
-  orig: 110, 175
-  offset: 0, 0
-  index: 5
-float
-  rotate: false
-  xy: 760, 243
-  size: 110, 175
-  orig: 110, 175
-  offset: 0, 0
-  index: 6
