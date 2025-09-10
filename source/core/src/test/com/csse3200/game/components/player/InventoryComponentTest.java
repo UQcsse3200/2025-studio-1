@@ -5,7 +5,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.physics.box2d.Body;
-import com.csse3200.game.entities.ItemComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.factories.items.ItemFactory;
 import com.csse3200.game.extensions.GameExtension;
