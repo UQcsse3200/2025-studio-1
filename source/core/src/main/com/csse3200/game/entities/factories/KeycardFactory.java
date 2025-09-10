@@ -30,7 +30,7 @@ public class KeycardFactory {
 
 
         com.csse3200.game.physics.PhysicsUtils.setScaledCollider(keycard, 0.5f, 0.5f);
-        keycard.getComponent(PhysicsComponent.class).BodyUserData(keycard);
+       // keycard.getComponent(PhysicsComponent.class).BodyUserData(keycard);
         return keycard;
     }
 
