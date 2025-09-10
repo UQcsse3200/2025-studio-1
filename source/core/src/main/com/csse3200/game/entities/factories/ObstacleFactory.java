@@ -14,12 +14,6 @@ import com.csse3200.game.rendering.DoorRenderComponent;
 
 
 /**
- * Factory to create obstacle entities.
- *
- * <p>Each obstacle entity type should have a creation method that returns a corresponding entity.
- */
-
-/**
  * Builds common static props and triggers used by the level (trees, floors, desks, crates, etc.).
  * Each method returns a ready-to-place Entity with the right components already attached.
  * Where needed we set a StaticBody so the object does not move, and assign a collider layer
@@ -28,29 +22,21 @@ import com.csse3200.game.rendering.DoorRenderComponent;
 public class ObstacleFactory {
 
   /**
-   * Makes a tree that the player can run into (it blocks like a rock).
-   * - Texture: images/tree.png
-   * - Physics: StaticBody + OBSTACLE collider (solid)
-   * - Scale: slightly taller for better readability
-   * @return a solid tree Entity
-   */
-
-  /**
    * Creates a tree entity.
    * @return entity
    */
   public static Entity createTree() {
-    Entity tree =
-            new Entity()
-                    .addComponent(new TextureRenderComponent("images/tree.png"))
-                    .addComponent(new PhysicsComponent())
-                    .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
+    Entity tree = new Entity()
+        .addComponent(new TextureRenderComponent("images/tree.png"))
+        .addComponent(new PhysicsComponent())
+        .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
 
     tree.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
     tree.getComponent(TextureRenderComponent.class).scaleEntity();
     tree.scaleHeight(2.5f);
     PhysicsUtils.setScaledCollider(tree, 0.5f, 0.2f);
     return tree;
+  }
   
   /**
    * Long, thin floor piece for platforms/walkways.
