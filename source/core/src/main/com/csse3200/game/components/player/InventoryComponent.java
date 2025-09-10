@@ -2,7 +2,7 @@ package com.csse3200.game.components.player;
 
 import com.csse3200.game.components.Component;
 import com.csse3200.game.components.WeaponsStatsComponent;
-import com.csse3200.game.entities.ItemComponent;
+import com.csse3200.game.components.ItemComponent;
 import com.csse3200.game.entities.Entity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
