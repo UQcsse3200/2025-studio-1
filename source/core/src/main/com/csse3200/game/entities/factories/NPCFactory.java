@@ -315,7 +315,14 @@ public class NPCFactory {
    * @return entity
    */
   public static Entity createVroomba(Entity target, float scalingFactor) {
-    Entity vroomba = createBaseNPC(target);
+    // Ground enemy build: dynamic body with collider/hitbox; no PhysicsMovementComponent
+    Entity vroomba = new Entity()
+            .addComponent(new PhysicsComponent())
+            .addComponent(new ColliderComponent())
+            .addComponent(new HitboxComponent().setLayer(PhysicsLayer.NPC))
+            .addComponent(new TouchAttackComponent(PhysicsLayer.PLAYER, 1.5f));
+    PhysicsUtils.setScaledCollider(vroomba, 0.9f, 0.4f);
+
     VroombaConfig config = configs.vroomba;
 
     AnimationRenderComponent animator =
@@ -324,11 +331,11 @@ public class NPCFactory {
     animator.addAnimation("angry_float", 0.1f, Animation.PlayMode.LOOP);
     animator.addAnimation("float", 0.1f, Animation.PlayMode.LOOP);
 
-    // Create the dash attack AI component
+    // Ground chase: set X only; gravity handles Y (Box2D). See Box2D Manual (Forces/Impulses).
     AITaskComponent aiComponent =
             new AITaskComponent()
-                    .addTask(new GPTSlowChaseTask(target, 10, new Vector2(0.3f, 0.3f)))
-                    .addTask(new GPTFastChaseTask(target, 10, new Vector2(1.2f, 1.2f)));
+                    .addTask(new GPTGroundSlowChaseTask(target, 10, 0.3f))
+                    .addTask(new GPTGroundFastChaseTask(target, 10, 1.2f));
 
 
     // Get player's inventory for reward system
@@ -337,13 +344,20 @@ public class NPCFactory {
       playerInventory = target.getComponent(InventoryComponent.class);
     }
 
+    // Explosion: arm when close; damage if within radius; then die (spawn particles)
+    float triggerRadius = 1.2f;
+    float damageRadius = 1.6f;
+    int boomDamage = Math.max(1, (int) (config.baseAttack * scalingFactor * 2));
+    float fuseSeconds = 1.5f;     // fuse time after triggered, before boom
+
     vroomba
             .addComponent(new CombatStatsComponent((int) (config.health * scalingFactor),
                     (int) (config.baseAttack * scalingFactor)))
             .addComponent(animator)
             .addComponent(new GhostAnimationController())
-            .addComponent(new EnemyDeathRewardComponent(15, playerInventory)) // Add reward + particles
-            .addComponent(new DeathParticleSpawnerComponent())
+            .addComponent(new EnemyDeathRewardComponent(15, playerInventory))
+            .addComponent(new DeathParticleSpawnerComponent("explosion_2"))
+            .addComponent(new VroombaSuicideComponent(target, triggerRadius, damageRadius, boomDamage, fuseSeconds))
             .addComponent(aiComponent);
 
     vroomba.getComponent(AnimationRenderComponent.class).scaleEntity();
