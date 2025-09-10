@@ -24,6 +24,9 @@ public class ShopScreenDisplay extends UIComponent {
     private Image dimmer;
     private Texture dimTex;
     private Table grid;
+    private Table hud;
+    private Label currencyLabel;
+
 
     public ShopScreenDisplay(ForestGameArea area, CatalogService catalog, ShopManager manager) {
         this.game = area;
@@ -77,6 +80,20 @@ public class ShopScreenDisplay extends UIComponent {
         });
 
         root.add(closeBtn).padTop(20).row();
+        // --- Currency HUD (top-right) ---
+        hud = new Table();
+        hud.setFillParent(true);
+        hud.top().right().pad(12);
+        stage.addActor(hud);
+
+        // label + initial value
+        currencyLabel = new Label("", skin);
+        updateCurrencyLabel();  // set from InventoryComponent once on open
+
+        // Optional: add a static "$" label or an icon if you have one in the skin
+        hud.add(new Label("$", skin)).padRight(4f);
+        hud.add(currencyLabel);
+
     }
 
     @Override
@@ -84,11 +101,19 @@ public class ShopScreenDisplay extends UIComponent {
         // Stage draws everything
     }
 
+    private void updateCurrencyLabel() {
+        var inv = game.getPlayer().getComponent(
+                com.csse3200.game.components.player.InventoryComponent.class);
+        int amount = (inv != null) ? inv.getProcessor() : 0;
+        currencyLabel.setText(String.valueOf(amount));
+    }
+
     @Override
     public void dispose() {
         if (root != null) { root.remove(); root = null; }
         if (dimmer != null) { dimmer.remove(); dimmer = null; }
         if (dimTex != null) { dimTex.dispose(); dimTex = null; }
+        if (hud != null) { hud.remove(); hud = null; }
         super.dispose();
     }
 
