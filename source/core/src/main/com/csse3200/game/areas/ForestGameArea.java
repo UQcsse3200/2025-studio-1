@@ -37,6 +37,7 @@ public class ForestGameArea extends GameArea {
   private static final int NUM_ROBOTS = 1;
   private static final int NUM_ITEMS = 5;//this is for ItemFactory
   private static final int NUM_GHOSTS = 1;
+  private static final int NUM_TURRETS = 1;
   private static final GridPoint2 PLAYER_SPAWN = new GridPoint2(10, 10);
   private static final float WALL_WIDTH = 0.1f;
   private static final String[] forestTextures = {
@@ -89,10 +90,11 @@ public class ForestGameArea extends GameArea {
     "images/Deepspin.atlas",
     "images/Grokdroid.atlas",
     "images/Vroomba.atlas",
+    "images/Turret.atlas",
     "images/explosion_1.atlas",
     "images/explosion_2.atlas",
     "images/explosion_2.atlas",
-    "images/player.atlas"
+    "images/player.atlas",
 
   };
   private static final String[] forestSounds = {"sounds/Impact4.ogg"};
@@ -409,6 +411,21 @@ public class ForestGameArea extends GameArea {
       GridPoint2 randomPos = RandomUtils.random(minPos, maxPos);
       Entity vroomba = NPCFactory.createVroomba(player, scaleFactor);
       spawnEntityAt(vroomba, randomPos, true, true);
+    }
+  }
+  /**
+   * Adds Turret enemies onto the map.
+   * @param total The total number of Vroomba to be spawned.
+   * @param scaleFactor The scale of increase in difficulty of the Vroomba
+   */
+  public void spawnTurret(int total, float scaleFactor) {
+    GridPoint2 minPos = new GridPoint2(0, 0);
+    GridPoint2 maxPos = terrain.getMapBounds(0).sub(3, 3);
+
+    for (int i = 0; i < NUM_TURRETS; i++) {
+      GridPoint2 randomPos = RandomUtils.random(minPos, maxPos);
+      Entity turret = NPCFactory.createTurret(player, this, scaleFactor);
+      spawnEntityAt(turret, randomPos, true, true);
     }
   }
 
