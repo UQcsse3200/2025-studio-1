@@ -70,7 +70,7 @@ public abstract class GameArea implements Disposable {
   public void startWaves(Entity player) {
     if (wavesManager == null) {
       // Use a higher room number so EnemyWaves logic spawns GhostGPT instead of airborne Deepspin
-      wavesManager = new EnemyWaves(5, this, player);
+      wavesManager = new EnemyWaves(this, player);
     }
     wavesManager.startWave();
   }
@@ -81,13 +81,9 @@ public abstract class GameArea implements Disposable {
    * @param scaleFactor The scale of increase in difficulty of the GhostGPT
    */
   public void spawnGhostGPT(int total, float scaleFactor, Entity player) {
-    GridPoint2 minPos = new GridPoint2(0, 0);
-    GridPoint2 maxPos = terrain.getMapBounds(0).sub(3, 3);
-
-    for (int i = 0; i < total; i++) {
-      GridPoint2 randomPos = RandomUtils.random(minPos, maxPos);
+    for (int i = 0; i < total; i++) {;
       Entity ghostGPT = NPCFactory.createGhostGPT(player, this, scaleFactor);
-      spawnEntityAt(ghostGPT, randomPos, true, true);
+      spawnEntityAt(ghostGPT, new GridPoint2(8, 11), true, false);
     }
   }
 
@@ -129,14 +125,10 @@ public abstract class GameArea implements Disposable {
    * @param scaleFactor The scale of increase in difficulty of the Vroomba
    */
   public void spawnVroomba(int total, float scaleFactor, Entity player) {
-    GridPoint2 minPos = new GridPoint2(0, 0);
-    GridPoint2 maxPos = terrain.getMapBounds(0).sub(3, 3);
-
-    for (int i = 0; i < total; i++) {
-      GridPoint2 randomPos = RandomUtils.random(minPos, maxPos);
-      Entity vroomba = NPCFactory.createVroomba(player, scaleFactor);
-      spawnEntityAt(vroomba, randomPos, true, true);
-    }
+    Entity vroomba1 = NPCFactory.createVroomba(player, scaleFactor);
+    Entity vroomba2 = NPCFactory.createVroomba(player, scaleFactor);
+    spawnEntityAt(vroomba1, new GridPoint2(16, 5), true, false);
+    spawnEntityAt(vroomba2, new GridPoint2(8, 5),  true, false);
   }
 
   // Enemy Projectiles
