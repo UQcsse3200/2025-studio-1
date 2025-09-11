@@ -216,7 +216,6 @@ public class PlayerStatsDisplay extends UIComponent {
 
   /**
    * Updates the ammo UI after the inventory slot is switched
-   * @param focusItem the focused item after the switch
    */
   public void updateAmmoUIAfterSwitch(int focusItem) {
 
@@ -280,13 +279,6 @@ public class PlayerStatsDisplay extends UIComponent {
    */
   protected void setProcessorLabel(Label label) {
     this.processorLabel = label;
-  }
-
-  /**
-   * For use in test code
-   */
-  protected void setAmmoLabel(Label label) {
-    this.ammoLabel = label;
   }
 
   @Override
