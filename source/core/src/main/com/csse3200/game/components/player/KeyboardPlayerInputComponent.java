@@ -57,7 +57,7 @@ public class KeyboardPlayerInputComponent extends InputComponent {
         triggerSprintEvent();
         return true;
 
-      case Keys.R:
+      case Keys.Q:
         triggerReloadEvent();
         return true;
       case Keys.SPACE:
@@ -128,7 +128,7 @@ public class KeyboardPlayerInputComponent extends InputComponent {
       case Keys.S:
         triggerStopCrouchingEvent();
         return true;
-      case Keys.Q:
+      case Keys.R:
         triggerRemoveItem();
         return true;
       case Keys.NUM_1:
