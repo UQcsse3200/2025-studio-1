@@ -1,12 +1,10 @@
 package com.csse3200.game.components.enemy;
 
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
@@ -24,23 +22,22 @@ public class EnemyHealthDisplay extends Component {
     private ProgressBar healthBar;
     // UI constants
     private static final float BAR_WIDTH = 70f;
-    private static final float BAR_HEIGHT = 10f;
+    private static final float BAR_HEIGHT = 5f;
     // Colours
     private static final Color COLOR_BG  = Color.DARK_GRAY;
     private static final Color COLOR_HEALTH = Color.RED;
     protected Stage stage;
-    private float offsetY = 0.4f * 45f;
+    private float offsetY = 0.6f;
 
     public EnemyHealthDisplay() {}
 
     public EnemyHealthDisplay(float offsetY) {
-        this.offsetY = offsetY * 45f;
+        this.offsetY = offsetY;
     }
 
     @Override
     public void create() {
         super.create();
-        logger.info("EnemyHealthDisplay created.");
         maxHealth = entity.getComponent(CombatStatsComponent.class).getHealth();
         // Health bar
         ProgressBar.ProgressBarStyle healthBarStyle = makeBarStyle(COLOR_HEALTH, BAR_HEIGHT);
@@ -48,14 +45,13 @@ public class EnemyHealthDisplay extends Component {
         healthBar.setWidth(BAR_WIDTH);
         healthBar.setValue(maxHealth);
         healthBar.setAnimateDuration(0f);
-        Vector2 pos = entity.getPosition();
-        Vector3 worldPos3 = new Vector3(pos.x, pos.y, 0);
-
+        // Set stage and add health bar
         stage = ServiceLocator.getRenderService().getStage();
         stage.addActor(healthBar);
-
-        Vector3 screenPos = stage.getCamera().project(worldPos3);
-        healthBar.setPosition(screenPos.x * 130f, screenPos.y * 80f);
+        // Add health bar to stage
+        stage = ServiceLocator.getRenderService().getStage();
+        stage.addActor(healthBar);
+        // Update ProgressBar when health value is changed
         entity.getEvents().addListener("updateHealth", this::updateEnemyHealthUI);
     }
 
@@ -97,11 +93,15 @@ public class EnemyHealthDisplay extends Component {
             return;
         }
         Vector2 pos = entity.getPosition();
-        healthBar.setPosition(pos.x * 97.66666666666667f + 240f, (pos.y - 1) * 95f + offsetY);
+        healthBar.setPosition((pos.x + 0.2f) * 129.4814725781657f, (pos.y - 3f + offsetY) * 135.3720388672149f);
     }
 
     public void dispose() {
         super.dispose();
         if (healthBar != null) healthBar.remove();
+    }
+
+    public int getCurrentHealthValue() {
+        return (int)healthBar.getValue();
     }
 }
