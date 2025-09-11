@@ -4,7 +4,7 @@ import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.entities.Entity;
 
 public class HealthEffect extends Effect {
-    private int damage;
+    private final int damage;
 
     public HealthEffect(int damage) {
         this.damage = damage;
@@ -17,7 +17,7 @@ public class HealthEffect extends Effect {
         }
 
         CombatStatsComponent combatStats = entity.getComponent(CombatStatsComponent.class);
-        combatStats.setHealth(combatStats.getHealth() + damage);
+        combatStats.setHealth(combatStats.getHealth() - damage);
         return true;
     }
 }
