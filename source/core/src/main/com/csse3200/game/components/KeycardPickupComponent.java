@@ -1,0 +1,49 @@
+package com.csse3200.game.components;
+
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.physics.box2d.Fixture;
+import com.csse3200.game.entities.Entity;
+import com.csse3200.game.components.InventoryComponent;
+import com.csse3200.game.physics.BodyUserData;
+import com.csse3200.game.physics.components.PhysicsComponent;
+
+public class KeycardPickupComponent extends Component {
+    private final int level;
+    private boolean collected = false;
+
+    public KeycardPickupComponent(int level) {
+        /** Initializes the component with a specific keycard level to grant on pickup. */
+        this.level = level;
+    }
+    @Override
+    public void create() {
+        entity.getEvents().addListener("collisionStart", this::onCollisionStart);
+
+        PhysicsComponent physics = entity.getComponent(PhysicsComponent.class);
+        if (physics != null && physics.getBody() != null) {
+            BodyUserData userData = new BodyUserData();
+            userData.entity = entity;
+            physics.getBody().setUserData(userData);
+        }
+    }
+
+    private void onCollisionStart(Fixture me, Fixture other)
+    {
+/** Handles collision: checks if the player collided, updates their inventory, and disposes the keycard entity.  */
+        if (collected) return;
+        Object otherUd = other.getBody().getUserData();
+        if (!(otherUd instanceof BodyUserData)) return;
+
+        Entity otherEntity = ((BodyUserData) otherUd).entity;
+        if (otherEntity == null) return;
+
+        InventoryComponent inventory = otherEntity.getComponent(InventoryComponent.class);
+        if (inventory != null) {
+            inventory.setKeycardLevel(level);
+            Gdx.app.log("KeycardPickup", "Keycard level " + level + " collected by player");
+            collected = true;
+
+            Gdx.app.postRunnable(() -> entity.dispose());
+        }
+    }
+}
