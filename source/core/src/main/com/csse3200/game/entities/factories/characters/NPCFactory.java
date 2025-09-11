@@ -142,7 +142,8 @@ public class NPCFactory {
             .addComponent(new PhysicsComponent())
             .addComponent(new ColliderComponent())
             .addComponent(new HitboxComponent().setLayer(PhysicsLayer.NPC))
-            .addComponent(new TouchAttackComponent(PhysicsLayer.PLAYER, 1.5f));
+            .addComponent(new TouchAttackComponent(PhysicsLayer.PLAYER, 1.5f))
+            .addComponent(new EnemyHealthDisplay());
     PhysicsUtils.setScaledCollider(ghostGPT, 0.9f, 0.4f);
 
     GhostGPTConfig config = configs.ghostGPT;
@@ -327,7 +328,8 @@ public class NPCFactory {
             .addComponent(new PhysicsComponent())
             .addComponent(new ColliderComponent())
             .addComponent(new HitboxComponent().setLayer(PhysicsLayer.NPC))
-            .addComponent(new TouchAttackComponent(PhysicsLayer.PLAYER, 1.5f));
+            .addComponent(new TouchAttackComponent(PhysicsLayer.PLAYER, 1.5f))
+            .addComponent(new EnemyHealthDisplay());
     PhysicsUtils.setScaledCollider(vroomba, 0.9f, 0.4f);
 
     VroombaConfig config = configs.vroomba;
