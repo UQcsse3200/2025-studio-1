@@ -29,7 +29,7 @@ public class EnemyHealthDisplay extends Component {
     private static final Color COLOR_BG  = Color.DARK_GRAY;
     private static final Color COLOR_HEALTH = Color.RED;
     protected Stage stage;
-    private float offsetY = 0.4f * 45f;
+    private float offsetY = 0.4f * 45f;  // default offset for enemy if not specified
 
     public EnemyHealthDisplay() {}
 
@@ -40,7 +40,6 @@ public class EnemyHealthDisplay extends Component {
     @Override
     public void create() {
         super.create();
-        logger.info("EnemyHealthDisplay created.");
         maxHealth = entity.getComponent(CombatStatsComponent.class).getHealth();
         // Health bar
         ProgressBar.ProgressBarStyle healthBarStyle = makeBarStyle(COLOR_HEALTH, BAR_HEIGHT);
@@ -48,14 +47,10 @@ public class EnemyHealthDisplay extends Component {
         healthBar.setWidth(BAR_WIDTH);
         healthBar.setValue(maxHealth);
         healthBar.setAnimateDuration(0f);
-        Vector2 pos = entity.getPosition();
-        Vector3 worldPos3 = new Vector3(pos.x, pos.y, 0);
-
+        // Set stage and add health bar
         stage = ServiceLocator.getRenderService().getStage();
         stage.addActor(healthBar);
-
-        Vector3 screenPos = stage.getCamera().project(worldPos3);
-        healthBar.setPosition(screenPos.x * 130f, screenPos.y * 80f);
+        // Update health bar if health values changed
         entity.getEvents().addListener("updateHealth", this::updateEnemyHealthUI);
     }
 
