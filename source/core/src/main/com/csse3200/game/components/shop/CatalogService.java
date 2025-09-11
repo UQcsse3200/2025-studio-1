@@ -31,4 +31,5 @@ public class CatalogService {
     public Entity spawnEntity(String itemKey) {
         return factory.apply(itemKey);
     }
+
 }
