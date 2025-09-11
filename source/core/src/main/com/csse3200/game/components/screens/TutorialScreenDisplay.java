@@ -13,6 +13,9 @@ import com.csse3200.game.ui.NeonStyles;
 import com.csse3200.game.ui.UIComponent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
 import java.util.HashSet;
 import java.util.List;
@@ -79,14 +82,23 @@ public class TutorialScreenDisplay extends UIComponent {
         table.add(descLabel).colspan(2).center().padBottom(20f);
         table.row();
 
+        Table animRow = new Table();
+        animRow.center();
+
+        // Buttons texture
+        Texture nextBtnTexture = new Texture("images/arrow-right.png");
+        ImageButton nextBtn = new ImageButton(new TextureRegionDrawable(new TextureRegion(nextBtnTexture)));
+        Texture prevBtnTexture = new Texture("images/arrow-left.png");
+        ImageButton prevBtn = new ImageButton(new TextureRegionDrawable(new TextureRegion(prevBtnTexture)));
+
         // Animation
+        AnimatedClipImage anim = null;
         if (step.getClip() != null) {
             try {
-                AnimatedClipImage anim = new AnimatedClipImage(step.getClip());
+                anim = new AnimatedClipImage(step.getClip());
                 anim.setScaling(Scaling.fit);
                 anim.setSize(800f, 450f);
-                table.add(anim).colspan(2).center().padBottom(20f).width(1100f).height(600f);
-                table.row();
+
             } catch (Exception ex) {
                 logger.error("Failed to load tutorial clip", ex);
                 table.add(new Label("Demo unavailable", skin)).colspan(2).center().padBottom(20f);
@@ -94,14 +106,18 @@ public class TutorialScreenDisplay extends UIComponent {
             }
         }
 
-        // Buttons
-        TextButton.TextButtonStyle style = neon.buttonRounded();
-        TextButton nextBtn = new TextButton("Next", style);
-        TextButton prevBtn = new TextButton("Previous", style);
-        TextButton mainMenuBtn = new TextButton("Main Menu", style);
+        animRow.add(prevBtn).size(108f, 108f).padRight(10f);
+        animRow.add(anim).size(1100f, 600f).padLeft(10f).padRight(10f);
+        animRow.add(nextBtn).size(108f, 108f).padLeft(10f);
 
-        nextBtn.getLabel().setFontScale(2f);
-        prevBtn.getLabel().setFontScale(2f);
+        prevBtn.setVisible(currentStep > 0);
+        nextBtn.setVisible(currentStep < steps.size() - 1);
+
+        table.add(animRow).colspan(2).center().padBottom(20f);
+        table.row();
+
+        TextButton.TextButtonStyle style = neon.buttonRounded();
+        TextButton mainMenuBtn = new TextButton("Main Menu", style);
         mainMenuBtn.getLabel().setFontScale(2.0f);
 
         // Button listeners
@@ -134,26 +150,9 @@ public class TutorialScreenDisplay extends UIComponent {
                     }
                 });
 
-        boolean hasPrev = currentStep > 0;
-        boolean hasNext = currentStep < steps.size() - 1;
 
-        Table btnRow = new Table();
-        btnRow.defaults().pad(4f);
-
-        if (hasPrev && hasNext) {
-            btnRow.add(prevBtn).left();
-            btnRow.add(nextBtn).right();
-        } else if (hasPrev) {
-            btnRow.add(prevBtn).center();
-        } else if (hasNext) {
-            btnRow.add();
-            btnRow.add(nextBtn).center();
-            btnRow.add();
-        }
-
-        table.add(btnRow).colspan(2).growX().padTop(10f);
         table.row();
-        table.add(mainMenuBtn).colspan(2).left().padLeft(30f).padTop(20f);
+        table.add(mainMenuBtn).colspan(2).center().padTop(20f);
     }
 
     /**
