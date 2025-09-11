@@ -88,8 +88,15 @@ public class PlayerActions extends Component {
     entity.getEvents().addListener("crouchStop", () -> crouching = false);
     entity.getEvents().addListener("sprintStart", this::startSprinting);
     entity.getEvents().addListener("sprintStop", this::stopSprinting);
+    //to selects the slot as per keyboard input
+    entity.getEvents().addListener("equipSlot1", () -> equipSlot(1));
+    entity.getEvents().addListener("equipSlot2", () -> equipSlot(2));
+    entity.getEvents().addListener("equipSlot3", () -> equipSlot(3));
+    entity.getEvents().addListener("equipSlot4", () -> equipSlot(4));
+    entity.getEvents().addListener("equipSlot5", () -> equipSlot(5));
 
-    // Find camera from any entity with CameraComponent
+
+      // Find camera from any entity with CameraComponent
     Array<Entity> entities = ServiceLocator.getEntityService().getEntities();
     for (Entity entity: entities) {
       if (entity.getComponent(CameraComponent.class) != null) {
@@ -395,5 +402,30 @@ public class PlayerActions extends Component {
       if (curr != null) return curr;
     }
     return entity.getComponent(WeaponsStatsComponent.class);
+  }
+
+    /**
+     * equipSlot(int slotIndex) selects the item slot in the inventory for the item that the player wants to equip
+     * @param slotIndex
+     */
+  private void equipSlot(int slotIndex){
+      InventoryComponent inventory = entity.getComponent(InventoryComponent.class);
+      if(inventory == null)return;  //player does not have any existing inventory
+
+      int inventoryIndex = slotIndex-1; //slot index for inventory are 0 based
+
+      Entity item = inventory.get(inventoryIndex);
+      if(item == null){
+          //if the inventory is empty prints a message on the console
+          Gdx.app.log("Inventory " , "No item in slot - " + slotIndex);
+          return;
+      }
+
+      //select the slot at inventoryIndex
+      inventory.selectSlot(inventoryIndex);
+      //equip the player with the weapon at that slot
+      inventory.setEquippedSlot(inventoryIndex);
+      //set that weapon as the current item in use in inventory
+      inventory.setCurrItem(item);
   }
 }
