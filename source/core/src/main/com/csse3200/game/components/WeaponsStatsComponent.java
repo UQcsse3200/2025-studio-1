@@ -21,7 +21,7 @@ public class WeaponsStatsComponent extends Component {
     private float coolDown;
     private boolean disableDamage;
     private int upgradeStage = 1;
-    private int maxUpgradeStage = 4;
+    private final int maxUpgradeStage = 4;
 
     /**
      * Construct a Weapons Stats Component (Attack System)
@@ -93,6 +93,14 @@ public class WeaponsStatsComponent extends Component {
     }
 
     /**
+     * Gets the max upgrades stage
+     * @return the max upgrades stage
+     */
+    public int getMaxUpgradeStage() {
+        return this.maxUpgradeStage;
+    }
+
+    /**
      * Checks if the weapon is already max upgraded
      * @return if the weapon is already max upgraded
      */
@@ -104,14 +112,12 @@ public class WeaponsStatsComponent extends Component {
      * Upgrades the weapon
      */
     public void upgrade() {
-        System.out.println(this.baseAttack);
-        if (this.upgradeStage < this.maxUpgradeStage) {
+        if (this.upgradeStage < maxUpgradeStage) {
             this.upgradeStage++;
             this.baseAttack *= 2;
         } else {
             System.out.println("Item already fully upgraded");
         }
-        System.out.println(this.baseAttack);
     }
 
     /**
