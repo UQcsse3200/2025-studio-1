@@ -148,7 +148,7 @@ public class ForestGameArea extends GameArea {
     //this.equipItem(pistol);
     //this.equipItem(lightsaber);
     //this.equipItem(dagger);
-    this.equipItem(rifle);
+    //this.equipItem(rifle);
 
     spawnGhosts();
     spawnGhostKing();
