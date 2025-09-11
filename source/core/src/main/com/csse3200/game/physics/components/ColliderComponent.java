@@ -1,6 +1,5 @@
 package com.csse3200.game.physics.components;
 
-import com.badlogic.gdx.math.Octree;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.csse3200.game.components.Component;
@@ -32,7 +31,13 @@ public class ColliderComponent extends Component {
       fixtureDef.shape = makeBoundingBox();
     }
 
-    Body physBody = entity.getComponent(PhysicsComponent.class).getBody();
+    PhysicsComponent physics = entity.getComponent(PhysicsComponent.class);
+    if (physics == null) {
+      logger.error("ColliderComponent requires PhysicsComponent, but none was found on entity: {}", entity);
+      return; // Prevent crash
+    }
+
+    Body physBody = physics.getBody();
     fixture = physBody.createFixture(fixtureDef);
   }
 
@@ -235,8 +240,14 @@ public class ColliderComponent extends Component {
   @Override
   public void dispose() {
     super.dispose();
-    Body physBody = entity.getComponent(PhysicsComponent.class).getBody();
-    if (physBody.getFixtureList().contains(fixture, true)) {
+    PhysicsComponent physics = entity.getComponent(PhysicsComponent.class);
+    if (physics == null) {
+      logger.error("ColliderComponent requires PhysicsComponent during dispose, but none was found on entity: {}", entity);
+      return;
+    }
+
+    Body physBody = physics.getBody();
+    if (physBody != null && physBody.getFixtureList().contains(fixture, true)) {
       physBody.destroyFixture(fixture);
     }
   }

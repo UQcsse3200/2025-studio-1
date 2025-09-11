@@ -1,79 +1,189 @@
 package com.csse3200.game.components;
 
+import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.areas.ForestGameArea;
 import com.csse3200.game.areas.GameArea;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
+import com.csse3200.game.entities.factories.system.RenderFactory;
 import com.csse3200.game.extensions.GameExtension;
 import com.csse3200.game.services.ServiceLocator;
-import org.junit.Assert;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
+import com.csse3200.game.rendering.RenderService;
+import com.csse3200.game.rendering.Renderer;
+import com.csse3200.game.physics.PhysicsEngine;
+import com.csse3200.game.physics.PhysicsService;
+
+import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import java.util.ArrayList;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(GameExtension.class)
+@DisplayName("Health System - CombatStatsComponent")
 class CombatStatsComponentTest {
-  CombatStatsComponent combat;
-  CombatStatsComponent enemy;
 
-  @BeforeEach
-  void setup() {
-    combat = new CombatStatsComponent(100, 20);
-    enemy = new CombatStatsComponent(100, 20);
+  // --- helper ---
+  private static class HealthSpy {
+    final AtomicInteger last = new AtomicInteger(-1);
+    final AtomicInteger cnt = new AtomicInteger(0);
+    void onUpdate(Integer h) { last.set(h); cnt.incrementAndGet(); }
   }
 
-  @Test
-  void shouldSetGetHealth() {
-    assertEquals(100, combat.getHealth());
-
-    combat.setHealth(150);
-    assertEquals(150, combat.getHealth());
-
-    combat.setHealth(-50);
-    assertEquals(0, combat.getHealth());
+  /** Attach a component to an Entity and subscribe a spy to "updateHealth". */
+  private static HealthSpy attachWithHealthSpy(CombatStatsComponent combat) {
+    HealthSpy spy = new HealthSpy();
+    Entity entity = new Entity().addComponent(combat);
+    entity.getEvents().addListener("updateHealth", spy::onUpdate);
+    entity.create();
+    return spy;
   }
 
-  @Test
-  void shouldCheckIsDead() {
-    assertFalse(combat.isDead());
+  // ---=---
+  @Nested
+  @DisplayName("Objective: Verify initialisation")
+  class InitTests {
+    @Test
+    void healthAttackMax_areInitialised() {
+      CombatStatsComponent combat = new CombatStatsComponent(100);
+      assertEquals(100, combat.getHealth());
+      assertEquals(100, combat.getMaxHealth());
+      assertFalse(combat.isDead());
+    }
 
-    combat.setHealth(0);
-    assertTrue(combat.isDead());
+    @Test
+    void zeroHealth_isDeadImmediately() {
+      CombatStatsComponent combat = new CombatStatsComponent(0);
+      assertEquals(0, combat.getHealth());
+      assertTrue(combat.isDead());
+    }
+
+    @Test
+    void negativeInitialHealth_clampsHealth_andMaxHealthToZero() {
+      CombatStatsComponent combat = new CombatStatsComponent(-5);
+      assertEquals(0, combat.getHealth());
+      assertEquals(0, combat.getMaxHealth());
+      assertTrue(combat.isDead());
+    }
   }
 
-  @Test
-  void shouldAddHealth() {
-    combat.addHealth(-500);
-    assertEquals(0, combat.getHealth());
+  // ---=---
+  @Nested
+  @DisplayName("Objective: setHealth clamps at lower bound and fires event")
+  class SetHealthTests {
+    @Test
+    void positiveSet_updatesAndFiresEvent_withClampToMax() {
+      CombatStatsComponent combat = new CombatStatsComponent(100);
+      HealthSpy spy = attachWithHealthSpy(combat);
 
-    combat.addHealth(100);
-    combat.addHealth(-20);
-    assertEquals(80, combat.getHealth());
+      combat.setHealth(150); // attempt to set above max
+      assertEquals(100, combat.getHealth());
+      assertEquals(100, spy.last.get());
+      assertEquals(1, spy.cnt.get());
+    }
+
+    @Test
+    void negativeSet_clampsToZero_andFiresEventOnce() {
+      CombatStatsComponent combat = new CombatStatsComponent(100);
+      HealthSpy spy = attachWithHealthSpy(combat);
+
+      combat.setHealth(-50);
+      assertEquals(0, combat.getHealth());
+      assertEquals(0, spy.last.get());
+      assertEquals(1, spy.cnt.get());
+      assertTrue(combat.isDead());
+    }
   }
 
-  @Test
-  void shouldSetGetBaseAttack() {
-    assertEquals(20, combat.getBaseAttack());
+  // ---=---
+  @Nested
+  @DisplayName("Objective: addHealth adjusts via setHealth (heal and damage)")
+  class AddHealthTests {
+    @Test
+    void bigDamage_overkill_clampsToZero() {
+      CombatStatsComponent combat = new CombatStatsComponent(100);
+      HealthSpy spy = attachWithHealthSpy(combat);
 
-    combat.setBaseAttack(150);
-    assertEquals(150, combat.getBaseAttack());
+      combat.addHealth(-200);
+      assertEquals(0, combat.getHealth());
+      assertEquals(0, spy.last.get());
+      assertTrue(combat.isDead());
+    }
 
-    combat.setBaseAttack(-50);
-    assertEquals(150, combat.getBaseAttack());
+    @Test
+    void healingBeyondMax_isCapped() {
+      CombatStatsComponent combat = new CombatStatsComponent(50);
+      combat.addHealth(200); // overheal
+      assertEquals(50, combat.getHealth());
+    }
   }
 
+  // ---=---
+  @Nested
+  @DisplayName("Objective: Death state toggles correctly")
+  class DeathStateTests {
+    @Test
+    void reducedToZero_marksDead() {
+      CombatStatsComponent combat = new CombatStatsComponent(1);
+      combat.addHealth(-1);
+      assertEquals(0, combat.getHealth());
+      assertTrue(combat.isDead());
+    }
+
+    @Test
+    void reviveFromZero_allowsHealIfMaxPositive() {
+      CombatStatsComponent combat = new CombatStatsComponent(100);
+      combat.setHealth(0);
+      assertTrue(combat.isDead());
+
+      combat.addHealth(+10);
+      assertEquals(10, combat.getHealth());
+      assertFalse(combat.isDead());
+    }
+  }
+
+  // ---=---
+  @Nested
+  @DisplayName("Objective: setMaxHealth behaviour and event")
+  class MaxHealthTests {
+    @Test
+    void updatesMax_andFiresEvent() {
+      CombatStatsComponent combat = new CombatStatsComponent(100);
+      AtomicInteger lastMax = new AtomicInteger(-1);
+      Entity entity = new Entity().addComponent(combat);
+      entity.getEvents().addListener("updateMaxHealth", lastMax::set);
+      entity.create();
+
+      combat.setMaxHealth(250);
+      assertEquals(250, combat.getMaxHealth());
+      assertEquals(250, lastMax.get());
+    }
+
+    @Test
+    void setMaxHealth_negative_clampsToZero_andFiresEvent() {
+      CombatStatsComponent combat = new CombatStatsComponent(100);
+      AtomicInteger lastMax = new AtomicInteger(-1);
+      Entity entity = new Entity().addComponent(combat);
+      entity.getEvents().addListener("updateMaxHealth", lastMax::set);
+      entity.create();
+
+      combat.setMaxHealth(-10);
+      assertEquals(0, combat.getMaxHealth());
+      assertEquals(0, lastMax.get());
+    }
+  }
+
+  // ---=---
   @Test
   void enemyShouldBeDeadWhenHealthZero() {
+    CombatStatsComponent enemy = new CombatStatsComponent(50);
     assertFalse(enemy.isDead());
-    enemy.addHealth(-100);
+    enemy.addHealth(-50);
     assertEquals(0, enemy.getHealth());
     assertTrue(enemy.isDead());
     // Overkill
@@ -82,89 +192,27 @@ class CombatStatsComponentTest {
     assertTrue(enemy.isDead());
   }
 
-
   @Test
-  void hitRemovesHealth() {
-    //Damage an entity and check the new health is correct
-    Entity victim = new Entity();
-    victim.addComponent(new CombatStatsComponent(100, 0));
-    assertEquals(100, victim.getComponent(CombatStatsComponent.class).getHealth());
-    victim.getComponent(CombatStatsComponent.class).hit(new CombatStatsComponent(0, 50));
-    assertEquals(50, victim.getComponent(CombatStatsComponent.class).getHealth());
-  }
-
-  @Test
-  void shouldSetGetCooldown() {
-    assertEquals(0, combat.getCoolDown());
-    combat.setCoolDown(100);
-    assertEquals(100, combat.getCoolDown());
-    combat.setCoolDown(-100);
-    assertEquals(0, combat.getCoolDown());
+  void takeDamageRemovesHealth() {
+    CombatStatsComponent combat = new CombatStatsComponent(100);
+    assertEquals(100, combat.getHealth());
+    combat.takeDamage(50);
+    assertEquals(50, combat.getHealth());
   }
 
   @Test
   void deathHitRemovesEntity() {
-    //Tests if killing an entity removes it from the game
     Entity victim = new Entity();
-    victim.addComponent(new CombatStatsComponent(10, 10));
-    GameArea area = new ForestGameArea(new TerrainFactory(new CameraComponent()));
+    victim.addComponent(new CombatStatsComponent(10));
+    GameArea area = new ForestGameArea(new TerrainFactory(new CameraComponent()), new CameraComponent());
     ServiceLocator.registerGameArea(area);
     ServiceLocator.registerEntityService(new EntityService());
     area.spawnEntity(victim);
-    // Add a listener to simulate death removal as in the real game
+
     victim.getEvents().addListener("death", () -> area.removeEntity(victim));
-    victim.getComponent(CombatStatsComponent.class).hit(new CombatStatsComponent(0, 10));
+    victim.getComponent(CombatStatsComponent.class).takeDamage(10);
+
     assertTrue(victim.getComponent(CombatStatsComponent.class).isDead());
     assertEquals(new ArrayList<>(), area.getEntities());
-
-  }
-
-  @Test
-  void shouldTakeDirectDamage() {
-    combat.hit(20);
-    assertEquals(80, combat.getHealth()); 
-  }
-
-  @Test
-  void shouldTakeDamageFromAttacker(){
-    combat.hit(enemy);
-    assertEquals(80, combat.getHealth());
-  }
-
-  @Test
-  void shouldSetGetMaxHealth() {
-    assertEquals(100, combat.getMaxHealth());
-    combat.setMaxHealth(200);
-    assertEquals(200, combat.getMaxHealth());
-  }
-
-  @Test
-  void nullAttackerDoesNothing() {
-    combat.hit(null);
-    assertEquals(100, combat.getHealth());
-  }
-
-  @Test
-  void applyDamageToDeadDoesNothing() {
-    combat.hit(100);
-    assertTrue(combat.isDead());
-    assertEquals(0, combat.getHealth());
-    combat.hit(1000);
-    assertEquals(0, combat.getHealth());
-  }
-
-  @Test
-  void testAmmo() {
-
-    combat.setAmmo(0);
-    Assert.assertEquals(combat.getAmmo(), 0);
-
-    combat.setAmmo(100);
-    Assert.assertEquals(combat.getAmmo(), 100);
-  }
-
-  @AfterEach
-  void cleanup() {
-    ServiceLocator.clear();
   }
 }
