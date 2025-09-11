@@ -27,7 +27,7 @@ public class TutorialScreen extends ScreenAdapter {
     private final GdxGame game;
     private final Renderer renderer;
     private static final String[] tutorialTextures = {
-            "images/menu_background.png"
+            "images/background.png"
     };
 
     public TutorialScreen(GdxGame game) {
@@ -57,7 +57,7 @@ public class TutorialScreen extends ScreenAdapter {
         Stage stage = ServiceLocator.getRenderService().getStage();
 
         Texture bgTex = ServiceLocator.getResourceService()
-                .getAsset("images/menu_background.png", Texture.class);
+                .getAsset("images/background.png", Texture.class);
         Image bg = new Image(new TextureRegionDrawable(bgTex));
         bg.setFillParent(true);
         bg.setScaling(Scaling.fill);
