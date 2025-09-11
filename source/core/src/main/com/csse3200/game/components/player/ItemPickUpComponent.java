@@ -1,11 +1,7 @@
 package com.csse3200.game.components.player;
 
-
-
-import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.areas.GameArea;
-import com.csse3200.game.areas.ForestGameArea;
 import com.csse3200.game.components.Component;
 import com.csse3200.game.components.ItemComponent;
 import com.badlogic.gdx.physics.box2d.Fixture;
@@ -17,6 +13,9 @@ import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.physics.components.PhysicsComponent;
 import com.badlogic.gdx.physics.box2d.BodyDef;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 /**
  * Component that allows an entity to pick up items when in proximity.
@@ -24,16 +23,18 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
  */
 
 public class ItemPickUpComponent extends Component {
-//     Reference to the player's inventory used to store picked up items.
+    // Reference to the player's inventory used to store picked up items.
     private InventoryComponent inventory;
-//     The item entity currently in collision range and eligible to be picked up.
+    // The item entity currently in collision range and eligible to be picked up.
     private Entity targetItem;
-//     The currently focused inventory slot (set via number key events).
+    // The currently focused inventory slot (set via number key events).
     private int focusedIndex = -1;
-//     Constructs an ItemPickUpComponent with a reference to the player's inventory.
+    // Constructs an ItemPickUpComponent with a reference to the player's inventory.
     public ItemPickUpComponent(InventoryComponent inventory) {
         this.inventory = inventory;
     }
+    // Constructs a private Logger for this class.
+    private static final Logger logger = LoggerFactory.getLogger(ItemPickUpComponent.class);
 
     /**
      * Called when the component is created. Registers listeners for relevant player events:
@@ -48,9 +49,9 @@ public class ItemPickUpComponent extends Component {
         entity.getEvents().addListener("collisionStart", this::onCollisionStart);
         entity.getEvents().addListener("collisionEnd", this::onCollisionEnd);
         entity.getEvents().addListener("pick up", this::onPickupRequest);
-
         entity.getEvents().addListener("focus item", this::onFocusItem);
         entity.getEvents().addListener("drop focused", this::onDropFocused);
+        logger.debug("ItemPickUpComponent listeners registered");
     }
 
     /**
@@ -62,13 +63,14 @@ public class ItemPickUpComponent extends Component {
     private void onCollisionStart(Fixture me, Fixture other) {
         Object data = other.getBody().getUserData();
         if (!(data instanceof BodyUserData userData)) {
+            logger.trace("collisionStart: no BodyUserData on other fixture");
             return;
         }
 
         Entity otherEntity = userData.entity;
         if (otherEntity.getComponent(ItemComponent.class) != null) {
             targetItem = otherEntity;
-            System.out.println("Collision with item: " + targetItem);
+            logger.trace("collisionStart: collided with item {}", targetItem);
         }
     }
 
@@ -80,12 +82,15 @@ public class ItemPickUpComponent extends Component {
      */
     private void onCollisionEnd(Fixture me, Fixture other) {
         Object data = other.getBody().getUserData();
-        if (!(data instanceof BodyUserData userData)) return;
+        if (!(data instanceof BodyUserData userData)){
+            logger.trace("collisionEnd: no BodyUserData on other fixture");
+            return;
+        }
 
         Entity otherEntity = userData.entity;
         if (targetItem == otherEntity) {
             targetItem = null;
-            System.out.println("Collision ended with item: " + otherEntity);
+            logger.debug("collisionEnd: cleared target for {}", otherEntity);
         }
     }
 
@@ -94,7 +99,7 @@ public class ItemPickUpComponent extends Component {
      * If there is a valid target item in range, attempts to add it to the inventory.
      */
     private void onPickupRequest() {
-        System.out.println("Pick up event received. targetItem = " + targetItem);
+        logger.debug("pick up event: current target={}", targetItem);
         if (targetItem != null) {
             pickUpItem(targetItem);
         }
@@ -106,15 +111,18 @@ public class ItemPickUpComponent extends Component {
      * @param item that player is currently touching
      */
     private void pickUpItem(Entity item) {
-        if (item == null) return;
+        if (item == null) {
+            logger.warn("pickUpItem called with null item");
+            return;
+        }
 
         boolean added = inventory.addItem(item);
         if (added) {
             item.dispose();
             targetItem = null;
-            System.out.println("Item picked up and added to inventory!");
+            logger.info("Picked up item and added to inventory");
         } else {
-            System.out.println("Inventory full. Cannot pick up item.");
+            logger.info("Inventory full. Cannot pick up item");
         }
     }
 
@@ -128,10 +136,10 @@ public class ItemPickUpComponent extends Component {
     private void onFocusItem(int index) {
         if (index >= 0 && index < 5) {
             focusedIndex = index;
+            logger.debug("Focus set to slot {}", focusedIndex);
         } else {
             focusedIndex = -1;
         }
-        System.out.println("Focused slot: " + focusedIndex);
     }
 
     /**
@@ -151,7 +159,7 @@ public class ItemPickUpComponent extends Component {
         // Get the entity stored in the currently focused inventory slot
         Entity item = inventory.get(focusedIndex);
         if (item == null) {
-            System.out.println("Focused slot empty, nothing to drop.");
+            logger.debug("Drop ignored: focused slot {} empty", focusedIndex);
             return;
         }
         // Extract the texture path from the item
@@ -160,12 +168,13 @@ public class ItemPickUpComponent extends Component {
         // Remove the item from the inventory
         boolean removed = inventory.remove(focusedIndex);
         if (!removed) {
-            //Failed to remove from inventory at index
+            logger.warn("Drop failed: could not remove item at index {}", focusedIndex);
             return;
         }
         focusedIndex = -1;
         // If no texture info was stored, skip respawning to the world
         if (tex == null) {
+            logger.debug("Drop: no texture info on item; skipping world respawn");
             return;
         }
         // Attempt to recreate a new item entity from the stored texture
@@ -177,17 +186,22 @@ public class ItemPickUpComponent extends Component {
         PhysicsComponent phys = newItem.getComponent(PhysicsComponent.class);
         if (phys != null) phys.setBodyType(BodyDef.BodyType.StaticBody);
 
+        // Copy the player's current center position
         Vector2 playerPos = entity.getCenterPosition().cpy();
+        // Define a vertical offset so the item spawns slightly below the player
         float dropOffsetY = -1.2f;
+        // Calculate the final drop position by applying the offset
         Vector2 dropPos = new Vector2(playerPos.x, playerPos.y + dropOffsetY);
-
         newItem.setPosition(dropPos);
 
+        // Get the current active GameArea
         GameArea area = ServiceLocator.getGameArea();
         if (area != null) {
             area.spawnEntity(newItem);
+            logger.debug("Respawned dropped item at world pos {}", dropPos);
+        } else {
+            logger.error("Drop: no active GameArea; cannot spawn item");
         }
-
     }
 
         /**
@@ -200,6 +214,7 @@ public class ItemPickUpComponent extends Component {
          * texture does not correspond to a known item type.
          */
     private Entity createItemFromTexture(String texture) {
+        logger.trace("createItemFromTexture({})", texture);
         if (texture.endsWith("dagger.png"))            return WeaponsFactory.createWeapon(Weapons.DAGGER);
         if (texture.endsWith("pistol.png"))            return WeaponsFactory.createWeapon(Weapons.PISTOL);
         if (texture.endsWith("rifle.png"))             return WeaponsFactory.createWeapon(Weapons.RIFLE);
