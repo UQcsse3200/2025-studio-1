@@ -217,11 +217,13 @@ public class InventoryComponent extends Component {
       return currItem != null ? currItem.getComponent(WeaponsStatsComponent.class) : null;
   }
 
+    /**
+     * setCurrItem(Entity item) sets the selected as the selected item in the inventory
+     * @param item is the one which is to be set as the current item in use
+     */
 
 
-  public void getCurrItem(Entity item){
-      this.currItem = item;
-  }
+  public void setCurrItem(Entity item){this.currItem = item;}
 
     /**
      *
@@ -241,14 +243,20 @@ public class InventoryComponent extends Component {
 
 
     @Override
+
     /**
-     * When the player presses a keyboard key the KeyboardInputComponent fires "focus item"
-     * InventoryComponent receives the event and update the selectedSlot
+     * whenever the triggerSelectItem() event is triggered InventoryComponent will run onFocusItem()
+     * and update which inventory slot is selected.
      */
     public void create() {
         super.create();
         entity.getEvents().addListener("focus item", this::onFocusItem);
     }
+
+    /**
+     * onFocusItem(int slotIndex) puts focus on the weapon item in the inventory that player gives slotIndex for
+     * @param slotIndex is the slot number of the weapon selected
+     */
 
     private void onFocusItem(int slotIndex) {
         selectSlot(slotIndex);
