@@ -2,6 +2,7 @@ package com.csse3200.game.components.enemy;
 
 import com.badlogic.gdx.utils.Timer;
 import com.csse3200.game.areas.ForestGameArea;
+import com.csse3200.game.areas.GameArea;
 import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.components.npc.GhostAnimationController;
 import com.csse3200.game.entities.Entity;
@@ -17,7 +18,7 @@ public class EnemyWaves {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final int maxWaves;
     private final int roomNumber;
-    private final ForestGameArea gameArea;
+    private final GameArea gameArea;
 
     private static int maxEnemies = 4;
     private static float scalingFactor = 1f;
@@ -29,7 +30,7 @@ public class EnemyWaves {
     private int waveNumber;
     private long waveEndTime;
 
-    public EnemyWaves(int roomNumber, ForestGameArea gameArea) {
+    public EnemyWaves(int roomNumber, GameArea gameArea) {
         this.roomNumber = roomNumber;
         this.gameArea = gameArea;
         this.waveNumber = 0;
