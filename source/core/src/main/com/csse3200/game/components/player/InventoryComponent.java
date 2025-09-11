@@ -11,7 +11,8 @@ import java.util.ArrayList;
 
 /**
  * A component intended to be used by the player to track their inventory.
- * Currently, has functionality for indexing, getting, setting, and removing from
+ * Currently, has functionality for indexing, getting, setting, and removing
+ * from
  * the players inventory, also stores the processor amount.
  * Can also be used as a more generic component for other entities.
  */
@@ -29,6 +30,7 @@ public class InventoryComponent extends Component {
   /**
    * Constructs an inventory for the player and a beginning currency amount
    * to start with.
+   *
    * @param processor The number of processors that the inventory is starting with
    */
   public InventoryComponent(int processor) {
@@ -42,8 +44,9 @@ public class InventoryComponent extends Component {
 
   /**
    * Returns a copy of the players current inventory.
+   *
    * @return An {@code ArrayList<Entity>} containing the entities in the
-   * players inventory.
+   *         players inventory.
    */
   public ArrayList<Entity> getInventory() {
     return new ArrayList<>(this.items);
@@ -51,8 +54,9 @@ public class InventoryComponent extends Component {
 
   /**
    * Returns a copy of the current inventory textures
+   *
    * @return An {@code ArrayList<String>} containing the texture paths of
-   * the players inventory
+   *         the players inventory
    */
   public ArrayList<String> getTextures() {
     return new ArrayList<>(this.itemTexs);
@@ -60,6 +64,7 @@ public class InventoryComponent extends Component {
 
   /**
    * Returns the number of items currently in the inventory
+   *
    * @return The number of items in the inventory
    */
   public int getSize() {
@@ -68,8 +73,10 @@ public class InventoryComponent extends Component {
 
   /**
    * Returns the item at the given index.
+   *
    * @param index The position of the item in the players inventory (0..4)
-   * @return The item at the given position, NULL if nothing there or index not in [0,4]
+   * @return The item at the given position, NULL if nothing there or index not in
+   *         [0,4]
    */
   public Entity get(int index) {
     if (index >= this.maxCapacity || index < this.minCapacity) {
@@ -80,8 +87,10 @@ public class InventoryComponent extends Component {
 
   /**
    * Returns the texture for the item at the given index
+   *
    * @param index The position of the item in the players inventory (0..4)
-   * @return The item at the given position, NULL if nothing there or index not in [0,4]
+   * @return The item at the given position, NULL if nothing there or index not in
+   *         [0,4]
    */
   public String getTex(int index) {
     if (index >= this.maxCapacity || index < this.minCapacity) {
@@ -93,6 +102,7 @@ public class InventoryComponent extends Component {
   /**
    * Adds an item to the next free inventory position for the player to hold
    * i.e. addItem(d) [a, b, _, c] -> [a, b, _, c, d]
+   *
    * @param item An item to store in the players inventory
    * @return true if successful, false otherwise
    */
@@ -108,10 +118,11 @@ public class InventoryComponent extends Component {
   /**
    * sets the provided item to the inventory in positions 0 to 4 to be the
    * given item.
+   *
    * @param index The index of the inventory 0 to 4
-   * @param item An item to store in the players inventory
+   * @param item  An item to store in the players inventory
    * @return true if the item was successfully set, false otherwise or if
-   * something is already there
+   *         something is already there
    */
   public Boolean setItem(int index, Entity item) {
     if (this.inventoryCount >= this.maxCapacity)
@@ -137,12 +148,13 @@ public class InventoryComponent extends Component {
   /**
    * Removes the item at the given index (must be between 0 and 4) and replaces it
    * with null value.
+   *
    * @param index the position of the item to be removed.
    * @return true if successful, false otherwise
    */
   public Boolean remove(int index) {
     if (this.inventoryCount == this.minCapacity ||
-            (index >= this.maxCapacity || index < this.minCapacity)) {
+        (index >= this.maxCapacity || index < this.minCapacity)) {
       return false;
     }
 
@@ -156,6 +168,7 @@ public class InventoryComponent extends Component {
 
   /**
    * Checks if the current inventory is empty or not
+   *
    * @return true if the inventory is empty, false otherwise
    */
   public Boolean isEmpty() {
@@ -164,6 +177,7 @@ public class InventoryComponent extends Component {
 
   /**
    * Returns true if the players inventory is full, false otherwise
+   *
    * @return true if the inventory is full, false otherwise
    */
   public Boolean isFull() {
@@ -172,6 +186,7 @@ public class InventoryComponent extends Component {
 
   /**
    * Returns the player's processor's.
+   *
    * @return how much processor player has
    */
   public int getProcessor() {
@@ -180,8 +195,10 @@ public class InventoryComponent extends Component {
 
   /**
    * Returns if the player has a certain amount of processor's.
+   *
    * @param processor required amount of processor's
-   * @return player has greater than or equal to the required amount of processor's
+   * @return player has greater than or equal to the required amount of
+   *         processor's
    */
   public Boolean hasProcessor(int processor) {
     return this.processor >= processor;
@@ -189,12 +206,14 @@ public class InventoryComponent extends Component {
 
   /**
    * Sets the player's processor's. Processor's has a minimum bound of 0.
+   *
    * @param processor processor
    */
   public void setProcessor(int processor) {
     int prev = this.processor;
     this.processor = Math.max(processor, 0);
-    // Fire event only after entity attached (not during constructor before setEntity)
+    // Fire event only after entity attached (not during constructor before
+    // setEntity)
     if (entity != null && prev != this.processor) {
       entity.getEvents().trigger("updateProcessor", this.processor);
     }
@@ -202,6 +221,7 @@ public class InventoryComponent extends Component {
 
   /**
    * Adds to the player's processors. The amount added can be negative.
+   *
    * @param processor processor to add
    */
   public void addProcessor(int processor) {
@@ -210,11 +230,11 @@ public class InventoryComponent extends Component {
 
   /**
    * Get the WeaponsStatsComponent for the current item
+   *
    * @return Weapon Stats of current item
    */
   public WeaponsStatsComponent getCurrItemStats() {
-      return currItem != null ? currItem.getComponent(WeaponsStatsComponent.class) : null;
+    return currItem != null ? currItem.getComponent(WeaponsStatsComponent.class) : null;
   }
 
 }
-
