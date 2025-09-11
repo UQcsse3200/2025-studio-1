@@ -25,7 +25,7 @@ public class EnemyProjectileDamageComponent extends Component {
     @Override
     public void create() {
         entity.getEvents().addListener("collisionStart", this::onCollisionStart);
-        Gdx.app.log(TAG, "attached to projectile entity id=" + entity.getId());
+        //Gdx.app.log(TAG, "attached to projectile entity id=" + entity.getId());
     }
 
     private void onCollisionStart(Object a, Object b) {
@@ -33,18 +33,18 @@ public class EnemyProjectileDamageComponent extends Component {
         Entity eb = toEntity(b);
 
         // Log initial collision parameters
-        Gdx.app.log(TAG, "collisionStart raw: a=" + klass(a) + " b=" + klass(b));
-        Gdx.app.log(TAG, "toEntity: ea=" + idOf(ea) + " eb=" + idOf(eb));
+        //Gdx.app.log(TAG, "collisionStart raw: a=" + klass(a) + " b=" + klass(b));
+        //Gdx.app.log(TAG, "toEntity: ea=" + idOf(ea) + " eb=" + idOf(eb));
 
         if (ea == null || eb == null) {
-            Gdx.app.log(TAG, "skip: one side cannot map to Entity");
+            //Gdx.app.log(TAG, "skip: one side cannot map to Entity");
             return;
         }
 
         // Identify "who am I?"
         Entity me = (ea == entity) ? ea : (eb == entity ? eb : null);
         if (me == null) {
-            Gdx.app.log(TAG, "skip: neither side is this projectile (event from others)");
+            //Gdx.app.log(TAG, "skip: neither side is this projectile (event from others)");
             return;
         }
         Entity other = (me == ea) ? eb : ea;
@@ -52,18 +52,18 @@ public class EnemyProjectileDamageComponent extends Component {
         // Log both layers
         int meLayer = layerOf(me);
         int otherLayer = layerOf(other);
-        Gdx.app.log(TAG, "layers: me=" + layerName(meLayer) + " other=" + layerName(otherLayer));
+        //Gdx.app.log(TAG, "layers: me=" + layerName(meLayer) + " other=" + layerName(otherLayer));
 
         // Only affect PLAYER layer
         if (otherLayer != PhysicsLayer.PLAYER) {
-            Gdx.app.log(TAG, "skip: other is not PLAYER layer");
+            //Gdx.app.log(TAG, "skip: other is not PLAYER layer");
             return;
         }
 
         // Apply damage
         CombatStatsComponent stats = other.getComponent(CombatStatsComponent.class);
         if (stats == null) {
-            Gdx.app.log(TAG, "skip: PLAYER has no CombatStatsComponent");
+            //Gdx.app.log(TAG, "skip: PLAYER has no CombatStatsComponent");
             return;
         }
 
@@ -75,12 +75,12 @@ public class EnemyProjectileDamageComponent extends Component {
         other.getEvents().trigger("healthChange", -damage);
 
         int after = stats.getHealth();
-        Gdx.app.log(TAG, "HIT player for " + damage + "hp  (" + before + " -> " + after + ")");
+        //Gdx.app.log(TAG, "HIT player for " + damage + "hp  (" + before + " -> " + after + ")");
 
         // Destroy projectile
         Gdx.app.postRunnable(() -> {
             if (entity != null) {
-                Gdx.app.log(TAG, "dispose projectile id=" + entity.getId());
+                //Gdx.app.log(TAG, "dispose projectile id=" + entity.getId());
                 entity.dispose();
             }
         });
