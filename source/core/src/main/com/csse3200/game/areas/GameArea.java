@@ -68,11 +68,40 @@ public abstract class GameArea implements Disposable {
    * Start enemy waves from terminal command by typing "waves".
    */
   public void startWaves(Entity player) {
-    if (wavesManager == null) {
-      // Use a higher room number so EnemyWaves logic spawns GhostGPT instead of airborne Deepspin
-      wavesManager = new EnemyWaves(this, player);
+    if (wavesManager == null || wavesManager.isFinished()) {
+      int room = getRoomNumber();
+      int maxWaves = room > 4 ? 2 : 1; // mimic original behaviour: higher rooms get 2 waves
+      wavesManager = new EnemyWaves(maxWaves, this, player);
+      Gdx.app.log("GameArea", "Initializing waves: room=" + room + " maxWaves=" + maxWaves);
     }
     wavesManager.startWave();
+  }
+
+  protected int getRoomNumber() {
+    String name = getClass().getSimpleName();
+    // Look for digits after Floor or Room (e.g., Floor3GameArea, Room2Area)
+    java.util.regex.Matcher m = java.util.regex.Pattern.compile("(?:Floor|Room)(\\d+)").matcher(name);
+    if (m.find()) {
+      try { return Integer.parseInt(m.group(1)); } catch (NumberFormatException ignored) {}
+    }
+    // Fallback: default first floor
+    return 1;
+  }
+
+  protected void spawnEntityAt(
+      Entity entity, GridPoint2 tilePos, boolean centerX, boolean centerY) {
+    Vector2 worldPos = terrain.tileToWorldPosition(tilePos);
+    float tileSize = terrain.getTileSize();
+
+    if (centerX) {
+      worldPos.x += (tileSize / 2) - entity.getCenterPosition().x;
+    }
+    if (centerY) {
+      worldPos.y += (tileSize / 2) - entity.getCenterPosition().y;
+    }
+
+    entity.setPosition(worldPos);
+    spawnEntity(entity);
   }
 
   /**
@@ -187,20 +216,5 @@ public abstract class GameArea implements Disposable {
     float x = MathUtils.random(minX, maxX);
     float y = MathUtils.random(minY, maxY);
     return new Vector2(x, y);
-  }
-  protected void spawnEntityAt(
-      Entity entity, GridPoint2 tilePos, boolean centerX, boolean centerY) {
-    Vector2 worldPos = terrain.tileToWorldPosition(tilePos);
-    float tileSize = terrain.getTileSize();
-
-    if (centerX) {
-      worldPos.x += (tileSize / 2) - entity.getCenterPosition().x;
-    }
-    if (centerY) {
-      worldPos.y += (tileSize / 2) - entity.getCenterPosition().y;
-    }
-
-    entity.setPosition(worldPos);
-    spawnEntity(entity);
   }
 }
