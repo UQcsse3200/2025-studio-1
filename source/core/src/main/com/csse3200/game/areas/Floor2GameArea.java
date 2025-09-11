@@ -76,19 +76,9 @@ public class Floor2GameArea extends GameArea {
 
   @Override
   public void dispose() {
+    // Avoid unloading area assets here to prevent race conditions during transitions.
+    // Screen-level disposal will handle unloading when the whole screen exits.
     super.dispose();
-    ResourceService rs = ServiceLocator.getResourceService();
-    // Keep shared assets (like player atlas) loaded; unload only local visuals.
-    rs.unloadAssets(new String[] {
-        "images/LobbyWIP.png",
-        "images/tree.png",
-        "foreg_sprites/general/LongFloor.png",
-        "foreg_sprites/general/ThickFloor.png",
-        "foreg_sprites/general/SmallSquare.png",
-        "foreg_sprites/general/SmallStair.png",
-        "foreg_sprites/general/SquareTile.png",
-        "images/keycard_lvl2.png"
-    });
   }
 
   private void spawnTerrain() {
@@ -100,28 +90,8 @@ public class Floor2GameArea extends GameArea {
     Bounds b = getCameraBounds(cameraComponent);
     addSolidWallLeft(b, WALL_WIDTH);
     addSolidWallRight(b, WALL_WIDTH);
-    addHorizontalDoorTop(b, WALL_WIDTH, this::loadRoom3);
 
-    // Bottom door slightly above ground
-    float doorWidth = Math.max(1f, b.viewWidth * 0.2f);
-    float doorX = b.camPos.x - doorWidth / 2f;
-    float leftSegWidth = Math.max(0f, doorX - b.leftX);
-    if (leftSegWidth > 0f) {
-      Entity bottomLeft = ObstacleFactory.createWall(leftSegWidth, WALL_WIDTH);
-      bottomLeft.setPosition(b.leftX, b.bottomY);
-      spawnEntity(bottomLeft);
-    }
-    float rightSegStart = doorX + doorWidth;
-    float rightSegWidth = Math.max(0f, (b.leftX + b.viewWidth) - rightSegStart);
-    if (rightSegWidth > 0f) {
-      Entity bottomRight = ObstacleFactory.createWall(rightSegWidth, WALL_WIDTH);
-      bottomRight.setPosition(rightSegStart, b.bottomY);
-      spawnEntity(bottomRight);
-    }
-    Entity bottomDoor = ObstacleFactory.createDoorTrigger(doorWidth, WALL_WIDTH);
-    bottomDoor.setPosition(doorX, b.bottomY + 0.1f);
-    bottomDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadPreviousLevel));
-    spawnEntity(bottomDoor);
+
 
     // Left vertical door resting on ground level
     float leftDoorHeight = Math.max(1f, b.viewHeight * 0.2f);
@@ -134,7 +104,7 @@ public class Floor2GameArea extends GameArea {
     }
     Entity leftDoor = ObstacleFactory.createDoorTrigger(WALL_WIDTH, leftDoorHeight);
     leftDoor.setPosition(b.leftX + 0.001f, leftDoorY);
-    leftDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadRoom4));
+    leftDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadPreviousLevel));
     spawnEntity(leftDoor);
 
     // Right vertical door resting on ground level
@@ -167,13 +137,7 @@ public class Floor2GameArea extends GameArea {
     clearAndLoad(() -> new ForestGameArea(terrainFactory, cameraComponent));
   }
 
-  private void loadRoom3() {
-    clearAndLoad(() -> new Floor3GameArea(terrainFactory, cameraComponent));
-  }
 
-  private void loadRoom4() {
-    clearAndLoad(() -> new Floor4GameArea(terrainFactory, cameraComponent));
-  }
 
   private void loadRoom5() {
     clearAndLoad(() -> new Floor5GameArea(terrainFactory, cameraComponent));
