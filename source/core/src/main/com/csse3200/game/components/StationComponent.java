@@ -19,9 +19,9 @@ import com.csse3200.game.services.ServiceLocator;
 
 
 public class StationComponent extends Component {
-    private boolean playerNear = false;
-    private Entity player = null;
-    private Label buyPrompt;
+    protected boolean playerNear = false;
+    protected Entity player = null;
+    protected Label buyPrompt;
 
     @Override
     public void create() {
@@ -53,15 +53,15 @@ public class StationComponent extends Component {
      * @param me the station
      * @param other entity colliding
      */
-    private void onCollisionStart(Fixture me, Fixture other) {
+    protected void onCollisionStart(Fixture me, Fixture other) {
         //Check it is a body that is colliding
         Object data = other.getBody().getUserData();
         if (!(data instanceof BodyUserData userData)) return;
 
         //Check if it's the player colliding
+
         Entity otherEntity = userData.entity;
         if (otherEntity.getComponent(PlayerActions.class) != null) {
-
             //
             player = otherEntity;
             playerNear = true;
@@ -88,7 +88,7 @@ public class StationComponent extends Component {
      * @param me the station
      * @param other the entity colliding
      */
-    private void onCollisionEnd(Fixture me, Fixture other) {
+    protected void onCollisionEnd(Fixture me, Fixture other) {
 
         //Remove the label if the player has moved away
         Object data = other.getBody().getUserData();
