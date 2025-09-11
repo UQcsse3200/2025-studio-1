@@ -23,6 +23,10 @@ import com.csse3200.game.services.ServiceLocator;
 
 import java.util.List;
 
+
+/**
+ * The game screen containing the tutorial screen.
+ */
 public class TutorialScreen extends ScreenAdapter {
     private final GdxGame game;
     private final Renderer renderer;
@@ -30,6 +34,10 @@ public class TutorialScreen extends ScreenAdapter {
             "images/background.png"
     };
 
+    /**
+     * Builds the tutorial screen.
+     * Registers services, creates the renderer, loads assets, and builds the UI.
+     */
     public TutorialScreen(GdxGame game) {
         this.game = game;
 
@@ -47,12 +55,19 @@ public class TutorialScreen extends ScreenAdapter {
         createUI();
     }
 
+    /**
+     * Loads textures needed by the tutorial screen.
+     */
     private void loadAssets() {
         ResourceService resourceService = ServiceLocator.getResourceService();
         resourceService.loadTextures(tutorialTextures);
         resourceService.loadAll();
     }
 
+    /**
+     * Creates the tutorial screen's ui including components for rendering ui elements to the screen and
+     * capturing and handling ui input.
+     */
     private void createUI() {
         Stage stage = ServiceLocator.getRenderService().getStage();
 
@@ -78,17 +93,26 @@ public class TutorialScreen extends ScreenAdapter {
         ServiceLocator.getEntityService().register(ui);
     }
 
+    /**
+     * Updates entities and renders the frame.
+     */
     @Override
     public void render(float delta) {
         ServiceLocator.getEntityService().update();
         renderer.render();
     }
 
+    /**
+     * Forwards new size to the renderer.
+     */
     @Override
     public void resize(int width, int height) {
         renderer.resize(width, height);
     }
 
+    /**
+     * Cleans up renderer and services and unloads assets.
+     */
     @Override
     public void dispose() {
         renderer.dispose();
