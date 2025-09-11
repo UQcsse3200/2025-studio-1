@@ -77,7 +77,8 @@ public class NPCFactory {
         .addComponent(new GhostAnimationController())
         .addComponent(new EnemyDeathRewardComponent(15, playerInventory)) // Add reward + particles
         .addComponent(new DeathParticleSpawnerComponent())
-        .addComponent(aiComponent);
+        .addComponent(aiComponent)
+        .addComponent(new EnemyHealthDisplay(0.4f));
 
     ghost.getComponent(AnimationRenderComponent.class).scaleEntity();
 
@@ -122,7 +123,8 @@ public class NPCFactory {
         .addComponent(new GhostAnimationController())
         .addComponent(new EnemyDeathRewardComponent(30, playerInventory)) // Add reward + particles
         .addComponent(new DeathParticleSpawnerComponent())
-        .addComponent(aiComponent);
+        .addComponent(aiComponent)
+        .addComponent(new EnemyHealthDisplay(0.4f));
 
     ghostKing.getComponent(AnimationRenderComponent.class).scaleEntity();
     return ghostKing;
@@ -210,7 +212,8 @@ public class NPCFactory {
             .addComponent(animator)
             .addComponent(new CombatStatsComponent(100))
             .addComponent(new WeaponsStatsComponent(5))
-            .addComponent(new BossAnimationController());
+            .addComponent(new BossAnimationController())
+            .addComponent(new EnemyHealthDisplay(0.4f));
 
     return robot;
   }
@@ -258,6 +261,7 @@ public class NPCFactory {
             .addComponent(new EnemyDeathRewardComponent(15, playerInventory)) // Add reward + particles
             .addComponent(new DeathParticleSpawnerComponent("explosion_2"))
             .addComponent(aiComponent)
+            .addComponent(new EnemyHealthDisplay(0.4f))
             .addComponent(new ProjectileLauncherComponent(area, target)); // Add the ability to fire projectiles
 
     deepspin.getComponent(AnimationRenderComponent.class).scaleEntity();
@@ -308,6 +312,7 @@ public class NPCFactory {
             .addComponent(new EnemyDeathRewardComponent(15, playerInventory)) // Add reward + particles
             .addComponent(new DeathParticleSpawnerComponent("explosion_2"))
             .addComponent(aiComponent)
+            .addComponent(new EnemyHealthDisplay(0.1f))
             .addComponent(new ProjectileLauncherComponent(area, target)); // Add the ability to fire projectiles
 
     grokDroid.getComponent(AnimationRenderComponent.class).scaleEntity();
@@ -367,7 +372,8 @@ public class NPCFactory {
             .addComponent(new EnemyDeathRewardComponent(15, playerInventory))
             .addComponent(new DeathParticleSpawnerComponent("explosion_2"))
             .addComponent(new VroombaSuicideComponent(target, triggerRadius, damageRadius, boomDamage, fuseSeconds))
-            .addComponent(aiComponent);
+            .addComponent(aiComponent)
+            .addComponent(new EnemyHealthDisplay(0.4f));
 
     vroomba.getComponent(AnimationRenderComponent.class).scaleEntity();
 
@@ -391,8 +397,7 @@ public class NPCFactory {
             .addComponent(new PhysicsMovementComponent())
             .addComponent(new ColliderComponent())
             .addComponent(new HitboxComponent().setLayer(PhysicsLayer.NPC))
-            .addComponent(new TouchAttackComponent(PhysicsLayer.PLAYER, 1.5f))
-            .addComponent(new EnemyHealthDisplay(0.4f));
+            .addComponent(new TouchAttackComponent(PhysicsLayer.PLAYER, 1.5f));
 
     PhysicsUtils.setScaledCollider(npc, 0.9f, 0.4f);
     return npc;
