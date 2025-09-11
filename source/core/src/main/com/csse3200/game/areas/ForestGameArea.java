@@ -56,6 +56,7 @@ public class ForestGameArea extends GameArea {
   private static final int NUM_ROBOTS = 1;
   private static final int NUM_ITEMS = 5;//this is for ItemFactory
   private static final int NUM_GHOSTS = 1;
+  private static final int NUM_TURRETS = 1;
   private static final float WALL_WIDTH = 0.1f;
 
   /** Files or pictures used by the game (enemy/props,etc.). */
@@ -159,9 +160,11 @@ public class ForestGameArea extends GameArea {
     "images/Deepspin.atlas",
     "images/Grokdroid.atlas",
     "images/Vroomba.atlas",
+    "images/Turret.atlas",
     "images/explosion_1.atlas",
     "images/explosion_2.atlas",
     "images/explosion_2.atlas",
+    "images/player.atlas",
     "images/player.atlas",
     "images/player.atlas",
     "images/terrain_iso_grass.atlas",
