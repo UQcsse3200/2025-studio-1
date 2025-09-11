@@ -29,6 +29,13 @@ public class EnemyHealthDisplay extends Component {
     private static final Color COLOR_BG  = Color.DARK_GRAY;
     private static final Color COLOR_HEALTH = Color.RED;
     protected Stage stage;
+    private float offsetY = 0.4f * 45f;
+
+    public EnemyHealthDisplay() {}
+
+    public EnemyHealthDisplay(float offsetY) {
+        this.offsetY = offsetY * 45f;
+    }
 
     @Override
     public void create() {
@@ -90,15 +97,7 @@ public class EnemyHealthDisplay extends Component {
             return;
         }
         Vector2 pos = entity.getPosition();
-        OrthographicCamera gameCamera = ServiceLocator.getRenderService().getCamera();
-        Vector3 worldPos3 = new Vector3(pos.x, pos.y, 0);
-        Vector3 screenPos = gameCamera.project(worldPos3);
-
-        healthBar.setPosition(screenPos.x, screenPos.y);
-        // Debug print
-        logger.info("Entity pos (world): {},{} | HealthBar pos (screen): {},{}",
-                pos.x, pos.y,
-                healthBar.getX(), healthBar.getY());
+        healthBar.setPosition(pos.x * 97.66666666666667f + 240f, (pos.y - 1) * 95f + offsetY);
     }
 
     public void dispose() {
