@@ -374,6 +374,65 @@ public class NPCFactory {
 
     return vroomba;
   }
+  /**
+   * Creates Turret enemy type
+   *
+   * @param target entity to chase
+   * @param area the area/space it is living in
+   * @param scalingFactor The scale of increase in health & attack of the Turret
+   * @return entity
+   */
+  public static Entity createTurret(Entity target, ForestGameArea area, float scalingFactor) {
+    // Build Turret as a ground enemy (do not use createBaseNPC to avoid floating movement)
+    Entity turret = new Entity()
+            .addComponent(new PhysicsComponent())
+            .addComponent(new ColliderComponent())
+            .addComponent(new HitboxComponent().setLayer(PhysicsLayer.NPC))
+            .addComponent(new TouchAttackComponent(PhysicsLayer.PLAYER, 1.5f))
+            .addComponent(new EnemyHealthDisplay());
+    PhysicsUtils.setScaledCollider(turret, 0.9f, 0.4f);
+
+    TurretConfig config = configs.turret;
+
+    AnimationRenderComponent animator =
+            new AnimationRenderComponent(
+                    ServiceLocator.getResourceService()
+                            .getAsset("images/Turret.atlas", TextureAtlas.class));
+    animator.setDisposeAtlas(false);
+    animator.addAnimation("angry_float", 0.1f, Animation.PlayMode.LOOP);
+    animator.addAnimation("float", 0.1f, Animation.PlayMode.LOOP);
+
+
+    ProjectileLauncherComponent projComp = new ProjectileLauncherComponent(area, target);
+    // Use ground chase tasks for gravity-based movement
+    AITaskComponent aiComponent =
+            new AITaskComponent()
+                    .addTask(new GPTGroundSlowChaseTask(target, 10, 0.3f))
+                    .addTask(new GPTGroundFastChaseTask(target, 10, 1.2f, projComp, turret));
+
+    // Get player's inventory for reward system
+    InventoryComponent playerInventory = null;
+    if (target != null) {
+      playerInventory = target.getComponent(InventoryComponent.class);
+    }
+
+    WeaponsStatsComponent turretStats = new WeaponsStatsComponent((int) (config.baseAttack * scalingFactor));
+
+    turret
+            .addComponent(turretStats)
+            .addComponent(new CombatStatsComponent((int) (config.health * scalingFactor)))
+            .addComponent(animator)
+            .addComponent(new GhostAnimationController())
+            .addComponent(new LowHealthAttackBuff(10, turretStats))
+            .addComponent(new EnemyDeathRewardComponent(15, playerInventory)) // Add reward + particles
+            .addComponent(new DeathParticleSpawnerComponent("explosion_2"))
+            .addComponent(aiComponent)
+            .addComponent(projComp); // Add the ability to fire projectiles
+
+    turret.getComponent(AnimationRenderComponent.class).scaleEntity();
+
+    return turret;
+  }
 
   /**
    * Creates a generic NPC to be used as a base entity by more specific NPC creation methods.
