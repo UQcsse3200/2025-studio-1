@@ -177,14 +177,15 @@ public class ItemPickUpComponent extends Component {
         PhysicsComponent phys = newItem.getComponent(PhysicsComponent.class);
         if (phys != null) phys.setBodyType(BodyDef.BodyType.StaticBody);
 
-        Vector2 playerPos = entity.getCenterPosition();
-        GridPoint2 dropTile = new GridPoint2(Math.round(playerPos.x), Math.round(playerPos.y));
-        // Spawn the item into the active game area if available
+        Vector2 playerPos = entity.getCenterPosition().cpy();
+        float dropOffsetY = -1.2f;
+        Vector2 dropPos = new Vector2(playerPos.x, playerPos.y + dropOffsetY);
+
+        newItem.setPosition(dropPos);
+
         GameArea area = ServiceLocator.getGameArea();
-        if (area instanceof ForestGameArea forest) {
-            forest.spawnItem(newItem, dropTile);
-        } else if (area != null) {
-            System.out.println("No active GameArea; cannot drop item.");
+        if (area != null) {
+            area.spawnEntity(newItem);
         }
 
     }
