@@ -10,14 +10,13 @@ import com.csse3200.game.components.Component;
 import com.csse3200.game.components.ItemComponent;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.csse3200.game.entities.Entity;
+import com.csse3200.game.entities.configs.Weapons;
 import com.csse3200.game.physics.BodyUserData;
-import com.csse3200.game.entities.factories.WeaponsFactory;
-import com.csse3200.game.entities.factories.ObstacleFactory;
+import com.csse3200.game.entities.factories.items.WeaponsFactory;
+import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.physics.components.PhysicsComponent;
 import com.badlogic.gdx.physics.box2d.BodyDef;
-//import com.csse3200.game.physics.components.HitboxComponent;    //might be needed later or delete if not used
-
 
 /**
  * Component that allows an entity to pick up items when in proximity.
@@ -190,23 +189,22 @@ public class ItemPickUpComponent extends Component {
 
     }
 
-    /**
-     * The method recreates an item entity based on its texture path.
-     * This method is used when dropping items from the inventory back into the world.
-     * Since inventory only stores the texture reference the texture string is used here
-     * as a lookup key to recreate the appropriate entity using the relevant factory class.
-     * @param texture the texture file path associated with the item in inventory
-     * @return a new {@link Entity} matching the texture, or {@code null} if the
-     * texture does not correspond to a known item type.
-     */
+        /**
+         * The method recreates an item entity based on its texture path.
+         * This method is used when dropping items from the inventory back into the world.
+         * Since inventory only stores the texture reference the texture string is used here
+         * as a lookup key to recreate the appropriate entity using the relevant factory class.
+         * @param texture the texture file path associated with the item in inventory
+         * @return a new {@link Entity} matching the texture, or {@code null} if the
+         * texture does not correspond to a known item type.
+         */
     private Entity createItemFromTexture(String texture) {
-        if (texture.endsWith("dagger.png"))            return WeaponsFactory.createDagger();
-        if (texture.endsWith("pistol.png"))            return WeaponsFactory.createPistol();
-        if (texture.endsWith("rifle.png"))             return WeaponsFactory.createRifle();
-        if (texture.endsWith("lightsaberSingle.png"))  return WeaponsFactory.createLightsaber();
+        if (texture.endsWith("dagger.png"))            return WeaponsFactory.createWeapon(Weapons.DAGGER);
+        if (texture.endsWith("pistol.png"))            return WeaponsFactory.createWeapon(Weapons.PISTOL);
+        if (texture.endsWith("rifle.png"))             return WeaponsFactory.createWeapon(Weapons.RIFLE);
+        if (texture.endsWith("lightsaberSingle.png"))  return WeaponsFactory.createWeapon(Weapons.LIGHTSABER);
         if (texture.endsWith("tree.png"))              return ObstacleFactory.createTree();
         return null;
     }
-
 }
 
