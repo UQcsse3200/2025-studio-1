@@ -93,7 +93,8 @@ public class ForestGameArea extends GameArea {
     "images/explosion_1.atlas",
     "images/explosion_2.atlas",
     "images/explosion_2.atlas",
-    "images/player.atlas"
+    "images/player.atlas",
+          "images/boss_explosion.atlas"
 
   };
   private static final String[] forestSounds = {"sounds/Impact4.ogg"};
@@ -141,8 +142,8 @@ public class ForestGameArea extends GameArea {
     //this.equipItem(dagger);
     this.equipItem(rifle);
 
-    spawnGhosts();
-    spawnGhostKing();
+    //spawnGhosts();
+    //spawnGhostKing();
     int choice = (int)(Math.random() * 3);
     if (choice == 0) {
       spawnBoss2();
