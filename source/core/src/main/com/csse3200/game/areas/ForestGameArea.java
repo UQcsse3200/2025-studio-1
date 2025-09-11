@@ -494,7 +494,6 @@ public class ForestGameArea extends GameArea {
     Entity newLightsaber = WeaponsFactory.createWeapon(Weapons.LIGHTSABER);
     Vector2 newLightsaberOffset = new Vector2(0.7f, -0.1f);
     newLightsaber.addComponent(new ItemHoldComponent(this.player, newLightsaberOffset));
-    //Commented out since lightsaber animation is a work in progress
     AnimationRenderComponent lightSaberAnimator = WeaponsFactory.createAnimation("images/lightSaber.atlas", this.player);
     newLightsaber.addComponent(lightSaberAnimator);
     lightSaberAnimator.startAnimation("anim");
