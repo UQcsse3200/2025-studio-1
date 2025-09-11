@@ -1,19 +1,12 @@
 package com.csse3200.game.areas;
 
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.GridPoint2;
-import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.CameraComponent;
-import com.csse3200.game.components.KeycardGateComponent;
 import com.csse3200.game.entities.Entity;
-import com.csse3200.game.entities.factories.KeycardFactory;
-import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.entities.factories.characters.PlayerFactory;
-import com.csse3200.game.physics.components.ColliderComponent;
 import com.csse3200.game.rendering.SolidColorRenderComponent;
 
 /** Room 5 with its own background styling. */
@@ -63,8 +56,9 @@ public class Floor5GameArea extends GameArea {
 
   private void spawnBordersAndReturnDoor() {
     Bounds b = getCameraBounds(cameraComponent);
-    addSolidWallRight(b, WALL_WIDTH);
+    // Use shared helpers (same placement/behavior):
     addVerticalDoorLeft(b, WALL_WIDTH, this::loadBackToFloor2);
+    addVerticalDoorRight(b, WALL_WIDTH, this::loadSecurity);
     addSolidWallTop(b, WALL_WIDTH);
     addSolidWallBottom(b, WALL_WIDTH);
   }
@@ -76,6 +70,10 @@ public class Floor5GameArea extends GameArea {
 
   private void loadBackToFloor2() {
     clearAndLoad(() -> new Floor2GameArea(terrainFactory, cameraComponent));
+  }
+
+  private void loadSecurity() {
+    clearAndLoad(() -> new SecurityGameArea(terrainFactory, cameraComponent));
   }
 }
 

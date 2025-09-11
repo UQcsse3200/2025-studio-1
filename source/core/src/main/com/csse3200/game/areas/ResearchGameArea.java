@@ -1,0 +1,61 @@
+package com.csse3200.game.areas;
+
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.math.GridPoint2;
+import com.csse3200.game.areas.terrain.TerrainFactory;
+import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
+import com.csse3200.game.components.CameraComponent;
+import com.csse3200.game.entities.Entity;
+import com.csse3200.game.entities.factories.characters.PlayerFactory;
+import com.csse3200.game.rendering.SolidColorRenderComponent;
+
+/** Research room: minimal walls and a left door back to Elevator. */
+public class ResearchGameArea extends GameArea {
+  private static final float WALL_WIDTH = 0.1f;
+  private static final GridPoint2 PLAYER_SPAWN = new GridPoint2(10, 10);
+
+  private final TerrainFactory terrainFactory;
+  private final CameraComponent cameraComponent;
+
+  public ResearchGameArea(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
+    this.terrainFactory = terrainFactory;
+    this.cameraComponent = cameraComponent;
+  }
+
+  @Override
+  public void create() {
+    GenericLayout.ensureGenericAssets(this);
+    GenericLayout.setupTerrainWithOverlay(this, terrainFactory, TerrainType.FOREST_DEMO,
+        new Color(0.10f, 0.12f, 0.10f, 0.24f));
+
+    spawnBordersAndDoors();
+    spawnPlayer();
+    spawnFloor();
+  }
+
+  // Assets ensured via GenericLayout
+
+  private void spawnBordersAndDoors() {
+    Bounds b = getCameraBounds(cameraComponent);
+    // Left door -> Elevator, Right door -> Storage
+    addVerticalDoorLeft(b, WALL_WIDTH, this::loadElevator);
+    addVerticalDoorRight(b, WALL_WIDTH, this::loadStorage);
+    addSolidWallTop(b, WALL_WIDTH);
+    addSolidWallBottom(b, WALL_WIDTH);
+  }
+
+  private void spawnPlayer() {
+    Entity player = PlayerFactory.createPlayer();
+    spawnEntityAt(player, PLAYER_SPAWN, true, true);
+  }
+
+  private void loadElevator() {
+    clearAndLoad(() -> new ElevatorGameArea(terrainFactory, cameraComponent));
+  }
+
+  private void loadStorage() {
+    clearAndLoad(() -> new StorageGameArea(terrainFactory, cameraComponent));
+  }
+}
+
+
