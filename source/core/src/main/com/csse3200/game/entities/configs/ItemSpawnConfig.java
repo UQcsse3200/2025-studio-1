@@ -16,18 +16,18 @@ public class ItemSpawnConfig {
         Map<String, List<ItemSpawner.ItemSpawnInfo>> config = new HashMap<>();
 
         // Weapons
-        config.put("dagger", Arrays.asList(
+        config.put(Weapons.DAGGER.name(), Arrays.asList(
                 new ItemSpawner.ItemSpawnInfo(new GridPoint2(5, 5), 1),
                 new ItemSpawner.ItemSpawnInfo(new GridPoint2(10, 8), 1)
         ));
-        config.put("pistol", Arrays.asList(
+        config.put(Weapons.PISTOL.name(), Arrays.asList(
                 new ItemSpawner.ItemSpawnInfo(new GridPoint2(3, 7), 1),
                 new ItemSpawner.ItemSpawnInfo(new GridPoint2(12, 12), 1)
         ));
-        config.put("rifle", Arrays.asList(
+        config.put(Weapons.RIFLE.name(), Arrays.asList(
                 new ItemSpawner.ItemSpawnInfo(new GridPoint2(8, 2), 1)
         ));
-        config.put("lightsaber", Arrays.asList(
+        config.put(Weapons.LIGHTSABER.name(), Arrays.asList(
                 new ItemSpawner.ItemSpawnInfo(new GridPoint2(12, 10), 1)
         ));
 

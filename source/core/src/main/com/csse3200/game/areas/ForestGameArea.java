@@ -226,6 +226,8 @@ public class ForestGameArea extends GameArea {
 
   @Override
   public void create() {
+    ServiceLocator.registerGameArea(this);
+
     loadAssets();
 
     displayUI();
@@ -268,6 +270,9 @@ public class ForestGameArea extends GameArea {
     // spawnGrokDroid();
     // spawnVroomba();
     playMusic();
+
+    ItemSpawner itemSpawner = new ItemSpawner(this);
+    itemSpawner.spawnItems(ItemSpawnConfig.FOREST_MAP());
 
     // Place a keycard on the floor so the player can unlock the door
     float keycardX = 1f, keycardY = 15f;
@@ -653,6 +658,10 @@ public class ForestGameArea extends GameArea {
     GridPoint2 pos = new GridPoint2(25, 5);
     Entity vroomba = NPCFactory.createVroomba(player, this);
     spawnEntityAt(vroomba, pos, true, true);
+  }
+
+  public void spawnItem(Entity item, GridPoint2 position) {
+    spawnEntityAt(item, position, false, false);
   }
 
   private void playMusic() {
