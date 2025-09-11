@@ -11,6 +11,7 @@ import com.csse3200.game.entities.factories.NPCFactory;
 import com.csse3200.game.entities.factories.ObstacleFactory;
 import com.csse3200.game.entities.factories.PlayerFactory;
 import com.csse3200.game.entities.factories.*;
+import com.csse3200.game.rendering.AnimationRenderComponent;
 import com.csse3200.game.utils.math.GridPoint2Utils;
 import com.csse3200.game.utils.math.RandomUtils;
 import com.csse3200.game.services.ResourceService;
@@ -102,9 +103,9 @@ public class ForestGameArea extends GameArea {
 
     //These are commented out since there is no equip feature yet
 //    this.equipItem(pistol);
-//    this.equipItem(lightsaber);
+    this.equipItem(lightsaber);
 //    this.equipItem(dagger);
-      this.equipItem(rifle);
+//      this.equipItem(rifle);
 
 //    spawnBullet();
 
@@ -190,8 +191,9 @@ public class ForestGameArea extends GameArea {
     newLightsaber.addComponent(new ItemHoldComponent(this.player, newLightsaberOffset));
 
     //Commented out since lightsaber animation is a work in progress
-    //AnimationRenderComponent lightSaberAnimator = WeaponsFactory.createAnimation("images/lightSaber.atlas", this.player);
-    //newLightsaber.addComponent(lightSaberAnimator);
+    AnimationRenderComponent lightSaberAnimator = WeaponsFactory.createAnimation("images/lightSaber.atlas", this.player);
+    newLightsaber.addComponent(lightSaberAnimator);
+    lightSaberAnimator.startAnimation("anim");
 
     return newLightsaber;
   }
