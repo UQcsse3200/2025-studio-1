@@ -1,8 +1,9 @@
 package com.csse3200.game.components.shop;
 
-import com.csse3200.game.components.entity.item.ItemComponent;
+import com.csse3200.game.components.ItemComponent;
 import com.csse3200.game.components.player.InventoryComponent;
 import com.csse3200.game.entities.Entity;
+import com.csse3200.game.entities.configs.ItemTypes;
 
 /**
  * Manages updating a player's inventory after an event (e.g., item purchase).
@@ -95,7 +96,7 @@ public class InventoryOperations {
         }
 
         String name = item.getName();
-        String type = item.getType();
+        ItemTypes type = item.getType();
         if (name == null || type == null) {
             return null;
         }
