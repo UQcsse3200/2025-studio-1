@@ -86,11 +86,11 @@ public class TutorialScreenDisplay extends UIComponent {
         TextButton.TextButtonStyle style = neon.buttonRounded();
         TextButton nextBtn = new TextButton("Next", style);
         TextButton prevBtn = new TextButton("Previous", style);
-        TextButton mainMenuBtn = new TextButton("Main Menu", style);
+        TextButton backBtn = new TextButton("Back", style);
 
         nextBtn.getLabel().setFontScale(2f);
         prevBtn.getLabel().setFontScale(2f);
-        mainMenuBtn.getLabel().setFontScale(2.0f);
+        backBtn.getLabel().setFontScale(2.0f);
 
         nextBtn.addListener(new ChangeListener() {
             @Override
@@ -112,11 +112,11 @@ public class TutorialScreenDisplay extends UIComponent {
             }
         });
 
-        mainMenuBtn.addListener(
+        backBtn.addListener(
                 new ChangeListener() {
                     @Override
                     public void changed(ChangeEvent changeEvent, Actor actor) {
-                        logger.debug("Main Menu button clicked");
+                        logger.debug("Back button clicked");
                         backMainMenu();
                     }
                 });
@@ -140,7 +140,7 @@ public class TutorialScreenDisplay extends UIComponent {
 
         table.add(btnRow).colspan(2).growX().padTop(10f);
         table.row();
-        table.add(mainMenuBtn).colspan(2).center().padTop(20f);
+        table.add(backBtn).colspan(2).left().padLeft(20f).padTop(20f);
     }
 
     private void backMainMenu() {
