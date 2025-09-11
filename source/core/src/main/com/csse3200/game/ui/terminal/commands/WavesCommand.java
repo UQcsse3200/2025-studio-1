@@ -4,6 +4,11 @@ import com.csse3200.game.areas.Floor2GameArea;
 import com.csse3200.game.areas.Floor3GameArea;
 import com.csse3200.game.areas.GameArea;
 import com.csse3200.game.areas.ForestGameArea;
+import com.csse3200.game.components.CombatStatsComponent;
+import com.csse3200.game.components.player.PlayerStatsDisplay;
+import com.csse3200.game.components.player.StaminaComponent;
+import com.csse3200.game.entities.Entity;
+import com.csse3200.game.entities.EntityService;
 import com.csse3200.game.services.ServiceLocator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,14 +25,38 @@ public class WavesCommand implements Command {
   @Override
   public boolean action(ArrayList<String> args) {
     GameArea ga = ServiceLocator.getGameArea();
-    if (!(ga instanceof Floor2GameArea)) {
+    if (ga == null) {
       logger.warn("WavesCommand: Current GameArea is not a ForestGameArea; cannot start waves");
       return false;
     }
-    Floor2GameArea area = (Floor2GameArea) ga;
-    area.startWaves();
-    logger.info("WavesCommand: Enemy waves started");
-    return true;
+    Entity player = null;
+
+    EntityService es = ServiceLocator.getEntityService();
+    if (es == null) {
+      logger.debug("No EntityService registered; cannot kill enemy");
+      return false;
+    }
+
+    for (Entity e : es.getEntities()) {
+      CombatStatsComponent stats = e.getComponent(CombatStatsComponent.class);
+      if (stats == null || !isPlayer(e)) {
+        continue;
+      }
+      player = e;
+      break;
+    }
+
+    if (player != null) {
+      ga.startWaves(player);
+
+      logger.info("WavesCommand: Enemy waves started");
+      return true;
+    }
+    return false;
+  }
+
+  private boolean isPlayer(Entity e) {
+    return e.getComponent(StaminaComponent.class) != null;
   }
 }
 

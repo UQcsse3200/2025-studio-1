@@ -1,7 +1,7 @@
 package com.csse3200.game.components.enemy;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.utils.Timer;
-import com.csse3200.game.areas.ForestGameArea;
 import com.csse3200.game.areas.GameArea;
 import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.components.npc.GhostAnimationController;
@@ -18,7 +18,7 @@ public class EnemyWaves {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final int maxWaves;
     private final int roomNumber;
-    private final GameArea gameArea;
+    private final Entity player;
 
     private static int maxEnemies = 4;
     private static float scalingFactor = 1f;
@@ -30,11 +30,11 @@ public class EnemyWaves {
     private int waveNumber;
     private long waveEndTime;
 
-    public EnemyWaves(int roomNumber, GameArea gameArea) {
+    public EnemyWaves(int roomNumber, GameArea gameArea, Entity player) {
         this.roomNumber = roomNumber;
-        this.gameArea = gameArea;
         this.waveNumber = 0;
         this.waveEndTime = 0;
+        this.player = player;
         this.maxWaves = (this.roomNumber > 4) ? 2 : 1;
         maxEnemies = (this.roomNumber > 3) ? (maxEnemies + 1) : 4;
     }
@@ -64,12 +64,12 @@ public class EnemyWaves {
         }
 
         logger.debug("Spawning wave {}, with scaling factor {}", waveNumber, scalingFactor);
-
+        GameArea gameArea = ServiceLocator.getGameArea();
         if (roomNumber > 3) {
-            gameArea.spawnGhostGPT(1, scalingFactor);
-            gameArea.spawnVroomba(2, scalingFactor);
+            gameArea.spawnGhostGPT(1, scalingFactor, player);
+            gameArea.spawnVroomba(2, scalingFactor, player);
         } else {
-            gameArea.spawnDeepspin(maxEnemies, scalingFactor);
+            gameArea.spawnDeepspin(maxEnemies, scalingFactor, player);
         }
         waveNumber++;
         scalingFactor += 0.25f;

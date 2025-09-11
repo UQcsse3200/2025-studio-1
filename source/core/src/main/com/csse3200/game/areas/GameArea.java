@@ -6,10 +6,15 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Disposable;
 import com.csse3200.game.areas.terrain.TerrainComponent;
+import com.csse3200.game.components.WeaponsStatsComponent;
 import com.csse3200.game.components.enemy.EnemyWaves;
 import com.csse3200.game.entities.Entity;
+import com.csse3200.game.entities.factories.ProjectileFactory;
+import com.csse3200.game.entities.factories.characters.NPCFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
+import com.csse3200.game.physics.components.PhysicsProjectileComponent;
 import com.csse3200.game.services.ServiceLocator;
+import com.csse3200.game.utils.math.RandomUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,12 +67,86 @@ public abstract class GameArea implements Disposable {
   /**
    * Start enemy waves from terminal command by typing "waves".
    */
-  public void startWaves() {
+  public void startWaves(Entity player) {
     if (wavesManager == null) {
       // Use a higher room number so EnemyWaves logic spawns GhostGPT instead of airborne Deepspin
-      wavesManager = new EnemyWaves(5, this);
+      wavesManager = new EnemyWaves(5, this, player);
     }
     wavesManager.startWave();
+  }
+
+  /**
+   * Adds GhostGPT enemies onto the map.
+   * @param total The total number of GhostGPT to be spawned.
+   * @param scaleFactor The scale of increase in difficulty of the GhostGPT
+   */
+  public void spawnGhostGPT(int total, float scaleFactor, Entity player) {
+    GridPoint2 minPos = new GridPoint2(0, 0);
+    GridPoint2 maxPos = terrain.getMapBounds(0).sub(3, 3);
+
+    for (int i = 0; i < total; i++) {
+      GridPoint2 randomPos = RandomUtils.random(minPos, maxPos);
+      Entity ghostGPT = NPCFactory.createGhostGPT(player, this, scaleFactor);
+      spawnEntityAt(ghostGPT, randomPos, true, true);
+    }
+  }
+
+  /**
+   * Adds DeepSpin enemies onto the map.
+   * @param total The total number of DeepSpins to be spawned.
+   * @param scaleFactor The scale of increase in difficulty of the DeepSpin
+   */
+  public void spawnDeepspin(int total, float scaleFactor, Entity player) {
+    GridPoint2 minPos = new GridPoint2(0, 0);
+    GridPoint2 maxPos = terrain.getMapBounds(0).sub(3, 3);
+
+    for (int i = 0; i < total; i++) {
+      GridPoint2 randomPos = RandomUtils.random(minPos, maxPos);
+      Entity deepspin = NPCFactory.createDeepspin(player, this, scaleFactor);
+      spawnEntityAt(deepspin, randomPos, true, true);
+    }
+  }
+
+  /**
+   * Adds GrokDroid enemies onto the map.
+   * @param total The total number of GrokDroid to be spawned.
+   * @param scaleFactor The scale of increase in difficulty of the GrokDroid
+   */
+  public void spawnGrokDroid(int total, float scaleFactor, Entity player) {
+    GridPoint2 minPos = new GridPoint2(0, 0);
+    GridPoint2 maxPos = terrain.getMapBounds(0).sub(3, 3);
+
+    for (int i = 0; i < total; i++) {
+      GridPoint2 randomPos = RandomUtils.random(minPos, maxPos);
+      Entity grokDroid = NPCFactory.createGrokDroid(player, this, scaleFactor);
+      spawnEntityAt(grokDroid, randomPos, true, true);
+    }
+  }
+
+  /**
+   * Adds Vroomba enemies onto the map.
+   * @param total The total number of Vroomba to be spawned.
+   * @param scaleFactor The scale of increase in difficulty of the Vroomba
+   */
+  public void spawnVroomba(int total, float scaleFactor, Entity player) {
+    GridPoint2 minPos = new GridPoint2(0, 0);
+    GridPoint2 maxPos = terrain.getMapBounds(0).sub(3, 3);
+
+    for (int i = 0; i < total; i++) {
+      GridPoint2 randomPos = RandomUtils.random(minPos, maxPos);
+      Entity vroomba = NPCFactory.createVroomba(player, scaleFactor);
+      spawnEntityAt(vroomba, randomPos, true, true);
+    }
+  }
+
+  // Enemy Projectiles
+  public Entity spawnEnemyProjectile(Vector2 directionToFire, WeaponsStatsComponent source) {
+    Entity laser = ProjectileFactory.createEnemyProjectile(directionToFire, source);
+    spawnEntityAt(laser, new GridPoint2(0, 0), true, true);
+    PhysicsProjectileComponent laserPhysics = laser.getComponent(PhysicsProjectileComponent.class);
+    int projectileSpeed = 5; // Should be abstracted from WeaponsStatsComponent in future implementation
+    laserPhysics.fire(directionToFire, projectileSpeed);
+    return laser;
   }
 
   /**
