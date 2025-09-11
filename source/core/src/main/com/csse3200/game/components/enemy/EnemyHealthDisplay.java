@@ -1,12 +1,10 @@
 package com.csse3200.game.components.enemy;
 
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
@@ -98,5 +96,9 @@ public class EnemyHealthDisplay extends Component {
     public void dispose() {
         super.dispose();
         if (healthBar != null) healthBar.remove();
+    }
+
+    public int getCurrentHealthValue() {
+        return (int)healthBar.getValue();
     }
 }
