@@ -73,7 +73,7 @@ public class TutorialScreenDisplay extends UIComponent {
                 AnimatedClipImage anim = new AnimatedClipImage(step.getClip());
                 anim.setScaling(Scaling.fit);
                 anim.setSize(800f, 450f);
-                table.add(anim).colspan(2).center().padBottom(20f);
+                table.add(anim).colspan(2).center().padBottom(20f).width(1100f).height(600f);
                 table.row();
             } catch (Exception ex) {
                 logger.error("Failed to load tutorial clip", ex);

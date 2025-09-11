@@ -20,17 +20,21 @@ public class AnimatedClipImage extends Image {
     private final boolean looping;
     private final List<String> loadedPaths;
     private float stateTime = 0f;
+    private final TextureRegionDrawable drawable;
 
     public AnimatedClipImage(TutorialClip clip) {
         Built built = buildAnimation(clip);
         this.animation = built.animation;
         this.looping = clip.loop;
         this.loadedPaths = built.paths;
-        setDrawable(new TextureRegionDrawable(animation.getKeyFrame(0)));
+
+        this.drawable = new TextureRegionDrawable(animation.getKeyFrame(0));
+        setDrawable(drawable);
     }
 
     private static class Built {
-        final Animation<TextureRegion> animation; final List<String> paths;
+        final Animation<TextureRegion> animation;
+        final List<String> paths;
         Built(Animation<TextureRegion> a, List<String> p) { animation = a; paths = p; }
     }
 
@@ -65,7 +69,7 @@ public class AnimatedClipImage extends Image {
     public void act(float delta) {
         super.act(delta);
         stateTime += delta;
-        setDrawable(new TextureRegionDrawable(animation.getKeyFrame(stateTime, looping)));
+        drawable.setRegion(animation.getKeyFrame(stateTime, looping));
     }
 
     public void disposeAssets() {
