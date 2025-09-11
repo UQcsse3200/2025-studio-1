@@ -9,12 +9,12 @@ import com.csse3200.game.physics.PhysicsLayer;
 
 public class ProjectileConfig {
 
-    public ItemTypes itemType = ItemTypes.PROJECTILE;
+    public static final ItemTypes itemType = ItemTypes.PROJECTILE;
 
-    public short projectileType;
-    public short target;
+    public final short projectileType;
+    public final short target;
 
-    public String texturePath;
+    public final String texturePath;
 
     /**
      * Creates a ProjectileConfig for a projectile.
@@ -31,6 +31,7 @@ public class ProjectileConfig {
                     this.projectileType = PhysicsLayer.ENEMY_PROJECTILE;
                     this.target = PhysicsLayer.NPC;
             }
+            default -> throw new IllegalArgumentException("Unknown target: " + target);
         }
         this.texturePath = texturePath;
     }

@@ -1,15 +1,16 @@
-package com.csse3200.game.entities;
+package com.csse3200.game.components;
 
-import com.csse3200.game.components.Component;
 import com.csse3200.game.entities.configs.ItemTypes;
 
 public class ItemComponent extends Component {
     private String name;
-    private ItemTypes type = ItemTypes.NONE;
+    private ItemTypes type;
     private int count = 1;
     private String texture;
 
-    public ItemComponent() {}
+    public ItemComponent() {
+        this.type = ItemTypes.NONE;
+    }
 
     /**
      * Returns the name of this item.
