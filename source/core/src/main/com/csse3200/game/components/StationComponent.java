@@ -2,10 +2,13 @@ package com.csse3200.game.components;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Fixture;
+import com.badlogic.gdx.scenes.scene2d.ui.Container;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.Align;
 import com.csse3200.game.components.player.InventoryComponent;
@@ -22,48 +25,72 @@ public class StationComponent extends Component {
 
     @Override
     public void create() {
+        //Create listeners for collisions
         entity.getEvents().addListener("collisionStart", this::onCollisionStart);
         entity.getEvents().addListener("collisionEnd", this::onCollisionEnd);
 
-        //Font
+        //Make the font
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(
                 Gdx.files.internal("fonts/ithaca.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter params =
                 new FreeTypeFontGenerator.FreeTypeFontParameter();
-        params.size = 20; // font size in pixels
+        params.size = 20;
         BitmapFont font = generator.generateFont(params);
-        generator.dispose(); // free generator memory
+        generator.dispose();
         Label.LabelStyle labelStyle = new Label.LabelStyle();
         labelStyle.font = font;
         labelStyle.font.getData().setScale(2f);
 
+        //Make a buy label
         buyPrompt = new Label("", labelStyle);
         buyPrompt.setVisible(false);
         ServiceLocator.getRenderService().getStage().addActor(buyPrompt);
 
     }
 
-
+    /**
+     * Handles colliding with the station and setting the buy labels/listeners
+     * @param me the station
+     * @param other entity colliding
+     */
     private void onCollisionStart(Fixture me, Fixture other) {
+        //Check it is a body that is colliding
         Object data = other.getBody().getUserData();
         if (!(data instanceof BodyUserData userData)) return;
 
+        //Check if it's the player colliding
         Entity otherEntity = userData.entity;
         if (otherEntity.getComponent(PlayerActions.class) != null) {
-            player = otherEntity;
 
+            //
+            player = otherEntity;
             playerNear = true;
             otherEntity.getEvents().addListener("interact", this::upgrade);
+
+            //Add the text/position for the buy label
             buyPrompt.setVisible(true);
-            float screenX = ServiceLocator.getRenderService().getStage().getWidth() / 2f;
-            float screenY = ServiceLocator.getRenderService().getStage().getHeight() / 2f + 100; // 100 px above bottom\
-            buyPrompt.setPosition(screenX - 100f, screenY, Align.bottom);
             buyPrompt.setText("Press E for upgrade");
+            buyPrompt.setColor(Color.WHITE);
+            Pixmap labelColor = new Pixmap(100, 100, Pixmap.Format.RGB888);
+            buyPrompt.getStyle().background = new Image(new Texture(labelColor)).getDrawable();
+            Container<Label> wrapped = new Container<>(buyPrompt);
+            wrapped.setBackground(new Image(new Texture(labelColor)).getDrawable());
+            ServiceLocator.getRenderService().getStage().addActor(wrapped);
+            float screenX = ServiceLocator.getRenderService().getStage().getWidth() / 2f;
+            float screenY = ServiceLocator.getRenderService().getStage().getHeight() / 4f;
+            wrapped.setPosition(screenX, screenY, Align.bottom);
+            buyPrompt.layout();
         }
     }
 
+    /**
+     * Handles removing the labels when the player leaves
+     * @param me the station
+     * @param other the entity colliding
+     */
     private void onCollisionEnd(Fixture me, Fixture other) {
 
+        //Remove the label if the player has moved away
         Object data = other.getBody().getUserData();
         if (!(data instanceof BodyUserData userData)) return;
         Entity otherEntity = userData.entity;
@@ -71,23 +98,30 @@ public class StationComponent extends Component {
             playerNear = false;
             buyPrompt.setVisible(false);
         }
-
     }
 
+    /**
+     * Upgrades the player's current item
+     */
     public void upgrade() {
+        //Check if the player is near
         if (playerNear && player != null) {
 
+            //Get their current item WeaponStatsComponent
             Entity currItem = player.getComponent(InventoryComponent.class).getCurrItem();
-
             WeaponsStatsComponent currItemStats = currItem.getComponent(WeaponsStatsComponent.class);
+            //Check if the weapon can be upgraded
             if (currItemStats != null) {
-                currItemStats.upgrade();
-                buyPrompt.setText("Item has been upgraded");
+                if (!currItemStats.isMaxUpgraded()) {
+                    currItemStats.upgrade();
+                    buyPrompt.setText("Item has been upgraded");
+                } else {
+                    buyPrompt.setText("Item is already fully upgraded!");
+                }
             } else {
-                buyPrompt.setText("Item is already fully upgraded!");
+                buyPrompt.setText("This can't be upgraded");
+
             }
         }
-
-
     }
 }
