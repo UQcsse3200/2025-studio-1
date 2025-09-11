@@ -34,7 +34,6 @@ public class MagazineComponent extends Component{
 
         float dt = ServiceLocator.getTimeSource().getDeltaTime();
         timeSinceLastReload += dt;
-        System.out.println(timeSinceLastReload);
     }
 
 
@@ -70,8 +69,8 @@ public class MagazineComponent extends Component{
             return false;
         }
 
-        CombatStatsComponent combatStats =  player.getComponent(CombatStatsComponent.class);
-        int ammoReserves = combatStats.getAmmo();
+        AmmoStatsComponent ammoStats =  player.getComponent(AmmoStatsComponent.class);
+        int ammoReserves = ammoStats.getAmmo();
         if (ammoReserves <= 0) {
 
             return false;
@@ -80,13 +79,13 @@ public class MagazineComponent extends Component{
         if (ammoReserves < maxAmmo) {
 
             this.setCurrentAmmo(currentAmmo + ammoReserves);
-            combatStats.setAmmo(0);
+            ammoStats.setAmmo(0);
         }
 
         else {
             int reloadedAmmo = maxAmmo - currentAmmo;
             this.setCurrentAmmo(maxAmmo);
-            combatStats.setAmmo(ammoReserves - reloadedAmmo);
+            ammoStats.setAmmo(ammoReserves - reloadedAmmo);
         }
 
         timeSinceLastReload = 0;
