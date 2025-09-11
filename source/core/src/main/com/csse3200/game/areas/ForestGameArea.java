@@ -161,14 +161,9 @@ public class ForestGameArea extends GameArea {
   }
 
   private void spawnRobots() {
-    GridPoint2 minPos = new GridPoint2(0, 0);
-    GridPoint2 maxPos = terrain.getMapBounds(0).sub(2, 2);
-
-    for (int i = 0; i < NUM_ROBOTS; i++) {
-      GridPoint2 randomPos = RandomUtils.random(minPos, maxPos);
+    GridPoint2 pos = new GridPoint2(20, 12);
       Entity robot = BossFactory.createRobot(player);
-      spawnEntityAt(robot, randomPos, true, true);
-    }
+      spawnEntityAt(robot, pos, true, true);
   }
 
   private void displayUI() {

@@ -3,7 +3,7 @@ size: 2048, 1280
 format: RGBA8888
 filter: Linear, Linear
 repeat: none
-attack
+default
   rotate: false
   xy: 0, 0
   size: 256, 256
