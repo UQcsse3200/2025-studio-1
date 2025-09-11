@@ -84,10 +84,25 @@ public class WeaponsStatsComponent extends Component {
         return (!disableDamage);
     }
 
+    /**
+     * Gets the current upgrade stage
+     * @return the upgrades stage
+     */
     public int getUpgradeStage() {
         return this.upgradeStage;
     }
 
+    /**
+     * Checks if the weapon is already max upgraded
+     * @return if the weapon is already max upgraded
+     */
+    public boolean isMaxUpgraded() {
+        return this.upgradeStage >= this.maxUpgradeStage;
+    }
+
+    /**
+     * Upgrades the weapon
+     */
     public void upgrade() {
         System.out.println(this.baseAttack);
         if (this.upgradeStage < this.maxUpgradeStage) {
