@@ -54,6 +54,13 @@ public class BossFactory {
                 .addComponent(new CombatStatsComponent(100, 5))
                 .addComponent(new BossAnimationController())
                 .addComponent(new BossStatusDisplay("Boss_1"));
+        animator.startAnimation("Idle");
+        animator.scaleEntity();
+
+        robot.getComponent(AnimationRenderComponent.class).scaleEntity();
+        float k = 5.0f;
+        Vector2 s = robot.getScale();
+        robot.setScale(s.x * k, s.y * k);
 
         return robot;
     }
