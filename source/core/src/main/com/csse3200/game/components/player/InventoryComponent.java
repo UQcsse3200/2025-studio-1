@@ -26,6 +26,7 @@ public class InventoryComponent extends Component {
   private int processor;
   private Entity currItem;
   private int selectedSlot = -1; // -1 = no selectedSlot
+  private int equippedSlot = -1; // no slot is equipped initially
 
   /**
    * Constructs an inventory for the player and a beginning currency amount
@@ -263,6 +264,17 @@ public class InventoryComponent extends Component {
         entity.getEvents().trigger("inventoryItemSelected", slotIndex);
     }
 
+    /**
+     * setEquippedSlot(int slotIndex) equips the player with the weapon at slotIndex
+     * @param slotIndex is the index of the slot from which the player wants to equip the weapon from
+     */
+    public void setEquippedSlot(int slotIndex){this.equippedSlot = slotIndex;}
 
+
+    /**
+     *
+     * @return the slot that is currently equipped
+     */
+    public int getEquippedSlot(){return this.equippedSlot;}
 }
 
