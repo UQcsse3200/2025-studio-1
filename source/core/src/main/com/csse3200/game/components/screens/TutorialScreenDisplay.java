@@ -18,6 +18,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * An ui component for displaying the tutorial screen.
+ */
 public class TutorialScreenDisplay extends UIComponent {
     private static final Logger logger = LoggerFactory.getLogger(TutorialScreenDisplay.class);
     private final GdxGame game;
@@ -29,13 +32,18 @@ public class TutorialScreenDisplay extends UIComponent {
 
     private final Set<String> loadedFramePaths = new HashSet<>();
 
-
+    /**
+     * Creates a tutorial display bound to a list of steps.
+     */
     public TutorialScreenDisplay(GdxGame game, List<TutorialStep> steps) {
         super();
         this.game = game;
         this.steps = steps;
     }
 
+    /**
+     * Builds the root table and shows the first step.
+     */
     @Override
     public void create() {
         super.create();
@@ -47,6 +55,10 @@ public class TutorialScreenDisplay extends UIComponent {
         showStep(currentStep);
     }
 
+    /**
+     * Rebuilds the UI for the given step index.
+     * Clears the table, then adds title, text, optional animation, and controls.
+     */
     private void showStep(int stepIndex) {
         table.clear();
 
@@ -86,12 +98,13 @@ public class TutorialScreenDisplay extends UIComponent {
         TextButton.TextButtonStyle style = neon.buttonRounded();
         TextButton nextBtn = new TextButton("Next", style);
         TextButton prevBtn = new TextButton("Previous", style);
-        TextButton backBtn = new TextButton("Back", style);
+        TextButton mainMenuBtn = new TextButton("Main Menu", style);
 
         nextBtn.getLabel().setFontScale(2f);
         prevBtn.getLabel().setFontScale(2f);
-        backBtn.getLabel().setFontScale(2.0f);
+        mainMenuBtn.getLabel().setFontScale(2.0f);
 
+        // Button listeners
         nextBtn.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -112,11 +125,11 @@ public class TutorialScreenDisplay extends UIComponent {
             }
         });
 
-        backBtn.addListener(
+        mainMenuBtn.addListener(
                 new ChangeListener() {
                     @Override
                     public void changed(ChangeEvent changeEvent, Actor actor) {
-                        logger.debug("Back button clicked");
+                        logger.debug("Main Menu button clicked");
                         backMainMenu();
                     }
                 });
@@ -140,9 +153,12 @@ public class TutorialScreenDisplay extends UIComponent {
 
         table.add(btnRow).colspan(2).growX().padTop(10f);
         table.row();
-        table.add(backBtn).colspan(2).left().padLeft(20f).padTop(20f);
+        table.add(mainMenuBtn).colspan(2).left().padLeft(30f).padTop(20f);
     }
 
+    /**
+     * Switches back to the main menu screen.
+     */
     private void backMainMenu() {
         logger.debug("Switching to Main Menu screen");
         game.setScreen(ScreenType.MAIN_MENU);
@@ -158,6 +174,9 @@ public class TutorialScreenDisplay extends UIComponent {
         return 2f;
     }
 
+    /**
+     * Unloads any loaded clip textures and clears UI.
+     */
     @Override
     public void dispose() {
         if (!loadedFramePaths.isEmpty()) {

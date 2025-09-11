@@ -15,6 +15,9 @@ import com.csse3200.game.services.ServiceLocator;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Scene2D Image that loads a sequence of frames into an Animation and plays it.
+ */
 public class AnimatedClipImage extends Image {
     private final Animation<TextureRegion> animation;
     private final boolean looping;
@@ -22,6 +25,9 @@ public class AnimatedClipImage extends Image {
     private float stateTime = 0f;
     private final TextureRegionDrawable drawable;
 
+    /**
+     * Builds the animation from the given clip and prepares a drawable for display.
+     */
     public AnimatedClipImage(TutorialClip clip) {
         Built built = buildAnimation(clip);
         this.animation = built.animation;
@@ -32,16 +38,24 @@ public class AnimatedClipImage extends Image {
         setDrawable(drawable);
     }
 
+    /**
+     * Small holder for build results.
+     */
     private static class Built {
         final Animation<TextureRegion> animation;
         final List<String> paths;
         Built(Animation<TextureRegion> a, List<String> p) { animation = a; paths = p; }
     }
 
+    /**
+     * Loads textures, validates existence, and constructs the Animation.
+     * Throws an error if any frame is missing or fails to load.
+     */
     private static Built buildAnimation(TutorialClip clip) {
         ResourceService rs = ServiceLocator.getResourceService();
         List<String> paths = new ArrayList<>(clip.frameCount);
 
+        // Build and validate the list of frame paths
         for (int i = 1; i <= clip.frameCount; i++) {
             String filename = String.format(clip.pattern, i);
             String path = clip.folder + "/" + filename;
@@ -53,6 +67,7 @@ public class AnimatedClipImage extends Image {
         rs.loadTextures(paths.toArray(new String[0]));
         rs.loadAll();
 
+        // Convert each Texture into a TextureRegion
         TextureRegion[] regions = new TextureRegion[clip.frameCount];
         for (int i = 0; i < clip.frameCount; i++) {
             Texture tex = rs.getAsset(paths.get(i), Texture.class);
@@ -65,6 +80,9 @@ public class AnimatedClipImage extends Image {
         return new Built(new Animation<>(frameDuration, regions), paths);
     }
 
+    /**
+     * Advances time and updates the displayed frame region.
+     */
     @Override
     public void act(float delta) {
         super.act(delta);
@@ -72,6 +90,9 @@ public class AnimatedClipImage extends Image {
         drawable.setRegion(animation.getKeyFrame(stateTime, looping));
     }
 
+    /**
+     * Unloads any textures this image loaded.
+     */
     public void disposeAssets() {
         if (!loadedPaths.isEmpty()) {
             ServiceLocator.getResourceService().unloadAssets(loadedPaths.toArray(new String[0]));
@@ -79,6 +100,9 @@ public class AnimatedClipImage extends Image {
         }
     }
 
+    /**
+     * Frees assets when the actor is removed from the stage.
+     */
     @Override
     public boolean remove() {
         disposeAssets();
