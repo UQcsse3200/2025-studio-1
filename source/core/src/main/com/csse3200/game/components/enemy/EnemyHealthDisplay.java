@@ -5,7 +5,6 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -24,8 +23,8 @@ public class EnemyHealthDisplay extends Component {
     private int maxHealth;
     private ProgressBar healthBar;
     // UI constants
-    private static final float BAR_WIDTH = 100f;
-    private static final float BAR_HEIGHT = 15f;
+    private static final float BAR_WIDTH = 70f;
+    private static final float BAR_HEIGHT = 10f;
     // Colours
     private static final Color COLOR_BG  = Color.DARK_GRAY;
     private static final Color COLOR_HEALTH = Color.RED;
@@ -34,6 +33,7 @@ public class EnemyHealthDisplay extends Component {
     @Override
     public void create() {
         super.create();
+        logger.info("EnemyHealthDisplay created.");
         maxHealth = entity.getComponent(CombatStatsComponent.class).getHealth();
         // Health bar
         ProgressBar.ProgressBarStyle healthBarStyle = makeBarStyle(COLOR_HEALTH, BAR_HEIGHT);
@@ -44,15 +44,12 @@ public class EnemyHealthDisplay extends Component {
         Vector2 pos = entity.getPosition();
         Vector3 worldPos3 = new Vector3(pos.x, pos.y, 0);
 
-
         stage = ServiceLocator.getRenderService().getStage();
         stage.addActor(healthBar);
 
         Vector3 screenPos = stage.getCamera().project(worldPos3);
-        float offsetY = entity.getScale().y * 6f + 5f; // above head
         healthBar.setPosition(screenPos.x * 130f, screenPos.y * 80f);
         entity.getEvents().addListener("updateHealth", this::updateEnemyHealthUI);
-
     }
 
     /**
@@ -88,9 +85,10 @@ public class EnemyHealthDisplay extends Component {
 
     @Override
     public void update() {
-        if (healthBar == null || entity == null) return;
-
-
+        if (healthBar == null || entity == null) {
+            logger.debug("HealthBar or Enemy is null");
+            return;
+        }
         Vector2 pos = entity.getPosition();
         OrthographicCamera gameCamera = ServiceLocator.getRenderService().getCamera();
         Vector3 worldPos3 = new Vector3(pos.x, pos.y, 0);
