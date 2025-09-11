@@ -2,11 +2,13 @@ package com.csse3200.game.entities.factories.items;
 
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.csse3200.game.components.RangedUseComponent;
 import com.csse3200.game.components.WeaponsStatsComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.components.ItemComponent;
 import com.csse3200.game.entities.configs.ItemTypes;
 import com.csse3200.game.entities.configs.Weapons;
+import com.csse3200.game.entities.configs.weapons.RangedWeaponConfig;
 import com.csse3200.game.entities.configs.weapons.WeaponConfig;
 import com.csse3200.game.rendering.AnimationRenderComponent;
 
@@ -42,9 +44,18 @@ public class WeaponsFactory {
 
         // Attach type to weapon
         switch (config.weaponType) {
-            case RANGED -> item.setType(ItemTypes.RANGED);
-            case MELEE -> item.setType(ItemTypes.MELEE);
-            default -> item.setType(ItemTypes.NONE);
+            case RANGED:
+                item.setType(ItemTypes.RANGED);
+                weapon.addComponent(new RangedUseComponent());
+                RangedWeaponConfig rangedConfig = (RangedWeaponConfig) config;
+                weapon.getComponent(WeaponsStatsComponent.class).setProjectileTexturePath(rangedConfig.projectileTexturePath);
+                break;
+            case MELEE:
+                item.setType(ItemTypes.MELEE);
+                break;
+            default:
+                item.setType(ItemTypes.NONE);
+                break;
         }
 
         return weapon;
