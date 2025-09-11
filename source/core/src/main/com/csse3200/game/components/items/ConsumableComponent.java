@@ -1,5 +1,7 @@
-package com.csse3200.game.components;
+package com.csse3200.game.components.items;
 
+import com.csse3200.game.components.Component;
+import com.csse3200.game.components.WeaponsStatsComponent;
 import com.csse3200.game.effects.AreaEffect;
 import com.csse3200.game.effects.Effect;
 
@@ -13,6 +15,10 @@ public class ConsumableComponent extends Component {
     public ConsumableComponent(ArrayList<Effect> effects, int duration) {
         this.effects = effects;
         this.duration = duration;
+    }
+
+    public ArrayList<Effect> getEffects() {
+        return effects;
     }
 
     public Effect getEffect(Class<? extends Effect> effectClass) {
@@ -29,10 +35,6 @@ public class ConsumableComponent extends Component {
             }
         }
         return null;
-    }
-
-    public boolean hasEffect(Class<? extends Effect> effectClass) {
-        return getEffect(effectClass) != null;
     }
 
     public int getDuration() {

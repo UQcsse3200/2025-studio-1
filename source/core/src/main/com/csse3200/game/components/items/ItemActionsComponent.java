@@ -1,5 +1,6 @@
-package com.csse3200.game.components;
+package com.csse3200.game.components.items;
 
+import com.csse3200.game.components.Component;
 import com.csse3200.game.entities.Entity;
 
 public abstract class ItemActionsComponent extends Component {
