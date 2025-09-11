@@ -264,6 +264,7 @@ public class ForestGameArea extends GameArea {
     spawnEntity(keycard);
 
     spawnItems();
+    ServiceLocator.registerGameArea(this);
   }
 
   private void spawnRobots() {
