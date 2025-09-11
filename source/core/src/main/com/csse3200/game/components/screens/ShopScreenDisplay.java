@@ -128,7 +128,7 @@ public class ShopScreenDisplay extends UIComponent {
         // Add name & price below icon
         Table itemTable = new Table();
         itemTable.add(actor).size(100, 100).row();
-        itemTable.add(new Label(entry.itemKey(), skin)).row();
+        itemTable.add(new Label(entry.getItemName(), skin)).row();
         itemTable.add(new Label("$" + entry.price(), skin)).padBottom(6).row();
 
         // --- Add Info button ---
@@ -144,7 +144,7 @@ public class ShopScreenDisplay extends UIComponent {
             actor.addListener(new ChangeListener() {
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {
-                    manager.purchase(game.getPlayer(), entry.itemKey());
+                    manager.purchase(game.getPlayer(), entry.getItemName());
                 }
             });}
 
