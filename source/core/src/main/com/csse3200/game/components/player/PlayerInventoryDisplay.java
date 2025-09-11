@@ -16,7 +16,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * The UI component of the inventory.
- * Use the triggers: "add item," "remove item," "remove all items," "focus item"
+ * Use the triggers: "add item," "remove item," "remove all items", "focus item"
  */
 public class PlayerInventoryDisplay extends UIComponent {
     private static final Logger log = LoggerFactory.getLogger(PlayerInventoryDisplay.class);
@@ -24,17 +24,28 @@ public class PlayerInventoryDisplay extends UIComponent {
     private Table table;
     private final Array<Slot> slots = new Array<>();
 
-    private static final int SLOTS = 5;
+    private static final int NUM_SLOTS = 5;
     private static final float SLOT_SIZE = 96f;
     private static final float SLOT_PAD  = 10f;
 
-    private int focusedIndex = -1;
+    private int focusedIndex = 0;
+
+    private final InventoryComponent inventory;
+
+    /** TODO what happens if this is gone, along with the
+     * Constructs the PlayerInventory display, takes in an InventoryComponent
+     * so that it can handle displaying the item textures etc.
+     * @param inventory An already initialised InventoryComponent
+     */
+    public PlayerInventoryDisplay(InventoryComponent inventory) {
+        this.inventory = inventory;
+    }
 
     @Override
     public void create() {
         super.create();
         buildUI();
-        entity.getEvents().addListener("add item", this::addInventoryItem);
+        entity.getEvents().addListener("add item", this::addItem);
         entity.getEvents().addListener("remove item", this::clearSlot);
         entity.getEvents().addListener("remove all items", this::clearAll);
         entity.getEvents().addListener("focus item", this::setFocusedIndex);
@@ -74,17 +85,18 @@ public class PlayerInventoryDisplay extends UIComponent {
         table.center().bottom();
         table.padBottom(20f);
 
-        // Preload background drawables
         Drawable normalBg = createSlotBg(0.2f, 0.2f, 0.2f, 0.6f, 2, 1f, 1f, 1f, 1f);
         Drawable focusBg  = createSlotBg(1f, 1f, 0f, 0.6f, 2, 1f, 1f, 0f, 1f);
 
-        for (int i = 0; i < SLOTS; i++) {
+        for (int i = 0; i < NUM_SLOTS; i++) {
             Slot slot = new Slot(normalBg, focusBg);
             slots.add(slot);
             table.add(slot).size(SLOT_SIZE).pad(SLOT_PAD);
         }
 
         stage.addActor(table);
+
+        setFocusedIndex(focusedIndex);
     }
 
     /** Add an item to the first empty slot. */
@@ -131,8 +143,6 @@ public class PlayerInventoryDisplay extends UIComponent {
 
     /** Focus a specific slot; pass -1 to clear focus. */
     public void setFocusedIndex(int index) {
-        if (index == focusedIndex) return;
-
         // clear previous focus
         if (focusedIndex >= 0 && focusedIndex < slots.size) {
             slots.get(focusedIndex).setHighlighted(false);

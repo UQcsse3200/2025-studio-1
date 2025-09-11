@@ -62,6 +62,7 @@ public class WinScreenDisplay extends UIComponent {
         //Victory title
         Label victoryLabel = new Label("Victory", skin, "title");
         victoryLabel.setFontScale(3.0f);
+        victoryLabel.setColor(0f, 1f, 0f, 1f);
         table.add(victoryLabel).colspan(2).center().padBottom(50f);
         table.row();
 

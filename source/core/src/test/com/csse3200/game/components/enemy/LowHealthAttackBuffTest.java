@@ -1,6 +1,7 @@
 package com.csse3200.game.components.enemy;
 
 import com.csse3200.game.components.CombatStatsComponent;
+import com.csse3200.game.components.WeaponsStatsComponent;
 import com.csse3200.game.entities.Entity;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -11,8 +12,9 @@ public class LowHealthAttackBuffTest {
     @Test
     @DisplayName("Buffs attack at threshold health")
     void buffsAttackAtThreshold() {
-        CombatStatsComponent stats = new CombatStatsComponent(100, 10);
+        WeaponsStatsComponent stats = new WeaponsStatsComponent(10);
         Entity ghostGpt = new Entity()
+                .addComponent(new CombatStatsComponent(100))
                 .addComponent(stats)
                 .addComponent(new LowHealthAttackBuff(10, stats));
 
@@ -21,14 +23,15 @@ public class LowHealthAttackBuffTest {
         ghostGpt.getComponent(CombatStatsComponent.class).setHealth(20);
 
         assertEquals(20, ghostGpt.getComponent(CombatStatsComponent.class).getHealth());
-        assertEquals(20, ghostGpt.getComponent(CombatStatsComponent.class).getBaseAttack());
+        assertEquals(20, ghostGpt.getComponent(WeaponsStatsComponent.class).getBaseAttack());
     }
 
     @Test
     @DisplayName("Buff applied only once")
     void buffAppliedOnlyOnce() {
-        CombatStatsComponent stats = new CombatStatsComponent(100, 10);
+        WeaponsStatsComponent stats = new WeaponsStatsComponent(10);
         Entity ghostGpt = new Entity()
+                .addComponent(new CombatStatsComponent(100))
                 .addComponent(stats)
                 .addComponent(new LowHealthAttackBuff(10, stats));
         ghostGpt.create();
@@ -36,11 +39,11 @@ public class LowHealthAttackBuffTest {
         ghostGpt.getComponent(CombatStatsComponent.class).setHealth(20);
 
         assertEquals(20, ghostGpt.getComponent(CombatStatsComponent.class).getHealth());
-        assertEquals(20, ghostGpt.getComponent(CombatStatsComponent.class).getBaseAttack());
+        assertEquals(20, ghostGpt.getComponent(WeaponsStatsComponent.class).getBaseAttack());
 
         ghostGpt.getComponent(CombatStatsComponent.class).setHealth(10);
 
         assertEquals(10, ghostGpt.getComponent(CombatStatsComponent.class).getHealth());
-        assertEquals(20, ghostGpt.getComponent(CombatStatsComponent.class).getBaseAttack());
+        assertEquals(20, ghostGpt.getComponent(WeaponsStatsComponent.class).getBaseAttack());
     }
 }
