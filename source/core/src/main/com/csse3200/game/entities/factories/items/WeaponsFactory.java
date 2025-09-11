@@ -10,6 +10,7 @@ import com.csse3200.game.entities.configs.ItemTypes;
 import com.csse3200.game.entities.configs.Weapons;
 import com.csse3200.game.entities.configs.weapons.WeaponConfig;
 import com.csse3200.game.rendering.AnimationRenderComponent;
+import com.csse3200.game.rendering.TextureRenderComponent;
 
 /**
  * Factory to create non-playable character (NPC) entities with predefined components.
@@ -51,6 +52,7 @@ public class WeaponsFactory {
                 break;
             case MELEE:
                 item.setType(ItemTypes.MELEE);
+                weapon.getComponent(TextureRenderComponent.class).disableComponent();
                 break;
             default:
                 item.setType(ItemTypes.NONE);
