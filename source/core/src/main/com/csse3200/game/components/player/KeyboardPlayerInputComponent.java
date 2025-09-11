@@ -174,7 +174,7 @@ public class KeyboardPlayerInputComponent extends InputComponent {
     boolean validDoubleKey = false;
     long timeDif = System.currentTimeMillis() - timeSinceKeyPress;
     long DOUBLE_KEY_INTERVAL = 300;
-    if (keycode == doublePressKeyCode || timeDif < DOUBLE_KEY_INTERVAL) {
+    if (keycode == doublePressKeyCode && timeDif < DOUBLE_KEY_INTERVAL) {
       validDoubleKey = true;
     }
     updateDoubleKeyPress(keycode);
