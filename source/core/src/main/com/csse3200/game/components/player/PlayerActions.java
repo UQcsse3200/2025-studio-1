@@ -340,6 +340,8 @@ public class PlayerActions extends Component {
 
   /** Fires a projectile towards the mouse cursor. */
   void shoot() {
+
+
     WeaponsStatsComponent weapon = getCurrentWeaponStats();
     if (weapon == null) {
       return;
@@ -347,10 +349,13 @@ public class PlayerActions extends Component {
 
     InventoryComponent inventory = entity.getComponent(InventoryComponent.class);
     Entity gun = inventory.getCurrentItem();
+
     MagazineComponent mag = gun.getComponent(MagazineComponent.class);
     // Check for cooldown, defaulting to zero if no current weapon
     float coolDown = weapon.getCoolDown();
-    if (this.timeSinceLastAttack < coolDown || mag.reloading()) return;
+    if (this.timeSinceLastAttack < coolDown || mag.reloading()) {
+      return;
+    }
 
     if (mag.getCurrentAmmo() <= 0) {
       Sound attackSound = ServiceLocator.getResourceService()
