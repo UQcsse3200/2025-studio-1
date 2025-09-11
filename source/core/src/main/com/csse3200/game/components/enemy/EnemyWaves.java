@@ -67,6 +67,7 @@ public class EnemyWaves {
         if (roomNumber > 3) {
             gameArea.spawnGhostGPT(1, scalingFactor);
             gameArea.spawnVroomba(2, scalingFactor);
+            gameArea.spawnTurret(3, scalingFactor);
         } else {
             gameArea.spawnDeepspin(maxEnemies, scalingFactor);
         }
