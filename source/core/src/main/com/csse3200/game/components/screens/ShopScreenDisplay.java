@@ -26,6 +26,7 @@ public class ShopScreenDisplay extends UIComponent {
     private Table grid;
     private Table hud;
     private Label currencyLabel;
+    private ItemScreenDisplay itemPopup;
 
 
     public ShopScreenDisplay(ForestGameArea area, CatalogService catalog, ShopManager manager) {
@@ -36,6 +37,9 @@ public class ShopScreenDisplay extends UIComponent {
     @Override
     public void create() {
         super.create();
+        itemPopup = new ItemScreenDisplay();
+        entity.addComponent(itemPopup);
+
 
         // --- Dimmer ---
         dimTex = makeSolidTexture(new Color(0, 0, 0, 0.6f));
@@ -114,6 +118,7 @@ public class ShopScreenDisplay extends UIComponent {
         if (dimmer != null) { dimmer.remove(); dimmer = null; }
         if (dimTex != null) { dimTex.dispose(); dimTex = null; }
         if (hud != null) { hud.remove(); hud = null; }
+        if (itemPopup != null) { itemPopup.dispose(); itemPopup = null; }
         super.dispose();
     }
 
@@ -136,29 +141,28 @@ public class ShopScreenDisplay extends UIComponent {
 
         // Click to purchase
         if(entry.enabled()){
-        actor.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                manager.purchase(game.getPlayer(), entry.itemKey());
-            }
-        });}
+            actor.addListener(new ChangeListener() {
+                @Override
+                public void changed(ChangeEvent event, Actor actor) {
+                    manager.purchase(game.getPlayer(), entry.itemKey());
+                }
+            });}
 
         grid.add(itemTable).size(120, 140);
 
     }
 
     private TextButton infoButton(CatalogEntry entry) {
-        TextButton infoBtn = new TextButton("Info", skin);
-        infoBtn.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                // Open mini screen in the middle
-                ItemScreenDisplay mini = new ItemScreenDisplay(entry);
-                mini.show(stage, skin);
+        TextButton btn = new TextButton("Info", skin);
+        btn.addListener(new ChangeListener() {
+            @Override public void changed(ChangeEvent event, Actor actor) {
+                itemPopup.open(entry); // safe: stage is already set by create()
             }
         });
-        return infoBtn;
+        return btn;
     }
+
+
 
 
 
