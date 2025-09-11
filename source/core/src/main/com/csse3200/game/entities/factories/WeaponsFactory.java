@@ -18,11 +18,11 @@ import com.csse3200.game.rendering.AnimationRenderComponent;
 import com.csse3200.game.rendering.TextureRenderComponent;
 
 /**
- * Factory to create non-playable character (NPC) entities with predefined components.
+ * Factory to create weapon entities with predefined components.
  *
- * <p>Each NPC entity type should have a creation method that returns a corresponding entity.
- * Predefined entity properties can be loaded from lightsaberConfigs stored as json files which are defined in
- * "NPCConfigs".
+ * <p>Each weapon entity type should have a creation method that returns a corresponding entity.
+ * Predefined entity properties can be loaded from configs stored as json files which are defined in
+ * assets/configs.
  *
  * <p>If needed, this factory can be separated into more specific factories for entities with
  * similar characteristics.
@@ -41,10 +41,10 @@ public class WeaponsFactory {
     public static Entity createLightsaber() {
 
         Entity lightsaber = createBaseWeapon("melee");
-        lightsaber.addComponent(new TextureRenderComponent("images/lightsaberSingle.png"))
+        lightsaber//.addComponent(new TextureRenderComponent("images/lightsaberSingle.png"))
             .addComponent(new CombatStatsComponent(0, lightsaberConfigs.baseAttack))
             .addComponent(new ItemComponent(1));
-        lightsaber.getComponent(TextureRenderComponent.class).scaleEntity();
+        //lightsaber.getComponent(TextureRenderComponent.class).scaleEntity();
         lightsaber.getComponent(PhysicsComponent.class).getBody().setUserData(lightsaber);
         return lightsaber;
     }
