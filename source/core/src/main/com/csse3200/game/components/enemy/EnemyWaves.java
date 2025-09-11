@@ -1,7 +1,8 @@
 package com.csse3200.game.components.enemy;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.utils.Timer;
+import com.csse3200.game.areas.Floor2GameArea;
+import com.csse3200.game.areas.ForestGameArea;
 import com.csse3200.game.areas.GameArea;
 import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.components.npc.GhostAnimationController;
@@ -17,7 +18,6 @@ import org.slf4j.LoggerFactory;
 public class EnemyWaves {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final int maxWaves;
-    private final int roomNumber;
     private final Entity player;
 
     private static int maxEnemies = 4;
@@ -30,13 +30,13 @@ public class EnemyWaves {
     private int waveNumber;
     private long waveEndTime;
 
-    public EnemyWaves(int roomNumber, GameArea gameArea, Entity player) {
-        this.roomNumber = roomNumber;
+    public EnemyWaves(GameArea gameArea, Entity player) {
         this.waveNumber = 0;
         this.waveEndTime = 0;
         this.player = player;
-        this.maxWaves = (this.roomNumber > 4) ? 2 : 1;
-        maxEnemies = (this.roomNumber > 3) ? (maxEnemies + 1) : 4;
+        GameArea area = ServiceLocator.getGameArea();
+        this.maxWaves = (area.getClass() == Floor2GameArea.class) ? 2 : 1;
+        maxEnemies = (area.getClass() == Floor2GameArea.class) ? (maxEnemies + 1) : 4;
     }
 
     /**
@@ -65,11 +65,10 @@ public class EnemyWaves {
 
         logger.debug("Spawning wave {}, with scaling factor {}", waveNumber, scalingFactor);
         GameArea gameArea = ServiceLocator.getGameArea();
-        if (roomNumber > 3) {
+        if (gameArea.getClass() == ForestGameArea.class) {
             gameArea.spawnGhostGPT(1, scalingFactor, player);
             gameArea.spawnVroomba(2, scalingFactor, player);
-        } else {
-            gameArea.spawnDeepspin(maxEnemies, scalingFactor, player);
+            logger.info("Enemies have been spawned");
         }
         waveNumber++;
         scalingFactor += 0.25f;
