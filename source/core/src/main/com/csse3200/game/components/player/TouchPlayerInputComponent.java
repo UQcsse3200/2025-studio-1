@@ -24,7 +24,7 @@ public class TouchPlayerInputComponent extends InputComponent {
    * @see InputProcessor#keyDown(int)
    */
   @Override
-  public boolean keyDown(int keycode) {
+  public boolean keyPressed(int keycode) {
     switch (keycode) {
       case Input.Keys.UP:
         walkDirection.add(Vector2Utils.UP);
@@ -54,7 +54,7 @@ public class TouchPlayerInputComponent extends InputComponent {
    * @see InputProcessor#keyUp(int)
    */
   @Override
-  public boolean keyUp(int keycode) {
+  public boolean keyReleased(int keycode) {
     switch (keycode) {
       case Input.Keys.UP:
         walkDirection.sub(Vector2Utils.UP);

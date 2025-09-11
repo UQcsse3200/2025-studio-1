@@ -2,19 +2,29 @@ package com.csse3200.game.input;
 
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.extensions.GameExtension;
+import com.csse3200.game.services.GameTime;
 import com.csse3200.game.services.ServiceLocator;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(GameExtension.class)
 class InputComponentTest {
+
+    @BeforeEach
+    void setUp() {
+       ServiceLocator.registerTimeSource(mock(GameTime.class));
+    }
+
+    @Test
+    void shouldBePausable() {
+        InputComponent inputComponent = spy(InputComponent.class);
+        assertTrue(inputComponent.isPauseable());
+    }
+
   @Test
   void shouldUpdatePriority() {
     int newPriority = 100;
@@ -40,9 +50,16 @@ class InputComponentTest {
   }
 
   @Test
-  void shouldHandleKeyDown(){
+  void shouldHandleKeyPressed(){
     InputComponent inputComponent = spy(InputComponent.class);
-    assertFalse(inputComponent.keyDown(1));
+    assertFalse(inputComponent.keyPressed(1));
+  }
+
+  @Test
+  void shouldHandleKeyPressPaused() {
+        InputComponent inputComponent = spy(InputComponent.class);
+        ServiceLocator.getTimeSource().setPaused(true);
+        assertFalse(inputComponent.keyPressed(1));
   }
 
   @Test
@@ -52,9 +69,16 @@ class InputComponentTest {
   }
 
   @Test
-  void shouldHandleKeyUp() {
+  void shouldHandleKeyReleased() {
   InputComponent inputComponent = spy(InputComponent.class);
-  assertFalse(inputComponent.keyUp(1));
+  assertFalse(inputComponent.keyReleased(1));
+  }
+
+  @Test
+  void shouldHandleKeyReleasedPause() {
+      InputComponent inputComponent = spy(InputComponent.class);
+      ServiceLocator.getTimeSource().setPaused(true);
+      assertFalse(inputComponent.keyReleased(1));
   }
 
   @Test

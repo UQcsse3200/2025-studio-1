@@ -1,5 +1,6 @@
 package com.csse3200.game.input;
 
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.Vector2;
@@ -56,11 +57,38 @@ public abstract class InputComponent extends Component
    * Below methods are for supporting keyboard and touch.
    */
 
-  /** @see InputProcessor#keyDown(int) */
-  @Override
-  public boolean keyDown(int keycode) {
-    return false;
+    /**
+     * Returns True as this component is pausable.
+     * @return True if the component is not pauseable, False if it is
+     */
+  protected boolean isPauseable() {
+      return true;
   }
+
+    /**
+     * Handles key down events from the game engine. This is final
+     * to ensure the logic is inherited by all children while delegating
+     * specific key handling to the {@link #keyPressed(int)} method.
+     *
+     * @param keycode one of the constants in {@link Input.Keys}
+     * @return true if the even was handled, false otherwise
+     */
+  @Override
+  public final boolean keyDown(int keycode) {
+      if (this.isPauseable() && ServiceLocator.getTimeSource().isPaused()) {
+          return false;
+      }
+    return this.keyPressed(keycode);
+  }
+
+    /**
+     * An abstract method to be implemented by subclasses for specific key down
+     * events. This method is called by the {@link #keyDown(int)} method.
+     *
+     * @param keycode The key code of the key that was pressed.
+     * @return true if the even was handled, false otherwise
+     */
+  protected abstract boolean keyPressed(int keycode);
 
   /** @see InputProcessor#keyTyped(char) */
   @Override
@@ -68,11 +96,32 @@ public abstract class InputComponent extends Component
     return false;
   }
 
-  /** @see InputProcessor#keyUp(int) */
+    /**
+     * Handles the key up events from the game engine. This is final
+     * to ensure that the logic is inherited by all the children while
+     * delegating specific key handling to the {@link #keyReleased(int)}
+     * method.
+     *
+     * @param keycode one of the constants in {@link Input.Keys}
+     * @return true if the even was handled, false otherwise
+     */
   @Override
-  public boolean keyUp(int keycode) {
-    return false;
+  public final boolean keyUp(int keycode) {
+      if (this.isPauseable() && ServiceLocator.getTimeSource().isPaused()) {
+          return false;
+      }
+      return this.keyReleased(keycode);
   }
+
+    /**
+     * An abstract method to be implemented by subclasses for specific key down
+     * events. This method is called by the {@link #keyUp(int)} method.
+     *
+     * @param keycode The key code of the key that was pressed.
+     * @return True if the even was handled, false otherwise
+     */
+  protected abstract boolean keyReleased(int keycode);
+
 
   /** @see InputProcessor#mouseMoved(int, int) */
   @Override

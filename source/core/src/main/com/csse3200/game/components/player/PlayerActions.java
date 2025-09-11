@@ -333,6 +333,9 @@ public class PlayerActions extends Component {
 
   /** Fires a projectile towards the mouse cursor. */
   void shoot() {
+    if (ServiceLocator.getTimeSource().isPaused())
+        return;
+
     WeaponsStatsComponent weapon = getCurrentWeaponStats();
     if (weapon == null) {
       return;
@@ -359,6 +362,8 @@ public class PlayerActions extends Component {
 
   /** Performs a melee attack against nearby enemies. */
   void attack() {
+      if (ServiceLocator.getTimeSource().isPaused())
+          return;
     WeaponsStatsComponent weapon = getCurrentWeaponStats();
     float coolDown = weapon != null ? weapon.getCoolDown() : 0;
     if (this.timeSinceLastAttack < coolDown) return;

@@ -16,7 +16,7 @@ public class InputDecorator extends InputComponent {
   }
 
   @Override
-  public boolean keyDown(int keycode) {
+  public boolean keyPressed(int keycode) {
     return inputProcessor.keyDown(keycode);
   }
 
@@ -26,7 +26,7 @@ public class InputDecorator extends InputComponent {
   }
 
   @Override
-  public boolean keyUp(int keycode) {
+  public boolean keyReleased(int keycode) {
     return inputProcessor.keyUp(keycode);
   }
 

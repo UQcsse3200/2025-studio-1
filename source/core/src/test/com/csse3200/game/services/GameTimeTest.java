@@ -8,7 +8,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -34,6 +34,14 @@ class GameTimeTest {
 
       gameTime.setPaused(false);
       shouldScale(1, 10f, 10f);
+  }
+
+  @Test
+  void shouldCheckPause() {
+      assertFalse(gameTime.isPaused());
+
+      gameTime.setPaused(true);
+      assertTrue(gameTime.isPaused());
   }
 
   @Test

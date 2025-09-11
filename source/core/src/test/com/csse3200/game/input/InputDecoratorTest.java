@@ -18,13 +18,13 @@ class InputDecoratorTest {
   void shouldCallKeys() {
     InputDecorator inputDecorator = new InputDecorator(inputProcessor, 10);
 
-    inputDecorator.keyDown(1);
+    inputDecorator.keyPressed(1);
     verify(inputProcessor).keyDown(1);
 
     inputDecorator.keyTyped('c');
     verify(inputProcessor).keyTyped('c');
 
-    inputDecorator.keyUp(2);
+    inputDecorator.keyReleased(2);
     verify(inputProcessor).keyUp(2);
   }
 
