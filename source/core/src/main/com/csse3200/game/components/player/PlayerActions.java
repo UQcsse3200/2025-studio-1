@@ -19,6 +19,8 @@ import com.csse3200.game.physics.PhysicsLayer;
 import com.csse3200.game.physics.components.HitboxComponent;
 import com.csse3200.game.physics.components.PhysicsComponent;
 import com.csse3200.game.physics.components.PhysicsProjectileComponent;
+import com.csse3200.game.rendering.AnimationRenderComponent;
+import com.csse3200.game.rendering.TextureRenderComponent;
 import com.csse3200.game.services.ServiceLocator;
 import com.badlogic.gdx.utils.Timer;
 
@@ -85,6 +87,7 @@ public class PlayerActions extends Component {
     entity.getEvents().addListener("walk", this::walk);
     entity.getEvents().addListener("walkStop", this::stopWalking);
     entity.getEvents().addListener("attack", this::attack);
+    entity.getEvents().addListener("attack", this::weaponAnimation);
     entity.getEvents().addListener("shoot", this::shoot);
     entity.getEvents().addListener("jumpAttempt", this::jump);
     entity.getEvents().addListener("sprintAttempt", this::sprintAttempt);
@@ -454,6 +457,13 @@ public class PlayerActions extends Component {
 
         reloadSound.play();
       }
+    }
+  }
+
+  void weaponAnimation() {
+    if (entity.getComponent(AnimationRenderComponent.class) != null) {
+      entity.getEvents().trigger("anim");
+      System.out.println("TRIGGERED");
     }
   }
 }
