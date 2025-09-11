@@ -204,7 +204,6 @@ public class ForestGameArea extends GameArea {
    * @param cameraComponent Camera helper supplying an OrthographicCamera (optional but used here).
    * @requires terrainFactory != null
    */
-
   public ForestGameArea(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
     super();
     this.terrainFactory = terrainFactory;
