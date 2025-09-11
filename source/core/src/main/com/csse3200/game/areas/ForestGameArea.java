@@ -5,13 +5,15 @@ import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
-import com.csse3200.game.components.ItemHoldComponent;
+import com.csse3200.game.components.items.ItemHoldComponent;
 import com.csse3200.game.components.WeaponsStatsComponent;
 import com.csse3200.game.components.player.InventoryComponent;
 import com.csse3200.game.entities.Entity;
+import com.csse3200.game.entities.configs.Consumables;
 import com.csse3200.game.entities.configs.Weapons;
 import com.csse3200.game.entities.factories.characters.BossFactory;
 import com.csse3200.game.entities.factories.characters.NPCFactory;
+import com.csse3200.game.entities.factories.items.ConsumableFactory;
 import com.csse3200.game.entities.factories.items.ItemFactory;
 import com.csse3200.game.entities.factories.items.WeaponsFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
@@ -141,6 +143,7 @@ public class ForestGameArea extends GameArea {
     //this.equipItem(lightsaber);
     //this.equipItem(dagger);
     this.equipItem(rifle);
+    this.equipItem(ConsumableFactory.createConsumable(Consumables.GENERIC_HEAL_ITEM));
 
     spawnGhosts();
     spawnGhostKing();
