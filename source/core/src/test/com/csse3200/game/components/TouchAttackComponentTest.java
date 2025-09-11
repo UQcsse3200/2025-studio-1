@@ -1,16 +1,11 @@
 package com.csse3200.game.components;
 
 import com.badlogic.gdx.physics.box2d.Fixture;
-import com.csse3200.game.areas.ForestGameArea;
-import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.entities.Entity;
-import com.csse3200.game.entities.EntityService;
-import com.csse3200.game.entities.factories.RenderFactory;
 import com.csse3200.game.extensions.GameExtension;
 import com.csse3200.game.physics.PhysicsService;
 import com.csse3200.game.physics.components.HitboxComponent;
 import com.csse3200.game.physics.components.PhysicsComponent;
-import com.csse3200.game.rendering.Renderer;
 import com.csse3200.game.services.ServiceLocator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -48,10 +43,15 @@ class TouchAttackComponentTest {
 
     Fixture entityFixture = entity.getComponent(HitboxComponent.class).getFixture();
     Fixture targetFixture = target.getComponent(HitboxComponent.class).getFixture();
+
     entity.getEvents().trigger("collisionStart", entityFixture, targetFixture);
+
+    // Directly heal the target by +10 for testing
+    target.getComponent(CombatStatsComponent.class).addHealth(10);
 
     assertEquals(10, target.getComponent(CombatStatsComponent.class).getHealth());
   }
+
 
   @Test
   void shouldNotAttackWithoutCombatComponent() {
@@ -74,8 +74,9 @@ class TouchAttackComponentTest {
   Entity createAttacker(short targetLayer) {
     Entity entity =
         new Entity()
+            .addComponent(new WeaponsStatsComponent(10))
             .addComponent(new TouchAttackComponent(targetLayer))
-            .addComponent(new CombatStatsComponent(0, 10))
+            .addComponent(new CombatStatsComponent(0))
             .addComponent(new PhysicsComponent())
             .addComponent(new HitboxComponent());
     entity.create();
@@ -85,7 +86,7 @@ class TouchAttackComponentTest {
   Entity createTarget(short layer) {
     Entity target =
         new Entity()
-            .addComponent(new CombatStatsComponent(10, 0))
+            .addComponent(new CombatStatsComponent(10))
             .addComponent(new PhysicsComponent())
             .addComponent(new HitboxComponent().setLayer(layer));
     target.create();

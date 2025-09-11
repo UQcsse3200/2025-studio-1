@@ -10,7 +10,7 @@ import java.util.List;
 
 public class PowerupComponent extends Component {
 
-    private CombatStatsComponent playerStats;
+    private WeaponsStatsComponent playerStats;
     private float duration;
     private float elapsed = 0f;
     private float originalCooldown;
@@ -20,7 +20,7 @@ public class PowerupComponent extends Component {
         this.active = false;
     }
 
-    public void applyRapidFire(CombatStatsComponent stats, float duration) {
+    public void applyRapidFire(WeaponsStatsComponent stats, float duration) {
         this.playerStats = stats;
         this.duration = duration;
         this.elapsed = 0f;
