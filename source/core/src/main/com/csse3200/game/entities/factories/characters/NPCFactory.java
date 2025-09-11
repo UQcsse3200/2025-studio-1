@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.ai.tasks.AITaskComponent;
 import com.csse3200.game.areas.ForestGameArea;
+import com.csse3200.game.areas.GameArea;
 import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.components.WeaponsStatsComponent;
 import com.csse3200.game.components.enemy.LowHealthAttackBuff;
@@ -136,7 +137,7 @@ public class NPCFactory {
    * @param scalingFactor The scale of increase in health & attack of the GhostGPT
    * @return entity
    */
-  public static Entity createGhostGPT(Entity target, ForestGameArea area, float scalingFactor) {
+  public static Entity createGhostGPT(Entity target, GameArea area, float scalingFactor) {
     // Build GhostGPT as a ground enemy (do not use createBaseNPC to avoid floating movement)
     Entity ghostGPT = new Entity()
             .addComponent(new PhysicsComponent())
@@ -223,7 +224,7 @@ public class NPCFactory {
    * @param scalingFactor The scale of increase in health & attack of the DeepSpin
    * @return entity
    */
-  public static Entity createDeepspin(Entity target, ForestGameArea area, float scalingFactor) {
+  public static Entity createDeepspin(Entity target, GameArea area, float scalingFactor) {
     Entity deepspin = createBaseNPC(target);
     DeepspinConfig config = configs.deepSpin;
 
@@ -273,7 +274,7 @@ public class NPCFactory {
    * @param scalingFactor The scale of increase in health & attack of the GrokDroid
    * @return entity
    */
-  public static Entity createGrokDroid(Entity target, ForestGameArea area, float scalingFactor) {
+  public static Entity createGrokDroid(Entity target, GameArea area, float scalingFactor) {
     Entity grokDroid = createBaseNPC(target);
     GrokDroidConfig config = configs.grokDroid;
 
