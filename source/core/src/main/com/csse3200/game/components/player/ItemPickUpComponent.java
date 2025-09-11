@@ -207,4 +207,3 @@ public class ItemPickUpComponent extends Component {
         return null;
     }
 }
-
