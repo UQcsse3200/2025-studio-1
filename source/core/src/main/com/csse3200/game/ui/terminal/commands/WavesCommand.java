@@ -1,5 +1,7 @@
 package com.csse3200.game.ui.terminal.commands;
 
+import com.csse3200.game.areas.Floor2GameArea;
+import com.csse3200.game.areas.Floor3GameArea;
 import com.csse3200.game.areas.GameArea;
 import com.csse3200.game.areas.ForestGameArea;
 import com.csse3200.game.services.ServiceLocator;
@@ -18,11 +20,11 @@ public class WavesCommand implements Command {
   @Override
   public boolean action(ArrayList<String> args) {
     GameArea ga = ServiceLocator.getGameArea();
-    if (!(ga instanceof ForestGameArea)) {
+    if (!(ga instanceof Floor2GameArea)) {
       logger.warn("WavesCommand: Current GameArea is not a ForestGameArea; cannot start waves");
       return false;
     }
-    ForestGameArea area = (ForestGameArea) ga;
+    Floor2GameArea area = (Floor2GameArea) ga;
     area.startWaves();
     logger.info("WavesCommand: Enemy waves started");
     return true;
