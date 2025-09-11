@@ -249,14 +249,14 @@ public class ForestGameArea extends GameArea {
     spawnBigWall();
     // spawnGhosts();
     // spawnGhostKing();
-    int choice = (int)(Math.random() * 3);
-    if (choice == 0) {
+   // int choice = (int)(Math.random() * 3);
+   // if (choice == 0) {
       spawnBoss2();
-    } else if (choice == 1) {
-      spawnRobots();
-    } else {
-      spawnBoss3();
-    }
+//    } else if (choice == 1) {
+//      spawnRobots();
+//    } else {
+//      spawnBoss3();
+//    }
     // spawnGhostGPT();
     // spawnDeepspin();
     // spawnGrokDroid();
@@ -363,7 +363,6 @@ public class ForestGameArea extends GameArea {
       entity.dispose();
     }
     areaEntities.clear();
-
     Floor2GameArea floor2 = new Floor2GameArea(terrainFactory, cameraComponent);
     floor2.create();
   }

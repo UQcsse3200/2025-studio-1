@@ -132,7 +132,7 @@ public class Floor2GameArea extends GameArea {
     bottomDoor.setPosition(doorX, bottomY + 0.1f); // Position above floor level
     // Door returns to floor 1
     bottomDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadPreviousLevel));
-    spawnEntity(bottomDoor);
+    //spawnEntity(bottomDoor);
 
     // Left border split with a vertical door -> Room 4
     float leftDoorHeight = Math.max(1f, viewHeight * 0.2f);
