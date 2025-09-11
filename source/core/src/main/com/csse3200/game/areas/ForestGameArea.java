@@ -103,7 +103,7 @@ public class ForestGameArea extends GameArea {
     "images/player.png",
     "images/mud.png",
     "images/heart.png",
-    "images/computerBench"
+    "images/computerBench.png"
   };
 
   /** General prop textures (floors, tiles, etc.). */
@@ -226,7 +226,7 @@ public class ForestGameArea extends GameArea {
     displayUI();
 
     spawnTerrain();
-    spawnTrees();
+//    spawnTrees();
     spawnComputerBench();
 
     player = spawnPlayer();
