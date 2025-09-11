@@ -243,9 +243,9 @@ public class ForestGameArea extends GameArea {
 
     //These are commented out since there is no equip feature yet
     // this.equipItem(pistol);
-     this.equipItem(lightsaber);
+    // this.equipItem(lightsaber);
     // this.equipItem(dagger);
-    //this.equipItem(rifle);
+     this.equipItem(rifle);
 
 
     spawnFloor();
