@@ -12,26 +12,33 @@ import org.slf4j.LoggerFactory;
 public class CombatStatsComponent extends Component {
 
   private static final Logger logger = LoggerFactory.getLogger(CombatStatsComponent.class);
-  private int health;
-  private int maxHealth;
-  private int baseAttack;
-  private int thresholdForBuff = 20;
-  private float coolDown;
-  private int ammo;
 
-  public CombatStatsComponent(int health, int baseAttack) {
+  /** Current health points (HP). Never negative. */
+  private int health;
+
+  /** Maximum health points. Caller-controlled; not enforced as an upper bound on {@link #setHealth(int)}. */
+  private int maxHealth;
+
+
+  private int thresholdForBuff = 20;
+
+
+  /**
+   * Construct a combat Stats Component (Health + Attack System)
+   *
+   * @param health     initial health (values {@code < 0} are clamped to {@code 0})
+   */
+  public CombatStatsComponent(int health) {
+    setMaxHealth(health);
     setHealth(health);
-    setBaseAttack(baseAttack);
-    this.coolDown = 0;
-    //placeholder value
-    this.ammo = 1000;
-    this.maxHealth = health;
   }
 
   /**
-   * Returns true if the entity's has 0 health, otherwise false.
+   * Checks whether this entity is dead.
+   * <p>
+   * An entity is considered dead if its health is less than or equal to zero.
    *
-   * @return is player dead
+   * @return {@code true} if the entity has 0 or less health, {@code false} otherwise
    */
   public Boolean isDead() {
     return this.health <= 0;
@@ -43,22 +50,21 @@ public class CombatStatsComponent extends Component {
    * @return entity's health
    */
   public int getHealth() {
-    return this.health;
+    return health;
+  }
+
+  public void takeDamage(int damage) {
+    applyDamage(damage);
   }
 
   /**
-   * Sets the entity's health. Health has a minimum bound of 0.
+   * Sets the entity's health. Health is always clamped between 0 and maxHealth.
    *
-   * @param health health
+   * @param health new health value
    */
   public void setHealth(int health) {
     int prevHealth = this.health;
-    if (health >= 0) {
-      this.health = health;
-    } else {
-      this.health = 0;
-    }
-
+    this.health = Math.clamp(health, 0, this.maxHealth);
     if (entity != null) {
       entity.getEvents().trigger("updateHealth", this.health);
 
@@ -75,31 +81,6 @@ public class CombatStatsComponent extends Component {
     }
   }
 
-    /**
-     * Set the entity's hit cooldown (seconds)
-     *
-     * @param coolDown coolDown
-     */
-    public void setCoolDown(float coolDown) {
-        if (coolDown >= 0) {
-            this.coolDown = coolDown;
-        } else {
-            this.coolDown = 0;
-        }
-    }
-
-  /**
-   * gets the entity's cooldown between attacks (seconds).
-   *
-   */
-
-  public float getCoolDown() {
-
-    return this.coolDown;
-  }
-
-
-
   /**
    * Adds to the player's health. The amount added can be negative.
    *
@@ -112,13 +93,13 @@ public class CombatStatsComponent extends Component {
   /**
    * Sets the entity's Max Health. Max Health has a minimum bound of 0.
    *
-   * @param maxHealth the maximum health that a entity can have
+   * @param maxHealth the maximum health that an entity can have
    */
   public void setMaxHealth(int maxHealth) {
-    if (maxHealth >= 0) {
-      this.maxHealth = maxHealth;
-    } else {
-      this.maxHealth = 0;
+    this.maxHealth = Math.max(maxHealth, 0);
+    // If current health is above the new cap, clamp it (and emit updateHealth)
+    if (this.health > this.maxHealth) {
+      setHealth(this.maxHealth);
     }
     if (entity != null) {
       entity.getEvents().trigger("updateMaxHealth", this.maxHealth);
@@ -126,91 +107,29 @@ public class CombatStatsComponent extends Component {
   }
 
   /**
-   * Return entity's maximum health
+   * Sets the entity's maximum health
+   *
+   * @return the entity's maximum health (never negative)
    */
   public int getMaxHealth() {
-     return maxHealth;
+     return this.maxHealth;
   }
 
-  /**
-   * Returns the entity's base attack damage.
-   *
-   * @return base attack damage
-   */
-  public int getBaseAttack() {
-    return this.baseAttack;
-  }
 
-  /**
-   * Sets the entity's attack damage. Attack damage has a minimum bound of 0.
-   *
-   * @param attack Attack damage
-   */
-  public void setBaseAttack(int attack) {
-    if (attack >= 0) {
-      this.baseAttack = attack;
-    } else {
-      logger.error("Can not set base attack to a negative attack value");
-    }
-  }
-
-  /**
-   * Allows the entity to be hit by some attacker and deal some damage, if they have waited
-   * for the designated time between attacks.
-   * @param attacker the entity attacking
-   */
-  public void hit(CombatStatsComponent attacker) {
-    if (attacker == null) {
-        logger.error("hit(attacker) called with null attacker");
-        return;
-    }
-    applyDamage(attacker.getBaseAttack());
-  }
 
   /**
    * Apply damage to this entity.
    *
-   * @param damage Damage amount (must >= 0)
+   * <p>Damage {@code <= 0} is ignored. If the entity is dead, the call is a no-op.</p>
+   *
+   * @param damage damage amount (must be {@code >= 0} to have any effect)
+   * @implSpec Implementations must not reduce health below {@code 0}.
+   * @see #setHealth(int)
    */
-
   private void applyDamage(int damage) {
-    if (damage <= 0 || isDead()) {
+    if (damage <= 0 || Boolean.TRUE.equals(isDead())) {
         return;
     }
     setHealth(this.health - damage);
   }
-
-  /**
-   * Deal direct damage as an integer.
-   * <p>
-   * This is intended for non-entity sources of damage, such as traps,
-   * projectiles, or weapons. At this stage, the weapon's output power
-   * (damage) is represented as a simple {@code int}. In future, this
-   * can be extended to use a WeaponStatsComponent or DamageInfo object
-   * for more complex calculations (crit, resistances, etc.).
-   */
-
-  public void hit(int damage) {
-    applyDamage(damage);
-  }
-
-  /**
-   * Gets the player's current amount off ammo (bullets they can fire)
-   * @return player's ammo.
-   */
-  public int getAmmo() {
-
-    return this.ammo;
-  }
-
-  /**
-   * Sets the player's current ammo count to a new value
-   * @param ammo the desired amount  ammo for the player to carry
-   */
-  public void setAmmo(int ammo) {
-
-    this.ammo = ammo;
-  }
-
-
 }

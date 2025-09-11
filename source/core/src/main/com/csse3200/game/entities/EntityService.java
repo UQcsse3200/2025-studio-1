@@ -4,9 +4,6 @@ import com.badlogic.gdx.utils.Array;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Provides a global access point for entities to register themselves. This allows for iterating
  * over entities to perform updates each loop. All game entities should be registered here.
@@ -38,9 +35,6 @@ public class EntityService {
     logger.debug("Unregistering {} in entity service", entity);
     entities.removeValue(entity, true);
   }
-
-
-
 
   /**
    * Update all registered entities. Should only be called from the main game loop.

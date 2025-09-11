@@ -3,10 +3,8 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Timer;
 import com.csse3200.game.areas.ForestGameArea;
 import com.csse3200.game.components.Component;
+import com.csse3200.game.components.WeaponsStatsComponent;
 import com.csse3200.game.entities.Entity;
-import com.csse3200.game.entities.factories.ProjectileFactory;
-import com.csse3200.game.rendering.RenderComponent;
-import com.csse3200.game.screens.MainGameScreen;
 import com.csse3200.game.services.ServiceLocator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,31 +30,39 @@ public class ProjectileLauncherComponent extends Component {
     }
 
     /**
-     * Fires a laser projectile in the direction specified.
-     * @param directionToFire The direction to fire at.
+     * Fires a projectile, classified as an enemy projectile, in the direction specified.
+     * @param directionToFire The direction to fire in
+     * @param offset Offset (from the center) where the projectile is fired
+     * @param scale The size of the projectile. "x" value represents width, and "y" value represents height.\
      */
-    public void FireLaserProjectile(Vector2 directionToFire)
+    public void FireProjectile(Vector2 directionToFire, Vector2 offset, Vector2 scale)
     {
-        Entity laser = forestGameArea.spawnLaserProjectile(directionToFire);
-        Vector2 laserOffset = new Vector2(0.2f, 0.8f);
-        Vector2 pos = new Vector2(getEntity().getPosition().x + laserOffset.x, getEntity().getPosition().y + laserOffset.y);
-        laser.setPosition(pos);
+        WeaponsStatsComponent weapon = entity.getComponent(WeaponsStatsComponent.class);
+        Entity projectile = forestGameArea.spawnEnemyProjectile(directionToFire, weapon);
+        Vector2 pos = new Vector2(getEntity().getPosition().x + offset.x,
+                                getEntity().getPosition().y + offset.y);
+        projectile.setPosition(pos);
+        projectile.scaleWidth(scale.x);
+        projectile.scaleHeight(scale.y);
     }
 
     /**
-     * Fires multiple laser projectiles at once
+     * Fires multiple laser projectiles, classified as enemy projectiles, at once
      * @param amount The amount of projectiles to fire in one go
      * @param angleDifferences The angle differences, in degrees, between lasers. For example, passing in 10 means
-     *                         10 degree difference in the rotation of each laser projectile.
+     *                          10 degree difference in the rotation of each laser projectile.
      * @param directionToFire The direction to fire at.
+     * @param offset Offset (from the center) where the projectile is fired
+     * @param scale The size of the projectile. "x" value represents width, and "y" value represents height.
      */
-    public void FireLaserProjectileMultishot(int amount, float angleDifferences, Vector2 directionToFire)
+    public void FireProjectileMultishot(int amount, float angleDifferences,
+                                            Vector2 directionToFire, Vector2 offset, Vector2 scale)
     {
         directionToFire = directionToFire.rotateDeg(-angleDifferences * ((float)amount/2));
 
             for (int i = 0; i < amount; i++)
             {
-                FireLaserProjectile(directionToFire);
+                FireProjectile(directionToFire, offset, scale);
                 directionToFire.rotateDeg(angleDifferences);
             }
     }
@@ -67,8 +73,12 @@ public class ProjectileLauncherComponent extends Component {
      * @param burstAmount The amount of projectiles to fire in a burst.
      * @param timeBetweenShots The time, in seconds, between each laser fired within one burst sequence.
      * @param directionToFire The direction to fire at.
+     * @param offset Offset (from the center) where the projectile is fired
+     * @param scale The size of the projectile. "x" value represents width, and "y" value represents height.
      */
-    public void FireLaserProjectileBurstFire(int burstAmount, float timeBetweenShots, Vector2 directionToFire)
+    public void FireProjectileBurstFire(int burstAmount, float timeBetweenShots,
+                                             Vector2 directionToFire, Vector2 offset, Vector2 scale)
+
     {
         Timer.Task burstFireTask = new Timer.Task() {
             int currentCount = 0;
@@ -82,7 +92,7 @@ public class ProjectileLauncherComponent extends Component {
                     return;
                 }
 
-                FireLaserProjectile(directionToFire);
+                FireProjectile(directionToFire, offset, scale);
                 currentCount++;
                 if (currentCount >= burstAmount) { cancel(); };
             }
@@ -90,23 +100,4 @@ public class ProjectileLauncherComponent extends Component {
 
         Timer.schedule(burstFireTask, 0f, timeBetweenShots);
     }
-
-    /*
-    @Override
-    public void update() {
-        //long currentTime = ServiceLocator.getTimeSource().getTime();
-
-        SAMPLE USE OF ATTACKING WITH THESE METHODS
-        if (currentTime - timeSinceFiring >= 1000L) {
-            timeSinceFiring = currentTime;
-
-            Vector2 dirToFire = new Vector2(target.getPosition().x - getEntity().getPosition().x,
-            target.getPosition().y - getEntity().getPosition().y);
-
-            FireLaserProjectileBurstFire(4, 0.2f, dirToFire);
-            //FireLaserProjectileMultishot(5, 10, dirToFire);
-        }
-
-    }
-    */
 }
