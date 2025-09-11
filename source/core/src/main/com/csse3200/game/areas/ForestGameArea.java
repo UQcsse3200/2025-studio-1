@@ -357,6 +357,7 @@ public class ForestGameArea extends GameArea {
 
     Floor2GameArea floor2 = new Floor2GameArea(terrainFactory, cameraComponent);
     floor2.create();
+    ServiceLocator.registerGameArea(floor2);
   }
 
 
@@ -496,17 +497,6 @@ public class ForestGameArea extends GameArea {
   }
 
 
-  // Enemy Projectiles
-  public Entity spawnEnemyProjectile(Vector2 directionToFire, WeaponsStatsComponent source) {
-    Entity laser = ProjectileFactory.createEnemyProjectile(directionToFire, source);
-    spawnEntityAt(laser, new GridPoint2(0, 0), true, true);
-    PhysicsProjectileComponent laserPhysics = laser.getComponent(PhysicsProjectileComponent.class);
-    int projectileSpeed = 5; // Should be abstracted from WeaponsStatsComponent in future implementation
-    laserPhysics.fire(directionToFire, projectileSpeed);
-    return laser;
-  }
-
-
   // private void spawnGhosts() {
   //   GridPoint2 minPos = new GridPoint2(0, 0);
   //   GridPoint2 maxPos = terrain.getMapBounds(0).sub(2, 2);
@@ -542,21 +532,7 @@ public class ForestGameArea extends GameArea {
   //   spawnEntityAt(ghostKing, randomPos, true, true);
   // }
 
-  /**
-   * Adds GhostGPT enemies onto the map.
-   * @param total The total number of GhostGPT to be spawned.
-   * @param scaleFactor The scale of increase in difficulty of the GhostGPT
-   */
-  public void spawnGhostGPT(int total, float scaleFactor) {
-    GridPoint2 minPos = new GridPoint2(0, 0);
-    GridPoint2 maxPos = terrain.getMapBounds(0).sub(3, 3);
 
-    for (int i = 0; i < total; i++) {
-        GridPoint2 randomPos = RandomUtils.random(minPos, maxPos);
-        Entity ghostGPT = NPCFactory.createGhostGPT(player, this, scaleFactor);
-        spawnEntityAt(ghostGPT, randomPos, true, true);
-    }
-  }
 
   /**
    * Adds a single crate to the lower platform for cover/decoration.
@@ -600,53 +576,6 @@ public class ForestGameArea extends GameArea {
     Entity darkCrate = ObstacleFactory.createStorageCrateDark();
     spawnEntityAt(darkCrate, darkCratePos, true, false);
     darkCrate.setPosition(darkCrate.getPosition().x, darkCrate.getPosition().y + 0.25f);
-  }
-  /**
-   * Adds DeepSpin enemies onto the map.
-   * @param total The total number of DeepSpins to be spawned.
-   * @param scaleFactor The scale of increase in difficulty of the DeepSpin
-   */
-  public void spawnDeepspin(int total, float scaleFactor) {
-    GridPoint2 minPos = new GridPoint2(0, 0);
-    GridPoint2 maxPos = terrain.getMapBounds(0).sub(3, 3);
-
-    for (int i = 0; i < total; i++) {
-      GridPoint2 randomPos = RandomUtils.random(minPos, maxPos);
-      Entity deepspin = NPCFactory.createDeepspin(player, this, scaleFactor);
-      spawnEntityAt(deepspin, randomPos, true, true);
-    }
-  }
-
-  /**
-   * Adds GrokDroid enemies onto the map.
-   * @param total The total number of GrokDroid to be spawned.
-   * @param scaleFactor The scale of increase in difficulty of the GrokDroid
-   */
-  public void spawnGrokDroid(int total, float scaleFactor) {
-    GridPoint2 minPos = new GridPoint2(0, 0);
-    GridPoint2 maxPos = terrain.getMapBounds(0).sub(3, 3);
-
-    for (int i = 0; i < total; i++) {
-      GridPoint2 randomPos = RandomUtils.random(minPos, maxPos);
-      Entity grokDroid = NPCFactory.createGrokDroid(player, this, scaleFactor);
-      spawnEntityAt(grokDroid, randomPos, true, true);
-    }
-  }
-
-  /**
-   * Adds Vroomba enemies onto the map.
-   * @param total The total number of Vroomba to be spawned.
-   * @param scaleFactor The scale of increase in difficulty of the Vroomba
-   */
-  public void spawnVroomba(int total, float scaleFactor) {
-    GridPoint2 minPos = new GridPoint2(0, 0);
-    GridPoint2 maxPos = terrain.getMapBounds(0).sub(3, 3);
-
-    for (int i = 0; i < total; i++) {
-      GridPoint2 randomPos = RandomUtils.random(minPos, maxPos);
-      Entity vroomba = NPCFactory.createVroomba(player, scaleFactor);
-      spawnEntityAt(vroomba, randomPos, true, true);
-    }
   }
 
   private void playMusic() {
