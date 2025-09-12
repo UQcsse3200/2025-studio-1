@@ -360,20 +360,8 @@ public class ForestGameArea extends GameArea {
    * This is called by the door/keycard logic when the player exits.
    */
   private void loadNextLevel() {
-    if (!beginTransition()) return;
-    try {
-      for (Entity entity : areaEntities) {
-        entity.dispose();
-      }
-      areaEntities.clear();
-      // stop music and unload assets before switching
-      dispose();
-
-      Floor2GameArea floor2 = new Floor2GameArea(terrainFactory, cameraComponent);
-      floor2.create();
-    } finally {
-      endTransition();
-    }
+    // Use the safe, render-thread transition helper
+    clearAndLoad(() -> new Floor2GameArea(terrainFactory, cameraComponent));
   }
 
 
@@ -708,12 +696,7 @@ public class ForestGameArea extends GameArea {
 
 
 
-  @Override
-  public void dispose() {
-    super.dispose();
-    ServiceLocator.getResourceService().getAsset(backgroundMusic, Music.class).stop();
-    this.unloadAssets();
-  }
+  // Removed area-specific dispose to avoid double disposal during transitions
 
 
   public Entity getPlayer() {

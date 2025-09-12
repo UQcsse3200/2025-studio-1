@@ -74,12 +74,7 @@ public class Floor2GameArea extends GameArea {
     ensurePlayerAtlas();
   }
 
-  @Override
-  public void dispose() {
-    // Avoid unloading area assets here to prevent race conditions during transitions.
-    // Screen-level disposal will handle unloading when the whole screen exits.
-    super.dispose();
-  }
+  // Removed area-specific dispose to avoid double disposal during transitions
 
   private void spawnTerrain() {
     setupTerrainWithOverlay(terrainFactory, TerrainType.LOBBY, new Color(0.1f, 0.1f, 0.2f, 0.25f));
