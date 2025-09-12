@@ -11,8 +11,6 @@ import com.csse3200.game.input.InputComponent;
  * the keyboard.
  */
 public class TouchTerminalInputComponent extends BaseTerminalInputComponent {
-    private Terminal terminal;
-
     public TouchTerminalInputComponent() {
         super(new ScrollToggleStrategy());
     }

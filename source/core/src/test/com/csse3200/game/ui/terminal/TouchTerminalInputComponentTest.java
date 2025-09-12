@@ -12,7 +12,8 @@ class TouchTerminalInputComponentTest {
   @Test
   void shouldSetTerminalOpenClose() {
     Terminal terminal = spy(Terminal.class);
-    TouchTerminalInputComponent terminalInput = new TouchTerminalInputComponent(terminal);
+    TouchTerminalInputComponent terminalInput = new TouchTerminalInputComponent();
+    terminalInput.setTerminal(terminal);
 
     terminal.setClosed();
 
@@ -30,7 +31,8 @@ class TouchTerminalInputComponentTest {
   void shouldUpdateMessageOnKeyTyped() {
     Terminal terminal = mock(Terminal.class);
     when(terminal.isOpen()).thenReturn(true);
-    KeyboardTerminalInputComponent terminalInput = new KeyboardTerminalInputComponent(terminal);
+    KeyboardTerminalInputComponent terminalInput = new KeyboardTerminalInputComponent();
+    terminalInput.setTerminal(terminal);
 
     terminalInput.keyTyped('a');
     terminalInput.keyTyped('b');
@@ -47,7 +49,8 @@ class TouchTerminalInputComponentTest {
   @Test
   void shouldHandleMessageWhenTerminalOpen() {
     Terminal terminal = mock(Terminal.class);
-    KeyboardTerminalInputComponent terminalInput = new KeyboardTerminalInputComponent(terminal);
+    KeyboardTerminalInputComponent terminalInput = new KeyboardTerminalInputComponent();
+    terminalInput.setTerminal(terminal);
 
     when(terminal.isOpen()).thenReturn(true);
     assertTrue(terminalInput.keyDown('a'));

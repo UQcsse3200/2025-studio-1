@@ -13,7 +13,8 @@ class KeyboardTerminalInputComponentTest {
   @Test
   void shouldToggleTerminalOpenClose() {
     Terminal terminal = spy(Terminal.class);
-    KeyboardTerminalInputComponent terminalInput = new KeyboardTerminalInputComponent(terminal);
+    KeyboardTerminalInputComponent terminalInput = new KeyboardTerminalInputComponent();
+    terminalInput.setTerminal(terminal);
 
     terminal.setClosed();
 
@@ -32,7 +33,8 @@ class KeyboardTerminalInputComponentTest {
   void shouldUpdateMessageOnKeyTyped() {
     Terminal terminal = mock(Terminal.class);
     when(terminal.isOpen()).thenReturn(true);
-    KeyboardTerminalInputComponent terminalInput = new KeyboardTerminalInputComponent(terminal);
+    KeyboardTerminalInputComponent terminalInput = new KeyboardTerminalInputComponent();
+    terminalInput.setTerminal(terminal);
 
     terminalInput.keyTyped('a');
     terminalInput.keyTyped('b');
@@ -49,7 +51,8 @@ class KeyboardTerminalInputComponentTest {
   @Test
   void shouldHandleMessageWhenTerminalOpen() {
     Terminal terminal = mock(Terminal.class);
-    KeyboardTerminalInputComponent terminalInput = new KeyboardTerminalInputComponent(terminal);
+    KeyboardTerminalInputComponent terminalInput = new KeyboardTerminalInputComponent();
+    terminalInput.setTerminal(terminal);
 
     when(terminal.isOpen()).thenReturn(true);
     assertTrue(terminalInput.keyDown('a'));
