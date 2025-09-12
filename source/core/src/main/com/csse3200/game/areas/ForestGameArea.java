@@ -1,8 +1,6 @@
 package com.csse3200.game.areas;
 
 import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Vector2;
@@ -10,9 +8,7 @@ import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.ItemHoldComponent;
 import com.csse3200.game.components.CameraComponent;
-import com.csse3200.game.components.DoorComponent;
 import com.csse3200.game.components.KeycardGateComponent;
-import com.csse3200.game.rendering.AnimationRenderComponent;
 import com.csse3200.game.components.WeaponsStatsComponent;
 import com.csse3200.game.components.player.InventoryComponent;
 import com.csse3200.game.entities.Entity;
@@ -27,14 +23,10 @@ import com.csse3200.game.entities.configs.ItemSpawnConfig;
 import com.csse3200.game.entities.factories.*;
 import com.csse3200.game.entities.spawner.ItemSpawner;
 import com.csse3200.game.physics.components.PhysicsProjectileComponent;
-import com.csse3200.game.utils.math.GridPoint2Utils;
-import com.csse3200.game.utils.math.RandomUtils;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import com.csse3200.game.rendering.TextureRenderComponent;
-
-import javax.naming.spi.ObjectFactory;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -268,7 +260,7 @@ public class ForestGameArea extends GameArea {
     playMusic();
 
     ItemSpawner itemSpawner = new ItemSpawner(this);
-    itemSpawner.spawnItems(ItemSpawnConfig.FOREST_MAP());
+    itemSpawner.spawnItems(ItemSpawnConfig.forestmap());
 
     // Place a keycard on the floor so the player can unlock the door
     float keycardX = 1f, keycardY = 15f;

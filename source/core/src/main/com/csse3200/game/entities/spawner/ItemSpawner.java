@@ -32,25 +32,54 @@ public class ItemSpawner {
      * @param config A map where keys are item types and values are lists of ItemSpawnInfo objects
      */
     public void spawnItems(Map<String, List<ItemSpawnInfo>> config) {
-        for (String type : config.keySet()) {
-            List<ItemSpawnInfo> spawnList = config.get(type);
-            for (ItemSpawnInfo spawninfo : spawnList) {
-                for (int count = 0; count < spawninfo.quantity; count++) {
-                    Entity item = makeItem(type);
-                    if (item == null)
-                        continue;
-                    //makes the item static so its doesnt move around the map when spawned
-                    PhysicsComponent physics = item.getComponent(PhysicsComponent.class);
-                    if (physics != null) {
-                        physics.setBodyType(BodyDef.BodyType.StaticBody);
-                    }
-                    // spawns the item in the game area at the specified position
-                    if (gameArea instanceof ForestGameArea) {
-                        ((ForestGameArea) gameArea).spawnItem(item, spawninfo.position);
-                    }
+        config.forEach(this::spawnItemsOfType);
+    }
 
-                }
-            }
+    /**
+     * It spawns all items of a specific type at their designated coordinates and quantities
+     * @param type it is the name of the item type
+     * @param spawnList is a list of positions and quantities for this type
+     */
+    private void spawnItemsOfType(String type, List<ItemSpawnInfo> spawnList) {
+        for (ItemSpawnInfo spawnInfo : spawnList) {
+            spawnItemsAtLocation(type, spawnInfo);
+        }
+    }
+
+    /**
+     * It spawns item of a specific type at a specific location and quantity
+     * @param type it is the name of the item type
+     * @param spawnInfo it holds the position and quantity for this spawn
+     */
+    private void spawnItemsAtLocation(String type, ItemSpawnInfo spawnInfo) {
+        for (int i = 0; i < spawnInfo.quantity; i++) {
+            Entity item = makeItem(type);
+            if (item == null) continue;
+            makeItemStatic(item);
+            spawnInGameArea(item, spawnInfo.position);
+        }
+    }
+
+    /**
+     * It makes the item static by setting it to StaticBody so that it doesn't move
+     * @param item is the item which is made static
+     */
+    private void makeItemStatic(Entity item) {
+        PhysicsComponent physics = item.getComponent(PhysicsComponent.class);
+        if (physics != null) {
+            physics.setBodyType(BodyDef.BodyType.StaticBody);
+        }
+    }
+
+    /**
+     * It spawns the item in different maps(game areas) at given positions
+     * @param item is the item to be spawned
+     * @param position is the position where the item is spawned
+     * can add more game areas here
+     */
+    private void spawnInGameArea(Entity item, GridPoint2 position) {
+        if (gameArea instanceof ForestGameArea forestArea) {
+            forestArea.spawnItem(item, position);
         }
     }
 

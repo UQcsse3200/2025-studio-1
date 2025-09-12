@@ -21,7 +21,7 @@ public class ItemSpawnConfig {
      * @return a map of item names to a list of spawn info (location and quantity)
      */
     // Forest Map
-    public static Map<String, List<ItemSpawner.ItemSpawnInfo>> FOREST_MAP() {
+    public static Map<String, List<ItemSpawner.ItemSpawnInfo>> forestmap() {
         Map<String, List<ItemSpawner.ItemSpawnInfo>> config = new HashMap<>();
 
         // Weapons
