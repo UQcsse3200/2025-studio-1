@@ -244,9 +244,9 @@ public class ForestGameArea extends GameArea {
 
     //These are commented out since there is no equip feature yet
     // this.equipItem(pistol);
-    // this.equipItem(lightsaber);
+     this.equipItem(lightsaber);
     // this.equipItem(dagger);
-     this.equipItem(rifle);
+    // this.equipItem(rifle);
 
 
     spawnFloor();
@@ -492,11 +492,11 @@ public class ForestGameArea extends GameArea {
 
   private Entity spawnLightsaber() {
     Entity newLightsaber = WeaponsFactory.createWeapon(Weapons.LIGHTSABER);
-    Vector2 newLightsaberOffset = new Vector2(0.7f, -0.1f);
+    Vector2 newLightsaberOffset = new Vector2(0.9f, -0.2f);
     newLightsaber.addComponent(new ItemHoldComponent(this.player, newLightsaberOffset));
-    //Commented out since lightsaber animation is a work in progress
-    //AnimationRenderComponent lightSaberAnimator = WeaponsFactory.createAnimation("images/lightSaber.atlas", this.player);
-    //newLightsaber.addComponent(lightSaberAnimator);
+    AnimationRenderComponent lightSaberAnimator = WeaponsFactory.createAnimation("images/lightSaber.atlas", this.player);
+    newLightsaber.addComponent(lightSaberAnimator);
+    lightSaberAnimator.startAnimation("anim");
     return newLightsaber;
   }
 
