@@ -123,11 +123,30 @@ public class ShopScreenDisplay extends UIComponent {
     }
 
     private void makeButton(CatalogEntry entry) {
-        Actor actor = entry.getIconActor(skin);
+        //Actor actor = (Image) entry.getIconActor(skin);
 
+        ImageButton iconButton = (ImageButton) entry.getIconActor(skin);
+
+        Actor finalIcon;
+        if (!entry.enabled()) {
+            // Wrap in a stack to add overlay
+            Stack stack = new Stack();
+            stack.add(iconButton);
+
+            // Semi-transparent grey overlay
+            Image overlay = new Image(new TextureRegionDrawable(new TextureRegion(
+                    makeSolidTexture(new Color(0.8f, 0, 0, 0.5f))
+            )));
+            overlay.setFillParent(true);
+            stack.add(overlay);
+
+            finalIcon = stack;
+        } else {
+            finalIcon = iconButton;
+        }
         // Add name & price below icon
         Table itemTable = new Table();
-        itemTable.add(actor).size(100, 100).row();
+        itemTable.add(finalIcon).size(100, 100).row();
         itemTable.add(new Label(entry.getItemName(), skin)).row();
         itemTable.add(new Label("$" + entry.price(), skin)).padBottom(6).row();
 
@@ -135,14 +154,11 @@ public class ShopScreenDisplay extends UIComponent {
         itemTable.add(infoButton(entry)).padTop(4).row();
 
         // Gray out if disabled
-        if (!entry.enabled()) {
-            itemTable.getChildren().forEach(child -> child.setColor(Color.GRAY));
-        }
 
         // Click to purchase
         int amountToPurchase = 1;
         if(entry.enabled()){
-            actor.addListener(new ChangeListener() {
+            finalIcon.addListener(new ChangeListener() {
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {
                     manager.purchase(game.getPlayer(), entry, amountToPurchase);
@@ -163,7 +179,16 @@ public class ShopScreenDisplay extends UIComponent {
         return btn;
     }
 
-
+    public void refreshCatalog(){
+        grid.clearChildren();
+        int columns = 4;
+        int count = 0;
+        for (CatalogEntry entry : catalog.list()) {
+            makeButton(entry);
+            count++;
+            if(count % columns == 0) grid.row();
+        }
+    }
 
 
 
