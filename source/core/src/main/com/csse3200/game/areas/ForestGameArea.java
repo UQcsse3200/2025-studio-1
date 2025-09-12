@@ -102,7 +102,8 @@ public class ForestGameArea extends GameArea {
     "images/door.png",
     "images/player.png",
     "images/mud.png",
-    "images/heart.png"
+    "images/heart.png",
+    "images/computerBench.png"
   };
 
   /** General prop textures (floors, tiles, etc.). */
@@ -225,6 +226,9 @@ public class ForestGameArea extends GameArea {
     displayUI();
 
     spawnTerrain();
+//    spawnTrees();
+    spawnComputerBench();
+
     player = spawnPlayer();
 
     dagger = spawnDagger();
@@ -399,6 +403,12 @@ public class ForestGameArea extends GameArea {
     spawnEntityAt(officeDesk, new GridPoint2(5, 11), true, false);
   }
 
+  private void spawnComputerBench() {
+    Entity bench = InteractableStationFactory.createComputerBench();
+    spawnEntityAt(bench, new GridPoint2(10, 7), true, true);
+
+  }
+
   /**
    * Places a large door sprite at the bottom-right platform. The door uses a keycard gate:
    * when the player has key level 1, the door callback triggers and we load the next level.
@@ -475,6 +485,7 @@ public class ForestGameArea extends GameArea {
   private void equipItem(Entity item) {
     InventoryComponent inventory = this.player.getComponent(InventoryComponent.class);
     inventory.addItem(item);
+    inventory.setCurrItem(item);
     spawnEntityAt(item, PLAYER_SPAWN, true, true);
   }
 

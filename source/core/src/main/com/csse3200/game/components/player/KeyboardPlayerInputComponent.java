@@ -90,6 +90,8 @@ public class KeyboardPlayerInputComponent extends InputComponent {
         entity.getEvents().trigger("shoot");
 
       } else if (itemInfo.getType() == ItemTypes.MELEE) {
+      }
+      else {
         entity.getEvents().trigger("attack");
       }
       return true;
@@ -148,6 +150,7 @@ public class KeyboardPlayerInputComponent extends InputComponent {
         return true;
       case Keys.E:
         triggerAddItem();
+        triggerInteract();
         return true;
       case Keys.R:
         triggerDropFocused();
@@ -265,5 +268,11 @@ public class KeyboardPlayerInputComponent extends InputComponent {
   private void triggerDropFocused() {
     entity.getEvents().trigger("drop focused");
   }
+
+  /** Triggers an interact request */
+  private void triggerInteract() {
+    entity.getEvents().trigger("interact");
+  }
+
 }
 
