@@ -20,21 +20,21 @@ public class ShopDemo {
 
         // Add one simple item (no icon -> null)
         demoEntries.add(new CatalogEntry(
-                healthPotion,   // itemKey
-                50,               // price
-                true,             // enabled
-                true,             // stackable
-                10,               // maxStack
-                1                // bundleQuantity
+                healthPotion,
+                50,
+                true,
+                true,
+                10,
+                1
         ));
 
         demoEntries.add(new CatalogEntry(
                 weapon,
-                200,               // price
-                false,             // enabled
-                true,             // stackable
-                10,               // maxStack
-                1               // bundleQuantity
+                200,
+                false,
+                true,
+                10,
+                1
         ));
 
         return new CatalogService(demoEntries);
