@@ -240,6 +240,48 @@ public class InventoryComponent extends Component {
   }
 
     /**
+     *
+     * @param item set the selected item as current
+     */
+  public void setCurrItem(Entity item){this.currItem = item;}
+
+
+    /**
+     *
+     * @param slotIndex takes the index of the slot selected
+     */
+    public void selectSlot(int slotIndex){
+        if(slotIndex >= 0 && slotIndex < this.items.size()){
+            this.selectedSlot = slotIndex;
+        }
+    }
+
+    /**
+     *
+     * @return the slot that is currently selected
+     */
+    public int getSelectedSlot(){return this.selectedSlot;}
+
+    @Override
+    /**
+     * to setup the component to respond whenever player focuses on an
+     * inventory item
+     */
+    public void create() {
+        super.create();
+        entity.getEvents().addListener("focus item", this::onFocusItem);
+    }
+
+    /**
+     *
+     * @param slotIndex puts focus on the item at that slot
+     */
+    private void onFocusItem(int slotIndex) {
+        selectSlot(slotIndex);
+        entity.getEvents().trigger("inventoryItemSelected", slotIndex);
+    }
+
+    /**
      * setEquippedSlot(int slotIndex) equips the player with the weapon at slotIndex
      * @param slotIndex is the index of the slot from which the player wants to equip the weapon from
      */
