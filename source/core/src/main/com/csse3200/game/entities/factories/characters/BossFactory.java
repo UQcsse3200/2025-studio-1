@@ -27,6 +27,7 @@ import com.csse3200.game.rendering.AnimationRenderComponent;
 import com.csse3200.game.rendering.TextureRenderComponent;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.components.player.BossStatusDisplay;
+import com.csse3200.game.components.WeaponsStatsComponent;
 
 
 /**
@@ -130,7 +131,6 @@ public class BossFactory {
                 target, 1.2f, 9f, 6f, 3f));
         boss3.addComponent(new EnemyMudRingSprayComponent(
                 2.5f, 12, 6f, 3f));
-
         return boss3;
     }
 
@@ -145,11 +145,11 @@ public class BossFactory {
     public static Entity createFireball(Vector2 from, Vector2 velocity) {
         Entity fireball = new Entity()
                 .addComponent(new PhysicsComponent())
-                .addComponent(new PhysicsMovementComponent())
                 .addComponent(new FireballMovementComponent(velocity))
                 .addComponent(new ColliderComponent())
                 .addComponent(new HitboxComponent().setLayer(PhysicsLayer.NPC))
                 .addComponent(new CombatStatsComponent(1))
+                .addComponent(new WeaponsStatsComponent(12))
                 .addComponent(new PhysicsProjectileComponent())
                 .addComponent(new TouchAttackComponent(PhysicsLayer.PLAYER, 0f));
         fireball.setPosition(from);
