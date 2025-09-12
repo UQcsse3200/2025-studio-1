@@ -4,7 +4,7 @@ import com.csse3200.game.components.Component;
 import com.csse3200.game.ui.terminal.commands.Command;
 import com.csse3200.game.ui.terminal.commands.DebugCommand;
 import com.csse3200.game.ui.terminal.commands.DisableDamageCommand;
-import com.csse3200.game.ui.terminal.commands.WinScreenCommand;
+import com.csse3200.game.ui.terminal.commands.EndScreenCommand;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,7 +42,8 @@ public class Terminal extends Component {
     this.game = game;
 
     addCommand("debug", new DebugCommand());
-    addCommand("winscreen", new WinScreenCommand(game));
+    addCommand("winscreen", new EndScreenCommand(game, GdxGame.ScreenType.WIN_SCREEN));
+    addCommand("deathscreen", new EndScreenCommand(game, GdxGame.ScreenType.DEATH_SCREEN));
     addCommand("disableDamage", new DisableDamageCommand());
   }
 

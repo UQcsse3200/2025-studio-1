@@ -22,18 +22,27 @@ public abstract class BaseTerminalInputComponent extends InputComponent {
         this.textPolicy = Objects.requireNonNull(textPolicy, "textPolicy");
     }
 
+    /** Allow DI in tests or custom wiring before create(). */
+    public void setTerminal(Terminal terminal) {
+        this.terminal = terminal;
+    }
+
     @Override
     public void create() {
         super.create();
-        terminal = entity.getComponent(Terminal.class);
-        if (terminal == null) {
-            throw new IllegalStateException("Terminal compoment not found on entity");
+        // Lazy autowire only if not injected already
+        if (this.terminal == null) {
+            this.terminal = entity.getComponent(Terminal.class);
+        }
+        if (this.terminal == null) {
+            throw new IllegalStateException("Terminal component not found on entity");
         }
     }
 
     // --- template flow ---
     @Override
     public boolean keyDown(int keycode) {
+        if (terminal == null) return false; // guard for pre-create() tests
         // First let strategy handle toggling/open/close gestures
         if (toggleStrategy.onKeyDown(terminal, keycode)) return true;
         // If terminal is open, consume so other handlers don’t process
@@ -42,6 +51,7 @@ public abstract class BaseTerminalInputComponent extends InputComponent {
 
     @Override
     public boolean keyTyped(char character) {
+        if (terminal == null) return false;
         if (!terminal.isOpen()) return false;
 
         if (character == '\b') {
@@ -64,10 +74,14 @@ public abstract class BaseTerminalInputComponent extends InputComponent {
 
     @Override
     public boolean keyUp(int keycode) {
+        if (terminal == null) return false;
         // While open, consume keyUp to avoid leaking to other handlers
         return terminal.isOpen();
     }
 
     @Override
-    public boolean scrolled(float amountX, float amountY) { return toggleStrategy.onScrolled(terminal, amountX, amountY); }
+    public boolean scrolled(float amountX, float amountY) {
+        if (terminal == null) return false;
+        return toggleStrategy.onScrolled(terminal, amountX, amountY);
+    }
 }
