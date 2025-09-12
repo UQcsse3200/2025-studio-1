@@ -12,6 +12,8 @@ import org.mockito.Mockito;
 import java.util.List;
 import java.util.Map;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.*;
 
 class ItemSpawnerTest {
@@ -31,7 +33,7 @@ class ItemSpawnerTest {
     @Test
     void testMakeItem_UnknownType() {
         Entity item = spawner.makeItem("unknown_item");
-        assert item == null;
+        assertNull(item, "Unknown item type should return null");
     }
 
     /**
@@ -65,7 +67,7 @@ class ItemSpawnerTest {
     void testItemSpawnInfo() {
         GridPoint2 pos = new GridPoint2(3, 4);
         ItemSpawner.ItemSpawnInfo info = new ItemSpawner.ItemSpawnInfo(pos, 5);
-        assert info.position.equals(pos);
-        assert info.quantity == 5;
+        assertEquals(pos, info.position, "Position should be stored correctly");
+        assertEquals(5, info.quantity, "Quantity should be stored correctly");
     }
 }
