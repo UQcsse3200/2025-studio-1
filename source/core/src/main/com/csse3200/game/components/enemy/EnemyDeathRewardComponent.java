@@ -1,9 +1,11 @@
 package com.csse3200.game.components.enemy;
 
+import com.badlogic.gdx.audio.Sound;
 import com.csse3200.game.components.AmmoStatsComponent;
 import com.csse3200.game.components.Component;
 import com.csse3200.game.components.player.InventoryComponent;
 import com.csse3200.game.entities.Entity;
+import com.csse3200.game.services.ServiceLocator;
 
 import java.util.Random;
 
@@ -35,17 +37,20 @@ public class EnemyDeathRewardComponent extends Component {
 
 
 
-        //1/3 chance of enemy adding ammo to the player
+        //1/4 chance of enemy adding ammo to the player
         Random rand = new Random();
 
-        int chance = rand.nextInt(3);
+        int chance = rand.nextInt(4);
 
         if (chance == 0) {
 
             Entity player = playerInventory.getEntity();
             AmmoStatsComponent playerAmmo = player.getComponent(AmmoStatsComponent.class);
             int currentAmmo = playerAmmo.getAmmo();
-            playerAmmo.setAmmo(currentAmmo + 200);
+            playerAmmo.setAmmo(currentAmmo + 30);
+            Sound attackSound = ServiceLocator.getResourceService()
+                    .getAsset("sounds/ammo_replenished.mp3", Sound.class);
+            attackSound.play();
             player.getEvents().trigger("ammo replenished");
 
         }
