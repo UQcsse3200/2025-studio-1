@@ -78,7 +78,8 @@ public class NPCFactory {
         .addComponent(new GhostAnimationController())
         .addComponent(new EnemyDeathRewardComponent(15, playerInventory)) // Add reward + particles
         .addComponent(new DeathParticleSpawnerComponent())
-        .addComponent(aiComponent);
+        .addComponent(aiComponent)
+        .addComponent(new EnemyHealthDisplay());
 
     ghost.getComponent(AnimationRenderComponent.class).scaleEntity();
 
@@ -123,7 +124,8 @@ public class NPCFactory {
         .addComponent(new GhostAnimationController())
         .addComponent(new EnemyDeathRewardComponent(30, playerInventory)) // Add reward + particles
         .addComponent(new DeathParticleSpawnerComponent())
-        .addComponent(aiComponent);
+        .addComponent(aiComponent)
+        .addComponent(new EnemyHealthDisplay());
 
     ghostKing.getComponent(AnimationRenderComponent.class).scaleEntity();
     return ghostKing;
@@ -143,8 +145,7 @@ public class NPCFactory {
             .addComponent(new PhysicsComponent())
             .addComponent(new ColliderComponent())
             .addComponent(new HitboxComponent().setLayer(PhysicsLayer.NPC))
-            .addComponent(new TouchAttackComponent(PhysicsLayer.PLAYER, 1.5f))
-            .addComponent(new EnemyHealthDisplay(2f));
+            .addComponent(new TouchAttackComponent(PhysicsLayer.PLAYER, 1.5f));
     PhysicsUtils.setScaledCollider(ghostGPT, 0.9f, 0.4f);
 
     GhostGPTConfig config = configs.ghostGPT;
@@ -182,7 +183,8 @@ public class NPCFactory {
             .addComponent(new EnemyDeathRewardComponent(15, playerInventory)) // Add reward + particles
             .addComponent(new DeathParticleSpawnerComponent("explosion_2"))
             .addComponent(aiComponent)
-            .addComponent(projComp); // Add the ability to fire projectiles
+            .addComponent(projComp) // Add the ability to fire projectiles
+            .addComponent(new EnemyHealthDisplay(1.3f));
 
     ghostGPT.getComponent(AnimationRenderComponent.class).scaleEntity();
 
@@ -211,7 +213,8 @@ public class NPCFactory {
             .addComponent(animator)
             .addComponent(new CombatStatsComponent(100))
             .addComponent(new WeaponsStatsComponent(5))
-            .addComponent(new BossAnimationController());
+            .addComponent(new BossAnimationController())
+            .addComponent(new EnemyHealthDisplay());
 
     return robot;
   }
@@ -259,6 +262,7 @@ public class NPCFactory {
             .addComponent(new EnemyDeathRewardComponent(15, playerInventory)) // Add reward + particles
             .addComponent(new DeathParticleSpawnerComponent("explosion_2"))
             .addComponent(aiComponent)
+            .addComponent(new EnemyHealthDisplay())
             .addComponent(new ProjectileLauncherComponent(area, target)); // Add the ability to fire projectiles
 
     deepspin.getComponent(AnimationRenderComponent.class).scaleEntity();
@@ -309,6 +313,7 @@ public class NPCFactory {
             .addComponent(new EnemyDeathRewardComponent(15, playerInventory)) // Add reward + particles
             .addComponent(new DeathParticleSpawnerComponent("explosion_2"))
             .addComponent(aiComponent)
+            .addComponent(new EnemyHealthDisplay(0.3f))
             .addComponent(new ProjectileLauncherComponent(area, target)); // Add the ability to fire projectiles
 
     grokDroid.getComponent(AnimationRenderComponent.class).scaleEntity();
@@ -329,8 +334,7 @@ public class NPCFactory {
             .addComponent(new PhysicsComponent())
             .addComponent(new ColliderComponent())
             .addComponent(new HitboxComponent().setLayer(PhysicsLayer.NPC))
-            .addComponent(new TouchAttackComponent(PhysicsLayer.PLAYER, 1.5f))
-            .addComponent(new EnemyHealthDisplay(0.4f));
+            .addComponent(new TouchAttackComponent(PhysicsLayer.PLAYER, 1.5f));
     PhysicsUtils.setScaledCollider(vroomba, 0.9f, 0.4f);
 
     VroombaConfig config = configs.vroomba;
@@ -368,70 +372,12 @@ public class NPCFactory {
             .addComponent(new EnemyDeathRewardComponent(15, playerInventory))
             .addComponent(new DeathParticleSpawnerComponent("explosion_2"))
             .addComponent(new VroombaSuicideComponent(target, triggerRadius, damageRadius, boomDamage, fuseSeconds))
-            .addComponent(aiComponent);
+            .addComponent(aiComponent)
+            .addComponent(new EnemyHealthDisplay());
 
     vroomba.getComponent(AnimationRenderComponent.class).scaleEntity();
 
     return vroomba;
-  }
-  /**
-   * Creates Turret enemy type
-   *
-   * @param target entity to chase
-   * @param area the area/space it is living in
-   * @param scalingFactor The scale of increase in health & attack of the Turret
-   * @return entity
-   */
-  public static Entity createTurret(Entity target, ForestGameArea area, float scalingFactor) {
-    // Build Turret as a ground enemy (do not use createBaseNPC to avoid floating movement)
-    Entity turret = new Entity()
-            .addComponent(new PhysicsComponent())
-            .addComponent(new ColliderComponent())
-            .addComponent(new HitboxComponent().setLayer(PhysicsLayer.NPC))
-            .addComponent(new TouchAttackComponent(PhysicsLayer.PLAYER, 1.5f))
-            .addComponent(new EnemyHealthDisplay());
-    PhysicsUtils.setScaledCollider(turret, 0.9f, 0.4f);
-
-    TurretConfig config = configs.turret;
-
-    AnimationRenderComponent animator =
-            new AnimationRenderComponent(
-                    ServiceLocator.getResourceService()
-                            .getAsset("images/Turret.atlas", TextureAtlas.class));
-    animator.setDisposeAtlas(false);
-    animator.addAnimation("angry_float", 0.1f, Animation.PlayMode.LOOP);
-    animator.addAnimation("float", 0.1f, Animation.PlayMode.LOOP);
-
-
-    ProjectileLauncherComponent projComp = new ProjectileLauncherComponent(area, target);
-    // Use ground chase tasks for gravity-based movement
-    AITaskComponent aiComponent =
-            new AITaskComponent()
-                    .addTask(new GPTGroundSlowChaseTask(target, 10, 0.3f))
-                    .addTask(new GPTGroundFastChaseTask(target, 10, 1.2f, projComp, turret));
-
-    // Get player's inventory for reward system
-    InventoryComponent playerInventory = null;
-    if (target != null) {
-      playerInventory = target.getComponent(InventoryComponent.class);
-    }
-
-    WeaponsStatsComponent turretStats = new WeaponsStatsComponent((int) (config.baseAttack * scalingFactor));
-
-    turret
-            .addComponent(turretStats)
-            .addComponent(new CombatStatsComponent((int) (config.health * scalingFactor)))
-            .addComponent(animator)
-            .addComponent(new GhostAnimationController())
-            .addComponent(new LowHealthAttackBuff(10, turretStats))
-            .addComponent(new EnemyDeathRewardComponent(15, playerInventory)) // Add reward + particles
-            .addComponent(new DeathParticleSpawnerComponent("explosion_2"))
-            .addComponent(aiComponent)
-            .addComponent(projComp); // Add the ability to fire projectiles
-
-    turret.getComponent(AnimationRenderComponent.class).scaleEntity();
-
-    return turret;
   }
 
   /**
@@ -451,8 +397,7 @@ public class NPCFactory {
             .addComponent(new PhysicsMovementComponent())
             .addComponent(new ColliderComponent())
             .addComponent(new HitboxComponent().setLayer(PhysicsLayer.NPC))
-            .addComponent(new TouchAttackComponent(PhysicsLayer.PLAYER, 1.5f))
-            .addComponent(new EnemyHealthDisplay(0.4f));
+            .addComponent(new TouchAttackComponent(PhysicsLayer.PLAYER, 1.5f));
 
     PhysicsUtils.setScaledCollider(npc, 0.9f, 0.4f);
     return npc;
