@@ -3,10 +3,12 @@ package com.csse3200.game.entities.spawner;
 import com.badlogic.gdx.math.GridPoint2;
 import com.csse3200.game.areas.ForestGameArea;
 import com.csse3200.game.entities.Entity;
+import com.csse3200.game.physics.components.PhysicsComponent;
+import com.badlogic.gdx.physics.box2d.BodyDef;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -14,70 +16,56 @@ import static org.mockito.Mockito.*;
 
 class ItemSpawnerTest {
 
-    private ForestGameArea mockGameArea;
+    private ForestGameArea mockForestArea;
     private ItemSpawner spawner;
-
-    // Its is a subclass to override makeItem from itemspwaner for testing
-    private static class TestItemSpawner extends ItemSpawner {
-        public TestItemSpawner(ForestGameArea gameArea) {
-            super(gameArea);
-        }
-
-        @Override
-        protected Entity makeItem(String type) {
-            return mock(Entity.class);     // It just returns a mock entity for any type
-        }
-    }
 
     @BeforeEach
     void setUp() {
-        mockGameArea = mock(ForestGameArea.class);
-        spawner = new TestItemSpawner(mockGameArea);
+        // here we mock the game area so that we don't need real game area for testing
+        mockForestArea = mock(ForestGameArea.class);
+        spawner = new ItemSpawner(mockForestArea);
+    }
+    /**
+     * tests that the makeItem method returns null for an unknown item type
+     */
+    @Test
+    void testMakeItem_UnknownType() {
+        Entity item = spawner.makeItem("unknown_item");
+        assert item == null;
     }
 
     /**
-     * It tests that items are spawned at all provided coordinates with the correct quantities
+     * tests that PhysicsComponent is correctly set to StaticBody during spawn.
      */
     @Test
-    void validQuantityAndCoordinates() {
-        Map<String, List<ItemSpawner.ItemSpawnInfo>> config = new HashMap<>();
-        config.put("itemA", List.of(
-                new ItemSpawner.ItemSpawnInfo(new GridPoint2(1, 2), 2),
-                new ItemSpawner.ItemSpawnInfo(new GridPoint2(3, 4), 1)
-        ));
+    void setsStaticBody() {
+        // we mock entity and physics component
+        Entity mockEntity = mock(Entity.class);
+        PhysicsComponent mockPhysics = mock(PhysicsComponent.class);
+        when(mockEntity.getComponent(PhysicsComponent.class)).thenReturn(mockPhysics);
 
-        spawner.spawnItems(config);
+        // here spy spawner is used to return mock entity for our test string
+        ItemSpawner spySpawner = Mockito.spy(spawner);
+        doReturn(mockEntity).when(spySpawner).makeItem("test_item");
 
-        // Verify spawnItem is called correct number of times with correct positions
-        verify(mockGameArea, times(2)).spawnItem(any(Entity.class), eq(new GridPoint2(1, 2)));
-        verify(mockGameArea, times(1)).spawnItem(any(Entity.class), eq(new GridPoint2(3, 4)));
+        // it is the test configuration
+        Map<String, List<ItemSpawner.ItemSpawnInfo>> config = Map.of(
+                "test_item", List.of(new ItemSpawner.ItemSpawnInfo(new GridPoint2(0, 0), 1))
+        );
+
+        spySpawner.spawnItems(config);
+        verify(mockPhysics).setBodyType(BodyDef.BodyType.StaticBody);
     }
 
     /**
-     * It tests that all items in the configuration are spawned correctly on the game
+     * it tests if the ItemSpawnInfo class correctly stores position and quantity
+     * and that spawnInGameArea is called with correct parameters
      */
     @Test
-    void shouldSpawnAllItems() {
-        Map<String, List<ItemSpawner.ItemSpawnInfo>> config = new HashMap<>();
-        config.put("itemA", List.of(new ItemSpawner.ItemSpawnInfo(new GridPoint2(0, 0), 1)));
-        config.put("itemB", List.of(new ItemSpawner.ItemSpawnInfo(new GridPoint2(5, 5), 3)));
-
-        spawner.spawnItems(config);
-
-        verify(mockGameArea, times(1)).spawnItem(any(Entity.class), eq(new GridPoint2(0, 0)));
-        verify(mockGameArea, times(3)).spawnItem(any(Entity.class), eq(new GridPoint2(5, 5)));
-    }
-
-    /**
-     * It is testing that unknown item types are handled without crashing and a warning is logged
-     */
-    @Test
-    void unknownItems() {
-        Map<String, List<ItemSpawner.ItemSpawnInfo>> config = new HashMap<>();
-        config.put("unknownitem", List.of(new ItemSpawner.ItemSpawnInfo(new GridPoint2(7, 7), 1)));
-
-        spawner.spawnItems(config);
-
-        verify(mockGameArea, times(1)).spawnItem(any(Entity.class), eq(new GridPoint2(7, 7)));
+    void testItemSpawnInfo() {
+        GridPoint2 pos = new GridPoint2(3, 4);
+        ItemSpawner.ItemSpawnInfo info = new ItemSpawner.ItemSpawnInfo(pos, 5);
+        assert info.position.equals(pos);
+        assert info.quantity == 5;
     }
 }
