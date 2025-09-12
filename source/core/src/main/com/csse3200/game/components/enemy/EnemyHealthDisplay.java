@@ -18,8 +18,9 @@ import org.slf4j.LoggerFactory;
 
 public class EnemyHealthDisplay extends Component {
     private static final Logger logger = LoggerFactory.getLogger(EnemyHealthDisplay.class);
-    private int maxHealth;
-    private ProgressBar healthBar;
+    int maxHealth;
+    int currentHealth;
+    ProgressBar healthBar;
     // UI constants
     private static final float BAR_WIDTH = 70f;
     private static final float BAR_HEIGHT = 5f;
@@ -27,6 +28,7 @@ public class EnemyHealthDisplay extends Component {
     private static final Color COLOR_BG  = Color.DARK_GRAY;
     private static final Color COLOR_HEALTH = Color.RED;
     protected Stage stage;
+    // Vertical offset for positioning the health bar above the enemy sprite
     private float offsetY = 0.6f;
 
     public EnemyHealthDisplay() {}
@@ -38,17 +40,16 @@ public class EnemyHealthDisplay extends Component {
     @Override
     public void create() {
         super.create();
-        maxHealth = entity.getComponent(CombatStatsComponent.class).getHealth();
+        maxHealth = entity.getComponent(CombatStatsComponent.class).getMaxHealth();
         // Health bar
         ProgressBar.ProgressBarStyle healthBarStyle = makeBarStyle(COLOR_HEALTH, BAR_HEIGHT);
         healthBar = new ProgressBar(0, maxHealth, 1, false, healthBarStyle);
         healthBar.setWidth(BAR_WIDTH);
         healthBar.setValue(maxHealth);
         healthBar.setAnimateDuration(0f);
+        // Update currentHealth for testing purpose
+        currentHealth = maxHealth;
         // Set stage and add health bar
-        stage = ServiceLocator.getRenderService().getStage();
-        stage.addActor(healthBar);
-        // Add health bar to stage
         stage = ServiceLocator.getRenderService().getStage();
         stage.addActor(healthBar);
         // Update ProgressBar when health value is changed
@@ -56,11 +57,13 @@ public class EnemyHealthDisplay extends Component {
     }
 
     /**
-     * Updates the player's health on the UI.
-     * @param health player health
+     * Updates the enemy's health on the UI.
+     * Also update private variable currentHealth for testing purpose.
+     * @param health enemy health
      */
     public void updateEnemyHealthUI(int health) {
         healthBar.setValue(health);
+        currentHealth = health;
     }
 
     /**
@@ -86,6 +89,12 @@ public class EnemyHealthDisplay extends Component {
         return style;
     }
 
+    /**
+     * Updates the position of the enemy's health bar every frame.
+     * Converts the entity's world coordinates into stage coordinates
+     * and repositions the health bar above the enemy.
+     * Skips update if the entity or health bar is missing.
+     */
     @Override
     public void update() {
         if (healthBar == null || entity == null) {
@@ -93,15 +102,28 @@ public class EnemyHealthDisplay extends Component {
             return;
         }
         Vector2 pos = entity.getPosition();
-        healthBar.setPosition((pos.x + 0.2f) * 129.4814725781657f, (pos.y - 3f + offsetY) * 135.3720388672149f);
+
+        // Convert world position to screen-space position and update the health bar's placement.
+        // The constants (129.48f, 135.37f) scale world units into stage/screen units.
+        healthBar.setPosition(
+                (pos.x + 0.2f) * 129.4814725781657f,
+                (pos.y - 3f + offsetY) * 135.3720388672149f
+        );
     }
 
+    /**
+     * Cleans up resources when the entity is destroyed.
+     * Removes the health bar from the stage to prevent it from lingering
+     * after the enemy is removed.
+     */
     public void dispose() {
         super.dispose();
         if (healthBar != null) healthBar.remove();
     }
 
-    public int getCurrentHealthValue() {
-        return (int)healthBar.getValue();
+    public int getMaxHealth() { return maxHealth; }
+
+    public int getCurrentHealth() {
+        return currentHealth;
     }
 }
