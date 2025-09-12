@@ -59,7 +59,7 @@ public class BossFactory {
         animator.scaleEntity();
 
         robot.getComponent(AnimationRenderComponent.class).scaleEntity();
-        float k = 5.0f;
+        float k = 3.0f;
         Vector2 s = robot.getScale();
         robot.setScale(s.x * k, s.y * k);
 
