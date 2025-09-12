@@ -48,6 +48,52 @@ public class FlyingBossRoom extends GameArea {
     private static final Logger logger = LoggerFactory.getLogger(FlyingBossRoom.class);
     private static final GridPoint2 PLAYER_SPAWN = new GridPoint2(3, 5);
 
+    private static final float WALL_WIDTH = 0.1f;
+
+    /** Files or pictures used by the game (enemy/props,etc.). */
+    private static final String[] forestTextures = {
+        "images/box_boy_leaf.png",
+        "images/tree.png",
+        "images/ghost_king.png",
+        "images/ghost_1.png",
+        "images/grass_1.png",
+        "images/grass_2.png",
+        "images/grass_3.png",
+        "images/hex_grass_1.png",
+        "images/hex_grass_2.png",
+        "images/hex_grass_3.png",
+        "images/iso_grass_1.png",
+        "images/iso_grass_2.png",
+        "images/iso_grass_3.png",
+        "images/robot-2-attack.png",
+        "images/robot-2-common.png",
+        "images/fireball1.png",
+        "images/blackhole1.png",
+        "images/Robot_1.png",
+        "images/Robot_1_attack_left.png",
+        "images/Robot_1_attack_right.png",
+        "images/Boss_3.png",
+        "images/mud.png",
+        "images/mud_ball_1.png",
+        "images/mud_ball_2.png",
+        "images/mud_ball_3.png",
+        "images/lightsaber.png",
+        "images/lightsaberSingle.png",
+        "images/ammo.png",
+        "images/round.png",
+        "images/pistol.png",
+        "images/rifle.png",
+        "images/dagger.png",
+        "images/laser_shot.png",
+        "images/Spawn.png",
+        "images/SpawnResize.png",
+        "images/LobbyWIP.png",
+        "images/door.png",
+        "images/player.png",
+        "images/mud.png",
+        "images/heart.png"
+    };
+
     /** General prop textures (floors, tiles, etc.). */
     private static final String[] generalTextures = {
         "foreg_sprites/general/LongFloor.png",
@@ -91,6 +137,12 @@ public class FlyingBossRoom extends GameArea {
         "images/explosion_2.atlas",
     };
 
+    private static final String[] forestSounds = {"sounds/Impact4.ogg"};
+
+    private static final String backgroundMusic = "sounds/BGM_03_mp3.mp3";
+
+    private static final String[] forestMusic = {backgroundMusic};
+
     private final TerrainFactory terrainFactory;
 
     private final CameraComponent cameraComponent;
@@ -103,15 +155,35 @@ public class FlyingBossRoom extends GameArea {
     private Entity pistol;
     private Entity rifle;
 
+    /**
+     * Creates a new FlyingBossRoom for the room where the flying boss spawns.
+     * 
+     * @param terrainFactory TerrainFactory used to create the terrain for the GameArea (required).
+     * @param cameraComponent Camera helper supplying an OrthographicCamera (optional but used here).
+     * @requires terrainFactory not null
+     */
     public FlyingBossRoom(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
         super();
         this.terrainFactory = terrainFactory;
         this.cameraComponent = cameraComponent;
     }
 
+    /**
+     * Creates the room by:
+     *  - loading assest
+     *  - displaying the UI
+     *  - spawning terrain (without door triggers)
+     *  - spawn player and rifle
+     *  - spawns floors
+     *  - spawns prop
+     * - spawns flying boss
+     */
     @Override
     public void create() {
         loadAssets();
+    
+        displayUI();
+        spawnTerrain();
 
         player = spawnPlayer();
         // dagger = spawnDagger();
@@ -121,22 +193,21 @@ public class FlyingBossRoom extends GameArea {
 
         this.equipItem(rifle);
 
-
         spawnFloor();
         spawnPlatforms();
-        displayUI();
+        spawnBigWall();
+
 
         spawnFlyingBoss();
-        spawnTerrain();
     }
 
     private void spawnPlatforms() {
         Entity platform1 = ObstacleFactory.createThinFloor();
-        GridPoint2 platform1Pos = new GridPoint(0, 10);
+        GridPoint2 platform1Pos = new GridPoint2(0, 10);
         spawnEntityAt(platform1, platform1Pos, false, false);
 
         Entity platform2 = ObstacleFactory.createThinFloor();
-        GridPoint2 platform2Pos = new GridPoint(20, 10);
+        GridPoint2 platform2Pos = new GridPoint2(20, 10);
         spawnEntityAt(platform2, platform2Pos, false, false);
     }
 
@@ -158,6 +229,15 @@ public class FlyingBossRoom extends GameArea {
 
         Entity flyingBoss = BossFactory.createBoss2(player);
         spawnEntityAt(flyingBoss, pos, true, true);
+    }
+
+    /**
+     * Adds a very tall thick-floor as a background wall/divider.
+     */
+    private void spawnBigWall() {
+        GridPoint2 wallSpawn = new GridPoint2(-14, 0);
+        Entity bigWall = ObstacleFactory.createBigThickFloor();
+        spawnEntityAt(bigWall, wallSpawn, true, false);
     }
 
     /**
@@ -219,11 +299,11 @@ public class FlyingBossRoom extends GameArea {
             spawnEntity(bottomRight);
         }
 
-        // Thin sensor line on the right that loads the next level on overlap
-        Entity rightDoor = ObstacleFactory.createDoorTrigger(WALL_WIDTH, rightDoorHeight);
-            rightDoor.setPosition(rightX - WALL_WIDTH - 0.001f, rightDoorY);
-            rightDoor.addComponent(new com.csse3200.game.components.DoorComponent(() -> this.loadNextLevel()));
-            spawnEntity(rightDoor);
+        // // Thin sensor line on the right that loads the next level on overlap
+        // Entity rightDoor = ObstacleFactory.createDoorTrigger(WALL_WIDTH, rightDoorHeight);
+        //     rightDoor.setPosition(rightX - WALL_WIDTH - 0.001f, rightDoorY);
+        //     rightDoor.addComponent(new com.csse3200.game.components.DoorComponent(() -> this.loadNextLevel()));
+        //     spawnEntity(rightDoor);
         }
     }
 
@@ -240,39 +320,52 @@ public class FlyingBossRoom extends GameArea {
         return newRifle;
     }
 
-    /**
-     * Loads all textures, atlases, sounds and music needed by this room.
-     * Blocks briefly until loading is complete. If you add new art, put it here.
-     */
-    private void loadAssets() {
-        logger.debug("Loading assets");
-        ResourceService resourceService = ServiceLocator.getResourceService();
-        resourceService.loadTextures(generalTextures);
-        resourceService.loadTextures(spawnPadTextures);
-        resourceService.loadTextureAtlases(forestTextureAtlases);
+  /**
+   * Loads all textures, atlases, sounds and music needed by this room.
+   * Blocks briefly until loading is complete. If you add new art, put it here.
+   */
+  private void loadAssets() {
+    logger.debug("Loading assets");
+    ResourceService resourceService = ServiceLocator.getResourceService();
+    resourceService.loadTextures(generalTextures);
+    resourceService.loadTextures(forestTextures);
+    resourceService.loadTextures(spawnPadTextures);
+    resourceService.loadTextureAtlases(forestTextureAtlases);
+    resourceService.loadSounds(forestSounds);
+    resourceService.loadMusic(forestMusic);
 
-        while (resourceService.loadForMillis(10)) {
-        // This could be upgraded to a loading screen
-        logger.info("Loading... {}%", resourceService.getProgress());
-        }
+    while (resourceService.loadForMillis(10)) {
+      // This could be upgraded to a loading screen
+      logger.info("Loading... {}%", resourceService.getProgress());
     }
+  }
 
-    /**
-     * Unloads assets that were loaded in {@link #loadAssets()}.
-     * Call this when leaving the room to free memory.
-     */
-    private void unloadAssets() {
-        logger.debug("Unloading assets");
-        ResourceService resourceService = ServiceLocator.getResourceService();
-        resourceService.unloadAssets(generalTextures);
-        resourceService.unloadAssets(forestTextureAtlases);
-        resourceService.unloadAssets(spawnPadTextures);
+  /**
+   * Unloads assets that were loaded in {@link #loadAssets()}.
+   * Call this when leaving the room to free memory.
+   */
+  private void unloadAssets() {
+    logger.debug("Unloading assets");
+    ResourceService resourceService = ServiceLocator.getResourceService();
+    resourceService.unloadAssets(forestTextures);
+    resourceService.unloadAssets(generalTextures);
+    resourceService.unloadAssets(forestTextureAtlases);
+    resourceService.unloadAssets(forestSounds);
+    resourceService.unloadAssets(forestMusic);
+    resourceService.unloadAssets(spawnPadTextures);
+  }
+
+    private void playMusic() {
+        Music music = ServiceLocator.getResourceService().getAsset(backgroundMusic, Music.class);
+        music.setLooping(true);
+        music.setVolume(0.3f);
+        music.play();
     }
 
     @Override
     public void dispose() {
         super.dispose();
-        ServiceLocator.getResourceService().getAsset(backgroundMusic, Music.class).stop();
+        // ServiceLocator.getResourceService().getAsset(backgroundMusic, Music.class).stop();
         this.unloadAssets();
     }
 
