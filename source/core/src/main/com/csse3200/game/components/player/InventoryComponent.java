@@ -28,20 +28,14 @@ public class InventoryComponent extends Component {
   private int processor;
   private Entity currItem;
   private int keycardLevel = 0;
+
+
   /**
    * Constructs an inventory for the player and a beginning currency amount
    * to start with.
    * 
    * @param processor The number of processors that the inventory is starting with
    */
-
-  public void setKeycardLevel(int level) {
-    this.keycardLevel = level;
-  }
-
-  public int getKeycardLevel() {
-    return this.keycardLevel;
-  }
   public InventoryComponent(int processor) {
 
     setProcessor(processor);
@@ -50,6 +44,24 @@ public class InventoryComponent extends Component {
       this.items.add(idx, null);
       this.itemTexs.add(idx, null);
     }
+  }
+
+  /**
+   * setter method for the keycard level
+   * 
+   * @param level level to set the keycard to
+   */
+  public void setKeycardLevel(int level) {
+    this.keycardLevel = level;
+  }
+
+  /**
+   * getter method for the keycard level
+   * 
+   * @return the current keycard level
+   */
+  public int getKeycardLevel() {
+    return this.keycardLevel;
   }
 
   /**
