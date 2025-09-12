@@ -61,7 +61,9 @@ public class ProjectileFactory {
      */
     public static Entity createPistolBullet(WeaponsStatsComponent source) {
         ProjectileTarget target = ProjectileTarget.ENEMY;
-        return createProjectile(target, source, "images/round.png");
+        Entity projectile = createProjectile(target, source, "images/round.png");
+        projectile.scaleHeight(0.85f);
+        return projectile;
     }
 
     /**
