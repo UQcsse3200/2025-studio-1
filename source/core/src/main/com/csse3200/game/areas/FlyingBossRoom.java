@@ -203,20 +203,12 @@ public class FlyingBossRoom extends GameArea {
 
     private void spawnPlatforms() {
         Entity platform1 = ObstacleFactory.createThinFloor();
-        GridPoint2 platform1Pos = new GridPoint2(0, 10);
+        GridPoint2 platform1Pos = new GridPoint2(4, 12);
         spawnEntityAt(platform1, platform1Pos, false, false);
 
-        Entity platform2 = ObstacleFactory.createThinFloor();
-        GridPoint2 platform2Pos = new GridPoint2(6, 10);
-        spawnEntityAt(platform2, platform2Pos, false, false);
-
         Entity platform3 = ObstacleFactory.createThinFloor();
-        GridPoint2 platform3Pos = new GridPoint2(18, 10);
+        GridPoint2 platform3Pos = new GridPoint2(22, 12);
         spawnEntityAt(platform3, platform3Pos, false, false);
-
-        Entity platform4 = ObstacleFactory.createThinFloor();
-        GridPoint2 platform4Pos = new GridPoint2(24, 10);
-        spawnEntityAt(platform4, platform4Pos, false, false);
     }
 
     private void displayUI() {
