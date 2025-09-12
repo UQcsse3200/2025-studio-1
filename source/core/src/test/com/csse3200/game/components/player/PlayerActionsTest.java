@@ -336,4 +336,65 @@ class PlayerActionsTest {
                     Math.abs(v.y - expected.y) <= (float) 0.001
     );
   }
+
+  @Nested
+  @DisplayName("Testing inventory and equipped actions")
+
+    class InventoryActionsTests{
+      InventoryComponent inventory;
+      PlayerActions actions;
+      Entity player;
+
+      @BeforeEach
+      void setup(){
+          inventory = mock(InventoryComponent.class);
+          actions = new PlayerActions();
+          player = spy(new Entity().addComponent(actions).addComponent(inventory));
+          player.create();
+      }
+
+      @Test
+      /**
+       * should select slot, set as equipped slot, and set as current item if slot is not empty
+       */
+      void testingEquipSlot(){
+          Entity mockItem = mock(Entity.class);
+          when(inventory.get(0)).thenReturn(mockItem);
+
+          actions.equipSlot(1);  //slot 1 - index 0
+
+          verify(inventory).selectSlot(0);
+          verify(inventory).setEquippedSlot(0);
+          verify(inventory).setCurrItem(mockItem);
+      }
+
+      @Test
+      /**
+       * equipCurrentWeapon() should trigger focus_item event with equipped slot index
+       */
+      void testingEquipCurrentWeapon(){
+          when(inventory.getEquippedSlot()).thenReturn(2);
+          actions.equipCurrentWeapon();
+          verify(player.getEvents()).trigger(eq("focus item"), eq(2));
+      }
+
+      @Test
+      /**
+       * equipCurrentWeapon() should trigger focus_item event with -1 when no equipped weapon
+       */
+      void testingEquipCurrentWeaponWithMinusOne(){
+          when(inventory.getEquippedSlot()).thenReturn(-1);
+          actions.equipCurrentWeapon();
+          verify(player.getEvents()).trigger(eq("focus item"), eq(-1));
+      }
+
+      @Test
+      void testingunequipWeapon(){
+          actions.unequipWeapon();
+
+          verify(inventory).setEquippedSlot(-1);
+          verify(inventory).setCurrItem(null);
+          verify(player.getEvents()).trigger(eq("focus item"), eq(-1));
+      }
+  }
 }
