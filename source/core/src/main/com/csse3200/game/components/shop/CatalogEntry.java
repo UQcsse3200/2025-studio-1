@@ -87,7 +87,13 @@ public record CatalogEntry(
         return new ImageButton(icon);
     }
 
+    public Entity getItem() {
+        return item;
+    }
+
     public String getItemName() {
         return item.getComponent(ItemComponent.class).getName();
     }
+
+
 }
