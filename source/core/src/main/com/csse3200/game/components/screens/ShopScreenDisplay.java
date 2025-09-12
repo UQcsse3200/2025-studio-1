@@ -140,11 +140,12 @@ public class ShopScreenDisplay extends UIComponent {
         }
 
         // Click to purchase
+        int amountToPurchase = 1;
         if(entry.enabled()){
             actor.addListener(new ChangeListener() {
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {
-                    manager.purchase(game.getPlayer(), entry.getItemName());
+                    manager.purchase(game.getPlayer(), entry, amountToPurchase);
                 }
             });}
 
