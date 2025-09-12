@@ -66,7 +66,6 @@ public class StationComponent extends Component {
             player = otherEntity;
             playerNear = true;
             otherEntity.getEvents().addListener("interact", this::upgrade);
-
             //Add the text/position for the buy label
             buyPrompt.setVisible(true);
             buyPrompt.setText("Press E for upgrade");
