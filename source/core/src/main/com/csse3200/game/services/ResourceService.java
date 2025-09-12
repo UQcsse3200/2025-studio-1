@@ -204,6 +204,45 @@ public class ResourceService implements Disposable {
     }
   }
 
+  /**
+   * Non-blocking enqueue of textures for loading. Call {@link #loadAll()} or repeatedly
+   * {@link #loadForMillis(int)} or poll {@link #isBundleLoaded(String[])} to complete.
+   */
+  public void loadTexturesAsync(String[] textureNames) {
+    loadAssets(textureNames, Texture.class);
+  }
+
+  /**
+   * Non-blocking enqueue of texture atlases for loading.
+   */
+  public void loadTextureAtlasesAsync(String[] atlasNames) {
+    loadAssets(atlasNames, TextureAtlas.class);
+  }
+
+  /**
+   * Returns true if all provided texture names are loaded.
+   */
+  public boolean isTexturesLoaded(String[] textureNames) {
+    for (String name : textureNames) {
+      if (!assetManager.isLoaded(name, Texture.class)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  /**
+   * Returns true if all provided atlas names are loaded.
+   */
+  public boolean isAtlasesLoaded(String[] atlasNames) {
+    for (String name : atlasNames) {
+      if (!assetManager.isLoaded(name, TextureAtlas.class)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
   @Override
   public void dispose() {
     assetManager.clear();

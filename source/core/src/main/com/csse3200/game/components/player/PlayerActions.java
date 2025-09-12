@@ -347,7 +347,12 @@ public class PlayerActions extends Component {
     Entity bullet = ProjectileFactory.createPistolBullet(weapon);
     Vector2 origin = new Vector2(entity.getPosition());
     bullet.setPosition(origin);
-    ServiceLocator.getEntityService().register(bullet);
+    com.csse3200.game.areas.GameArea area = ServiceLocator.getGameArea();
+    if (area != null) {
+      area.spawnEntity(bullet);
+    } else {
+      ServiceLocator.getEntityService().register(bullet);
+    }
 
     PhysicsProjectileComponent projectilePhysics = bullet.getComponent(PhysicsProjectileComponent.class);
 
