@@ -2,7 +2,7 @@ package com.csse3200.game.entities;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.physics.box2d.Body;
-import com.csse3200.game.components.ItemComponent;
+import com.csse3200.game.components.items.ItemComponent;
 import com.csse3200.game.entities.factories.items.ItemFactory;
 import com.csse3200.game.extensions.GameExtension;
 import com.csse3200.game.physics.PhysicsEngine;

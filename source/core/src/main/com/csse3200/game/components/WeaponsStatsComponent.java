@@ -20,6 +20,7 @@ public class WeaponsStatsComponent extends Component {
     private int baseAttack;
     private float coolDown;
     private boolean disableDamage;
+    private String projectileTexturePath;
 
     /**
      * Construct a Weapons Stats Component (Attack System)
@@ -76,6 +77,14 @@ public class WeaponsStatsComponent extends Component {
         } else {
             logger.error("Can not set base attack to a negative attack value");
         }
+    }
+
+    public void setProjectileTexturePath(String projectileTexturePath) {
+        this.projectileTexturePath = projectileTexturePath;
+    }
+
+    public String getProjectileTexturePath() {
+        return this.projectileTexturePath;
     }
 
     private boolean canAttack() {

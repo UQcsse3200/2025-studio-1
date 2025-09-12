@@ -1,6 +1,6 @@
 package com.csse3200.game.components.player;
 
-import com.csse3200.game.components.ItemComponent;
+import com.csse3200.game.components.items.ItemComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
 import com.csse3200.game.extensions.GameExtension;
