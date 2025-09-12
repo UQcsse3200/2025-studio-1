@@ -2,7 +2,7 @@ package com.csse3200.game.entities.factories;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.csse3200.game.components.StationComponent;
+import com.csse3200.game.components.stations.StationComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.physics.PhysicsLayer;
 import com.csse3200.game.physics.PhysicsUtils;
@@ -26,7 +26,7 @@ public class InteractableStationFactory {
         PhysicsUtils.setScaledCollider(bench, 0.5f, 0.3f);
         bench.getComponent(ColliderComponent.class).setAsBoxAligned(new Vector2(0.5f, 0.3f),
                 PhysicsComponent.AlignX.CENTER, PhysicsComponent.AlignY.TOP);
-
+        bench.getComponent(StationComponent.class).setPrice(500);
         return bench;
     }
 
