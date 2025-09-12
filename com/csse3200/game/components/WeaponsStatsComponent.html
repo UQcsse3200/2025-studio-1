@@ -146,20 +146,40 @@ loadScripts(document, 'script');</script>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">gets the entity's cooldown between attacks (seconds).</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setBaseAttack(int)" class="member-name-link">setBaseAttack</a><wbr>(int&nbsp;attack)</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getMaxUpgradeStage()" class="member-name-link">getMaxUpgradeStage</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Sets the entity's attack damage.</div>
+<div class="block">Gets the max upgrades stage</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getUpgradeStage()" class="member-name-link">getUpgradeStage</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Gets the current upgrade stage</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isMaxUpgraded()" class="member-name-link">isMaxUpgraded</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Checks if the weapon is already max upgraded</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setCoolDown(float)" class="member-name-link">setCoolDown</a><wbr>(float&nbsp;coolDown)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setBaseAttack(int)" class="member-name-link">setBaseAttack</a><wbr>(int&nbsp;attack)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Set the entity's hit cooldown (seconds)</div>
+<div class="block">Sets the entity's attack damage.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setDisableDamage(boolean)" class="member-name-link">setDisableDamage</a><wbr>(boolean&nbsp;status)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setCoolDown(float)" class="member-name-link">setCoolDown</a><wbr>(float&nbsp;coolDown)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Set the entity's hit cooldown (seconds)</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setDisableDamage(boolean)" class="member-name-link">setDisableDamage</a><wbr>(boolean&nbsp;status)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Sets whether the player can receive any damage.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#upgrade()" class="member-name-link">upgrade</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Upgrades the weapon</div>
 </div>
 </div>
 </div>
@@ -244,6 +264,46 @@ loadScripts(document, 'script');</script>
 <dt>Parameters:</dt>
 <dd><code>attack</code> - Attack damage</dd>
 </dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getUpgradeStage()">
+<h3>getUpgradeStage</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">getUpgradeStage</span>()</div>
+<div class="block">Gets the current upgrade stage</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>the upgrades stage</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getMaxUpgradeStage()">
+<h3>getMaxUpgradeStage</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">getMaxUpgradeStage</span>()</div>
+<div class="block">Gets the max upgrades stage</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>the max upgrades stage</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="isMaxUpgraded()">
+<h3>isMaxUpgraded</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isMaxUpgraded</span>()</div>
+<div class="block">Checks if the weapon is already max upgraded</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>if the weapon is already max upgraded</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="upgrade()">
+<h3>upgrade</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">upgrade</span>()</div>
+<div class="block">Upgrades the weapon</div>
 </section>
 </li>
 <li>
