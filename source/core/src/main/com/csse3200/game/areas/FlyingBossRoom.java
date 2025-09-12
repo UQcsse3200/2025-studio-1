@@ -46,7 +46,7 @@ import org.slf4j.LoggerFactory;
  */
 public class FlyingBossRoom extends GameArea {
     private static final Logger logger = LoggerFactory.getLogger(FlyingBossRoom.class);
-    private static final GridPoint2 PLAYER_SPAWN = new GridPoint2(3, 5);
+    private static final GridPoint2 PLAYER_SPAWN = new GridPoint2(3, 10);
 
     private static final float WALL_WIDTH = 0.1f;
 
@@ -207,8 +207,16 @@ public class FlyingBossRoom extends GameArea {
         spawnEntityAt(platform1, platform1Pos, false, false);
 
         Entity platform2 = ObstacleFactory.createThinFloor();
-        GridPoint2 platform2Pos = new GridPoint2(20, 10);
+        GridPoint2 platform2Pos = new GridPoint2(6, 10);
         spawnEntityAt(platform2, platform2Pos, false, false);
+
+        Entity platform3 = ObstacleFactory.createThinFloor();
+        GridPoint2 platform3Pos = new GridPoint2(18, 10);
+        spawnEntityAt(platform3, platform3Pos, false, false);
+
+        Entity platform4 = ObstacleFactory.createThinFloor();
+        GridPoint2 platform4Pos = new GridPoint2(24, 10);
+        spawnEntityAt(platform4, platform4Pos, false, false);
     }
 
     private void displayUI() {
