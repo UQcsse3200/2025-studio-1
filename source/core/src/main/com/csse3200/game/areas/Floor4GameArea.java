@@ -31,6 +31,7 @@ public class Floor4GameArea extends GameArea {
 
   @Override
   public void create() {
+    ensureAssets();
     terrain = terrainFactory.createTerrain(TerrainType.FOREST_DEMO_ISO);
     spawnEntity(new Entity().addComponent(terrain));
 
@@ -49,6 +50,25 @@ public class Floor4GameArea extends GameArea {
     Entity keycard = KeycardFactory.createKeycard(4);
     keycard.setPosition(new Vector2(keycardX, keycardY));
     spawnEntity(keycard);
+  }
+
+  private void ensureAssets() {
+    com.csse3200.game.services.ResourceService rs = com.csse3200.game.services.ServiceLocator.getResourceService();
+    String[] textures = new String[] {
+      "images/iso_grass_1.png", "images/iso_grass_2.png", "images/iso_grass_3.png",
+      "foreg_sprites/general/LongFloor.png",
+      "foreg_sprites/general/ThickFloor.png",
+      "foreg_sprites/general/SmallSquare.png",
+      "foreg_sprites/general/SmallStair.png",
+      "foreg_sprites/general/SquareTile.png",
+      "images/keycard_lvl4.png"
+    };
+    java.util.List<String> toLoad = new java.util.ArrayList<>();
+    for (String t : textures) if (!rs.containsAsset(t, com.badlogic.gdx.graphics.Texture.class)) toLoad.add(t);
+    if (!toLoad.isEmpty()) { rs.loadTextures(toLoad.toArray(new String[0])); rs.loadAll(); }
+    if (!rs.containsAsset("images/player.atlas", com.badlogic.gdx.graphics.g2d.TextureAtlas.class)) {
+      rs.loadTextureAtlases(new String[] {"images/player.atlas"}); rs.loadAll();
+    }
   }
 
 
@@ -115,21 +135,25 @@ public class Floor4GameArea extends GameArea {
   }
 
   private void loadBackToFloor2() {
-    for (Entity entity : areaEntities) {
-      entity.dispose();
-    }
-    areaEntities.clear();
-    Floor2GameArea floor2 = new Floor2GameArea(terrainFactory, cameraComponent);
-    floor2.create();
+    if (!beginTransition()) return;
+    try {
+      for (Entity entity : areaEntities) { entity.dispose(); }
+      areaEntities.clear();
+      dispose();
+      Floor2GameArea floor2 = new Floor2GameArea(terrainFactory, cameraComponent);
+      floor2.create();
+    } finally { endTransition(); }
   }
 
   private void loadFloor7() {
-    for (Entity entity : areaEntities) {
-      entity.dispose();
-    }
-    areaEntities.clear();
-    Floor7GameArea room7 = new Floor7GameArea(terrainFactory, cameraComponent);
-    room7.create();
+    if (!beginTransition()) return;
+    try {
+      for (Entity entity : areaEntities) { entity.dispose(); }
+      areaEntities.clear();
+      dispose();
+      Floor7GameArea room7 = new Floor7GameArea(terrainFactory, cameraComponent);
+      room7.create();
+    } finally { endTransition(); }
   }
 }
 

@@ -31,6 +31,7 @@ public class Floor6GameArea extends GameArea {
 
   @Override
   public void create() {
+    ensureAssets();
     // Choose a distinct terrain look
     terrain = terrainFactory.createTerrain(TerrainType.FOREST_DEMO_HEX);
     spawnEntity(new Entity().addComponent(terrain));
@@ -48,45 +49,11 @@ public class Floor6GameArea extends GameArea {
     }
 
   private void spawnBordersAndDoors() {
-    OrthographicCamera cam = (OrthographicCamera) cameraComponent.getCamera();
-    Vector2 camPos = cameraComponent.getEntity().getPosition();
-    float viewWidth = cam.viewportWidth;
-    float viewHeight = cam.viewportHeight;
-    float leftX = camPos.x - viewWidth / 2f;
-    float rightX = camPos.x + viewWidth / 2f;
-    float bottomY = camPos.y - viewHeight / 2f;
-    float topY = camPos.y + viewHeight / 2f;
-
-    // Solid borders on top/bottom and solid left
-    Entity top = ObstacleFactory.createWall(viewWidth, WALL_WIDTH);
-    top.setPosition(leftX, topY - WALL_WIDTH);
-    spawnEntity(top);
-    Entity bottom = ObstacleFactory.createWall(viewWidth, WALL_WIDTH);
-    bottom.setPosition(leftX, bottomY);
-    spawnEntity(bottom);
-    Entity left = ObstacleFactory.createWall(WALL_WIDTH, viewHeight);
-    left.setPosition(leftX, bottomY);
-    spawnEntity(left);
-
-    // Right border split with a vertical door -> back to Floor 3
-    float rightDoorHeight = Math.max(1f, viewHeight * 0.2f);
-    float rightDoorY = camPos.y - rightDoorHeight / 0.7f;
-    float rightTopSegHeight = Math.max(0f, (topY) - (rightDoorY + rightDoorHeight));
-    if (rightTopSegHeight > 0f) {
-      Entity rightTop = ObstacleFactory.createWall(WALL_WIDTH, rightTopSegHeight);
-      rightTop.setPosition(rightX - WALL_WIDTH, rightDoorY + rightDoorHeight);
-      spawnEntity(rightTop);
-    }
-    float rightBottomSegHeight = Math.max(0f, (rightDoorY - bottomY));
-    if (rightBottomSegHeight > 0f) {
-      Entity rightBottom = ObstacleFactory.createWall(WALL_WIDTH, rightBottomSegHeight);
-      rightBottom.setPosition(rightX - WALL_WIDTH, bottomY);
-      spawnEntity(rightBottom);
-    }
-    Entity rightDoor = ObstacleFactory.createDoorTrigger(WALL_WIDTH, rightDoorHeight);
-    rightDoor.setPosition(rightX - WALL_WIDTH - 0.001f, rightDoorY);
-    rightDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadBackToFloor3));
-    spawnEntity(rightDoor);
+    Bounds b = getCameraBounds(cameraComponent);
+    addSolidWallTop(b, WALL_WIDTH);
+    addSolidWallBottom(b, WALL_WIDTH);
+    addSolidWallLeft(b, WALL_WIDTH);
+    addVerticalDoorRight(b, WALL_WIDTH, this::loadBackToFloor3);
   }
 
   private void spawnPlayer() {
@@ -95,12 +62,27 @@ public class Floor6GameArea extends GameArea {
   }
 
   private void loadBackToFloor3() {
-    for (Entity entity : areaEntities) {
-      entity.dispose();
-    }
-    areaEntities.clear();
-    Floor3GameArea room3 = new Floor3GameArea(terrainFactory, cameraComponent);
-    room3.create();
+    if (!beginTransition()) return;
+    try {
+      for (Entity entity : areaEntities) { entity.dispose(); }
+      areaEntities.clear();
+      dispose();
+      Floor3GameArea room3 = new Floor3GameArea(terrainFactory, cameraComponent);
+      room3.create();
+    } finally { endTransition(); }
+  }
+
+  private void ensureAssets() {
+    String[] textures = new String[] {
+      "images/hex_grass_1.png", "images/hex_grass_2.png", "images/hex_grass_3.png",
+      "foreg_sprites/general/LongFloor.png",
+      "foreg_sprites/general/ThickFloor.png",
+      "foreg_sprites/general/SmallSquare.png",
+      "foreg_sprites/general/SmallStair.png",
+      "foreg_sprites/general/SquareTile.png"
+    };
+    ensureTextures(textures);
+    ensurePlayerAtlas();
   }
 }
 

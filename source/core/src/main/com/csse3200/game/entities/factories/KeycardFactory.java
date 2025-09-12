@@ -7,6 +7,7 @@ import com.csse3200.game.physics.components.ColliderComponent;
 import com.csse3200.game.physics.components.HitboxComponent;
 import com.csse3200.game.physics.PhysicsLayer;
 import com.csse3200.game.components.KeycardPickupComponent;
+import com.csse3200.game.components.player.InventoryComponent;
 import com.badlogic.gdx.math.MathUtils;
 
 import java.util.ArrayList;
