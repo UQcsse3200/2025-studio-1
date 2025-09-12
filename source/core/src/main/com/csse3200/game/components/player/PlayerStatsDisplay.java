@@ -70,7 +70,9 @@ public class PlayerStatsDisplay extends UIComponent {
     entity.getEvents().addListener("shoot", this::updateAmmoUI);
     entity.getEvents().addListener("reload", this::updateAmmoUI);
     entity.getEvents().addListener("pick up", this::updateAmmoUI);
+    entity.getEvents().addListener("ammo replenished", this::updateAmmoUI);
     entity.getEvents().addListener("focus item", this::updateAmmoUIAfterSwitch);
+
   }
 
   /**

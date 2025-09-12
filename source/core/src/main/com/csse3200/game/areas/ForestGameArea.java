@@ -267,10 +267,10 @@ public class ForestGameArea extends GameArea {
     } else {
       spawnBoss3();
     }
-    // spawnGhostGPT();
-    // spawnDeepspin();
-    // spawnGrokDroid();
-    // spawnVroomba();
+     spawnGhostGPT();
+     spawnDeepspin();
+     spawnGrokDroid();
+     spawnVroomba();
     playMusic();
 
     // Place a keycard on the floor so the player can unlock the door
