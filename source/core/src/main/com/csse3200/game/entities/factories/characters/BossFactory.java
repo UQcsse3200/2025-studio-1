@@ -53,6 +53,7 @@ public class BossFactory {
         robot
                 .addComponent(animator)
                 .addComponent(new CombatStatsComponent(100))
+                .addComponent(new WeaponsStatsComponent(5))
                 .addComponent(new BossAnimationController())
                 .addComponent(new BossStatusDisplay("Boss_1"));
         animator.startAnimation("Idle");
