@@ -68,13 +68,19 @@ public class EnemyWaves {
       logger.info("EnemyWaves: all {} waves already spawned", maxWaves);
       return;
     }
-    logger.info("EnemyWaves: spawning wave {} of {} (scale={})", waveNumber + 1, maxWaves, scalingFactor);
-    // Spawn pattern similar to earlier working version: Ghost + Vroomba combo for visibility
-    gameArea.spawnGhostGPT(baseGhosts, scalingFactor, player);
-    gameArea.spawnVroomba(baseVroombas, scalingFactor, player);
+    float baseScale = 1f;
+    try {
+      baseScale = gameArea.getBaseDifficultyScale();
+    } catch (Exception e) {
+      // fallback to 1 if area not ready
+    }
+    float effectiveScale = scalingFactor * baseScale;
+    logger.info("EnemyWaves: spawning wave {} of {} (waveScale={}, baseScale={}, effective={})", waveNumber + 1, maxWaves, scalingFactor, baseScale, effectiveScale);
+    gameArea.spawnGhostGPT(baseGhosts, effectiveScale, player);
+    gameArea.spawnVroomba(baseVroombas, effectiveScale, player);
 
     waveNumber++;
-    scalingFactor += 0.25f;
+    scalingFactor += 0.25f; // incremental per-wave multiplier
   }
 
   private void tick() {
