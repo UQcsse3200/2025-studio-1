@@ -28,7 +28,7 @@ public class TutorialScreenDisplay extends UIComponent {
     private static final Logger logger = LoggerFactory.getLogger(TutorialScreenDisplay.class);
     private final GdxGame game;
     private final List<TutorialStep> steps;
-    private int currentStep = 0;
+    public int currentStep = 0;
 
     private Table table;
     private NeonStyles neon;
@@ -62,7 +62,7 @@ public class TutorialScreenDisplay extends UIComponent {
      * Rebuilds the UI for the given step index.
      * Clears the table, then adds title, text, optional animation, and controls.
      */
-    private void showStep(int stepIndex) {
+    void showStep(int stepIndex) {
         table.clear();
 
         TutorialStep step = steps.get(stepIndex);
@@ -158,7 +158,7 @@ public class TutorialScreenDisplay extends UIComponent {
     /**
      * Switches back to the main menu screen.
      */
-    private void backMainMenu() {
+    void backMainMenu() {
         logger.debug("Switching to Main Menu screen");
         game.setScreen(ScreenType.MAIN_MENU);
     }
