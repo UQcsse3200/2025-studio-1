@@ -111,11 +111,40 @@ public class FlyingBossRoom extends GameArea {
 
     @Override
     public void create() {
+        loadAssets();
+
         player = spawnPlayer();
+        // dagger = spawnDagger();
+        // pistol = spawnPistol();
+        rifle = spawnRifle();
+        // lightsaber = spawnLightsaber();
+
+        this.equipItem(rifle);
+
+
         spawnFloor();
+        spawnPlatforms();
+        displayUI();
+
         spawnFlyingBoss();
         spawnTerrain();
+    }
 
+    private void spawnPlatforms() {
+        Entity platform1 = ObstacleFactory.createThinFloor();
+        GridPoint2 platform1Pos = new GridPoint(0, 10);
+        spawnEntityAt(platform1, platform1Pos, false, false);
+
+        Entity platform2 = ObstacleFactory.createThinFloor();
+        GridPoint2 platform2Pos = new GridPoint(20, 10);
+        spawnEntityAt(platform2, platform2Pos, false, false);
+    }
+
+    private void displayUI() {
+        Entity ui = new Entity();
+        ui.addComponent(new GameAreaDisplay("Box Forest"))
+                .addComponent(new com.csse3200.game.components.gamearea.FloorLabelDisplay("Floor 1"));
+        spawnEntity(ui);
     }
 
     private Entity spawnPlayer() {
@@ -192,9 +221,63 @@ public class FlyingBossRoom extends GameArea {
 
         // Thin sensor line on the right that loads the next level on overlap
         Entity rightDoor = ObstacleFactory.createDoorTrigger(WALL_WIDTH, rightDoorHeight);
-        rightDoor.setPosition(rightX - WALL_WIDTH - 0.001f, rightDoorY);
-        rightDoor.addComponent(new com.csse3200.game.components.DoorComponent(() -> this.loadNextLevel()));
-        spawnEntity(rightDoor);
+            rightDoor.setPosition(rightX - WALL_WIDTH - 0.001f, rightDoorY);
+            rightDoor.addComponent(new com.csse3200.game.components.DoorComponent(() -> this.loadNextLevel()));
+            spawnEntity(rightDoor);
         }
+    }
+
+    private void equipItem(Entity item) {
+        InventoryComponent inventory = this.player.getComponent(InventoryComponent.class);
+        inventory.addItem(item);
+        spawnEntityAt(item, PLAYER_SPAWN, true, true);
+    }
+
+    private Entity spawnRifle() {
+        Entity newRifle = WeaponsFactory.createWeapon(Weapons.RIFLE);
+        Vector2 newRifleOffset = new Vector2(0.25f, 0.15f);
+        newRifle.addComponent(new ItemHoldComponent(this.player, newRifleOffset));
+        return newRifle;
+    }
+
+    /**
+     * Loads all textures, atlases, sounds and music needed by this room.
+     * Blocks briefly until loading is complete. If you add new art, put it here.
+     */
+    private void loadAssets() {
+        logger.debug("Loading assets");
+        ResourceService resourceService = ServiceLocator.getResourceService();
+        resourceService.loadTextures(generalTextures);
+        resourceService.loadTextures(spawnPadTextures);
+        resourceService.loadTextureAtlases(forestTextureAtlases);
+
+        while (resourceService.loadForMillis(10)) {
+        // This could be upgraded to a loading screen
+        logger.info("Loading... {}%", resourceService.getProgress());
+        }
+    }
+
+    /**
+     * Unloads assets that were loaded in {@link #loadAssets()}.
+     * Call this when leaving the room to free memory.
+     */
+    private void unloadAssets() {
+        logger.debug("Unloading assets");
+        ResourceService resourceService = ServiceLocator.getResourceService();
+        resourceService.unloadAssets(generalTextures);
+        resourceService.unloadAssets(forestTextureAtlases);
+        resourceService.unloadAssets(spawnPadTextures);
+    }
+
+    @Override
+    public void dispose() {
+        super.dispose();
+        ServiceLocator.getResourceService().getAsset(backgroundMusic, Music.class).stop();
+        this.unloadAssets();
+    }
+
+
+    public Entity getPlayer() {
+        return player;
     }
 }
