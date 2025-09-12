@@ -33,6 +33,7 @@ public class InventoryComponent extends Component {
    * Constructs an inventory for the player and a beginning currency amount
    * to start with.
    *
+   *
    * @param processor The number of processors that the inventory is starting with
    */
   public InventoryComponent(int processor) {
@@ -232,6 +233,7 @@ public class InventoryComponent extends Component {
 
   /**
    * Get the WeaponsStatsComponent for the current item
+   *
    *
    * @return Weapon Stats of current item
    */

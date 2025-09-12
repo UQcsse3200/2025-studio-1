@@ -36,16 +36,12 @@ public class PlayerFactory {
    */
   public static Entity createPlayer() {
     InputComponent inputComponent =
-        ServiceLocator.getInputService().getInputFactory().createForPlayer();
+            ServiceLocator.getInputService().getInputFactory().createForPlayer();
     InventoryComponent playerInventory = new InventoryComponent(stats.gold);
 
-    //TODO : to make sure the player spawns unequipped at the start of the game
-
-
-    AnimationRenderComponent animator =
-            new AnimationRenderComponent(
-                    ServiceLocator.getResourceService()
-                            .getAsset("images/player.atlas", TextureAtlas.class));
+    AnimationRenderComponent animator = new AnimationRenderComponent(
+        ServiceLocator.getResourceService()
+            .getAsset("images/player.atlas", TextureAtlas.class));
     add_animations(animator);
     Entity player =
         new Entity()
@@ -100,6 +96,40 @@ public class PlayerFactory {
     animator.addAnimation("right_fall", 0.1f, Animation.PlayMode.NORMAL);
     animator.addAnimation("left_fall", 0.1f, Animation.PlayMode.NORMAL);
     animator.startAnimation("right_stand");
+  }
+
+  /**
+   * Create a player entity that uses arrow keys for movement.
+   * @return entity
+   */
+  public static Entity createPlayerWithArrowKeys() {
+    InputComponent inputComponent = new TouchPlayerInputComponent();
+
+    Entity player =
+            new Entity()
+                    .addComponent(new TextureRenderComponent("images/box_boy_leaf.png"))
+                    .addComponent(new PhysicsComponent())
+                    .addComponent(new ColliderComponent())
+                    .addComponent(new HitboxComponent().setLayer(PhysicsLayer.PLAYER))
+                    .addComponent(new PlayerActions())
+                    .addComponent(new CombatStatsComponent(stats.health))
+                    .addComponent(new InventoryComponent(stats.gold))
+                    .addComponent(inputComponent)
+                    .addComponent(new PlayerStatsDisplay());
+
+    PhysicsUtils.setScaledCollider(player, 0.6f, 0.3f);
+    player.getComponent(ColliderComponent.class).setDensity(1.5f);
+    player.getComponent(TextureRenderComponent.class).scaleEntity();
+
+    PhysicsComponent physics = player.getComponent(PhysicsComponent.class);
+    if (physics != null) {
+      for (Fixture fixture : physics.getBody().getFixtureList()) {
+        Filter filter = fixture.getFilterData();
+        filter.maskBits = PhysicsLayer.WALL | PhysicsLayer.GATE;
+        fixture.setFilterData(filter);
+      }
+    }
+    return player;
   }
 
   private PlayerFactory() {
