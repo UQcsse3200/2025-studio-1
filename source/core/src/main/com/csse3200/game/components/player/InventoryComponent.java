@@ -257,10 +257,16 @@ public class InventoryComponent extends Component {
     }
 
     /**
-     *
-     * @return the slot that is currently selected
+     * Returns the item that is currently selected in the inventory.
+     * @return the selected item, or null if no slot is selected
      */
-    public int getSelectedSlot(){return this.selectedSlot;}
+    public Entity getSelectedItem() {
+        if (selectedSlot >= 0 && selectedSlot < items.size()) {
+            return items.get(selectedSlot);
+        }
+        return null; // no item selected
+    }
+
 
     @Override
     /**
