@@ -90,7 +90,7 @@ public class PhysicsComponent extends Component {
 
   @Override
   public void dispose() {
-    physics.destroyBody(body);
+      com.badlogic.gdx.Gdx.app.postRunnable(() -> physics.destroyBody(body));
   }
 
   @Override
