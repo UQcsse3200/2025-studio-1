@@ -52,7 +52,6 @@ class ItemPickUpComponentTest {
         pickup = new ItemPickUpComponent(inventory);
         ServiceLocator.registerEntityService(new EntityService());
 
-
         player = new Entity()
                 .addComponent(inventory)
                 .addComponent(pickup);
@@ -69,12 +68,10 @@ class ItemPickUpComponentTest {
             Entity worldItem = new Entity().addComponent(new ItemComponent());
             worldItem.create();
 
-
             // Simulate collision target present
             setPrivate(pickup, "targetItem", worldItem);
 
             player.getEvents().trigger("pick up");
-
 
             assertEquals(1, inventory.getSize(), "Item should be added to inventory");
             assertSame(worldItem, inventory.get(0), "First slot should contain picked up item");
@@ -227,7 +224,7 @@ class ItemPickUpComponentTest {
         player.getEvents().trigger("focus item", 0);
         player.getEvents().trigger("drop focused");
 
-        // Removed but not respawned (we didn't register a GameArea anyway)
+        // Removed but not respawned
         assertEquals(0, inventory.getSize());
     }
 }
