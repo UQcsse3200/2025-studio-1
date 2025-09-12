@@ -24,9 +24,7 @@ public class KeycardFactory {
         /** Creates a keycard entity with the specified level, physics, rendering, and pickup logic.*/
         Entity keycard = new Entity()
                 .addComponent(new TextureRenderComponent("images/keycard_lvl" + level + ".png"))
-                .addComponent(new PhysicsComponent())
                 .addComponent(new ColliderComponent().setSensor(true))
-                .addComponent(new HitboxComponent().setLayer(PhysicsLayer.ITEM))
                 .addComponent(new KeycardPickupComponent(level));
 
 
