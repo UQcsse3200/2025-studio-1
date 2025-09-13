@@ -12,7 +12,7 @@ import com.csse3200.game.components.screens.TutorialScreenDisplay;
 import com.csse3200.game.components.screens.TutorialStep;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
-import com.csse3200.game.entities.factories.RenderFactory;
+import com.csse3200.game.entities.factories.system.RenderFactory;
 import com.csse3200.game.input.InputDecorator;
 import com.csse3200.game.input.InputService;
 import com.csse3200.game.rendering.RenderService;
