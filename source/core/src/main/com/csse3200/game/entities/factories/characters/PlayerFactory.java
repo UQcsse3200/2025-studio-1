@@ -30,8 +30,18 @@ import com.csse3200.game.services.ServiceLocator;
  * the properties stored in 'PlayerConfig'.
  */
 public class PlayerFactory {
-  private static final PlayerConfig stats =
-          FileLoader.readClass(PlayerConfig.class, "configs/player.json");
+  private static final PlayerConfig stats = safeLoadPlayerConfig();
+
+  private static PlayerConfig safeLoadPlayerConfig() {
+    PlayerConfig cfg = FileLoader.readClass(PlayerConfig.class, "configs/player.json");
+    if (cfg == null) {
+      cfg = new PlayerConfig();
+      cfg.gold = 0;
+      cfg.health = 100;
+      cfg.baseAttack = 10;
+    }
+    return cfg;
+  }
 
   /**
    * Create a player entity.
@@ -62,9 +72,6 @@ public class PlayerFactory {
             .addComponent(new StaminaComponent())
             .addComponent(animator)
             .addComponent(new PlayerAnimationController());
-    player.getComponent(PhysicsComponent.class).getBody().setUserData(new BodyUserData());
-    ((BodyUserData) player.getComponent(PhysicsComponent.class).getBody().getUserData()).entity = player;
-
     player.getComponent(AnimationRenderComponent.class).scaleEntity(2f);
     PhysicsUtils.setScaledCollider(player, 0.6f, 0.3f);
     player.getComponent(ColliderComponent.class).setDensity(1.5f);
@@ -124,9 +131,6 @@ public class PlayerFactory {
             .addComponent(new StaminaComponent())
             .addComponent(animator)
             .addComponent(new PlayerAnimationController());
-
-    player.getComponent(PhysicsComponent.class).getBody().setUserData(new BodyUserData());
-    ((BodyUserData) player.getComponent(PhysicsComponent.class).getBody().getUserData()).entity = player;
 
     player.getComponent(AnimationRenderComponent.class).scaleEntity(2f);
     PhysicsUtils.setScaledCollider(player, 0.6f, 0.3f);
