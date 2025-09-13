@@ -42,6 +42,7 @@ public class TutorialScreenDisplay extends UIComponent {
         super();
         this.game = game;
         this.steps = steps;
+        logger.debug("TutorialScreenDisplay created with {} steps", steps.size());
     }
 
     /**
@@ -55,6 +56,7 @@ public class TutorialScreenDisplay extends UIComponent {
         table.setFillParent(true);
         table.center();
         stage.addActor(table);
+        logger.debug("UI table created and added to stage");
         showStep(currentStep);
     }
 
@@ -63,6 +65,7 @@ public class TutorialScreenDisplay extends UIComponent {
      * Clears the table, then adds title, text, optional animation, and controls.
      */
     void showStep(int stepIndex) {
+        logger.debug("Showing step {} of {}", stepIndex + 1, steps.size());
         table.clear();
 
         TutorialStep step = steps.get(stepIndex);
@@ -72,6 +75,7 @@ public class TutorialScreenDisplay extends UIComponent {
         titleLabel.setFontScale(3f);
         table.add(titleLabel).colspan(2).center().padBottom(20f);
         table.row();
+        logger.debug("Title added to table: {}", step.getTitle());
 
         Label.LabelStyle smallStyle = skin.get("small", Label.LabelStyle.class);
         smallStyle.fontColor = skin.getColor("white");
@@ -81,6 +85,7 @@ public class TutorialScreenDisplay extends UIComponent {
         descLabel.setFontScale(2f);
         table.add(descLabel).colspan(2).center().padBottom(20f);
         table.row();
+        logger.debug("Description added to table: {}", step.getDescription());
 
         Table animRow = new Table();
         animRow.center();
@@ -88,8 +93,11 @@ public class TutorialScreenDisplay extends UIComponent {
         // Buttons texture
         Texture nextBtnTexture = new Texture("images/arrow-right.png");
         ImageButton nextBtn = new ImageButton(new TextureRegionDrawable(new TextureRegion(nextBtnTexture)));
+        logger.debug("Next button created");
+
         Texture prevBtnTexture = new Texture("images/arrow-left.png");
         ImageButton prevBtn = new ImageButton(new TextureRegionDrawable(new TextureRegion(prevBtnTexture)));
+        logger.debug("Previos button created");
 
         // Animation
         AnimatedClipImage anim = null;
@@ -98,7 +106,7 @@ public class TutorialScreenDisplay extends UIComponent {
                 anim = new AnimatedClipImage(step.getClip());
                 anim.setScaling(Scaling.fit);
                 anim.setSize(800f, 450f);
-
+                logger.debug("Animation clip loaded for step{}", stepIndex + 1);
             } catch (Exception ex) {
                 logger.error("Failed to load tutorial clip", ex);
                 table.add(new Label("Demo unavailable", skin)).colspan(2).center().padBottom(20f);
@@ -112,6 +120,7 @@ public class TutorialScreenDisplay extends UIComponent {
 
         prevBtn.setVisible(currentStep > 0);
         nextBtn.setVisible(currentStep < steps.size() - 1);
+        logger.debug("Prev button is visible: {}, Next button is visible: {}", prevBtn.isVisible(), nextBtn.isVisible());
 
         table.add(animRow).colspan(2).center().padBottom(20f);
         table.row();
@@ -119,12 +128,14 @@ public class TutorialScreenDisplay extends UIComponent {
         TextButton.TextButtonStyle style = neon.buttonRounded();
         TextButton mainMenuBtn = new TextButton("Main Menu", style);
         mainMenuBtn.getLabel().setFontScale(2.0f);
+        logger.debug("Main Menu Button created");
 
         // Button listeners
         nextBtn.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 if (currentStep < steps.size() - 1) {
+                    logger.debug("Next button clicked");
                     currentStep++;
                     showStep(currentStep);
                 }
@@ -135,6 +146,7 @@ public class TutorialScreenDisplay extends UIComponent {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 if (currentStep > 0) {
+                    logger.debug("Preivous button clicked");
                     currentStep--;
                     showStep(currentStep);
                 }
@@ -153,6 +165,8 @@ public class TutorialScreenDisplay extends UIComponent {
 
         table.row();
         table.add(mainMenuBtn).colspan(2).center().padTop(20f);
+        logger.debug("Main Menu Button added to table");
+
     }
 
     /**
@@ -178,6 +192,7 @@ public class TutorialScreenDisplay extends UIComponent {
      */
     @Override
     public void dispose() {
+        logger.debug("Disposing TutorialScreenDisplay");
         if (!loadedFramePaths.isEmpty()) {
             ServiceLocator.getResourceService()
                     .unloadAssets(loadedFramePaths.toArray(new String[0]));
@@ -185,5 +200,6 @@ public class TutorialScreenDisplay extends UIComponent {
         }
         table.clear();
         super.dispose();
+        logger.debug("Disposed TutorialScreenDisplay");
     }
 }
