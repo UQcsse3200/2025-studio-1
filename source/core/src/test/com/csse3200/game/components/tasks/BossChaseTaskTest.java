@@ -56,7 +56,6 @@ class BossChaseTaskTest {
         me.setPosition(0f, 0f);
 
         Entity target = new Entity();
-        // 先不在上方，允许开始
         target.setPosition(0f, 0.2f);
 
         BossChaseTask task = new BossChaseTask(target, 10, 5f, 10f);
@@ -71,7 +70,6 @@ class BossChaseTaskTest {
 
     @Test
     void shouldMoveTowardsTargetWhenBelowAndInView() {
-        // 目标在“下方”，允许追击，距离应缩短
         Entity target = new Entity();
         target.setPosition(0f, 0f);
 
