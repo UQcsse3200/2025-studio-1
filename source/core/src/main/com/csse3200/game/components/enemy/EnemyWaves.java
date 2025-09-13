@@ -83,7 +83,7 @@ public class EnemyWaves {
     scalingFactor += 0.25f; // incremental per-wave multiplier
   }
 
-  private void tick() {
+  void tick() {
     EntityService es = ServiceLocator.getEntityService();
     if (es == null) return;
     boolean anyAlive = false;
