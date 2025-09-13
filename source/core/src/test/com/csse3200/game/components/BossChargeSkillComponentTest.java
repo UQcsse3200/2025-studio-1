@@ -47,7 +47,10 @@ class BossChargeSkillComponentTest {
         float cooldown       = 0.2f;
 
         BossChargeSkillComponent skill = new BossChargeSkillComponent(
-                target, triggerRange, dwellTime, prepareTime, chargeSpeed, chargeDuration, cooldown);
+                target,
+                triggerRange, dwellTime, prepareTime, chargeSpeed, chargeDuration, cooldown,
+                -100f, 100f, 0f, 0f   // ← 新增4参：leftX, rightX, patrolY, patrolSpeed(=0避免巡逻移动)
+        );
         boss.addComponent(skill);
         boss.create();
 
@@ -104,7 +107,10 @@ class BossChargeSkillComponentTest {
         float cooldown       = 0f;
 
         BossChargeSkillComponent skill = new BossChargeSkillComponent(
-                target, triggerRange, dwellTime, prepareTime, chargeSpeed, chargeDuration, cooldown);
+                target,
+                triggerRange, dwellTime, prepareTime, chargeSpeed, chargeDuration, cooldown,
+                -100f, 100f, 0f, 0f   // ← 新增4参：leftX, rightX, patrolY, patrolSpeed(=0避免巡逻移动)
+        );
         boss.addComponent(skill);
         boss.create();
 
@@ -146,7 +152,10 @@ class BossChargeSkillComponentTest {
         float cooldown       = 0.2f;
 
         BossChargeSkillComponent skill = new BossChargeSkillComponent(
-                target, triggerRange, dwellTime, prepareTime, chargeSpeed, chargeDuration, cooldown);
+                target,
+                triggerRange, dwellTime, prepareTime, chargeSpeed, chargeDuration, cooldown,
+                -100f, 100f, 0f, 0f   // ← 新增4参：leftX, rightX, patrolY, patrolSpeed(=0避免巡逻移动)
+        );
         boss.addComponent(skill);
         boss.create();
 
