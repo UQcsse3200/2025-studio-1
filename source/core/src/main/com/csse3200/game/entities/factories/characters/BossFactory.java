@@ -10,6 +10,7 @@ import com.csse3200.game.components.npc.Boss2AnimationController;
 import com.csse3200.game.components.npc.BossAnimationController;
 import com.csse3200.game.components.TouchAttackComponent;
 import com.csse3200.game.components.player.InventoryComponent;
+import com.csse3200.game.components.tasks.BossChaseTask;
 import com.csse3200.game.components.tasks.BossFuryTask;
 import com.csse3200.game.components.tasks.ChaseTask;
 import com.csse3200.game.components.tasks.WanderTask;
@@ -64,14 +65,14 @@ public class BossFactory {
         animator.scaleEntity();
 
         AITaskComponent ai = new AITaskComponent()
-                .addTask(new ChaseTask(
+                .addTask(new BossChaseTask(
                         target,
                         10,
                         12f,
                         18f
                 ))
                 .addTask(new WanderTask(
-                        new Vector2(4f, 4f),
+                        new Vector2(1f, 1f),
                         2f
                 ));
         robot.addComponent(ai);
