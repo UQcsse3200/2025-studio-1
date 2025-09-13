@@ -11,6 +11,7 @@ import com.csse3200.game.entities.configs.Weapons;
 import com.csse3200.game.entities.configs.weapons.WeaponConfig;
 import com.csse3200.game.rendering.AnimationRenderComponent;
 import com.csse3200.game.rendering.TextureRenderComponent;
+import com.csse3200.game.rendering.TextureRenderWithRotationComponent;
 
 /**
  * Factory to create non-playable character (NPC) entities with predefined components.
@@ -42,6 +43,7 @@ public class WeaponsFactory {
         WeaponsStatsComponent weaponStats = weapon.getComponent(WeaponsStatsComponent.class);
         weaponStats.setCoolDown(0.2f);
 
+
         ItemComponent item = weapon.getComponent(ItemComponent.class);
 
         // Attach type to weapon
@@ -49,6 +51,9 @@ public class WeaponsFactory {
             case RANGED:
                 item.setType(ItemTypes.RANGED);
                 weapon.addComponent(new MagazineComponent(20));
+                // using TextureRenderWithRotationComponent to allow guns to follow cursor
+                weapon.addComponent(new TextureRenderWithRotationComponent(config.texturePath));
+                weapon.getComponent(TextureRenderComponent.class).disableComponent();
                 break;
             case MELEE:
                 item.setType(ItemTypes.MELEE);
