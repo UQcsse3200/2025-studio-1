@@ -13,6 +13,7 @@ import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.physics.components.PhysicsComponent;
 import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.math.MathUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -190,8 +191,9 @@ public class ItemPickUpComponent extends Component {
         Vector2 playerPos = entity.getCenterPosition().cpy();
         // Define a vertical offset so the item spawns slightly below the player
         float dropOffsetY = -1.2f;
+        float shiftX = MathUtils.random(-0.65f, 0.65f);
         // Calculate the final drop position by applying the offset
-        Vector2 dropPos = new Vector2(playerPos.x, playerPos.y + dropOffsetY);
+        Vector2 dropPos = new Vector2(playerPos.x + shiftX, playerPos.y + dropOffsetY);
         newItem.setPosition(dropPos);
 
         // Get the current active GameArea
