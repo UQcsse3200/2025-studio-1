@@ -26,6 +26,7 @@ public class ServiceLocator {
   private static InputService inputService;
   private static ResourceService resourceService;
   private static GameArea gameArea;
+  private static SaveLoadService saveLoadService;
 
   public static EntityService getEntityService() {
     return entityService;
@@ -52,6 +53,8 @@ public class ServiceLocator {
   }
 
   public static GameArea getGameArea() {return gameArea;}
+
+  public static SaveLoadService getSaveLoadService() {return saveLoadService;}
 
   public static void registerGameArea(GameArea theArea) {
     logger.debug("Registering game area service {}", theArea);
@@ -87,6 +90,11 @@ public class ServiceLocator {
     resourceService = source;
   }
 
+  public static void registerSaveLoadService(SaveLoadService source) {
+    logger.debug("Registering save service {}", source);
+    saveLoadService = source;
+  }
+
   public static void clear() {
     entityService = null;
     renderService = null;
@@ -95,6 +103,7 @@ public class ServiceLocator {
     inputService = null;
     resourceService = null;
     gameArea = null;
+    saveLoadService = null;
   }
   private static final com.csse3200.game.events.EventHandler globalEvents = new com.csse3200.game.events.EventHandler();
 
