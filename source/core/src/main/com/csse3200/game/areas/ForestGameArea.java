@@ -244,9 +244,9 @@ public class ForestGameArea extends GameArea {
 
     //These are commented out since there is no equip feature yet
     // this.equipItem(pistol);
-     this.equipItem(lightsaber);
+    // this.equipItem(lightsaber);
     // this.equipItem(dagger);
-    // this.equipItem(rifle);
+     this.equipItem(rifle);
 
 
     spawnFloor();
@@ -497,6 +497,7 @@ public class ForestGameArea extends GameArea {
     AnimationRenderComponent lightSaberAnimator = WeaponsFactory.createAnimation("images/lightSaber.atlas", this.player);
     newLightsaber.addComponent(lightSaberAnimator);
     lightSaberAnimator.startAnimation("anim");
+
     return newLightsaber;
   }
 
