@@ -16,10 +16,10 @@ import org.slf4j.LoggerFactory;
 public class EnemyWaves {
   private static final Logger logger = LoggerFactory.getLogger(EnemyWaves.class);
 
-  private final int maxWaves;      // total waves per session
   private final Entity player;
   private final GameArea gameArea;
 
+  private int maxWaves;      // total waves per session
   private int waveNumber = 0;      // waves spawned so far
   private float scalingFactor = 1f; // difficulty scaling
   private int baseGhosts = 1;
@@ -43,7 +43,7 @@ public class EnemyWaves {
 
   /** Start or resume wave logic. If all waves previously finished, this restarts from wave 0. */
   public void startWave() {
-    if (isFinished()) {
+    if (allWavesFinished()) {
       logger.info("EnemyWaves: restarting wave session");
       resetSession();
     }
@@ -121,5 +121,74 @@ public class EnemyWaves {
     return entity.getComponent(GhostAnimationController.class) != null;
   }
 
-  public boolean isFinished() { return waveNumber >= maxWaves; }
+  /**
+   * Checks if all the waves in the current room have finished.
+   * @return True if all waves have finished, false otherwise.
+   */
+  public boolean allWavesFinished() { return waveNumber >= maxWaves; }
+
+    /**
+     * Checks if the current wave has finished.
+     * @return True if the current wave has finished, false otherwise.
+     */
+    public boolean isCurrentWaveFinsihed() {
+      return waveEndTime > 0;
+    }
+
+    /**
+     * Returns the maximum number of waves in the current room.
+     * @return The maxWaves as an int.
+     */
+    public int getMaxWaves() { return maxWaves; }
+
+    /**
+     * Returns the scaling factor of the enemies in the next wave.
+     * @return The scaling factor as a float.
+     */
+    public float getScalingFactor() { return scalingFactor; }
+
+    /**
+     * Returns the wave number of the next wave in the current room.
+     * @return The wave number as an int.
+     */
+    public int getWaveNumber() { return waveNumber; }
+
+    /**
+     * Returns the time stamp of when the previous wave ended in the current room if no enemies are alive
+     * otherwise returns 0.
+     * @return The wave end time in milliseconds as a long.
+     */
+    public long getWaveEndTime() { return waveEndTime; }
+
+    /**
+     * Sets the maximum number of waves in the current room.
+     * @param maxWaves The maximum number of waves as an int.
+     */
+    public void setMaxWaves(int maxWaves) {
+      this.maxWaves = maxWaves;
+    }
+
+    /**
+     * Sets the scaling factor of the enemies in the next wave.
+     * @param scalingFactor The scaling factor as a float.
+     */
+    public void setScalingFactor(float scalingFactor) {
+      this.scalingFactor = scalingFactor;
+    }
+
+    /**
+     * Sets the wave number of the next wave in the current room.
+     * @param waveNumber The wave number as an int.
+     */
+    public void setWaveNumber(int waveNumber) {
+      this.waveNumber = waveNumber;
+    }
+
+    /**
+     * Sets the time stamp of when the previous wave ended in the current room
+     * @param waveEndTime The wave end time in milliseconds as a long .
+     */
+    public void setWaveEndTime(long waveEndTime) {
+      this.waveEndTime = waveEndTime;
+    }
 }
