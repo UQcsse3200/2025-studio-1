@@ -8,9 +8,9 @@ import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.components.enemy.*;
 import com.csse3200.game.components.npc.Boss2AnimationController;
 import com.csse3200.game.components.npc.BossAnimationController;
-import com.csse3200.game.components.npc.GhostAnimationController;
 import com.csse3200.game.components.TouchAttackComponent;
 import com.csse3200.game.components.player.InventoryComponent;
+import com.csse3200.game.components.tasks.BossFuryTask;
 import com.csse3200.game.components.tasks.ChaseTask;
 import com.csse3200.game.components.tasks.WanderTask;
 import com.csse3200.game.entities.Entity;
@@ -52,6 +52,7 @@ public class BossFactory {
                 .addComponent(new PhysicsMovementComponent(moveSpeed))
                 .addComponent(new ColliderComponent())
                 .addComponent(new HitboxComponent().setLayer(PhysicsLayer.NPC))
+                .addComponent(new BossAnimationController())
                 .addComponent(new TouchAttackComponent(PhysicsLayer.PLAYER, 1.5f))
                 .addComponent(new CombatStatsComponent(1000))
                 .addComponent(new WeaponsStatsComponent(5))
@@ -75,6 +76,12 @@ public class BossFactory {
                 ));
         robot.addComponent(ai);
 
+        robot.addComponent(new BossFuryTask(
+                0.5f,
+                1.3f,
+                5,
+                0.45f
+                ));
         robot.getComponent(AnimationRenderComponent.class).scaleEntity();
         Vector2 s = robot.getScale();
         float k = 2.0f;
