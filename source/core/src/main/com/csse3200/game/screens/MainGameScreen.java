@@ -10,7 +10,7 @@ import com.csse3200.game.components.maingame.MainGameActions;
 import com.csse3200.game.components.screens.PauseMenuDisplay;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
-import com.csse3200.game.entities.factories.RenderFactory;
+import com.csse3200.game.entities.factories.system.RenderFactory;
 import com.csse3200.game.input.InputComponent;
 import com.csse3200.game.input.InputDecorator;
 import com.csse3200.game.input.InputService;
@@ -36,7 +36,7 @@ import com.csse3200.game.components.CombatStatsComponent;
 /**
  * The game screen containing the main game.
  *
- * <p>Details on libGDX screens: <a href="https://happycoding.io/tutorials/libgdx/game-screens">...</a></p>
+ * <p>Details on libGDX screens: https://happycoding.io/tutorials/libgdx/game-screens
  */
 public class MainGameScreen extends ScreenAdapter {
   private static final Logger logger = LoggerFactory.getLogger(MainGameScreen.class);
@@ -76,7 +76,7 @@ public class MainGameScreen extends ScreenAdapter {
 
     logger.debug("Initialising main game screen entities");
     TerrainFactory terrainFactory = new TerrainFactory(renderer.getCamera());
-    forestGameArea = new ForestGameArea(terrainFactory);
+    forestGameArea = new ForestGameArea(terrainFactory, renderer.getCamera());
     forestGameArea.create();
   }
 
@@ -101,6 +101,7 @@ public class MainGameScreen extends ScreenAdapter {
       } else {
         hidePauseOverlay();
       }
+      return;
     }
   }
 
@@ -181,6 +182,7 @@ public class MainGameScreen extends ScreenAdapter {
             .addComponent(new InputDecorator(stage, 100));
     pauseOverlay.getEvents().addListener("resume", this::hidePauseOverlay);
     ServiceLocator.getEntityService().register(pauseOverlay);
+    ServiceLocator.getTimeSource().setPaused(true);
     isPauseVisible = true;
   }
 
@@ -192,6 +194,7 @@ public class MainGameScreen extends ScreenAdapter {
     if (pauseOverlay != null) {
       pauseOverlay.dispose();
       ServiceLocator.getEntityService().unregister(pauseOverlay);
+      ServiceLocator.getTimeSource().setPaused(false);
       pauseOverlay = null;
     }
     isPauseVisible = false;
