@@ -55,6 +55,7 @@ public class BossFactory {
                 .addComponent(new CombatStatsComponent(100))
                 .addComponent(new WeaponsStatsComponent(5))
                 .addComponent(new BossAnimationController())
+                .addComponent(new BossDeathComponent())
                 .addComponent(new BossStatusDisplay("Boss_1"));
         animator.startAnimation("Idle");
         animator.scaleEntity();
@@ -90,7 +91,7 @@ public class BossFactory {
                 .addComponent(new BossChargeSkillComponent(target, 6f, 5f, 0.4f, 12f, 0.6f, 1.5f))
                 .addComponent(new BlackholeComponent(target,7f,8f))
                 .addComponent(new EnemyDeathRewardComponent(100, playerInventory))
-                .addComponent(new DeathParticleSpawnerComponent())
+                .addComponent(new BossDeathComponent())
                 .addComponent(new BossStatusDisplay("Boss_2"));;
         boss2.getComponent(AnimationRenderComponent.class).scaleEntity();
         float k = 4.0f;
@@ -125,7 +126,7 @@ public class BossFactory {
                         .addTask(new WanderTask(new Vector2(3f, 3f), 1f))
                         .addTask(new ChaseTask(target, 8, 5f, 7f)))
                 .addComponent(new EnemyDeathRewardComponent(100, playerInventory))
-                .addComponent(new DeathParticleSpawnerComponent())
+                .addComponent(new BossDeathComponent())
                 .addComponent(new TextureRenderComponent("images/Boss_3.png"))
                 .addComponent(new BossStatusDisplay("Boss_3"));;
 
@@ -157,17 +158,12 @@ public class BossFactory {
                 .addComponent(new CombatStatsComponent(1))
                 .addComponent(new WeaponsStatsComponent(12))
                 .addComponent(new PhysicsProjectileComponent())
+                .addComponent(new ShrinkFixtureComponent(0.1f, true))
                 .addComponent(new TouchAttackComponent(PhysicsLayer.PLAYER, 0f));
         fireball.setPosition(from);
-        AnimationRenderComponent animator =
-                new AnimationRenderComponent(
-                        ServiceLocator.getResourceService().getAsset("images/fireball.atlas", TextureAtlas.class));
-        animator.addAnimation("angry_float", 0.3f, Animation.PlayMode.LOOP);
-        animator.addAnimation("float", 0.3f, Animation.PlayMode.LOOP);
-        animator.startAnimation("float");
-        animator.startAnimation("angry_float");
-        fireball.addComponent(animator);
-        fireball.getComponent(AnimationRenderComponent.class).scaleEntity();
+        TextureRenderComponent texture = new TextureRenderComponent("images/laserball.png");
+        fireball.addComponent(texture);
+        texture.scaleEntity();
 
         return fireball;
     }
