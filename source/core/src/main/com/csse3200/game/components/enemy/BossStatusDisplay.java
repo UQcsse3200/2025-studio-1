@@ -142,9 +142,9 @@ public class BossStatusDisplay extends Component {
     public void setPhase(String phase) {
         this.phase = phase;
         if ("FURY".equalsIgnoreCase(phase)) {
-            setHealthBarColor(Color.RED);      // 狂暴：红色
+            setHealthBarColor(Color.RED);
         } else {
-            setHealthBarColor(COLOR_HEALTH);   // 其它：默认橙色
+            setHealthBarColor(COLOR_HEALTH);
         }
     }
 
