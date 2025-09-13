@@ -5,8 +5,11 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.physics.box2d.Body;
+import com.csse3200.game.components.WeaponsStatsComponent;
 import com.csse3200.game.entities.Entity;
+import com.csse3200.game.entities.configs.Weapons;
 import com.csse3200.game.entities.factories.items.ItemFactory;
+import com.csse3200.game.entities.factories.items.WeaponsFactory;
 import com.csse3200.game.extensions.GameExtension;
 import com.csse3200.game.physics.PhysicsEngine;
 import com.csse3200.game.physics.PhysicsService;
@@ -232,7 +235,23 @@ class InventoryComponentTest {
             assertEquals(MAX_INVENTORY, inventory.getSize(), "Should have 5 items");
             assertTrue(inventory.isFull(), "Inventory should be full");
         }
+
+    @Test
+    void shouldSetGetCurrItem() {
+      //Test for a weapon
+      Entity thing = WeaponsFactory.createWeapon(Weapons.PISTOL);
+      inventory.setCurrItem(thing);
+
+      assertInstanceOf(WeaponsStatsComponent.class, inventory.getCurrItemStats());
+      assertEquals(thing, inventory.getCurrItem());
+
+      //Test for a nothing entity
+      thing = new Entity();
+      inventory.setCurrItem(thing);
+      assertEquals(thing, inventory.getCurrItem());
+      assertNull(inventory.getCurrItemStats());
     }
+  }
 
     @Test
     void shouldSetGetProcessor() {
