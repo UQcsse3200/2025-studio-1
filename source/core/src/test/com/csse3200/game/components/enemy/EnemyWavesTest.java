@@ -29,6 +29,38 @@ public class EnemyWavesTest{
 
     private static final long WAVE_DELAY_MS = 5000;
 
+    /**
+     * Create one enemy with the given health
+     * @param health The health that the enemy should have.
+     * @return The enemy {@link Entity} with the given health
+     */
+    private Entity makeEnemy(int health) {
+        Entity enemy = mock(Entity.class);
+        CombatStatsComponent stats = mock(CombatStatsComponent.class);
+        when(stats.getHealth()).thenReturn(health);
+        when(enemy.getComponent(CombatStatsComponent.class)).thenReturn(stats);
+        when(enemy.getComponent(GhostAnimationController.class)).thenReturn(mock(GhostAnimationController.class));
+        return enemy;
+    }
+
+    /**
+     * Simulate time progression for tick evaluation
+     * @param ms The time that is added on to the waveEndTime
+     */
+    private void advanceTimeAndTick(long ms) {
+        try {
+            var field = EnemyWaves.class.getDeclaredField("waveEndTime");
+            field.setAccessible(true);
+
+            long fakePast = System.currentTimeMillis() - ms;
+            field.setLong(enemyWaves, fakePast);
+
+            enemyWaves.tick();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     @BeforeEach
     void setUp() {
         // Mock Gdx.app so logging calls don’t crash
@@ -171,35 +203,75 @@ public class EnemyWavesTest{
         verify(gameArea).spawnGhostGPT(anyInt(), anyFloat(), eq(player));
     }
 
-    /**
-     * Create one enemy with the given health
-     * @param health The health that the enemy should have.
-     * @return The enemy {@link Entity} with the given health
-     */
-    private Entity makeEnemy(int health) {
-        Entity enemy = mock(Entity.class);
-        CombatStatsComponent stats = mock(CombatStatsComponent.class);
-        when(stats.getHealth()).thenReturn(health);
-        when(enemy.getComponent(CombatStatsComponent.class)).thenReturn(stats);
-        when(enemy.getComponent(GhostAnimationController.class)).thenReturn(mock(GhostAnimationController.class));
-        return enemy;
+    @Test
+    void testGetAndSetMaxWaves() {
+        enemyWaves.setMaxWaves(10);
+        Assertions.assertEquals(10, enemyWaves.getMaxWaves());
+
+        enemyWaves.setMaxWaves(0);
+        Assertions.assertEquals(0, enemyWaves.getMaxWaves());
     }
 
-    /**
-     * Simulate time progression for tick evaluation
-     * @param ms The time that is added on to the waveEndTime
-     */
-    private void advanceTimeAndTick(long ms) {
-        try {
-            var field = EnemyWaves.class.getDeclaredField("waveEndTime");
-            field.setAccessible(true);
+    @Test
+    void testGetAndSetScalingFactor() {
+        enemyWaves.setScalingFactor(2.5f);
+        Assertions.assertEquals(2.5f, enemyWaves.getScalingFactor());
 
-            long fakePast = System.currentTimeMillis() - ms;
-            field.setLong(enemyWaves, fakePast);
+        enemyWaves.setScalingFactor(-1f);
+        Assertions.assertEquals(-1f, enemyWaves.getScalingFactor());
+    }
 
-            enemyWaves.tick();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+    @Test
+    void testGetAndSetWaveNumber() {
+        enemyWaves.setWaveNumber(5);
+        Assertions.assertEquals(5, enemyWaves.getWaveNumber());
+
+        enemyWaves.setWaveNumber(0);
+        Assertions.assertEquals(0, enemyWaves.getWaveNumber());
+    }
+
+    @Test
+    void testGetAndSetWaveEndTime() {
+        long now = System.currentTimeMillis();
+        enemyWaves.setWaveEndTime(now);
+        Assertions.assertEquals(now, enemyWaves.getWaveEndTime());
+
+        enemyWaves.setWaveEndTime(0L);
+        Assertions.assertEquals(0L, enemyWaves.getWaveEndTime());
+    }
+
+    @Test
+    void testIsCurrentWaveFinishedTrueWhenWaveEndTimeSet() {
+        long now = System.currentTimeMillis();
+        enemyWaves.setWaveEndTime(now);
+        Assertions.assertTrue(enemyWaves.isCurrentWaveFinsihed(),
+                "Expected current wave finished when waveEndTime > 0");
+    }
+
+    @Test
+    void testIsCurrentWaveFinishedFalseWhenWaveEndTimeZero() {
+        enemyWaves.setWaveEndTime(0L);
+        Assertions.assertFalse(enemyWaves.isCurrentWaveFinsihed(),
+                "Expected current wave not finished when waveEndTime = 0");
+    }
+
+    @Test
+    void testGettersReflectWaveProgression() {
+        // Due to the beforeEach
+        Assertions.assertEquals(3, enemyWaves.getMaxWaves());
+        Assertions.assertEquals(0, enemyWaves.getWaveNumber());
+        Assertions.assertEquals(1f, enemyWaves.getScalingFactor());
+        Assertions.assertEquals(0L, enemyWaves.getWaveEndTime());
+        Assertions.assertFalse(enemyWaves.isCurrentWaveFinsihed());
+
+        enemyWaves.startWave();
+        Assertions.assertEquals(1, enemyWaves.getWaveNumber());
+        Assertions.assertEquals(1.25f, enemyWaves.getScalingFactor());
+
+        // Simulate wave end
+        entities.clear();
+        enemyWaves.tick();
+        Assertions.assertTrue(enemyWaves.getWaveEndTime() > 0);
+        Assertions.assertTrue(enemyWaves.isCurrentWaveFinsihed());
     }
 }
