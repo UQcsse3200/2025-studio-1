@@ -4,11 +4,10 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.ai.tasks.AITaskComponent;
-import com.csse3200.game.areas.ForestGameArea;
 import com.csse3200.game.areas.GameArea;
 import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.components.WeaponsStatsComponent;
-import com.csse3200.game.components.enemy.LowHealthAttackBuff;
+import com.csse3200.game.components.enemy.LowHealthAttackBuffComponent;
 import com.csse3200.game.components.enemy.ProjectileLauncherComponent;
 import com.csse3200.game.components.npc.BossAnimationController;
 import com.csse3200.game.components.enemy.*;
@@ -179,7 +178,7 @@ public class NPCFactory {
             .addComponent(new CombatStatsComponent((int) (config.health * scalingFactor)))
             .addComponent(animator)
             .addComponent(new GhostAnimationController())
-            .addComponent(new LowHealthAttackBuff(10, ghostGPTStats))
+            .addComponent(new LowHealthAttackBuffComponent(10, ghostGPTStats))
             .addComponent(new EnemyDeathRewardComponent(15, playerInventory)) // Add reward + particles
             .addComponent(new DeathParticleSpawnerComponent("explosion_2"))
             .addComponent(aiComponent)
@@ -258,7 +257,7 @@ public class NPCFactory {
             .addComponent(deepspinAttack)
             .addComponent(animator)
             .addComponent(new GhostAnimationController())
-            .addComponent(new LowHealthAttackBuff(10, deepspinAttack))
+            .addComponent(new LowHealthAttackBuffComponent(10, deepspinAttack))
             .addComponent(new EnemyDeathRewardComponent(15, playerInventory)) // Add reward + particles
             .addComponent(new DeathParticleSpawnerComponent("explosion_2"))
             .addComponent(aiComponent)
@@ -309,7 +308,7 @@ public class NPCFactory {
             .addComponent(grokDroidWeapon)
             .addComponent(animator)
             .addComponent(new GhostAnimationController())
-            .addComponent(new LowHealthAttackBuff(10, grokDroidWeapon))
+            .addComponent(new LowHealthAttackBuffComponent(10, grokDroidWeapon))
             .addComponent(new EnemyDeathRewardComponent(15, playerInventory)) // Add reward + particles
             .addComponent(new DeathParticleSpawnerComponent("explosion_2"))
             .addComponent(aiComponent)

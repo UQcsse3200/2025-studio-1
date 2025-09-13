@@ -7,7 +7,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class LowHealthAttackBuffTest {
+public class LowHealthAttackBuffComponentTest {
 
     @Test
     @DisplayName("Buffs attack at threshold health")
@@ -16,7 +16,7 @@ public class LowHealthAttackBuffTest {
         Entity ghostGpt = new Entity()
                 .addComponent(new CombatStatsComponent(100))
                 .addComponent(stats)
-                .addComponent(new LowHealthAttackBuff(10, stats));
+                .addComponent(new LowHealthAttackBuffComponent(10, stats));
 
         ghostGpt.create();
 
@@ -33,7 +33,7 @@ public class LowHealthAttackBuffTest {
         Entity ghostGpt = new Entity()
                 .addComponent(new CombatStatsComponent(100))
                 .addComponent(stats)
-                .addComponent(new LowHealthAttackBuff(10, stats));
+                .addComponent(new LowHealthAttackBuffComponent(10, stats));
         ghostGpt.create();
 
         ghostGpt.getComponent(CombatStatsComponent.class).setHealth(20);
