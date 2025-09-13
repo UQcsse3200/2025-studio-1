@@ -102,7 +102,8 @@ public class ForestGameArea extends GameArea {
     "images/door.png",
     "images/player.png",
     "images/mud.png",
-    "images/heart.png"
+    "images/heart.png",
+          "images/laserball.png"
   };
 
   /** General prop textures (floors, tiles, etc.). */
@@ -174,6 +175,7 @@ public class ForestGameArea extends GameArea {
     "images/ghostGPT.atlas",
     "images/explosion_1.atlas",
     "images/explosion_2.atlas",
+    "images/boss_explosion.atlas"
   };
 
 
