@@ -18,11 +18,7 @@ import com.csse3200.game.entities.configs.characters.NPCConfigs;
 import com.csse3200.game.files.FileLoader;
 import com.csse3200.game.physics.PhysicsLayer;
 import com.csse3200.game.physics.PhysicsUtils;
-import com.csse3200.game.physics.components.ColliderComponent;
-import com.csse3200.game.physics.components.HitboxComponent;
-import com.csse3200.game.physics.components.PhysicsComponent;
-import com.csse3200.game.physics.components.PhysicsMovementComponent;
-import com.csse3200.game.physics.components.PhysicsProjectileComponent;
+import com.csse3200.game.physics.components.*;
 import com.csse3200.game.rendering.AnimationRenderComponent;
 import com.csse3200.game.rendering.TextureRenderComponent;
 import com.csse3200.game.services.ServiceLocator;
@@ -41,8 +37,6 @@ public class BossFactory {
             FileLoader.readClass(NPCConfigs.class, "configs/NPCs.json");
 
     public static Entity createRobot(Entity target) {
-        Entity robot = createBaseNPC(target);
-
         AnimationRenderComponent animator = new AnimationRenderComponent(
                 ServiceLocator.getResourceService().getAsset("images/Robot_1.atlas", TextureAtlas.class));
         animator.addAnimation("Idle",   0.12f, Animation.PlayMode.LOOP);
@@ -50,19 +44,40 @@ public class BossFactory {
         animator.addAnimation("fury",   0.10f, Animation.PlayMode.LOOP);
         animator.addAnimation("die",    0.10f, Animation.PlayMode.NORMAL);
 
-        robot
-                .addComponent(animator)
-                .addComponent(new CombatStatsComponent(100))
+        Vector2 moveSpeed     = new Vector2(2.5f, 2.5f);
+
+        Entity robot = new Entity()
+                .addComponent(new PhysicsComponent())
+                .addComponent(new PhysicsMovementComponent(moveSpeed))
+                .addComponent(new ColliderComponent())
+                .addComponent(new HitboxComponent().setLayer(PhysicsLayer.NPC))
+                .addComponent(new TouchAttackComponent(PhysicsLayer.PLAYER, 1.5f))
+                .addComponent(new CombatStatsComponent(1000))
                 .addComponent(new WeaponsStatsComponent(5))
+                .addComponent(new BossStatusDisplay("Boss_1"))
                 .addComponent(new BossAnimationController())
-                .addComponent(new BossStatusDisplay("Boss_1"));
-        animator.startAnimation("Idle");
-        animator.scaleEntity();
+                .addComponent(animator);
+
+        AITaskComponent ai = new AITaskComponent()
+                .addTask(new ChaseTask(
+                        target,
+                        10,
+                        12f,
+                        18f
+                ))
+                .addTask(new WanderTask(
+                        new Vector2(4f, 4f),
+                        2f
+                ));
+        robot.addComponent(ai);
 
         robot.getComponent(AnimationRenderComponent.class).scaleEntity();
-        float k = 3.0f;
         Vector2 s = robot.getScale();
+        float k = 2.0f;
         robot.setScale(s.x * k, s.y * k);
+
+        PhysicsUtils.setScaledCollider(robot, 0.1f, 0.3f);
+        robot.getComponent(ColliderComponent.class).setDensity(1.5f);
 
         return robot;
     }
