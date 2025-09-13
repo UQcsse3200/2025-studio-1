@@ -20,6 +20,8 @@ public class WeaponsStatsComponent extends Component {
     private int baseAttack;
     private float coolDown;
     private boolean disableDamage;
+    private int upgradeStage = 1;
+    private final int maxUpgradeStage = 4;
 
     /**
      * Construct a Weapons Stats Component (Attack System)
@@ -82,6 +84,41 @@ public class WeaponsStatsComponent extends Component {
         return (!disableDamage);
     }
 
+    /**
+     * Gets the current upgrade stage
+     * @return the upgrades stage
+     */
+    public int getUpgradeStage() {
+        return this.upgradeStage;
+    }
+
+    /**
+     * Gets the max upgrades stage
+     * @return the max upgrades stage
+     */
+    public int getMaxUpgradeStage() {
+        return this.maxUpgradeStage;
+    }
+
+    /**
+     * Checks if the weapon is already max upgraded
+     * @return if the weapon is already max upgraded
+     */
+    public boolean isMaxUpgraded() {
+        return this.upgradeStage >= this.maxUpgradeStage;
+    }
+
+    /**
+     * Upgrades the weapon
+     */
+    public void upgrade() {
+        if (this.upgradeStage < maxUpgradeStage) {
+            this.upgradeStage++;
+            this.baseAttack *= 2;
+        } else {
+            System.out.println("Item already fully upgraded");
+        }
+    }
 
     /**
      * Sets whether the player can receive any damage. True means no damage received
