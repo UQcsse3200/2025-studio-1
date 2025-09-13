@@ -3,8 +3,13 @@ package com.csse3200.game.services;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.areas.GameArea;
+import com.csse3200.game.components.CombatStatsComponent;
+import com.csse3200.game.components.player.InventoryComponent;
+import com.csse3200.game.components.player.PlayerStatsDisplay;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.files.FileLoader;
+import com.csse3200.game.rendering.AnimationRenderComponent;
+import com.csse3200.game.rendering.TextureRenderComponent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
@@ -25,27 +30,30 @@ import java.util.List;
 public class SaveLoadService {
     private static final Logger logger = LoggerFactory.getLogger(SaveLoadService.class);
 
-    public SaveLoadService() {
-    }
-
     /** Save the current GameArea to local storage (saves/slotX.json). */
     public boolean save(String slot, GameArea gameArea) {
 
-        GameState gs = new GameState();
+        PlayerInfo gs = new PlayerInfo();
         gs.areaId = gameArea.toString();
 
         for (Entity e : gameArea.getEntities()) {
-            EntityState es = new EntityState();
-            es.prefabKey = e.toString();
-            es.position.set(e.getPosition());
-
-            gs.entities.add(es);
+            if (e.getComponent(PlayerStatsDisplay.class) != null) {
+                logger.info("Inventory component found: Player found.");
+                CombatStatsComponent stat = e.getComponent(CombatStatsComponent.class);
+                InventoryComponent inv = e.getComponent(InventoryComponent.class);
+                gs.inventory = new ArrayList<>();
+                for (int i = 0; i < inv.getSize(); i++) {
+                    gs.inventory.add(inv.getTex(i));
+                }
+                gs.Health = stat.getHealth();
+                gs.position.set(e.getPosition());
+            }
         }
+        //add round number and stage info later when implemented
+        gs.RoundNumber = 2;
 
         String path = "saves/" + slot + ".json";
         FileLoader.writeClass(gs, path, FileLoader.Location.LOCAL);
-        logger.info("Saved {} entities for area {} to {}", gs.entities.size(), gs.areaId,
-                Gdx.files.local(path).file().getAbsolutePath());
         return true;
     }
 
@@ -54,17 +62,12 @@ public class SaveLoadService {
         return false;
     }
 
-
     /** mock game state to store entities. */
-    public static class GameState {
+    public static class PlayerInfo {
         public String areaId;
-        public List<EntityState> entities = new ArrayList<>();
-    }
-
-    /** Snapshot of a single entity. */
-    public static class EntityState {
-        public String prefabKey;
+        public List<String> inventory;
+        public int Health;
         public Vector2 position = new Vector2();
-        // Add component blobs later if/when you introduce a persistable interface.
+        public int RoundNumber;
     }
 }
