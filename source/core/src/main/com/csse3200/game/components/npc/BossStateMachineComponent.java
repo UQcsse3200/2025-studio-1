@@ -21,6 +21,8 @@ public class BossStateMachineComponent extends Component {
     private boolean enragedOnce = false;
     private float furyCooldownMul = 0.6f;
 
+    // 平台“同层”高度容忍阈值（按你关卡平台高度调）
+    private static final float SAME_LEVEL_EPS = 0.6f;
 
     public BossStateMachineComponent(float aggroRange, float attackRange,
                                      float attackCooldown, float enrageThresholdRatio) {
@@ -39,6 +41,7 @@ public class BossStateMachineComponent extends Component {
     public void create() {
         combat = entity.getComponent(CombatStatsComponent.class);
         if (combat != null) {
+            // 若有 getMaxHealth() 可换成 max；当前取初始生命作为“最大值”
             maxHp = Math.max(1, combat.getHealth());
         }
         enter(State.WANDER);
@@ -51,14 +54,20 @@ public class BossStateMachineComponent extends Component {
             return;
         }
 
-        cd -= ServiceLocator.getTimeSource().getDeltaTime();
+        // 冷却递减并夹紧到 0
+        float dt = ServiceLocator.getTimeSource().getDeltaTime();
+        cd = Math.max(0f, cd - dt);
 
-        float dist = (target != null)
-                ? entity.getPosition().dst(target.getPosition())
-                : Float.MAX_VALUE;
+        // —— 只看水平距离 + 同层判定 ——
+        float dx = Float.MAX_VALUE;
+        float dy = Float.MAX_VALUE;
+        if (target != null) {
+            dx = Math.abs(entity.getPosition().x - target.getPosition().x);
+            dy = Math.abs(entity.getPosition().y - target.getPosition().y);
+        }
+        boolean sameLevel = dy <= SAME_LEVEL_EPS;
 
         boolean enraged = (combat != null) && combat.getHealth() <= maxHp * enrageThresholdRatio;
-
         if (enraged && !enragedOnce) {
             enragedOnce = true;
             enter(State.ENRAGED);
@@ -68,12 +77,9 @@ public class BossStateMachineComponent extends Component {
             case WANDER:
                 if (enraged) {
                     enter(State.ENRAGED);
-                    break;
-                }
-                if (dist <= attackRange && cd <= 0f) {
+                } else if (dx <= attackRange && sameLevel && cd <= 0f) {
                     enter(State.ATTACK);
-                }
-                else if (dist <= aggroRange) {
+                } else if (dx <= aggroRange && sameLevel) {
                     enter(State.CHASE);
                 }
                 break;
@@ -81,21 +87,20 @@ public class BossStateMachineComponent extends Component {
             case CHASE:
                 if (enraged) {
                     enter(State.ENRAGED);
-                    break;
-                }
-                if (dist <= attackRange && cd <= 0f) {
+                } else if (dx <= attackRange && sameLevel && cd <= 0f) {
                     enter(State.ATTACK);
-                }
-                else if (dist > aggroRange * 1.2f) {
+                } else if (dx > aggroRange * 1.2f || !sameLevel) {
+                    // 超出牵引范围或不同层 → 退出追击
                     enter(State.WANDER);
                 }
                 break;
 
             case ENRAGED:
-                if (dist <= attackRange && cd <= 0f) {
+                if (dx <= attackRange && sameLevel && cd <= 0f) {
                     enter(State.ATTACK);
-                }
-                else if (dist > attackRange) {
+                } else if (dx <= aggroRange && sameLevel) {
+                    enter(State.CHASE);
+                } else {
                     enter(State.WANDER);
                 }
                 break;
@@ -107,11 +112,9 @@ public class BossStateMachineComponent extends Component {
 
                 if (enraged) {
                     enter(State.ENRAGED);
-                }
-                else if (dist <= aggroRange) {
+                } else if (dx <= aggroRange && sameLevel) {
                     enter(State.CHASE);
-                }
-                else {
+                } else {
                     enter(State.WANDER);
                 }
                 break;
@@ -122,9 +125,13 @@ public class BossStateMachineComponent extends Component {
     }
 
     private void enter(State next) {
-        if (state == next) {
-            return;
+        if (state == next) return;
+
+        // 关键：离开 CHASE 的瞬间通知移动器“刹车 + 清目标”
+        if (state == State.CHASE && next != State.CHASE) {
+            entity.getEvents().trigger("chaseStop");
         }
+
         state = next;
 
         switch (state) {
@@ -136,15 +143,27 @@ public class BossStateMachineComponent extends Component {
                 break;
             case ENRAGED:
                 entity.getEvents().trigger("boss:enraged");
-                entity.getEvents().trigger("chaseStart");
+                entity.getEvents().trigger("chaseStart"); // 狂暴期间保持横向追
                 break;
             case ATTACK:
                 break;
             case DEAD:
+                entity.getEvents().trigger("chaseStop");  // 死亡也停
                 entity.getEvents().trigger("boss:death");
                 break;
         }
     }
+
+    // 如需保留旧的“上方判断”工具函数也可以，但当前逻辑用 sameLevel 替代
+    @SuppressWarnings("unused")
+    private boolean targetClearlyAbove() {
+        if (target == null) return false;
+        float myY = entity.getPosition().y;
+        float ty  = target.getPosition().y;
+        return (ty - myY) > SAME_LEVEL_EPS;
+    }
 }
+
+
 
 
