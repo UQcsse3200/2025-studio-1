@@ -79,7 +79,7 @@ public class BossFactory {
 
         robot.addComponent(new BossFuryTask(
                 0.5f,
-                1.3f,
+                1.5f,
                 5,
                 0.25f
                 ));

@@ -65,12 +65,12 @@ class BossFuryTaskTest {
     @Test
     void doesNotTrigger_WhenAboveThreshold() {
         Entity boss = makeBossEntity(
-                /*hp=*/1000,
-                /*baseAttack=*/5,
-                /*thresholdRatio=*/0.0f,
-                /*speedMultiplier=*/1.3f,
-                /*damageBonus=*/3,
-                /*newCooldown=*/0.45f
+                1000,
+                5,
+                0.0f,
+                1.3f,
+                3,
+                0.45f
         );
 
         WeaponsStatsComponent w = boss.getComponent(WeaponsStatsComponent.class);
