@@ -27,15 +27,6 @@ public class TextureRenderWithRotationComponent extends TextureRenderComponent {
     public TextureRenderWithRotationComponent(String texturePath) {
         super(texturePath); // still loads the Texture
         region = new TextureRegion(super.getTexture());
-
-        // Find camera from any entity with CameraComponent
-        Array<Entity> entities = ServiceLocator.getEntityService().getEntities();
-        for (Entity entity: entities) {
-            if (entity.getComponent(CameraComponent.class) != null) {
-                this.camera = entity.getComponent(CameraComponent.class).getCamera();
-
-            }
-        }
     }
 
     /**
@@ -55,6 +46,18 @@ public class TextureRenderWithRotationComponent extends TextureRenderComponent {
         //System.out.println("Rendering" + ServiceLocator.getTimeSource().getTime());
         Vector2 position = entity.getPosition();
         Vector2 scale = entity.getScale();
+
+        // Find camera from any entity with CameraComponent
+        Array<Entity> entities = ServiceLocator.getEntityService().getEntities();
+
+        if (camera == null) {
+            for (Entity entity : entities) {
+                if (entity.getComponent(CameraComponent.class) != null) {
+                    this.camera = entity.getComponent(CameraComponent.class).getCamera();
+
+                }
+            }
+        }
 
         // is a ranged weapon - follow mouse movement
         if (entity.hasComponent(WeaponsStatsComponent.class)) {
