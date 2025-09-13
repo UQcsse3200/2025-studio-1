@@ -35,7 +35,7 @@ public class EnemyWavesTest{
         Gdx.app = mock(Application.class);
         when(Gdx.app.getLogLevel()).thenReturn(Application.LOG_DEBUG);
 
-        // Mock Timer.schedule so tasks never run asynchronously
+        // Mock Timer.schedule so tasks don't run in the background while testing
         timerMock = Mockito.mockStatic(Timer.class);
         timerMock.when(() -> Timer.schedule(any(Timer.Task.class), anyFloat(), anyFloat()))
                 .thenAnswer(invocation -> invocation.getArgument(0));
@@ -60,6 +60,7 @@ public class EnemyWavesTest{
     }
 
     @Test
+    @DisplayName("Start wave function actually spawns the wave")
     void testStartWaveSpawnsImmediatelyOnFirstCall() {
         enemyWaves.startWave();
         verify(gameArea).spawnGhostGPT(anyInt(), anyFloat(), eq(player));
@@ -67,6 +68,7 @@ public class EnemyWavesTest{
     }
 
     @Test
+    @DisplayName("Enemies are scaled with each wave")
     void testSpawnWaveScalesDifficulty() {
         when(gameArea.getBaseDifficultyScale()).thenReturn(2f);
 
@@ -74,50 +76,48 @@ public class EnemyWavesTest{
         verify(gameArea).spawnGhostGPT(eq(1), eq(2f), eq(player));
         verify(gameArea).spawnVroomba(eq(2), eq(2f), eq(player));
 
-        // Simulate clearing wave
         entities.clear();
         advanceTimeAndTick(WAVE_DELAY_MS + 100);
 
-        // Next wave should scale up
+        // Scaling test
         verify(gameArea).spawnGhostGPT(eq(1), eq(2.5f), eq(player));
         verify(gameArea).spawnVroomba(eq(2), eq(2.5f), eq(player));
     }
 
     @Test
+    @DisplayName("New wave is not spawned when enemies are alive")
     void testDoesNotSpawnNewWaveIfEnemiesStillAlive() {
         Entity enemy = makeEnemy(10);
         entities.add(enemy);
 
         enemyWaves.startWave();
-        reset(gameArea); // reset interactions
 
-        // Tick with alive enemies
+        // Remove previous calls to the gameArea class
+        reset(gameArea);
+
         enemyWaves.tick();
         verifyNoInteractions(gameArea);
     }
 
     @Test
+    @DisplayName("There is an actual delay between spawning of the next wave and the clearing of the previous")
     void testWaveDelayBeforeSpawningNextWave() {
         enemyWaves.startWave();
         reset(gameArea);
 
-        // No enemies alive
         entities.clear();
-
-        // Not enough time passed -> no spawn
         advanceTimeAndTick(WAVE_DELAY_MS - 100);
         verifyNoInteractions(gameArea);
 
-        // Enough time -> next wave spawns
         advanceTimeAndTick(WAVE_DELAY_MS + 100);
         verify(gameArea).spawnGhostGPT(anyInt(), anyFloat(), eq(player));
     }
 
     @Test
+    @DisplayName("Task is canceled when all waves are cleared in the room")
     void testAllWavesCompletedStopsTicking() {
         enemyWaves.startWave();
 
-        // Simulate clearing 3 waves
         for (int i = 0; i < 3; i++) {
             entities.clear();
             advanceTimeAndTick(WAVE_DELAY_MS + 100);
@@ -125,47 +125,57 @@ public class EnemyWavesTest{
 
         Assertions.assertTrue(enemyWaves.isFinished());
 
+        // Remove previous calls to the gameArea class
         reset(gameArea);
+
         entities.clear();
         advanceTimeAndTick(WAVE_DELAY_MS + 100);
 
-        // Should not spawn anymore
         verifyNoInteractions(gameArea);
     }
 
     @Test
+    @DisplayName("Restarting waves after completion of all waves actually resets the enemy scaling")
     void testRestartAfterCompletionResetsWaves() {
         enemyWaves.startWave();
 
-        // Complete all waves
         for (int i = 0; i < 3; i++) {
             entities.clear();
             advanceTimeAndTick(WAVE_DELAY_MS + 100);
         }
         Assertions.assertTrue(enemyWaves.isFinished());
 
+        // Remove previous calls to the gameArea class
         reset(gameArea);
-        enemyWaves.startWave(); // should reset and spawn again
 
-        verify(gameArea).spawnGhostGPT(anyInt(), anyFloat(), eq(player));
-        verify(gameArea).spawnVroomba(anyInt(), anyFloat(), eq(player));
+        when(gameArea.getBaseDifficultyScale()).thenReturn(2f);
+        enemyWaves.startWave();
+
+        verify(gameArea).spawnGhostGPT(eq(1), eq(2f), eq(player));
+        verify(gameArea).spawnVroomba(eq(2), eq(2f), eq(player));
     }
 
     @Test
+    @DisplayName("Non enemy entities are ignored in the wave spawning logic")
     void testNonEnemyEntitiesIgnored() {
         Entity neutral = mock(Entity.class);
         when(neutral.getComponent(CombatStatsComponent.class)).thenReturn(new CombatStatsComponent(10));
-        // No GhostAnimationController -> not enemy
         entities.add(neutral);
 
         enemyWaves.startWave();
+
+        // Remove previous calls to the gameArea class
         reset(gameArea);
 
         advanceTimeAndTick(WAVE_DELAY_MS + 100);
-        // Wave should still progress as if no enemies
         verify(gameArea).spawnGhostGPT(anyInt(), anyFloat(), eq(player));
     }
 
+    /**
+     * Create one enemy with the given health
+     * @param health The health that the enemy should have.
+     * @return The enemy {@link Entity} with the given health
+     */
     private Entity makeEnemy(int health) {
         Entity enemy = mock(Entity.class);
         CombatStatsComponent stats = mock(CombatStatsComponent.class);
@@ -175,13 +185,15 @@ public class EnemyWavesTest{
         return enemy;
     }
 
-    /** Simulate time progression for tick evaluation */
+    /**
+     * Simulate time progression for tick evaluation
+     * @param ms The time that is added on to the waveEndTime
+     */
     private void advanceTimeAndTick(long ms) {
         try {
             var field = EnemyWaves.class.getDeclaredField("waveEndTime");
             field.setAccessible(true);
 
-            // Set waveEndTime to (now - ms) so tick() will see it as "ms" in the past.
             long fakePast = System.currentTimeMillis() - ms;
             field.setLong(enemyWaves, fakePast);
 
