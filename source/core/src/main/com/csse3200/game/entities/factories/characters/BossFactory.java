@@ -158,7 +158,6 @@ public class BossFactory {
                 .addComponent(new CombatStatsComponent(1))
                 .addComponent(new WeaponsStatsComponent(12))
                 .addComponent(new PhysicsProjectileComponent())
-                .addComponent(new ShrinkFixtureComponent(0.1f, true))
                 .addComponent(new TouchAttackComponent(PhysicsLayer.PLAYER, 0f));
         fireball.setPosition(from);
         TextureRenderComponent texture = new TextureRenderComponent("images/laserball.png");
