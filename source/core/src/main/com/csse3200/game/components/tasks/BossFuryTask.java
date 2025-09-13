@@ -8,6 +8,7 @@ import com.csse3200.game.physics.components.PhysicsMovementComponent;
 import com.csse3200.game.rendering.AnimationRenderComponent;
 import com.csse3200.game.components.player.BossStatusDisplay;
 
+/** Boss's fury form */
 public class BossFuryTask extends Component {
     private final float thresholdRatio;
     private final float speedMultiplier;
