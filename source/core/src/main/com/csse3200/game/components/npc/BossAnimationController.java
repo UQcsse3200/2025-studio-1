@@ -15,7 +15,7 @@ public class BossAnimationController extends Component {
         }
 
         entity.getEvents().addListener("wanderStart", this::playIdle);
-        entity.getEvents().addListener("chaseStart",  this::playAttack);
+        entity.getEvents().addListener("chaseStart",  this::onChaseStart);
 
         // Boss event
         entity.getEvents().addListener("boss:attackStart", this::playAttack);
@@ -23,6 +23,16 @@ public class BossAnimationController extends Component {
         entity.getEvents().addListener("boss:death", this::playDeath);
 
         playIdle();
+    }
+
+
+    private void onChaseStart() {
+        if (animator == null) return;
+        if (inFury) {
+            animator.startAnimation("fury");
+        } else {
+            animator.startAnimation("attack");
+        }
     }
 
     private void onFury() {
