@@ -40,7 +40,7 @@ class BossFuryTaskTest {
         Entity boss = makeBossEntity(
                 1000,
                 5,
-                .0f,
+                1.0f,
                 1.3f,
                 3,
                 0.45f
@@ -67,7 +67,7 @@ class BossFuryTaskTest {
         Entity boss = makeBossEntity(
                 1000,
                 5,
-                1.0f,
+                0.0f,
                 1.3f,
                 3,
                 0.45f
