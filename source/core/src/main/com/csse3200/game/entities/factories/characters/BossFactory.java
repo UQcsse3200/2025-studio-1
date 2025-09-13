@@ -76,7 +76,6 @@ public class BossFactory {
         BaseEntityConfig config = configs.boss2;
         InventoryComponent playerInventory =
                 (target != null) ? target.getComponent(InventoryComponent.class) : null;
-
         float patrolCenterX   = 5f;
         float patrolHalfWidth = 3f;
         float leftX  = patrolCenterX - patrolHalfWidth;
@@ -109,12 +108,8 @@ public class BossFactory {
             Vector2 s = boss2.getScale();
             boss2.setScale(s.x * k, s.y * k);
         }
-
         return boss2;
     }
-
-
-
 
     /**
      * Creates a Boss-3 entity with combat stats, rendering, scaling, and physics collider.
@@ -158,7 +153,7 @@ public class BossFactory {
     public static Entity createBlackhole(Vector2 pos,Entity target){
         Entity Blackhole = new Entity()
                 .addComponent(new TextureRenderComponent("images/blackhole1.png"))
-                .addComponent(new BlackholeAttackComponent(target,1f,4f));
+                .addComponent(new BlackholeAttackComponent(target,1.5f,4f));
         Blackhole.setPosition(pos);
         Blackhole.getComponent(TextureRenderComponent.class).scaleEntity();
         Vector2 s = Blackhole.getScale();
