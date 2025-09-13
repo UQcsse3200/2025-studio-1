@@ -43,7 +43,7 @@ import org.slf4j.LoggerFactory;
  * - Builds the terrain and screen edges
  * - Spawns the player, props (desk, crates, energy pod), a keycard door, and enemies
  * - Starts background music
- * Think of this as the a level assembler as it doesn’t know how to build each object,
+ * Think of this as the level assembler as it doesn’t know how to build each object,
  * it just asks the right factories to create them and places them in the world.
  */
 public class ForestGameArea extends GameArea {
@@ -100,9 +100,11 @@ public class ForestGameArea extends GameArea {
     "images/SpawnResize.png",
     "images/LobbyWIP.png",
     "images/door.png",
+    "images/KeycardDoor.png",
     "images/player.png",
     "images/mud.png",
-    "images/heart.png"
+    "images/heart.png",
+    "images/MarblePlatform.png"
   };
 
   /** General prop textures (floors, tiles, etc.). */
@@ -116,6 +118,7 @@ public class ForestGameArea extends GameArea {
     "foreg_sprites/general/ThinFloor.png",
     "foreg_sprites/general/ThinFloor2.png",
     "foreg_sprites/general/ThinFloor3.png",
+    "foreg_sprites/general/Test.png"
   };
 
   /** Spawn pad textures. */
@@ -239,14 +242,10 @@ public class ForestGameArea extends GameArea {
     this.equipItem(rifle);
 
     spawnFloor();
-    spawnPad();
-    spawnCrates();
-    spawnPlatforms();
     spawnBottomRightDoor();
-    spawnSecurityCamera();
-    spawnEnergyPod();
-    spawnStorageCrates();
-    spawnBigWall();
+    spawnMarblePlatforms();
+
+
     // spawnGhosts();
     // spawnGhostKing();
     int choice = (int)(Math.random() * 3);
@@ -412,11 +411,11 @@ public class ForestGameArea extends GameArea {
    * when the player has key level 1, the door callback triggers and we load the next level.
    */
   private void spawnBottomRightDoor() {
-    float doorX = 14f;
-    float doorY = 3f;
+    float doorX = 13.9f;
+    float doorY = 3.75f;
 
     Entity door = ObstacleFactory.createDoorTrigger(20f, 40f);
-    TextureRenderComponent texture = new TextureRenderComponent("images/door.png");
+    TextureRenderComponent texture = new TextureRenderComponent("images/KeycardDoor.png");
     door.addComponent(texture);
     texture.scaleEntity();
     door.setPosition(doorX, doorY);
@@ -426,6 +425,35 @@ public class ForestGameArea extends GameArea {
     }));
 
     spawnEntity(door);
+  }
+
+  /**
+   * Places two platforms within the room for players to jump on.
+   */
+  private void spawnMarblePlatforms() {
+    float PlatformX = 2.5f;
+    float PlatformX2 = 5.4f;
+    float PlatformX3 = 8.2f;
+    float PlatformX4 = 11.1f;
+    float PlatformY = 6f;
+    float PlatformY2 = 8f;
+
+    Entity Platform1 = ObstacleFactory.createMarblePlatform();
+    Platform1.setPosition(PlatformX, PlatformY);
+
+    Entity Platform2 = ObstacleFactory.createMarblePlatform();
+    Platform2.setPosition(PlatformX2, PlatformY2);
+
+    Entity Platform3 = ObstacleFactory.createMarblePlatform();
+    Platform3.setPosition(PlatformX3, PlatformY2);
+
+    Entity Platform4 = ObstacleFactory.createMarblePlatform();
+    Platform4.setPosition(PlatformX4, PlatformY);
+
+    spawnEntity(Platform1);
+    spawnEntity(Platform2);
+    spawnEntity(Platform3);
+    spawnEntity(Platform4);
   }
 
   /**
