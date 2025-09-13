@@ -76,23 +76,20 @@ public class BossFactory {
         BaseEntityConfig config = configs.boss2;
         InventoryComponent playerInventory =
                 (target != null) ? target.getComponent(InventoryComponent.class) : null;
-
-        // ===== 手动指定巡逻走廊 =====
-        float patrolCenterX   = 5f;  // 你想要的中心X
-        float patrolHalfWidth = 3f;   // 左右摆动的半宽（可调）
-        float leftX  = patrolCenterX - patrolHalfWidth; // = 12
-        float rightX = patrolCenterX + patrolHalfWidth; // = 18
-        float patrolY = 8f;          // 固定的Y（“中间偏上处”可自行改）
-        float patrolSpeed = 4f;       // 左右巡逻速度（m/s，可调）
+        float patrolCenterX   = 5f;
+        float patrolHalfWidth = 3f;
+        float leftX  = patrolCenterX - patrolHalfWidth;
+        float rightX = patrolCenterX + patrolHalfWidth;
+        float patrolY = 8f;
+        float patrolSpeed = 4f;
 
         boss2
                 .addComponent(new CombatStatsComponent(1000))
                 .addComponent(new FireballAttackComponent(target, 1.5f, 8f, 6f, config.baseAttack + 2))
-                // 传入 11 个参数：触发/停留/准备/速度/持续/冷却 + 左边界/右边界/固定Y/巡逻速度
                 .addComponent(new BossChargeSkillComponent(
                         target,
                         6f,    // triggerRange
-                        5f,  // dwellTime（原来是 5f 太久了，建议 0.3~0.6）
+                        5f,  // dwellTime
                         0.4f,  // prepareTime
                         12f,   // chargeSpeed
                         0.6f,  // chargeDuration
@@ -103,8 +100,6 @@ public class BossFactory {
                 .addComponent(new EnemyDeathRewardComponent(100, playerInventory))
                 .addComponent(new BossDeathComponent())
                 .addComponent(new BossStatusDisplay("Boss_2"));
-
-        // 可选：放大显示（如果 createBaseBoss2 已做可删）
         AnimationRenderComponent arc = boss2.getComponent(AnimationRenderComponent.class);
         if (arc != null) {
             arc.scaleEntity();
@@ -112,12 +107,8 @@ public class BossFactory {
             Vector2 s = boss2.getScale();
             boss2.setScale(s.x * k, s.y * k);
         }
-
         return boss2;
     }
-
-
-
 
     /**
      * Creates a Boss-3 entity with combat stats, rendering, scaling, and physics collider.
@@ -161,7 +152,7 @@ public class BossFactory {
     public static Entity createBlackhole(Vector2 pos,Entity target){
         Entity Blackhole = new Entity()
                 .addComponent(new TextureRenderComponent("images/blackhole1.png"))
-                .addComponent(new BlackholeAttackComponent(target,1f,4f));
+                .addComponent(new BlackholeAttackComponent(target,1.5f,4f));
         Blackhole.setPosition(pos);
         Blackhole.getComponent(TextureRenderComponent.class).scaleEntity();
         return Blackhole;
