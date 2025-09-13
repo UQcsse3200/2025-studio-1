@@ -102,7 +102,8 @@ public class ForestGameArea extends GameArea {
     "images/door.png",
     "images/player.png",
     "images/mud.png",
-    "images/heart.png"
+    "images/heart.png",
+          "images/laserball.png"
   };
 
   /** General prop textures (floors, tiles, etc.). */
@@ -174,6 +175,7 @@ public class ForestGameArea extends GameArea {
     "images/ghostGPT.atlas",
     "images/explosion_1.atlas",
     "images/explosion_2.atlas",
+    "images/boss_explosion.atlas"
   };
 
 
@@ -529,11 +531,11 @@ public class ForestGameArea extends GameArea {
   // }
 
   private void spawnBoss2() {
-    GridPoint2 pos = new GridPoint2(20, 12);
-
+    GridPoint2 pos = new GridPoint2(5, 8);
     Entity boss2 = BossFactory.createBoss2(player);
     spawnEntityAt(boss2, pos, true, true);
   }
+
   //new added boss3
   private void spawnBoss3() {
     GridPoint2 pos = new GridPoint2(20, 12);
