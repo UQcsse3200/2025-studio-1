@@ -31,6 +31,7 @@ public class BossStatusDisplay extends Component {
     private ProgressBar healthBar;
     private String bossName;
     private int maxHealth = 100;
+    private String phase = "NORMAL";
 
     public BossStatusDisplay(String bossName) {
         this.bossName = bossName;
@@ -48,6 +49,7 @@ public class BossStatusDisplay extends Component {
             }
             // Listen to CombatStatsComponent's existing events for dynamic tracking
             entity.getEvents().addListener("updateHealth", this::updateBossHealthUI);
+            entity.getEvents().addListener("bossFury", this::setPhase);
             entity.getEvents().addListener("death", this::onBossDeath);
 
             createHealthBar();
@@ -136,6 +138,24 @@ public class BossStatusDisplay extends Component {
         style.knob = null;
         return style;
     }
+
+    public void setPhase(String phase) {
+        this.phase = phase;
+        if ("FURY".equalsIgnoreCase(phase)) {
+            setHealthBarColor(Color.RED);      // 狂暴：红色
+        } else {
+            setHealthBarColor(COLOR_HEALTH);   // 其它：默认橙色
+        }
+    }
+
+    private void setHealthBarColor(Color color) {
+        if (healthBar == null) return;
+        ProgressBar.ProgressBarStyle st = new ProgressBar.ProgressBarStyle(healthBar.getStyle());
+        st.knobBefore = makeColorDrawable(color);
+        st.knobBefore.setMinHeight(BAR_HEIGHT);
+        healthBar.setStyle(st);
+    }
+
 
     /**
      * Create colored drawable
