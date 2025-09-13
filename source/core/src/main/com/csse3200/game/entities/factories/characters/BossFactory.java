@@ -44,7 +44,7 @@ public class BossFactory {
         animator.addAnimation("fury",   0.10f, Animation.PlayMode.LOOP);
         animator.addAnimation("die",    0.10f, Animation.PlayMode.NORMAL);
 
-        Vector2 moveSpeed     = new Vector2(2.5f, 2.5f);
+        Vector2 moveSpeed = new Vector2(2.5f, 2.5f);
 
         Entity robot = new Entity()
                 .addComponent(new PhysicsComponent())
