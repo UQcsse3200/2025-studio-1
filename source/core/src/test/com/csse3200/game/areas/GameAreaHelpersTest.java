@@ -1,16 +1,21 @@
 package com.csse3200.game.areas;
 
+import com.badlogic.gdx.Application;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.csse3200.game.areas.terrain.TerrainComponent;
 import com.csse3200.game.areas.terrain.TerrainFactory;
-import com.csse3200.game.entities.Entity;
+import com.csse3200.game.entities.EntityService;
 import com.csse3200.game.extensions.GameExtension;
+import com.csse3200.game.rendering.SolidColorRenderComponent;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-
+import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -21,9 +26,19 @@ class GameAreaHelpersTest {
   void beforeEach() {
     // Reset services that we care about per test
     ServiceLocator.clear();
+
     // Mock RenderService to avoid NPE during SolidColorRenderComponent.create()
     ServiceLocator.registerRenderService(mock(com.csse3200.game.rendering.RenderService.class));
+
+    // Mock Gdx.app to run postRunnable synchronously
+    Gdx.app = mock(Application.class);
+    doAnswer(invocation -> {
+      Runnable r = invocation.getArgument(0);
+      r.run(); // Execute immediately
+      return null;
+    }).when(Gdx.app).postRunnable(any(Runnable.class));
   }
+
 
   @Test
   void ensureTexturesLoadsMissing() {
@@ -31,7 +46,10 @@ class GameAreaHelpersTest {
     when(rs.containsAsset(any(String.class), eq(com.badlogic.gdx.graphics.Texture.class))).thenReturn(false);
     ServiceLocator.registerResourceService(rs);
 
-    GameArea area = new GameArea() { @Override public void create() {} };
+    GameArea area = mock(GameArea.class);
+    doCallRealMethod().when(area).ensureTextures(any(String[].class));
+
+    // Call the real method
     area.ensureTextures(new String[] {"a.png", "b.png"});
 
     verify(rs, atLeastOnce()).loadTextures(any(String[].class));
@@ -40,14 +58,20 @@ class GameAreaHelpersTest {
 
   @Test
   void ensurePlayerAtlasLoadsWhenMissing() {
+    // Mock ResourceService
     ResourceService rs = mock(ResourceService.class);
-    when(rs.containsAsset(eq("images/player.atlas"), eq(com.badlogic.gdx.graphics.g2d.TextureAtlas.class)))
-        .thenReturn(false);
+    when(rs.containsAsset("images/player.atlas", com.badlogic.gdx.graphics.g2d.TextureAtlas.class))
+            .thenReturn(false);
     ServiceLocator.registerResourceService(rs);
 
-    GameArea area = new GameArea() { @Override public void create() {} };
+    // Spy on a GameArea so real methods run
+    GameArea area = spy(GameArea.class);
+
+    // Call the real ensurePlayerAtlas method
+    doCallRealMethod().when(area).ensurePlayerAtlas();
     area.ensurePlayerAtlas();
 
+    // Verify that ResourceService was asked to load the atlas
     verify(rs).loadTextureAtlases(any(String[].class));
     verify(rs, atLeastOnce()).loadAll();
   }
@@ -55,32 +79,33 @@ class GameAreaHelpersTest {
   @Test
   void setupTerrainWithOverlaySpawnsTerrainAndOverlay() {
     // Prepare services required by spawnEntity (EntityService)
-    ServiceLocator.registerEntityService(new com.csse3200.game.entities.EntityService());
-    // Register RenderService for SolidColorRenderComponent
+    ServiceLocator.registerEntityService(new EntityService());
     ServiceLocator.registerRenderService(mock(com.csse3200.game.rendering.RenderService.class));
 
+    // Mock TerrainFactory and TerrainComponent
     TerrainFactory factory = mock(TerrainFactory.class);
     TerrainComponent terrain = mock(TerrainComponent.class);
     when(factory.createTerrain(any())).thenReturn(terrain);
 
-    GameArea area = new GameArea() { @Override public void create() {} };
+    // Use a spy on GameArea to allow real method calls
+    GameArea area = spy(GameArea.class);
+    doCallRealMethod().when(area).setupTerrainWithOverlay(any(), any(), any());
 
     int before = area.getEntities().size();
     area.setupTerrainWithOverlay(factory, TerrainFactory.TerrainType.FOREST_DEMO, new Color(1f, 0f, 0f, 0.2f));
     int after = area.getEntities().size();
 
-    // Should add terrain entity + overlay entity
-    assert after == before + 2;
+    // Assert that exactly 2 entities were added
+    assertEquals(before + 2, after, "setupTerrainWithOverlay should add 2 entities");
 
-    // One of the spawned entities has the TerrainComponent, and one has SolidColorRenderComponent
-    boolean hasTerrain = false;
-    boolean hasOverlay = false;
-    for (Entity e : area.getEntities()) {
-      if (e.getComponent(TerrainComponent.class) != null) hasTerrain = true;
-      if (e.getComponent(com.csse3200.game.rendering.SolidColorRenderComponent.class) != null) hasOverlay = true;
-    }
-    assert hasTerrain;
-    assert hasOverlay;
+    // Check that one entity has TerrainComponent and one has SolidColorRenderComponent
+    boolean hasTerrain = area.getEntities().stream()
+            .anyMatch(e -> e.getComponent(TerrainComponent.class) != null);
+    boolean hasOverlay = area.getEntities().stream()
+            .anyMatch(e -> e.getComponent(SolidColorRenderComponent.class) != null);
+
+    Assertions.assertTrue(hasTerrain, "There should be an entity with TerrainComponent");
+    Assertions.assertTrue(hasOverlay, "There should be an entity with SolidColorRenderComponent");
   }
 
   private static class FlagArea extends GameArea {
@@ -92,12 +117,13 @@ class GameAreaHelpersTest {
   @Test
   void clearAndLoadTransitionsToNextArea() {
     // Needed for spawnEntity during disposal in some implementations
-    ServiceLocator.registerEntityService(new com.csse3200.game.entities.EntityService());
+    ServiceLocator.registerEntityService(new EntityService());
 
-    GameArea current = new FlagArea(null);
     final boolean[] called = {false};
+    GameArea current = new FlagArea(null);
     current.clearAndLoad(() -> new FlagArea(() -> called[0] = true));
-    assert called[0];
+
+    assertTrue(called[0]);
   }
 }
 
