@@ -243,10 +243,10 @@ public class ForestGameArea extends GameArea {
 //  Entity bullet = spawnBullet();
 
     //These are commented out since there is no equip feature yet
-    // this.equipItem(pistol);
+     this.equipItem(pistol);
     // this.equipItem(lightsaber);
     // this.equipItem(dagger);
-     this.equipItem(rifle);
+    // this.equipItem(rifle);
 
 
     spawnFloor();
