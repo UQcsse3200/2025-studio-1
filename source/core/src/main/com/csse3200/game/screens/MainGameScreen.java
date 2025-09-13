@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.csse3200.game.GdxGame;
 import com.csse3200.game.areas.ForestGameArea;
+import com.csse3200.game.areas.GameArea;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.components.maingame.MainGameActions;
 import com.csse3200.game.components.screens.PauseMenuDisplay;
@@ -20,6 +21,7 @@ import com.csse3200.game.rendering.RenderService;
 import com.csse3200.game.rendering.Renderer;
 import com.csse3200.game.services.GameTime;
 import com.csse3200.game.services.ResourceService;
+import com.csse3200.game.services.SaveLoadService;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.terminal.Terminal;
 import com.csse3200.game.ui.terminal.TerminalDisplay;
@@ -63,6 +65,8 @@ public class MainGameScreen extends ScreenAdapter {
 
     ServiceLocator.registerInputService(new InputService());
     ServiceLocator.registerResourceService(new ResourceService());
+    ServiceLocator.registerSaveLoadService(new SaveLoadService());
+
 
     ServiceLocator.registerEntityService(new EntityService());
     ServiceLocator.registerRenderService(new RenderService());
@@ -131,7 +135,7 @@ public class MainGameScreen extends ScreenAdapter {
     ServiceLocator.getEntityService().dispose();
     ServiceLocator.getRenderService().dispose();
     ServiceLocator.getResourceService().dispose();
-
+    ServiceLocator.getEntityService().dispose();
     ServiceLocator.clear();
   }
 
@@ -176,10 +180,12 @@ public class MainGameScreen extends ScreenAdapter {
    * and listens for the "resume" event to remove itself when requested.
    */
   private void showPauseOverlay() {
+    logger.info("Showing pause overlay");
     Stage stage = ServiceLocator.getRenderService().getStage();
     pauseOverlay = new Entity()
             .addComponent(new PauseMenuDisplay(game))
             .addComponent(new InputDecorator(stage, 100));
+    pauseOverlay.getEvents().addListener("save", this::saveState);
     pauseOverlay.getEvents().addListener("resume", this::hidePauseOverlay);
     ServiceLocator.getEntityService().register(pauseOverlay);
     ServiceLocator.getTimeSource().setPaused(true);
@@ -198,5 +204,14 @@ public class MainGameScreen extends ScreenAdapter {
       pauseOverlay = null;
     }
     isPauseVisible = false;
+  }
+
+  private void saveState() {
+    logger.info("Saving state");
+    if (ServiceLocator.getSaveLoadService().save("slides", forestGameArea)) {
+      logger.info("Saving data successful");
+    } else {
+      logger.info("Save data failed");
+    }
   }
 }
