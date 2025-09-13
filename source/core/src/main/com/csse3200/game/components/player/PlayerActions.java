@@ -108,6 +108,9 @@ public class PlayerActions extends Component {
     if(!Gdx.input.isKeyPressed(Input.Keys.A) && !Gdx.input.isKeyPressed(Input.Keys.D) && !dashing) {
       this.walkDirection.x = 0f;
       entity.getEvents().trigger("walkStop");
+      if(!grounded) {
+        entity.getEvents().trigger("groundLeft", walkDirection);
+      }
     }
     if(!Gdx.input.isKeyPressed(Input.Keys.S) && crouching) {
       entity.getEvents().trigger("crouchStop");
