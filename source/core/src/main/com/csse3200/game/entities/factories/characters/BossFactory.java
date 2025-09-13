@@ -219,21 +219,14 @@ public class BossFactory {
                         .addComponent(new HitboxComponent().setLayer(PhysicsLayer.NPC))
                         .addComponent(new TouchAttackComponent(PhysicsLayer.PLAYER, 1.5f));
 
-        // 载入你的 atlas（路径按你的工程调整）
         final String ATLAS_PATH = "images/boss_idle.atlas";
         TextureAtlas atlas = ServiceLocator.getResourceService().getAsset(ATLAS_PATH, TextureAtlas.class);
 
         AnimationRenderComponent arc = new AnimationRenderComponent(atlas);
         boss.addComponent(arc);
-
-        // ✅ 关键：所有状态共用同一动画基名（例如 "idle"）
         boss.addComponent(new Boss2AnimationController("idle", 0.10f, Animation.PlayMode.LOOP));
-
-        // 尺寸/碰撞体
         arc.scaleEntity();
         PhysicsUtils.setScaledCollider(boss, 0.9f, 0.4f);
-
-        // 可选：整体放大显示
         Vector2 s = boss.getScale();
         boss.setScale(s.x * 4f, s.y * 4f);
 
