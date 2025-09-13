@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.ai.tasks.AITaskComponent;
 import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.components.enemy.*;
+import com.csse3200.game.components.npc.Boss2AnimationController;
 import com.csse3200.game.components.npc.BossAnimationController;
 import com.csse3200.game.components.npc.GhostAnimationController;
 import com.csse3200.game.components.TouchAttackComponent;
@@ -70,37 +71,53 @@ public class BossFactory {
 
 
     public static Entity createBoss2(Entity target) {
-        Entity boss2 = createBaseNPC(target);
-        BaseEntityConfig config = configs.boss2;
-        InventoryComponent playerInventory = null;
-        if (target != null) {
-            playerInventory = target.getComponent(InventoryComponent.class);
-        }
+        Entity boss2 = createBaseBoss2(target);
 
-        AnimationRenderComponent animator =
-                new AnimationRenderComponent(
-                        ServiceLocator.getResourceService().getAsset("images/boss_idle.atlas", TextureAtlas.class));
-        animator.addAnimation("angry_float", 0.1f, Animation.PlayMode.LOOP);
-        animator.addAnimation("float", 0.1f, Animation.PlayMode.LOOP);
+        BaseEntityConfig config = configs.boss2;
+        InventoryComponent playerInventory =
+                (target != null) ? target.getComponent(InventoryComponent.class) : null;
+
+        // ===== 手动指定巡逻走廊 =====
+        float patrolCenterX   = 5f;  // 你想要的中心X
+        float patrolHalfWidth = 3f;   // 左右摆动的半宽（可调）
+        float leftX  = patrolCenterX - patrolHalfWidth; // = 12
+        float rightX = patrolCenterX + patrolHalfWidth; // = 18
+        float patrolY = 8f;          // 固定的Y（“中间偏上处”可自行改）
+        float patrolSpeed = 4f;       // 左右巡逻速度（m/s，可调）
 
         boss2
                 .addComponent(new CombatStatsComponent(1000))
-                .addComponent(animator)
-                .addComponent(new GhostAnimationController())
                 .addComponent(new FireballAttackComponent(target, 1.5f, 8f, 6f, config.baseAttack + 2))
-                .addComponent(new BossChargeSkillComponent(target, 6f, 5f, 0.4f, 12f, 0.6f, 1.5f))
-                .addComponent(new BlackholeComponent(target,7f,8f))
+                // 传入 11 个参数：触发/停留/准备/速度/持续/冷却 + 左边界/右边界/固定Y/巡逻速度
+                .addComponent(new BossChargeSkillComponent(
+                        target,
+                        6f,    // triggerRange
+                        5f,  // dwellTime（原来是 5f 太久了，建议 0.3~0.6）
+                        0.4f,  // prepareTime
+                        12f,   // chargeSpeed
+                        0.6f,  // chargeDuration
+                        1.5f,  // cooldown
+                        leftX, rightX, patrolY, patrolSpeed
+                ))
+                .addComponent(new BlackholeComponent(target, 7f, 8f))
                 .addComponent(new EnemyDeathRewardComponent(100, playerInventory))
                 .addComponent(new BossDeathComponent())
-                .addComponent(new BossStatusDisplay("Boss_2"));;
-        boss2.getComponent(AnimationRenderComponent.class).scaleEntity();
-        float k = 4.0f;
-        Vector2 s = boss2.getScale();
-        boss2.setScale(s.x * k, s.y * k);
+                .addComponent(new BossStatusDisplay("Boss_2"));
 
+        // 可选：放大显示（如果 createBaseBoss2 已做可删）
+        AnimationRenderComponent arc = boss2.getComponent(AnimationRenderComponent.class);
+        if (arc != null) {
+            arc.scaleEntity();
+            float k = 4.0f;
+            Vector2 s = boss2.getScale();
+            boss2.setScale(s.x * k, s.y * k);
+        }
 
         return boss2;
     }
+
+
+
 
     /**
      * Creates a Boss-3 entity with combat stats, rendering, scaling, and physics collider.
@@ -192,5 +209,35 @@ public class BossFactory {
 
         PhysicsUtils.setScaledCollider(npc, 0.9f, 0.4f);
         return npc;
+    }
+
+    public static Entity createBaseBoss2(Entity target) {
+        Entity boss =
+                new Entity()
+                        .addComponent(new PhysicsComponent())
+                        .addComponent(new PhysicsMovementComponent())
+                        .addComponent(new ColliderComponent())
+                        .addComponent(new HitboxComponent().setLayer(PhysicsLayer.NPC))
+                        .addComponent(new TouchAttackComponent(PhysicsLayer.PLAYER, 1.5f));
+
+        // 载入你的 atlas（路径按你的工程调整）
+        final String ATLAS_PATH = "images/boss_idle.atlas";
+        TextureAtlas atlas = ServiceLocator.getResourceService().getAsset(ATLAS_PATH, TextureAtlas.class);
+
+        AnimationRenderComponent arc = new AnimationRenderComponent(atlas);
+        boss.addComponent(arc);
+
+        // ✅ 关键：所有状态共用同一动画基名（例如 "idle"）
+        boss.addComponent(new Boss2AnimationController("idle", 0.10f, Animation.PlayMode.LOOP));
+
+        // 尺寸/碰撞体
+        arc.scaleEntity();
+        PhysicsUtils.setScaledCollider(boss, 0.9f, 0.4f);
+
+        // 可选：整体放大显示
+        Vector2 s = boss.getScale();
+        boss.setScale(s.x * 4f, s.y * 4f);
+
+        return boss;
     }
 }
