@@ -204,6 +204,7 @@ public class EnemyWavesTest{
     }
 
     @Test
+    @DisplayName("Getting and setting max waves")
     void testGetAndSetMaxWaves() {
         enemyWaves.setMaxWaves(10);
         Assertions.assertEquals(10, enemyWaves.getMaxWaves());
@@ -213,6 +214,7 @@ public class EnemyWavesTest{
     }
 
     @Test
+    @DisplayName("Getting and setting scaling factor")
     void testGetAndSetScalingFactor() {
         enemyWaves.setScalingFactor(2.5f);
         Assertions.assertEquals(2.5f, enemyWaves.getScalingFactor());
@@ -222,6 +224,7 @@ public class EnemyWavesTest{
     }
 
     @Test
+    @DisplayName("Getting and setting wave number")
     void testGetAndSetWaveNumber() {
         enemyWaves.setWaveNumber(5);
         Assertions.assertEquals(5, enemyWaves.getWaveNumber());
@@ -231,6 +234,7 @@ public class EnemyWavesTest{
     }
 
     @Test
+    @DisplayName("Getting and setting wave end time")
     void testGetAndSetWaveEndTime() {
         long now = System.currentTimeMillis();
         enemyWaves.setWaveEndTime(now);
@@ -241,21 +245,20 @@ public class EnemyWavesTest{
     }
 
     @Test
-    void testIsCurrentWaveFinishedTrueWhenWaveEndTimeSet() {
+    @DisplayName("Check behaviour of isCurrentWaveFinished")
+    void testIsCurrentWaveFinished() {
         long now = System.currentTimeMillis();
         enemyWaves.setWaveEndTime(now);
         Assertions.assertTrue(enemyWaves.isCurrentWaveFinsihed(),
                 "Expected current wave finished when waveEndTime > 0");
-    }
 
-    @Test
-    void testIsCurrentWaveFinishedFalseWhenWaveEndTimeZero() {
         enemyWaves.setWaveEndTime(0L);
         Assertions.assertFalse(enemyWaves.isCurrentWaveFinsihed(),
                 "Expected current wave not finished when waveEndTime = 0");
     }
 
     @Test
+    @DisplayName("Check behaviour of getters during wave simulation")
     void testGettersReflectWaveProgression() {
         // Due to the beforeEach
         Assertions.assertEquals(3, enemyWaves.getMaxWaves());
