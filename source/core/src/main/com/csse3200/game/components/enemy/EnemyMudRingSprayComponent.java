@@ -3,6 +3,7 @@ package com.csse3200.game.components.enemy;
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.components.Component;
+import com.csse3200.game.components.WeaponsStatsComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.physics.PhysicsLayer;
 import com.csse3200.game.physics.components.ColliderComponent;
@@ -46,7 +47,7 @@ public class EnemyMudRingSprayComponent extends Component {
         Vector2 center = entity.getCenterPosition();
 
         int dmg = 10;
-        CombatStatsComponent bossStats = entity.getComponent(CombatStatsComponent.class);
+        WeaponsStatsComponent bossStats = entity.getComponent(WeaponsStatsComponent.class);
         if (bossStats != null) dmg = bossStats.getBaseAttack();
 
         float step = (float)(Math.PI * 2 / count);

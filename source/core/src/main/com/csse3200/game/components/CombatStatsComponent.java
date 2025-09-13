@@ -19,25 +19,18 @@ public class CombatStatsComponent extends Component {
   /** Maximum health points. Caller-controlled; not enforced as an upper bound on {@link #setHealth(int)}. */
   private int maxHealth;
 
-  /** Base attack damage used when this component attacks another. Non-negative */
-  private int baseAttack;
+
   private int thresholdForBuff = 20;
-  private float coolDown;
-  private boolean disableDamage;
+
 
   /**
    * Construct a combat Stats Component (Health + Attack System)
    *
    * @param health     initial health (values {@code < 0} are clamped to {@code 0})
-   * @param baseAttack base attack damage (must be {@code >= 0})
    */
-  public CombatStatsComponent(int health, int baseAttack) {
+  public CombatStatsComponent(int health) {
     setMaxHealth(health);
     setHealth(health);
-    setBaseAttack(baseAttack);
-    setDisableDamage(false);
-    setCoolDown(0);
-
   }
 
   /**
@@ -47,14 +40,22 @@ public class CombatStatsComponent extends Component {
    *
    * @return {@code true} if the entity has 0 or less health, {@code false} otherwise
    */
-  public Boolean isDead() { return this.health <= 0; }
+  public Boolean isDead() {
+    return this.health <= 0;
+  }
 
   /**
    * Returns the entity's health.
    *
    * @return entity's health
    */
-  public int getHealth() { return health; }
+  public int getHealth() {
+    return health;
+  }
+
+  public void takeDamage(int damage) {
+    applyDamage(damage);
+  }
 
   /**
    * Sets the entity's health. Health is always clamped between 0 and maxHealth.
@@ -79,23 +80,6 @@ public class CombatStatsComponent extends Component {
       }
     }
   }
-
-    /**
-     * Set the entity's hit cooldown (seconds)
-     *
-     * @param coolDown coolDown
-     */
-    public void setCoolDown(float coolDown) { this.coolDown = Math.max(0, coolDown); }
-
-  /**
-   * gets the entity's cooldown between attacks (seconds).
-   *
-   */
-
-  public float getCoolDown() {
-    return this.coolDown;
-  }
-
 
   /**
    * Adds to the player's health. The amount added can be negative.
@@ -131,47 +115,7 @@ public class CombatStatsComponent extends Component {
      return this.maxHealth;
   }
 
-  /**
-   * Returns the entity's base attack damage.
-   *
-   * @return base attack damage
-   */
-  public int getBaseAttack() {
-    return baseAttack;
-  }
 
-  /**
-   * Sets the entity's attack damage. Attack damage has a minimum bound of 0.
-   *
-   * @param attack Attack damage
-   */
-  public void setBaseAttack(int attack) {
-    if (attack >= 0) {
-      this.baseAttack = attack;
-    } else {
-      logger.error("Can not set base attack to a negative attack value");
-    }
-  }
-
-  /**
-   * Apply damage to this entity from another attacking entity.
-   *
-   * <p>If {@code attacker} is {@code null}, an error is logged and the call is a no-op.</p>
-   * <p>If this entity is already dead or the attacker's base attack is {@code <= 0}, no damage is applied.</p>
-   *
-   * <p>Allows the entity to be hit by some attacker and deal damage, provided they have
-   * waited for the designated time between attacks.</p>
-   *
-   * @param attacker the attacking entity providing {@linkplain #getBaseAttack() base attack} damage; may be {@code null}
-   * @see #applyDamage(int)
-   */
-  public void hit(CombatStatsComponent attacker) {
-    if (attacker == null) {
-        logger.error("hit(attacker) called with null attacker");
-        return;
-    }
-    applyDamage(attacker.getBaseAttack());
-  }
 
   /**
    * Apply damage to this entity.
@@ -183,37 +127,9 @@ public class CombatStatsComponent extends Component {
    * @see #setHealth(int)
    */
   private void applyDamage(int damage) {
-    if (damage <= 0 || isDead() || disableDamage) {
+    if (damage <= 0 || Boolean.TRUE.equals(isDead())) {
         return;
     }
     setHealth(this.health - damage);
-  }
-
-  /**
-   * Deal direct damage as an integer.
-   *
-   * <p>
-   *  Intended for non-entity sources (e.g. traps, projectiles, environmental hazards).
-   *  This delegates to {@link #applyDamage(int)} and therefore follows the same validation and dead-entity behaviour.
-   * </p>
-   *
-   * @param damage raw damage amount (non-negative to take effect)
-   * projectiles, or weapons.
-   */
-  // Note: At this stage, the weapon's output power (damage) is represented as a simple {@code int}.
-  //  In future, this can be extended to use a {@code WeaponStatsComponent} or {@code DamageInfo}
-  //  for features like critical hits or resistances.
-  public void hit(int damage) {
-    applyDamage(damage);
-  }
-
-  /**
-   * Sets whether the player can receive any damage. True means no damage received
-   * and false means damage can be received.
-   *
-   * @param status Status of whether entity can be damaged
-   */
-  public void setDisableDamage(boolean status) {
-    this.disableDamage = status;
   }
 }

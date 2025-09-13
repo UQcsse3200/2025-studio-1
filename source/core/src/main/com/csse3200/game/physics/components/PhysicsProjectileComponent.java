@@ -59,7 +59,6 @@ public class PhysicsProjectileComponent extends Component{
      * Fires a bullet in a certain direction at a certain speed
      *
      */
-
     public void fire(Vector2 direction, float speed) {
 
         initialVelocity = direction.nor().scl(speed);
@@ -75,7 +74,4 @@ public class PhysicsProjectileComponent extends Component{
     public void setLived(float lived) {
         this.lived = lived;
     }
-
-
-
 }

@@ -5,64 +5,64 @@ filter: Nearest,Nearest
 repeat: none
 angry_float
   rotate: false
-  xy: 37, 260
-  size: 210, 200
-  orig: 210, 200
+  xy: 6, 51
+  size: 46, 43
+  orig: 230, 215
   offset: 0, 0
   index: 0
 angry_float
   rotate: false
-  xy: 285, 260
-  size: 210, 200
-  orig: 210, 200
+  xy: 57, 51
+  size: 46, 43
+  orig: 230, 215
   offset: 0, 0
   index: 1
 angry_float
   rotate: false
-  xy: 516, 260
-  size: 210, 200
-  orig: 210, 200
+  xy: 102, 51
+  size: 46, 43
+  orig: 230, 215
   offset: 0, 0
   index: 2
 angry_float
   rotate: false
-  xy: 760, 260
-  size: 210, 200
-  orig: 210, 200
+  xy: 152, 51
+  size: 46, 43
+  orig: 230, 215
   offset: 0, 0
   index: 3
 default
   rotate: false
-  xy: 40, 37
-  size: 210, 200
-  orig: 210, 200
+  xy: 6, 6
+  size: 46, 43
+  orig: 230, 215
   offset: 0, 0
   index: 0
 float
   rotate: false
-  xy: 40, 37
-  size: 210, 200
-  orig: 210, 200
+  xy: 6, 6
+  size: 46, 43
+  orig: 230, 215
   offset: 0, 0
   index: 0
 float
   rotate: false
-  xy: 287, 37
-  size: 210, 200
-  orig: 210, 200
+  xy: 57, 6
+  size: 46, 43
+  orig: 230, 215
   offset: 0, 0
   index: 1
 float
   rotate: false
-  xy: 510, 37
-  size: 210, 200
-  orig: 210, 200
+  xy: 102, 6
+  size: 46, 43
+  orig: 230, 215
   offset: 0, 0
   index: 2
 float
   rotate: false
-  xy: 768, 37
-  size: 210, 200
-  orig: 210, 200
+  xy: 152, 6
+  size: 46, 43
+  orig: 230, 215
   offset: 0, 0
   index: 3
