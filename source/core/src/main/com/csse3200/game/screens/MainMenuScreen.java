@@ -134,7 +134,7 @@ public class MainMenuScreen extends ScreenAdapter {
 
     // Register the UI entity that owns the display and actions
     Entity ui = new Entity();
-    ui.addComponent(new MainMenuDisplay())
+    ui.addComponent(new MainMenuDisplay(game))
         .addComponent(new InputDecorator(stage, 10))
         .addComponent(new MainMenuActions(game));
     ServiceLocator.getEntityService().register(ui);
