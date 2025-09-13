@@ -123,7 +123,7 @@ public class EnemyWavesTest{
             advanceTimeAndTick(WAVE_DELAY_MS + 100);
         }
 
-        Assertions.assertTrue(enemyWaves.isFinished());
+        Assertions.assertTrue(enemyWaves.allWavesFinished());
 
         // Remove previous calls to the gameArea class
         reset(gameArea);
@@ -143,7 +143,7 @@ public class EnemyWavesTest{
             entities.clear();
             advanceTimeAndTick(WAVE_DELAY_MS + 100);
         }
-        Assertions.assertTrue(enemyWaves.isFinished());
+        Assertions.assertTrue(enemyWaves.allWavesFinished());
 
         // Remove previous calls to the gameArea class
         reset(gameArea);
