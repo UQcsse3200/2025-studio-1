@@ -49,7 +49,7 @@ public class BossFuryTask extends Component {
     }
 
     private void enterFury() {
-
+        entity.getEvents().trigger("boss:enraged");
         AnimationRenderComponent animator = entity.getComponent(AnimationRenderComponent.class);
         if (animator != null && animator.hasAnimation("fury")) {
             animator.startAnimation("fury");

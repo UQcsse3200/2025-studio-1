@@ -81,7 +81,7 @@ public class BossFactory {
                 0.5f,
                 1.3f,
                 5,
-                0.45f
+                0.25f
                 ));
         robot.getComponent(AnimationRenderComponent.class).scaleEntity();
         Vector2 s = robot.getScale();
