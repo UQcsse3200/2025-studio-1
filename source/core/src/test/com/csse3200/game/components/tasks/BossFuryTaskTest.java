@@ -16,7 +16,6 @@ import com.csse3200.game.services.ServiceLocator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -76,7 +75,7 @@ class BossFuryTaskTest {
 
         WeaponsStatsComponent w = boss.getComponent(WeaponsStatsComponent.class);
         boss.update();
-        assertEquals(5, w.getBaseAttack(), "未达阈值时不应触发");
+        assertEquals(5, w.getBaseAttack());
         assertEquals(1f, boss.getScale().x, 1e-3);
         assertEquals(1f, boss.getScale().y, 1e-3);
     }
