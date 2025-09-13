@@ -245,7 +245,16 @@ public class InventoryComponent extends Component {
      *
      * @param item set the selected item as current
      */
-  public void setCurrItem(Entity item){this.currItem = item;}
+    public void setCurrItem(Entity item) {
+        this.currItem = item;
+    }
+    /**
+     * Get the current item
+     * @return the current item
+     */
+    public Entity getCurrItem() {
+        return this.currItem;
+    }
 
 
     /**
@@ -301,4 +310,9 @@ public class InventoryComponent extends Component {
      * @return the slot that is currently equipped
      */
     public int getEquippedSlot(){return this.equippedSlot;}
+  /**
+   * Set the current item
+   */
+
+
 }

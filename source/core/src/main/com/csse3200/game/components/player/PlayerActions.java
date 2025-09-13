@@ -96,7 +96,7 @@ public class PlayerActions extends Component {
     entity.getEvents().addListener("equipSlot5", () -> equipSlot(5));
 
 
-      // Find camera from any entity with CameraComponent
+    // Find camera from any entity with CameraComponent
     Array<Entity> entities = ServiceLocator.getEntityService().getEntities();
     for (Entity entity: entities) {
       if (entity.getComponent(CameraComponent.class) != null) {
