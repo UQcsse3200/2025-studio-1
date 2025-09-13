@@ -21,8 +21,8 @@ import java.util.List;
  */
 public class BossStatusDisplay extends Component {
 
-    private static final float BAR_WIDTH = 600f;
-    private static final float BAR_HEIGHT = 20f;
+    private static final float BAR_WIDTH = 800f;
+    private static final float BAR_HEIGHT = 40f;
     private static final Color COLOR_BG = Color.DARK_GRAY;
     private static final Color COLOR_HEALTH = Color.ORANGE;
 
@@ -46,12 +46,39 @@ public class BossStatusDisplay extends Component {
             if (combatStats != null) {
                 maxHealth = combatStats.getMaxHealth();
             }
+            // Listen to CombatStatsComponent's existing events for dynamic tracking
+            entity.getEvents().addListener("updateHealth", this::updateBossHealthUI);
+            entity.getEvents().addListener("death", this::onBossDeath);
 
             createHealthBar();
             System.out.println("Simple Boss health bar created for: " + bossName);
 
         } catch (Exception e) {
             System.err.println("Failed to create boss health bar: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Update boss health UI in response to health changes
+     */
+    public void updateBossHealthUI(int health) {
+        if (healthBar != null) {
+            healthBar.setValue(health);
+
+            float healthPercentage = (float) health / maxHealth;
+            System.out.println("[BOSS UI] Health updated: " + health + "/" + maxHealth +
+                    " (" + (int)(healthPercentage * 100) + "%)");
+        }
+    }
+
+    /**
+     * Handle boss death event
+     */
+    public void onBossDeath() {
+        System.out.println("[BOSS UI] Boss " + bossName + " has been defeated!");
+
+        if (healthBar != null) {
+            healthBar.setValue(0);
         }
     }
 
@@ -71,7 +98,11 @@ public class BossStatusDisplay extends Component {
         table.setSize(BAR_WIDTH, BAR_HEIGHT);
         float screenWidth = stage.getWidth();
         float screenHeight = stage.getHeight();
-        table.setPosition((screenWidth - BAR_WIDTH) / 2, 140);
+
+        // Position at center-top
+        float x = (screenWidth - BAR_WIDTH) / 2;        // Center horizontally
+        float y = screenHeight - BAR_HEIGHT - 270f;      // Near top with 50px margin
+        table.setPosition(x, y);
 
         // Create simple health bar
         ProgressBar.ProgressBarStyle healthBarStyle = createBarStyle();
