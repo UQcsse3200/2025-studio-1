@@ -1,13 +1,12 @@
 package com.csse3200.game.components.player;
 
-import com.csse3200.game.components.entity.item.ItemComponent;
+import com.csse3200.game.components.ItemComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
 import com.csse3200.game.extensions.GameExtension;
 import com.csse3200.game.services.ServiceLocator;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mockito;
 
 import java.lang.reflect.Field;
 
