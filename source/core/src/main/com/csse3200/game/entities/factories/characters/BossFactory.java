@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.ai.tasks.AITaskComponent;
 import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.components.enemy.*;
+import com.csse3200.game.components.npc.Boss2AnimationController;
 import com.csse3200.game.components.npc.BossAnimationController;
 import com.csse3200.game.components.npc.GhostAnimationController;
 import com.csse3200.game.components.TouchAttackComponent;
@@ -55,8 +56,11 @@ public class BossFactory {
                 .addComponent(new CombatStatsComponent(1000))
                 .addComponent(new WeaponsStatsComponent(5))
                 .addComponent(new BossStatusDisplay("Boss_1"))
-                .addComponent(new BossAnimationController())
+                .addComponent(new BossDeathComponent())
                 .addComponent(animator);
+
+        animator.startAnimation("Idle");
+        animator.scaleEntity();
 
         AITaskComponent ai = new AITaskComponent()
                 .addTask(new ChaseTask(
@@ -84,35 +88,43 @@ public class BossFactory {
 
 
     public static Entity createBoss2(Entity target) {
-        Entity boss2 = createBaseNPC(target);
-        BaseEntityConfig config = configs.boss2;
-        InventoryComponent playerInventory = null;
-        if (target != null) {
-            playerInventory = target.getComponent(InventoryComponent.class);
-        }
+        Entity boss2 = createBaseBoss2(target);
 
-        AnimationRenderComponent animator =
-                new AnimationRenderComponent(
-                        ServiceLocator.getResourceService().getAsset("images/boss_idle.atlas", TextureAtlas.class));
-        animator.addAnimation("angry_float", 0.1f, Animation.PlayMode.LOOP);
-        animator.addAnimation("float", 0.1f, Animation.PlayMode.LOOP);
+        BaseEntityConfig config = configs.boss2;
+        InventoryComponent playerInventory =
+                (target != null) ? target.getComponent(InventoryComponent.class) : null;
+        float patrolCenterX   = 5f;
+        float patrolHalfWidth = 3f;
+        float leftX  = patrolCenterX - patrolHalfWidth;
+        float rightX = patrolCenterX + patrolHalfWidth;
+        float patrolY = 8f;
+        float patrolSpeed = 4f;
 
         boss2
                 .addComponent(new CombatStatsComponent(1000))
-                .addComponent(animator)
-                .addComponent(new GhostAnimationController())
                 .addComponent(new FireballAttackComponent(target, 1.5f, 8f, 6f, config.baseAttack + 2))
-                .addComponent(new BossChargeSkillComponent(target, 6f, 5f, 0.4f, 12f, 0.6f, 1.5f))
-                .addComponent(new BlackholeComponent(target,7f,8f))
+                .addComponent(new BossChargeSkillComponent(
+                        target,
+                        6f,
+                        5f,
+                        0.4f,
+                        12f,
+                        0.6f,
+                        1.5f,
+                        leftX, rightX, patrolY, patrolSpeed
+                ))
+                .addComponent(new BlackholeComponent(target, 7f, 8f))
                 .addComponent(new EnemyDeathRewardComponent(100, playerInventory))
-                .addComponent(new DeathParticleSpawnerComponent())
-                .addComponent(new BossStatusDisplay("Boss_2"));;
-        boss2.getComponent(AnimationRenderComponent.class).scaleEntity();
-        float k = 4.0f;
-        Vector2 s = boss2.getScale();
-        boss2.setScale(s.x * k, s.y * k);
+                .addComponent(new BossDeathComponent())
+                .addComponent(new BossStatusDisplay("Boss_2"));
 
-
+        AnimationRenderComponent arc = boss2.getComponent(AnimationRenderComponent.class);
+        if (arc != null) {
+            arc.scaleEntity();
+            float k = 3.0f;
+            Vector2 s = boss2.getScale();
+            boss2.setScale(s.x * k, s.y * k);
+        }
         return boss2;
     }
 
@@ -133,9 +145,14 @@ public class BossFactory {
                 .addComponent(new PhysicsComponent())
                 .addComponent(new ColliderComponent())
                 .addComponent(new HitboxComponent().setLayer(PhysicsLayer.NPC))
+                .addComponent(new PhysicsMovementComponent())
                 .addComponent(new CombatStatsComponent(config.health))
+                .addComponent(new WeaponsStatsComponent(config.baseAttack))
+                .addComponent(new AITaskComponent()
+                        .addTask(new WanderTask(new Vector2(3f, 3f), 1f))
+                        .addTask(new ChaseTask(target, 8, 5f, 7f)))
                 .addComponent(new EnemyDeathRewardComponent(100, playerInventory))
-                .addComponent(new DeathParticleSpawnerComponent())
+                .addComponent(new BossDeathComponent())
                 .addComponent(new TextureRenderComponent("images/Boss_3.png"))
                 .addComponent(new BossStatusDisplay("Boss_3"));;
 
@@ -153,9 +170,12 @@ public class BossFactory {
     public static Entity createBlackhole(Vector2 pos,Entity target){
         Entity Blackhole = new Entity()
                 .addComponent(new TextureRenderComponent("images/blackhole1.png"))
-                .addComponent(new BlackholeAttackComponent(target,1f,4f));
+                .addComponent(new BlackholeAttackComponent(target,1.5f,4f));
         Blackhole.setPosition(pos);
         Blackhole.getComponent(TextureRenderComponent.class).scaleEntity();
+        Vector2 s = Blackhole.getScale();
+        float k = 1.8f;
+        Blackhole.setScale(s.x * k, s.y * k);
         return Blackhole;
     }
     public static Entity createFireball(Vector2 from, Vector2 velocity) {
@@ -169,16 +189,13 @@ public class BossFactory {
                 .addComponent(new PhysicsProjectileComponent())
                 .addComponent(new TouchAttackComponent(PhysicsLayer.PLAYER, 0f));
         fireball.setPosition(from);
-        AnimationRenderComponent animator =
-                new AnimationRenderComponent(
-                        ServiceLocator.getResourceService().getAsset("images/fireball.atlas", TextureAtlas.class));
-        animator.addAnimation("angry_float", 0.3f, Animation.PlayMode.LOOP);
-        animator.addAnimation("float", 0.3f, Animation.PlayMode.LOOP);
-        animator.startAnimation("float");
-        animator.startAnimation("angry_float");
-        fireball.addComponent(animator);
-        fireball.getComponent(AnimationRenderComponent.class).scaleEntity();
-
+        TextureRenderComponent texture = new TextureRenderComponent("images/laserball.png");
+        fireball.addComponent(texture);
+        texture.scaleEntity();
+        Vector2 s = fireball.getScale();
+        float k = 0.5f;
+        fireball.setScale(s.x * k, s.y * k);
+        PhysicsUtils.setScaledCollider(fireball, 0.5f, 0.5f);
         return fireball;
     }
 
@@ -206,5 +223,28 @@ public class BossFactory {
 
         PhysicsUtils.setScaledCollider(npc, 0.9f, 0.4f);
         return npc;
+    }
+
+    public static Entity createBaseBoss2(Entity target) {
+        Entity boss =
+                new Entity()
+                        .addComponent(new PhysicsComponent())
+                        .addComponent(new PhysicsMovementComponent())
+                        .addComponent(new ColliderComponent())
+                        .addComponent(new HitboxComponent().setLayer(PhysicsLayer.NPC))
+                        .addComponent(new TouchAttackComponent(PhysicsLayer.PLAYER, 1.5f));
+
+        final String ATLAS_PATH = "images/boss_idle.atlas";
+        TextureAtlas atlas = ServiceLocator.getResourceService().getAsset(ATLAS_PATH, TextureAtlas.class);
+
+        AnimationRenderComponent arc = new AnimationRenderComponent(atlas);
+        boss.addComponent(arc);
+        boss.addComponent(new Boss2AnimationController("idle", 0.10f, Animation.PlayMode.LOOP));
+        arc.scaleEntity();
+        PhysicsUtils.setScaledCollider(boss, 0.9f, 0.4f);
+        Vector2 s = boss.getScale();
+        boss.setScale(s.x * 4f, s.y * 4f);
+
+        return boss;
     }
 }
