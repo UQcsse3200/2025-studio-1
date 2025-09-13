@@ -28,7 +28,7 @@ public class PlayerInventoryDisplay extends UIComponent {
     private static final float SLOT_SIZE = 96f;
     private static final float SLOT_PAD  = 10f;
 
-    private int focusedIndex = 0;
+    private int focusedIndex = -1;
 
     private final InventoryComponent inventory;
 
