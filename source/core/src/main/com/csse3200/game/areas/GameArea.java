@@ -9,6 +9,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Disposable;
 import com.csse3200.game.areas.terrain.TerrainComponent;
 import com.csse3200.game.areas.terrain.TerrainFactory;
+import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.services.ServiceLocator;
@@ -26,10 +27,14 @@ import java.util.function.Supplier;
 public abstract class GameArea implements Disposable {
   protected TerrainComponent terrain;
   protected List<Entity> areaEntities;
+  protected TerrainFactory terrainFactory;
+  protected CameraComponent cameraComponent;
   /** Prevents re-entrant room transitions across areas */
   protected static boolean isTransitioning = false;
 
-  protected GameArea() {
+  protected GameArea(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
+    this.terrainFactory = terrainFactory;
+    this.cameraComponent = cameraComponent;
     areaEntities = new ArrayList<>();
   }
 
@@ -323,6 +328,18 @@ public abstract class GameArea implements Disposable {
     spawnEntity(door);
   }
 
+  protected <T extends GameArea> void loadArea(Class<T> areaClass) {
+    clearAndLoad(() -> {
+      try {
+        // Pass the concrete terrainFactory and cameraComponent
+        return areaClass
+                .getConstructor(TerrainFactory.class, CameraComponent.class)
+                .newInstance(this.terrainFactory, this.cameraComponent);
+      } catch (Exception e) {
+        throw new RuntimeException("Failed to create " + areaClass.getSimpleName(), e);
+      }
+    });
+  }
   /** Helper to clear current entities and transition to a new area. */
   protected void clearAndLoad(Supplier<GameArea> nextAreaSupplier) {
     if (!beginTransition()) return;
