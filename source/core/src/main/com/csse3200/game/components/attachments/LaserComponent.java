@@ -16,7 +16,7 @@ import com.csse3200.game.services.ServiceLocator;
 public class LaserComponent extends RenderComponent {
     private final ShapeRenderer shapeRenderer = new ShapeRenderer();
     private final float length;
-    private Vector2 direction = new Vector2(1, 0); // default facing right
+    private Vector2 direction = new Vector2(1, 0);
     private Color color = Color.RED;
     private Camera camera;
 
