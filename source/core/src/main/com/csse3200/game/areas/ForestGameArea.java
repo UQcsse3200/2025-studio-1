@@ -19,7 +19,9 @@ import com.csse3200.game.entities.factories.items.ItemFactory;
 import com.csse3200.game.entities.factories.items.WeaponsFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.entities.factories.characters.PlayerFactory;
+import com.csse3200.game.entities.configs.ItemSpawnConfig;
 import com.csse3200.game.entities.factories.*;
+import com.csse3200.game.entities.spawner.ItemSpawner;
 import com.csse3200.game.physics.components.PhysicsProjectileComponent;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
@@ -207,6 +209,8 @@ public class ForestGameArea extends GameArea {
 
   @Override
   public void create() {
+    ServiceLocator.registerGameArea(this);
+
     loadAssets();
 
     displayUI();
@@ -223,10 +227,10 @@ public class ForestGameArea extends GameArea {
     lightsaber = spawnLightsaber();
 
     //These are commented out since there is no equip feature yet
-    // this.equipItem(pistol);
-    // this.equipItem(lightsaber);
-    // this.equipItem(dagger);
-    this.equipItem(rifle);
+    //this.equipItem(pistol);
+    //this.equipItem(lightsaber);
+    //this.equipItem(dagger);
+    //this.equipItem(rifle);
 
     spawnFloor();
     spawnBottomRightDoor();
@@ -247,6 +251,9 @@ public class ForestGameArea extends GameArea {
     // spawnGrokDroid();
     // spawnVroomba();
     playMusic();
+
+    ItemSpawner itemSpawner = new ItemSpawner(this);
+    itemSpawner.spawnItems(ItemSpawnConfig.forestmap());
 
     // Place a keycard on the floor so the player can unlock the door
     float keycardX = 1f;
@@ -661,6 +668,10 @@ public class ForestGameArea extends GameArea {
     GridPoint2 pos = new GridPoint2(25, 5);
     Entity vroomba = NPCFactory.createVroomba(player, this);
     spawnEntityAt(vroomba, pos, true, true);
+  }
+
+  public void spawnItem(Entity item, GridPoint2 position) {
+    spawnEntityAt(item, position, false, false);
   }
 
   private void playMusic() {

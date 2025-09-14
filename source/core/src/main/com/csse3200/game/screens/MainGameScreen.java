@@ -104,7 +104,6 @@ public class MainGameScreen extends ScreenAdapter {
       } else {
         hidePauseOverlay();
       }
-      return;
     }
   }
 
