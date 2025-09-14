@@ -3,6 +3,7 @@ package com.csse3200.game.components.enemy;
 import com.badlogic.gdx.utils.Timer;
 import com.csse3200.game.areas.GameArea;
 import com.csse3200.game.components.CombatStatsComponent;
+import com.csse3200.game.components.Component;
 import com.csse3200.game.components.npc.GhostAnimationController;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
@@ -13,7 +14,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Handles spawning enemies over multiple waves. Simplified: a fixed number of waves per trigger.
  */
-public class EnemyWaves {
+public class EnemyWaves extends Component {
   private static final Logger logger = LoggerFactory.getLogger(EnemyWaves.class);
 
   private final Entity player;
