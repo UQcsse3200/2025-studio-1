@@ -1,35 +1,25 @@
 package com.csse3200.game.components.shop;
 
-import com.csse3200.game.entities.Entity;
+import java.util.ArrayList;
 
-import java.util.Collection;
-import java.util.Map;
-import java.util.function.Function;
 
 public class CatalogService {
-    private final Map<String, CatalogEntry> entries;
-    private final Function<String, Entity> factory;
+    private final ArrayList<CatalogEntry> entries;
 
-    public CatalogService(Map<String, CatalogEntry> entries,
-                           Function<String, Entity> factory) {
+    public CatalogService(ArrayList<CatalogEntry> entries) {
         this.entries = entries;
-        this.factory = factory;
     }
 
-    public CatalogEntry get(String itemKey) {
-        return entries.get(itemKey);
+    public CatalogEntry get(CatalogEntry item) {
+        for (CatalogEntry entry : entries) {
+            if (entry.equals(item)) {
+                return entry;
+            }
+        }
+        return null;
     }
 
-    public Collection<CatalogEntry> list() {
-        return entries.values();
+    public ArrayList<CatalogEntry> list() {
+        return entries;
     }
-
-    public boolean exists(String itemKey) {
-        return entries.containsKey(itemKey);
-    }
-
-    public Entity spawnEntity(String itemKey) {
-        return factory.apply(itemKey);
-    }
-
 }

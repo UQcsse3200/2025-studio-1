@@ -54,7 +54,7 @@ public class ItemScreenDisplay extends UIComponent {
         box.setBackground(new TextureRegionDrawable(new TextureRegion(whiteTex)));
 
         // Title
-        Label title = new Label(entry.itemKey(), skin);
+        Label title = new Label(entry.getItemName(), skin);
         title.setColor(Color.BLACK);
         title.setFontScale(1.2f);
         box.add(title).padBottom(8f).row();

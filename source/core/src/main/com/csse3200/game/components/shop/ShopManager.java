@@ -1,6 +1,6 @@
 package com.csse3200.game.components.shop;
 
-import com.csse3200.game.components.ItemComponent;
+import com.csse3200.game.components.items.ItemComponent;
 import com.csse3200.game.components.player.InventoryComponent;
 import com.csse3200.game.entities.Entity;
 import org.slf4j.Logger;
@@ -16,53 +16,44 @@ public class ShopManager {
     }
 
 
-    public PurchaseResult purchase(Entity player, String itemKey) {
-        // TODO: refactor this
-         InventoryComponent inventory = player.getComponent(InventoryComponent.class);
-         if (inventory == null) {
-             return fail(player, itemKey, PurchaseError.UNEXPECTED);
-         }
+    public PurchaseResult purchase(Entity player, CatalogEntry item, int amount) {
+        InventoryComponent inventory = player.getComponent(InventoryComponent.class);
+        if (inventory == null) {
+            return fail(player, item, PurchaseError.UNEXPECTED);
+        }
 
-         CatalogEntry entry = catalog.get(itemKey);
-         if (entry == null) {
-             return fail(player, itemKey, PurchaseError.NOT_FOUND);
-         }
-         if (!entry.enabled()) {
-             return fail(player, itemKey, PurchaseError.DISABLED);
-         }
+        CatalogEntry entry = catalog.get(item);
+        if (entry == null) {
+            return fail(player, item, PurchaseError.NOT_FOUND);
+        }
+        if (!entry.enabled()) {
+            return fail(player, item, PurchaseError.DISABLED);
+        }
 
-         // TODO: make a way for user to input how many to purchase
-         final int amount = entry.bundleQuantity();
-         final int cost = entry.price();
+        final int cost = entry.price();
 
          // Check user has sufficient funds
         if (!hasSufficientFunds(inventory, amount, cost)) {
-            return fail(player, itemKey, PurchaseError.INSUFFICIENT_FUNDS);
-        }
-
-        // Spawn item
-        Entity item = spawnItem(inventory, itemKey);
-        if (item == null) {
-            return fail(player, itemKey, PurchaseError.INVALID_ITEM);
+            return fail(player, item, PurchaseError.INSUFFICIENT_FUNDS);
         }
 
         // Add item to Inventory
-        int idx = InventoryOperations.addOrStack(inventory, item, amount,
+        int idx = InventoryOperations.addOrStack(inventory, item.getItem(), amount,
                 entry.stackable(), entry.maxStack());
         if (idx < 0) {
-            return fail(player, itemKey, PurchaseError.INVENTORY_FULL);
+            return fail(player, item, PurchaseError.INVENTORY_FULL);
         }
 
         chargePlayer(inventory, amount, cost);
 
         // TODO: Success hooks
 
-        return PurchaseResult.ok(itemKey, 1);
+        return PurchaseResult.ok(item, 1);
     }
 
-    private PurchaseResult fail(Entity player, String itemKey, PurchaseError error) {
-        logger.error("Failed to purchase item {}, error: {}", itemKey, error);
-        player.getEvents().trigger("purchaseFailed", itemKey, error);
+    private PurchaseResult fail(Entity player, CatalogEntry item, PurchaseError error) {
+//        logger.error("Failed to purchase item {}, error: {}", getItemName(item), error);
+        player.getEvents().trigger("purchaseFailed", getItemName(item), error);
         return PurchaseResult.fail(error);
     }
 
@@ -75,18 +66,8 @@ public class ShopManager {
         inventory.addProcessor(-1 * total);
     }
 
-    private Entity spawnItem(InventoryComponent inventory, String itemKey) {
-        Entity item = catalog.spawnEntity(itemKey);
-        if (item == null) {
-            return null;
-        }
-        ItemComponent itemComponent = item.getComponent(ItemComponent.class);
-        if (itemComponent == null) {
-            return null;
-        }
-        if (itemComponent.getCount() <= 0) {
-            itemComponent.setCount(1);
-        }
-        return item;
+    private String getItemName(CatalogEntry entry) {
+        return entry.getItemName();
     }
+
 }
