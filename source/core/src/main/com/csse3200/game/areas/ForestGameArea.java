@@ -174,12 +174,6 @@ public class ForestGameArea extends GameArea {
 
   private static final String[] forestMusic = {BACKGROUND_MUSIC};
 
-
-  private final TerrainFactory terrainFactory;
-
-  private final CameraComponent cameraComponent;
-
-
   private Entity player;
   private Entity dagger;
   private Entity lightsaber;
@@ -197,9 +191,7 @@ public class ForestGameArea extends GameArea {
    */
 
   public ForestGameArea(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
-    super();
-    this.terrainFactory = terrainFactory;
-    this.cameraComponent = cameraComponent;
+    super(terrainFactory, cameraComponent);
   }
 /** Create the game area, including terrain, static entities (trees), dynamic entities (player) */
   /**
