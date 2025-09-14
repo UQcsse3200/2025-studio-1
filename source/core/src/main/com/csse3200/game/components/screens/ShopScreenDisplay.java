@@ -11,12 +11,23 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.csse3200.game.components.shop.CatalogEntry;
 import com.csse3200.game.components.shop.CatalogService;
+import com.csse3200.game.components.shop.PurchaseError;
 import com.csse3200.game.components.shop.ShopManager;
 import com.csse3200.game.areas.ForestGameArea;
 import com.csse3200.game.ui.*;
 
 
 public class ShopScreenDisplay extends UIComponent {
+    // error messages
+    private static final String ERROR_MESSAGE = "Unable to purchase ";
+    private static final String NOT_FOUND_MESSAGE = ".Item was not found.";
+    private static final String DISABLED_MESSAGE = ". Item is disabled.";
+    private static final String INSUFFICIENT_FUNDS_MESSAGE = ". You have insufficient funds.";
+    private static final String INVENTORY_FULL_MESSAGE = ". Inventory is full.";
+    private static final String LIMIT_REACHED_MESSAGE = ". Item limit has been reached.";
+    private static final String INVALID_ITEM_MESSAGE = ". Invalid item.";
+    private static final String UNEXPECTED_MESSAGE = ". Unexpected error.";
+
     private final ForestGameArea game;
     private final CatalogService catalog;
     private final ShopManager manager;
@@ -36,18 +47,19 @@ public class ShopScreenDisplay extends UIComponent {
     }
     @Override
     public void create() {
+        entity.getEvents().addListener("purchaseFailed", this::showError);
         super.create();
         itemPopup = new ItemScreenDisplay();
         entity.addComponent(itemPopup);
 
 
-        // --- Dimmer ---
+        //Dimmer
         dimTex = makeSolidTexture(new Color(0, 0, 0, 0.6f));
         dimmer = new Image(new TextureRegionDrawable(new TextureRegion(dimTex)));
         dimmer.setFillParent(true);
         stage.addActor(dimmer);
 
-        // --- Root table ---
+        // Root table
         root = new Table();
         root.setFillParent(true);
         root.center();
@@ -58,7 +70,7 @@ public class ShopScreenDisplay extends UIComponent {
         title.setFontScale(2f);
         root.add(title).padBottom(20).row();
 
-        // --- Grid ---
+        // Grid
         grid = new Table();
         grid.defaults().pad(10);
 
@@ -73,7 +85,7 @@ public class ShopScreenDisplay extends UIComponent {
 
         root.add(grid).row();
 
-        // --- Close Shop button ---
+        //  Close Shop button
         TextButton.TextButtonStyle style = skin.get("default", TextButton.TextButtonStyle.class);
         TextButton closeBtn = new TextButton("Close Shop", style);
         closeBtn.addListener(new ChangeListener() {
@@ -123,8 +135,6 @@ public class ShopScreenDisplay extends UIComponent {
     }
 
     private void makeButton(CatalogEntry entry) {
-        //Actor actor = (Image) entry.getIconActor(skin);
-
         ImageButton iconButton = (ImageButton) entry.getIconActor(skin);
 
         Actor finalIcon;
@@ -216,7 +226,24 @@ public class ShopScreenDisplay extends UIComponent {
             hud.setVisible(false);
         }
     }
-    
+
+    public void showError(String itemName, PurchaseError error) {
+        String message = ERROR_MESSAGE + itemName;
+        String errorMsg = switch(error) {
+            case DISABLED -> DISABLED_MESSAGE;
+            case NOT_FOUND -> NOT_FOUND_MESSAGE;
+            case INVALID_ITEM -> INVALID_ITEM_MESSAGE;
+            case LIMIT_REACHED -> LIMIT_REACHED_MESSAGE;
+            case INVENTORY_FULL -> INVENTORY_FULL_MESSAGE;
+            case INSUFFICIENT_FUNDS -> INSUFFICIENT_FUNDS_MESSAGE;
+            default -> UNEXPECTED_MESSAGE;
+        };
+        Dialog dialog = new Dialog("Error", skin);
+        dialog.text(message + errorMsg);
+        dialog.button("OK");
+        dialog.show(stage);
+    }
+
 
     // --- Helper: create solid texture for dimmer ---
     private static Texture makeSolidTexture(Color color) {
