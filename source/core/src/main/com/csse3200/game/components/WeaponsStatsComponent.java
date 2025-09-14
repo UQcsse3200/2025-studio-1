@@ -115,8 +115,6 @@ public class WeaponsStatsComponent extends Component {
         if (this.upgradeStage < maxUpgradeStage) {
             this.upgradeStage++;
             this.baseAttack *= 2;
-        } else {
-            System.out.println("Item already fully upgraded");
         }
     }
 
