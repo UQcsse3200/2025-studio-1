@@ -190,7 +190,33 @@ public class ShopScreenDisplay extends UIComponent {
         }
     }
 
+    public void show() {
+        if (root != null) {
+            root.setVisible(true);
+        }
+        if (dimmer != null) {
+            dimmer.setVisible(true);
+        }
+        if (hud != null) {
+            hud.setVisible(true);
+        }
 
+        refreshCatalog();
+        updateCurrencyLabel();
+    }
+
+    public void hide() {
+        if (root != null) {
+            root.setVisible(false);
+        }
+        if (dimmer != null) {
+            dimmer.setVisible(false);
+        }
+        if (hud != null) {
+            hud.setVisible(false);
+        }
+    }
+    
 
     // --- Helper: create solid texture for dimmer ---
     private static Texture makeSolidTexture(Color color) {
