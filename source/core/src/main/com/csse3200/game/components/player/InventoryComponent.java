@@ -237,4 +237,18 @@ public class InventoryComponent extends Component {
     return currItem != null ? currItem.getComponent(WeaponsStatsComponent.class) : null;
   }
 
+  /**
+   * Set the current item
+   */
+  public void setCurrItem(Entity item) {
+    this.currItem = item;
+  }
+  /**
+   * Get the current item
+   * @return the current item
+   */
+  public Entity getCurrItem() {
+     return this.currItem;
+  }
+
 }
