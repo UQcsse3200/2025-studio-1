@@ -8,11 +8,8 @@ import com.csse3200.game.components.*;
 import com.csse3200.game.components.player.*;
 import com.csse3200.game.components.player.InventoryComponent;
 import com.csse3200.game.components.player.StaminaComponent;
-import com.csse3200.game.effects.Effect;
-import com.csse3200.game.effects.RapidFireEffect;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.characters.PlayerConfig;
-import com.csse3200.game.entities.configs.consumables.RapidFireConsumableConfig;
 import com.csse3200.game.files.FileLoader;
 import com.csse3200.game.input.InputComponent;
 import com.csse3200.game.physics.PhysicsLayer;
@@ -75,36 +72,35 @@ public class PlayerFactory {
     // pick up rapid fire powerup
     // remove this if we have item pickup available
     // (disposes entity when player go near it)
-    player.addComponent(new Component() {
-      public void update() {
-        var entities = ServiceLocator.getEntityService().getEntities();
-        for (int i = 0; i < entities.size; i++) {
-          Entity entityRapidFirePowerup = entities.get(i);
-          TagComponent tag = entityRapidFirePowerup.getComponent(TagComponent.class);
+      player.addComponent(new Component() {
+          @Override
+          public void update() {
+              var entities = ServiceLocator.getEntityService().getEntities();
+              for (int i = 0; i < entities.size; i++) {
+                  Entity entityPowerup = entities.get(i);
+                  TagComponent tag = entityPowerup.getComponent(TagComponent.class);
 
-          if (tag != null && tag.getTag().equals("rapidfire")) {
-            if (entityRapidFirePowerup.getCenterPosition().dst(player.getCenterPosition()) < 1f) {
+                  if (tag != null) {
+                      String tagName = tag.getTag();
+                      float distance = entityPowerup.getCenterPosition().dst(player.getCenterPosition());
 
-              InventoryComponent inventory = player.getComponent(InventoryComponent.class);
-              Entity equippedWeapon = inventory.getCurrentItem();
+                      if (distance < 1f) {
+                          WeaponsStatsComponent statsComp = player.getComponent(WeaponsStatsComponent.class);
+                          PowerupComponent powerup = player.getComponent(PowerupComponent.class);
 
-              if (equippedWeapon != null) {
-                RapidFireConsumableConfig config = new RapidFireConsumableConfig();
-                for (Effect e : config.effects) {
-                  if (e instanceof RapidFireEffect rapidFireEffect) {
-                    player.getComponent(PowerupComponent.class).setEquippedWeapon(equippedWeapon);
-                    player.getComponent(PowerupComponent.class).addEffect(rapidFireEffect);
+                          if (tagName.equals("rapidfire")) {
+                              powerup.applyRapidFire(statsComp, 2f);
+                              entityPowerup.dispose();
+                          }
+                          else if (tagName.equals("damageBoost")) {
+                              powerup.applyDamageBoost(statsComp, 10, 30f); // +10 damage for 30 seconds
+                              entityPowerup.dispose();
+                          }
+                      }
                   }
-                }
               }
-
-              entityRapidFirePowerup.dispose();
-            }
           }
-        }
-      }
-    });
-
+      });
 
     return player;
   }

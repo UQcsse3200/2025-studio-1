@@ -20,6 +20,15 @@ public class PowerupsFactory {
 
         return powerup;
     }
+    public static Entity createDamageBoost() {
+        Entity powerup = createBasePowerup("damageBoost");
+
+        powerup.addComponent(new TextureRenderComponent("images/heart.png"));
+        powerup.getComponent(TextureRenderComponent.class).scaleEntity();
+        powerup.getComponent(PhysicsComponent.class).getBody().setUserData(powerup);
+
+        return powerup;
+    }
 
     public static Entity createUnlimitedAmmo() {
         Entity powerup = createBasePowerup("unlimitedammo");
@@ -40,9 +49,5 @@ public class PowerupsFactory {
 
         PhysicsUtils.setScaledCollider(powerup, 0.5f, 0.5f);
         return powerup;
-    }
-
-    private PowerupsFactory() {
-        throw new IllegalArgumentException("Instantiating static util class");
     }
 }
