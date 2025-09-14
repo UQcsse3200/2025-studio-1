@@ -1,14 +1,11 @@
 package com.csse3200.game.components;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.Align;
-import com.csse3200.game.components.player.InventoryComponent;
 import com.csse3200.game.components.player.PlayerActions;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.benches.BenchConfig;
@@ -25,6 +22,7 @@ public class StationComponent extends Component {
     public StationComponent(BenchConfig config) {
         this.config = config;
     }
+
     @Override
     public void create() {
         entity.getEvents().addListener("collisionStart", this::onCollisionStart);
@@ -82,29 +80,4 @@ public class StationComponent extends Component {
     public void upgrade() {
         this.config.upgrade(playerNear, player, buyPrompt);
     }
-
-
-//    public void computerUpgrade() {
-//        if (playerNear && player != null) {
-//
-//            Entity currItem = player.getComponent(InventoryComponent.class).getCurrItem();
-//
-//            WeaponsStatsComponent currItemStats = currItem.getComponent(WeaponsStatsComponent.class);
-//            if (currItemStats != null) {
-//                currItemStats.upgrade();
-//                buyPrompt.setText("Item has been upgraded");
-//            } else {
-//                buyPrompt.setText("Item is already fully upgraded!");
-//            }
-//        }
-//
-//
-//    }
-//
-//    public void healthUpgrade() {
-//        if (playerNear && player != null) {
-//            int currentMaxHealth = player.getComponent(CombatStatsComponent.class).getMaxHealth();
-//            player.getComponent(CombatStatsComponent.class).setMaxHealth(currentMaxHealth * 2);
-//        }
-//    }
 }

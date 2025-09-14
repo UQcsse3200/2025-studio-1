@@ -17,42 +17,6 @@ import com.csse3200.game.rendering.TextureRenderWithRotationComponent;
 public class InteractableStationFactory {
 
     /**
-     * Creates the interactable computer bench for upgrading weapons
-     * @return the bench
-     */
-//    public static Entity createComputerBench() {
-//        Entity bench = createBaseStation();
-//        bench.addComponent(new TextureRenderComponent("images/computerBench.png"));
-//        bench.addComponent(new StationComponent(ItemTypes.COMPUTER_BENCH.config));
-//        bench.getComponent(TextureRenderComponent.class).scaleEntity();
-//        bench.scaleHeight(2.5f);
-//        bench.getComponent(TextureRenderComponent.class);
-//        PhysicsUtils.setScaledCollider(bench, 0.5f, 0.3f);
-//        bench.getComponent(ColliderComponent.class).setAsBoxAligned(new Vector2(0.5f, 0.3f),
-//                PhysicsComponent.AlignX.CENTER, PhysicsComponent.AlignY.TOP);
-//
-//        return bench;
-//    }
-
-    /**
-     * Creates an interactable health bench to upgrade total player health.
-     * @return A new health bench.
-     */
-//    public static Entity createHealthBench() {
-//        Entity healthBench = createBaseStation();
-//        healthBench.addComponent(new TextureRenderWithRotationComponent("images/healthBench.png"));
-//        healthBench.addComponent(new StationComponent());
-//        healthBench.getComponent(TextureRenderComponent.class).scaleEntity();
-//        healthBench.scaleHeight(2.5f);
-//        healthBench.getComponent(TextureRenderComponent.class);
-//        PhysicsUtils.setScaledCollider(healthBench, 0.5f, 0.3f);
-//        healthBench.getComponent(ColliderComponent.class).setAsBoxAligned(new Vector2(0.5f, 0.3f),
-//                PhysicsComponent.AlignX.CENTER, PhysicsComponent.AlignY.TOP);
-//
-//        return healthBench;
-//    }
-
-    /**
      * Creates a base interactable station
      * @return the station
      */
