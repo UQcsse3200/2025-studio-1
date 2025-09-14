@@ -10,10 +10,19 @@ public class GameTime {
   private static Logger logger = LoggerFactory.getLogger(GameTime.class);
   private final long startTime;
   private float timeScale = 1f;
+  private boolean paused = false;
 
   public GameTime() {
     startTime = TimeUtils.millis();
     logger.debug("Setting game start time to {}", startTime);
+  }
+
+    /**
+     * Sets the status of the game to be paused (true) or not (false).
+     * @param paused True if the game is currently paused, False otherwise
+     */
+  public void setPaused(boolean paused) {
+    this.paused = paused;
   }
 
   /**
@@ -28,6 +37,8 @@ public class GameTime {
 
   /** @return time passed since the last frame in seconds, scaled by time scale. */
   public float getDeltaTime() {
+      if (paused)
+         return 0;
     return Gdx.graphics.getDeltaTime() * timeScale;
   }
 
