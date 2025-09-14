@@ -26,6 +26,8 @@ import com.csse3200.game.rendering.TextureRenderComponent;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.components.player.BossStatusDisplay;
 import com.csse3200.game.components.WeaponsStatsComponent;
+import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.math.Vector2;
 
 
 /**
@@ -153,12 +155,8 @@ public class BossFactory {
                 .addComponent(new PhysicsComponent())
                 .addComponent(new ColliderComponent())
                 .addComponent(new HitboxComponent().setLayer(PhysicsLayer.NPC))
-                .addComponent(new PhysicsMovementComponent())
                 .addComponent(new CombatStatsComponent(config.health))
                 .addComponent(new WeaponsStatsComponent(config.baseAttack))
-                .addComponent(new AITaskComponent()
-                        .addTask(new WanderTask(new Vector2(3f, 3f), 1f))
-                        .addTask(new ChaseTask(target, 8, 5f, 7f)))
                 .addComponent(new EnemyDeathRewardComponent(100, playerInventory))
                 .addComponent(new BossDeathComponent())
                 .addComponent(new TextureRenderComponent("images/Boss_3.png"))
@@ -166,12 +164,13 @@ public class BossFactory {
 
         boss3.getComponent(TextureRenderComponent.class).scaleEntity();
         boss3.setScale(new Vector2(2f, 2f));
-        PhysicsUtils.setScaledCollider(boss3, 2.0f, 0.8f);
+        PhysicsUtils.setScaledCollider(boss3, 1.2f, 0.6f);
 
         boss3.addComponent(new EnemyMudBallAttackComponent(
                 target, 1.2f, 9f, 6f, 3f));
         boss3.addComponent(new EnemyMudRingSprayComponent(
                 2.5f, 12, 6f, 3f));
+
         return boss3;
     }
 
