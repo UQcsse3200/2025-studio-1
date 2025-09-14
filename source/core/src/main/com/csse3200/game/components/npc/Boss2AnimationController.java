@@ -39,7 +39,7 @@ public class Boss2AnimationController extends Component {
         this(new Names(), new Speeds(), Animation.PlayMode.LOOP);
     }
 
-    /** Fully custom names & speeds. Set any name to null to disable that animation. */
+    /** Fully custom names and speeds. Set any name to null to disable that animation. */
     public Boss2AnimationController(Names names, Speeds speeds, Animation.PlayMode loopMode) {
         this.names = names != null ? names : new Names();
         this.speeds = speeds != null ? speeds : new Speeds();
