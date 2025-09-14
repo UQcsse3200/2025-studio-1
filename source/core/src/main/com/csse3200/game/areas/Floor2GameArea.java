@@ -39,7 +39,7 @@ public class Floor2GameArea extends GameArea {
     ensureAssets();
     spawnTerrain();
     spawnWallsAndDoor();
-    spawnTrees(); // Add tree spawning
+   // spawnTrees(); // Add tree spawning
     spawnPlayer();
     spawnFloor();
     float keycardX = 13f;
@@ -57,7 +57,7 @@ public class Floor2GameArea extends GameArea {
   /** Ensure Floor 2 specific textures/atlases are loaded before use */
   private void ensureAssets() {
     String[] needed = new String[] {
-        "images/LobbyWIP.png",
+        "images/background-reception.png",
         "images/tree.png",
         "foreg_sprites/general/LongFloor.png",
         "foreg_sprites/general/ThickFloor.png",
