@@ -14,6 +14,7 @@ import com.csse3200.game.components.tasks.BossChaseTask;
 import com.csse3200.game.components.tasks.BossFuryTask;
 import com.csse3200.game.components.tasks.ChaseTask;
 import com.csse3200.game.components.tasks.WanderTask;
+import com.csse3200.game.components.boss.*;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.characters.BaseEntityConfig;
 import com.csse3200.game.entities.configs.characters.NPCConfigs;
@@ -112,6 +113,7 @@ public class BossFactory {
 
         boss2
                 .addComponent(new CombatStatsComponent(1000))
+                .addComponent(new BossStageComponent(boss2))
                 .addComponent(new FireballAttackComponent(target, 1.5f, 8f, 6f, config.baseAttack + 2))
                 .addComponent(new BossChargeSkillComponent(
                         target,
@@ -190,19 +192,18 @@ public class BossFactory {
                 .addComponent(new PhysicsComponent())
                 .addComponent(new FireballMovementComponent(velocity))
                 .addComponent(new ColliderComponent())
-                .addComponent(new HitboxComponent().setLayer(PhysicsLayer.NPC))
+                .addComponent(new HitboxComponent().setLayer(PhysicsLayer.ENEMY_PROJECTILE))
                 .addComponent(new CombatStatsComponent(1))
                 .addComponent(new WeaponsStatsComponent(12))
                 .addComponent(new PhysicsProjectileComponent())
-                .addComponent(new TouchAttackComponent(PhysicsLayer.PLAYER, 0f));
+                .addComponent(new TouchAttackComponent(PhysicsLayer.PLAYER, 1f));
         fireball.setPosition(from);
         TextureRenderComponent texture = new TextureRenderComponent("images/laserball.png");
         fireball.addComponent(texture);
         texture.scaleEntity();
-        Vector2 s = fireball.getScale();
-        float k = 0.5f;
-        fireball.setScale(s.x * k, s.y * k);
-        PhysicsUtils.setScaledCollider(fireball, 0.5f, 0.5f);
+        ColliderComponent collider = fireball.getComponent(ColliderComponent.class);
+        collider.setLayer(PhysicsLayer.ENEMY_PROJECTILE)
+                .setFilter(PhysicsLayer.ENEMY_PROJECTILE, PhysicsLayer.PLAYER);
         return fireball;
     }
 
