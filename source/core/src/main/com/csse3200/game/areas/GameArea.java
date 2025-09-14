@@ -68,7 +68,7 @@ public abstract class GameArea implements Disposable {
    * Start enemy waves from terminal command by typing "waves".
    */
   public void startWaves(Entity player) {
-    if (wavesManager == null || wavesManager.isFinished()) {
+    if (wavesManager == null || wavesManager.allWavesFinished()) {
       int room = getRoomNumber();
       int maxWaves = room > 4 ? 2 : 1; // mimic original behaviour: higher rooms get 2 waves
       wavesManager = new EnemyWaves(maxWaves, this, player);
@@ -77,7 +77,7 @@ public abstract class GameArea implements Disposable {
     wavesManager.startWave();
   }
 
-  protected int getRoomNumber() {
+  public int getRoomNumber() { // changed from protected to public for EnemyWaves access
     String name = getClass().getSimpleName();
     // Look for digits after Floor or Room (e.g., Floor3GameArea, Room2Area)
     java.util.regex.Matcher m = java.util.regex.Pattern.compile("(?:Floor|Room)(\\d+)").matcher(name);
@@ -86,6 +86,12 @@ public abstract class GameArea implements Disposable {
     }
     // Fallback: default first floor
     return 1;
+  }
+
+  public float getBaseDifficultyScale() {
+    int room = getRoomNumber();
+    // +40% per room after first (tweak as needed)
+    return 1f + 0.4f * Math.max(0, room - 1);
   }
 
   protected void spawnEntityAt(
