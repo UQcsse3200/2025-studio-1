@@ -14,12 +14,8 @@ public class Floor5GameArea extends GameArea {
   private static final float WALL_WIDTH = 0.1f;
   private static final GridPoint2 PLAYER_SPAWN = new GridPoint2(10, 10);
 
-  private final TerrainFactory terrainFactory;
-  private final CameraComponent cameraComponent;
-
   public Floor5GameArea(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
-    this.terrainFactory = terrainFactory;
-    this.cameraComponent = cameraComponent;
+    super(terrainFactory, cameraComponent);
   }
 
   @Override
@@ -57,8 +53,8 @@ public class Floor5GameArea extends GameArea {
   private void spawnBordersAndReturnDoor() {
     Bounds b = getCameraBounds(cameraComponent);
     // Use shared helpers (same placement/behavior):
-    addVerticalDoorLeft(b, WALL_WIDTH, this::loadBackToFloor2);
-    addVerticalDoorRight(b, WALL_WIDTH, this::loadSecurity);
+    addVerticalDoorLeft(b, WALL_WIDTH, () -> loadArea(Floor2GameArea.class));
+    addVerticalDoorRight(b, WALL_WIDTH, () -> loadArea(SecurityGameArea.class));
     addSolidWallTop(b, WALL_WIDTH);
     addSolidWallBottom(b, WALL_WIDTH);
   }

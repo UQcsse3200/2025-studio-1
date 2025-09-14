@@ -30,12 +30,8 @@ public class Floor2GameArea extends GameArea {
   private static final float WALL_WIDTH = 0.1f;
   private static final int NUM_TREES = 8; // Number of trees to spawn
 
-  private final TerrainFactory terrainFactory;
-  private final CameraComponent cameraComponent;
-
   public Floor2GameArea(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
-    this.terrainFactory = terrainFactory;
-    this.cameraComponent = cameraComponent;
+    super(terrainFactory, cameraComponent);
   }
 
   @Override
@@ -99,7 +95,7 @@ public class Floor2GameArea extends GameArea {
     }
     Entity leftDoor = ObstacleFactory.createDoorTrigger(WALL_WIDTH, leftDoorHeight);
     leftDoor.setPosition(b.leftX + 0.001f, leftDoorY);
-    leftDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadPreviousLevel));
+    leftDoor.addComponent(new com.csse3200.game.components.DoorComponent(() -> loadArea(ForestGameArea.class)));
     spawnEntity(leftDoor);
 
     // Right vertical door resting on ground level
@@ -113,29 +109,13 @@ public class Floor2GameArea extends GameArea {
     }
     Entity rightDoor = ObstacleFactory.createDoorTrigger(WALL_WIDTH, rightDoorHeight);
     rightDoor.setPosition(b.rightX - WALL_WIDTH - 0.001f, rightDoorY);
-    rightDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadRoom5));
+    rightDoor.addComponent(new com.csse3200.game.components.DoorComponent(() -> loadArea(Floor5GameArea.class)));
     spawnEntity(rightDoor);
   }
 
   private void spawnPlayer() {
     Entity player = PlayerFactory.createPlayerWithArrowKeys();
     spawnEntityAt(player, PLAYER_SPAWN, true, true);
-  }
-
-  private void loadPreviousLevel() {
-    // Keep the special ghost atlas handling as is, before delegating
-    com.csse3200.game.services.ResourceService rs = ServiceLocator.getResourceService();
-    if (!rs.containsAsset("images/ghost.atlas", com.badlogic.gdx.graphics.g2d.TextureAtlas.class)) {
-      rs.loadTextureAtlases(new String[]{"images/ghost.atlas", "images/ghostKing.atlas"});
-      rs.loadAll();
-    }
-    clearAndLoad(() -> new ForestGameArea(terrainFactory, cameraComponent));
-  }
-
-
-
-  private void loadRoom5() {
-    clearAndLoad(() -> new Floor5GameArea(terrainFactory, cameraComponent));
   }
 
   private void spawnTrees() {

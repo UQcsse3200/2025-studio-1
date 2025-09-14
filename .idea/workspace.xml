@@ -5,9 +5,23 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="78acdbef-b972-46a4-a50a-31b47a1e7ab6" name="Changes" comment="Disabled keycard because i cant figure out why it wont work">
-      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/core/src/main/com/csse3200/game/areas/ElevatorGameArea.java" beforeDir="false" afterPath="$PROJECT_DIR$/source/core/src/main/com/csse3200/game/areas/ElevatorGameArea.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/core/src/main/com/csse3200/game/areas/Floor2GameArea.java" beforeDir="false" afterPath="$PROJECT_DIR$/source/core/src/main/com/csse3200/game/areas/Floor2GameArea.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/core/src/main/com/csse3200/game/areas/Floor5GameArea.java" beforeDir="false" afterPath="$PROJECT_DIR$/source/core/src/main/com/csse3200/game/areas/Floor5GameArea.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/core/src/main/com/csse3200/game/areas/ForestGameArea.java" beforeDir="false" afterPath="$PROJECT_DIR$/source/core/src/main/com/csse3200/game/areas/ForestGameArea.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/core/src/main/com/csse3200/game/areas/GameArea.java" beforeDir="false" afterPath="$PROJECT_DIR$/source/core/src/main/com/csse3200/game/areas/GameArea.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/core/src/main/com/csse3200/game/areas/OfficeGameArea.java" beforeDir="false" afterPath="$PROJECT_DIR$/source/core/src/main/com/csse3200/game/areas/OfficeGameArea.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/core/src/main/com/csse3200/game/areas/ResearchGameArea.java" beforeDir="false" afterPath="$PROJECT_DIR$/source/core/src/main/com/csse3200/game/areas/ResearchGameArea.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/core/src/main/com/csse3200/game/areas/SecurityGameArea.java" beforeDir="false" afterPath="$PROJECT_DIR$/source/core/src/main/com/csse3200/game/areas/SecurityGameArea.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/core/src/main/com/csse3200/game/areas/StorageGameArea.java" beforeDir="false" afterPath="$PROJECT_DIR$/source/core/src/main/com/csse3200/game/areas/StorageGameArea.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/core/src/main/com/csse3200/game/areas/TunnelGameArea.java" beforeDir="false" afterPath="$PROJECT_DIR$/source/core/src/main/com/csse3200/game/areas/TunnelGameArea.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/core/src/test/com/csse3200/game/areas/GameAreaBoundsTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/source/core/src/test/com/csse3200/game/areas/GameAreaBoundsTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/core/src/test/com/csse3200/game/areas/GameAreaHelpersTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/source/core/src/test/com/csse3200/game/areas/GameAreaHelpersTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/core/src/test/com/csse3200/game/areas/GameAreaResourcesTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/source/core/src/test/com/csse3200/game/areas/GameAreaResourcesTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/core/src/test/com/csse3200/game/areas/GameAreaSpawnTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/source/core/src/test/com/csse3200/game/areas/GameAreaSpawnTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/core/src/test/com/csse3200/game/areas/GameAreaTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/source/core/src/test/com/csse3200/game/areas/GameAreaTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/core/src/test/com/csse3200/game/physics/PhysicsUtilsTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/source/core/src/test/com/csse3200/game/physics/PhysicsUtilsTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -73,12 +87,12 @@
     &quot;assignee&quot;: &quot;ZoravrDhillon&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "https://github.com/UQcsse3200/2025-studio-1.git",
-    "accountId": "85b6b89c-b3f3-4da9-b858-57045a916ffd"
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/UQcsse3200/2025-studio-1.git&quot;,
+    &quot;accountId&quot;: &quot;85b6b89c-b3f3-4da9-b858-57045a916ffd&quot;
   }
-}]]></component>
+}</component>
   <component name="ProblemsViewState">
     <option name="selectedTabId" value="CurrentFile" />
   </component>
@@ -95,6 +109,20 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "Gradle.GameAreaBoundsTest.executor": "Run",
+    "Gradle.GameAreaHelpersTest.ensurePlayerAtlasLoadsWhenMissing.executor": "Run",
+    "Gradle.GameAreaHelpersTest.executor": "Run",
+    "Gradle.GameAreaResourcesTest.executor": "Run",
+    "Gradle.GameAreaSpawnTest.executor": "Run",
+    "Gradle.GameAreaTest.executor": "Run",
+    "Gradle.PhysicsContactListenerTest.shouldTriggerCollisionEnd.executor": "Run",
+    "Gradle.PhysicsProjectileComponentTest.bodyConfiguredOnCreate.executor": "Run",
+    "Gradle.PhysicsProjectileComponentTest.bodyNoVelocityInitially.executor": "Run",
+    "Gradle.PhysicsProjectileComponentTest.executor": "Run",
+    "Gradle.PhysicsUtilsTest.executor": "Run",
+    "Gradle.PhysicsUtilsTest.shouldScaleBigCollider.executor": "Run",
+    "Gradle.PhysicsUtilsTest.shouldScaleFullCollider.executor": "Run",
+    "Gradle.PhysicsUtilsTest.shouldScaleHalfCollider.executor": "Run",
     "Gradle.source [build].executor": "Run",
     "Gradle.source [run].executor": "Run",
     "Gradle.source [test].executor": "Run",
@@ -104,7 +132,7 @@
     "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager": "true",
     "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
     "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "Traverse-fix",
+    "git-widget-placeholder": "named-in-line",
     "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "C:/Users/zdhil/2025-studio-1",
@@ -136,21 +164,8 @@
       <command value="gradle run" />
     </option>
   </component>
-  <component name="RunManager" selected="Application.DesktopLauncher">
-    <configuration name="DesktopLauncher" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="com.csse3200.game.desktop.DesktopLauncher" />
-      <module name="UQ_CSSE3200_2025_Studio_1.desktop.main" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="com.csse3200.game.desktop.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="source [build]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+  <component name="RunManager" selected="Gradle.GameAreaHelpersTest">
+    <configuration name="GameAreaBoundsTest" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
         <option name="externalProjectPath" value="$PROJECT_DIR$/source" />
@@ -161,18 +176,20 @@
         </option>
         <option name="taskNames">
           <list>
-            <option value="build" />
+            <option value=":core:test" />
+            <option value="--tests" />
+            <option value="&quot;com.csse3200.game.areas.GameAreaBoundsTest&quot;" />
           </list>
         </option>
         <option name="vmOptions" />
       </ExternalSystemSettings>
-      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
       <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
       <DebugAllEnabled>false</DebugAllEnabled>
-      <RunAsTest>false</RunAsTest>
+      <RunAsTest>true</RunAsTest>
       <method v="2" />
     </configuration>
-    <configuration name="source [run]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+    <configuration name="GameAreaHelpersTest" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
         <option name="externalProjectPath" value="$PROJECT_DIR$/source" />
@@ -183,18 +200,20 @@
         </option>
         <option name="taskNames">
           <list>
-            <option value="run" />
+            <option value=":core:test" />
+            <option value="--tests" />
+            <option value="&quot;com.csse3200.game.areas.GameAreaHelpersTest&quot;" />
           </list>
         </option>
         <option name="vmOptions" />
       </ExternalSystemSettings>
-      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
       <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
       <DebugAllEnabled>false</DebugAllEnabled>
-      <RunAsTest>false</RunAsTest>
+      <RunAsTest>true</RunAsTest>
       <method v="2" />
     </configuration>
-    <configuration name="source [test]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+    <configuration name="GameAreaHelpersTest.ensurePlayerAtlasLoadsWhenMissing" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
         <option name="externalProjectPath" value="$PROJECT_DIR$/source" />
@@ -205,23 +224,74 @@
         </option>
         <option name="taskNames">
           <list>
-            <option value="test" />
+            <option value=":core:test" />
+            <option value="--tests" />
+            <option value="&quot;com.csse3200.game.areas.GameAreaHelpersTest.ensurePlayerAtlasLoadsWhenMissing&quot;" />
           </list>
         </option>
         <option name="vmOptions" />
       </ExternalSystemSettings>
-      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
       <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
       <DebugAllEnabled>false</DebugAllEnabled>
-      <RunAsTest>false</RunAsTest>
+      <RunAsTest>true</RunAsTest>
+      <method v="2" />
+    </configuration>
+    <configuration name="GameAreaResourcesTest" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$/source" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value=":core:test" />
+            <option value="--tests" />
+            <option value="&quot;com.csse3200.game.areas.GameAreaResourcesTest&quot;" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <RunAsTest>true</RunAsTest>
+      <method v="2" />
+    </configuration>
+    <configuration name="GameAreaSpawnTest" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$/source" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value=":core:test" />
+            <option value="--tests" />
+            <option value="&quot;com.csse3200.game.areas.GameAreaSpawnTest&quot;" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <RunAsTest>true</RunAsTest>
       <method v="2" />
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.DesktopLauncher" />
-        <item itemvalue="Gradle.source [run]" />
-        <item itemvalue="Gradle.source [build]" />
-        <item itemvalue="Gradle.source [test]" />
+        <item itemvalue="Gradle.GameAreaHelpersTest" />
+        <item itemvalue="Gradle.GameAreaHelpersTest.ensurePlayerAtlasLoadsWhenMissing" />
+        <item itemvalue="Gradle.GameAreaBoundsTest" />
+        <item itemvalue="Gradle.GameAreaResourcesTest" />
+        <item itemvalue="Gradle.GameAreaSpawnTest" />
       </list>
     </recent_temporary>
   </component>
