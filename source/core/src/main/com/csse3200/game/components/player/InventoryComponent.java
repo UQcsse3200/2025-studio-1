@@ -253,7 +253,10 @@ public class InventoryComponent extends Component {
      * @return the current item
      */
     public Entity getCurrItem() {
-        return this.currItem;
+        if (selectedSlot >= 0 && selectedSlot < items.size()) {
+            return items.get(selectedSlot);
+        }
+        return null;
     }
 
 
@@ -271,11 +274,11 @@ public class InventoryComponent extends Component {
      * Returns the item that is currently selected in the inventory.
      * @return the selected item, or null if no slot is selected
      */
-    public Entity getSelectedItem() {
+    public int getSelectedSlot() {
         if (selectedSlot >= 0 && selectedSlot < items.size()) {
-            return items.get(selectedSlot);
+            return selectedSlot;
         }
-        return null; // no item selected
+        return -1; // no item selected
     }
 
 
