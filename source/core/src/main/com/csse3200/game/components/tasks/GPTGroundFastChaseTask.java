@@ -25,6 +25,7 @@ public class GPTGroundFastChaseTask extends DefaultTask implements PriorityTask 
   private final PhysicsEngine physics;
   private final DebugRenderer debugRenderer;
   private final RaycastHit hit = new RaycastHit();
+  private final RaycastHit jumpHit = new RaycastHit();
   private PhysicsComponent physicsComponent;
 
   // Projectile firing
@@ -33,6 +34,12 @@ public class GPTGroundFastChaseTask extends DefaultTask implements PriorityTask 
   private final float firingCooldown = 3f; // seconds
   private float currentCooldown = 3f; // starts ready to fire
   private final GameTime timeSource;
+
+  // Jump mechanics (slightly faster cadence than slow chase)
+  private float timeSinceLastJump = 0f;
+  private final float jumpCooldown = 0.9f; // faster enemies jump a bit more often
+  private final float obstacleCheckDistance = 0.7f; // look a tad further ahead
+  private final float jumpImpulse = 15f; // slightly stronger jump
 
   /**
    * Fast chase without projectiles
@@ -79,7 +86,27 @@ public class GPTGroundFastChaseTask extends DefaultTask implements PriorityTask 
     float impulseX = (desiredVx - currentVx) * body.getMass();
     body.applyLinearImpulse(new Vector2(impulseX, 0f), body.getWorldCenter(), true);
 
+    attemptJump(dirX, body);
     fireProjectiles();
+  }
+
+  private void attemptJump(float dirX, Body body) {
+    timeSinceLastJump += timeSource.getDeltaTime();
+    if (timeSinceLastJump < jumpCooldown) return;
+    if (Math.abs(body.getLinearVelocity().y) > 0.05f) return; // not grounded enough
+    if (dirX == 0f) return;
+
+    Vector2 from = owner.getEntity().getCenterPosition();
+    Vector2 to = new Vector2(from.x + dirX * obstacleCheckDistance, from.y);
+
+    if (!physics.raycast(from, to, PhysicsLayer.OBSTACLE, jumpHit)) {
+      return; // nothing to jump
+    }
+
+    float impulseY = body.getMass() * jumpImpulse;
+    body.applyLinearImpulse(new Vector2(0f, impulseY), body.getWorldCenter(), true);
+    timeSinceLastJump = 0f;
+    debugRenderer.drawLine(from, to);
   }
 
   private void fireProjectiles() {
