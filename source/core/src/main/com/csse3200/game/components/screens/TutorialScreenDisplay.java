@@ -1,205 +1,156 @@
 package com.csse3200.game.components.screens;
 
-import com.badlogic.gdx.utils.Scaling;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.csse3200.game.GdxGame;
-import com.csse3200.game.GdxGame.ScreenType;
-import com.csse3200.game.services.ServiceLocator;
-import com.csse3200.game.ui.AnimatedClipImage;
-import com.csse3200.game.ui.NeonStyles;
-import com.csse3200.game.ui.UIComponent;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Scaling;
+import com.csse3200.game.GdxGame;
+import com.csse3200.game.ui.AnimatedClipImage;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
- * An ui component for displaying the tutorial screen.
+ * UI component that displays the multi-step Tutorial screen.
+ * <p>
+ * Each step contains a title, description, and an optional animated clip.
+ * Users can navigate with previous/next arrows and return to the main menu.
+ * <p>
+ * This component extends {@link BaseScreenDisplay} to reuse common UI helpers
+ * and lifecycle management (stage root, styles, and auto-disposal).
  */
-public class TutorialScreenDisplay extends UIComponent {
-    private static final Logger logger = LoggerFactory.getLogger(TutorialScreenDisplay.class);
-    private final GdxGame game;
+public class TutorialScreenDisplay extends BaseScreenDisplay {
+    /** Ordered list of tutorial steps to display. */
     private final List<TutorialStep> steps;
+    /** Index of the currently displayed tutorial step. */
     protected int currentStep = 0;
 
-    private Table table;
-    private NeonStyles neon;
-
-    private final Set<String> loadedFramePaths = new HashSet<>();
+    /** Left navigation arrow texture, loaded once per screen instance. */
+    private Texture arrowLeft;
+    /** Right navigation arrow texture, loaded once per screen instance. */
+    private Texture arrowRight;
 
     /**
      * Creates a tutorial display bound to a list of steps.
+     *
+     * @param game  the game instance, used for navigation helpers
+     * @param steps ordered list of tutorial steps to render (must not be {@code null})
      */
     public TutorialScreenDisplay(GdxGame game, List<TutorialStep> steps) {
-        super();
-        this.game = game;
+        super(game);
         this.steps = steps;
-        logger.debug("TutorialScreenDisplay created with {} steps", steps.size());
     }
 
     /**
-     * Builds the root table and shows the first step.
+     * Loads per-screen textures, then delegates to {@link BaseScreenDisplay#create()}
+     * to initialise the stage root and build the UI.
      */
     @Override
     public void create() {
+        // Load per-screen textures once, then let BaseScreenDisplay set up stage/root/skin
+        arrowLeft  = new Texture("images/arrow-left.png");
+        arrowRight = new Texture("images/arrow-right.png");
         super.create();
-        neon = new NeonStyles(0.7f);
-        table = new Table();
-        table.setFillParent(true);
-        table.center();
-        stage.addActor(table);
-        logger.debug("UI table created and added to stage");
+    }
+
+    /**
+     * Builds the initial UI by showing the current step.
+     *
+     * @param root the fill-parent root table created by {@link BaseScreenDisplay}
+     */
+    @Override
+    protected void buildUI(Table root) {
         showStep(currentStep);
     }
 
     /**
-     * Rebuilds the UI for the given step index.
-     * Clears the table, then adds title, text, optional animation, and controls.
+     * Rebuilds the UI for the specified step index.
+     * Clears the root table, adds the step title/description, renders the
+     * animated clip if available, and wires prev/next and Main Menu controls.
+     *
+     * @param stepIndex zero-based index into {@link #steps}
      */
     void showStep(int stepIndex) {
-        logger.debug("Showing step {} of {}", stepIndex + 1, steps.size());
-        table.clear();
-
+        root.clear();
         TutorialStep step = steps.get(stepIndex);
 
         // Title
-        Label titleLabel = new Label(step.getTitle(), skin, "title");
-        titleLabel.setFontScale(3f);
-        table.add(titleLabel).colspan(2).center().padBottom(20f);
-        table.row();
-        logger.debug("Title added to table: {}", step.getTitle());
+        addTitle(root, step.getTitle(), 3f, null, 20f);
 
-        Label.LabelStyle smallStyle = skin.get("small", Label.LabelStyle.class);
-        smallStyle.fontColor = skin.getColor("white");
+        // Description (clone small style; keep text white)
+        Label.LabelStyle small = new Label.LabelStyle(skin.get("small", Label.LabelStyle.class));
+        small.fontColor = skin.getColor("white");
+        Label desc = new Label(step.getDescription(), small);
+        desc.setFontScale(2f);
+        root.add(desc).colspan(2).center().padBottom(20f);
+        root.row();
 
-        // Description
-        Label descLabel = new Label(step.getDescription(), skin, "small");
-        descLabel.setFontScale(2f);
-        table.add(descLabel).colspan(2).center().padBottom(20f);
-        table.row();
-        logger.debug("Description added to table: {}", step.getDescription());
-
+        // Animation row: [prev] [clip or fallback] [next]
         Table animRow = new Table();
-        animRow.center();
+        ImageButton prevBtn = new ImageButton(new TextureRegionDrawable(new TextureRegion(arrowLeft)));
+        ImageButton nextBtn = new ImageButton(new TextureRegionDrawable(new TextureRegion(arrowRight)));
 
-        // Buttons texture
-        Texture nextBtnTexture = new Texture("images/arrow-right.png");
-        ImageButton nextBtn = new ImageButton(new TextureRegionDrawable(new TextureRegion(nextBtnTexture)));
-        logger.debug("Next button created");
-
-        Texture prevBtnTexture = new Texture("images/arrow-left.png");
-        ImageButton prevBtn = new ImageButton(new TextureRegionDrawable(new TextureRegion(prevBtnTexture)));
-        logger.debug("Previos button created");
-
-        // Animation
         AnimatedClipImage anim = null;
         if (step.getClip() != null) {
             try {
                 anim = new AnimatedClipImage(step.getClip());
                 anim.setScaling(Scaling.fit);
                 anim.setSize(800f, 450f);
-                logger.debug("Animation clip loaded for step{}", stepIndex + 1);
             } catch (Exception ex) {
                 logger.error("Failed to load tutorial clip", ex);
-                table.add(new Label("Demo unavailable", skin)).colspan(2).center().padBottom(20f);
-                table.row();
             }
         }
 
         animRow.add(prevBtn).size(108f, 108f).padRight(10f);
-        animRow.add(anim).size(1100f, 600f).padLeft(10f).padRight(10f);
+        if (anim != null) {
+            animRow.add(anim).size(1100f, 600f).padLeft(10f).padRight(10f);
+        } else {
+            Label fallback = new Label("Demo unavailable", small);
+            fallback.setFontScale(2f);
+            animRow.add(fallback).size(1100f, 600f).padLeft(10f).padRight(10f).center();
+        }
         animRow.add(nextBtn).size(108f, 108f).padLeft(10f);
 
         prevBtn.setVisible(currentStep > 0);
         nextBtn.setVisible(currentStep < steps.size() - 1);
-        logger.debug("Prev button is visible: {}, Next button is visible: {}", prevBtn.isVisible(), nextBtn.isVisible());
 
-        table.add(animRow).colspan(2).center().padBottom(20f);
-        table.row();
+        root.add(animRow).colspan(2).center().padBottom(20f);
+        root.row();
 
-        TextButton.TextButtonStyle style = neon.buttonRounded();
-        TextButton mainMenuBtn = new TextButton("Main Menu", style);
-        mainMenuBtn.getLabel().setFontScale(2.0f);
-        logger.debug("Main Menu Button created");
+        // Bottom controls
+        TextButton mainMenuBtn = button("Main Menu", 2.0f, this::backMainMenu);
+        root.add(mainMenuBtn).colspan(2).center().padTop(20f);
 
-        // Button listeners
-        nextBtn.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                if (currentStep < steps.size() - 1) {
-                    logger.debug("Next button clicked");
-                    currentStep++;
-                    showStep(currentStep);
-                }
-            }
-        });
-
+        // Listeners
         prevBtn.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
+            @Override public void changed(ChangeEvent event, Actor actor) {
                 if (currentStep > 0) {
-                    logger.debug("Preivous button clicked");
                     currentStep--;
                     showStep(currentStep);
                 }
             }
         });
 
-        mainMenuBtn.addListener(
-                new ChangeListener() {
-                    @Override
-                    public void changed(ChangeEvent changeEvent, Actor actor) {
-                        logger.debug("Main Menu button clicked");
-                        backMainMenu();
-                    }
-                });
-
-
-        table.row();
-        table.add(mainMenuBtn).colspan(2).center().padTop(20f);
-        logger.debug("Main Menu Button added to table");
-
+        nextBtn.addListener(new ChangeListener() {
+            @Override public void changed(ChangeEvent event, Actor actor) {
+                if (currentStep < steps.size() - 1) {
+                    currentStep++;
+                    showStep(currentStep);
+                }
+            }
+        });
     }
 
     /**
-     * Switches back to the main menu screen.
-     */
-    void backMainMenu() {
-        logger.debug("Switching to Main Menu screen");
-        game.setScreen(ScreenType.MAIN_MENU);
-    }
-
-    @Override
-    public void draw(SpriteBatch batch) {
-        // stage handles rendering
-    }
-
-    @Override
-    public float getZIndex() {
-        return 2f;
-    }
-
-    /**
-     * Unloads any loaded clip textures and clears UI.
+     * Disposes arrow textures and then delegates to {@link BaseScreenDisplay#dispose()}.
+     * Subclasses should ensure UI actors that use textures are detached before disposal.
      */
     @Override
     public void dispose() {
-        logger.debug("Disposing TutorialScreenDisplay");
-        if (!loadedFramePaths.isEmpty()) {
-            ServiceLocator.getResourceService()
-                    .unloadAssets(loadedFramePaths.toArray(new String[0]));
-            loadedFramePaths.clear();
-        }
-        table.clear();
+        if (arrowLeft  != null) { arrowLeft.dispose();  arrowLeft = null; }
+        if (arrowRight != null) { arrowRight.dispose(); arrowRight = null; }
         super.dispose();
-        logger.debug("Disposed TutorialScreenDisplay");
     }
 }

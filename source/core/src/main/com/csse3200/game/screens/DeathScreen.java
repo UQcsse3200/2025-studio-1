@@ -2,7 +2,7 @@ package com.csse3200.game.screens;
 
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.csse3200.game.GdxGame;
-import com.csse3200.game.components.screens.DeathScreenDisplay;
+import com.csse3200.game.components.screens.BaseEndScreenDisplays;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.input.InputDecorator;
 import com.csse3200.game.services.ServiceLocator;
@@ -44,7 +44,7 @@ public class DeathScreen extends BaseScreen {
      * <p>
      * This entity includes:
      * <ul>
-     *   <li>{@link DeathScreenDisplay} — the defeat UI (title, round/time labels, buttons)</li>
+     *   <li>{@link BaseEndScreenDisplays} — the defeat UI (title, round/time labels, buttons)</li>
      *   <li>{@link InputDecorator} — captures and forwards input events to the stage</li>
      * </ul>
      *
@@ -53,7 +53,7 @@ public class DeathScreen extends BaseScreen {
     @Override
     protected Entity createUIScreen(Stage stage) {
         return new Entity()
-                .addComponent(new DeathScreenDisplay(game))
+                .addComponent(BaseEndScreenDisplays.defeated(game))
                 .addComponent(new InputDecorator(stage, 10));
     }
 }
