@@ -11,6 +11,7 @@ import com.badlogic.gdx.utils.Align;
 import com.csse3200.game.components.player.InventoryComponent;
 import com.csse3200.game.components.player.PlayerActions;
 import com.csse3200.game.entities.Entity;
+import com.csse3200.game.entities.configs.benches.BenchConfig;
 import com.csse3200.game.physics.BodyUserData;
 import com.csse3200.game.services.ServiceLocator;
 
@@ -19,7 +20,11 @@ public class StationComponent extends Component {
     private boolean playerNear = false;
     private Entity player = null;
     private Label buyPrompt;
+    public BenchConfig config;
 
+    public StationComponent(BenchConfig config) {
+        this.config = config;
+    }
     @Override
     public void create() {
         entity.getEvents().addListener("collisionStart", this::onCollisionStart);
@@ -58,7 +63,7 @@ public class StationComponent extends Component {
             float screenX = ServiceLocator.getRenderService().getStage().getWidth() / 2f;
             float screenY = ServiceLocator.getRenderService().getStage().getHeight() / 2f + 100; // 100 px above bottom\
             buyPrompt.setPosition(screenX - 100f, screenY, Align.bottom);
-            buyPrompt.setText("Press E for upgrade");
+            buyPrompt.setText(config.promptText);
         }
     }
 
@@ -75,19 +80,31 @@ public class StationComponent extends Component {
     }
 
     public void upgrade() {
-        if (playerNear && player != null) {
-
-            Entity currItem = player.getComponent(InventoryComponent.class).getCurrItem();
-
-            WeaponsStatsComponent currItemStats = currItem.getComponent(WeaponsStatsComponent.class);
-            if (currItemStats != null) {
-                currItemStats.upgrade();
-                buyPrompt.setText("Item has been upgraded");
-            } else {
-                buyPrompt.setText("Item is already fully upgraded!");
-            }
-        }
-
-
+        this.config.upgrade(playerNear, player, buyPrompt);
     }
+
+
+//    public void computerUpgrade() {
+//        if (playerNear && player != null) {
+//
+//            Entity currItem = player.getComponent(InventoryComponent.class).getCurrItem();
+//
+//            WeaponsStatsComponent currItemStats = currItem.getComponent(WeaponsStatsComponent.class);
+//            if (currItemStats != null) {
+//                currItemStats.upgrade();
+//                buyPrompt.setText("Item has been upgraded");
+//            } else {
+//                buyPrompt.setText("Item is already fully upgraded!");
+//            }
+//        }
+//
+//
+//    }
+//
+//    public void healthUpgrade() {
+//        if (playerNear && player != null) {
+//            int currentMaxHealth = player.getComponent(CombatStatsComponent.class).getMaxHealth();
+//            player.getComponent(CombatStatsComponent.class).setMaxHealth(currentMaxHealth * 2);
+//        }
+//    }
 }
