@@ -1,15 +1,20 @@
 package com.csse3200.game.services;
 
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Json;
 import com.csse3200.game.areas.GameArea;
 import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.components.ItemComponent;
 import com.csse3200.game.components.player.InventoryComponent;
+import com.csse3200.game.components.player.PlayerInventoryDisplay;
 import com.csse3200.game.components.player.PlayerStatsDisplay;
 import com.csse3200.game.entities.Entity;
+import com.csse3200.game.entities.factories.characters.PlayerFactory;
 import com.csse3200.game.files.FileLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,7 +32,7 @@ import java.util.List;
  */
 public class SaveLoadService {
     private static final Logger logger = LoggerFactory.getLogger(SaveLoadService.class);
-
+    private String path;
     /** Save the current GameArea to local storage (saves/slotX.json). */
     public boolean save(String slot, GameArea gameArea) {
 
@@ -57,14 +62,29 @@ public class SaveLoadService {
         //add round number and stage info later when implemented
         gs.RoundNumber = 2;
 
-        String path = "saves/" + slot + ".json";
+        path = "saves" + File.separator + slot + ".json";
         FileLoader.writeClass(gs, path, FileLoader.Location.LOCAL);
         return true;
     }
 
     /** Load a save file from local storage and rebuild the area + entities. */
-    public boolean load(String slot) {
-        return false;
+    public static boolean load() {
+
+        String filePath = "saves" + File.separator + "slides.json";
+
+        PlayerInfo loadStats =
+                FileLoader.readClass(PlayerInfo.class, filePath,
+                FileLoader.Location.LOCAL);
+//        Entity loadPlayer = PlayerFactory.createPlayer();
+//        loadPlayer.setPosition(loadStats.position);
+//        InventoryComponent loadInv = loadPlayer.getComponent(InventoryComponent.class);
+
+        if (loadStats == null) {
+            return false;
+        }
+
+        logger.info("successfully loaded");
+        return true;
     }
 
     /** mock game state to store entities. */

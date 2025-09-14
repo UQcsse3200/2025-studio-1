@@ -87,6 +87,13 @@ public class FileLoader {
     file.writeString(json.prettyPrint(object), false);
   }
 
+  public static void writeWeapon() {
+
+
+  }
+
+
+
   private static FileHandle getFileHandle(String filename, Location location) {
     switch (location) {
       case CLASSPATH:

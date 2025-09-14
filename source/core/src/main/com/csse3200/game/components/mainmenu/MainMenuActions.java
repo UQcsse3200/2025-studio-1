@@ -2,8 +2,10 @@ package com.csse3200.game.components.mainmenu;
 
 import com.csse3200.game.GdxGame;
 import com.csse3200.game.components.Component;
+import com.csse3200.game.services.SaveLoadService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 
 /**
  * This class listens to events relevant to the Main Menu Screen and does something when one of the
@@ -30,6 +32,7 @@ public class MainMenuActions extends Component {
    */
   private void onStart() {
     logger.info("Start game");
+
     game.setScreen(GdxGame.ScreenType.MAIN_GAME);
   }
 
@@ -39,6 +42,8 @@ public class MainMenuActions extends Component {
    */
   private void onLoad() {
     logger.info("Load game");
+    SaveLoadService.load();
+
   }
 
   /**
