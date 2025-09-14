@@ -58,12 +58,14 @@ public class EnemyWaves extends Component {
     }
   }
 
+  /** Resets the wave parameters to their default values. */
   private void resetSession() {
     waveNumber = 0;
     scalingFactor = 1f;
     waveEndTime = 0;
   }
 
+  /** Spawns the enemies on the map based on the member variables of {@link EnemyWaves} object. */
   private void spawnWave() {
     if (waveNumber >= maxWaves) {
       logger.info("EnemyWaves: all {} waves already spawned", maxWaves);
@@ -84,6 +86,7 @@ public class EnemyWaves extends Component {
     scalingFactor += 0.25f; // incremental per-wave multiplier
   }
 
+  /** Checks if a wave is completed at every tick. The tick interval being 0.1f. */
   void tick() {
     EntityService es = ServiceLocator.getEntityService();
     if (es == null) return;
@@ -118,6 +121,11 @@ public class EnemyWaves extends Component {
     }
   }
 
+  /**
+   * Checks if the given Entity is an enemy.
+   * @param entity The entity that needs to be checked.
+   * @return True if the entity is an enemy, false otherwise.
+   */
   private boolean isEnemy(Entity entity) {
     return entity.getComponent(GhostAnimationController.class) != null;
   }
