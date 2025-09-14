@@ -217,6 +217,8 @@ public class MainGameScreen extends ScreenAdapter {
    * Creates and displays the shop overlay on top of the game.
    */
   private void showShopOverlay() {
+    // once shop is an entity
+    // shop.show()
     Stage stage = ServiceLocator.getRenderService().getStage();
     CatalogService catalog = ShopDemo.makeDemoCatalog();
     ShopManager manager = new ShopManager(catalog);
@@ -235,6 +237,8 @@ public class MainGameScreen extends ScreenAdapter {
    * Removes and disposes the shop overlay.
    */
   private void hideShopOverlay() {
+    // once shop is an entity
+    // shop.hide()
     if (shopOverlay != null) {
       shopOverlay.dispose();
       ServiceLocator.getEntityService().unregister(shopOverlay);
