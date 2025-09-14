@@ -81,15 +81,18 @@ public class MainGameScreen extends ScreenAdapter {
     logger.debug("Initialising main game screen entities");
     TerrainFactory terrainFactory = new TerrainFactory(renderer.getCamera());
     forestGameArea = new ForestGameArea(terrainFactory, renderer.getCamera());
+    com.csse3200.game.services.ServiceLocator.registerGameArea(forestGameArea);
     forestGameArea.create();
   }
 
   @Override
   public void render(float delta) {
-    if (!isPauseVisible) {
+    if (!isPauseVisible && !com.csse3200.game.services.ServiceLocator.isTransitioning()) {
       physicsEngine.update();
     }
-    ServiceLocator.getEntityService().update();
+    if (!com.csse3200.game.services.ServiceLocator.isTransitioning()) {
+      ServiceLocator.getEntityService().update();
+    }
     Entity player = forestGameArea.getPlayer();
     //show death screen when player is dead
     if (player != null) {
@@ -105,7 +108,6 @@ public class MainGameScreen extends ScreenAdapter {
       } else {
         hidePauseOverlay();
       }
-      return;
     }
   }
 

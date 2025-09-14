@@ -27,6 +27,7 @@ public class ServiceLocator {
   private static ResourceService resourceService;
   private static GameArea gameArea;
   private static SaveLoadService saveLoadService;
+  private static volatile boolean transitioning = false;
 
   public static EntityService getEntityService() {
     return entityService;
@@ -53,6 +54,8 @@ public class ServiceLocator {
   }
 
   public static GameArea getGameArea() {return gameArea;}
+  public static boolean isTransitioning() { return transitioning; }
+  public static void setTransitioning(boolean value) { transitioning = value; }
 
   public static SaveLoadService getSaveLoadService() {return saveLoadService;}
 
