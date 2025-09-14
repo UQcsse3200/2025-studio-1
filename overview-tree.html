@@ -99,6 +99,19 @@ loadScripts(document, 'script');</script>
 <ul>
 <li class="circle">java.lang.<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" class="type-name-link external-link" title="class or interface in java.lang">Object</a>
 <ul>
+<li class="circle">com.badlogic.gdx.scenes.scene2d.Actor
+<ul>
+<li class="circle">com.badlogic.gdx.scenes.scene2d.ui.Widget (implements com.badlogic.gdx.scenes.scene2d.utils.Layout)
+<ul>
+<li class="circle">com.badlogic.gdx.scenes.scene2d.ui.Image
+<ul>
+<li class="circle">com.csse3200.game.ui.<a href="com/csse3200/game/ui/AnimatedClipImage.html" class="type-name-link" title="class in com.csse3200.game.ui">AnimatedClipImage</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="circle">com.csse3200.game.physics.raycast.<a href="com/csse3200/game/physics/raycast/AllHitCallback.html" class="type-name-link" title="class in com.csse3200.game.physics.raycast">AllHitCallback</a> (implements com.badlogic.gdx.physics.box2d.RayCastCallback)</li>
 <li class="circle">com.csse3200.game.entities.configs.characters.<a href="com/csse3200/game/entities/configs/characters/BaseEntityConfig.html" class="type-name-link" title="class in com.csse3200.game.entities.configs.characters">BaseEntityConfig</a>
 <ul>
@@ -179,18 +192,22 @@ loadScripts(document, 'script');</script>
 </li>
 <li class="circle">com.csse3200.game.ui.<a href="com/csse3200/game/ui/UIComponent.html" class="type-name-link" title="class in com.csse3200.game.ui">UIComponent</a> (implements com.csse3200.game.rendering.<a href="com/csse3200/game/rendering/Renderable.html" title="interface in com.csse3200.game.rendering">Renderable</a>)
 <ul>
-<li class="circle">com.csse3200.game.components.screens.<a href="com/csse3200/game/components/screens/DeathScreenDisplay.html" class="type-name-link" title="class in com.csse3200.game.components.screens">DeathScreenDisplay</a></li>
+<li class="circle">com.csse3200.game.components.screens.<a href="com/csse3200/game/components/screens/BaseScreenDisplay.html" class="type-name-link" title="class in com.csse3200.game.components.screens">BaseScreenDisplay</a>
+<ul>
+<li class="circle">com.csse3200.game.components.screens.<a href="com/csse3200/game/components/screens/BaseEndScreenDisplays.html" class="type-name-link" title="class in com.csse3200.game.components.screens">BaseEndScreenDisplays</a></li>
+<li class="circle">com.csse3200.game.components.screens.<a href="com/csse3200/game/components/screens/PauseMenuDisplay.html" class="type-name-link" title="class in com.csse3200.game.components.screens">PauseMenuDisplay</a></li>
+<li class="circle">com.csse3200.game.components.screens.<a href="com/csse3200/game/components/screens/TutorialScreenDisplay.html" class="type-name-link" title="class in com.csse3200.game.components.screens">TutorialScreenDisplay</a></li>
+</ul>
+</li>
 <li class="circle">com.csse3200.game.components.gamearea.<a href="com/csse3200/game/components/gamearea/FloorLabelDisplay.html" class="type-name-link" title="class in com.csse3200.game.components.gamearea">FloorLabelDisplay</a></li>
 <li class="circle">com.csse3200.game.components.gamearea.<a href="com/csse3200/game/components/gamearea/GameAreaDisplay.html" class="type-name-link" title="class in com.csse3200.game.components.gamearea">GameAreaDisplay</a></li>
 <li class="circle">com.csse3200.game.components.maingame.<a href="com/csse3200/game/components/maingame/MainGameExitDisplay.html" class="type-name-link" title="class in com.csse3200.game.components.maingame">MainGameExitDisplay</a></li>
 <li class="circle">com.csse3200.game.components.mainmenu.<a href="com/csse3200/game/components/mainmenu/MainMenuDisplay.html" class="type-name-link" title="class in com.csse3200.game.components.mainmenu">MainMenuDisplay</a></li>
-<li class="circle">com.csse3200.game.components.screens.<a href="com/csse3200/game/components/screens/PauseMenuDisplay.html" class="type-name-link" title="class in com.csse3200.game.components.screens">PauseMenuDisplay</a></li>
 <li class="circle">com.csse3200.game.components.gamearea.<a href="com/csse3200/game/components/gamearea/PerformanceDisplay.html" class="type-name-link" title="class in com.csse3200.game.components.gamearea">PerformanceDisplay</a></li>
 <li class="circle">com.csse3200.game.components.player.<a href="com/csse3200/game/components/player/PlayerInventoryDisplay.html" class="type-name-link" title="class in com.csse3200.game.components.player">PlayerInventoryDisplay</a></li>
 <li class="circle">com.csse3200.game.components.player.<a href="com/csse3200/game/components/player/PlayerStatsDisplay.html" class="type-name-link" title="class in com.csse3200.game.components.player">PlayerStatsDisplay</a></li>
 <li class="circle">com.csse3200.game.components.settingsmenu.<a href="com/csse3200/game/components/settingsmenu/SettingsMenuDisplay.html" class="type-name-link" title="class in com.csse3200.game.components.settingsmenu">SettingsMenuDisplay</a></li>
 <li class="circle">com.csse3200.game.ui.terminal.<a href="com/csse3200/game/ui/terminal/TerminalDisplay.html" class="type-name-link" title="class in com.csse3200.game.ui.terminal">TerminalDisplay</a></li>
-<li class="circle">com.csse3200.game.components.screens.<a href="com/csse3200/game/components/screens/WinScreenDisplay.html" class="type-name-link" title="class in com.csse3200.game.components.screens">WinScreenDisplay</a></li>
 </ul>
 </li>
 </ul>
@@ -281,6 +298,7 @@ loadScripts(document, 'script');</script>
 <li class="circle">com.csse3200.game.screens.<a href="com/csse3200/game/screens/MainGameScreen.html" class="type-name-link" title="class in com.csse3200.game.screens">MainGameScreen</a></li>
 <li class="circle">com.csse3200.game.screens.<a href="com/csse3200/game/screens/MainMenuScreen.html" class="type-name-link" title="class in com.csse3200.game.screens">MainMenuScreen</a></li>
 <li class="circle">com.csse3200.game.screens.<a href="com/csse3200/game/screens/SettingsScreen.html" class="type-name-link" title="class in com.csse3200.game.screens">SettingsScreen</a></li>
+<li class="circle">com.csse3200.game.screens.<a href="com/csse3200/game/screens/TutorialScreen.html" class="type-name-link" title="class in com.csse3200.game.screens">TutorialScreen</a></li>
 <li class="circle">com.csse3200.game.screens.<a href="com/csse3200/game/screens/WinScreen.html" class="type-name-link" title="class in com.csse3200.game.screens">WinScreen</a></li>
 </ul>
 </li>
@@ -290,6 +308,8 @@ loadScripts(document, 'script');</script>
 <li class="circle">com.csse3200.game.utils.<a href="com/csse3200/game/utils/StringDecorator.html" class="type-name-link" title="class in com.csse3200.game.utils">StringDecorator</a>&lt;T&gt;</li>
 <li class="circle">com.csse3200.game.areas.terrain.<a href="com/csse3200/game/areas/terrain/TerrainFactory.html" class="type-name-link" title="class in com.csse3200.game.areas.terrain">TerrainFactory</a></li>
 <li class="circle">com.csse3200.game.areas.terrain.<a href="com/csse3200/game/areas/terrain/TerrainTile.html" class="type-name-link" title="class in com.csse3200.game.areas.terrain">TerrainTile</a> (implements com.badlogic.gdx.maps.tiled.TiledMapTile)</li>
+<li class="circle">com.csse3200.game.components.screens.<a href="com/csse3200/game/components/screens/TutorialClip.html" class="type-name-link" title="class in com.csse3200.game.components.screens">TutorialClip</a></li>
+<li class="circle">com.csse3200.game.components.screens.<a href="com/csse3200/game/components/screens/TutorialStep.html" class="type-name-link" title="class in com.csse3200.game.components.screens">TutorialStep</a></li>
 <li class="circle">com.csse3200.game.files.<a href="com/csse3200/game/files/UserSettings.html" class="type-name-link" title="class in com.csse3200.game.files">UserSettings</a></li>
 <li class="circle">com.csse3200.game.files.<a href="com/csse3200/game/files/UserSettings.DisplaySettings.html" class="type-name-link" title="class in com.csse3200.game.files">UserSettings.DisplaySettings</a></li>
 <li class="circle">com.csse3200.game.files.<a href="com/csse3200/game/files/UserSettings.Settings.html" class="type-name-link" title="class in com.csse3200.game.files">UserSettings.Settings</a></li>

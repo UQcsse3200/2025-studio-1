@@ -88,7 +88,9 @@ loadScripts(document, 'script');</script>
 <div class="inheritance"><a href="../Component.html" title="class in com.csse3200.game.components">com.csse3200.game.components.Component</a>
 <div class="inheritance"><a href="../../rendering/RenderComponent.html" title="class in com.csse3200.game.rendering">com.csse3200.game.rendering.RenderComponent</a>
 <div class="inheritance"><a href="../../ui/UIComponent.html" title="class in com.csse3200.game.ui">com.csse3200.game.ui.UIComponent</a>
+<div class="inheritance"><a href="BaseScreenDisplay.html" title="class in com.csse3200.game.components.screens">com.csse3200.game.components.screens.BaseScreenDisplay</a>
 <div class="inheritance">com.csse3200.game.components.screens.PauseMenuDisplay</div>
+</div>
 </div>
 </div>
 </div>
@@ -100,8 +102,17 @@ loadScripts(document, 'script');</script>
 </dl>
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">PauseMenuDisplay</span>
-<span class="extends-implements">extends <a href="../../ui/UIComponent.html" title="class in com.csse3200.game.ui">UIComponent</a></span></div>
-<div class="block">Visual pause menu overlay shown on top of the main game.</div>
+<span class="extends-implements">extends <a href="BaseScreenDisplay.html" title="class in com.csse3200.game.components.screens">BaseScreenDisplay</a></span></div>
+<div class="block">Pause menu overlay shown above the main game and HUD.
+ <p>
+ Renders a full-screen dimmer and a centered panel with actions:
+ <ul>
+   <li><b>Resume</b> — triggers the entity's <code>"resume"</code> event</li>
+   <li><b>Restart</b> — switches to <a href="../../GdxGame.ScreenType.html#MAIN_GAME"><code>GdxGame.ScreenType.MAIN_GAME</code></a></li>
+   <li><b>Main Menu</b> — returns to <a href="../../GdxGame.ScreenType.html#MAIN_MENU"><code>GdxGame.ScreenType.MAIN_MENU</code></a></li>
+ </ul>
+ The dimmer is non-interactive (input disabled) so button clicks reach the menu.
+ ESC is handled once to immediately resume gameplay.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -109,6 +120,9 @@ loadScripts(document, 'script');</script>
 <li>
 <section class="field-summary" id="field-summary">
 <h2>Field Summary</h2>
+<div class="inherited-list">
+<h3 id="fields-inherited-from-class-com.csse3200.game.components.screens.BaseScreenDisplay">Fields inherited from class&nbsp;com.csse3200.game.components.screens.<a href="BaseScreenDisplay.html" title="class in com.csse3200.game.components.screens">BaseScreenDisplay</a></h3>
+<code><a href="BaseScreenDisplay.html#game">game</a>, <a href="BaseScreenDisplay.html#logger">logger</a>, <a href="BaseScreenDisplay.html#neon">neon</a>, <a href="BaseScreenDisplay.html#root">root</a></code></div>
 <div class="inherited-list">
 <h3 id="fields-inherited-from-class-com.csse3200.game.ui.UIComponent">Fields inherited from class&nbsp;com.csse3200.game.ui.<a href="../../ui/UIComponent.html" title="class in com.csse3200.game.ui">UIComponent</a></h3>
 <code><a href="../../ui/UIComponent.html#skin">skin</a>, <a href="../../ui/UIComponent.html#stage">stage</a></code></div>
@@ -126,7 +140,9 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
 <div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(com.csse3200.game.GdxGame)" class="member-name-link">PauseMenuDisplay</a><wbr>(<a href="../../GdxGame.html" title="class in com.csse3200.game">GdxGame</a>&nbsp;game)</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">Creates a new pause menu overlay bound to the given game instance.</div>
+</div>
 </div>
 </section>
 </li>
@@ -141,29 +157,33 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#create()" class="member-name-link">create</a>()</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#buildUI(com.badlogic.gdx.scenes.scene2d.ui.Table)" class="member-name-link">buildUI</a><wbr>(com.badlogic.gdx.scenes.scene2d.ui.Table&nbsp;root)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Initialises styles and builds the actors.</div>
+<div class="block">Builds the pause UI:
+ 
+   Add a full-screen, non-interactive dimmer (placed on the Stage)
+   Bring <code>root</code> to the front so the panel sits above the dimmer/HUD
+   Add title and action buttons
+   Capture the first ESC key press to resume and remove the listener
+ </div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#dispose()" class="member-name-link">dispose</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Removes overlay actors from the stage and disposes generated textures.</div>
+<div class="block">Removes the dimmer from the Stage and delegates to base disposal.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#draw(com.badlogic.gdx.graphics.g2d.SpriteBatch)" class="member-name-link">draw</a><wbr>(com.badlogic.gdx.graphics.g2d.SpriteBatch&nbsp;batch)</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>float</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getZIndex()" class="member-name-link">getZIndex</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Draw the renderable.</div>
-</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>float</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getZIndex()" class="member-name-link">getZIndex</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Returns the draw order for the overlay.</div>
+<div class="block">High z-index to ensure the pause overlay renders above other UI layers.</div>
 </div>
 </div>
 </div>
 </div>
+<div class="inherited-list">
+<h3 id="methods-inherited-from-class-com.csse3200.game.components.screens.BaseScreenDisplay">Methods inherited from class&nbsp;com.csse3200.game.components.screens.<a href="BaseScreenDisplay.html" title="class in com.csse3200.game.components.screens">BaseScreenDisplay</a></h3>
+<code><a href="BaseScreenDisplay.html#addBody(com.badlogic.gdx.scenes.scene2d.ui.Table,java.lang.String,float,float)">addBody</a>, <a href="BaseScreenDisplay.html#addTitle(com.badlogic.gdx.scenes.scene2d.ui.Table,java.lang.String,float,com.badlogic.gdx.graphics.Color,float)">addTitle</a>, <a href="BaseScreenDisplay.html#backMainMenu()">backMainMenu</a>, <a href="BaseScreenDisplay.html#button(java.lang.String,float,java.lang.Runnable)">button</a>, <a href="BaseScreenDisplay.html#create()">create</a>, <a href="BaseScreenDisplay.html#draw(com.badlogic.gdx.graphics.g2d.SpriteBatch)">draw</a>, <a href="BaseScreenDisplay.html#makeSolidTexture(com.badlogic.gdx.graphics.Color)">makeSolidTexture</a>, <a href="BaseScreenDisplay.html#solidImage(com.badlogic.gdx.graphics.Color)">solidImage</a></code></div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-com.csse3200.game.ui.UIComponent">Methods inherited from class&nbsp;com.csse3200.game.ui.<a href="../../ui/UIComponent.html" title="class in com.csse3200.game.ui">UIComponent</a></h3>
 <code><a href="../../ui/UIComponent.html#getLayer()">getLayer</a></code></div>
@@ -197,6 +217,11 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="&lt;init&gt;(com.csse3200.game.GdxGame)">
 <h3>PauseMenuDisplay</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">PauseMenuDisplay</span><wbr><span class="parameters">(<a href="../../GdxGame.html" title="class in com.csse3200.game">GdxGame</a>&nbsp;game)</span></div>
+<div class="block">Creates a new pause menu overlay bound to the given game instance.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>game</code> - game instance used for screen navigation actions</dd>
+</dl>
 </section>
 </li>
 </ul>
@@ -208,27 +233,21 @@ loadScripts(document, 'script');</script>
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="create()">
-<h3>create</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">create</span>()</div>
-<div class="block">Initialises styles and builds the actors.</div>
-<dl class="notes">
-<dt>Overrides:</dt>
-<dd><code><a href="../../ui/UIComponent.html#create()">create</a></code>&nbsp;in class&nbsp;<code><a href="../../ui/UIComponent.html" title="class in com.csse3200.game.ui">UIComponent</a></code></dd>
-</dl>
-</section>
-</li>
-<li>
-<section class="detail" id="draw(com.badlogic.gdx.graphics.g2d.SpriteBatch)">
-<h3>draw</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">draw</span><wbr><span class="parameters">(com.badlogic.gdx.graphics.g2d.SpriteBatch&nbsp;batch)</span></div>
-<div class="block"><span class="description-from-type-label">Description copied from class:&nbsp;<code><a href="../../rendering/RenderComponent.html#draw(com.badlogic.gdx.graphics.g2d.SpriteBatch)">RenderComponent</a></code></span></div>
-<div class="block">Draw the renderable. Should be called only by the renderer, not manually.</div>
+<section class="detail" id="buildUI(com.badlogic.gdx.scenes.scene2d.ui.Table)">
+<h3>buildUI</h3>
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">buildUI</span><wbr><span class="parameters">(com.badlogic.gdx.scenes.scene2d.ui.Table&nbsp;root)</span></div>
+<div class="block">Builds the pause UI:
+ <ol>
+   <li>Add a full-screen, non-interactive dimmer (placed on the Stage)</li>
+   <li>Bring <code>root</code> to the front so the panel sits above the dimmer/HUD</li>
+   <li>Add title and action buttons</li>
+   <li>Capture the first ESC key press to resume and remove the listener</li>
+ </ol></div>
 <dl class="notes">
 <dt>Specified by:</dt>
-<dd><code><a href="../../rendering/RenderComponent.html#draw(com.badlogic.gdx.graphics.g2d.SpriteBatch)">draw</a></code>&nbsp;in class&nbsp;<code><a href="../../rendering/RenderComponent.html" title="class in com.csse3200.game.rendering">RenderComponent</a></code></dd>
+<dd><code><a href="BaseScreenDisplay.html#buildUI(com.badlogic.gdx.scenes.scene2d.ui.Table)">buildUI</a></code>&nbsp;in class&nbsp;<code><a href="BaseScreenDisplay.html" title="class in com.csse3200.game.components.screens">BaseScreenDisplay</a></code></dd>
 <dt>Parameters:</dt>
-<dd><code>batch</code> - Batch to render to.</dd>
+<dd><code>root</code> - the fill-parent root table created by <a href="BaseScreenDisplay.html" title="class in com.csse3200.game.components.screens"><code>BaseScreenDisplay</code></a></dd>
 </dl>
 </section>
 </li>
@@ -236,14 +255,14 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="getZIndex()">
 <h3>getZIndex</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">getZIndex</span>()</div>
-<div class="block">Returns the draw order for the overlay.</div>
+<div class="block">High z-index to ensure the pause overlay renders above other UI layers.</div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="../../rendering/Renderable.html#getZIndex()">getZIndex</a></code>&nbsp;in interface&nbsp;<code><a href="../../rendering/Renderable.html" title="interface in com.csse3200.game.rendering">Renderable</a></code></dd>
 <dt>Overrides:</dt>
-<dd><code><a href="../../ui/UIComponent.html#getZIndex()">getZIndex</a></code>&nbsp;in class&nbsp;<code><a href="../../ui/UIComponent.html" title="class in com.csse3200.game.ui">UIComponent</a></code></dd>
+<dd><code><a href="BaseScreenDisplay.html#getZIndex()">getZIndex</a></code>&nbsp;in class&nbsp;<code><a href="BaseScreenDisplay.html" title="class in com.csse3200.game.components.screens">BaseScreenDisplay</a></code></dd>
 <dt>Returns:</dt>
-<dd>Z index</dd>
+<dd>draw order value for this UI component</dd>
 </dl>
 </section>
 </li>
@@ -251,12 +270,13 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="dispose()">
 <h3>dispose</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">dispose</span>()</div>
-<div class="block">Removes overlay actors from the stage and disposes generated textures.</div>
+<div class="block">Removes the dimmer from the Stage and delegates to base disposal.
+ Ensures no stale dimmer instances remain if the overlay is recreated later.</div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code>dispose</code>&nbsp;in interface&nbsp;<code>com.badlogic.gdx.utils.Disposable</code></dd>
 <dt>Overrides:</dt>
-<dd><code><a href="../../rendering/RenderComponent.html#dispose()">dispose</a></code>&nbsp;in class&nbsp;<code><a href="../../rendering/RenderComponent.html" title="class in com.csse3200.game.rendering">RenderComponent</a></code></dd>
+<dd><code><a href="BaseScreenDisplay.html#dispose()">dispose</a></code>&nbsp;in class&nbsp;<code><a href="BaseScreenDisplay.html" title="class in com.csse3200.game.components.screens">BaseScreenDisplay</a></code></dd>
 </dl>
 </section>
 </li>

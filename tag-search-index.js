@@ -1,1 +1,1 @@
-tagSearchIndex = [{"l":"Constant Field Values","h":"","u":"constant-values.html"}];updateSearchResults();
+tagSearchIndex = [{"l":"Constant Field Values","h":"","u":"constant-values.html"},{"l":"Usage","h":"class com.csse3200.game.ui.AnimatedClipImage","d":"Section","u":"com/csse3200/game/ui/AnimatedClipImage.html#usage-heading"}];updateSearchResults();
