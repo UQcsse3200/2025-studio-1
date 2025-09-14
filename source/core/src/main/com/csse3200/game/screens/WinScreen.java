@@ -3,7 +3,7 @@ package com.csse3200.game.screens;
 
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.csse3200.game.GdxGame;
-import com.csse3200.game.components.screens.WinScreenDisplay;
+import com.csse3200.game.components.screens.BaseEndScreenDisplays;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.input.InputDecorator;
 import com.csse3200.game.services.ServiceLocator;
@@ -45,7 +45,7 @@ public class WinScreen extends BaseScreen {
      * <p>
      * This entity includes:
      * <ul>
-     *   <li>{@link WinScreenDisplay} — the victory UI (title, round/time labels, buttons)</li>
+     *   <li>{@link BaseEndScreenDisplays} — the victory UI (title, round/time labels, buttons)</li>
      *   <li>{@link InputDecorator} — captures and forwards input events to the stage</li>
      * </ul>
      *
@@ -54,7 +54,7 @@ public class WinScreen extends BaseScreen {
     @Override
     protected Entity createUIScreen(Stage stage) {
         return new Entity()
-                .addComponent(new WinScreenDisplay(game))
+                .addComponent(BaseEndScreenDisplays.victory(game))
                 .addComponent(new InputDecorator(stage, 10));
     }
 }
