@@ -28,7 +28,7 @@ public class TutorialScreenDisplay extends UIComponent {
     private static final Logger logger = LoggerFactory.getLogger(TutorialScreenDisplay.class);
     private final GdxGame game;
     private final List<TutorialStep> steps;
-    public int currentStep = 0;
+    protected int currentStep = 0;
 
     private Table table;
     private NeonStyles neon;
