@@ -30,66 +30,36 @@ abstract class BaseEndScreenDisplay extends UIComponent {
     private static final float Z_INDEX = 2f;
     // protected members
     protected final GdxGame game;
-    protected NeonStyles neon;
-    protected Table table;
+    private final String titleText;
+    private final Color titleColor;
+    private final String primaryText;
+    private final String secondaryText;
+    private final Runnable primaryAction;
+    private final Runnable secondaryAction;
+    private NeonStyles neon;
+    private Table table;
 
     /**
      * Constructs a new BaseEndScreenDisplay.
      *
      * @param game the {@link GdxGame} instance, used for screen navigation
      */
-    protected BaseEndScreenDisplay(GdxGame game) {
+    protected BaseEndScreenDisplay(
+            GdxGame game,
+            String titleText,
+            Color titleColor,
+            String primaryText,
+            Runnable primaryAction,
+            Runnable secondaryAction
+    ) {
         this.game = game;
+        this.titleText = titleText;
+        this.titleColor = titleColor;
+        this.primaryText = primaryText;
+        this.primaryAction = primaryAction;
+        this.secondaryText = "Main Menu";
+        this.secondaryAction = secondaryAction != null ? secondaryAction : this::backToMainMenu;
     }
-
-    /**
-     * Returns the text to display as the screen title.
-     * Subclasses should provide a descriptive label, for example,
-     * "Victory" or "Defeated".
-     *
-     * @return
-     */
-    protected abstract String titleText();
-
-    /**
-     * Returns the colour to apply to the title label.
-     * Subclasses should provide a colour appropriate for the
-     * screen context (e.g. green for victory, red for defeat).
-     *
-     * @return the colour to apply to the title label
-     */
-    protected abstract Color titleColor();
-
-    /**
-     * Returns the text for the primary action button.
-     * Subclasses should provide context-specific labels,
-     * for example, "Continue" or "Try Again".
-     *
-     * @return the text for the primary action button
-     */
-    protected abstract String primaryButtonText();
-
-    /**
-     * Defines the behaviour executed when the primary button is clicked.
-     * Subclasses must override this to provide screen-specific behaviour
-     * (e.g. continue game, restart game).
-     */
-    protected abstract void onPrimaryButton();
-
-    /**
-     * Returns the text for the secondary action button.
-     *
-     * @return the text for the secondary action button
-     *         (defaults to "Main Menu", but can be overridden)
-     */
-    protected String secondaryButtonText() { return "Main Menu"; }
-
-
-    /**
-     * Defines the behaviour executed when the secondary button is clicked.
-     * By default, switches back to the Main Menu screen, but can be overridden.
-     */
-    protected void onSecondaryButton() { backMainMenu(); }
 
     /**
      * Called when the component is created. Initialises styles and
@@ -117,9 +87,9 @@ abstract class BaseEndScreenDisplay extends UIComponent {
         table.defaults().width(btnWidth).height(btnHeight);
 
         // title
-        Label title = new Label(titleText(), skin, "title");
+        Label title = new Label(this.titleText, skin, "title");
         title.setFontScale(3.0f);
-        title.setColor(titleColor());
+        title.setColor(this.titleColor);
         table.add(title).colspan(2).center().padBottom(50f);
         table.row();
 
@@ -140,27 +110,9 @@ abstract class BaseEndScreenDisplay extends UIComponent {
         table.row();
 
         // Buttons
-        TextButton.TextButtonStyle style = neon.buttonRounded();
-        TextButton primaryBtn = new TextButton(primaryButtonText(), style);
-        TextButton secondaryBtn = new TextButton(secondaryButtonText(), style);
-        primaryBtn.getLabel().setFontScale(2.0f);
-        secondaryBtn.getLabel().setFontScale(2.0f);
+        TextButton primaryBtn = createButton(primaryText, primaryAction);
+        TextButton secondaryBtn = createButton(secondaryText, secondaryAction);
 
-        primaryBtn.addListener(new ChangeListener() {
-            @Override public void changed(ChangeEvent event, Actor actor) {
-                logger.debug("{} clicked", primaryButtonText());
-                onPrimaryButton();
-            }
-        });
-
-        secondaryBtn.addListener(new ChangeListener() {
-            @Override public void changed(ChangeEvent event, Actor actor) {
-                logger.debug("{} clicked", secondaryButtonText());
-                onSecondaryButton();
-            }
-        });
-
-        table.row();
         table.add(primaryBtn).left().padRight(30f);
         table.add(secondaryBtn).left();
 
@@ -168,11 +120,26 @@ abstract class BaseEndScreenDisplay extends UIComponent {
         logger.info("Actors added to {}", getClass().getSimpleName());
     }
 
+    private TextButton createButton(String text, Runnable action) {
+        TextButton btn = new TextButton(text, neon.buttonRounded());
+        btn.getLabel().setFontScale(2.0f);
+        btn.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                logger.debug("{} clicked on {}", text, getClass().getSimpleName());
+                if (action != null) {
+                    action.run();
+                }
+            }
+        });
+        return btn;
+    }
+
     /**
-     * Switches the game screen back to the Main Menu.
-     * Subclasses may call this directly or override {@link #onSecondaryButton()}.
+     * Defines the behaviour executed when the secondary button is clicked.
+     * By default, switches back to the Main Menu screen, but can be overridden.
      */
-    protected void backMainMenu() {
+    protected void backToMainMenu() {
         logger.info("Switching to MAIN_MENU from {}", getClass().getSimpleName());
         game.setScreen(GdxGame.ScreenType.MAIN_MENU);
     }

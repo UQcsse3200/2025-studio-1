@@ -2,61 +2,31 @@ package com.csse3200.game.components.screens;
 
 import com.badlogic.gdx.graphics.Color;
 import com.csse3200.game.GdxGame;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
- * UI component for displaying the Win Screen.
+ * End-of-run UI shown when the player wins.
  * <p>
- * This screen is shown when the player achieves victory.
- * It displays a "Victory" title, the round number,
- * elapsed time, and provides options to:
+ * This subclass configures {@link BaseEndScreenDisplay} with:
  * <ul>
- *   <li>Continue — proceed to the next stage/game</li>
- *   <li>Main Menu — return to the main menu</li>
+ *   <li>Title: <b>"Victory"</b> in green</li>
+ *   <li>Primary button: <b>"Continue"</b> → switches to {@link GdxGame.ScreenType#MAIN_GAME}</li>
+ *   <li>Secondary button: <b>"Main Menu"</b> → handled by the base class (back to main menu)</li>
  * </ul>
  */
 public class WinScreenDisplay extends BaseEndScreenDisplay {
-    /** Logger instance for the Win Screen. */
-    private static final Logger logger = LoggerFactory.getLogger(WinScreenDisplay.class);
-
     /**
-     * Creates a new WinScreenDisplay.
+     * Creates a victory end-screen display.
      *
      * @param game the {@link GdxGame} instance used for navigation
      */
     public WinScreenDisplay(GdxGame game) {
-        super(game);
-    }
-
-    /**
-     * {@inheritDoc}
-     * @return "Victory"
-     */
-    @Override
-    protected String titleText() { return "Victory"; }
-
-    /**
-     * {@inheritDoc}
-     * @return green color for the victory title
-     */
-    @Override
-    protected Color titleColor() { return new Color(0f, 1f, 0f, 1f); }
-
-    /**
-     * {@inheritDoc}
-     * @return "Continue"
-     */
-    @Override
-    protected String primaryButtonText() { return "Continue"; }
-
-    /**
-     * {@inheritDoc}
-     * Continues the game by switching to the MAIN_GAME screen.
-     */
-    @Override
-    protected void onPrimaryButton() {
-        logger.info("Continuing game from WinScreenDisplay");
-        game.setScreen(GdxGame.ScreenType.MAIN_GAME);
+        super(
+                game,
+                "Victory",
+                new Color(0f, 1f, 0f, 1f),
+                "Continue",
+                () -> game.setScreen(GdxGame.ScreenType.MAIN_GAME),
+                null // use default secondary action (back to Main Menu)
+        );
     }
 }

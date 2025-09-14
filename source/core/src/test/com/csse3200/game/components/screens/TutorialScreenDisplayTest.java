@@ -26,7 +26,7 @@ import java.util.List;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(GameExtension.class)
-public class TutorialScreenDisplayTest {
+class TutorialScreenDisplayTest {
     private GdxGame mockGame;
     private TutorialScreenDisplay display;
     private Stage stage;
@@ -111,26 +111,18 @@ public class TutorialScreenDisplayTest {
         boolean hasPrevButton = false;
 
         for (Actor actor : rootTable.getChildren()) {
-            if (actor instanceof Label) {
-                Label label = (Label) actor;
+            if (actor instanceof Label label) {
                 String text = label.getText().toString();
-                if (text.equals(expectedTitle)) {
-                    hasTitle = true;
-                }
-                if (text.equals(expectedDescription)) {
-                    hasDescription = true;
-                }
-            } else if (actor instanceof TextButton) {
-                TextButton button = (TextButton) actor;
+                if (text.equals(expectedTitle)) hasTitle = true;
+                if (text.equals(expectedDescription)) hasDescription = true;
+            } else if (actor instanceof TextButton button) {
                 if (button.getText().toString().equals("Main Menu")) {
                     hasMainMenuButton = true;
                     break;
                 }
-            } else if (actor instanceof Table) {
-                Table animTable = (Table) actor;
+            } else if (actor instanceof Table animTable) {
                 for (Actor nestedActor : animTable.getChildren()) {
                     if (nestedActor instanceof ImageButton) {
-                        ImageButton btn = (ImageButton) nestedActor;
                         int index = animTable.getChildren().indexOf(nestedActor, true);
                         if (index == 0) hasPrevButton = true;
                         if (index == animTable.getChildren().size - 1) hasNextButton = true;
