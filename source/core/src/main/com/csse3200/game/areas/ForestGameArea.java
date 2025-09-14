@@ -31,8 +31,14 @@ import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import com.csse3200.game.rendering.TextureRenderComponent;
+import com.csse3200.game.entities.factories.ShopFactory;
+import com.csse3200.game.components.shop.ShopManager;
+import com.csse3200.game.components.shop.CatalogService;
+import com.csse3200.game.components.shop.ShopDemo;
+
 
 import javax.naming.spi.ObjectFactory;
+import java.util.Collections;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -247,6 +253,7 @@ public class ForestGameArea extends GameArea {
     spawnEnergyPod();
     spawnStorageCrates();
     spawnBigWall();
+    spawnShopKiosk();
     // spawnGhosts();
     // spawnGhostKing();
     int choice = (int)(Math.random() * 3);
@@ -397,6 +404,14 @@ public class ForestGameArea extends GameArea {
 
     Entity officeDesk = ObstacleFactory.createOfficeDesk();
     spawnEntityAt(officeDesk, new GridPoint2(5, 11), true, false);
+  }
+
+  private void spawnShopKiosk() {
+    CatalogService catalog = ShopDemo.makeDemoCatalog();
+    ShopManager manager = new ShopManager(catalog);
+
+    Entity shop = ShopFactory.createShop(this, manager, catalog, "images/tree.png"); // have as tree now as placeholder, later need to change to actual shop icon
+    spawnEntityAt(shop, new GridPoint2(12, 6), true, false);
   }
 
   /**

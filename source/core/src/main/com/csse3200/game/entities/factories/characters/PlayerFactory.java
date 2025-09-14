@@ -20,6 +20,7 @@ import com.csse3200.game.physics.components.PhysicsComponent;
 import com.csse3200.game.rendering.AnimationRenderComponent;
 import com.csse3200.game.rendering.TextureRenderComponent;
 import com.csse3200.game.services.ServiceLocator;
+import com.csse3200.game.components.ShopInteractComponent;
 
 /**
  * Factory to create a player entity.
@@ -59,7 +60,8 @@ public class PlayerFactory {
             .addComponent(new PlayerInventoryDisplay(playerInventory))
             .addComponent(new StaminaComponent())
             .addComponent(animator)
-            .addComponent(new PlayerAnimationController());
+            .addComponent(new PlayerAnimationController())
+            .addComponent(new ShopInteractComponent(2.0f));
 
     player.getComponent(AnimationRenderComponent.class).scaleEntity(2f);
     PhysicsUtils.setScaledCollider(player, 0.6f, 0.3f);
