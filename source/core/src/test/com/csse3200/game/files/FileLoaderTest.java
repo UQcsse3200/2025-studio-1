@@ -62,4 +62,6 @@ class FileLoaderTest {
                   TestStats.class, "test/files/invalid.json");
         assertNull(test);
     }
+
+
 }
