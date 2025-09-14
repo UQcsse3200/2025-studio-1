@@ -15,6 +15,7 @@ import com.csse3200.game.physics.PhysicsEngine;
 import com.csse3200.game.physics.PhysicsService;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
+import com.csse3200.game.components.ItemComponent;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -297,28 +298,12 @@ class InventoryComponentTest {
 
         @BeforeEach
         void setup() {
-            setupMocks();
             setupInventory();
             createItems();
         }
 
         /**
-         * to create all the fake dependencies before each test
-         * so that no real files or assets are affected
-         */
-        private void setupMocks() {
-            //Replace real file system with a fake one
-            Gdx.files = mock(Files.class);
-            when(Gdx.files.internal(anyString())).thenReturn(mock(FileHandle.class));
-
-            ResourceService resourceService = mock(ResourceService.class);
-            ServiceLocator.registerResourceService(resourceService);
-            //when the game asks for a texture asset a fake one will be returned
-            when(resourceService.getAsset(anyString(), eq(Texture.class))).thenReturn(mock(Texture.class));
-        }
-
-        /**
-         * creats a fresh inventory for the owner with a capacity of 5 items
+         * creates a fresh inventory for the owner with a capacity of 5 items
          */
         private void setupInventory() {
             inventory = new InventoryComponent(5);
@@ -330,20 +315,25 @@ class InventoryComponentTest {
          * creates 2 new items
          */
         private void createItems() {
-            item1 = ItemFactory.createItem("images/mud.png");
-            item2 = ItemFactory.createItem("images/mud.png");
-        }
+            item1 = new Entity()
+                .addComponent(new WeaponsStatsComponent(5))
+                .addComponent(new ItemComponent());
+            item1.create();
 
+            item2 = new Entity()
+                .addComponent(new WeaponsStatsComponent(4))
+                .addComponent(new ItemComponent());
+            item2.create();
+        }
         /**
          * Adds the previously created items to the inventory slots
          *
          * @param slot takes the slot index where player wants to add the item
-         * @param item takes the item to be added in the inventory
+         * @param item1 takes the item to be added in the inventory
          */
-        private void addItemSlot(int slot, Entity item) {
-            inventory.setItem(slot, item);
+        public void addItemSlot(int slot, Entity item1) {
+            inventory.setItem(slot, item1);
         }
-
 
         @Nested
         @DisplayName("Testing : setCurrItem")
@@ -372,10 +362,10 @@ class InventoryComponentTest {
                 addItemSlot(1, item2);
 
                 inventory.selectSlot(0);
-                assertEquals(item1, inventory.getSelectedItem(), "Selected item should return item1");
+                assertEquals(item1, inventory.getCurrItem(), "Selected item should return item1");
 
                 inventory.selectSlot(1);
-                assertEquals(item2, inventory.getSelectedItem(), "Selected item should return item2");
+                assertEquals(item2, inventory.getCurrItem(), "Selected item should return item2");
             }
 
             @Test
@@ -383,28 +373,36 @@ class InventoryComponentTest {
              * Should return null if no slot is selected
              */
             void selectSlotNullTest(){
-                assertNull(inventory.getSelectedItem(), "No item selected, should return null");
+                assertNull(inventory.getCurrItem(), "No item selected, should return null");
             }
         }
 
         @Nested
         @DisplayName("Testing : create() and onFocusItem()")
 
-        class testingFocusItem{
+        class testingFocusItem {
             @Test
-            /**
-             *
-             */
-            public void focusItemTest(){
+            public void focusItemTest() {
                 inventory.setItem(0, item1);
-                inventory.selectSlot(0);
-                assertEquals(0, inventory.getSelectedItem(), "selectSlot should set selected slot to 0");
-                owner.getEvents().trigger("focus item ", 0);
 
-                assertEquals(item1, inventory.getSelectedItem(), "Focusing on slot 0 should select item1");
+                // Select slot 0
+                inventory.selectSlot(0);
+
+                // Check selected slot index
+                assertEquals(0, inventory.getSelectedSlot(), "Selected slot should be 0");
+
+                // Check selected item
+                assertEquals(item1, inventory.getCurrItem(), "selectSlot should select item1");
+
+                // Trigger focus events
+                owner.getEvents().trigger("focus item ", 0);
+                assertEquals(item1, inventory.getCurrItem(), "Focusing on slot 0 should select item1");
+
+                // Trigger focus on slot 1 (optional, just for coverage)
                 owner.getEvents().trigger("focus item ", 1);
             }
         }
+
 
         @Nested
         @DisplayName("Testing setting and getting Equipped Slot ")
@@ -421,6 +419,4 @@ class InventoryComponentTest {
         }
 
     }
-
-
 }
