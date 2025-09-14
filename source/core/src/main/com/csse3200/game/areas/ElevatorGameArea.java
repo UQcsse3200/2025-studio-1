@@ -5,11 +5,8 @@ import com.badlogic.gdx.math.GridPoint2;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.CameraComponent;
-import com.csse3200.game.entities.Entity;
-import com.csse3200.game.entities.factories.characters.PlayerFactory;
-import com.csse3200.game.rendering.SolidColorRenderComponent;
 
-/** Elevator room: minimal walls and two doors (left<->Office, right->Research). */
+/** Elevator room: minimal walls and two doors (left--Office, right--Research). */
 public class ElevatorGameArea extends GameArea {
   private static final float WALL_WIDTH = 0.1f;
   private static final GridPoint2 PLAYER_SPAWN = new GridPoint2(10, 10);
