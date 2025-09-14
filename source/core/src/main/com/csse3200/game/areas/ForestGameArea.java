@@ -12,6 +12,7 @@ import com.csse3200.game.components.ItemHoldComponent;
 import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.components.DoorComponent;
 import com.csse3200.game.components.KeycardGateComponent;
+import com.csse3200.game.components.attachments.BulletEnhancerComponent;
 import com.csse3200.game.components.attachments.LaserComponent;
 import com.csse3200.game.rendering.AnimationRenderComponent;
 import com.csse3200.game.components.WeaponsStatsComponent;
@@ -104,7 +105,8 @@ public class ForestGameArea extends GameArea {
     "images/player.png",
     "images/mud.png",
     "images/heart.png",
-    "images/computerBench.png"
+    "images/computerBench.png",
+    "images/waterBullet.png"
   };
 
   /** General prop textures (floors, tiles, etc.). */
@@ -231,12 +233,13 @@ public class ForestGameArea extends GameArea {
     spawnComputerBench();
 
     player = spawnPlayer();
-
+    ServiceLocator.registerPlayer(player);
     dagger = spawnDagger();
     pistol = spawnPistol();
     rifle = spawnRifle();
     lightsaber = spawnLightsaber();
     rifle.addComponent(new LaserComponent(5f));
+    rifle.addComponent(new BulletEnhancerComponent());
     //These are commented out since there is no equip feature yet
     // this.equipItem(pistol);
     // this.equipItem(lightsaber);
@@ -515,7 +518,6 @@ public class ForestGameArea extends GameArea {
     newRifle.addComponent(new ItemHoldComponent(this.player, newRifleOffset));
     return newRifle;
   }
-
 
   // Enemy Projectiles
   public Entity spawnEnemyProjectile(Vector2 directionToFire, WeaponsStatsComponent source) {

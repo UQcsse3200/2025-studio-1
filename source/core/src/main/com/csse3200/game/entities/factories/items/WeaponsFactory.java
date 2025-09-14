@@ -38,7 +38,6 @@ public class WeaponsFactory {
         WeaponConfig config = weaponType.getConfig();
         Entity weapon = ItemFactory.createItem(config.texturePath);
         weapon.addComponent(new WeaponsStatsComponent(config));
-
         ItemComponent item = weapon.getComponent(ItemComponent.class);
 
         // Attach type to weapon
