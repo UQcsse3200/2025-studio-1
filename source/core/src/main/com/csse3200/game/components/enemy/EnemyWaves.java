@@ -3,6 +3,7 @@ package com.csse3200.game.components.enemy;
 import com.badlogic.gdx.utils.Timer;
 import com.csse3200.game.areas.GameArea;
 import com.csse3200.game.components.CombatStatsComponent;
+import com.csse3200.game.components.Component;
 import com.csse3200.game.components.npc.GhostAnimationController;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
@@ -13,13 +14,13 @@ import org.slf4j.LoggerFactory;
 /**
  * Handles spawning enemies over multiple waves. Simplified: a fixed number of waves per trigger.
  */
-public class EnemyWaves {
+public class EnemyWaves extends Component {
   private static final Logger logger = LoggerFactory.getLogger(EnemyWaves.class);
 
-  private final int maxWaves;      // total waves per session
   private final Entity player;
   private final GameArea gameArea;
 
+  private int maxWaves;      // total waves per session
   private int waveNumber = 0;      // waves spawned so far
   private float scalingFactor = 1f; // difficulty scaling
   private int baseGhosts = 1;
@@ -43,7 +44,7 @@ public class EnemyWaves {
 
   /** Start or resume wave logic. If all waves previously finished, this restarts from wave 0. */
   public void startWave() {
-    if (isFinished()) {
+    if (allWavesFinished()) {
       logger.info("EnemyWaves: restarting wave session");
       resetSession();
     }
@@ -57,27 +58,36 @@ public class EnemyWaves {
     }
   }
 
+  /** Resets the wave parameters to their default values. */
   private void resetSession() {
     waveNumber = 0;
     scalingFactor = 1f;
     waveEndTime = 0;
   }
 
+  /** Spawns the enemies on the map based on the member variables of {@link EnemyWaves} object. */
   private void spawnWave() {
     if (waveNumber >= maxWaves) {
       logger.info("EnemyWaves: all {} waves already spawned", maxWaves);
       return;
     }
-    logger.info("EnemyWaves: spawning wave {} of {} (scale={})", waveNumber + 1, maxWaves, scalingFactor);
-    // Spawn pattern similar to earlier working version: Ghost + Vroomba combo for visibility
-    gameArea.spawnGhostGPT(baseGhosts, scalingFactor, player);
-    gameArea.spawnVroomba(baseVroombas, scalingFactor, player);
+    float baseScale = 1f;
+    try {
+      baseScale = gameArea.getBaseDifficultyScale();
+    } catch (Exception e) {
+      // fallback to 1 if area not ready
+    }
+    float effectiveScale = scalingFactor * baseScale;
+    logger.info("EnemyWaves: spawning wave {} of {} (waveScale={}, baseScale={}, effective={})", waveNumber + 1, maxWaves, scalingFactor, baseScale, effectiveScale);
+    gameArea.spawnGhostGPT(baseGhosts, effectiveScale, player);
+    gameArea.spawnVroomba(baseVroombas, effectiveScale, player);
 
     waveNumber++;
-    scalingFactor += 0.25f;
+    scalingFactor += 0.25f; // incremental per-wave multiplier
   }
 
-  private void tick() {
+  /** Checks if a wave is completed at every tick. The tick interval being 0.1f. */
+  void tick() {
     EntityService es = ServiceLocator.getEntityService();
     if (es == null) return;
     boolean anyAlive = false;
@@ -111,9 +121,83 @@ public class EnemyWaves {
     }
   }
 
+  /**
+   * Checks if the given Entity is an enemy.
+   * @param entity The entity that needs to be checked.
+   * @return True if the entity is an enemy, false otherwise.
+   */
   private boolean isEnemy(Entity entity) {
     return entity.getComponent(GhostAnimationController.class) != null;
   }
 
-  public boolean isFinished() { return waveNumber >= maxWaves; }
+  /**
+   * Checks if all the waves in the current room have finished.
+   * @return True if all waves have finished, false otherwise.
+   */
+  public boolean allWavesFinished() { return waveNumber >= maxWaves; }
+
+    /**
+     * Checks if the current wave has finished.
+     * @return True if the current wave has finished, false otherwise.
+     */
+    public boolean isCurrentWaveFinsihed() {
+      return waveEndTime > 0;
+    }
+
+    /**
+     * Returns the maximum number of waves in the current room.
+     * @return The maxWaves as an int.
+     */
+    public int getMaxWaves() { return maxWaves; }
+
+    /**
+     * Returns the scaling factor of the enemies in the next wave.
+     * @return The scaling factor as a float.
+     */
+    public float getScalingFactor() { return scalingFactor; }
+
+    /**
+     * Returns the wave number of the next wave in the current room.
+     * @return The wave number as an int.
+     */
+    public int getWaveNumber() { return waveNumber; }
+
+    /**
+     * Returns the time stamp of when the previous wave ended in the current room if no enemies are alive
+     * otherwise returns 0.
+     * @return The wave end time in milliseconds as a long.
+     */
+    public long getWaveEndTime() { return waveEndTime; }
+
+    /**
+     * Sets the maximum number of waves in the current room.
+     * @param maxWaves The maximum number of waves as an int.
+     */
+    public void setMaxWaves(int maxWaves) {
+      this.maxWaves = maxWaves;
+    }
+
+    /**
+     * Sets the scaling factor of the enemies in the next wave.
+     * @param scalingFactor The scaling factor as a float.
+     */
+    public void setScalingFactor(float scalingFactor) {
+      this.scalingFactor = scalingFactor;
+    }
+
+    /**
+     * Sets the wave number of the next wave in the current room.
+     * @param waveNumber The wave number as an int.
+     */
+    public void setWaveNumber(int waveNumber) {
+      this.waveNumber = waveNumber;
+    }
+
+    /**
+     * Sets the time stamp of when the previous wave ended in the current room
+     * @param waveEndTime The wave end time in milliseconds as a long .
+     */
+    public void setWaveEndTime(long waveEndTime) {
+      this.waveEndTime = waveEndTime;
+    }
 }
