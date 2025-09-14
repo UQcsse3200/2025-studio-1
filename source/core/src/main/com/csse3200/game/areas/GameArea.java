@@ -68,7 +68,7 @@ public abstract class GameArea implements Disposable {
    * Start enemy waves from terminal command by typing "waves".
    */
   public void startWaves(Entity player) {
-    if (wavesManager == null || wavesManager.isFinished()) {
+    if (wavesManager == null || wavesManager.allWavesFinished()) {
       int room = getRoomNumber();
       int maxWaves = room > 4 ? 2 : 1; // mimic original behaviour: higher rooms get 2 waves
       wavesManager = new EnemyWaves(maxWaves, this, player);

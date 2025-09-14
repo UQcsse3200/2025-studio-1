@@ -62,4 +62,35 @@ public class WeaponsStatsComponentTest {
             combat.setDisableDamage(false); // no crash
         }
     }
+
+    @Nested
+    @DisplayName("Objective: Upgrade Feature")
+    class upgradeTests {
+
+        @Test
+        void baseUpgradeTest() {
+            WeaponsStatsComponent combat = new WeaponsStatsComponent(20);
+            int originalAttack = combat.getBaseAttack();
+            combat.upgrade();
+            //Check the damage has doubled and the upgrade stage is now 2
+            assertEquals(2 * originalAttack, combat.getBaseAttack());
+            assertEquals(2, combat.getUpgradeStage());
+        }
+
+        @Test
+        void maxUpgradeTest() {
+            WeaponsStatsComponent combat = new WeaponsStatsComponent(20);
+
+            for (int i = 0; i < combat.getMaxUpgradeStage(); i++) {
+                combat.upgrade();
+            }
+
+            assertEquals(combat.getMaxUpgradeStage(), combat.getUpgradeStage());
+            combat.upgrade();
+            assertEquals(combat.getMaxUpgradeStage(), combat.getUpgradeStage());
+
+        }
+    }
+
+
 }
