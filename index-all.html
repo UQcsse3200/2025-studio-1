@@ -49,7 +49,7 @@ loadScripts(document, 'script');</script>
 <div class="header">
 <h1>Index</h1>
 </div>
-<a href="#I:A">A</a>&nbsp;<a href="#I:B">B</a>&nbsp;<a href="#I:C">C</a>&nbsp;<a href="#I:D">D</a>&nbsp;<a href="#I:E">E</a>&nbsp;<a href="#I:F">F</a>&nbsp;<a href="#I:G">G</a>&nbsp;<a href="#I:H">H</a>&nbsp;<a href="#I:I">I</a>&nbsp;<a href="#I:J">J</a>&nbsp;<a href="#I:K">K</a>&nbsp;<a href="#I:L">L</a>&nbsp;<a href="#I:M">M</a>&nbsp;<a href="#I:N">N</a>&nbsp;<a href="#I:O">O</a>&nbsp;<a href="#I:P">P</a>&nbsp;<a href="#I:R">R</a>&nbsp;<a href="#I:S">S</a>&nbsp;<a href="#I:T">T</a>&nbsp;<a href="#I:U">U</a>&nbsp;<a href="#I:V">V</a>&nbsp;<a href="#I:W">W</a>&nbsp;<a href="#I:Z">Z</a>&nbsp;<br><a href="allclasses-index.html">All&nbsp;Classes&nbsp;and&nbsp;Interfaces</a><span class="vertical-separator">|</span><a href="allpackages-index.html">All&nbsp;Packages</a><span class="vertical-separator">|</span><a href="constant-values.html">Constant&nbsp;Field&nbsp;Values</a>
+<a href="#I:A">A</a>&nbsp;<a href="#I:B">B</a>&nbsp;<a href="#I:C">C</a>&nbsp;<a href="#I:D">D</a>&nbsp;<a href="#I:E">E</a>&nbsp;<a href="#I:F">F</a>&nbsp;<a href="#I:G">G</a>&nbsp;<a href="#I:H">H</a>&nbsp;<a href="#I:I">I</a>&nbsp;<a href="#I:J">J</a>&nbsp;<a href="#I:K">K</a>&nbsp;<a href="#I:L">L</a>&nbsp;<a href="#I:M">M</a>&nbsp;<a href="#I:N">N</a>&nbsp;<a href="#I:O">O</a>&nbsp;<a href="#I:P">P</a>&nbsp;<a href="#I:Q">Q</a>&nbsp;<a href="#I:R">R</a>&nbsp;<a href="#I:S">S</a>&nbsp;<a href="#I:T">T</a>&nbsp;<a href="#I:U">U</a>&nbsp;<a href="#I:V">V</a>&nbsp;<a href="#I:W">W</a>&nbsp;<a href="#I:Z">Z</a>&nbsp;<br><a href="allclasses-index.html">All&nbsp;Classes&nbsp;and&nbsp;Interfaces</a><span class="vertical-separator">|</span><a href="allpackages-index.html">All&nbsp;Packages</a><span class="vertical-separator">|</span><a href="constant-values.html">Constant&nbsp;Field&nbsp;Values</a>
 <h2 class="title" id="I:A">A</h2>
 <dl class="index">
 <dt><a href="com/csse3200/game/files/FileLoader.Location.html#ABSOLUTE" class="member-name-link">ABSOLUTE</a> - Enum constant in enum class com.csse3200.game.files.<a href="com/csse3200/game/files/FileLoader.Location.html" title="enum class in com.csse3200.game.files">FileLoader.Location</a></dt>
@@ -334,6 +334,8 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/csse3200/game/entities/factories/items/package-summary.html">com.csse3200.game.entities.factories.items</a> - package com.csse3200.game.entities.factories.items</dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/entities/factories/system/package-summary.html">com.csse3200.game.entities.factories.system</a> - package com.csse3200.game.entities.factories.system</dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/entities/spawner/package-summary.html">com.csse3200.game.entities.spawner</a> - package com.csse3200.game.entities.spawner</dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/events/package-summary.html">com.csse3200.game.events</a> - package com.csse3200.game.events</dt>
 <dd>&nbsp;</dd>
@@ -1260,6 +1262,11 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Initialise this ForestGameArea to use the provided TerrainFactory and camera helper.</div>
 </dd>
+<dt><a href="com/csse3200/game/entities/configs/ItemSpawnConfig.html#forestmap()" class="member-name-link">forestmap()</a> - Static method in class com.csse3200.game.entities.configs.<a href="com/csse3200/game/entities/configs/ItemSpawnConfig.html" title="class in com.csse3200.game.entities.configs">ItemSpawnConfig</a></dt>
+<dd>
+<div class="block">Gives a list of items(including weapons) and their spawn locations for the forest map
+ Each item can have multiple spawn locations and each location can have multiple items</div>
+</dd>
 <dt><a href="com/csse3200/game/files/UserSettings.Settings.html#fps" class="member-name-link">fps</a> - Variable in class com.csse3200.game.files.<a href="com/csse3200/game/files/UserSettings.Settings.html" title="class in com.csse3200.game.files">UserSettings.Settings</a></dt>
 <dd>
 <div class="block">FPS cap of the game.</div>
@@ -1851,6 +1858,25 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/csse3200/game/components/player/ItemPickUpComponent.html#%3Cinit%3E(com.csse3200.game.components.player.InventoryComponent)" class="member-name-link">ItemPickUpComponent(InventoryComponent)</a> - Constructor for class com.csse3200.game.components.player.<a href="com/csse3200/game/components/player/ItemPickUpComponent.html" title="class in com.csse3200.game.components.player">ItemPickUpComponent</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/entities/configs/ItemSpawnConfig.html" class="type-name-link" title="class in com.csse3200.game.entities.configs">ItemSpawnConfig</a> - Class in <a href="com/csse3200/game/entities/configs/package-summary.html">com.csse3200.game.entities.configs</a></dt>
+<dd>
+<div class="block">Sets up item spawn configurations for different maps
+ To add items for a new map make a new method like FOREST_MAP</div>
+</dd>
+<dt><a href="com/csse3200/game/entities/configs/ItemSpawnConfig.html#%3Cinit%3E()" class="member-name-link">ItemSpawnConfig()</a> - Constructor for class com.csse3200.game.entities.configs.<a href="com/csse3200/game/entities/configs/ItemSpawnConfig.html" title="class in com.csse3200.game.entities.configs">ItemSpawnConfig</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/entities/spawner/ItemSpawner.html" class="type-name-link" title="class in com.csse3200.game.entities.spawner">ItemSpawner</a> - Class in <a href="com/csse3200/game/entities/spawner/package-summary.html">com.csse3200.game.entities.spawner</a></dt>
+<dd>
+<div class="block">Spawns items in the game area based on a provided configuration.</div>
+</dd>
+<dt><a href="com/csse3200/game/entities/spawner/ItemSpawner.html#%3Cinit%3E(com.csse3200.game.areas.GameArea)" class="member-name-link">ItemSpawner(GameArea)</a> - Constructor for class com.csse3200.game.entities.spawner.<a href="com/csse3200/game/entities/spawner/ItemSpawner.html" title="class in com.csse3200.game.entities.spawner">ItemSpawner</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/entities/spawner/ItemSpawner.ItemSpawnInfo.html" class="type-name-link" title="class in com.csse3200.game.entities.spawner">ItemSpawner.ItemSpawnInfo</a> - Class in <a href="com/csse3200/game/entities/spawner/package-summary.html">com.csse3200.game.entities.spawner</a></dt>
+<dd>
+<div class="block">It holds the information needed to spawn an item</div>
+</dd>
+<dt><a href="com/csse3200/game/entities/spawner/ItemSpawner.ItemSpawnInfo.html#%3Cinit%3E(com.badlogic.gdx.math.GridPoint2,int)" class="member-name-link">ItemSpawnInfo(GridPoint2, int)</a> - Constructor for class com.csse3200.game.entities.spawner.<a href="com/csse3200/game/entities/spawner/ItemSpawner.ItemSpawnInfo.html" title="class in com.csse3200.game.entities.spawner">ItemSpawner.ItemSpawnInfo</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/entities/configs/projectiles/ProjectileConfig.html#itemType" class="member-name-link">itemType</a> - Static variable in class com.csse3200.game.entities.configs.projectiles.<a href="com/csse3200/game/entities/configs/projectiles/ProjectileConfig.html" title="class in com.csse3200.game.entities.configs.projectiles">ProjectileConfig</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/entities/configs/ItemTypes.html" class="type-name-link" title="enum class in com.csse3200.game.entities.configs">ItemTypes</a> - Enum Class in <a href="com/csse3200/game/entities/configs/package-summary.html">com.csse3200.game.entities.configs</a></dt>
@@ -2094,6 +2120,12 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/csse3200/game/screens/MainMenuScreen.html#%3Cinit%3E(com.csse3200.game.GdxGame)" class="member-name-link">MainMenuScreen(GdxGame)</a> - Constructor for class com.csse3200.game.screens.<a href="com/csse3200/game/screens/MainMenuScreen.html" title="class in com.csse3200.game.screens">MainMenuScreen</a></dt>
 <dd>
 <div class="block">Builds the main menu screen.</div>
+</dd>
+<dt><a href="com/csse3200/game/entities/spawner/ItemSpawner.html#makeItem(java.lang.String)" class="member-name-link">makeItem(String)</a> - Method in class com.csse3200.game.entities.spawner.<a href="com/csse3200/game/entities/spawner/ItemSpawner.html" title="class in com.csse3200.game.entities.spawner">ItemSpawner</a></dt>
+<dd>
+<div class="block">Creates an item entity based on the provided type
+ This method currently supports weapon types defined in the Weapons enum
+ Additional item types like consumables, perishables, etc.</div>
 </dd>
 <dt><a href="com/csse3200/game/utils/math/Vector2Utils.html#MAX" class="member-name-link">MAX</a> - Static variable in class com.csse3200.game.utils.math.<a href="com/csse3200/game/utils/math/Vector2Utils.html" title="class in com.csse3200.game.utils.math">Vector2Utils</a></dt>
 <dd>&nbsp;</dd>
@@ -2349,6 +2381,8 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Point at which the raycast hit the fixture.</div>
 </dd>
+<dt><a href="com/csse3200/game/entities/spawner/ItemSpawner.ItemSpawnInfo.html#position" class="member-name-link">position</a> - Variable in class com.csse3200.game.entities.spawner.<a href="com/csse3200/game/entities/spawner/ItemSpawner.ItemSpawnInfo.html" title="class in com.csse3200.game.entities.spawner">ItemSpawner.ItemSpawnInfo</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/physics/PhysicsContactListener.html#postSolve(com.badlogic.gdx.physics.box2d.Contact,com.badlogic.gdx.physics.box2d.ContactImpulse)" class="member-name-link">postSolve(Contact, ContactImpulse)</a> - Method in class com.csse3200.game.physics.<a href="com/csse3200/game/physics/PhysicsContactListener.html" title="class in com.csse3200.game.physics">PhysicsContactListener</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/physics/PhysicsContactListener.html#preSolve(com.badlogic.gdx.physics.box2d.Contact,com.badlogic.gdx.physics.box2d.Manifold)" class="member-name-link">preSolve(Contact, Manifold)</a> - Method in class com.csse3200.game.physics.<a href="com/csse3200/game/physics/PhysicsContactListener.html" title="class in com.csse3200.game.physics">PhysicsContactListener</a></dt>
@@ -2399,6 +2433,11 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Put key, value pair in map</div>
 </dd>
+</dl>
+<h2 class="title" id="I:Q">Q</h2>
+<dl class="index">
+<dt><a href="com/csse3200/game/entities/spawner/ItemSpawner.ItemSpawnInfo.html#quantity" class="member-name-link">quantity</a> - Variable in class com.csse3200.game.entities.spawner.<a href="com/csse3200/game/entities/spawner/ItemSpawner.ItemSpawnInfo.html" title="class in com.csse3200.game.entities.spawner">ItemSpawner.ItemSpawnInfo</a></dt>
+<dd>&nbsp;</dd>
 </dl>
 <h2 class="title" id="I:R">R</h2>
 <dl class="index">
@@ -2970,6 +3009,12 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/csse3200/game/areas/GameArea.html#spawnFloor()" class="member-name-link">spawnFloor()</a> - Method in class com.csse3200.game.areas.<a href="com/csse3200/game/areas/GameArea.html" title="class in com.csse3200.game.areas">GameArea</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/areas/ForestGameArea.html#spawnItem(com.csse3200.game.entities.Entity,com.badlogic.gdx.math.GridPoint2)" class="member-name-link">spawnItem(Entity, GridPoint2)</a> - Method in class com.csse3200.game.areas.<a href="com/csse3200/game/areas/ForestGameArea.html" title="class in com.csse3200.game.areas">ForestGameArea</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/entities/spawner/ItemSpawner.html#spawnItems(java.util.Map)" class="member-name-link">spawnItems(Map&lt;String, List&lt;ItemSpawner.ItemSpawnInfo&gt;&gt;)</a> - Method in class com.csse3200.game.entities.spawner.<a href="com/csse3200/game/entities/spawner/ItemSpawner.html" title="class in com.csse3200.game.entities.spawner">ItemSpawner</a></dt>
+<dd>
+<div class="block">Spawns items in the game area based on the provided information.</div>
+</dd>
 <dt><a href="com/csse3200/game/areas/KeycardSpawnerSystem.html#spawnKeycards(com.csse3200.game.areas.GameArea)" class="member-name-link">spawnKeycards(GameArea)</a> - Static method in class com.csse3200.game.areas.<a href="com/csse3200/game/areas/KeycardSpawnerSystem.html" title="class in com.csse3200.game.areas">KeycardSpawnerSystem</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/utils/SortedIntMap.html#spliterator()" class="member-name-link">spliterator()</a> - Method in class com.csse3200.game.utils.<a href="com/csse3200/game/utils/SortedIntMap.html" title="class in com.csse3200.game.utils">SortedIntMap</a></dt>
@@ -3613,7 +3658,7 @@ the order they are declared.</div>
  processed</div>
 </dd>
 </dl>
-<a href="#I:A">A</a>&nbsp;<a href="#I:B">B</a>&nbsp;<a href="#I:C">C</a>&nbsp;<a href="#I:D">D</a>&nbsp;<a href="#I:E">E</a>&nbsp;<a href="#I:F">F</a>&nbsp;<a href="#I:G">G</a>&nbsp;<a href="#I:H">H</a>&nbsp;<a href="#I:I">I</a>&nbsp;<a href="#I:J">J</a>&nbsp;<a href="#I:K">K</a>&nbsp;<a href="#I:L">L</a>&nbsp;<a href="#I:M">M</a>&nbsp;<a href="#I:N">N</a>&nbsp;<a href="#I:O">O</a>&nbsp;<a href="#I:P">P</a>&nbsp;<a href="#I:R">R</a>&nbsp;<a href="#I:S">S</a>&nbsp;<a href="#I:T">T</a>&nbsp;<a href="#I:U">U</a>&nbsp;<a href="#I:V">V</a>&nbsp;<a href="#I:W">W</a>&nbsp;<a href="#I:Z">Z</a>&nbsp;<br><a href="allclasses-index.html">All&nbsp;Classes&nbsp;and&nbsp;Interfaces</a><span class="vertical-separator">|</span><a href="allpackages-index.html">All&nbsp;Packages</a><span class="vertical-separator">|</span><a href="constant-values.html">Constant&nbsp;Field&nbsp;Values</a></main>
+<a href="#I:A">A</a>&nbsp;<a href="#I:B">B</a>&nbsp;<a href="#I:C">C</a>&nbsp;<a href="#I:D">D</a>&nbsp;<a href="#I:E">E</a>&nbsp;<a href="#I:F">F</a>&nbsp;<a href="#I:G">G</a>&nbsp;<a href="#I:H">H</a>&nbsp;<a href="#I:I">I</a>&nbsp;<a href="#I:J">J</a>&nbsp;<a href="#I:K">K</a>&nbsp;<a href="#I:L">L</a>&nbsp;<a href="#I:M">M</a>&nbsp;<a href="#I:N">N</a>&nbsp;<a href="#I:O">O</a>&nbsp;<a href="#I:P">P</a>&nbsp;<a href="#I:Q">Q</a>&nbsp;<a href="#I:R">R</a>&nbsp;<a href="#I:S">S</a>&nbsp;<a href="#I:T">T</a>&nbsp;<a href="#I:U">U</a>&nbsp;<a href="#I:V">V</a>&nbsp;<a href="#I:W">W</a>&nbsp;<a href="#I:Z">Z</a>&nbsp;<br><a href="allclasses-index.html">All&nbsp;Classes&nbsp;and&nbsp;Interfaces</a><span class="vertical-separator">|</span><a href="allpackages-index.html">All&nbsp;Packages</a><span class="vertical-separator">|</span><a href="constant-values.html">Constant&nbsp;Field&nbsp;Values</a></main>
 </div>
 </div>
 </body>

@@ -24,6 +24,7 @@ com.csse3200.game.entities.factories
 com.csse3200.game.entities.factories.characters
 com.csse3200.game.entities.factories.items
 com.csse3200.game.entities.factories.system
+com.csse3200.game.entities.spawner
 com.csse3200.game.events
 com.csse3200.game.events.listeners
 com.csse3200.game.files
