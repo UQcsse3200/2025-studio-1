@@ -169,7 +169,7 @@ public class BossFactory {
         PhysicsUtils.setScaledCollider(boss3, 1.2f, 0.6f);
 
         boss3.addComponent(new EnemyMudBallAttackComponent(
-                target, 1.2f, 9f, 6f, 3f));
+                target, "boss3_attack_cpu", 1.2f, 0f, 6f, 3f));
         boss3.addComponent(new EnemyMudRingSprayComponent(
                 2.5f, 12, 6f, 3f));
 
