@@ -24,7 +24,7 @@ public class PlayerInventoryDisplay extends UIComponent {
     private Table table;
     private final Array<Slot> slots = new Array<>();
 
-    private static final int SLOTS = 5;
+    private static final int NUM_SLOTS = 5;
     private static final float SLOT_SIZE = 96f;
     private static final float SLOT_PAD  = 10f;
 
@@ -88,13 +88,15 @@ public class PlayerInventoryDisplay extends UIComponent {
         Drawable normalBg = createSlotBg(0.2f, 0.2f, 0.2f, 0.6f, 2, 1f, 1f, 1f, 1f);
         Drawable focusBg  = createSlotBg(1f, 1f, 0f, 0.6f, 2, 1f, 1f, 0f, 1f);
 
-        for (int i = 0; i < SLOTS; i++) {
+        for (int i = 0; i < NUM_SLOTS; i++) {
             Slot slot = new Slot(normalBg, focusBg);
             slots.add(slot);
             table.add(slot).size(SLOT_SIZE).pad(SLOT_PAD);
         }
 
         stage.addActor(table);
+
+        setFocusedIndex(focusedIndex);
     }
 
     /** Add an item to the first empty slot. */
@@ -141,8 +143,6 @@ public class PlayerInventoryDisplay extends UIComponent {
 
     /** Focus a specific slot; pass -1 to clear focus. */
     public void setFocusedIndex(int index) {
-        if (index == focusedIndex) return;
-
         // clear previous focus
         if (focusedIndex >= 0 && focusedIndex < slots.size) {
             slots.get(focusedIndex).setHighlighted(false);
