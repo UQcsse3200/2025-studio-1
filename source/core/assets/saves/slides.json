@@ -1,0 +1,12 @@
+{
+areaId: com.csse3200.game.areas.ForestGameArea@31fa1761
+inventory: [
+	null\nItem : null\nId : 16\nType : RANGED\nCount : 1\nimages/rifle.png
+]
+Health: 100
+position: {
+	x: 0.75000006
+	y: 7.5149984
+}
+RoundNumber: 2
+}
