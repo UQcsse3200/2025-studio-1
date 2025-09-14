@@ -9,6 +9,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Disposable;
 import com.csse3200.game.areas.terrain.TerrainComponent;
 import com.csse3200.game.areas.terrain.TerrainFactory;
+import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.services.ServiceLocator;
@@ -26,10 +27,14 @@ import java.util.function.Supplier;
 public abstract class GameArea implements Disposable {
   protected TerrainComponent terrain;
   protected List<Entity> areaEntities;
+  protected TerrainFactory terrainFactory;
+  protected CameraComponent cameraComponent;
   /** Prevents re-entrant room transitions across areas */
   protected static boolean isTransitioning = false;
 
-  protected GameArea() {
+  protected GameArea(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
+    this.terrainFactory = terrainFactory;
+    this.cameraComponent = cameraComponent;
     areaEntities = new ArrayList<>();
   }
 
@@ -45,14 +50,16 @@ public abstract class GameArea implements Disposable {
 
   /** Attempt to start a room transition. Returns false if one is already in progress. */
   protected boolean beginTransition() {
-    if (isTransitioning) return false;
+    if (isTransitioning || com.csse3200.game.services.ServiceLocator.isTransitioning()) return false;
     isTransitioning = true;
+    com.csse3200.game.services.ServiceLocator.setTransitioning(true);
     return true;
   }
 
   /** Mark the end of a room transition. */
   protected void endTransition() {
     isTransitioning = false;
+    com.csse3200.game.services.ServiceLocator.setTransitioning(false);
   }
 
   /**
@@ -62,7 +69,11 @@ public abstract class GameArea implements Disposable {
    */
   public void spawnEntity(Entity entity) {
     areaEntities.add(entity);
-    ServiceLocator.getEntityService().register(entity);
+    if (com.csse3200.game.services.ServiceLocator.isTransitioning()) {
+      Gdx.app.postRunnable(() -> ServiceLocator.getEntityService().register(entity));
+    } else {
+      ServiceLocator.getEntityService().register(entity);
+    }
   }
 
   protected void spawnFloor() {
@@ -317,19 +328,40 @@ public abstract class GameArea implements Disposable {
     spawnEntity(door);
   }
 
+  protected <T extends GameArea> void loadArea(Class<T> areaClass) {
+    clearAndLoad(() -> {
+      try {
+        // Pass the concrete terrainFactory and cameraComponent
+        return areaClass
+                .getConstructor(TerrainFactory.class, CameraComponent.class)
+                .newInstance(this.terrainFactory, this.cameraComponent);
+      } catch (Exception e) {
+        throw new RuntimeException("Failed to create " + areaClass.getSimpleName(), e);
+      }
+    });
+  }
   /** Helper to clear current entities and transition to a new area. */
   protected void clearAndLoad(Supplier<GameArea> nextAreaSupplier) {
     if (!beginTransition()) return;
-    try {
+    // Ensure transition happens on the render thread to avoid race conditions
+    Gdx.app.postRunnable(() -> {
+      // Phase 1: disable and dispose current area's entities
       for (Entity entity : areaEntities) {
+        entity.setEnabled(false);
         entity.dispose();
       }
       areaEntities.clear();
-      dispose();
-      GameArea next = nextAreaSupplier.get();
-      next.create();
-    } finally {
-      endTransition();
-    }
+
+      // Phase 2: on the next frame, build the next area to avoid Box2D world-locked/native races
+      Gdx.app.postRunnable(() -> {
+        try {
+          GameArea next = nextAreaSupplier.get();
+          com.csse3200.game.services.ServiceLocator.registerGameArea(next);
+          next.create();
+        } finally {
+          endTransition();
+        }
+      });
+    });
   }
 }
