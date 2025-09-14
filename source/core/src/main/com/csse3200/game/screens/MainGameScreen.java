@@ -167,7 +167,7 @@ public class MainGameScreen extends ScreenAdapter {
         .addComponent(new MainGameExitDisplay())
         .addComponent(new Terminal(this.game))
         .addComponent(inputComponent)
-        .addComponent(new TerminalDisplay());
+        .addComponent(new TerminalDisplay(this.game));
 
     ServiceLocator.getEntityService().register(ui);
   }
