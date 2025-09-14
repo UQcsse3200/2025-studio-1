@@ -13,28 +13,37 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(GameExtension.class)
 class GameAreaBoundsTest {
+
   @Test
   void computesCameraBoundsCorrectly() {
-    OrthographicCamera cam = new OrthographicCamera();
+    // Mock camera and set viewport directly
+    OrthographicCamera cam = mock(OrthographicCamera.class);
     cam.viewportWidth = 30f;
     cam.viewportHeight = 20f;
-    Entity camEntity = new Entity();
-    camEntity.setPosition(10f, 5f);
+
+    // Mock entity position
+    Entity camEntity = mock(Entity.class);
+    when(camEntity.getPosition()).thenReturn(new Vector2(10f, 5f));
+
+    // Mock camera component
     CameraComponent cameraComponent = mock(CameraComponent.class);
     when(cameraComponent.getCamera()).thenReturn(cam);
     when(cameraComponent.getEntity()).thenReturn(camEntity);
 
-    GameArea area = new GameArea() { @Override public void create() {} };
+    // Mock GameArea with real method calls enabled
+    GameArea area = mock(GameArea.class, withSettings().defaultAnswer(CALLS_REAL_METHODS));
+
+    // Call the real method
     GameArea.Bounds b = area.getCameraBounds(cameraComponent);
 
+    // Assertions
     assertEquals(-5f, b.leftX, 0.0001f);
     assertEquals(25f, b.rightX, 0.0001f);
     assertEquals(-5f, b.bottomY, 0.0001f);
     assertEquals(15f, b.topY, 0.0001f);
     assertEquals(30f, b.viewWidth, 0.0001f);
     assertEquals(20f, b.viewHeight, 0.0001f);
-    assertEquals(new Vector2(10f, 5f), b.camPos);
+    assertEquals(10f, b.camPos.x, 0.0001f);
+    assertEquals(5f, b.camPos.y, 0.0001f);
   }
 }
-
-
