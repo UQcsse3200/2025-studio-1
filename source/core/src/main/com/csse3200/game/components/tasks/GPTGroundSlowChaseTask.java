@@ -11,6 +11,7 @@ import com.csse3200.game.physics.components.PhysicsComponent;
 import com.csse3200.game.physics.raycast.RaycastHit;
 import com.csse3200.game.rendering.DebugRenderer;
 import com.csse3200.game.services.ServiceLocator;
+import com.csse3200.game.services.GameTime;
 
 /**
  * Ground slow-chase for GhostGPT: set X only; Box2D gravity handles Y.
@@ -23,7 +24,14 @@ public class GPTGroundSlowChaseTask extends DefaultTask implements PriorityTask 
   private final PhysicsEngine physics;
   private final DebugRenderer debugRenderer;
   private final RaycastHit hit = new RaycastHit();
+  private final RaycastHit jumpHit = new RaycastHit();
   private PhysicsComponent physicsComponent;
+  // Jump mechanics
+  private final GameTime timeSource;
+  private float timeSinceLastJump = 0f;
+  private final float jumpCooldown = 1.2f; // seconds between jumps
+  private final float obstacleCheckDistance = 0.6f; // horizontal ray distance to look for obstacle
+  private final float jumpImpulse = 15f; // upward impulse (scaled by mass)
 
   /**
    * @param target player entity to chase
@@ -36,6 +44,7 @@ public class GPTGroundSlowChaseTask extends DefaultTask implements PriorityTask 
     this.speedX = speed;
     this.physics = ServiceLocator.getPhysicsService().getPhysics();
     this.debugRenderer = ServiceLocator.getRenderService().getDebug();
+    this.timeSource = ServiceLocator.getTimeSource();
   }
 
   @Override
@@ -61,6 +70,29 @@ public class GPTGroundSlowChaseTask extends DefaultTask implements PriorityTask 
     float currentVx = body.getLinearVelocity().x;
     float impulseX = (desiredVx - currentVx) * body.getMass();
     body.applyLinearImpulse(new Vector2(impulseX, 0f), body.getWorldCenter(), true);
+
+    attemptJump(dirX, body);
+  }
+
+  private void attemptJump(float dirX, Body body) {
+    timeSinceLastJump += timeSource.getDeltaTime();
+    if (timeSinceLastJump < jumpCooldown) return; // still on cooldown
+    if (Math.abs(body.getLinearVelocity().y) > 0.05f) return; // already moving vertically -> not grounded enough
+    if (dirX == 0f) return; // no horizontal intent
+
+    Vector2 from = owner.getEntity().getCenterPosition();
+    Vector2 to = new Vector2(from.x + dirX * obstacleCheckDistance, from.y);
+
+    // Raycast ahead at center height for an obstacle
+    if (!physics.raycast(from, to, PhysicsLayer.OBSTACLE, jumpHit)) {
+      return; // nothing to jump over
+    }
+
+    // Simple jump: apply vertical impulse
+    float impulseY = body.getMass() * jumpImpulse;
+    body.applyLinearImpulse(new Vector2(0f, impulseY), body.getWorldCenter(), true);
+    timeSinceLastJump = 0f;
+    debugRenderer.drawLine(from, to); // visualize trigger ray (optional)
   }
 
   @Override
