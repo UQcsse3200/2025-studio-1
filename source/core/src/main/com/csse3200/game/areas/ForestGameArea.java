@@ -12,6 +12,7 @@ import com.csse3200.game.components.ItemHoldComponent;
 import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.components.DoorComponent;
 import com.csse3200.game.components.KeycardGateComponent;
+import com.csse3200.game.components.attachments.LaserComponent;
 import com.csse3200.game.rendering.AnimationRenderComponent;
 import com.csse3200.game.components.WeaponsStatsComponent;
 import com.csse3200.game.components.player.InventoryComponent;
@@ -235,7 +236,7 @@ public class ForestGameArea extends GameArea {
     pistol = spawnPistol();
     rifle = spawnRifle();
     lightsaber = spawnLightsaber();
-
+    rifle.addComponent(new LaserComponent(5f));
     //These are commented out since there is no equip feature yet
     // this.equipItem(pistol);
     // this.equipItem(lightsaber);

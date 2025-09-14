@@ -3,6 +3,7 @@ package com.csse3200.game.entities.factories.items;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.csse3200.game.components.WeaponsStatsComponent;
+import com.csse3200.game.components.attachments.LaserComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.components.ItemComponent;
 import com.csse3200.game.entities.configs.ItemTypes;
