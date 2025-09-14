@@ -14,6 +14,7 @@ import com.csse3200.game.components.shop.CatalogService;
 import com.csse3200.game.components.shop.ShopManager;
 import com.csse3200.game.areas.ForestGameArea;
 import com.csse3200.game.ui.*;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 
 
 public class ShopScreenDisplay extends UIComponent {
@@ -104,6 +105,9 @@ public class ShopScreenDisplay extends UIComponent {
     public void draw(SpriteBatch batch) {
         // Stage draws everything
     }
+
+    public Stage getStage() { return stage; }
+
 
     private void updateCurrencyLabel() {
         var inv = game.getPlayer().getComponent(
