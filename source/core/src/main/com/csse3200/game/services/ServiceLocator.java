@@ -2,6 +2,7 @@ package com.csse3200.game.services;
 
 import com.csse3200.game.areas.GameArea;
 import com.csse3200.game.entities.EntityService;
+import com.csse3200.game.events.EventHandler;
 import com.csse3200.game.input.InputService;
 import com.csse3200.game.physics.PhysicsService;
 import com.csse3200.game.rendering.RenderService;
@@ -25,6 +26,7 @@ public class ServiceLocator {
   private static InputService inputService;
   private static ResourceService resourceService;
   private static GameArea gameArea;
+  private static volatile boolean transitioning = false;
 
   public static EntityService getEntityService() {
     return entityService;
@@ -51,6 +53,8 @@ public class ServiceLocator {
   }
 
   public static GameArea getGameArea() {return gameArea;}
+  public static boolean isTransitioning() { return transitioning; }
+  public static void setTransitioning(boolean value) { transitioning = value; }
 
   public static void registerGameArea(GameArea theArea) {
     logger.debug("Registering game area service {}", theArea);
@@ -95,7 +99,11 @@ public class ServiceLocator {
     resourceService = null;
     gameArea = null;
   }
+  private static final com.csse3200.game.events.EventHandler globalEvents = new com.csse3200.game.events.EventHandler();
 
+  public static com.csse3200.game.events.EventHandler getGlobalEvents() {
+    return globalEvents;
+  }
   private ServiceLocator() {
     throw new IllegalStateException("Instantiating static util class");
   }
