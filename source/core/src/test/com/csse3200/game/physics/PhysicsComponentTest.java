@@ -37,11 +37,12 @@ class PhysicsComponentTest {
     Entity entity = new Entity();
     PhysicsComponent component = new PhysicsComponent();
     entity.addComponent(component);
+    entity.create();
 
     verify(engine).createBody(any());
+    System.out.println(body);
     assertEquals(body, component.getBody());
 
-    entity.create();
     verify(body).setActive(true);
   }
 

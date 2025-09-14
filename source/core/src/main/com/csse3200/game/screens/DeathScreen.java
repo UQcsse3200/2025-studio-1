@@ -1,135 +1,59 @@
 package com.csse3200.game.screens;
 
-import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.csse3200.game.GdxGame;
-import com.csse3200.game.components.screens.DeathScreenDisplay;
+import com.csse3200.game.components.screens.BaseEndScreenDisplays;
 import com.csse3200.game.entities.Entity;
-import com.csse3200.game.entities.EntityService;
-import com.csse3200.game.entities.factories.system.RenderFactory;
 import com.csse3200.game.input.InputDecorator;
-import com.csse3200.game.input.InputService;
-import com.csse3200.game.rendering.RenderService;
-import com.csse3200.game.rendering.Renderer;
-import com.csse3200.game.services.GameTime;
-import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.badlogic.gdx.utils.Scaling;
-
 /**
- * The game screen containing the death screen.
+ * Screen shown when the player is defeated.
+ * <p>
+ * This class extends {@link BaseScreen} and provides the
+ * specific UI entity for the death scenario. The UI includes:
+ * <ul>
+ *   <li>A "Defeated" title</li>
+ *   <li>Round and elapsed time labels</li>
+ *   <li>Buttons for retrying the game or returning to the main menu</li>
+ * </ul>
+ * <p>
+ * Common lifecycle management (service registration, renderer setup,
+ * asset loading/unloading, and background creation) is handled by {@link BaseScreen}.
  */
-public class DeathScreen extends ScreenAdapter {
-    private static final Logger logger = LoggerFactory.getLogger(DeathScreen.class);
-    private final GdxGame game;
-    private final Renderer renderer;
-    private static final String[] deathScreenTextures = {"images/menu_background.png"};
+public class DeathScreen extends BaseScreen {
 
     /**
-     * Creates a new DeathScreen instance
-     * Registers services, creates the renderer, loads assets, and builds the UI.
+     * Constructs a new DeathScreen instance.
+     * <p>
+     * This will:
+     * <ul>
+     *   <li>Register services with {@link ServiceLocator}</li>
+     *   <li>Create a renderer and position its camera</li>
+     *   <li>Load required assets</li>
+     *   <li>Build the UI (via {@link #createUIScreen(Stage stage)})</li>
+     * </ul>
      *
-     * @param game the {@link GdxGame} instance
+     * @param game the {@link GdxGame} instance, used for screen navigation
      */
     public DeathScreen(GdxGame game) {
-        this.game = game;
-
-        logger.debug("Initialising death screen service");
-        ServiceLocator.registerInputService(new InputService());
-        ServiceLocator.registerResourceService(new ResourceService());
-        ServiceLocator.registerEntityService(new EntityService());
-        ServiceLocator.registerRenderService(new RenderService());
-        ServiceLocator.registerTimeSource(new GameTime());
-
-
-        renderer = RenderFactory.createRenderer();
-        logger.debug("Death Screen renderer created");
-        renderer.getCamera().getEntity().setPosition(5f, 5f);
-        logger.debug("Death Screen renderer camera position set");
-
-        loadAssets();
-        createUI();
-    }
-
-    @Override
-    public void render(float delta) {
-        logger.debug("Rendering death screen frame");
-        ServiceLocator.getEntityService().update();
-        renderer.render();
+        super(game, "images/menu_background.png");
     }
 
     /**
-     * Adjusts the death screens layout when the window is resized
-     * @param width New width in pixels
-     * @param height New height in pixels
+     * Provides the UI entity for the death screen.
+     * <p>
+     * This entity includes:
+     * <ul>
+     *   <li>{@link BaseEndScreenDisplays} — the defeat UI (title, round/time labels, buttons)</li>
+     *   <li>{@link InputDecorator} — captures and forwards input events to the stage</li>
+     * </ul>
+     *
+     * @return the UI {@link Entity} for the death screen
      */
     @Override
-    public void resize(int width, int height) {
-        logger.debug("Resizing death screen frame to {}*{}", width, height);
-        renderer.resize(width, height);
-    }
-
-    /**
-     * Cleans up and disposes of resources when the death screen is no longer used
-     */
-    @Override
-    public void dispose() {
-        logger.debug("Disposing death screen");
-        renderer.dispose();
-        unloadAssets();
-        ServiceLocator.getRenderService().dispose();
-        ServiceLocator.getEntityService().dispose();
-        logger.debug("Death screen service disposed");
-        ServiceLocator.clear();
-        logger.debug("Death screen ServiceLocation cleared");
-
-    }
-
-    /**
-     * Loads textures and other resources required for the death screen.
-     */
-    private void loadAssets() {
-        logger.debug("Loading assets");
-        ResourceService resourceService = ServiceLocator.getResourceService();
-        resourceService.loadTextures(deathScreenTextures);
-        ServiceLocator.getResourceService().loadAll();
-    }
-
-    /**
-     * Unloads textures and other resources required for the death screen.
-     */
-    private void unloadAssets() {
-        logger.debug("Death Screen assets unloading");
-        ResourceService resourceService = ServiceLocator.getResourceService();
-        resourceService.unloadAssets(deathScreenTextures);
-    }
-
-    /**
-     * Creates the setting screen's ui including components for rendering ui elements to the screen
-     * and capturing and handling ui input.
-     */
-    private void createUI() {
-        logger.debug("Creating ui");
-        Stage stage = ServiceLocator.getRenderService().getStage();
-
-        Texture bgTex = ServiceLocator.getResourceService()
-                .getAsset("images/menu_background.png", Texture.class);
-        logger.debug("Death Screen background texture asset loaded");
-        Image bg = new Image(new TextureRegionDrawable(new TextureRegion(bgTex)));
-        bg.setFillParent(true);
-        bg.setScaling(Scaling.fill);
-        stage.addActor(bg);
-        logger.debug("Death Screen background image added");
-
-        Entity ui = new Entity();
-        ui.addComponent(new DeathScreenDisplay(game)).addComponent(new InputDecorator(stage, 10));
-        ServiceLocator.getEntityService().register(ui);
-        logger.debug("Death Screen UI created and registered");
+    protected Entity createUIScreen(Stage stage) {
+        return new Entity()
+                .addComponent(BaseEndScreenDisplays.defeated(game))
+                .addComponent(new InputDecorator(stage, 10));
     }
 }
