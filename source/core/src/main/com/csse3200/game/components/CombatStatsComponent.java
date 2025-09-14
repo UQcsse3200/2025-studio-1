@@ -118,7 +118,16 @@ public class CombatStatsComponent extends Component {
      return this.maxHealth;
   }
 
-
+  /**
+   * <p>Doubles player maximum health when player interacts with a HealthBench. Only applied once.</p>
+   */
+  public void upgradeMaxHealth() {
+    if (!healthUpgraded) {
+      healthUpgraded = true;
+      this.setMaxHealth(maxHealth * 2);
+      this.setHealth(maxHealth); // regenerate player
+    }
+  }
 
   /**
    * Apply damage to this entity.
@@ -134,17 +143,5 @@ public class CombatStatsComponent extends Component {
         return;
     }
     setHealth(this.health - damage);
-  }
-
-
-  /**
-   * <p>Doubles player maximum health when player interacts with a HealthBench. Only applied once</p>
-   */
-  public void upgradeMaxHealth() {
-    if (!healthUpgraded) {
-      healthUpgraded = true;
-      this.setMaxHealth(maxHealth * 2);
-      this.setHealth(maxHealth); // regenerate player
-    }
   }
 }
