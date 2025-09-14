@@ -5,7 +5,10 @@ public enum ItemTypes {
     MELEE("melee"),
     RANGED("ranged"),
     PROJECTILE("projectile"),
-    CONSUMABLE("consumable");
+    CONSUMABLE("consumable"),
+    BENCH("bench"),
+    HEALTH_BENCH("healthbench"),
+    COMPUTER_BENCH("computerbench");
 
     private final String string;
 

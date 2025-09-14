@@ -9,6 +9,7 @@ import com.csse3200.game.components.ItemHoldComponent;
 import com.csse3200.game.components.WeaponsStatsComponent;
 import com.csse3200.game.components.player.InventoryComponent;
 import com.csse3200.game.entities.Entity;
+import com.csse3200.game.entities.configs.Benches;
 import com.csse3200.game.entities.configs.Weapons;
 import com.csse3200.game.entities.factories.characters.BossFactory;
 import com.csse3200.game.entities.factories.characters.NPCFactory;
@@ -76,8 +77,8 @@ public class ForestGameArea extends GameArea {
     "images/player.png",
     "images/mud.png",
     "images/heart.png",
-    "images/computerBench.png"
-
+    "images/computerBench.png",
+    "images/healthBench.png"
   };
 
   private static final String[] forestTextureAtlases = {
@@ -129,7 +130,8 @@ public class ForestGameArea extends GameArea {
     displayUI();
     spawnTerrain();
     spawnTrees();
-    spawnComputerBench();
+    //spawnComputerBench();
+    spawnHealthBench();
 
     player = spawnPlayer();
 
@@ -223,9 +225,14 @@ public class ForestGameArea extends GameArea {
   }
 
   private void spawnComputerBench() {
-    Entity bench = InteractableStationFactory.createComputerBench();
+    Entity bench = InteractableStationFactory.createStation(Benches.COMPUTER_BENCH);
     spawnEntityAt(bench, new GridPoint2(10, 7), true, true);
 
+  }
+
+  private void spawnHealthBench() {
+    Entity bench = InteractableStationFactory.createStation(Benches.HEALTH_BENCH);
+    spawnEntityAt(bench, new GridPoint2(10, 7), true, true);
   }
 
   /**
