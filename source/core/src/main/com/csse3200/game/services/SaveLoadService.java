@@ -1,15 +1,13 @@
 package com.csse3200.game.services;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.areas.GameArea;
 import com.csse3200.game.components.CombatStatsComponent;
+import com.csse3200.game.components.ItemComponent;
 import com.csse3200.game.components.player.InventoryComponent;
 import com.csse3200.game.components.player.PlayerStatsDisplay;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.files.FileLoader;
-import com.csse3200.game.rendering.AnimationRenderComponent;
-import com.csse3200.game.rendering.TextureRenderComponent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
@@ -43,7 +41,14 @@ public class SaveLoadService {
                 InventoryComponent inv = e.getComponent(InventoryComponent.class);
                 gs.inventory = new ArrayList<>();
                 for (int i = 0; i < inv.getSize(); i++) {
-                    gs.inventory.add(inv.getTex(i));
+                    if (inv.get(i).getComponent(ItemComponent.class) != null) {
+                        ItemComponent item = inv.get(i).getComponent(ItemComponent.class);
+                        //stores information on the item and easy to expand to increase information
+                        String info = item.getName() + '\n' +
+                                item.getDescription() + '\n' +
+                                inv.getTex(i);
+                        gs.inventory.add(info);
+                    }
                 }
                 gs.Health = stat.getHealth();
                 gs.position.set(e.getPosition());
