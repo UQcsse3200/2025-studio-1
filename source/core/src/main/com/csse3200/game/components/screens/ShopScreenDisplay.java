@@ -38,6 +38,7 @@ public class ShopScreenDisplay extends UIComponent {
     private Table hud;
     private Label currencyLabel;
     private ItemScreenDisplay itemPopup;
+    Image background;
 
 
     public ShopScreenDisplay(ForestGameArea area, CatalogService catalog, ShopManager manager) {
@@ -52,6 +53,15 @@ public class ShopScreenDisplay extends UIComponent {
         itemPopup = new ItemScreenDisplay();
         entity.addComponent(itemPopup);
 
+        // Background white colour
+        Texture whiteTex = makeSolidTexture(Color.WHITE);
+        background = new Image(new TextureRegionDrawable(new TextureRegion(whiteTex)));
+        background.setFillParent(false); // we will size it manually
+        background.setSize(500, 600);     // adjust width/height to cover your grid/buttons
+        background.setPosition(
+                (stage.getWidth() - background.getWidth()) / 2,
+                (stage.getHeight() - background.getHeight()) / 2
+        );
 
         //Dimmer
         dimTex = makeSolidTexture(new Color(0, 0, 0, 0.6f));
@@ -63,6 +73,7 @@ public class ShopScreenDisplay extends UIComponent {
         root = new Table();
         root.setFillParent(true);
         root.center();
+        stage.addActor(background);
         stage.addActor(root);
 
         // Title
@@ -131,6 +142,7 @@ public class ShopScreenDisplay extends UIComponent {
         if (dimTex != null) { dimTex.dispose(); dimTex = null; }
         if (hud != null) { hud.remove(); hud = null; }
         if (itemPopup != null) { itemPopup.dispose(); itemPopup = null; }
+        if (background != null) {background.remove(); background = null; }
         super.dispose();
     }
 
@@ -145,7 +157,7 @@ public class ShopScreenDisplay extends UIComponent {
 
             // Semi-transparent grey overlay
             Image overlay = new Image(new TextureRegionDrawable(new TextureRegion(
-                    makeSolidTexture(new Color(0.8f, 0, 0, 0.5f))
+                    makeSolidTexture(new Color(0.8f, 0f, 0f, 0.5f))
             )));
             overlay.setFillParent(true);
             stack.add(overlay);
@@ -201,6 +213,9 @@ public class ShopScreenDisplay extends UIComponent {
     }
 
     public void show() {
+        if (background != null) {
+            background.setVisible(true);
+        }
         if (root != null) {
             root.setVisible(true);
         }
@@ -216,6 +231,9 @@ public class ShopScreenDisplay extends UIComponent {
     }
 
     public void hide() {
+        if (background != null) {
+            background.setVisible(false);
+        }
         if (root != null) {
             root.setVisible(false);
         }
