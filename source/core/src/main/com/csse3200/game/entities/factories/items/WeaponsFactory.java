@@ -2,11 +2,14 @@ package com.csse3200.game.entities.factories.items;
 
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.csse3200.game.components.items.MeleeUseComponent;
+import com.csse3200.game.components.items.RangedUseComponent;
 import com.csse3200.game.components.WeaponsStatsComponent;
 import com.csse3200.game.entities.Entity;
-import com.csse3200.game.components.ItemComponent;
+import com.csse3200.game.components.items.ItemComponent;
 import com.csse3200.game.entities.configs.ItemTypes;
 import com.csse3200.game.entities.configs.Weapons;
+import com.csse3200.game.entities.configs.weapons.RangedWeaponConfig;
 import com.csse3200.game.entities.configs.weapons.WeaponConfig;
 import com.csse3200.game.rendering.AnimationRenderComponent;
 
@@ -37,14 +40,28 @@ public class WeaponsFactory {
         WeaponConfig config = weaponType.getConfig();
         Entity weapon = ItemFactory.createItem(config.texturePath);
         weapon.addComponent(new WeaponsStatsComponent(config));
+        WeaponsStatsComponent weaponStats = weapon.getComponent(WeaponsStatsComponent.class);
 
         ItemComponent item = weapon.getComponent(ItemComponent.class);
 
         // Attach type to weapon
         switch (config.weaponType) {
-            case RANGED -> item.setType(ItemTypes.RANGED);
-            case MELEE -> item.setType(ItemTypes.MELEE);
-            default -> item.setType(ItemTypes.NONE);
+            case RANGED:
+                RangedWeaponConfig rangedConfig = (RangedWeaponConfig) config;
+                weapon.addComponent(new RangedUseComponent());
+
+                item.setType(ItemTypes.RANGED);
+                weaponStats.setProjectileTexturePath(rangedConfig.projectileTexturePath);
+                break;
+
+            case MELEE:
+                item.setType(ItemTypes.MELEE);
+                weapon.addComponent(new MeleeUseComponent());
+                break;
+
+            default:
+                item.setType(ItemTypes.NONE);
+                break;
         }
 
         return weapon;

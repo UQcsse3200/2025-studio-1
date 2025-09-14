@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.csse3200.game.components.shop.CatalogEntry;
 import com.csse3200.game.components.shop.CatalogService;
+import com.csse3200.game.components.shop.PurchaseError;
 import com.csse3200.game.components.shop.ShopManager;
 import com.csse3200.game.areas.ForestGameArea;
 import com.csse3200.game.ui.*;
@@ -18,6 +19,16 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 
 
 public class ShopScreenDisplay extends UIComponent {
+    // error messages
+    private static final String ERROR_MESSAGE = "Unable to purchase ";
+    private static final String NOT_FOUND_MESSAGE = ".Item was not found.";
+    private static final String DISABLED_MESSAGE = ". Item is disabled.";
+    private static final String INSUFFICIENT_FUNDS_MESSAGE = ". You have insufficient funds.";
+    private static final String INVENTORY_FULL_MESSAGE = ". Inventory is full.";
+    private static final String LIMIT_REACHED_MESSAGE = ". Item limit has been reached.";
+    private static final String INVALID_ITEM_MESSAGE = ". Invalid item.";
+    private static final String UNEXPECTED_MESSAGE = ". Unexpected error.";
+
     private final ForestGameArea game;
     private final CatalogService catalog;
     private final ShopManager manager;
@@ -28,6 +39,7 @@ public class ShopScreenDisplay extends UIComponent {
     private Table hud;
     private Label currencyLabel;
     private ItemScreenDisplay itemPopup;
+    Image background;
 
 
     public ShopScreenDisplay(ForestGameArea area, CatalogService catalog, ShopManager manager) {
@@ -37,21 +49,32 @@ public class ShopScreenDisplay extends UIComponent {
     }
     @Override
     public void create() {
+        entity.getEvents().addListener("purchaseFailed", this::showError);
         super.create();
         itemPopup = new ItemScreenDisplay();
         entity.addComponent(itemPopup);
 
+        // Background white colour
+        Texture whiteTex = makeSolidTexture(Color.WHITE);
+        background = new Image(new TextureRegionDrawable(new TextureRegion(whiteTex)));
+        background.setFillParent(false); // we will size it manually
+        background.setSize(500, 600);     // adjust width/height to cover your grid/buttons
+        background.setPosition(
+                (stage.getWidth() - background.getWidth()) / 2,
+                (stage.getHeight() - background.getHeight()) / 2
+        );
 
-        // --- Dimmer ---
+        //Dimmer
         dimTex = makeSolidTexture(new Color(0, 0, 0, 0.6f));
         dimmer = new Image(new TextureRegionDrawable(new TextureRegion(dimTex)));
         dimmer.setFillParent(true);
         stage.addActor(dimmer);
 
-        // --- Root table ---
+        // Root table
         root = new Table();
         root.setFillParent(true);
         root.center();
+        stage.addActor(background);
         stage.addActor(root);
 
         // Title
@@ -59,7 +82,7 @@ public class ShopScreenDisplay extends UIComponent {
         title.setFontScale(2f);
         root.add(title).padBottom(20).row();
 
-        // --- Grid ---
+        // Grid
         grid = new Table();
         grid.defaults().pad(10);
 
@@ -74,7 +97,7 @@ public class ShopScreenDisplay extends UIComponent {
 
         root.add(grid).row();
 
-        // --- Close Shop button ---
+        //  Close Shop button
         TextButton.TextButtonStyle style = skin.get("default", TextButton.TextButtonStyle.class);
         TextButton closeBtn = new TextButton("Close Shop", style);
         closeBtn.addListener(new ChangeListener() {
@@ -123,32 +146,48 @@ public class ShopScreenDisplay extends UIComponent {
         if (dimTex != null) { dimTex.dispose(); dimTex = null; }
         if (hud != null) { hud.remove(); hud = null; }
         if (itemPopup != null) { itemPopup.dispose(); itemPopup = null; }
+        if (background != null) {background.remove(); background = null; }
         super.dispose();
     }
 
     private void makeButton(CatalogEntry entry) {
-        Actor actor = entry.getIconActor(skin);
+        ImageButton iconButton = (ImageButton) entry.getIconActor(skin);
 
+        Actor finalIcon;
+        if (!entry.enabled()) {
+            // Wrap in a stack to add overlay
+            Stack stack = new Stack();
+            stack.add(iconButton);
+
+            // Semi-transparent grey overlay
+            Image overlay = new Image(new TextureRegionDrawable(new TextureRegion(
+                    makeSolidTexture(new Color(0.8f, 0f, 0f, 0.5f))
+            )));
+            overlay.setFillParent(true);
+            stack.add(overlay);
+
+            finalIcon = stack;
+        } else {
+            finalIcon = iconButton;
+        }
         // Add name & price below icon
         Table itemTable = new Table();
-        itemTable.add(actor).size(100, 100).row();
-        itemTable.add(new Label(entry.itemKey(), skin)).row();
+        itemTable.add(finalIcon).size(100, 100).row();
+        itemTable.add(new Label(entry.getItemName(), skin)).row();
         itemTable.add(new Label("$" + entry.price(), skin)).padBottom(6).row();
 
         // --- Add Info button ---
         itemTable.add(infoButton(entry)).padTop(4).row();
 
         // Gray out if disabled
-        if (!entry.enabled()) {
-            itemTable.getChildren().forEach(child -> child.setColor(Color.GRAY));
-        }
 
         // Click to purchase
+        int amountToPurchase = 1;
         if(entry.enabled()){
-            actor.addListener(new ChangeListener() {
+            finalIcon.addListener(new ChangeListener() {
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {
-                    manager.purchase(game.getPlayer(), entry.itemKey());
+                    manager.purchase(game.getPlayer(), entry, amountToPurchase);
                 }
             });}
 
@@ -166,8 +205,66 @@ public class ShopScreenDisplay extends UIComponent {
         return btn;
     }
 
+    public void refreshCatalog(){
+        grid.clearChildren();
+        int columns = 4;
+        int count = 0;
+        for (CatalogEntry entry : catalog.list()) {
+            makeButton(entry);
+            count++;
+            if(count % columns == 0) grid.row();
+        }
+    }
 
+    public void show() {
+        if (background != null) {
+            background.setVisible(true);
+        }
+        if (root != null) {
+            root.setVisible(true);
+        }
+        if (dimmer != null) {
+            dimmer.setVisible(true);
+        }
+        if (hud != null) {
+            hud.setVisible(true);
+        }
 
+        refreshCatalog();
+        updateCurrencyLabel();
+    }
+
+    public void hide() {
+        if (background != null) {
+            background.setVisible(false);
+        }
+        if (root != null) {
+            root.setVisible(false);
+        }
+        if (dimmer != null) {
+            dimmer.setVisible(false);
+        }
+        if (hud != null) {
+            hud.setVisible(false);
+        }
+    }
+
+    public void showError(String itemName, PurchaseError error) {
+        String message = ERROR_MESSAGE + itemName;
+        String errorMsg = switch(error) {
+            case DISABLED -> DISABLED_MESSAGE;
+            case NOT_FOUND -> NOT_FOUND_MESSAGE;
+            case INVALID_ITEM -> INVALID_ITEM_MESSAGE;
+            case LIMIT_REACHED -> LIMIT_REACHED_MESSAGE;
+            case INVENTORY_FULL -> INVENTORY_FULL_MESSAGE;
+            case INSUFFICIENT_FUNDS -> INSUFFICIENT_FUNDS_MESSAGE;
+            default -> UNEXPECTED_MESSAGE;
+        };
+        Dialog dialog = new Dialog("Error", skin);
+        dialog.text(message + errorMsg);
+        dialog.button("OK");
+        dialog.show(stage);
+    }
 
 
     // --- Helper: create solid texture for dimmer ---
