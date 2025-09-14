@@ -41,9 +41,7 @@ import org.slf4j.LoggerFactory;
  */
 public class ForestGameArea extends GameArea {
   private static final Logger logger = LoggerFactory.getLogger(ForestGameArea.class);
-
-
-  private static final int NUM_TREES = 7;
+  
   private static final GridPoint2 PLAYER_SPAWN = new GridPoint2(3, 20);
   private static final int NUM_ROBOTS = 1;
   private static final int NUM_ITEMS = 5;//this is for ItemFactory
@@ -96,7 +94,7 @@ public class ForestGameArea extends GameArea {
     "images/KeycardDoor.png",
     "images/player.png",
     "images/mud.png",
-    "images/heart.png",
+    HEART,
     "images/MarblePlatform.png"
   };
 
@@ -398,29 +396,29 @@ public class ForestGameArea extends GameArea {
    * Places two platforms within the room for players to jump on.
    */
   private void spawnMarblePlatforms() {
-    float PlatformX = 2.5f;
-    float PlatformX2 = 5.4f;
-    float PlatformX3 = 8.2f;
-    float PlatformX4 = 11.1f;
-    float PlatformY = 6f;
-    float PlatformY2 = 8f;
+    float platformX = 2.5f;
+    float platformX2 = 5.4f;
+    float platformX3 = 8.2f;
+    float platformX4 = 11.1f;
+    float platformY = 6f;
+    float platformY2 = 8f;
 
-    Entity Platform1 = ObstacleFactory.createMarblePlatform();
-    Platform1.setPosition(PlatformX, PlatformY);
+    Entity platform1 = ObstacleFactory.createMarblePlatform();
+    platform1.setPosition(platformX, platformY);
 
-    Entity Platform2 = ObstacleFactory.createMarblePlatform();
-    Platform2.setPosition(PlatformX2, PlatformY2);
+    Entity platform2 = ObstacleFactory.createMarblePlatform();
+    platform2.setPosition(platformX2, platformY2);
 
-    Entity Platform3 = ObstacleFactory.createMarblePlatform();
-    Platform3.setPosition(PlatformX3, PlatformY2);
+    Entity platform3 = ObstacleFactory.createMarblePlatform();
+    platform3.setPosition(platformX3, platformY2);
 
-    Entity Platform4 = ObstacleFactory.createMarblePlatform();
-    Platform4.setPosition(PlatformX4, PlatformY);
+    Entity platform4 = ObstacleFactory.createMarblePlatform();
+    platform4.setPosition(platformX4, platformY);
 
-    spawnEntity(Platform1);
-    spawnEntity(Platform2);
-    spawnEntity(Platform3);
-    spawnEntity(Platform4);
+    spawnEntity(platform1);
+    spawnEntity(platform2);
+    spawnEntity(platform3);
+    spawnEntity(platform4);
   }
 
   /**

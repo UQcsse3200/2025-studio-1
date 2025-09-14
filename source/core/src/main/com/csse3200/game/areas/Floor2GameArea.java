@@ -1,8 +1,6 @@
 package com.csse3200.game.areas;
 
-import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.areas.terrain.TerrainFactory;
@@ -12,16 +10,8 @@ import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.factories.KeycardFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.entities.factories.characters.PlayerFactory;
-import com.csse3200.game.rendering.SolidColorRenderComponent;
-import com.csse3200.game.services.ResourceService;
-import com.csse3200.game.services.ServiceLocator;
-import com.csse3200.game.utils.math.GridPoint2Utils;
-import com.csse3200.game.utils.math.RandomUtils;
-import com.badlogic.gdx.graphics.Texture;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import java.util.ArrayList;
-import java.util.List;
 
 /** Second floor with different background and arrow-key controls. */
 public class Floor2GameArea extends GameArea {
@@ -131,7 +121,7 @@ public class Floor2GameArea extends GameArea {
         new GridPoint2(20, 10)   // Right center
     };
 
-    for (int i = 0; i < NUM_TREES && i < treePositions.length; i++) {
+    for (int i = 0; i < NUM_TREES; i++) {
       Entity tree = ObstacleFactory.createTree();
       spawnEntityAt(tree, treePositions[i], true, false);
     }

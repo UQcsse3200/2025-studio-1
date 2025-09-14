@@ -63,14 +63,6 @@ public class Floor5GameArea extends GameArea {
     Entity player = PlayerFactory.createPlayer();
     spawnEntityAt(player, PLAYER_SPAWN, true, true);
   }
-
-  private void loadBackToFloor2() {
-    clearAndLoad(() -> new Floor2GameArea(terrainFactory, cameraComponent));
-  }
-
-  private void loadSecurity() {
-    clearAndLoad(() -> new SecurityGameArea(terrainFactory, cameraComponent));
-  }
 }
 
 
