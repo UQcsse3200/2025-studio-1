@@ -40,7 +40,7 @@ public class EnemyDeathRewardComponent extends Component {
         //1/4 chance of enemy adding ammo to the player
         Random rand = new Random();
 
-        int chance = rand.nextInt(4);
+        int chance = rand.nextInt(5);
 
         if (chance == 0) {
 
@@ -55,4 +55,28 @@ public class EnemyDeathRewardComponent extends Component {
 
         }
     }
+
+    /**
+     * Adds processor to the player inventory if inventory is present. Used for testing
+     * without random variable
+     */
+    public void rewardGuaranteedReload() {
+        if (playerInventory == null) {
+            return;
+        }
+        playerInventory.addProcessor(rewardProcessor);
+
+
+        Entity player = playerInventory.getEntity();
+        AmmoStatsComponent playerAmmo = player.getComponent(AmmoStatsComponent.class);
+        int currentAmmo = playerAmmo.getAmmo();
+        playerAmmo.setAmmo(currentAmmo + 30);
+
+        Sound attackSound = ServiceLocator.getResourceService()
+                .getAsset("sounds/ammo_replenished.mp3", Sound.class);
+        attackSound.play();
+        player.getEvents().trigger("ammo replenished");
+    }
+
+
 }
