@@ -5,8 +5,6 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.entities.Entity;
-import com.csse3200.game.components.ItemComponent;
-import com.csse3200.game.entities.configs.ItemTypes;
 import com.csse3200.game.input.InputComponent;
 import com.csse3200.game.utils.math.Vector2Utils;
 
@@ -85,13 +83,7 @@ public class KeyboardPlayerInputComponent extends InputComponent {
         return false;
       }
 
-      ItemComponent itemInfo = item.getComponent(ItemComponent.class);
-      if (itemInfo.getType() == ItemTypes.RANGED) {
-        entity.getEvents().trigger("shoot");
-
-      } else if (itemInfo.getType() == ItemTypes.MELEE) {
-        entity.getEvents().trigger("attack");
-      }
+      item.getEvents().trigger("use", entity);
       return true;
     }
     return false;
@@ -180,7 +172,7 @@ public class KeyboardPlayerInputComponent extends InputComponent {
     boolean validDoubleKey = false;
     long timeDif = System.currentTimeMillis() - timeSinceKeyPress;
     long DOUBLE_KEY_INTERVAL = 300;
-    if (keycode == doublePressKeyCode || timeDif < DOUBLE_KEY_INTERVAL) {
+    if (keycode == doublePressKeyCode && timeDif < DOUBLE_KEY_INTERVAL) {
       validDoubleKey = true;
     }
     updateDoubleKeyPress(keycode);

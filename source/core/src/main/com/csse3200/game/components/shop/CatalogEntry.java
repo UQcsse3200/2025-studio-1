@@ -11,25 +11,26 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.Gdx;
+import com.csse3200.game.components.items.ItemComponent;
+import com.csse3200.game.entities.Entity;
 
 /**
  * Models one purchasable catalog item that can be found in the shop.
  */
 public record CatalogEntry(
-        String itemKey,
+        Entity item,
         int price,
         boolean enabled,
         boolean stackable,
         int maxStack,
-        int bundleQuantity,
-        TextureRegionDrawable icon
+        int bundleQuantity
 ) {
 
     /**
      * Constructs a CatalogEntry, storing the details around an item that can
      * be purchased from the shop
      *
-     * @param itemKey The unique identifiable itemKey
+     * @param item The unique identifiable itemKey
      * @param price The price (per unit) of the item
      * @param enabled Whether this item can currently be purchased by the player.
      *                (E.g., disabled due to max stack, not enough processors, etc.)
@@ -40,7 +41,7 @@ public record CatalogEntry(
      * @param bundleQuantity How many units of the item sold per purchase.
      */
     public CatalogEntry {
-        checkValidEntry(itemKey, price, stackable, maxStack, bundleQuantity);
+        checkValidEntry(item, price, stackable, maxStack, bundleQuantity);
     }
 
     /**
@@ -54,10 +55,10 @@ public record CatalogEntry(
         return (price * qty);
     }
 
-    private void checkValidEntry(String itemKey, int price,
+    private void checkValidEntry(Entity item, int price,
                                  boolean stackable, int maxStack,
                                  int bundleQuantity) {
-        if (itemKey == null || itemKey.isBlank()) {
+        if (item == null) {
             throw new IllegalArgumentException("itemKey cannot be null or blank");
         }
 
@@ -81,21 +82,18 @@ public record CatalogEntry(
      * @return actor of icon
      **/
     public Actor getIconActor(Skin skin) {
-        if (icon != null) {
-            return new ImageButton(icon);
-        } else {
-            // Create a Table with a dark background and a label showing the key
-            Table table = new Table();
-            table.setBackground(skin.newDrawable("white", Color.DARK_GRAY));
-            Label label = new Label(itemKey, skin);
-            label.setColor(Color.WHITE);
-            table.add(label).pad(5);
-            return table;
-        }
+        Texture texture = new Texture(item.getComponent(ItemComponent.class).getTexture());
+        TextureRegionDrawable icon  = new TextureRegionDrawable(texture);
+        return new ImageButton(icon);
     }
 
-    public static TextureRegionDrawable loadIcon(String path) {
-        Texture texture = new Texture(Gdx.files.internal(path));
-        return new TextureRegionDrawable(new TextureRegion(texture));
+    public Entity getItem() {
+        return item;
     }
+
+    public String getItemName() {
+        return item.getComponent(ItemComponent.class).getName();
+    }
+
+
 }
