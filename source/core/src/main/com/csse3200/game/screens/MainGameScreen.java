@@ -107,7 +107,6 @@ public class MainGameScreen extends ScreenAdapter {
       } else {
         hidePauseOverlay();
       }
-      return;
     }
     if (Gdx.input.isKeyJustPressed(Input.Keys.K)) {
       if (!isShopVisible) {
