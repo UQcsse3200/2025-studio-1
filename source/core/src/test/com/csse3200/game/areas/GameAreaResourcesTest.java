@@ -24,8 +24,11 @@ class GameAreaResourcesTest {
     when(rs.containsAsset(anyString(), eq(com.badlogic.gdx.graphics.Texture.class))).thenReturn(true);
     ServiceLocator.registerResourceService(rs);
 
-    GameArea area = new GameArea() { @Override public void create() {} };
-    area.ensureTextures(new String[] {"x.png", "y.png"});
+    // Mock the abstract GameArea class
+    GameArea area = mock(GameArea.class, CALLS_REAL_METHODS);
+
+    // Call the real method on the mock
+    area.ensureTextures(new String[]{"x.png", "y.png"});
 
     verify(rs, never()).loadTextures(any(String[].class));
     verify(rs, never()).loadAll();
@@ -36,12 +39,12 @@ class GameAreaResourcesTest {
     ResourceService rs = mock(ResourceService.class);
     ServiceLocator.registerResourceService(rs);
 
-    GameArea area = new GameArea() { @Override public void create() {} };
-    String[] paths = new String[] {"a.png", "b.png"};
+    // Mock the abstract GameArea class
+    GameArea area = mock(GameArea.class, CALLS_REAL_METHODS);
+
+    String[] paths = new String[]{"a.png", "b.png"};
     area.unloadAssets(paths);
 
     verify(rs).unloadAssets(paths);
   }
 }
-
-
