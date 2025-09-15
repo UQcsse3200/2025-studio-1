@@ -24,7 +24,7 @@ public class ArrowKeysPlayerInputComponent extends InputComponent {
   }
 
   @Override
-  public boolean keyDown(int keycode) {
+  public boolean keyPressed(int keycode) {
     switch (keycode) {
       case Input.Keys.LEFT:
         walkDirection.add(Vector2Utils.LEFT);
@@ -53,7 +53,7 @@ public class ArrowKeysPlayerInputComponent extends InputComponent {
   }
 
   @Override
-  public boolean keyUp(int keycode) {
+  public boolean keyReleased(int keycode) {
     switch (keycode) {
       case Input.Keys.LEFT:
         walkDirection.sub(Vector2Utils.LEFT);
