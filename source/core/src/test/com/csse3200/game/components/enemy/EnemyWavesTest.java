@@ -2,6 +2,7 @@ package com.csse3200.game.components.enemy;
 
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Timer;
 import com.csse3200.game.areas.GameArea;
@@ -11,8 +12,12 @@ import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
 import com.csse3200.game.services.ServiceLocator;
 import org.junit.jupiter.api.*;
+import org.mockito.ArgumentCaptor;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
