@@ -37,7 +37,24 @@ public class ObstacleFactory {
     PhysicsUtils.setScaledCollider(tree, 0.5f, 0.2f);
     return tree;
   }
-  
+
+  /**
+   * Creates a Marble Platform for Fancy Rooms
+   * @return entity
+   */
+  public static Entity createMarblePlatform() {
+      Entity MarblePlatform =
+              new Entity()
+                      .addComponent(new TextureRenderComponent("images/MarblePlatform.png"))
+                      .addComponent(new PhysicsComponent())
+                      .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
+      MarblePlatform.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
+      MarblePlatform.getComponent(TextureRenderComponent.class).scaleEntity();
+      MarblePlatform.scaleHeight(0.5f);
+      PhysicsUtils.setScaledCollider(MarblePlatform, 1f, 0.75f);
+      return MarblePlatform;
+  }
+
   /**
    * Long, thin floor piece for platforms/walkways.
    * Solid so the player can stand on it.
@@ -46,13 +63,13 @@ public class ObstacleFactory {
   public static Entity createLongFloor() {
     Entity longFloor =
             new Entity()
-                    .addComponent(new TextureRenderComponent("foreg_sprites/general/LongFloor.png"))
+                    .addComponent(new TextureRenderComponent("foreg_sprites/general/Test.png"))
                     .addComponent(new PhysicsComponent())
                     .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
 
     longFloor.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
     longFloor.getComponent(TextureRenderComponent.class).scaleEntity();
-    longFloor.scaleHeight(1f);
+    longFloor.scaleHeight(0.6f);
     PhysicsUtils.setScaledCollider(longFloor, 1f, 1f);
     return longFloor;
   }
