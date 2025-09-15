@@ -52,11 +52,19 @@ public class Floor5GameArea extends GameArea {
 
   private void spawnBordersAndReturnDoor() {
     Bounds b = getCameraBounds(cameraComponent);
-    // Use shared helpers (same placement/behavior):
-    addVerticalDoorLeft(b, WALL_WIDTH, () -> loadArea(Floor2GameArea.class));
-    addVerticalDoorRight(b, WALL_WIDTH, () -> loadArea(SecurityGameArea.class));
+   
+    addVerticalDoorLeft(b, WALL_WIDTH, this::loadBackToFloor2);
+    addVerticalDoorRight(b, WALL_WIDTH, this::loadSecurity);
     addSolidWallTop(b, WALL_WIDTH);
     addSolidWallBottom(b, WALL_WIDTH);
+  }
+
+  private void loadBackToFloor2() {
+    clearAndLoad(() -> new Floor2GameArea(terrainFactory, cameraComponent));
+  }
+
+  private void loadSecurity() {
+    clearAndLoad(() -> new SecurityGameArea(terrainFactory, cameraComponent));
   }
 
   private void spawnPlayer() {
