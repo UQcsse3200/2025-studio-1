@@ -2,11 +2,20 @@ package com.csse3200.game.areas;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.GridPoint2;
+import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.CameraComponent;
+import com.csse3200.game.components.InventoryComponent;
+import com.csse3200.game.components.KeycardGateComponent;
+import com.csse3200.game.components.KeycardPickupComponent;
 import com.csse3200.game.entities.Entity;
+import com.csse3200.game.entities.factories.KeycardFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
+import com.csse3200.game.physics.PhysicsLayer;
+import com.csse3200.game.physics.components.ColliderComponent;
+import com.csse3200.game.physics.components.HitboxComponent;
+import com.csse3200.game.rendering.TextureRenderComponent;
 
 /** Elevator room: minimal walls and two doors (left--Office, right--Research). */
 public class ElevatorGameArea extends GameArea {
@@ -21,15 +30,19 @@ public class ElevatorGameArea extends GameArea {
   public void create() {
     GenericLayout.ensureGenericAssets(this);
     // Ensure the thin floor texture is available for the elevator room
-    ensureTextures(new String[] { "foreg_sprites/general/ThinFloor3.png", "images/Elevator background.png" });
+    ensureTextures(new String[] { "foreg_sprites/general/ThinFloor3.png", "images/Elevator background.png","images/keycard_lvl2.png","images/KeycardDoor.png" });
     // Use the dedicated elevator background
     terrain = terrainFactory.createTerrain(TerrainType.ELEVATOR);
     spawnEntity(new Entity().addComponent(terrain));
-
+    float keycardX = 3f;
+    float keycardY = 10f;
+    Entity keycard = KeycardFactory.createKeycard(2);
+    keycard.setPosition(new Vector2(keycardX, keycardY));
+    spawnEntity(keycard);
     spawnBordersAndDoors();
     spawnPlayer();
     spawnFloor();
-  }
+      }
 
   // Assets ensured via GenericLayout
 
@@ -64,7 +77,19 @@ public class ElevatorGameArea extends GameArea {
     }
     Entity rightDoor = ObstacleFactory.createDoorTrigger(WALL_WIDTH, rightDoorHeight);
     rightDoor.setPosition(b.rightX - WALL_WIDTH - 0.001f, rightDoorY);
-    rightDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadResearch));
+
+// Make the door physically block the player
+    rightDoor.addComponent(new ColliderComponent());
+    rightDoor.addComponent(new HitboxComponent().setLayer(PhysicsLayer.GATE));
+
+// Add keycard logic
+    rightDoor.addComponent(new KeycardGateComponent(2, () -> {
+      ColliderComponent collider = rightDoor.getComponent(ColliderComponent.class);
+      if (collider != null) collider.setEnabled(false);
+
+      loadResearch();
+    }));
+
     spawnEntity(rightDoor);
   }
 
