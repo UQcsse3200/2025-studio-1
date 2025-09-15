@@ -190,7 +190,7 @@ public class ObstacleFactory {
     thinFloor.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
     thinFloor.getComponent(TextureRenderComponent.class).scaleEntity();
     thinFloor.scaleHeight(0.8f);
-    PhysicsUtils.setScaledCollider(thinFloor, 1f, 1f);
+    PhysicsUtils.setScaledCollider(thinFloor, 1f, 0.9f);
     return thinFloor;
   }
 
