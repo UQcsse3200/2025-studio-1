@@ -12,6 +12,7 @@ public class BlackholeAttackComponent extends Component {
     private final float lifeTime;
 
     private float timer = 0f;
+    private boolean disposed = false;
 
     public BlackholeAttackComponent(Entity target, float radius, float lifeTime) {
         this.target = target;
@@ -25,17 +26,25 @@ public class BlackholeAttackComponent extends Component {
 
         float dt = ServiceLocator.getTimeSource().getDeltaTime();
         timer += dt;
-        if (timer >= lifeTime) {
+
+        // 到寿命时销毁
+        if (!disposed && timer >= lifeTime) {
+            disposed = true;
             Gdx.app.postRunnable(() -> {
                 if (entity != null) {
                     entity.dispose();
                 }
             });
+            return;
         }
-        Vector2 hole = entity.getCenterPosition();
-        Vector2 player = target.getCenterPosition();
-        if (hole.dst2(player) <= radius * radius) {
-            target.setPosition(hole);
+        Vector2 holeCenter = entity.getCenterPosition();
+        Vector2 playerCenter = target.getCenterPosition();
+        if (holeCenter.dst2(playerCenter) <= radius * radius) {
+            float pullFactor = 0.07f;
+            Vector2 newCenter = playerCenter.cpy().lerp(holeCenter, pullFactor);
+            Vector2 delta = newCenter.sub(playerCenter);
+            Vector2 curPos = target.getPosition();
+            target.setPosition(curPos.x + delta.x, curPos.y + delta.y);
         }
     }
 }

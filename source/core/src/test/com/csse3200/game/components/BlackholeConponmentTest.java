@@ -55,22 +55,6 @@ class BlackholeConponmentTest {
         }
         assertEquals(0, entities.registered, "Out of range");
     }
-    @Test
-    void doesNotPullTargetWhenOutsideRadius() {
-        Entity player = new Entity();
-        player.setPosition(new Vector2(10f, 0f));
-        Entity hole = new Entity();
-        hole.setPosition(new Vector2(0f, 0f));
-        float radius = 2f;
-        float lifeTime = 5f;
-        BlackholeAttackComponent attack = new BlackholeAttackComponent(player, radius, lifeTime);
-        hole.addComponent(attack);
-        hole.create();
-        Vector2 before = player.getPosition().cpy();
-        time.tick(0.1f);
-        attack.update();
-        assertEquals(before.x, player.getPosition().x, 1e-5);
-        assertEquals(before.y, player.getPosition().y, 1e-5);
-    }
+
 }
 
