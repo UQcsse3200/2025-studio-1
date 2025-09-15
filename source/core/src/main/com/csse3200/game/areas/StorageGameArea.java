@@ -34,7 +34,7 @@ public class StorageGameArea extends GameArea {
   }
 
   private void spawnPlayer() {
-    Entity player = PlayerFactory.createPlayerWithArrowKeys();
+    Entity player = PlayerFactory.createPlayer();
     spawnEntityAt(player, PLAYER_SPAWN, true, true);
   }
 

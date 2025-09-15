@@ -85,7 +85,7 @@ public class Floor2GameArea extends GameArea {
     }
     Entity leftDoor = ObstacleFactory.createDoorTrigger(WALL_WIDTH, leftDoorHeight);
     leftDoor.setPosition(b.leftX + 0.001f, leftDoorY);
-    leftDoor.addComponent(new com.csse3200.game.components.DoorComponent(() -> loadArea(ForestGameArea.class)));
+    leftDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadForest));
     spawnEntity(leftDoor);
 
     // Right vertical door resting on ground level
@@ -99,12 +99,20 @@ public class Floor2GameArea extends GameArea {
     }
     Entity rightDoor = ObstacleFactory.createDoorTrigger(WALL_WIDTH, rightDoorHeight);
     rightDoor.setPosition(b.rightX - WALL_WIDTH - 0.001f, rightDoorY);
-    rightDoor.addComponent(new com.csse3200.game.components.DoorComponent(() -> loadArea(Floor5GameArea.class)));
+    rightDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadBackToFloor5));
     spawnEntity(rightDoor);
   }
 
+  private void loadForest() {
+    clearAndLoad(() -> new ForestGameArea(terrainFactory, cameraComponent));
+  }
+
+  private void loadBackToFloor5() {
+    clearAndLoad(() -> new Floor5GameArea(terrainFactory, cameraComponent));
+  }
+
   private void spawnPlayer() {
-    Entity player = PlayerFactory.createPlayerWithArrowKeys();
+    Entity player = PlayerFactory.createPlayer();
     spawnEntityAt(player, PLAYER_SPAWN, true, true);
   }
 
