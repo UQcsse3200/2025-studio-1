@@ -44,6 +44,7 @@ public class ServerGameArea extends GameArea {
 
   private static final String[] serverBackground = {
     "images/ServerRoomBackground.png",
+    "images/ServerRoomBackgroundResize.png",
   };
 
   private static final String[] serverRacks = {
