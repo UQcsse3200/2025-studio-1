@@ -31,17 +31,19 @@ public class GPTGroundSlowChaseTask extends DefaultTask implements PriorityTask 
   private float timeSinceLastJump = 0f;
   private final float jumpCooldown = 1.2f; // seconds between jumps
   private final float obstacleCheckDistance = 0.6f; // horizontal ray distance to look for obstacle
-  private final float jumpImpulse = 15f; // upward impulse (scaled by mass)
+  private final float jumpImpulse; // upward impulse (scaled by mass)
 
   /**
-   * @param target player entity to chase
-   * @param priority task priority when chasing
-   * @param speed horizontal speed (units per second)
+   * @param target      player entity to chase
+   * @param priority    task priority when chasing
+   * @param speed       horizontal speed (units per second)
+   * @param jumpImpulse upward impulse (scaled by mass)
    */
-  public GPTGroundSlowChaseTask(Entity target, int priority, float speed) {
+  public GPTGroundSlowChaseTask(Entity target, int priority, float speed, float jumpImpulse) {
     this.target = target;
     this.priority = priority;
     this.speedX = speed;
+    this.jumpImpulse = jumpImpulse;
     this.physics = ServiceLocator.getPhysicsService().getPhysics();
     this.debugRenderer = ServiceLocator.getRenderService().getDebug();
     this.timeSource = ServiceLocator.getTimeSource();

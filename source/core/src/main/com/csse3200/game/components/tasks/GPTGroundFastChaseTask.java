@@ -31,8 +31,8 @@ public class GPTGroundFastChaseTask extends DefaultTask implements PriorityTask 
   // Projectile firing
   private final ProjectileLauncherComponent projectileLauncher;
   private final Entity shooter;
-  private final float firingCooldown = 3f; // seconds
-  private float currentCooldown = 3f; // starts ready to fire
+  private final float firingCooldown; // seconds
+  private float currentCooldown; // starts ready to fire
   private final GameTime timeSource;
 
   // Jump mechanics (slightly faster cadence than slow chase)
@@ -45,19 +45,22 @@ public class GPTGroundFastChaseTask extends DefaultTask implements PriorityTask 
    * Fast chase without projectiles
    */
   public GPTGroundFastChaseTask(Entity target, int priority, float speed) {
-    this(target, priority, speed, null, null);
+    this(target, priority, speed, null, null, 3f, 3f);
   }
 
   /**
    * Fast chase with projectile support
    */
   public GPTGroundFastChaseTask(Entity target, int priority, float speed,
-                                ProjectileLauncherComponent projectileLauncher, Entity shooter) {
+                                ProjectileLauncherComponent projectileLauncher, Entity shooter,
+                                float firingCooldown, float currentCooldown) {
     this.target = target;
     this.priority = priority;
     this.speedX = speed;
     this.projectileLauncher = projectileLauncher;
     this.shooter = shooter;
+    this.firingCooldown = firingCooldown;
+    this.currentCooldown = currentCooldown;
     this.physics = ServiceLocator.getPhysicsService().getPhysics();
     this.debugRenderer = ServiceLocator.getRenderService().getDebug();
     this.timeSource = ServiceLocator.getTimeSource();

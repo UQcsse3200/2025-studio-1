@@ -73,8 +73,8 @@ public class NPCFactory {
     // Use ground chase tasks for gravity-based movement
     AITaskComponent aiComponent =
         new AITaskComponent()
-            .addTask(new GPTGroundSlowChaseTask(target, 10, 0.3f))
-            .addTask(new GPTGroundFastChaseTask(target, 10, 1.2f, projComp, ghostGPT));
+            .addTask(new GPTGroundSlowChaseTask(target, 10, 0.3f, 15f))
+            .addTask(new GPTGroundFastChaseTask(target, 10, 1.2f, projComp, ghostGPT, 3f, 3f));
 
     // Get player's inventory for reward system
     InventoryComponent playerInventory = null;
@@ -256,7 +256,7 @@ public class NPCFactory {
     // Ground chase: set X only; gravity handles Y (Box2D). See Box2D Manual (Forces/Impulses).
     AITaskComponent aiComponent =
             new AITaskComponent()
-                    .addTask(new GPTGroundSlowChaseTask(target, 10, 0.3f))
+                    .addTask(new GPTGroundSlowChaseTask(target, 10, 0.3f, 15f))
                     .addTask(new GPTGroundFastChaseTask(target, 10, 1.2f));
 
 
