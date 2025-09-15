@@ -113,6 +113,11 @@ public abstract class GameArea implements Disposable {
     wavesManager.startWave();
   }
 
+  /**
+   * Returns the room number corresponding to the current floor.
+   * @return Room number as an int if the floor name is in the format "Floor2"
+   * with 2 being any number, otherwise returns 1.
+   */
   public int getRoomNumber() { // changed from protected to public for EnemyWaves access
     String name = getClass().getSimpleName();
     // Look for digits after Floor or Room (e.g., Floor3GameArea, Room2Area)
@@ -124,6 +129,10 @@ public abstract class GameArea implements Disposable {
     return 1;
   }
 
+  /**
+   * Returns the base difficulty scale of the current room.
+   * @return Scaling factor as a float.
+   */
   public float getBaseDifficultyScale() {
     int room = getRoomNumber();
     // +40% per room after first (tweak as needed)
