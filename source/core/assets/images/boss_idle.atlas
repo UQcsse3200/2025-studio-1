@@ -3,76 +3,6 @@ size: 10800, 546
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
-angry_float
-  rotate: false
-  xy: 0, 0
-  size: 1080, 546
-  orig: 1080, 546
-  offset: 0, 0
-  index: 0
-angry_float
-  rotate: false
-  xy: 1080, 0
-  size: 1080, 546
-  orig: 1080, 546
-  offset: 0, 0
-  index: 1
-angry_float
-  rotate: false
-  xy: 2160, 0
-  size: 1080, 546
-  orig: 1080, 546
-  offset: 0, 0
-  index: 2
-angry_float
-  rotate: false
-  xy: 3240, 0
-  size: 1080, 546
-  orig: 1080, 546
-  offset: 0, 0
-  index: 3
-angry_float
-  rotate: false
-  xy: 4320, 0
-  size: 1080, 546
-  orig: 1080, 546
-  offset: 0, 0
-  index: 4
-angry_float
-  rotate: false
-  xy: 5400, 0
-  size: 1080, 546
-  orig: 1080, 546
-  offset: 0, 0
-  index: 5
-angry_float
-  rotate: false
-  xy: 6480, 0
-  size: 1080, 546
-  orig: 1080, 546
-  offset: 0, 0
-  index: 6
-angry_float
-  rotate: false
-  xy: 7560, 0
-  size: 1080, 546
-  orig: 1080, 546
-  offset: 0, 0
-  index: 7
-angry_float
-  rotate: false
-  xy: 8640, 0
-  size: 1080, 546
-  orig: 1080, 546
-  offset: 0, 0
-  index: 8
-angry_float
-  rotate: false
-  xy: 9720, 0
-  size: 1080, 546
-  orig: 1080, 546
-  offset: 0, 0
-  index: 9
 default
   rotate: false
   xy: 0, 0
@@ -80,70 +10,70 @@ default
   orig: 1080, 546
   offset: 0, 0
   index: 0
-float
+idle
   rotate: false
   xy: 0, 0
   size: 1080, 546
   orig: 1080, 546
   offset: 0, 0
   index: 0
-float
+idle
   rotate: false
   xy: 1080, 0
   size: 1080, 546
   orig: 1080, 546
   offset: 0, 0
   index: 1
-float
+idle
   rotate: false
   xy: 2160, 0
   size: 1080, 546
   orig: 1080, 546
   offset: 0, 0
   index: 2
-float
+idle
   rotate: false
   xy: 3240, 0
   size: 1080, 546
   orig: 1080, 546
   offset: 0, 0
   index: 3
-float
+idle
   rotate: false
   xy: 4320, 0
   size: 1080, 546
   orig: 1080, 546
   offset: 0, 0
   index: 4
-float
+idle
   rotate: false
   xy: 5400, 0
   size: 1080, 546
   orig: 1080, 546
   offset: 0, 0
   index: 5
-float
+idle
   rotate: false
   xy: 6480, 0
   size: 1080, 546
   orig: 1080, 546
   offset: 0, 0
   index: 6
-float
+idle
   rotate: false
   xy: 7560, 0
   size: 1080, 546
   orig: 1080, 546
   offset: 0, 0
   index: 7
-float
+idle
   rotate: false
   xy: 8640, 0
   size: 1080, 546
   orig: 1080, 546
   offset: 0, 0
   index: 8
-float
+idle
   rotate: false
   xy: 9720, 0
   size: 1080, 546
