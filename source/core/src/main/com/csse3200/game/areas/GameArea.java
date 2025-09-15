@@ -156,12 +156,50 @@ public abstract class GameArea implements Disposable {
   }
 
   /**
+   * Spawns the enemies based on the room number given.
+   * @param roomNumber The number of the current floor/room.
+   * @param total The total number of enemies to be spawned.
+   * @param scaleFactor The scaling factor of the difficulty of the enemies to be spawned.
+   * @param player The player {@link Entity} that is to be target by the enemies.
+   */
+  public void spawnEnemies(int roomNumber, int total, float scaleFactor, Entity player) {
+      HashMap<String, ArrayList<Vector2>> positions = getEnemySpawnPosition(roomNumber);
+      switch (roomNumber) {
+          case 1:
+              spawnDeepspin(total, scaleFactor, player, positions);
+              break;
+          case 2:
+              spawnDeepspin(total, scaleFactor, player, positions);
+              spawnVroomba(total, scaleFactor, player, positions);
+              break;
+          case 3:
+              spawnVroomba(total, scaleFactor, player, positions);
+              spawnGhostGPT(total, scaleFactor, player, positions);
+              break;
+          case 4:
+              spawnGhostGPT(total, scaleFactor, player, positions);
+              spawnDeepspin(total, scaleFactor, player, positions);
+              break;
+          case 5:
+              spawnGhostGPT(total, scaleFactor, player, positions);
+              spawnDeepspin(total, scaleFactor, player, positions);
+              spawnVroomba(total, scaleFactor, player, positions);
+              break;
+          case 6, 7:
+              spawnGhostGPT(total, scaleFactor, player, positions);
+              spawnGrokDroid(total, scaleFactor, player, positions);
+              break;
+          default: throw new IllegalStateException("Unexpected room number: " + roomNumber);
+      }
+  }
+
+  /**
    * Adds GhostGPT enemies onto the map.
    * @param total The total number of GhostGPT to be spawned.
    * @param scaleFactor The scale of increase in difficulty of the GhostGPT
    */
-  public void spawnGhostGPT(int total, float scaleFactor, Entity player) {
-      HashMap<String, ArrayList<Vector2>> positions = getEnemySpawnPosition(3);
+  public void spawnGhostGPT(
+          int total, float scaleFactor, Entity player, HashMap<String, ArrayList<Vector2>> positions) {
       ArrayList<Vector2> spawnPositions = positions.get("GhostGpt");
       for (Vector2 pos : spawnPositions) {
           Entity ghostGpt = NPCFactory.createGhostGPT(player, this, scaleFactor);
@@ -175,8 +213,8 @@ public abstract class GameArea implements Disposable {
    * @param total The total number of DeepSpins to be spawned.
    * @param scaleFactor The scale of increase in difficulty of the DeepSpin
    */
-  public void spawnDeepspin(int total, float scaleFactor, Entity player) {
-      HashMap<String, ArrayList<Vector2>> positions = getEnemySpawnPosition(getRoomNumber());
+  public void spawnDeepspin(
+          int total, float scaleFactor, Entity player, HashMap<String, ArrayList<Vector2>> positions) {
       ArrayList<Vector2> spawnPositions = positions.get("Deepspin");
       for (Vector2 pos : spawnPositions) {
           Entity deepSpin = NPCFactory.createDeepspin(player, this, scaleFactor);
@@ -190,8 +228,8 @@ public abstract class GameArea implements Disposable {
    * @param total The total number of GrokDroid to be spawned.
    * @param scaleFactor The scale of increase in difficulty of the GrokDroid
    */
-  public void spawnGrokDroid(int total, float scaleFactor, Entity player) {
-      HashMap<String, ArrayList<Vector2>> positions = getEnemySpawnPosition(getRoomNumber());
+  public void spawnGrokDroid(
+          int total, float scaleFactor, Entity player, HashMap<String, ArrayList<Vector2>> positions) {
       ArrayList<Vector2> spawnPositions = positions.get("GrokDroid");
       for (Vector2 pos : spawnPositions) {
           Entity grokDroid = NPCFactory.createGrokDroid(player, this, scaleFactor);
@@ -205,8 +243,8 @@ public abstract class GameArea implements Disposable {
    * @param total The total number of Vroomba to be spawned.
    * @param scaleFactor The scale of increase in difficulty of the Vroomba
    */
-  public void spawnVroomba(int total, float scaleFactor, Entity player) {
-      HashMap<String, ArrayList<Vector2>> positions = getEnemySpawnPosition(3);
+  public void spawnVroomba(
+          int total, float scaleFactor, Entity player, HashMap<String, ArrayList<Vector2>> positions) {
       ArrayList<Vector2> spawnPositions = positions.get("Vroomba");
       for (Vector2 pos : spawnPositions) {
           Entity vroomba = NPCFactory.createVroomba(player, scaleFactor);
