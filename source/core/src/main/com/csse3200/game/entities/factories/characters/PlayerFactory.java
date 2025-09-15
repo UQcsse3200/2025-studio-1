@@ -34,7 +34,7 @@ import com.csse3200.game.components.player.ItemPickUpComponent;
 public class PlayerFactory {
   private static final PlayerConfig stats =
       FileLoader.readClass(PlayerConfig.class, "configs/player.json");
-  private static final PlayerConfig stats = safeLoadPlayerConfig();
+//  private static final PlayerConfig stats = safeLoadPlayerConfig();
 
   private static PlayerConfig safeLoadPlayerConfig() {
     PlayerConfig cfg = FileLoader.readClass(PlayerConfig.class, "configs/player.json");
@@ -86,7 +86,7 @@ public class PlayerFactory {
     //Unequip player at spawn
     PlayerActions actions = player.getComponent(PlayerActions.class);
     actions.create();
-    actions.unequipWeapon();  //start without a weapon equipped
+    actions.unequipPlayer();  //start without a weapon equipped
 
     return player;
   }
