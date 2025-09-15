@@ -1,6 +1,5 @@
 package com.csse3200.game.components.shop;
 
-import com.csse3200.game.components.items.ItemComponent;
 import com.csse3200.game.components.player.InventoryComponent;
 import com.csse3200.game.entities.Entity;
 import org.slf4j.Logger;
@@ -13,6 +12,10 @@ public class ShopManager {
 
     public ShopManager(CatalogService catalog) {
         this.catalog = catalog;
+    }
+
+    public CatalogService getCatalog() {
+        return catalog;
     }
 
 
@@ -39,7 +42,7 @@ public class ShopManager {
 
         // Add item to Inventory
         int idx = InventoryOperations.addOrStack(inventory, item.getItem(), amount,
-                entry.stackable(), entry.maxStack());
+                entry.maxStack());
         if (idx < 0) {
             return fail(player, item, PurchaseError.INVENTORY_FULL);
         }
