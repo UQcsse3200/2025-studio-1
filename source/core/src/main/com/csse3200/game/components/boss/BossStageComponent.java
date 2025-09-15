@@ -6,6 +6,7 @@ import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.factories.characters.BossFactory;
 import com.csse3200.game.components.enemy.*;
+import com.csse3200.game.components.boss.MissueAttackComponent;
 
 public class BossStageComponent extends Component {
     private int currentStage = 1;
@@ -31,5 +32,7 @@ public class BossStageComponent extends Component {
         fireball.setAttack(false);
         BlackholeComponent balckhole =  entity.getComponent(BlackholeComponent.class);
         balckhole.setAttack(false);
+        MissueAttackComponent missle = entity.getComponent(MissueAttackComponent.class);
+        missle.setAttack(true);
     }
 }
