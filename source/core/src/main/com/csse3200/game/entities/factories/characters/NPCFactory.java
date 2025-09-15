@@ -180,8 +180,6 @@ public class NPCFactory {
 
 
   /**
-<<<<<<< HEAD:source/core/src/main/com/csse3200/game/entities/factories/NPCFactory.java
-=======
    * Creates a robot entity.
    *
    * @param target entity to chase (e.g. player)
@@ -208,7 +206,6 @@ public class NPCFactory {
   }
 
   /**
->>>>>>> main:source/core/src/main/com/csse3200/game/entities/factories/characters/NPCFactory.java
    * Creates Deepspin enemy type
    *
    * @param target entity to chase

@@ -1,6 +1,7 @@
 package com.csse3200.game.components.player;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.math.Vector2;
@@ -88,7 +89,6 @@ public class PlayerActions extends Component {
     entity.getEvents().addListener("crouchStop", () -> crouching = false);
     entity.getEvents().addListener("sprintStart", this::startSprinting);
     entity.getEvents().addListener("sprintStop", this::stopSprinting);
-
     // Find camera from any entity with CameraComponent
     Array<Entity> entities = ServiceLocator.getEntityService().getEntities();
     for (Entity entity: entities) {
@@ -104,6 +104,16 @@ public class PlayerActions extends Component {
    */
   @Override
   public void update() {
+    if(!Gdx.input.isKeyPressed(Input.Keys.A) && !Gdx.input.isKeyPressed(Input.Keys.D) && !dashing) {
+      this.walkDirection.x = 0f;
+      entity.getEvents().trigger("walkStop");
+      if(!grounded) {
+        entity.getEvents().trigger("groundLeft", walkDirection);
+      }
+    }
+    if(!Gdx.input.isKeyPressed(Input.Keys.S) && crouching) {
+      entity.getEvents().trigger("crouchStop");
+    }
     if (moving || dashing) {
       updateSpeed();
     }
@@ -333,6 +343,9 @@ public class PlayerActions extends Component {
 
   /** Fires a projectile towards the mouse cursor. */
   void shoot() {
+    if (ServiceLocator.getTimeSource().isPaused())
+        return;
+
     WeaponsStatsComponent weapon = getCurrentWeaponStats();
     if (weapon == null) {
       return;
@@ -347,7 +360,12 @@ public class PlayerActions extends Component {
     Entity bullet = ProjectileFactory.createPistolBullet(weapon);
     Vector2 origin = new Vector2(entity.getPosition());
     bullet.setPosition(origin);
-    ServiceLocator.getEntityService().register(bullet);
+    com.csse3200.game.areas.GameArea area = ServiceLocator.getGameArea();
+    if (area != null) {
+      area.spawnEntity(bullet);
+    } else {
+      ServiceLocator.getEntityService().register(bullet);
+    }
 
     PhysicsProjectileComponent projectilePhysics = bullet.getComponent(PhysicsProjectileComponent.class);
 
@@ -359,6 +377,8 @@ public class PlayerActions extends Component {
 
   /** Performs a melee attack against nearby enemies. */
   void attack() {
+      if (ServiceLocator.getTimeSource().isPaused())
+          return;
     WeaponsStatsComponent weapon = getCurrentWeaponStats();
     float coolDown = weapon != null ? weapon.getCoolDown() : 0;
     if (this.timeSinceLastAttack < coolDown) return;
