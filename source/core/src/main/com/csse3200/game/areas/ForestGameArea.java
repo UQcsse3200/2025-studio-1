@@ -113,7 +113,8 @@ public class ForestGameArea extends GameArea {
     "images/player.png",
     "images/mud.png",
     "images/heart.png",
-    "images/computerBench.png"
+    "images/computerBench.png",
+          "images/VendingMachine.png"
   };
 
   /** General prop textures (floors, tiles, etc.). */
@@ -424,7 +425,7 @@ public class ForestGameArea extends GameArea {
     CatalogService catalog = ShopDemo.makeDemoCatalog();
     ShopManager manager = new ShopManager(catalog);
 
-    Entity shop = ShopFactory.createShop(this, manager, "images/tree.png"); // have as tree now as placeholder, later need to change to actual shop icon
+    Entity shop = ShopFactory.createShop(this, manager, "images/VendingMachine.png"); // have as tree now as placeholder, later need to change to actual shop icon
     spawnEntityAt(shop, new GridPoint2(12, 6), true, false);
   }
 
