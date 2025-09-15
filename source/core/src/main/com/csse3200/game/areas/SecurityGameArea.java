@@ -58,12 +58,14 @@ public class SecurityGameArea extends GameArea {
   @Override
   public void create() {
     GenericLayout.ensureGenericAssets(this);
-    GenericLayout.setupTerrainWithOverlay(this, terrainFactory, TerrainType.FOREST_DEMO,
+    GenericLayout.setupTerrainWithOverlay(this, terrainFactory, TerrainType.SECURITY_ROOM,
         new Color(0.08f, 0.08f, 0.1f, 0.30f));
 
     spawnBordersAndDoors();
     spawnPlayer();
     spawnFloor();
+    spawnPlatforms();
+    spawnSecurityProps();
   }
 
   // Assets ensured via GenericLayout
