@@ -42,100 +42,11 @@ public class NPCFactory {
       FileLoader.readClass(NPCConfigs.class, "configs/NPCs.json");
 
   /**
-   * Creates a ghost entity.
-   *
-   * @param target entity to chase
-   * @return entity
-   */
-  public static Entity createGhost(Entity target) {
-    Entity ghost = createBaseNPC(target);
-    BaseEntityConfig config = configs.ghost;
-
-    AnimationRenderComponent animator =
-        new AnimationRenderComponent(
-            ServiceLocator.getResourceService().getAsset("images/ghost.atlas", TextureAtlas.class));
-    animator.addAnimation("angry_float", 0.1f, Animation.PlayMode.LOOP);
-    animator.addAnimation("float", 0.1f, Animation.PlayMode.LOOP);
-
-    // Create the dash attack AI component
-    AITaskComponent aiComponent =
-        new AITaskComponent()
-            .addTask(new WanderTask(new Vector2(2f, 2f), 1000L))
-            .addTask(new DashAttackTask(target, 15, new Vector2(7f, 7f), 1000L, 200L));
-
-
-    // Get player's inventory for reward system
-    InventoryComponent playerInventory = null;
-    if (target != null) {
-      playerInventory = target.getComponent(InventoryComponent.class);
-    }
-
-    ghost
-        .addComponent(new CombatStatsComponent(config.health))
-        .addComponent(new WeaponsStatsComponent(config.baseAttack))
-        .addComponent(animator)
-        .addComponent(new GhostAnimationController())
-        .addComponent(new EnemyDeathRewardComponent(15, playerInventory)) // Add reward + particles
-        .addComponent(new DeathParticleSpawnerComponent())
-        .addComponent(aiComponent)
-        .addComponent(new EnemyHealthDisplay());
-
-    ghost.getComponent(AnimationRenderComponent.class).scaleEntity();
-
-    return ghost;
-  }
-
-  /**
-   * Creates a ghost king entity.
-   *
-   * @param target entity to chase
-   * @return entity
-   */
-  public static Entity createGhostKing(Entity target) {
-    Entity ghostKing = createBaseNPC(target);
-    GhostKingConfig config = configs.ghostKing;
-
-    AnimationRenderComponent animator =
-        new AnimationRenderComponent(
-            ServiceLocator.getResourceService()
-                .getAsset("images/ghostKing.atlas", TextureAtlas.class));
-    animator.setDisposeAtlas(false);
-    animator.addAnimation("float", 0.1f, Animation.PlayMode.LOOP);
-    animator.addAnimation("angry_float", 0.1f, Animation.PlayMode.LOOP);
-
-    // Create the constant chase AI task
-    AITaskComponent aiComponent =
-        new AITaskComponent()
-          .addTask(new WanderTask(new Vector2(2f, 2f), 2000L))
-          .addTask(new DashAttackTask(target, 15, new Vector2(15f, 15f), 500L, 300L));
-
-
-    // Get player's inventory for reward system
-    InventoryComponent playerInventory = null;
-    if (target != null) {
-      playerInventory = target.getComponent(InventoryComponent.class);
-    }
-
-    ghostKing
-        .addComponent(new CombatStatsComponent(config.health))
-        .addComponent(new WeaponsStatsComponent(config.baseAttack))
-        .addComponent(animator)
-        .addComponent(new GhostAnimationController())
-        .addComponent(new EnemyDeathRewardComponent(30, playerInventory)) // Add reward + particles
-        .addComponent(new DeathParticleSpawnerComponent())
-        .addComponent(aiComponent)
-        .addComponent(new EnemyHealthDisplay());
-
-    ghostKing.getComponent(AnimationRenderComponent.class).scaleEntity();
-    return ghostKing;
-  }
-
-  /**
    * Creates GhostGPT enemy type
    *
    * @param target entity to chase
    * @param area the area/space it is living in
-   * @param scalingFactor The scale of increase in health & attack of the GhostGPT
+   * @param scalingFactor The scale of increase in health and attack of the GhostGPT
    * @return entity
    */
   public static Entity createGhostGPT(Entity target, GameArea area, float scalingFactor) {
@@ -190,14 +101,12 @@ public class NPCFactory {
     return ghostGPT;
   }
 
-
   /**
    * Creates a robot entity.
    *
    * @param target entity to chase (e.g. player)
    * @return robot entity
    */
-
   public static Entity createRobot(Entity target) {
     Entity robot = createBaseNPC(target);
 
@@ -223,7 +132,7 @@ public class NPCFactory {
    *
    * @param target entity to chase
    * @param area the area/space it is living in
-   * @param scalingFactor The scale of increase in health & attack of the DeepSpin
+   * @param scalingFactor The scale of increase in health and attack of the DeepSpin
    * @return entity
    */
   public static Entity createDeepspin(Entity target, GameArea area, float scalingFactor) {
@@ -274,7 +183,7 @@ public class NPCFactory {
    *
    * @param target entity to chase
    * @param area the area/space it is living in
-   * @param scalingFactor The scale of increase in health & attack of the GrokDroid
+   * @param scalingFactor The scale of increase in health and attack of the GrokDroid
    * @return entity
    */
   public static Entity createGrokDroid(Entity target, GameArea area, float scalingFactor) {
@@ -324,7 +233,7 @@ public class NPCFactory {
    * Creates a Vroomba entity.
    *
    * @param target entity to chase
-   * @param scalingFactor The scale of increase in health & attack of the Vroomba
+   * @param scalingFactor The scale of increase in health and attack of the Vroomba
    * @return entity
    */
   public static Entity createVroomba(Entity target, float scalingFactor) {
