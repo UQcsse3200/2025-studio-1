@@ -8,8 +8,11 @@ import com.csse3200.game.components.*;
 import com.csse3200.game.components.player.*;
 import com.csse3200.game.components.player.InventoryComponent;
 import com.csse3200.game.components.player.StaminaComponent;
+import com.csse3200.game.effects.Effect;
+import com.csse3200.game.effects.RapidFireEffect;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.characters.PlayerConfig;
+import com.csse3200.game.entities.configs.consumables.RapidFireConsumableConfig;
 import com.csse3200.game.files.FileLoader;
 import com.csse3200.game.input.InputComponent;
 import com.csse3200.game.physics.PhysicsLayer;
@@ -73,7 +76,6 @@ public class PlayerFactory {
     // remove this if we have item pickup available
     // (disposes entity when player go near it)
     player.addComponent(new Component() {
-      @Override
       public void update() {
         var entities = ServiceLocator.getEntityService().getEntities();
         for (int i = 0; i < entities.size; i++) {
@@ -82,15 +84,29 @@ public class PlayerFactory {
 
           if (tag != null && tag.getTag().equals("rapidfire")) {
             if (entityRapidFirePowerup.getCenterPosition().dst(player.getCenterPosition()) < 1f) {
-              WeaponsStatsComponent statsComp = player.getComponent(WeaponsStatsComponent.class);
-              PowerupComponent powerup = player.getComponent(PowerupComponent.class);
-              powerup.applyRapidFire(statsComp, 2f);
+
+              InventoryComponent inventory = player.getComponent(InventoryComponent.class);
+              Entity equippedWeapon = inventory.getCurrentItem();
+
+              if (equippedWeapon != null) {
+                // Create rapid fire effect and apply to the weapon entity
+                RapidFireConsumableConfig config = new RapidFireConsumableConfig();
+                for (Effect e : config.effects) {
+                  if (e instanceof RapidFireEffect rapidFireEffect) {
+                    rapidFireEffect.apply(equippedWeapon); // Entity passed here
+                    player.getComponent(PowerupComponent.class).addEffect(rapidFireEffect);
+                  }
+                }
+              }
+
+              // Remove the powerup from the world
               entityRapidFirePowerup.dispose();
             }
           }
         }
       }
     });
+
 
     return player;
   }
