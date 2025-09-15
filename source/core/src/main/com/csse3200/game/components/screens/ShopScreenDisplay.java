@@ -184,13 +184,12 @@ public class ShopScreenDisplay extends UIComponent {
 
         // Click to purchase
         int amountToPurchase = 1;
-        if(entry.enabled()){
-            finalIcon.addListener(new ChangeListener() {
+        finalIcon.addListener(new ChangeListener() {
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {
                     manager.purchase(game.getPlayer(), entry, amountToPurchase);
                 }
-            });}
+            });
 
         grid.add(itemTable).size(120, 140);
 
