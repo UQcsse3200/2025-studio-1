@@ -228,7 +228,7 @@ public class BossFactory {
         warning.setPosition(pos);
         return warning;
     }
-    public static Entity createMissle(Vector2 from, Vector2 velocity) {
+    public static Entity createMissle(Vector2 from) {
         Entity missle = new Entity()
                 .addComponent(new PhysicsComponent())
                 .addComponent(new ColliderComponent())
@@ -236,13 +236,14 @@ public class BossFactory {
                 .addComponent(new CombatStatsComponent(1))
                 .addComponent(new WeaponsStatsComponent(12))
                 .addComponent(new PhysicsProjectileComponent())
+                .addComponent(new MissleMovementComponent(3f))
                 .addComponent(new TouchAttackComponent(PhysicsLayer.PLAYER, 1f));
         missle.setPosition(from);
         TextureRenderComponent texture = new TextureRenderComponent("images/missle.png");
         missle.addComponent(texture);
         texture.scaleEntity();
         Vector2 s = missle.getScale();
-        missle.setScale(s.x * 0.2f, s.y * 0.2f);
+        missle.setScale(s.x * 0.3f, s.y * 0.3f);
         ColliderComponent collider = missle.getComponent(ColliderComponent.class);
         collider.setLayer(PhysicsLayer.ENEMY_PROJECTILE)
                 .setFilter(PhysicsLayer.ENEMY_PROJECTILE, PhysicsLayer.PLAYER);
