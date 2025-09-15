@@ -5,13 +5,11 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.csse3200.game.GdxGame;
@@ -21,9 +19,6 @@ public class StoryScreen extends ScreenAdapter {
     private Stage stage;
     private Skin skin;
     private Label dialogueLabel;
-    private Label spaceIndicator;
-    private Label escIndicator;
-    private Image background;
     private Texture bgTexture;
 
     private final String[] storyLines = {
@@ -54,7 +49,7 @@ public class StoryScreen extends ScreenAdapter {
         skin = new Skin(Gdx.files.internal("uiskin.json"));
         // Background
         bgTexture = new Texture(Gdx.files.internal("images/menu_background.png"));
-        background = new Image(bgTexture);
+        Image background = new Image(bgTexture);
         background.setFillParent(true);
         stage.addActor(background);
         // Dialogue
@@ -63,8 +58,8 @@ public class StoryScreen extends ScreenAdapter {
         dialogueLabel.setAlignment(Align.center);
         dialogueLabel.setFontScale(1.5f);
         // Input indicators
-        spaceIndicator = new Label("SPACE → Next", skin);
-        escIndicator = new Label("ESC → Skip", skin);
+        Label spaceIndicator = new Label("SPACE → Next", skin);
+        Label escIndicator = new Label("ESC → Skip", skin);
         Table indicatorsTable = new Table();
         indicatorsTable.setFillParent(true);
         indicatorsTable.top().left().pad(10);
