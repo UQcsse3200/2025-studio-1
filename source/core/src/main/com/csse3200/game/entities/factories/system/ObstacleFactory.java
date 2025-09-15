@@ -103,7 +103,7 @@ public class ObstacleFactory {
                     .addComponent(new TextureRenderComponent("foreg_sprites/general/Railing.png"));
 
     railing.getComponent(TextureRenderComponent.class).scaleEntity();
-    railing.scaleHeight(0.7f);
+    railing.scaleHeight(0.5f);
     return railing;
   }
 
