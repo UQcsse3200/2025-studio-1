@@ -85,8 +85,6 @@ public class Floor2GameArea extends GameArea {
     addSolidWallLeft(b, WALL_WIDTH);
     addSolidWallRight(b, WALL_WIDTH);
 
-
-
     // Left vertical door resting on ground level
     float leftDoorHeight = Math.max(1f, b.viewHeight * 0.2f);
     float leftDoorY = b.bottomY; // ground level
@@ -111,7 +109,7 @@ public class Floor2GameArea extends GameArea {
       spawnEntity(rightTop);
     }
     Entity rightDoor = ObstacleFactory.createDoorTrigger(WALL_WIDTH, rightDoorHeight);
-    rightDoor.setPosition(b.rightX - WALL_WIDTH - 0.001f, rightDoorY);
+    rightDoor.setPosition(b.rightX - WALL_WIDTH - 0.001f, rightDoorY+8f);
     rightDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadBackToFloor5));
     spawnEntity(rightDoor);
   }
