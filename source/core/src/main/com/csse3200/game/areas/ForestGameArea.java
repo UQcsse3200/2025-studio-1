@@ -99,9 +99,10 @@ public class ForestGameArea extends GameArea {
     "images/KeycardDoor.png",
     "images/player.png",
     "images/mud.png",
-    HEART,
+    "images/heart.png",
+    "images/laserball.png",
     "images/MarblePlatform.png",
-    "images/computerBench.png",
+    "images/computerBench.png"
   };
 
   /** General prop textures (floors, tiles, etc.). */
@@ -164,6 +165,7 @@ public class ForestGameArea extends GameArea {
     "images/explosion_1.atlas",
     "images/explosion_2.atlas",
     "images/player.atlas",
+          "images/boss_explosion.atlas",
     "images/player.atlas",
     "images/terrain_iso_grass.atlas",
     "images/ghost.atlas",
@@ -171,6 +173,7 @@ public class ForestGameArea extends GameArea {
     "images/ghostGPT.atlas",
     "images/explosion_1.atlas",
     "images/explosion_2.atlas",
+    "images/boss_explosion.atlas"
   };
 
   private static final String[] playerSound1 = {"sounds/jump.mp3"};
@@ -233,6 +236,8 @@ public class ForestGameArea extends GameArea {
     //this.equipItem(dagger);
     //this.equipItem(rifle);
 
+    //spawnGhosts();
+    //spawnGhostKing();
     spawnFloor();
     spawnBottomRightDoor();
     spawnMarblePlatforms();
@@ -267,12 +272,10 @@ public class ForestGameArea extends GameArea {
   }
 
   private void spawnRobots() {
-    GridPoint2 pos = new GridPoint2(6, 10);
-    GridPoint2 pos2 = new GridPoint2(8, 10);
-    Entity robot = NPCFactory.createRobot(player);
-    Entity robot2 = NPCFactory.createRobot(player);
-    spawnEntityAt(robot, pos, true, true);
-    spawnEntityAt(robot2, pos2, true, true);
+    GridPoint2 pos = new GridPoint2(8, 13);
+      Entity robot = BossFactory.createRobot(player);
+      spawnEntityAt(robot, pos, true, true);
+
   }
 
   private void displayUI() {
@@ -552,11 +555,11 @@ public class ForestGameArea extends GameArea {
   // }
 
   private void spawnBoss2() {
-    GridPoint2 pos = new GridPoint2(20, 12);
-
+    GridPoint2 pos = new GridPoint2(5, 8);
     Entity boss2 = BossFactory.createBoss2(player);
     spawnEntityAt(boss2, pos, true, true);
   }
+
   //new added boss3
   private void spawnBoss3() {
     GridPoint2 pos = new GridPoint2(20, 12);
