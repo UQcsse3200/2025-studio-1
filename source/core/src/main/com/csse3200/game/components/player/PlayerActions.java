@@ -14,6 +14,7 @@ import com.csse3200.game.physics.PhysicsLayer;
 import com.csse3200.game.physics.components.HitboxComponent;
 import com.csse3200.game.physics.components.PhysicsComponent;
 import com.csse3200.game.physics.components.PhysicsProjectileComponent;
+import com.csse3200.game.rendering.TextureRenderComponent;
 import com.csse3200.game.services.ServiceLocator;
 import com.badlogic.gdx.utils.Timer;
 
@@ -437,38 +438,58 @@ public class PlayerActions extends Component {
       entity.getEvents().trigger("focus item", inventoryIndex);
   }
 
-
-    /**
-     * equips the player with the weapon that is in the selected slot
-     */
-    public void equipCurrentWeapon() {
-        InventoryComponent inventory = entity.getComponent(InventoryComponent.class);
-        if (inventory == null) return;
-
-        int equippedIndex = inventory.getEquippedSlot();
-        if (equippedIndex >= 0) {
-            // set current item to the equipped slot
-            Entity item;
-            item = inventory.getCurrItem();
-            inventory.setCurrItem(item);
-
-            entity.getEvents().trigger("focus item", equippedIndex);
-        } else {
-            entity.getEvents().trigger("focus item", -1);
-            inventory.setCurrItem(null);
-        }
-    }
-
     /**
      * this function is to unequip the player
      */
-    public void unequipWeapon(){
+    public void unequipPlayer(){
         InventoryComponent inventory = entity.getComponent(InventoryComponent.class);
         if (inventory == null) return;
 
         inventory.setEquippedSlot(-1);
         inventory.setCurrItem(null);
         entity.getEvents().trigger("focus item", -1);
+    }
+
+
+    private Entity currentWeapon = null;
+
+    public void equipWeapon(Entity weapon) {
+        if (currentWeapon != null) {
+            unequipWeapon();
+        }
+        currentWeapon = weapon;
+
+        TextureRenderComponent renderComp = weapon.getComponent(TextureRenderComponent.class);
+        if (renderComp != null) {
+            renderComp.setEnabled(true);
+        }
+
+        updateWeaponPosition();
+    }
+
+    public void unequipWeapon() {
+        if (currentWeapon == null) return;
+
+        TextureRenderComponent renderComp = currentWeapon.getComponent(TextureRenderComponent.class);
+        if (renderComp != null) {
+            renderComp.setEnabled(false);
+        }
+
+        currentWeapon = null;
+    }
+
+    //to represent relative difference between the
+    //player's body position and player's hand.
+    private float handOffsetX;
+    private float handOffsetY;
+    public void updateWeaponPosition() {
+        if (currentWeapon != null) {
+            Vector2 playerPos = entity.getPosition();
+            if (facingRight) {
+                currentWeapon.setPosition(playerPos.x + handOffsetX, playerPos.y + handOffsetY);
+            } else {
+                currentWeapon.setPosition(playerPos.x - handOffsetX, playerPos.y + handOffsetY);
+            }        }
     }
 
 }
