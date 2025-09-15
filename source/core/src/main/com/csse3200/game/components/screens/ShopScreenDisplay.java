@@ -18,6 +18,7 @@ import com.csse3200.game.ui.*;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.scenes.scene2d.ui.Container;
+import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 
 
 public class ShopScreenDisplay extends UIComponent {
@@ -33,7 +34,7 @@ public class ShopScreenDisplay extends UIComponent {
 
     // UI constants
     private static final float PANEL_W = 720f;
-    private static final float PANEL_H = 660f;
+    private static final float PANEL_H = 600f;
     private static final int   GRID_COLUMNS = 4;
     private static final float CELL_W = 150f;
     private static final float CELL_H = 180f;
@@ -50,11 +51,10 @@ public class ShopScreenDisplay extends UIComponent {
 
     // Scene2D Widgets
     private Table root;
+    private Table grid;
     private Image frame;
     private Image dimmer;
-    private Texture dimTex;
-    private Texture frameTex;
-    private Table grid;
+    private Texture pixelTex;
     private Label currencyLabel;
     private ItemScreenDisplay itemPopup;
     Image background;
@@ -80,8 +80,7 @@ public class ShopScreenDisplay extends UIComponent {
         buildGrid();
         populateGrid();
 
-        addBalanceFooter();
-        addCloseButton();
+        addFooter();
         subscribeCurrencyUpdates();
 
         hide();
@@ -98,9 +97,8 @@ public class ShopScreenDisplay extends UIComponent {
     public void dispose() {
         if (root != null) { root.remove(); root = null; }
         if (dimmer != null) { dimmer.remove(); dimmer = null; }
-        if (dimTex != null) { dimTex.dispose(); dimTex = null; }
         if (frame != null) { frame.remove(); frame = null; }
-        if (frameTex != null) { frameTex.dispose(); frameTex = null; }
+        if (pixelTex != null) { pixelTex.dispose(); pixelTex = null; }
         if (itemPopup != null) { itemPopup.dispose(); itemPopup = null; }
         if (background != null) {background.remove(); background = null; }
         super.dispose();
@@ -140,26 +138,28 @@ public class ShopScreenDisplay extends UIComponent {
 
     // Dim the world, draw a black frame outline, and a navy panel behind content.
     private void buildBackdrop() {
+        pixelTex = makeSolidTexture(Color.WHITE);
+
         // Dimmer
-        dimTex = makeSolidTexture(new Color(0, 0, 0, 0.6f));
-        dimmer = new Image(new TextureRegionDrawable(new TextureRegion(dimTex)));
+        dimmer = new Image(new TextureRegionDrawable(new TextureRegion(pixelTex)));
         dimmer.setFillParent(true);
+        dimmer.setColor(0f, 0f, 0f, 0.6f);
         stage.addActor(dimmer);
 
         // Black frame (outline)
-        frameTex = makeSolidTexture(Color.BLACK);
-        frame = new Image(new TextureRegionDrawable(new TextureRegion(frameTex)));
+        frame = new Image(new TextureRegionDrawable(new TextureRegion(pixelTex)));
         frame.setSize(PANEL_W + 8, PANEL_H + 8);
         frame.setPosition((stage.getWidth() - frame.getWidth()) / 2f,
                 (stage.getHeight() - frame.getHeight()) / 2f);
+        frame.setColor(Color.BLACK);
         stage.addActor(frame);
 
         // Navy panel
-        Texture panelTex = makeSolidTexture(PANEL_COLOR);
-        background = new Image(new TextureRegionDrawable(new TextureRegion(panelTex)));
+        background = new Image(new TextureRegionDrawable(new TextureRegion(pixelTex)));
         background.setSize(PANEL_W, PANEL_H);
         background.setPosition((stage.getWidth() - background.getWidth()) / 2f,
                 (stage.getHeight() - background.getHeight()) / 2f);
+        background.setColor(PANEL_COLOR);
         stage.addActor(background);
     }
 
@@ -182,13 +182,13 @@ public class ShopScreenDisplay extends UIComponent {
         title.setFontScale(1.8f);
         root.add(title).padBottom(10).row();
 
-        Image divider = new Image(new TextureRegionDrawable(
-                new TextureRegion(makeSolidTexture(new Color(1f, 1f, 1f, 0.08f)))
-        ));
-        divider.setHeight(2);
-        divider.setFillParent(false);
-        divider.setWidth(PANEL_W - 40);
-        root.add(divider).padBottom(8).row();
+        Image divider = new Image(new TextureRegionDrawable(new TextureRegion(pixelTex)));
+        divider.setColor(1f, 1f, 1f, 0.08f);
+        root.add(divider)
+                .width(PANEL_W - 40f)  // match your side padding
+                .height(2f)
+                .padBottom(8f)
+                .row();
     }
 
     // Create grid table and add to root
@@ -215,32 +215,37 @@ public class ShopScreenDisplay extends UIComponent {
         populateGrid(); // re-adds all cells and rows
     }
 
-    // Balance label aligned bottom right
-    private void addBalanceFooter() {
+    // One footer row (Button and Balance)
+    private void addFooter() {
         Label.LabelStyle balStyle = new Label.LabelStyle(skin.get(Label.LabelStyle.class));
         balStyle.fontColor = GOLD;
-
         currencyLabel = new Label("", balStyle);
         currencyLabel.setFontScale(1.2f);
         updateCurrencyLabel();
 
-        Table footer = new Table();
-        footer.add().expandX();
-        footer.add(currencyLabel).right();
-        root.add(footer).growX().padTop(8f).row();
-    }
-
-    // Close shop button
-    private void addCloseButton() {
-        TextButton.TextButtonStyle style = skin.get("default", TextButton.TextButtonStyle.class);
-        TextButton closeBtn = new TextButton("Close Shop", style);
+        // Close button
+        TextButton closeBtn = new TextButton(
+                "Close Shop",
+                skin.get("default", TextButton.TextButtonStyle.class)
+        );
         closeBtn.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                hide();
-            }
+            @Override public void changed(ChangeEvent event, Actor actor) { hide(); }
         });
-        root.add(closeBtn).padTop(14).center().row();
+
+        // Two overlayed rows: one centers the button, one right-aligns balance
+        Stack footerStack = new Stack();
+
+        Table centerRow = new Table();
+        centerRow.center();
+        centerRow.add(closeBtn).expandX().center();
+
+        Table rightRow = new Table();
+        rightRow.add(currencyLabel).expandX().right().padRight(12f);
+
+        footerStack.add(centerRow);
+        footerStack.add(rightRow);
+
+        root.add(footerStack).growX().padTop(8f).padBottom(10f).row();
     }
 
     // Keep balance in sync with InventoryComponent#setProcessor().
@@ -262,11 +267,11 @@ public class ShopScreenDisplay extends UIComponent {
             // red-tinted overlay if disabled
             Stack stack = new Stack();
             stack.add(iconButton);
-            Image overlay = new Image(new TextureRegionDrawable(new TextureRegion(
-                    makeSolidTexture(new Color(0.8f, 0f, 0f, 0.5f))
-            )));
+            Image overlay = new Image(new TextureRegionDrawable(new TextureRegion(pixelTex)));
+            overlay.setColor(0.8f, 0f, 0f, 0.5f);
             overlay.setFillParent(true);
             stack.add(overlay);
+
             iconActor = stack;
         } else {
             iconActor = iconButton;
