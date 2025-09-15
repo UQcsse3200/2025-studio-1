@@ -30,7 +30,7 @@ public class StorageGameArea extends GameArea {
 
   private void spawnBordersAndDoors() {
     GenericLayout.addLeftRightDoorsAndWalls(this, cameraComponent, WALL_WIDTH,
-        this::loadResearch, this::loadTunnel);
+        this::loadResearch, this::loadServer);
   }
 
   private void spawnPlayer() {
@@ -42,8 +42,8 @@ public class StorageGameArea extends GameArea {
     clearAndLoad(() -> new ResearchGameArea(terrainFactory, cameraComponent));
   }
 
-  private void loadTunnel() {
-    clearAndLoad(() -> new TunnelGameArea(terrainFactory, cameraComponent));
+  private void loadServer() {
+    clearAndLoad(() -> new ServerGameArea(terrainFactory, cameraComponent));
   }
 }
 

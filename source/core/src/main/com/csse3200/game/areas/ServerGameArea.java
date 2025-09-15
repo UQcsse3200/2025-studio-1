@@ -2,6 +2,7 @@ package com.csse3200.game.areas;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.GridPoint2;
+import com.csse3200.game.areas.*;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.CameraComponent;
@@ -198,9 +199,9 @@ public class ServerGameArea extends GameArea {
   public void create() {
     ServiceLocator.registerGameArea(this);
 
-    // GenericLayout.ensureGenericAssets(this);
-    // GenericLayout.setupTerrainWithOverlay(this, terrainFactory, TerrainType.FOREST_DEMO,
-    //     new Color(0.10f, 0.12f, 0.10f, 0.24f));
+    GenericLayout.ensureGenericAssets(this);
+    GenericLayout.setupTerrainWithOverlay(this, terrainFactory, TerrainType.SERVER_ROOM,
+        new Color(0.10f, 0.12f, 0.10f, 0.24f));
 
     loadAssets();
     displayUI();
@@ -217,6 +218,10 @@ public class ServerGameArea extends GameArea {
 
     ItemSpawner itemSpawner = new ItemSpawner(this);
     itemSpawner.spawnItems(ItemSpawnConfig.servermap());
+
+    Entity ui = new Entity();
+    ui.addComponent(new com.csse3200.game.components.gamearea.FloorLabelDisplay("Server Room"));
+    spawnEntity(ui);
   }
 
   private void displayUI() {
@@ -433,7 +438,24 @@ public class ServerGameArea extends GameArea {
     resourceService.unloadAssets(serverRacks);
   }
 
+  /**
+   * Getter method for the player entity
+   * @return Entity player
+   */
   public Entity getPlayer() {
     return player;
+  }
+
+  private void spawnBordersAndDoors() {
+    GenericLayout.addLeftRightDoorsAndWalls(this, cameraComponent, WALL_WIDTH,
+        this::loadStorage, this::loadTunnel);
+  }
+
+  private void loadTunnel() {
+    clearAndLoad(() -> new TunnelGameArea(terrainFactory, cameraComponent));
+  }
+
+  private void loadStorage() {
+    clearAndLoad(() -> new StorageGameArea(terrainFactory, cameraComponent));
   }
 }
