@@ -72,8 +72,13 @@ public class EnemyMudBallAttackComponent extends Component {
         proj.getComponent(TextureRenderComponent.class).scaleEntity();
 
         // Delayed registration to avoid concurrent modification (e.g., iterator issues)
-        com.badlogic.gdx.Gdx.app.postRunnable(() ->
-                ServiceLocator.getEntityService().register(proj)
-        );
+        com.badlogic.gdx.Gdx.app.postRunnable(() -> {
+            com.csse3200.game.areas.GameArea area = ServiceLocator.getGameArea();
+            if (area != null) {
+                area.spawnEntity(proj);
+            } else {
+                ServiceLocator.getEntityService().register(proj);
+            }
+        });
     }
 }

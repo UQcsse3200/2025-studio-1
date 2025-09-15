@@ -17,7 +17,7 @@ import com.csse3200.game.utils.math.Vector2Utils;
 public class KeyboardPlayerInputComponent extends InputComponent {
   private final Vector2 walkDirection = Vector2.Zero.cpy();
 
-  private int focusedItem = 0;
+  private int focusedItem = -1;
 
   private long timeSinceKeyPress = 0;
   private int doublePressKeyCode = -1;
@@ -88,8 +88,7 @@ public class KeyboardPlayerInputComponent extends InputComponent {
       ItemComponent itemInfo = item.getComponent(ItemComponent.class);
       if (itemInfo.getType() == ItemTypes.RANGED) {
         entity.getEvents().trigger("shoot");
-
-      } else if (itemInfo.getType() == ItemTypes.MELEE) {
+      } else {
         entity.getEvents().trigger("attack");
       }
       return true;
@@ -148,6 +147,7 @@ public class KeyboardPlayerInputComponent extends InputComponent {
         return true;
       case Keys.E:
         triggerAddItem();
+        triggerInteract();
         return true;
       case Keys.R:
         triggerDropFocused();
@@ -265,5 +265,11 @@ public class KeyboardPlayerInputComponent extends InputComponent {
   private void triggerDropFocused() {
     entity.getEvents().trigger("drop focused");
   }
+
+  /** Triggers an interact request */
+  private void triggerInteract() {
+    entity.getEvents().trigger("interact");
+  }
+
 }
 
