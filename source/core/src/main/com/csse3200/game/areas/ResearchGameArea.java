@@ -52,6 +52,11 @@ public class ResearchGameArea extends GameArea {
   private void loadStorage() {
     clearAndLoad(() -> new StorageGameArea(terrainFactory, cameraComponent));
   }
+
+  @Override
+  public String toString() {
+    return "Research";
+  }
 }
 
 

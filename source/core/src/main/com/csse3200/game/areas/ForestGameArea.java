@@ -728,4 +728,9 @@ public class ForestGameArea extends GameArea {
   public Entity getPlayer() {
     return player;
   }
+
+  @Override
+  public String toString() {
+    return "Forest";
+  }
 }

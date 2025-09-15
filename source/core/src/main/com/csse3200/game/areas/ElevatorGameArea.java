@@ -44,6 +44,11 @@ public class ElevatorGameArea extends GameArea {
   private void loadResearch() {
     clearAndLoad(() -> new ResearchGameArea(terrainFactory, cameraComponent));
   }
+
+  @Override
+  public String toString() {
+    return "Elevator";
+  }
 }
 
 
