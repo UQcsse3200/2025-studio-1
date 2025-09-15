@@ -59,6 +59,12 @@ public class ResearchGameArea extends GameArea {
     return "Research";
   }
 
+  @Override
+  public Entity getPlayer() {
+    //placeholder
+    return null;
+  }
+
   public static ResearchGameArea load(SaveLoadService.PlayerInfo load) {
     return (new ResearchGameArea(terrainFactory, cameraComponent));
   }

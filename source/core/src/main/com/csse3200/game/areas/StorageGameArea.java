@@ -7,7 +7,6 @@ import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.factories.characters.PlayerFactory;
-import com.csse3200.game.services.SaveLoadService;
 
 /** Storage room: minimal walls with left--Research and right--Tunnel. */
 public class StorageGameArea extends GameArea {
@@ -52,9 +51,15 @@ public class StorageGameArea extends GameArea {
     return "Storage";
   }
 
-  public static StorageGameArea load(SaveLoadService.PlayerInfo load) {
+  @Override
+  public Entity getPlayer() {
+    // placeholder
+    return null;
+  }
 
-    return (new StorageGameArea(terrainFactory, cameraComponent));
+  public static StorageGameArea load(TerrainFactory terrainFactory, CameraComponent camera) {
+
+    return (new StorageGameArea(terrainFactory, camera));
   }
 }
 

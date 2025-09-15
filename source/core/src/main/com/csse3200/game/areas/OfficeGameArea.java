@@ -54,6 +54,12 @@ public class OfficeGameArea extends GameArea {
     return "Office";
   }
 
+  @Override
+  public Entity getPlayer() {
+    //placeholder see previous
+    return null;
+  }
+
   public static OfficeGameArea load(SaveLoadService.PlayerInfo load) {
     return (new OfficeGameArea(terrainFactory, cameraComponent));
   }

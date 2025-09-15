@@ -136,6 +136,10 @@ public class Floor2GameArea extends GameArea {
   public static Floor2GameArea load(SaveLoadService.PlayerInfo load) {
     return (new Floor2GameArea(terrainFactory, cameraComponent));
   }
+
+  public Entity getPlayer() {
+    return null;
+  }
 }
 
 

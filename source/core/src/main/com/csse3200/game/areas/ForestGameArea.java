@@ -740,8 +740,7 @@ public class ForestGameArea extends GameArea {
     return "Forest";
   }
 
-  public static ForestGameArea load(SaveLoadService.PlayerInfo load) {
-
+  public static ForestGameArea load(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
     return (new ForestGameArea(terrainFactory, cameraComponent));
   }
 }
