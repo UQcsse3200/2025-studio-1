@@ -50,6 +50,7 @@ public class ShopScreenDisplay extends UIComponent {
     @Override
     public void create() {
         entity.getEvents().addListener("purchaseFailed", this::showError);
+        entity.getEvents().addListener("interact", this::show);
         super.create();
         itemPopup = new ItemScreenDisplay();
         entity.addComponent(itemPopup);
@@ -103,7 +104,7 @@ public class ShopScreenDisplay extends UIComponent {
         closeBtn.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                entity.getEvents().trigger("closeShop");
+                hide();
             }
         });
 
@@ -121,7 +122,7 @@ public class ShopScreenDisplay extends UIComponent {
         // Optional: add a static "$" label or an icon if you have one in the skin
         hud.add(new Label("$", skin)).padRight(4f);
         hud.add(currencyLabel);
-
+        hide();
     }
 
     @Override
@@ -217,6 +218,8 @@ public class ShopScreenDisplay extends UIComponent {
     }
 
     public void show() {
+        refreshCatalog();
+        updateCurrencyLabel();
         if (background != null) {
             background.setVisible(true);
         }
@@ -230,8 +233,6 @@ public class ShopScreenDisplay extends UIComponent {
             hud.setVisible(true);
         }
 
-        refreshCatalog();
-        updateCurrencyLabel();
     }
 
     public void hide() {
