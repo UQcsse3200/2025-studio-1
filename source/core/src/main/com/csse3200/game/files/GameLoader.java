@@ -26,7 +26,7 @@ public class GameLoader extends FileLoader {
      * Base constructor extending to allow unique class types
      * See Filehandle.java and json.java
      */
-    public GameLoader() {
+    public GameLoader(SaveLoadService.PlayerInfo loadStats) {
 
     }
 
