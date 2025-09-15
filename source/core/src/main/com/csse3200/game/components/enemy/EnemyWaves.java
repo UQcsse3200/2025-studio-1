@@ -142,7 +142,7 @@ public class EnemyWaves extends Component {
      * Checks if the current wave has finished.
      * @return True if the current wave has finished, false otherwise.
      */
-    public boolean isCurrentWaveFinsihed() {
+    public boolean isCurrentWaveFinished() {
       return waveEndTime > 0;
     }
 
