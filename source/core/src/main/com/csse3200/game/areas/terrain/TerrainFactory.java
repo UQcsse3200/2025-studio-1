@@ -70,6 +70,10 @@ public class TerrainFactory {
         TextureRegion serverBackground =
             new TextureRegion(resourceService.getAsset("images/ServerRoomBackgroundResize.png", Texture.class));
         return createGameRooms(0.5f, serverBackground);
+      case SECURITY_ROOM:
+        TextureRegion securityBackground =
+            new TextureRegion(resourceService.getAsset("images/SecurityBackground.png", Texture.class));
+        return createGameRooms(0.5f, securityBackground);
       case FOREST_DEMO:
         TextureRegion orthoGrass =
             new TextureRegion(resourceService.getAsset("images/grass_1.png", Texture.class));
@@ -199,6 +203,7 @@ public class TerrainFactory {
     FOREST_DEMO_HEX,
     SPAWN_ROOM,
     SERVER_ROOM,
-    LOBBY
+    LOBBY,
+    SECURITY_ROOM,
   }
 }
