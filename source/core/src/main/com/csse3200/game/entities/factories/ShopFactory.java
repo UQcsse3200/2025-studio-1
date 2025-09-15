@@ -24,8 +24,9 @@ public final class ShopFactory {
                 .addComponent(new HitboxComponent())
                 .addComponent(new TextureRenderComponent(kioskTexture))
                 .addComponent(manager)
-                .addComponent(new ShopScreenDisplay(area, manager));
-          //      .addComponent(new ShopComponent(area, manager));
+                .addComponent(new ShopScreenDisplay(area, manager))
+                .addComponent(new ShopComponent(area, manager));
+        shop.create();
 
         PhysicsComponent phys = shop.getComponent(PhysicsComponent.class);
         phys.setBodyType(BodyDef.BodyType.StaticBody);

@@ -116,7 +116,7 @@ public class ForestGameArea extends GameArea {
     "images/mud.png",
     "images/heart.png",
     "images/computerBench.png",
-          "images/VendingMachine.png"
+    "images/VendingMachine.png",
     HEART,
     "images/MarblePlatform.png",
     "images/computerBench.png",
