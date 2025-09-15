@@ -164,6 +164,7 @@ public abstract class GameArea implements Disposable {
    */
   public void spawnEnemies(int roomNumber, int total, float scaleFactor, Entity player) {
       HashMap<String, ArrayList<Vector2>> positions = getEnemySpawnPosition(roomNumber);
+      System.out.println("Room number: " + roomNumber);
       switch (roomNumber) {
           case 1:
               spawnDeepspin(total, scaleFactor, player, positions);
@@ -269,7 +270,7 @@ public abstract class GameArea implements Disposable {
   }
 
   protected HashMap<String, ArrayList<Vector2>> getEnemySpawnPosition(int roomNumber) {
-      HashMap<String, ArrayList<Vector2>> postions = new HashMap<>();
+      HashMap<String, ArrayList<Vector2>> positions = new HashMap<>();
       ArrayList<Vector2> respectiveSpawns = new ArrayList<>();
       switch (roomNumber) {
           case 1:
@@ -277,67 +278,67 @@ public abstract class GameArea implements Disposable {
               respectiveSpawns.add(new Vector2(5.4f, 11f));
               respectiveSpawns.add(new Vector2(8.2f, 11f));
               respectiveSpawns.add(new Vector2(11.1f, 10f));
-              postions.put("Deepspin", (ArrayList<Vector2>) respectiveSpawns.clone());
+              positions.put("Deepspin", (ArrayList<Vector2>) respectiveSpawns.clone());
               break;
           case 2:
               respectiveSpawns.add(new Vector2(2.7f, 8f));
               respectiveSpawns.add(new Vector2(5.6f, 10f));
-              postions.put("Vroomba", (ArrayList<Vector2>) respectiveSpawns.clone());
+              positions.put("Vroomba", (ArrayList<Vector2>) respectiveSpawns.clone());
               respectiveSpawns.clear();
               respectiveSpawns.add(new Vector2(8.2f, 11f));
               respectiveSpawns.add(new Vector2(11.1f, 10f));
-              postions.put("Deepspin", (ArrayList<Vector2>) respectiveSpawns.clone());
+              positions.put("Deepspin", (ArrayList<Vector2>) respectiveSpawns.clone());
               break;
           case 3:
               respectiveSpawns.add(new Vector2(10f, 4f));
-              postions.put("GhostGpt", (ArrayList<Vector2>) respectiveSpawns.clone());
+              positions.put("GhostGpt", (ArrayList<Vector2>) respectiveSpawns.clone());
               respectiveSpawns.clear();
               respectiveSpawns.add(new Vector2(8.4f, 10f));
               respectiveSpawns.add(new Vector2(11.3f, 8f));
-              postions.put("Vroomba", (ArrayList<Vector2>) respectiveSpawns.clone());
+              positions.put("Vroomba", (ArrayList<Vector2>) respectiveSpawns.clone());
               break;
           case 4:
               respectiveSpawns.add(new Vector2(2.7f, 8f));
               respectiveSpawns.add(new Vector2(5.6f, 10f));
-              postions.put("GhostGpt", (ArrayList<Vector2>) respectiveSpawns.clone());
+              positions.put("GhostGpt", (ArrayList<Vector2>) respectiveSpawns.clone());
               respectiveSpawns.clear();
               respectiveSpawns.add(new Vector2(8.2f, 11f));
               respectiveSpawns.add(new Vector2(11.1f, 10f));
-              postions.put("Deepspin", (ArrayList<Vector2>) respectiveSpawns.clone());
+              positions.put("Deepspin", (ArrayList<Vector2>) respectiveSpawns.clone());
               break;
           case 5:
               respectiveSpawns.add(new Vector2(2.7f, 8f));
-              postions.put("GhostGpt", (ArrayList<Vector2>) respectiveSpawns.clone());
+              positions.put("GhostGpt", (ArrayList<Vector2>) respectiveSpawns.clone());
               respectiveSpawns.clear();
               respectiveSpawns.add(new Vector2(5.6f, 10f));
-              postions.put("Vroomba", (ArrayList<Vector2>) respectiveSpawns.clone());
+              positions.put("Vroomba", (ArrayList<Vector2>) respectiveSpawns.clone());
               respectiveSpawns.clear();
               respectiveSpawns.add(new Vector2(8.2f, 11f));
               respectiveSpawns.add(new Vector2(11.1f, 10f));
-              postions.put("Deepspin", (ArrayList<Vector2>) respectiveSpawns.clone());
+              positions.put("Deepspin", (ArrayList<Vector2>) respectiveSpawns.clone());
               break;
           case 6:
               respectiveSpawns.add(new Vector2(13f, 4f));
               respectiveSpawns.add(new Vector2(10f, 4f));
-              postions.put("GhostGpt", (ArrayList<Vector2>) respectiveSpawns.clone());
+              positions.put("GhostGpt", (ArrayList<Vector2>) respectiveSpawns.clone());
               respectiveSpawns.clear();
               respectiveSpawns.add(new Vector2(8.4f, 10f));
               respectiveSpawns.add(new Vector2(11.3f, 8f));
-              postions.put("GrokDroid", (ArrayList<Vector2>) respectiveSpawns.clone());
+              positions.put("GrokDroid", (ArrayList<Vector2>) respectiveSpawns.clone());
               break;
           case 7:
               respectiveSpawns.add(new Vector2(13f, 4f));
               respectiveSpawns.add(new Vector2(10f, 4f));
               respectiveSpawns.add(new Vector2(2.7f, 8f));
-              postions.put("GhostGpt", (ArrayList<Vector2>) respectiveSpawns.clone());
+              positions.put("GhostGpt", (ArrayList<Vector2>) respectiveSpawns.clone());
               respectiveSpawns.clear();
               respectiveSpawns.add(new Vector2(8.4f, 10f));
               respectiveSpawns.add(new Vector2(11.3f, 8f));
-              postions.put("GrokDroid", (ArrayList<Vector2>) respectiveSpawns.clone());
+              positions.put("GrokDroid", (ArrayList<Vector2>) respectiveSpawns.clone());
               break;
           default: throw new IllegalStateException("Unexpected room number: " + roomNumber);
       }
-      return postions;
+      return positions;
   }
 
   /**
