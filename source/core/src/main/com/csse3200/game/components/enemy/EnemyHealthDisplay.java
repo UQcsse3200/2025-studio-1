@@ -102,7 +102,6 @@ public class EnemyHealthDisplay extends Component {
             return;
         }
         Vector2 pos = entity.getPosition();
-
         // Convert world position to screen-space position and update the health bar's placement.
         // The constants (129.48f, 135.37f) scale world units into stage/screen units.
         healthBar.setPosition(
@@ -123,7 +122,5 @@ public class EnemyHealthDisplay extends Component {
 
     public int getMaxHealth() { return maxHealth; }
 
-    public int getCurrentHealth() {
-        return currentHealth;
-    }
+    public int getCurrentHealth() { return currentHealth; }
 }
