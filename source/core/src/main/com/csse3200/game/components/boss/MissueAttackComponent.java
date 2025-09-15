@@ -7,59 +7,80 @@ import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.factories.characters.BossFactory;
 import com.csse3200.game.services.ServiceLocator;
 
-
+/**
+ * Spawns random ground warnings at a fixed cooldown; after a short warning time,
+ * a missile is spawned above that position and falls straight down.
+ *
+ * Usage:
+ *   - Attach this component to a boss.
+ *   - Call setAttack(true) to start the periodic warning/missile cycle.
+ *   - Call setAttack(false) to stop it.
+ *
+ * Notes:
+ *   - World/random range is controlled by minX/maxX and minY/maxY.
+ *   - Only visuals are created for warnings; the entity is disposed when the missile launches.
+ */
 public class MissueAttackComponent extends Component {
-    private static final float COOLDOWN = 3f;
-    private static final int COUNT = 3;
-    private static final float WARN_TIME = 1f;
-    private static final float SKY_HEIGHT = 5f;
-    private static final float FALL_SPEED = 4f;
-    private static final float MIN_X = -8f, MAX_X = 8f;
-    private static final float MIN_Y = 0f,  MAX_Y = 6f;
+    private static final float cooldown = 0.4f;   // seconds between warning spawns
+    private static final int count = 1;           // warnings per spawn wave
+    private static final float warnTime = 2f;     // seconds a warning stays before missile drops
+    private static final float skyHeight = 5f;    // missile spawn height above ground warning
+    private static final float minX = 0f, maxX = 30f; // horizontal range for warnings
+
+    /** Whether the system is active (true = spawning warnings/missiles). */
     private boolean attack = false;
 
+    /** One active warning's state. */
     private static class WarningEntry {
-        Vector2 pos;
-        float t;
-        Entity visual;
+        Vector2 pos;     // ground position of the warning
+        float t;         // elapsed time since warning was spawned
+        Entity visual;   // the spawned warning entity (for cleanup)
     }
 
+    /** Currently active warnings. */
     private final java.util.ArrayList<WarningEntry> actives = new java.util.ArrayList<>();
+    /** Timer tracking time since last spawn wave. */
     private float timer = 0f;
 
     @Override
     public void update() {
-        if (!attack ) {
-            return;
+        if (!attack) {
+            return; // do nothing while disabled
         }
         float dt = ServiceLocator.getTimeSource().getDeltaTime();
         timer += dt;
-
-        if (timer >= COOLDOWN) {
+        // Periodically spawn new warnings
+        if (timer >= cooldown) {
             timer = 0f;
             spawnWarnings();
         }
 
+        // Advance warnings and drop missiles when their warn time expires
         for (int i = actives.size() - 1; i >= 0; i--) {
             WarningEntry w = actives.get(i);
             w.t += dt;
-            if (w.t >= WARN_TIME) {
+            if (w.t >= warnTime) {
                 launchMissile(w.pos);
-                if (w.visual != null) w.visual.dispose();
+                if (w.visual != null) {
+                    w.visual.dispose();
+                }
                 actives.remove(i);
             }
         }
     }
 
+    /** Spawn a wave of ground warnings at random positions within the configured bounds. */
     private void spawnWarnings() {
-        for (int i = 0; i < COUNT; i++) {
-            float x = MathUtils.random(MIN_X, MAX_X);
-            float y = MathUtils.random(MIN_Y, MAX_Y);
+        for (int i = 0; i < count; i++) {
+            float x = MathUtils.random(minX, maxX);
+            float y = 3f;
             Vector2 ground = new Vector2(x, y);
 
+            // Visual warning on the ground
             Entity warning = BossFactory.createWarning(ground);
             ServiceLocator.getEntityService().register(warning);
 
+            // Track its lifetime
             WarningEntry entry = new WarningEntry();
             entry.pos = ground;
             entry.t = 0f;
@@ -67,35 +88,27 @@ public class MissueAttackComponent extends Component {
             actives.add(entry);
         }
     }
+
+    /** Spawn a missile above the given ground point. Movement handled by the missile itself. */
     private void launchMissile(Vector2 ground) {
-        Vector2 spawn = new Vector2(ground.x, ground.y + SKY_HEIGHT);
-        Vector2 vel = new Vector2(0f, -FALL_SPEED);
-        Entity missile = BossFactory.createMissle(spawn, vel);
-        missile.addComponent(new ConstantVelocityComponent(0f, -FALL_SPEED));
+        Vector2 spawn = new Vector2(ground.x, ground.y + skyHeight); //passed through to factory if used there
+        Entity missile = BossFactory.createMissle(spawn);
         ServiceLocator.getEntityService().register(missile);
     }
-    private static class ConstantVelocityComponent extends Component {
-        private final float vx, vy;
-        public ConstantVelocityComponent(float vx, float vy) { this.vx = vx; this.vy = vy; }
-        @Override public void update() {
-            var phys = entity.getComponent(com.csse3200.game.physics.components.PhysicsComponent.class);
-            if (phys != null && phys.getBody() != null) {
-                phys.getBody().setLinearVelocity(vx, vy);
-                phys.getBody().setGravityScale(0f);
-                phys.getBody().setBullet(true);
-            }
-        }
-    }
 
+    /** Clean up any lingering warning visuals when this component is disposed. */
     @Override
     public void dispose() {
         for (WarningEntry w : actives) {
-            if (w.visual != null) w.visual.dispose();
+            if (w.visual != null) {
+                w.visual.dispose();
+            }
         }
         actives.clear();
     }
-    public void setAttack(boolean attack)
-    {
+
+    /** Enable/disable the attack cycle. */
+    public void setAttack(boolean attack) {
         this.attack = attack;
     }
 }

@@ -24,6 +24,7 @@ public class BossStageComponent extends Component {
         if (currentStage == 1 && currentHp * 2 <= maxHp) {
             enterStage2();
         }
+
     }
 
     private void enterStage2() {
