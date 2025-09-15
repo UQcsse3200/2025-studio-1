@@ -82,7 +82,7 @@ public class EnemyDeathRewardComponentTest {
     }
 
     @Test
-    @DisplayName("Awards processor to player when enemy dies")
+    @DisplayName("Awards ammo to player when enemy dies")
     void awardsAmmoOnDeath() {
 
         ServiceLocator.registerResourceService(resourceService);
