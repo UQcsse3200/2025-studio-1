@@ -16,7 +16,7 @@ import org.slf4j.LoggerFactory;
 /** Second floor with different background and arrow-key controls. */
 public class Floor2GameArea extends GameArea {
   private static final Logger logger = LoggerFactory.getLogger(Floor2GameArea.class);
-  private static final GridPoint2 PLAYER_SPAWN = new GridPoint2(8, 10);
+  private static final GridPoint2 PLAYER_SPAWN = new GridPoint2(5, 10);
   private static final float WALL_WIDTH = 0.1f;
 
   public Floor2GameArea(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
@@ -32,6 +32,8 @@ public class Floor2GameArea extends GameArea {
     spawnFloor();
     spawnholoclock();
     spawnplatform2();
+    spawndesk_reception();
+    spawncomic_stand();
     float keycardX = 13f;
     float keycardY = 10f;
     Entity keycard = KeycardFactory.createKeycard(2);
@@ -56,7 +58,9 @@ public class Floor2GameArea extends GameArea {
             "foreg_sprites/general/SquareTile.png",
             "images/keycard_lvl2.png",
             "images/platform-2.png",
-            "images/holo-clock.png"
+            "images/holo-clock.png",
+            "images/desk_reception.png",
+            "images/comics.png"
 
     };
     ensureTextures(needed);
@@ -104,12 +108,14 @@ public class Floor2GameArea extends GameArea {
     spawnEntity(rightDoor);
   }
   private void spawnplatform2() {
-    float PlatformX = 0f;
-    float PlatformY = 3.5f;
-    float PlatformX2 = 3f;
-    float PlatformY2 = 7f;
-    float PlatformX3 = 9f;
-    float PlatformY3 = 8f;
+    float PlatformX = 5.5f;
+    float PlatformY = 3f;
+    float PlatformX2 = 1f;
+    float PlatformY2 = 6f;
+    float PlatformX3 = 7f;
+    float PlatformY3 = 7f;
+    float PlatformX4 = 11f;
+    float PlatformY4 = 9f;
     Entity Platform1 = ObstacleFactory.createplatform2();
     Platform1.setPosition(PlatformX, PlatformY);
     spawnEntity(Platform1);
@@ -119,14 +125,31 @@ public class Floor2GameArea extends GameArea {
     Entity Platform3 = ObstacleFactory.createplatform2();
     Platform3.setPosition(PlatformX3, PlatformY3);
     spawnEntity(Platform3);
+    Entity Platform4 = ObstacleFactory.createplatform2();
+    Platform4.setPosition(PlatformX4, PlatformY4);
+    spawnEntity(Platform4);
 
   }
   private void spawnholoclock() {
-    float PlatformX = 10f;
-    float PlatformY = 3.5f;
+    float PlatformX = 0.8f;
+    float PlatformY = 7.45f;
     Entity clock1 = ObstacleFactory.createholoclock();
     clock1.setPosition(PlatformX, PlatformY);
     spawnEntity(clock1);
+  }
+  private void spawndesk_reception() {
+    float PlatformX = 12.5f;
+    float PlatformY = 3.5f;
+    Entity desk1 = ObstacleFactory.createdesk_reception();
+    desk1.setPosition(PlatformX, PlatformY);
+    spawnEntity(desk1);
+  }
+  private void spawncomic_stand() {
+    float PlatformX = 11f;
+    float PlatformY = 3.5f;
+    Entity stand1 = ObstacleFactory.createcomic_stand();
+    stand1.setPosition(PlatformX, PlatformY);
+    spawnEntity(stand1);
   }
   private void spawnPlayer() {
     Entity player = PlayerFactory.createPlayerWithArrowKeys();

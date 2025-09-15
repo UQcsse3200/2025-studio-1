@@ -229,13 +229,28 @@ public class ObstacleFactory {
   public static Entity createholoclock() {
     Entity clockSpawn =
             new Entity()
-                    .addComponent(new TextureRenderComponent("images/holo-clock.png"))
-                    .addComponent(new PhysicsComponent());
-    clockSpawn.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
-    clockSpawn.getComponent(TextureRenderComponent.class).scaleEntity();
+                    .addComponent(new TextureRenderComponent("images/holo-clock.png"));
+                        clockSpawn.getComponent(TextureRenderComponent.class).scaleEntity();
     clockSpawn.scaleHeight(2f);
         return clockSpawn;
   }
+  public static Entity createdesk_reception() {
+    Entity desk_receptionSpawn =
+            new Entity()
+                    .addComponent(new TextureRenderComponent("images/desk_reception.png"));
+    desk_receptionSpawn.getComponent(TextureRenderComponent.class).scaleEntity();
+    desk_receptionSpawn.scaleHeight(3f);
+    return desk_receptionSpawn;
+  }
+  public static Entity createcomic_stand() {
+    Entity comic_standSpawn =
+            new Entity()
+                    .addComponent(new TextureRenderComponent("images/comics.png"));
+   comic_standSpawn.getComponent(TextureRenderComponent.class).scaleEntity();
+    comic_standSpawn.scaleHeight(1.5f);
+    return comic_standSpawn;
+  }
+
 
   /**
    * Red spawn pad prop. Identical behaviour to the purple pad.
