@@ -44,7 +44,7 @@ public class ShopManager extends Component {
 
         // Add item to Inventory
         int idx = InventoryOperations.addOrStack(inventory, item.getItem(), amount,
-                entry.stackable(), entry.maxStack());
+                entry.maxStack());
         if (idx < 0) {
             return fail(player, item, PurchaseError.INVENTORY_FULL);
         }
