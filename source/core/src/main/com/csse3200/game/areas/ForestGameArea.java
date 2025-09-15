@@ -198,7 +198,7 @@ public class ForestGameArea extends GameArea {
   public ForestGameArea(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
     super(terrainFactory, cameraComponent);
   }
-/** Create the game area, including terrain, static entities (trees), dynamic entities (player) */
+
   /**
    * Entry point for this room. This:
    * - Loads textures/sounds/music
@@ -206,7 +206,6 @@ public class ForestGameArea extends GameArea {
    * - Creates the terrain, walls, and UI label
    * - Spawns player, props (desk, crates, pod), door (with keycard gate), and enemies
    * - Starts background music*/
-
   @Override
   public void create() {
     ServiceLocator.registerGameArea(this);
@@ -236,9 +235,6 @@ public class ForestGameArea extends GameArea {
     spawnBottomRightDoor();
     spawnMarblePlatforms();
 
-
-    // spawnGhosts();
-    // spawnGhostKing();
     SecureRandom random = new SecureRandom();
     int choice = random.nextInt(3);
     switch (choice) {
@@ -246,10 +242,6 @@ public class ForestGameArea extends GameArea {
       case 1 -> spawnRobots();
       default -> spawnBoss3();
     }
-    // spawnGhostGPT();
-    // spawnDeepspin();
-    // spawnGrokDroid();
-    // spawnVroomba();
     playMusic();
 
     ItemSpawner itemSpawner = new ItemSpawner(this);
@@ -525,18 +517,6 @@ public class ForestGameArea extends GameArea {
     return newRifle;
   }
 
-
-  // private void spawnGhosts() {
-  //   GridPoint2 minPos = new GridPoint2(0, 0);
-  //   GridPoint2 maxPos = terrain.getMapBounds(0).sub(2, 2);
-
-  //   for (int i = 0; i < NUM_GHOSTS; i++) {
-  //     GridPoint2 randomPos = RandomUtils.random(minPos, maxPos);
-  //     Entity ghost = NPCFactory.createGhost(player);
-  //     spawnEntityAt(ghost, randomPos, true, true);
-  //   }
-  // }
-
   private void spawnBoss2() {
     GridPoint2 pos = new GridPoint2(20, 12);
 
@@ -551,18 +531,6 @@ public class ForestGameArea extends GameArea {
     spawnEntityAt(boss3, pos, true, true);
   }
 
-
-  // private void spawnGhostKing() {
-  //   GridPoint2 minPos = new GridPoint2(0, 0);
-  //   GridPoint2 maxPos = terrain.getMapBounds(0).sub(2, 2);
-
-  //   GridPoint2 randomPos = RandomUtils.random(minPos, maxPos);
-  //   Entity ghostKing = NPCFactory.createGhostKing(player);
-  //   spawnEntityAt(ghostKing, randomPos, true, true);
-  // }
-
-
-
   /**
    * Adds a single crate to the lower platform for cover/decoration.
    */
@@ -571,7 +539,6 @@ public class ForestGameArea extends GameArea {
     Entity crate = ObstacleFactory.createCrate();
     spawnEntityAt(crate, cratePos, true, false);
   }
-
 
   /**
    * Places a visual-only security camera in the top-right area.
@@ -590,7 +557,6 @@ public class ForestGameArea extends GameArea {
     Entity energyPod = ObstacleFactory.createLargeEnergyPod();
     spawnEntityAt(energyPod, energyPodPos, false, false);
   }
-
 
   /**
    * Spawns two storage crates (green and dark) and nudges them slightly up
