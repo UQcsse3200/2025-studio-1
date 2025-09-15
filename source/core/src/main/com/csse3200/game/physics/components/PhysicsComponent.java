@@ -66,19 +66,34 @@ public class PhysicsComponent extends Component {
     return body;
   }
 
+    /**
+     *
+     */
   @Override
   public void create() {
-    if (body == null) {
-      body = physics.createBody(bodyDef);
-    }
-    body.setTransform(entity.getPosition(), 0f);
-    body.setActive(true);
+      System.out.println("PhysicsComponent.create() called for entity: " + entity);
+      if (body == null) {
+          body = physics.createBody(bodyDef);
+          System.out.println("Physics body created: " + body);
+      }
 
-    BodyUserData userData = new BodyUserData();
-    userData.entity = this.entity;
-    body.setUserData(userData);
+      Vector2 pos = entity.getPosition();
+      if (pos == null) {
+          pos = new Vector2(0, 0);
+      }
 
-    entity.getEvents().addListener("setPosition", (Vector2 pos) -> body.setTransform(pos, 0f));
+      body.setTransform(pos, 0f);
+      body.setActive(true);
+
+      BodyUserData userData = new BodyUserData();
+      userData.entity = this.entity;
+      body.setUserData(userData);
+
+      entity.getEvents().addListener("setPosition", (Vector2 newPos) -> {
+          if (body != null) {
+              body.setTransform(newPos, 0f);
+          }
+      });
   }
 
   /**
