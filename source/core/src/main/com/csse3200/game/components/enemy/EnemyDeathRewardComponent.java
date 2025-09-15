@@ -40,7 +40,7 @@ public class EnemyDeathRewardComponent extends Component {
         //1/4 chance of enemy adding ammo to the player
         Random rand = new Random();
 
-        int chance = rand.nextInt(5);
+        int chance = rand.nextInt(4);
 
         if (chance == 0) {
 
