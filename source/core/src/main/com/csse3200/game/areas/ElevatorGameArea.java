@@ -17,7 +17,7 @@ import com.csse3200.game.physics.components.ColliderComponent;
 import com.csse3200.game.physics.components.HitboxComponent;
 import com.csse3200.game.rendering.TextureRenderComponent;
 
-/** Elevator room: minimal walls and two doors (left--Office, right--Research). */
+/** Elevator room: minimal walls and two doors (left--Office, right--Research). **/
 public class ElevatorGameArea extends GameArea {
   private static final float WALL_WIDTH = 0.1f;
   private static final GridPoint2 PLAYER_SPAWN = new GridPoint2(10, 10);
@@ -29,9 +29,9 @@ public class ElevatorGameArea extends GameArea {
   @Override
   public void create() {
     GenericLayout.ensureGenericAssets(this);
-    // Ensure the thin floor texture is available for the elevator room
+    /** Ensure the thin floor texture is available for the elevator room **/
     ensureTextures(new String[] { "foreg_sprites/general/ThinFloor3.png", "images/Elevator background.png","images/keycard_lvl2.png","images/KeycardDoor.png" });
-    // Use the dedicated elevator background
+    /** Use the dedicated elevator background **/
     terrain = terrainFactory.createTerrain(TerrainType.ELEVATOR);
     spawnEntity(new Entity().addComponent(terrain));
     float keycardX = 3f;
@@ -44,14 +44,11 @@ public class ElevatorGameArea extends GameArea {
     spawnFloor();
       }
 
-  // Assets ensured via GenericLayout
-
   private void spawnBordersAndDoors() {
     if (cameraComponent == null) return;
     Bounds b = getCameraBounds(cameraComponent);
 
     addSolidWallTop(b, WALL_WIDTH);
-
 
     float leftDoorHeight = Math.max(1f, b.viewHeight * 0.2f);
     float leftDoorY = b.bottomY; // ground level
@@ -66,7 +63,6 @@ public class ElevatorGameArea extends GameArea {
     leftDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadOffice));
     spawnEntity(leftDoor);
 
-
     float rightDoorHeight = Math.max(1f, b.viewHeight * 0.2f);
     float rightDoorY = b.bottomY; // ground level
     float rightTopSegHeight = Math.max(0f, b.topY - (rightDoorY + rightDoorHeight));
@@ -77,19 +73,14 @@ public class ElevatorGameArea extends GameArea {
     }
     Entity rightDoor = ObstacleFactory.createDoorTrigger(WALL_WIDTH, rightDoorHeight);
     rightDoor.setPosition(b.rightX - WALL_WIDTH - 0.001f, rightDoorY);
-
-// Make the door physically block the player
     rightDoor.addComponent(new ColliderComponent());
     rightDoor.addComponent(new HitboxComponent().setLayer(PhysicsLayer.GATE));
-
-// Add keycard logic
+    /**Add keycard logic **/
     rightDoor.addComponent(new KeycardGateComponent(2, () -> {
       ColliderComponent collider = rightDoor.getComponent(ColliderComponent.class);
       if (collider != null) collider.setEnabled(false);
-
       loadResearch();
     }));
-
     spawnEntity(rightDoor);
   }
 
@@ -115,7 +106,6 @@ public class ElevatorGameArea extends GameArea {
       GridPoint2 floorspawn = new GridPoint2(i, 6);
       Entity floor = ObstacleFactory.createThinFloor();
       spawnEntityAt(floor, floorspawn, false, false);
-      // Nudge down slightly to sit visually on the ground
       floor.setPosition(floor.getPosition().x, floor.getPosition().y - 0.3f);
     }
   }

@@ -143,24 +143,6 @@ public class ObstacleFactory {
   }
 
   /**
-   * Small, solid square tile useful as a step or blocker.
-   * @return a static solid tile
-   */
-  public static Entity createSmallSquare() {
-    Entity smallSquare =
-            new Entity()
-                    .addComponent(new TextureRenderComponent("foreg_sprites/general/SmallSquare.png"))
-                    .addComponent(new PhysicsComponent())
-                    .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
-
-    smallSquare.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
-    smallSquare.getComponent(TextureRenderComponent.class).scaleEntity();
-    smallSquare.scaleHeight(1f);
-    PhysicsUtils.setScaledCollider(smallSquare, 1f, 1f);
-    return smallSquare;
-  }
-
-  /**
    * Short stair-like prop the player cannot pass through.
    * @return a static solid stair block
    */
@@ -177,25 +159,6 @@ public class ObstacleFactory {
     PhysicsUtils.setScaledCollider(smallStair, 1f, 1f);
     return smallStair;
   }
-
-  /**
-   * Square floor tile, collidable so it behaves like ground.
-   * @return a static square tile
-   */
-  public static Entity createSquareTile() {
-    Entity squareTile =
-            new Entity()
-                    .addComponent(new TextureRenderComponent("foreg_sprites/general/SquareTile.png"))
-                    .addComponent(new PhysicsComponent())
-                    .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
-
-    squareTile.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
-    squareTile.getComponent(TextureRenderComponent.class).scaleEntity();
-    squareTile.scaleHeight(2f);
-    PhysicsUtils.setScaledCollider(squareTile, 1f, 1f);
-    return squareTile;
-  }
-
   /**
    * Regular thick floor block (short version of the big wall).
    * @return a static ground piece
@@ -306,24 +269,6 @@ public class ObstacleFactory {
   }
 
   /**
-   * Small ceiling light prop. Solid only so it can be positioned consistently — it’s decorative.
-   * @return a static light entity
-   */
-  public static Entity createCeilingLight() {
-    Entity ceilingLight =
-            new Entity()
-                    .addComponent(new TextureRenderComponent("foreg_sprites/office/CeilingLight.png"))
-                    .addComponent(new PhysicsComponent())
-                    .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
-
-    ceilingLight.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
-    ceilingLight.getComponent(TextureRenderComponent.class).scaleEntity();
-    ceilingLight.scaleHeight(1f);
-    PhysicsUtils.setScaledCollider(ceilingLight, 1f, 1f);
-    return ceilingLight;
-  }
-
-  /**
    * Wooden crate that blocks the player (useful for cover or decoration).
    * @return a static crate entity
    */
@@ -339,75 +284,6 @@ public class ObstacleFactory {
     crate.scaleHeight(1f);
     PhysicsUtils.setScaledCollider(crate, 1f, 1f);
     return crate;
-  }
-
-  /**
-   * Large shelf prop that blocks movement (like furniture in the way).
-   * @return a static shelf entity
-   */
-  public static Entity createLargeShelf() {
-    Entity largeShelf =
-            new Entity()
-                    .addComponent(new TextureRenderComponent("foreg_sprites/office/LargeShelf.png"))
-                    .addComponent(new PhysicsComponent())
-                    .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
-
-    largeShelf.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
-    largeShelf.getComponent(TextureRenderComponent.class).scaleEntity();
-    largeShelf.scaleHeight(1f);
-    PhysicsUtils.setScaledCollider(largeShelf, 1f, 1f);
-    return largeShelf;
-  }
-
-  // Added ceiling lights on under the ThinFloor
-  public static Entity createLongCeilingLight() {
-    Entity longCeilingLight =
-            new Entity()
-                    .addComponent(new TextureRenderComponent("foreg_sprites/office/LongCeilingLight2.png"))
-                    .addComponent(new PhysicsComponent())
-                    .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
-
-    longCeilingLight.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
-    longCeilingLight.getComponent(TextureRenderComponent.class).scaleEntity();
-    longCeilingLight.scaleHeight(2.7f);
-    PhysicsUtils.setScaledCollider(longCeilingLight, 1f, 0.1f);
-    return longCeilingLight;
-  }
-
-  /**
-   * Mid-height shelf prop that blocks movement.
-   * @return a static shelf entity
-   */
-  public static Entity createMidShelf() {
-    Entity midShelf =
-            new Entity()
-                    .addComponent(new TextureRenderComponent("foreg_sprites/office/MidShelf.png"))
-                    .addComponent(new PhysicsComponent())
-                    .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
-
-    midShelf.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
-    midShelf.getComponent(TextureRenderComponent.class).scaleEntity();
-    midShelf.scaleHeight(2f);
-    PhysicsUtils.setScaledCollider(midShelf, 1f, 1f);
-    return midShelf;
-  }
-
-  /**
-   * Office chair prop that the player cannot pass through.
-   * @return a static chair entity
-   */
-  public static Entity createOfficeChair() {
-    Entity officeChair =
-            new Entity()
-                    .addComponent(new TextureRenderComponent("foreg_sprites/office/OfficeChair.png"))
-                    .addComponent(new PhysicsComponent())
-                    .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
-
-    officeChair.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
-    officeChair.getComponent(TextureRenderComponent.class).scaleEntity();
-    officeChair.scaleHeight(1.2f);
-    PhysicsUtils.setScaledCollider(officeChair, 1f, 1f);
-    return officeChair;
   }
 
   /**
