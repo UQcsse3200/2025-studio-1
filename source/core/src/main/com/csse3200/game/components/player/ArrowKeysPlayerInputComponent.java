@@ -53,6 +53,11 @@ public class ArrowKeysPlayerInputComponent extends InputComponent {
   }
 
   @Override
+  protected boolean keyPressed(int keycode) {
+    return false;
+  }
+
+  @Override
   public boolean keyUp(int keycode) {
     switch (keycode) {
       case Input.Keys.LEFT:
@@ -92,6 +97,11 @@ public class ArrowKeysPlayerInputComponent extends InputComponent {
       default:
         return false;
     }
+  }
+
+  @Override
+  protected boolean keyReleased(int keycode) {
+    return false;
   }
 
   @Override
