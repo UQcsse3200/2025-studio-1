@@ -130,6 +130,7 @@ public class BossFactory {
                 .addComponent(new BlackholeComponent(target, 7f, 8f))
                 .addComponent(new EnemyDeathRewardComponent(100, playerInventory))
                 .addComponent(new BossDeathComponent())
+                .addComponent(new MissueAttackComponent())
                 .addComponent(new BossStatusDisplay("Boss_2"));
 
         AnimationRenderComponent arc = boss2.getComponent(AnimationRenderComponent.class);
@@ -171,7 +172,7 @@ public class BossFactory {
         PhysicsUtils.setScaledCollider(boss3, 1.2f, 0.6f);
 
         boss3.addComponent(new EnemyMudBallAttackComponent(
-                target, 1.2f, 9f, 6f, 3f));
+                target, "boss3_attack_cpu", 1.2f, 0f, 11f, 3f));
         boss3.addComponent(new EnemyMudRingSprayComponent(
                 2.5f, 12, 6f, 3f));
 
@@ -208,7 +209,32 @@ public class BossFactory {
                 .setFilter(PhysicsLayer.ENEMY_PROJECTILE, PhysicsLayer.PLAYER);
         return fireball;
     }
-
+    public static Entity createWarning(Vector2 pos) {
+        Entity warning = new Entity()
+                .addComponent(new TextureRenderComponent("images/warning.png"));
+        warning.setPosition(pos);
+        return warning;
+    }
+    public static Entity createMissle(Vector2 from, Vector2 velocity) {
+        Entity missle = new Entity()
+                .addComponent(new PhysicsComponent())
+                .addComponent(new ColliderComponent())
+                .addComponent(new HitboxComponent().setLayer(PhysicsLayer.ENEMY_PROJECTILE))
+                .addComponent(new CombatStatsComponent(1))
+                .addComponent(new WeaponsStatsComponent(12))
+                .addComponent(new PhysicsProjectileComponent())
+                .addComponent(new TouchAttackComponent(PhysicsLayer.PLAYER, 1f));
+        missle.setPosition(from);
+        TextureRenderComponent texture = new TextureRenderComponent("images/missle.png");
+        missle.addComponent(texture);
+        texture.scaleEntity();
+        Vector2 s = missle.getScale();
+        missle.setScale(s.x * 0.2f, s.y * 0.2f);
+        ColliderComponent collider = missle.getComponent(ColliderComponent.class);
+        collider.setLayer(PhysicsLayer.ENEMY_PROJECTILE)
+                .setFilter(PhysicsLayer.ENEMY_PROJECTILE, PhysicsLayer.PLAYER);
+        return missle;
+    }
     /**
      * Creates a base NPC entity with default wandering, chasing, physics,
      * and touch attack behavior. This is used as a template for other bosses or NPCs.
