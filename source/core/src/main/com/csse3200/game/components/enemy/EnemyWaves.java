@@ -23,8 +23,7 @@ public class EnemyWaves extends Component {
   private int maxWaves;      // total waves per session
   private int waveNumber = 0;      // waves spawned so far
   private float scalingFactor = 1f; // difficulty scaling
-  private int baseGhosts = 1;
-  private int baseVroombas = 2;
+  private int baseEnemies = 3;
 
   private static final long WAVE_DELAY_MS = 5000; // delay between waves after all enemies dead
   private static final float TICK_SEC = 0.1f;     // poll cadence
@@ -79,8 +78,10 @@ public class EnemyWaves extends Component {
     }
     float effectiveScale = scalingFactor * baseScale;
     logger.info("EnemyWaves: spawning wave {} of {} (waveScale={}, baseScale={}, effective={})", waveNumber + 1, maxWaves, scalingFactor, baseScale, effectiveScale);
-    gameArea.spawnGhostGPT(baseGhosts, effectiveScale, player);
-    gameArea.spawnVroomba(baseVroombas, effectiveScale, player);
+    //gameArea.spawnGhostGPT(baseGhosts, effectiveScale, player);
+    //gameArea.spawnVroomba(baseVroombas, effectiveScale, player);
+
+      gameArea.spawnEnemies(3, baseEnemies, effectiveScale, player);
 
     waveNumber++;
     scalingFactor += 0.25f; // incremental per-wave multiplier
