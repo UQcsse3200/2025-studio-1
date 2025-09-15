@@ -181,6 +181,8 @@ public class ServerGameArea extends GameArea {
     spawnTerrain();
     spawnBigWall();
     spawnPlatforms();
+    spawnRoomObjects();
+    spawnSpawnPads();
 
     player = spawnPlayer();
     spawnFloor();
@@ -214,12 +216,51 @@ public class ServerGameArea extends GameArea {
       for (int i = 15; i <= 30; i += 5) {
         GridPoint2 platformSpawn = new GridPoint2((i + (j/3)), j);
         Entity platform = ObstacleFactory.createThinFloor();
-        spawnEntityAt(platform, platformSpawn, true, false);
+        spawnEntityAt(platform, platformSpawn, false, false);
       }
     }
   }
 
+  /**
+   * Spwans the ambient static objects for this level, including spawn pads
+   * and server racks.
+   */
+  private void spawnRoomObjects() {
+    for (int i = 20; i < 30; i+= 1) {
+      Entity rack = ObstacleFactory.createServerRack1();
+      GridPoint2 rackSpawn = new GridPoint2(i, 7);
+      spawnEntityAt(rack, rackSpawn, false, false);
+    }
+  }
 
+  /**
+   * Spawn the spawn pads in the room. The enemy spawn pad (red spawn pad) will
+   * go on the top floor, whereas the weapon spawn pad (purple spawn pad) will go
+   * on the second floor.
+   */
+  private void spawnSpawnPads() {
+    Entity spawnPad = ObstacleFactory.createRedSpawnPad();
+    GridPoint2 spawnPadSpawn = new GridPoint2(25, 19);
+    spawnEntityAt(spawnPad, spawnPadSpawn, false, false);
+    Entity spawnPad2 = ObstacleFactory.createPurpleSpawnPad();
+    GridPoint2 spawnPadSpawn2 = new GridPoint2(25, 15);
+    spawnEntityAt(spawnPad2, spawnPadSpawn2, false, false);
+
+
+  }
+
+  /**
+   * Spawns two GhostGPT enemies at fixed locations for predictable behaviour.
+   */
+  private void spawnGhostGPT() {
+    GridPoint2 spawn1 = new GridPoint2(25, 20);
+    GridPoint2 spawn2 = new GridPoint2(25, 20);
+
+    // Entity ghostGPT = NPCFactory.createGhostGPT(player, this);
+    // spawnEntityAt(ghostGPT, spawn1, true, true);
+    // Entity ghostGPT2 = NPCFactory.createGhostGPT(player, this);
+    // spawnEntityAt(ghostGPT2, spawn2, true, true);
+  }
 
   /**
    * Adds a very tall thick-floor as a background wall/divider.
