@@ -18,7 +18,6 @@ public class Floor2GameArea extends GameArea {
   private static final Logger logger = LoggerFactory.getLogger(Floor2GameArea.class);
   private static final GridPoint2 PLAYER_SPAWN = new GridPoint2(8, 10);
   private static final float WALL_WIDTH = 0.1f;
-  private static final int NUM_TREES = 8; // Number of trees to spawn
 
   public Floor2GameArea(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
     super(terrainFactory, cameraComponent);
@@ -29,7 +28,6 @@ public class Floor2GameArea extends GameArea {
     ensureAssets();
     spawnTerrain();
     spawnWallsAndDoor();
-   // spawnTrees(); // Add tree spawning
     spawnPlayer();
     spawnFloor();
     spawnholoclock();
@@ -49,14 +47,14 @@ public class Floor2GameArea extends GameArea {
   /** Ensure Floor 2 specific textures/atlases are loaded before use */
   private void ensureAssets() {
     String[] needed = new String[] {
-        "images/background-reception.png",
-        "images/tree.png",
-        "foreg_sprites/general/LongFloor.png",
-        "foreg_sprites/general/ThickFloor.png",
-        "foreg_sprites/general/SmallSquare.png",
-        "foreg_sprites/general/SmallStair.png",
-        "foreg_sprites/general/SquareTile.png",
-        "images/keycard_lvl2.png",
+            "images/background-reception.png",
+            "images/tree.png",
+            "foreg_sprites/general/LongFloor.png",
+            "foreg_sprites/general/ThickFloor.png",
+            "foreg_sprites/general/SmallSquare.png",
+            "foreg_sprites/general/SmallStair.png",
+            "foreg_sprites/general/SquareTile.png",
+            "images/keycard_lvl2.png",
             "images/platform-2.png",
             "images/holo-clock.png"
 
@@ -77,9 +75,7 @@ public class Floor2GameArea extends GameArea {
     addSolidWallLeft(b, WALL_WIDTH);
     addSolidWallRight(b, WALL_WIDTH);
 
-
-
-    // Left vertical door resting on ground level
+    // Left vertical door
     float leftDoorHeight = Math.max(1f, b.viewHeight * 0.2f);
     float leftDoorY = b.bottomY; // ground level
     float leftTopSegHeight = Math.max(0f, b.topY - (leftDoorY + leftDoorHeight));
@@ -93,7 +89,7 @@ public class Floor2GameArea extends GameArea {
     leftDoor.addComponent(new com.csse3200.game.components.DoorComponent(() -> loadArea(ForestGameArea.class)));
     spawnEntity(leftDoor);
 
-    // Right vertical door resting on ground level
+    // Right vertical door
     float rightDoorHeight = Math.max(1f, b.viewHeight * 0.2f);
     float rightDoorY = b.bottomY; // ground level
     float rightTopSegHeight = Math.max(0f, b.topY - (rightDoorY + rightDoorHeight));
@@ -112,7 +108,7 @@ public class Floor2GameArea extends GameArea {
     float PlatformY = 3.5f;
     float PlatformX2 = 3f;
     float PlatformY2 = 7f;
-    float PlatformX3 = 10f;
+    float PlatformX3 = 9f;
     float PlatformY3 = 8f;
     Entity Platform1 = ObstacleFactory.createplatform2();
     Platform1.setPosition(PlatformX, PlatformY);
@@ -133,28 +129,11 @@ public class Floor2GameArea extends GameArea {
     spawnEntity(clock1);
   }
   private void spawnPlayer() {
-    Entity player = PlayerFactory.createPlayerWithArrowKeys();
+    Entity player = PlayerFactory.createPlayer();
     spawnEntityAt(player, PLAYER_SPAWN, true, true);
   }
 
-  private void spawnTrees() {
-    // Spawn trees in fixed positions around the map
-    GridPoint2[] treePositions = {
-        new GridPoint2(5, 15),   // Top left area
-        new GridPoint2(15, 15),  // Top right area
-        new GridPoint2(5, 5),    // Bottom left area
-        new GridPoint2(15, 5),   // Bottom right area
-        new GridPoint2(10, 20),  // Top center
-        new GridPoint2(10, 0),   // Bottom center
-        new GridPoint2(0, 10),   // Left center
-        new GridPoint2(20, 10)   // Right center
-    };
-
-    for (int i = 0; i < NUM_TREES && i < treePositions.length; i++) {
-      Entity tree = ObstacleFactory.createTree();
-      spawnEntityAt(tree, treePositions[i], true, false);
-    }
-  }
 }
+
 
 
