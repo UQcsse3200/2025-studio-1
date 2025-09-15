@@ -81,7 +81,7 @@ public class EnemyWaves extends Component {
     //gameArea.spawnGhostGPT(baseGhosts, effectiveScale, player);
     //gameArea.spawnVroomba(baseVroombas, effectiveScale, player);
 
-      // Change 3 to gameArea.getRoomNumber() once multiple rooms are working.
+      // Change gameArea.getRoomNumber() to any number between 2 and 7 to get different enemies.
       gameArea.spawnEnemies(gameArea.getRoomNumber(), baseEnemies, effectiveScale, player);
 
     waveNumber++;
