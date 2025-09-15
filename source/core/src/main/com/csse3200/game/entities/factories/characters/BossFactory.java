@@ -127,7 +127,11 @@ public class BossFactory {
 
         boss2
                 .addComponent(new CombatStatsComponent(1000))
-                .addComponent(new Boss2HealthPhaseSwitcher(0.5f, "idle", "phase2"))
+                .addComponent(new com.csse3200.game.components.boss.Boss2HealthPhaseSwitcher(
+                        0.5f,   // phase2 阈值 / threshold
+                        0.3f,   // angry  阈值 / threshold
+                        "idle", "phase2", "angry"
+                ))
                 .addComponent(new BossStageComponent(boss2))
                 .addComponent(new FireballAttackComponent(target, 1.5f, 8f, 6f, config.baseAttack + 2))
                 .addComponent(new BossChargeSkillComponent(
@@ -304,12 +308,13 @@ public class BossFactory {
                 .addComponent(new TouchAttackComponent(PhysicsLayer.PLAYER, 1.5f));
 
         TextureAtlas atlas = ServiceLocator.getResourceService()
-                .getAsset("images/boss2_combined.atlas", TextureAtlas.class);
+                .getAsset("images/boss_idle.atlas", TextureAtlas.class);
 
         AnimationRenderComponent arc = new AnimationRenderComponent(atlas);
         arc.setDisposeAtlas(false);
         arc.addAnimation("idle",   0.10f, Animation.PlayMode.LOOP);
-        arc.addAnimation("phase2", 0.08f, Animation.PlayMode.LOOP);
+        arc.addAnimation("phase2", 0.1f, Animation.PlayMode.LOOP);
+        arc.addAnimation("angry", 0.1f, Animation.PlayMode.LOOP);
         boss.addComponent(arc);
 
         // 碰撞体缩放
