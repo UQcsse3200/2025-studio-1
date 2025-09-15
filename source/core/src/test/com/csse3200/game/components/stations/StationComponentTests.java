@@ -9,6 +9,8 @@ import com.csse3200.game.components.WeaponsStatsComponent;
 import com.csse3200.game.components.player.InventoryComponent;
 import com.csse3200.game.components.player.PlayerActions;
 import com.csse3200.game.entities.Entity;
+import com.csse3200.game.entities.configs.benches.BenchConfig;
+import com.csse3200.game.entities.configs.benches.ComputerBenchConfig;
 import com.csse3200.game.extensions.GameExtension;
 import com.csse3200.game.physics.*;
 import com.csse3200.game.rendering.RenderService;
@@ -36,7 +38,8 @@ public class StationComponentTests {
         ServiceLocator.registerPhysicsService(new PhysicsService());
 
         //Make station, player, inventory
-        stationComponent = new StationComponent();
+        BenchConfig config = new ComputerBenchConfig();
+        stationComponent = new StationComponent(config);
         stationComponent.setPlayerNear(true);
         player = new Entity();
         inventory = new InventoryComponent(10000);
@@ -58,7 +61,6 @@ public class StationComponentTests {
         buyPrompt = new Label("", labelStyle);
         stationComponent.setBuyPrompt(buyPrompt);
 
-        stationComponent.setPrice(500);
     }
 
     @Nested
@@ -67,7 +69,7 @@ public class StationComponentTests {
         @Test
         void notEnoughMoneyShouldNotUpgrade() {
 
-            player.getComponent(InventoryComponent.class).addProcessor(-10000); //Make the player broke
+            player.getComponent(InventoryComponent.class).addProcessor(-player.getComponent(InventoryComponent.class).getProcessor()); //Make the player broke
             stationComponent.upgrade();
             assertEquals("You are broke! Fries in the bag!", stationComponent.getBuyPrompt().getText().toString());
 
@@ -126,7 +128,7 @@ public class StationComponentTests {
             when(other.getBody().getUserData()).thenReturn(userData);
             stationComponent.onCollisionStart(me, other);
 
-            assertEquals("Press E to upgrade for " + stationComponent.getPrice(), stationComponent.getBuyPrompt().getText().toString());
+            assertEquals("Press E to upgrade weapon for " + stationComponent.getPrice(), stationComponent.getBuyPrompt().getText().toString());
         }
     }
 
@@ -155,7 +157,7 @@ public class StationComponentTests {
             Entity notWeapon = new Entity();
             player.getComponent(InventoryComponent.class).setCurrItem(notWeapon);
             stationComponent.upgrade();
-            assertEquals("This can't be upgraded", stationComponent.getBuyPrompt().getText().toString());
+            assertEquals("Not a weapon!", stationComponent.getBuyPrompt().getText().toString());
         }
 
         @Test
@@ -163,13 +165,12 @@ public class StationComponentTests {
             int maxUpgrade = weapon.getComponent(WeaponsStatsComponent.class).getMaxUpgradeStage();
             for (int i = 1; i < maxUpgrade; i++) {
                 stationComponent.upgrade();
-
             }
             int prevDamage = weapon.getComponent(WeaponsStatsComponent.class).getBaseAttack();
             stationComponent.upgrade();
             int currDamage = weapon.getComponent(WeaponsStatsComponent.class).getBaseAttack();
             assertEquals(currDamage, prevDamage);
-            assertEquals("Item is already fully upgraded!", stationComponent.getBuyPrompt().getText().toString());
+            assertEquals("Weapon is fully upgraded already!", stationComponent.getBuyPrompt().getText().toString());
         }
     }
 
