@@ -420,6 +420,42 @@ public class ObstacleFactory {
     return crate;
   }
 
+  /**
+   * Server rack (first variant, lighter colour).
+   * @return a static server rack entity
+   */
+  public static Entity createServerRack1() {
+    Entity serverRack =
+            new Entity()
+                    .addComponent(new TextureRenderComponent("foreg_sprites/furniture/ServerRack.png"))
+                    .addComponent(new PhysicsComponent())
+                    .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
+
+    serverRack.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
+    serverRack.getComponent(TextureRenderComponent.class).scaleEntity();
+    serverRack.scaleHeight(1f);
+    PhysicsUtils.setScaledCollider(serverRack, 1f, 1f);
+    return serverRack;
+  }
+
+  /**
+   * Server rack (second variant, darker colour).
+   * @return a static server rack entity
+   */
+  public static Entity createServerRack2() {
+    Entity serverRack =
+            new Entity()
+                    .addComponent(new TextureRenderComponent("foreg_sprites/furniture/ServerRack2.png"))
+                    .addComponent(new PhysicsComponent())
+                    .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
+
+    serverRack.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
+    serverRack.getComponent(TextureRenderComponent.class).scaleEntity();
+    serverRack.scaleHeight(1f);
+    PhysicsUtils.setScaledCollider(serverRack, 1f, 1f);
+    return serverRack;
+  }
+
   public static Entity createWall(float width, float height) {
     Entity wall = new Entity()
             .addComponent(new PhysicsComponent().setBodyType(BodyType.StaticBody))
