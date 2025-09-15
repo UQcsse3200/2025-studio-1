@@ -43,16 +43,51 @@ public class ObstacleFactory {
    * @return entity
    */
   public static Entity createMarblePlatform() {
-      Entity MarblePlatform =
-              new Entity()
-                      .addComponent(new TextureRenderComponent("images/MarblePlatform.png"))
-                      .addComponent(new PhysicsComponent())
-                      .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
-      MarblePlatform.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
-      MarblePlatform.getComponent(TextureRenderComponent.class).scaleEntity();
-      MarblePlatform.scaleHeight(0.5f);
-      PhysicsUtils.setScaledCollider(MarblePlatform, 1f, 0.75f);
-      return MarblePlatform;
+    Entity MarblePlatform = new Entity()
+        .addComponent(new TextureRenderComponent("images/MarblePlatform.png"))
+        .addComponent(new PhysicsComponent())
+        .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
+    MarblePlatform.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
+    MarblePlatform.getComponent(TextureRenderComponent.class).scaleEntity();
+    MarblePlatform.scaleHeight(0.5f);
+    PhysicsUtils.setScaledCollider(MarblePlatform, 1f, 0.75f);
+    return MarblePlatform;
+  }
+
+  public static Entity createShipmentBoxes() {
+    Entity ShipmentBoxes = new Entity()
+        .addComponent(new TextureRenderComponent("images/ShipmentBoxLid.png"))
+        .addComponent(new PhysicsComponent())
+        .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
+    ShipmentBoxes.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
+    ShipmentBoxes.getComponent(TextureRenderComponent.class).scaleEntity();
+    ShipmentBoxes.scaleHeight(0.05f);
+    PhysicsUtils.setScaledCollider(ShipmentBoxes, 1f, 0.75f);
+    return ShipmentBoxes;
+  }
+
+  public static Entity createShipmentCrane() {
+    Entity ShipmentCrane = new Entity()
+        .addComponent(new TextureRenderComponent("images/ShipmentCrane.png"))
+        .addComponent(new PhysicsComponent())
+        .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
+    ShipmentCrane.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
+    ShipmentCrane.getComponent(TextureRenderComponent.class).scaleEntity();
+    ShipmentCrane.scaleHeight(0.05f);
+    PhysicsUtils.setScaledCollider(ShipmentCrane, 1f, 0.75f);
+    return ShipmentCrane;
+  }
+
+  public static Entity createConveyor() {
+    Entity ShipmentCrane = new Entity()
+        .addComponent(new TextureRenderComponent("images/Conveyor.png"))
+        .addComponent(new PhysicsComponent())
+        .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
+    ShipmentCrane.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
+    ShipmentCrane.getComponent(TextureRenderComponent.class).scaleEntity();
+    ShipmentCrane.scaleHeight(0.05f);
+    PhysicsUtils.setScaledCollider(ShipmentCrane, 1f, 0.75f);
+    return ShipmentCrane;
   }
 
   /**
@@ -193,7 +228,47 @@ public class ObstacleFactory {
     PhysicsUtils.setScaledCollider(thinFloor, 1f, 0.9f);
     return thinFloor;
   }
+  /** creating the platform used in reception room **/
+  public static Entity createplatform2() {
+    Entity platform2 =
+            new Entity()
+                    .addComponent(new TextureRenderComponent("images/platform-2.png"))
+                    .addComponent(new PhysicsComponent())
+                    .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
 
+    platform2.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
+    platform2.getComponent(TextureRenderComponent.class).scaleEntity();
+    platform2.scaleHeight(3f);
+    PhysicsUtils.setScaledCollider(platform2, 0.7f, 0.55f);
+    return platform2;
+ }
+  /** creating the clock used in reception room **/
+  public static Entity createholoclock() {
+    Entity clockSpawn =
+            new Entity()
+                    .addComponent(new TextureRenderComponent("images/holo-clock.png"));
+    clockSpawn.getComponent(TextureRenderComponent.class).scaleEntity();
+    clockSpawn.scaleHeight(2f);
+    return clockSpawn;
+  }
+  /** creating the help desk used in reception room **/
+  public static Entity createdesk_reception() {
+    Entity desk_receptionSpawn =
+            new Entity()
+                    .addComponent(new TextureRenderComponent("images/desk_reception.png"));
+    desk_receptionSpawn.getComponent(TextureRenderComponent.class).scaleEntity();
+    desk_receptionSpawn.scaleHeight(3f);
+    return desk_receptionSpawn;
+  }
+  /** creating the comic stand used in reception room **/
+  public static Entity createcomic_stand() {
+    Entity comic_standSpawn =
+            new Entity()
+                    .addComponent(new TextureRenderComponent("images/comics.png"));
+    comic_standSpawn.getComponent(TextureRenderComponent.class).scaleEntity();
+    comic_standSpawn.scaleHeight(1.5f);
+    return comic_standSpawn;
+}
   /**
    * Purple spawn pad prop. Solid so it rests on the ground like other props.
    * @return a static pad entity
