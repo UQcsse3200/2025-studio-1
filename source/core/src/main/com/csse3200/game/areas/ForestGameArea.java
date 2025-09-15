@@ -19,7 +19,9 @@ import com.csse3200.game.entities.factories.items.ItemFactory;
 import com.csse3200.game.entities.factories.items.WeaponsFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.entities.factories.characters.PlayerFactory;
+import com.csse3200.game.entities.configs.ItemSpawnConfig;
 import com.csse3200.game.entities.factories.*;
+import com.csse3200.game.entities.spawner.ItemSpawner;
 import com.csse3200.game.physics.components.PhysicsProjectileComponent;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
@@ -96,7 +98,7 @@ public class ForestGameArea extends GameArea {
     "images/KeycardDoor.png",
     "images/player.png",
     "images/mud.png",
-    "images/heart.png",
+    HEART,
     "images/MarblePlatform.png",
     "images/computerBench.png",
   };
@@ -207,6 +209,8 @@ public class ForestGameArea extends GameArea {
 
   @Override
   public void create() {
+    ServiceLocator.registerGameArea(this);
+
     loadAssets();
 
     displayUI();
@@ -223,10 +227,10 @@ public class ForestGameArea extends GameArea {
     lightsaber = spawnLightsaber();
 
     //These are commented out since there is no equip feature yet
-    // this.equipItem(pistol);
-    // this.equipItem(lightsaber);
-    // this.equipItem(dagger);
-    this.equipItem(rifle);
+    //this.equipItem(pistol);
+    //this.equipItem(lightsaber);
+    //this.equipItem(dagger);
+    //this.equipItem(rifle);
 
     spawnFloor();
     spawnBottomRightDoor();
@@ -247,6 +251,9 @@ public class ForestGameArea extends GameArea {
     // spawnGrokDroid();
     // spawnVroomba();
     playMusic();
+
+    ItemSpawner itemSpawner = new ItemSpawner(this);
+    itemSpawner.spawnItems(ItemSpawnConfig.forestmap());
 
     // Place a keycard on the floor so the player can unlock the door
     float keycardX = 1f;
@@ -408,29 +415,29 @@ public class ForestGameArea extends GameArea {
    * Places two platforms within the room for players to jump on.
    */
   private void spawnMarblePlatforms() {
-    float PlatformX = 2.5f;
-    float PlatformX2 = 5.4f;
-    float PlatformX3 = 8.2f;
-    float PlatformX4 = 11.1f;
-    float PlatformY = 6f;
-    float PlatformY2 = 8f;
+    float platformX = 2.5f;
+    float platformX2 = 5.4f;
+    float platformX3 = 8.2f;
+    float platformX4 = 11.1f;
+    float platformY = 6f;
+    float platformY2 = 8f;
 
-    Entity Platform1 = ObstacleFactory.createMarblePlatform();
-    Platform1.setPosition(PlatformX, PlatformY);
+    Entity platform1 = ObstacleFactory.createMarblePlatform();
+    platform1.setPosition(platformX, platformY);
 
-    Entity Platform2 = ObstacleFactory.createMarblePlatform();
-    Platform2.setPosition(PlatformX2, PlatformY2);
+    Entity platform2 = ObstacleFactory.createMarblePlatform();
+    platform2.setPosition(platformX2, platformY2);
 
-    Entity Platform3 = ObstacleFactory.createMarblePlatform();
-    Platform3.setPosition(PlatformX3, PlatformY2);
+    Entity platform3 = ObstacleFactory.createMarblePlatform();
+    platform3.setPosition(platformX3, platformY2);
 
-    Entity Platform4 = ObstacleFactory.createMarblePlatform();
-    Platform4.setPosition(PlatformX4, PlatformY);
+    Entity platform4 = ObstacleFactory.createMarblePlatform();
+    platform4.setPosition(platformX4, platformY);
 
-    spawnEntity(Platform1);
-    spawnEntity(Platform2);
-    spawnEntity(Platform3);
-    spawnEntity(Platform4);
+    spawnEntity(platform1);
+    spawnEntity(platform2);
+    spawnEntity(platform3);
+    spawnEntity(platform4);
   }
 
   /**
@@ -661,6 +668,10 @@ public class ForestGameArea extends GameArea {
     GridPoint2 pos = new GridPoint2(25, 5);
     Entity vroomba = NPCFactory.createVroomba(player, this);
     spawnEntityAt(vroomba, pos, true, true);
+  }
+
+  public void spawnItem(Entity item, GridPoint2 position) {
+    spawnEntityAt(item, position, false, false);
   }
 
   private void playMusic() {

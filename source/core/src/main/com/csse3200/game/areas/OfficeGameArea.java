@@ -9,7 +9,7 @@ import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.factories.characters.PlayerFactory;
 import com.csse3200.game.rendering.SolidColorRenderComponent;
 
-/** Office room: minimal walls and two doors (left<->Security, right->Elevator). */
+/** Office room: minimal walls and two doors (left--Security, right--Elevator). */
 public class OfficeGameArea extends GameArea {
   private static final float WALL_WIDTH = 0.1f;
   private static final GridPoint2 PLAYER_SPAWN = new GridPoint2(10, 10);
