@@ -45,6 +45,11 @@ public class StorageGameArea extends GameArea {
   private void loadTunnel() {
     clearAndLoad(() -> new TunnelGameArea(terrainFactory, cameraComponent));
   }
+
+  @Override
+  public String toString() {
+    return "Storage";
+  }
 }
 
 

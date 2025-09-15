@@ -126,6 +126,11 @@ public class Floor2GameArea extends GameArea {
       spawnEntityAt(tree, treePositions[i], true, false);
     }
   }
+
+  @Override
+  public String toString() {
+    return "Floor2";
+  }
 }
 
 

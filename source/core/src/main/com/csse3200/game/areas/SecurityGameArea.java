@@ -47,6 +47,11 @@ public class SecurityGameArea extends GameArea {
   private void loadOffice() {
     clearAndLoad(() -> new OfficeGameArea(terrainFactory, cameraComponent));
   }
+
+  @Override
+  public String toString() {
+    return "Security";
+  }
 }
 
 
