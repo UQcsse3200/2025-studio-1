@@ -11,15 +11,35 @@ import com.csse3200.game.entities.factories.system.ObstacleFactory;
 
 import javax.swing.*;
 
-/** Shipping Room*/
+/**
+ * The "Shipping" area of the game map. This class:
+ * - Builds the terrain (background)
+ * - Spawns the player and necessary props
+ * - Generates the doors to the previous and next room
+ */
 public class ShippingGameArea extends GameArea {
   private static final float WALL_WIDTH = 0.1f;
   private static final GridPoint2 PLAYER_SPAWN = new GridPoint2(10, 10);
 
+/**
+ * Initialise this ShippingGameArea to use the provided TerrainFactory and camera helper.
+ * The camera is used to size the screen-edge walls and place the right-side door trigger.
+ *
+ * @param terrainFactory TerrainFactory used to create the terrain for the GameArea (required).
+ * @param cameraComponent Camera helper supplying an OrthographicCamera (optional but used here).
+ * @requires terrainFactory != null
+ */
   public ShippingGameArea(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
       super(terrainFactory, cameraComponent);
   }
 
+/** Create the game area, including terrain, static entities (trees), dynamic entities (player)
+ *
+ * Entry point for this room. This:
+ * - Loads textures
+ * - Creates the terrain, walls, and UI label
+ * - Spawns player, props (desk, crates, pod), door (with keycard gate), and enemies
+ */
   @Override
   public void create() {
     GenericLayout.ensureGenericAssets(this);
@@ -38,6 +58,9 @@ public class ShippingGameArea extends GameArea {
     spawnEntity(ui);
   }
 
+  /**
+   * Creates a platform atop the boxes in the truck that has physics colliders.
+   */
   private void spawnShipmentBoxLid() {
     float lidX = 7.25f;
     float lidY = 5.1f;
@@ -48,6 +71,9 @@ public class ShippingGameArea extends GameArea {
     spawnEntity(BoxLid);
   }
 
+  /**
+   * Creates a platform atop the crane that has physics colliders.
+   */
   private void spawnShipmentCrane() {
     float craneX = 8.7f;
     float craneY = 7.85f;
@@ -58,6 +84,9 @@ public class ShippingGameArea extends GameArea {
     spawnEntity(ShipmentCrane);
   }
 
+  /**
+   * Creates a platform atop the conveyor that has physics colliders.
+   */
   private void spawnConveyor() {
     float conveyorX = 10.7f;
     float conveyorY = 8f;
@@ -78,10 +107,16 @@ public class ShippingGameArea extends GameArea {
     spawnEntityAt(player, PLAYER_SPAWN, true, true);
   }
 
+  /**
+   * Clears the game area and loads the previous section.
+   */
   private void loadForest() {
     clearAndLoad(() -> new ForestGameArea(terrainFactory, cameraComponent));
   }
 
+  /**
+   * Clears the game area and loads the next section (storage).
+   */
   private void loadStorage() {
     clearAndLoad(() -> new StorageGameArea(terrainFactory, cameraComponent));
   }

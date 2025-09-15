@@ -54,6 +54,10 @@ public class ObstacleFactory {
     return MarblePlatform;
   }
 
+  /**
+   * Creates a platform that can be used to give crates a top that can be stood on.
+   * @return entity
+   */
   public static Entity createShipmentBoxes() {
     Entity ShipmentBoxes = new Entity()
         .addComponent(new TextureRenderComponent("images/ShipmentBoxLid.png"))
@@ -66,6 +70,10 @@ public class ObstacleFactory {
     return ShipmentBoxes;
   }
 
+  /**
+   * Creates a platform that can be used to give the shipping room crane a top that can be stood on.
+   * @return entity
+   */
   public static Entity createShipmentCrane() {
     Entity ShipmentCrane = new Entity()
         .addComponent(new TextureRenderComponent("images/ShipmentCrane.png"))
@@ -78,6 +86,10 @@ public class ObstacleFactory {
     return ShipmentCrane;
   }
 
+  /**
+   * Creates a platform that can be used to give the conveyor in the shipping room a top that can be stood on.
+   * @return entity
+   */
   public static Entity createConveyor() {
     Entity ShipmentCrane = new Entity()
         .addComponent(new TextureRenderComponent("images/Conveyor.png"))
