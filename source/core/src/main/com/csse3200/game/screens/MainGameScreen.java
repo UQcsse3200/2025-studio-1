@@ -223,7 +223,7 @@ public class MainGameScreen extends ScreenAdapter {
     ShopManager manager = new ShopManager(catalog);
 
     shopOverlay = new Entity()
-            .addComponent(new ShopScreenDisplay(forestGameArea, catalog, manager))
+            .addComponent(new ShopScreenDisplay(forestGameArea, manager))
             .addComponent(new InputDecorator(stage, 100));
 
     shopOverlay.getEvents().addListener("closeShop", this::hideShopOverlay);

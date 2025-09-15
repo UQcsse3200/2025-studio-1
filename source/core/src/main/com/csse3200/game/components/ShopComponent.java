@@ -15,15 +15,13 @@ public class ShopComponent extends Component {
 
     private final ForestGameArea area;
     private final ShopManager manager;
-    private final CatalogService catalog;
 
     private Entity uiEntity;
     private boolean open;
 
-    public ShopComponent(ForestGameArea area, ShopManager manager, CatalogService catalog) {
+    public ShopComponent(ForestGameArea area, ShopManager manager) {
         this.area = area;
         this.manager = manager;
-        this.catalog = catalog;
     }
 
     @Override
@@ -40,7 +38,7 @@ public class ShopComponent extends Component {
         logger.info("Opening shop UI");
         open = true;
 
-        uiEntity = new Entity().addComponent(new ShopScreenDisplay(area, catalog, manager));
+        uiEntity = new Entity().addComponent(new ShopScreenDisplay(area, manager));
         area.spawnEntity(uiEntity);
         uiEntity.getEvents().addListener("closeShop", this::close);
 
