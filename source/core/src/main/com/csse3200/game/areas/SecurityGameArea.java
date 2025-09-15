@@ -37,7 +37,8 @@ public class SecurityGameArea extends GameArea {
   }
 
   private void spawnPlayer() {
-    GenericLayout.spawnArrowPlayerAt(this, PLAYER_SPAWN);
+    Entity player = PlayerFactory.createPlayer();
+    spawnEntityAt(player, PLAYER_SPAWN, true, true);
   }
 
   private void loadBackToFloor5() {
