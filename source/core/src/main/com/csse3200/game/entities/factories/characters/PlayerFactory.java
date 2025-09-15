@@ -7,11 +7,13 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.components.WeaponsStatsComponent;
 import com.csse3200.game.components.player.*;
+import com.csse3200.game.components.player.InventoryComponent;
 import com.csse3200.game.components.player.StaminaComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.characters.PlayerConfig;
 import com.csse3200.game.files.FileLoader;
 import com.csse3200.game.input.InputComponent;
+import com.csse3200.game.physics.BodyUserData;
 import com.csse3200.game.physics.PhysicsLayer;
 import com.csse3200.game.physics.PhysicsUtils;
 import com.csse3200.game.physics.components.ColliderComponent;
@@ -32,6 +34,18 @@ import com.csse3200.game.components.player.ItemPickUpComponent;
 public class PlayerFactory {
   private static final PlayerConfig stats =
       FileLoader.readClass(PlayerConfig.class, "configs/player.json");
+  private static final PlayerConfig stats = safeLoadPlayerConfig();
+
+  private static PlayerConfig safeLoadPlayerConfig() {
+    PlayerConfig cfg = FileLoader.readClass(PlayerConfig.class, "configs/player.json");
+    if (cfg == null) {
+      cfg = new PlayerConfig();
+      cfg.gold = 0;
+      cfg.health = 100;
+      cfg.baseAttack = 10;
+    }
+    return cfg;
+  }
 
   /**
    * Create a player entity.
@@ -102,36 +116,40 @@ public class PlayerFactory {
   }
 
   /**
-   * Create a player entity that uses arrow keys for movement.
-   * @return entity
+   * Create a full-featured player entity that uses arrow keys for movement,
+   * matching the main player visuals/animations.
    */
   public static Entity createPlayerWithArrowKeys() {
-    InputComponent inputComponent = new TouchPlayerInputComponent();
+    InputComponent inputComponent = new ArrowKeysPlayerInputComponent();
+    InventoryComponent playerInventory = new InventoryComponent(stats.gold);
+
+    AnimationRenderComponent animator = new AnimationRenderComponent(
+        ServiceLocator.getResourceService()
+            .getAsset("images/player.atlas", TextureAtlas.class));
+    add_animations(animator);
 
     Entity player =
-            new Entity()
-                    .addComponent(new TextureRenderComponent("images/box_boy_leaf.png"))
-                    .addComponent(new PhysicsComponent())
-                    .addComponent(new ColliderComponent())
-                    .addComponent(new HitboxComponent().setLayer(PhysicsLayer.PLAYER))
-                    .addComponent(new PlayerActions())
-                    .addComponent(new CombatStatsComponent(stats.health))
-                    .addComponent(new InventoryComponent(stats.gold))
-                    .addComponent(inputComponent)
-                    .addComponent(new PlayerStatsDisplay());
+        new Entity()
+            .addComponent(new PhysicsComponent())
+            .addComponent(new ColliderComponent())
+            .addComponent(new HitboxComponent().setLayer(PhysicsLayer.PLAYER))
+            .addComponent(new PlayerActions())
+            .addComponent(new CombatStatsComponent(stats.health))
+            .addComponent(new WeaponsStatsComponent(stats.baseAttack))
+            .addComponent(playerInventory)
+            .addComponent(new ItemPickUpComponent(playerInventory))
+            .addComponent(inputComponent)
+            .addComponent(new PlayerStatsDisplay())
+            .addComponent(new PlayerInventoryDisplay(playerInventory))
+            .addComponent(new StaminaComponent())
+            .addComponent(animator)
+            .addComponent(new PlayerAnimationController());
 
+    player.getComponent(AnimationRenderComponent.class).scaleEntity(2f);
     PhysicsUtils.setScaledCollider(player, 0.6f, 0.3f);
     player.getComponent(ColliderComponent.class).setDensity(1.5f);
-    player.getComponent(TextureRenderComponent.class).scaleEntity();
-
-    PhysicsComponent physics = player.getComponent(PhysicsComponent.class);
-    if (physics != null) {
-      for (Fixture fixture : physics.getBody().getFixtureList()) {
-        Filter filter = fixture.getFilterData();
-        filter.maskBits = PhysicsLayer.WALL | PhysicsLayer.GATE;
-        fixture.setFilterData(filter);
-      }
-    }
+    PhysicsUtils.setScaledCollider(player, 0.3f,0.5f);
+    player.getComponent(WeaponsStatsComponent.class).setCoolDown(0.2f);
     return player;
   }
 

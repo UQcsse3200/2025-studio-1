@@ -17,6 +17,7 @@ import java.util.ArrayList;
  * Can also be used as a more generic component for other entities.
  */
 public class InventoryComponent extends Component {
+
   private static final Logger logger = LoggerFactory.getLogger(InventoryComponent.class);
 
   private int inventoryCount = 0;
@@ -28,6 +29,8 @@ public class InventoryComponent extends Component {
   private Entity currItem;
   private int selectedSlot = -1; // -1 = no selectedSlot
   private int equippedSlot = -1; // no slot is equipped initially
+  private int keycardLevel = 0;
+
 
   /**
    * Constructs an inventory for the player and a beginning currency amount
@@ -37,12 +40,31 @@ public class InventoryComponent extends Component {
    * @param processor The number of processors that the inventory is starting with
    */
   public InventoryComponent(int processor) {
+
     setProcessor(processor);
 
     for (int idx = this.minCapacity; idx < this.maxCapacity; idx++) {
       this.items.add(idx, null);
       this.itemTexs.add(idx, null);
     }
+  }
+
+  /**
+   * setter method for the keycard level
+   *
+   * @param level level to set the keycard to
+   */
+  public void setKeycardLevel(int level) {
+    this.keycardLevel = level;
+  }
+
+  /**
+   * getter method for the keycard level
+   *
+   * @return the current keycard level
+   */
+  public int getKeycardLevel() {
+    return this.keycardLevel;
   }
 
   /**
@@ -242,18 +264,24 @@ public class InventoryComponent extends Component {
   }
 
     /**
-     *
-     * @param item set the selected item as current
+     * Set the current item
      */
     public void setCurrItem(Entity item) {
         this.currItem = item;
+    }
+    /**
+     * Get the current item
+     * @return the current item
+     */
+    public Entity getCurrItem() {
+        return this.currItem;
     }
 
     /**
      * Get the current item
      * @return the current item
      */
-    public Entity getCurrItem() {
+    public Entity getCurrSlot() {
         if (selectedSlot >= 0 && selectedSlot < items.size()) {
             return items.get(selectedSlot);
         }
@@ -265,7 +293,7 @@ public class InventoryComponent extends Component {
      *
      * @param slotIndex takes the index of the slot selected
      */
-    public void selectSlot(int slotIndex){
+    public void setSelectSlot(int slotIndex){
         if(slotIndex >= 0 && slotIndex < this.items.size()){
             this.selectedSlot = slotIndex;
         }
@@ -298,7 +326,7 @@ public class InventoryComponent extends Component {
      * @param slotIndex puts focus on the item at that slot
      */
     private void onFocusItem(int slotIndex) {
-        selectSlot(slotIndex);
+        setSelectSlot(slotIndex);
         entity.getEvents().trigger("inventoryItemSelected", slotIndex);
     }
 
@@ -314,9 +342,6 @@ public class InventoryComponent extends Component {
      * @return the slot that is currently equipped
      */
     public int getEquippedSlot(){return this.equippedSlot;}
-  /**
-   * Set the current item
-   */
 
 
 }
