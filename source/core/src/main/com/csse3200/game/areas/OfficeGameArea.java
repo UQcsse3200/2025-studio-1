@@ -60,8 +60,8 @@ public class OfficeGameArea extends GameArea {
     return null;
   }
 
-  public static OfficeGameArea load(SaveLoadService.PlayerInfo load) {
-    return (new OfficeGameArea(terrainFactory, cameraComponent));
+  public static OfficeGameArea load(TerrainFactory terrainFactory, CameraComponent camera) {
+    return (new OfficeGameArea(terrainFactory, camera));
   }
 }
 

@@ -60,8 +60,8 @@ public class SecurityGameArea extends GameArea {
     return null;
   }
 
-  public static SecurityGameArea load(SaveLoadService.PlayerInfo load) {
-    return (new SecurityGameArea(terrainFactory, cameraComponent));
+  public static SecurityGameArea load(TerrainFactory terrainFactory, CameraComponent camera) {
+    return (new SecurityGameArea(terrainFactory, camera));
   }
 }
 
