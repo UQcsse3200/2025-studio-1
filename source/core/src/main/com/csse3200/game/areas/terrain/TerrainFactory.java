@@ -64,8 +64,12 @@ public class TerrainFactory {
         return createGameRooms(0.5f, spawnBackground);
       case LOBBY:
         TextureRegion lobbyBackground =
-            new TextureRegion(resourceService.getAsset("images/LobbyWIP.png", Texture.class));
+                new TextureRegion(resourceService.getAsset("images/background-reception.png", Texture.class));
         return createGameRooms(0.5f, lobbyBackground);
+      case MAIN_HALL:
+        TextureRegion hallBackground =
+                new TextureRegion(resourceService.getAsset("images/mainHall-background.png", Texture.class));
+        return createGameRooms(0.5f, hallBackground);
       case SHIPPING:
         TextureRegion shippingBackground =
             new TextureRegion(resourceService.getAsset("images/Shipping.png", Texture.class));
@@ -204,6 +208,7 @@ public class TerrainFactory {
     SPAWN_ROOM,
     LOBBY,
     SHIPPING,
-    ELEVATOR
+    ELEVATOR,
+    MAIN_HALL
   }
 }
