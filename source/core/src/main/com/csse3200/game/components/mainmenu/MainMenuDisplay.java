@@ -12,6 +12,7 @@ import com.csse3200.game.ui.UIComponent;
 import com.csse3200.game.ui.NeonStyles;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import com.csse3200.game.GdxGame;
 
 /**
  * A ui component for displaying the Main menu.
@@ -21,6 +22,11 @@ public class MainMenuDisplay extends UIComponent {
   private static final float Z_INDEX = 2f;
   private Table table;
   private NeonStyles neon;
+  private GdxGame game;
+
+  public MainMenuDisplay(GdxGame game) {
+    this.game = game;
+  }
 
   /**
    * Initialises styles and builds the actors.
@@ -30,6 +36,7 @@ public class MainMenuDisplay extends UIComponent {
     super.create();
     neon = new NeonStyles(0.70f);
     addActors();
+
   }
 
   /**
@@ -63,12 +70,14 @@ public class MainMenuDisplay extends UIComponent {
     TextButton loadBtn = new TextButton("Load", style);
     TextButton settingsBtn = new TextButton("Settings", style);
     TextButton exitBtn = new TextButton("Exit", style);
+    TextButton tutorialBtn = new TextButton("Tutorial", style);
 
     // Label text size
     startBtn.getLabel().setFontScale(2.0f);
     loadBtn.getLabel().setFontScale(2.0f);
     settingsBtn.getLabel().setFontScale(2.0f);
     exitBtn.getLabel().setFontScale(2.0f);
+    tutorialBtn.getLabel().setFontScale(2.0f);
 
     // Button actions
     startBtn.addListener(
@@ -107,6 +116,14 @@ public class MainMenuDisplay extends UIComponent {
           }
         });
 
+    tutorialBtn.addListener(new ChangeListener() {
+      @Override
+      public void changed(ChangeEvent event, Actor actor) {
+        logger.debug("Tutorial button clicked");
+        entity.getEvents().trigger("tutorial");
+      }
+    });
+
     // Column layout
     table.add(title).left().padBottom(40f).padLeft(-10f);
     table.row();
@@ -117,7 +134,8 @@ public class MainMenuDisplay extends UIComponent {
     table.add(settingsBtn).padTop(15f).left();
     table.row();
     table.add(exitBtn).padTop(15f).left();
-
+    table.row();
+    table.add(tutorialBtn).padTop(15f).left();
     stage.addActor(table);
   }
 
