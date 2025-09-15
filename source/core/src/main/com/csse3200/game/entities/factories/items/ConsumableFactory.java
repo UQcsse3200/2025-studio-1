@@ -33,5 +33,7 @@ public class ConsumableFactory {
 
         consumable.addComponent(new WeaponsStatsComponent(damage))
                 .addComponent(new RangedUseComponent());
+
+        consumable.getComponent(WeaponsStatsComponent.class).setProjectileTexturePath(config.texturePath);
     }
 }
