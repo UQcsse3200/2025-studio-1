@@ -96,7 +96,6 @@ public class ShopManager extends Component {
         return PurchaseResult.ok(item, 1);
     }
 
-
     private PurchaseResult fail(Entity player, CatalogEntry item, PurchaseError error) {
         entity.getEvents().trigger("purchaseFailed", getItemName(item), error);
         return PurchaseResult.fail(error);
