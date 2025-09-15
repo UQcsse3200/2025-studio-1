@@ -451,6 +451,9 @@ public class PlayerActions extends Component {
     }
 
 
+    /**
+     *
+     */
     private Entity currentWeapon = null;
 
     public void equipWeapon(Entity weapon) {
@@ -467,6 +470,9 @@ public class PlayerActions extends Component {
         updateWeaponPosition();
     }
 
+    /**
+     *
+     */
     public void unequipWeapon() {
         if (currentWeapon == null) return;
 
@@ -480,16 +486,42 @@ public class PlayerActions extends Component {
 
     //to represent relative difference between the
     //player's body position and player's hand.
-    private float handOffsetX;
-    private float handOffsetY;
+    private float handOffsetX = 5f;
+    private float handOffsetY = 10f;
+
+    /**
+     *
+     */
     public void updateWeaponPosition() {
-        if (currentWeapon != null) {
+        if (currentWeapon == null) return;
+
+        PhysicsComponent physics = currentWeapon.getComponent(PhysicsComponent.class);
+        if (physics == null) {
+            System.out.println("Weapon has no PhysicsComponent," +
+                "\nupdating position directly");
+            // Directly update visual position without physics:
             Vector2 playerPos = entity.getPosition();
             if (facingRight) {
                 currentWeapon.setPosition(playerPos.x + handOffsetX, playerPos.y + handOffsetY);
             } else {
                 currentWeapon.setPosition(playerPos.x - handOffsetX, playerPos.y + handOffsetY);
-            }        }
-    }
+            }
+            return;
+        }
 
+        Body body = physics.getBody();
+        if (body == null) {
+            System.out.println("Weapon's PhysicsComponent body is null," +
+                "\nskipping physics-based position update");
+            return; // Don't update position through physics if body not created
+        }
+
+        // Safe to use physics body
+        Vector2 playerPos = entity.getPosition();
+        if (facingRight) {
+            body.setTransform(playerPos.x + handOffsetX, playerPos.y + handOffsetY, 0f);
+        } else {
+            body.setTransform(playerPos.x - handOffsetX, playerPos.y + handOffsetY, 0f);
+        }
+    }
 }
