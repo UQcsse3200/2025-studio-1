@@ -63,6 +63,11 @@ public class Floor5GameArea extends GameArea {
     Entity player = PlayerFactory.createPlayer();
     spawnEntityAt(player, PLAYER_SPAWN, true, true);
   }
+
+  @Override
+  public String toString() {
+    return "Floor5";
+  }
 }
 
 
