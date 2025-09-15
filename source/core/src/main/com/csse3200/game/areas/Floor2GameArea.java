@@ -1,8 +1,6 @@
 package com.csse3200.game.areas;
 
-import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.areas.terrain.TerrainFactory;
@@ -12,16 +10,8 @@ import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.factories.KeycardFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.entities.factories.characters.PlayerFactory;
-import com.csse3200.game.rendering.SolidColorRenderComponent;
-import com.csse3200.game.services.ResourceService;
-import com.csse3200.game.services.ServiceLocator;
-import com.csse3200.game.utils.math.GridPoint2Utils;
-import com.csse3200.game.utils.math.RandomUtils;
-import com.badlogic.gdx.graphics.Texture;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import java.util.ArrayList;
-import java.util.List;
 
 /** Second floor with different background and arrow-key controls. */
 public class Floor2GameArea extends GameArea {
@@ -42,6 +32,8 @@ public class Floor2GameArea extends GameArea {
    // spawnTrees(); // Add tree spawning
     spawnPlayer();
     spawnFloor();
+    spawnholoclock();
+    spawnplatform2();
     float keycardX = 13f;
     float keycardY = 10f;
     Entity keycard = KeycardFactory.createKeycard(2);
@@ -64,7 +56,10 @@ public class Floor2GameArea extends GameArea {
         "foreg_sprites/general/SmallSquare.png",
         "foreg_sprites/general/SmallStair.png",
         "foreg_sprites/general/SquareTile.png",
-        "images/keycard_lvl2.png"
+        "images/keycard_lvl2.png",
+            "images/platform-2.png",
+            "images/holo-clock.png"
+
     };
     ensureTextures(needed);
     ensurePlayerAtlas();
@@ -108,11 +103,35 @@ public class Floor2GameArea extends GameArea {
       spawnEntity(rightTop);
     }
     Entity rightDoor = ObstacleFactory.createDoorTrigger(WALL_WIDTH, rightDoorHeight);
-    rightDoor.setPosition(b.rightX - WALL_WIDTH - 0.001f, rightDoorY);
+    rightDoor.setPosition(b.rightX - WALL_WIDTH - 0.001f, rightDoorY+7f);
     rightDoor.addComponent(new com.csse3200.game.components.DoorComponent(() -> loadArea(Floor5GameArea.class)));
     spawnEntity(rightDoor);
   }
+  private void spawnplatform2() {
+    float PlatformX = 0f;
+    float PlatformY = 3.5f;
+    float PlatformX2 = 3f;
+    float PlatformY2 = 7f;
+    float PlatformX3 = 10f;
+    float PlatformY3 = 8f;
+    Entity Platform1 = ObstacleFactory.createplatform2();
+    Platform1.setPosition(PlatformX, PlatformY);
+    spawnEntity(Platform1);
+    Entity Platform2 = ObstacleFactory.createplatform2();
+    Platform2.setPosition(PlatformX2, PlatformY2);
+    spawnEntity(Platform2);
+    Entity Platform3 = ObstacleFactory.createplatform2();
+    Platform3.setPosition(PlatformX3, PlatformY3);
+    spawnEntity(Platform3);
 
+  }
+  private void spawnholoclock() {
+    float PlatformX = 10f;
+    float PlatformY = 3.5f;
+    Entity clock1 = ObstacleFactory.createholoclock();
+    clock1.setPosition(PlatformX, PlatformY);
+    spawnEntity(clock1);
+  }
   private void spawnPlayer() {
     Entity player = PlayerFactory.createPlayerWithArrowKeys();
     spawnEntityAt(player, PLAYER_SPAWN, true, true);

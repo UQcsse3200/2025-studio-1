@@ -193,6 +193,21 @@ public class ObstacleFactory {
     PhysicsUtils.setScaledCollider(thinFloor, 1f, 1f);
     return thinFloor;
   }
+  public static Entity createplatform2() {
+    Entity platform2 =
+            new Entity()
+                    .addComponent(new TextureRenderComponent("images/platform-2.png"))
+                    .addComponent(new PhysicsComponent())
+                    .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
+
+    platform2.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
+    platform2.getComponent(TextureRenderComponent.class).scaleEntity();
+    platform2.scaleHeight(3f);
+    PhysicsUtils.setScaledCollider(platform2, 0.7f, 0.55f);
+    return platform2;
+  }
+
+  /**
 
   /**
    * Purple spawn pad prop. Solid so it rests on the ground like other props.
@@ -210,6 +225,16 @@ public class ObstacleFactory {
     purpSpawn.scaleHeight(0.7f);
     PhysicsUtils.setScaledCollider(purpSpawn, 1f, 1f);
     return purpSpawn;
+  }
+  public static Entity createholoclock() {
+    Entity clockSpawn =
+            new Entity()
+                    .addComponent(new TextureRenderComponent("images/holo-clock.png"))
+                    .addComponent(new PhysicsComponent());
+    clockSpawn.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
+    clockSpawn.getComponent(TextureRenderComponent.class).scaleEntity();
+    clockSpawn.scaleHeight(2f);
+        return clockSpawn;
   }
 
   /**
