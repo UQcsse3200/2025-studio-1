@@ -44,7 +44,6 @@ public class WeaponsStatsComponent extends Component {
      * @param coolDown coolDown
      */
     public void setCoolDown(float coolDown) {
-//        this.coolDown = Math.max(0.2f, coolDown);
         if (coolDown < 0f) {
             this.coolDown = Math.max(0.2f, coolDown);
         } else {

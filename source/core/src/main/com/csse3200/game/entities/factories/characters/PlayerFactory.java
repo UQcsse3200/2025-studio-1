@@ -89,17 +89,15 @@ public class PlayerFactory {
               Entity equippedWeapon = inventory.getCurrentItem();
 
               if (equippedWeapon != null) {
-                // Create rapid fire effect and apply to the weapon entity
                 RapidFireConsumableConfig config = new RapidFireConsumableConfig();
                 for (Effect e : config.effects) {
                   if (e instanceof RapidFireEffect rapidFireEffect) {
-                    rapidFireEffect.apply(equippedWeapon); // Entity passed here
+                    player.getComponent(PowerupComponent.class).setEquippedWeapon(equippedWeapon);
                     player.getComponent(PowerupComponent.class).addEffect(rapidFireEffect);
                   }
                 }
               }
 
-              // Remove the powerup from the world
               entityRapidFirePowerup.dispose();
             }
           }

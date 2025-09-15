@@ -108,7 +108,7 @@ class MagazineComponentTest {
     void updateProperlyChangesReloadingStatus() {
 
         when(timeSource.getDeltaTime()).thenReturn(1f);
-        magazine.seTimeSinceLastReload(0f);
+        magazine.setTimeSinceLastReload(0f);
         Assert.assertTrue(magazine.reloading());
 
         magazine.update();
