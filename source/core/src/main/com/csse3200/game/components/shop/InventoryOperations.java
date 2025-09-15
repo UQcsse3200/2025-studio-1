@@ -11,19 +11,18 @@ import java.util.List;
  * Manages updating a player's inventory after an event (e.g., item purchase).
  */
 public class InventoryOperations {
-    private static final int FAILURE = -1;
 
     private InventoryOperations() {}
 
     public static int addOrStack(InventoryComponent inventory, Entity item,
                                  int amount, int maxStack) {
         if (inventory == null || item == null || amount <= 0 || maxStack <= 0) {
-            return FAILURE;
+            return PurchaseError.UNEXPECTED.getCode();
         }
 
         ItemComponent itemComponent = item.getComponent(ItemComponent.class);
         if (itemComponent == null) {
-            return FAILURE;
+            return PurchaseError.INVALID_ITEM.getCode();
         }
 
         int index = findIndexForItem(inventory, item);
@@ -32,12 +31,12 @@ public class InventoryOperations {
             Entity existing = inventory.getInventory().get(index);
             ItemComponent existingItemComponent = existing.getComponent(ItemComponent.class);
             if (existingItemComponent == null) {
-                return FAILURE;
+                return PurchaseError.INVALID_ITEM.getCode();
             }
 
             int currentQuantity = existingItemComponent.getCount();
             if  (currentQuantity + amount > maxStack) {
-                return FAILURE  ;
+                return PurchaseError.LIMIT_REACHED.getCode();
             }
             existingItemComponent.setCount(currentQuantity + amount);
             inventory.getEntity().getEvents()
@@ -45,15 +44,15 @@ public class InventoryOperations {
             return index;
         } else {  // Insert as a new slot
             if (inventory.isFull()) {
-                return FAILURE;
+                return PurchaseError.INVENTORY_FULL.getCode();
             }
             if (amount > maxStack) {
-                return FAILURE;
+                return PurchaseError.LIMIT_REACHED.getCode();
             }
             itemComponent.setCount(amount);
             boolean ok = inventory.addItem(item);
             if (!ok) {
-                return FAILURE;
+                return PurchaseError.UNEXPECTED.getCode();
             }
             return inventory.getInventory().indexOf(item);
         }
@@ -75,7 +74,7 @@ public class InventoryOperations {
                 return i;
             }
         }
-        return FAILURE;
+        return -1;
     }
 
 
