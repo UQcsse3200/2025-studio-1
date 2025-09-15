@@ -208,11 +208,11 @@ public class BossFactory {
         boss3.getComponent(TextureRenderComponent.class).scaleEntity();
         boss3.setScale(new Vector2(2f, 2f));
         PhysicsUtils.setScaledCollider(boss3, 1.2f, 0.6f);
-
         boss3.addComponent(new EnemyMudBallAttackComponent(
                 target, "boss3_attack_cpu", 1.2f, 0f, 11f, 3f));
         boss3.addComponent(new EnemyMudRingSprayComponent(
                 2.5f, 12, 6f, 3f));
+
 
         return boss3;
     }
