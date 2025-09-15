@@ -34,8 +34,39 @@ public class ElevatorGameArea extends GameArea {
   // Assets ensured via GenericLayout
 
   private void spawnBordersAndDoors() {
-    GenericLayout.addLeftRightDoorsAndWalls(this, cameraComponent, WALL_WIDTH,
-        this::loadOffice, this::loadResearch);
+    if (cameraComponent == null) return;
+    Bounds b = getCameraBounds(cameraComponent);
+
+    // Top wall only; leave bottom open so ground-level doors aren't blocked
+    addSolidWallTop(b, WALL_WIDTH);
+
+    // Left vertical door resting on ground level
+    float leftDoorHeight = Math.max(1f, b.viewHeight * 0.2f);
+    float leftDoorY = b.bottomY; // ground level
+    float leftTopSegHeight = Math.max(0f, b.topY - (leftDoorY + leftDoorHeight));
+    if (leftTopSegHeight > 0f) {
+      Entity leftTop = ObstacleFactory.createWall(WALL_WIDTH, leftTopSegHeight);
+      leftTop.setPosition(b.leftX, leftDoorY + leftDoorHeight);
+      spawnEntity(leftTop);
+    }
+    Entity leftDoor = ObstacleFactory.createDoorTrigger(WALL_WIDTH, leftDoorHeight);
+    leftDoor.setPosition(b.leftX + 0.001f, leftDoorY);
+    leftDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadOffice));
+    spawnEntity(leftDoor);
+
+    // Right vertical door resting on ground level
+    float rightDoorHeight = Math.max(1f, b.viewHeight * 0.2f);
+    float rightDoorY = b.bottomY; // ground level
+    float rightTopSegHeight = Math.max(0f, b.topY - (rightDoorY + rightDoorHeight));
+    if (rightTopSegHeight > 0f) {
+      Entity rightTop = ObstacleFactory.createWall(WALL_WIDTH, rightTopSegHeight);
+      rightTop.setPosition(b.rightX - WALL_WIDTH, rightDoorY + rightDoorHeight);
+      spawnEntity(rightTop);
+    }
+    Entity rightDoor = ObstacleFactory.createDoorTrigger(WALL_WIDTH, rightDoorHeight);
+    rightDoor.setPosition(b.rightX - WALL_WIDTH - 0.001f, rightDoorY);
+    rightDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadResearch));
+    spawnEntity(rightDoor);
   }
 
   private void spawnPlayer() {
