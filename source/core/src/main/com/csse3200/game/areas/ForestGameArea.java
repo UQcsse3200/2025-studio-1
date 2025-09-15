@@ -233,7 +233,7 @@ public class ForestGameArea extends GameArea {
     spawnComputerBench();
 //    spawnTrees();
     //spawnComputerBench();
-    spawnHealthBench();
+//    spawnHealthBench();
 
     player = spawnPlayer();
 
