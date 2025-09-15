@@ -87,6 +87,19 @@ public class BossFactory {
                 5,
                 0.25f
                 ));
+
+        int maxHp = robot.getComponent(CombatStatsComponent.class).getHealth();
+        int defenseHp = Math.round(maxHp * 0.30f);
+
+        robot
+                .addComponent(new com.csse3200.game.components.boss.DamageReductionComponent())
+                .addComponent(new com.csse3200.game.components.boss.BossDefenseComponent(
+                        20f,
+                        1.0f,
+                        defenseHp,
+                        false
+                ));
+
         robot.getComponent(AnimationRenderComponent.class).scaleEntity();
         Vector2 s = robot.getScale();
         float k = 2.0f;

@@ -1,6 +1,7 @@
 package com.csse3200.game.components;
 
 import com.csse3200.game.components.enemy.LowHealthAttackBuff;
+import com.csse3200.game.components.boss.DamageReductionComponent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -54,6 +55,7 @@ public class CombatStatsComponent extends Component {
   }
 
   public void takeDamage(int damage) {
+    damage = reduceIncomingDamage(damage);
     applyDamage(damage);
   }
 
@@ -131,5 +133,27 @@ public class CombatStatsComponent extends Component {
         return;
     }
     setHealth(this.health - damage);
+  }
+
+  /**
+   * pre-processing before health reduction: If the entity has {@link DamageReductionComponent} attached,
+   * reduce/avoid incoming damage according to its rules; otherwise return it as is
+   * @param damage initial damage value
+   * @return Damage value after processing
+   */
+  private int reduceIncomingDamage(int damage) {
+    if (damage <= 0) {
+      return damage;
+    }
+
+    if (entity == null) {
+      return damage;
+    }
+
+    DamageReductionComponent dr = entity.getComponent(DamageReductionComponent.class);
+    if (dr != null) {
+      damage = dr.apply(damage);
+    }
+    return damage;
   }
 }
