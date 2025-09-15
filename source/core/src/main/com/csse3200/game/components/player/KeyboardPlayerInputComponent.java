@@ -8,6 +8,7 @@ import com.csse3200.game.entities.Entity;
 import com.csse3200.game.components.ItemComponent;
 import com.csse3200.game.entities.configs.ItemTypes;
 import com.csse3200.game.input.InputComponent;
+import com.csse3200.game.rendering.TextureRenderComponent;
 import com.csse3200.game.utils.math.Vector2Utils;
 
 /**
@@ -283,6 +284,7 @@ public class KeyboardPlayerInputComponent extends InputComponent {
      */
     public void equipCurrentWeapon() {
         InventoryComponent inventory = entity.getComponent(InventoryComponent.class);
+        PlayerActions actions = entity.getComponent(PlayerActions.class);
         if (inventory == null) return;  //no inventory
 
         int selectedSlot = inventory.getSelectedSlot();
@@ -299,6 +301,8 @@ public class KeyboardPlayerInputComponent extends InputComponent {
         inventory.setCurrItem(weapon);
         entity.getEvents().trigger("focusItem", selectedSlot);  // Refresh UI & logic
         System.out.println("Equipped weapon from slot " + selectedSlot);
+
+        actions.equipWeapon(weapon);
     }
 
     /**
@@ -306,12 +310,15 @@ public class KeyboardPlayerInputComponent extends InputComponent {
      */
     public void unequipCurrentWeapon(){
         InventoryComponent inventory = entity.getComponent(InventoryComponent.class);
+        PlayerActions actions = entity.getComponent(PlayerActions.class);
         if (inventory == null) return;
 
         inventory.setEquippedSlot(-1);
         inventory.setCurrItem(null);
         entity.getEvents().trigger("focus item", -1);
         System.out.println("Unequipped weapon");
+
+        actions.unequipWeapon();
     }
 }
 
