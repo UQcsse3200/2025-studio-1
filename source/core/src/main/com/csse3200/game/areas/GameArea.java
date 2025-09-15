@@ -3,6 +3,8 @@ package com.csse3200.game.areas;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
@@ -10,6 +12,7 @@ import com.badlogic.gdx.utils.Disposable;
 import com.csse3200.game.areas.terrain.TerrainComponent;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.components.CameraComponent;
+import com.csse3200.game.components.DoorComponent;
 import com.csse3200.game.components.WeaponsStatsComponent;
 import com.csse3200.game.components.enemy.EnemyWaves;
 import com.csse3200.game.entities.Entity;
@@ -17,12 +20,16 @@ import com.csse3200.game.entities.factories.ProjectileFactory;
 import com.csse3200.game.entities.factories.characters.NPCFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.physics.components.PhysicsProjectileComponent;
+import com.csse3200.game.rendering.SolidColorRenderComponent;
+import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
-import com.csse3200.game.utils.math.RandomUtils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.function.Supplier;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Represents an area in the game, such as a level, indoor area, etc. An area has a terrain and
@@ -58,16 +65,16 @@ public abstract class GameArea implements Disposable {
 
   /** Attempt to start a room transition. Returns false if one is already in progress. */
   protected boolean beginTransition() {
-    if (isTransitioning || com.csse3200.game.services.ServiceLocator.isTransitioning()) return false;
+    if (isTransitioning || ServiceLocator.isTransitioning()) return false;
     isTransitioning = true;
-    com.csse3200.game.services.ServiceLocator.setTransitioning(true);
+    ServiceLocator.setTransitioning(true);
     return true;
   }
 
   /** Mark the end of a room transition. */
   protected void endTransition() {
     isTransitioning = false;
-    com.csse3200.game.services.ServiceLocator.setTransitioning(false);
+    ServiceLocator.setTransitioning(false);
   }
 
   /**
@@ -77,7 +84,7 @@ public abstract class GameArea implements Disposable {
    */
   public void spawnEntity(Entity entity) {
     areaEntities.add(entity);
-    if (com.csse3200.game.services.ServiceLocator.isTransitioning()) {
+    if (ServiceLocator.isTransitioning()) {
       Gdx.app.postRunnable(() -> ServiceLocator.getEntityService().register(entity));
     } else {
       ServiceLocator.getEntityService().register(entity);
@@ -109,7 +116,7 @@ public abstract class GameArea implements Disposable {
   public int getRoomNumber() { // changed from protected to public for EnemyWaves access
     String name = getClass().getSimpleName();
     // Look for digits after Floor or Room (e.g., Floor3GameArea, Room2Area)
-    java.util.regex.Matcher m = java.util.regex.Pattern.compile("(?:Floor|Room)(\\d+)").matcher(name);
+    Matcher m = Pattern.compile("(?:Floor|Room)(\\d+)").matcher(name);
     if (m.find()) {
       try { return Integer.parseInt(m.group(1)); } catch (NumberFormatException ignored) {}
     }
@@ -145,10 +152,13 @@ public abstract class GameArea implements Disposable {
    * @param scaleFactor The scale of increase in difficulty of the GhostGPT
    */
   public void spawnGhostGPT(int total, float scaleFactor, Entity player) {
-    for (int i = 0; i < total; i++) {;
-      Entity ghostGPT = NPCFactory.createGhostGPT(player, this, scaleFactor);
-      spawnEntityAt(ghostGPT, new GridPoint2(8, 11), true, false);
-    }
+      HashMap<String, ArrayList<Vector2>> positions = getEnemySpawnPosition(3);
+      ArrayList<Vector2> spawnPositions = positions.get("GhostGpt");
+      for (Vector2 pos : spawnPositions) {
+          Entity ghostGpt = NPCFactory.createGhostGPT(player, this, scaleFactor);
+          ghostGpt.setPosition(pos);
+          spawnEntity(ghostGpt);
+      }
   }
 
   /**
@@ -157,14 +167,13 @@ public abstract class GameArea implements Disposable {
    * @param scaleFactor The scale of increase in difficulty of the DeepSpin
    */
   public void spawnDeepspin(int total, float scaleFactor, Entity player) {
-    GridPoint2 minPos = new GridPoint2(0, 0);
-    GridPoint2 maxPos = terrain.getMapBounds(0).sub(3, 3);
-
-    for (int i = 0; i < total; i++) {
-      GridPoint2 randomPos = RandomUtils.random(minPos, maxPos);
-      Entity deepspin = NPCFactory.createDeepspin(player, this, scaleFactor);
-      spawnEntityAt(deepspin, randomPos, true, true);
-    }
+      HashMap<String, ArrayList<Vector2>> positions = getEnemySpawnPosition(getRoomNumber());
+      ArrayList<Vector2> spawnPositions = positions.get("Deepspin");
+      for (Vector2 pos : spawnPositions) {
+          Entity deepSpin = NPCFactory.createDeepspin(player, this, scaleFactor);
+          deepSpin.setPosition(pos);
+          spawnEntity(deepSpin);
+      }
   }
 
   /**
@@ -173,14 +182,13 @@ public abstract class GameArea implements Disposable {
    * @param scaleFactor The scale of increase in difficulty of the GrokDroid
    */
   public void spawnGrokDroid(int total, float scaleFactor, Entity player) {
-    GridPoint2 minPos = new GridPoint2(0, 0);
-    GridPoint2 maxPos = terrain.getMapBounds(0).sub(3, 3);
-
-    for (int i = 0; i < total; i++) {
-      GridPoint2 randomPos = RandomUtils.random(minPos, maxPos);
-      Entity grokDroid = NPCFactory.createGrokDroid(player, this, scaleFactor);
-      spawnEntityAt(grokDroid, randomPos, true, true);
-    }
+      HashMap<String, ArrayList<Vector2>> positions = getEnemySpawnPosition(getRoomNumber());
+      ArrayList<Vector2> spawnPositions = positions.get("GrokDroid");
+      for (Vector2 pos : spawnPositions) {
+          Entity grokDroid = NPCFactory.createGrokDroid(player, this, scaleFactor);
+          grokDroid.setPosition(pos);
+          spawnEntity(grokDroid);
+      }
   }
 
   /**
@@ -189,13 +197,21 @@ public abstract class GameArea implements Disposable {
    * @param scaleFactor The scale of increase in difficulty of the Vroomba
    */
   public void spawnVroomba(int total, float scaleFactor, Entity player) {
-    Entity vroomba1 = NPCFactory.createVroomba(player, scaleFactor);
-    Entity vroomba2 = NPCFactory.createVroomba(player, scaleFactor);
-    spawnEntityAt(vroomba1, new GridPoint2(16, 5), true, false);
-    spawnEntityAt(vroomba2, new GridPoint2(8, 5),  true, false);
+      HashMap<String, ArrayList<Vector2>> positions = getEnemySpawnPosition(3);
+      ArrayList<Vector2> spawnPositions = positions.get("Vroomba");
+      for (Vector2 pos : spawnPositions) {
+          Entity vroomba = NPCFactory.createVroomba(player, scaleFactor);
+          vroomba.setPosition(pos);
+          spawnEntity(vroomba);
+      }
   }
 
-  // Enemy Projectiles
+  /**
+   * Spawns projectiles from enemies.
+   * @param directionToFire The direction in which the projectile is to be fired.
+   * @param source The entity that the projectile is coming from.
+   * @return The spawned projectile {@link Entity}
+   */
   public Entity spawnEnemyProjectile(Vector2 directionToFire, WeaponsStatsComponent source) {
     Entity laser = ProjectileFactory.createEnemyProjectile(directionToFire, source);
     spawnEntityAt(laser, new GridPoint2(0, 0), true, true);
@@ -203,6 +219,78 @@ public abstract class GameArea implements Disposable {
     int projectileSpeed = 5; // Should be abstracted from WeaponsStatsComponent in future implementation
     laserPhysics.fire(directionToFire, projectileSpeed);
     return laser;
+  }
+
+  protected HashMap<String, ArrayList<Vector2>> getEnemySpawnPosition(int roomNumber) {
+      HashMap<String, ArrayList<Vector2>> postions = new HashMap<>();
+      ArrayList<Vector2> respectiveSpawns = new ArrayList<>();
+      switch (roomNumber) {
+          case 1:
+              respectiveSpawns.add(new Vector2(2.5f, 11f));
+              respectiveSpawns.add(new Vector2(5.4f, 11f));
+              respectiveSpawns.add(new Vector2(8.2f, 11f));
+              respectiveSpawns.add(new Vector2(11.1f, 10f));
+              postions.put("Deepspin", (ArrayList<Vector2>) respectiveSpawns.clone());
+              break;
+          case 2:
+              respectiveSpawns.add(new Vector2(2.7f, 8f));
+              respectiveSpawns.add(new Vector2(5.6f, 10f));
+              postions.put("Vroomba", (ArrayList<Vector2>) respectiveSpawns.clone());
+              respectiveSpawns.clear();
+              respectiveSpawns.add(new Vector2(8.2f, 11f));
+              respectiveSpawns.add(new Vector2(11.1f, 10f));
+              postions.put("Deepspin", (ArrayList<Vector2>) respectiveSpawns.clone());
+              break;
+          case 3:
+              respectiveSpawns.add(new Vector2(10f, 4f));
+              postions.put("GhostGpt", (ArrayList<Vector2>) respectiveSpawns.clone());
+              respectiveSpawns.clear();
+              respectiveSpawns.add(new Vector2(8.4f, 10f));
+              respectiveSpawns.add(new Vector2(11.3f, 8f));
+              postions.put("Vroomba", (ArrayList<Vector2>) respectiveSpawns.clone());
+              break;
+          case 4:
+              respectiveSpawns.add(new Vector2(2.7f, 8f));
+              respectiveSpawns.add(new Vector2(5.6f, 10f));
+              postions.put("GhostGpt", (ArrayList<Vector2>) respectiveSpawns.clone());
+              respectiveSpawns.clear();
+              respectiveSpawns.add(new Vector2(8.2f, 11f));
+              respectiveSpawns.add(new Vector2(11.1f, 10f));
+              postions.put("Deepspin", (ArrayList<Vector2>) respectiveSpawns.clone());
+              break;
+          case 5:
+              respectiveSpawns.add(new Vector2(2.7f, 8f));
+              postions.put("GhostGpt", (ArrayList<Vector2>) respectiveSpawns.clone());
+              respectiveSpawns.clear();
+              respectiveSpawns.add(new Vector2(5.6f, 10f));
+              postions.put("Vroomba", (ArrayList<Vector2>) respectiveSpawns.clone());
+              respectiveSpawns.clear();
+              respectiveSpawns.add(new Vector2(8.2f, 11f));
+              respectiveSpawns.add(new Vector2(11.1f, 10f));
+              postions.put("Deepspin", (ArrayList<Vector2>) respectiveSpawns.clone());
+              break;
+          case 6:
+              respectiveSpawns.add(new Vector2(13f, 4f));
+              respectiveSpawns.add(new Vector2(10f, 4f));
+              postions.put("GhostGpt", (ArrayList<Vector2>) respectiveSpawns.clone());
+              respectiveSpawns.clear();
+              respectiveSpawns.add(new Vector2(8.4f, 10f));
+              respectiveSpawns.add(new Vector2(11.3f, 8f));
+              postions.put("GrokDroid", (ArrayList<Vector2>) respectiveSpawns.clone());
+              break;
+          case 7:
+              respectiveSpawns.add(new Vector2(13f, 4f));
+              respectiveSpawns.add(new Vector2(10f, 4f));
+              respectiveSpawns.add(new Vector2(2.7f, 8f));
+              postions.put("GhostGpt", (ArrayList<Vector2>) respectiveSpawns.clone());
+              respectiveSpawns.clear();
+              respectiveSpawns.add(new Vector2(8.4f, 10f));
+              respectiveSpawns.add(new Vector2(11.3f, 8f));
+              postions.put("GrokDroid", (ArrayList<Vector2>) respectiveSpawns.clone());
+              break;
+          default: throw new IllegalStateException("Unexpected room number: " + roomNumber);
+      }
+      return postions;
   }
 
   /**
@@ -255,10 +343,10 @@ public abstract class GameArea implements Disposable {
 
   /** Convenience to load textures if not already loaded. */
   protected void ensureTextures(String[] texturePaths) {
-    com.csse3200.game.services.ResourceService rs = ServiceLocator.getResourceService();
-    java.util.List<String> toLoad = new java.util.ArrayList<>();
+    ResourceService rs = ServiceLocator.getResourceService();
+    List<String> toLoad = new ArrayList<>();
     for (String path : texturePaths) {
-      if (!rs.containsAsset(path, com.badlogic.gdx.graphics.Texture.class)) {
+      if (!rs.containsAsset(path, Texture.class)) {
         toLoad.add(path);
       }
     }
@@ -270,8 +358,8 @@ public abstract class GameArea implements Disposable {
 
   /** Ensure the common player atlas is available. */
   protected void ensurePlayerAtlas() {
-    com.csse3200.game.services.ResourceService rs = ServiceLocator.getResourceService();
-    if (!rs.containsAsset("images/player.atlas", com.badlogic.gdx.graphics.g2d.TextureAtlas.class)) {
+    ResourceService rs = ServiceLocator.getResourceService();
+    if (!rs.containsAsset("images/player.atlas", TextureAtlas.class)) {
       rs.loadTextureAtlases(new String[] {"images/player.atlas"});
       rs.loadAll();
     }
@@ -279,7 +367,7 @@ public abstract class GameArea implements Disposable {
 
   /** Unload a set of assets if loaded. */
   protected void unloadAssets(String[] assetPaths) {
-    com.csse3200.game.services.ResourceService rs = ServiceLocator.getResourceService();
+    ResourceService rs = ServiceLocator.getResourceService();
     rs.unloadAssets(assetPaths);
   }
 
@@ -293,7 +381,7 @@ public abstract class GameArea implements Disposable {
       Entity overlay = new Entity();
       overlay.setScale(1000f, 1000f);
       overlay.setPosition(-500f, -500f);
-      overlay.addComponent(new com.csse3200.game.rendering.SolidColorRenderComponent(overlayColor));
+      overlay.addComponent(new SolidColorRenderComponent(overlayColor));
       spawnEntity(overlay);
     }
   }
@@ -309,7 +397,7 @@ public abstract class GameArea implements Disposable {
     }
   }
 
-  protected Bounds getCameraBounds(com.csse3200.game.components.CameraComponent cameraComponent) {
+  protected Bounds getCameraBounds(CameraComponent cameraComponent) {
     OrthographicCamera cam = (OrthographicCamera) cameraComponent.getCamera();
     Vector2 camPos = cameraComponent.getEntity().getPosition();
     float viewWidth = cam.viewportWidth;
@@ -361,7 +449,7 @@ public abstract class GameArea implements Disposable {
     }
     Entity door = ObstacleFactory.createDoorTrigger(wallWidth, doorHeight);
     door.setPosition(b.leftX + 0.001f, doorY);
-    door.addComponent(new com.csse3200.game.components.DoorComponent(onEnter));
+    door.addComponent(new DoorComponent(onEnter));
     spawnEntity(door);
   }
 
@@ -383,7 +471,7 @@ public abstract class GameArea implements Disposable {
     }
     Entity door = ObstacleFactory.createDoorTrigger(wallWidth, doorHeight);
     door.setPosition(b.rightX - wallWidth - 0.001f, doorY);
-    door.addComponent(new com.csse3200.game.components.DoorComponent(onEnter));
+    door.addComponent(new DoorComponent(onEnter));
     spawnEntity(door);
   }
 
@@ -406,7 +494,7 @@ public abstract class GameArea implements Disposable {
     }
     Entity door = ObstacleFactory.createDoorTrigger(doorWidth, wallWidth);
     door.setPosition(doorX, b.topY - wallWidth + 0.001f);
-    door.addComponent(new com.csse3200.game.components.DoorComponent(onEnter));
+    door.addComponent(new DoorComponent(onEnter));
     spawnEntity(door);
   }
 
@@ -429,7 +517,7 @@ public abstract class GameArea implements Disposable {
     }
     Entity door = ObstacleFactory.createDoorTrigger(doorWidth, wallWidth);
     door.setPosition(doorX, b.bottomY + 0.001f);
-    door.addComponent(new com.csse3200.game.components.DoorComponent(onEnter));
+    door.addComponent(new DoorComponent(onEnter));
     spawnEntity(door);
   }
 
@@ -461,7 +549,7 @@ public abstract class GameArea implements Disposable {
       Gdx.app.postRunnable(() -> {
         try {
           GameArea next = nextAreaSupplier.get();
-          com.csse3200.game.services.ServiceLocator.registerGameArea(next);
+          ServiceLocator.registerGameArea(next);
           next.create();
         } finally {
           endTransition();
