@@ -140,6 +140,8 @@ public class AnimationRenderComponent extends RenderComponent {
       return;
     }
 
+    stopIfDone = false;
+    nextAnimationName = null;
     currentAnimation = animation;
     currentAnimationName = name;
     animationPlayTime = 0f;
