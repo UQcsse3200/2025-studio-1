@@ -14,6 +14,7 @@ import com.csse3200.game.components.shop.CatalogService;
 import com.csse3200.game.components.shop.PurchaseError;
 import com.csse3200.game.components.shop.ShopManager;
 import com.csse3200.game.areas.ForestGameArea;
+import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.*;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 
@@ -217,6 +218,7 @@ public class ShopScreenDisplay extends UIComponent {
     }
 
     public void show() {
+        ServiceLocator.getTimeSource().setPaused(true);
         refreshCatalog();
         updateCurrencyLabel();
         if (background != null) {
@@ -235,6 +237,7 @@ public class ShopScreenDisplay extends UIComponent {
     }
 
     public void hide() {
+        ServiceLocator.getTimeSource().setPaused(false);
         if (background != null) {
             background.setVisible(false);
         }
