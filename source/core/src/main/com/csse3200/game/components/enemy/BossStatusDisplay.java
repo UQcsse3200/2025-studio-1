@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Minimal Boss health bar - just displays a red bar in top-right corner
+ * Boss health bar
  */
 public class BossStatusDisplay extends Component {
 
@@ -70,6 +70,12 @@ public class BossStatusDisplay extends Component {
             float healthPercentage = (float) health / maxHealth;
             System.out.println("[BOSS UI] Health updated: " + health + "/" + maxHealth +
                     " (" + (int)(healthPercentage * 100) + "%)");
+            // Change color to red when health drops to 50% or below
+            if (healthPercentage <= 0.5f) {
+                setHealthBarColor(Color.RED);
+            } else {
+                setHealthBarColor(COLOR_HEALTH);
+            }
         }
     }
 
