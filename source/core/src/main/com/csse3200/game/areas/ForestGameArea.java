@@ -240,7 +240,7 @@ public class ForestGameArea extends GameArea {
     // this.equipItem(lightsaber);
     // this.equipItem(dagger);
     this.equipItem(rifle);
-    this.equipItem(ConsumableFactory.createConsumable(Consumables.GENERIC_HEAL_ITEM));
+//    this.equipItem(ConsumableFactory.createConsumable(Consumables.GENERIC_HEAL_ITEM));
 
     spawnFloor();
     spawnPad();
