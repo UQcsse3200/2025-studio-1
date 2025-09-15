@@ -3,11 +3,13 @@ package com.csse3200.game.components.player;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.components.ItemComponent;
 import com.csse3200.game.entities.configs.ItemTypes;
 import com.csse3200.game.input.InputComponent;
+import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.utils.math.Vector2Utils;
 
 /**
@@ -17,7 +19,7 @@ import com.csse3200.game.utils.math.Vector2Utils;
 public class KeyboardPlayerInputComponent extends InputComponent {
   private final Vector2 walkDirection = Vector2.Zero.cpy();
 
-  private int focusedItem = 0;
+  private int focusedItem = -1;
 
   private long timeSinceKeyPress = 0;
   private int doublePressKeyCode = -1;
@@ -33,7 +35,7 @@ public class KeyboardPlayerInputComponent extends InputComponent {
    * @see InputProcessor#keyDown(int)
    */
   @Override
-  public boolean keyDown(int keycode) {
+  public boolean keyPressed(int keycode) {
     switch (keycode) {
       case Keys.A:
         walkDirection.add(Vector2Utils.LEFT);
@@ -57,6 +59,9 @@ public class KeyboardPlayerInputComponent extends InputComponent {
 
       case Keys.SPACE:
         triggerJumpEvent();
+        Sound jump = ServiceLocator.getResourceService().getAsset("sounds/jump.mp3", Sound.class);
+        jump.play();
+        entity.getEvents().trigger("anim");
         return true;
 
       default:
@@ -88,8 +93,7 @@ public class KeyboardPlayerInputComponent extends InputComponent {
       ItemComponent itemInfo = item.getComponent(ItemComponent.class);
       if (itemInfo.getType() == ItemTypes.RANGED) {
         entity.getEvents().trigger("shoot");
-
-      } else if (itemInfo.getType() == ItemTypes.MELEE) {
+      } else {
         entity.getEvents().trigger("attack");
       }
       return true;
@@ -104,7 +108,7 @@ public class KeyboardPlayerInputComponent extends InputComponent {
    * @see InputProcessor#keyUp(int)
    */
   @Override
-  public boolean keyUp(int keycode) {
+  public boolean keyReleased(int keycode) {
     switch (keycode) {
       case Keys.A:
         walkDirection.sub(Vector2Utils.LEFT);
@@ -122,9 +126,6 @@ public class KeyboardPlayerInputComponent extends InputComponent {
 
       case Keys.S:
         triggerStopCrouchingEvent();
-        return true;
-      case Keys.Q:
-        triggerRemoveItem();
         return true;
       case Keys.NUM_1:
         focusedItem = 0;
@@ -148,6 +149,7 @@ public class KeyboardPlayerInputComponent extends InputComponent {
         return true;
       case Keys.E:
         triggerAddItem();
+        triggerInteract();
         return true;
       case Keys.R:
         triggerDropFocused();
@@ -244,16 +246,10 @@ public class KeyboardPlayerInputComponent extends InputComponent {
     entity.getEvents().trigger("jumpAttempt");
   }
 
-   /** Triggers an inventory removal request for the currently focused slot. */
-  private void triggerRemoveItem() {
-    entity.getEvents().trigger("remove item", focusedItem);
-  }
-
   /** Triggers an item pickup request. */
   private void triggerAddItem() {
     System.out.println("Pick up event triggered");
     entity.getEvents().trigger("pick up");
-
   }
 
   /** Triggers a change in the currently focused inventory slot. */
@@ -265,5 +261,11 @@ public class KeyboardPlayerInputComponent extends InputComponent {
   private void triggerDropFocused() {
     entity.getEvents().trigger("drop focused");
   }
+
+  /** Triggers an interact request */
+  private void triggerInteract() {
+    entity.getEvents().trigger("interact");
+  }
+
 }
 
