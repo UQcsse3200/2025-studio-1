@@ -32,6 +32,7 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.components.boss.CocoonSpawnerComponent;
 import com.csse3200.game.components.boss.IndividualCocoonComponent;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 
 /**
@@ -198,7 +199,7 @@ public class BossFactory {
                 .addComponent(new PhysicsComponent())
                 .addComponent(new ColliderComponent())
                 .addComponent(new HitboxComponent().setLayer(PhysicsLayer.NPC))
-                .addComponent(new CombatStatsComponent(1000))
+                .addComponent(new CombatStatsComponent(500))
                 .addComponent(new WeaponsStatsComponent(config.baseAttack))
                 .addComponent(new EnemyDeathRewardComponent(100, playerInventory))
                 .addComponent(new BossDeathComponent())
@@ -208,11 +209,31 @@ public class BossFactory {
         boss3.getComponent(TextureRenderComponent.class).scaleEntity();
         boss3.setScale(new Vector2(2f, 2f));
         PhysicsUtils.setScaledCollider(boss3, 1.2f, 0.6f);
+
+        TextureAtlas phaseAtlas = ServiceLocator.getResourceService()
+                .getAsset("images/boss3_phase2.atlas", TextureAtlas.class);
+        AnimationRenderComponent phaseArc = new AnimationRenderComponent(phaseAtlas);
+        phaseArc.setDisposeAtlas(false);
+        phaseArc.addAnimation("phase1", 0.08f, Animation.PlayMode.LOOP);
+        phaseArc.addAnimation("phase2", 0.08f, Animation.PlayMode.LOOP);
+        phaseArc.addAnimation("phase3", 0.08f, Animation.PlayMode.LOOP);
+        phaseArc.setEnabled(false);             // <- keep hidden until 50%
+        boss3.addComponent(phaseArc);
+
         boss3.addComponent(new EnemyMudBallAttackComponent(
                 target, "boss3_attack_cpu", 1.2f, 0f, 11f, 3f));
         boss3.addComponent(new EnemyMudRingSprayComponent(
                 2.5f, 12, 6f, 3f));
 
+        // Add phased animator: keep static until 50%, then play animations at 50/40/25
+        boss3.addComponent(
+                new com.csse3200.game.components.boss.Boss3HealthPhaseSwitcher(
+                        "images/boss3_phase2.atlas", 0.08f
+                )
+                        .addPhase(0.50f, "phase1")
+                        .addPhase(0.40f, "phase2")
+                        .addPhase(0.25f, "phase3")
+        );
 
         return boss3;
     }
