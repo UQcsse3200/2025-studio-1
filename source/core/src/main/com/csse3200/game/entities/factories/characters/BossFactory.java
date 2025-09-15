@@ -30,6 +30,8 @@ import com.csse3200.game.components.player.BossStatusDisplay;
 import com.csse3200.game.components.WeaponsStatsComponent;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.math.Vector2;
+import com.csse3200.game.components.boss.CocoonSpawnerComponent;
+import com.csse3200.game.components.boss.IndividualCocoonComponent;
 
 
 /**
@@ -99,6 +101,25 @@ public class BossFactory {
                         defenseHp,
                         false
                 ));
+
+        // Replace original defense component with new cocoon defense component
+        Vector2[] cocoonPositions = getDefaultCocoonPositions();
+        robot.addComponent(new CocoonSpawnerComponent(0.30f, cocoonPositions));
+
+        // Add defense animation listeners
+        robot.getEvents().addListener("startDefenseMode", () -> {
+            AnimationRenderComponent anim = robot.getComponent(AnimationRenderComponent.class);
+            if (anim != null && anim.hasAnimation("defense")) {
+                anim.startAnimation("defense");
+            }
+        });
+
+        robot.getEvents().addListener("endDefenseMode", () -> {
+            AnimationRenderComponent anim = robot.getComponent(AnimationRenderComponent.class);
+            if (anim != null) {
+                anim.startAnimation("Idle");
+            }
+        });
 
         robot.getComponent(AnimationRenderComponent.class).scaleEntity();
         Vector2 s = robot.getScale();
@@ -311,7 +332,6 @@ public class BossFactory {
         arc.addAnimation("idle",   0.10f, Animation.PlayMode.LOOP);
         arc.addAnimation("phase2", 0.08f, Animation.PlayMode.LOOP);
         boss.addComponent(arc);
-
         // 碰撞体缩放
         PhysicsUtils.setScaledCollider(boss, 0.9f, 0.4f);
 
@@ -321,5 +341,41 @@ public class BossFactory {
         return boss;
     }
 
+    /**
+     * Get default spawn positions for cocoons
+     * @return Array of cocoon spawn positions
+     */
+    public static Vector2[] getDefaultCocoonPositions() {
+        return new Vector2[] {
+                new Vector2(30f, 12f),   // Top left
+                new Vector2(8f, 7f),   // Top right
+                new Vector2(10f, 10f),   // Bottom left
+        };
+    }
+
+    /**
+     * Create Robot with cocoon spawning capability (enhanced version)
+     * @param target The player entity that the boss will chase and attack
+     * @return Enhanced Robot entity with cocoon spawning capability
+     */
+    public static Entity createRobotWithCocoons(Entity target) {
+        // Create original robot using existing method
+        Entity robot = createRobot(target);
+
+        // Add cocoon spawner component to existing robot
+        Vector2[] cocoonPositions = getDefaultCocoonPositions();
+        robot.addComponent(new CocoonSpawnerComponent(0.30f, cocoonPositions));
+
+        // Add event listeners for cocoon spawning
+        robot.getEvents().addListener("cocoonsSpawned", (Integer count) -> {
+            System.out.println("Boss defense activated! " + count + " cocoons spawned!");
+        });
+
+        robot.getEvents().addListener("allCocoonsDestroyed", () -> {
+            System.out.println("All cocoons destroyed! Boss defense can be overcome!");
+        });
+
+        return robot;
+    }
 
 }
