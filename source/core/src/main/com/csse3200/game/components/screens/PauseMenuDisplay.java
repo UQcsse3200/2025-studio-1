@@ -66,16 +66,16 @@ public class PauseMenuDisplay extends BaseScreenDisplay {
         addTitle(root, "Game Paused", 2.0f, Color.WHITE, 24f);
 
         // Buttons
-        TextButton resumeBtn   = new TextButton("Resume", style);
-        TextButton restartBtm = new TextButton("Restart", style);
-        TextButton mainBtn     = new TextButton("Main Menu", style);
-        TextButton saveBtn     = new TextButton("Save", style);
+//        TextButton resumeBtn   = new TextButton("Resume", style);
+//        TextButton restartBtm = new TextButton("Restart", style);
+//        TextButton mainBtn     = new TextButton("Main Menu", style);
+//        TextButton saveBtn     = new TextButton("Save", style);
 
         // Label text size
-        resumeBtn.getLabel().setFontScale(1.8f);
-        restartBtm.getLabel().setFontScale(1.8f);
-        mainBtn.getLabel().setFontScale(1.8f);
-        saveBtn.getLabel().setFontScale(1.8f);
+//        resumeBtn.getLabel().setFontScale(1.8f);
+//        restartBtm.getLabel().setFontScale(1.8f);
+//        mainBtn.getLabel().setFontScale(1.8f);
+//        saveBtn.getLabel().setFontScale(1.8f);
         logger.debug("Buttons created");
 
         Table panel = new Table();
@@ -83,7 +83,7 @@ public class PauseMenuDisplay extends BaseScreenDisplay {
         panel.add(button("Resume", 1.8f, () -> entity.getEvents().trigger("resume"))).row();
         panel.add(button("Restart", 1.8f, () -> game.setScreen(GdxGame.ScreenType.MAIN_GAME))).row();
         panel.add(button("Main Menu", 1.8f, this::backMainMenu)).row();
-        panel.add(saveBtn).row();
+        panel.add(button("save",1.8f, () -> entity.getEvents().trigger("save")) ).row();
 
         root.add(panel);
 
@@ -91,14 +91,6 @@ public class PauseMenuDisplay extends BaseScreenDisplay {
         stage.setKeyboardFocus(root);
         root.setTouchable(Touchable.enabled);
 
-
-        saveBtn.addListener(new ChangeListener() {
-            @Override public void changed(ChangeEvent event, Actor actor) {
-                logger.debug("save button clicked");
-                entity.getEvents().trigger("save");
-                game.setScreen(GdxGame.ScreenType.MAIN_MENU);
-            }
-        });
 
         final InputListener escOnce = new InputListener() {
             /** Prevents repeated ESC events (debounce). */
