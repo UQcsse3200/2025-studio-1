@@ -221,8 +221,8 @@ public class Entity {
     return this;
   }
 
-  public Array<Component> getComponents() {
-    return createdComponents;
+  public IntMap<Component> getComponents() {
+    return components;
   }
 
   public <T extends Component> boolean hasComponent(Class<T> type) {

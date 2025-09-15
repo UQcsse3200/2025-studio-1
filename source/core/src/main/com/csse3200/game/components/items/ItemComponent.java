@@ -54,13 +54,17 @@ public class ItemComponent extends Component {
      * the game
      * @return the count for the item
      */
-    public int getCount() {return this.count;}
+    public int getCount() {
+        return this.count;
+    }
 
     /**
      * setCount to set item_count at a given value
      * @param count sets the item count
      */
-    public void setCount(int count){this.count = count;}
+    public void setCount(int count) {
+        this.count = count;
+    }
 
     /**
      * Sets the texture path of the current item

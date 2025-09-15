@@ -21,7 +21,6 @@ public record CatalogEntry(
         Entity item,
         int price,
         boolean enabled,
-        boolean stackable,
         int maxStack,
         int bundleQuantity
 ) {
@@ -41,7 +40,7 @@ public record CatalogEntry(
      * @param bundleQuantity How many units of the item sold per purchase.
      */
     public CatalogEntry {
-        checkValidEntry(item, price, stackable, maxStack, bundleQuantity);
+        checkValidEntry(item, price, maxStack, bundleQuantity);
     }
 
     /**
@@ -56,7 +55,7 @@ public record CatalogEntry(
     }
 
     private void checkValidEntry(Entity item, int price,
-                                 boolean stackable, int maxStack,
+                                 int maxStack,
                                  int bundleQuantity) {
         if (item == null) {
             throw new IllegalArgumentException("itemKey cannot be null or blank");
@@ -70,7 +69,7 @@ public record CatalogEntry(
             throw new IllegalArgumentException("bundleQuantity cannot be negative");
         }
 
-        if (!stackable && maxStack < 1) {
+        if (maxStack < 1) {
             throw new IllegalArgumentException("maxStack cannot be negative for stackables");
         }
     }
