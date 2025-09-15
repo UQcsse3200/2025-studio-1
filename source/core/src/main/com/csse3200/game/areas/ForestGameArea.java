@@ -32,7 +32,6 @@ import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import com.csse3200.game.rendering.TextureRenderComponent;
-import com.csse3200.game.entities.factories.ShopFactory;
 import com.csse3200.game.components.shop.ShopManager;
 import com.csse3200.game.components.shop.CatalogService;
 import com.csse3200.game.components.shop.ShopDemo;
@@ -121,7 +120,12 @@ public class ForestGameArea extends GameArea {
     "images/ShipmentBoxLid.png",
     "images/ShipmentCrane.png",
     "images/Conveyor.png",
-  };
+    "images/ServerRoomBackground.png",
+    "images/ServerRoomBackgroundResize.png",
+    "foreg_sprites/furniture/ServerRack.png",
+    "foreg_sprites/furniture/ServerRack2.png",
+    "foreg_sprites/furniture/Vent.png",
+    };
 
   /** General prop textures (floors, tiles, etc.). */
   private static final String[] generalTextures = {
