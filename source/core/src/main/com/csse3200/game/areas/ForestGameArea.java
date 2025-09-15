@@ -25,7 +25,9 @@ import com.csse3200.game.entities.factories.items.ItemFactory;
 import com.csse3200.game.entities.factories.items.WeaponsFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.entities.factories.characters.PlayerFactory;
+import com.csse3200.game.entities.configs.ItemSpawnConfig;
 import com.csse3200.game.entities.factories.*;
+import com.csse3200.game.entities.spawner.ItemSpawner;
 import com.csse3200.game.physics.components.PhysicsProjectileComponent;
 import com.csse3200.game.utils.math.GridPoint2Utils;
 import com.csse3200.game.utils.math.RandomUtils;
@@ -110,7 +112,8 @@ public class ForestGameArea extends GameArea {
     "images/door.png",
     "images/player.png",
     "images/mud.png",
-    "images/heart.png"
+    "images/heart.png",
+    "images/computerBench.png"
   };
 
   /** General prop textures (floors, tiles, etc.). */
@@ -228,11 +231,16 @@ public class ForestGameArea extends GameArea {
 
   @Override
   public void create() {
+    ServiceLocator.registerGameArea(this);
+
     loadAssets();
 
     displayUI();
 
     spawnTerrain();
+//    spawnTrees();
+    spawnComputerBench();
+
     player = spawnPlayer();
 
     dagger = spawnDagger();
@@ -272,6 +280,9 @@ public class ForestGameArea extends GameArea {
     // spawnGrokDroid();
     // spawnVroomba();
     playMusic();
+
+    ItemSpawner itemSpawner = new ItemSpawner(this);
+    itemSpawner.spawnItems(ItemSpawnConfig.forestmap());
 
     // Place a keycard on the floor so the player can unlock the door
     float keycardX = 1f, keycardY = 15f;
@@ -417,6 +428,12 @@ public class ForestGameArea extends GameArea {
     spawnEntityAt(shop, new GridPoint2(12, 6), true, false);
   }
 
+  private void spawnComputerBench() {
+    Entity bench = InteractableStationFactory.createComputerBench();
+    spawnEntityAt(bench, new GridPoint2(10, 7), true, true);
+
+  }
+
   /**
    * Places a large door sprite at the bottom-right platform. The door uses a keycard gate:
    * when the player has key level 1, the door callback triggers and we load the next level.
@@ -493,6 +510,7 @@ public class ForestGameArea extends GameArea {
   private void equipItem(Entity item) {
     InventoryComponent inventory = this.player.getComponent(InventoryComponent.class);
     inventory.addItem(item);
+    inventory.setCurrItem(item);
     spawnEntityAt(item, PLAYER_SPAWN, true, true);
   }
 
@@ -665,6 +683,10 @@ public class ForestGameArea extends GameArea {
     GridPoint2 pos = new GridPoint2(25, 5);
     Entity vroomba = NPCFactory.createVroomba(player, this);
     spawnEntityAt(vroomba, pos, true, true);
+  }
+
+  public void spawnItem(Entity item, GridPoint2 position) {
+    spawnEntityAt(item, position, false, false);
   }
 
   private void playMusic() {
