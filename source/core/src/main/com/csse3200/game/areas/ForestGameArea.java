@@ -141,6 +141,18 @@ public class ForestGameArea extends GameArea {
     "foreg_sprites/general/Test.png"
   };
 
+  private static final String[] securityTextures = {
+    "images/SecurityBackground.png",
+    "foreg_sprites/general/ThinFloor3.png",
+    "foreg_sprites/Security/Monitor.png",
+    "foreg_sprites/Security/Platform.png",
+    "foreg_sprites/Security/RedLight.png",
+    "foreg_sprites/Security/SecuritySystem.png",
+    "foreg_sprites/futuristic/storage_crate_green2.png",
+    "foreg_sprites/futuristic/storage_crate_dark2.png",
+    "foreg_sprites/futuristic/SecurityCamera3.png"
+  };
+
   /** Spawn pad textures. */
   private static final String[] spawnPadTextures = {
     "foreg_sprites/spawn_pads/SpawnPadPurple.png",
@@ -635,6 +647,7 @@ public class ForestGameArea extends GameArea {
     resourceService.loadTextures(forestTextures);
     resourceService.loadTextures(spawnPadTextures);
     resourceService.loadTextures(officeTextures);
+    resourceService.loadTextures(securityTextures);
     resourceService.loadTextureAtlases(forestTextureAtlases);
     resourceService.loadSounds(playerSound1);
     resourceService.loadSounds(forestSounds);
@@ -663,6 +676,7 @@ public class ForestGameArea extends GameArea {
     resourceService.unloadAssets(forestMusic);
     resourceService.unloadAssets(spawnPadTextures);
     resourceService.unloadAssets(officeTextures);
+    resourceService.unloadAssets(securityTextures);
   }
 
   // Removed area-specific dispose to avoid double disposal during transitions
