@@ -153,7 +153,7 @@ public class AnimationRenderComponent extends RenderComponent {
    * @param currentName name of the animation to play.
    * @param nextName name of the animation to play after the current animation is done.
    */
-  public void playAnimationUntilDone(String currentName, String nextName) {
+  public void playAnimationOnce(String currentName, String nextName) {
     Animation<TextureRegion> animation = animations.getOrDefault(currentName, null);
     if (animation.getPlayMode() == PlayMode.LOOP) {
       logger.error(
