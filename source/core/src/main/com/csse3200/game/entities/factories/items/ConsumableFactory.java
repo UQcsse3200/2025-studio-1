@@ -24,6 +24,7 @@ public class ConsumableFactory {
         }
 
         consumable.getComponent(ItemComponent.class).setType(ItemTypes.CONSUMABLE);
+        consumable.create();
         return consumable;
     }
 
