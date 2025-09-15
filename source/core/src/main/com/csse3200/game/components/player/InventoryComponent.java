@@ -334,7 +334,16 @@ public class InventoryComponent extends Component {
      * setEquippedSlot(int slotIndex) equips the player with the weapon at slotIndex
      * @param slotIndex is the index of the slot from which the player wants to equip the weapon from
      */
-    public void setEquippedSlot(int slotIndex){this.equippedSlot = slotIndex;}
+    public void setEquippedSlot(int slotIndex){
+        InventoryComponent inventory = entity.getComponent(InventoryComponent.class);
+        if(inventory == null) return;
+
+        //set the selected slot
+        inventory.setSelectSlot(slotIndex);
+
+        //trigger the UI update and internal logic
+        entity.getEvents().trigger("focus item", slotIndex);
+    }
 
 
     /**
@@ -342,6 +351,4 @@ public class InventoryComponent extends Component {
      * @return the slot that is currently equipped
      */
     public int getEquippedSlot(){return this.equippedSlot;}
-
-
 }
