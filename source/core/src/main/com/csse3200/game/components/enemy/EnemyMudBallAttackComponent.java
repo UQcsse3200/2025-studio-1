@@ -132,7 +132,7 @@ public class EnemyMudBallAttackComponent extends Component {
                 .addComponent(new HitboxComponent().setLayer(PhysicsLayer.ENEMY_PROJECTILE))
                 .addComponent(new EnemyProjectileMovementComponent(velocity, life))
                 .addComponent(new CombatStatsComponent(1))
-                .addComponent(new WeaponsStatsComponent(dmg))
+                .addComponent(new WeaponsStatsComponent(dmg/3))
                 .addComponent(new TouchAttackComponent(PhysicsLayer.PLAYER, 0f));
 
         AnimationRenderComponent arc = new AnimationRenderComponent(atlas);
