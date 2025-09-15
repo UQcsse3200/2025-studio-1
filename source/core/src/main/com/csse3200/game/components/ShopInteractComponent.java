@@ -19,7 +19,7 @@ public class ShopInteractComponent extends InputComponent {
     }
 
     @Override
-    public boolean keyDown(int keycode) {
+    public boolean keyPressed(int keycode) {
         if (keycode != Input.Keys.NUM_0 && keycode != Input.Keys.NUMPAD_0) return false;
 
         Entity nearest = null;
@@ -41,6 +41,11 @@ public class ShopInteractComponent extends InputComponent {
             nearest.getEvents().trigger("interact");
             return true;
         }
+        return false;
+    }
+
+    @Override
+    protected boolean keyReleased(int keycode) {
         return false;
     }
 }
