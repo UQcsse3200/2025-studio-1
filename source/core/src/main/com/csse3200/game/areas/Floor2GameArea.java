@@ -41,11 +41,7 @@ public class Floor2GameArea extends GameArea {
     spawnplatform2();
     spawndesk_reception();
     spawncomic_stand();
-    float keycardX = 13f;
-    float keycardY = 10f;
-    Entity keycard = KeycardFactory.createKeycard(2);
-    keycard.setPosition(new Vector2(keycardX, keycardY));
-    spawnEntity(keycard);
+
 
     // UI label
     Entity ui = new Entity();
