@@ -23,7 +23,7 @@ public class MagazineComponent extends Component{
 
         this.maxAmmo = maxAmmo;
         this.currentAmmo = maxAmmo;
-        this.timeSinceLastReload = 1.69f;
+        this.timeSinceLastReload = 1.5f;
     }
 
     /**
