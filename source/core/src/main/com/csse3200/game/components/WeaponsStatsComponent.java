@@ -13,7 +13,7 @@ public class WeaponsStatsComponent extends Component {
 
     private static final Logger logger = LoggerFactory.getLogger(WeaponsStatsComponent.class);
 
-    private static final int DEFAULT_COOLDOWN = 0;
+    private static final float DEFAULT_COOLDOWN = 0.2f;
     private static final boolean DEFAULT_DISABLE_DAMAGE = false;
 
     /** Base attack damage used when this component attacks another. Non-negative */
@@ -44,7 +44,12 @@ public class WeaponsStatsComponent extends Component {
      * @param coolDown coolDown
      */
     public void setCoolDown(float coolDown) {
-        this.coolDown = Math.max(0, coolDown);
+//        this.coolDown = Math.max(0.2f, coolDown);
+        if (coolDown < 0f) {
+            this.coolDown = Math.max(0.2f, coolDown);
+        } else {
+            this.coolDown = coolDown;
+        }
     }
 
     /**

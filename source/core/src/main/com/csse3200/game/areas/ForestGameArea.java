@@ -518,7 +518,7 @@ public class ForestGameArea extends GameArea {
 
   private Entity spawnRapidFirePowerup() {
     Entity newRapidFirePowerup = PowerupsFactory.createRapidFire();
-    spawnEntityAt(newRapidFirePowerup, new GridPoint2(25, 20), true, true);
+    spawnEntityAt(newRapidFirePowerup, new GridPoint2(2, 40), true, true);
     return newRapidFirePowerup;
   }
 
