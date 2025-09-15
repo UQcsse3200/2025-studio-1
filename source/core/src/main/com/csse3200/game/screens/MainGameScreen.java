@@ -34,6 +34,8 @@ import com.badlogic.gdx.Input;
 import com.csse3200.game.GdxGame.ScreenType;
 import com.csse3200.game.components.CombatStatsComponent;
 
+import java.util.Optional;
+
 
 /**
  * The game screen containing the main game.

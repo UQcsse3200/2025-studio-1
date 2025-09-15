@@ -1,22 +1,22 @@
 package com.csse3200.game.services;
 
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.Json;
-import com.csse3200.game.areas.GameArea;
+import com.badlogic.gdx.utils.reflect.ClassReflection;
+import com.csse3200.game.areas.*;
 import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.components.ItemComponent;
 import com.csse3200.game.components.player.InventoryComponent;
-import com.csse3200.game.components.player.PlayerInventoryDisplay;
 import com.csse3200.game.components.player.PlayerStatsDisplay;
 import com.csse3200.game.entities.Entity;
-import com.csse3200.game.entities.factories.characters.PlayerFactory;
 import com.csse3200.game.files.FileLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
+
 
 /**
  * Minimal, self-contained Save/Load service with no external registries.
@@ -35,10 +35,16 @@ public class SaveLoadService {
     private String path;
     /** Save the current GameArea to local storage (saves/slotX.json). */
     public boolean save(String slot, GameArea gameArea) {
+        FileLoader.jsonSave.addClassTag("Forest", ForestGameArea.class);
+        FileLoader.jsonSave.addClassTag("Elevator", ElevatorGameArea.class);
+        FileLoader.jsonSave.addClassTag("Office", OfficeGameArea.class);
+        FileLoader.jsonSave.addClassTag("Floor5", Floor5GameArea.class);
+        FileLoader.jsonSave.addClassTag("Floor2", Floor2GameArea.class);
+        FileLoader.jsonSave.addClassTag("Tunnel", TunnelGameArea.class);
+
 
         PlayerInfo gs = new PlayerInfo();
         gs.areaId = gameArea.toString();
-
         for (Entity e : gameArea.getEntities()) {
             if (e.getComponent(PlayerStatsDisplay.class) != null) {
                 logger.info("Inventory component found: Player found.");
@@ -49,9 +55,7 @@ public class SaveLoadService {
                     if (inv.get(i).getComponent(ItemComponent.class) != null) {
                         ItemComponent item = inv.get(i).getComponent(ItemComponent.class);
                         //stores information on the item and easy to expand to increase information
-                        String info = item.getName() + '\n' +
-                                item.getDescription() + '\n' +
-                                inv.getTex(i);
+                        String info = inv.getTex(i);
                         gs.inventory.add(info);
                     }
                 }
@@ -69,24 +73,44 @@ public class SaveLoadService {
 
     /** Load a save file from local storage and rebuild the area + entities. */
     public static boolean load() {
-
+        FileLoader.jsonSave.addClassTag("Forest", ForestGameArea.class);
+        FileLoader.jsonSave.addClassTag("Elevator", ElevatorGameArea.class);
+        FileLoader.jsonSave.addClassTag("Office", OfficeGameArea.class);
+        FileLoader.jsonSave.addClassTag("Floor5", Floor5GameArea.class);
+        FileLoader.jsonSave.addClassTag("Floor2", Floor2GameArea.class);
+        FileLoader.jsonSave.addClassTag("Tunnel", TunnelGameArea.class);
         String filePath = "saves" + File.separator + "slides.json";
 
         PlayerInfo loadStats =
-                FileLoader.readClass(PlayerInfo.class, filePath,
+                FileLoader.readPlayer(PlayerInfo.class, filePath,
                 FileLoader.Location.LOCAL);
-        Entity loadPlayer = PlayerFactory.createPlayer();
-//        loadStats.areaId.
-//        loadPlayer.setPosition(loadStats.position);
-//        InventoryComponent loadInv = loadPlayer.getComponent(InventoryComponent.class);
-
-        if (loadStats == null) {
+        logger.info("area id retrieved");
+        FileLoader.jsonSave.getClass(loadStats.areaId);
+        GameArea areaLoad;
+        try {
+            areaLoad = (GameArea) ClassReflection.newInstance(FileLoader.jsonSave.getClass(loadStats.areaId));
+        } catch (Exception e) {
+            logger.error(e.getMessage());
             return false;
         }
+        logger.info(areaLoad.toString());
 
+//        InventoryComponent loadInventory = new InventoryComponent(0);
+//        ItemPickUpComponent loadIn = new ItemPickUpComponent(loadInventory);
+//        if (!loadStats.inventory.isEmpty()) {
+//            for (int i = 0; i < loadStats.inventory.size(); i++) {
+//                loadIn.createItemFromTexture(loadStats.inventory.get(i));
+//                loadInventory.addItem(
+//                        loadIn.createItemFromTexture(loadStats.inventory.get(i)));
+//            }
+//        }
+//        if (loadStats == null) {
+//            return false;
+//        }
+//        logger.info(String.valueOf(loadInventory));
         logger.info("successfully loaded");
-        return true;
-    }
+            return true;
+        }
 
     /** mock game state to store entities. */
     public static class PlayerInfo {
