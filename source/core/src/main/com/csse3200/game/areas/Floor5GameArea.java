@@ -15,6 +15,7 @@ public class Floor5GameArea extends GameArea {
   private static final float WALL_WIDTH = 0.1f;
   private static final GridPoint2 PLAYER_SPAWN = new GridPoint2(10, 10);
 
+
   public Floor5GameArea(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
     super(terrainFactory, cameraComponent);
   }
@@ -61,6 +62,11 @@ public class Floor5GameArea extends GameArea {
   private void spawnPlayer() {
     Entity player = PlayerFactory.createPlayer();
     spawnEntityAt(player, PLAYER_SPAWN, true, true);
+  }
+
+  public Entity getPlayer() {
+    //tempoary placeholder return null to stop errors
+    return null;
   }
 
   @Override

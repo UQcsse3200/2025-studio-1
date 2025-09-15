@@ -6,6 +6,7 @@ import com.badlogic.gdx.utils.Json;
 import com.csse3200.game.areas.GameArea;
 import com.csse3200.game.components.player.InventoryComponent;
 import com.csse3200.game.components.player.ItemPickUpComponent;
+import com.csse3200.game.entities.Entity;
 import com.csse3200.game.services.SaveLoadService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -159,7 +160,7 @@ public class FileLoader {
    * Reads Inventory component of a save file json
    * - currently a placeholder for refacotring end sprint 2 / into sprint 3
    */
-  public static void readInventory(List<String> inventory) {
+  public static InventoryComponent readInventory(List<String> inventory) {
     InventoryComponent loadInventory = new InventoryComponent(0);
     ItemPickUpComponent loadIn = new ItemPickUpComponent(loadInventory);
     if (!inventory.isEmpty()) {
@@ -169,6 +170,7 @@ public class FileLoader {
                 loadIn.createItemFromTexture(inventory.get(i)));
       }
     }
+    return loadInventory;
   }
 
   private static FileHandle getFileHandle(String filename, Location location) {

@@ -56,7 +56,7 @@ public class SaveLoadService {
     }
 
     /** Load a save file from local storage and rebuild the area + entities. */
-    public static boolean load() {
+    public static PlayerInfo load() {
         FileLoader.jsonSave.addClassTag("Forest", ForestGameArea.class);
         FileLoader.jsonSave.addClassTag("Elevator", ElevatorGameArea.class);
         FileLoader.jsonSave.addClassTag("Office", OfficeGameArea.class);
@@ -69,37 +69,17 @@ public class SaveLoadService {
                 FileLoader.readPlayer(PlayerInfo.class, filePath,
                 FileLoader.Location.LOCAL);
         logger.info("area id retrieved");
-        GameArea areaLoad;
+        return loadStats;
 
         // switch for all areas of the game
-        switch (loadStats.areaId){
-            case "Forest" -> areaLoad = ForestGameArea.load(loadStats);
-            case "Elevator" -> areaLoad = ElevatorGameArea.load(loadStats);
-            case "Office" -> areaLoad = OfficeGameArea.load(loadStats);
-            case "Floor5" -> areaLoad = Floor5GameArea.load(loadStats);
-            case "Floor2" -> areaLoad = Floor2GameArea.load(loadStats);
-            case "Tunnel" -> areaLoad = TunnelGameArea.load(loadStats);
-            case "Security" -> areaLoad = SecurityGameArea.load(loadStats);
-            case "Storage" -> areaLoad = StorageGameArea.load(loadStats);
-        }
 
 
-        InventoryComponent loadInventory = new InventoryComponent(0);
-        ItemPickUpComponent loadIn = new ItemPickUpComponent(loadInventory);
-        if (!loadStats.inventory.isEmpty()) {
-            for (int i = 0; i < loadStats.inventory.size(); i++) {
-                loadIn.createItemFromTexture(loadStats.inventory.get(i));
-                loadInventory.addItem(
-                        loadIn.createItemFromTexture(loadStats.inventory.get(i)));
-            }
-        }
 //        if (loadStats == null) {
 //            return false;
 //        }
 //        logger.info(String.valueOf(loadInventory));
-        logger.info("successfully loaded");
-            return true;
-        }
+
+    }
 
     /** mock game state to store entities. */
     public static class PlayerInfo {
