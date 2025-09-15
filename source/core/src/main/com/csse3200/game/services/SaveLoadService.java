@@ -13,22 +13,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
 
 /**
- * Minimal, self-contained Save/Load service with no external registries.
- * Usage:
- *   // at boot (MainGameScreen ctor)
- *   ServiceLocator.registerSaveLoadService(new SaveLoadService(ServiceLocator.getTimeSource()));
- *   // register areas you want to be loadable
- *   ServiceLocator.getSaveLoadService().registerArea("ForestGameArea",
- *       () -> new com.csse3200.game.areas.ForestGameArea(terrainFactory, renderer.getCamera()));
- *   // register prefabs (e.g., player)
- *   ServiceLocator.getSaveLoadService().registerPrefab("PLAYER",
- *       com.csse3200.game.entities.factories.characters.PlayerFactory::createPlayer);
+ * save load service that will extract all information about the current game state and will add it to save file to
+ * be loaded.
  */
 public class SaveLoadService {
     private static final Logger logger = LoggerFactory.getLogger(SaveLoadService.class);
@@ -46,21 +37,19 @@ public class SaveLoadService {
         PlayerInfo gs = new PlayerInfo();
         gs.areaId = gameArea.toString();
         for (Entity e : gameArea.getEntities()) {
-            if (e.getComponent(PlayerStatsDisplay.class) != null) {
+            if (e.getComponent(InventoryComponent.class) != null) {
                 logger.info("Inventory component found: Player found.");
                 CombatStatsComponent stat = e.getComponent(CombatStatsComponent.class);
                 InventoryComponent inv = e.getComponent(InventoryComponent.class);
                 gs.inventory = new ArrayList<>();
                 for (int i = 0; i < inv.getSize(); i++) {
                     if (inv.get(i).getComponent(ItemComponent.class) != null) {
-                        ItemComponent item = inv.get(i).getComponent(ItemComponent.class);
-                        //stores information on the item and easy to expand to increase information
-                        String info = inv.getTex(i);
-                        gs.inventory.add(info);
+                        gs.inventory.add(inv.getTex(i));
                     }
                 }
                 gs.Health = stat.getHealth();
                 gs.position.set(e.getPosition());
+                gs.ProcessNumber = inv.getProcessor();
             }
         }
         //add round number and stage info later when implemented
@@ -117,6 +106,7 @@ public class SaveLoadService {
         public String areaId;
         public List<String> inventory;
         public int Health;
+        public int ProcessNumber;
         public Vector2 position = new Vector2();
         public int RoundNumber;
     }
