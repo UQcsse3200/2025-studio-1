@@ -4,6 +4,8 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.math.Vector2;
+import com.csse3200.game.components.TagComponent;
+import com.csse3200.game.entities.factories.PowerupsFactory;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.components.ItemComponent;
 import com.csse3200.game.entities.configs.ItemTypes;
@@ -55,6 +57,9 @@ public class KeyboardPlayerInputComponent extends InputComponent {
         triggerSprintEvent();
         return true;
 
+      case Keys.Q:
+        triggerReloadEvent();
+        return true;
       case Keys.SPACE:
         triggerJumpEvent();
         return true;
@@ -122,7 +127,7 @@ public class KeyboardPlayerInputComponent extends InputComponent {
       case Keys.S:
         triggerStopCrouchingEvent();
         return true;
-      case Keys.Q:
+      case Keys.R:
         triggerRemoveItem();
         return true;
       case Keys.NUM_1:
@@ -145,11 +150,15 @@ public class KeyboardPlayerInputComponent extends InputComponent {
         focusedItem = 4;
         triggerSelectItem();
         return true;
+//      case Keys.NUM_6:
+//        PowerupsFactory.applyRapidFire(entity, 1f);
+//        return true;
+      case Keys.P:
       case Keys.E:
         triggerAddItem();
         triggerInteract();
         return true;
-      case Keys.R:
+      case Keys.C:
         triggerDropFocused();
         return true;
       default:
@@ -207,6 +216,11 @@ public class KeyboardPlayerInputComponent extends InputComponent {
     } else {
       entity.getEvents().trigger("walk", walkDirection);
     }
+  }
+
+  private void triggerReloadEvent() {
+
+    entity.getEvents().trigger("reload");
   }
 
   /**

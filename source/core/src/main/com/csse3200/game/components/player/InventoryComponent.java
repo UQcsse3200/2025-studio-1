@@ -251,4 +251,13 @@ public class InventoryComponent extends Component {
      return this.currItem;
   }
 
+  /**
+   * Gets the current item equipped by the player
+   *
+   * @return current item entity used by the player
+   */
+
+  public Entity getCurrentItem() {
+    return currItem != null ? currItem : null;
+  }
 }
