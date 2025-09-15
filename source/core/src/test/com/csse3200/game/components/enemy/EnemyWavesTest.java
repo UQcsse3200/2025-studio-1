@@ -278,4 +278,14 @@ public class EnemyWavesTest{
         Assertions.assertTrue(enemyWaves.getWaveEndTime() > 0);
         Assertions.assertTrue(enemyWaves.isCurrentWaveFinsihed());
     }
+
+    @Test
+    @DisplayName("Check that the correct room number is passed to spawnEnemies()")
+    void testDelegatesWithCorrectRoomNumber() {
+        when(gameArea.getRoomNumber()).thenReturn(3);
+
+        enemyWaves.startWave();
+
+        verify(gameArea).spawnEnemies(eq(3), anyInt(), anyFloat(), eq(player));
+    }
 }

@@ -82,7 +82,7 @@ public class EnemyWaves extends Component {
     //gameArea.spawnVroomba(baseVroombas, effectiveScale, player);
 
       // Change 3 to gameArea.getRoomNumber() once multiple rooms are working.
-      gameArea.spawnEnemies(3, baseEnemies, effectiveScale, player);
+      gameArea.spawnEnemies(gameArea.getRoomNumber(), baseEnemies, effectiveScale, player);
 
     waveNumber++;
     scalingFactor += 0.25f; // incremental per-wave multiplier
