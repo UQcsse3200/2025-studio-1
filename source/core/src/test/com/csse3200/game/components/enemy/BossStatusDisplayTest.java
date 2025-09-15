@@ -1,9 +1,10 @@
-package com.csse3200.game.components.player;
+package com.csse3200.game.components.enemy;
 
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar.ProgressBarStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 
+import com.csse3200.game.components.player.BossStatusDisplay;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;

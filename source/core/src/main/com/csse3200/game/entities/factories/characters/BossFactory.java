@@ -94,7 +94,7 @@ public class BossFactory {
         robot
                 .addComponent(new com.csse3200.game.components.boss.DamageReductionComponent())
                 .addComponent(new com.csse3200.game.components.boss.BossDefenseComponent(
-                        20f,
+                        10f,
                         1.0f,
                         defenseHp,
                         false
