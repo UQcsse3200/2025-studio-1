@@ -16,6 +16,10 @@ public class ShopManager extends Component {
         this.catalog = catalog;
     }
 
+    public CatalogService getCatalog() {
+        return catalog;
+    }
+
 
     public PurchaseResult purchase(Entity player, CatalogEntry item, int amount) {
         InventoryComponent inventory = player.getComponent(InventoryComponent.class);
@@ -40,7 +44,7 @@ public class ShopManager extends Component {
 
         // Add item to Inventory
         int idx = InventoryOperations.addOrStack(inventory, item.getItem(), amount,
-                entry.stackable(), entry.maxStack());
+                entry.maxStack());
         if (idx < 0) {
             return fail(player, item, PurchaseError.INVENTORY_FULL);
         }
@@ -52,9 +56,6 @@ public class ShopManager extends Component {
         return PurchaseResult.ok(item, 1);
     }
 
-    public CatalogService getCatalog() {
-        return catalog;
-    }
 
     private PurchaseResult fail(Entity player, CatalogEntry item, PurchaseError error) {
 //        logger.error("Failed to purchase item {}, error: {}", getItemName(item), error);

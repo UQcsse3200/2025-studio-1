@@ -41,6 +41,11 @@ public class ConsumableUseComponent extends ItemActionsComponent {
         } else {
             ItemComponent itemComponent = entity.getComponent(ItemComponent.class);
             itemComponent.setCount(itemComponent.getCount() - 1);
+
+            // Trigger update ItemCount event
+            inventory.getEntity().getEvents()
+                    .trigger("update item count", itemIdx, itemComponent.getCount());
         }
+
     }
 }

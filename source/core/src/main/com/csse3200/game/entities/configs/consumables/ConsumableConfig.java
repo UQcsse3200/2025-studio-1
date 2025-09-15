@@ -9,6 +9,7 @@ public abstract class ConsumableConfig {
     public int duration = 0;
     public boolean isProjectile = false;
     public String texturePath;
+    public int maxStack = 1;  // 1 for no stack
 
     public ConsumableConfig() {}
 }

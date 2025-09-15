@@ -221,8 +221,8 @@ public class Entity {
     return this;
   }
 
-  public Array<Component> getComponents() {
-    return createdComponents;
+  public IntMap<Component> getComponents() {
+    return components;
   }
 
   public <T extends Component> boolean hasComponent(Class<T> type) {
@@ -232,8 +232,9 @@ public class Entity {
 
   /** Dispose of the entity. This will dispose of all components on this entity. */
   public void dispose() {
-    for (Component component : createdComponents) {
-      component.dispose();
+    // Dispose in reverse creation order so dependents (e.g., Collider) tear down before owners (Physics)
+    for (int i = createdComponents.size - 1; i >= 0; i--) {
+      createdComponents.get(i).dispose();
     }
     ServiceLocator.getEntityService().unregister(this);
   }
