@@ -53,6 +53,13 @@ public class SecurityGameArea extends GameArea {
   public String toString() {
     return "Security";
   }
+
+  @Override
+  public Entity getPlayer() {
+    //placeholder
+    return null;
+  }
+
   public static SecurityGameArea load(SaveLoadService.PlayerInfo load) {
     return (new SecurityGameArea(terrainFactory, cameraComponent));
   }

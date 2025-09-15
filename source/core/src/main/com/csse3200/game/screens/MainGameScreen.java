@@ -4,8 +4,7 @@ import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.csse3200.game.GdxGame;
-import com.csse3200.game.areas.ForestGameArea;
-import com.csse3200.game.areas.GameArea;
+import com.csse3200.game.areas.*;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.components.maingame.MainGameActions;
 import com.csse3200.game.components.screens.PauseMenuDisplay;
@@ -48,7 +47,7 @@ public class MainGameScreen extends ScreenAdapter {
   private final GdxGame game;
   private final Renderer renderer;
   private final PhysicsEngine physicsEngine;
-  private final ForestGameArea forestGameArea;
+  private final GameArea gameArea;
 
 
   private Entity pauseOverlay;
@@ -81,9 +80,9 @@ public class MainGameScreen extends ScreenAdapter {
 
     logger.debug("Initialising main game screen entities");
     TerrainFactory terrainFactory = new TerrainFactory(renderer.getCamera());
-    forestGameArea = new ForestGameArea(terrainFactory, renderer.getCamera());
-    com.csse3200.game.services.ServiceLocator.registerGameArea(forestGameArea);
-    forestGameArea.create();
+    gameArea = new ForestGameArea(terrainFactory, renderer.getCamera());
+    com.csse3200.game.services.ServiceLocator.registerGameArea(gameArea);
+    gameArea.create();
   }
 
   @Override
@@ -94,7 +93,7 @@ public class MainGameScreen extends ScreenAdapter {
     if (!com.csse3200.game.services.ServiceLocator.isTransitioning()) {
       ServiceLocator.getEntityService().update();
     }
-    Entity player = forestGameArea.getPlayer();
+    Entity player = gameArea.getPlayer();
     //show death screen when player is dead
     if (player != null) {
       var playerStat = player.getComponent(CombatStatsComponent.class);
@@ -211,13 +210,64 @@ public class MainGameScreen extends ScreenAdapter {
 
   private void saveState() {
     logger.info("Saving state");
-    if (ServiceLocator.getSaveLoadService().save("slides", forestGameArea)) {
+    if (ServiceLocator.getSaveLoadService().save("slides", gameArea)) {
       logger.info("Saving data successful");
     } else {
       logger.info("Save data failed");
     }
   }
 
-  private void loadState(){}
+
+  /**
+   * Overloaded constructor for loading the game
+   *
+   * @param game game
+   * @param Filename loaded file
+   */
+  public MainGameScreen(GdxGame game, String Filename){
+
+
+    this.game = game;
+    SaveLoadService.PlayerInfo load = SaveLoadService.load();
+    logger.debug("Initialising main game screen services");
+    ServiceLocator.registerTimeSource(new GameTime());
+
+    PhysicsService physicsService = new PhysicsService();
+    ServiceLocator.registerPhysicsService(physicsService);
+    physicsEngine = physicsService.getPhysics();
+
+    ServiceLocator.registerInputService(new InputService());
+    ServiceLocator.registerResourceService(new ResourceService());
+    ServiceLocator.registerSaveLoadService(new SaveLoadService());
+
+
+    ServiceLocator.registerEntityService(new EntityService());
+    ServiceLocator.registerRenderService(new RenderService());
+
+    renderer = RenderFactory.createRenderer();
+    renderer.getCamera().getEntity().setPosition(CAMERA_POSITION);
+    renderer.getDebug().renderPhysicsWorld(physicsEngine.getWorld());
+
+    loadAssets();
+    createUI();
+    GameArea areaLoad = null;
+    logger.debug("Initialising main game screen entities");
+    TerrainFactory terrainFactory = new TerrainFactory(renderer.getCamera());
+    switch (load.areaId) {
+      case "Forest" -> areaLoad = ForestGameArea.load(terrainFactory, renderer.getCamera());
+      case "Elevator" -> areaLoad = ElevatorGameArea.load(load);
+      case "Office" -> areaLoad = OfficeGameArea.load(load);
+      case "Floor5" -> areaLoad = Floor5GameArea.load(load);
+      case "Floor2" -> areaLoad = Floor2GameArea.load(load);
+      case "Tunnel" -> areaLoad = TunnelGameArea.load(load);
+      case "Security" -> areaLoad = SecurityGameArea.load(load);
+      case "Storage" -> areaLoad = StorageGameArea.load(terrainFactory, renderer.getCamera());
+      default -> logger.error("couldnt create Game area from file");
+    }
+
+    gameArea = areaLoad;
+    com.csse3200.game.services.ServiceLocator.registerGameArea(gameArea);
+    gameArea.create();
+  }
 
 }

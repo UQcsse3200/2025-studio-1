@@ -194,6 +194,7 @@ public abstract class GameArea implements Disposable {
     }
   }
 
+
   /** Camera bounds helper. */
   protected static class Bounds {
     public final float leftX, rightX, bottomY, topY, viewWidth, viewHeight;
@@ -372,4 +373,6 @@ public abstract class GameArea implements Disposable {
   public String toString() {
     return "GameArea";
   }
+
+  public abstract Entity getPlayer();
 }

@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.GridPoint2;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.CameraComponent;
+import com.csse3200.game.entities.Entity;
 import com.csse3200.game.services.SaveLoadService;
 
 /** Elevator room: minimal walls and two doors (left--Office, right--Research). */
@@ -49,6 +50,12 @@ public class ElevatorGameArea extends GameArea {
   @Override
   public String toString() {
     return "Elevator";
+  }
+
+  @Override
+  public Entity getPlayer() {
+    // placeholder for errors
+    return null;
   }
 
   public static ElevatorGameArea load(SaveLoadService.PlayerInfo load) {

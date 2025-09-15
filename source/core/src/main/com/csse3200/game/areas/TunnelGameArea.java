@@ -51,6 +51,12 @@ public class TunnelGameArea extends GameArea {
     return "Tunnel";
   }
 
+  @Override
+  public Entity getPlayer() {
+    //placeholder
+    return null;
+  }
+
   public static TunnelGameArea load(SaveLoadService.PlayerInfo load) {
     return (new TunnelGameArea(terrainFactory, cameraComponent));
   }
