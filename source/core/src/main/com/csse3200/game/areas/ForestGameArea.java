@@ -24,6 +24,7 @@ import com.csse3200.game.entities.factories.*;
 import com.csse3200.game.entities.spawner.ItemSpawner;
 import com.csse3200.game.physics.components.PhysicsProjectileComponent;
 import com.csse3200.game.services.ResourceService;
+import com.csse3200.game.services.SaveLoadService;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import com.csse3200.game.rendering.TextureRenderComponent;
@@ -483,6 +484,8 @@ public class ForestGameArea extends GameArea {
   }
 
 
+
+
   private Entity spawnDagger() {
     Entity newDagger = WeaponsFactory.createWeapon(Weapons.DAGGER);
     Vector2 newDaggerOffset = new Vector2(0.7f, 0.3f);
@@ -732,5 +735,10 @@ public class ForestGameArea extends GameArea {
   @Override
   public String toString() {
     return "Forest";
+  }
+
+  public static ForestGameArea load(SaveLoadService.PlayerInfo load) {
+
+    return (new ForestGameArea(terrainFactory, cameraComponent));
   }
 }

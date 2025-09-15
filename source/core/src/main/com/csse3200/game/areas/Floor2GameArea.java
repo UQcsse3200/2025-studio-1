@@ -10,6 +10,7 @@ import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.factories.KeycardFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.entities.factories.characters.PlayerFactory;
+import com.csse3200.game.services.SaveLoadService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -130,6 +131,10 @@ public class Floor2GameArea extends GameArea {
   @Override
   public String toString() {
     return "Floor2";
+  }
+
+  public static Floor2GameArea load(SaveLoadService.PlayerInfo load) {
+    return (new Floor2GameArea(terrainFactory, cameraComponent));
   }
 }
 
