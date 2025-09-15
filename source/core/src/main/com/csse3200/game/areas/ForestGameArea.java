@@ -559,7 +559,7 @@ public class ForestGameArea extends GameArea {
 
   //new added boss3
   private void spawnBoss3() {
-    GridPoint2 pos = new GridPoint2(20, 12);
+    GridPoint2 pos = new GridPoint2(15, 16);
 
     Entity boss3 = BossFactory.createBoss3(player);
     spawnEntityAt(boss3, pos, true, true);
