@@ -10,9 +10,8 @@ import java.util.List;
 
 public class PowerupComponent extends Component {
     private final List<Effect> activeEffects = new ArrayList<>();
-    private Entity equippedWeapon; // The weapon whose stats control firing
+    private Entity equippedWeapon;
 
-    /** Call this when player equips a weapon */
     public void setEquippedWeapon(Entity weapon) {
         this.equippedWeapon = weapon;
     }
@@ -21,11 +20,11 @@ public class PowerupComponent extends Component {
         return equippedWeapon;
     }
 
-    /** Add and activate an effect */
     public void addEffect(Effect effect) {
         if (effect instanceof RapidFireEffect rapidfire && equippedWeapon != null) {
-            rapidfire.apply(equippedWeapon);
-            activeEffects.add(rapidfire);
+            if (rapidfire.apply(equippedWeapon)) {
+                activeEffects.add(rapidfire);
+            }
         }
     }
 
@@ -34,11 +33,11 @@ public class PowerupComponent extends Component {
         float dt = ServiceLocator.getTimeSource().getDeltaTime();
 
         for (int i = activeEffects.size() - 1; i >= 0; i--) {
-            Effect e = activeEffects.get(i);
+            Effect effect = activeEffects.get(i);
 
-            if (e instanceof RapidFireEffect rfe) {
-                rfe.update(dt);
-                if (!rfe.isActive()) {
+            if (effect instanceof RapidFireEffect rapidFireEffect) {
+                rapidFireEffect.update(dt);
+                if (!rapidFireEffect.isActive()) {
                     activeEffects.remove(i);
                 }
             }
