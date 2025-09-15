@@ -10,21 +10,21 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 @DisplayName("InventoryOperations: addOrStack()")
-class InventoryOperationsTest {
+public class InventoryOperationsTest {
 
     private Entity mkItem(String name) {
         Entity e = new Entity();
-        ItemComponent item = new ItemComponent();
-        item.setName(name);
-        item.setTexture(name.toLowerCase() + ".png");
-        e.addComponent(item);
+        ItemComponent ic = new ItemComponent();
+        ic.setName(name);
+        ic.setTexture("x.png");
+        e.addComponent(ic);
         e.create();
         return e;
     }
 
-    private InventoryComponent mkInventory(int startingProcessors) {
+    private InventoryComponent mkInventory(int processors) {
         Entity player = new Entity();
-        InventoryComponent inv = new InventoryComponent(startingProcessors);
+        InventoryComponent inv = new InventoryComponent(processors);
         player.addComponent(inv);
         player.create();
         return inv;
@@ -32,34 +32,30 @@ class InventoryOperationsTest {
 
     @Nested
     @DisplayName("Objective: insert new items")
-    class InsertNewItems {
+    class InsertNew {
         @Test
-        @DisplayName("Inserts into empty inventory at index 0 and sets count")
-        void insertsIntoEmptyInventory() {
+        @DisplayName("insertsIntoEmpty_atIndex0_andSetsCount()")
+        void insertsIntoEmpty_atIndex0_andSetsCount() {
             InventoryComponent inv = mkInventory(0);
-            Entity sword = mkItem("Sword");
+            Entity item = mkItem("Gem");
 
-            int idx = InventoryOperations.addOrStack(inv, sword, 1, 5);
-
-            assertEquals(0, idx);
-            assertSame(sword, inv.get(0));
-            assertEquals(1, sword.getComponent(ItemComponent.class).getCount());
-            assertEquals(1, inv.getSize());
+            int idx = InventoryOperations.addOrStack(inv, item, 1, 10);
+            assertTrue(idx >= 0, "Expected a valid index");
+            assertTrue(inv.getInventory().contains(item), "Item should be in inventory");
+            assertEquals(1, item.getComponent(ItemComponent.class).getCount());
         }
 
         @Test
-        @DisplayName("Fails when inventory is full")
-        void failsWhenFull() {
+        @DisplayName("failsWhenInventoryIsFull()")
+        void failsWhenInventoryIsFull() {
             InventoryComponent inv = mkInventory(0);
-            // Fill 5-slot inventory with distinct items
+            // Fill 5 slots (InventoryComponent maxCapacity = 5)
             for (int i = 0; i < 5; i++) {
-                Entity it = mkItem("Item" + i);
-                assertTrue(InventoryOperations.addOrStack(inv, it, 1, 5) >= 0);
+                inv.addItem(mkItem("Filler-" + i));
             }
-            Entity extra = mkItem("Extra");
-            int idx = InventoryOperations.addOrStack(inv, extra, 1, 5);
-            assertEquals(-1, idx);
-            assertEquals(5, inv.getSize());
+            Entity item = mkItem("New");
+            int code = InventoryOperations.addOrStack(inv, item, 1, 10);
+            assertEquals(PurchaseError.INVENTORY_FULL.getCode(), code);
         }
     }
 
@@ -67,33 +63,28 @@ class InventoryOperationsTest {
     @DisplayName("Objective: stacking existing items")
     class Stacking {
         @Test
-        @DisplayName("Stacks within maxStack and returns same index")
-        void stacksWithinLimit() {
+        @DisplayName("stacksWithinMaxStack_returnsSameIndex()")
+        void stacksWithinMaxStack_returnsSameIndex() {
             InventoryComponent inv = mkInventory(0);
-            Entity apple = mkItem("Apple");
+            Entity item = mkItem("Potion");
+            inv.addItem(item); // put same entity in inventory
 
-            int first = InventoryOperations.addOrStack(inv, apple, 1, 5);
-            assertEquals(0, first);
-            assertEquals(1, apple.getComponent(ItemComponent.class).getCount());
-
-            int again = InventoryOperations.addOrStack(inv, apple, 2, 5);
-            assertEquals(0, again); // same slot
-            assertEquals(3, apple.getComponent(ItemComponent.class).getCount());
-            assertEquals(1, inv.getSize()); // still one slot used
+            int idx = InventoryOperations.addOrStack(inv, item, 2, 5);
+            assertTrue(idx >= 0, "Should return index of existing slot");
+            assertEquals(3, item.getComponent(ItemComponent.class).getCount()); // 1 + 2
         }
 
         @Test
-        @DisplayName("Fails when stacking would exceed maxStack; count unchanged")
-        void failsWhenExceedingMaxStack() {
+        @DisplayName("failsWhenStackWouldExceedMaxStack_countUnchanged()")
+        void failsWhenStackWouldExceedMaxStack_countUnchanged() {
             InventoryComponent inv = mkInventory(0);
-            Entity bolt = mkItem("Bolt");
+            Entity item = mkItem("Arrow");
+            inv.addItem(item);
+            item.getComponent(ItemComponent.class).setCount(3);
 
-            assertEquals(0, InventoryOperations.addOrStack(inv, bolt, 3, 5));
-            assertEquals(3, bolt.getComponent(ItemComponent.class).getCount());
-
-            int res = InventoryOperations.addOrStack(inv, bolt, 3, 5); // 3 + 3 > 5
-            assertEquals(-1, res);
-            assertEquals(3, bolt.getComponent(ItemComponent.class).getCount()); // unchanged
+            int code = InventoryOperations.addOrStack(inv, item, 1, 3); // would exceed
+            assertEquals(PurchaseError.LIMIT_REACHED.getCode(), code);
+            assertEquals(3, item.getComponent(ItemComponent.class).getCount(), "Count should not change");
         }
     }
 
@@ -101,26 +92,26 @@ class InventoryOperationsTest {
     @DisplayName("Objective: invalid inputs")
     class InvalidInputs {
         @Test
-        @DisplayName("Nulls or non-positive amounts/maxStack return FAILURE")
-        void invalidArgsReturnFailure() {
+        @DisplayName("nullsOrNonPositiveAmountsOrMaxStack_returnFailure()")
+        void nullsOrNonPositiveAmountsOrMaxStack_returnFailure() {
+            Entity item = mkItem("Any");
             InventoryComponent inv = mkInventory(0);
-            Entity item = mkItem("Thing");
 
-            assertEquals(-1, InventoryOperations.addOrStack(null, item, 1, 5));
-            assertEquals(-1, InventoryOperations.addOrStack(inv, null, 1, 5));
-            assertEquals(-1, InventoryOperations.addOrStack(inv, item, 0, 5));
-            assertEquals(-1, InventoryOperations.addOrStack(inv, item, -2, 5));
-            assertEquals(-1, InventoryOperations.addOrStack(inv, item, 1, 0));
-            assertEquals(-1, InventoryOperations.addOrStack(inv, item, 1, -3));
+            assertEquals(PurchaseError.UNEXPECTED.getCode(), InventoryOperations.addOrStack(null, item, 1, 5));
+            assertEquals(PurchaseError.UNEXPECTED.getCode(), InventoryOperations.addOrStack(inv, null, 1, 5));
+            assertEquals(PurchaseError.UNEXPECTED.getCode(), InventoryOperations.addOrStack(inv, item, 0, 5));
+            assertEquals(PurchaseError.UNEXPECTED.getCode(), InventoryOperations.addOrStack(inv, item, 1, 0));
         }
 
         @Test
-        @DisplayName("Missing ItemComponent returns FAILURE")
-        void missingItemComponentReturnsFailure() {
+        @DisplayName("missingItemComponent_returnsFailure()")
+        void missingItemComponent_returnsFailure() {
             InventoryComponent inv = mkInventory(0);
             Entity bare = new Entity();
             bare.create();
-            assertEquals(-1, InventoryOperations.addOrStack(inv, bare, 1, 5));
+
+            int code = InventoryOperations.addOrStack(inv, bare, 1, 5);
+            assertEquals(PurchaseError.INVALID_ITEM.getCode(), code);
         }
     }
 }

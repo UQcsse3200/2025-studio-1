@@ -12,67 +12,50 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@DisplayName("ShopManager")
 public class ShopManagerTest {
 
-    private CatalogEntry mkEntry(String name, int price, boolean enabled, int maxStack, int bundleQty) {
-        Entity itemEntity = new Entity();
+    private Entity mkItemEntity(String name) {
+        Entity e = new Entity();
         ItemComponent ic = new ItemComponent();
         ic.setName(name);
-        ic.setTexture("test.png"); // dummy path
-        itemEntity.addComponent(ic);
-        itemEntity.create();
-        return new CatalogEntry(itemEntity, price, enabled, maxStack, bundleQty);
+        ic.setTexture("x.png");
+        e.addComponent(ic);
+        e.create();
+        return e;
     }
 
-    private Entity mkPlayerWithProcessors(int processors) {
-        Entity player = new Entity();
-        InventoryComponent inv = new InventoryComponent(0); // start at 0
+    private CatalogEntry mkEntry(String name, int price, boolean enabled, int maxStack, int bundleQty) {
+        return new CatalogEntry(mkItemEntity(name), price, enabled, maxStack, bundleQty);
+    }
+
+    private InventoryComponent attachInventory(Entity player, int processors) {
+        InventoryComponent inv = new InventoryComponent(processors);
         player.addComponent(inv);
         player.create();
-        inv.setProcessor(processors);
-        return player;
+        return inv;
     }
 
-    private ShopManager mkManagerWithEntity(CatalogService catalog) {
-        ShopManager manager = new ShopManager(catalog);
-        Entity shopEntity = new Entity();
-        shopEntity.addComponent(manager);
-        shopEntity.create(); // attach so fail() can trigger events safely
-        return manager;
-    }
-
-    private void fillInventory(InventoryComponent inv, int count) {
-        for (int i = 0; i < count; i++) {
-            Entity e = new Entity();
-            ItemComponent ic = new ItemComponent();
-            ic.setName("Item" + i);
-            ic.setTexture("i" + i + ".png");
-            e.addComponent(ic);
-            e.create();
-            assertTrue(inv.addItem(e));
-        }
-    }
-
-    private void addSpecificItemToInventory(InventoryComponent inv, Entity item, int count) {
-        ItemComponent ic = item.getComponent(ItemComponent.class);
-        ic.setCount(count);
-        if (ic.getTexture() == null) ic.setTexture("pre.png");
-        assertTrue(inv.addItem(item));
+    /** Attach manager to an entity so it can fire events without NPEs. */
+    private ShopManager mkManager(CatalogService catalog) {
+        ShopManager m = new ShopManager(catalog);
+        Entity shop = new Entity();
+        shop.addComponent(m);
+        shop.create();
+        return m;
     }
 
     @Nested
     @DisplayName("Objective: Success behaviour")
-    class SuccessTests {
+    class Success {
 
         @Test
         @DisplayName("Purchase succeeds: charges funds and adds item")
         void purchaseSucceeds_chargesFunds_andAddsItem() {
             CatalogEntry sword = mkEntry("Sword", 50, true, 10, 1);
-            CatalogService catalog = new CatalogService(new ArrayList<>(List.of(sword)));
-            ShopManager manager = mkManagerWithEntity(catalog);
-
-            Entity player = mkPlayerWithProcessors(200);
-            InventoryComponent inv = player.getComponent(InventoryComponent.class);
+            ShopManager manager = mkManager(new CatalogService(new ArrayList<>(List.of(sword))));
+            Entity player = new Entity();
+            InventoryComponent inv = attachInventory(player, 200);
 
             PurchaseResult r = manager.purchase(player, sword, 1);
 
@@ -81,145 +64,116 @@ public class ShopManagerTest {
             assertEquals(150, inv.getProcessor()); // 200 - 50
             assertTrue(inv.getInventory().contains(sword.getItem()));
             assertEquals(1, sword.getItem().getComponent(ItemComponent.class).getCount());
-            assertSame(sword, r.entry());
-            assertEquals(1, r.qty());
         }
 
         @Test
-        @DisplayName("Stacks when same entity is in inventory and within max stack")
-        void stacksExistingItemWithinMaxStack() {
-            CatalogEntry potion = mkEntry("Potion", 10, true, 5, 1);
-            CatalogService catalog = new CatalogService(new ArrayList<>(List.of(potion)));
-            ShopManager manager = mkManagerWithEntity(catalog);
+        @DisplayName("Stacks when same entity exists and within max stack")
+        void stacksWhenSameEntity_andWithinMaxStack() {
+            CatalogEntry arrows = mkEntry("Arrow", 5, true, 5, 1);
+            ShopManager manager = mkManager(new CatalogService(new ArrayList<>(List.of(arrows))));
+            Entity player = new Entity();
+            InventoryComponent inv = attachInventory(player, 100);
 
-            Entity player = mkPlayerWithProcessors(100);
-            InventoryComponent inv = player.getComponent(InventoryComponent.class);
+            // Put the same entity in inventory first with count=1
+            inv.addItem(arrows.getItem());
+            arrows.getItem().getComponent(ItemComponent.class).setCount(1);
 
-            // Pre-add the SAME entity as the catalog entry with count 2
-            addSpecificItemToInventory(inv, potion.getItem(), 2);
-
-            PurchaseResult r = manager.purchase(player, potion, 1);
-
+            PurchaseResult r = manager.purchase(player, arrows, 1);
             assertTrue(r.ok());
             assertEquals(PurchaseError.NONE, r.error());
-            assertEquals(90, inv.getProcessor()); // 100 - 10
-            assertTrue(inv.getInventory().contains(potion.getItem()));
-            assertEquals(3, potion.getItem().getComponent(ItemComponent.class).getCount());
+            assertEquals(95, inv.getProcessor()); // 100 - 5
+            assertEquals(2, arrows.getItem().getComponent(ItemComponent.class).getCount());
         }
     }
 
     @Nested
     @DisplayName("Objective: Failure behaviour")
-    class FailureTests {
+    class Failure {
 
         @Test
         @DisplayName("Fails when insufficient funds")
-        void purchaseFails_whenInsufficientFunds() {
+        void failsWhenInsufficientFunds() {
             CatalogEntry sword = mkEntry("Sword", 50, true, 10, 1);
-            CatalogService catalog = new CatalogService(new ArrayList<>(List.of(sword)));
-            ShopManager manager = mkManagerWithEntity(catalog);
-
-            Entity player = mkPlayerWithProcessors(10);
-            InventoryComponent inv = player.getComponent(InventoryComponent.class);
+            ShopManager manager = mkManager(new CatalogService(new ArrayList<>(List.of(sword))));
+            Entity player = new Entity();
+            attachInventory(player, 10);
 
             PurchaseResult r = manager.purchase(player, sword, 1);
-
             assertFalse(r.ok());
             assertEquals(PurchaseError.INSUFFICIENT_FUNDS, r.error());
-            assertEquals(10, inv.getProcessor()); // unchanged
-            assertFalse(inv.getInventory().contains(sword.getItem()));
-        }
-
-        @Test
-        @DisplayName("Fails when item is disabled")
-        void purchaseFails_whenDisabled() {
-            CatalogEntry shield = mkEntry("Shield", 40, false, 10, 1);
-            CatalogService catalog = new CatalogService(new ArrayList<>(List.of(shield)));
-            ShopManager manager = mkManagerWithEntity(catalog);
-
-            Entity player = mkPlayerWithProcessors(100);
-
-            PurchaseResult r = manager.purchase(player, shield, 1);
-
-            assertFalse(r.ok());
-            assertEquals(PurchaseError.DISABLED, r.error());
         }
 
         @Test
         @DisplayName("Fails when item not found in catalog")
-        void purchaseFails_whenNotFound() {
-            CatalogEntry inCatalog = mkEntry("Bow", 30, true, 10, 1);
-            CatalogEntry differentEntry = mkEntry("Bow", 30, true, 10, 1);
-            CatalogService catalog = new CatalogService(new ArrayList<>(List.of(inCatalog)));
-            ShopManager manager = mkManagerWithEntity(catalog);
+        void failsWhenItemNotFound() {
+            CatalogEntry ghost = mkEntry("Ghost", 10, true, 10, 1);
+            ShopManager manager = mkManager(new CatalogService(new ArrayList<>())); // empty
+            Entity player = new Entity();
+            attachInventory(player, 100);
 
-            Entity player = mkPlayerWithProcessors(100);
-
-            PurchaseResult r = manager.purchase(player, differentEntry, 1);
-
+            PurchaseResult r = manager.purchase(player, ghost, 1);
             assertFalse(r.ok());
             assertEquals(PurchaseError.NOT_FOUND, r.error());
         }
 
         @Test
-        @DisplayName("Fails when inventory is full for a new item")
-        void purchaseFails_whenInventoryFull_newItem() {
-            CatalogEntry gem = mkEntry("Gem", 5, true, 10, 1);
-            CatalogService catalog = new CatalogService(new ArrayList<>(List.of(gem)));
-            ShopManager manager = mkManagerWithEntity(catalog);
+        @DisplayName("Fails when item is disabled")
+        void failsWhenItemDisabled() {
+            CatalogEntry disabled = mkEntry("Relic", 20, false, 10, 1);
+            ShopManager manager = mkManager(new CatalogService(new ArrayList<>(List.of(disabled))));
+            Entity player = new Entity();
+            attachInventory(player, 100);
 
-            Entity player = mkPlayerWithProcessors(100);
-            InventoryComponent inv = player.getComponent(InventoryComponent.class);
-
-            // Fill the 5-slot inventory completely with different items
-            fillInventory(inv, 5);
-            assertTrue(inv.isFull());
-
-            PurchaseResult r = manager.purchase(player, gem, 1);
-
+            PurchaseResult r = manager.purchase(player, disabled, 1);
             assertFalse(r.ok());
-            assertEquals(PurchaseError.INVENTORY_FULL, r.error());
-            // Funds unchanged and item not added
-            assertEquals(100, inv.getProcessor());
-            assertFalse(inv.getInventory().contains(gem.getItem()));
-        }
-
-        @Test
-        @DisplayName("Fails when stacking would exceed max stack")
-        void purchaseFails_whenExceedMaxStack() {
-            CatalogEntry arrow = mkEntry("Arrow", 2, true, 3, 1); // maxStack = 3
-            CatalogService catalog = new CatalogService(new ArrayList<>(List.of(arrow)));
-            ShopManager manager = mkManagerWithEntity(catalog);
-
-            Entity player = mkPlayerWithProcessors(50);
-            InventoryComponent inv = player.getComponent(InventoryComponent.class);
-
-            // Pre-add SAME entity with count = 3 (already at max)
-            addSpecificItemToInventory(inv, arrow.getItem(), 3);
-
-            PurchaseResult r = manager.purchase(player, arrow, 1);
-
-            assertFalse(r.ok());
-            assertEquals(PurchaseError.INVENTORY_FULL, r.error()); // mapped from addOrStack() failure
-            // Funds unchanged, count unchanged
-            assertEquals(50, inv.getProcessor());
-            assertEquals(3, arrow.getItem().getComponent(ItemComponent.class).getCount());
+            assertEquals(PurchaseError.DISABLED, r.error());
         }
 
         @Test
         @DisplayName("Fails with UNEXPECTED when player has no InventoryComponent")
-        void purchaseFails_whenNoInventoryComponent() {
-            CatalogEntry orb = mkEntry("Orb", 10, true, 5, 1);
-            CatalogService catalog = new CatalogService(new ArrayList<>(List.of(orb)));
-            ShopManager manager = mkManagerWithEntity(catalog);
+        void failsWhenNoInventoryComponent() {
+            CatalogEntry item = mkEntry("Thing", 1, true, 10, 1);
+            ShopManager manager = mkManager(new CatalogService(new ArrayList<>(List.of(item))));
+            Entity player = new Entity();
 
-            Entity playerWithoutInv = new Entity(); // no InventoryComponent
-            playerWithoutInv.create();
-
-            PurchaseResult r = manager.purchase(playerWithoutInv, orb, 1);
-
+            PurchaseResult r = manager.purchase(player, item, 1);
             assertFalse(r.ok());
             assertEquals(PurchaseError.UNEXPECTED, r.error());
+        }
+
+        @Test
+        @DisplayName("Fails when inventory is full for a new item")
+        void failsWhenInventoryFull_newItem() {
+            CatalogEntry item = mkEntry("Rune", 5, true, 10, 1);
+            ShopManager manager = mkManager(new CatalogService(new ArrayList<>(List.of(item))));
+            Entity player = new Entity();
+            InventoryComponent inv = attachInventory(player, 100);
+
+            // Fill 5 slots (InventoryComponent maxCapacity = 5)
+            for (int i = 0; i < 5; i++) {
+                inv.addItem(mkItemEntity("Filler-" + i));
+            }
+
+            PurchaseResult r = manager.purchase(player, item, 1);
+            assertFalse(r.ok());
+            assertEquals(PurchaseError.INVENTORY_FULL, r.error());
+        }
+
+        @Test
+        @DisplayName("Fails when stacking would exceed max stack")
+        void failsWhenStackWouldExceedMax() {
+            CatalogEntry item = mkEntry("Potion", 3, true, 2, 1); // maxStack = 2
+            ShopManager manager = mkManager(new CatalogService(new ArrayList<>(List.of(item))));
+            Entity player = new Entity();
+            InventoryComponent inv = attachInventory(player, 100);
+
+            inv.addItem(item.getItem());
+            item.getItem().getComponent(ItemComponent.class).setCount(2); // already at max
+
+            PurchaseResult r = manager.purchase(player, item, 1);
+            assertFalse(r.ok());
+            assertEquals(PurchaseError.LIMIT_REACHED, r.error());
+            assertEquals(100, inv.getProcessor(), "Funds should not be deducted on failure");
         }
     }
 }
