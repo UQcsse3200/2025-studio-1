@@ -14,12 +14,10 @@ import com.csse3200.game.components.DoorComponent;
 import com.csse3200.game.entities.configs.Consumables;
 import com.csse3200.game.components.KeycardGateComponent;
 import com.csse3200.game.rendering.AnimationRenderComponent;
-import com.csse3200.game.components.WeaponsStatsComponent;
 import com.csse3200.game.components.player.InventoryComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.Weapons;
 import com.csse3200.game.entities.factories.characters.BossFactory;
-import com.csse3200.game.entities.factories.characters.NPCFactory;
 import com.csse3200.game.entities.factories.items.ConsumableFactory;
 import com.csse3200.game.entities.factories.items.ItemFactory;
 import com.csse3200.game.entities.factories.items.WeaponsFactory;
@@ -28,7 +26,6 @@ import com.csse3200.game.entities.factories.characters.PlayerFactory;
 import com.csse3200.game.entities.configs.ItemSpawnConfig;
 import com.csse3200.game.entities.factories.*;
 import com.csse3200.game.entities.spawner.ItemSpawner;
-import com.csse3200.game.physics.components.PhysicsProjectileComponent;
 import com.csse3200.game.utils.math.GridPoint2Utils;
 import com.csse3200.game.utils.math.RandomUtils;
 import com.csse3200.game.services.ResourceService;
@@ -66,10 +63,7 @@ public class ForestGameArea extends GameArea {
   private static final int NUM_ROBOTS = 1;
   private static final int NUM_ITEMS = 5;//this is for ItemFactory
   private static final int NUM_GHOSTS = 1;
-  private static final int NUM_GHOST_GPTS = 1;
-  private static final int NUM_DEEP_SPIN = 1;
-  private static final int NUM_GROK_DROID = 1;
-  private static final int NUM_VROOMBA = 1;
+  // private static final int NUM_TURRETS = 1;
   private static final float WALL_WIDTH = 0.1f;
 
   /** Files or pictures used by the game (enemy/props,etc.). */
@@ -181,6 +175,7 @@ public class ForestGameArea extends GameArea {
     "images/Deepspin.atlas",
     "images/Grokdroid.atlas",
     "images/Vroomba.atlas",
+    "images/Turret.atlas",
     "images/explosion_1.atlas",
     "images/explosion_2.atlas",
     "images/player.atlas",
@@ -209,6 +204,7 @@ public class ForestGameArea extends GameArea {
   private Entity pistol;
   private Entity rifle;
 
+
   /**
    * Initialise this ForestGameArea to use the provided TerrainFactory and camera helper.
    * The camera is used to size the screen-edge walls and place the right-side door trigger.
@@ -217,11 +213,10 @@ public class ForestGameArea extends GameArea {
    * @param cameraComponent Camera helper supplying an OrthographicCamera (optional but used here).
    * @requires terrainFactory != null
    */
-
   public ForestGameArea(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
     super(terrainFactory, cameraComponent);
   }
-/** Create the game area, including terrain, static entities (trees), dynamic entities (player) */
+
   /**
    * Entry point for this room. This:
    * - Loads textures/sounds/music
@@ -229,7 +224,6 @@ public class ForestGameArea extends GameArea {
    * - Creates the terrain, walls, and UI label
    * - Spawns player, props (desk, crates, pod), door (with keycard gate), and enemies
    * - Starts background music*/
-
   @Override
   public void create() {
     ServiceLocator.registerGameArea(this);
@@ -256,17 +250,10 @@ public class ForestGameArea extends GameArea {
     this.equipItem(rifle);
 //    this.equipItem(ConsumableFactory.createConsumable(Consumables.GENERIC_HEAL_ITEM));
 
-    //spawnGhosts();
-    //spawnGhostKing();
     spawnFloor();
     spawnBottomRightDoor();
     spawnMarblePlatforms();
 
-
-    spawnSecurityCamera();
-    spawnEnergyPod();
-    spawnStorageCrates();
-    spawnBigWall();
     spawnShopKiosk();
     // spawnGhosts();
     // spawnGhostKing();
@@ -277,10 +264,6 @@ public class ForestGameArea extends GameArea {
       case 1 -> spawnRobots();
       default -> spawnBoss3();
     }
-    // spawnGhostGPT();
-    // spawnDeepspin();
-    // spawnGrokDroid();
-    // spawnVroomba();
     playMusic();
 
     ItemSpawner itemSpawner = new ItemSpawner(this);
@@ -562,29 +545,6 @@ public class ForestGameArea extends GameArea {
     return newRifle;
   }
 
-
-  // Enemy Projectiles
-  public Entity spawnEnemyProjectile(Vector2 directionToFire, WeaponsStatsComponent source) {
-    Entity laser = ProjectileFactory.createEnemyProjectile(directionToFire, source);
-    spawnEntityAt(laser, new GridPoint2(0, 0), true, true);
-    PhysicsProjectileComponent laserPhysics = laser.getComponent(PhysicsProjectileComponent.class);
-    int projectileSpeed = 5; // Should be abstracted from WeaponsStatsComponent in future implementation
-    laserPhysics.fire(directionToFire, projectileSpeed);
-    return laser;
-  }
-
-
-  // private void spawnGhosts() {
-  //   GridPoint2 minPos = new GridPoint2(0, 0);
-  //   GridPoint2 maxPos = terrain.getMapBounds(0).sub(2, 2);
-
-  //   for (int i = 0; i < NUM_GHOSTS; i++) {
-  //     GridPoint2 randomPos = RandomUtils.random(minPos, maxPos);
-  //     Entity ghost = NPCFactory.createGhost(player);
-  //     spawnEntityAt(ghost, randomPos, true, true);
-  //   }
-  // }
-
   private void spawnBoss2() {
     GridPoint2 pos = new GridPoint2(5, 8);
     Entity boss2 = BossFactory.createBoss2(player);
@@ -599,29 +559,6 @@ public class ForestGameArea extends GameArea {
     spawnEntityAt(boss3, pos, true, true);
   }
 
-
-  // private void spawnGhostKing() {
-  //   GridPoint2 minPos = new GridPoint2(0, 0);
-  //   GridPoint2 maxPos = terrain.getMapBounds(0).sub(2, 2);
-
-  //   GridPoint2 randomPos = RandomUtils.random(minPos, maxPos);
-  //   Entity ghostKing = NPCFactory.createGhostKing(player);
-  //   spawnEntityAt(ghostKing, randomPos, true, true);
-  // }
-
-  /**
-   * Spawns two GhostGPT enemies at fixed locations for predictable behaviour.
-   */
-  private void spawnGhostGPT() {
-    GridPoint2 spawn1 = new GridPoint2(20, 20);
-    GridPoint2 spawn2 = new GridPoint2(25, 20);
-
-    Entity ghostGPT = NPCFactory.createGhostGPT(player, this);
-    spawnEntityAt(ghostGPT, spawn1, true, true);
-    Entity ghostGPT2 = NPCFactory.createGhostGPT(player, this);
-    spawnEntityAt(ghostGPT2, spawn2, true, true);
-  }
-
   /**
    * Adds a single crate to the lower platform for cover/decoration.
    */
@@ -630,7 +567,6 @@ public class ForestGameArea extends GameArea {
     Entity crate = ObstacleFactory.createCrate();
     spawnEntityAt(crate, cratePos, true, false);
   }
-
 
   /**
    * Places a visual-only security camera in the top-right area.
@@ -650,7 +586,6 @@ public class ForestGameArea extends GameArea {
     spawnEntityAt(energyPod, energyPodPos, false, false);
   }
 
-
   /**
    * Spawns two storage crates (green and dark) and nudges them slightly up
    * so they appear seated on the ground visually.
@@ -665,46 +600,6 @@ public class ForestGameArea extends GameArea {
     Entity darkCrate = ObstacleFactory.createStorageCrateDark();
     spawnEntityAt(darkCrate, darkCratePos, true, false);
     darkCrate.setPosition(darkCrate.getPosition().x, darkCrate.getPosition().y + 0.25f);
-  }
-  /**
-   * Adds NUM_Deep_spin amount of GhostGPT enemies onto the map.
-   */
-  private void spawnDeepspin() {
-    GridPoint2 pos = new GridPoint2(10, 20);
-    GridPoint2 pos2 = new GridPoint2(12, 20);
-
-    // for (int i = 0; i < NUM_DEEP_SPIN; i++) {
-    //   GridPoint2 randomPos = RandomUtils.random(minPos, maxPos);
-    //   Entity deepspin = NPCFactory.createDeepspin(player, this);
-    //   spawnEntityAt(deepspin, randomPos, true, true);
-    // }
-
-    Entity deepspin = NPCFactory.createDeepspin(player, this);
-    Entity deepspin2 = NPCFactory.createDeepspin(player, this);
-    spawnEntityAt(deepspin, pos, true, true);
-    spawnEntityAt(deepspin2, pos2, true, true);
-  }
-  /**
-   * Adds NUM_GROK_DROID amount of GrokDroid enemies onto the map.
-   */
-  private void spawnGrokDroid() {
-    GridPoint2 pos1 = new GridPoint2(20, 15);
-    GridPoint2 pos2 = new GridPoint2(25, 15);
-
-    Entity grokDroid = NPCFactory.createGrokDroid(player, this);
-    Entity grokDroid2 = NPCFactory.createGrokDroid(player, this);
-
-    spawnEntityAt(grokDroid, pos1, true, true);
-    spawnEntityAt(grokDroid2, pos2, true, true);
-
-  }
-  /**
-   * Adds NUM_VROOMBA amount of GrokDroid enemies onto the map.
-   */
-  private void spawnVroomba() {
-    GridPoint2 pos = new GridPoint2(25, 5);
-    Entity vroomba = NPCFactory.createVroomba(player, this);
-    spawnEntityAt(vroomba, pos, true, true);
   }
 
   public void spawnItem(Entity item, GridPoint2 position) {
