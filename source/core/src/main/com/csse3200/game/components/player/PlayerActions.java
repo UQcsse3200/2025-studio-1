@@ -421,7 +421,7 @@ public class PlayerActions extends Component {
     timeSinceLastAttack = 0;
   }
 
-  private WeaponsStatsComponent getCurrentWeaponStats() {
+  public WeaponsStatsComponent getCurrentWeaponStats() {
     InventoryComponent inv = entity.getComponent(InventoryComponent.class);
     if (inv != null) {
       WeaponsStatsComponent curr = inv.getCurrItemStats();

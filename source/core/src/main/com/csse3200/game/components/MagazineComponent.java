@@ -108,7 +108,7 @@ public class MagazineComponent extends Component{
      * @param timeSinceLastReload designated time since last reload
      */
 
-    public void seTimeSinceLastReload(float timeSinceLastReload) {
+    public void setTimeSinceLastReload(float timeSinceLastReload) {
 
         this.timeSinceLastReload = timeSinceLastReload;
     }
