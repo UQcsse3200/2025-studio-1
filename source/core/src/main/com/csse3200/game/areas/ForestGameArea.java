@@ -14,12 +14,10 @@ import com.csse3200.game.components.DoorComponent;
 import com.csse3200.game.entities.configs.Consumables;
 import com.csse3200.game.components.KeycardGateComponent;
 import com.csse3200.game.rendering.AnimationRenderComponent;
-import com.csse3200.game.components.WeaponsStatsComponent;
 import com.csse3200.game.components.player.InventoryComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.Weapons;
 import com.csse3200.game.entities.factories.characters.BossFactory;
-import com.csse3200.game.entities.factories.characters.NPCFactory;
 import com.csse3200.game.entities.factories.items.ConsumableFactory;
 import com.csse3200.game.entities.factories.items.ItemFactory;
 import com.csse3200.game.entities.factories.items.WeaponsFactory;
@@ -28,8 +26,6 @@ import com.csse3200.game.entities.factories.characters.PlayerFactory;
 import com.csse3200.game.entities.configs.ItemSpawnConfig;
 import com.csse3200.game.entities.factories.*;
 import com.csse3200.game.entities.spawner.ItemSpawner;
-import com.csse3200.game.components.enemy.EnemyWaves;
-import com.csse3200.game.physics.components.PhysicsProjectileComponent;
 import com.csse3200.game.utils.math.GridPoint2Utils;
 import com.csse3200.game.utils.math.RandomUtils;
 import com.csse3200.game.services.ResourceService;
@@ -67,7 +63,7 @@ public class ForestGameArea extends GameArea {
   private static final int NUM_ROBOTS = 1;
   private static final int NUM_ITEMS = 5;//this is for ItemFactory
   private static final int NUM_GHOSTS = 1;
-  private static final int NUM_TURRETS = 1;
+  // private static final int NUM_TURRETS = 1;
   private static final float WALL_WIDTH = 0.1f;
 
   /** Files or pictures used by the game (enemy/props,etc.). */
