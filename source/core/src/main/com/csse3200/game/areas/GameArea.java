@@ -12,6 +12,7 @@ import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
+import com.csse3200.game.services.SaveLoadService;
 import com.csse3200.game.services.ServiceLocator;
 
 import java.util.ArrayList;
@@ -27,8 +28,8 @@ import java.util.function.Supplier;
 public abstract class GameArea implements Disposable {
   protected TerrainComponent terrain;
   protected List<Entity> areaEntities;
-  protected TerrainFactory terrainFactory;
-  protected CameraComponent cameraComponent;
+  protected static TerrainFactory terrainFactory;
+  protected static CameraComponent cameraComponent;
   /** Prevents re-entrant room transitions across areas */
   protected static boolean isTransitioning = false;
 
@@ -364,6 +365,8 @@ public abstract class GameArea implements Disposable {
       });
     });
   }
+
+
 
   @Override
   public String toString() {

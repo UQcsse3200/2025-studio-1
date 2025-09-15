@@ -20,7 +20,7 @@ public class InventoryComponent extends Component {
 
   private static final Logger logger = LoggerFactory.getLogger(InventoryComponent.class);
 
-  private int inventoryCount = 0;
+private int inventoryCount = 0;
   private final int maxCapacity = 5;
   private final int minCapacity = 0;
   private final ArrayList<Entity> items = new ArrayList<>(maxCapacity);

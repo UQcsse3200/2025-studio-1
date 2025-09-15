@@ -6,6 +6,7 @@ import com.csse3200.game.areas.*;
 import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.components.ItemComponent;
 import com.csse3200.game.components.player.InventoryComponent;
+import com.csse3200.game.components.player.ItemPickUpComponent;
 import com.csse3200.game.components.player.PlayerStatsDisplay;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.files.FileLoader;
@@ -26,12 +27,6 @@ public class SaveLoadService {
     private String path;
     /** Save the current GameArea to local storage (saves/slotX.json). */
     public boolean save(String slot, GameArea gameArea) {
-        FileLoader.jsonSave.addClassTag("Forest", ForestGameArea.class);
-        FileLoader.jsonSave.addClassTag("Elevator", ElevatorGameArea.class);
-        FileLoader.jsonSave.addClassTag("Office", OfficeGameArea.class);
-        FileLoader.jsonSave.addClassTag("Floor5", Floor5GameArea.class);
-        FileLoader.jsonSave.addClassTag("Floor2", Floor2GameArea.class);
-        FileLoader.jsonSave.addClassTag("Tunnel", TunnelGameArea.class);
 
 
         PlayerInfo gs = new PlayerInfo();
@@ -74,25 +69,30 @@ public class SaveLoadService {
                 FileLoader.readPlayer(PlayerInfo.class, filePath,
                 FileLoader.Location.LOCAL);
         logger.info("area id retrieved");
-        FileLoader.jsonSave.getClass(loadStats.areaId);
         GameArea areaLoad;
-        try {
-            areaLoad = (GameArea) ClassReflection.newInstance(FileLoader.jsonSave.getClass(loadStats.areaId));
-        } catch (Exception e) {
-            logger.error(e.getMessage());
-            return false;
-        }
-        logger.info(areaLoad.toString());
 
-//        InventoryComponent loadInventory = new InventoryComponent(0);
-//        ItemPickUpComponent loadIn = new ItemPickUpComponent(loadInventory);
-//        if (!loadStats.inventory.isEmpty()) {
-//            for (int i = 0; i < loadStats.inventory.size(); i++) {
-//                loadIn.createItemFromTexture(loadStats.inventory.get(i));
-//                loadInventory.addItem(
-//                        loadIn.createItemFromTexture(loadStats.inventory.get(i)));
-//            }
-//        }
+        // switch for all areas of the game
+        switch (loadStats.areaId){
+            case "Forest" -> areaLoad = ForestGameArea.load(loadStats);
+            case "Elevator" -> areaLoad = ElevatorGameArea.load(loadStats);
+            case "Office" -> areaLoad = OfficeGameArea.load(loadStats);
+            case "Floor5" -> areaLoad = Floor5GameArea.load(loadStats);
+            case "Floor2" -> areaLoad = Floor2GameArea.load(loadStats);
+            case "Tunnel" -> areaLoad = TunnelGameArea.load(loadStats);
+            case "Security" -> areaLoad = SecurityGameArea.load(loadStats);
+            case "Storage" -> areaLoad = StorageGameArea.load(loadStats);
+        }
+
+
+        InventoryComponent loadInventory = new InventoryComponent(0);
+        ItemPickUpComponent loadIn = new ItemPickUpComponent(loadInventory);
+        if (!loadStats.inventory.isEmpty()) {
+            for (int i = 0; i < loadStats.inventory.size(); i++) {
+                loadIn.createItemFromTexture(loadStats.inventory.get(i));
+                loadInventory.addItem(
+                        loadIn.createItemFromTexture(loadStats.inventory.get(i)));
+            }
+        }
 //        if (loadStats == null) {
 //            return false;
 //        }

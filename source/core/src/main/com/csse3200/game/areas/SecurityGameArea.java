@@ -8,6 +8,7 @@ import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.factories.characters.PlayerFactory;
 import com.csse3200.game.rendering.SolidColorRenderComponent;
+import com.csse3200.game.services.SaveLoadService;
 
 /** Minimal generic Security room: walls, doors, and a subtle background overlay. */
 public class SecurityGameArea extends GameArea {
@@ -51,6 +52,9 @@ public class SecurityGameArea extends GameArea {
   @Override
   public String toString() {
     return "Security";
+  }
+  public static SecurityGameArea load(SaveLoadService.PlayerInfo load) {
+    return (new SecurityGameArea(terrainFactory, cameraComponent));
   }
 }
 
