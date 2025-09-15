@@ -1,104 +1,89 @@
 package com.csse3200.game.areas;
 
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.GridPoint2;
+import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
+import com.csse3200.game.components.items.ItemHoldComponent;
 import com.csse3200.game.components.CameraComponent;
+import com.csse3200.game.components.DoorComponent;
+import com.csse3200.game.entities.configs.Consumables;
+import com.csse3200.game.components.KeycardGateComponent;
+import com.csse3200.game.rendering.AnimationRenderComponent;
+import com.csse3200.game.components.player.InventoryComponent;
 import com.csse3200.game.entities.Entity;
+import com.csse3200.game.entities.configs.Weapons;
+import com.csse3200.game.entities.factories.characters.BossFactory;
+import com.csse3200.game.entities.factories.items.ConsumableFactory;
+import com.csse3200.game.entities.factories.items.ItemFactory;
+import com.csse3200.game.entities.factories.items.WeaponsFactory;
+import com.csse3200.game.entities.factories.system.ObstacleFactory;
+import com.csse3200.game.entities.factories.characters.PlayerFactory;
+import com.csse3200.game.entities.configs.ItemSpawnConfig;
+import com.csse3200.game.entities.factories.*;
+import com.csse3200.game.entities.spawner.ItemSpawner;
+import com.csse3200.game.utils.math.GridPoint2Utils;
+import com.csse3200.game.utils.math.RandomUtils;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
-import com.csse3200.game.entities.factories.system.ObstacleFactory;
+import com.csse3200.game.components.gamearea.GameAreaDisplay;
+import com.csse3200.game.rendering.TextureRenderComponent;
+import com.csse3200.game.entities.factories.ShopFactory;
+import com.csse3200.game.components.shop.ShopManager;
+import com.csse3200.game.components.shop.CatalogService;
+import com.csse3200.game.components.shop.ShopDemo;
 
-/**
- * Represents the Security Game Area within the game.
- * This area includes walls, doors, floors, security props, and platforms.
- * It handles spawning the player, collidable and decorative entities, and
- * transitioning to other game areas via doors.
- */
+
+import javax.naming.spi.ObjectFactory;
+import java.util.Collections;
+import java.security.SecureRandom;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+/** Minimal generic Security room: walls, doors, and a subtle background overlay. */
 public class SecurityGameArea extends GameArea {
   private static final float WALL_WIDTH = 0.1f;
-  private static final GridPoint2 PLAYER_SPAWN = new GridPoint2(2, 10);
+  private static final GridPoint2 PLAYER_SPAWN = new GridPoint2(10, 10);
 
-  /** Textures used for the security room, including background and props. */
-  private static final String[] securityTextures = {
-          "images/SecurityBackground.png",
-          "foreg_sprites/general/ThinFloor3.png",
-          "foreg_sprites/Security/Monitor.png",
-          "foreg_sprites/Security/Platform.png",
-          "foreg_sprites/Security/RedLight.png",
-          "foreg_sprites/Security/SecuritySystem.png",
-          "foreg_sprites/futuristic/storage_crate_green2.png",
-          "foreg_sprites/futuristic/storage_crate_dark2.png",
-          "foreg_sprites/futuristic/SecurityCamera3.png"
-  };
-
-  /**
-   * Constructs a SecurityGameArea.
-   *
-   * @param terrainFactory   Factory used to create terrain for this area.
-   * @param cameraComponent  Camera component used to determine viewport boundaries.
-   */
   public SecurityGameArea(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
     super(terrainFactory, cameraComponent);
   }
 
-  /**
-   * Creates the game area, loading textures, spawning terrain,
-   * borders, doors, player, platforms, and security props.
-   */
   @Override
   public void create() {
-    // Load textures
-    ResourceService resourceService = ServiceLocator.getResourceService();
-    resourceService.loadTextures(securityTextures);
-    resourceService.loadAll();
-
-    // Spawn terrain
-    terrain = terrainFactory.createTerrain(TerrainType.SECURITY_ROOM);
-    spawnEntity(new Entity().addComponent(terrain));
+    GenericLayout.ensureGenericAssets(this);
+    GenericLayout.setupTerrainWithOverlay(this, terrainFactory, TerrainType.FOREST_DEMO,
+        new Color(0.08f, 0.08f, 0.1f, 0.30f));
 
     spawnBordersAndDoors();
     spawnPlayer();
-    spawnPlatforms();
-    spawnSecurityProps();
+    spawnFloor();
   }
 
-  /**
-   * Spawns walls and doors on the left and right sides of the camera viewport.
-   * Left door triggers transition back to Floor5GameArea.
-   * Right door triggers transition to OfficeGameArea.
-   */
+  // Assets ensured via GenericLayout
+
   private void spawnBordersAndDoors() {
-    if (cameraComponent == null) return;
-    Bounds b = getCameraBounds(cameraComponent);
-
-    // Left wall with door at ground level
-    addSolidWallLeft(b, WALL_WIDTH);
-
-    float leftDoorHeight = Math.max(1f, b.viewHeight * 0.2f);
-    float leftDoorY = b.bottomY;
-    Entity leftDoor = ObstacleFactory.createDoorTrigger(WALL_WIDTH, leftDoorHeight);
-    leftDoor.setPosition(b.leftX + 0.001f, leftDoorY);
-    leftDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadBackToFloor5));
-    spawnEntity(leftDoor);
-
-    // Right wall with door at the top-right
-    addSolidWallRight(b, WALL_WIDTH);
-
-    float rightDoorHeight = Math.max(1f, b.viewHeight * 0.2f);
-    float rightDoorY = b.topY - rightDoorHeight;
-    Entity rightDoor = ObstacleFactory.createDoorTrigger(WALL_WIDTH, rightDoorHeight);
-    rightDoor.setPosition(b.rightX - WALL_WIDTH - 0.001f, rightDoorY);
-    rightDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadOffice));
-    spawnEntity(rightDoor);
+    GenericLayout.addLeftRightDoorsAndWalls(this, cameraComponent, WALL_WIDTH,
+        this::loadBackToFloor5, this::loadOffice);
   }
 
-  /**
-   * Spawns the player character at the predefined spawn point.
-   */
   private void spawnPlayer() {
     Entity player = PlayerFactory.createPlayer();
     spawnEntityAt(player, PLAYER_SPAWN, true, true);
+  }
+
+  private void loadBackToFloor5() {
+    clearAndLoad(() -> new Floor5GameArea(terrainFactory, cameraComponent));
+  }
+
+  private void loadOffice() {
+    clearAndLoad(() -> new OfficeGameArea(terrainFactory, cameraComponent));
   }
 
   /**
@@ -153,18 +138,5 @@ public class SecurityGameArea extends GameArea {
       Entity plat = ObstacleFactory.createSecurityPlatform();
       spawnEntityAt(plat, platPos, true, false);
     }
-  }
-
-  /**
-   * Clears the current game area and loads Floor5GameArea.
-   */
-  private void loadBackToFloor5() {
-    clearAndLoad(() -> new Floor5GameArea(terrainFactory, cameraComponent));
-  }
-  /**
-   * Clears the current game area and loads OfficeGameArea.
-   */
-  private void loadOffice() {
-    clearAndLoad(() -> new OfficeGameArea(terrainFactory, cameraComponent));
   }
 }
