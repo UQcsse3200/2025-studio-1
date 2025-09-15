@@ -357,13 +357,7 @@ public class ObstacleFactory {
    * Security camera sprite (visual only). No physics/collider, so it never blocks the player.
    * @return a decorative camera entity
    */
-  public static Entity createLargeSecurityCamera() {
-    Entity cam = new Entity()
-            .addComponent(new TextureRenderComponent("foreg_sprites/futuristic/SecurityCamera3.png"));
-    cam.getComponent(TextureRenderComponent.class).scaleEntity();
-    cam.scaleHeight(1.9f);
-    return cam;
-  }
+
 
   /**
    * Glowing energy pod that acts as a solid prop on the floor.
@@ -419,7 +413,61 @@ public class ObstacleFactory {
     PhysicsUtils.setScaledCollider(crate, 1f, 1f);
     return crate;
   }
+    public static Entity createLargeSecurityCamera() {
+        Entity cam = new Entity()
+                .addComponent(new TextureRenderComponent("foreg_sprites/futuristic/SecurityCamera3.png"));
+        cam.getComponent(TextureRenderComponent.class).scaleEntity();
+        cam.scaleHeight(1.7f);
+        return cam;
+    }
+    public static Entity createSecurityMonitor() {
+        Entity monitor =
+                new Entity()
+                        .addComponent(new TextureRenderComponent("foreg_sprites/Security/Monitor.png"))
+                        .addComponent(new PhysicsComponent())
+                .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
 
+        monitor.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
+        monitor.getComponent(TextureRenderComponent.class).scaleEntity();
+        monitor.scaleHeight(1.5f);
+        PhysicsUtils.setScaledCollider(monitor, 0.7f, 0.7f);
+        return monitor;
+    }
+    public static Entity createSecurityPlatform() {
+        Entity platform =
+                new Entity()
+                        .addComponent(new TextureRenderComponent("foreg_sprites/Security/Platform.png"))
+                        .addComponent(new PhysicsComponent())
+                        .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
+
+        platform.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
+        platform.getComponent(TextureRenderComponent.class).scaleEntity();
+        platform.scaleHeight(1.0f);
+        PhysicsUtils.setScaledCollider(platform, 0.6f, 0.6f);
+        return platform;
+    }
+    public static Entity createRedLight() {
+        Entity redLight =
+                new Entity()
+                        .addComponent(new TextureRenderComponent("foreg_sprites/Security/RedLight.png"));
+
+        redLight.getComponent(TextureRenderComponent.class).scaleEntity();
+        redLight.scaleHeight(1f);
+        return redLight;
+    }
+    public static Entity createSecuritySystem() {
+        Entity console =
+                new Entity()
+                        .addComponent(new TextureRenderComponent("foreg_sprites/Security/SecuritySystem.png"))
+                        .addComponent(new PhysicsComponent())
+                        .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
+
+        console.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
+        console.getComponent(TextureRenderComponent.class).scaleEntity();
+        console.scaleHeight(2.0f);
+        PhysicsUtils.setScaledCollider(console, 0.7f, 0.7f);
+        return console;
+    }
   public static Entity createWall(float width, float height) {
     Entity wall = new Entity()
             .addComponent(new PhysicsComponent().setBodyType(BodyType.StaticBody))
