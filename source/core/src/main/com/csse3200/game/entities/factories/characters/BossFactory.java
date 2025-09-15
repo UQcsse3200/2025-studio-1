@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.ai.tasks.AITaskComponent;
 import com.csse3200.game.components.CombatStatsComponent;
+import com.csse3200.game.components.Component;
 import com.csse3200.game.components.enemy.*;
 import com.csse3200.game.components.npc.Boss2AnimationController;
 import com.csse3200.game.components.npc.BossAnimationController;
@@ -113,6 +114,7 @@ public class BossFactory {
 
         boss2
                 .addComponent(new CombatStatsComponent(1000))
+                .addComponent(new Boss2HealthPhaseSwitcher(0.5f, "idle", "phase2"))
                 .addComponent(new BossStageComponent(boss2))
                 .addComponent(new FireballAttackComponent(target, 1.5f, 8f, 6f, config.baseAttack + 2))
                 .addComponent(new BossChargeSkillComponent(
@@ -233,26 +235,52 @@ public class BossFactory {
         return npc;
     }
 
-    public static Entity createBaseBoss2(Entity target) {
-        Entity boss =
-                new Entity()
-                        .addComponent(new PhysicsComponent())
-                        .addComponent(new PhysicsMovementComponent())
-                        .addComponent(new ColliderComponent())
-                        .addComponent(new HitboxComponent().setLayer(PhysicsLayer.NPC))
-                        .addComponent(new TouchAttackComponent(PhysicsLayer.PLAYER, 1.5f));
+    public static class ApplyInitialBoss2Setup extends Component {
+        private final float scaleK;
+        private final String startAnim;
+        public ApplyInitialBoss2Setup(float scaleK, String startAnim) {
+            this.scaleK = scaleK; this.startAnim = startAnim;
+        }
+        @Override public void create() {
+            AnimationRenderComponent arc = entity.getComponent(AnimationRenderComponent.class);
+            if (arc != null) {
+                arc.scaleEntity();                      // 此时 entity 已注入，不会 NPE
+                Vector2 s = entity.getScale();
+                entity.setScale(s.x * scaleK, s.y * scaleK);
+                if (arc.hasAnimation(startAnim)) arc.startAnimation(startAnim);
+            }
+        }
+    }
 
-        final String ATLAS_PATH = "images/boss_idle.atlas";
-        TextureAtlas atlas = ServiceLocator.getResourceService().getAsset(ATLAS_PATH, TextureAtlas.class);
+
+
+
+    // Base：只负责渲染、碰撞、起始动画（不要主动触发 phase2）
+    public static Entity createBaseBoss2(Entity target) {
+        Entity boss = new Entity()
+                .addComponent(new PhysicsComponent())
+                .addComponent(new PhysicsMovementComponent())
+                .addComponent(new ColliderComponent())
+                .addComponent(new HitboxComponent().setLayer(PhysicsLayer.NPC))
+                .addComponent(new TouchAttackComponent(PhysicsLayer.PLAYER, 1.5f));
+
+        TextureAtlas atlas = ServiceLocator.getResourceService()
+                .getAsset("images/boss2_combined.atlas", TextureAtlas.class);
 
         AnimationRenderComponent arc = new AnimationRenderComponent(atlas);
+        arc.setDisposeAtlas(false);
+        arc.addAnimation("idle",   0.10f, Animation.PlayMode.LOOP);
+        arc.addAnimation("phase2", 0.08f, Animation.PlayMode.LOOP);
         boss.addComponent(arc);
-        boss.addComponent(new Boss2AnimationController("idle", 0.10f, Animation.PlayMode.LOOP));
-        arc.scaleEntity();
+
+        // 碰撞体缩放
         PhysicsUtils.setScaledCollider(boss, 0.9f, 0.4f);
-        Vector2 s = boss.getScale();
-        boss.setScale(s.x * 4f, s.y * 4f);
+
+        // 延迟到 create() 再做首帧缩放与播放
+        boss.addComponent(new ApplyInitialBoss2Setup(4f, "idle"));
 
         return boss;
     }
+
+
 }
