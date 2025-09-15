@@ -42,6 +42,10 @@ public class ServerGameArea extends GameArea {
 /** Files or pictures used by the game (enemy/props,etc.). */
   private static final String HEART = "images/heart.png";
 
+  private static final String[] serverBackground = {
+    "images/ServerRoomBackground.png",
+  };
+
   private static final String[] serverRacks = {
     "foreg_sprites/furniture/ServerRack.png",
     "foreg_sprites/furniture/ServerRack2.png",
@@ -245,21 +249,6 @@ public class ServerGameArea extends GameArea {
     Entity spawnPad2 = ObstacleFactory.createPurpleSpawnPad();
     GridPoint2 spawnPadSpawn2 = new GridPoint2(25, 15);
     spawnEntityAt(spawnPad2, spawnPadSpawn2, false, false);
-
-
-  }
-
-  /**
-   * Spawns two GhostGPT enemies at fixed locations for predictable behaviour.
-   */
-  private void spawnGhostGPT() {
-    GridPoint2 spawn1 = new GridPoint2(25, 20);
-    GridPoint2 spawn2 = new GridPoint2(25, 20);
-
-    // Entity ghostGPT = NPCFactory.createGhostGPT(player, this);
-    // spawnEntityAt(ghostGPT, spawn1, true, true);
-    // Entity ghostGPT2 = NPCFactory.createGhostGPT(player, this);
-    // spawnEntityAt(ghostGPT2, spawn2, true, true);
   }
 
   /**
@@ -277,7 +266,7 @@ public class ServerGameArea extends GameArea {
    */
   private void spawnTerrain() {
     // Build the ground
-    terrain = terrainFactory.createTerrain(TerrainType.SPAWN_ROOM);
+    terrain = terrainFactory.createTerrain(TerrainType.SERVER_ROOM);
     spawnEntity(new Entity().addComponent(terrain));
 
     // Build screen edges and the right-side door if a camera is available
@@ -339,6 +328,7 @@ public class ServerGameArea extends GameArea {
   private void loadAssets() {
     logger.debug("Loading assets");
     ResourceService resourceService = ServiceLocator.getResourceService();
+    resourceService.loadTextures(serverBackground);
     resourceService.loadTextures(futuristicTextures);
     resourceService.loadTextures(keycardTextures);
     resourceService.loadTextures(generalTextures);
@@ -363,6 +353,7 @@ public class ServerGameArea extends GameArea {
   private void unloadAssets() {
     logger.debug("Unloading assets");
     ResourceService resourceService = ServiceLocator.getResourceService();
+    resourceService.unloadAssets(serverBackground);
     resourceService.unloadAssets(keycardTextures);
     resourceService.unloadAssets(futuristicTextures);
     resourceService.unloadAssets(playerSound1);
