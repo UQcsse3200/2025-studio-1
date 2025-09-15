@@ -55,6 +55,7 @@ public class CombatStatsComponent extends Component {
 
   public void takeDamage(int damage) {
     applyDamage(damage);
+    entity.getEvents().trigger("damageTaken");
   }
 
   /**
