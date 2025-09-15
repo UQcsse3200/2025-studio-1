@@ -1,11 +1,7 @@
 package com.csse3200.game.ui.terminal.commands;
 
-import com.csse3200.game.areas.Floor2GameArea;
-import com.csse3200.game.areas.Floor3GameArea;
 import com.csse3200.game.areas.GameArea;
-import com.csse3200.game.areas.ForestGameArea;
 import com.csse3200.game.components.CombatStatsComponent;
-import com.csse3200.game.components.player.PlayerStatsDisplay;
 import com.csse3200.game.components.player.StaminaComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
