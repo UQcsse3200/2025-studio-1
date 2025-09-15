@@ -16,6 +16,8 @@ import com.csse3200.game.components.shop.ShopManager;
 import com.csse3200.game.areas.ForestGameArea;
 import com.csse3200.game.ui.*;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.utils.Scaling;
+import com.badlogic.gdx.scenes.scene2d.ui.Container;
 
 
 public class ShopScreenDisplay extends UIComponent {
@@ -33,8 +35,10 @@ public class ShopScreenDisplay extends UIComponent {
     private final CatalogService catalog;
     private final ShopManager manager;
     private Table root;
+    private Image frame;
     private Image dimmer;
     private Texture dimTex;
+    private Texture frameTex;
     private Table grid;
     private Table hud;
     private Label currencyLabel;
@@ -52,40 +56,64 @@ public class ShopScreenDisplay extends UIComponent {
         entity.getEvents().addListener("purchaseFailed", this::showError);
         entity.getEvents().addListener("interact", this::show);
         super.create();
+
         itemPopup = new ItemScreenDisplay();
         entity.addComponent(itemPopup);
 
-        // Background white colour
-        Texture whiteTex = makeSolidTexture(Color.WHITE);
-        background = new Image(new TextureRegionDrawable(new TextureRegion(whiteTex)));
-        background.setFillParent(false); // we will size it manually
-        background.setSize(500, 600);     // adjust width/height to cover your grid/buttons
-        background.setPosition(
-                (stage.getWidth() - background.getWidth()) / 2,
-                (stage.getHeight() - background.getHeight()) / 2
-        );
-
-        //Dimmer
+        // Dimmer
         dimTex = makeSolidTexture(new Color(0, 0, 0, 0.6f));
         dimmer = new Image(new TextureRegionDrawable(new TextureRegion(dimTex)));
         dimmer.setFillParent(true);
         stage.addActor(dimmer);
 
-        // Root table
-        root = new Table();
-        root.setFillParent(true);
-        root.center();
+        // Frame (outline)
+        float panelW = 720f, panelH = 660f;
+        frameTex = makeSolidTexture(Color.BLACK);
+        frame = new Image(new TextureRegionDrawable(new TextureRegion(frameTex)));
+        frame.setSize(panelW + 8, panelH + 8);
+        frame.setPosition(
+                (stage.getWidth()  - frame.getWidth())  / 2f,
+                (stage.getHeight() - frame.getHeight()) / 2f
+        );
+        stage.addActor(frame);
+
+        // Panel background (centered card)
+        Texture panelTex = makeSolidTexture(Color.valueOf("0B132B")); // deep navy
+        background = new Image(new TextureRegionDrawable(new TextureRegion(panelTex)));
+        background.setSize(panelW, panelH);
+        background.setPosition(
+                (stage.getWidth() - background.getWidth()) / 2f,
+                (stage.getHeight() - background.getHeight()) / 2f);
         stage.addActor(background);
+
+        // Root table sits on top of the panel
+        root = new Table();
+        root.setSize(panelW, panelH);
+        root.setPosition(background.getX(), background.getY());
+        root.top().pad(20); // top-align & inner padding
+        root.defaults().pad(10);
         stage.addActor(root);
 
         // Title
-        Label title = new Label("Shop", skin);
-        title.setFontScale(2f);
-        root.add(title).padBottom(20).row();
+        Label.LabelStyle titleStyle =
+                new Label.LabelStyle(skin.get(Label.LabelStyle.class));
+        titleStyle.fontColor = Color.valueOf("00E5FF"); // aqua
+        Label title = new Label("Shop", titleStyle);
+        title.setFontScale(1.8f);
+        root.add(title).padBottom(10).row();
 
-        // Grid
+        // Divider
+        Image divider = new Image(new TextureRegionDrawable(new TextureRegion(
+                makeSolidTexture(new Color(1f, 1f, 1f, 0.08f))
+        )));
+        divider.setHeight(2);
+        divider.setFillParent(false);
+        divider.setWidth(panelW - 40);
+        root.add(divider).padBottom(8).row();
+
+        // Grid (uniform cells)
         grid = new Table();
-        grid.defaults().pad(10);
+        grid.defaults().pad(12).size(150, 180).uniform(true); // keeps every cell the same size
 
         int columns = 4;
         int count = 0;
@@ -98,6 +126,18 @@ public class ShopScreenDisplay extends UIComponent {
 
         root.add(grid).row();
 
+        // Balance footer (bottom-right inside panel)
+        Label.LabelStyle balStyle = new Label.LabelStyle(skin.get(Label.LabelStyle.class));
+        balStyle.fontColor = Color.valueOf("FFD54F"); // gold
+        currencyLabel = new Label("", balStyle);
+        currencyLabel.setFontScale(1.2f);
+        updateCurrencyLabel();
+
+        Table footer = new Table();
+        footer.add().expandX();                 // push next cell to the right edge
+        footer.add(currencyLabel).right();
+        root.add(footer).growX().padTop(8f).row();
+
         //  Close Shop button
         TextButton.TextButtonStyle style = skin.get("default", TextButton.TextButtonStyle.class);
         TextButton closeBtn = new TextButton("Close Shop", style);
@@ -107,21 +147,15 @@ public class ShopScreenDisplay extends UIComponent {
                 hide();
             }
         });
+        root.add(closeBtn).padTop(14).center().row();
 
-        root.add(closeBtn).padTop(20).row();
-        // --- Currency HUD (top-right) ---
-        hud = new Table();
-        hud.setFillParent(true);
-        hud.top().right().pad(12);
-        stage.addActor(hud);
+        // keep the footer label in sync with InventoryComponent#setProcessor()
+        game.getPlayer().getEvents().addListener("updateProcessor", (Integer p) -> {
+            if (currencyLabel != null) {
+                currencyLabel.setText("Balance: $" + p);
+            }
+        });
 
-        // label + initial value
-        currencyLabel = new Label("", skin);
-        updateCurrencyLabel();  // set from InventoryComponent once on open
-
-        // Optional: add a static "$" label or an icon if you have one in the skin
-        hud.add(new Label("$", skin)).padRight(4f);
-        hud.add(currencyLabel);
         hide();
     }
 
@@ -137,7 +171,7 @@ public class ShopScreenDisplay extends UIComponent {
         var inv = game.getPlayer().getComponent(
                 com.csse3200.game.components.player.InventoryComponent.class);
         int amount = (inv != null) ? inv.getProcessor() : 0;
-        currencyLabel.setText(String.valueOf(amount));
+        currencyLabel.setText("Balance: $" + amount);
     }
 
     @Override
@@ -145,7 +179,8 @@ public class ShopScreenDisplay extends UIComponent {
         if (root != null) { root.remove(); root = null; }
         if (dimmer != null) { dimmer.remove(); dimmer = null; }
         if (dimTex != null) { dimTex.dispose(); dimTex = null; }
-        if (hud != null) { hud.remove(); hud = null; }
+        if (frame != null) { frame.remove(); frame = null; }
+        if (frameTex != null) { frameTex.dispose(); frameTex = null; }
         if (itemPopup != null) { itemPopup.dispose(); itemPopup = null; }
         if (background != null) {background.remove(); background = null; }
         super.dispose();
@@ -153,6 +188,8 @@ public class ShopScreenDisplay extends UIComponent {
 
     private void makeButton(CatalogEntry entry) {
         ImageButton iconButton = (ImageButton) entry.getIconActor(skin);
+        // Ensure the icon scales to fit the cell (prevents tall sprites from overlapping)
+        iconButton.getImage().setScaling(com.badlogic.gdx.utils.Scaling.fit);
 
         Actor finalIcon;
         if (!entry.enabled()) {
@@ -171,11 +208,25 @@ public class ShopScreenDisplay extends UIComponent {
         } else {
             finalIcon = iconButton;
         }
+
+        // Wrap the icon in a fixed-size box
+        Container<Actor> iconBox = new Container<>(iconButton);
+        iconBox.prefSize(96, 96);
+        iconBox.minSize(96, 96);
+        iconBox.maxSize(96, 96);
+        iconBox.fill();
+
         // Add name & price below icon
         Table itemTable = new Table();
-        itemTable.add(finalIcon).size(100, 100).row();
-        itemTable.add(new Label(entry.getItemName(), skin)).row();
-        itemTable.add(new Label("$" + entry.price(), skin)).padBottom(6).row();
+        itemTable.add(iconBox).width(96).height(96).padTop(6).padBottom(8).row();
+        itemTable.add(new Label(entry.getItemName(), skin)).padBottom(4).row();
+
+        // Price label in gold
+        Label.LabelStyle priceStyle =
+                new Label.LabelStyle(skin.get(Label.LabelStyle.class));
+        priceStyle.fontColor = Color.valueOf("FFD54F"); // gold
+        Label price = new Label("$" + entry.price(), priceStyle);
+        itemTable.add(price).padBottom(8).row();
 
         // --- Add Info button ---
         itemTable.add(infoButton(entry)).padTop(4).row();
@@ -191,7 +242,7 @@ public class ShopScreenDisplay extends UIComponent {
                 }
             });
 
-        grid.add(itemTable).size(120, 140);
+        grid.add(itemTable);
 
     }
 
@@ -219,6 +270,9 @@ public class ShopScreenDisplay extends UIComponent {
     public void show() {
         refreshCatalog();
         updateCurrencyLabel();
+        if (frame != null) {
+            frame.setVisible(true);
+        }
         if (background != null) {
             background.setVisible(true);
         }
@@ -228,13 +282,12 @@ public class ShopScreenDisplay extends UIComponent {
         if (dimmer != null) {
             dimmer.setVisible(true);
         }
-        if (hud != null) {
-            hud.setVisible(true);
-        }
-
     }
 
     public void hide() {
+        if (frame != null) {
+            frame.setVisible(false);
+        }
         if (background != null) {
             background.setVisible(false);
         }
@@ -243,9 +296,6 @@ public class ShopScreenDisplay extends UIComponent {
         }
         if (dimmer != null) {
             dimmer.setVisible(false);
-        }
-        if (hud != null) {
-            hud.setVisible(false);
         }
     }
 
