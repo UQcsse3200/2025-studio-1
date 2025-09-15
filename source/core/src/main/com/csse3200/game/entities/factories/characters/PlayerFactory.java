@@ -4,12 +4,15 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.Fixture;
-import com.csse3200.game.components.CombatStatsComponent;
-import com.csse3200.game.components.WeaponsStatsComponent;
+import com.csse3200.game.components.*;
 import com.csse3200.game.components.player.*;
+import com.csse3200.game.components.player.InventoryComponent;
 import com.csse3200.game.components.player.StaminaComponent;
+import com.csse3200.game.effects.Effect;
+import com.csse3200.game.effects.RapidFireEffect;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.characters.PlayerConfig;
+import com.csse3200.game.entities.configs.consumables.RapidFireConsumableConfig;
 import com.csse3200.game.files.FileLoader;
 import com.csse3200.game.input.InputComponent;
 import com.csse3200.game.physics.PhysicsLayer;
@@ -52,6 +55,7 @@ public class PlayerFactory {
             .addComponent(new PlayerActions())
             .addComponent(new CombatStatsComponent(stats.health))
             .addComponent(new WeaponsStatsComponent(stats.baseAttack))
+            .addComponent(new AmmoStatsComponent(1000))
             .addComponent(playerInventory)
             .addComponent(new ItemPickUpComponent(playerInventory))
             .addComponent(inputComponent)
@@ -59,13 +63,49 @@ public class PlayerFactory {
             .addComponent(new PlayerInventoryDisplay(playerInventory))
             .addComponent(new StaminaComponent())
             .addComponent(animator)
-            .addComponent(new PlayerAnimationController());
+            .addComponent(new PlayerAnimationController())
+            .addComponent(new PowerupComponent());
 
     player.getComponent(AnimationRenderComponent.class).scaleEntity(2f);
     PhysicsUtils.setScaledCollider(player, 0.6f, 0.3f);
     player.getComponent(ColliderComponent.class).setDensity(1.5f);
     PhysicsUtils.setScaledCollider(player, 0.3f,0.5f);
     player.getComponent(WeaponsStatsComponent.class).setCoolDown(0.2f);
+
+    // pick up rapid fire powerup
+    // remove this if we have item pickup available
+    // (disposes entity when player go near it)
+    player.addComponent(new Component() {
+      public void update() {
+        var entities = ServiceLocator.getEntityService().getEntities();
+        for (int i = 0; i < entities.size; i++) {
+          Entity entityRapidFirePowerup = entities.get(i);
+          TagComponent tag = entityRapidFirePowerup.getComponent(TagComponent.class);
+
+          if (tag != null && tag.getTag().equals("rapidfire")) {
+            if (entityRapidFirePowerup.getCenterPosition().dst(player.getCenterPosition()) < 1f) {
+
+              InventoryComponent inventory = player.getComponent(InventoryComponent.class);
+              Entity equippedWeapon = inventory.getCurrentItem();
+
+              if (equippedWeapon != null) {
+                RapidFireConsumableConfig config = new RapidFireConsumableConfig();
+                for (Effect e : config.effects) {
+                  if (e instanceof RapidFireEffect rapidFireEffect) {
+                    player.getComponent(PowerupComponent.class).setEquippedWeapon(equippedWeapon);
+                    player.getComponent(PowerupComponent.class).addEffect(rapidFireEffect);
+                  }
+                }
+              }
+
+              entityRapidFirePowerup.dispose();
+            }
+          }
+        }
+      }
+    });
+
+
     return player;
   }
 

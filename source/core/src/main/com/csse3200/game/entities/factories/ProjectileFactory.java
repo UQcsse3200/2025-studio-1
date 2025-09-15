@@ -69,7 +69,9 @@ public class ProjectileFactory {
         if (item.hasComponent(BulletEnhancerComponent.class)) {
             return createProjectile(target, source, "images/waterBullet.png");
         }
-        return createProjectile(target, source, "images/round.png");
+        Entity projectile = createProjectile(target, source, "images/round.png");
+        projectile.scaleHeight(0.85f);
+        return projectile;
     }
 
     /**

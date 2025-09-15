@@ -178,9 +178,13 @@ public class ForestGameArea extends GameArea {
     "images/explosion_1.atlas",
     "images/explosion_2.atlas",
   };
+  private static final String[] forestSounds = {"sounds/Impact4.ogg",
+          "sounds/shot_failed.mp3",
+          "sounds/reload.mp3",
+          "sounds/laser_blast.mp3",
+          "sounds/ammo_replenished.mp3"};
 
 
-  private static final String[] forestSounds = {"sounds/Impact4.ogg"};
 
   private static final String backgroundMusic = "sounds/BGM_03_mp3.mp3";
 
@@ -192,12 +196,13 @@ public class ForestGameArea extends GameArea {
   private final CameraComponent cameraComponent;
 
 
-  private Entity player;
-  private Entity dagger;
-  private Entity lightsaber;
-  private Entity bullet;
-  private Entity pistol;
-  private Entity rifle;
+    private Entity player;
+    private Entity dagger;
+    private Entity lightsaber;
+    private Entity bullet;
+    private Entity pistol;
+    private Entity rifle;
+
 
   /**
    * Initialise this ForestGameArea to use the provided TerrainFactory and camera helper.
@@ -241,6 +246,9 @@ public class ForestGameArea extends GameArea {
     rifle.addComponent(new LaserComponent());
     rifle.addComponent(new BulletEnhancerComponent());
 
+
+    Entity rapidFirePowerup = spawnRapidFirePowerup();
+//  Entity bullet = spawnBullet();
 
     //These are commented out since there is no equip feature yet
     // this.equipItem(pistol);
@@ -498,11 +506,12 @@ public class ForestGameArea extends GameArea {
 
   private Entity spawnLightsaber() {
     Entity newLightsaber = WeaponsFactory.createWeapon(Weapons.LIGHTSABER);
-    Vector2 newLightsaberOffset = new Vector2(0.7f, -0.1f);
+    Vector2 newLightsaberOffset = new Vector2(0.9f, -0.2f);
     newLightsaber.addComponent(new ItemHoldComponent(this.player, newLightsaberOffset));
-    //Commented out since lightsaber animation is a work in progress
-    //AnimationRenderComponent lightSaberAnimator = WeaponsFactory.createAnimation("images/lightSaber.atlas", this.player);
-    //newLightsaber.addComponent(lightSaberAnimator);
+    AnimationRenderComponent lightSaberAnimator = WeaponsFactory.createAnimation("images/lightSaber.atlas", this.player);
+    newLightsaber.addComponent(lightSaberAnimator);
+    lightSaberAnimator.startAnimation("anim");
+
     return newLightsaber;
   }
 
@@ -520,6 +529,13 @@ public class ForestGameArea extends GameArea {
     newRifle.addComponent(new ItemHoldComponent(this.player, newRifleOffset));
     return newRifle;
   }
+
+  private Entity spawnRapidFirePowerup() {
+    Entity newRapidFirePowerup = PowerupsFactory.createRapidFire();
+    spawnEntityAt(newRapidFirePowerup, new GridPoint2(2, 40), true, true);
+    return newRapidFirePowerup;
+  }
+
 
   // Enemy Projectiles
   public Entity spawnEnemyProjectile(Vector2 directionToFire, WeaponsStatsComponent source) {

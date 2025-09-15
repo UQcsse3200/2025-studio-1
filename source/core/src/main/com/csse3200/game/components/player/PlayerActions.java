@@ -7,13 +7,20 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.utils.Array;
+import com.csse3200.game.components.CameraComponent;
+import com.csse3200.game.components.CombatStatsComponent;
+import com.csse3200.game.components.Component;
+import com.csse3200.game.components.MagazineComponent;
 import com.csse3200.game.components.*;
 import com.csse3200.game.entities.Entity;
+import com.csse3200.game.entities.configs.weapons.PistolConfig;
 import com.csse3200.game.entities.factories.ProjectileFactory;
 import com.csse3200.game.physics.PhysicsLayer;
 import com.csse3200.game.physics.components.HitboxComponent;
 import com.csse3200.game.physics.components.PhysicsComponent;
 import com.csse3200.game.physics.components.PhysicsProjectileComponent;
+import com.csse3200.game.rendering.AnimationRenderComponent;
+import com.csse3200.game.rendering.TextureRenderComponent;
 import com.csse3200.game.services.ServiceLocator;
 import com.badlogic.gdx.utils.Timer;
 
@@ -80,6 +87,7 @@ public class PlayerActions extends Component {
     entity.getEvents().addListener("walk", this::walk);
     entity.getEvents().addListener("walkStop", this::stopWalking);
     entity.getEvents().addListener("attack", this::attack);
+    entity.getEvents().addListener("attack", this::weaponAnimation);
     entity.getEvents().addListener("shoot", this::shoot);
     entity.getEvents().addListener("jumpAttempt", this::jump);
     entity.getEvents().addListener("sprintAttempt", this::sprintAttempt);
@@ -89,10 +97,12 @@ public class PlayerActions extends Component {
     entity.getEvents().addListener("sprintStart", this::startSprinting);
     entity.getEvents().addListener("sprintStop", this::stopSprinting);
     // Find camera from any entity with CameraComponent
+    entity.getEvents().addListener("reload", this::reload);
     Array<Entity> entities = ServiceLocator.getEntityService().getEntities();
     for (Entity entity: entities) {
       if (entity.getComponent(CameraComponent.class) != null) {
         camera = entity.getComponent(CameraComponent.class).getCamera();
+
       }
     }
   }
@@ -332,26 +342,49 @@ public class PlayerActions extends Component {
 
   /** Fires a projectile towards the mouse cursor. */
   void shoot() {
+
+
     WeaponsStatsComponent weapon = getCurrentWeaponStats();
     if (weapon == null) {
       return;
     }
+
+    InventoryComponent inventory = entity.getComponent(InventoryComponent.class);
+    Entity gun = inventory.getCurrentItem();
+
+    MagazineComponent mag = gun.getComponent(MagazineComponent.class);
     // Check for cooldown, defaulting to zero if no current weapon
     float coolDown = weapon.getCoolDown();
-    if (this.timeSinceLastAttack < coolDown) return;
+    if (this.timeSinceLastAttack < coolDown || mag.reloading()) {
+      return;
+    }
 
-    Sound attackSound = ServiceLocator.getResourceService().getAsset("sounds/Impact4.ogg", Sound.class);
+    if (mag.getCurrentAmmo() <= 0) {
+      Sound attackSound = ServiceLocator.getResourceService()
+              .getAsset("sounds/shot_failed.mp3", Sound.class);
+      attackSound.play();
+      return;
+    }
+
+
+    Sound attackSound = ServiceLocator.getResourceService()
+            .getAsset("sounds/laser_blast.mp3", Sound.class);
     attackSound.play();
 
     Entity bullet = ProjectileFactory.createPistolBullet(weapon);
-    Vector2 origin = new Vector2(entity.getPosition());
-    bullet.setPosition(origin);
+    Vector2 origin = new Vector2(entity.getCenterPosition());
+
+    bullet.setPosition(new Vector2(origin.x - bullet.getScale().x / 2f,
+            origin.y - bullet.getScale().y / 2f));
     ServiceLocator.getEntityService().register(bullet);
 
     PhysicsProjectileComponent projectilePhysics = bullet.getComponent(PhysicsProjectileComponent.class);
 
     Vector3 destination = camera.unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
     projectilePhysics.fire(new Vector2(destination.x - origin.x, destination.y - origin.y), 5);
+
+
+    mag.setCurrentAmmo(mag.getCurrentAmmo() - 1);
 
     timeSinceLastAttack = 0;
   }
@@ -387,12 +420,54 @@ public class PlayerActions extends Component {
     timeSinceLastAttack = 0;
   }
 
-  private WeaponsStatsComponent getCurrentWeaponStats() {
+  public WeaponsStatsComponent getCurrentWeaponStats() {
     InventoryComponent inv = entity.getComponent(InventoryComponent.class);
     if (inv != null) {
       WeaponsStatsComponent curr = inv.getCurrItemStats();
       if (curr != null) return curr;
     }
     return entity.getComponent(WeaponsStatsComponent.class);
+  }
+
+  /**
+   * Makes player reload their equipped weapon
+   */
+  void reload() {
+
+
+    InventoryComponent inventory = entity.getComponent(InventoryComponent.class);
+    Entity equippedItem = inventory.getCurrentItem();
+
+    if (equippedItem != null) {
+      MagazineComponent mag = equippedItem.getComponent(MagazineComponent.class);
+      if (mag != null) {
+
+        if (mag.reloading()) {
+
+          return;
+        }
+
+        Sound reloadSound;
+
+        if (mag.reload(entity)) {
+          reloadSound = ServiceLocator.getResourceService()
+                  .getAsset("sounds/reload.mp3", Sound.class);
+        }
+
+        else {
+          reloadSound = ServiceLocator.getResourceService()
+                  .getAsset("sounds/shot_failed.mp3", Sound.class);
+        }
+
+        reloadSound.play();
+      }
+    }
+  }
+
+  void weaponAnimation() {
+    if (entity.getComponent(AnimationRenderComponent.class) != null) {
+      entity.getEvents().trigger("anim");
+      System.out.println("TRIGGERED");
+    }
   }
 }
