@@ -245,11 +245,11 @@ public class EnemyWavesTest{
     void testIsCurrentWaveFinished() {
         long now = System.currentTimeMillis();
         enemyWaves.setWaveEndTime(now);
-        Assertions.assertTrue(enemyWaves.isCurrentWaveFinsihed(),
+        Assertions.assertTrue(enemyWaves.isCurrentWaveFinished(),
                 "Expected current wave finished when waveEndTime > 0");
 
         enemyWaves.setWaveEndTime(0L);
-        Assertions.assertFalse(enemyWaves.isCurrentWaveFinsihed(),
+        Assertions.assertFalse(enemyWaves.isCurrentWaveFinished(),
                 "Expected current wave not finished when waveEndTime = 0");
     }
 
@@ -261,7 +261,7 @@ public class EnemyWavesTest{
         Assertions.assertEquals(0, enemyWaves.getWaveNumber());
         Assertions.assertEquals(1f, enemyWaves.getScalingFactor());
         Assertions.assertEquals(0L, enemyWaves.getWaveEndTime());
-        Assertions.assertFalse(enemyWaves.isCurrentWaveFinsihed());
+        Assertions.assertFalse(enemyWaves.isCurrentWaveFinished());
 
         enemyWaves.startWave();
         Assertions.assertEquals(1, enemyWaves.getWaveNumber());
@@ -271,7 +271,7 @@ public class EnemyWavesTest{
         entities.clear();
         enemyWaves.tick();
         Assertions.assertTrue(enemyWaves.getWaveEndTime() > 0);
-        Assertions.assertTrue(enemyWaves.isCurrentWaveFinsihed());
+        Assertions.assertTrue(enemyWaves.isCurrentWaveFinished());
     }
 
     @Test
