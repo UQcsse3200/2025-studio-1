@@ -24,7 +24,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 
 public class ShopScreenDisplay extends UIComponent {
     // Error messages
-    private static final String ERROR_MESSAGE = "Unable to purchase ";
+    private static final String ERROR_MESSAGE = "Unable to purchase";
     private static final String NOT_FOUND_MESSAGE = ".Item was not found.";
     private static final String DISABLED_MESSAGE = ". Item is disabled.";
     private static final String INSUFFICIENT_FUNDS_MESSAGE = ". You have insufficient funds.";
@@ -337,7 +337,6 @@ public class ShopScreenDisplay extends UIComponent {
 
     // Errors
     private void showError(String itemName, PurchaseError error) {
-        String message = ERROR_MESSAGE + itemName;
         String errorMsg = switch (error) {
             case DISABLED -> DISABLED_MESSAGE;
             case NOT_FOUND -> NOT_FOUND_MESSAGE;
@@ -348,7 +347,7 @@ public class ShopScreenDisplay extends UIComponent {
             default -> UNEXPECTED_MESSAGE;
         };
         Dialog dialog = new Dialog("Error", skin);
-        dialog.text(message + errorMsg);
+        dialog.text(ERROR_MESSAGE + errorMsg);
         dialog.button("OK");
         dialog.show(stage);
     }
