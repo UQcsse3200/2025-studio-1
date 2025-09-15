@@ -15,7 +15,7 @@ import com.csse3200.game.services.GameTime;
 
 /**
  * Ground slow-chase for GhostGPT: set X only; Box2D gravity handles Y.
- * Not using MovementTask because it sets both X&Y (makes flying). Refer: Box2D manual (forces/impulses).
+ * Not using MovementTask because it sets both X and Y (makes flying). Refer: Box2D manual (forces/impulses).
  */
 public class GPTGroundSlowChaseTask extends DefaultTask implements PriorityTask {
   private final Entity target;
