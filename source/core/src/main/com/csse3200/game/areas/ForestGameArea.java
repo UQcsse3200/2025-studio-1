@@ -104,7 +104,9 @@ public class ForestGameArea extends GameArea {
     "images/mud.png",
     "images/heart.png",
           "images/laserball.png",
-    "images/computerBench.png"
+    "images/computerBench.png",
+          "images/boss_idle.png",
+          "images/robot-2.png"
 
   };
 
@@ -177,7 +179,8 @@ public class ForestGameArea extends GameArea {
     "images/ghostGPT.atlas",
     "images/explosion_1.atlas",
     "images/explosion_2.atlas",
-    "images/boss_explosion.atlas"
+    "images/boss_explosion.atlas",
+          "images/boss2_combined.atlas"
   };
 
 
