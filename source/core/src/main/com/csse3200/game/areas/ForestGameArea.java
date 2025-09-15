@@ -186,7 +186,8 @@ public class ForestGameArea extends GameArea {
     "images/explosion_2.atlas",
     "images/boss_explosion.atlas",
           "images/boss2_combined.atlas",
-          "images/Boss3_Attacks.atlas"
+          "images/Boss3_Attacks.atlas",
+          "images/boss3_phase2.atlas"
   };
 
 
