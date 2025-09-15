@@ -150,6 +150,9 @@ implements com.badlogic.gdx.utils.Disposable</span></div>
 <div class="col-first even-row-color"><code>protected <a href="terrain/TerrainFactory.html" title="class in com.csse3200.game.areas.terrain">TerrainFactory</a></code></div>
 <div class="col-second even-row-color"><code><a href="#terrainFactory" class="member-name-link">terrainFactory</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code>protected <a href="../components/enemy/EnemyWaves.html" title="class in com.csse3200.game.components.enemy">EnemyWaves</a></code></div>
+<div class="col-second odd-row-color"><code><a href="#wavesManager" class="member-name-link">wavesManager</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
 </div>
 </section>
 </li>
@@ -261,31 +264,66 @@ implements com.badlogic.gdx.utils.Disposable</span></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Convenience to load textures if not already loaded.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected <a href="GameArea.Bounds.html" title="class in com.csse3200.game.areas">GameArea.Bounds</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getCameraBounds(com.csse3200.game.components.CameraComponent)" class="member-name-link">getCameraBounds</a><wbr>(<a href="../components/CameraComponent.html" title="class in com.csse3200.game.components">CameraComponent</a>&nbsp;cameraComponent)</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>float</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getBaseDifficultyScale()" class="member-name-link">getBaseDifficultyScale</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Returns the base difficulty scale of the current room.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected <a href="GameArea.Bounds.html" title="class in com.csse3200.game.areas">GameArea.Bounds</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getCameraBounds(com.csse3200.game.components.CameraComponent)" class="member-name-link">getCameraBounds</a><wbr>(<a href="../components/CameraComponent.html" title="class in com.csse3200.game.components">CameraComponent</a>&nbsp;cameraComponent)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/HashMap.html" title="class or interface in java.util" class="external-link">HashMap</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/ArrayList.html" title="class or interface in java.util" class="external-link">ArrayList</a>&lt;com.badlogic.gdx.math.Vector2&gt;&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getEnemySpawnPosition(int)" class="member-name-link">getEnemySpawnPosition</a><wbr>(int&nbsp;roomNumber)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a>&gt;</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getEntities()" class="member-name-link">getEntities</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Gets all the current entities</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected com.badlogic.gdx.math.Vector2</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getRoomSpawnPosition(java.lang.String)" class="member-name-link">getRoomSpawnPosition</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;roomName)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected &lt;T extends <a href="GameArea.html" title="class in com.csse3200.game.areas">GameArea</a>&gt;<br>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#loadArea(java.lang.Class)" class="member-name-link">loadArea</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;T&gt;&nbsp;areaClass)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#removeEntity(com.csse3200.game.entities.Entity)" class="member-name-link">removeEntity</a><wbr>(<a href="../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a>&nbsp;entity)</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getRoomNumber()" class="member-name-link">getRoomNumber</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Returns the room number corresponding to the current floor.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected com.badlogic.gdx.math.Vector2</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getRoomSpawnPosition(java.lang.String)" class="member-name-link">getRoomSpawnPosition</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;roomName)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected &lt;T extends <a href="GameArea.html" title="class in com.csse3200.game.areas">GameArea</a>&gt;<br>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#loadArea(java.lang.Class)" class="member-name-link">loadArea</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;T&gt;&nbsp;areaClass)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#removeEntity(com.csse3200.game.entities.Entity)" class="member-name-link">removeEntity</a><wbr>(<a href="../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a>&nbsp;entity)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Remove an entity</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setupTerrainWithOverlay(com.csse3200.game.areas.terrain.TerrainFactory,com.csse3200.game.areas.terrain.TerrainFactory.TerrainType,com.badlogic.gdx.graphics.Color)" class="member-name-link">setupTerrainWithOverlay</a><wbr>(<a href="terrain/TerrainFactory.html" title="class in com.csse3200.game.areas.terrain">TerrainFactory</a>&nbsp;factory,
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setupTerrainWithOverlay(com.csse3200.game.areas.terrain.TerrainFactory,com.csse3200.game.areas.terrain.TerrainFactory.TerrainType,com.badlogic.gdx.graphics.Color)" class="member-name-link">setupTerrainWithOverlay</a><wbr>(<a href="terrain/TerrainFactory.html" title="class in com.csse3200.game.areas.terrain">TerrainFactory</a>&nbsp;factory,
  <a href="terrain/TerrainFactory.TerrainType.html" title="enum class in com.csse3200.game.areas.terrain">TerrainFactory.TerrainType</a>&nbsp;type,
  com.badlogic.gdx.graphics.Color&nbsp;overlayColor)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Create terrain of a given type and add an optional color overlay.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#spawnDeepspin(int,float,com.csse3200.game.entities.Entity,java.util.HashMap)" class="member-name-link">spawnDeepspin</a><wbr>(int&nbsp;total,
+ float&nbsp;scaleFactor,
+ <a href="../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a>&nbsp;player,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/HashMap.html" title="class or interface in java.util" class="external-link">HashMap</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/ArrayList.html" title="class or interface in java.util" class="external-link">ArrayList</a>&lt;com.badlogic.gdx.math.Vector2&gt;&gt;&nbsp;positions)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Adds DeepSpin enemies onto the map.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#spawnEnemies(int,int,float,com.csse3200.game.entities.Entity)" class="member-name-link">spawnEnemies</a><wbr>(int&nbsp;roomNumber,
+ int&nbsp;total,
+ float&nbsp;scaleFactor,
+ <a href="../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a>&nbsp;player)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Spawns the enemies based on the room number given.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#spawnEnemyProjectile(com.badlogic.gdx.math.Vector2,com.csse3200.game.components.WeaponsStatsComponent)" class="member-name-link">spawnEnemyProjectile</a><wbr>(com.badlogic.gdx.math.Vector2&nbsp;directionToFire,
+ <a href="../components/WeaponsStatsComponent.html" title="class in com.csse3200.game.components">WeaponsStatsComponent</a>&nbsp;source)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Spawns projectiles from enemies.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#spawnEntity(com.csse3200.game.entities.Entity)" class="member-name-link">spawnEntity</a><wbr>(<a href="../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a>&nbsp;entity)</code></div>
@@ -307,6 +345,35 @@ implements com.badlogic.gdx.utils.Disposable</span></div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#spawnFloor()" class="member-name-link">spawnFloor</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#spawnGhostGPT(int,float,com.csse3200.game.entities.Entity,java.util.HashMap)" class="member-name-link">spawnGhostGPT</a><wbr>(int&nbsp;total,
+ float&nbsp;scaleFactor,
+ <a href="../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a>&nbsp;player,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/HashMap.html" title="class or interface in java.util" class="external-link">HashMap</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/ArrayList.html" title="class or interface in java.util" class="external-link">ArrayList</a>&lt;com.badlogic.gdx.math.Vector2&gt;&gt;&nbsp;positions)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Adds GhostGPT enemies onto the map.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#spawnGrokDroid(int,float,com.csse3200.game.entities.Entity,java.util.HashMap)" class="member-name-link">spawnGrokDroid</a><wbr>(int&nbsp;total,
+ float&nbsp;scaleFactor,
+ <a href="../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a>&nbsp;player,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/HashMap.html" title="class or interface in java.util" class="external-link">HashMap</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/ArrayList.html" title="class or interface in java.util" class="external-link">ArrayList</a>&lt;com.badlogic.gdx.math.Vector2&gt;&gt;&nbsp;positions)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Adds GrokDroid enemies onto the map.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#spawnVroomba(int,float,com.csse3200.game.entities.Entity,java.util.HashMap)" class="member-name-link">spawnVroomba</a><wbr>(int&nbsp;total,
+ float&nbsp;scaleFactor,
+ <a href="../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a>&nbsp;player,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/HashMap.html" title="class or interface in java.util" class="external-link">HashMap</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/ArrayList.html" title="class or interface in java.util" class="external-link">ArrayList</a>&lt;com.badlogic.gdx.math.Vector2&gt;&gt;&nbsp;positions)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Adds Vroomba enemies onto the map.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#startWaves(com.csse3200.game.entities.Entity)" class="member-name-link">startWaves</a><wbr>(<a href="../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a>&nbsp;player)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Start enemy waves from terminal command by typing "waves".</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#unloadAssets(java.lang.String%5B%5D)" class="member-name-link">unloadAssets</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>[]&nbsp;assetPaths)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
@@ -358,6 +425,12 @@ implements com.badlogic.gdx.utils.Disposable</span></div>
 <h3>isTransitioning</h3>
 <div class="member-signature"><span class="modifiers">protected static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isTransitioning</span></div>
 <div class="block">Prevents re-entrant room transitions across areas</div>
+</section>
+</li>
+<li>
+<section class="detail" id="wavesManager">
+<h3>wavesManager</h3>
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type"><a href="../components/enemy/EnemyWaves.html" title="class in com.csse3200.game.components.enemy">EnemyWaves</a></span>&nbsp;<span class="element-name">wavesManager</span></div>
 </section>
 </li>
 </ul>
@@ -433,6 +506,143 @@ implements com.badlogic.gdx.utils.Disposable</span></div>
 </section>
 </li>
 <li>
+<section class="detail" id="startWaves(com.csse3200.game.entities.Entity)">
+<h3>startWaves</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">startWaves</span><wbr><span class="parameters">(<a href="../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a>&nbsp;player)</span></div>
+<div class="block">Start enemy waves from terminal command by typing "waves".</div>
+</section>
+</li>
+<li>
+<section class="detail" id="getRoomNumber()">
+<h3>getRoomNumber</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">getRoomNumber</span>()</div>
+<div class="block">Returns the room number corresponding to the current floor.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>Room number as an int if the floor name is in the format "Floor2"
+ with 2 being any number, otherwise returns 1.</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getBaseDifficultyScale()">
+<h3>getBaseDifficultyScale</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">getBaseDifficultyScale</span>()</div>
+<div class="block">Returns the base difficulty scale of the current room.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>Scaling factor as a float.</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="spawnEntityAt(com.csse3200.game.entities.Entity,com.badlogic.gdx.math.GridPoint2,boolean,boolean)">
+<h3>spawnEntityAt</h3>
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">spawnEntityAt</span><wbr><span class="parameters">(<a href="../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a>&nbsp;entity,
+ com.badlogic.gdx.math.GridPoint2&nbsp;tilePos,
+ boolean&nbsp;centerX,
+ boolean&nbsp;centerY)</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="spawnEnemies(int,int,float,com.csse3200.game.entities.Entity)">
+<h3>spawnEnemies</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">spawnEnemies</span><wbr><span class="parameters">(int&nbsp;roomNumber,
+ int&nbsp;total,
+ float&nbsp;scaleFactor,
+ <a href="../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a>&nbsp;player)</span></div>
+<div class="block">Spawns the enemies based on the room number given.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>roomNumber</code> - The number of the current floor/room.</dd>
+<dd><code>total</code> - The total number of enemies to be spawned.</dd>
+<dd><code>scaleFactor</code> - The scaling factor of the difficulty of the enemies to be spawned.</dd>
+<dd><code>player</code> - The player <a href="../entities/Entity.html" title="class in com.csse3200.game.entities"><code>Entity</code></a> that is to be target by the enemies.</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="spawnGhostGPT(int,float,com.csse3200.game.entities.Entity,java.util.HashMap)">
+<h3>spawnGhostGPT</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">spawnGhostGPT</span><wbr><span class="parameters">(int&nbsp;total,
+ float&nbsp;scaleFactor,
+ <a href="../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a>&nbsp;player,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/HashMap.html" title="class or interface in java.util" class="external-link">HashMap</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/ArrayList.html" title="class or interface in java.util" class="external-link">ArrayList</a>&lt;com.badlogic.gdx.math.Vector2&gt;&gt;&nbsp;positions)</span></div>
+<div class="block">Adds GhostGPT enemies onto the map.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>total</code> - The total number of GhostGPT to be spawned.</dd>
+<dd><code>scaleFactor</code> - The scale of increase in difficulty of the GhostGPT</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="spawnDeepspin(int,float,com.csse3200.game.entities.Entity,java.util.HashMap)">
+<h3>spawnDeepspin</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">spawnDeepspin</span><wbr><span class="parameters">(int&nbsp;total,
+ float&nbsp;scaleFactor,
+ <a href="../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a>&nbsp;player,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/HashMap.html" title="class or interface in java.util" class="external-link">HashMap</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/ArrayList.html" title="class or interface in java.util" class="external-link">ArrayList</a>&lt;com.badlogic.gdx.math.Vector2&gt;&gt;&nbsp;positions)</span></div>
+<div class="block">Adds DeepSpin enemies onto the map.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>total</code> - The total number of DeepSpins to be spawned.</dd>
+<dd><code>scaleFactor</code> - The scale of increase in difficulty of the DeepSpin</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="spawnGrokDroid(int,float,com.csse3200.game.entities.Entity,java.util.HashMap)">
+<h3>spawnGrokDroid</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">spawnGrokDroid</span><wbr><span class="parameters">(int&nbsp;total,
+ float&nbsp;scaleFactor,
+ <a href="../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a>&nbsp;player,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/HashMap.html" title="class or interface in java.util" class="external-link">HashMap</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/ArrayList.html" title="class or interface in java.util" class="external-link">ArrayList</a>&lt;com.badlogic.gdx.math.Vector2&gt;&gt;&nbsp;positions)</span></div>
+<div class="block">Adds GrokDroid enemies onto the map.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>total</code> - The total number of GrokDroid to be spawned.</dd>
+<dd><code>scaleFactor</code> - The scale of increase in difficulty of the GrokDroid</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="spawnVroomba(int,float,com.csse3200.game.entities.Entity,java.util.HashMap)">
+<h3>spawnVroomba</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">spawnVroomba</span><wbr><span class="parameters">(int&nbsp;total,
+ float&nbsp;scaleFactor,
+ <a href="../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a>&nbsp;player,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/HashMap.html" title="class or interface in java.util" class="external-link">HashMap</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/ArrayList.html" title="class or interface in java.util" class="external-link">ArrayList</a>&lt;com.badlogic.gdx.math.Vector2&gt;&gt;&nbsp;positions)</span></div>
+<div class="block">Adds Vroomba enemies onto the map.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>total</code> - The total number of Vroomba to be spawned.</dd>
+<dd><code>scaleFactor</code> - The scale of increase in difficulty of the Vroomba</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="spawnEnemyProjectile(com.badlogic.gdx.math.Vector2,com.csse3200.game.components.WeaponsStatsComponent)">
+<h3>spawnEnemyProjectile</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a></span>&nbsp;<span class="element-name">spawnEnemyProjectile</span><wbr><span class="parameters">(com.badlogic.gdx.math.Vector2&nbsp;directionToFire,
+ <a href="../components/WeaponsStatsComponent.html" title="class in com.csse3200.game.components">WeaponsStatsComponent</a>&nbsp;source)</span></div>
+<div class="block">Spawns projectiles from enemies.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>directionToFire</code> - The direction in which the projectile is to be fired.</dd>
+<dd><code>source</code> - The entity that the projectile is coming from.</dd>
+<dt>Returns:</dt>
+<dd>The spawned projectile <a href="../entities/Entity.html" title="class in com.csse3200.game.entities"><code>Entity</code></a></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getEnemySpawnPosition(int)">
+<h3>getEnemySpawnPosition</h3>
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/HashMap.html" title="class or interface in java.util" class="external-link">HashMap</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/ArrayList.html" title="class or interface in java.util" class="external-link">ArrayList</a>&lt;com.badlogic.gdx.math.Vector2&gt;&gt;</span>&nbsp;<span class="element-name">getEnemySpawnPosition</span><wbr><span class="parameters">(int&nbsp;roomNumber)</span></div>
+</section>
+</li>
+<li>
 <section class="detail" id="removeEntity(com.csse3200.game.entities.Entity)">
 <h3>removeEntity</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">removeEntity</span><wbr><span class="parameters">(<a href="../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a>&nbsp;entity)</span></div>
@@ -470,15 +680,6 @@ implements com.badlogic.gdx.utils.Disposable</span></div>
 <section class="detail" id="getRoomSpawnPosition(java.lang.String)">
 <h3>getRoomSpawnPosition</h3>
 <div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">com.badlogic.gdx.math.Vector2</span>&nbsp;<span class="element-name">getRoomSpawnPosition</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;roomName)</span></div>
-</section>
-</li>
-<li>
-<section class="detail" id="spawnEntityAt(com.csse3200.game.entities.Entity,com.badlogic.gdx.math.GridPoint2,boolean,boolean)">
-<h3>spawnEntityAt</h3>
-<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">spawnEntityAt</span><wbr><span class="parameters">(<a href="../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a>&nbsp;entity,
- com.badlogic.gdx.math.GridPoint2&nbsp;tilePos,
- boolean&nbsp;centerX,
- boolean&nbsp;centerY)</span></div>
 </section>
 </li>
 <li>

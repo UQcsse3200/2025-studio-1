@@ -235,27 +235,33 @@ loadScripts(document, 'script');</script>
 <div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Awards the player processor when the enemy dies.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/csse3200/game/components/enemy/EnemyMudBallAttackComponent.html" title="class in com.csse3200.game.components.enemy">EnemyMudBallAttackComponent</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/csse3200/game/components/enemy/EnemyHealthDisplay.html" title="class in com.csse3200.game.components.enemy">EnemyHealthDisplay</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/csse3200/game/components/enemy/EnemyMudBallAttackComponent.html" title="class in com.csse3200.game.components.enemy">EnemyMudBallAttackComponent</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Tracking mud ball attack: Fires a mud ball towards the target.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/csse3200/game/components/enemy/EnemyMudProjectileComponent.html" title="class in com.csse3200.game.components.enemy">EnemyMudProjectileComponent</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/csse3200/game/components/enemy/EnemyMudProjectileComponent.html" title="class in com.csse3200.game.components.enemy">EnemyMudProjectileComponent</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Enemy mud projectile: Moves in a straight line with a set lifetime,
  and automatically destroys itself when the lifetime expires.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/csse3200/game/components/enemy/EnemyMudRingSprayComponent.html" title="class in com.csse3200.game.components.enemy">EnemyMudRingSprayComponent</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/csse3200/game/components/enemy/EnemyMudRingSprayComponent.html" title="class in com.csse3200.game.components.enemy">EnemyMudRingSprayComponent</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Circular mud spray (fires `count` projectiles evenly around a circle).</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/csse3200/game/components/enemy/EnemyProjectileDamageComponent.html" title="class in com.csse3200.game.components.enemy">EnemyProjectileDamageComponent</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/csse3200/game/components/enemy/EnemyProjectileDamageComponent.html" title="class in com.csse3200.game.components.enemy">EnemyProjectileDamageComponent</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Enemy projectile damage (with detailed logging):
  - Handles collisions from (Fixture, Fixture) / (Entity, Entity) / mixed inputs.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/csse3200/game/components/enemy/EnemyProjectileMovementComponent.html" title="class in com.csse3200.game.components.enemy">EnemyProjectileMovementComponent</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/csse3200/game/components/enemy/EnemyProjectileMovementComponent.html" title="class in com.csse3200.game.components.enemy">EnemyProjectileMovementComponent</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Projectile straight-line movement + lifetime control.</div>
+</div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/csse3200/game/components/enemy/EnemyWaves.html" title="class in com.csse3200.game.components.enemy">EnemyWaves</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="block">Handles spawning enemies over multiple waves.</div>
 </div>
 <div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/csse3200/game/entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a></div>
 <div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
@@ -362,6 +368,14 @@ loadScripts(document, 'script');</script>
 <div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Chases a target entity indefinitely and the entity being visible causes a speed increase
   CAN have added functionality to launch projectiles at the player too if wanted.</div>
+</div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/csse3200/game/components/tasks/GPTGroundFastChaseTask.html" title="class in com.csse3200.game.components.tasks">GPTGroundFastChaseTask</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="block">Ground fast-chase for GhostGPT: drive X only; Box2D gravity/collisions control Y.</div>
+</div>
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/csse3200/game/components/tasks/GPTGroundSlowChaseTask.html" title="class in com.csse3200.game.components.tasks">GPTGroundSlowChaseTask</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="block">Ground slow-chase for GhostGPT: set X only; Box2D gravity handles Y.</div>
 </div>
 <div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/csse3200/game/components/tasks/GPTSlowChaseTask.html" title="class in com.csse3200.game.components.tasks">GPTSlowChaseTask</a></div>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab2">
@@ -484,7 +498,7 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Configuration for the lightsaber weapon</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/csse3200/game/components/enemy/LowHealthAttackBuff.html" title="class in com.csse3200.game.components.enemy">LowHealthAttackBuff</a></div>
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/csse3200/game/components/enemy/LowHealthAttackBuffComponent.html" title="class in com.csse3200.game.components.enemy">LowHealthAttackBuffComponent</a></div>
 <div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Gives an attack buff to the entity when used.</div>
 </div>
@@ -801,47 +815,56 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Tunnel room: minimal walls with left door back to Storage.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/csse3200/game/components/screens/TutorialClip.html" title="class in com.csse3200.game.components.screens">TutorialClip</a></div>
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/csse3200/game/entities/configs/characters/TurretConfig.html" title="class in com.csse3200.game.entities.configs.characters">TurretConfig</a></div>
 <div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="block">Defines the properties stored in ghost GPT config files to be loaded by the NPC Factory.</div>
+</div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/csse3200/game/components/screens/TutorialClip.html" title="class in com.csse3200.game.components.screens">TutorialClip</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Immutable description of an animated tutorial clip composed of sequential PNG frames.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/csse3200/game/screens/TutorialScreen.html" title="class in com.csse3200.game.screens">TutorialScreen</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/csse3200/game/screens/TutorialScreen.html" title="class in com.csse3200.game.screens">TutorialScreen</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Screen shown for tutorial system.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/csse3200/game/components/screens/TutorialScreenDisplay.html" title="class in com.csse3200.game.components.screens">TutorialScreenDisplay</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/csse3200/game/components/screens/TutorialScreenDisplay.html" title="class in com.csse3200.game.components.screens">TutorialScreenDisplay</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">UI component that displays the multi-step Tutorial screen.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/csse3200/game/components/screens/TutorialStep.html" title="class in com.csse3200.game.components.screens">TutorialStep</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/csse3200/game/components/screens/TutorialStep.html" title="class in com.csse3200.game.components.screens">TutorialStep</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Represents a single page in the Tutorial flow.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/csse3200/game/ui/UIComponent.html" title="class in com.csse3200.game.ui">UIComponent</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/csse3200/game/ui/UIComponent.html" title="class in com.csse3200.game.ui">UIComponent</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">A generic component for rendering onto the ui.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab1"><a href="com/csse3200/game/components/UseInterface.html" title="interface in com.csse3200.game.components">UseInterface</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab1">&nbsp;</div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/csse3200/game/files/UserSettings.html" title="class in com.csse3200.game.files">UserSettings</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab1"><a href="com/csse3200/game/components/UseInterface.html" title="interface in com.csse3200.game.components">UseInterface</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab1">&nbsp;</div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/csse3200/game/files/UserSettings.html" title="class in com.csse3200.game.files">UserSettings</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Reading, Writing, and applying user settings in the game.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/csse3200/game/files/UserSettings.DisplaySettings.html" title="class in com.csse3200.game.files">UserSettings.DisplaySettings</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/csse3200/game/files/UserSettings.DisplaySettings.html" title="class in com.csse3200.game.files">UserSettings.DisplaySettings</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Stores chosen display settings.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/csse3200/game/files/UserSettings.Settings.html" title="class in com.csse3200.game.files">UserSettings.Settings</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/csse3200/game/files/UserSettings.Settings.html" title="class in com.csse3200.game.files">UserSettings.Settings</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Stores game settings, can be serialised/deserialised.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/csse3200/game/utils/math/Vector2Utils.html" title="class in com.csse3200.game.utils.math">Vector2Utils</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/csse3200/game/utils/math/Vector2Utils.html" title="class in com.csse3200.game.utils.math">Vector2Utils</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Contains additional utility constants and functions for common Vector2 operations.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/csse3200/game/entities/configs/characters/VroombaConfig.html" title="class in com.csse3200.game.entities.configs.characters">VroombaConfig</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/csse3200/game/entities/configs/characters/VroombaConfig.html" title="class in com.csse3200.game.entities.configs.characters">VroombaConfig</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Defines the properties stored in ghost king config files to be loaded by the NPC Factory.</div>
+</div>
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/csse3200/game/components/enemy/VroombaSuicideComponent.html" title="class in com.csse3200.game.components.enemy">VroombaSuicideComponent</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="block">Makes Vroomba behave like a suicide bomber:
+ - When within triggerRadius of the player, start a short fuse.</div>
 </div>
 <div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/csse3200/game/components/tasks/WaitTask.html" title="class in com.csse3200.game.components.tasks">WaitTask</a></div>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab2">
@@ -851,24 +874,28 @@ loadScripts(document, 'script');</script>
 <div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Wander around by moving a random position within a range of the starting position.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/csse3200/game/entities/configs/weapons/WeaponConfig.html" title="class in com.csse3200.game.entities.configs.weapons">WeaponConfig</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab3"><a href="com/csse3200/game/entities/configs/Weapons.html" title="enum class in com.csse3200.game.entities.configs">Weapons</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab3">&nbsp;</div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/csse3200/game/entities/factories/items/WeaponsFactory.html" title="class in com.csse3200.game.entities.factories.items">WeaponsFactory</a></div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/csse3200/game/ui/terminal/commands/WavesCommand.html" title="class in com.csse3200.game.ui.terminal.commands">WavesCommand</a></div>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="block">Starts enemy waves in the current ForestGameArea.</div>
+</div>
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/csse3200/game/entities/configs/weapons/WeaponConfig.html" title="class in com.csse3200.game.entities.configs.weapons">WeaponConfig</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab3"><a href="com/csse3200/game/entities/configs/Weapons.html" title="enum class in com.csse3200.game.entities.configs">Weapons</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab3">&nbsp;</div>
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/csse3200/game/entities/factories/items/WeaponsFactory.html" title="class in com.csse3200.game.entities.factories.items">WeaponsFactory</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Factory to create non-playable character (NPC) entities with predefined components.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/csse3200/game/components/WeaponsStatsComponent.html" title="class in com.csse3200.game.components">WeaponsStatsComponent</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/csse3200/game/components/WeaponsStatsComponent.html" title="class in com.csse3200.game.components">WeaponsStatsComponent</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Component used to store information related to combat such as health, attack, etc.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/csse3200/game/screens/WinScreen.html" title="class in com.csse3200.game.screens">WinScreen</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/csse3200/game/screens/WinScreen.html" title="class in com.csse3200.game.screens">WinScreen</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Screen shown when the player achieves victory.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/csse3200/game/ui/terminal/commands/WinScreenCommand.html" title="class in com.csse3200.game.ui.terminal.commands">WinScreenCommand</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/csse3200/game/ui/terminal/commands/WinScreenCommand.html" title="class in com.csse3200.game.ui.terminal.commands">WinScreenCommand</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">A command for switching to the Win Screen.</div>
 </div>
 </div>
