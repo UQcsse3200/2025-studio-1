@@ -17,6 +17,7 @@ import java.util.ArrayList;
  * Can also be used as a more generic component for other entities.
  */
 public class InventoryComponent extends Component {
+
   private static final Logger logger = LoggerFactory.getLogger(InventoryComponent.class);
 
   private int inventoryCount = 0;
@@ -26,6 +27,8 @@ public class InventoryComponent extends Component {
   private final ArrayList<String> itemTexs = new ArrayList<>(maxCapacity);
   private int processor;
   private Entity currItem;
+  private int keycardLevel = 0;
+
 
   /**
    * Constructs an inventory for the player and a beginning currency amount
@@ -34,12 +37,31 @@ public class InventoryComponent extends Component {
    * @param processor The number of processors that the inventory is starting with
    */
   public InventoryComponent(int processor) {
+
     setProcessor(processor);
 
     for (int idx = this.minCapacity; idx < this.maxCapacity; idx++) {
       this.items.add(idx, null);
       this.itemTexs.add(idx, null);
     }
+  }
+
+  /**
+   * setter method for the keycard level
+   * 
+   * @param level level to set the keycard to
+   */
+  public void setKeycardLevel(int level) {
+    this.keycardLevel = level;
+  }
+
+  /**
+   * getter method for the keycard level
+   * 
+   * @return the current keycard level
+   */
+  public int getKeycardLevel() {
+    return this.keycardLevel;
   }
 
   /**
@@ -251,5 +273,4 @@ public class InventoryComponent extends Component {
   public Entity getCurrItem() {
      return this.currItem;
   }
-
 }

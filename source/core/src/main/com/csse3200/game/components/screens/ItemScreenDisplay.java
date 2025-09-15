@@ -93,7 +93,7 @@ public class ItemScreenDisplay extends UIComponent {
         root.add(box).width(420f);
     }
 
-    /** Remove popup UI (component stays attached & reusable). */
+    /** Remove popup UI (component stays attached and reusable). */
     public void close() {
         if (root != null) { root.remove(); root = null; }
         if (whiteTexOwned && whiteTex != null) {
