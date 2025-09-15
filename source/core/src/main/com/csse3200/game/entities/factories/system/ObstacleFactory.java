@@ -43,16 +43,51 @@ public class ObstacleFactory {
    * @return entity
    */
   public static Entity createMarblePlatform() {
-      Entity MarblePlatform =
-              new Entity()
-                      .addComponent(new TextureRenderComponent("images/MarblePlatform.png"))
-                      .addComponent(new PhysicsComponent())
-                      .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
-      MarblePlatform.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
-      MarblePlatform.getComponent(TextureRenderComponent.class).scaleEntity();
-      MarblePlatform.scaleHeight(0.5f);
-      PhysicsUtils.setScaledCollider(MarblePlatform, 1f, 0.75f);
-      return MarblePlatform;
+    Entity MarblePlatform = new Entity()
+        .addComponent(new TextureRenderComponent("images/MarblePlatform.png"))
+        .addComponent(new PhysicsComponent())
+        .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
+    MarblePlatform.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
+    MarblePlatform.getComponent(TextureRenderComponent.class).scaleEntity();
+    MarblePlatform.scaleHeight(0.5f);
+    PhysicsUtils.setScaledCollider(MarblePlatform, 1f, 0.75f);
+    return MarblePlatform;
+  }
+
+  public static Entity createShipmentBoxes() {
+    Entity ShipmentBoxes = new Entity()
+        .addComponent(new TextureRenderComponent("images/ShipmentBoxLid.png"))
+        .addComponent(new PhysicsComponent())
+        .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
+    ShipmentBoxes.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
+    ShipmentBoxes.getComponent(TextureRenderComponent.class).scaleEntity();
+    ShipmentBoxes.scaleHeight(0.05f);
+    PhysicsUtils.setScaledCollider(ShipmentBoxes, 1f, 0.75f);
+    return ShipmentBoxes;
+  }
+
+  public static Entity createShipmentCrane() {
+    Entity ShipmentCrane = new Entity()
+        .addComponent(new TextureRenderComponent("images/ShipmentCrane.png"))
+        .addComponent(new PhysicsComponent())
+        .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
+    ShipmentCrane.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
+    ShipmentCrane.getComponent(TextureRenderComponent.class).scaleEntity();
+    ShipmentCrane.scaleHeight(0.05f);
+    PhysicsUtils.setScaledCollider(ShipmentCrane, 1f, 0.75f);
+    return ShipmentCrane;
+  }
+
+  public static Entity createConveyor() {
+    Entity ShipmentCrane = new Entity()
+        .addComponent(new TextureRenderComponent("images/Conveyor.png"))
+        .addComponent(new PhysicsComponent())
+        .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
+    ShipmentCrane.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
+    ShipmentCrane.getComponent(TextureRenderComponent.class).scaleEntity();
+    ShipmentCrane.scaleHeight(0.05f);
+    PhysicsUtils.setScaledCollider(ShipmentCrane, 1f, 0.75f);
+    return ShipmentCrane;
   }
 
   /**
