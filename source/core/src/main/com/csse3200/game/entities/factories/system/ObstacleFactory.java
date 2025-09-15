@@ -193,6 +193,7 @@ public class ObstacleFactory {
     PhysicsUtils.setScaledCollider(thinFloor, 1f, 1f);
     return thinFloor;
   }
+  /** creating the platform used in reception room **/
   public static Entity createplatform2() {
     Entity platform2 =
             new Entity()
@@ -226,6 +227,7 @@ public class ObstacleFactory {
     PhysicsUtils.setScaledCollider(purpSpawn, 1f, 1f);
     return purpSpawn;
   }
+  /** creating the clock used in reception room **/
   public static Entity createholoclock() {
     Entity clockSpawn =
             new Entity()
@@ -234,6 +236,7 @@ public class ObstacleFactory {
     clockSpawn.scaleHeight(2f);
         return clockSpawn;
   }
+  /** creating the help desk used in reception room **/
   public static Entity createdesk_reception() {
     Entity desk_receptionSpawn =
             new Entity()
@@ -242,6 +245,7 @@ public class ObstacleFactory {
     desk_receptionSpawn.scaleHeight(3f);
     return desk_receptionSpawn;
   }
+  /** creating the comic stand used in reception room **/
   public static Entity createcomic_stand() {
     Entity comic_standSpawn =
             new Entity()

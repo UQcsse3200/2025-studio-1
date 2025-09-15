@@ -107,6 +107,7 @@ public class Floor2GameArea extends GameArea {
     rightDoor.addComponent(new com.csse3200.game.components.DoorComponent(() -> loadArea(Floor5GameArea.class)));
     spawnEntity(rightDoor);
   }
+  /** spawning platforms in various places in the room **/
   private void spawnplatform2() {
     float PlatformX = 5.5f;
     float PlatformY = 3f;
@@ -130,6 +131,7 @@ public class Floor2GameArea extends GameArea {
     spawnEntity(Platform4);
 
   }
+  /**Spawning the clock on the second platfrom**/
   private void spawnholoclock() {
     float PlatformX = 0.8f;
     float PlatformY = 7.45f;
@@ -137,6 +139,7 @@ public class Floor2GameArea extends GameArea {
     clock1.setPosition(PlatformX, PlatformY);
     spawnEntity(clock1);
   }
+  /**spawning a help desk featuring a robot to make the room look like reception **/
   private void spawndesk_reception() {
     float PlatformX = 12.5f;
     float PlatformY = 3.5f;
@@ -144,6 +147,7 @@ public class Floor2GameArea extends GameArea {
     desk1.setPosition(PlatformX, PlatformY);
     spawnEntity(desk1);
   }
+  /**spawning a comic stand near the reception desk **/
   private void spawncomic_stand() {
     float PlatformX = 11f;
     float PlatformY = 3.5f;
