@@ -58,6 +58,11 @@ public class TerrainFactory {
   public TerrainComponent createTerrain(TerrainType terrainType) {
     ResourceService resourceService = ServiceLocator.getResourceService();
     switch (terrainType) {
+      case ELEVATOR:
+        TextureRegion elevatorBackground =
+            new TextureRegion(resourceService.getAsset("images/Elevator background.png", Texture.class));
+        // Use the same background tiling/scaling approach as other floors so grid math stays consistent
+        return createGameRooms(0.5f, elevatorBackground);
       case SPAWN_ROOM:
         TextureRegion spawnBackground =
             new TextureRegion(resourceService.getAsset("images/SpawnResize.png", Texture.class));
@@ -194,6 +199,7 @@ public class TerrainFactory {
     FOREST_DEMO_ISO,
     FOREST_DEMO_HEX,
     SPAWN_ROOM,
-    LOBBY
+    LOBBY,
+    ELEVATOR
   }
 }

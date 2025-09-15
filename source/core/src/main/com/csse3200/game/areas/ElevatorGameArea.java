@@ -5,6 +5,8 @@ import com.badlogic.gdx.math.GridPoint2;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.CameraComponent;
+import com.csse3200.game.entities.Entity;
+import com.csse3200.game.entities.factories.system.ObstacleFactory;
 
 /** Elevator room: minimal walls and two doors (left--Office, right--Research). */
 public class ElevatorGameArea extends GameArea {
@@ -18,8 +20,11 @@ public class ElevatorGameArea extends GameArea {
   @Override
   public void create() {
     GenericLayout.ensureGenericAssets(this);
-    GenericLayout.setupTerrainWithOverlay(this, terrainFactory, TerrainType.FOREST_DEMO,
-        new Color(0.12f, 0.10f, 0.10f, 0.26f));
+    // Ensure the thin floor texture is available for the elevator room
+    ensureTextures(new String[] { "foreg_sprites/general/ThinFloor3.png", "images/Elevator background.png" });
+    // Use the dedicated elevator background
+    terrain = terrainFactory.createTerrain(TerrainType.ELEVATOR);
+    spawnEntity(new Entity().addComponent(terrain));
 
     spawnBordersAndDoors();
     spawnPlayer();
@@ -43,6 +48,20 @@ public class ElevatorGameArea extends GameArea {
 
   private void loadResearch() {
     clearAndLoad(() -> new ResearchGameArea(terrainFactory, cameraComponent));
+  }
+
+  /**
+   * Override default floor spawning to use the thin floor sprite in the elevator.
+   */
+  @Override
+  protected void spawnFloor() {
+    for (int i = 0; i < 25; i += 4) {
+      GridPoint2 floorspawn = new GridPoint2(i, 6);
+      Entity floor = ObstacleFactory.createThinFloor();
+      spawnEntityAt(floor, floorspawn, false, false);
+      // Nudge down slightly to sit visually on the ground
+      floor.setPosition(floor.getPosition().x, floor.getPosition().y - 0.3f);
+    }
   }
 }
 
