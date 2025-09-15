@@ -198,7 +198,7 @@ public class BossFactory {
                 .addComponent(new PhysicsComponent())
                 .addComponent(new ColliderComponent())
                 .addComponent(new HitboxComponent().setLayer(PhysicsLayer.NPC))
-                .addComponent(new CombatStatsComponent(config.health))
+                .addComponent(new CombatStatsComponent(1000))
                 .addComponent(new WeaponsStatsComponent(config.baseAttack))
                 .addComponent(new EnemyDeathRewardComponent(100, playerInventory))
                 .addComponent(new BossDeathComponent())
