@@ -4,6 +4,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.csse3200.game.areas.ForestGameArea;
 import com.csse3200.game.components.ShopComponent;
+import com.csse3200.game.components.screens.ShopScreenDisplay;
 import com.csse3200.game.components.shop.ShopManager;
 import com.csse3200.game.components.shop.CatalogService;
 import com.csse3200.game.entities.Entity;
@@ -22,7 +23,9 @@ public final class ShopFactory {
                 .addComponent(new PhysicsComponent())
                 .addComponent(new HitboxComponent())
                 .addComponent(new TextureRenderComponent(kioskTexture))
-                .addComponent(new ShopComponent(area, manager));
+                .addComponent(manager)
+                .addComponent(new ShopScreenDisplay(area, manager));
+          //      .addComponent(new ShopComponent(area, manager));
 
         PhysicsComponent phys = shop.getComponent(PhysicsComponent.class);
         phys.setBodyType(BodyDef.BodyType.StaticBody);

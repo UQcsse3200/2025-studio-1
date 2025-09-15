@@ -1,12 +1,13 @@
 package com.csse3200.game.components.shop;
 
+import com.csse3200.game.components.Component;
 import com.csse3200.game.components.items.ItemComponent;
 import com.csse3200.game.components.player.InventoryComponent;
 import com.csse3200.game.entities.Entity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class ShopManager {
+public class ShopManager extends Component {
     private static final Logger logger = LoggerFactory.getLogger(ShopManager.class);
 
     private final CatalogService catalog;
