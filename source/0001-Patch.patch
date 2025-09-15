@@ -1,0 +1,109 @@
+From cd2d512b7ca904cad2d64e6bbb2e88693daa4f4c Mon Sep 17 00:00:00 2001
+From: JTrenerry <105094182+JTrenerry@users.noreply.github.com>
+Date: Mon, 15 Sep 2025 16:55:00 +1000
+Subject: [PATCH] Patch
+
+---
+ .../com/csse3200/game/components/Component.java |  9 +++++++++
+ .../game/components/ComponentPriority.java      | 17 +++++++++++++++++
+ .../main/com/csse3200/game/entities/Entity.java |  5 +++++
+ .../physics/components/PhysicsComponent.java    |  2 ++
+ 4 files changed, 33 insertions(+)
+ create mode 100644 source/core/src/main/com/csse3200/game/components/ComponentPriority.java
+
+diff --git a/source/core/src/main/com/csse3200/game/components/Component.java b/source/core/src/main/com/csse3200/game/components/Component.java
+index babc6f29..9a701137 100644
+--- a/source/core/src/main/com/csse3200/game/components/Component.java
++++ b/source/core/src/main/com/csse3200/game/components/Component.java
+@@ -13,6 +13,7 @@ public class Component {
+   private static final Logger logger = LoggerFactory.getLogger(Component.class);
+   protected Entity entity;
+   protected boolean enabled = true;
++  protected ComponentPriority prio = ComponentPriority.LOW;
+ 
+   /**
+    * Called when the entity is created and registered. Initial logic such as calls to GetComponent
+@@ -62,6 +63,14 @@ public class Component {
+     return entity;
+   }
+ 
++    /**
++     * Get the priority of which the component should be made
++     * @return ComponentPriority
++     */
++  public ComponentPriority getPrio() {
++      return prio;
++  }
++
+   /**
+    * Enable or disable the component. While disabled, a component does not run update() or
+    * earlyUpdate(). Other events inside the component may still fire. The component can still be
+diff --git a/source/core/src/main/com/csse3200/game/components/ComponentPriority.java b/source/core/src/main/com/csse3200/game/components/ComponentPriority.java
+new file mode 100644
+index 00000000..f96690aa
+--- /dev/null
++++ b/source/core/src/main/com/csse3200/game/components/ComponentPriority.java
+@@ -0,0 +1,17 @@
++package com.csse3200.game.components;
++
++public enum ComponentPriority {
++    HIGH(1),
++    MEDIUM(25),
++    LOW(100);
++
++    private final int value;
++
++    ComponentPriority(int value) {
++        this.value = value;
++    }
++
++    public int getValue() {
++        return value;
++    }
++}
+diff --git a/source/core/src/main/com/csse3200/game/entities/Entity.java b/source/core/src/main/com/csse3200/game/entities/Entity.java
+index c4aea9a6..7244e3af 100644
+--- a/source/core/src/main/com/csse3200/game/entities/Entity.java
++++ b/source/core/src/main/com/csse3200/game/entities/Entity.java
+@@ -10,6 +10,8 @@ import com.csse3200.game.services.ServiceLocator;
+ import org.slf4j.Logger;
+ import org.slf4j.LoggerFactory;
+ 
++import java.util.Comparator;
++
+ /**
+  * Core entity class. Entities exist in the game and are updated each frame. All entities have a
+  * position and scale, but have no default behaviour. Components should be added to an entity to
+@@ -247,6 +249,9 @@ public class Entity {
+       return;
+     }
+     createdComponents = components.values().toArray();
++    createdComponents.sort(
++        Comparator.comparingInt(c -> c.getPrio().getValue())
++    );
+     for (Component component : createdComponents) {
+       component.create();
+     }
+diff --git a/source/core/src/main/com/csse3200/game/physics/components/PhysicsComponent.java b/source/core/src/main/com/csse3200/game/physics/components/PhysicsComponent.java
+index 8775a796..353dba29 100644
+--- a/source/core/src/main/com/csse3200/game/physics/components/PhysicsComponent.java
++++ b/source/core/src/main/com/csse3200/game/physics/components/PhysicsComponent.java
+@@ -5,6 +5,7 @@ import com.badlogic.gdx.physics.box2d.Body;
+ import com.badlogic.gdx.physics.box2d.BodyDef;
+ import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+ import com.csse3200.game.components.Component;
++import com.csse3200.game.components.ComponentPriority;
+ import com.csse3200.game.physics.BodyUserData;
+ import com.csse3200.game.physics.PhysicsContactListener;
+ import com.csse3200.game.physics.PhysicsEngine;
+@@ -26,6 +27,7 @@ public class PhysicsComponent extends Component {
+   /** Create a physics component with default settings. */
+   public PhysicsComponent() {
+     this(ServiceLocator.getPhysicsService().getPhysics());
++    this.prio = ComponentPriority.HIGH;
+   }
+ 
+   /**
+-- 
+2.45.1.windows.1
+
