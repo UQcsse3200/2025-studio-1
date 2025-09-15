@@ -1,7 +1,11 @@
 package com.csse3200.game.components.shop;
 
 /**
- * Errors that could occur during a purchase event
+ * Represents possible errors that can occur during a purchase event.
+ * <p>
+ * These values allow shop systems to communicate the exact reason
+ * why a purchase request failed, or {@link #NONE} if successful.
+ * </p>
  */
 public enum PurchaseError {
     NONE,
