@@ -10,11 +10,11 @@ import com.csse3200.game.entities.factories.characters.PlayerFactory;
 import com.csse3200.game.rendering.SolidColorRenderComponent;
 
 /** Room 5 with its own background styling. */
-public class Floor5GameArea extends GameArea {
+public class MainHall extends GameArea {
   private static final float WALL_WIDTH = 0.1f;
   private static final GridPoint2 PLAYER_SPAWN = new GridPoint2(10, 10);
 
-  public Floor5GameArea(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
+  public MainHall(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
     super(terrainFactory, cameraComponent);
   }
 
@@ -61,7 +61,7 @@ public class Floor5GameArea extends GameArea {
   }
 
   private void loadBackToFloor2() {
-    clearAndLoad(() -> new Floor2GameArea(terrainFactory, cameraComponent));
+    clearAndLoad(() -> new Reception(terrainFactory, cameraComponent));
   }
 
   private void loadSecurity() {
