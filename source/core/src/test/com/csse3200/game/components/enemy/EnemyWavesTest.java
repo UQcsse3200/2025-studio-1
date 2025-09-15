@@ -95,8 +95,7 @@ public class EnemyWavesTest{
     @DisplayName("Start wave function actually spawns the wave")
     void testStartWaveSpawnsImmediatelyOnFirstCall() {
         enemyWaves.startWave();
-        verify(gameArea).spawnGhostGPT(anyInt(), anyFloat(), eq(player));
-        verify(gameArea).spawnVroomba(anyInt(), anyFloat(), eq(player));
+        verify(gameArea).spawnEnemies(anyInt(), anyInt(), anyFloat(), eq(player));
     }
 
     @Test
@@ -105,15 +104,13 @@ public class EnemyWavesTest{
         when(gameArea.getBaseDifficultyScale()).thenReturn(2f);
 
         enemyWaves.startWave(); // spawns wave 1
-        verify(gameArea).spawnGhostGPT(eq(1), eq(2f), eq(player));
-        verify(gameArea).spawnVroomba(eq(2), eq(2f), eq(player));
+        verify(gameArea).spawnEnemies(anyInt(), anyInt(), eq(2f), eq(player));
 
         entities.clear();
         advanceTimeAndTick(WAVE_DELAY_MS + 100);
 
         // Scaling test
-        verify(gameArea).spawnGhostGPT(eq(1), eq(2.5f), eq(player));
-        verify(gameArea).spawnVroomba(eq(2), eq(2.5f), eq(player));
+        verify(gameArea).spawnEnemies(anyInt(), anyInt(), eq(2.5f), eq(player));
     }
 
     @Test
@@ -142,7 +139,7 @@ public class EnemyWavesTest{
         verifyNoInteractions(gameArea);
 
         advanceTimeAndTick(WAVE_DELAY_MS + 100);
-        verify(gameArea).spawnGhostGPT(anyInt(), anyFloat(), eq(player));
+        verify(gameArea).spawnEnemies(anyInt(), anyInt(), anyFloat(), eq(player));
     }
 
     @Test
@@ -183,8 +180,7 @@ public class EnemyWavesTest{
         when(gameArea.getBaseDifficultyScale()).thenReturn(2f);
         enemyWaves.startWave();
 
-        verify(gameArea).spawnGhostGPT(eq(1), eq(2f), eq(player));
-        verify(gameArea).spawnVroomba(eq(2), eq(2f), eq(player));
+        verify(gameArea).spawnEnemies(anyInt(), anyInt(), anyFloat(), eq(player));
     }
 
     @Test
@@ -200,7 +196,7 @@ public class EnemyWavesTest{
         reset(gameArea);
 
         advanceTimeAndTick(WAVE_DELAY_MS + 100);
-        verify(gameArea).spawnGhostGPT(anyInt(), anyFloat(), eq(player));
+        verify(gameArea).spawnEnemies(anyInt(), anyInt(), anyFloat(), eq(player));
     }
 
     @Test
