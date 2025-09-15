@@ -75,7 +75,8 @@ public class SaveLoadService {
         PlayerInfo loadStats =
                 FileLoader.readClass(PlayerInfo.class, filePath,
                 FileLoader.Location.LOCAL);
-//        Entity loadPlayer = PlayerFactory.createPlayer();
+        Entity loadPlayer = PlayerFactory.createPlayer();
+        loadStats.areaId.
 //        loadPlayer.setPosition(loadStats.position);
 //        InventoryComponent loadInv = loadPlayer.getComponent(InventoryComponent.class);
 
