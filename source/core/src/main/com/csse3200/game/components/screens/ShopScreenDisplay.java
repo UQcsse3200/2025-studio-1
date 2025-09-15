@@ -14,12 +14,16 @@ import com.csse3200.game.components.shop.CatalogService;
 import com.csse3200.game.components.shop.PurchaseError;
 import com.csse3200.game.components.shop.ShopManager;
 import com.csse3200.game.areas.ForestGameArea;
+import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.*;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.utils.Scaling;
+import com.badlogic.gdx.scenes.scene2d.ui.Container;
+import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 
 
 public class ShopScreenDisplay extends UIComponent {
-    // error messages
+    // Error messages
     private static final String ERROR_MESSAGE = "Unable to purchase ";
     private static final String NOT_FOUND_MESSAGE = ".Item was not found.";
     private static final String DISABLED_MESSAGE = ". Item is disabled.";
@@ -29,14 +33,29 @@ public class ShopScreenDisplay extends UIComponent {
     private static final String INVALID_ITEM_MESSAGE = ". Invalid item.";
     private static final String UNEXPECTED_MESSAGE = ". Unexpected error.";
 
+    // UI constants
+    private static final float PANEL_W = 720f;
+    private static final float PANEL_H = 600f;
+    private static final int   GRID_COLUMNS = 4;
+    private static final float CELL_W = 150f;
+    private static final float CELL_H = 180f;
+    private static final float ICON_SIZE = 96f;
+
+    private static final Color PANEL_COLOR = Color.valueOf("0B132B");
+    private static final Color TITLE_COLOR = Color.valueOf("00E5FF");
+    private static final Color GOLD        = Color.valueOf("FFD54F");
+
+    // Dependencies
     private final ForestGameArea game;
     private final CatalogService catalog;
     private final ShopManager manager;
+
+    // Scene2D Widgets
     private Table root;
-    private Image dimmer;
-    private Texture dimTex;
     private Table grid;
-    private Table hud;
+    private Image frame;
+    private Image dimmer;
+    private Texture pixelTex;
     private Label currencyLabel;
     private ItemScreenDisplay itemPopup;
     Image background;
@@ -52,76 +71,19 @@ public class ShopScreenDisplay extends UIComponent {
         entity.getEvents().addListener("purchaseFailed", this::showError);
         entity.getEvents().addListener("interact", this::show);
         super.create();
+
         itemPopup = new ItemScreenDisplay();
         entity.addComponent(itemPopup);
 
-        // Background white colour
-        Texture whiteTex = makeSolidTexture(Color.WHITE);
-        background = new Image(new TextureRegionDrawable(new TextureRegion(whiteTex)));
-        background.setFillParent(false); // we will size it manually
-        background.setSize(500, 600);     // adjust width/height to cover your grid/buttons
-        background.setPosition(
-                (stage.getWidth() - background.getWidth()) / 2,
-                (stage.getHeight() - background.getHeight()) / 2
-        );
+        buildBackdrop();
+        buildRootTable();
+        addHeader();
+        buildGrid();
+        populateGrid();
 
-        //Dimmer
-        dimTex = makeSolidTexture(new Color(0, 0, 0, 0.6f));
-        dimmer = new Image(new TextureRegionDrawable(new TextureRegion(dimTex)));
-        dimmer.setFillParent(true);
-        stage.addActor(dimmer);
+        addFooter();
+        subscribeCurrencyUpdates();
 
-        // Root table
-        root = new Table();
-        root.setFillParent(true);
-        root.center();
-        stage.addActor(background);
-        stage.addActor(root);
-
-        // Title
-        Label title = new Label("Shop", skin);
-        title.setFontScale(2f);
-        root.add(title).padBottom(20).row();
-
-        // Grid
-        grid = new Table();
-        grid.defaults().pad(10);
-
-        int columns = 4;
-        int count = 0;
-
-        for (CatalogEntry entry : catalog.list()) {
-            makeButton(entry);
-            count++;
-            if (count % columns == 0) grid.row();
-        }
-
-        root.add(grid).row();
-
-        //  Close Shop button
-        TextButton.TextButtonStyle style = skin.get("default", TextButton.TextButtonStyle.class);
-        TextButton closeBtn = new TextButton("Close Shop", style);
-        closeBtn.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                hide();
-            }
-        });
-
-        root.add(closeBtn).padTop(20).row();
-        // --- Currency HUD (top-right) ---
-        hud = new Table();
-        hud.setFillParent(true);
-        hud.top().right().pad(12);
-        stage.addActor(hud);
-
-        // label + initial value
-        currencyLabel = new Label("", skin);
-        updateCurrencyLabel();  // set from InventoryComponent once on open
-
-        // Optional: add a static "$" label or an icon if you have one in the skin
-        hud.add(new Label("$", skin)).padRight(4f);
-        hud.add(currencyLabel);
         hide();
     }
 
@@ -132,93 +94,24 @@ public class ShopScreenDisplay extends UIComponent {
 
     public Stage getStage() { return stage; }
 
-
-    private void updateCurrencyLabel() {
-        var inv = game.getPlayer().getComponent(
-                com.csse3200.game.components.player.InventoryComponent.class);
-        int amount = (inv != null) ? inv.getProcessor() : 0;
-        currencyLabel.setText(String.valueOf(amount));
-    }
-
     @Override
     public void dispose() {
         if (root != null) { root.remove(); root = null; }
         if (dimmer != null) { dimmer.remove(); dimmer = null; }
-        if (dimTex != null) { dimTex.dispose(); dimTex = null; }
-        if (hud != null) { hud.remove(); hud = null; }
+        if (frame != null) { frame.remove(); frame = null; }
+        if (pixelTex != null) { pixelTex.dispose(); pixelTex = null; }
         if (itemPopup != null) { itemPopup.dispose(); itemPopup = null; }
         if (background != null) {background.remove(); background = null; }
         super.dispose();
     }
 
-    private void makeButton(CatalogEntry entry) {
-        ImageButton iconButton = (ImageButton) entry.getIconActor(skin);
-
-        Actor finalIcon;
-        if (!entry.enabled()) {
-            // Wrap in a stack to add overlay
-            Stack stack = new Stack();
-            stack.add(iconButton);
-
-            // Semi-transparent grey overlay
-            Image overlay = new Image(new TextureRegionDrawable(new TextureRegion(
-                    makeSolidTexture(new Color(0.8f, 0f, 0f, 0.5f))
-            )));
-            overlay.setFillParent(true);
-            stack.add(overlay);
-
-            finalIcon = stack;
-        } else {
-            finalIcon = iconButton;
-        }
-        // Add name & price below icon
-        Table itemTable = new Table();
-        itemTable.add(finalIcon).size(100, 100).row();
-        itemTable.add(new Label(entry.getItemName(), skin)).row();
-        itemTable.add(new Label("$" + entry.price(), skin)).padBottom(6).row();
-
-        // --- Add Info button ---
-        itemTable.add(infoButton(entry)).padTop(4).row();
-
-        // Gray out if disabled
-
-        // Click to purchase
-        int amountToPurchase = 1;
-        finalIcon.addListener(new ChangeListener() {
-                @Override
-                public void changed(ChangeEvent event, Actor actor) {
-                    manager.purchase(game.getPlayer(), entry, amountToPurchase);
-                }
-            });
-
-        grid.add(itemTable).size(120, 140);
-
-    }
-
-    private TextButton infoButton(CatalogEntry entry) {
-        TextButton btn = new TextButton("Info", skin);
-        btn.addListener(new ChangeListener() {
-            @Override public void changed(ChangeEvent event, Actor actor) {
-                itemPopup.open(entry); // safe: stage is already set by create()
-            }
-        });
-        return btn;
-    }
-
-    public void refreshCatalog(){
-        grid.clearChildren();
-        int columns = 4;
-        int count = 0;
-        for (CatalogEntry entry : catalog.list()) {
-            makeButton(entry);
-            count++;
-            if(count % columns == 0) grid.row();
-        }
-    }
-
     public void show() {
+        ServiceLocator.getTimeSource().setPaused(true);
         refreshCatalog();
         updateCurrencyLabel();
+        if (frame != null) {
+            frame.setVisible(true);
+        }
         if (background != null) {
             background.setVisible(true);
         }
@@ -228,13 +121,13 @@ public class ShopScreenDisplay extends UIComponent {
         if (dimmer != null) {
             dimmer.setVisible(true);
         }
-        if (hud != null) {
-            hud.setVisible(true);
-        }
-
     }
 
     public void hide() {
+        ServiceLocator.getTimeSource().setPaused(false);
+        if (frame != null) {
+            frame.setVisible(false);
+        }
         if (background != null) {
             background.setVisible(false);
         }
@@ -244,14 +137,208 @@ public class ShopScreenDisplay extends UIComponent {
         if (dimmer != null) {
             dimmer.setVisible(false);
         }
-        if (hud != null) {
-            hud.setVisible(false);
+    }
+
+    // Dim the world, draw a black frame outline, and a navy panel behind content.
+    private void buildBackdrop() {
+        pixelTex = makeSolidTexture(Color.WHITE);
+
+        // Dimmer
+        dimmer = new Image(new TextureRegionDrawable(new TextureRegion(pixelTex)));
+        dimmer.setFillParent(true);
+        dimmer.setColor(0f, 0f, 0f, 0.6f);
+        stage.addActor(dimmer);
+
+        // Black frame (outline)
+        frame = new Image(new TextureRegionDrawable(new TextureRegion(pixelTex)));
+        frame.setSize(PANEL_W + 8, PANEL_H + 8);
+        frame.setPosition((stage.getWidth() - frame.getWidth()) / 2f,
+                (stage.getHeight() - frame.getHeight()) / 2f);
+        frame.setColor(Color.BLACK);
+        stage.addActor(frame);
+
+        // Navy panel
+        background = new Image(new TextureRegionDrawable(new TextureRegion(pixelTex)));
+        background.setSize(PANEL_W, PANEL_H);
+        background.setPosition((stage.getWidth() - background.getWidth()) / 2f,
+                (stage.getHeight() - background.getHeight()) / 2f);
+        background.setColor(PANEL_COLOR);
+        stage.addActor(background);
+    }
+
+    // Root table, sized/positioned on top of the panel.
+    private void buildRootTable() {
+        root = new Table();
+        root.setSize(PANEL_W, PANEL_H);
+        root.setPosition(background.getX(), background.getY());
+        root.top().pad(20);
+        root.defaults().pad(10);
+        stage.addActor(root);
+    }
+
+    // Adds title and Divider
+    private void addHeader() {
+        Label.LabelStyle titleStyle = new Label.LabelStyle(skin.get(Label.LabelStyle.class));
+        titleStyle.fontColor = TITLE_COLOR;
+
+        Label title = new Label("Shop", titleStyle);
+        title.setFontScale(1.8f);
+        root.add(title).padBottom(10).row();
+
+        Image divider = new Image(new TextureRegionDrawable(new TextureRegion(pixelTex)));
+        divider.setColor(1f, 1f, 1f, 0.08f);
+        root.add(divider)
+                .width(PANEL_W - 40f)  // match your side padding
+                .height(2f)
+                .padBottom(8f)
+                .row();
+    }
+
+    // Create grid table and add to root
+    private void buildGrid() {
+        grid = new Table();
+        grid.defaults().pad(12).size(CELL_W, CELL_H).uniform(true);
+        root.add(grid).row();
+    }
+
+    // Populate grid with the catalog with consistent rows/columns
+    private void populateGrid() {
+        int count = 0;
+        for (CatalogEntry entry : catalog.list()) {
+            grid.add(buildItemCell(entry));
+            count++;
+            if (count % GRID_COLUMNS == 0) grid.row();
         }
     }
 
-    public void showError(String itemName, PurchaseError error) {
+    // Rebuild the item grid from the current catalog
+    private void refreshCatalog() {
+        if (grid == null) return;
+        grid.clearChildren();
+        populateGrid(); // re-adds all cells and rows
+    }
+
+    // One footer row (Button and Balance)
+    private void addFooter() {
+        Label.LabelStyle balStyle = new Label.LabelStyle(skin.get(Label.LabelStyle.class));
+        balStyle.fontColor = GOLD;
+        currencyLabel = new Label("", balStyle);
+        currencyLabel.setFontScale(1.2f);
+        updateCurrencyLabel();
+
+        // Close button
+        TextButton closeBtn = new TextButton(
+                "Close Shop",
+                skin.get("default", TextButton.TextButtonStyle.class)
+        );
+        closeBtn.addListener(new ChangeListener() {
+            @Override public void changed(ChangeEvent event, Actor actor) { hide(); }
+        });
+
+        // Two overlayed rows: one centers the button, one right-aligns balance
+        Stack footerStack = new Stack();
+
+        Table centerRow = new Table();
+        centerRow.center();
+        centerRow.add(closeBtn).expandX().center();
+
+        Table rightRow = new Table();
+        rightRow.add(currencyLabel).expandX().right().padRight(12f);
+
+        footerStack.add(centerRow);
+        footerStack.add(rightRow);
+
+        root.add(footerStack).growX().padTop(8f).padBottom(10f).row();
+    }
+
+    // Keep balance in sync with InventoryComponent#setProcessor().
+    private void subscribeCurrencyUpdates() {
+        game.getPlayer().getEvents().addListener("updateProcessor", (Integer p) -> {
+            if (currencyLabel != null) {
+                currencyLabel.setText("Balance: $" + p);
+            }
+        });
+    }
+
+    // Build cells.
+    private Table buildItemCell(CatalogEntry entry) {
+        ImageButton iconButton = (ImageButton) entry.getIconActor(skin);
+        iconButton.getImage().setScaling(Scaling.fit); // keep aspect within box
+
+        Actor iconActor;
+        if (!entry.enabled()) {
+            // red-tinted overlay if disabled
+            Stack stack = new Stack();
+            stack.add(iconButton);
+            Image overlay = new Image(new TextureRegionDrawable(new TextureRegion(pixelTex)));
+            overlay.setColor(0.8f, 0f, 0f, 0.5f);
+            overlay.setFillParent(true);
+            stack.add(overlay);
+
+            iconActor = stack;
+        } else {
+            iconActor = iconButton;
+        }
+
+        // Lock icon into a fixed square
+        Container<Actor> iconBox = new Container<>(iconActor);
+        iconBox.prefSize(ICON_SIZE, ICON_SIZE).minSize(ICON_SIZE, ICON_SIZE).maxSize(ICON_SIZE, ICON_SIZE).fill();
+
+        // Gold price labels
+        Label.LabelStyle priceStyle = new Label.LabelStyle(skin.get(Label.LabelStyle.class));
+        priceStyle.fontColor = GOLD;
+
+        // Compose one cell
+        Table cell = new Table();
+        cell.add(iconBox).width(ICON_SIZE).height(ICON_SIZE).padTop(6).padBottom(8).row();
+        cell.add(new Label(entry.getItemName(), skin)).padBottom(4).row();
+        cell.add(new Label("$" + entry.price(), priceStyle)).padBottom(8).row();
+        cell.add(infoButton(entry)).padTop(4).row();
+
+        // Click purchases
+        final int amountToPurchase = 1;
+        iconActor.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                manager.purchase(game.getPlayer(), entry, amountToPurchase);
+            }
+        });
+
+        return cell;
+    }
+
+    private TextButton infoButton(CatalogEntry entry) {
+        TextButton btn = new TextButton("Info", skin);
+        btn.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                itemPopup.open(entry);
+            }
+        });
+        return btn;
+    }
+
+    // Helpers
+    private void updateCurrencyLabel() {
+        var inv = game.getPlayer().getComponent(
+                com.csse3200.game.components.player.InventoryComponent.class);
+        int amount = (inv != null) ? inv.getProcessor() : 0;
+        currencyLabel.setText("Balance: $" + amount);
+    }
+
+    private static Texture makeSolidTexture(Color color) {
+        Pixmap pm = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
+        pm.setColor(color);
+        pm.fill();
+        Texture t = new Texture(pm);
+        pm.dispose();
+        return t;
+    }
+
+    // Errors
+    private void showError(String itemName, PurchaseError error) {
         String message = ERROR_MESSAGE + itemName;
-        String errorMsg = switch(error) {
+        String errorMsg = switch (error) {
             case DISABLED -> DISABLED_MESSAGE;
             case NOT_FOUND -> NOT_FOUND_MESSAGE;
             case INVALID_ITEM -> INVALID_ITEM_MESSAGE;
@@ -264,16 +351,5 @@ public class ShopScreenDisplay extends UIComponent {
         dialog.text(message + errorMsg);
         dialog.button("OK");
         dialog.show(stage);
-    }
-
-
-    // --- Helper: create solid texture for dimmer ---
-    private static Texture makeSolidTexture(Color color) {
-        Pixmap pm = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
-        pm.setColor(color);
-        pm.fill();
-        Texture t = new Texture(pm);
-        pm.dispose();
-        return t;
     }
 }

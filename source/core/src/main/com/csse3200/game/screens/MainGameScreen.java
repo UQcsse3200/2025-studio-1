@@ -8,10 +8,6 @@ import com.csse3200.game.areas.ForestGameArea;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.components.maingame.MainGameActions;
 import com.csse3200.game.components.screens.PauseMenuDisplay;
-import com.csse3200.game.components.screens.ShopScreenDisplay;
-import com.csse3200.game.components.shop.CatalogService;
-import com.csse3200.game.components.shop.ShopDemo;
-import com.csse3200.game.components.shop.ShopManager;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
 import com.csse3200.game.entities.factories.system.RenderFactory;
@@ -54,8 +50,7 @@ public class MainGameScreen extends ScreenAdapter {
 
   private Entity pauseOverlay;
   private boolean isPauseVisible = false;
-  private Entity shopOverlay;
-  private boolean isShopVisible = false;
+
 
   public MainGameScreen(GdxGame game) {
     this.game = game;
@@ -89,7 +84,7 @@ public class MainGameScreen extends ScreenAdapter {
 
   @Override
   public void render(float delta) {
-    if (!isPauseVisible && !isShopVisible
+    if (!isPauseVisible && !(ServiceLocator.getTimeSource().isPaused())
             && !com.csse3200.game.services.ServiceLocator.isTransitioning()) {
       physicsEngine.update();
     }
@@ -110,13 +105,6 @@ public class MainGameScreen extends ScreenAdapter {
         showPauseOverlay();
       } else {
         hidePauseOverlay();
-      }
-    }
-    if (Gdx.input.isKeyJustPressed(Input.Keys.K)) {
-      if (!isShopVisible) {
-        showShopOverlay();
-      } else {
-        hideShopOverlay();
       }
     }
 
@@ -214,41 +202,6 @@ public class MainGameScreen extends ScreenAdapter {
       pauseOverlay = null;
     }
     isPauseVisible = false;
-  }
-
-  /**
-   * Creates and displays the shop overlay on top of the game.
-   */
-  private void showShopOverlay() {
-    // once shop is an entity
-    // shop.show()
-    Stage stage = ServiceLocator.getRenderService().getStage();
-    CatalogService catalog = ShopDemo.makeDemoCatalog();
-    ShopManager manager = new ShopManager(catalog);
-
-    shopOverlay = new Entity()
-            .addComponent(new ShopScreenDisplay(forestGameArea, manager))
-            .addComponent(new InputDecorator(stage, 100));
-
-    shopOverlay.getEvents().addListener("closeShop", this::hideShopOverlay);
-    ServiceLocator.getEntityService().register(shopOverlay);
-    ServiceLocator.getTimeSource().setPaused(true);
-    isShopVisible = true;
-  }
-
-  /**
-   * Removes and disposes the shop overlay.
-   */
-  private void hideShopOverlay() {
-    // once shop is an entity
-    // shop.hide()
-    if (shopOverlay != null) {
-      shopOverlay.dispose();
-      ServiceLocator.getEntityService().unregister(shopOverlay);
-      shopOverlay = null;
-    }
-    ServiceLocator.getTimeSource().setPaused(false);
-    isShopVisible = false;
   }
 
 
