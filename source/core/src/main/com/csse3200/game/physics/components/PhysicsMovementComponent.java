@@ -96,4 +96,16 @@ public class PhysicsMovementComponent extends Component implements MovementContr
     // Move towards targetPosition based on our current position
     return targetPosition.cpy().sub(entity.getPosition()).nor();
   }
+
+  /**
+   * Makes the entity jump by applying a vertical impulse.
+   *
+   * @param force The strength of the jump (vertical impulse).
+   */
+  public void jump(float force) {
+    if (physicsComponent != null && physicsComponent.getBody() != null) {
+      Body body = physicsComponent.getBody();
+      body.applyLinearImpulse(new Vector2(0, force), body.getWorldCenter(), true);
+    }
+  }
 }
