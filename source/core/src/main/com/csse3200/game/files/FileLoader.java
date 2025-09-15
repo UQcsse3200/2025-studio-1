@@ -5,11 +5,13 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Json;
 import com.csse3200.game.areas.GameArea;
 import com.csse3200.game.components.player.InventoryComponent;
+import com.csse3200.game.components.player.ItemPickUpComponent;
 import com.csse3200.game.services.SaveLoadService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.List;
 
 /**
  * Wrapper for reading Java objects from JSON files.
@@ -105,11 +107,6 @@ public class FileLoader {
     return (T) object;
   }
 
-//  public static GameArea readArea(Class area) {
-//
-//
-//    return loadArea;
-//  }
 
 
 
@@ -162,8 +159,16 @@ public class FileLoader {
    * Reads Inventory component of a save file json
    * - currently a placeholder for refacotring end sprint 2 / into sprint 3
    */
-  public static void readPlayerInfo(SaveLoadService.PlayerInfo invComp) {
-//    invComp.areaId
+  public static void readInventory(List<String> inventory) {
+    InventoryComponent loadInventory = new InventoryComponent(0);
+    ItemPickUpComponent loadIn = new ItemPickUpComponent(loadInventory);
+    if (!inventory.isEmpty()) {
+      for (int i = 0; i < inventory.size(); i++) {
+        loadIn.createItemFromTexture(inventory.get(i));
+        loadInventory.addItem(
+                loadIn.createItemFromTexture(inventory.get(i)));
+      }
+    }
   }
 
   private static FileHandle getFileHandle(String filename, Location location) {

@@ -8,6 +8,7 @@ import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.factories.characters.PlayerFactory;
 import com.csse3200.game.rendering.SolidColorRenderComponent;
+import com.csse3200.game.services.SaveLoadService;
 
 /** Room 5 with its own background styling. */
 public class Floor5GameArea extends GameArea {
@@ -33,8 +34,6 @@ public class Floor5GameArea extends GameArea {
     spawnBordersAndReturnDoor();
     spawnPlayer();
     spawnFloor();
-
-
   }
 
   private void ensureAssets() {
@@ -67,6 +66,10 @@ public class Floor5GameArea extends GameArea {
   @Override
   public String toString() {
     return "Floor5";
+  }
+
+  public static Floor5GameArea load(SaveLoadService.PlayerInfo load) {
+    return (new Floor5GameArea(terrainFactory, cameraComponent));
   }
 }
 

@@ -8,6 +8,7 @@ import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.factories.characters.PlayerFactory;
 import com.csse3200.game.rendering.SolidColorRenderComponent;
+import com.csse3200.game.services.SaveLoadService;
 
 /** Research room: minimal walls and a left door back to Elevator. */
 public class ResearchGameArea extends GameArea {
@@ -56,6 +57,10 @@ public class ResearchGameArea extends GameArea {
   @Override
   public String toString() {
     return "Research";
+  }
+
+  public static ResearchGameArea load(SaveLoadService.PlayerInfo load) {
+    return (new ResearchGameArea(terrainFactory, cameraComponent));
   }
 }
 

@@ -7,6 +7,7 @@ import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.factories.characters.PlayerFactory;
+import com.csse3200.game.services.SaveLoadService;
 
 /** Tunnel room: minimal walls with left door back to Storage. */
 public class TunnelGameArea extends GameArea {
@@ -48,6 +49,10 @@ public class TunnelGameArea extends GameArea {
   @Override
   public String toString() {
     return "Tunnel";
+  }
+
+  public static TunnelGameArea load(SaveLoadService.PlayerInfo load) {
+    return (new TunnelGameArea(terrainFactory, cameraComponent));
   }
 
 }

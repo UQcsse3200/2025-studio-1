@@ -34,8 +34,6 @@ import com.badlogic.gdx.Input;
 import com.csse3200.game.GdxGame.ScreenType;
 import com.csse3200.game.components.CombatStatsComponent;
 
-import java.util.Optional;
-
 
 /**
  * The game screen containing the main game.
@@ -51,6 +49,7 @@ public class MainGameScreen extends ScreenAdapter {
   private final Renderer renderer;
   private final PhysicsEngine physicsEngine;
   private final ForestGameArea forestGameArea;
+
 
   private Entity pauseOverlay;
   private boolean isPauseVisible = false;
@@ -218,4 +217,7 @@ public class MainGameScreen extends ScreenAdapter {
       logger.info("Save data failed");
     }
   }
+
+  private void loadState(){}
+
 }
