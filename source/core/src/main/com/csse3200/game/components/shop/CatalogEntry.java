@@ -14,8 +14,15 @@ import com.badlogic.gdx.Gdx;
 import com.csse3200.game.components.items.ItemComponent;
 import com.csse3200.game.entities.Entity;
 
+
 /**
- * Models one purchasable catalog item that can be found in the shop.
+ * Represents a purchasable catalog entry in the in-game shop.
+ * <p>
+ * A catalog entry stores metadata about a specific {@link Entity} item,
+ * including its price, whether it is currently enabled for purchase,
+ * the maximum stack size in the player's inventory, and how many units
+ * of the item are sold in one bundle.
+ * </p>
  */
 public record CatalogEntry(
         Entity item,
@@ -36,20 +43,46 @@ public record CatalogEntry(
      * @param maxStack The max number of this item that can be stored in one inventory
      *                 slot (1 if stackable is false)
      * @param bundleQuantity How many units of the item sold per purchase.
+     * @throws IllegalArgumentException if any of the arguments are invalid
+     *                                  (e.g., null item, non-positive price, invalid stack/bundle size).
      */
     public CatalogEntry {
         checkValidEntry(item, price, maxStack, bundleQuantity);
     }
 
+
     /**
-     * Calculates the cost for the quantity of this CatalogEntry.
+     * Creates an icon actor representing this catalog entry's item.
+     * <p>
+     * This is typically used for rendering the item in the shop UI.
+     * </p>
      *
-     * @param quantity the number the player wants to purchase
-     * @return the total cost
+     * @param skin The game skin to style UI elements (currently unused).
+     * @return An {@link Actor} displaying the item's icon.
      */
-    public int costFor(int quantity) {
-        int qty = Math.max(1, quantity);
-        return (price * qty);
+    public Actor getIconActor(Skin skin) {
+        Texture texture = new Texture(item.getComponent(ItemComponent.class).getTexture());
+        TextureRegionDrawable icon  = new TextureRegionDrawable(texture);
+        return new ImageButton(icon);
+    }
+
+    /**
+     * Gets the item entity associated with this entry.
+     *
+     * @return The item entity.
+     */
+    public Entity getItem() {
+        return item;
+    }
+
+
+    /**
+     * Gets the display name of the item.
+     *
+     * @return The item's name as defined in its {@link ItemComponent}.
+     */
+    public String getItemName() {
+        return item.getComponent(ItemComponent.class).getName();
     }
 
     private void checkValidEntry(Entity item, int price,
@@ -72,25 +105,7 @@ public record CatalogEntry(
         }
     }
 
-    /**
-     * Get icon for entry
-     *
-     * @param skin game skin to use
-     * @return actor of icon
-     **/
-    public Actor getIconActor(Skin skin) {
-        Texture texture = new Texture(item.getComponent(ItemComponent.class).getTexture());
-        TextureRegionDrawable icon  = new TextureRegionDrawable(texture);
-        return new ImageButton(icon);
-    }
 
-    public Entity getItem() {
-        return item;
-    }
-
-    public String getItemName() {
-        return item.getComponent(ItemComponent.class).getName();
-    }
 
 
 }

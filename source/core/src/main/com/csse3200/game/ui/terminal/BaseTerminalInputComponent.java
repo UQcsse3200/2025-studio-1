@@ -27,6 +27,7 @@ public abstract class BaseTerminalInputComponent extends InputComponent {
      * @return False, as this is a component not affected by pause
      * functionality
      */
+    @Override
     protected boolean isPauseable() {
         return false;
     }
@@ -41,6 +42,7 @@ public abstract class BaseTerminalInputComponent extends InputComponent {
      * @return whether the input was processed
      * @see InputProcessor#keyDown(int)
      */
+    @Override
     public abstract boolean keyPressed(int keycode);
 
     /**
@@ -50,6 +52,7 @@ public abstract class BaseTerminalInputComponent extends InputComponent {
      * @return whether the input was processed
      * @see InputProcessor#keyTyped(char)
      */
+    @Override
     public boolean keyTyped(char character) {
         if (!terminal.isOpen()) {
             return false;
@@ -80,6 +83,7 @@ public abstract class BaseTerminalInputComponent extends InputComponent {
      * @return whether the input was processed
      * @see InputProcessor#keyUp(int)
      */
+    @Override
     public boolean keyReleased(int keycode) {
         return terminal.isOpen();
     }
