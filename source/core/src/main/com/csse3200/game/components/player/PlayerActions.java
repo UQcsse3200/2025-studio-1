@@ -401,14 +401,16 @@ public class PlayerActions extends Component {
       WeaponsStatsComponent curr = inv.getCurrItemStats();
       if (curr != null) return curr;
     }
-    return entity.getComponent(WeaponsStatsComponent.class);
+      //changed to null so that in case of no weapon equipped
+      // it doesn't fallback to player's base component
+    return null;
   }
 
   /**
    * equipSlot(int slotIndex) selects the item slot in the inventory for the item that the player wants to equip
    * @param slotIndex
    */
-  private void equipSlot(int slotIndex){
+  public void equipSlot(int slotIndex){
       InventoryComponent inventory = entity.getComponent(InventoryComponent.class);
       if(inventory == null)return;  //player does not have any existing inventory
 
@@ -434,18 +436,20 @@ public class PlayerActions extends Component {
     /**
      * equips the player with the weapon that is in the selected slot
      */
-    private void equipCurrentWeapon(){
+    public void equipCurrentWeapon() {
         InventoryComponent inventory = entity.getComponent(InventoryComponent.class);
-        //if the inventory does not exist - return
-        if(inventory == null) return;
+        if (inventory == null) return;
 
         int equippedIndex = inventory.getEquippedSlot();
-        if (equippedIndex >= 0){
-            //if valid equippedIndex - put focus on the slot item
+        if (equippedIndex >= 0) {
+            // set current item to the equipped slot
+            Entity item = inventory.getCurrItem();
+            inventory.setCurrItem(item);
+
             entity.getEvents().trigger("focus item", equippedIndex);
         } else {
-            //if invalid equippedIndex - item does not exist
             entity.getEvents().trigger("focus item", -1);
+            inventory.setCurrItem(null);
         }
     }
 
