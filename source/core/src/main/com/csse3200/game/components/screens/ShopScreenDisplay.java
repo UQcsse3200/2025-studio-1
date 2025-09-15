@@ -42,9 +42,9 @@ public class ShopScreenDisplay extends UIComponent {
     Image background;
 
 
-    public ShopScreenDisplay(ForestGameArea area, CatalogService catalog, ShopManager manager) {
+    public ShopScreenDisplay(ForestGameArea area, ShopManager manager) {
         this.game = area;
-        this.catalog = catalog;
+        this.catalog = manager.getCatalog();
         this.manager = manager;
     }
     @Override

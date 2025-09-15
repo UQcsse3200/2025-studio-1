@@ -16,14 +16,13 @@ public final class ShopFactory {
 
     public static Entity createShop(ForestGameArea area,
                                     ShopManager manager,
-                                    CatalogService catalog,
                                     String kioskTexture) {
 
         Entity shop = new Entity()
                 .addComponent(new PhysicsComponent())
                 .addComponent(new HitboxComponent())
                 .addComponent(new TextureRenderComponent(kioskTexture))
-                .addComponent(new ShopComponent(area, manager, catalog));
+                .addComponent(new ShopComponent(area, manager));
 
         PhysicsComponent phys = shop.getComponent(PhysicsComponent.class);
         phys.setBodyType(BodyDef.BodyType.StaticBody);
