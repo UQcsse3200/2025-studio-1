@@ -87,7 +87,9 @@ loadScripts(document, 'script');</script>
 <div class="inheritance" title="Inheritance Tree"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">java.lang.Object</a>
 <div class="inheritance"><a href="../../components/Component.html" title="class in com.csse3200.game.components">com.csse3200.game.components.Component</a>
 <div class="inheritance"><a href="../../input/InputComponent.html" title="class in com.csse3200.game.input">com.csse3200.game.input.InputComponent</a>
+<div class="inheritance"><a href="BaseTerminalInputComponent.html" title="class in com.csse3200.game.ui.terminal">com.csse3200.game.ui.terminal.BaseTerminalInputComponent</a>
 <div class="inheritance">com.csse3200.game.ui.terminal.TouchTerminalInputComponent</div>
+</div>
 </div>
 </div>
 </div>
@@ -98,7 +100,7 @@ loadScripts(document, 'script');</script>
 </dl>
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">TouchTerminalInputComponent</span>
-<span class="extends-implements">extends <a href="../../input/InputComponent.html" title="class in com.csse3200.game.input">InputComponent</a></span></div>
+<span class="extends-implements">extends <a href="BaseTerminalInputComponent.html" title="class in com.csse3200.game.ui.terminal">BaseTerminalInputComponent</a></span></div>
 <div class="block">Input handler for the debug terminal for keyboard and touch (mouse) input.
  This input handler uses keyboard and touch input.
 
@@ -111,6 +113,9 @@ loadScripts(document, 'script');</script>
 <li>
 <section class="field-summary" id="field-summary">
 <h2>Field Summary</h2>
+<div class="inherited-list">
+<h3 id="fields-inherited-from-class-com.csse3200.game.ui.terminal.BaseTerminalInputComponent">Fields inherited from class&nbsp;com.csse3200.game.ui.terminal.<a href="BaseTerminalInputComponent.html" title="class in com.csse3200.game.ui.terminal">BaseTerminalInputComponent</a></h3>
+<code><a href="BaseTerminalInputComponent.html#terminal">terminal</a></code></div>
 <div class="inherited-list">
 <h3 id="fields-inherited-from-class-com.csse3200.game.input.InputComponent">Fields inherited from class&nbsp;com.csse3200.game.input.<a href="../../input/InputComponent.html" title="class in com.csse3200.game.input">InputComponent</a></h3>
 <code><a href="../../input/InputComponent.html#priority">priority</a></code></div>
@@ -145,38 +150,26 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#create()" class="member-name-link">create</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Called when the entity is created and registered.</div>
-</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#keyDown(int)" class="member-name-link">keyDown</a><wbr>(int&nbsp;keycode)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Handles input if the terminal is open.</div>
-</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#keyTyped(char)" class="member-name-link">keyTyped</a><wbr>(char&nbsp;character)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#keyPressed(int)" class="member-name-link">keyPressed</a><wbr>(int&nbsp;keycode)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Handles input if the terminal is open.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#keyUp(int)" class="member-name-link">keyUp</a><wbr>(int&nbsp;keycode)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Handles input if the terminal is open.</div>
-</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#scrolled(float,float)" class="member-name-link">scrolled</a><wbr>(float&nbsp;amountX,
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#scrolled(float,float)" class="member-name-link">scrolled</a><wbr>(float&nbsp;amountX,
  float&nbsp;amountY)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Scrolling up will open the terminal and scrolling down will close the terminal.</div>
 </div>
 </div>
 </div>
 </div>
 <div class="inherited-list">
+<h3 id="methods-inherited-from-class-com.csse3200.game.ui.terminal.BaseTerminalInputComponent">Methods inherited from class&nbsp;com.csse3200.game.ui.terminal.<a href="BaseTerminalInputComponent.html" title="class in com.csse3200.game.ui.terminal">BaseTerminalInputComponent</a></h3>
+<code><a href="BaseTerminalInputComponent.html#create()">create</a>, <a href="BaseTerminalInputComponent.html#isPauseable()">isPauseable</a>, <a href="BaseTerminalInputComponent.html#keyReleased(int)">keyReleased</a>, <a href="BaseTerminalInputComponent.html#keyTyped(char)">keyTyped</a></code></div>
+<div class="inherited-list">
 <h3 id="methods-inherited-from-class-com.csse3200.game.input.InputComponent">Methods inherited from class&nbsp;com.csse3200.game.input.<a href="../../input/InputComponent.html" title="class in com.csse3200.game.input">InputComponent</a></h3>
-<code><a href="../../input/InputComponent.html#dispose()">dispose</a>, <a href="../../input/InputComponent.html#fling(float,float,int)">fling</a>, <a href="../../input/InputComponent.html#getPriority()">getPriority</a>, <a href="../../input/InputComponent.html#longPress(float,float)">longPress</a>, <a href="../../input/InputComponent.html#mouseMoved(int,int)">mouseMoved</a>, <a href="../../input/InputComponent.html#pan(float,float,float,float)">pan</a>, <a href="../../input/InputComponent.html#panStop(float,float,int,int)">panStop</a>, <a href="../../input/InputComponent.html#pinch(com.badlogic.gdx.math.Vector2,com.badlogic.gdx.math.Vector2,com.badlogic.gdx.math.Vector2,com.badlogic.gdx.math.Vector2)">pinch</a>, <a href="../../input/InputComponent.html#pinchStop()">pinchStop</a>, <a href="../../input/InputComponent.html#pinchStopHandled()">pinchStopHandled</a>, <a href="../../input/InputComponent.html#setPriority(int)">setPriority</a>, <a href="../../input/InputComponent.html#tap(float,float,int,int)">tap</a>, <a href="../../input/InputComponent.html#touchDown(float,float,int,int)">touchDown</a>, <a href="../../input/InputComponent.html#touchDown(int,int,int,int)">touchDown</a>, <a href="../../input/InputComponent.html#touchDragged(int,int,int)">touchDragged</a>, <a href="../../input/InputComponent.html#touchUp(int,int,int,int)">touchUp</a>, <a href="../../input/InputComponent.html#zoom(float,float)">zoom</a></code></div>
+<code><a href="../../input/InputComponent.html#dispose()">dispose</a>, <a href="../../input/InputComponent.html#fling(float,float,int)">fling</a>, <a href="../../input/InputComponent.html#getPriority()">getPriority</a>, <a href="../../input/InputComponent.html#keyDown(int)">keyDown</a>, <a href="../../input/InputComponent.html#keyUp(int)">keyUp</a>, <a href="../../input/InputComponent.html#longPress(float,float)">longPress</a>, <a href="../../input/InputComponent.html#mouseMoved(int,int)">mouseMoved</a>, <a href="../../input/InputComponent.html#pan(float,float,float,float)">pan</a>, <a href="../../input/InputComponent.html#panStop(float,float,int,int)">panStop</a>, <a href="../../input/InputComponent.html#pinch(com.badlogic.gdx.math.Vector2,com.badlogic.gdx.math.Vector2,com.badlogic.gdx.math.Vector2,com.badlogic.gdx.math.Vector2)">pinch</a>, <a href="../../input/InputComponent.html#pinchStop()">pinchStop</a>, <a href="../../input/InputComponent.html#pinchStopHandled()">pinchStopHandled</a>, <a href="../../input/InputComponent.html#setPriority(int)">setPriority</a>, <a href="../../input/InputComponent.html#tap(float,float,int,int)">tap</a>, <a href="../../input/InputComponent.html#touchDown(float,float,int,int)">touchDown</a>, <a href="../../input/InputComponent.html#touchDown(int,int,int,int)">touchDown</a>, <a href="../../input/InputComponent.html#touchDragged(int,int,int)">touchDragged</a>, <a href="../../input/InputComponent.html#touchUp(int,int,int,int)">touchUp</a>, <a href="../../input/InputComponent.html#zoom(float,float)">zoom</a></code></div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-com.csse3200.game.components.Component">Methods inherited from class&nbsp;com.csse3200.game.components.<a href="../../components/Component.html" title="class in com.csse3200.game.components">Component</a></h3>
 <code><a href="../../components/Component.html#earlyUpdate()">earlyUpdate</a>, <a href="../../components/Component.html#getEntity()">getEntity</a>, <a href="../../components/Component.html#setEnabled(boolean)">setEnabled</a>, <a href="../../components/Component.html#setEntity(com.csse3200.game.entities.Entity)">setEntity</a>, <a href="../../components/Component.html#toString()">toString</a>, <a href="../../components/Component.html#triggerEarlyUpdate()">triggerEarlyUpdate</a>, <a href="../../components/Component.html#triggerUpdate()">triggerUpdate</a>, <a href="../../components/Component.html#update()">update</a></code></div>
@@ -215,81 +208,23 @@ loadScripts(document, 'script');</script>
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="create()">
-<h3>create</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">create</span>()</div>
-<div class="block"><span class="description-from-type-label">Description copied from class:&nbsp;<code><a href="../../components/Component.html#create()">Component</a></code></span></div>
-<div class="block">Called when the entity is created and registered. Initial logic such as calls to GetComponent
- should be made here, not in the constructor which is called before an entity is finished.</div>
-<dl class="notes">
-<dt>Overrides:</dt>
-<dd><code><a href="../../input/InputComponent.html#create()">create</a></code>&nbsp;in class&nbsp;<code><a href="../../input/InputComponent.html" title="class in com.csse3200.game.input">InputComponent</a></code></dd>
-</dl>
-</section>
-</li>
-<li>
-<section class="detail" id="keyDown(int)">
-<h3>keyDown</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">keyDown</span><wbr><span class="parameters">(int&nbsp;keycode)</span></div>
+<section class="detail" id="keyPressed(int)">
+<h3>keyPressed</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">keyPressed</span><wbr><span class="parameters">(int&nbsp;keycode)</span></div>
 <div class="block">Handles input if the terminal is open. This is because keyDown events are
  triggered alongside keyTyped events. If the user is typing in the terminal, the input shouldn't
  trigger any other input handlers.</div>
 <dl class="notes">
 <dt>Specified by:</dt>
-<dd><code>keyDown</code>&nbsp;in interface&nbsp;<code>com.badlogic.gdx.InputProcessor</code></dd>
-<dt>Overrides:</dt>
-<dd><code><a href="../../input/InputComponent.html#keyDown(int)">keyDown</a></code>&nbsp;in class&nbsp;<code><a href="../../input/InputComponent.html" title="class in com.csse3200.game.input">InputComponent</a></code></dd>
+<dd><code><a href="BaseTerminalInputComponent.html#keyPressed(int)">keyPressed</a></code>&nbsp;in class&nbsp;<code><a href="BaseTerminalInputComponent.html" title="class in com.csse3200.game.ui.terminal">BaseTerminalInputComponent</a></code></dd>
+<dt>Parameters:</dt>
+<dd><code>keycode</code> - The key code of the key that was pressed.</dd>
 <dt>Returns:</dt>
 <dd>whether the input was processed</dd>
 <dt>See Also:</dt>
 <dd>
 <ul class="tag-list">
 <li><code>InputProcessor.keyDown(int)</code></li>
-</ul>
-</dd>
-</dl>
-</section>
-</li>
-<li>
-<section class="detail" id="keyTyped(char)">
-<h3>keyTyped</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">keyTyped</span><wbr><span class="parameters">(char&nbsp;character)</span></div>
-<div class="block">Handles input if the terminal is open. If 'enter' is typed, the entered message will be
- processed, otherwise the message will be updated with the new character.</div>
-<dl class="notes">
-<dt>Specified by:</dt>
-<dd><code>keyTyped</code>&nbsp;in interface&nbsp;<code>com.badlogic.gdx.InputProcessor</code></dd>
-<dt>Overrides:</dt>
-<dd><code><a href="../../input/InputComponent.html#keyTyped(char)">keyTyped</a></code>&nbsp;in class&nbsp;<code><a href="../../input/InputComponent.html" title="class in com.csse3200.game.input">InputComponent</a></code></dd>
-<dt>Returns:</dt>
-<dd>whether the input was processed</dd>
-<dt>See Also:</dt>
-<dd>
-<ul class="tag-list">
-<li><code>InputProcessor.keyTyped(char)</code></li>
-</ul>
-</dd>
-</dl>
-</section>
-</li>
-<li>
-<section class="detail" id="keyUp(int)">
-<h3>keyUp</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">keyUp</span><wbr><span class="parameters">(int&nbsp;keycode)</span></div>
-<div class="block">Handles input if the terminal is open. This is because keyUp events are
- triggered alongside keyTyped events. If the user is typing in the terminal, the input shouldn't
- trigger any other input handlers.</div>
-<dl class="notes">
-<dt>Specified by:</dt>
-<dd><code>keyUp</code>&nbsp;in interface&nbsp;<code>com.badlogic.gdx.InputProcessor</code></dd>
-<dt>Overrides:</dt>
-<dd><code><a href="../../input/InputComponent.html#keyUp(int)">keyUp</a></code>&nbsp;in class&nbsp;<code><a href="../../input/InputComponent.html" title="class in com.csse3200.game.input">InputComponent</a></code></dd>
-<dt>Returns:</dt>
-<dd>whether the input was processed</dd>
-<dt>See Also:</dt>
-<dd>
-<ul class="tag-list">
-<li><code>InputProcessor.keyUp(int)</code></li>
 </ul>
 </dd>
 </dl>
