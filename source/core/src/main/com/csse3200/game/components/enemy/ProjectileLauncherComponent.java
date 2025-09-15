@@ -6,6 +6,7 @@ import com.csse3200.game.areas.GameArea;
 import com.csse3200.game.components.Component;
 import com.csse3200.game.components.WeaponsStatsComponent;
 import com.csse3200.game.entities.Entity;
+import com.csse3200.game.physics.components.PhysicsComponent;
 import com.csse3200.game.services.ServiceLocator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,6 +43,23 @@ public class ProjectileLauncherComponent extends Component {
         Entity projectile = forestGameArea.spawnEnemyProjectile(directionToFire, weapon);
         Vector2 pos = new Vector2(getEntity().getPosition().x + offset.x,
                                 getEntity().getPosition().y + offset.y);
+        projectile.setPosition(pos);
+        projectile.scaleWidth(scale.x);
+        projectile.scaleHeight(scale.y);
+    }
+
+    /**
+     * Fires a projectile, classified as an enemy projectile, in the direction specified.
+     * @param directionToFire The direction to fire in
+     * @param offset Offset (from the center) where the projectile is fired
+     * @param scale The size of the projectile. "x" value represents width, and "y" value represents height.\
+     */
+    public void FireUpdatingProjectile(Vector2 directionToFire, Vector2 offset, Vector2 scale)
+    {
+        WeaponsStatsComponent weapon = entity.getComponent(WeaponsStatsComponent.class);
+        Entity projectile = forestGameArea.spawnUpdatingEnemyProjectile(directionToFire, weapon);
+        Vector2 pos = new Vector2(getEntity().getPosition().x + offset.x,
+                getEntity().getPosition().y + offset.y);
         projectile.setPosition(pos);
         projectile.scaleWidth(scale.x);
         projectile.scaleHeight(scale.y);
@@ -100,5 +118,15 @@ public class ProjectileLauncherComponent extends Component {
         };
 
         Timer.schedule(burstFireTask, 0f, timeBetweenShots);
+    }
+
+    public void CatapultProjectile(Vector2 directionToFire, Vector2 offset, Vector2 scale) {
+        WeaponsStatsComponent weapon = entity.getComponent(WeaponsStatsComponent.class);
+        Entity projectile = forestGameArea.spawnEnemyProjectile(directionToFire, weapon);
+        Vector2 pos = new Vector2(getEntity().getPosition().x + offset.x,
+                getEntity().getPosition().y + offset.y);
+        projectile.setPosition(pos);
+        projectile.scaleWidth(scale.x);
+        projectile.scaleHeight(scale.y);
     }
 }
