@@ -426,7 +426,7 @@ public class ForestGameArea extends GameArea {
     ShopManager manager = new ShopManager(catalog);
 
     Entity shop = ShopFactory.createShop(this, manager, "images/VendingMachine.png"); // have as tree now as placeholder, later need to change to actual shop icon
-    spawnEntityAt(shop, new GridPoint2(12, 6), true, false);
+    spawnEntityAt(shop, new GridPoint2(18, 6), true, false);
   }
 
   private void spawnComputerBench() {

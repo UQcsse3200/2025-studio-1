@@ -2,6 +2,7 @@ package com.csse3200.game.components;
 
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Vector2;
+import com.csse3200.game.components.shop.ShopManager;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.input.InputComponent;
 import com.csse3200.game.services.ServiceLocator;
@@ -26,7 +27,7 @@ public class ShopInteractComponent extends InputComponent {
 
         Vector2 p = entity.getCenterPosition();
         for (Entity e : ServiceLocator.getEntityService().getEntities()) {
-            ShopComponent shop = e.getComponent(ShopComponent.class);
+            ShopManager shop = e.getComponent(ShopManager.class);
             if (shop == null) continue;
 
             float d2 = e.getCenterPosition().dst2(p);
