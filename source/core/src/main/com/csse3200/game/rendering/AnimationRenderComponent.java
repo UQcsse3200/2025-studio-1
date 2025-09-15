@@ -157,7 +157,9 @@ public class AnimationRenderComponent extends RenderComponent {
    */
   public void playAnimationOnce(String currentName, String nextName) {
     Animation<TextureRegion> animation = animations.getOrDefault(currentName, null);
-    if (animation.getPlayMode() == PlayMode.LOOP) {
+    if (animation == null) {
+      startAnimation(currentName); // null errors are handled in here
+    } else if (animation.getPlayMode() == PlayMode.LOOP) {
       logger.error(
               "Attempted to play animation {} until done, but it was a looping animation.",
               currentName);
