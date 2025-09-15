@@ -21,7 +21,7 @@ public class Floor5GameArea extends GameArea {
   @Override
   public void create() {
     ensureAssets();
-    terrain = terrainFactory.createTerrain(TerrainType.FOREST_DEMO_HEX);
+    terrain = terrainFactory.createTerrain(TerrainType.MAIN_HALL);
     spawnEntity(new Entity().addComponent(terrain));
 
     Entity overlay = new Entity();
@@ -39,8 +39,9 @@ public class Floor5GameArea extends GameArea {
 
   private void ensureAssets() {
     String[] textures = new String[] {
-      "images/hex_grass_1.png", "images/hex_grass_2.png", "images/hex_grass_3.png",
+      "images/mainHall-background.png",
       "foreg_sprites/general/LongFloor.png",
+
       "foreg_sprites/general/ThickFloor.png",
       "foreg_sprites/general/SmallSquare.png",
       "foreg_sprites/general/SmallStair.png",
