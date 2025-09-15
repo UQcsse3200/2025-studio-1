@@ -17,11 +17,9 @@ public class ShopDemo {
       ArrayList<CatalogEntry> demoEntries=  new ArrayList<>();
         Entity healthPotion = ConsumableFactory.createConsumable(GENERIC_HEAL_ITEM);
         Entity weapon = WeaponsFactory.createWeapon(Weapons.RIFLE);
-        System.out.println(healthPotion.getComponents());
-        System.out.println(healthPotion.getEvents().getListeners());
-
-        System.out.println(weapon.getComponents());
-        System.out.println(weapon.getEvents().getListeners());
+        Entity lightsaber = WeaponsFactory.createWeapon(Weapons.LIGHTSABER);
+        Entity pistol = WeaponsFactory.createWeapon(Weapons.PISTOL);
+        Entity dagger = WeaponsFactory.createWeapon(Weapons.DAGGER);
 
         // Add one simple item (no icon -> null)
         demoEntries.add(new CatalogEntry(
@@ -34,10 +32,34 @@ public class ShopDemo {
 
         demoEntries.add(new CatalogEntry(
                 weapon,
-                1,               // price
+                10,               // price
                 true,             // enabled
-                10,               // maxStack
+                1,               // maxStack
                 1               // bundleQuantity
+        ));
+
+        demoEntries.add(new CatalogEntry(
+                lightsaber,
+                10,
+                true,
+                1,
+                1
+        ));
+
+        demoEntries.add(new CatalogEntry(
+                pistol,
+                10,
+                true,
+                1,
+                1
+        ));
+
+        demoEntries.add(new CatalogEntry(
+                dagger,
+                10,
+                true,
+                1,
+                1
         ));
 
         return new CatalogService(demoEntries);
