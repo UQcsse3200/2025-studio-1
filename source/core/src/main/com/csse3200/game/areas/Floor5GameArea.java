@@ -74,8 +74,8 @@ public class Floor5GameArea extends GameArea {
     return "Floor5";
   }
 
-  public static Floor5GameArea load(SaveLoadService.PlayerInfo load) {
-    return (new Floor5GameArea(terrainFactory, cameraComponent));
+  public static Floor5GameArea load(TerrainFactory terrainFactory, CameraComponent camera) {
+    return (new Floor5GameArea(terrainFactory, camera));
   }
 }
 

@@ -65,8 +65,8 @@ public class ResearchGameArea extends GameArea {
     return null;
   }
 
-  public static ResearchGameArea load(SaveLoadService.PlayerInfo load) {
-    return (new ResearchGameArea(terrainFactory, cameraComponent));
+  public static ResearchGameArea load(TerrainFactory terrainFactory, CameraComponent camera) {
+    return (new ResearchGameArea(terrainFactory, camera));
   }
 }
 

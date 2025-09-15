@@ -29,7 +29,6 @@ private int inventoryCount = 0;
   private Entity currItem;
   private int keycardLevel = 0;
 
-
   /**
    * Constructs an inventory for the player and a beginning currency amount
    * to start with.

@@ -57,8 +57,8 @@ public class TunnelGameArea extends GameArea {
     return null;
   }
 
-  public static TunnelGameArea load(SaveLoadService.PlayerInfo load) {
-    return (new TunnelGameArea(terrainFactory, cameraComponent));
+  public static TunnelGameArea load(TerrainFactory terrainFactory, CameraComponent camera) {
+    return (new TunnelGameArea(terrainFactory, camera));
   }
 
 }

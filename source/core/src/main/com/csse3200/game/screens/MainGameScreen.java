@@ -255,12 +255,12 @@ public class MainGameScreen extends ScreenAdapter {
     TerrainFactory terrainFactory = new TerrainFactory(renderer.getCamera());
     switch (load.areaId) {
       case "Forest" -> areaLoad = ForestGameArea.load(terrainFactory, renderer.getCamera());
-      case "Elevator" -> areaLoad = ElevatorGameArea.load(load);
-      case "Office" -> areaLoad = OfficeGameArea.load(load);
-      case "Floor5" -> areaLoad = Floor5GameArea.load(load);
-      case "Floor2" -> areaLoad = Floor2GameArea.load(load);
-      case "Tunnel" -> areaLoad = TunnelGameArea.load(load);
-      case "Security" -> areaLoad = SecurityGameArea.load(load);
+      case "Elevator" -> areaLoad = ElevatorGameArea.load(terrainFactory, renderer.getCamera());
+      case "Office" -> areaLoad = OfficeGameArea.load(terrainFactory, renderer.getCamera());
+      case "Floor5" -> areaLoad = Floor5GameArea.load(terrainFactory, renderer.getCamera());
+      case "Floor2" -> areaLoad = Floor2GameArea.load(terrainFactory, renderer.getCamera());
+      case "Tunnel" -> areaLoad = TunnelGameArea.load(terrainFactory, renderer.getCamera());
+      case "Security" -> areaLoad = SecurityGameArea.load(terrainFactory, renderer.getCamera());
       case "Storage" -> areaLoad = StorageGameArea.load(terrainFactory, renderer.getCamera());
       default -> logger.error("couldnt create Game area from file");
     }
