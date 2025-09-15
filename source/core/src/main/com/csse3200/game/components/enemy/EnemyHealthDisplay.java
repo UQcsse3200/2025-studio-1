@@ -31,6 +31,10 @@ public class EnemyHealthDisplay extends Component {
     // Vertical offset for positioning the health bar above the enemy sprite
     private float offsetY = 0.6f;
 
+    // World-to-stage scaling factors (exact values)
+    private static final float WORLD_TO_STAGE_X = 129.4814725781657f;
+    private static final float WORLD_TO_STAGE_Y = 135.3720388672149f;
+
     public EnemyHealthDisplay() {}
 
     public EnemyHealthDisplay(float offsetY) {
@@ -103,10 +107,9 @@ public class EnemyHealthDisplay extends Component {
         }
         Vector2 pos = entity.getPosition();
         // Convert world position to screen-space position and update the health bar's placement.
-        // The constants (129.48f, 135.37f) scale world units into stage/screen units.
         healthBar.setPosition(
-                (pos.x + 0.2f) * 129.4814725781657f,
-                (pos.y - 3f + offsetY) * 135.3720388672149f
+                (pos.x + 0.2f) * WORLD_TO_STAGE_X,
+                (pos.y - 3f + offsetY) * WORLD_TO_STAGE_Y
         );
     }
 
