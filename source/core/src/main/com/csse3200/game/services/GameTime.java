@@ -22,7 +22,6 @@ public class GameTime {
      * @param paused True if the game is currently paused, False otherwise
      */
   public void setPaused(boolean paused) {
-    System.out.println("paused");
     this.paused = paused;
   }
 
