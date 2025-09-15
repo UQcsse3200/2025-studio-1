@@ -429,7 +429,7 @@ public class PlayerActions extends Component {
       }
 
       //select the slot at inventoryIndex
-      inventory.selectSlot(inventoryIndex);
+      inventory.setSelectSlot(inventoryIndex);
       //equip the player with the weapon at that slot
       inventory.setEquippedSlot(inventoryIndex);
       //set that weapon as the current item in use in inventory
@@ -448,7 +448,8 @@ public class PlayerActions extends Component {
         int equippedIndex = inventory.getEquippedSlot();
         if (equippedIndex >= 0) {
             // set current item to the equipped slot
-            Entity item = inventory.getCurrItem();
+            Entity item;
+            item = inventory.getCurrItem();
             inventory.setCurrItem(item);
 
             entity.getEvents().trigger("focus item", equippedIndex);
