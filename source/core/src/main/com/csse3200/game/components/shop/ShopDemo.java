@@ -17,6 +17,7 @@ public class ShopDemo {
       ArrayList<CatalogEntry> demoEntries=  new ArrayList<>();
         Entity healthPotion = ConsumableFactory.createConsumable(GENERIC_HEAL_ITEM);
         Entity weapon = WeaponsFactory.createWeapon(Weapons.PISTOL);
+        Entity dagger = WeaponsFactory.createWeapon(Weapons.DAGGER);
 
         // Add one simple item (no icon -> null)
         demoEntries.add(new CatalogEntry(
@@ -34,6 +35,15 @@ public class ShopDemo {
                 false,
                 true,
                 10,
+                1
+        ));
+
+        demoEntries.add(new CatalogEntry(
+                dagger,
+                50,
+                true,
+                false,
+                1,
                 1
         ));
 
