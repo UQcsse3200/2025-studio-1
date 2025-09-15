@@ -129,7 +129,7 @@ public class Floor2GameArea extends GameArea {
     spawnEntity(clock1);
   }
   private void spawnPlayer() {
-    Entity player = PlayerFactory.createPlayer();
+    Entity player = PlayerFactory.createPlayerWithArrowKeys();
     spawnEntityAt(player, PLAYER_SPAWN, true, true);
   }
 
