@@ -99,10 +99,9 @@ public class ForestGameArea extends GameArea {
     "images/player.png",
     "images/mud.png",
     "images/heart.png",
-    "images/laserball.png"
+    "images/laserball.png",
     "images/MarblePlatform.png",
-    "images/computerBench.png",
-
+    "images/computerBench.png"
   };
 
   /** General prop textures (floors, tiles, etc.). */
