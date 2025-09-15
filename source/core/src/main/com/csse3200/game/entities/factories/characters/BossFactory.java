@@ -30,6 +30,8 @@ import com.csse3200.game.components.player.BossStatusDisplay;
 import com.csse3200.game.components.WeaponsStatsComponent;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.math.Vector2;
+import com.csse3200.game.components.boss.CocoonSpawnerComponent;
+import com.csse3200.game.components.boss.IndividualCocoonComponent;
 
 
 /**
@@ -100,6 +102,25 @@ public class BossFactory {
                         false
                 ));
 
+        // Replace original defense component with new cocoon defense component
+        Vector2[] cocoonPositions = getDefaultCocoonPositions();
+        robot.addComponent(new CocoonSpawnerComponent(0.30f, cocoonPositions));
+
+        // Add defense animation listeners
+        robot.getEvents().addListener("startDefenseMode", () -> {
+            AnimationRenderComponent anim = robot.getComponent(AnimationRenderComponent.class);
+            if (anim != null && anim.hasAnimation("defense")) {
+                anim.startAnimation("defense");
+            }
+        });
+
+        robot.getEvents().addListener("endDefenseMode", () -> {
+            AnimationRenderComponent anim = robot.getComponent(AnimationRenderComponent.class);
+            if (anim != null) {
+                anim.startAnimation("Idle");
+            }
+        });
+
         robot.getComponent(AnimationRenderComponent.class).scaleEntity();
         Vector2 s = robot.getScale();
         float k = 2.0f;
@@ -127,7 +148,11 @@ public class BossFactory {
 
         boss2
                 .addComponent(new CombatStatsComponent(1000))
-                .addComponent(new Boss2HealthPhaseSwitcher(0.5f, "idle", "phase2"))
+                .addComponent(new com.csse3200.game.components.boss.Boss2HealthPhaseSwitcher(
+                        0.5f,   // phase2 阈值 / threshold
+                        0.3f,   // angry  阈值 / threshold
+                        "idle", "phase2", "angry"
+                ))
                 .addComponent(new BossStageComponent(boss2))
                 .addComponent(new FireballAttackComponent(target, 1.5f, 8f, 6f, config.baseAttack + 2))
                 .addComponent(new BossChargeSkillComponent(
@@ -305,14 +330,14 @@ public class BossFactory {
                 .addComponent(new TouchAttackComponent(PhysicsLayer.PLAYER, 1.5f));
 
         TextureAtlas atlas = ServiceLocator.getResourceService()
-                .getAsset("images/boss2_combined.atlas", TextureAtlas.class);
+                .getAsset("images/boss_idle.atlas", TextureAtlas.class);
 
         AnimationRenderComponent arc = new AnimationRenderComponent(atlas);
         arc.setDisposeAtlas(false);
         arc.addAnimation("idle",   0.10f, Animation.PlayMode.LOOP);
-        arc.addAnimation("phase2", 0.08f, Animation.PlayMode.LOOP);
+        arc.addAnimation("phase2", 0.1f, Animation.PlayMode.LOOP);
+        arc.addAnimation("angry", 0.1f, Animation.PlayMode.LOOP);
         boss.addComponent(arc);
-
         // 碰撞体缩放
         PhysicsUtils.setScaledCollider(boss, 0.9f, 0.4f);
 
@@ -322,5 +347,41 @@ public class BossFactory {
         return boss;
     }
 
+    /**
+     * Get default spawn positions for cocoons
+     * @return Array of cocoon spawn positions
+     */
+    public static Vector2[] getDefaultCocoonPositions() {
+        return new Vector2[] {
+                new Vector2(30f, 12f),   // Top left
+                new Vector2(8f, 7f),   // Top right
+                new Vector2(10f, 10f),   // Bottom left
+        };
+    }
+
+    /**
+     * Create Robot with cocoon spawning capability (enhanced version)
+     * @param target The player entity that the boss will chase and attack
+     * @return Enhanced Robot entity with cocoon spawning capability
+     */
+    public static Entity createRobotWithCocoons(Entity target) {
+        // Create original robot using existing method
+        Entity robot = createRobot(target);
+
+        // Add cocoon spawner component to existing robot
+        Vector2[] cocoonPositions = getDefaultCocoonPositions();
+        robot.addComponent(new CocoonSpawnerComponent(0.30f, cocoonPositions));
+
+        // Add event listeners for cocoon spawning
+        robot.getEvents().addListener("cocoonsSpawned", (Integer count) -> {
+            System.out.println("Boss defense activated! " + count + " cocoons spawned!");
+        });
+
+        robot.getEvents().addListener("allCocoonsDestroyed", () -> {
+            System.out.println("All cocoons destroyed! Boss defense can be overcome!");
+        });
+
+        return robot;
+    }
 
 }
