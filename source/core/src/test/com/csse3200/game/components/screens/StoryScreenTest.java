@@ -1,5 +1,6 @@
 package com.csse3200.game.components.screens;
 
+import com.csse3200.game.screens.StoryScreen;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.csse3200.game.GdxGame;
 import org.junit.Before;
