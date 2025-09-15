@@ -35,18 +35,23 @@ import java.security.SecureRandom;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/** Research room: minimal walls and a left door back to Elevator. */
+/** 
+ * Server Room. Has several platforms as well as server racks sprites.
+ * Is attached to Tunnel Room.
+ */
 public class ServerGameArea extends GameArea {
   private static final Logger logger = LoggerFactory.getLogger(ServerGameArea.class);
 
-/** Files or pictures used by the game (enemy/props,etc.). */
+  /** Files or pictures used by the game (enemy/props,etc.). */
   private static final String HEART = "images/heart.png";
 
+  /** Server Room background images */
   private static final String[] serverBackground = {
     "images/ServerRoomBackground.png",
     "images/ServerRoomBackgroundResize.png",
   };
 
+  /** Server Room server rack sprites + vent */
   private static final String[] serverRacks = {
     "foreg_sprites/furniture/ServerRack.png",
     "foreg_sprites/furniture/ServerRack2.png",
@@ -169,10 +174,23 @@ public class ServerGameArea extends GameArea {
 
   private Entity player;
 
+  private Entity rifle;
+
+  /**
+   * Constructor for the Server Room, simples calls GameArea constructor.
+   * @param terrainFactory the game's terrain factory (set in MainGameScreen)
+   * @param cameraComponent the game's camera component (set in MainGameScreen)
+   */
   public ServerGameArea(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
     super(terrainFactory, cameraComponent);
   }
 
+  /**
+   * The create function for the Server Room. Loads assets, displays UI, spawns terrain,
+   * spawns in side wall, platforms, room objects (server racks) and spawn pads.
+   * Then spawns the player in bottom left, spawns a rifle on the purple spawn pad,
+   * and then spawns the floor.
+   */
   @Override
   public void create() {
     ServiceLocator.registerGameArea(this);
@@ -189,8 +207,12 @@ public class ServerGameArea extends GameArea {
     spawnRoomObjects();
     spawnSpawnPads();
 
-    player = spawnPlayer();
     spawnFloor();
+    player = spawnPlayer();
+    rifle = spawnRifle();
+
+    ItemSpawner itemSpawner = new ItemSpawner(this);
+    itemSpawner.spawnItems(ItemSpawnConfig.servermap());
   }
 
   private void displayUI() {
@@ -259,6 +281,18 @@ public class ServerGameArea extends GameArea {
     GridPoint2 wallSpawn = new GridPoint2(-14, 0);
     Entity bigWall = ObstacleFactory.createBigThickFloor();
     spawnEntityAt(bigWall, wallSpawn, true, false);
+  }
+
+
+  /**
+   * Spawns a rifle on top of the purple spawn pad.
+   * @return Entity rifle
+   */
+  private Entity spawnRifle() {
+    Entity newRifle = WeaponsFactory.createWeapon(Weapons.RIFLE);
+    Vector2 newRifleOffset = new Vector2(0.25f, 0.15f);
+    newRifle.addComponent(new ItemHoldComponent(this.player, newRifleOffset));
+    return newRifle;
   }
 
   /**
