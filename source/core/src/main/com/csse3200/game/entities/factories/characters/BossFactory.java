@@ -89,7 +89,8 @@ public class BossFactory {
                 .addComponent(new CombatStatsComponent(config.health))
                 .addComponent(new EnemyDeathRewardComponent(100, playerInventory))
                 .addComponent(new DeathParticleSpawnerComponent())
-                .addComponent(new TextureRenderComponent("images/Boss_3.png"));
+                .addComponent(new TextureRenderComponent("images/Boss_3.png"))
+                .addComponent(new EnemyHealthDisplay());
 
         boss3.getComponent(TextureRenderComponent.class).scaleEntity();
         boss3.setScale(new Vector2(2f, 2f));
@@ -152,7 +153,8 @@ public class BossFactory {
                         .addComponent(new ColliderComponent())
                         .addComponent(new HitboxComponent().setLayer(PhysicsLayer.NPC))
                         .addComponent(new TouchAttackComponent(PhysicsLayer.PLAYER, 1.5f))
-                        .addComponent(aiComponent);
+                        .addComponent(aiComponent)
+                        .addComponent(new EnemyHealthDisplay());
 
         PhysicsUtils.setScaledCollider(npc, 0.9f, 0.4f);
         return npc;
