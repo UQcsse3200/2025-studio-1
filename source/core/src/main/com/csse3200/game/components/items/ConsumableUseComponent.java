@@ -1,7 +1,6 @@
 package com.csse3200.game.components.items;
 
 
-import com.badlogic.gdx.utils.Timer;
 import com.csse3200.game.components.player.InventoryComponent;
 import com.csse3200.game.effects.Effect;
 import com.csse3200.game.entities.Entity;

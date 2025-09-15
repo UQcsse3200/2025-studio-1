@@ -5,10 +5,7 @@ import com.csse3200.game.entities.configs.Weapons;
 import com.csse3200.game.entities.factories.items.ConsumableFactory;
 import com.csse3200.game.entities.factories.items.WeaponsFactory;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 import static com.csse3200.game.entities.configs.Consumables.GENERIC_HEAL_ITEM;
 import static com.csse3200.game.entities.configs.Consumables.GENERIC_PROJECTILE_CONSUMABLE;

@@ -83,7 +83,7 @@ public class ProjectileFactory {
     /**
      * Creates a laser shot entity
      * @param direction direction in which the projectile is shot
-     * @param source
+     * @param source weapon stats to derive from
      * @return The laser entity
      */
     public static Entity createEnemyProjectile(Vector2 direction, WeaponsStatsComponent source) {
