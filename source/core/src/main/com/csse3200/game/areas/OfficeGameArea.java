@@ -48,6 +48,11 @@ public class OfficeGameArea extends GameArea {
   private void loadElevator() {
     clearAndLoad(() -> new ElevatorGameArea(terrainFactory, cameraComponent));
   }
+
+  @Override
+  public String toString() {
+    return "Office";
+  }
 }
 
 

@@ -364,4 +364,9 @@ public abstract class GameArea implements Disposable {
       });
     });
   }
+
+  @Override
+  public String toString() {
+    return "GameArea";
+  }
 }
