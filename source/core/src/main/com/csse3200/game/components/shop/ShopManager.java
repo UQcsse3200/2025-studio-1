@@ -89,7 +89,7 @@ public class ShopManager extends Component {
         int idx = InventoryOperations.addOrStack(inventory, item.getItem(), amount,
                 entry.maxStack());
         if (idx < 0) {
-            return fail(player, item, PurchaseError.INVENTORY_FULL);
+            return fail(player, item, PurchaseError.fromCode(idx));
         }
 
         chargePlayer(inventory, amount, cost);
@@ -97,7 +97,7 @@ public class ShopManager extends Component {
     }
 
     private PurchaseResult fail(Entity player, CatalogEntry item, PurchaseError error) {
-        entity.getEvents().trigger("purchaseFailed", getItemName(item), error);
+        entity.getEvents().trigger("purchaseFailed", item.getItemName(), error);
         return PurchaseResult.fail(error);
     }
 
