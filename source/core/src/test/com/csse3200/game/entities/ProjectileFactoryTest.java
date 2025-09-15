@@ -12,6 +12,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.csse3200.game.components.TouchAttackComponent;
 import com.csse3200.game.components.WeaponsStatsComponent;
+import com.csse3200.game.components.player.InventoryComponent;
 import com.csse3200.game.entities.configs.Weapons;
 import com.csse3200.game.entities.factories.ProjectileFactory;
 import com.csse3200.game.entities.factories.items.WeaponsFactory;
@@ -48,6 +49,11 @@ public class ProjectileFactoryTest {
 
        Gdx.files = mock(Files.class);
         when(Gdx.files.internal(anyString())).thenReturn(mock(FileHandle.class));
+        Entity player = new Entity();
+        ServiceLocator.registerPlayer(player);
+        player.addComponent(mock(InventoryComponent.class));
+        com.csse3200.game.components.player.InventoryComponent inventoryComponent
+                = mock(com.csse3200.game.components.player.InventoryComponent.class);
 
         PhysicsEngine physicsEngine = mock(PhysicsEngine.class);
         Body physicsBody = mock(Body.class);
@@ -61,9 +67,11 @@ public class ProjectileFactoryTest {
         when(resourceService.getAsset(anyString(), eq(Texture.class))).thenReturn(texture);
 
         Entity pistol = WeaponsFactory.createWeapon(Weapons.PISTOL);
+        when(player.getComponent(InventoryComponent.class).getCurrItem()).thenReturn(pistol);
         pistolBullet = ProjectileFactory.createPistolBullet(
                 pistol.getComponent(WeaponsStatsComponent.class)
         );
+
     }
 
 
