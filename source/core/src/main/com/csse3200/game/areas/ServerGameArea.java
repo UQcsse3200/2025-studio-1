@@ -267,12 +267,6 @@ public class ServerGameArea extends GameArea {
       GridPoint2 rackSpawn = new GridPoint2(i, 7);
       spawnEntityAt(rack, rackSpawn, false, false);
     }
-
-    for (int i = 24; i < 30; i+= 1) {
-      Entity rack = ObstacleFactory.createServerRack1();
-      GridPoint2 rackSpawn = new GridPoint2(i, 11);
-      spawnEntityAt(rack, rackSpawn, false, false);
-    }
   }
 
   /**

@@ -70,7 +70,7 @@ public class ShippingGameArea extends GameArea {
 
   private void spawnBordersAndDoors() {
     GenericLayout.addLeftRightDoorsAndWalls(this, cameraComponent, WALL_WIDTH,
-        this::loadTunnel, this::loadStorage);
+        this::loadTunnel, this::loadServer);
   }
 
   private void spawnPlayer() {
@@ -82,7 +82,7 @@ public class ShippingGameArea extends GameArea {
     clearAndLoad(() -> new TunnelGameArea(terrainFactory, cameraComponent));
   }
 
-  private void loadStorage() {
-    clearAndLoad(() -> new StorageGameArea(terrainFactory, cameraComponent));
+  private void loadServer() {
+    clearAndLoad(() -> new ServerGameArea(terrainFactory, cameraComponent));
   }
 }

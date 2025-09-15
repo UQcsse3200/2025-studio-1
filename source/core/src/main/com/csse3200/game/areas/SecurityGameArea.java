@@ -71,8 +71,28 @@ public class SecurityGameArea extends GameArea {
   // Assets ensured via GenericLayout
 
   private void spawnBordersAndDoors() {
-    GenericLayout.addLeftRightDoorsAndWalls(this, cameraComponent, WALL_WIDTH,
-        this::loadBackToFloor5, this::loadOffice);
+    if (cameraComponent == null) return;
+    Bounds b = getCameraBounds(cameraComponent);
+
+    // Left wall with door at ground level
+    addSolidWallLeft(b, WALL_WIDTH);
+
+    float leftDoorHeight = Math.max(1f, b.viewHeight * 0.2f);
+    float leftDoorY = b.bottomY;
+    Entity leftDoor = ObstacleFactory.createDoorTrigger(WALL_WIDTH, leftDoorHeight);
+    leftDoor.setPosition(b.leftX + 0.001f, leftDoorY);
+    leftDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadBackToFloor5));
+    spawnEntity(leftDoor);
+
+    // Right wall with door at the top-right
+    addSolidWallRight(b, WALL_WIDTH);
+
+    float rightDoorHeight = Math.max(1f, b.viewHeight * 0.2f);
+    float rightDoorY = b.topY - rightDoorHeight;
+    Entity rightDoor = ObstacleFactory.createDoorTrigger(WALL_WIDTH, rightDoorHeight);
+    rightDoor.setPosition(b.rightX - WALL_WIDTH - 0.001f, rightDoorY);
+    rightDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadOffice));
+    spawnEntity(rightDoor);
   }
 
   private void spawnPlayer() {
