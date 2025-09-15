@@ -120,6 +120,8 @@ public class ForestGameArea extends GameArea {
     HEART,
     "images/MarblePlatform.png",
     "images/computerBench.png",
+    "images/monster.png",
+    "images/electriczap.png",
   };
 
   /** General prop textures (floors, tiles, etc.). */
