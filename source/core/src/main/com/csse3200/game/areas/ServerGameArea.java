@@ -114,7 +114,8 @@ public class ServerGameArea extends GameArea {
     "foreg_sprites/general/ThinFloor.png",
     "foreg_sprites/general/ThinFloor2.png",
     "foreg_sprites/general/ThinFloor3.png",
-    "foreg_sprites/general/Test.png"
+    "foreg_sprites/general/Test.png",
+    "foreg_sprites/office/Crate.png",
   };
 
   /** Spawn pad textures. */
@@ -205,6 +206,7 @@ public class ServerGameArea extends GameArea {
     spawnBigWall();
     spawnPlatforms();
     spawnRoomObjects();
+    spawnCratesAndRailing();
     spawnSpawnPads();
 
     spawnFloor();
@@ -257,6 +259,34 @@ public class ServerGameArea extends GameArea {
       Entity rack = ObstacleFactory.createServerRack1();
       GridPoint2 rackSpawn = new GridPoint2(i, 7);
       spawnEntityAt(rack, rackSpawn, false, false);
+    }
+
+    for (int i = 24; i < 30; i+= 1) {
+      Entity rack = ObstacleFactory.createServerRack1();
+      GridPoint2 rackSpawn = new GridPoint2(i, 11);
+      spawnEntityAt(rack, rackSpawn, false, false);
+    }
+  }
+
+  /**
+   * Spawns some other objects in the room, including crates and a railing
+   * accross the bottom floo
+   */
+  private void spawnCratesAndRailing() {
+    Entity crate1 = ObstacleFactory.createCrate();
+    GridPoint2 crateSpawn1 = new GridPoint2(11, 7);
+    spawnEntityAt(crate1, crateSpawn1, false, false);
+    Entity crate2 = ObstacleFactory.createCrate();
+    GridPoint2 crateSpawn2 = new GridPoint2(13, 7);
+    spawnEntityAt(crate2, crateSpawn2, false, false);
+    Entity crate3 = ObstacleFactory.createCrate();
+    GridPoint2 crateSpawn3 = new GridPoint2(13, 9);
+    spawnEntityAt(crate3, crateSpawn3, false, false);
+    
+    for (int i = 0; i <= 30; i += 3) {
+      Entity railing = ObstacleFactory.createRailing();
+      GridPoint2 railingSpawn = new GridPoint2(i, 7);
+      spawnEntityAt(railing, railingSpawn, false, false);
     }
   }
 
