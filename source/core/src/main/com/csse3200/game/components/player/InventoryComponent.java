@@ -112,6 +112,7 @@ public class InventoryComponent extends Component {
         return this.setItem(idx, item);
       }
     }
+    setCurrItem(item);
     return false;
   }
 

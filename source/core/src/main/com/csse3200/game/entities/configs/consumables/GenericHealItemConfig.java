@@ -11,5 +11,6 @@ public class GenericHealItemConfig extends ConsumableConfig {
         this.effects = new ArrayList<>();
         this.effects.add(new HealthEffect(-100));
         this.texturePath = "images/heart.png";
+        this.maxStack = 10;
     }
 }

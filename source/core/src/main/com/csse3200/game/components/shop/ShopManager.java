@@ -16,6 +16,10 @@ public class ShopManager extends Component {
         this.catalog = catalog;
     }
 
+    public CatalogService getCatalog() {
+        return catalog;
+    }
+
 
     public PurchaseResult purchase(Entity player, CatalogEntry item, int amount) {
         InventoryComponent inventory = player.getComponent(InventoryComponent.class);
@@ -50,10 +54,6 @@ public class ShopManager extends Component {
         // TODO: Success hooks
 
         return PurchaseResult.ok(item, 1);
-    }
-
-    public CatalogService getCatalog() {
-        return catalog;
     }
 
     private PurchaseResult fail(Entity player, CatalogEntry item, PurchaseError error) {
