@@ -2,31 +2,23 @@ package com.csse3200.game.areas;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.GridPoint2;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.entities.Entity;
-import com.csse3200.game.entities.factories.KeycardFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.entities.factories.characters.PlayerFactory;
-import com.csse3200.game.physics.PhysicsLayer;
-import com.csse3200.game.physics.PhysicsUtils;
-import com.csse3200.game.physics.components.ColliderComponent;
-import com.csse3200.game.physics.components.PhysicsComponent;
-import com.csse3200.game.rendering.TextureRenderComponent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /** Second floor with different background and arrow-key controls. */
-public class Floor2GameArea extends GameArea {
-  private static final Logger logger = LoggerFactory.getLogger(Floor2GameArea.class);
+public class Reception extends GameArea {
+  private static final Logger logger = LoggerFactory.getLogger(Reception.class);
   private static final GridPoint2 PLAYER_SPAWN = new GridPoint2(8, 10);
   private static final float WALL_WIDTH = 0.1f;
   private static final int NUM_TREES = 8; // Number of trees to spawn
 
-  public Floor2GameArea(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
+  public Reception(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
     super(terrainFactory, cameraComponent);
   }
 
@@ -41,8 +33,6 @@ public class Floor2GameArea extends GameArea {
     spawnplatform2();
     spawndesk_reception();
     spawncomic_stand();
-
-
     // UI label
     Entity ui = new Entity();
     ui.addComponent(new com.csse3200.game.components.gamearea.FloorLabelDisplay("Floor 2"));
@@ -115,7 +105,7 @@ public class Floor2GameArea extends GameArea {
   }
 
   private void loadBackToFloor5() {
-    clearAndLoad(() -> new Floor5GameArea(terrainFactory, cameraComponent));
+    clearAndLoad(() -> new MainHall(terrainFactory, cameraComponent));
   }
 
   private void spawnPlayer() {

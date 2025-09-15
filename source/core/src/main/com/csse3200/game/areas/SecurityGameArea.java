@@ -7,7 +7,6 @@ import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.factories.characters.PlayerFactory;
-import com.csse3200.game.rendering.SolidColorRenderComponent;
 
 /** Minimal generic Security room: walls, doors, and a subtle background overlay. */
 public class SecurityGameArea extends GameArea {
@@ -42,7 +41,7 @@ public class SecurityGameArea extends GameArea {
   }
 
   private void loadBackToFloor5() {
-    clearAndLoad(() -> new Floor5GameArea(terrainFactory, cameraComponent));
+    clearAndLoad(() -> new MainHall(terrainFactory, cameraComponent));
   }
 
   private void loadOffice() {

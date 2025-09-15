@@ -3,7 +3,6 @@ package com.csse3200.game.areas;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.areas.terrain.TerrainFactory;
-import com.csse3200.game.areas.terrain.TerrainComponent;
 import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
@@ -11,8 +10,6 @@ import com.csse3200.game.extensions.GameExtension;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.rendering.RenderService;
-import com.csse3200.game.physics.PhysicsService;
-import com.csse3200.game.physics.PhysicsEngine;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -51,7 +48,7 @@ class Floor2GameAreaTest {
     when(cameraComponent.getCamera()).thenReturn(cam);
     when(cameraComponent.getEntity()).thenReturn(camEntity);
 
-    Floor2GameArea area = new Floor2GameArea(mock(TerrainFactory.class), cameraComponent);
+    Reception area = new Reception(mock(TerrainFactory.class), cameraComponent);
     GameArea.Bounds b = area.getCameraBounds(cameraComponent);
 
     // Verify bounds calculation
@@ -77,7 +74,7 @@ class Floor2GameAreaTest {
     when(cameraComponent.getCamera()).thenReturn(cam);
     when(cameraComponent.getEntity()).thenReturn(camEntity);
 
-    Floor2GameArea area = new Floor2GameArea(mock(TerrainFactory.class), cameraComponent);
+    Reception area = new Reception(mock(TerrainFactory.class), cameraComponent);
     GameArea.Bounds b = area.getCameraBounds(cameraComponent);
 
     // Test bottom door positioning (should be at bottomY + 0.1f)
