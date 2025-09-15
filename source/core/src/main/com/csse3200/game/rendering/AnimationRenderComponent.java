@@ -43,6 +43,9 @@ public class AnimationRenderComponent extends RenderComponent {
   private float animationPlayTime;
   private boolean disposeAtlas = false;
 
+  private boolean stopIfDone;
+  private String nextAnimationName;
+
   /**
    * Create the component for a given texture atlas.
    * @param atlas libGDX-supported texture atlas containing desired animations
@@ -144,6 +147,27 @@ public class AnimationRenderComponent extends RenderComponent {
   }
 
   /**
+   * Starts the playback of the desired animation. Once the current animation is done, it will play the next animation
+   * specified by the nextName parameter.
+   * @requires currentName references a normal animation (non looping).
+   * @param currentName name of the animation to play.
+   * @param nextName name of the animation to play after the current animation is done.
+   */
+  public void playAnimationUntilDone(String currentName, String nextName) {
+    Animation<TextureRegion> animation = animations.getOrDefault(currentName, null);
+    if (animation.getPlayMode() == PlayMode.LOOP) {
+      logger.error(
+              "Attempted to play animation {} until done, but it was a looping animation.",
+              currentName);
+      return;
+    }
+
+    startAnimation(currentName);
+    stopIfDone = true;
+    nextAnimationName = nextName;
+  }
+
+  /**
    * Stop the currently running animation. Does nothing if no animation is playing.
    * @return true if animation was stopped, false if no animation is playing.
    */
@@ -179,7 +203,12 @@ public class AnimationRenderComponent extends RenderComponent {
   protected void draw(SpriteBatch batch) {
     if (currentAnimation == null) {
       return;
+    } else if (stopIfDone && isFinished()) {
+      startAnimation(nextAnimationName);
+      stopIfDone = false;
+      nextAnimationName = null;
     }
+
     TextureRegion region = currentAnimation.getKeyFrame(animationPlayTime);
     Vector2 pos = entity.getPosition();
     Vector2 scale = entity.getScale();
