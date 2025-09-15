@@ -33,8 +33,6 @@ public class MainHall extends GameArea {
     spawnBordersAndReturnDoor();
     spawnPlayer();
     spawnFloor();
-
-
   }
 
   private void ensureAssets() {

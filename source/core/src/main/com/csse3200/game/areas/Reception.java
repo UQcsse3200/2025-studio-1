@@ -35,9 +35,8 @@ public class Reception extends GameArea {
     spawncomic_stand();
 
 
-    // UI label
     Entity ui = new Entity();
-    ui.addComponent(new com.csse3200.game.components.gamearea.FloorLabelDisplay("Floor 2"));
+    ui.addComponent(new com.csse3200.game.components.gamearea.FloorLabelDisplay("Reception"));
     spawnEntity(ui);
   }
 
@@ -61,8 +60,6 @@ public class Reception extends GameArea {
     ensurePlayerAtlas();
   }
 
-  // Removed area-specific dispose to avoid double disposal during transitions
-
   private void spawnTerrain() {
     setupTerrainWithOverlay(terrainFactory, TerrainType.LOBBY, new Color(0.1f, 0.1f, 0.2f, 0.25f));
   }
@@ -72,10 +69,8 @@ public class Reception extends GameArea {
     Bounds b = getCameraBounds(cameraComponent);
     addSolidWallLeft(b, WALL_WIDTH);
     addSolidWallRight(b, WALL_WIDTH);
-
-    // Left vertical door resting on ground level
     float leftDoorHeight = Math.max(1f, b.viewHeight * 0.2f);
-    float leftDoorY = b.bottomY; // ground level
+    float leftDoorY = b.bottomY;
     float leftTopSegHeight = Math.max(0f, b.topY - (leftDoorY + leftDoorHeight));
     if (leftTopSegHeight > 0f) {
       Entity leftTop = ObstacleFactory.createWall(WALL_WIDTH, leftTopSegHeight);
@@ -87,7 +82,7 @@ public class Reception extends GameArea {
     leftDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadForest));
     spawnEntity(leftDoor);
 
-    // Right vertical door resting on ground level
+
     float rightDoorHeight = Math.max(1f, b.viewHeight * 0.2f);
     float rightDoorY = b.bottomY; // ground level
     float rightTopSegHeight = Math.max(0f, b.topY - (rightDoorY + rightDoorHeight));
@@ -137,7 +132,7 @@ public class Reception extends GameArea {
     spawnEntity(Platform4);
 
   }
-  /*Spawning the clock on the second platfrom*/
+  /**Spawning the clock on the second platform**/
   private void spawnholoclock() {
     float PlatformX = 0.8f;
     float PlatformY = 7.45f;

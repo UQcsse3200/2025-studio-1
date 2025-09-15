@@ -45,13 +45,8 @@ import org.slf4j.LoggerFactory;
  */
 public class ForestGameArea extends GameArea {
   private static final Logger logger = LoggerFactory.getLogger(ForestGameArea.class);
-
-
-  private static final int NUM_TREES = 7;
   private static final GridPoint2 PLAYER_SPAWN = new GridPoint2(3, 20);
-  private static final int NUM_ROBOTS = 1;
   private static final int NUM_ITEMS = 5;//this is for ItemFactory
-  private static final int NUM_GHOSTS = 1;
   // private static final int NUM_TURRETS = 1;
   private static final float WALL_WIDTH = 0.1f;
 
@@ -238,17 +233,11 @@ public class ForestGameArea extends GameArea {
   @Override
   public void create() {
     ServiceLocator.registerGameArea(this);
-
     loadAssets();
-
     displayUI();
-
     spawnTerrain();
-//    spawnTrees();
     spawnComputerBench();
-
     player = spawnPlayer();
-
     dagger = spawnDagger();
     pistol = spawnPistol();
     rifle = spawnRifle();
@@ -260,11 +249,9 @@ public class ForestGameArea extends GameArea {
     // this.equipItem(dagger);
     this.equipItem(rifle);
 //    this.equipItem(ConsumableFactory.createConsumable(Consumables.GENERIC_HEAL_ITEM));
-
     spawnFloor();
     spawnBottomRightDoor();
     spawnMarblePlatforms();
-
     spawnShopKiosk();
     // spawnGhosts();
     // spawnGhostKing();
@@ -276,7 +263,6 @@ public class ForestGameArea extends GameArea {
       default -> spawnBoss3();
     }
     playMusic();
-
     ItemSpawner itemSpawner = new ItemSpawner(this);
     itemSpawner.spawnItems(ItemSpawnConfig.forestmap());
 
@@ -289,14 +275,12 @@ public class ForestGameArea extends GameArea {
 
     spawnItems();
   }
-
   private void spawnRobots() {
     GridPoint2 pos = new GridPoint2(8, 13);
       Entity robot = BossFactory.createRobot(player);
       spawnEntityAt(robot, pos, true, true);
 
   }
-
   private void displayUI() {
     Entity ui = new Entity();
     ui.addComponent(new GameAreaDisplay("Box Forest"))
@@ -319,7 +303,6 @@ public class ForestGameArea extends GameArea {
       Vector2 camPos = cameraComponent.getEntity().getPosition();
       float viewWidth = cam.viewportWidth;
       float viewHeight = cam.viewportHeight;
-
       float leftX = camPos.x - viewWidth / 2f;
       float rightX = camPos.x + viewWidth / 2f;
       float bottomY = camPos.y - viewHeight / 2f;
@@ -380,19 +363,6 @@ public class ForestGameArea extends GameArea {
     clearAndLoad(() -> new Reception(terrainFactory, cameraComponent));
   }
 
-
-  // private void spawnTrees() {
-  //   GridPoint2 minPos = new GridPoint2(0, 0);
-  //   GridPoint2 maxPos = terrain.getMapBounds(0);
-
-  //   for (int i = 0; i < NUM_TREES; i++) {
-  //     GridPoint2 randomPos = RandomUtils.random(minPos, maxPos);
-  //     randomPos.y = 2;
-  //     Entity tree = ObstacleFactory.createTree();
-  //     spawnEntityAt(tree, randomPos, true, false);
-  //   }
-  // }
-
   /**
    * Builds the upper walkway: three thin floors, a long ceiling light, and a front-facing desk.
    */
@@ -402,7 +372,6 @@ public class ForestGameArea extends GameArea {
       Entity platform = ObstacleFactory.createThinFloor();
       spawnEntityAt(platform, platformPos, true, false);
     }
-
     Entity officeDesk = ObstacleFactory.createOfficeDesk();
     spawnEntityAt(officeDesk, new GridPoint2(5, 11), true, false);
   }
@@ -441,7 +410,6 @@ public class ForestGameArea extends GameArea {
 
     spawnEntity(door);
   }
-
   /**
    * Places two platforms within the room for players to jump on.
    */
@@ -505,14 +473,11 @@ public class ForestGameArea extends GameArea {
     spawnEntityAt(ItemFactory.createItem(HEART), thirdPos, true, false);
   }
 
-
-
   private Entity spawnPlayer() {
     Entity newPlayer = PlayerFactory.createPlayer();
     spawnEntityAt(newPlayer, PLAYER_SPAWN, true, true);
     return newPlayer;
   }
-
 
   private Entity spawnDagger() {
     Entity newDagger = WeaponsFactory.createWeapon(Weapons.DAGGER);
@@ -522,14 +487,12 @@ public class ForestGameArea extends GameArea {
     return newDagger;
   }
 
-
   private void equipItem(Entity item) {
     InventoryComponent inventory = this.player.getComponent(InventoryComponent.class);
     inventory.addItem(item);
     inventory.setCurrItem(item);
     spawnEntityAt(item, PLAYER_SPAWN, true, true);
   }
-
 
   private Entity spawnLightsaber() {
     Entity newLightsaber = WeaponsFactory.createWeapon(Weapons.LIGHTSABER);
@@ -547,7 +510,6 @@ public class ForestGameArea extends GameArea {
     newPistol.addComponent(new ItemHoldComponent(this.player, newPistolOffset));
     return newPistol;
   }
-
 
   private Entity spawnRifle() {
     Entity newRifle = WeaponsFactory.createWeapon(Weapons.RIFLE);
@@ -569,50 +531,6 @@ public class ForestGameArea extends GameArea {
     Entity boss3 = BossFactory.createBoss3(player);
     spawnEntityAt(boss3, pos, true, true);
   }
-
-  /**
-   * Adds a single crate to the lower platform for cover/decoration.
-   */
-  private void spawnCrates() {
-    GridPoint2 cratePos = new GridPoint2(17, 6);
-    Entity crate = ObstacleFactory.createCrate();
-    spawnEntityAt(crate, cratePos, true, false);
-  }
-
-  /**
-   * Places a visual-only security camera in the top-right area.
-   */
-  private void spawnSecurityCamera() {
-    GridPoint2 cameraPos = new GridPoint2(27, 19);
-    Entity securityCamera = ObstacleFactory.createLargeSecurityCamera();
-    spawnEntityAt(securityCamera, cameraPos, true, false);
-  }
-
-  /**
-   * Places the collidable energy pod on the floor using bottom-left alignment.
-   */
-  private void spawnEnergyPod() {
-    GridPoint2 energyPodPos = new GridPoint2(20, 6);
-    Entity energyPod = ObstacleFactory.createLargeEnergyPod();
-    spawnEntityAt(energyPod, energyPodPos, false, false);
-  }
-
-  /**
-   * Spawns two storage crates (green and dark) and nudges them slightly up
-   * so they appear seated on the ground visually.
-   */
-  private void spawnStorageCrates() {
-    GridPoint2 greenCratePos = new GridPoint2(5, 5);
-    Entity greenCrate = ObstacleFactory.createStorageCrateGreen();
-    spawnEntityAt(greenCrate, greenCratePos, true, false);
-    greenCrate.setPosition(greenCrate.getPosition().x, greenCrate.getPosition().y + 0.25f);
-
-    GridPoint2 darkCratePos = new GridPoint2(26, 5);
-    Entity darkCrate = ObstacleFactory.createStorageCrateDark();
-    spawnEntityAt(darkCrate, darkCratePos, true, false);
-    darkCrate.setPosition(darkCrate.getPosition().x, darkCrate.getPosition().y + 0.25f);
-  }
-
   public void spawnItem(Entity item, GridPoint2 position) {
     spawnEntityAt(item, position, false, false);
   }

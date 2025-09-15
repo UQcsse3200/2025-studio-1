@@ -31,15 +31,10 @@ public class SecurityGameArea extends GameArea {
     spawnSecurityProps();
   }
 
-  // Assets ensured via GenericLayout
-
   private void spawnBordersAndDoors() {
     if (cameraComponent == null) return;
     Bounds b = getCameraBounds(cameraComponent);
-
-    // Left wall with door at ground level
     addSolidWallLeft(b, WALL_WIDTH);
-
     float leftDoorHeight = Math.max(1f, b.viewHeight * 0.2f);
     float leftDoorY = b.bottomY;
     Entity leftDoor = ObstacleFactory.createDoorTrigger(WALL_WIDTH, leftDoorHeight);
@@ -47,7 +42,6 @@ public class SecurityGameArea extends GameArea {
     leftDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadBackToFloor5));
     spawnEntity(leftDoor);
 
-    // Right wall with door at the top-right
     addSolidWallRight(b, WALL_WIDTH);
 
     float rightDoorHeight = Math.max(1f, b.viewHeight * 0.2f);
@@ -63,14 +57,6 @@ public class SecurityGameArea extends GameArea {
     spawnEntityAt(player, PLAYER_SPAWN, true, true);
   }
 
-  private void loadBackToFloor5() {
-    clearAndLoad(() -> new MainHall(terrainFactory, cameraComponent));
-  }
-
-  private void loadOffice() {
-    clearAndLoad(() -> new OfficeGameArea(terrainFactory, cameraComponent));
-  }
-
   /**
    * Spawns thin floor platforms in the room, including
    * an extra platform below the top-right door.
@@ -82,7 +68,7 @@ public class SecurityGameArea extends GameArea {
       spawnEntityAt(platform, platformPos, true, false);
     }
 
-    // Extra platform just below the top-right door
+    /**Extra platform just below the top-right door **/
     GridPoint2 topRightPlatformPos = new GridPoint2(26, 18);
     Entity topRightPlatform = ObstacleFactory.createThinFloor();
     spawnEntityAt(topRightPlatform, topRightPlatformPos, true, false);
@@ -97,31 +83,39 @@ public class SecurityGameArea extends GameArea {
       Security platforms (collidable)
    */
   private void spawnSecurityProps() {
-    // Security System (collidable)
+
+    /** Security System (collidable)**/
     GridPoint2 systemPos = new GridPoint2(27, 6);
     Entity system = ObstacleFactory.createSecuritySystem();
     spawnEntityAt(system, systemPos, true, false);
 
-    // Red light (decorative)
+    /**Red light (decorative)**/
     GridPoint2 redLightPos = new GridPoint2(14, 22);
     Entity redLight = ObstacleFactory.createRedLight();
     spawnEntityAt(redLight, redLightPos, false, false);
 
-    // Monitor (decorative)
+    /** Monitor (decorative)**/
     GridPoint2 monitorPos = new GridPoint2(5, 6);
     Entity monitor = ObstacleFactory.createSecurityMonitor();
     spawnEntityAt(monitor, monitorPos, false, false);
 
-    // Security camera (decorative, from your ObstacleFactory)
+    /**Security camera (decorative, from ObstacleFactory) **/
     GridPoint2 cameraPos = new GridPoint2(1, 19);
     Entity securityCamera = ObstacleFactory.createLargeSecurityCamera();
     spawnEntityAt(securityCamera, cameraPos, false, false);
 
-    // 2 Security Platforms (collidable)
+    /** 2 Security Platforms (collidable) **/
     for (int i = 0; i < 2; i++) {
       GridPoint2 platPos = new GridPoint2(24 - i * 5, 10 + i * 4);
       Entity plat = ObstacleFactory.createSecurityPlatform();
       spawnEntityAt(plat, platPos, true, false);
     }
+  }
+  private void loadBackToFloor5() {
+    clearAndLoad(() -> new MainHall(terrainFactory, cameraComponent));
+  }
+
+  private void loadOffice() {
+    clearAndLoad(() -> new OfficeGameArea(terrainFactory, cameraComponent));
   }
 }
