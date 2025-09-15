@@ -16,7 +16,7 @@ import com.csse3200.game.services.ServiceLocator;
 
 /**
  * Ground fast-chase for GhostGPT: drive X only; Box2D gravity/collisions control Y.
- * Not using MovementTask (it sets X&Y -> flying). See Box2D manual on Forces/Impulses.
+ * Not using MovementTask (it sets X and Y -> flying). See Box2D manual on Forces/Impulses.
  */
 public class GPTGroundFastChaseTask extends DefaultTask implements PriorityTask {
   private final Entity target;
