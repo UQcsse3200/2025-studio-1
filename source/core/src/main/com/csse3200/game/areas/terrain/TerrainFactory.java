@@ -66,6 +66,10 @@ public class TerrainFactory {
         TextureRegion lobbyBackground =
             new TextureRegion(resourceService.getAsset("images/LobbyWIP.png", Texture.class));
         return createGameRooms(0.5f, lobbyBackground);
+      case SHIPPING:
+        TextureRegion shippingBackground =
+            new TextureRegion(resourceService.getAsset("images/Shipping.png", Texture.class));
+        return createGameRooms(0.5f, shippingBackground);
       case FOREST_DEMO:
         TextureRegion orthoGrass =
             new TextureRegion(resourceService.getAsset("images/grass_1.png", Texture.class));
@@ -194,6 +198,7 @@ public class TerrainFactory {
     FOREST_DEMO_ISO,
     FOREST_DEMO_HEX,
     SPAWN_ROOM,
-    LOBBY
+    LOBBY,
+    SHIPPING
   }
 }
