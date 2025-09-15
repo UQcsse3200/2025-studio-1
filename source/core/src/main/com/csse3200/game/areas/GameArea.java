@@ -584,11 +584,15 @@ public abstract class GameArea implements Disposable {
   /** Helper to clear current entities and transition to a new area. */
   protected void clearAndLoad(Supplier<GameArea> nextAreaSupplier) {
     if (!beginTransition()) return;
+
+    for (Entity entity : areaEntities) {
+        entity.setEnabled(false);
+    }
+
     // Ensure transition happens on the render thread to avoid race conditions
     Gdx.app.postRunnable(() -> {
       // Phase 1: disable and dispose current area's entities
       for (Entity entity : areaEntities) {
-        entity.setEnabled(false);
         entity.dispose();
       }
       areaEntities.clear();
