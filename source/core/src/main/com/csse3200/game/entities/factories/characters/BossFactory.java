@@ -128,6 +128,7 @@ public class BossFactory {
                 .addComponent(new BlackholeComponent(target, 7f, 8f))
                 .addComponent(new EnemyDeathRewardComponent(100, playerInventory))
                 .addComponent(new BossDeathComponent())
+                .addComponent(new MissueAttackComponent())
                 .addComponent(new BossStatusDisplay("Boss_2"));
 
         AnimationRenderComponent arc = boss2.getComponent(AnimationRenderComponent.class);
@@ -206,7 +207,32 @@ public class BossFactory {
                 .setFilter(PhysicsLayer.ENEMY_PROJECTILE, PhysicsLayer.PLAYER);
         return fireball;
     }
-
+    public static Entity createWarning(Vector2 pos) {
+        Entity warning = new Entity()
+                .addComponent(new TextureRenderComponent("images/warning.png"));
+        warning.setPosition(pos);
+        return warning;
+    }
+    public static Entity createMissle(Vector2 from, Vector2 velocity) {
+        Entity missle = new Entity()
+                .addComponent(new PhysicsComponent())
+                .addComponent(new ColliderComponent())
+                .addComponent(new HitboxComponent().setLayer(PhysicsLayer.ENEMY_PROJECTILE))
+                .addComponent(new CombatStatsComponent(1))
+                .addComponent(new WeaponsStatsComponent(12))
+                .addComponent(new PhysicsProjectileComponent())
+                .addComponent(new TouchAttackComponent(PhysicsLayer.PLAYER, 1f));
+        missle.setPosition(from);
+        TextureRenderComponent texture = new TextureRenderComponent("images/missle.png");
+        missle.addComponent(texture);
+        texture.scaleEntity();
+        Vector2 s = missle.getScale();
+        missle.setScale(s.x * 0.2f, s.y * 0.2f);
+        ColliderComponent collider = missle.getComponent(ColliderComponent.class);
+        collider.setLayer(PhysicsLayer.ENEMY_PROJECTILE)
+                .setFilter(PhysicsLayer.ENEMY_PROJECTILE, PhysicsLayer.PLAYER);
+        return missle;
+    }
     /**
      * Creates a base NPC entity with default wandering, chasing, physics,
      * and touch attack behavior. This is used as a template for other bosses or NPCs.
