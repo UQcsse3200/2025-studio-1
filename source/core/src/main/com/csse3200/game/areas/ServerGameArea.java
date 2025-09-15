@@ -58,6 +58,7 @@ public class ServerGameArea extends GameArea {
     "foreg_sprites/furniture/Vent.png",
   };
 
+  /** 'Forest Textures' contains important weapon and NPC sprites */
   private static final String[] forestTextures = {
     "images/box_boy_leaf.png",
     "images/tree.png",
@@ -140,6 +141,7 @@ public class ServerGameArea extends GameArea {
     "images/keycard_lvl4.png",
   };
 
+  /** Texture atlases for animated entities */
   private static final String[] forestTextureAtlases = {
     "images/robot-2.atlas", "images/fireball.atlas", "images/blackhole.atlas", "images/Robot_1.atlas",
     "images/boss_idle.atlas",
