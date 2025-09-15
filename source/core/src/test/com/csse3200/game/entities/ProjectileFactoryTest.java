@@ -5,11 +5,15 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
+import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Files;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.backends.headless.HeadlessApplication;
+import com.badlogic.gdx.backends.headless.HeadlessApplicationConfiguration;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.Box2D;
 import com.csse3200.game.components.TouchAttackComponent;
 import com.csse3200.game.components.WeaponsStatsComponent;
 import com.csse3200.game.entities.configs.Weapons;
@@ -22,6 +26,7 @@ import com.csse3200.game.physics.components.ColliderComponent;
 import com.csse3200.game.physics.components.HitboxComponent;
 import com.csse3200.game.physics.components.PhysicsComponent;
 import com.csse3200.game.physics.components.PhysicsProjectileComponent;
+import com.csse3200.game.rendering.RenderService;
 import com.csse3200.game.rendering.TextureRenderWithRotationComponent;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
@@ -41,12 +46,17 @@ public class ProjectileFactoryTest {
     @Mock
     Body body;
     static Entity pistolBullet;
+    static HeadlessApplication app;
 
 
     @BeforeAll
     static void setUp() throws NoSuchFieldException, IllegalAccessException {
+        app = new HeadlessApplication(new ApplicationAdapter(){}, new HeadlessApplicationConfiguration());
 
-       Gdx.files = mock(Files.class);
+        // Load Box2D native libs
+        Box2D.init();
+
+        Gdx.files = mock(Files.class);
         when(Gdx.files.internal(anyString())).thenReturn(mock(FileHandle.class));
 
         PhysicsEngine physicsEngine = mock(PhysicsEngine.class);
@@ -59,6 +69,9 @@ public class ProjectileFactoryTest {
         ServiceLocator.registerResourceService(resourceService);
         Texture texture = mock(Texture.class);
         when(resourceService.getAsset(anyString(), eq(Texture.class))).thenReturn(texture);
+
+        RenderService renderService = mock(RenderService.class);
+        ServiceLocator.registerRenderService(renderService);
 
         Entity pistol = WeaponsFactory.createWeapon(Weapons.PISTOL);
         pistolBullet = ProjectileFactory.createPistolBullet(

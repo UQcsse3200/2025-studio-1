@@ -1,20 +1,26 @@
 package com.csse3200.game.areas;
 
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
-import com.csse3200.game.components.ItemHoldComponent;
+import com.csse3200.game.components.items.ItemHoldComponent;
 import com.csse3200.game.components.CameraComponent;
+import com.csse3200.game.components.DoorComponent;
+import com.csse3200.game.entities.configs.Consumables;
 import com.csse3200.game.components.KeycardGateComponent;
+import com.csse3200.game.rendering.AnimationRenderComponent;
 import com.csse3200.game.components.WeaponsStatsComponent;
 import com.csse3200.game.components.player.InventoryComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.Weapons;
 import com.csse3200.game.entities.factories.characters.BossFactory;
 import com.csse3200.game.entities.factories.characters.NPCFactory;
+import com.csse3200.game.entities.factories.items.ConsumableFactory;
 import com.csse3200.game.entities.factories.items.ItemFactory;
 import com.csse3200.game.entities.factories.items.WeaponsFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
@@ -23,10 +29,20 @@ import com.csse3200.game.entities.configs.ItemSpawnConfig;
 import com.csse3200.game.entities.factories.*;
 import com.csse3200.game.entities.spawner.ItemSpawner;
 import com.csse3200.game.physics.components.PhysicsProjectileComponent;
+import com.csse3200.game.utils.math.GridPoint2Utils;
+import com.csse3200.game.utils.math.RandomUtils;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import com.csse3200.game.rendering.TextureRenderComponent;
+import com.csse3200.game.entities.factories.ShopFactory;
+import com.csse3200.game.components.shop.ShopManager;
+import com.csse3200.game.components.shop.CatalogService;
+import com.csse3200.game.components.shop.ShopDemo;
+
+
+import javax.naming.spi.ObjectFactory;
+import java.util.Collections;
 import java.security.SecureRandom;
 
 import org.slf4j.Logger;
@@ -99,9 +115,13 @@ public class ForestGameArea extends GameArea {
     "images/player.png",
     "images/mud.png",
     "images/heart.png",
+    "images/computerBench.png",
+    "images/VendingMachine.png",
     "images/laserball.png",
+    HEART,
     "images/MarblePlatform.png",
-    "images/computerBench.png"
+    "images/monster.png",
+    "images/electriczap.png",
   };
 
   /** General prop textures (floors, tiles, etc.). */
@@ -230,10 +250,11 @@ public class ForestGameArea extends GameArea {
     lightsaber = spawnLightsaber();
 
     //These are commented out since there is no equip feature yet
-    //this.equipItem(pistol);
-    //this.equipItem(lightsaber);
-    //this.equipItem(dagger);
-    //this.equipItem(rifle);
+    // this.equipItem(pistol);
+    // this.equipItem(lightsaber);
+    // this.equipItem(dagger);
+    this.equipItem(rifle);
+//    this.equipItem(ConsumableFactory.createConsumable(Consumables.GENERIC_HEAL_ITEM));
 
     //spawnGhosts();
     //spawnGhostKing();
@@ -242,6 +263,11 @@ public class ForestGameArea extends GameArea {
     spawnMarblePlatforms();
 
 
+    spawnSecurityCamera();
+    spawnEnergyPod();
+    spawnStorageCrates();
+    spawnBigWall();
+    spawnShopKiosk();
     // spawnGhosts();
     // spawnGhostKing();
     SecureRandom random = new SecureRandom();
@@ -385,6 +411,14 @@ public class ForestGameArea extends GameArea {
 
     Entity officeDesk = ObstacleFactory.createOfficeDesk();
     spawnEntityAt(officeDesk, new GridPoint2(5, 11), true, false);
+  }
+
+  private void spawnShopKiosk() {
+    CatalogService catalog = ShopDemo.makeDemoCatalog();
+    ShopManager manager = new ShopManager(catalog);
+
+    Entity shop = ShopFactory.createShop(this, manager, "images/VendingMachine.png"); // have as tree now as placeholder, later need to change to actual shop icon
+    spawnEntityAt(shop, new GridPoint2(18, 6), true, false);
   }
 
   private void spawnComputerBench() {
