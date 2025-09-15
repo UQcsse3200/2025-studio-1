@@ -70,7 +70,7 @@ public class ShippingGameArea extends GameArea {
 
   private void spawnBordersAndDoors() {
     GenericLayout.addLeftRightDoorsAndWalls(this, cameraComponent, WALL_WIDTH,
-        this::loadForest, this::loadStorage);
+        this::loadTunnel, this::loadStorage);
   }
 
   private void spawnPlayer() {
@@ -78,8 +78,8 @@ public class ShippingGameArea extends GameArea {
     spawnEntityAt(player, PLAYER_SPAWN, true, true);
   }
 
-  private void loadForest() {
-    clearAndLoad(() -> new ForestGameArea(terrainFactory, cameraComponent));
+  private void loadTunnel() {
+    clearAndLoad(() -> new TunnelGameArea(terrainFactory, cameraComponent));
   }
 
   private void loadStorage() {
