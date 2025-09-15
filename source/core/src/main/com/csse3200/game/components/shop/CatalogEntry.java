@@ -21,7 +21,6 @@ public record CatalogEntry(
         Entity item,
         int price,
         boolean enabled,
-        boolean stackable,
         int maxStack,
         int bundleQuantity
 ) {
@@ -34,14 +33,12 @@ public record CatalogEntry(
      * @param price The price (per unit) of the item
      * @param enabled Whether this item can currently be purchased by the player.
      *                (E.g., disabled due to max stack, not enough processors, etc.)
-     * @param stackable Whether the use may have multiple of this item in an
-     *                  inventory slot.
      * @param maxStack The max number of this item that can be stored in one inventory
      *                 slot (1 if stackable is false)
      * @param bundleQuantity How many units of the item sold per purchase.
      */
     public CatalogEntry {
-        checkValidEntry(item, price, stackable, maxStack, bundleQuantity);
+        checkValidEntry(item, price, maxStack, bundleQuantity);
     }
 
     /**
@@ -56,7 +53,7 @@ public record CatalogEntry(
     }
 
     private void checkValidEntry(Entity item, int price,
-                                 boolean stackable, int maxStack,
+                                 int maxStack,
                                  int bundleQuantity) {
         if (item == null) {
             throw new IllegalArgumentException("itemKey cannot be null or blank");
@@ -70,7 +67,7 @@ public record CatalogEntry(
             throw new IllegalArgumentException("bundleQuantity cannot be negative");
         }
 
-        if (!stackable && maxStack < 1) {
+        if (maxStack < 1) {
             throw new IllegalArgumentException("maxStack cannot be negative for stackables");
         }
     }

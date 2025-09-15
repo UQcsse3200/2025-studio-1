@@ -3,7 +3,6 @@ package com.csse3200.game.components.shop;
 import com.csse3200.game.components.items.ItemComponent;
 import com.csse3200.game.components.player.InventoryComponent;
 import com.csse3200.game.entities.Entity;
-import com.csse3200.game.entities.configs.ItemTypes;
 
 import java.util.ArrayList;
 
@@ -17,43 +16,60 @@ public class InventoryOperations {
      * Returns the index of the slot containing the item, if any.
      *
      * @param inventory the player's inventory
-     * @param key the item's unique key ([type]:[name])
+     * @param item the item's unique key ([type]:[name])
      * @return the index or -1 if not found.
      */
-    public static int findIndexByKey(InventoryComponent inventory, Entity item) {
+    public static int findIndexForItem(InventoryComponent inventory, Entity item) {
         ArrayList<Entity> inventoryItems = inventory.getInventory();
+        System.out.println(inventoryItems);
         for (Entity e : inventoryItems) {
-            if (e.equals(item)) {
+            if (e != null && e.equals(item)) {
                 return inventoryItems.indexOf(e);
             }
         }
         return -1;
     }
 
-    public static int addOrStack(InventoryComponent inventory, Entity item, int amount,
-                                 boolean stackable, int maxStack) {
+    public static int addOrStack(InventoryComponent inventory, Entity item,
+                                 int amount, int maxStack) {
+        if (amount <= 0 || maxStack <= 0) {
+            return -1;
+        }
+
+        ItemComponent itemComponent = item.getComponent(ItemComponent.class);
+        if (itemComponent == null) {
+            return -1;
+        }
+
+        int index = findIndexForItem(inventory, item);
+        if (index >= 0) {
+            Entity existing = inventory.getInventory().get(index);
+            ItemComponent existingItemComponent = existing.getComponent(ItemComponent.class);
+            if (existingItemComponent == null) {
+                return -1;
+            }
+
+            int currentQuantity = existingItemComponent.getCount();
+            if  (currentQuantity + amount > maxStack) {
+                return -1;
+            }
+            existingItemComponent.setCount(currentQuantity + amount);
+            inventory.getEntity().getEvents()
+                    .trigger("update item count", index, existingItemComponent.getCount());
+            return index;
+        }
+
+        if (inventory.isFull()) {
+            return -1;
+        }
+        if (amount > maxStack) {
+            return -1;
+        }
+        itemComponent.setCount(amount);
         boolean ok = inventory.addItem(item);
-        return ok ? inventory.getInventory().indexOf(item) : -1;
-    }
-
-    public static boolean consume(InventoryComponent inventory,
-                                  String itemName, String itemType,
-                                  int amount) {
-        inventory.getEntity().getEvents().trigger("consumed", itemName, amount);
-        return true;
-    }
-
-    private static String keyOf(Entity entity) {
-        ItemComponent item = entity.getComponent(ItemComponent.class);
-        if (item == null) {
-            return null;
+        if (!ok) {
+            return -1;
         }
-
-        String name = item.getName();
-        ItemTypes type = item.getType();
-        if (name == null || type == null) {
-            return null;
-        }
-        return type + ":"  + name;
+        return inventory.getInventory().indexOf(item);
     }
 }

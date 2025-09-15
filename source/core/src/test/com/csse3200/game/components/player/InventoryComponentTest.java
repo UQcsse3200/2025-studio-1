@@ -13,6 +13,7 @@ import com.csse3200.game.entities.factories.items.WeaponsFactory;
 import com.csse3200.game.extensions.GameExtension;
 import com.csse3200.game.physics.PhysicsEngine;
 import com.csse3200.game.physics.PhysicsService;
+import com.csse3200.game.rendering.RenderService;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
 import org.junit.jupiter.api.BeforeEach;
@@ -65,6 +66,9 @@ class InventoryComponentTest {
       ResourceService resourceService = mock(ResourceService.class);
       ServiceLocator.registerResourceService(resourceService);
       Texture texture = mock(Texture.class);
+
+      RenderService renderService = mock(RenderService.class);
+      ServiceLocator.registerRenderService(renderService);
       when(resourceService.getAsset(anyString(), eq(Texture.class))).thenReturn(texture);
       owner.create();
     }
