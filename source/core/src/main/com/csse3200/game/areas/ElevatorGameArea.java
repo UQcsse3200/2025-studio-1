@@ -58,8 +58,8 @@ public class ElevatorGameArea extends GameArea {
     return null;
   }
 
-  public static ElevatorGameArea load(SaveLoadService.PlayerInfo load) {
-    return (new ElevatorGameArea(terrainFactory, cameraComponent));
+  public static ElevatorGameArea load(TerrainFactory terrainFactory, CameraComponent camera) {
+    return (new ElevatorGameArea(terrainFactory, camera));
   }
 
 }

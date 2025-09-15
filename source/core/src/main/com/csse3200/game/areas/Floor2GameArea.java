@@ -133,8 +133,8 @@ public class Floor2GameArea extends GameArea {
     return "Floor2";
   }
 
-  public static Floor2GameArea load(SaveLoadService.PlayerInfo load) {
-    return (new Floor2GameArea(terrainFactory, cameraComponent));
+  public static Floor2GameArea load(TerrainFactory terrainFactory, CameraComponent camera) {
+    return (new Floor2GameArea(terrainFactory, camera));
   }
 
   public Entity getPlayer() {
