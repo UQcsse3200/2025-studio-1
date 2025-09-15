@@ -8,6 +8,7 @@ import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
 import com.csse3200.game.entities.factories.system.RenderFactory;
 import com.csse3200.game.extensions.GameExtension;
+import com.csse3200.game.services.GameTime;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.rendering.RenderService;
 import com.csse3200.game.rendering.Renderer;
@@ -214,5 +215,32 @@ class CombatStatsComponentTest {
 
     assertTrue(victim.getComponent(CombatStatsComponent.class).isDead());
     assertEquals(new ArrayList<>(), area.getEntities());
+  }
+
+  @Nested
+  @DisplayName("Objective: incoming damage reduction hook")
+  class IncomingDamageReductionTests {
+
+    @Test
+    void reduceIncomingDamage_noMockTime() {
+      ServiceLocator.registerTimeSource(new GameTime());
+
+      Entity e = new Entity()
+              .addComponent(new CombatStatsComponent(100))
+              .addComponent(new com.csse3200.game.components.boss.DamageReductionComponent());
+      e.create();
+
+      var combat = e.getComponent(CombatStatsComponent.class);
+      var dr = e.getComponent(com.csse3200.game.components.boss.DamageReductionComponent.class);
+
+      dr.start(1.0f, 10f);
+      combat.takeDamage(20);
+      assertEquals(100, combat.getHealth());
+
+      dr.start(1.0f, 0f);
+      dr.update();
+      combat.takeDamage(20);
+      assertEquals(80, combat.getHealth());
+    }
   }
 }
