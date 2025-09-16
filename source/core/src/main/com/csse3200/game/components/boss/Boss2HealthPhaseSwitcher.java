@@ -5,15 +5,7 @@ import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.rendering.AnimationRenderComponent;
 
 /**
- * 根据血量百分比切换动画的组件（3 段：idle / phase2 / angry）。
  * Switch boss animation by HP ratio (3 stages: idle / phase2 / angry).
- *
- * 规则 / Rules:
- *   hp/max > 0.50  -> idle
- *   0.30 < hp/max <= 0.50 -> phase2
- *   hp/max <= 0.30 -> angry
- *
- * 如果 atlas 中缺失对应的动画名，会跳过切换以避免报错。
  * If an animation name is missing in the atlas, the switch is skipped safely.
  */
 public class Boss2HealthPhaseSwitcher extends Component {
@@ -26,11 +18,9 @@ public class Boss2HealthPhaseSwitcher extends Component {
     private CombatStatsComponent stats;
     private AnimationRenderComponent arc;
 
-    // 记录是否已经进入过这些阶段，便于触发事件时只发一次（可选）
     private boolean enteredPhase2 = false;
     private boolean enteredAngry  = false;
 
-    // 当前播放中的动画名，避免每帧重复 startAnimation
     private String current = null;
 
     public Boss2HealthPhaseSwitcher(float phase2Threshold,
@@ -56,7 +46,6 @@ public class Boss2HealthPhaseSwitcher extends Component {
 
     @Override
     public void update() {
-        // 懒加载，防止添加顺序导致 null
         if (stats == null) {
             stats = entity.getComponent(CombatStatsComponent.class);
         }
@@ -79,7 +68,6 @@ public class Boss2HealthPhaseSwitcher extends Component {
             want = angryName;
             if (!enteredAngry) {
                 enteredAngry = true;
-                // 可选事件：进入暴怒
                 // Optional: emit an event for entering angry stage
                 entity.getEvents().trigger("boss2:angry");
             }
@@ -87,11 +75,10 @@ public class Boss2HealthPhaseSwitcher extends Component {
             want = phase2Name;
             if (!enteredPhase2) {
                 enteredPhase2 = true;
-                // 可选事件：进入二阶段
                 entity.getEvents().trigger("boss2:phase2");
             }
         } else {
-            want = idleName; // 默认回到 idle
+            want = idleName;
         }
 
         if (!want.equals(current)) {
