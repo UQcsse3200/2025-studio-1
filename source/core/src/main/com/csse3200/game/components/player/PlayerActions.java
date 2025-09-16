@@ -18,7 +18,7 @@ import com.csse3200.game.rendering.TextureRenderComponent;
 import com.csse3200.game.services.ServiceLocator;
 import com.badlogic.gdx.utils.Timer;
 
-import static com.csse3200.game.areas.ForestGameArea.PLAYER_SPAWN;
+//import static com.csse3200.game.areas.ForestGameArea.PLAYER_SPAWN;
 
 /**
  * Component that handles all player actions including movement, jumping, sprinting,
