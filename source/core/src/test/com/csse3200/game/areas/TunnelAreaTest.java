@@ -49,18 +49,19 @@ class TunnelAreaTest {
 
     @Test
     void testSpawnPlayerCallsPlayerFactory() throws Exception {
-        MockedStatic<PlayerFactory> playerFactoryMock = mockStatic(PlayerFactory.class);
-        Entity mockPlayer = mock(Entity.class);
-        playerFactoryMock.when(PlayerFactory::createPlayer).thenReturn(mockPlayer);
+        try (MockedStatic<PlayerFactory> playerFactoryMock = mockStatic(PlayerFactory.class)) {
+            Entity mockPlayer = mock(Entity.class);
+            playerFactoryMock.when(PlayerFactory::createPlayer).thenReturn(mockPlayer);
 
-        var method = TunnelGameArea.class.getDeclaredMethod("spawnPlayer");
-        method.setAccessible(true);
-        Entity result = (Entity) method.invoke(tunnelGameArea);
+            var method = TunnelGameArea.class.getDeclaredMethod("spawnPlayer");
+            method.setAccessible(true);
+            Entity result = (Entity) method.invoke(tunnelGameArea);
 
-        // Verify PlayerFactory used and player spawned
-        playerFactoryMock.verify(PlayerFactory::createPlayer);
-        verify(tunnelGameArea).spawnEntityAt(eq(mockPlayer), any(GridPoint2.class), eq(true), eq(true));
-        Assertions.assertEquals(mockPlayer, result);
+            // Verify PlayerFactory used and player spawned
+            playerFactoryMock.verify(PlayerFactory::createPlayer);
+            verify(tunnelGameArea).spawnEntityAt(eq(mockPlayer), any(GridPoint2.class), eq(true), eq(true));
+            Assertions.assertEquals(mockPlayer, result);
+        }
     }
 
     @Test
