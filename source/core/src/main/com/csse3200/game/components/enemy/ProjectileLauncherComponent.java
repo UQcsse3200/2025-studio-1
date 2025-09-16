@@ -5,27 +5,28 @@ import com.csse3200.game.areas.GameArea;
 import com.csse3200.game.components.Component;
 import com.csse3200.game.components.WeaponsStatsComponent;
 import com.csse3200.game.entities.Entity;
-import com.csse3200.game.entities.configs.ProjectileTypes;
+import com.csse3200.game.entities.configs.Projectiles;
 import com.csse3200.game.services.ServiceLocator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * A class containing methods that allow entities to fire projectiles essentially.
+ * A class containing methods that allow entities to fire projectiles essentially, in a variety of ways.
  */
 public class ProjectileLauncherComponent extends Component {
     private long timeSinceFiring;
     private static final Logger projectileLogger = LoggerFactory.getLogger(ProjectileLauncherComponent.class);
     private static GameArea gameArea;
-    private Entity target;
-    private final ProjectileTypes projType; // Could expand to house multiple projectile types.
+    private final Entity target;
+    private final Projectiles projType; // Could expand to house multiple projectile types.
 
     /**
      * Constructor for the class.
      * @param area The area, such as ForestGameArea, in which the entity is residing in.
      * @param target The target entity, that this component's entity wants to hit.
+     * @param projType The projectile to be launched from this launcher component.
      */
-    public ProjectileLauncherComponent(GameArea area, Entity target, ProjectileTypes projType)
+    public ProjectileLauncherComponent(GameArea area, Entity target, Projectiles projType)
     {
         gameArea = area;
         this.target = target;
@@ -49,7 +50,8 @@ public class ProjectileLauncherComponent extends Component {
             default -> throw new IllegalArgumentException("Projectile launcher can't fire unknown projectile type: "
                     + projType);
         }
-        
+
+        // Position projectile and scale it properly.
         Vector2 pos = new Vector2(getEntity().getPosition().x + offset.x,
                                 getEntity().getPosition().y + offset.y);
         projectile.setPosition(pos);
@@ -110,16 +112,6 @@ public class ProjectileLauncherComponent extends Component {
         };
 
         Timer.schedule(burstFireTask, 0f, timeBetweenShots);
-    }
-
-    public void CatapultProjectile(Vector2 directionToFire, Vector2 offset, Vector2 scale) {
-        WeaponsStatsComponent weapon = entity.getComponent(WeaponsStatsComponent.class);
-        Entity projectile = gameArea.spawnGhostGPTProjectile(directionToFire, weapon);
-        Vector2 pos = new Vector2(getEntity().getPosition().x + offset.x,
-                getEntity().getPosition().y + offset.y);
-        projectile.setPosition(pos);
-        projectile.scaleWidth(scale.x);
-        projectile.scaleHeight(scale.y);
     }
 }
 

@@ -260,9 +260,9 @@ public abstract class GameArea implements Disposable {
   }
 
   /**
-   * Spawns projectiles from enemies.
+   * Spawns the projectile used by the Ghost GPT Enemy
    * @param directionToFire The direction in which the projectile is to be fired.
-   * @param source The entity that the projectile is coming from.
+   * @param source The damage and other statistics that the projectile will use.
    * @return The spawned projectile {@link Entity}
    */
   public Entity spawnGhostGPTProjectile(Vector2 directionToFire, WeaponsStatsComponent source) {
