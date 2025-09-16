@@ -412,4 +412,14 @@ public class ServerGameArea extends GameArea {
   private void loadStorage() {
     clearAndLoad(() -> new StorageGameArea(terrainFactory, cameraComponent));
   }
+
+
+  @Override
+  public String toString() {
+    return "Server";
+  }
+
+  public static ServerGameArea load(TerrainFactory terrainFactory, CameraComponent camera) {
+    return (new ServerGameArea(terrainFactory, camera));
+  }
 }
