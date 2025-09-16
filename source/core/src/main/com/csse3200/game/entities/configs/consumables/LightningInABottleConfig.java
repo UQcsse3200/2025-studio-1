@@ -7,8 +7,8 @@ import com.csse3200.game.effects.HealthEffect;
 import java.util.ArrayList;
 
 // Placeholder Consumable used for testing of Projectile Consumables
-public class GenericProjectileConsumableConfig extends ProjectileConsumableConfig {
-    public GenericProjectileConsumableConfig() {
+public class LightningInABottleConfig extends ProjectileConsumableConfig {
+    public LightningInABottleConfig() {
         this.texturePath = "images/lightning_bottle.png";
         this.duration = 3;
         this.projectileDamage = 0;
