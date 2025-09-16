@@ -16,7 +16,7 @@ import com.csse3200.game.components.TouchAttackComponent;
 import com.csse3200.game.components.tasks.*;
 import com.csse3200.game.components.player.InventoryComponent;
 import com.csse3200.game.entities.Entity;
-import com.csse3200.game.entities.configs.ProjectileTypes;
+import com.csse3200.game.entities.configs.Projectiles;
 import com.csse3200.game.entities.configs.characters.*;
 import com.csse3200.game.files.FileLoader;
 import com.csse3200.game.physics.PhysicsLayer;
@@ -159,7 +159,7 @@ public class NPCFactory {
     animator.addAnimation("float", 0.1f, Animation.PlayMode.LOOP);
 
 
-    ProjectileLauncherComponent projComp = new ProjectileLauncherComponent(area, target, ProjectileTypes.GHOSTGPT_LASER);
+    ProjectileLauncherComponent projComp = new ProjectileLauncherComponent(area, target, Projectiles.GHOSTGPT_LASER);
     // Use ground chase tasks for gravity-based movement
     AITaskComponent aiComponent =
         new AITaskComponent()
@@ -263,7 +263,7 @@ public class NPCFactory {
             .addComponent(new DeathParticleSpawnerComponent("explosion_2"))
             .addComponent(aiComponent)
             .addComponent(new EnemyHealthDisplay())
-            .addComponent(new ProjectileLauncherComponent(area, target, ProjectileTypes.GHOSTGPT_LASER)); // Add the ability to fire projectiles
+            .addComponent(new ProjectileLauncherComponent(area, target, Projectiles.GHOSTGPT_LASER)); // Add the ability to fire projectiles
 
     deepspin.getComponent(AnimationRenderComponent.class).scaleEntity();
 
@@ -314,7 +314,7 @@ public class NPCFactory {
             .addComponent(new DeathParticleSpawnerComponent("explosion_2"))
             .addComponent(aiComponent)
             .addComponent(new EnemyHealthDisplay(0.3f))
-            .addComponent(new ProjectileLauncherComponent(area, target, ProjectileTypes.GHOSTGPT_LASER)); // Add the ability to fire projectiles
+            .addComponent(new ProjectileLauncherComponent(area, target, Projectiles.GHOSTGPT_LASER)); // Add the ability to fire projectiles
 
     grokDroid.getComponent(AnimationRenderComponent.class).scaleEntity();
 
