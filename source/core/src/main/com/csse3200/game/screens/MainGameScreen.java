@@ -272,7 +272,7 @@ public class MainGameScreen extends ScreenAdapter {
     com.csse3200.game.services.ServiceLocator.registerGameArea(gameArea);
 
     gameArea.create();
-
+    gameArea.getPlayer().getEvents().trigger("load player", load.inventory, load.ProcessNumber);
 
 //    InventoryComponent loadinventory = gameArea.getPlayer().getComponent(InventoryComponent.class);
 //    loadinventory = FileLoader.readInventory(load.inventory,load.ProcessNumber);

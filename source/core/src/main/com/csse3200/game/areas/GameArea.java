@@ -34,8 +34,8 @@ public abstract class GameArea implements Disposable {
   protected static boolean isTransitioning = false;
 
   protected GameArea(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
-    this.terrainFactory = terrainFactory;
-    this.cameraComponent = cameraComponent;
+    GameArea.terrainFactory = terrainFactory;
+    GameArea.cameraComponent = cameraComponent;
     areaEntities = new ArrayList<>();
   }
 
