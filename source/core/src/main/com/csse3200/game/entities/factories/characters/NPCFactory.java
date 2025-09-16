@@ -1,11 +1,13 @@
 package com.csse3200.game.entities.factories.characters;
 
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.ai.tasks.AITaskComponent;
 import com.csse3200.game.areas.GameArea;
 import com.csse3200.game.components.CombatStatsComponent;
+import com.csse3200.game.components.SoundComponent;
 import com.csse3200.game.components.WeaponsStatsComponent;
 import com.csse3200.game.components.enemy.LowHealthAttackBuffComponent;
 import com.csse3200.game.components.enemy.ProjectileLauncherComponent;
@@ -148,6 +150,11 @@ public class NPCFactory {
     animator.addAnimation("angry_float", 0.1f, Animation.PlayMode.LOOP);
     animator.addAnimation("float", 0.1f, Animation.PlayMode.LOOP);
     animator.addAnimation("damage_taken", 0.1f, Animation.PlayMode.NORMAL);
+
+    SoundComponent soundComponent = new SoundComponent();
+    deepspin.addComponent(soundComponent);
+    soundComponent.registerSound("take_damage", "sounds/shock.mp3");
+    soundComponent.registerSound("death", "sounds/pop.mp3");
 
     AITaskComponent aiComponent =
             new AITaskComponent()
@@ -315,7 +322,6 @@ public class NPCFactory {
     animator.setDisposeAtlas(false);
     animator.addAnimation("angry_float", 0.1f, Animation.PlayMode.LOOP);
     animator.addAnimation("float", 0.1f, Animation.PlayMode.LOOP);
-
 
     ProjectileLauncherComponent projComp = new ProjectileLauncherComponent(area, target, Projectiles.GHOSTGPT_LASER);
     // Has 0 speed due to stationary ememy
