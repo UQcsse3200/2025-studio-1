@@ -2,22 +2,23 @@ package com.csse3200.game.entities.configs.benches;
 
 import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.components.player.InventoryComponent;
+import com.csse3200.game.components.player.PlayerActions;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.ItemTypes;
 
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 
-public class HealthBenchConfig extends BenchConfig {
+public class SpeedBenchConfig extends BenchConfig {
     private boolean upgradeUsed;
 
     /**
-     * Initialise HealthBenchConfig
+     * Initialise SpeedBenchConfig
      */
-    public HealthBenchConfig() {
+    public SpeedBenchConfig() {
         benchType = ItemTypes.HEALTH_BENCH;
-        texturePath = "images/healthBench.png";
+        texturePath = "images/speedBench.png";
         price = 1000;
-        promptText = "Press E to upgrade health for " + price;
+        promptText = "Press E to boost speed for " + price;
         upgradeUsed = false;
     }
 
@@ -26,9 +27,9 @@ public class HealthBenchConfig extends BenchConfig {
 
         if (playerNear && player != null && !upgradeUsed
                 && player.getComponent(InventoryComponent.class).hasProcessor(price)) {
-            System.out.println("CURR MAX HEALTH: " + player.getComponent(CombatStatsComponent.class).getMaxHealth());
             player.getComponent(CombatStatsComponent.class).upgradeMaxHealth();
             subtractPrice(player);
+            player.getComponent(PlayerActions.class).upgradeSpeed();
             upgradeUsed = true;
             buyPrompt.setText("Upgrade Successful!");
         } else if (upgradeUsed) {

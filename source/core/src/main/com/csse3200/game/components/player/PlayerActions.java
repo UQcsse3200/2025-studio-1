@@ -30,9 +30,9 @@ public class PlayerActions extends Component {
   private PhysicsComponent physicsComponent;
 
   // Movement Constants
-  private static final Vector2 MAX_SPEED = new Vector2(3f, 3f);
-  private static final Vector2 CROUCH_SPEED = new Vector2(1.5f, 3f);
-  private static final Vector2 SPRINT_SPEED = new Vector2(7f, 3f);
+  private static Vector2 MAX_SPEED = new Vector2(3f, 3f);
+  private static Vector2 CROUCH_SPEED = new Vector2(1.5f, 3f);
+  private static Vector2 SPRINT_SPEED = new Vector2(7f, 3f);
   private static final Vector2 JUMP_VELOCITY = new Vector2(0f, 15f);
   private static final Vector2 DASH_SPEED = new Vector2(20f, 9.8f);
   private static final float DASH_DURATION = 0.1f;
@@ -394,5 +394,14 @@ public class PlayerActions extends Component {
       if (curr != null) return curr;
     }
     return entity.getComponent(WeaponsStatsComponent.class);
+  }
+
+  /**
+   * Upgrades the speed of the player
+   */
+  public void upgradeSpeed() {
+    MAX_SPEED = new Vector2(5f, 5f);
+    CROUCH_SPEED = new Vector2(2f, 4f);
+    SPRINT_SPEED = new Vector2(9f, 5f);
   }
 }
