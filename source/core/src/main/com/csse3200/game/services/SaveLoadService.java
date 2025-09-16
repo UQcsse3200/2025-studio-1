@@ -4,7 +4,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.reflect.ClassReflection;
 import com.csse3200.game.areas.*;
 import com.csse3200.game.components.CombatStatsComponent;
-import com.csse3200.game.components.ItemComponent;
+import com.csse3200.game.components.items.ItemComponent;
 import com.csse3200.game.components.player.InventoryComponent;
 import com.csse3200.game.components.player.ItemPickUpComponent;
 import com.csse3200.game.components.player.PlayerStatsDisplay;
@@ -61,8 +61,8 @@ public class SaveLoadService {
         FileLoader.jsonSave.addClassTag("Forest", ForestGameArea.class);
         FileLoader.jsonSave.addClassTag("Elevator", ElevatorGameArea.class);
         FileLoader.jsonSave.addClassTag("Office", OfficeGameArea.class);
-        FileLoader.jsonSave.addClassTag("Floor5", Floor5GameArea.class);
-        FileLoader.jsonSave.addClassTag("Floor2", Floor2GameArea.class);
+        FileLoader.jsonSave.addClassTag("Mainhall", MainHall.class);
+        FileLoader.jsonSave.addClassTag("Reception", Reception.class);
         FileLoader.jsonSave.addClassTag("Tunnel", TunnelGameArea.class);
         String filePath = "saves" + File.separator + "slides.json";
 
