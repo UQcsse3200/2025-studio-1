@@ -254,21 +254,17 @@ public class ForestGameArea extends GameArea {
     rifle.addComponent(new LaserComponent());
     rifle.addComponent(new BulletEnhancerComponent());
 
-
-//    Entity rapidFirePowerup = spawnRapidFirePowerup();
-
     //These are commented out since there is no equip feature yet
     // this.equipItem(pistol);
     // this.equipItem(lightsaber);
     // this.equipItem(dagger);
+
     this.equipItem(rifle);
-//    this.equipItem(ConsumableFactory.createConsumable(Consumables.GENERIC_HEAL_ITEM));
+
     spawnFloor();
     spawnBottomRightDoor();
     spawnMarblePlatforms();
     spawnShopKiosk();
-    // spawnGhosts();
-    // spawnGhostKing();
     SecureRandom random = new SecureRandom();
     int choice = random.nextInt(3);
     switch (choice) {
