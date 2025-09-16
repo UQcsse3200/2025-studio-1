@@ -278,7 +278,6 @@ public class MainGameScreen extends ScreenAdapter {
 
     gameArea = areaLoad;
     com.csse3200.game.services.ServiceLocator.registerGameArea(gameArea);
-    gameArea.inventory = load.inventory;
     gameArea.loadthis = true;
     gameArea.create();
     // currently not needed: sprint 3 refactor to fix everything
