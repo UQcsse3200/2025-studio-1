@@ -10,12 +10,12 @@ import java.util.ArrayList;
 public class GenericProjectileConsumableConfig extends ProjectileConsumableConfig {
     public GenericProjectileConsumableConfig() {
         this.texturePath = "images/round.png";
-        this.duration = 1;
+        this.duration = 3;
         this.projectileDamage = 0;
 
         ArrayList<Effect> areaEffects = new ArrayList<>();
         areaEffects.add(new HealthEffect(1000000));
         this.effects = new ArrayList<>();
-        this.effects.add(new AreaEffect(areaEffects, 5));
+        this.effects.add(new AreaEffect(areaEffects, 2));
     }
 }
