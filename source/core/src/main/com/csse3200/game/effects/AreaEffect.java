@@ -42,6 +42,10 @@ public class AreaEffect extends Effect {
         return effects;
     }
 
+    public int getRadius() {
+        return radius;
+    }
+
     @Override
     public boolean apply(Entity center) {
         boolean applied = false;
