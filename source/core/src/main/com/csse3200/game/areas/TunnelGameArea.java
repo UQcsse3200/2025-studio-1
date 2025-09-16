@@ -44,6 +44,7 @@ public class TunnelGameArea extends GameArea {
     spawnPlatforms();
     spawnSpawnPads();
     spawnGrokDroids();
+    spawnObjectDoors();
 
     spawnFloor();
 
@@ -122,6 +123,16 @@ public class TunnelGameArea extends GameArea {
     Entity grok2 = NPCFactory.createGrokDroid(player, this, 3f);
     GridPoint2 grok2Pos = new GridPoint2(25, 7);
     spawnEntityAt(grok2, grok2Pos, true, false);
+  }
+
+  /**
+   * Spawn entity door at the bottom left, and no door to the right
+   * as this is the last room (currently).
+   */
+  private void spawnObjectDoors() {
+    Entity leftDoor = ObstacleFactory.createDoor();
+    GridPoint2 leftDoorSpawn = new GridPoint2(0, 7);
+    spawnEntityAt(leftDoor, leftDoorSpawn, false, false);
   }
 
   private void loadServer() {
