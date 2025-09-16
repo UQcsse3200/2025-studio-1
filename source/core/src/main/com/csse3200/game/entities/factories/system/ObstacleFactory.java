@@ -1,6 +1,7 @@
 package com.csse3200.game.entities.factories.system;
 
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.physics.PhysicsLayer;
 import com.csse3200.game.physics.PhysicsUtils;
@@ -213,6 +214,47 @@ public class ObstacleFactory {
     clockSpawn.getComponent(TextureRenderComponent.class).scaleEntity();
     clockSpawn.scaleHeight(2f);
     return clockSpawn;
+  }
+  /** creating the platform for Office area  **/
+  public static Entity createOfficeElevatorPlatform() {
+    Entity platform =
+            new Entity()
+                    .addComponent(new TextureRenderComponent("images/Office and elevator/Platform for elevator.png"))
+                    .addComponent(new PhysicsComponent())
+                    .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
+
+    platform.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
+    platform.getComponent(TextureRenderComponent.class).scaleEntity();
+    platform.scaleHeight(3f);
+    // Thin collider aligned to the top so the player stands on the platform surface
+    Vector2 colliderSize = platform.getScale().cpy().scl(0.9f, 0.10f);
+    // Lower the collider slightly to account for transparent pixels above the platform surface
+    float offsetDown = 1.10f;
+    Vector2 colliderPos = new Vector2(
+            platform.getScale().x / 2f,
+            platform.getScale().y - (colliderSize.y / 2f) - offsetDown);
+    platform.getComponent(ColliderComponent.class).setAsBox(colliderSize, colliderPos);
+    return platform;
+  }
+
+  /** creating the platform for Elevator area  **/
+  public static Entity createElevatorPlatform() {
+    Entity platform =
+            new Entity()
+                    .addComponent(new TextureRenderComponent("images/Office and elevator/Office platform.png"))
+                    .addComponent(new PhysicsComponent())
+                    .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
+
+    platform.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
+    platform.getComponent(TextureRenderComponent.class).scaleEntity();
+    platform.scaleHeight(3f);
+    Vector2 colliderSize = platform.getScale().cpy().scl(0.9f, 0.10f);
+    float offsetDown = 1.10f;
+    Vector2 colliderPos = new Vector2(
+            platform.getScale().x / 2f,
+            platform.getScale().y - (colliderSize.y / 2f) - offsetDown);
+    platform.getComponent(ColliderComponent.class).setAsBox(colliderSize, colliderPos);
+    return platform;
   }
   /** creating the help desk used in reception room **/
   public static Entity createdesk_reception() {
