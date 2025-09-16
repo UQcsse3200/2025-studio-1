@@ -279,11 +279,15 @@ public class ServerGameArea extends GameArea {
   }
 
   /**
-   * Spawn entity door
+   * Spawn entity door at the bottom left and top right of the screens
    */
   private void spawnObjectDoors() {
     Entity rightDoor = ObstacleFactory.createDoor();
     GridPoint2 rightDoorSpawn = new GridPoint2(28, 19);
     spawnEntityAt(rightDoor, rightDoorSpawn, false, false);
+
+    Entity leftDoor = ObstacleFactory.createDoor();
+    GridPoint2 leftDoorSpawn = new GridPoint2(0, 7);
+    spawnEntityAt(leftDoor, leftDoorSpawn, false, false);
   }
 }
