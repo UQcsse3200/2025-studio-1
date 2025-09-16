@@ -246,14 +246,14 @@ public class ServerGameArea extends GameArea {
 
   private void spawnBordersAndDoors() {
     GenericLayout.addLeftRightDoorsAndWalls(this, cameraComponent, WALL_WIDTH,
-        this::loadShipping, this::loadTunnel);
+        this::loadStorage, this::loadTunnel);
   }
 
   private void loadTunnel() {
     clearAndLoad(() -> new TunnelGameArea(terrainFactory, cameraComponent));
   }
 
-  private void loadShipping() {
-    clearAndLoad(() -> new ShippingGameArea(terrainFactory, cameraComponent));
+  private void loadStorage() {
+    clearAndLoad(() -> new StorageGameArea(terrainFactory, cameraComponent));
   }
 }
