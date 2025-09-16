@@ -67,6 +67,7 @@ public class ShopManager extends Component {
             return fail(item, PurchaseError.UNEXPECTED);
         }
 
+        // Get item being purchased
         CatalogEntry entry = catalog.get(item);
         if (entry == null) {
             return fail(item, PurchaseError.NOT_FOUND);
