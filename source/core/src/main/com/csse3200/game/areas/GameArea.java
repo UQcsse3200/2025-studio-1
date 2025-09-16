@@ -120,7 +120,7 @@ public abstract class GameArea implements Disposable {
    */
   public int getRoomNumber() { // changed from protected to public for EnemyWaves access
     String name = getClass().getSimpleName();
-    // Look for digits after Floor or Room (e.g., Floor3GameArea, Room2Area)
+    // Look for digits after Floor or Room (e.g., MainHall, Reception,Storage etc.)
     Matcher m = Pattern.compile("(?:Floor|Room)(\\d+)").matcher(name);
     if (m.find()) {
       try { return Integer.parseInt(m.group(1)); } catch (NumberFormatException ignored) {}
@@ -363,6 +363,7 @@ public abstract class GameArea implements Disposable {
    *
    * @param entity   entity to spawn (not yet registered)
    */
+
   public void spawnEntityInRoom(String roomName, Entity entity) {
     Vector2 pos = getRoomSpawnPosition(roomName);
     entity.setPosition(pos);
@@ -522,52 +523,6 @@ public abstract class GameArea implements Disposable {
     spawnEntity(door);
   }
 
-  /** Add a horizontal door on the top edge. */
-  protected void addHorizontalDoorTop(Bounds b, float wallWidth, Runnable onEnter) {
-    float doorWidth = Math.max(1f, b.viewWidth * 0.2f);
-    float doorX = b.camPos.x - doorWidth / 2f;
-    float leftSegWidth = Math.max(0f, doorX - b.leftX);
-    if (leftSegWidth > 0f) {
-      Entity left = ObstacleFactory.createWall(leftSegWidth, wallWidth);
-      left.setPosition(b.leftX, b.topY - wallWidth);
-      spawnEntity(left);
-    }
-    float rightStart = doorX + doorWidth;
-    float rightSegWidth = Math.max(0f, (b.leftX + b.viewWidth) - rightStart);
-    if (rightSegWidth > 0f) {
-      Entity right = ObstacleFactory.createWall(rightSegWidth, wallWidth);
-      right.setPosition(rightStart, b.topY - wallWidth);
-      spawnEntity(right);
-    }
-    Entity door = ObstacleFactory.createDoorTrigger(doorWidth, wallWidth);
-    door.setPosition(doorX, b.topY - wallWidth + 0.001f);
-    door.addComponent(new DoorComponent(onEnter));
-    spawnEntity(door);
-  }
-
-  /** Add a horizontal door on the bottom edge. */
-  protected void addHorizontalDoorBottom(Bounds b, float wallWidth, Runnable onEnter) {
-    float doorWidth = Math.max(1f, b.viewWidth * 0.2f);
-    float doorX = b.camPos.x - doorWidth / 2f;
-    float leftSegWidth = Math.max(0f, doorX - b.leftX);
-    if (leftSegWidth > 0f) {
-      Entity left = ObstacleFactory.createWall(leftSegWidth, wallWidth);
-      left.setPosition(b.leftX, b.bottomY);
-      spawnEntity(left);
-    }
-    float rightStart = doorX + doorWidth;
-    float rightSegWidth = Math.max(0f, (b.leftX + b.viewWidth) - rightStart);
-    if (rightSegWidth > 0f) {
-      Entity right = ObstacleFactory.createWall(rightSegWidth, wallWidth);
-      right.setPosition(rightStart, b.bottomY);
-      spawnEntity(right);
-    }
-    Entity door = ObstacleFactory.createDoorTrigger(doorWidth, wallWidth);
-    door.setPosition(doorX, b.bottomY + 0.001f);
-    door.addComponent(new DoorComponent(onEnter));
-    spawnEntity(door);
-  }
-
   protected <T extends GameArea> void loadArea(Class<T> areaClass) {
     clearAndLoad(() -> {
       try {
@@ -588,15 +543,15 @@ public abstract class GameArea implements Disposable {
         entity.setEnabled(false);
     }
 
-    // Ensure transition happens on the render thread to avoid race conditions
+    /** Ensure transition happens on the render thread to avoid race conditions **/
     Gdx.app.postRunnable(() -> {
-      // Phase 1: disable and dispose current area's entities
+      /** Phase 1: disable and dispose current area's entities **/
       for (Entity entity : areaEntities) {
         entity.dispose();
       }
       areaEntities.clear();
 
-      // Phase 2: on the next frame, build the next area to avoid Box2D world-locked/native races
+      /** Phase 2: on the next frame, build the next area to avoid Box2D world-locked/native races **/
       Gdx.app.postRunnable(() -> {
         try {
           GameArea next = nextAreaSupplier.get();
