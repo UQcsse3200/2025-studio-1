@@ -95,6 +95,10 @@ public class RangedUseComponent extends ItemActionsComponent {
         Timer.schedule(new Timer.Task() {
             @Override
             public void run() {
+                if (ServiceLocator.getTimeSource().isPaused()) {
+                    return;
+                }
+
                 PhysicsComponent physics = bullet.getComponent(PhysicsComponent.class);
                 if (physics == null || physics.getBody() == null) {
                     cancel(); // bullet gone, stop rotating
@@ -135,6 +139,10 @@ public class RangedUseComponent extends ItemActionsComponent {
 
             @Override
             public void run() {
+                if (ServiceLocator.getTimeSource().isPaused()) {
+                    return;
+                }
+
                 PhysicsComponent physics = bullet.getComponent(PhysicsComponent.class);
                 if (physics == null || physics.getBody() == null) {
                     cancel(); // stop pulsing if bullet is gone
@@ -166,6 +174,10 @@ public class RangedUseComponent extends ItemActionsComponent {
         Timer.schedule(new Timer.Task() {
             @Override
             public void run() {
+                if (ServiceLocator.getTimeSource().isPaused()) {
+                    return;
+                }
+
                 if (consumable == null) {
                     bullet.dispose();
                     return;
