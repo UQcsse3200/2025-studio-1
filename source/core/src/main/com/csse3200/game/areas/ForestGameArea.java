@@ -524,7 +524,7 @@ public class ForestGameArea extends GameArea {
 
     private Entity spawnDamageBoostPowerup() {
         Entity newDamageBoostPowerup = PowerupsFactory.createDamageBoost();
-        spawnEntityAt(newDamageBoostPowerup, new GridPoint2(20, 25), true, true);
+        spawnEntityAt(newDamageBoostPowerup, new GridPoint2(2, 25), true, true);
         return newDamageBoostPowerup;
     }
 
