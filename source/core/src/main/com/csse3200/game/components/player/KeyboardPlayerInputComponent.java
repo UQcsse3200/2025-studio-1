@@ -250,7 +250,6 @@ public class KeyboardPlayerInputComponent extends InputComponent {
   private void triggerAddItem() {
     System.out.println("Pick up event triggered");
     entity.getEvents().trigger("pick up");
-
   }
 
   /** Triggers a change in the currently focused inventory slot. */
