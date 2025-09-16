@@ -8,9 +8,9 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-public class EnemyJumpTest {
+class EnemyJumpTest {
     @Test
-    public void testEnemyJumpAppliesImpulse() {
+    void testEnemyJumpAppliesImpulse() {
         PhysicsComponent physicsComponent = mock(PhysicsComponent.class);
         Body body = mock(Body.class);
         when(physicsComponent.getBody()).thenReturn(body);
@@ -30,7 +30,7 @@ public class EnemyJumpTest {
     }
 
     @Test
-    public void testJumpNoPhysicsComponentDoesNothing() {
+    void testJumpNoPhysicsComponentDoesNothing() {
         PhysicsMovementComponent movement = new PhysicsMovementComponent();
         Entity enemy = new Entity();
         enemy.addComponent(movement);
@@ -40,7 +40,7 @@ public class EnemyJumpTest {
     }
 
     @Test
-    public void testJumpNullBodyDoesNothing() {
+    void testJumpNullBodyDoesNothing() {
         PhysicsComponent physicsComponent = mock(PhysicsComponent.class);
         when(physicsComponent.getBody()).thenReturn(null);
         Entity enemy = new Entity();
@@ -53,7 +53,7 @@ public class EnemyJumpTest {
     }
 
     @Test
-    public void testJumpAfterDisposeIgnored() {
+    void testJumpAfterDisposeIgnored() {
         PhysicsComponent physicsComponent = mock(PhysicsComponent.class);
         Body body = mock(Body.class);
         when(physicsComponent.getBody()).thenReturn(body);
@@ -69,7 +69,7 @@ public class EnemyJumpTest {
     }
 
     @Test
-    public void testSetMovingFalseAppliesCounterImpulse() {
+    void testSetMovingFalseAppliesCounterImpulse() {
         PhysicsComponent physicsComponent = mock(PhysicsComponent.class);
         Body body = mock(Body.class);
         when(physicsComponent.getBody()).thenReturn(body);
@@ -89,7 +89,7 @@ public class EnemyJumpTest {
     }
 
     @Test
-    public void testUpdateMovesTowardTargetApplyingImpulse() {
+    void testUpdateMovesTowardTargetApplyingImpulse() {
         PhysicsComponent physicsComponent = mock(PhysicsComponent.class);
         Body body = mock(Body.class);
         when(physicsComponent.getBody()).thenReturn(body);
@@ -110,7 +110,7 @@ public class EnemyJumpTest {
     }
 
     @Test
-    public void testUpdateSkipsWhenBodyNull() {
+    void testUpdateSkipsWhenBodyNull() {
         PhysicsComponent physicsComponent = mock(PhysicsComponent.class);
         when(physicsComponent.getBody()).thenReturn(null);
         Entity e = new Entity();
@@ -125,7 +125,7 @@ public class EnemyJumpTest {
     }
 
     @Test
-    public void testDisposePreventsFurtherMovement() {
+    void testDisposePreventsFurtherMovement() {
         PhysicsComponent physicsComponent = mock(PhysicsComponent.class);
         Body body = mock(Body.class);
         when(physicsComponent.getBody()).thenReturn(body);
