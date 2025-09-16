@@ -26,7 +26,7 @@ import com.csse3200.game.physics.components.*;
 import com.csse3200.game.rendering.AnimationRenderComponent;
 import com.csse3200.game.rendering.TextureRenderComponent;
 import com.csse3200.game.services.ServiceLocator;
-import com.csse3200.game.components.player.BossStatusDisplay;
+import com.csse3200.game.components.enemy.BossStatusDisplay;
 import com.csse3200.game.components.WeaponsStatsComponent;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.math.Vector2;
