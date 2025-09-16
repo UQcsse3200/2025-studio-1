@@ -43,6 +43,35 @@ public class ItemSpawnConfig {
 
         return config;
     }
+    /**
+     * Gives a list of items(including weapons) and their spawn locations for the shipping map
+     * Each item can have multiple spawn locations and each location can have multiple items
+     * @return a map of item names to a list of spawn info (location and quantity)
+     */
+    public static Map<String, List<ItemSpawner.ItemSpawnInfo>> shippingmap() {
+        Map<String, List<ItemSpawner.ItemSpawnInfo>> config = new HashMap<>();
+
+        config.put(Weapons.RIFLE.name(), Arrays.asList(
+                new ItemSpawner.ItemSpawnInfo(new GridPoint2(5, 7), 1)
+        ));
+
+        return config;
+    }
+
+    /**
+     * Gives a list of items(including weapons) and their spawn locations for the storage map
+     * Each item can have multiple spawn locations and each location can have multiple items
+     * @return a map of item names to a list of spawn info (location and quantity)
+     */
+    public static Map<String, List<ItemSpawner.ItemSpawnInfo>> storage1map() {
+        Map<String, List<ItemSpawner.ItemSpawnInfo>> config = new HashMap<>();
+
+        config.put(Weapons.RIFLE.name(), Arrays.asList(
+                new ItemSpawner.ItemSpawnInfo(new GridPoint2(4, 17), 1)
+        ));
+
+        return config;
+    }
 
     /** Server Room spawning. Spawns a rifle on the purple spawn pad */
     public static Map<String, List<ItemSpawner.ItemSpawnInfo>> servermap() {
