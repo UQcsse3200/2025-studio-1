@@ -153,9 +153,8 @@ public class AnimationRenderComponent extends RenderComponent {
    * specified by the nextName parameter.
    * @requires currentName references a normal animation (non looping).
    * @param currentName name of the animation to play.
-   * @param nextName name of the animation to play after the current animation is done.
    */
-  public void playAnimationOnce(String currentName, String nextName) {
+  public void playAnimationOnce(String currentName) {
     Animation<TextureRegion> animation = animations.getOrDefault(currentName, null);
     if (animation == null) {
       startAnimation(currentName); // null errors are handled in here
@@ -166,9 +165,16 @@ public class AnimationRenderComponent extends RenderComponent {
       return;
     }
 
-    startAnimation(currentName);
+    if (stopIfDone) { // already playing a one loop animation
+      String temp = nextAnimationName;
+      startAnimation(currentName);
+      nextAnimationName = temp;
+    } else {
+      String temp = currentAnimationName;
+      startAnimation(currentName);
+      nextAnimationName = temp;
+    }
     stopIfDone = true;
-    nextAnimationName = nextName;
   }
 
   /**
