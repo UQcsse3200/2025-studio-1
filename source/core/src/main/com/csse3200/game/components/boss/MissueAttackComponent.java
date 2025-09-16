@@ -21,10 +21,10 @@ import com.csse3200.game.services.ServiceLocator;
  *   - Only visuals are created for warnings; the entity is disposed when the missile launches.
  */
 public class MissueAttackComponent extends Component {
-    private static final float cooldown = 0.4f;   // seconds between warning spawns
+    private static final float cooldown = 0.3f;   // seconds between warning spawns
     private static final int count = 1;           // warnings per spawn wave
     private static final float warnTime = 2f;     // seconds a warning stays before missile drops
-    private static final float skyHeight = 5f;    // missile spawn height above ground warning
+    private static final float skyHeight = 7f;    // missile spawn height above ground warning
     private static final float minX = 0f, maxX = 30f; // horizontal range for warnings
 
     /** Whether the system is active (true = spawning warnings/missiles). */
