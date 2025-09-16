@@ -83,7 +83,14 @@ public class ItemSpawner {
         } else if (gameArea instanceof TunnelGameArea tunnelArea) {
             tunnelArea.spawnItem(item, position);
         }
+          else if(gameArea instanceof ResearchGameArea researchArea) {
+            researchArea.spawnItem(item, position);
+        }
+          else if(gameArea instanceof SecurityGameArea securityArea) {
+            securityArea.spawnItem(item, position);
+        }
     }
+
 
     /**
      * Creates an item entity based on the provided type
