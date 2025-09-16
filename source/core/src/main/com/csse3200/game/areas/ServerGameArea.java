@@ -62,7 +62,7 @@ public class ServerGameArea extends GameArea {
     spawnCratesAndRailing();
     spawnSpawnPads();
     spawnBordersAndDoors();
-    spawnObjectDoors();
+    spawnObjectDoors(new GridPoint2(0, 6), new GridPoint2(28, 21));
 
     spawnFloor();
     player = spawnPlayer();
@@ -276,18 +276,5 @@ public class ServerGameArea extends GameArea {
 
   private void loadStorage() {
     clearAndLoad(() -> new StorageGameArea(terrainFactory, cameraComponent));
-  }
-
-  /**
-   * Spawn entity door at the bottom left and top right of the screens
-   */
-  private void spawnObjectDoors() {
-    Entity rightDoor = ObstacleFactory.createDoor();
-    GridPoint2 rightDoorSpawn = new GridPoint2(28, 19);
-    spawnEntityAt(rightDoor, rightDoorSpawn, false, false);
-
-    Entity leftDoor = ObstacleFactory.createDoor();
-    GridPoint2 leftDoorSpawn = new GridPoint2(0, 7);
-    spawnEntityAt(leftDoor, leftDoorSpawn, false, false);
   }
 }
