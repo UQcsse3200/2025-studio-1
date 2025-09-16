@@ -30,11 +30,11 @@ public class StorageGameArea extends GameArea {
 
   private void spawnBordersAndDoors() {
     GenericLayout.addLeftRightDoorsAndWalls(this, cameraComponent, WALL_WIDTH,
-        this::loadResearch, this::loadTunnel);
+        this::loadResearch, this::loadShipping);
   }
 
   private void spawnPlayer() {
-    Entity player = PlayerFactory.createPlayerWithArrowKeys();
+    Entity player = PlayerFactory.createPlayer();
     spawnEntityAt(player, PLAYER_SPAWN, true, true);
   }
 
@@ -42,8 +42,8 @@ public class StorageGameArea extends GameArea {
     clearAndLoad(() -> new ResearchGameArea(terrainFactory, cameraComponent));
   }
 
-  private void loadTunnel() {
-    clearAndLoad(() -> new TunnelGameArea(terrainFactory, cameraComponent));
+  private void loadShipping() {
+    clearAndLoad(() -> new ShippingGameArea(terrainFactory, cameraComponent));
   }
 }
 
