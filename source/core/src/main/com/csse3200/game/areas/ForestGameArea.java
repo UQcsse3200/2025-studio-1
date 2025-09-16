@@ -9,12 +9,10 @@ import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.items.ItemHoldComponent;
 import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.components.KeycardGateComponent;
-import com.csse3200.game.components.WeaponsStatsComponent;
 import com.csse3200.game.components.player.InventoryComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.Weapons;
 import com.csse3200.game.entities.factories.characters.BossFactory;
-import com.csse3200.game.entities.factories.characters.NPCFactory;
 import com.csse3200.game.entities.factories.items.ItemFactory;
 import com.csse3200.game.entities.factories.items.WeaponsFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
@@ -22,7 +20,6 @@ import com.csse3200.game.entities.factories.characters.PlayerFactory;
 import com.csse3200.game.entities.configs.ItemSpawnConfig;
 import com.csse3200.game.entities.factories.*;
 import com.csse3200.game.entities.spawner.ItemSpawner;
-import com.csse3200.game.physics.components.PhysicsProjectileComponent;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.components.gamearea.GameAreaDisplay;
@@ -49,10 +46,8 @@ import org.slf4j.LoggerFactory;
 public class ForestGameArea extends GameArea {
   private static final Logger logger = LoggerFactory.getLogger(ForestGameArea.class);
 
-
   private static final int NUM_TREES = 7;
   private static final GridPoint2 PLAYER_SPAWN = new GridPoint2(3, 20);
-  private static final int NUM_ROBOTS = 1;
   private static final int NUM_ITEMS = 5;//this is for ItemFactory
   // private static final int NUM_TURRETS = 1;
   private static final float WALL_WIDTH = 0.1f;
@@ -225,7 +220,6 @@ public class ForestGameArea extends GameArea {
    * @param cameraComponent Camera helper supplying an OrthographicCamera (optional but used here).
    * @requires terrainFactory != null
    */
-
   public ForestGameArea(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
     super(terrainFactory, cameraComponent);
   }
@@ -237,7 +231,6 @@ public class ForestGameArea extends GameArea {
    * - Creates the terrain, walls, and UI label
    * - Spawns player, props (desk, crates, pod), door (with keycard gate), and enemies
    * - Starts background music*/
-
   @Override
   public void create() {
     ServiceLocator.registerGameArea(this);
@@ -255,8 +248,9 @@ public class ForestGameArea extends GameArea {
     // this.equipItem(pistol);
     // this.equipItem(lightsaber);
     // this.equipItem(dagger);
-    this.equipItem(null); //setting to null because it's leading the player to spawn with weapon at the start
+//    this.equipItem(rifle);
 //    this.equipItem(ConsumableFactory.createConsumable(Consumables.GENERIC_HEAL_ITEM));
+
     spawnFloor();
     spawnBottomRightDoor();
     spawnMarblePlatforms();
@@ -283,6 +277,7 @@ public class ForestGameArea extends GameArea {
 
     spawnItems();
   }
+
   private void spawnRobots() {
     GridPoint2 pos = new GridPoint2(8, 13);
       Entity robot = BossFactory.createRobot(player);
@@ -380,7 +375,6 @@ public class ForestGameArea extends GameArea {
       Entity platform = ObstacleFactory.createThinFloor();
       spawnEntityAt(platform, platformPos, true, false);
     }
-
     Entity officeDesk = ObstacleFactory.createOfficeDesk();
     spawnEntityAt(officeDesk, new GridPoint2(5, 11), true, false);
   }
@@ -419,6 +413,7 @@ public class ForestGameArea extends GameArea {
 
     spawnEntity(door);
   }
+
   /**
    * Places two platforms within the room for players to jump on.
    */
@@ -572,6 +567,7 @@ public class ForestGameArea extends GameArea {
     Entity boss3 = BossFactory.createBoss3(player);
     spawnEntityAt(boss3, pos, true, true);
   }
+
   public void spawnItem(Entity item, GridPoint2 position) {
     spawnEntityAt(item, position, false, false);
   }
