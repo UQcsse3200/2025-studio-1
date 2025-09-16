@@ -12,7 +12,10 @@ import static com.csse3200.game.entities.configs.Consumables.GENERIC_PROJECTILE_
 
 public class ShopDemo {
     public static CatalogService makeDemoCatalog() {
-      ArrayList<CatalogEntry> demoEntries=  new ArrayList<>();
+
+      // NOTE: temporary solution to add items. In the future, will be determined by room, player level, etc.
+
+      ArrayList<CatalogEntry> demoEntries = new ArrayList<>();
         Entity healthPotion = ConsumableFactory.createConsumable(GENERIC_HEAL_ITEM);
         Entity bomb = ConsumableFactory.createConsumable(GENERIC_PROJECTILE_CONSUMABLE);
         Entity weapon = WeaponsFactory.createWeapon(Weapons.RIFLE);
@@ -20,13 +23,12 @@ public class ShopDemo {
         Entity pistol = WeaponsFactory.createWeapon(Weapons.PISTOL);
         Entity dagger = WeaponsFactory.createWeapon(Weapons.DAGGER);
 
-        // Add one simple item (no icon -> null)
         demoEntries.add(new CatalogEntry(
-                healthPotion,   // itemKey
-                1,               // price
-                true,             // enabled
-                10,               // maxStack
-                1                // bundleQuantity
+                healthPotion,
+                1,
+                true,
+                10,
+                1
         ));
 
         demoEntries.add(new CatalogEntry(
@@ -39,10 +41,10 @@ public class ShopDemo {
 
         demoEntries.add(new CatalogEntry(
                 weapon,
-                10,               // price
-                true,             // enabled
-                1,               // maxStack
-                1               // bundleQuantity
+                10,
+                true,
+                1,
+                1
         ));
 
         demoEntries.add(new CatalogEntry(

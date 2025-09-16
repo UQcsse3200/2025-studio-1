@@ -4,7 +4,6 @@ import com.csse3200.game.components.items.ItemComponent;
 import com.csse3200.game.components.player.InventoryComponent;
 import com.csse3200.game.entities.Entity;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -14,8 +13,17 @@ public class InventoryOperations {
 
     private InventoryOperations() {}
 
+    /**
+     * Adds item to an inventory, either on a new slot or stacks on an existing slot.
+     * @param inventory The player's inventory to add to
+     * @param item The item being added
+     * @param amount The number of items added
+     * @param maxStack The max number of items that a player can hold
+     * @return The inventory slot the item was added to on success, or the failure result including a message and status code.
+     */
     public static int addOrStack(InventoryComponent inventory, Entity item,
                                  int amount, int maxStack) {
+        // Check passed in information is valid
         if (inventory == null || item == null || amount <= 0 || maxStack <= 0) {
             return PurchaseError.UNEXPECTED.getCode();
         }
