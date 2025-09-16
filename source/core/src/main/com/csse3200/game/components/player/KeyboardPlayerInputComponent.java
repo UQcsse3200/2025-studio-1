@@ -315,6 +315,8 @@ public class KeyboardPlayerInputComponent extends InputComponent {
 
         inventory.setEquippedSlot(-1);
         inventory.setCurrItem(null);
+
+        // TODO call the trigger like instructed within ForestGameArea, for displaying the item
         entity.getEvents().trigger("focus item", -1);
         System.out.println("Unequipped weapon");
 
