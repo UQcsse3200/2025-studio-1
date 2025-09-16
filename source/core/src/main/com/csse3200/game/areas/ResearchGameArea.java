@@ -35,7 +35,7 @@ public class ResearchGameArea extends GameArea {
     Bounds b = getCameraBounds(cameraComponent);
     // Left door -> Elevator, Right door -> Storage
     addVerticalDoorLeft(b, WALL_WIDTH, this::loadElevator);
-    addVerticalDoorRight(b, WALL_WIDTH, this::loadStorage);
+    addVerticalDoorRight(b, WALL_WIDTH, this::loadShipping);
     addSolidWallTop(b, WALL_WIDTH);
     addSolidWallBottom(b, WALL_WIDTH);
   }
@@ -49,8 +49,8 @@ public class ResearchGameArea extends GameArea {
     clearAndLoad(() -> new ElevatorGameArea(terrainFactory, cameraComponent));
   }
 
-  private void loadStorage() {
-    clearAndLoad(() -> new StorageGameArea(terrainFactory, cameraComponent));
+  private void loadShipping() {
+    clearAndLoad(() -> new ShippingGameArea(terrainFactory, cameraComponent));
   }
 }
 
