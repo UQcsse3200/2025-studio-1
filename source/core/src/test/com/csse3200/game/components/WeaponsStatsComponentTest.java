@@ -37,13 +37,14 @@ public class WeaponsStatsComponentTest {
         @Test
         void shouldSetAndGetCooldown() {
             WeaponsStatsComponent combat = new WeaponsStatsComponent(0);
-            assertEquals(0, combat.getCoolDown());
+            assertEquals(0.2f, combat.getCoolDown());
 
             combat.setCoolDown(100);
             assertEquals(100, combat.getCoolDown());
 
             combat.setCoolDown(-100);
-            assertEquals(0, combat.getCoolDown(), "Negative cooldown should clamp to 0");
+            assertEquals(0.2f, combat.getCoolDown(), "Negative cooldown " +
+                    "should clamp to 0.2f");
         }
     }
 
