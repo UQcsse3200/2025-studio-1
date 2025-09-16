@@ -31,7 +31,7 @@ public class BossStageComponent extends Component {
         currentStage = 2;
         FireballAttackComponent fireball = entity.getComponent(FireballAttackComponent.class);
         fireball.setAttack(false);
-        BlackholeComponent balckhole =  entity.getComponent(BlackholeComponent.class);
+        BlackholeComponent balckhole = entity.getComponent(BlackholeComponent.class);
         balckhole.setAttack(false);
         MissueAttackComponent missle = entity.getComponent(MissueAttackComponent.class);
         missle.setAttack(true);
