@@ -11,7 +11,6 @@ import com.badlogic.gdx.math.Vector2;
 public class TextureRenderWithRotationComponent extends TextureRenderComponent {
     private final TextureRegion region;
     private float rotation = 0;
-    private boolean hasSetRotation = false;
 
     public TextureRenderWithRotationComponent(String texturePath) {
         super(texturePath); // still loads the Texture
@@ -23,11 +22,7 @@ public class TextureRenderWithRotationComponent extends TextureRenderComponent {
      * @param value The rotation value, in degrees.
      */
     public void setRotation(float value) {
-        if (!hasSetRotation)
-        {
-            rotation = value;
-            hasSetRotation = true;
-        }
+        rotation = value;
     }
 
     @Override

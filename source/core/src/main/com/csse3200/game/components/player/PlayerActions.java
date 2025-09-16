@@ -1,6 +1,7 @@
 package com.csse3200.game.components.player;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.math.Vector2;
@@ -112,6 +113,16 @@ public class PlayerActions extends Component {
    */
   @Override
   public void update() {
+    if(!Gdx.input.isKeyPressed(Input.Keys.A) && !Gdx.input.isKeyPressed(Input.Keys.D) && !dashing) {
+      this.walkDirection.x = 0f;
+      entity.getEvents().trigger("walkStop");
+      if(!grounded) {
+        entity.getEvents().trigger("groundLeft", walkDirection);
+      }
+    }
+    if(!Gdx.input.isKeyPressed(Input.Keys.S) && crouching) {
+      entity.getEvents().trigger("crouchStop");
+    }
     if (moving || dashing) {
       updateSpeed();
     }
@@ -341,6 +352,9 @@ public class PlayerActions extends Component {
 
   /** Fires a projectile towards the mouse cursor. */
   void shoot() {
+    if (ServiceLocator.getTimeSource().isPaused())
+        return;
+
     WeaponsStatsComponent weapon = getCurrentWeaponStats();
     if (weapon == null) {
       return;
@@ -372,6 +386,8 @@ public class PlayerActions extends Component {
 
   /** Performs a melee attack against nearby enemies. */
   void attack() {
+      if (ServiceLocator.getTimeSource().isPaused())
+          return;
     WeaponsStatsComponent weapon = getCurrentWeaponStats();
     float coolDown = weapon != null ? weapon.getCoolDown() : 0;
     if (this.timeSinceLastAttack < coolDown) return;
