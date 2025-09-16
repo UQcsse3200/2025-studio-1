@@ -299,6 +299,8 @@ public class KeyboardPlayerInputComponent extends InputComponent {
         // Equip the weapon
         inventory.setEquippedSlot(selectedSlot);
         inventory.setCurrItem(weapon);
+
+        //TODO call the trigger like instructed within ForestGameArea, for displaying the item
         entity.getEvents().trigger("focusItem", selectedSlot);  // Refresh UI & logic
         System.out.println("Equipped weapon from slot " + selectedSlot);
 
@@ -315,8 +317,7 @@ public class KeyboardPlayerInputComponent extends InputComponent {
 
         inventory.setEquippedSlot(-1);
         inventory.setCurrItem(null);
-
-        // TODO call the trigger like instructed within ForestGameArea, for displaying the item
+        //TODO call the trigger like instructed within ForestGameArea, for displaying the item
         entity.getEvents().trigger("focus item", -1);
         System.out.println("Unequipped weapon");
 
