@@ -2,35 +2,31 @@ package com.csse3200.game.ui.terminal;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.scenes.scene2d.ui.Value;
 import com.csse3200.game.components.screens.BaseScreenDisplay;
 import com.csse3200.game.GdxGame;
 
-/**
- * Displays the debug terminal as a bottom "prompt box".
- * Uses BaseScreenDisplay for shared Scene2D wiring.
- */
 public class TerminalDisplay extends BaseScreenDisplay {
     private static final float Z_INDEX = 10f;
 
-    // Layout constants
-    private static final float H_PADDING = 16f;
-    private static final float V_PADDING = 10f;
-    private static final float MARGIN_BOTTOM = 8f;
-    private static final float MAX_WIDTH_RATIO = 0.48f; // 92% of screen width
+    // Layout
+    private static final float WIDTH_RATIO = 0.20f; // 10% of screen width
+    private static final float H_PADDING   = 16f;
+    private static final float V_PADDING   = 10f;
+    private static final float MARGIN_BOT  = 8f;
 
-    // Scene2D actors
+    private Table container;
     private Table promptBox;
     private Label label;
+    private Cell<?> promptCell;
 
-    // Data source
     private Terminal terminal;
 
-    public TerminalDisplay(GdxGame game) {
-        super(game);
-    }
+    public TerminalDisplay(GdxGame game) { super(game); }
 
     @Override
     public void create() {
@@ -43,72 +39,75 @@ public class TerminalDisplay extends BaseScreenDisplay {
 
     @Override
     protected void buildUI(Table root) {
-        // We want bottom-left anchoring instead of the BaseScreenDisplay's default center
-        root.clearChildren();
-        root.setFillParent(true);
-        root.align(Align.bottomLeft);
+        // root may be shared; mount our own container
+        container = new Table();
+        container.setFillParent(true);
+        container.align(Align.bottomLeft);
+        container.setTouchable(Touchable.disabled);
+        stage.addActor(container);
 
-        // Prompt box container
+        // prompt background
         promptBox = new Table();
         promptBox.align(Align.left);
+        promptBox.setClip(true);
 
-        // Background drawable: prefer common skin drawables, fallback to tinted "white"
         Drawable bg = null;
-        if (skin.has("textfield", Drawable.class)) {
-            bg = skin.getDrawable("textfield");
-        } else if (skin.has("rounded", Drawable.class)) {
-            bg = skin.getDrawable("rounded");
-        } else if (skin.has("button", Drawable.class)) {
-            bg = skin.getDrawable("button");
-        }
-        if (bg == null) {
-            Color tint = new Color(0f, 0f, 0f, 0.6f);
-            bg = skin.newDrawable("white", tint);
-        }
+        if (skin.has("textfield", Drawable.class)) bg = skin.getDrawable("textfield");
+        else if (skin.has("rounded", Drawable.class)) bg = skin.getDrawable("rounded");
+        else if (skin.has("button", Drawable.class)) bg = skin.getDrawable("button");
+        if (bg == null) bg = skin.newDrawable("white", new Color(0f, 0f, 0f, 0.6f));
         promptBox.setBackground(bg);
 
-        // Label style: default skin label (swap to monospace in skin if desired)
+        // label: single line + ellipsis
         label = new Label("> ", skin);
         label.setAlignment(Align.left);
         label.setWrap(false);
+        label.setEllipsis(true);
+        promptBox.setClip(true);
 
-        // Padding inside the prompt box
         promptBox.add(label)
+                .minWidth(0f)
+                .growX()
                 .padLeft(H_PADDING)
                 .padRight(H_PADDING)
                 .padTop(V_PADDING)
-                .padBottom(V_PADDING)
-                .growX();
+                .padBottom(V_PADDING);
 
-        // Width & placement
-        float worldWidth = stage.getViewport().getWorldWidth();
-        float maxWidth = worldWidth * MAX_WIDTH_RATIO;
-
-        root.add(promptBox)
-                .width(maxWidth)
-                .padBottom(MARGIN_BOTTOM)
+        // width = 10% of container (screen) width; auto-updates on resize
+        promptCell = container.add(promptBox)
+                .width(Value.percentWidth(WIDTH_RATIO, container))
                 .left()
-                .row();
+                .padBottom(MARGIN_BOT);
+        container.row();
 
-        // Start hidden until the terminal is open
-        root.setVisible(false);
+        container.setVisible(false);
     }
 
     @Override
     public void draw(SpriteBatch batch) {
-        // Stage draws itself; we just update visibility + text each frame
-        if (terminal == null) return; // create() guards this, but be safe
+        if (terminal == null) return;
 
         boolean open = terminal.isOpen();
-        if (root != null) root.setVisible(open);
+        if (container != null) {
+            container.setVisible(open);
+            if (open) container.toFront();
+        }
         if (!open) return;
 
         String message = terminal.getEnteredMessage();
         label.setText("> " + (message == null ? "" : message));
     }
 
-    @Override
-    public float getZIndex() {
-        return Z_INDEX;
+    public void resize(int width, int height) {
+        // keep layout in sync with viewport; percent width will follow automatically
+        stage.getViewport().update(width, height, true);
+        if (container != null) {
+            container.setFillParent(true);
+            container.invalidateHierarchy();
+            container.validate();
+        }
     }
+
+    @Override
+    public float getZIndex() { return Z_INDEX; }
 }
