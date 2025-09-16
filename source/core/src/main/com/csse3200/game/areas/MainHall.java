@@ -10,18 +10,18 @@ import com.csse3200.game.entities.factories.characters.PlayerFactory;
 import com.csse3200.game.rendering.SolidColorRenderComponent;
 
 /** Room 5 with its own background styling. */
-public class Floor5GameArea extends GameArea {
+public class MainHall extends GameArea {
   private static final float WALL_WIDTH = 0.1f;
   private static final GridPoint2 PLAYER_SPAWN = new GridPoint2(10, 10);
 
-  public Floor5GameArea(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
+  public MainHall(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
     super(terrainFactory, cameraComponent);
   }
 
   @Override
   public void create() {
     ensureAssets();
-    terrain = terrainFactory.createTerrain(TerrainType.FOREST_DEMO_HEX);
+    terrain = terrainFactory.createTerrain(TerrainType.MAIN_HALL);
     spawnEntity(new Entity().addComponent(terrain));
 
     Entity overlay = new Entity();
@@ -33,14 +33,13 @@ public class Floor5GameArea extends GameArea {
     spawnBordersAndReturnDoor();
     spawnPlayer();
     spawnFloor();
-
-
   }
 
   private void ensureAssets() {
     String[] textures = new String[] {
-      "images/hex_grass_1.png", "images/hex_grass_2.png", "images/hex_grass_3.png",
+      "images/mainHall-background.png",
       "foreg_sprites/general/LongFloor.png",
+
       "foreg_sprites/general/ThickFloor.png",
       "foreg_sprites/general/SmallSquare.png",
       "foreg_sprites/general/SmallStair.png",
@@ -52,11 +51,21 @@ public class Floor5GameArea extends GameArea {
 
   private void spawnBordersAndReturnDoor() {
     Bounds b = getCameraBounds(cameraComponent);
-    // Use shared helpers (same placement/behavior):
-    addVerticalDoorLeft(b, WALL_WIDTH, () -> loadArea(Floor2GameArea.class));
-    addVerticalDoorRight(b, WALL_WIDTH, () -> loadArea(SecurityGameArea.class));
+   
+    addVerticalDoorLeft(b, WALL_WIDTH, this::loadBackToFloor2);
+    addVerticalDoorRight(b, WALL_WIDTH, this::loadSecurity);
     addSolidWallTop(b, WALL_WIDTH);
     addSolidWallBottom(b, WALL_WIDTH);
+  }
+
+  private void loadBackToFloor2() {
+      roomNumber--;
+    clearAndLoad(() -> new Reception(terrainFactory, cameraComponent));
+  }
+
+  private void loadSecurity() {
+      roomNumber++;
+    clearAndLoad(() -> new SecurityGameArea(terrainFactory, cameraComponent));
   }
 
   private void spawnPlayer() {
