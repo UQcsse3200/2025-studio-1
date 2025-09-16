@@ -240,22 +240,22 @@ class InventoryComponentTest {
             assertTrue(inventory.isFull(), "Inventory should be full");
         }
 
-    @Test
-    void shouldSetGetCurrItem() {
-      //Test for a weapon
-      Entity thing = WeaponsFactory.createWeapon(Weapons.PISTOL);
-      inventory.setCurrItem(thing);
+        @Test
+        void shouldSetGetCurrItem() {
+          //Test for a weapon
+          Entity thing = WeaponsFactory.createWeapon(Weapons.PISTOL);
+          inventory.setCurrItem(thing);
 
-      assertInstanceOf(WeaponsStatsComponent.class, inventory.getCurrItemStats());
-      assertEquals(thing, inventory.getCurrItem());
+          assertInstanceOf(WeaponsStatsComponent.class, inventory.getCurrItemStats());
+          assertEquals(thing, inventory.getCurrItem());
 
-      //Test for a nothing entity
-      thing = new Entity();
-      inventory.setCurrItem(thing);
-      assertEquals(thing, inventory.getCurrItem());
-      assertNull(inventory.getCurrItemStats());
+          //Test for a nothing entity
+          thing = new Entity();
+          inventory.setCurrItem(thing);
+          assertEquals(thing, inventory.getCurrItem());
+          assertNull(inventory.getCurrItemStats());
+        }
     }
-  }
 
     @Test
     void shouldSetGetProcessor() {

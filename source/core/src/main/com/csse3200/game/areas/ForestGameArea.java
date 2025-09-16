@@ -251,9 +251,6 @@ public class ForestGameArea extends GameArea {
 //    this.equipItem(rifle);
 //    this.equipItem(ConsumableFactory.createConsumable(Consumables.GENERIC_HEAL_ITEM));
 
-      // TODO Nandini
-//    this.equipItem(null); //setting to null because it's leading the player to spawn with weapon at the start
-
     spawnFloor();
     spawnBottomRightDoor();
     spawnMarblePlatforms();
