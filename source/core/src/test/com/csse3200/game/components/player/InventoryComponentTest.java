@@ -16,13 +16,11 @@ import com.csse3200.game.physics.PhysicsService;
 import com.csse3200.game.rendering.RenderService;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 
+import java.security.Provider;
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -71,6 +69,11 @@ class InventoryComponentTest {
             ServiceLocator.registerRenderService(renderService);
             when(resourceService.getAsset(anyString(), eq(Texture.class))).thenReturn(texture);
             owner.create();
+        }
+
+        @AfterEach
+        void afterEach() {
+            ServiceLocator.clear();
         }
 
         @Test
