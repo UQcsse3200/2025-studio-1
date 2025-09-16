@@ -52,6 +52,7 @@ public class ShippingGameArea extends GameArea {
     spawnBordersAndDoors();
     player = spawnPlayer();
     spawnGrokDroids();
+    spawnVroombaAndDeepspin();
     spawnFloor();
     spawnShipmentBoxLid();
     spawnShipmentCrane();
@@ -141,6 +142,19 @@ public class ShippingGameArea extends GameArea {
     Entity grok2 = NPCFactory.createGrokDroid(player, this, 3f);
     GridPoint2 grok2Pos = new GridPoint2(25, 7);
     spawnEntityAt(grok2, grok2Pos, true, false);
+  }
+
+  /** Spawn a Vroomba and a Deepspin to diversify Shipping enemies. */
+  private void spawnVroombaAndDeepspin() {
+    // Vroomba on the left side floor
+    Entity vroomba = NPCFactory.createVroomba(player, 1.5f);
+    GridPoint2 vPos = new GridPoint2(6, 7);
+    spawnEntityAt(vroomba, vPos, true, false);
+
+    // Deepspin on the right side near crates
+    Entity deepspin = NPCFactory.createDeepspin(player, this, 1.5f);
+    GridPoint2 dPos = new GridPoint2(22, 8);
+    spawnEntityAt(deepspin, dPos, true, false);
   }
 
   /**
