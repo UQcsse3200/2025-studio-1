@@ -1,0 +1,41 @@
+Turret.png
+size: 100, 100
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+angry_float
+  rotate: false
+  xy: 7, 37
+  size: 30, 21
+  orig: 150, 105
+  offset: 0, 0
+  index: 0
+angry_float
+  rotate: false
+  xy: 42, 37
+  size: 30, 21
+  orig: 150, 105
+  offset: 0, 0
+  index: 1
+default
+  rotate: false
+  xy: 7, 7
+  size: 18, 30
+  orig: 150, 105
+  offset: 0, 0
+  index: 0
+float
+  rotate: false
+  xy: 7, 7
+  size: 30, 21
+  orig: 150, 105
+  offset: 0, 0
+  index: 0
+float
+  rotate: false
+  xy: 42, 7
+  size: 30, 21
+  orig: 150, 105
+  offset: 0, 0
+  index: 1
+
