@@ -2,7 +2,7 @@ package com.csse3200.game.components.player;
 
 import com.csse3200.game.components.Component;
 import com.csse3200.game.components.WeaponsStatsComponent;
-import com.csse3200.game.components.ItemComponent;
+import com.csse3200.game.components.items.ItemComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.files.FileLoader;
 import org.slf4j.Logger;
@@ -137,6 +137,7 @@ private int inventoryCount = 0;
         return this.setItem(idx, item);
       }
     }
+    setCurrItem(item);
     return false;
   }
 
