@@ -26,7 +26,7 @@ public class KeycardSpawnerSystem {
                 keycardLevel = 4;
                 break;
             default:
-                // No keycard in other areas
+                /** No keycard in other areas **/
                 return;
         }
 
