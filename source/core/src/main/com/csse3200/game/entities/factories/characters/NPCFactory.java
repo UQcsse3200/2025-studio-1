@@ -153,6 +153,7 @@ public class NPCFactory {
 
     SoundComponent soundComponent = new SoundComponent();
     deepspin.addComponent(soundComponent);
+
     soundComponent.registerSound("take_damage", "sounds/shock.mp3");
     soundComponent.registerSound("death", "sounds/pop.mp3");
 
