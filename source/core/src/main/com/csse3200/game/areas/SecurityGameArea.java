@@ -29,7 +29,7 @@ public class SecurityGameArea extends GameArea {
     spawnBordersAndDoors();
     spawnPlayer();
     spawnPlatforms();
-    spawnObjectDoors(new GridPoint2(0, 6), new GridPoint2(28, 21));
+    spawnObjectDoors(new GridPoint2(0, 6), new GridPoint2(28, 19));
     spawnSecurityProps();
     ItemSpawner itemSpawner = new ItemSpawner(this);
     itemSpawner.spawnItems(ItemSpawnConfig.securitymap());
