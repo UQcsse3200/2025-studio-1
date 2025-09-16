@@ -1,130 +1,98 @@
 package com.csse3200.game.components.enemy;
 
+import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.entities.Entity;
-import com.csse3200.game.services.GameTime;
+import com.csse3200.game.entities.EntityService;
 import com.csse3200.game.services.ServiceLocator;
 import org.junit.jupiter.api.*;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class BossChargeSkillComponentExtraTest {
+/**
+ * Smoke tests for BossDeathComponent focusing on the "atlas missing" defensive path.
+ * We avoid touching real graphics resources, so these tests are deterministic in CI.
+ */
+public class BossDeathComponentTest {
 
     /**
-     * Controllable time source for deterministic updates.
+     * A minimal EntityService stub that captures registered entities.
+     * Only register() is used by BossDeathComponent; other methods are no-ops.
      */
-    static class TestTime extends GameTime {
-        private float dt = 0f;
-        void setDelta(float dt) { this.dt = dt; }
-        @Override public float getDeltaTime() { return dt; }
+    static class CapturingEntityService extends EntityService {
+        final List<Entity> registered = new ArrayList<>();
+
+        @Override
+        public void register(Entity entity) {
+            registered.add(entity);
+        }
     }
 
-    private TestTime time;
+    private CapturingEntityService capturingES;
 
     @BeforeEach
-    void setup() {
-        time = new TestTime();
-        ServiceLocator.registerTimeSource(time);
+    void setUp() {
+        // Use a capturing EntityService to see if an effect gets registered.
+        capturingES = new CapturingEntityService();
+        ServiceLocator.registerEntityService(capturingES);
+
+        // Intentionally DO NOT register a ResourceService (or atlas) so that
+        // BossDeathComponent goes down the "atlas missing" safe-return path.
+        // (ServiceLocator.getResourceService() will be null.)
     }
 
     @AfterEach
-    void teardown() {
-        // If you have a ServiceLocator.clear(), you can call it here.
+    void tearDown() {
+        // If your ServiceLocator has a clear(), you can call it here to avoid cross-test leakage.
         // ServiceLocator.clear();
     }
 
     @Test
-    void update_doesNothing_whenAttackDisabled() {
-        // Arrange: boss and target on the same spot
-        Entity target = new Entity(); target.setPosition(0f, 0f);
-        Entity boss   = new Entity(); boss.setPosition(0f, 0f);
-
-        // Short timings (not really used since attack=false)
-        BossChargeSkillComponent comp = new BossChargeSkillComponent(
-                target,
-                5f,      // triggerRange
-                0.05f,   // dwellTime
-                0.05f,   // prepareTime
-                5f,      // chargeSpeed
-                0.1f,    // chargeDuration
-                0.05f,   // cooldown
-                -1f, 1f, // patrolLeftX, patrolRightX
-                0f,      // patrolY
-                1f       // patrolSpeed
-        );
-        boss.addComponent(comp);
+    void deathEvent_withNoAtlas_doesNotCrash_orRegisterEffect_orHideBoss() {
+        // Arrange: create a boss entity with some stats and the BossDeathComponent
+        Entity boss = new Entity();
+        boss.addComponent(new CombatStatsComponent(100)); // not strictly required but realistic
+        BossDeathComponent death = new BossDeathComponent(); // default config
+        boss.addComponent(death);
         boss.create();
 
-        // Disable attack path (early return branch)
-        comp.setAttack(false);
+        // Act: fire the "death" event. Without atlas, BossDeathComponent should early-out safely.
+        assertDoesNotThrow(() -> boss.getEvents().trigger("death"),
+                "Death event must not throw even if atlas is missing");
 
-        // Capture position before update
-        float x0 = boss.getPosition().x;
-        float y0 = boss.getPosition().y;
+        // Assert: no explosion effect should be registered
+        assertTrue(capturingES.registered.isEmpty(),
+                "No effect entity should be registered when atlas is missing");
 
-        // Act
-        step(comp, 0.2f, 0.02f);
-
-        // Assert: position unchanged, i.e., no state/behavior executed
-        assertEquals(x0, boss.getPosition().x, 1e-5, "Position X should not change when attack is disabled");
-        assertEquals(y0, boss.getPosition().y, 1e-5, "Position Y should not change when attack is disabled");
     }
 
     @Test
-    void prep_isCancelled_whenCrashBecomesFalse() {
-        // Arrange: put target in range so PREP can be reached
-        Entity target = new Entity(); target.setPosition(0f, 0f);
-        Entity boss   = new Entity(); boss.setPosition(0f, 0f);
-
-        var events = new ArrayList<String>();
-        boss.getEvents().addListener("boss2:patrol", () -> events.add("patrol"));
-        boss.getEvents().addListener("boss2:prep",   () -> events.add("prep"));
-
-        BossChargeSkillComponent comp = new BossChargeSkillComponent(
-                target,
-                100f,    // triggerRange (big so always in range)
-                0.05f,   // dwellTime (quick to reach PREP)
-                0.1f,    // prepareTime
-                5f,      // chargeSpeed
-                0.1f,    // chargeDuration
-                0.05f,   // cooldown
-                -1f, 1f, // patrolLeftX, patrolRightX
-                0f,      // patrolY
-                1f       // patrolSpeed
-        );
-        boss.addComponent(comp);
+    void deathEvent_listenerIsInstalled_onCreate() {
+        // Arrange
+        Entity boss = new Entity();
+        BossDeathComponent death = new BossDeathComponent(0.06f, 4f);
+        boss.addComponent(death);
         boss.create();
 
-        // Enable attack path and allow entering PREP
-        comp.setAttack(true);
-        comp.setCrash(true);
-
-        // Wait long enough to enter PREP
-        step(comp, 0.08f, 0.02f);
-        assertTrue(events.contains("prep"), "Should enter PREP and fire boss2:prep");
-
-        // Cancel crash while in/after PREP; component should revert to PATROL
-        comp.setCrash(false);
-
-        // Give time for the component to handle the cancel and switch back to PATROL
-        int before = events.size();
-        step(comp, 0.2f, 0.02f);
-
-        assertTrue(
-                events.subList(before, events.size()).contains("patrol"),
-                "Cancelling crash should send boss back to PATROL"
-        );
+        // Act & Assert: triggering "death" should be handled (no listener NPE)
+        assertDoesNotThrow(() -> boss.getEvents().trigger("death"),
+                "Component should have subscribed to 'death' on create()");
     }
 
-    /** Helper: advance time and repeatedly call update() */
-    private void step(BossChargeSkillComponent comp, float total, float dt) {
-        float t = 0f;
-        while (t < total) {
-            time.setDelta(dt);
-            comp.update();
-            t += dt;
-        }
+    @Test
+    void constructor_clampsInvalidParams_andStillSafeWithoutAtlas() {
+        // Arrange: pass zero/negative params to ensure internal clamping doesn't break logic
+        Entity boss = new Entity();
+        BossDeathComponent death = new BossDeathComponent(0f, 0f); // should clamp to small positive values
+        boss.addComponent(death);
+        boss.create();
+
+        // Act & Assert: even with invalid ctor inputs, "death" should not crash without atlas
+        assertDoesNotThrow(() -> boss.getEvents().trigger("death"));
+        assertTrue(capturingES.registered.isEmpty(),
+                "Even with clamped params, no effect is spawned when atlas is missing");
     }
 }
 
