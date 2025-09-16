@@ -148,6 +148,9 @@ public class BossFactory {
 
         boss2
                 .addComponent(new CombatStatsComponent(1000))
+                .addComponent(new DamageReductionComponent())
+                .addComponent(new AttackProtectionComponent())
+                .addComponent(new AttackProtectionDisplay())
                 .addComponent(new com.csse3200.game.components.boss.Boss2HealthPhaseSwitcher(
                         0.5f,   // phase2 阈值 / threshold
                         0.3f,   // angry  阈值 / threshold
