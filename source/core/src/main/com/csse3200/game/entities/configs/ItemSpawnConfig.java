@@ -65,6 +65,37 @@ public class ItemSpawnConfig {
 
         return config;
     }
+    /** Research Room spawning. Spawns a pistol, lightsaber, rifle in the map on various location */
+    public static Map<String, List<ItemSpawner.ItemSpawnInfo>> researchmap() {
+        Map<String, List<ItemSpawner.ItemSpawnInfo>> config = new HashMap<>();
+
+        config.put(Weapons.PISTOL.name(), Arrays.asList(
+                new ItemSpawner.ItemSpawnInfo(new GridPoint2(1, 12), 1)
+        ));
+        config.put(Weapons.RIFLE.name(), Arrays.asList(
+                new ItemSpawner.ItemSpawnInfo(new GridPoint2(25, 16), 1)
+        ));
+        config.put(Weapons.LIGHTSABER.name(), Arrays.asList(
+                new ItemSpawner.ItemSpawnInfo(new GridPoint2(22, 6), 1)
+        ));
+
+
+        return config;
+    }
+    /** Security Room spawning. Spawns a pistol, lightsaber, rifle in the map on various location */
+    public static Map<String, List<ItemSpawner.ItemSpawnInfo>> securitymap() {
+        Map<String, List<ItemSpawner.ItemSpawnInfo>> config = new HashMap<>();
+
+        config.put(Weapons.PISTOL.name(), Arrays.asList(
+                new ItemSpawner.ItemSpawnInfo(new GridPoint2(24, 11), 1)
+        ));
+        config.put(Weapons.LIGHTSABER.name(), Arrays.asList(
+                new ItemSpawner.ItemSpawnInfo(new GridPoint2(22, 6), 1)
+        ));
+
+
+        return config;
+    }
     //  for a new map just add more methods
 
 }
