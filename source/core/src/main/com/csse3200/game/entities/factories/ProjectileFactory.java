@@ -131,6 +131,22 @@ public class ProjectileFactory {
         return projectile;
     }
 
+    public static Entity createBomb(ProjectileTarget target, WeaponsStatsComponent source, String texturePath) {
+        // Create a config based on the projectile's target
+        ProjectileConfig config = new ProjectileConfig(target, texturePath);
+
+        // Create the projectile and add components
+        Entity projectile = new Entity()
+                .addComponent(new PhysicsComponent())
+                .addComponent(new PhysicsProjectileComponent())
+                .addComponent(new WeaponsStatsComponent(source.getBaseAttack()))
+                .addComponent(new TextureRenderWithRotationComponent(config.texturePath));
+
+        projectile.getComponent(PhysicsComponent.class).setBodyType(BodyDef.BodyType.DynamicBody);
+
+        return projectile;
+    }
+
     /**
      * Creates a pistol bullet entity
      * @return pistol bullet entity
@@ -143,7 +159,7 @@ public class ProjectileFactory {
     /**
      * Creates a standard laser shot entity projectile
      * @param direction direction in which the projectile is shot
-     * @param source The attack damage, and other related stats, of the projectile
+     * @param source weapon stats to derive from
      * @return The laser entity
      */
     public static Entity createEnemyLaserProjectile(Vector2 direction, WeaponsStatsComponent source) {

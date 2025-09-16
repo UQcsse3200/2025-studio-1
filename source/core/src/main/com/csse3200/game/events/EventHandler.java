@@ -156,4 +156,8 @@ public class EventHandler {
   private static void logTrigger(String eventName) {
     logger.debug("Triggering event {}", eventName);
   }
+
+  public Map<String, Array<EventListener>> getListeners() {
+    return listeners;
+  }
 }

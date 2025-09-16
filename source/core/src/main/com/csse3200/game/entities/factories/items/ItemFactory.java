@@ -1,7 +1,7 @@
 package com.csse3200.game.entities.factories.items;
 
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
-import com.csse3200.game.components.ItemComponent;
+import com.csse3200.game.components.items.ItemComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.physics.components.HitboxComponent;
 import com.csse3200.game.physics.components.PhysicsComponent;

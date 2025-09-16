@@ -1,20 +1,24 @@
 package com.csse3200.game.areas;
 
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
-import com.csse3200.game.components.ItemHoldComponent;
+import com.csse3200.game.components.items.ItemHoldComponent;
 import com.csse3200.game.components.CameraComponent;
+import com.csse3200.game.components.DoorComponent;
+import com.csse3200.game.entities.configs.Consumables;
 import com.csse3200.game.components.KeycardGateComponent;
-import com.csse3200.game.components.WeaponsStatsComponent;
+import com.csse3200.game.rendering.AnimationRenderComponent;
 import com.csse3200.game.components.player.InventoryComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.Weapons;
 import com.csse3200.game.entities.factories.characters.BossFactory;
-import com.csse3200.game.entities.factories.characters.NPCFactory;
+import com.csse3200.game.entities.factories.items.ConsumableFactory;
 import com.csse3200.game.entities.factories.items.ItemFactory;
 import com.csse3200.game.entities.factories.items.WeaponsFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
@@ -22,12 +26,20 @@ import com.csse3200.game.entities.factories.characters.PlayerFactory;
 import com.csse3200.game.entities.configs.ItemSpawnConfig;
 import com.csse3200.game.entities.factories.*;
 import com.csse3200.game.entities.spawner.ItemSpawner;
-import com.csse3200.game.components.enemy.EnemyWaves;
-import com.csse3200.game.physics.components.PhysicsProjectileComponent;
+import com.csse3200.game.utils.math.GridPoint2Utils;
+import com.csse3200.game.utils.math.RandomUtils;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import com.csse3200.game.rendering.TextureRenderComponent;
+import com.csse3200.game.entities.factories.ShopFactory;
+import com.csse3200.game.components.shop.ShopManager;
+import com.csse3200.game.components.shop.CatalogService;
+import com.csse3200.game.components.shop.ShopDemo;
+
+
+import javax.naming.spi.ObjectFactory;
+import java.util.Collections;
 import java.security.SecureRandom;
 
 import org.slf4j.Logger;
@@ -51,7 +63,7 @@ public class ForestGameArea extends GameArea {
   private static final int NUM_ROBOTS = 1;
   private static final int NUM_ITEMS = 5;//this is for ItemFactory
   private static final int NUM_GHOSTS = 1;
-  private static final int NUM_TURRETS = 1;
+  // private static final int NUM_TURRETS = 1;
   private static final float WALL_WIDTH = 0.1f;
 
   /** Files or pictures used by the game (enemy/props,etc.). */
@@ -96,9 +108,14 @@ public class ForestGameArea extends GameArea {
     "images/KeycardDoor.png",
     "images/player.png",
     "images/mud.png",
+    "images/heart.png",
+    "images/computerBench.png",
+    "images/VendingMachine.png",
+    "images/laserball.png",
     HEART,
     "images/MarblePlatform.png",
-    "images/computerBench.png",
+    "images/monster.png",
+    "images/electriczap.png",
   };
 
   /** General prop textures (floors, tiles, etc.). */
@@ -162,7 +179,7 @@ public class ForestGameArea extends GameArea {
     "images/explosion_1.atlas",
     "images/explosion_2.atlas",
     "images/player.atlas",
-    "images/player.atlas",
+          "images/boss_explosion.atlas",
     "images/player.atlas",
     "images/terrain_iso_grass.atlas",
     "images/ghost.atlas",
@@ -170,6 +187,7 @@ public class ForestGameArea extends GameArea {
     "images/ghostGPT.atlas",
     "images/explosion_1.atlas",
     "images/explosion_2.atlas",
+    "images/boss_explosion.atlas"
   };
 
   private static final String[] playerSound1 = {"sounds/jump.mp3"};
@@ -226,15 +244,19 @@ public class ForestGameArea extends GameArea {
     lightsaber = spawnLightsaber();
 
     //These are commented out since there is no equip feature yet
-    //this.equipItem(pistol);
-    //this.equipItem(lightsaber);
-    //this.equipItem(dagger);
-    //this.equipItem(rifle);
+    // this.equipItem(pistol);
+    // this.equipItem(lightsaber);
+    // this.equipItem(dagger);
+    this.equipItem(rifle);
+//    this.equipItem(ConsumableFactory.createConsumable(Consumables.GENERIC_HEAL_ITEM));
 
     spawnFloor();
     spawnBottomRightDoor();
     spawnMarblePlatforms();
 
+    spawnShopKiosk();
+    // spawnGhosts();
+    // spawnGhostKing();
     SecureRandom random = new SecureRandom();
     int choice = random.nextInt(3);
     switch (choice) {
@@ -258,12 +280,10 @@ public class ForestGameArea extends GameArea {
   }
 
   private void spawnRobots() {
-    GridPoint2 pos = new GridPoint2(6, 10);
-    GridPoint2 pos2 = new GridPoint2(8, 10);
-    Entity robot = NPCFactory.createRobot(player);
-    Entity robot2 = NPCFactory.createRobot(player);
-    spawnEntityAt(robot, pos, true, true);
-    spawnEntityAt(robot2, pos2, true, true);
+    GridPoint2 pos = new GridPoint2(8, 13);
+      Entity robot = BossFactory.createRobot(player);
+      spawnEntityAt(robot, pos, true, true);
+
   }
 
   private void displayUI() {
@@ -374,6 +394,14 @@ public class ForestGameArea extends GameArea {
 
     Entity officeDesk = ObstacleFactory.createOfficeDesk();
     spawnEntityAt(officeDesk, new GridPoint2(5, 11), true, false);
+  }
+
+  private void spawnShopKiosk() {
+    CatalogService catalog = ShopDemo.makeDemoCatalog();
+    ShopManager manager = new ShopManager(catalog);
+
+    Entity shop = ShopFactory.createShop(this, manager, "images/VendingMachine.png"); // have as tree now as placeholder, later need to change to actual shop icon
+    spawnEntityAt(shop, new GridPoint2(18, 6), true, false);
   }
 
   private void spawnComputerBench() {
@@ -518,11 +546,11 @@ public class ForestGameArea extends GameArea {
   }
 
   private void spawnBoss2() {
-    GridPoint2 pos = new GridPoint2(20, 12);
-
+    GridPoint2 pos = new GridPoint2(5, 8);
     Entity boss2 = BossFactory.createBoss2(player);
     spawnEntityAt(boss2, pos, true, true);
   }
+
   //new added boss3
   private void spawnBoss3() {
     GridPoint2 pos = new GridPoint2(20, 12);

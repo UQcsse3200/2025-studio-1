@@ -164,7 +164,6 @@ public abstract class GameArea implements Disposable {
    */
   public void spawnEnemies(int roomNumber, int total, float scaleFactor, Entity player) {
       HashMap<String, ArrayList<Vector2>> positions = getEnemySpawnPosition(roomNumber);
-      System.out.println("Room number: " + roomNumber);
       switch (roomNumber) {
           case 1:
               spawnDeepspin(total, scaleFactor, player, positions);
