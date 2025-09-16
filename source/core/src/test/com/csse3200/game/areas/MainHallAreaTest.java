@@ -30,20 +30,20 @@ import org.mockito.MockedStatic;
 import java.util.ArrayList;
 
 @ExtendWith(GameExtension.class)
-class ServerAreaTest {
+class MainHallAreaTest {
 
     private TerrainFactory terrainFactory;
     private CameraComponent cameraComponent;
-    private ServerGameArea serverGameArea;
+    private MainHall mainHall;
 
     @BeforeEach
     void beforeEach() {
         ServiceLocator.registerEntityService(new EntityService());
         terrainFactory = mock(TerrainFactory.class);
         cameraComponent = mock(CameraComponent.class);
-        serverGameArea = spy(new ServerGameArea(terrainFactory, cameraComponent));
+        mainHall = spy(new MainHall(terrainFactory, cameraComponent));
 
-        doNothing().when(serverGameArea)
+        doNothing().when(mainHall)
                 .spawnEntityAt(any(Entity.class), any(GridPoint2.class), anyBoolean(), anyBoolean());
     }
 
@@ -53,35 +53,36 @@ class ServerAreaTest {
             Entity mockPlayer = mock(Entity.class);
             playerFactoryMock.when(PlayerFactory::createPlayer).thenReturn(mockPlayer);
 
-            var method = ServerGameArea.class.getDeclaredMethod("spawnPlayer");
+            var method = MainHall.class.getDeclaredMethod("spawnPlayer");
             method.setAccessible(true);
-            Entity result = (Entity) method.invoke(serverGameArea);
+            method.invoke(mainHall); // returns null because method is void
 
-            // Verify PlayerFactory used and player spawned
+            // Verify PlayerFactory was used
             playerFactoryMock.verify(PlayerFactory::createPlayer);
-            verify(serverGameArea).spawnEntityAt(eq(mockPlayer), any(GridPoint2.class), eq(true), eq(true));
-            Assertions.assertEquals(mockPlayer, result);
+
+            // Verify the player was spawned
+            verify(mainHall).spawnEntityAt(eq(mockPlayer), any(GridPoint2.class), eq(true), eq(true));
         }
     }
 
     @Test
     void testTraversals() throws Exception {
-        doNothing().when(serverGameArea).clearAndLoad(any());
+        doNothing().when(mainHall).clearAndLoad(any());
 
-        var method = ServerGameArea.class.getDeclaredMethod("loadTunnel");
+        var method = MainHall.class.getDeclaredMethod("loadBackToFloor2");
         method.setAccessible(true);
-        method.invoke(serverGameArea);
+        method.invoke(mainHall);
 
-        verify(serverGameArea).clearAndLoad(argThat(supplier -> {
-            return supplier.get() instanceof TunnelGameArea;
+        verify(mainHall).clearAndLoad(argThat(supplier -> {
+            return supplier.get() instanceof Reception;
         }));
 
-        var method2 = ServerGameArea.class.getDeclaredMethod("loadStorage");
+        var method2 = MainHall.class.getDeclaredMethod("loadSecurity");
         method2.setAccessible(true);
-        method2.invoke(serverGameArea);
+        method2.invoke(mainHall);
 
-        verify(serverGameArea).clearAndLoad(argThat(supplier -> {
-            return supplier.get() instanceof StorageGameArea;
+        verify(mainHall).clearAndLoad(argThat(supplier -> {
+            return supplier.get() instanceof SecurityGameArea;
         }));
     }
 }
