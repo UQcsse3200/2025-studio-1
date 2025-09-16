@@ -20,6 +20,14 @@ public class IndividualCocoonComponent extends Component {
         entity.getEvents().addListener("death", this::onCocoonDeath);
 
         System.out.println("White cocoon created and ready!");
+
+        entity.getEvents().addListener("hit", () -> {
+            CombatStatsComponent stats = entity.getComponent(CombatStatsComponent.class);
+            System.out.println("Cocoon hit! Health: " + stats.getHealth());
+        });
+
+        entity.getEvents().addListener("death", this::onCocoonDeath);
+        System.out.println("Cocoon created with " + entity.getComponent(CombatStatsComponent.class).getHealth() + " health");
     }
 
     @Override
@@ -41,7 +49,9 @@ public class IndividualCocoonComponent extends Component {
 
         isDestroyed = true;
 
+        entity.setScale(0f, 0f);
         System.out.println("White cocoon destroyed!");
+        entity.getEvents().trigger("cocoonDestroyed");
 
         // The death event is automatically triggered by CombatStatsComponent
         // and caught by the CocoonSpawnerComponent through the death listener
