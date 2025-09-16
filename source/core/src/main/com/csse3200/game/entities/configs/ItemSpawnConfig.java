@@ -49,7 +49,7 @@ public class ItemSpawnConfig {
         Map<String, List<ItemSpawner.ItemSpawnInfo>> config = new HashMap<>();
 
         config.put(Weapons.RIFLE.name(), Arrays.asList(
-                new ItemSpawner.ItemSpawnInfo(new GridPoint2(15, 15), 1)
+                new ItemSpawner.ItemSpawnInfo(new GridPoint2(25, 16), 1)
         ));
 
         return config;
