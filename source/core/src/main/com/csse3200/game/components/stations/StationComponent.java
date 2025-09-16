@@ -123,7 +123,6 @@ public class StationComponent extends Component {
         ServiceLocator.getRenderService().getStage().addActor(buyPrompt);
     }
 
-
     /**
      * Updates when the player collides with the station
      * @param me the station
@@ -136,13 +135,12 @@ public class StationComponent extends Component {
         Entity otherEntity = userData.entity;
         if (otherEntity.getComponent(PlayerActions.class) != null) {
             player = otherEntity;
-
             playerNear = true;
             otherEntity.getEvents().addListener("interact", this::upgrade);
             buyPrompt.setVisible(true);
             float screenX = ServiceLocator.getRenderService().getStage().getWidth() / 2f;
-            float screenY = ServiceLocator.getRenderService().getStage().getHeight() / 2f + 100; // 100 px above bottom\
-            buyPrompt.setPosition(screenX - 100f, screenY, Align.bottom);
+            float screenY = ServiceLocator.getRenderService().getStage().getHeight() / 2f;
+            buyPrompt.setPosition(screenX - 200f, screenY - 100f, Align.bottom);
             buyPrompt.setText(config.promptText);
         }
     }
@@ -153,7 +151,6 @@ public class StationComponent extends Component {
      * @param other the player
      */
     protected void onCollisionEnd(Fixture me, Fixture other) {
-
         Object data = other.getBody().getUserData();
         if (!(data instanceof BodyUserData userData)) return;
         Entity otherEntity = userData.entity;
@@ -161,7 +158,6 @@ public class StationComponent extends Component {
             playerNear = false;
             buyPrompt.setVisible(false);
         }
-
     }
 
     /**

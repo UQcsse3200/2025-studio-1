@@ -1,7 +1,7 @@
-package com.csse3200.game.entities.configs;
+package com.csse3200.game.entities.configs.benches;
 
-import com.csse3200.game.entities.configs.benches.BenchConfig;
-import com.csse3200.game.entities.configs.benches.ComputerBenchConfig;
+import com.csse3200.game.entities.configs.ItemTypes;
+import org.junit.Assert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -19,7 +19,6 @@ public class ComputerBenchConfigTest {
     void setupCorrect() {
         assertNotNull(config.promptText);
         assertNotNull(config.texturePath);
-        assertEquals(ItemTypes.COMPUTER_BENCH, config.benchType);
+        Assert.assertEquals(ItemTypes.COMPUTER_BENCH, config.benchType);
     }
-
 }
