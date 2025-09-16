@@ -23,16 +23,19 @@ public class ComputerBenchConfig extends BenchConfig {
 
     @Override
     public void upgrade(boolean playerNear, Entity player, Label buyPrompt)  {
+        //Check the player is near
         if (playerNear && player != null) {
             Entity currItem = player.getComponent(InventoryComponent.class).getCurrItem();
 
             WeaponsStatsComponent currItemStats = currItem.getComponent(WeaponsStatsComponent.class);
+            //Check it's a weapon
             if (currItemStats != null) {
+                //Check funds
                 if (player.getComponent(InventoryComponent.class).hasProcessor(price) && !currItemStats.isMaxUpgraded()) {
                     currItemStats.upgrade();
                     subtractPrice(player);
                     buyPrompt.setText("Item has been upgraded");
-                } else if (currItemStats.isMaxUpgraded()) {
+                } else if (currItemStats.isMaxUpgraded()) { //Check the gun can be upgraded
                     buyPrompt.setText("Weapon is fully upgraded already!");
                 } else {
                     buyPrompt.setText("You are broke! Fries in the bag!");
