@@ -30,20 +30,20 @@ import org.mockito.MockedStatic;
 import java.util.ArrayList;
 
 @ExtendWith(GameExtension.class)
-class ServerAreaTest {
+class ShippingAreaTest {
 
     private TerrainFactory terrainFactory;
     private CameraComponent cameraComponent;
-    private ServerGameArea serverGameArea;
+    private ShippingGameArea shippingGameArea;
 
     @BeforeEach
     void beforeEach() {
         ServiceLocator.registerEntityService(new EntityService());
         terrainFactory = mock(TerrainFactory.class);
         cameraComponent = mock(CameraComponent.class);
-        serverGameArea = spy(new ServerGameArea(terrainFactory, cameraComponent));
+        shippingGameArea = spy(new ShippingGameArea(terrainFactory, cameraComponent));
 
-        doNothing().when(serverGameArea)
+        doNothing().when(shippingGameArea)
                 .spawnEntityAt(any(Entity.class), any(GridPoint2.class), anyBoolean(), anyBoolean());
     }
 
@@ -53,34 +53,35 @@ class ServerAreaTest {
             Entity mockPlayer = mock(Entity.class);
             playerFactoryMock.when(PlayerFactory::createPlayer).thenReturn(mockPlayer);
 
-            var method = ServerGameArea.class.getDeclaredMethod("spawnPlayer");
+            var method = ShippingGameArea.class.getDeclaredMethod("spawnPlayer");
             method.setAccessible(true);
-            Entity result = (Entity) method.invoke(serverGameArea);
+            method.invoke(shippingGameArea); // returns null because method is void
 
-            // Verify PlayerFactory used and player spawned
+            // Verify PlayerFactory was used
             playerFactoryMock.verify(PlayerFactory::createPlayer);
-            verify(serverGameArea).spawnEntityAt(eq(mockPlayer), any(GridPoint2.class), eq(true), eq(true));
-            Assertions.assertEquals(mockPlayer, result);
+
+            // Verify the player was spawned
+            verify(shippingGameArea).spawnEntityAt(eq(mockPlayer), any(GridPoint2.class), eq(true), eq(true));
         }
     }
 
     @Test
     void testTraversals() throws Exception {
-        doNothing().when(serverGameArea).clearAndLoad(any());
+        doNothing().when(shippingGameArea).clearAndLoad(any());
 
-        var method = ServerGameArea.class.getDeclaredMethod("loadTunnel");
+        var method = ShippingGameArea.class.getDeclaredMethod("loadResearch");
         method.setAccessible(true);
-        method.invoke(serverGameArea);
+        method.invoke(shippingGameArea);
 
-        verify(serverGameArea).clearAndLoad(argThat(supplier -> {
-            return supplier.get() instanceof TunnelGameArea;
+        verify(shippingGameArea).clearAndLoad(argThat(supplier -> {
+            return supplier.get() instanceof ResearchGameArea;
         }));
 
-        var method2 = ServerGameArea.class.getDeclaredMethod("loadStorage");
+        var method2 = ShippingGameArea.class.getDeclaredMethod("loadStorage");
         method2.setAccessible(true);
-        method2.invoke(serverGameArea);
+        method2.invoke(shippingGameArea);
 
-        verify(serverGameArea).clearAndLoad(argThat(supplier -> {
+        verify(shippingGameArea).clearAndLoad(argThat(supplier -> {
             return supplier.get() instanceof StorageGameArea;
         }));
     }

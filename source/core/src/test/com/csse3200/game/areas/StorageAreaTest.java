@@ -30,20 +30,20 @@ import org.mockito.MockedStatic;
 import java.util.ArrayList;
 
 @ExtendWith(GameExtension.class)
-class ServerAreaTest {
+class StorageAreaTest {
 
     private TerrainFactory terrainFactory;
     private CameraComponent cameraComponent;
-    private ServerGameArea serverGameArea;
+    private StorageGameArea storageGameArea;
 
     @BeforeEach
     void beforeEach() {
         ServiceLocator.registerEntityService(new EntityService());
         terrainFactory = mock(TerrainFactory.class);
         cameraComponent = mock(CameraComponent.class);
-        serverGameArea = spy(new ServerGameArea(terrainFactory, cameraComponent));
+        storageGameArea = spy(new StorageGameArea(terrainFactory, cameraComponent));
 
-        doNothing().when(serverGameArea)
+        doNothing().when(storageGameArea)
                 .spawnEntityAt(any(Entity.class), any(GridPoint2.class), anyBoolean(), anyBoolean());
     }
 
@@ -53,35 +53,36 @@ class ServerAreaTest {
             Entity mockPlayer = mock(Entity.class);
             playerFactoryMock.when(PlayerFactory::createPlayer).thenReturn(mockPlayer);
 
-            var method = ServerGameArea.class.getDeclaredMethod("spawnPlayer");
+            var method = StorageGameArea.class.getDeclaredMethod("spawnPlayer");
             method.setAccessible(true);
-            Entity result = (Entity) method.invoke(serverGameArea);
+            method.invoke(storageGameArea); // returns null because method is void
 
-            // Verify PlayerFactory used and player spawned
+            // Verify PlayerFactory was used
             playerFactoryMock.verify(PlayerFactory::createPlayer);
-            verify(serverGameArea).spawnEntityAt(eq(mockPlayer), any(GridPoint2.class), eq(true), eq(true));
-            Assertions.assertEquals(mockPlayer, result);
+
+            // Verify the player was spawned
+            verify(storageGameArea).spawnEntityAt(eq(mockPlayer), any(GridPoint2.class), eq(true), eq(true));
         }
     }
 
     @Test
     void testTraversals() throws Exception {
-        doNothing().when(serverGameArea).clearAndLoad(any());
+        doNothing().when(storageGameArea).clearAndLoad(any());
 
-        var method = ServerGameArea.class.getDeclaredMethod("loadTunnel");
+        var method = StorageGameArea.class.getDeclaredMethod("loadServer");
         method.setAccessible(true);
-        method.invoke(serverGameArea);
+        method.invoke(storageGameArea);
 
-        verify(serverGameArea).clearAndLoad(argThat(supplier -> {
-            return supplier.get() instanceof TunnelGameArea;
+        verify(storageGameArea).clearAndLoad(argThat(supplier -> {
+            return supplier.get() instanceof ServerGameArea;
         }));
 
-        var method2 = ServerGameArea.class.getDeclaredMethod("loadStorage");
+        var method2 = StorageGameArea.class.getDeclaredMethod("loadShipping");
         method2.setAccessible(true);
-        method2.invoke(serverGameArea);
+        method2.invoke(storageGameArea);
 
-        verify(serverGameArea).clearAndLoad(argThat(supplier -> {
-            return supplier.get() instanceof StorageGameArea;
+        verify(storageGameArea).clearAndLoad(argThat(supplier -> {
+            return supplier.get() instanceof ShippingGameArea;
         }));
     }
 }
