@@ -94,7 +94,7 @@ loadScripts(document, 'script');</script>
 </dl>
 <dl class="notes">
 <dt>Direct Known Subclasses:</dt>
-<dd><code><a href="ElevatorGameArea.html" title="class in com.csse3200.game.areas">ElevatorGameArea</a></code>, <code><a href="Floor2GameArea.html" title="class in com.csse3200.game.areas">Floor2GameArea</a></code>, <code><a href="Floor5GameArea.html" title="class in com.csse3200.game.areas">Floor5GameArea</a></code>, <code><a href="ForestGameArea.html" title="class in com.csse3200.game.areas">ForestGameArea</a></code>, <code><a href="OfficeGameArea.html" title="class in com.csse3200.game.areas">OfficeGameArea</a></code>, <code><a href="ResearchGameArea.html" title="class in com.csse3200.game.areas">ResearchGameArea</a></code>, <code><a href="SecurityGameArea.html" title="class in com.csse3200.game.areas">SecurityGameArea</a></code>, <code><a href="StorageGameArea.html" title="class in com.csse3200.game.areas">StorageGameArea</a></code>, <code><a href="TunnelGameArea.html" title="class in com.csse3200.game.areas">TunnelGameArea</a></code></dd>
+<dd><code><a href="ElevatorGameArea.html" title="class in com.csse3200.game.areas">ElevatorGameArea</a></code>, <code><a href="ForestGameArea.html" title="class in com.csse3200.game.areas">ForestGameArea</a></code>, <code><a href="MainHall.html" title="class in com.csse3200.game.areas">MainHall</a></code>, <code><a href="OfficeGameArea.html" title="class in com.csse3200.game.areas">OfficeGameArea</a></code>, <code><a href="Reception.html" title="class in com.csse3200.game.areas">Reception</a></code>, <code><a href="ResearchGameArea.html" title="class in com.csse3200.game.areas">ResearchGameArea</a></code>, <code><a href="SecurityGameArea.html" title="class in com.csse3200.game.areas">SecurityGameArea</a></code>, <code><a href="ServerGameArea.html" title="class in com.csse3200.game.areas">ServerGameArea</a></code>, <code><a href="ShippingGameArea.html" title="class in com.csse3200.game.areas">ShippingGameArea</a></code>, <code><a href="StorageGameArea.html" title="class in com.csse3200.game.areas">StorageGameArea</a></code>, <code><a href="TunnelGameArea.html" title="class in com.csse3200.game.areas">TunnelGameArea</a></code></dd>
 </dl>
 <hr>
 <div class="type-signature"><span class="modifiers">public abstract class </span><span class="element-name type-name-label">GameArea</span>
@@ -183,20 +183,6 @@ implements com.badlogic.gdx.utils.Disposable</span></div>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#addHorizontalDoorBottom(com.csse3200.game.areas.GameArea.Bounds,float,java.lang.Runnable)" class="member-name-link">addHorizontalDoorBottom</a><wbr>(<a href="GameArea.Bounds.html" title="class in com.csse3200.game.areas">GameArea.Bounds</a>&nbsp;b,
- float&nbsp;wallWidth,
- <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Runnable.html" title="class or interface in java.lang" class="external-link">Runnable</a>&nbsp;onEnter)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Add a horizontal door on the bottom edge.</div>
-</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#addHorizontalDoorTop(com.csse3200.game.areas.GameArea.Bounds,float,java.lang.Runnable)" class="member-name-link">addHorizontalDoorTop</a><wbr>(<a href="GameArea.Bounds.html" title="class in com.csse3200.game.areas">GameArea.Bounds</a>&nbsp;b,
- float&nbsp;wallWidth,
- <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Runnable.html" title="class or interface in java.lang" class="external-link">Runnable</a>&nbsp;onEnter)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Add a horizontal door on the top edge.</div>
-</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#addSolidWallBottom(com.csse3200.game.areas.GameArea.Bounds,float)" class="member-name-link">addSolidWallBottom</a><wbr>(<a href="GameArea.Bounds.html" title="class in com.csse3200.game.areas">GameArea.Bounds</a>&nbsp;b,
  float&nbsp;wallWidth)</code></div>
@@ -763,24 +749,6 @@ implements com.badlogic.gdx.utils.Disposable</span></div>
  float&nbsp;wallWidth,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Runnable.html" title="class or interface in java.lang" class="external-link">Runnable</a>&nbsp;onEnter)</span></div>
 <div class="block">Add a vertical door on the right edge.</div>
-</section>
-</li>
-<li>
-<section class="detail" id="addHorizontalDoorTop(com.csse3200.game.areas.GameArea.Bounds,float,java.lang.Runnable)">
-<h3>addHorizontalDoorTop</h3>
-<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">addHorizontalDoorTop</span><wbr><span class="parameters">(<a href="GameArea.Bounds.html" title="class in com.csse3200.game.areas">GameArea.Bounds</a>&nbsp;b,
- float&nbsp;wallWidth,
- <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Runnable.html" title="class or interface in java.lang" class="external-link">Runnable</a>&nbsp;onEnter)</span></div>
-<div class="block">Add a horizontal door on the top edge.</div>
-</section>
-</li>
-<li>
-<section class="detail" id="addHorizontalDoorBottom(com.csse3200.game.areas.GameArea.Bounds,float,java.lang.Runnable)">
-<h3>addHorizontalDoorBottom</h3>
-<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">addHorizontalDoorBottom</span><wbr><span class="parameters">(<a href="GameArea.Bounds.html" title="class in com.csse3200.game.areas">GameArea.Bounds</a>&nbsp;b,
- float&nbsp;wallWidth,
- <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Runnable.html" title="class or interface in java.lang" class="external-link">Runnable</a>&nbsp;onEnter)</span></div>
-<div class="block">Add a horizontal door on the bottom edge.</div>
 </section>
 </li>
 <li>
