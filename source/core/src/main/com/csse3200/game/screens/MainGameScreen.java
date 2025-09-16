@@ -280,6 +280,15 @@ public class MainGameScreen extends ScreenAdapter {
     com.csse3200.game.services.ServiceLocator.registerGameArea(gameArea);
     gameArea.loadthis = true;
     gameArea.create();
+    InventoryComponent help = gameArea.getPlayer().getComponent(InventoryComponent.class);
+    ItemPickUpComponent testLoading= new ItemPickUpComponent(help);
+    for (int i = 0; i < load.inventory.size(); i++) {
+      Entity placehold = testLoading.createItemFromTexture(load.inventory.get(i));
+      help.addItem(placehold);
+    }
+
+
+
     // currently not needed: sprint 3 refactor to fix everything
 //    gameArea.getPlayer().getEvents().trigger("load player", load.inventory, load.ProcessNumber);
     // functionally bad but if it works
