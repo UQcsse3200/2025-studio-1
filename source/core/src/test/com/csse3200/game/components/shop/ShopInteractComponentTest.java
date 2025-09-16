@@ -51,7 +51,7 @@ class ShopInteractComponentTest {
     class RangeChecks {
 
         @Test
-        @DisplayName("Pressing 0 triggers 'interact' on a shop within range")
+        @DisplayName("Interact Keypress in range")
         void triggersInteractWhenInRange() {
             ShopInteractComponent input = makePlayer(0, 0, 5f);
             boolean[] fired = {false};
@@ -64,7 +64,7 @@ class ShopInteractComponentTest {
         }
 
         @Test
-        @DisplayName("Returns false and does nothing when no shop is within range")
+        @DisplayName("Within Range check")
         void returnsFalseWhenNoShopInRange() {
             ShopInteractComponent input = makePlayer(0, 0, 5f);
             boolean[] fired = {false};
@@ -77,7 +77,7 @@ class ShopInteractComponentTest {
         }
 
         @Test
-        @DisplayName("When multiple shops are in range, only the nearest is triggered")
+        @DisplayName("Use Nearest Shop")
         void triggersOnlyNearestWhenMultipleInRange() {
             ShopInteractComponent input = makePlayer(0, 0, 6f);
             boolean[] nearHit = {false};
