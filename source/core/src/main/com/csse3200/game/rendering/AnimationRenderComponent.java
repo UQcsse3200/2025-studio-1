@@ -43,7 +43,7 @@ public class AnimationRenderComponent extends RenderComponent {
   private float animationPlayTime;
   private boolean disposeAtlas = false;
 
-  private boolean stopIfDone;
+  private boolean playOnce;
   private String nextAnimationName;
 
   /**
@@ -140,7 +140,7 @@ public class AnimationRenderComponent extends RenderComponent {
       return;
     }
 
-    stopIfDone = false;
+    playOnce = false;
     nextAnimationName = null;
     currentAnimation = animation;
     currentAnimationName = name;
@@ -165,7 +165,7 @@ public class AnimationRenderComponent extends RenderComponent {
       return;
     }
 
-    if (stopIfDone) { // already playing a one loop animation
+    if (playOnce) { // already playing a one loop animation
       String temp = nextAnimationName;
       startAnimation(currentName);
       nextAnimationName = temp;
@@ -174,7 +174,7 @@ public class AnimationRenderComponent extends RenderComponent {
       startAnimation(currentName);
       nextAnimationName = temp;
     }
-    stopIfDone = true;
+    playOnce = true;
   }
 
   /**
@@ -213,9 +213,9 @@ public class AnimationRenderComponent extends RenderComponent {
   protected void draw(SpriteBatch batch) {
     if (currentAnimation == null) {
       return;
-    } else if (stopIfDone && isFinished()) {
+    } else if (playOnce && isFinished()) {
       startAnimation(nextAnimationName);
-      stopIfDone = false;
+      playOnce = false;
       nextAnimationName = null;
     }
 
