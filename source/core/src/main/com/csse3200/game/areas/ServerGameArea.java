@@ -196,8 +196,8 @@ public class ServerGameArea extends GameArea {
     spawnCratesAndRailing();
     spawnSpawnPads();
     spawnBordersAndDoors();
-
     spawnFloor();
+
     player = spawnPlayer();
 
     ItemSpawner itemSpawner = new ItemSpawner(this);
@@ -207,6 +207,8 @@ public class ServerGameArea extends GameArea {
     ui.addComponent(new com.csse3200.game.components.gamearea.FloorLabelDisplay("Server Room"));
     spawnEntity(ui);
   }
+
+
 
   private void displayUI() {
     Entity ui = new Entity();

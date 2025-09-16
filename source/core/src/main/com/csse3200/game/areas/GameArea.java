@@ -15,10 +15,12 @@ import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.components.DoorComponent;
 import com.csse3200.game.components.WeaponsStatsComponent;
 import com.csse3200.game.components.enemy.EnemyWaves;
+import com.csse3200.game.components.player.InventoryComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.factories.ProjectileFactory;
 import com.csse3200.game.entities.factories.characters.NPCFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
+import com.csse3200.game.files.FileLoader;
 import com.csse3200.game.services.SaveLoadService;
 import com.csse3200.game.physics.components.PhysicsProjectileComponent;
 import com.csse3200.game.rendering.SolidColorRenderComponent;
@@ -43,8 +45,15 @@ public abstract class GameArea implements Disposable {
   protected List<Entity> areaEntities;
   protected TerrainFactory terrainFactory;
   protected CameraComponent cameraComponent;
+  public boolean loadthis = false;
   /** Prevents re-entrant room transitions across areas */
   protected static boolean isTransitioning = false;
+  // trying to get loading worked
+  public void switchToLoad(int activate) {
+      if (activate == 1) this.loadthis = true;
+  }
+
+  private Entity player;
 
   protected EnemyWaves wavesManager; // manage waves via terminal command
 
@@ -52,6 +61,7 @@ public abstract class GameArea implements Disposable {
     this.terrainFactory = terrainFactory;
     this.cameraComponent = cameraComponent;
     areaEntities = new ArrayList<>();
+
   }
 
   /** Create the game area in the world. */
@@ -570,6 +580,8 @@ public abstract class GameArea implements Disposable {
   public String toString() {
     return "GameArea";
   }
+
+
 
 //  public abstract Entity spawnPlayer(List<String> inventory, int CPU, int health);
 
