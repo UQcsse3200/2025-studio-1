@@ -24,7 +24,10 @@ public class ConsumableUseComponent extends ItemActionsComponent {
         // Current method of accessing current item from inventory hopefully should be changed to getter method
         // in inventory component following changes suggested to Team 1
         int itemIdx = -1;
-        for (int i = 0; i < inventory.getSize(); i++) {
+        for (int i = 0; i < 5; i++) {
+            if (inventory.get(i) == null) {
+                continue;
+            }
             // Finds index of current item
             if (inventory.get(i).getId() == entity.getId()) {
                 itemIdx = i;
