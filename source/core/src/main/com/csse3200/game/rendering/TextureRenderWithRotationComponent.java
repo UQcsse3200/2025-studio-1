@@ -34,11 +34,7 @@ public class TextureRenderWithRotationComponent extends TextureRenderComponent {
      * @param value The rotation value, in degrees.
      */
     public void setRotation(float value) {
-        if (!hasSetRotation)
-        {
-            rotation = value;
-            hasSetRotation = true;
-        }
+        rotation = value;
     }
 
     @Override

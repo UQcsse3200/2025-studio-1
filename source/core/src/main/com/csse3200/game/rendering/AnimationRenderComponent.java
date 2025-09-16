@@ -43,6 +43,9 @@ public class AnimationRenderComponent extends RenderComponent {
   private float animationPlayTime;
   private boolean disposeAtlas = false;
 
+  private boolean playOnce;
+  private String nextAnimationName;
+
   /**
    * Create the component for a given texture atlas.
    * @param atlas libGDX-supported texture atlas containing desired animations
@@ -137,10 +140,41 @@ public class AnimationRenderComponent extends RenderComponent {
       return;
     }
 
+    playOnce = false;
+    nextAnimationName = null;
     currentAnimation = animation;
     currentAnimationName = name;
     animationPlayTime = 0f;
     logger.debug("Starting animation {}", name);
+  }
+
+  /**
+   * Starts the playback of the desired animation. Once the current animation is done, it will play the next animation
+   * specified by the nextName parameter.
+   * @requires currentName references a normal animation (non looping).
+   * @param currentName name of the animation to play.
+   */
+  public void playAnimationOnce(String currentName) {
+    Animation<TextureRegion> animation = animations.getOrDefault(currentName, null);
+    if (animation == null) {
+      startAnimation(currentName); // null errors are handled in here
+    } else if (animation.getPlayMode() == PlayMode.LOOP) {
+      logger.error(
+              "Attempted to play animation {} until done, but it was a looping animation.",
+              currentName);
+      return;
+    }
+
+    if (playOnce) { // already playing a one loop animation
+      String temp = nextAnimationName;
+      startAnimation(currentName);
+      nextAnimationName = temp;
+    } else {
+      String temp = currentAnimationName;
+      startAnimation(currentName);
+      nextAnimationName = temp;
+    }
+    playOnce = true;
   }
 
   /**
@@ -179,7 +213,12 @@ public class AnimationRenderComponent extends RenderComponent {
   protected void draw(SpriteBatch batch) {
     if (currentAnimation == null) {
       return;
+    } else if (playOnce && isFinished()) {
+      startAnimation(nextAnimationName);
+      playOnce = false;
+      nextAnimationName = null;
     }
+
     TextureRegion region = currentAnimation.getKeyFrame(animationPlayTime);
     Vector2 pos = entity.getPosition();
     Vector2 scale = entity.getScale();

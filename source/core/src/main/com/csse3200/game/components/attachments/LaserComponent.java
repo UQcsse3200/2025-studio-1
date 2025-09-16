@@ -31,7 +31,7 @@ public class LaserComponent extends RenderComponent {
     public void draw(SpriteBatch batch) {
 
         Vector2 gunPos = entity.getPosition();
-        gunPos.y += 0.18f;
+        gunPos.y += 0.35f;
         gunPos.x += 1f;
         Vector3 end = camera.unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
         batch.end();

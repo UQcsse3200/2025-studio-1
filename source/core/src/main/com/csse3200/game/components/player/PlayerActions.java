@@ -1,6 +1,7 @@
 package com.csse3200.game.components.player;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.math.Vector2;
@@ -113,6 +114,16 @@ public class PlayerActions extends Component {
    */
   @Override
   public void update() {
+    if(!Gdx.input.isKeyPressed(Input.Keys.A) && !Gdx.input.isKeyPressed(Input.Keys.D) && !dashing) {
+      this.walkDirection.x = 0f;
+      entity.getEvents().trigger("walkStop");
+      if(!grounded) {
+        entity.getEvents().trigger("groundLeft", walkDirection);
+      }
+    }
+    if(!Gdx.input.isKeyPressed(Input.Keys.S) && crouching) {
+      entity.getEvents().trigger("crouchStop");
+    }
     if (moving || dashing) {
       updateSpeed();
     }
@@ -342,7 +353,8 @@ public class PlayerActions extends Component {
 
   /** Fires a projectile towards the mouse cursor. */
   void shoot() {
-
+    if (ServiceLocator.getTimeSource().isPaused())
+        return;
 
     WeaponsStatsComponent weapon = getCurrentWeaponStats();
     if (weapon == null) {
@@ -350,7 +362,7 @@ public class PlayerActions extends Component {
     }
 
     InventoryComponent inventory = entity.getComponent(InventoryComponent.class);
-    Entity gun = inventory.getCurrentItem();
+    Entity gun = inventory.getCurrItem();
 
     MagazineComponent mag = gun.getComponent(MagazineComponent.class);
     // Check for cooldown, defaulting to zero if no current weapon
@@ -372,11 +384,17 @@ public class PlayerActions extends Component {
     attackSound.play();
 
     Entity bullet = ProjectileFactory.createPistolBullet(weapon);
-    Vector2 origin = new Vector2(entity.getCenterPosition());
+    Vector2 origin = new Vector2(entity.getPosition());
+    bullet.setPosition(new Vector2(origin.x - bullet.getScale().x / 2f + 2f,
+            origin.y + 0.6f - bullet.getScale().y / 2f));
+    com.csse3200.game.areas.GameArea area = ServiceLocator.getGameArea();
+    if (area != null) {
+      area.spawnEntity(bullet);
+    } else {
+      ServiceLocator.getEntityService().register(bullet);
+    }
 
-    bullet.setPosition(new Vector2(origin.x - bullet.getScale().x / 2f + 1f,
-            origin.y - 0.2f - bullet.getScale().y / 2f));
-    ServiceLocator.getEntityService().register(bullet);
+//    ServiceLocator.getEntityService().register(bullet);
 
     PhysicsProjectileComponent projectilePhysics = bullet.getComponent(PhysicsProjectileComponent.class);
 
@@ -391,6 +409,8 @@ public class PlayerActions extends Component {
 
   /** Performs a melee attack against nearby enemies. */
   void attack() {
+      if (ServiceLocator.getTimeSource().isPaused())
+          return;
     WeaponsStatsComponent weapon = getCurrentWeaponStats();
     float coolDown = weapon != null ? weapon.getCoolDown() : 0;
     if (this.timeSinceLastAttack < coolDown) return;
@@ -436,7 +456,7 @@ public class PlayerActions extends Component {
 
 
     InventoryComponent inventory = entity.getComponent(InventoryComponent.class);
-    Entity equippedItem = inventory.getCurrentItem();
+    Entity equippedItem = inventory.getCurrItem();
 
     if (equippedItem != null) {
       MagazineComponent mag = equippedItem.getComponent(MagazineComponent.class);
