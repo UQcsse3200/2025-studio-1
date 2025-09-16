@@ -12,7 +12,7 @@ import com.csse3200.game.entities.factories.characters.NPCFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.entities.spawner.ItemSpawner;
 
-/** Tunnel room: minimal walls with left door back to Storage. */
+/** Tunnel room: minimal walls with left door back to Server Room. */
 public class TunnelGameArea extends GameArea {
   private static final float WALL_WIDTH = 0.1f;
   private static final GridPoint2 PLAYER_SPAWN = new GridPoint2(10, 10);
@@ -23,6 +23,16 @@ public class TunnelGameArea extends GameArea {
     super(terrainFactory, cameraComponent);
   }
 
+  /**
+   * Creates the tunnel room with the following steps:
+   * - Loads background with GenericLayout methods
+   * - spawns the borders and doors
+   * - spawns the player in and
+   * - spawns the platforms and spawn pads
+   * - spawns 2 grok droids as enemies
+   * - spawns the floor overlay
+   * - spawns items using the ItemSpawner and the tunnelmap configuration
+   */
   @Override
   public void create() {
     GenericLayout.ensureGenericAssets(this);
@@ -30,7 +40,7 @@ public class TunnelGameArea extends GameArea {
         new Color(0.08f, 0.08f, 0.12f, 0.28f));
 
     spawnBordersAndDoors();
-    player =spawnPlayer();
+    player = spawnPlayer();
     spawnPlatforms();
     spawnSpawnPads();
     spawnGrokDroids();
@@ -41,14 +51,21 @@ public class TunnelGameArea extends GameArea {
     itemSpawner.spawnItems(ItemSpawnConfig.tunnelmap());
   }
 
+  /**
+   * Spawns the borders and doors of the room.
+   */
   private void spawnBordersAndDoors() {
     Bounds b = getCameraBounds(cameraComponent);
     addVerticalDoorLeft(b, WALL_WIDTH, this::loadServer);
-    addVerticalDoorRight(b, WALL_WIDTH, this::loadShipping);
     addSolidWallTop(b, WALL_WIDTH);
     addSolidWallBottom(b, WALL_WIDTH);
   }
 
+  /**
+   * Spawns the player at the designated spawn point PLAYER_SPAWN and then
+   * returns the player entity.
+   * @return the player entity
+   */
   private Entity spawnPlayer() {
     Entity player = PlayerFactory.createPlayer();
     spawnEntityAt(player, PLAYER_SPAWN, true, true);
@@ -105,10 +122,6 @@ public class TunnelGameArea extends GameArea {
 
   private void loadServer() {
     clearAndLoad(() -> new ServerGameArea(terrainFactory, cameraComponent));
-  }
-
-  private void loadShipping() {
-    clearAndLoad(() -> new ShippingGameArea(terrainFactory, cameraComponent));
   }
 }
 
