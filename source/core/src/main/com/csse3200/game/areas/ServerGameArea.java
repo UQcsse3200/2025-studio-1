@@ -242,9 +242,31 @@ public class ServerGameArea extends GameArea {
     return player;
   }
 
+  /**
+   * Spawns the borders and doors of the room.
+   * Left door -> Storage, Right door -> Tunnel
+   * Different to genericLayout as the right door is up high
+   * at the third platfomr level.
+   */
   private void spawnBordersAndDoors() {
-    GenericLayout.addLeftRightDoorsAndWalls(this, cameraComponent, WALL_WIDTH,
-        this::loadStorage, this::loadTunnel);
+    if (cameraComponent == null) return;
+    Bounds b = getCameraBounds(cameraComponent);
+    addSolidWallLeft(b, WALL_WIDTH);
+    float leftDoorHeight = Math.max(1f, b.viewHeight * 0.2f);
+    float leftDoorY = b.bottomY;
+    Entity leftDoor = ObstacleFactory.createDoorTrigger(WALL_WIDTH, leftDoorHeight);
+    leftDoor.setPosition(b.leftX + 0.001f, leftDoorY);
+    leftDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadStorage));
+    spawnEntity(leftDoor);
+
+    addSolidWallRight(b, WALL_WIDTH);
+
+    float rightDoorHeight = Math.max(1f, b.viewHeight * 0.2f);
+    float rightDoorY = b.topY - rightDoorHeight;
+    Entity rightDoor = ObstacleFactory.createDoorTrigger(WALL_WIDTH, rightDoorHeight);
+    rightDoor.setPosition(b.rightX - WALL_WIDTH - 0.001f, rightDoorY);
+    rightDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadTunnel));
+    spawnEntity(rightDoor);
   }
 
   private void loadTunnel() {
