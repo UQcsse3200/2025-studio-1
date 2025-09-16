@@ -54,7 +54,7 @@ public class ResearchGameArea extends GameArea {
     float rightDoorY = b.topY - rightDoorHeight;
     Entity rightDoor = ObstacleFactory.createDoorTrigger(WALL_WIDTH, rightDoorHeight);
     rightDoor.setPosition(b.rightX - WALL_WIDTH - 0.001f, rightDoorY);
-    rightDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadStorage));
+    rightDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadShipping));
     spawnEntity(rightDoor);
   }
 
@@ -121,8 +121,8 @@ public class ResearchGameArea extends GameArea {
     clearAndLoad(() -> new ElevatorGameArea(terrainFactory, cameraComponent));
   }
 
-  private void loadStorage() {
-    clearAndLoad(() -> new StorageGameArea(terrainFactory, cameraComponent));
+  private void loadShipping() {
+    clearAndLoad(() -> new ShippingGameArea(terrainFactory, cameraComponent));
   }
 }
 

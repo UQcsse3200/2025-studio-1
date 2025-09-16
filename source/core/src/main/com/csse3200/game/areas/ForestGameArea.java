@@ -111,6 +111,7 @@ public class ForestGameArea extends GameArea {
     "foreg_sprites/furniture/ServerRack.png",
     "foreg_sprites/furniture/ServerRack2.png",
     "foreg_sprites/furniture/Vent.png",
+    "images/Storage.png"
     };
 
   /** General prop textures (floors, tiles, etc.). */
