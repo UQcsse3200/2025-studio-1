@@ -382,7 +382,7 @@ public class BossFactory {
         return new Vector2[] {
                 new Vector2(5f, 6f),
                 new Vector2(9f, 3f),
-                new Vector2(3f, 3f),
+                new Vector2(12f, 3f),
         };
     }
 
