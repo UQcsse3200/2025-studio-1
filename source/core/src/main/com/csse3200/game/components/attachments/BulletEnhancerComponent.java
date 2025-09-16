@@ -1,6 +1,6 @@
 package com.csse3200.game.components.attachments;
 import com.csse3200.game.components.Component;
-import com.csse3200.game.components.ItemComponent;
+import com.csse3200.game.components.items.ItemComponent;
 import com.csse3200.game.components.WeaponsStatsComponent;
 import com.csse3200.game.entities.configs.ItemTypes;
 

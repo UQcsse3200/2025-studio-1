@@ -1,6 +1,11 @@
 package com.csse3200.game.effects;
 
+import com.badlogic.gdx.utils.Array;
+import com.csse3200.game.components.CombatStatsComponent;
+import com.csse3200.game.components.player.PlayerActions;
 import com.csse3200.game.entities.Entity;
+import com.csse3200.game.services.ServiceLocator;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -39,13 +44,24 @@ public class AreaEffect extends Effect {
 
     @Override
     public boolean apply(Entity center) {
-        // for entities around center and in radius
         boolean applied = false;
-        for (Effect effect : effects) {
-            if (effect.apply(center)) { // replace center with iterative entity
-                applied = true;
+        // Find entities in range
+        Array<Entity> entities = ServiceLocator.getEntityService().getEntities();
+        for (Entity entity : entities) {
+            float distanceFromCenter = entity.getCenterPosition().dst(center.getCenterPosition());
+            boolean isPlayer = entity.hasComponent(PlayerActions.class);
+            if (distanceFromCenter <= radius && entity.hasComponent(CombatStatsComponent.class) && !isPlayer) {
+
+                // Applies effects to entities
+                for (Effect effect : effects) {
+                    if (effect.apply(entity)) {
+                        applied = true;
+                    }
+                }
+
             }
         }
+
         return applied;
     }
 }

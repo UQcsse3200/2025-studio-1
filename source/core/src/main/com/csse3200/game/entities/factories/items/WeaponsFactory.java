@@ -3,12 +3,16 @@ package com.csse3200.game.entities.factories.items;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.csse3200.game.components.MagazineComponent;
+import com.csse3200.game.components.items.ItemHoldComponent;
+import com.csse3200.game.components.items.MeleeUseComponent;
+import com.csse3200.game.components.items.RangedUseComponent;
 import com.csse3200.game.components.WeaponsStatsComponent;
 import com.csse3200.game.components.attachments.LaserComponent;
 import com.csse3200.game.entities.Entity;
-import com.csse3200.game.components.ItemComponent;
+import com.csse3200.game.components.items.ItemComponent;
 import com.csse3200.game.entities.configs.ItemTypes;
 import com.csse3200.game.entities.configs.Weapons;
+import com.csse3200.game.entities.configs.weapons.RangedWeaponConfig;
 import com.csse3200.game.entities.configs.weapons.WeaponConfig;
 import com.csse3200.game.rendering.AnimationRenderComponent;
 import com.csse3200.game.rendering.TextureRenderComponent;
@@ -64,7 +68,6 @@ public class WeaponsFactory {
                 item.setType(ItemTypes.NONE);
                 break;
         }
-
         return weapon;
     }
 

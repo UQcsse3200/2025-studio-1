@@ -22,6 +22,17 @@ public class EntityService {
    * @param entity new entity.
    */
   public void register(Entity entity) {
+    if (com.csse3200.game.services.ServiceLocator.isTransitioning()) {
+      // Defer registration until after transition to avoid leaking into the wrong area
+      com.badlogic.gdx.Gdx.app.postRunnable(() -> {
+        if (!com.csse3200.game.services.ServiceLocator.isTransitioning()) {
+          logger.debug("Deferred-registering {} in entity service", entity);
+          entities.add(entity);
+          entity.create();
+        }
+      });
+      return;
+    }
     logger.debug("Registering {} in entity service", entity);
     entities.add(entity);
     entity.create();
@@ -40,7 +51,9 @@ public class EntityService {
    * Update all registered entities. Should only be called from the main game loop.
    */
   public void update() {
-
+    if (com.csse3200.game.services.ServiceLocator.isTransitioning()) {
+      return;
+    }
     Array<Entity> toRemove = new Array<>();
     for (Entity entity : entities) {
       entity.earlyUpdate();
