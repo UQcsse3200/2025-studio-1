@@ -1,9 +1,8 @@
-package com.csse3200.game.components;
+package com.csse3200.game.components.shop;
 
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Vector2;
-import com.csse3200.game.components.shop.CatalogService;
-import com.csse3200.game.components.shop.ShopManager;
+import com.csse3200.game.components.ShopInteractComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
 import com.csse3200.game.services.ServiceLocator;
