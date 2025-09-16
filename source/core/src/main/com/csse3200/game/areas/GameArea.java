@@ -217,14 +217,10 @@ public abstract class GameArea implements Disposable {
           int total, float scaleFactor, Entity player, HashMap<String, ArrayList<Vector2>> positions) {
       ArrayList<Vector2> spawnPositions = positions.get("Deepspin");
 
-      int count = 0;
       for (Vector2 pos : spawnPositions) {
-          if (count != 0) { continue; }
-          Entity deepSpin = NPCFactory.createGhostGPT(player, this, scaleFactor);
+          Entity deepSpin = NPCFactory.createDeepspin(player, this, scaleFactor);
           deepSpin.setPosition(pos);
           spawnEntity(deepSpin);
-
-          count++;
       }
   }
 
