@@ -126,6 +126,9 @@ public class CocoonSpawnerComponent extends Component {
         // Set collider
         com.csse3200.game.physics.PhysicsUtils.setScaledCollider(cocoon, 0.8f, 0.8f);
 
+        cocoon.getComponent(com.csse3200.game.physics.components.PhysicsComponent.class)
+                .getBody().setType(com.badlogic.gdx.physics.box2d.BodyDef.BodyType.StaticBody);
+
         return cocoon;
     }
 
