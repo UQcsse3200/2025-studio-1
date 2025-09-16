@@ -6,6 +6,7 @@ import com.csse3200.game.ui.terminal.commands.DebugCommand;
 import com.csse3200.game.ui.terminal.commands.DisableDamageCommand;
 import com.csse3200.game.ui.terminal.commands.EndScreenCommand;
 import com.csse3200.game.ui.terminal.commands.DamageMultiplierCommand;
+import com.csse3200.game.ui.terminal.commands.PickupAllCommand;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,6 +48,7 @@ public class Terminal extends Component {
     addCommand("deathscreen", new EndScreenCommand(game, GdxGame.ScreenType.DEATH_SCREEN));
     addCommand("disableDamage", new DisableDamageCommand());
     addCommand("damageMultiplier", new DamageMultiplierCommand());
+    addCommand("pickupAll", new PickupAllCommand());
   }
 
   /** @return message entered by user */
