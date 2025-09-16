@@ -4,7 +4,6 @@ import com.csse3200.game.components.WeaponsStatsComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.services.ServiceLocator;
 import com.badlogic.gdx.utils.Array;
-import com.csse3200.game.components.player.PlayerActions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,7 +14,6 @@ import java.util.ArrayList;
  */
 public class DamageMultiplierCommand implements Command {
 
-    private Array<Entity> entityList;
     private static final Logger logger = LoggerFactory.getLogger(DamageMultiplierCommand.class);
 
     @Override
@@ -25,20 +23,23 @@ public class DamageMultiplierCommand implements Command {
             return false;
         }
 
-        String arg = args.get(0);
-        entityList = ServiceLocator.getEntityService().getEntities();
+        String arg = args.getFirst();
+        Array<Entity> entityList = ServiceLocator.getEntityService().getEntities();
 
-        switch (arg.toLowerCase()) {
-            case "on":
+        return switch (arg.toLowerCase()) {
+            case "on" -> {
                 setDamageMultiplierStatus(entityList, true);
-                return true;
-            case "off":
+                yield true;
+            }
+            case "off" -> {
                 setDamageMultiplierStatus(entityList, false);
-                return true;
-            default:
+                yield true;
+            }
+            default -> {
                 logger.debug("Unrecognised argument received for 'damageMultiplier' command: {}", args);
-                return false;
-        }
+                yield false;
+            }
+        };
     }
 
     boolean isValid(ArrayList<String> args) {
@@ -46,12 +47,13 @@ public class DamageMultiplierCommand implements Command {
     }
 
     void setDamageMultiplierStatus(Array<Entity> entityList, boolean status) {
-        for (Entity entity : entityList) {
-            if (entity.getComponent(WeaponsStatsComponent.class) != null) {
-                entity.getComponent(WeaponsStatsComponent.class).setDamageBoostEnabled(status);
+        for (int i = 0; i < entityList.size; i++) {
+            Entity entity = entityList.get(i);
+            WeaponsStatsComponent comp = entity.getComponent(WeaponsStatsComponent.class);
+            if (comp != null) {
+                comp.setDamageBoostEnabled(status);
                 logger.info("Damage multiplier set to {} for entity {}", status, entity);
             }
         }
     }
-
 }
