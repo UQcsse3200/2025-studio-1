@@ -101,6 +101,11 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">ShopScreenDisplay</span>
 <span class="extends-implements">extends <a href="../../ui/UIComponent.html" title="class in com.csse3200.game.ui">UIComponent</a></span></div>
+<div class="block">Screen which displays the shop screen.
+ <p>
+     Displays purchasable items which are clickable and trigger a purchase event. Displays
+     current balance as well as error messages.
+ </p></div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -126,7 +131,10 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(com.csse3200.game.areas.ForestGameArea,com.csse3200.game.components.shop.ShopManager)" class="member-name-link">ShopScreenDisplay</a><wbr>(<a href="../../areas/ForestGameArea.html" title="class in com.csse3200.game.areas">ForestGameArea</a>&nbsp;area,
  <a href="../shop/ShopManager.html" title="class in com.csse3200.game.components.shop">ShopManager</a>&nbsp;manager)</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">UI component that displays the shop screen
+ Allows player to interact with the shop and displays relevant error messages.</div>
+</div>
 </div>
 </section>
 </li>
@@ -144,27 +152,33 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#create()" class="member-name-link">create</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Called when the entity is created and registered.</div>
+<div class="block">Creates a new ShopScreen Display and sets up UI components</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#dispose()" class="member-name-link">dispose</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Called when the component is disposed.</div>
+<div class="block">Cleans up resources and disposes of UI elements.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#draw(com.badlogic.gdx.graphics.g2d.SpriteBatch)" class="member-name-link">draw</a><wbr>(com.badlogic.gdx.graphics.g2d.SpriteBatch&nbsp;batch)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Draw the renderable.</div>
+<div class="block">Draw method overridden</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.badlogic.gdx.scenes.scene2d.Stage</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getStage()" class="member-name-link">getStage</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Returns the Stage associated with the shop screen</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#hide()" class="member-name-link">hide</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Hides the shop screen and resumes game time.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#show()" class="member-name-link">show</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Shows the shop screen.</div>
+</div>
 </div>
 </div>
 </div>
@@ -202,6 +216,13 @@ loadScripts(document, 'script');</script>
 <h3>ShopScreenDisplay</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">ShopScreenDisplay</span><wbr><span class="parameters">(<a href="../../areas/ForestGameArea.html" title="class in com.csse3200.game.areas">ForestGameArea</a>&nbsp;area,
  <a href="../shop/ShopManager.html" title="class in com.csse3200.game.components.shop">ShopManager</a>&nbsp;manager)</span></div>
+<div class="block">UI component that displays the shop screen
+ Allows player to interact with the shop and displays relevant error messages.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>area</code> - Game area containing player</dd>
+<dd><code>manager</code> - Shop manager to handle purchases</dd>
+</dl>
 </section>
 </li>
 </ul>
@@ -216,9 +237,7 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="create()">
 <h3>create</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">create</span>()</div>
-<div class="block"><span class="description-from-type-label">Description copied from class:&nbsp;<code><a href="../Component.html#create()">Component</a></code></span></div>
-<div class="block">Called when the entity is created and registered. Initial logic such as calls to GetComponent
- should be made here, not in the constructor which is called before an entity is finished.</div>
+<div class="block">Creates a new ShopScreen Display and sets up UI components</div>
 <dl class="notes">
 <dt>Overrides:</dt>
 <dd><code><a href="../../ui/UIComponent.html#create()">create</a></code>&nbsp;in class&nbsp;<code><a href="../../ui/UIComponent.html" title="class in com.csse3200.game.ui">UIComponent</a></code></dd>
@@ -229,8 +248,7 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="draw(com.badlogic.gdx.graphics.g2d.SpriteBatch)">
 <h3>draw</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">draw</span><wbr><span class="parameters">(com.badlogic.gdx.graphics.g2d.SpriteBatch&nbsp;batch)</span></div>
-<div class="block"><span class="description-from-type-label">Description copied from class:&nbsp;<code><a href="../../rendering/RenderComponent.html#draw(com.badlogic.gdx.graphics.g2d.SpriteBatch)">RenderComponent</a></code></span></div>
-<div class="block">Draw the renderable. Should be called only by the renderer, not manually.</div>
+<div class="block">Draw method overridden</div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="../../rendering/RenderComponent.html#draw(com.badlogic.gdx.graphics.g2d.SpriteBatch)">draw</a></code>&nbsp;in class&nbsp;<code><a href="../../rendering/RenderComponent.html" title="class in com.csse3200.game.rendering">RenderComponent</a></code></dd>
@@ -243,14 +261,18 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="getStage()">
 <h3>getStage</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">com.badlogic.gdx.scenes.scene2d.Stage</span>&nbsp;<span class="element-name">getStage</span>()</div>
+<div class="block">Returns the Stage associated with the shop screen</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>the stage object</dd>
+</dl>
 </section>
 </li>
 <li>
 <section class="detail" id="dispose()">
 <h3>dispose</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">dispose</span>()</div>
-<div class="block"><span class="description-from-type-label">Description copied from class:&nbsp;<code><a href="../Component.html#dispose()">Component</a></code></span></div>
-<div class="block">Called when the component is disposed. Dispose of any internal resources here.</div>
+<div class="block">Cleans up resources and disposes of UI elements.</div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code>dispose</code>&nbsp;in interface&nbsp;<code>com.badlogic.gdx.utils.Disposable</code></dd>
@@ -263,12 +285,15 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="show()">
 <h3>show</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">show</span>()</div>
+<div class="block">Shows the shop screen.
+ Pauses the game, refreshes the catalog, and updates balance display</div>
 </section>
 </li>
 <li>
 <section class="detail" id="hide()">
 <h3>hide</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">hide</span>()</div>
+<div class="block">Hides the shop screen and resumes game time.</div>
 </section>
 </li>
 </ul>

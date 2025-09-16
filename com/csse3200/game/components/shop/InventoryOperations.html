@@ -111,7 +111,9 @@ loadScripts(document, 'script');</script>
  <a href="../../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a>&nbsp;item,
  int&nbsp;amount,
  int&nbsp;maxStack)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Adds item to an inventory, either on a new slot or stacks on an existing slot.</div>
+</div>
 </div>
 </div>
 </div>
@@ -136,6 +138,16 @@ loadScripts(document, 'script');</script>
  <a href="../../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a>&nbsp;item,
  int&nbsp;amount,
  int&nbsp;maxStack)</span></div>
+<div class="block">Adds item to an inventory, either on a new slot or stacks on an existing slot.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>inventory</code> - The player's inventory to add to</dd>
+<dd><code>item</code> - The item being added</dd>
+<dd><code>amount</code> - The number of items added</dd>
+<dd><code>maxStack</code> - The max number of items that a player can hold</dd>
+<dt>Returns:</dt>
+<dd>The inventory slot the item was added to on success, or the failure result including a message and status code.</dd>
+</dl>
 </section>
 </li>
 </ul>
