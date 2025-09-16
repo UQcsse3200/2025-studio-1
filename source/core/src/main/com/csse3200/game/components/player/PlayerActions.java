@@ -5,16 +5,13 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.utils.Array;
 import com.csse3200.game.components.*;
 import com.csse3200.game.entities.Entity;
-import com.csse3200.game.entities.factories.ProjectileFactory;
 import com.csse3200.game.physics.PhysicsLayer;
 import com.csse3200.game.physics.components.HitboxComponent;
 import com.csse3200.game.physics.components.PhysicsComponent;
-import com.csse3200.game.physics.components.PhysicsProjectileComponent;
 import com.csse3200.game.services.ServiceLocator;
 import com.badlogic.gdx.utils.Timer;
 
@@ -65,9 +62,6 @@ public class PlayerActions extends Component {
   // Tracks time since last attack for cooldown purposes
   private float timeSinceLastAttack = 0;
 
-  // Camera reference for world coordinates
-  private Camera camera;
-
   /**
    * Initializes the component by setting required components and
    * registering event listeners for all player actions.
@@ -81,7 +75,6 @@ public class PlayerActions extends Component {
     entity.getEvents().addListener("walk", this::walk);
     entity.getEvents().addListener("walkStop", this::stopWalking);
     entity.getEvents().addListener("attack", this::attack);
-    entity.getEvents().addListener("shoot", this::shoot);
     entity.getEvents().addListener("jumpAttempt", this::jump);
     entity.getEvents().addListener("sprintAttempt", this::sprintAttempt);
     entity.getEvents().addListener("dashAttempt", this::dash);
@@ -91,11 +84,6 @@ public class PlayerActions extends Component {
     entity.getEvents().addListener("sprintStop", this::stopSprinting);
     // Find camera from any entity with CameraComponent
     Array<Entity> entities = ServiceLocator.getEntityService().getEntities();
-    for (Entity entity: entities) {
-      if (entity.getComponent(CameraComponent.class) != null) {
-        camera = entity.getComponent(CameraComponent.class).getCamera();
-      }
-    }
   }
 
   /**
@@ -339,40 +327,6 @@ public class PlayerActions extends Component {
   /** Cheat: infinite stamina. */
   public void infStamina() {
     stamina.setInfiniteStamina(true);
-  }
-
-  /** Fires a projectile towards the mouse cursor. */
-  void shoot() {
-    if (ServiceLocator.getTimeSource().isPaused())
-        return;
-
-    WeaponsStatsComponent weapon = getCurrentWeaponStats();
-    if (weapon == null) {
-      return;
-    }
-    // Check for cooldown, defaulting to zero if no current weapon
-    float coolDown = weapon.getCoolDown();
-    if (this.timeSinceLastAttack < coolDown) return;
-
-    Sound attackSound = ServiceLocator.getResourceService().getAsset("sounds/Impact4.ogg", Sound.class);
-    attackSound.play();
-
-    Entity bullet = ProjectileFactory.createPistolBullet(weapon);
-    Vector2 origin = new Vector2(entity.getPosition());
-    bullet.setPosition(origin);
-    com.csse3200.game.areas.GameArea area = ServiceLocator.getGameArea();
-    if (area != null) {
-      area.spawnEntity(bullet);
-    } else {
-      ServiceLocator.getEntityService().register(bullet);
-    }
-
-    PhysicsProjectileComponent projectilePhysics = bullet.getComponent(PhysicsProjectileComponent.class);
-
-    Vector3 destination = camera.unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
-    projectilePhysics.fire(new Vector2(destination.x - origin.x, destination.y - origin.y), 5);
-
-    timeSinceLastAttack = 0;
   }
 
   /** Performs a melee attack against nearby enemies. */
