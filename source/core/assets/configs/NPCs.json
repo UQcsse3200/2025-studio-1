@@ -30,6 +30,10 @@
   "vroomba": {
     "health": 50,
     "baseAttack": 10
+  },
+  "turret": {
+    "health": 150,
+    "baseAttack": 5
   }
 }
 

@@ -1,5 +1,6 @@
 package com.csse3200.game.rendering;
 
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
@@ -15,6 +16,16 @@ public class RenderService implements Disposable {
   private static final int INITIAL_CAPACITY = 4;
   private Stage stage;
   private DebugRenderer debugRenderer;
+  private OrthographicCamera camera;
+
+  public void setCamera(OrthographicCamera camera) {
+    this.camera = camera;
+  }
+
+  public OrthographicCamera getCamera() {
+    return camera;
+  }
+
 
   /**
    * Map from layer to list of renderables, allows us to render each layer in the correct order
