@@ -563,4 +563,8 @@ public abstract class GameArea implements Disposable {
       });
     });
   }
+
+  public void spawnItem(Entity item, GridPoint2 position) {
+    spawnEntityAt(item, position, false, false);
+  }
 }
