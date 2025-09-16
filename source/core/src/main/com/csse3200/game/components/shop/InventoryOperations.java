@@ -4,7 +4,6 @@ import com.csse3200.game.components.items.ItemComponent;
 import com.csse3200.game.components.player.InventoryComponent;
 import com.csse3200.game.entities.Entity;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
