@@ -563,7 +563,23 @@ public abstract class GameArea implements Disposable {
       });
     });
   }
+    /**
+     * Spawns decorative object doors (non-functional) at given positions.
+     *
+     * @param leftDoorPos  grid position for the left/bottom decorative door
+     * @param rightDoorPos grid position for the right/top decorative door
+     */
+    protected void spawnObjectDoors(GridPoint2 leftDoorPos, GridPoint2 rightDoorPos) {
+        if (rightDoorPos != null) {
+            Entity rightDoor = ObstacleFactory.createDoor();
+            spawnEntityAt(rightDoor, rightDoorPos, false, false);
+        }
 
+        if (leftDoorPos != null) {
+            Entity leftDoor = ObstacleFactory.createDoor();
+            spawnEntityAt(leftDoor, leftDoorPos, false, false);
+        }
+    }
   public void spawnItem(Entity item, GridPoint2 position) {
     spawnEntityAt(item, position, false, false);
   }
