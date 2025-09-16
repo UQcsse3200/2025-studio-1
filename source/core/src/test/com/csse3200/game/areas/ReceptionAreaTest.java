@@ -30,20 +30,20 @@ import org.mockito.MockedStatic;
 import java.util.ArrayList;
 
 @ExtendWith(GameExtension.class)
-class ServerAreaTest {
+class ReceptionAreaTest {
 
     private TerrainFactory terrainFactory;
     private CameraComponent cameraComponent;
-    private ServerGameArea serverGameArea;
+    private Reception reception;
 
     @BeforeEach
     void beforeEach() {
         ServiceLocator.registerEntityService(new EntityService());
         terrainFactory = mock(TerrainFactory.class);
         cameraComponent = mock(CameraComponent.class);
-        serverGameArea = spy(new ServerGameArea(terrainFactory, cameraComponent));
+        reception = spy(new Reception(terrainFactory, cameraComponent));
 
-        doNothing().when(serverGameArea)
+        doNothing().when(reception)
                 .spawnEntityAt(any(Entity.class), any(GridPoint2.class), anyBoolean(), anyBoolean());
     }
 
@@ -53,35 +53,36 @@ class ServerAreaTest {
             Entity mockPlayer = mock(Entity.class);
             playerFactoryMock.when(PlayerFactory::createPlayer).thenReturn(mockPlayer);
 
-            var method = ServerGameArea.class.getDeclaredMethod("spawnPlayer");
+            var method = Reception.class.getDeclaredMethod("spawnPlayer");
             method.setAccessible(true);
-            Entity result = (Entity) method.invoke(serverGameArea);
+            method.invoke(reception); // returns null because method is void
 
-            // Verify PlayerFactory used and player spawned
+            // Verify PlayerFactory was used
             playerFactoryMock.verify(PlayerFactory::createPlayer);
-            verify(serverGameArea).spawnEntityAt(eq(mockPlayer), any(GridPoint2.class), eq(true), eq(true));
-            Assertions.assertEquals(mockPlayer, result);
+
+            // Verify the player was spawned
+            verify(reception).spawnEntityAt(eq(mockPlayer), any(GridPoint2.class), eq(true), eq(true));
         }
     }
 
     @Test
     void testTraversals() throws Exception {
-        doNothing().when(serverGameArea).clearAndLoad(any());
+        doNothing().when(reception).clearAndLoad(any());
 
-        var method = ServerGameArea.class.getDeclaredMethod("loadTunnel");
+        var method = Reception.class.getDeclaredMethod("loadBackToFloor5");
         method.setAccessible(true);
-        method.invoke(serverGameArea);
+        method.invoke(reception);
 
-        verify(serverGameArea).clearAndLoad(argThat(supplier -> {
-            return supplier.get() instanceof TunnelGameArea;
+        verify(reception).clearAndLoad(argThat(supplier -> {
+            return supplier.get() instanceof MainHall;
         }));
 
-        var method2 = ServerGameArea.class.getDeclaredMethod("loadStorage");
+        var method2 = Reception.class.getDeclaredMethod("loadForest");
         method2.setAccessible(true);
-        method2.invoke(serverGameArea);
+        method2.invoke(reception);
 
-        verify(serverGameArea).clearAndLoad(argThat(supplier -> {
-            return supplier.get() instanceof StorageGameArea;
+        verify(reception).clearAndLoad(argThat(supplier -> {
+            return supplier.get() instanceof ForestGameArea;
         }));
     }
 }
