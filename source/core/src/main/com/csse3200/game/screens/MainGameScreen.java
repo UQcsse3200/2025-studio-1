@@ -7,10 +7,12 @@ import com.csse3200.game.GdxGame;
 import com.csse3200.game.areas.*;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.components.maingame.MainGameActions;
+import com.csse3200.game.components.player.InventoryComponent;
 import com.csse3200.game.components.screens.PauseMenuDisplay;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
 import com.csse3200.game.entities.factories.system.RenderFactory;
+import com.csse3200.game.files.FileLoader;
 import com.csse3200.game.input.InputComponent;
 import com.csse3200.game.input.InputDecorator;
 import com.csse3200.game.input.InputService;
@@ -219,7 +221,7 @@ public class MainGameScreen extends ScreenAdapter {
 
 
   /**
-   * Overloaded constructor for loading the game
+   * Overloaded constructor for loading the game from save file
    *
    * @param game game
    * @param Filename loaded file
@@ -229,7 +231,7 @@ public class MainGameScreen extends ScreenAdapter {
 
     this.game = game;
     SaveLoadService.PlayerInfo load = SaveLoadService.load();
-    logger.debug("Initialising main game screen services");
+    logger.debug("Initialising main game screen services from file load");
     ServiceLocator.registerTimeSource(new GameTime());
 
     PhysicsService physicsService = new PhysicsService();
@@ -250,6 +252,7 @@ public class MainGameScreen extends ScreenAdapter {
 
     loadAssets();
     createUI();
+    // null so default can return error
     GameArea areaLoad = null;
     logger.debug("Initialising main game screen entities");
     TerrainFactory terrainFactory = new TerrainFactory(renderer.getCamera());
@@ -267,7 +270,12 @@ public class MainGameScreen extends ScreenAdapter {
 
     gameArea = areaLoad;
     com.csse3200.game.services.ServiceLocator.registerGameArea(gameArea);
+
     gameArea.create();
+
+
+//    InventoryComponent loadinventory = gameArea.getPlayer().getComponent(InventoryComponent.class);
+//    loadinventory = FileLoader.readInventory(load.inventory,load.ProcessNumber);
   }
 
 }
