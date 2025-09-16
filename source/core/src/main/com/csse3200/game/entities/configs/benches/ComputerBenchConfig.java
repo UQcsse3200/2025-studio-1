@@ -9,6 +9,10 @@ import com.csse3200.game.entities.configs.ItemTypes;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 
 public class ComputerBenchConfig extends BenchConfig {
+
+    /**
+     * Initialise ComputerBenchConfig
+     */
     public ComputerBenchConfig() {
         benchType = ItemTypes.COMPUTER_BENCH;
         texturePath = "images/computerBench.png";
@@ -24,7 +28,7 @@ public class ComputerBenchConfig extends BenchConfig {
 
             WeaponsStatsComponent currItemStats = currItem.getComponent(WeaponsStatsComponent.class);
             if (currItemStats != null) {
-                if (player.getComponent(InventoryComponent.class).hasProcessor(1000) && !currItemStats.isMaxUpgraded()) {
+                if (player.getComponent(InventoryComponent.class).hasProcessor(price) && !currItemStats.isMaxUpgraded()) {
                     currItemStats.upgrade();
                     subtractPrice(player);
                     buyPrompt.setText("Item has been upgraded");
