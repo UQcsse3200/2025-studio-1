@@ -104,7 +104,6 @@ public class ArrowKeysPlayerInputComponent extends InputComponent {
       }
       ItemComponent itemInfo = item.getComponent(ItemComponent.class);
       if (itemInfo.getType() == ItemTypes.RANGED) {
-        System.out.println("RANGED");
         entity.getEvents().trigger("shoot");
       } else if (itemInfo.getType() == ItemTypes.MELEE) {
         entity.getEvents().trigger("attack");

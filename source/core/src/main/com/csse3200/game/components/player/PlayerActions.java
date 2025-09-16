@@ -394,8 +394,6 @@ public class PlayerActions extends Component {
       ServiceLocator.getEntityService().register(bullet);
     }
 
-//    ServiceLocator.getEntityService().register(bullet);
-
     PhysicsProjectileComponent projectilePhysics = bullet.getComponent(PhysicsProjectileComponent.class);
 
     Vector3 destination = camera.unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
@@ -487,7 +485,6 @@ public class PlayerActions extends Component {
   void weaponAnimation() {
     if (entity.getComponent(AnimationRenderComponent.class) != null) {
       entity.getEvents().trigger("anim");
-      System.out.println("TRIGGERED");
     }
   }
 }
