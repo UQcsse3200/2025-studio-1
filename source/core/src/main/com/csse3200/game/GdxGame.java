@@ -74,7 +74,6 @@ public class GdxGame extends Game {
       case LOAD_GAME -> new MainGameScreen(this, "placeholder");
       case TUTORIAL_SCREEN -> new TutorialScreen(this);
       case STORY -> new StoryScreen(this);
-      default -> null;
     };
   }
 
