@@ -9,7 +9,6 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@DisplayName("InventoryOperations: addOrStack()")
 public class InventoryOperationsTest {
 
     private Entity mkItem(String name) {
@@ -34,7 +33,7 @@ public class InventoryOperationsTest {
     @DisplayName("Objective: insert new items")
     class InsertNew {
         @Test
-        @DisplayName("insertsIntoEmpty_atIndex0_andSetsCount()")
+        @DisplayName("InsertItem test")
         void insertsIntoEmpty_atIndex0_andSetsCount() {
             InventoryComponent inv = mkInventory(0);
             Entity item = mkItem("Gem");
@@ -46,7 +45,7 @@ public class InventoryOperationsTest {
         }
 
         @Test
-        @DisplayName("failsWhenInventoryIsFull()")
+        @DisplayName("InventoryFull failure)")
         void failsWhenInventoryIsFull() {
             InventoryComponent inv = mkInventory(0);
             // Fill 5 slots (InventoryComponent maxCapacity = 5)
@@ -63,7 +62,7 @@ public class InventoryOperationsTest {
     @DisplayName("Objective: stacking existing items")
     class Stacking {
         @Test
-        @DisplayName("stacksWithinMaxStack_returnsSameIndex()")
+        @DisplayName("Objective: Return same stack index")
         void stacksWithinMaxStack_returnsSameIndex() {
             InventoryComponent inv = mkInventory(0);
             Entity item = mkItem("Potion");
@@ -75,7 +74,7 @@ public class InventoryOperationsTest {
         }
 
         @Test
-        @DisplayName("failsWhenStackWouldExceedMaxStack_countUnchanged()")
+        @DisplayName("Objective: Max stack failure")
         void failsWhenStackWouldExceedMaxStack_countUnchanged() {
             InventoryComponent inv = mkInventory(0);
             Entity item = mkItem("Arrow");
@@ -92,7 +91,7 @@ public class InventoryOperationsTest {
     @DisplayName("Objective: invalid inputs")
     class InvalidInputs {
         @Test
-        @DisplayName("nullsOrNonPositiveAmountsOrMaxStack_returnFailure()")
+        @DisplayName("Failure on invalid stack amount")
         void nullsOrNonPositiveAmountsOrMaxStack_returnFailure() {
             Entity item = mkItem("Any");
             InventoryComponent inv = mkInventory(0);
@@ -104,7 +103,7 @@ public class InventoryOperationsTest {
         }
 
         @Test
-        @DisplayName("missingItemComponent_returnsFailure()")
+        @DisplayName("Failure on invalid entry")
         void missingItemComponent_returnsFailure() {
             InventoryComponent inv = mkInventory(0);
             Entity bare = new Entity();
