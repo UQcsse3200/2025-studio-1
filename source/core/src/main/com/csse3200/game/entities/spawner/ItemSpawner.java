@@ -88,6 +88,8 @@ public class ItemSpawner {
         }
           else if(gameArea instanceof SecurityGameArea securityArea) {
             securityArea.spawnItem(item, position);
+        } else if (gameArea instanceof ServerGameArea serverArea) {
+            serverArea.spawnItem(item, position);
         }
     }
 

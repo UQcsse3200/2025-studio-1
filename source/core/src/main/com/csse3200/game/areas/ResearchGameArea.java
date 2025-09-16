@@ -28,7 +28,7 @@ public class ResearchGameArea extends GameArea {
     GenericLayout.ensureGenericAssets(this);
     GenericLayout.setupTerrainWithOverlay(this, terrainFactory, TerrainType.RESEARCH_ROOM,
             new Color(0.10f, 0.12f, 0.18f, 0.28f)); // subtle lab-themed overlay
-
+    spawnObjectDoors(new GridPoint2(0, 6), new GridPoint2(28, 21));
     spawnBordersAndDoors();
     spawnPlayer();
     spawnPlatforms();
