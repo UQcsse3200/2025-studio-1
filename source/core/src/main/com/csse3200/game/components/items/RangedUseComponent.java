@@ -38,14 +38,14 @@ public class RangedUseComponent extends ItemActionsComponent {
         }
     }
 
-    private void playAttackSound() {
+    void playAttackSound() {
         Sound attackSound = ServiceLocator.getResourceService()
                 .getAsset("sounds/Impact4.ogg", Sound.class);
         attackSound.play();
     }
 
     /** Finds and returns the active camera in the entity service. */
-    private Camera getActiveCamera() {
+    Camera getActiveCamera() {
         for (Entity entity : ServiceLocator.getEntityService().getEntities()) {
             if (entity.hasComponent(CameraComponent.class)) {
                 return entity.getComponent(CameraComponent.class).getCamera();
@@ -55,7 +55,7 @@ public class RangedUseComponent extends ItemActionsComponent {
     }
 
     /** Creates either a bomb or regular projectile depending on consumable state. */
-    private Entity createProjectileEntity(WeaponsStatsComponent weaponsStats, String texturePath) {
+    Entity createProjectileEntity(WeaponsStatsComponent weaponsStats, String texturePath) {
         boolean isConsumable = entity.hasComponent(ConsumableComponent.class);
         return isConsumable
                 ? ProjectileFactory.createBomb(ProjectileTarget.ENEMY, weaponsStats, texturePath)
