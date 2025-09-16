@@ -44,7 +44,12 @@ public class FireballAttackComponent extends Component {
     private void shoot(Vector2 from, Vector2 to) {
         Vector2 velocity = new Vector2(to).sub(from).nor().scl(speed);
         Entity fireball = BossFactory.createFireball(from, velocity);
-        ServiceLocator.getEntityService().register(fireball);
+        com.csse3200.game.areas.GameArea area = ServiceLocator.getGameArea();
+        if (area != null) {
+            area.spawnEntity(fireball);
+        } else {
+            ServiceLocator.getEntityService().register(fireball);
+        }
     }
     public void setAttack(boolean attack)
     {

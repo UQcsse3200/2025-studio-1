@@ -1,15 +1,13 @@
 package com.csse3200.game.components.player;
 
-import com.csse3200.game.components.ItemComponent;
+import com.csse3200.game.components.items.ItemComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
 import com.csse3200.game.extensions.GameExtension;
 import com.csse3200.game.services.ServiceLocator;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
-
 import java.lang.reflect.Field;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -54,7 +52,6 @@ class ItemPickUpComponentTest {
         pickup = new ItemPickUpComponent(inventory);
         ServiceLocator.registerEntityService(new EntityService());
 
-
         player = new Entity()
                 .addComponent(inventory)
                 .addComponent(pickup);
@@ -71,12 +68,10 @@ class ItemPickUpComponentTest {
             Entity worldItem = new Entity().addComponent(new ItemComponent());
             worldItem.create();
 
-
             // Simulate collision target present
             setPrivate(pickup, "targetItem", worldItem);
 
             player.getEvents().trigger("pick up");
-
 
             assertEquals(1, inventory.getSize(), "Item should be added to inventory");
             assertSame(worldItem, inventory.get(0), "First slot should contain picked up item");
@@ -183,5 +178,53 @@ class ItemPickUpComponentTest {
             player.getEvents().trigger("drop focused");
             assertEquals(0, inventory.getSize());
         }
+    }
+
+    @Test
+    @DisplayName("Drop clears focus and tolerates null GameArea")
+    void dropClearsFocusWithoutGameArea() {
+        // Put one item in slot 0
+        Entity item0 = new Entity().addComponent(new ItemComponent());
+        assertTrue(inventory.addItem(item0));
+
+        // Focus slot 0 and drop with NO game area registered
+        player.getEvents().trigger("focus item", 0);
+        player.getEvents().trigger("drop focused");
+
+        // Item removed and focus cleared
+        assertEquals(0, inventory.getSize(), "Inventory should be empty after drop");
+        assertEquals(-1, (int) getPrivate(pickup, "focusedIndex"), "Focus should be cleared (-1)");
+    }
+
+    @Test
+    @DisplayName("Drop ignores unknown textures (no respawn)")
+    void dropUnknownTextureNoRespawn() {
+        // Make an item whose texture is unknown to the factory
+        ItemComponent itemComponent = new ItemComponent();
+        itemComponent.setTexture("images/dont-exist.png");
+        Entity unknown = new Entity().addComponent(itemComponent);
+
+        assertTrue(inventory.addItem(unknown));
+        player.getEvents().trigger("focus item", 0);
+        player.getEvents().trigger("drop focused");
+
+        // Item removed; respawn skipped
+        assertEquals(0, inventory.getSize());
+    }
+
+    @Test
+    @DisplayName("Drop skips respawn when item has no texture")
+    void dropSkipsRespawnWhenNoTexture() {
+        // ItemComponent with no texture set
+        Entity blank = new Entity().addComponent(new ItemComponent());
+        assertTrue(inventory.addItem(blank));
+        assertEquals(1, inventory.getSize());
+
+        // Focus and drop
+        player.getEvents().trigger("focus item", 0);
+        player.getEvents().trigger("drop focused");
+
+        // Removed but not respawned
+        assertEquals(0, inventory.getSize());
     }
 }

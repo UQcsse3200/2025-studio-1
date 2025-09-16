@@ -5,6 +5,7 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.csse3200.game.components.Component;
+import com.csse3200.game.components.ComponentPriority;
 import com.csse3200.game.physics.BodyUserData;
 import com.csse3200.game.physics.PhysicsContactListener;
 import com.csse3200.game.physics.PhysicsEngine;
@@ -20,11 +21,13 @@ import com.csse3200.game.services.ServiceLocator;
 public class PhysicsComponent extends Component {
   private static final float GROUND_FRICTION = 5f;
   private final PhysicsEngine physics;
-  private final Body body;
+  private Body body;
+  private final BodyDef bodyDef = new BodyDef();
 
   /** Create a physics component with default settings. */
   public PhysicsComponent() {
     this(ServiceLocator.getPhysicsService().getPhysics());
+    this.prio = ComponentPriority.HIGH;
   }
 
   /**
@@ -34,14 +37,11 @@ public class PhysicsComponent extends Component {
    */
   public PhysicsComponent(PhysicsEngine engine) {
     this.physics = engine;
-
-    BodyDef bodyDef = new BodyDef();
     bodyDef.type = BodyType.DynamicBody;
     bodyDef.fixedRotation = true;
     bodyDef.linearDamping = GROUND_FRICTION;
     bodyDef.angle = 0f;
     bodyDef.active = false;
-    body = physics.createBody(bodyDef);
   }
 
   /**
@@ -51,7 +51,11 @@ public class PhysicsComponent extends Component {
    * @return self
    */
   public PhysicsComponent setBodyType(BodyType bodyType) {
-    body.setType(bodyType);
+    if (body != null) {
+      body.setType(bodyType);
+    } else {
+      bodyDef.type = bodyType;
+    }
     return this;
   }
 
@@ -66,7 +70,9 @@ public class PhysicsComponent extends Component {
 
   @Override
   public void create() {
-
+    if (body == null) {
+      body = physics.createBody(bodyDef);
+    }
     body.setTransform(entity.getPosition(), 0f);
     body.setActive(true);
 
@@ -90,7 +96,11 @@ public class PhysicsComponent extends Component {
 
   @Override
   public void dispose() {
-    physics.destroyBody(body);
+      if (body != null) {
+        // Destroy immediately on render thread to avoid overlap with next area's creations
+        physics.destroyBody(body);
+        body = null;
+      }
   }
 
   @Override

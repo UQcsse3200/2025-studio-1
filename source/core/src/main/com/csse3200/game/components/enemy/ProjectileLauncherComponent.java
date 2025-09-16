@@ -2,6 +2,7 @@ package com.csse3200.game.components.enemy;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Timer;
 import com.csse3200.game.areas.ForestGameArea;
+import com.csse3200.game.areas.GameArea;
 import com.csse3200.game.components.Component;
 import com.csse3200.game.components.WeaponsStatsComponent;
 import com.csse3200.game.entities.Entity;
@@ -15,7 +16,7 @@ import org.slf4j.LoggerFactory;
 public class ProjectileLauncherComponent extends Component {
     private long timeSinceFiring;
     private static final Logger projectileLogger = LoggerFactory.getLogger(ProjectileLauncherComponent.class);
-    private static ForestGameArea forestGameArea;
+    private static GameArea forestGameArea;
     private Entity target;
 
     /**
@@ -23,7 +24,7 @@ public class ProjectileLauncherComponent extends Component {
      * @param area The area, such as ForestGameArea, in which the entity is residing in.
      * @param target The target entity, that this component's entity wants to hit.
      */
-    public ProjectileLauncherComponent(ForestGameArea area, Entity target)
+    public ProjectileLauncherComponent(GameArea area, Entity target)
     {
         forestGameArea = area;
         this.target = target;
