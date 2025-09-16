@@ -223,7 +223,7 @@ public class ForestGameArea extends GameArea {
 //    spawnTrees();
     spawnComputerBench();
 
-    player = spawnPlayer();
+    this.player = spawnPlayer();
 
     dagger = spawnDagger();
     pistol = spawnPistol();
@@ -482,6 +482,7 @@ public class ForestGameArea extends GameArea {
 
   private Entity spawnPlayer() {
     Entity newPlayer = PlayerFactory.createPlayer();
+
     spawnEntityAt(newPlayer, PLAYER_SPAWN, true, true);
     return newPlayer;
   }
@@ -731,6 +732,8 @@ public class ForestGameArea extends GameArea {
   }
 
   // Removed area-specific dispose to avoid double disposal during transitions
+
+
   public Entity getPlayer() {
     return player;
   }
@@ -741,6 +744,7 @@ public class ForestGameArea extends GameArea {
   }
 
   public static ForestGameArea load(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
+
     return (new ForestGameArea(terrainFactory, cameraComponent));
   }
 }

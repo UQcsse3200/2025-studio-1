@@ -374,5 +374,12 @@ public abstract class GameArea implements Disposable {
     return "GameArea";
   }
 
+//  public abstract Entity spawnPlayer(List<String> inventory, int CPU, int health);
+
+  /**
+   * allows manipulation of player character by loading function
+   *
+   * @return player entity
+   */
   public abstract Entity getPlayer();
 }
