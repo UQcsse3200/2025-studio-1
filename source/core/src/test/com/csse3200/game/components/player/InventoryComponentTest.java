@@ -243,7 +243,8 @@ class InventoryComponentTest {
     @Test
     void shouldSetGetCurrItem() {
       //Test for a weapon
-      Entity thing = WeaponsFactory.createWeapon(Weapons.PISTOL);
+      Entity thing = new Entity();
+      thing.addComponent(mock(WeaponsStatsComponent.class));
       inventory.setCurrItem(thing);
 
       assertInstanceOf(WeaponsStatsComponent.class, inventory.getCurrItemStats());
