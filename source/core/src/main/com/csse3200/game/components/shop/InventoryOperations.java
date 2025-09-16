@@ -4,26 +4,33 @@ import com.csse3200.game.components.items.ItemComponent;
 import com.csse3200.game.components.player.InventoryComponent;
 import com.csse3200.game.entities.Entity;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Manages updating a player's inventory after an event (e.g., item purchase).
  */
 public class InventoryOperations {
-    private static final int FAILURE = -1;
 
     private InventoryOperations() {}
 
+    /**
+     * Adds item to an inventory, either on a new slot or stacks on an existing slot.
+     * @param inventory The player's inventory to add to
+     * @param item The item being added
+     * @param amount The number of items added
+     * @param maxStack The max number of items that a player can hold
+     * @return The inventory slot the item was added to on success, or the failure result including a message and status code.
+     */
     public static int addOrStack(InventoryComponent inventory, Entity item,
                                  int amount, int maxStack) {
+        // Check passed in information is valid
         if (inventory == null || item == null || amount <= 0 || maxStack <= 0) {
-            return FAILURE;
+            return PurchaseError.UNEXPECTED.getCode();
         }
 
         ItemComponent itemComponent = item.getComponent(ItemComponent.class);
         if (itemComponent == null) {
-            return FAILURE;
+            return PurchaseError.INVALID_ITEM.getCode();
         }
 
         int index = findIndexForItem(inventory, item);
@@ -32,12 +39,12 @@ public class InventoryOperations {
             Entity existing = inventory.getInventory().get(index);
             ItemComponent existingItemComponent = existing.getComponent(ItemComponent.class);
             if (existingItemComponent == null) {
-                return FAILURE;
+                return PurchaseError.INVALID_ITEM.getCode();
             }
 
             int currentQuantity = existingItemComponent.getCount();
             if  (currentQuantity + amount > maxStack) {
-                return FAILURE  ;
+                return PurchaseError.LIMIT_REACHED.getCode();
             }
             existingItemComponent.setCount(currentQuantity + amount);
             inventory.getEntity().getEvents()
@@ -45,15 +52,15 @@ public class InventoryOperations {
             return index;
         } else {  // Insert as a new slot
             if (inventory.isFull()) {
-                return FAILURE;
+                return PurchaseError.INVENTORY_FULL.getCode();
             }
             if (amount > maxStack) {
-                return FAILURE;
+                return PurchaseError.LIMIT_REACHED.getCode();
             }
             itemComponent.setCount(amount);
             boolean ok = inventory.addItem(item);
             if (!ok) {
-                return FAILURE;
+                return PurchaseError.UNEXPECTED.getCode();
             }
             return inventory.getInventory().indexOf(item);
         }
@@ -75,7 +82,7 @@ public class InventoryOperations {
                 return i;
             }
         }
-        return FAILURE;
+        return -1;
     }
 
 
