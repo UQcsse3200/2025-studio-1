@@ -224,6 +224,7 @@ public class MainGameScreen extends ScreenAdapter {
   }
 
 
+
   /**
    * Overloaded constructor for loading the game from save file
    *
@@ -281,10 +282,12 @@ public class MainGameScreen extends ScreenAdapter {
     gameArea.create();
     InventoryComponent help = gameArea.getPlayer().getComponent(InventoryComponent.class);
     ItemPickUpComponent testLoading= new ItemPickUpComponent(help);
-    for (int i = 0; i < load.inventory.size(); i++) {
-      Entity placehold = testLoading.createItemFromTexture(load.inventory.get(i));
-      help.addItem(placehold);
-    }
+    //repopulates the inventory
+    if (load.inventory != null){
+      for (int i = 0; i < load.inventory.size(); i++) {
+        Entity placehold = testLoading.createItemFromTexture(load.inventory.get(i));
+        help.addItem(placehold);
+    }}
 
 
 
