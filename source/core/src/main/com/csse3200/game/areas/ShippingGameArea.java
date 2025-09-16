@@ -6,8 +6,11 @@ import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.entities.Entity;
+import com.csse3200.game.entities.configs.ItemSpawnConfig;
+import com.csse3200.game.entities.factories.characters.NPCFactory;
 import com.csse3200.game.entities.factories.characters.PlayerFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
+import com.csse3200.game.entities.spawner.ItemSpawner;
 
 import javax.swing.*;
 
@@ -20,6 +23,7 @@ import javax.swing.*;
 public class ShippingGameArea extends GameArea {
   private static final float WALL_WIDTH = 0.1f;
   private static final GridPoint2 PLAYER_SPAWN = new GridPoint2(10, 10);
+  private Entity player;
 
   /**
    * Initialise this ShippingGameArea to use the provided TerrainFactory and camera helper.
@@ -46,11 +50,15 @@ public class ShippingGameArea extends GameArea {
         new Color(0.12f, 0.12f, 0.10f, 0.26f));
 
     spawnBordersAndDoors();
-    spawnPlayer();
+    player = spawnPlayer();
+    spawnGrokDroids();
     spawnFloor();
     spawnShipmentBoxLid();
     spawnShipmentCrane();
     spawnConveyor();
+
+    ItemSpawner itemSpawner = new ItemSpawner(this);
+    itemSpawner.spawnItems(ItemSpawnConfig.shippingmap());
 
     Entity ui = new Entity();
     ui.addComponent(new com.csse3200.game.components.gamearea.FloorLabelDisplay("Shipping"));
@@ -117,9 +125,22 @@ public class ShippingGameArea extends GameArea {
     spawnEntity(rightDoor);
   }
 
-  private void spawnPlayer() {
+  private Entity spawnPlayer() {
     Entity player = PlayerFactory.createPlayer();
     spawnEntityAt(player, PLAYER_SPAWN, true, true);
+    return player;
+  }
+
+  /**
+   * Spawn 2 high-level grok droids in the room as enemies.
+   */
+  private void spawnGrokDroids() {
+    Entity grok1 = NPCFactory.createGrokDroid(player, this, 3f);
+    GridPoint2 grok1Pos = new GridPoint2(25, 7);
+    spawnEntityAt(grok1, grok1Pos, true, false);
+    Entity grok2 = NPCFactory.createGrokDroid(player, this, 3f);
+    GridPoint2 grok2Pos = new GridPoint2(25, 7);
+    spawnEntityAt(grok2, grok2Pos, true, false);
   }
 
   /**
