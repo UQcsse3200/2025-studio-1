@@ -9,12 +9,12 @@ import java.util.ArrayList;
 // Placeholder Consumable used for testing of Projectile Consumables
 public class GenericProjectileConsumableConfig extends ProjectileConsumableConfig {
     public GenericProjectileConsumableConfig() {
-        this.texturePath = "images/round.png";
+        this.texturePath = "images/lightning_bottle.png";
         this.duration = 3;
         this.projectileDamage = 0;
 
         ArrayList<Effect> areaEffects = new ArrayList<>();
-        areaEffects.add(new HealthEffect(1000000));
+        areaEffects.add(new HealthEffect(100));
         this.effects = new ArrayList<>();
         this.effects.add(new AreaEffect(areaEffects, 2));
     }
