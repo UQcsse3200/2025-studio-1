@@ -147,6 +147,7 @@ public class NPCFactory {
     animator.setDisposeAtlas(false);
     animator.addAnimation("angry_float", 0.1f, Animation.PlayMode.LOOP);
     animator.addAnimation("float", 0.1f, Animation.PlayMode.LOOP);
+    animator.addAnimation("damage_taken", 0.1f, Animation.PlayMode.NORMAL);
 
     AITaskComponent aiComponent =
             new AITaskComponent()
