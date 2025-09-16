@@ -400,8 +400,38 @@ public class PlayerActions extends Component {
    * Upgrades the speed of the player
    */
   public void upgradeSpeed() {
-    MAX_SPEED = new Vector2(5f, 5f);
-    CROUCH_SPEED = new Vector2(2f, 4f);
-    SPRINT_SPEED = new Vector2(9f, 5f);
+    MAX_SPEED.x *= 1.25F;
+    MAX_SPEED.y *= 1.25F;
+    CROUCH_SPEED.x *= 1.25F;
+    CROUCH_SPEED.y *= 1.25F;
+    SPRINT_SPEED.x *= 1.25F;
+    SPRINT_SPEED.y *= 1.25F;
+
   }
+
+  /**
+   *
+   * @return the max speed vector
+   */
+  public Vector2 getMaxSpeed() {
+    return MAX_SPEED;
+  }
+
+  /**
+   *
+   * @return the crouch speed
+   */
+  public Vector2 getCrouchSpeed() {
+    return CROUCH_SPEED;
+  }
+
+  /**
+   *
+   * @return the sprint speed
+   */
+  public Vector2 getSprintSpeed() {
+    return SPRINT_SPEED;
+  }
+
+
 }

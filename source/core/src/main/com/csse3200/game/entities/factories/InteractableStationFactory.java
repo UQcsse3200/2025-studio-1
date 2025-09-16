@@ -46,7 +46,6 @@ public class InteractableStationFactory {
         PhysicsUtils.setScaledCollider(bench, 1f, 1f);
         bench.getComponent(ColliderComponent.class).setAsBoxAligned(new Vector2(1f, 1f),
                 PhysicsComponent.AlignX.CENTER, PhysicsComponent.AlignY.CENTER);
-
         return bench;
     }
 

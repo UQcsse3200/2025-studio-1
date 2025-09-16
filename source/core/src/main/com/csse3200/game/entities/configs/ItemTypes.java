@@ -8,7 +8,8 @@ public enum ItemTypes {
     CONSUMABLE("consumable"),
     BENCH("bench"),
     HEALTH_BENCH("healthbench"),
-    COMPUTER_BENCH("computerbench");
+    COMPUTER_BENCH("computerbench"),
+    SPEED_BENCH("speedbench");
 
     private final String string;
 

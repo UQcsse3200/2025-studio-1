@@ -24,17 +24,20 @@ public class HealthBenchConfig extends BenchConfig {
     @Override
     public void upgrade(boolean playerNear, Entity player, Label buyPrompt) {
 
+        //check the player and the upgrade hasnt been used yet
         if (playerNear && player != null && !upgradeUsed
                 && player.getComponent(InventoryComponent.class).hasProcessor(price)) {
-            System.out.println("CURR MAX HEALTH: " + player.getComponent(CombatStatsComponent.class).getMaxHealth());
+
             player.getComponent(CombatStatsComponent.class).upgradeMaxHealth();
             subtractPrice(player);
             upgradeUsed = true;
             buyPrompt.setText("Upgrade Successful!");
-        } else if (upgradeUsed) {
+
+        } else if (upgradeUsed) { //If upgrade has been used, tell player
             buyPrompt.setText("Upgrade Already Used!");
         } else {
             assert player != null;
+            //Tell player if they don't have funds
             if (!player.getComponent(InventoryComponent.class).hasProcessor(price)) {
                 buyPrompt.setText("You are broke! Fries in the bag!");
             }
