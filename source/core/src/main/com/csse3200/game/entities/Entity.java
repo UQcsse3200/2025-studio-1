@@ -223,6 +223,10 @@ public class Entity {
     return this;
   }
 
+  public IntMap<Component> getComponents() {
+    return components;
+  }
+
   public <T extends Component> boolean hasComponent(Class<T> type) {
     ComponentType componentType = ComponentType.getFrom(type);
     return components.get(componentType.getId()) != null;

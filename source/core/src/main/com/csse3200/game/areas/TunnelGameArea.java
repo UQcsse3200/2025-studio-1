@@ -7,7 +7,6 @@ import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.factories.characters.PlayerFactory;
-import com.csse3200.game.services.SaveLoadService;
 
 /** Tunnel room: minimal walls with left door back to Storage. */
 public class TunnelGameArea extends GameArea {
@@ -32,7 +31,7 @@ public class TunnelGameArea extends GameArea {
   private void spawnBordersAndDoors() {
     Bounds b = getCameraBounds(cameraComponent);
     addVerticalDoorLeft(b, WALL_WIDTH, this::loadStorage);
-    addSolidWallRight(b, WALL_WIDTH);
+    addVerticalDoorRight(b, WALL_WIDTH, this::loadShipping);
     addSolidWallTop(b, WALL_WIDTH);
     addSolidWallBottom(b, WALL_WIDTH);
   }
@@ -44,6 +43,10 @@ public class TunnelGameArea extends GameArea {
 
   private void loadStorage() {
     clearAndLoad(() -> new StorageGameArea(terrainFactory, cameraComponent));
+  }
+
+  private void loadShipping() {
+    clearAndLoad(() -> new ShippingGameArea(terrainFactory, cameraComponent));
   }
 
   @Override
