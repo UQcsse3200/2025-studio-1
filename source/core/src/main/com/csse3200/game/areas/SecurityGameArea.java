@@ -6,8 +6,10 @@ import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.entities.Entity;
+import com.csse3200.game.entities.configs.ItemSpawnConfig;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.entities.factories.characters.PlayerFactory;
+import com.csse3200.game.entities.spawner.ItemSpawner;
 
 /** Minimal generic Security room: walls, doors, and a subtle background overlay. */
 public class SecurityGameArea extends GameArea {
@@ -26,9 +28,10 @@ public class SecurityGameArea extends GameArea {
 
     spawnBordersAndDoors();
     spawnPlayer();
-    spawnFloor();
     spawnPlatforms();
     spawnSecurityProps();
+    ItemSpawner itemSpawner = new ItemSpawner(this);
+    itemSpawner.spawnItems(ItemSpawnConfig.securitymap());
   }
 
   private void spawnBordersAndDoors() {
@@ -95,12 +98,12 @@ public class SecurityGameArea extends GameArea {
     spawnEntityAt(redLight, redLightPos, false, false);
 
     /** Monitor (decorative)**/
-    GridPoint2 monitorPos = new GridPoint2(5, 6);
+    GridPoint2 monitorPos = new GridPoint2(7, 6);
     Entity monitor = ObstacleFactory.createSecurityMonitor();
     spawnEntityAt(monitor, monitorPos, false, false);
 
     /**Security camera (decorative, from ObstacleFactory) **/
-    GridPoint2 cameraPos = new GridPoint2(1, 19);
+    GridPoint2 cameraPos = new GridPoint2(2, 19);
     Entity securityCamera = ObstacleFactory.createLargeSecurityCamera();
     spawnEntityAt(securityCamera, cameraPos, false, false);
 
