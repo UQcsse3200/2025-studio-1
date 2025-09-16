@@ -370,7 +370,7 @@ public class ForestGameArea extends GameArea {
    */
   private void loadNextLevel() {
     // Use the safe, render-thread transition helper
-    clearAndLoad(() -> new Reception(terrainFactory, cameraComponent));
+    clearAndLoad(() -> new ElevatorGameArea(terrainFactory, cameraComponent));
   }
 
   /**
