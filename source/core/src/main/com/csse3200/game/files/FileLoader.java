@@ -116,11 +116,14 @@ public class FileLoader {
   public static InventoryComponent readInventory(List<String> inventory, int CPU) {
     InventoryComponent loadInventory = new InventoryComponent(CPU);
     ItemPickUpComponent loadIn = new ItemPickUpComponent(loadInventory);
+    logger.info("item pick up");
+
     if (!inventory.isEmpty()) {
       for (int i = 0; i < inventory.size(); i++) {
         loadIn.createItemFromTexture(inventory.get(i));
         loadInventory.addItem(
                 loadIn.createItemFromTexture(inventory.get(i)));
+        logger.info("Item {} added to inventory", inventory.get(i));
       }
     }
     return loadInventory;

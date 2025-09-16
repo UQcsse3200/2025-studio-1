@@ -8,6 +8,7 @@ import com.csse3200.game.areas.*;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.components.maingame.MainGameActions;
 import com.csse3200.game.components.player.InventoryComponent;
+import com.csse3200.game.components.player.ItemPickUpComponent;
 import com.csse3200.game.components.screens.PauseMenuDisplay;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
@@ -34,6 +35,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.csse3200.game.GdxGame.ScreenType;
 import com.csse3200.game.components.CombatStatsComponent;
+
+import java.util.List;
 
 
 /**
@@ -257,6 +260,8 @@ public class MainGameScreen extends ScreenAdapter {
     GameArea areaLoad = null;
     logger.debug("Initialising main game screen entities");
     TerrainFactory terrainFactory = new TerrainFactory(renderer.getCamera());
+
+    //cases for all current areas
     switch (load.areaId) {
       case "Forest" -> areaLoad = ForestGameArea.load(terrainFactory, renderer.getCamera());
       case "Elevator" -> areaLoad = ElevatorGameArea.load(terrainFactory, renderer.getCamera());
@@ -273,14 +278,14 @@ public class MainGameScreen extends ScreenAdapter {
 
     gameArea = areaLoad;
     com.csse3200.game.services.ServiceLocator.registerGameArea(gameArea);
-
+    gameArea.inventory = load.inventory;
+    gameArea.loadthis = true;
     gameArea.create();
-    gameArea.getPlayer().getEvents().trigger("load player", load.inventory, load.ProcessNumber);
+    // currently not needed: sprint 3 refactor to fix everything
+//    gameArea.getPlayer().getEvents().trigger("load player", load.inventory, load.ProcessNumber);
+    // functionally bad but if it works
+//    gameArea.loadIn(load.inventory, load.Health,load.ProcessNumber, load.position.x, load.position.y);
 
-//    InventoryComponent loadinventory = gameArea.getPlayer().getComponent(InventoryComponent.class);
-//    loadinventory = FileLoader.readInventory(load.inventory,load.ProcessNumber);
   }
-
-
 
 }

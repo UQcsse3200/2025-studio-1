@@ -57,7 +57,7 @@ public class SaveLoadService {
 
     /** Load a save file from local storage and rebuild the area + entities. */
     public static PlayerInfo load() {
-        //tags to link areas
+        //tags to link areas - this will be commented out as they are not needed at this time
         FileLoader.jsonSave.addClassTag("Forest", ForestGameArea.class);
         FileLoader.jsonSave.addClassTag("Elevator", ElevatorGameArea.class);
         FileLoader.jsonSave.addClassTag("Office", OfficeGameArea.class);

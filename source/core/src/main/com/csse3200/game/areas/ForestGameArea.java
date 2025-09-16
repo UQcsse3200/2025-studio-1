@@ -31,6 +31,7 @@ import com.csse3200.game.components.shop.ShopDemo;
 
 
 import java.security.SecureRandom;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -115,28 +116,7 @@ public class ForestGameArea extends GameArea {
 
   /** General prop textures (floors, tiles, etc.). */
   private static final String[] generalTextures = {
-    "foreg_sprites/general/LongFloor.png",
-    "foreg_sprites/general/Railing.png",
-    "foreg_sprites/general/SmallSquare.png",
-    "foreg_sprites/general/SmallStair.png",
-    "foreg_sprites/general/SquareTile.png",
-    "foreg_sprites/general/ThickFloor.png",
-    "foreg_sprites/general/ThinFloor.png",
-    "foreg_sprites/general/ThinFloor2.png",
-    "foreg_sprites/general/ThinFloor3.png",
     "foreg_sprites/general/Test.png"
-  };
-
-  private static final String[] securityTextures = {
-    "images/SecurityBackground.png",
-    "foreg_sprites/general/ThinFloor3.png",
-    "foreg_sprites/Security/Monitor.png",
-    "foreg_sprites/Security/Platform.png",
-    "foreg_sprites/Security/RedLight.png",
-    "foreg_sprites/Security/SecuritySystem.png",
-    "foreg_sprites/futuristic/storage_crate_green2.png",
-    "foreg_sprites/futuristic/storage_crate_dark2.png",
-    "foreg_sprites/futuristic/SecurityCamera3.png"
   };
 
   /** Spawn pad textures. */
@@ -171,6 +151,19 @@ public class ForestGameArea extends GameArea {
     "images/keycard_lvl3.png",
     "images/keycard_lvl4.png",
   };
+
+  private static final String[] securityTextures = {
+          "images/SecurityBackground.png",
+          "foreg_sprites/general/ThinFloor3.png",
+          "foreg_sprites/Security/Monitor.png",
+          "foreg_sprites/Security/Platform.png",
+          "foreg_sprites/Security/RedLight.png",
+          "foreg_sprites/Security/SecuritySystem.png",
+          "foreg_sprites/futuristic/storage_crate_green2.png",
+          "foreg_sprites/futuristic/storage_crate_dark2.png",
+          "foreg_sprites/futuristic/SecurityCamera3.png"
+  };
+
 
   private static final String[] forestTextureAtlases = {
     "images/robot-2.atlas", "images/fireball.atlas", "images/blackhole.atlas", "images/Robot_1.atlas",
@@ -240,7 +233,6 @@ public class ForestGameArea extends GameArea {
     spawnComputerBench();
     player = spawnPlayer();
 
-    this.player = spawnPlayer();
 
     dagger = spawnDagger();
     pistol = spawnPistol();
@@ -251,7 +243,7 @@ public class ForestGameArea extends GameArea {
     // this.equipItem(pistol);
     // this.equipItem(lightsaber);
     // this.equipItem(dagger);
-    this.equipItem(rifle);
+//    this.equipItem(rifle);
 //    this.equipItem(ConsumableFactory.createConsumable(Consumables.GENERIC_HEAL_ITEM));
     spawnFloor();
     spawnBottomRightDoor();
@@ -278,7 +270,9 @@ public class ForestGameArea extends GameArea {
     spawnEntity(keycard);
 
     spawnItems();
+
   }
+
   private void spawnRobots() {
     GridPoint2 pos = new GridPoint2(8, 13);
       Entity robot = BossFactory.createRobot(player);
@@ -480,6 +474,15 @@ public class ForestGameArea extends GameArea {
   private Entity spawnPlayer() {
     Entity newPlayer = PlayerFactory.createPlayer();
     spawnEntityAt(newPlayer, PLAYER_SPAWN, true, true);
+
+    return newPlayer;
+  }
+
+
+  private Entity spawnPlayer(int loading) {
+    Entity newPlayer = PlayerFactory.createPlayer();
+    spawnEntityAt(newPlayer, PLAYER_SPAWN, true, true);
+
     return newPlayer;
   }
 
@@ -604,7 +607,6 @@ public class ForestGameArea extends GameArea {
   }
 
   public static ForestGameArea load(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
-
     return (new ForestGameArea(terrainFactory, cameraComponent));
   }
 }
