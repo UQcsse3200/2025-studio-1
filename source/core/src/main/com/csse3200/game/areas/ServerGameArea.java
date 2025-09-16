@@ -2,36 +2,22 @@ package com.csse3200.game.areas;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.GridPoint2;
-import com.csse3200.game.areas.*;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.factories.characters.PlayerFactory;
-import com.csse3200.game.rendering.SolidColorRenderComponent;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
-import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.components.ItemHoldComponent;
-import com.csse3200.game.components.KeycardGateComponent;
-import com.csse3200.game.components.WeaponsStatsComponent;
-import com.csse3200.game.components.player.InventoryComponent;
 import com.csse3200.game.entities.configs.Weapons;
-import com.csse3200.game.entities.factories.characters.BossFactory;
-import com.csse3200.game.entities.factories.characters.NPCFactory;
-import com.csse3200.game.entities.factories.items.ItemFactory;
 import com.csse3200.game.entities.factories.items.WeaponsFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.entities.configs.ItemSpawnConfig;
-import com.csse3200.game.entities.factories.*;
 import com.csse3200.game.entities.spawner.ItemSpawner;
-import com.csse3200.game.physics.components.PhysicsProjectileComponent;
 import com.csse3200.game.components.gamearea.GameAreaDisplay;
-import com.csse3200.game.rendering.TextureRenderComponent;
-import java.security.SecureRandom;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -178,8 +164,6 @@ public class ServerGameArea extends GameArea {
 
   private Entity player;
 
-  private Entity rifle;
-
   /**
    * Constructor for the Server Room, simples calls GameArea constructor.
    * @param terrainFactory the game's terrain factory (set in MainGameScreen)
@@ -211,10 +195,10 @@ public class ServerGameArea extends GameArea {
     spawnRoomObjects();
     spawnCratesAndRailing();
     spawnSpawnPads();
+    spawnBordersAndDoors();
 
     spawnFloor();
     player = spawnPlayer();
-    rifle = spawnRifle();
 
     ItemSpawner itemSpawner = new ItemSpawner(this);
     itemSpawner.spawnItems(ItemSpawnConfig.servermap());
@@ -364,11 +348,7 @@ public class ServerGameArea extends GameArea {
 
       // Leave a bottom gap in the middle if needed, then add a right-door trigger
       float doorWidth = Math.max(1f, viewWidth * 0.2f);
-      float doorHeight = WALL_WIDTH;
       float doorX = camPos.x - doorWidth / 2f;
-      float doorY = bottomY + 0.001f; // slight offset to sit above border
-      float rightDoorHeight = Math.max(1f, viewHeight * 0.2f);
-      float rightDoorY = camPos.y - rightDoorHeight / 2f;
 
       // Bottom screen border split into two segments leaving a gap for the door
       float leftSegmentWidth = Math.max(0f, doorX - leftX);
@@ -410,26 +390,6 @@ public class ServerGameArea extends GameArea {
       // This could be upgraded to a loading screen
       logger.info("Loading... {}%", resourceService.getProgress());
     }
-  }
-
-  /**
-   * Unloads assets that were loaded in {@link #loadAssets()}.
-   * Call this when leaving the room to free memory.
-   */
-  private void unloadAssets() {
-    logger.debug("Unloading assets");
-    ResourceService resourceService = ServiceLocator.getResourceService();
-    resourceService.unloadAssets(serverBackground);
-    resourceService.unloadAssets(keycardTextures);
-    resourceService.unloadAssets(futuristicTextures);
-    resourceService.unloadAssets(playerSound1);
-    resourceService.unloadAssets(forestTextures);
-    resourceService.unloadAssets(generalTextures);
-    resourceService.unloadAssets(forestTextureAtlases);
-    resourceService.unloadAssets(forestSounds);
-    resourceService.unloadAssets(forestMusic);
-    resourceService.unloadAssets(spawnPadTextures);
-    resourceService.unloadAssets(serverRacks);
   }
 
   /**
