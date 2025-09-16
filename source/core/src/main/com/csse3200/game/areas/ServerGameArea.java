@@ -7,13 +7,10 @@ import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.factories.characters.PlayerFactory;
-import com.csse3200.game.services.ResourceService;
+import com.csse3200.game.entities.factories.characters.NPCFactory;
 import com.csse3200.game.services.ServiceLocator;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector2;
-import com.csse3200.game.components.ItemHoldComponent;
-import com.csse3200.game.entities.configs.Weapons;
-import com.csse3200.game.entities.factories.items.WeaponsFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.entities.configs.ItemSpawnConfig;
 import com.csse3200.game.entities.spawner.ItemSpawner;
@@ -68,6 +65,7 @@ public class ServerGameArea extends GameArea {
 
     spawnFloor();
     player = spawnPlayer();
+    spawnGPTs();
 
     ItemSpawner itemSpawner = new ItemSpawner(this);
     itemSpawner.spawnItems(ItemSpawnConfig.servermap());
@@ -159,24 +157,24 @@ public class ServerGameArea extends GameArea {
   }
 
   /**
+   * Spawn 2 high-level GPTs in the room as enemies.
+   */
+  private void spawnGPTs() {
+    Entity ghost1 = NPCFactory.createGhostGPT(player, this, 2.5f);
+    GridPoint2 ghost1Pos = new GridPoint2(25, 20);
+    spawnEntityAt(ghost1, ghost1Pos, true, false);
+    Entity ghost2 = NPCFactory.createGhostGPT(player, this, 2.5f);
+    GridPoint2 ghost2Pos = new GridPoint2(25, 20);
+    spawnEntityAt(ghost2, ghost2Pos, true, false);
+  }
+
+  /**
    * Adds a very tall thick-floor as a background wall/divider.
    */
   private void spawnBigWall() {
     GridPoint2 wallSpawn = new GridPoint2(-14, 0);
     Entity bigWall = ObstacleFactory.createBigThickFloor();
     spawnEntityAt(bigWall, wallSpawn, true, false);
-  }
-
-
-  /**
-   * Spawns a rifle on top of the purple spawn pad.
-   * @return Entity rifle
-   */
-  private Entity spawnRifle() {
-    Entity newRifle = WeaponsFactory.createWeapon(Weapons.RIFLE);
-    Vector2 newRifleOffset = new Vector2(0.25f, 0.15f);
-    newRifle.addComponent(new ItemHoldComponent(this.player, newRifleOffset));
-    return newRifle;
   }
 
   /**
