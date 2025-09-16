@@ -18,6 +18,8 @@ import com.csse3200.game.rendering.TextureRenderComponent;
 import com.csse3200.game.services.ServiceLocator;
 import com.badlogic.gdx.utils.Timer;
 
+import static com.csse3200.game.areas.ForestGameArea.PLAYER_SPAWN;
+
 /**
  * Component that handles all player actions including movement, jumping, sprinting,
  * dashing, crouching, attacking, and shooting.
@@ -52,7 +54,7 @@ public class PlayerActions extends Component {
   private Vector2 walkDirection = Vector2.Zero.cpy();
   private boolean moving = false;
   private boolean sprinting = false;
-  private boolean facingRight = true;
+  boolean facingRight = true;
   private boolean dashing = false;
   private boolean crouching = false;
   private boolean grounded = true;
@@ -452,9 +454,11 @@ public class PlayerActions extends Component {
 
 
     /**
-     *
+     * if player already has a weapon --> unequip first
+     * sets new weapon as equipped
+     * repositions the weapon to appear in player's hand
      */
-    private Entity currentWeapon = null;
+    Entity currentWeapon = null;
 
     public void equipWeapon(Entity weapon) {
         if (currentWeapon != null) {
@@ -471,7 +475,8 @@ public class PlayerActions extends Component {
     }
 
     /**
-     *
+     * ensures that no weapon is equipped and weapon’s
+     * texture (sprite) is no longer visible in the game.
      */
     public void unequipWeapon() {
         if (currentWeapon == null) return;
@@ -486,11 +491,11 @@ public class PlayerActions extends Component {
 
     //to represent relative difference between the
     //player's body position and player's hand.
-    private float handOffsetX = 5f;
-    private float handOffsetY = 10f;
+    float handOffsetX = 5f;
+    float handOffsetY = 10f;
 
     /**
-     *
+     * this function sets the coordinates for the weapon in player's hand
      */
     public void updateWeaponPosition() {
         if (currentWeapon == null) return;
