@@ -1,5 +1,6 @@
-package com.csse3200.game.components;
+package com.csse3200.game.components.items;
 
+import com.csse3200.game.components.Component;
 import com.csse3200.game.entities.configs.ItemTypes;
 
 public class ItemComponent extends Component {
@@ -53,13 +54,17 @@ public class ItemComponent extends Component {
      * the game
      * @return the count for the item
      */
-    public int getCount() {return this.count;}
+    public int getCount() {
+        return this.count;
+    }
 
     /**
      * setCount to set item_count at a given value
      * @param count sets the item count
      */
-    public void setCount(int count){this.count = count;}
+    public void setCount(int count) {
+        this.count = count;
+    }
 
     /**
      * Sets the texture path of the current item

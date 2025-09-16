@@ -2,7 +2,7 @@ package com.csse3200.game.components.player;
 
 import com.csse3200.game.components.Component;
 import com.csse3200.game.components.WeaponsStatsComponent;
-import com.csse3200.game.components.ItemComponent;
+import com.csse3200.game.components.items.ItemComponent;
 import com.csse3200.game.entities.Entity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,8 +23,8 @@ public class InventoryComponent extends Component {
   private int inventoryCount = 0;
   private final int maxCapacity = 5;
   private final int minCapacity = 0;
-  private final ArrayList<Entity> items = new ArrayList<Entity>(maxCapacity);
-  private final ArrayList<String> itemTexs = new ArrayList<String>(maxCapacity);
+  private final ArrayList<Entity> items = new ArrayList<>(maxCapacity);
+  private final ArrayList<String> itemTexs = new ArrayList<>(maxCapacity);
   private int processor;
   private Entity currItem;
   private int selectedSlot = -1; // -1 = no selectedSlot
@@ -36,11 +36,9 @@ public class InventoryComponent extends Component {
    * Constructs an inventory for the player and a beginning currency amount
    * to start with.
    *
-   *
    * @param processor The number of processors that the inventory is starting with
    */
   public InventoryComponent(int processor) {
-
     setProcessor(processor);
 
     for (int idx = this.minCapacity; idx < this.maxCapacity; idx++) {
@@ -137,6 +135,7 @@ public class InventoryComponent extends Component {
         return this.setItem(idx, item);
       }
     }
+    setCurrItem(item);
     return false;
   }
 
@@ -172,7 +171,7 @@ public class InventoryComponent extends Component {
 
   /**
    * Removes the item at the given index (must be between 0 and 4) and replaces it
-   * with null vlaue.
+   * with null value.
    *
    * @param index the position of the item to be removed.
    * @return true if successful, false otherwise
@@ -205,7 +204,7 @@ public class InventoryComponent extends Component {
    *
    * @return true if the inventory is full, false otherwise
    */
-  public Boolean isFull() {
+  public boolean isFull() {
     return this.inventoryCount == this.maxCapacity;
   }
 
@@ -255,7 +254,6 @@ public class InventoryComponent extends Component {
 
   /**
    * Get the WeaponsStatsComponent for the current item
-   *
    *
    * @return Weapon Stats of current item
    */

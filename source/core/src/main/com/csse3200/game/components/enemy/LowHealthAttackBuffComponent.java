@@ -1,6 +1,5 @@
 package com.csse3200.game.components.enemy;
 
-import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.components.Component;
 import com.csse3200.game.components.WeaponsStatsComponent;
 
@@ -9,12 +8,12 @@ import com.csse3200.game.components.WeaponsStatsComponent;
  *
  * <p> Requires CombatStatsComponent on this entity.</p>
  */
-public class LowHealthAttackBuff extends Component {
+public class LowHealthAttackBuffComponent extends Component {
     private final int attackBuff;
     private final WeaponsStatsComponent stats;
     private boolean triggered = false;
 
-    public LowHealthAttackBuff(int attackBuff, WeaponsStatsComponent stats) {
+    public LowHealthAttackBuffComponent(int attackBuff, WeaponsStatsComponent stats) {
         this.attackBuff = attackBuff;
         this.stats = stats;
     }
