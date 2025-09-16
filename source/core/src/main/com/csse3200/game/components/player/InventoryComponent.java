@@ -202,7 +202,7 @@ public class InventoryComponent extends Component {
    *
    * @return true if the inventory is full, false otherwise
    */
-  public Boolean isFull() {
+  public boolean isFull() {
     return this.inventoryCount == this.maxCapacity;
   }
 
