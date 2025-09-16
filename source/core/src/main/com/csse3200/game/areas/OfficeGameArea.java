@@ -25,6 +25,7 @@ public class OfficeGameArea extends GameArea {
               "images/Office and elevator/Office Background.png",
               "images/Office and elevator/Office stuff.png",
               "images/Office and elevator/table chair ceo.png",
+              "images/KeycardDoor.png",
               "foreg_sprites/general/ThinFloor3.png",
               "images/Office and elevator/Platform for elevator.png"
       });
@@ -49,6 +50,16 @@ public class OfficeGameArea extends GameArea {
       addSolidWallTop(b, WALL_WIDTH);
       addSolidWallBottom(b, WALL_WIDTH);
 
+      // left door sprite 
+      float leftDoorHeight = Math.max(1f, b.viewHeight * 0.2f);
+      float leftDoorY = b.camPos.y - leftDoorHeight / 2f;
+      Entity leftDoorSprite = new Entity()
+              .addComponent(new com.csse3200.game.rendering.TextureRenderComponent("images/KeycardDoor.png"));
+      leftDoorSprite.getComponent(com.csse3200.game.rendering.TextureRenderComponent.class).scaleEntity();
+      leftDoorSprite.scaleHeight(leftDoorHeight);
+      leftDoorSprite.setPosition(b.leftX + 0.1f, leftDoorY);
+      spawnEntity(leftDoorSprite);
+
       float rightDoorHeight = Math.max(1f, b.viewHeight * 0.2f);
       float rightDoorY = b.bottomY + 7.0f; // higher placement
       float rightTopSegHeight = Math.max(0f, b.topY - (rightDoorY + rightDoorHeight));
@@ -61,6 +72,14 @@ public class OfficeGameArea extends GameArea {
       rightDoor.setPosition(b.rightX - WALL_WIDTH - 0.001f, rightDoorY);
       rightDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadElevator));
       spawnEntity(rightDoor);
+
+      //  right door sprite
+      Entity rightDoorSprite = new Entity()
+              .addComponent(new com.csse3200.game.rendering.TextureRenderComponent("images/KeycardDoor.png"));
+      rightDoorSprite.getComponent(com.csse3200.game.rendering.TextureRenderComponent.class).scaleEntity();
+      rightDoorSprite.scaleHeight(rightDoorHeight);
+      rightDoorSprite.setPosition(b.rightX - WALL_WIDTH - 1.2f, rightDoorY);
+      spawnEntity(rightDoorSprite);
   }
 
   private void spawnPlayer() {
