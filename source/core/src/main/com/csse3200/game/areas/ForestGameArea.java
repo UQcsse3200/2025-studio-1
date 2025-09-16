@@ -229,7 +229,7 @@ public class ForestGameArea extends GameArea {
     //this.equipItem(pistol);
     //this.equipItem(lightsaber);
     //this.equipItem(dagger);
-    this.equipItem(rifle);
+    //this.equipItem(rifle);
 
     spawnFloor();
     spawnBottomRightDoor();
@@ -498,43 +498,36 @@ public class ForestGameArea extends GameArea {
     spawnEntityAt(item, PLAYER_SPAWN, true, true);
   }
 
-    /** TODO create a trigger and a listener, so when the item is selected to be
-     *  TODO equipped then call this function with .trigger("equip item", itemName)
-     *  TODO can change this how you'd like, this is my idea
-     *
-     * FIXME delete spaces when finished
-     *
-     *
+    /**
      * This function takes in a string name for an item,
      * it then spawns the item at the players location so that they're holding it.
-     *
-     * @param itemName A valid name of an item that is spawnable within the game
-     *             (i.e. dagger, pistol, rifle, lightsaber)
+     * @param itemName  A valid name of an item that is spawnable within the game
+     *          (i.e. dagger, pistol, rifle, lightsaber)
      */
-  private boolean spawnAndEquipItem(String itemName) {
-      Entity item;
-      switch (itemName) {
-          case "dagger":
-              item = spawnDagger();
-              equipItem(item);
-              return true;
-          case "pistol":
-              item = spawnPistol();
-              equipItem(item);
-              return true;
-          case "rifle":
-              item = spawnRifle();
-              equipItem(item);
-              return true;
-          case "lightsaber":
-              item = spawnLightsaber();
-              equipItem(item);
-              return true;
-          default:
-              logger.debug("Invalid item name: {}", itemName);
-              return false;
-      }
-  }
+    private boolean spawnAndEquipItem(String itemName) {
+        Entity item;
+        switch (itemName) {
+            case "dagger":
+                item = spawnDagger();
+                equipItem(item);
+                return true;
+            case "pistol":
+                item = spawnPistol();
+                equipItem(item);
+                return true;
+            case "rifle":
+                item = spawnRifle();
+                equipItem(item);
+                return true;
+            case "lightsaber":
+                item = spawnLightsaber();
+                equipItem(item);
+                return true;
+            default:
+                logger.debug("Invalid item name: {}", itemName);
+                return false;
+        }
+    }
 
 
   private Entity spawnLightsaber() {
