@@ -16,7 +16,6 @@ import com.csse3200.game.entities.Entity;
  * </p>
  */
 public class ShopManager extends Component {
-    // private static final Logger logger = LoggerFactory.getLogger(ShopManager.class);
 
     private final CatalogService catalog;
 
