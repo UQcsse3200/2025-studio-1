@@ -57,7 +57,7 @@ public class DashAttackTask extends DefaultTask implements PriorityTask {
         movementTask.update();
         // If the enemy has dashed and the cooldown has passed, dash again
         if (ServiceLocator.getTimeSource().getTime() - lastDashTime > cooldown + dashTime) {
-            movementTask.setSpeed(new Vector2(5f, 5f)); // Dash
+            movementTask.setSpeed(speed); // Dash
             lastDashTime = ServiceLocator.getTimeSource().getTime();
         // If the enemy has run out of dash time and is now on cooldown, stand still
         } else if (ServiceLocator.getTimeSource().getTime() - lastDashTime > dashTime){
