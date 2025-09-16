@@ -33,7 +33,7 @@
   },
   "turret": {
     "health": 500,
-    "baseAttack": 50
+    "baseAttack": 5
   }
 }
 

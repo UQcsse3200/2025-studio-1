@@ -167,6 +167,7 @@ public abstract class GameArea implements Disposable {
       switch (roomNumber) {
           case 1:
               spawnDeepspin(total, scaleFactor, player, positions);
+              spawnTurret(total,scaleFactor, player, positions);
               break;
           case 2:
               spawnDeepspin(total, scaleFactor, player, positions);
@@ -253,6 +254,20 @@ public abstract class GameArea implements Disposable {
           spawnEntity(vroomba);
       }
   }
+    /**
+     * Adds Turret enemies onto the map.
+     * @param total The total number of Turret to be spawned.
+     * @param scaleFactor The scale of increase in difficulty of the GhostGPT
+     */
+    public void spawnTurret(
+            int total, float scaleFactor, Entity player, HashMap<String, ArrayList<Vector2>> positions) {
+        ArrayList<Vector2> spawnPositions = positions.get("Turret");
+        for (Vector2 pos : spawnPositions) {
+            Entity turret = NPCFactory.createTurret(player, this, scaleFactor);
+            turret.setPosition(pos);
+            spawnEntity(turret);
+        }
+    }
 
   /**
    * Spawns the projectile used by the Ghost GPT Enemy
@@ -279,6 +294,10 @@ public abstract class GameArea implements Disposable {
               respectiveSpawns.add(new Vector2(8.2f, 11f));
               respectiveSpawns.add(new Vector2(11.1f, 10f));
               positions.put("Deepspin", (ArrayList<Vector2>) respectiveSpawns.clone());
+              respectiveSpawns.clear();
+              respectiveSpawns.add(new Vector2(2.5f, 5f));
+              positions.put("Turret", (ArrayList<Vector2>) respectiveSpawns.clone());
+
               break;
           case 2:
               respectiveSpawns.add(new Vector2(2.7f, 8f));
