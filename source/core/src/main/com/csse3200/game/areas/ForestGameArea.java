@@ -253,12 +253,6 @@ public class ForestGameArea extends GameArea {
     lightsaber = spawnLightsaber();
     rifle.addComponent(new LaserComponent());
     rifle.addComponent(new BulletEnhancerComponent());
-
-    //These are commented out since there is no equip feature yet
-    // this.equipItem(pistol);
-    // this.equipItem(lightsaber);
-    // this.equipItem(dagger);
-
     this.equipItem(rifle);
 
     spawnFloor();
