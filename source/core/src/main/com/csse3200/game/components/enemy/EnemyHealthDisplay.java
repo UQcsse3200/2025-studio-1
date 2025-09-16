@@ -118,6 +118,7 @@ public class EnemyHealthDisplay extends Component {
      * Removes the health bar from the stage to prevent it from lingering
      * after the enemy is removed.
      */
+    @Override
     public void dispose() {
         super.dispose();
         if (healthBar != null) healthBar.remove();
