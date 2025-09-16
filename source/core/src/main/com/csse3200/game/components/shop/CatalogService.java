@@ -1,6 +1,7 @@
 package com.csse3200.game.components.shop;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Provides access to a collection of {@link CatalogEntry} objects.
@@ -17,8 +18,8 @@ public class CatalogService {
      *
      * @param entries The catalog entries to manage. Must not be {@code null}.
      */
-    public CatalogService(ArrayList<CatalogEntry> entries) {
-        this.entries = entries;
+    public CatalogService(List<CatalogEntry> entries) {
+        this.entries = (ArrayList<CatalogEntry>) entries;
     }
 
     /**
@@ -44,7 +45,7 @@ public class CatalogService {
      *
      * @return A list of {@link CatalogEntry} objects.
      */
-    public ArrayList<CatalogEntry> list() {
+    public List<CatalogEntry> list() {
         return entries;
     }
 }

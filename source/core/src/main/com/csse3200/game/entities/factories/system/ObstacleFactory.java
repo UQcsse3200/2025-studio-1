@@ -43,16 +43,51 @@ public class ObstacleFactory {
    * @return entity
    */
   public static Entity createMarblePlatform() {
-      Entity MarblePlatform =
-              new Entity()
-                      .addComponent(new TextureRenderComponent("images/MarblePlatform.png"))
-                      .addComponent(new PhysicsComponent())
-                      .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
-      MarblePlatform.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
-      MarblePlatform.getComponent(TextureRenderComponent.class).scaleEntity();
-      MarblePlatform.scaleHeight(0.5f);
-      PhysicsUtils.setScaledCollider(MarblePlatform, 1f, 0.75f);
-      return MarblePlatform;
+    Entity MarblePlatform = new Entity()
+        .addComponent(new TextureRenderComponent("images/MarblePlatform.png"))
+        .addComponent(new PhysicsComponent())
+        .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
+    MarblePlatform.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
+    MarblePlatform.getComponent(TextureRenderComponent.class).scaleEntity();
+    MarblePlatform.scaleHeight(0.5f);
+    PhysicsUtils.setScaledCollider(MarblePlatform, 1f, 0.75f);
+    return MarblePlatform;
+  }
+
+  public static Entity createShipmentBoxes() {
+    Entity ShipmentBoxes = new Entity()
+        .addComponent(new TextureRenderComponent("images/ShipmentBoxLid.png"))
+        .addComponent(new PhysicsComponent())
+        .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
+    ShipmentBoxes.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
+    ShipmentBoxes.getComponent(TextureRenderComponent.class).scaleEntity();
+    ShipmentBoxes.scaleHeight(0.05f);
+    PhysicsUtils.setScaledCollider(ShipmentBoxes, 1f, 0.75f);
+    return ShipmentBoxes;
+  }
+
+  public static Entity createShipmentCrane() {
+    Entity ShipmentCrane = new Entity()
+        .addComponent(new TextureRenderComponent("images/ShipmentCrane.png"))
+        .addComponent(new PhysicsComponent())
+        .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
+    ShipmentCrane.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
+    ShipmentCrane.getComponent(TextureRenderComponent.class).scaleEntity();
+    ShipmentCrane.scaleHeight(0.05f);
+    PhysicsUtils.setScaledCollider(ShipmentCrane, 1f, 0.75f);
+    return ShipmentCrane;
+  }
+
+  public static Entity createConveyor() {
+    Entity ShipmentCrane = new Entity()
+        .addComponent(new TextureRenderComponent("images/Conveyor.png"))
+        .addComponent(new PhysicsComponent())
+        .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
+    ShipmentCrane.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
+    ShipmentCrane.getComponent(TextureRenderComponent.class).scaleEntity();
+    ShipmentCrane.scaleHeight(0.05f);
+    PhysicsUtils.setScaledCollider(ShipmentCrane, 1f, 0.75f);
+    return ShipmentCrane;
   }
 
   /**
@@ -103,26 +138,8 @@ public class ObstacleFactory {
                     .addComponent(new TextureRenderComponent("foreg_sprites/general/Railing.png"));
 
     railing.getComponent(TextureRenderComponent.class).scaleEntity();
-    railing.scaleHeight(0.7f);
+    railing.scaleHeight(0.5f);
     return railing;
-  }
-
-  /**
-   * Small, solid square tile useful as a step or blocker.
-   * @return a static solid tile
-   */
-  public static Entity createSmallSquare() {
-    Entity smallSquare =
-            new Entity()
-                    .addComponent(new TextureRenderComponent("foreg_sprites/general/SmallSquare.png"))
-                    .addComponent(new PhysicsComponent())
-                    .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
-
-    smallSquare.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
-    smallSquare.getComponent(TextureRenderComponent.class).scaleEntity();
-    smallSquare.scaleHeight(1f);
-    PhysicsUtils.setScaledCollider(smallSquare, 1f, 1f);
-    return smallSquare;
   }
 
   /**
@@ -142,25 +159,6 @@ public class ObstacleFactory {
     PhysicsUtils.setScaledCollider(smallStair, 1f, 1f);
     return smallStair;
   }
-
-  /**
-   * Square floor tile, collidable so it behaves like ground.
-   * @return a static square tile
-   */
-  public static Entity createSquareTile() {
-    Entity squareTile =
-            new Entity()
-                    .addComponent(new TextureRenderComponent("foreg_sprites/general/SquareTile.png"))
-                    .addComponent(new PhysicsComponent())
-                    .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
-
-    squareTile.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
-    squareTile.getComponent(TextureRenderComponent.class).scaleEntity();
-    squareTile.scaleHeight(2f);
-    PhysicsUtils.setScaledCollider(squareTile, 1f, 1f);
-    return squareTile;
-  }
-
   /**
    * Regular thick floor block (short version of the big wall).
    * @return a static ground piece
@@ -190,10 +188,50 @@ public class ObstacleFactory {
     thinFloor.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
     thinFloor.getComponent(TextureRenderComponent.class).scaleEntity();
     thinFloor.scaleHeight(0.8f);
-    PhysicsUtils.setScaledCollider(thinFloor, 1f, 1f);
+    PhysicsUtils.setScaledCollider(thinFloor, 1f, 0.9f);
     return thinFloor;
   }
+  /** creating the platform used in reception room **/
+  public static Entity createplatform2() {
+    Entity platform2 =
+            new Entity()
+                    .addComponent(new TextureRenderComponent("images/platform-2.png"))
+                    .addComponent(new PhysicsComponent())
+                    .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
 
+    platform2.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
+    platform2.getComponent(TextureRenderComponent.class).scaleEntity();
+    platform2.scaleHeight(3f);
+    PhysicsUtils.setScaledCollider(platform2, 0.7f, 0.55f);
+    return platform2;
+ }
+  /** creating the clock used in reception room **/
+  public static Entity createholoclock() {
+    Entity clockSpawn =
+            new Entity()
+                    .addComponent(new TextureRenderComponent("images/holo-clock.png"));
+    clockSpawn.getComponent(TextureRenderComponent.class).scaleEntity();
+    clockSpawn.scaleHeight(2f);
+    return clockSpawn;
+  }
+  /** creating the help desk used in reception room **/
+  public static Entity createdesk_reception() {
+    Entity desk_receptionSpawn =
+            new Entity()
+                    .addComponent(new TextureRenderComponent("images/desk_reception.png"));
+    desk_receptionSpawn.getComponent(TextureRenderComponent.class).scaleEntity();
+    desk_receptionSpawn.scaleHeight(3f);
+    return desk_receptionSpawn;
+  }
+  /** creating the comic stand used in reception room **/
+  public static Entity createcomic_stand() {
+    Entity comic_standSpawn =
+            new Entity()
+                    .addComponent(new TextureRenderComponent("images/comics.png"));
+    comic_standSpawn.getComponent(TextureRenderComponent.class).scaleEntity();
+    comic_standSpawn.scaleHeight(1.5f);
+    return comic_standSpawn;
+}
   /**
    * Purple spawn pad prop. Solid so it rests on the ground like other props.
    * @return a static pad entity
@@ -231,24 +269,6 @@ public class ObstacleFactory {
   }
 
   /**
-   * Small ceiling light prop. Solid only so it can be positioned consistently — it’s decorative.
-   * @return a static light entity
-   */
-  public static Entity createCeilingLight() {
-    Entity ceilingLight =
-            new Entity()
-                    .addComponent(new TextureRenderComponent("foreg_sprites/office/CeilingLight.png"))
-                    .addComponent(new PhysicsComponent())
-                    .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
-
-    ceilingLight.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
-    ceilingLight.getComponent(TextureRenderComponent.class).scaleEntity();
-    ceilingLight.scaleHeight(1f);
-    PhysicsUtils.setScaledCollider(ceilingLight, 1f, 1f);
-    return ceilingLight;
-  }
-
-  /**
    * Wooden crate that blocks the player (useful for cover or decoration).
    * @return a static crate entity
    */
@@ -264,75 +284,6 @@ public class ObstacleFactory {
     crate.scaleHeight(1f);
     PhysicsUtils.setScaledCollider(crate, 1f, 1f);
     return crate;
-  }
-
-  /**
-   * Large shelf prop that blocks movement (like furniture in the way).
-   * @return a static shelf entity
-   */
-  public static Entity createLargeShelf() {
-    Entity largeShelf =
-            new Entity()
-                    .addComponent(new TextureRenderComponent("foreg_sprites/office/LargeShelf.png"))
-                    .addComponent(new PhysicsComponent())
-                    .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
-
-    largeShelf.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
-    largeShelf.getComponent(TextureRenderComponent.class).scaleEntity();
-    largeShelf.scaleHeight(1f);
-    PhysicsUtils.setScaledCollider(largeShelf, 1f, 1f);
-    return largeShelf;
-  }
-
-  // Added ceiling lights on under the ThinFloor
-  public static Entity createLongCeilingLight() {
-    Entity longCeilingLight =
-            new Entity()
-                    .addComponent(new TextureRenderComponent("foreg_sprites/office/LongCeilingLight2.png"))
-                    .addComponent(new PhysicsComponent())
-                    .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
-
-    longCeilingLight.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
-    longCeilingLight.getComponent(TextureRenderComponent.class).scaleEntity();
-    longCeilingLight.scaleHeight(2.7f);
-    PhysicsUtils.setScaledCollider(longCeilingLight, 1f, 0.1f);
-    return longCeilingLight;
-  }
-
-  /**
-   * Mid-height shelf prop that blocks movement.
-   * @return a static shelf entity
-   */
-  public static Entity createMidShelf() {
-    Entity midShelf =
-            new Entity()
-                    .addComponent(new TextureRenderComponent("foreg_sprites/office/MidShelf.png"))
-                    .addComponent(new PhysicsComponent())
-                    .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
-
-    midShelf.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
-    midShelf.getComponent(TextureRenderComponent.class).scaleEntity();
-    midShelf.scaleHeight(2f);
-    PhysicsUtils.setScaledCollider(midShelf, 1f, 1f);
-    return midShelf;
-  }
-
-  /**
-   * Office chair prop that the player cannot pass through.
-   * @return a static chair entity
-   */
-  public static Entity createOfficeChair() {
-    Entity officeChair =
-            new Entity()
-                    .addComponent(new TextureRenderComponent("foreg_sprites/office/OfficeChair.png"))
-                    .addComponent(new PhysicsComponent())
-                    .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
-
-    officeChair.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
-    officeChair.getComponent(TextureRenderComponent.class).scaleEntity();
-    officeChair.scaleHeight(1.2f);
-    PhysicsUtils.setScaledCollider(officeChair, 1f, 1f);
-    return officeChair;
   }
 
   /**
@@ -357,13 +308,7 @@ public class ObstacleFactory {
    * Security camera sprite (visual only). No physics/collider, so it never blocks the player.
    * @return a decorative camera entity
    */
-  public static Entity createLargeSecurityCamera() {
-    Entity cam = new Entity()
-            .addComponent(new TextureRenderComponent("foreg_sprites/futuristic/SecurityCamera3.png"));
-    cam.getComponent(TextureRenderComponent.class).scaleEntity();
-    cam.scaleHeight(1.9f);
-    return cam;
-  }
+
 
   /**
    * Glowing energy pod that acts as a solid prop on the floor.
@@ -418,6 +363,96 @@ public class ObstacleFactory {
     crate.scaleHeight(1.5f);
     PhysicsUtils.setScaledCollider(crate, 1f, 1f);
     return crate;
+  }
+    public static Entity createLargeSecurityCamera() {
+        Entity cam = new Entity()
+                .addComponent(new TextureRenderComponent("foreg_sprites/futuristic/SecurityCamera3.png"));
+        cam.getComponent(TextureRenderComponent.class).scaleEntity();
+        cam.scaleHeight(1.7f);
+        return cam;
+    }
+    public static Entity createSecurityMonitor() {
+        Entity monitor =
+                new Entity()
+                        .addComponent(new TextureRenderComponent("foreg_sprites/Security/Monitor.png"))
+                        .addComponent(new PhysicsComponent())
+                .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
+
+        monitor.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
+        monitor.getComponent(TextureRenderComponent.class).scaleEntity();
+        monitor.scaleHeight(1.5f);
+        PhysicsUtils.setScaledCollider(monitor, 0.7f, 0.7f);
+        return monitor;
+    }
+    public static Entity createSecurityPlatform() {
+        Entity platform =
+                new Entity()
+                        .addComponent(new TextureRenderComponent("foreg_sprites/Security/Platform.png"))
+                        .addComponent(new PhysicsComponent())
+                        .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
+
+        platform.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
+        platform.getComponent(TextureRenderComponent.class).scaleEntity();
+        platform.scaleHeight(1.0f);
+        PhysicsUtils.setScaledCollider(platform, 0.6f, 0.6f);
+        return platform;
+    }
+    public static Entity createRedLight() {
+        Entity redLight =
+                new Entity()
+                        .addComponent(new TextureRenderComponent("foreg_sprites/Security/RedLight.png"));
+
+        redLight.getComponent(TextureRenderComponent.class).scaleEntity();
+        redLight.scaleHeight(1f);
+        return redLight;
+    }
+    public static Entity createSecuritySystem() {
+        Entity console =
+                new Entity()
+                        .addComponent(new TextureRenderComponent("foreg_sprites/Security/SecuritySystem.png"))
+                        .addComponent(new PhysicsComponent())
+                        .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
+
+        console.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
+        console.getComponent(TextureRenderComponent.class).scaleEntity();
+        console.scaleHeight(2.0f);
+        PhysicsUtils.setScaledCollider(console, 0.7f, 0.7f);
+        return console;
+    }
+  /**
+   * Server rack (first variant, lighter colour).
+   * @return a static server rack entity
+   */
+  public static Entity createServerRack1() {
+    Entity serverRack =
+            new Entity()
+                    .addComponent(new TextureRenderComponent("foreg_sprites/furniture/ServerRack.png"))
+                    .addComponent(new PhysicsComponent())
+                    .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
+
+    serverRack.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
+    serverRack.getComponent(TextureRenderComponent.class).scaleEntity();
+    serverRack.scaleHeight(1f);
+    PhysicsUtils.setScaledCollider(serverRack, 1f, 1f);
+    return serverRack;
+  }
+
+  /**
+   * Server rack (second variant, darker colour).
+   * @return a static server rack entity
+   */
+  public static Entity createServerRack2() {
+    Entity serverRack =
+            new Entity()
+                    .addComponent(new TextureRenderComponent("foreg_sprites/furniture/ServerRack2.png"))
+                    .addComponent(new PhysicsComponent())
+                    .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
+
+    serverRack.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
+    serverRack.getComponent(TextureRenderComponent.class).scaleEntity();
+    serverRack.scaleHeight(1f);
+    PhysicsUtils.setScaledCollider(serverRack, 1f, 1f);
+    return serverRack;
   }
 
   public static Entity createWall(float width, float height) {
