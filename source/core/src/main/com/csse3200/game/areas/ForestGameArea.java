@@ -527,7 +527,7 @@ public class ForestGameArea extends GameArea {
 
   private Entity spawnRifle() {
     Entity newRifle = WeaponsFactory.createWeapon(Weapons.RIFLE);
-    Vector2 newRifleOffset = new Vector2(0.25f, 0.15f);
+    Vector2 newRifleOffset = new Vector2(0.8f, 0.15f);
     newRifle.addComponent(new ItemHoldComponent(this.player, newRifleOffset));
     return newRifle;
   }
