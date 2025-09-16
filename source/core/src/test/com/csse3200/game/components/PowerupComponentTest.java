@@ -48,6 +48,8 @@ class PowerupComponentTest {
         when(rapidFireEffect.apply(weapon)).thenReturn(true);
         when(rapidFireEffect.isActive()).thenReturn(true);
 
+        when(ServiceLocator.getTimeSource().getDeltaTime()).thenReturn(1f);
+
         powerupComponent.addEffect(rapidFireEffect);
         powerupComponent.update();
 
@@ -61,7 +63,6 @@ class PowerupComponentTest {
         powerupComponent.addEffect(rapidFireEffect);
         powerupComponent.update();
 
-        // Should not be updated because effect not added
         verify(rapidFireEffect, never()).update(anyFloat());
     }
 

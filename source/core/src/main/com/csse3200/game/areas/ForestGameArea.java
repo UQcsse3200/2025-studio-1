@@ -240,8 +240,8 @@ public class ForestGameArea extends GameArea {
     rifle = spawnRifle();
     lightsaber = spawnLightsaber();
 
-//    rapidFirePowerup = spawnRapidFirePowerup();
-    unlimitedAmmoPowerup = spawnUnlimitedAmmoPowerup();
+    rapidFirePowerup = spawnRapidFirePowerup();
+//    unlimitedAmmoPowerup = spawnUnlimitedAmmoPowerup();
 //  Entity bullet = spawnBullet();
 
     //These are commented out since there is no equip feature yet
@@ -518,18 +518,11 @@ public class ForestGameArea extends GameArea {
     return newRifle;
   }
 
-//  private Entity spawnRapidFirePowerup() {
-//    Entity newRapidFirePowerup = PowerupsFactory.createRapidFire();
-//    spawnEntityAt(newRapidFirePowerup, new GridPoint2(2, 40), true, true);
-//    return newRapidFirePowerup;
-//  }
-
-  private Entity spawnUnlimitedAmmoPowerup() {
-    Entity newUnlimitedAmmoPowerup = PowerupsFactory.createRapidFire();
-    spawnEntityAt(newUnlimitedAmmoPowerup, new GridPoint2(2, 40), true, true);
-    return newUnlimitedAmmoPowerup;
+  private Entity spawnRapidFirePowerup() {
+    Entity newRapidFirePowerup = PowerupsFactory.createRapidFire();
+    spawnEntityAt(newRapidFirePowerup, new GridPoint2(2, 40), true, true);
+    return newRapidFirePowerup;
   }
-
 
   // Enemy Projectiles
   public Entity spawnEnemyProjectile(Vector2 directionToFire, WeaponsStatsComponent source) {
