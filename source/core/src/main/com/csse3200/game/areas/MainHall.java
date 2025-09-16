@@ -59,10 +59,12 @@ public class MainHall extends GameArea {
   }
 
   private void loadBackToFloor2() {
+      roomNumber--;
     clearAndLoad(() -> new Reception(terrainFactory, cameraComponent));
   }
 
   private void loadSecurity() {
+      roomNumber++;
     clearAndLoad(() -> new SecurityGameArea(terrainFactory, cameraComponent));
   }
 

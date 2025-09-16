@@ -90,10 +90,12 @@ public class ElevatorGameArea extends GameArea {
   }
 
   private void loadOffice() {
+      roomNumber--;
     clearAndLoad(() -> new OfficeGameArea(terrainFactory, cameraComponent));
   }
 
   private void loadResearch() {
+      roomNumber++;
     clearAndLoad(() -> new ResearchGameArea(terrainFactory, cameraComponent));
   }
 
