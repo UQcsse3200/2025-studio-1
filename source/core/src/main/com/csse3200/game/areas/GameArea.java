@@ -296,29 +296,29 @@ public abstract class GameArea implements Disposable {
               positions.put("Turret", (ArrayList<Vector2>) respectiveSpawns.clone());
               break;
           case 2:
-              respectiveSpawns.add(new Vector2(2.7f, 8f));
-              respectiveSpawns.add(new Vector2(5.6f, 10f));
+              respectiveSpawns.add(new Vector2(5.7f, 5f));
+              respectiveSpawns.add(new Vector2(1.5f, 7f));
               positions.put("Vroomba", (ArrayList<Vector2>) respectiveSpawns.clone());
               respectiveSpawns.clear();
-              respectiveSpawns.add(new Vector2(8.2f, 11f));
-              respectiveSpawns.add(new Vector2(11.1f, 10f));
-              positions.put("Deepspin", (ArrayList<Vector2>) respectiveSpawns.clone());
+              respectiveSpawns.add(new Vector2(11.5f, 10f));
+              positions.put("GhostGpt", (ArrayList<Vector2>) respectiveSpawns.clone());
               break;
           case 3:
-              respectiveSpawns.add(new Vector2(10f, 4f));
-              positions.put("GhostGpt", (ArrayList<Vector2>) respectiveSpawns.clone());
-              respectiveSpawns.clear();
               respectiveSpawns.add(new Vector2(8.4f, 10f));
-              respectiveSpawns.add(new Vector2(11.3f, 8f));
+              respectiveSpawns.add(new Vector2(2f, 10f));
+              positions.put("Deepspin", (ArrayList<Vector2>) respectiveSpawns.clone());
+              respectiveSpawns.clear();
+              respectiveSpawns.add(new Vector2(12f, 5f));
+              respectiveSpawns.add(new Vector2(2f, 5f));
               positions.put("Vroomba", (ArrayList<Vector2>) respectiveSpawns.clone());
               break;
           case 4:
-              respectiveSpawns.add(new Vector2(2.7f, 8f));
-              respectiveSpawns.add(new Vector2(5.6f, 10f));
+              respectiveSpawns.add(new Vector2(12f, 10f));
+              respectiveSpawns.add(new Vector2(2f, 5f));
               positions.put("GhostGpt", (ArrayList<Vector2>) respectiveSpawns.clone());
               respectiveSpawns.clear();
-              respectiveSpawns.add(new Vector2(8.2f, 11f));
-              respectiveSpawns.add(new Vector2(11.1f, 10f));
+              respectiveSpawns.add(new Vector2(7f, 11f));
+              respectiveSpawns.add(new Vector2(3f, 10f));
               positions.put("Deepspin", (ArrayList<Vector2>) respectiveSpawns.clone());
               break;
           case 5:
@@ -342,23 +342,23 @@ public abstract class GameArea implements Disposable {
               positions.put("GrokDroid", (ArrayList<Vector2>) respectiveSpawns.clone());
               break;
           case 7:
-              respectiveSpawns.add(new Vector2(13f, 4f));
-              respectiveSpawns.add(new Vector2(10f, 4f));
-              respectiveSpawns.add(new Vector2(2.7f, 8f));
+              respectiveSpawns.add(new Vector2(11f, 10f));
+              respectiveSpawns.add(new Vector2(2f, 5f));
+              respectiveSpawns.add(new Vector2(11f, 5f));
               positions.put("GhostGpt", (ArrayList<Vector2>) respectiveSpawns.clone());
               respectiveSpawns.clear();
-              respectiveSpawns.add(new Vector2(8.4f, 10f));
-              respectiveSpawns.add(new Vector2(11.3f, 8f));
+              respectiveSpawns.add(new Vector2(3f, 10f));
+              respectiveSpawns.add(new Vector2(7f, 8f));
               positions.put("GrokDroid", (ArrayList<Vector2>) respectiveSpawns.clone());
               break;
           default:
-              respectiveSpawns.add(new Vector2(13f, 4f));
-              respectiveSpawns.add(new Vector2(10f, 4f));
-              respectiveSpawns.add(new Vector2(2.7f, 8f));
+              respectiveSpawns.add(new Vector2(12f, 11f));
+              respectiveSpawns.add(new Vector2(7.6f, 4f));
+              respectiveSpawns.add(new Vector2(2f, 4f));
               positions.put("GhostGpt", (ArrayList<Vector2>) respectiveSpawns.clone());
               respectiveSpawns.clear();
-              respectiveSpawns.add(new Vector2(8.4f, 10f));
-              respectiveSpawns.add(new Vector2(11.3f, 8f));
+              respectiveSpawns.add(new Vector2(5f, 10f));
+              respectiveSpawns.add(new Vector2(2f, 10f));
               positions.put("GrokDroid", (ArrayList<Vector2>) respectiveSpawns.clone());
               break;
       }
