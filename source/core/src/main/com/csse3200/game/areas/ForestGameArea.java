@@ -248,13 +248,13 @@ public class ForestGameArea extends GameArea {
 
 
     Entity rapidFirePowerup = spawnRapidFirePowerup();
-//  Entity bullet = spawnBullet();
 
     //These are commented out since there is no equip feature yet
     // this.equipItem(pistol);
     // this.equipItem(lightsaber);
     // this.equipItem(dagger);
     this.equipItem(rifle);
+
 
     spawnFloor();
     spawnPad();
@@ -265,8 +265,13 @@ public class ForestGameArea extends GameArea {
     spawnEnergyPod();
     spawnStorageCrates();
     spawnBigWall();
+    //Commented out so I don't die immediately
     // spawnGhosts();
     // spawnGhostKing();
+    // spawnGhostGPT();
+    // spawnDeepspin();
+    // spawnGrokDroid();
+    // spawnVroomba();
     int choice = (int)(Math.random() * 3);
     if (choice == 0) {
       spawnBoss2();
@@ -275,10 +280,7 @@ public class ForestGameArea extends GameArea {
     } else {
       spawnBoss3();
     }
-    // spawnGhostGPT();
-    // spawnDeepspin();
-    // spawnGrokDroid();
-    // spawnVroomba();
+
     playMusic();
 
     // Place a keycard on the floor so the player can unlock the door
