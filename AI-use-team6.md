@@ -301,9 +301,28 @@ boss.setPosition(new Vector2(0f, 0f));
 
 Ling Fang talk with chatgpt
 add a attack concroller in others' code
+copy code
 if (!timer <= 0f) {
 pauseAI(false);
 dwellCounter = 0f;
 triggerAnim("boss2:patrol");
 state = State.PATROL;
 }
+
+Ling Fang talk with chatgpt and write some document due to bad english
+the dispose logic in missle attack method
+@Override
+public void dispose() {
+for (WarningEntry w : actives) {
+if (w.visual != null) {
+w.visual.dispose();
+}
+}
+actives.clear();
+}
+The attention attack logic in the code is based on other group in the code like 
+the health display in other map
+use code from the other team member ; the reduce damage conponment in other map
+
+Talk with chat gpt with the test codes
+talk alao with them about the  spawn logic but failed.
