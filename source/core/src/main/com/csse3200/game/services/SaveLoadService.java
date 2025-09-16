@@ -57,6 +57,7 @@ public class SaveLoadService {
 
     /** Load a save file from local storage and rebuild the area + entities. */
     public static PlayerInfo load() {
+        //tags to link areas
         FileLoader.jsonSave.addClassTag("Forest", ForestGameArea.class);
         FileLoader.jsonSave.addClassTag("Elevator", ElevatorGameArea.class);
         FileLoader.jsonSave.addClassTag("Office", OfficeGameArea.class);
@@ -70,15 +71,6 @@ public class SaveLoadService {
                 FileLoader.Location.LOCAL);
         logger.info("area id retrieved");
         return loadStats;
-
-        // switch for all areas of the game
-
-
-//        if (loadStats == null) {
-//            return false;
-//        }
-//        logger.info(String.valueOf(loadInventory));
-
     }
 
     /** mock game state to store entities. */

@@ -4,10 +4,12 @@ import com.csse3200.game.components.Component;
 import com.csse3200.game.components.WeaponsStatsComponent;
 import com.csse3200.game.components.ItemComponent;
 import com.csse3200.game.entities.Entity;
+import com.csse3200.game.files.FileLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A component intended to be used by the player to track their inventory.
@@ -37,12 +39,15 @@ private int inventoryCount = 0;
    */
   public InventoryComponent(int processor) {
     setProcessor(processor);
+//    entity.getEvents().addListener("load player", this::loadInventory);
+//    commented out in case i need later
 
     for (int idx = this.minCapacity; idx < this.maxCapacity; idx++) {
       this.items.add(idx, null);
       this.itemTexs.add(idx, null);
     }
   }
+
 
   /**
    * setter method for the keycard level
