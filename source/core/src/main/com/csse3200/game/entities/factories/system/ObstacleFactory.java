@@ -641,6 +641,17 @@ public class ObstacleFactory {
     return serverRack;
   }
 
+  /**
+   * Makes a static door, no collision so that the player can pass through.
+   */
+  public static Entity createDoor() {
+    Entity door = new Entity()
+            .addComponent(new TextureRenderComponent("images/KeycardDoor.png"));
+    door.getComponent(TextureRenderComponent.class).scaleEntity();
+    door.scaleHeight(1.8f);
+    return door;
+  }
+
   public static Entity createWall(float width, float height) {
     Entity wall = new Entity()
             .addComponent(new PhysicsComponent().setBodyType(BodyType.StaticBody))
