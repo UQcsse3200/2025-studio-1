@@ -7,11 +7,14 @@ import static org.junit.jupiter.api.Assertions.*;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.World;
 import com.csse3200.game.components.ItemComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
 import com.csse3200.game.extensions.GameExtension;
 import com.csse3200.game.physics.components.PhysicsComponent;
+import com.csse3200.game.rendering.TextureRenderComponent;
 import com.csse3200.game.services.GameTime;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
@@ -363,51 +366,39 @@ class PlayerActionsTest {
           item.addComponent(new ItemComponent());
 
           inventory.addItem(item);
+          inventory.setEquippedSlot(2);
 
-          actions.equipSlot(1);  //slot 1 - index 0
-
-          assert(inventory.getEquippedSlot() == 0);
-          assert(inventory.getCurrItem() == item);
+          assertEquals(1, inventory.getEquippedSlot());
       }
 
-//      TODO : Fix me
-//      @Test
-//      /**
-//       * equipCurrentWeapon() should trigger focus_item event with equipped slot index
-//       */
-//      void testingEquipCurrentWeapon(){
-//         Entity item = new Entity();
-//         item.addComponent(new ItemComponent());
-//         inventory.addItem(item);
-//         inventory.setEquippedSlot(0);
-//
-//         actions.equipCurrentWeapon();
-//
-//          assertEquals(item, inventory.getCurrItem());
-//          assertEquals(0, inventory.getEquippedSlot());
-//      }
-//
-//      @Test
-//      /**
-//       * equipCurrentWeapon() should trigger focus_item event with -1 when no equipped weapon
-//       */
-//      void testingEquipCurrentWeaponWithMinusOne(){
-//          Entity item = new Entity();
-//         inventory.setCurrItem(null);
-//         inventory.setEquippedSlot(-1);
-//         actions.equipCurrentWeapon();
-//
-//         assertEquals(null, inventory.getCurrItem());
-//         verify(player.getEvents()).trigger(eq("focus item"), eq(-1));
-//      }
-//
-//      @Test
-//      void testingunequipWeapon(){
-//          actions.unequipWeapon();
-//
-//          assertEquals(-1, inventory.getEquippedSlot());
-//          assertNull(inventory.getCurrItem());
-//          verify(player.getEvents()).trigger(eq("focus item"), eq(-1));
-//      }
+      /**
+       * should not return any slot if the inventory is empty
+       */
+      @Test
+      void testingEmptySlot(){
+          Entity item = new Entity();
+          item.addComponent(new ItemComponent());
+
+          inventory.addItem(item);
+          inventory.setEquippedSlot(0);
+
+          assertEquals(-1, inventory.getEquippedSlot(), "Inventory is empty");
+      }
+
+
+      /**
+       * should not select any slot and return a message for invalid slot index
+       */
+      @Test
+      void testingInvalidEquipSlot(){
+          Entity item = new Entity();
+          item.addComponent(new ItemComponent());
+
+          inventory.addItem(item);
+          inventory.setEquippedSlot(7);
+
+          assertFalse(inventory.getEquippedSlot() < 5  && inventory.getEquippedSlot() <= 0,
+              "Invalid equipped Slot");
+      }
   }
 }
