@@ -2,6 +2,9 @@ package com.csse3200.game.input;
 
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.extensions.GameExtension;
+import com.csse3200.game.services.GameTime;
+import com.csse3200.game.services.ServiceLocator;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
@@ -13,6 +16,11 @@ import static org.mockito.Mockito.*;
 @ExtendWith(GameExtension.class)
 class InputServiceTest {
 
+    @BeforeEach
+    void setMockGameTime() {
+        ServiceLocator.registerTimeSource(mock(GameTime.class));
+    }
+
   @Test
   void shouldRegisterInputHandler() {
     int keycode = 1;
@@ -23,7 +31,7 @@ class InputServiceTest {
     inputService.register(inputComponent);
 
     inputService.keyDown(keycode);
-    verify(inputComponent).keyDown(keycode);
+    verify(inputComponent).keyPressed(keycode);
   }
 
   @Test
@@ -41,9 +49,9 @@ class InputServiceTest {
   }
 
   @Test
-  void shouldHandleKeyDown()
+  void shouldHandleKeyPressed()
       throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-    Method method = InputComponent.class.getDeclaredMethod("keyDown", int.class);
+    Method method = InputComponent.class.getDeclaredMethod("keyPressed", int.class);
     Method serviceMethod = InputService.class.getDeclaredMethod("keyDown", int.class);
     shouldCallInputHandlersInPriorityOrder(method, serviceMethod, 1);
   }
@@ -57,9 +65,9 @@ class InputServiceTest {
   }
 
   @Test
-  void shouldHandleKeyUp()
+  void shouldHandleKeyReleased()
       throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-    Method method = InputComponent.class.getDeclaredMethod("keyUp", int.class);
+    Method method = InputComponent.class.getDeclaredMethod("keyReleased", int.class);
     Method serviceMethod = InputService.class.getDeclaredMethod("keyUp", int.class);
     shouldCallInputHandlersInPriorityOrder(method, serviceMethod, 1);
   }
