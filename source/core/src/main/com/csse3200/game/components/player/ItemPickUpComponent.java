@@ -52,6 +52,7 @@ public class ItemPickUpComponent extends Component {
         entity.getEvents().addListener("pick up", this::onPickupRequest);
         entity.getEvents().addListener("focus item", this::onFocusItem);
         entity.getEvents().addListener("drop focused", this::onDropFocused);
+        entity.getEvents().addListener("pickupAll", this::onPickupAll);
         logger.debug("ItemPickUpComponent listeners registered");
     }
 
@@ -223,5 +224,41 @@ public class ItemPickUpComponent extends Component {
         if (texture.endsWith("lightsaberSingle.png"))  return WeaponsFactory.createWeapon(Weapons.LIGHTSABER);
         if (texture.endsWith("tree.png"))              return ObstacleFactory.createTree();
         return null;
+    }
+
+        /**
+         * Picks up all available items in the world and adds them to the player's inventory.
+         *
+         * This is a cheat feature triggered by the terminal command "pickupAll".
+         * Unlike normal pickups (which require collision), this method scans all entities
+         * in the game world and attempts to add every entity with an itemComponent
+         * into the inventory until it is full.
+         */
+    private void onPickupAll() {
+        if (inventory == null) {
+            logger.warn("pickupAll: inventory not found on player");
+            return;
+        }
+        //pickup all entities at once
+        var entities = ServiceLocator.getEntityService().getEntities();
+        int picked = 0;
+
+        for (Entity candidate : entities) {
+            if (candidate == entity) continue;
+            //only pickup ItemComponet
+            if (candidate.getComponent(ItemComponent.class) == null) continue;
+
+            // If the bag is full, then return false
+            boolean added = inventory.addItem(candidate);
+            if (added) {
+                candidate.dispose();
+                picked++;
+            } else {
+                logger.info("pickupAll: inventory full after picking {} item(s)", picked);
+                break;
+            }
+        }
+
+        logger.info("pickupAll: finished, picked {} item(s)", picked);
     }
 }
