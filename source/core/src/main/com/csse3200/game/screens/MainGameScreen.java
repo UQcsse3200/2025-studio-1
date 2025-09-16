@@ -83,7 +83,8 @@ public class MainGameScreen extends ScreenAdapter {
 
   @Override
   public void render(float delta) {
-    if (!isPauseVisible && !com.csse3200.game.services.ServiceLocator.isTransitioning()) {
+    if (!isPauseVisible && !(ServiceLocator.getTimeSource().isPaused())
+            && !ServiceLocator.isTransitioning()) {
       physicsEngine.update();
     }
     if (!com.csse3200.game.services.ServiceLocator.isTransitioning()) {

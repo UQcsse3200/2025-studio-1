@@ -11,6 +11,7 @@ import com.csse3200.game.physics.components.HitboxComponent;
 import com.csse3200.game.physics.components.PhysicsComponent;
 import com.csse3200.game.rendering.TextureRenderComponent;
 import com.csse3200.game.services.ServiceLocator;
+import com.csse3200.game.components.TouchAttackComponent;
 
 /**
  * Tracking mud ball attack: Fires a mud ball towards the target.
@@ -63,7 +64,9 @@ public class EnemyMudBallAttackComponent extends Component {
                 .addComponent(new HitboxComponent().setLayer(PhysicsLayer.NPC))
                 .addComponent(new TextureRenderComponent("images/mud_ball_1.png"))
                 .addComponent(new EnemyProjectileMovementComponent(velocity, life))
-                .addComponent(new EnemyProjectileDamageComponent(dmg));
+                .addComponent(new CombatStatsComponent(1)) // Add health to the projectile
+                .addComponent(new WeaponsStatsComponent(dmg)) // Add damage to the projectile
+                .addComponent(new TouchAttackComponent(PhysicsLayer.PLAYER, 0f));
 
         proj.setPosition(start);
         proj.getComponent(TextureRenderComponent.class).scaleEntity();

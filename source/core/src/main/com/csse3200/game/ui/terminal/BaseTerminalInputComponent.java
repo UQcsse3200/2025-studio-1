@@ -1,87 +1,90 @@
 package com.csse3200.game.ui.terminal;
 
+import com.badlogic.gdx.InputProcessor;
 import com.csse3200.game.input.InputComponent;
-import java.util.Objects;
 
-/**
- * Template for terminal input components
- * Holds the flow and delegates toggling to a strategy.
- */
 public abstract class BaseTerminalInputComponent extends InputComponent {
     protected Terminal terminal;
-    private final TerminalToggleStrategy toggleStrategy;
-    private final TextPolicy textPolicy;
 
-    protected BaseTerminalInputComponent(TerminalToggleStrategy strategy) {
-        this(strategy, new DefaultTextPolicy());
-    }
-
-    protected BaseTerminalInputComponent(TerminalToggleStrategy strategy, TextPolicy textPolicy) {
+    protected BaseTerminalInputComponent() {
         super(10);
-        this.toggleStrategy = Objects.requireNonNull(strategy, "toggleStrategy");
-        this.textPolicy = Objects.requireNonNull(textPolicy, "textPolicy");
     }
 
-    /** Allow DI in tests or custom wiring before create(). */
-    public void setTerminal(Terminal terminal) {
+    protected BaseTerminalInputComponent(Terminal terminal) {
+        this();
         this.terminal = terminal;
     }
 
     @Override
     public void create() {
         super.create();
-        // Lazy autowire only if not injected already
-        if (this.terminal == null) {
-            this.terminal = entity.getComponent(Terminal.class);
-        }
-        if (this.terminal == null) {
-            throw new IllegalStateException("Terminal component not found on entity");
-        }
+        terminal = entity.getComponent(Terminal.class);
     }
 
-    // --- template flow ---
+    /**
+     * Returns false because this component is not one intended to
+     * be paused
+     * @return False, as this is a component not affected by pause
+     * functionality
+     */
     @Override
-    public boolean keyDown(int keycode) {
-        if (terminal == null) return false; // guard for pre-create() tests
-        // First let strategy handle toggling/open/close gestures
-        if (toggleStrategy.onKeyDown(terminal, keycode)) return true;
-        // If terminal is open, consume so other handlers don’t process
-        return terminal.isOpen();
+    protected boolean isPauseable() {
+        return false;
     }
 
+    /**
+     * If the toggle key is pressed, the terminal will open / close.
+     *
+     * <p>Otherwise, handles input if the terminal is open. This is because keyDown events are
+     * triggered alongside keyTyped events. If the user is typing in the terminal, the input shouldn't
+     * trigger any other input handlers.
+     *
+     * @return whether the input was processed
+     * @see InputProcessor#keyDown(int)
+     */
+    @Override
+    public abstract boolean keyPressed(int keycode);
+
+    /**
+     * Handles input if the terminal is open. If 'enter' is typed, the entered message will be
+     * processed, otherwise the message will be updated with the new character.
+     *
+     * @return whether the input was processed
+     * @see InputProcessor#keyTyped(char)
+     */
     @Override
     public boolean keyTyped(char character) {
-        if (terminal == null) return false;
-        if (!terminal.isOpen()) return false;
+        if (!terminal.isOpen()) {
+            return false;
+        }
 
         if (character == '\b') {
             terminal.handleBackspace();
             return true;
-        }
-        if (character == '\r' || character == '\n') {
+        } else if (character == '\r' || character == '\n') {
             if (terminal.processMessage()) {
                 terminal.toggleIsOpen();
             }
             terminal.setEnteredMessage("");
             return true;
-        }
-        if (textPolicy.isAllowed(character)) {
+        } else if(Character.isLetterOrDigit(character) || character == ' ') {
+            // append character to message
             terminal.appendToMessage(character);
             return true;
         }
         return false;
     }
 
+    /**
+     * Handles input if the terminal is open. This is because keyUp events are
+     * triggered alongside keyTyped events. If the user is typing in the terminal, the input shouldn't
+     * trigger any other input handlers.
+     *
+     * @return whether the input was processed
+     * @see InputProcessor#keyUp(int)
+     */
     @Override
-    public boolean keyUp(int keycode) {
-        if (terminal == null) return false;
-        // While open, consume keyUp to avoid leaking to other handlers
+    public boolean keyReleased(int keycode) {
         return terminal.isOpen();
-    }
-
-    @Override
-    public boolean scrolled(float amountX, float amountY) {
-        if (terminal == null) return false;
-        return toggleStrategy.onScrolled(terminal, amountX, amountY);
     }
 }

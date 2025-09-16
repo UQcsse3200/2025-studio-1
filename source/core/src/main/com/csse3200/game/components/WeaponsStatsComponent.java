@@ -20,6 +20,7 @@ public class WeaponsStatsComponent extends Component {
     private int baseAttack;
     private float coolDown;
     private boolean disableDamage;
+    private String projectileTexturePath;
     private int upgradeStage = 1;
     private final int maxUpgradeStage = 4;
 
@@ -86,6 +87,14 @@ public class WeaponsStatsComponent extends Component {
         } else {
             logger.error("Can not set base attack to a negative attack value");
         }
+    }
+
+    public void setProjectileTexturePath(String projectileTexturePath) {
+        this.projectileTexturePath = projectileTexturePath;
+    }
+
+    public String getProjectileTexturePath() {
+        return this.projectileTexturePath;
     }
 
     private boolean canAttack() {
