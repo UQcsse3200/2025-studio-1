@@ -339,7 +339,8 @@ public class InventoryComponent extends Component {
         if(inventory == null) return;
 
         //set the selected slot
-        inventory.setSelectSlot(slotIndex);
+        //inventory.setSelectSlot(slotIndex-1);
+        this.equippedSlot = slotIndex-1;
 
         //trigger the UI update and internal logic
         entity.getEvents().trigger("focus item", slotIndex);
