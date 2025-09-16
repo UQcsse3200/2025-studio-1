@@ -30,7 +30,7 @@ public class TunnelGameArea extends GameArea {
 
   private void spawnBordersAndDoors() {
     Bounds b = getCameraBounds(cameraComponent);
-    addVerticalDoorLeft(b, WALL_WIDTH, this::loadStorage);
+    addVerticalDoorLeft(b, WALL_WIDTH, this::loadServer);
     addVerticalDoorRight(b, WALL_WIDTH, this::loadShipping);
     addSolidWallTop(b, WALL_WIDTH);
     addSolidWallBottom(b, WALL_WIDTH);
@@ -41,8 +41,8 @@ public class TunnelGameArea extends GameArea {
     spawnEntityAt(player, PLAYER_SPAWN, true, true);
   }
 
-  private void loadStorage() {
-    clearAndLoad(() -> new StorageGameArea(terrainFactory, cameraComponent));
+  private void loadServer() {
+    clearAndLoad(() -> new ServerGameArea(terrainFactory, cameraComponent));
   }
 
   private void loadShipping() {
