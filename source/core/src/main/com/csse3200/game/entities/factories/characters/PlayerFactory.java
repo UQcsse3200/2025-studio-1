@@ -22,8 +22,6 @@ import com.csse3200.game.physics.components.PhysicsComponent;
 import com.csse3200.game.rendering.AnimationRenderComponent;
 import com.csse3200.game.rendering.TextureRenderComponent;
 import com.csse3200.game.services.ServiceLocator;
-import com.csse3200.game.components.player.ItemPickUpComponent;
-
 
 /**
  * Factory to create a player entity.
@@ -32,9 +30,7 @@ import com.csse3200.game.components.player.ItemPickUpComponent;
  * the properties stores in 'PlayerConfig'.
  */
 public class PlayerFactory {
-  private static final PlayerConfig stats =
-      FileLoader.readClass(PlayerConfig.class, "configs/player.json");
-//  private static final PlayerConfig stats = safeLoadPlayerConfig();
+  private static final PlayerConfig stats = safeLoadPlayerConfig();
 
   private static PlayerConfig safeLoadPlayerConfig() {
     PlayerConfig cfg = FileLoader.readClass(PlayerConfig.class, "configs/player.json");
@@ -76,7 +72,6 @@ public class PlayerFactory {
             .addComponent(new StaminaComponent())
             .addComponent(animator)
             .addComponent(new PlayerAnimationController());
-
     player.getComponent(AnimationRenderComponent.class).scaleEntity(2f);
     PhysicsUtils.setScaledCollider(player, 0.6f, 0.3f);
     player.getComponent(ColliderComponent.class).setDensity(1.5f);
@@ -90,8 +85,6 @@ public class PlayerFactory {
 
     return player;
   }
-
-
 
   /**
    * Add player animations to animation render component.
