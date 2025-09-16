@@ -16,6 +16,7 @@ import com.csse3200.game.entities.factories.ProjectileFactory;
 import com.csse3200.game.entities.factories.items.ItemFactory;
 import com.csse3200.game.physics.components.PhysicsComponent;
 import com.csse3200.game.physics.components.PhysicsProjectileComponent;
+import com.csse3200.game.rendering.TextureRenderWithRotationComponent;
 import com.csse3200.game.services.ServiceLocator;
 
 public class RangedUseComponent extends ItemActionsComponent {
@@ -84,15 +85,34 @@ public class RangedUseComponent extends ItemActionsComponent {
     private void bombTimer(float duration, Entity bullet) {
         ConsumableComponent consumable = entity.getComponent(ConsumableComponent.class);
 
-        scheduleBulletStop(bullet, 0.5f);
-        scheduleBulletPulse(bullet, 0.5f, 0.2f);
+        scheduleBulletRotation(bullet);
+        scheduleBulletStop(bullet);
+        scheduleBulletPulse(bullet);
         scheduleExplosion(bullet, consumable, duration);
     }
+
+    private void scheduleBulletRotation(Entity bullet) {
+        Timer.schedule(new Timer.Task() {
+            @Override
+            public void run() {
+                PhysicsComponent physics = bullet.getComponent(PhysicsComponent.class);
+                if (physics == null || physics.getBody() == null) {
+                    cancel(); // bullet gone, stop rotating
+                    return;
+                }
+
+                TextureRenderWithRotationComponent render = bullet.getComponent(TextureRenderWithRotationComponent.class);
+                render.setRotationWithRepeat(render.getRotation() + (float) 10.0);
+            }
+        }, 0f, 1/60f);
+    }
+
+
 
     /**
      * Stops the bullet's movement after a given delay.
      */
-    private void scheduleBulletStop(Entity bullet, float delay) {
+    private void scheduleBulletStop(Entity bullet) {
         Timer.schedule(new Timer.Task() {
             @Override
             public void run() {
@@ -101,13 +121,13 @@ public class RangedUseComponent extends ItemActionsComponent {
                     physics.getBody().setLinearVelocity(Vector2.Zero);
                 }
             }
-        }, delay);
+        }, (float) 0.5);
     }
 
     /**
      * Makes the bullet pulse (grow/shrink) until it is disposed.
      */
-    private void scheduleBulletPulse(Entity bullet, float startDelay, float interval) {
+    private void scheduleBulletPulse(Entity bullet) {
         final Vector2 baseScale = bullet.getScale().cpy();
 
         Timer.schedule(new Timer.Task() {
@@ -125,7 +145,7 @@ public class RangedUseComponent extends ItemActionsComponent {
                 Vector2 oldScale = bullet.getScale().cpy();
 
                 Vector2 newScale = enlarge
-                        ? baseScale.cpy().scl(1.25f)
+                        ? baseScale.cpy().scl(1.5f)
                         : baseScale.cpy();
 
                 float dx = (oldScale.x - newScale.x) / 2f;
@@ -136,7 +156,7 @@ public class RangedUseComponent extends ItemActionsComponent {
 
                 enlarge = !enlarge;
             }
-        }, startDelay, interval);
+        }, (float) 0.5, (float) 0.2);
     }
 
     /**
@@ -151,7 +171,7 @@ public class RangedUseComponent extends ItemActionsComponent {
                     return;
                 }
 
-                final Entity explosion = ItemFactory.createItem("images/electriczap.png");
+                final Entity explosion = ItemFactory.createItem("images/electric_zap.png");
                 AreaEffect aoe = (AreaEffect) consumable.getEffect(AreaEffect.class);
                 float aoeSize = 2 * aoe.getRadius();
 

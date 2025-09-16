@@ -30,6 +30,15 @@ public class TextureRenderWithRotationComponent extends TextureRenderComponent {
         }
     }
 
+    public void setRotationWithRepeat(float value) {
+        rotation = value;
+        hasSetRotation = true;
+    }
+
+    public float getRotation() {
+        return rotation;
+    }
+
     @Override
     protected void draw(SpriteBatch batch) {
         //System.out.println("Rendering" + ServiceLocator.getTimeSource().getTime());
