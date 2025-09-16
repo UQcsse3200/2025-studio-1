@@ -99,6 +99,9 @@ public class CocoonSpawnerComponent extends Component {
             setupCocoonDeathListener(cocoon);
         }
 
+        // Set Boss as invulnerable immediately after spawning cocoons
+        updateBossDefenseState();
+
         // Trigger cocoon spawned event (can be used for effects/sounds)
         entity.getEvents().trigger("cocoonsSpawned", activeCocoons.size());
 
@@ -150,10 +153,29 @@ public class CocoonSpawnerComponent extends Component {
 
         System.out.println("Cocoon destroyed! Remaining cocoons: " + activeCocoons.size());
 
-        // Trigger event when all cocoons are destroyed
-        if (activeCocoons.isEmpty() && cocoonsSpawned) {
-            entity.getEvents().trigger("allCocoonsDestroyed");
-            System.out.println("All cocoons destroyed!");
+        updateBossDefenseState();
+    }
+
+    /**
+     * Update Boss defense state based on cocoon count
+     */
+    private void updateBossDefenseState() {
+        boolean hasActiveCocoons = !activeCocoons.isEmpty();
+
+        DamageReductionComponent defenseComponent =
+                entity.getComponent(DamageReductionComponent.class);
+
+        if (defenseComponent != null) {
+            if (hasActiveCocoons) {
+                // Activate defense: complete immunity (1.0 reduction) for a long duration
+                defenseComponent.start(1.0f, 999f); // 1.0 = complete immunity, 999s = very long
+                System.out.println("Boss is protected by " + activeCocoons.size() + " cocoons - INVULNERABLE");
+            } else {
+                // Deactivate defense
+                defenseComponent.stop(); // Assuming there's a stop method, or set reduction to 0
+                System.out.println("All cocoons destroyed! Boss is now VULNERABLE");
+                entity.getEvents().trigger("allCocoonsDestroyed");
+            }
         }
     }
 
