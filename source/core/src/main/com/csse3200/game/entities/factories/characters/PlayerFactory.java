@@ -7,11 +7,14 @@ import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.components.WeaponsStatsComponent;
+import com.csse3200.game.components.mainmenu.MainMenuActions;
 import com.csse3200.game.components.player.*;
 import com.csse3200.game.components.player.InventoryComponent;
 import com.csse3200.game.components.player.StaminaComponent;
 import com.csse3200.game.entities.Entity;
+import com.csse3200.game.entities.EntityService;
 import com.csse3200.game.entities.configs.characters.PlayerConfig;
+import com.csse3200.game.events.EventHandler;
 import com.csse3200.game.files.FileLoader;
 import com.csse3200.game.input.InputComponent;
 import com.csse3200.game.physics.BodyUserData;
@@ -24,6 +27,8 @@ import com.csse3200.game.rendering.AnimationRenderComponent;
 import com.csse3200.game.rendering.TextureRenderComponent;
 import com.csse3200.game.services.ServiceLocator;
 
+import java.util.EventListener;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -35,6 +40,7 @@ import java.util.Optional;
 public class PlayerFactory {
   private static final PlayerConfig stats = safeLoadPlayerConfig();
 
+
   private static PlayerConfig safeLoadPlayerConfig() {
     PlayerConfig cfg = FileLoader.readClass(PlayerConfig.class, "configs/player.json");
     if (cfg == null) {
@@ -44,6 +50,15 @@ public class PlayerFactory {
       cfg.baseAttack = 10;
     }
     return cfg;
+  }
+
+  private static PlayerConfig overwrite(List<String> inventory, int CPU, int health) {
+    PlayerConfig cfgOverwrite = new PlayerConfig();
+    cfgOverwrite.gold = CPU;
+    cfgOverwrite.health = health;
+    Entity listen = new Entity();
+
+    return cfgOverwrite;
   }
 
   /**
@@ -80,6 +95,7 @@ public class PlayerFactory {
     player.getComponent(ColliderComponent.class).setDensity(1.5f);
     PhysicsUtils.setScaledCollider(player, 0.3f,0.5f);
     player.getComponent(WeaponsStatsComponent.class).setCoolDown(0.2f);
+
     return player;
   }
 

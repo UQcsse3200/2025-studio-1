@@ -72,13 +72,11 @@ public class FileLoader {
   }
 
   /**
-   * Read generic Java classes from a JSON file. Properties in the JSON file will override class
-   * defaults.
+   * Read playerinfo from a JSON file and write into class.
    *
    * @param player class type
    * @param filename file to read from
    * @param location File storage type. See
-   *     https://github.com/libgdx/libgdx/wiki/File-handling#file-storage-types
    * @param <T> Class type to read JSON into
    * @return instance of class, may be null
    */
@@ -109,12 +107,33 @@ public class FileLoader {
   }
 
 
+  /**
+   * Reads Inventory component of a save file json
+   * - currently a placeholder for refacotring end sprint 2 / into sprint 3
+   * @param inventory  string representation of the items
+   * @param CPU processor count to be loaded in
+   */
+  public static InventoryComponent readInventory(List<String> inventory, int CPU) {
+    InventoryComponent loadInventory = new InventoryComponent(CPU);
+    ItemPickUpComponent loadIn = new ItemPickUpComponent(loadInventory);
+    if (!inventory.isEmpty()) {
+      for (int i = 0; i < inventory.size(); i++) {
+        loadIn.createItemFromTexture(inventory.get(i));
+        loadInventory.addItem(
+                loadIn.createItemFromTexture(inventory.get(i)));
+      }
+    }
+    return loadInventory;
+  }
 
 
 
 
 
-    /**
+
+
+
+  /**
      * Write generic Java classes to a JSON file.
      *
      * @param object Java object to write.
@@ -155,23 +174,6 @@ public class FileLoader {
     file.writeString(json.prettyPrint(playerInfo), false);
   }
 
-
-  /**
-   * Reads Inventory component of a save file json
-   * - currently a placeholder for refacotring end sprint 2 / into sprint 3
-   */
-  public static InventoryComponent readInventory(List<String> inventory) {
-    InventoryComponent loadInventory = new InventoryComponent(0);
-    ItemPickUpComponent loadIn = new ItemPickUpComponent(loadInventory);
-    if (!inventory.isEmpty()) {
-      for (int i = 0; i < inventory.size(); i++) {
-        loadIn.createItemFromTexture(inventory.get(i));
-        loadInventory.addItem(
-                loadIn.createItemFromTexture(inventory.get(i)));
-      }
-    }
-    return loadInventory;
-  }
 
   private static FileHandle getFileHandle(String filename, Location location) {
     switch (location) {
