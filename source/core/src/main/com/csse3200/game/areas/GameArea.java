@@ -45,15 +45,10 @@ public abstract class GameArea implements Disposable {
   protected List<Entity> areaEntities;
   protected TerrainFactory terrainFactory;
   protected CameraComponent cameraComponent;
-  public boolean loadthis = false;
   /** Prevents re-entrant room transitions across areas */
   protected static boolean isTransitioning = false;
-  // trying to get loading worked
-  public void switchToLoad(int activate) {
-      if (activate == 1) this.loadthis = true;
-  }
 
-  private Entity player;
+  private Entity player; // placeholder
 
   protected EnemyWaves wavesManager; // manage waves via terminal command
 

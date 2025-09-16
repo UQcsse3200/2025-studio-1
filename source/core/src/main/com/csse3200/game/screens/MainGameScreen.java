@@ -278,7 +278,6 @@ public class MainGameScreen extends ScreenAdapter {
 
     gameArea = areaLoad;
     com.csse3200.game.services.ServiceLocator.registerGameArea(gameArea);
-    gameArea.loadthis = true;
     gameArea.create();
     InventoryComponent help = gameArea.getPlayer().getComponent(InventoryComponent.class);
     ItemPickUpComponent testLoading= new ItemPickUpComponent(help);
