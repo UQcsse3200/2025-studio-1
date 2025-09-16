@@ -217,10 +217,15 @@ public abstract class GameArea implements Disposable {
   public void spawnDeepspin(
           int total, float scaleFactor, Entity player, HashMap<String, ArrayList<Vector2>> positions) {
       ArrayList<Vector2> spawnPositions = positions.get("Deepspin");
+
+      int count = 0;
       for (Vector2 pos : spawnPositions) {
-          Entity deepSpin = NPCFactory.createDeepspin(player, this, scaleFactor);
+          if (count != 0) { continue; }
+          Entity deepSpin = NPCFactory.createGhostGPT(player, this, scaleFactor);
           deepSpin.setPosition(pos);
           spawnEntity(deepSpin);
+
+          count++;
       }
   }
 
@@ -260,8 +265,8 @@ public abstract class GameArea implements Disposable {
    * @param source The entity that the projectile is coming from.
    * @return The spawned projectile {@link Entity}
    */
-  public Entity spawnEnemyProjectile(Vector2 directionToFire, WeaponsStatsComponent source) {
-    Entity laser = ProjectileFactory.createEnemyProjectile(directionToFire, source);
+  public Entity spawnGhostGPTProjectile(Vector2 directionToFire, WeaponsStatsComponent source) {
+    Entity laser = ProjectileFactory.createEnemyLaserProjectile(directionToFire, source);
     spawnEntityAt(laser, new GridPoint2(0, 0), true, true);
     PhysicsProjectileComponent laserPhysics = laser.getComponent(PhysicsProjectileComponent.class);
     int projectileSpeed = 5; // Should be abstracted from WeaponsStatsComponent in future implementation
