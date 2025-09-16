@@ -262,6 +262,7 @@ public class NPCFactory {
                     ServiceLocator.getResourceService().getAsset("images/Vroomba.atlas", TextureAtlas.class));
     animator.addAnimation("angry_float", 0.1f, Animation.PlayMode.LOOP);
     animator.addAnimation("float", 0.1f, Animation.PlayMode.LOOP);
+    animator.addAnimation("damage_taken", 0.1f, Animation.PlayMode.NORMAL);
 
     // Ground chase: set X only; gravity handles Y (Box2D). See Box2D Manual (Forces/Impulses).
     AITaskComponent aiComponent =
