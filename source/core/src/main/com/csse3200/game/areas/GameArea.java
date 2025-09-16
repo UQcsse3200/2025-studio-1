@@ -46,6 +46,7 @@ public abstract class GameArea implements Disposable {
   protected static boolean isTransitioning = false;
 
   protected EnemyWaves wavesManager; // manage waves via terminal command
+    protected static int roomNumber = 1;
 
   protected GameArea(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
     this.terrainFactory = terrainFactory;
@@ -119,14 +120,7 @@ public abstract class GameArea implements Disposable {
    * with 2 being any number, otherwise returns 1.
    */
   public int getRoomNumber() { // changed from protected to public for EnemyWaves access
-    String name = getClass().getSimpleName();
-    // Look for digits after Floor or Room (e.g., Floor3GameArea, Room2Area)
-    Matcher m = Pattern.compile("(?:Floor|Room)(\\d+)").matcher(name);
-    if (m.find()) {
-      try { return Integer.parseInt(m.group(1)); } catch (NumberFormatException ignored) {}
-    }
-    // Fallback: default first floor
-    return 1;
+    return roomNumber;
   }
 
   /**
@@ -190,7 +184,10 @@ public abstract class GameArea implements Disposable {
               spawnGhostGPT(total, scaleFactor, player, positions);
               spawnGrokDroid(total, scaleFactor, player, positions);
               break;
-          default: throw new IllegalStateException("Unexpected room number: " + roomNumber);
+          default:
+              spawnGhostGPT(total, scaleFactor, player, positions);
+              spawnGrokDroid(total, scaleFactor, player, positions);
+              break;
       }
   }
 
@@ -295,34 +292,33 @@ public abstract class GameArea implements Disposable {
               respectiveSpawns.add(new Vector2(11.1f, 10f));
               positions.put("Deepspin", (ArrayList<Vector2>) respectiveSpawns.clone());
               respectiveSpawns.clear();
-              respectiveSpawns.add(new Vector2(2.5f, 5f));
+              respectiveSpawns.add(new Vector2(12f, 5f));
               positions.put("Turret", (ArrayList<Vector2>) respectiveSpawns.clone());
-
               break;
           case 2:
-              respectiveSpawns.add(new Vector2(2.7f, 8f));
-              respectiveSpawns.add(new Vector2(5.6f, 10f));
+              respectiveSpawns.add(new Vector2(5.7f, 5f));
+              respectiveSpawns.add(new Vector2(1.5f, 7f));
               positions.put("Vroomba", (ArrayList<Vector2>) respectiveSpawns.clone());
               respectiveSpawns.clear();
-              respectiveSpawns.add(new Vector2(8.2f, 11f));
-              respectiveSpawns.add(new Vector2(11.1f, 10f));
-              positions.put("Deepspin", (ArrayList<Vector2>) respectiveSpawns.clone());
+              respectiveSpawns.add(new Vector2(11.5f, 10f));
+              positions.put("GhostGpt", (ArrayList<Vector2>) respectiveSpawns.clone());
               break;
           case 3:
-              respectiveSpawns.add(new Vector2(10f, 4f));
-              positions.put("GhostGpt", (ArrayList<Vector2>) respectiveSpawns.clone());
-              respectiveSpawns.clear();
               respectiveSpawns.add(new Vector2(8.4f, 10f));
-              respectiveSpawns.add(new Vector2(11.3f, 8f));
+              respectiveSpawns.add(new Vector2(2f, 10f));
+              positions.put("Deepspin", (ArrayList<Vector2>) respectiveSpawns.clone());
+              respectiveSpawns.clear();
+              respectiveSpawns.add(new Vector2(12f, 5f));
+              respectiveSpawns.add(new Vector2(2f, 5f));
               positions.put("Vroomba", (ArrayList<Vector2>) respectiveSpawns.clone());
               break;
           case 4:
-              respectiveSpawns.add(new Vector2(2.7f, 8f));
-              respectiveSpawns.add(new Vector2(5.6f, 10f));
+              respectiveSpawns.add(new Vector2(12f, 10f));
+              respectiveSpawns.add(new Vector2(2f, 5f));
               positions.put("GhostGpt", (ArrayList<Vector2>) respectiveSpawns.clone());
               respectiveSpawns.clear();
-              respectiveSpawns.add(new Vector2(8.2f, 11f));
-              respectiveSpawns.add(new Vector2(11.1f, 10f));
+              respectiveSpawns.add(new Vector2(7f, 11f));
+              respectiveSpawns.add(new Vector2(3f, 10f));
               positions.put("Deepspin", (ArrayList<Vector2>) respectiveSpawns.clone());
               break;
           case 5:
@@ -346,16 +342,25 @@ public abstract class GameArea implements Disposable {
               positions.put("GrokDroid", (ArrayList<Vector2>) respectiveSpawns.clone());
               break;
           case 7:
-              respectiveSpawns.add(new Vector2(13f, 4f));
-              respectiveSpawns.add(new Vector2(10f, 4f));
-              respectiveSpawns.add(new Vector2(2.7f, 8f));
+              respectiveSpawns.add(new Vector2(11f, 10f));
+              respectiveSpawns.add(new Vector2(2f, 5f));
+              respectiveSpawns.add(new Vector2(11f, 5f));
               positions.put("GhostGpt", (ArrayList<Vector2>) respectiveSpawns.clone());
               respectiveSpawns.clear();
-              respectiveSpawns.add(new Vector2(8.4f, 10f));
-              respectiveSpawns.add(new Vector2(11.3f, 8f));
+              respectiveSpawns.add(new Vector2(3f, 10f));
+              respectiveSpawns.add(new Vector2(7f, 8f));
               positions.put("GrokDroid", (ArrayList<Vector2>) respectiveSpawns.clone());
               break;
-          default: throw new IllegalStateException("Unexpected room number: " + roomNumber);
+          default:
+              respectiveSpawns.add(new Vector2(12f, 11f));
+              respectiveSpawns.add(new Vector2(7.6f, 4f));
+              respectiveSpawns.add(new Vector2(2f, 4f));
+              positions.put("GhostGpt", (ArrayList<Vector2>) respectiveSpawns.clone());
+              respectiveSpawns.clear();
+              respectiveSpawns.add(new Vector2(5f, 10f));
+              respectiveSpawns.add(new Vector2(2f, 10f));
+              positions.put("GrokDroid", (ArrayList<Vector2>) respectiveSpawns.clone());
+              break;
       }
       return positions;
   }
@@ -383,6 +388,7 @@ public abstract class GameArea implements Disposable {
    *
    * @param entity   entity to spawn (not yet registered)
    */
+
   public void spawnEntityInRoom(String roomName, Entity entity) {
     Vector2 pos = getRoomSpawnPosition(roomName);
     entity.setPosition(pos);
@@ -542,52 +548,6 @@ public abstract class GameArea implements Disposable {
     spawnEntity(door);
   }
 
-  /** Add a horizontal door on the top edge. */
-  protected void addHorizontalDoorTop(Bounds b, float wallWidth, Runnable onEnter) {
-    float doorWidth = Math.max(1f, b.viewWidth * 0.2f);
-    float doorX = b.camPos.x - doorWidth / 2f;
-    float leftSegWidth = Math.max(0f, doorX - b.leftX);
-    if (leftSegWidth > 0f) {
-      Entity left = ObstacleFactory.createWall(leftSegWidth, wallWidth);
-      left.setPosition(b.leftX, b.topY - wallWidth);
-      spawnEntity(left);
-    }
-    float rightStart = doorX + doorWidth;
-    float rightSegWidth = Math.max(0f, (b.leftX + b.viewWidth) - rightStart);
-    if (rightSegWidth > 0f) {
-      Entity right = ObstacleFactory.createWall(rightSegWidth, wallWidth);
-      right.setPosition(rightStart, b.topY - wallWidth);
-      spawnEntity(right);
-    }
-    Entity door = ObstacleFactory.createDoorTrigger(doorWidth, wallWidth);
-    door.setPosition(doorX, b.topY - wallWidth + 0.001f);
-    door.addComponent(new DoorComponent(onEnter));
-    spawnEntity(door);
-  }
-
-  /** Add a horizontal door on the bottom edge. */
-  protected void addHorizontalDoorBottom(Bounds b, float wallWidth, Runnable onEnter) {
-    float doorWidth = Math.max(1f, b.viewWidth * 0.2f);
-    float doorX = b.camPos.x - doorWidth / 2f;
-    float leftSegWidth = Math.max(0f, doorX - b.leftX);
-    if (leftSegWidth > 0f) {
-      Entity left = ObstacleFactory.createWall(leftSegWidth, wallWidth);
-      left.setPosition(b.leftX, b.bottomY);
-      spawnEntity(left);
-    }
-    float rightStart = doorX + doorWidth;
-    float rightSegWidth = Math.max(0f, (b.leftX + b.viewWidth) - rightStart);
-    if (rightSegWidth > 0f) {
-      Entity right = ObstacleFactory.createWall(rightSegWidth, wallWidth);
-      right.setPosition(rightStart, b.bottomY);
-      spawnEntity(right);
-    }
-    Entity door = ObstacleFactory.createDoorTrigger(doorWidth, wallWidth);
-    door.setPosition(doorX, b.bottomY + 0.001f);
-    door.addComponent(new DoorComponent(onEnter));
-    spawnEntity(door);
-  }
-
   protected <T extends GameArea> void loadArea(Class<T> areaClass) {
     clearAndLoad(() -> {
       try {
@@ -608,15 +568,15 @@ public abstract class GameArea implements Disposable {
         entity.setEnabled(false);
     }
 
-    // Ensure transition happens on the render thread to avoid race conditions
+    /** Ensure transition happens on the render thread to avoid race conditions **/
     Gdx.app.postRunnable(() -> {
-      // Phase 1: disable and dispose current area's entities
+      /** Phase 1: disable and dispose current area's entities **/
       for (Entity entity : areaEntities) {
         entity.dispose();
       }
       areaEntities.clear();
 
-      // Phase 2: on the next frame, build the next area to avoid Box2D world-locked/native races
+      /** Phase 2: on the next frame, build the next area to avoid Box2D world-locked/native races **/
       Gdx.app.postRunnable(() -> {
         try {
           GameArea next = nextAreaSupplier.get();
