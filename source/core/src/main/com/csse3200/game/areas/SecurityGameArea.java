@@ -29,6 +29,7 @@ public class SecurityGameArea extends GameArea {
     spawnBordersAndDoors();
     spawnPlayer();
     spawnPlatforms();
+    spawnObjectDoors(new GridPoint2(0, 6), new GridPoint2(28, 21));
     spawnSecurityProps();
     ItemSpawner itemSpawner = new ItemSpawner(this);
     itemSpawner.spawnItems(ItemSpawnConfig.securitymap());
@@ -121,4 +122,5 @@ public class SecurityGameArea extends GameArea {
   private void loadOffice() {
     clearAndLoad(() -> new OfficeGameArea(terrainFactory, cameraComponent));
   }
+
 }
