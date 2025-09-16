@@ -41,7 +41,7 @@ class DashAttackTaskTest {
         target.setPosition(10f, 10f);
 
         AITaskComponent ai = new AITaskComponent()
-                .addTask(new DashAttackTask(target, 10, new Vector2(0, 0), 1000, 1000));
+                .addTask(new DashAttackTask(target, 10, new Vector2(2, 2), 1000, 1000));
         Entity entity = makePhysicsEntity().addComponent(ai);
         entity.create();
         entity.setPosition(0f, 0f);
