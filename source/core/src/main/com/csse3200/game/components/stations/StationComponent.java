@@ -20,43 +20,82 @@ public class StationComponent extends Component {
     private Label buyPrompt;
     public BenchConfig config;
 
+    /**
+     * Initialise the station component
+     * @param config config for the type of bench
+     */
     public StationComponent(BenchConfig config) {
         this.config = config;
     }
 
+    /**
+     * Sets if the player is near
+     * @param near is the player near
+     */
     public void setPlayerNear(boolean near) {
         this.playerNear = near;
     }
 
-
+    /**
+     * Sets the config
+     * @param config the config
+     */
     public void setConfig(BenchConfig config) {
         this.config = config;
     }
 
+    /**
+     * Sets buy prompt
+     * @param prompt the buyPrompt
+     */
     public void setBuyPrompt(Label prompt) {
         this.buyPrompt = prompt;
     }
 
+    /**
+     * Sets the player interacting with the bench
+     * @param player interacting with the bench
+     */
     public void setPlayer(Entity player) {
         this.player = player;
     }
 
+    /**
+     *
+     * @return is the player near
+     */
     public boolean isPlayerNear() {
         return this.playerNear;
     }
 
+    /**
+     *
+     * @return the player interacting
+     */
     public Entity getPlayer() {
         return this.player;
     }
 
+    /**
+     *
+     * @return the buyPrompt
+     */
     public Label getBuyPrompt() {
         return this.buyPrompt;
     }
 
+    /**
+     *
+     * @return the config for the bench
+     */
     public BenchConfig getConfig() {
         return this.config;
     }
 
+    /**
+     *
+     * @return the bench price
+     */
     public int getPrice() {
         return this.config.getPrice();
     }
@@ -85,6 +124,11 @@ public class StationComponent extends Component {
     }
 
 
+    /**
+     * Updates when the player collides with the station
+     * @param me the station
+     * @param other the player colliding
+     */
     protected void onCollisionStart(Fixture me, Fixture other) {
         Object data = other.getBody().getUserData();
         if (!(data instanceof BodyUserData userData)) return;
@@ -103,6 +147,11 @@ public class StationComponent extends Component {
         }
     }
 
+    /**
+     * Updates when the player stops colliding with the station
+     * @param me the station
+     * @param other the player
+     */
     protected void onCollisionEnd(Fixture me, Fixture other) {
 
         Object data = other.getBody().getUserData();
@@ -115,6 +164,9 @@ public class StationComponent extends Component {
 
     }
 
+    /**
+     * Triggers the upgrade from the station
+     */
     public void upgrade() {
         this.config.upgrade(playerNear, player, buyPrompt);
     }

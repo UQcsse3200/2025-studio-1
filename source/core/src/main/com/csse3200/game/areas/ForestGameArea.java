@@ -106,7 +106,8 @@ public class ForestGameArea extends GameArea {
     "images/heart.png",
     "images/computerBench.png",
     "images/healthBench.png",
-    "images/computerBench.png"
+    "images/computerBench.png",
+    "images/speedBench.png"
   };
 
   /** General prop textures (floors, tiles, etc.). */
@@ -225,15 +226,11 @@ public class ForestGameArea extends GameArea {
   @Override
   public void create() {
     loadAssets();
-
     displayUI();
-
     spawnTerrain();
-//    spawnTrees();
     spawnComputerBench();
-//    spawnTrees();
-    //spawnComputerBench();
 //    spawnHealthBench();
+    spawnSpeedBench();
 
     player = spawnPlayer();
 
@@ -411,7 +408,7 @@ public class ForestGameArea extends GameArea {
 
   private void spawnComputerBench() {
     Entity bench = InteractableStationFactory.createStation(Benches.COMPUTER_BENCH);
-    spawnEntityAt(bench, new GridPoint2(10, 7), true, true);
+    spawnEntityAt(bench, new GridPoint2(14, 7), true, true);
 
   }
 
@@ -419,6 +416,13 @@ public class ForestGameArea extends GameArea {
     Entity bench = InteractableStationFactory.createStation(Benches.HEALTH_BENCH);
     spawnEntityAt(bench, new GridPoint2(10, 7), true, true);
   }
+
+  private void spawnSpeedBench() {
+    Entity bench = InteractableStationFactory.createStation(Benches.SPEED_BENCH);
+    spawnEntityAt(bench, new GridPoint2(10, 7), true, true);
+  }
+
+
 
   /**
    * Places a large door sprite at the bottom-right platform. The door uses a keycard gate:
