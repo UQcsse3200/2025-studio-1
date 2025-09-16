@@ -140,9 +140,16 @@ loadScripts(document, 'script');</script>
 <div class="block">Creates a robot entity.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../../Entity.html" title="class in com.csse3200.game.entities">Entity</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#createVroomba(com.csse3200.game.entities.Entity,float)" class="member-name-link">createVroomba</a><wbr>(<a href="../../Entity.html" title="class in com.csse3200.game.entities">Entity</a>&nbsp;target,
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#createTurret(com.csse3200.game.entities.Entity,com.csse3200.game.areas.GameArea,float)" class="member-name-link">createTurret</a><wbr>(<a href="../../Entity.html" title="class in com.csse3200.game.entities">Entity</a>&nbsp;target,
+ <a href="../../../areas/GameArea.html" title="class in com.csse3200.game.areas">GameArea</a>&nbsp;area,
  float&nbsp;scalingFactor)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Creates Turret enemy type</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../../Entity.html" title="class in com.csse3200.game.entities">Entity</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#createVroomba(com.csse3200.game.entities.Entity,float)" class="member-name-link">createVroomba</a><wbr>(<a href="../../Entity.html" title="class in com.csse3200.game.entities">Entity</a>&nbsp;target,
+ float&nbsp;scalingFactor)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Creates a Vroomba entity.</div>
 </div>
 </div>
@@ -236,6 +243,23 @@ loadScripts(document, 'script');</script>
 <dt>Parameters:</dt>
 <dd><code>target</code> - entity to chase</dd>
 <dd><code>scalingFactor</code> - The scale of increase in health and attack of the Vroomba</dd>
+<dt>Returns:</dt>
+<dd>entity</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="createTurret(com.csse3200.game.entities.Entity,com.csse3200.game.areas.GameArea,float)">
+<h3>createTurret</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../../Entity.html" title="class in com.csse3200.game.entities">Entity</a></span>&nbsp;<span class="element-name">createTurret</span><wbr><span class="parameters">(<a href="../../Entity.html" title="class in com.csse3200.game.entities">Entity</a>&nbsp;target,
+ <a href="../../../areas/GameArea.html" title="class in com.csse3200.game.areas">GameArea</a>&nbsp;area,
+ float&nbsp;scalingFactor)</span></div>
+<div class="block">Creates Turret enemy type</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>target</code> - entity to chase</dd>
+<dd><code>area</code> - the area/space it is living in</dd>
+<dd><code>scalingFactor</code> - The scale of increase in health and attack of the GhostGPT</dd>
 <dt>Returns:</dt>
 <dd>entity</dd>
 </dl>

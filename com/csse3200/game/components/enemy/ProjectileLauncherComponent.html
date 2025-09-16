@@ -93,7 +93,7 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">ProjectileLauncherComponent</span>
 <span class="extends-implements">extends <a href="../Component.html" title="class in com.csse3200.game.components">Component</a></span></div>
-<div class="block">A class containing methods that allow entities to fire projectiles essentially.</div>
+<div class="block">A class containing methods that allow entities to fire projectiles essentially, in a variety of ways.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -114,8 +114,9 @@ loadScripts(document, 'script');</script>
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(com.csse3200.game.areas.GameArea,com.csse3200.game.entities.Entity)" class="member-name-link">ProjectileLauncherComponent</a><wbr>(<a href="../../areas/GameArea.html" title="class in com.csse3200.game.areas">GameArea</a>&nbsp;area,
- <a href="../../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a>&nbsp;target)</code></div>
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(com.csse3200.game.areas.GameArea,com.csse3200.game.entities.Entity,com.csse3200.game.entities.configs.Projectiles)" class="member-name-link">ProjectileLauncherComponent</a><wbr>(<a href="../../areas/GameArea.html" title="class in com.csse3200.game.areas">GameArea</a>&nbsp;area,
+ <a href="../../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a>&nbsp;target,
+ <a href="../../entities/configs/Projectiles.html" title="enum class in com.csse3200.game.entities.configs">Projectiles</a>&nbsp;projType)</code></div>
 <div class="col-last even-row-color">
 <div class="block">Constructor for the class.</div>
 </div>
@@ -179,15 +180,17 @@ loadScripts(document, 'script');</script>
 <h2>Constructor Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="&lt;init&gt;(com.csse3200.game.areas.GameArea,com.csse3200.game.entities.Entity)">
+<section class="detail" id="&lt;init&gt;(com.csse3200.game.areas.GameArea,com.csse3200.game.entities.Entity,com.csse3200.game.entities.configs.Projectiles)">
 <h3>ProjectileLauncherComponent</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">ProjectileLauncherComponent</span><wbr><span class="parameters">(<a href="../../areas/GameArea.html" title="class in com.csse3200.game.areas">GameArea</a>&nbsp;area,
- <a href="../../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a>&nbsp;target)</span></div>
+ <a href="../../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a>&nbsp;target,
+ <a href="../../entities/configs/Projectiles.html" title="enum class in com.csse3200.game.entities.configs">Projectiles</a>&nbsp;projType)</span></div>
 <div class="block">Constructor for the class.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>area</code> - The area, such as ForestGameArea, in which the entity is residing in.</dd>
 <dd><code>target</code> - The target entity, that this component's entity wants to hit.</dd>
+<dd><code>projType</code> - The projectile to be launched from this launcher component.</dd>
 </dl>
 </section>
 </li>

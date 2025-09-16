@@ -74,6 +74,17 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/ai/tasks/Task.Status.html#ACTIVE" class="member-name-link">ACTIVE</a> - Enum constant in enum class com.csse3200.game.ai.tasks.<a href="com/csse3200/game/ai/tasks/Task.Status.html" title="enum class in com.csse3200.game.ai.tasks">Task.Status</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/entities/configs/projectiles/ActiveProjectile.html" class="type-name-link" title="class in com.csse3200.game.entities.configs.projectiles">ActiveProjectile</a> - Class in <a href="com/csse3200/game/entities/configs/projectiles/package-summary.html">com.csse3200.game.entities.configs.projectiles</a></dt>
+<dd>
+<div class="block">An extension of current projectile functionality based in Entity, so that it's trajectory and flight path are
+ affected during runtime.</div>
+</dd>
+<dt><a href="com/csse3200/game/entities/configs/projectiles/ActiveProjectile.html#%3Cinit%3E()" class="member-name-link">ActiveProjectile()</a> - Constructor for class com.csse3200.game.entities.configs.projectiles.<a href="com/csse3200/game/entities/configs/projectiles/ActiveProjectile.html" title="class in com.csse3200.game.entities.configs.projectiles">ActiveProjectile</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/entities/configs/ActiveProjectileTypes.html" class="type-name-link" title="enum class in com.csse3200.game.entities.configs">ActiveProjectileTypes</a> - Enum Class in <a href="com/csse3200/game/entities/configs/package-summary.html">com.csse3200.game.entities.configs</a></dt>
+<dd>
+<div class="block">The different type of behaviours ActiveProjectiles can take</div>
+</dd>
 <dt><a href="com/csse3200/game/rendering/AnimationRenderComponent.html#addAnimation(java.lang.String,float)" class="member-name-link">addAnimation(String, float)</a> - Method in class com.csse3200.game.rendering.<a href="com/csse3200/game/rendering/AnimationRenderComponent.html" title="class in com.csse3200.game.rendering">AnimationRenderComponent</a></dt>
 <dd>
 <div class="block">Register an animation from the texture atlas.</div>
@@ -227,6 +238,10 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/csse3200/game/files/UserSettings.html#applySettings(com.csse3200.game.files.UserSettings.Settings)" class="member-name-link">applySettings(UserSettings.Settings)</a> - Static method in class com.csse3200.game.files.<a href="com/csse3200/game/files/UserSettings.html" title="class in com.csse3200.game.files">UserSettings</a></dt>
 <dd>
 <div class="block">Apply the given settings without storing them.</div>
+</dd>
+<dt><a href="com/csse3200/game/entities/configs/ActiveProjectileTypes.html#ARC" class="member-name-link">ARC</a> - Enum constant in enum class com.csse3200.game.entities.configs.<a href="com/csse3200/game/entities/configs/ActiveProjectileTypes.html" title="enum class in com.csse3200.game.entities.configs">ActiveProjectileTypes</a></dt>
+<dd>
+<div class="block">Projectile affected by gravity, following an arc trajectory.</div>
 </dd>
 <dt><a href="com/csse3200/game/effects/AreaEffect.html" class="type-name-link" title="class in com.csse3200.game.effects">AreaEffect</a> - Class in <a href="com/csse3200/game/effects/package-summary.html">com.csse3200.game.effects</a></dt>
 <dd>&nbsp;</dd>
@@ -788,6 +803,8 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/components/TouchAttackComponent.html#create()" class="member-name-link">create()</a> - Method in class com.csse3200.game.components.<a href="com/csse3200/game/components/TouchAttackComponent.html" title="class in com.csse3200.game.components">TouchAttackComponent</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/entities/configs/projectiles/ActiveProjectile.html#create()" class="member-name-link">create()</a> - Method in class com.csse3200.game.entities.configs.projectiles.<a href="com/csse3200/game/entities/configs/projectiles/ActiveProjectile.html" title="class in com.csse3200.game.entities.configs.projectiles">ActiveProjectile</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/entities/Entity.html#create()" class="member-name-link">create()</a> - Method in class com.csse3200.game.entities.<a href="com/csse3200/game/entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a></dt>
 <dd>
 <div class="block">Create the entity and start running.</div>
@@ -829,6 +846,10 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/csse3200/game/entities/factories/items/WeaponsFactory.html#createAnimation(java.lang.String,com.csse3200.game.entities.Entity)" class="member-name-link">createAnimation(String, Entity)</a> - Static method in class com.csse3200.game.entities.factories.items.<a href="com/csse3200/game/entities/factories/items/WeaponsFactory.html" title="class in com.csse3200.game.entities.factories.items">WeaponsFactory</a></dt>
 <dd>
 <div class="block">Creates an animation component that can be used with a weapon.</div>
+</dd>
+<dt><a href="com/csse3200/game/entities/factories/ProjectileFactory.html#createArcProjectile(com.csse3200.game.entities.configs.projectiles.ProjectileTarget,com.csse3200.game.components.WeaponsStatsComponent,java.lang.String,float)" class="member-name-link">createArcProjectile(ProjectileTarget, WeaponsStatsComponent, String, float)</a> - Static method in class com.csse3200.game.entities.factories.<a href="com/csse3200/game/entities/factories/ProjectileFactory.html" title="class in com.csse3200.game.entities.factories">ProjectileFactory</a></dt>
+<dd>
+<div class="block">Base class to create a projectile.</div>
 </dd>
 <dt><a href="com/csse3200/game/entities/factories/characters/BossFactory.html#createBaseBoss2(com.csse3200.game.entities.Entity)" class="member-name-link">createBaseBoss2(Entity)</a> - Static method in class com.csse3200.game.entities.factories.characters.<a href="com/csse3200/game/entities/factories/characters/BossFactory.html" title="class in com.csse3200.game.entities.factories.characters">BossFactory</a></dt>
 <dd>&nbsp;</dd>
@@ -885,12 +906,16 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Thin trigger line used for doors/exits.</div>
 </dd>
-<dt><a href="com/csse3200/game/entities/factories/ProjectileFactory.html#createEnemyProjectile(com.badlogic.gdx.math.Vector2,com.csse3200.game.components.WeaponsStatsComponent)" class="member-name-link">createEnemyProjectile(Vector2, WeaponsStatsComponent)</a> - Static method in class com.csse3200.game.entities.factories.<a href="com/csse3200/game/entities/factories/ProjectileFactory.html" title="class in com.csse3200.game.entities.factories">ProjectileFactory</a></dt>
+<dt><a href="com/csse3200/game/entities/factories/ProjectileFactory.html#createEnemyLaserProjectile(com.badlogic.gdx.math.Vector2,com.csse3200.game.components.WeaponsStatsComponent)" class="member-name-link">createEnemyLaserProjectile(Vector2, WeaponsStatsComponent)</a> - Static method in class com.csse3200.game.entities.factories.<a href="com/csse3200/game/entities/factories/ProjectileFactory.html" title="class in com.csse3200.game.entities.factories">ProjectileFactory</a></dt>
 <dd>
-<div class="block">Creates a laser shot entity</div>
+<div class="block">Creates a standard laser shot entity projectile</div>
 </dd>
 <dt><a href="com/csse3200/game/entities/factories/characters/BossFactory.html#createFireball(com.badlogic.gdx.math.Vector2,com.badlogic.gdx.math.Vector2)" class="member-name-link">createFireball(Vector2, Vector2)</a> - Static method in class com.csse3200.game.entities.factories.characters.<a href="com/csse3200/game/entities/factories/characters/BossFactory.html" title="class in com.csse3200.game.entities.factories.characters">BossFactory</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/entities/factories/ProjectileFactory.html#createFollowingProjectile(com.csse3200.game.entities.configs.projectiles.ProjectileTarget,com.csse3200.game.components.WeaponsStatsComponent,java.lang.String,com.csse3200.game.entities.Entity,float)" class="member-name-link">createFollowingProjectile(ProjectileTarget, WeaponsStatsComponent, String, Entity, float)</a> - Static method in class com.csse3200.game.entities.factories.<a href="com/csse3200/game/entities/factories/ProjectileFactory.html" title="class in com.csse3200.game.entities.factories">ProjectileFactory</a></dt>
+<dd>
+<div class="block">Base class to create a projectile.</div>
+</dd>
 <dt><a href="com/csse3200/game/input/InputFactory.html#createForPlayer()" class="member-name-link">createForPlayer()</a> - Method in class com.csse3200.game.input.<a href="com/csse3200/game/input/InputFactory.html" title="class in com.csse3200.game.input">InputFactory</a></dt>
 <dd>
 <div class="block">Creates an input handler for the player</div>
@@ -1045,6 +1070,10 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/csse3200/game/entities/factories/system/ObstacleFactory.html#createTree()" class="member-name-link">createTree()</a> - Static method in class com.csse3200.game.entities.factories.system.<a href="com/csse3200/game/entities/factories/system/ObstacleFactory.html" title="class in com.csse3200.game.entities.factories.system">ObstacleFactory</a></dt>
 <dd>
 <div class="block">Creates a tree entity.</div>
+</dd>
+<dt><a href="com/csse3200/game/entities/factories/characters/NPCFactory.html#createTurret(com.csse3200.game.entities.Entity,com.csse3200.game.areas.GameArea,float)" class="member-name-link">createTurret(Entity, GameArea, float)</a> - Static method in class com.csse3200.game.entities.factories.characters.<a href="com/csse3200/game/entities/factories/characters/NPCFactory.html" title="class in com.csse3200.game.entities.factories.characters">NPCFactory</a></dt>
+<dd>
+<div class="block">Creates Turret enemy type</div>
 </dd>
 <dt><a href="com/csse3200/game/screens/DeathScreen.html#createUIScreen(com.badlogic.gdx.scenes.scene2d.Stage)" class="member-name-link">createUIScreen(Stage)</a> - Method in class com.csse3200.game.screens.<a href="com/csse3200/game/screens/DeathScreen.html" title="class in com.csse3200.game.screens">DeathScreen</a></dt>
 <dd>
@@ -1617,6 +1646,10 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Folder containing the PNG frames, relative to the assets root.</div>
 </dd>
+<dt><a href="com/csse3200/game/entities/configs/ActiveProjectileTypes.html#FOLLOW_TARGET" class="member-name-link">FOLLOW_TARGET</a> - Enum constant in enum class com.csse3200.game.entities.configs.<a href="com/csse3200/game/entities/configs/ActiveProjectileTypes.html" title="enum class in com.csse3200.game.entities.configs">ActiveProjectileTypes</a></dt>
+<dd>
+<div class="block">Projectile that continuously adjusts its path to follow a target.</div>
+</dd>
 <dt><a href="com/csse3200/game/utils/SortedIntMap.html#forEach(java.util.function.Consumer)" class="member-name-link">forEach(Consumer&lt;? super V&gt;)</a> - Method in class com.csse3200.game.utils.<a href="com/csse3200/game/utils/SortedIntMap.html" title="class in com.csse3200.game.utils">SortedIntMap</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/areas/terrain/TerrainFactory.TerrainType.html#FOREST_DEMO" class="member-name-link">FOREST_DEMO</a> - Enum constant in enum class com.csse3200.game.areas.terrain.<a href="com/csse3200/game/areas/terrain/TerrainFactory.TerrainType.html" title="enum class in com.csse3200.game.areas.terrain">TerrainFactory.TerrainType</a></dt>
@@ -2168,6 +2201,10 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/entities/configs/characters/NPCConfigs.html#ghostGPT" class="member-name-link">ghostGPT</a> - Variable in class com.csse3200.game.entities.configs.characters.<a href="com/csse3200/game/entities/configs/characters/NPCConfigs.html" title="class in com.csse3200.game.entities.configs.characters">NPCConfigs</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/entities/configs/Projectiles.html#GHOSTGPT_LASER" class="member-name-link">GHOSTGPT_LASER</a> - Enum constant in enum class com.csse3200.game.entities.configs.<a href="com/csse3200/game/entities/configs/Projectiles.html" title="enum class in com.csse3200.game.entities.configs">Projectiles</a></dt>
+<dd>
+<div class="block">The laser that the GHOST_GPT enemy fires.</div>
+</dd>
 <dt><a href="com/csse3200/game/entities/configs/characters/GhostGPTConfig.html" class="type-name-link" title="class in com.csse3200.game.entities.configs.characters">GhostGPTConfig</a> - Class in <a href="com/csse3200/game/entities/configs/characters/package-summary.html">com.csse3200.game.entities.configs.characters</a></dt>
 <dd>
 <div class="block">Defines the properties stored in ghost GPT config files to be loaded by the NPC Factory.</div>
@@ -3077,7 +3114,7 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/entities/configs/weapons/PistolConfig.html#%3Cinit%3E()" class="member-name-link">PistolConfig()</a> - Constructor for class com.csse3200.game.entities.configs.weapons.<a href="com/csse3200/game/entities/configs/weapons/PistolConfig.html" title="class in com.csse3200.game.entities.configs.weapons">PistolConfig</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/csse3200/game/rendering/AnimationRenderComponent.html#playAnimationOnce(java.lang.String,java.lang.String)" class="member-name-link">playAnimationOnce(String, String)</a> - Method in class com.csse3200.game.rendering.<a href="com/csse3200/game/rendering/AnimationRenderComponent.html" title="class in com.csse3200.game.rendering">AnimationRenderComponent</a></dt>
+<dt><a href="com/csse3200/game/rendering/AnimationRenderComponent.html#playAnimationOnce(java.lang.String)" class="member-name-link">playAnimationOnce(String)</a> - Method in class com.csse3200.game.rendering.<a href="com/csse3200/game/rendering/AnimationRenderComponent.html" title="class in com.csse3200.game.rendering">AnimationRenderComponent</a></dt>
 <dd>
 <div class="block">Starts the playback of the desired animation.</div>
 </dd>
@@ -3181,11 +3218,16 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/csse3200/game/components/enemy/ProjectileLauncherComponent.html" class="type-name-link" title="class in com.csse3200.game.components.enemy">ProjectileLauncherComponent</a> - Class in <a href="com/csse3200/game/components/enemy/package-summary.html">com.csse3200.game.components.enemy</a></dt>
 <dd>
-<div class="block">A class containing methods that allow entities to fire projectiles essentially.</div>
+<div class="block">A class containing methods that allow entities to fire projectiles essentially, in a variety of ways.</div>
 </dd>
-<dt><a href="com/csse3200/game/components/enemy/ProjectileLauncherComponent.html#%3Cinit%3E(com.csse3200.game.areas.GameArea,com.csse3200.game.entities.Entity)" class="member-name-link">ProjectileLauncherComponent(GameArea, Entity)</a> - Constructor for class com.csse3200.game.components.enemy.<a href="com/csse3200/game/components/enemy/ProjectileLauncherComponent.html" title="class in com.csse3200.game.components.enemy">ProjectileLauncherComponent</a></dt>
+<dt><a href="com/csse3200/game/components/enemy/ProjectileLauncherComponent.html#%3Cinit%3E(com.csse3200.game.areas.GameArea,com.csse3200.game.entities.Entity,com.csse3200.game.entities.configs.Projectiles)" class="member-name-link">ProjectileLauncherComponent(GameArea, Entity, Projectiles)</a> - Constructor for class com.csse3200.game.components.enemy.<a href="com/csse3200/game/components/enemy/ProjectileLauncherComponent.html" title="class in com.csse3200.game.components.enemy">ProjectileLauncherComponent</a></dt>
 <dd>
 <div class="block">Constructor for the class.</div>
+</dd>
+<dt><a href="com/csse3200/game/entities/configs/Projectiles.html" class="type-name-link" title="enum class in com.csse3200.game.entities.configs">Projectiles</a> - Enum Class in <a href="com/csse3200/game/entities/configs/package-summary.html">com.csse3200.game.entities.configs</a></dt>
+<dd>
+<div class="block">Different instances of projectiles represented as enums, used in <a href="com/csse3200/game/components/enemy/ProjectileLauncherComponent.html" title="class in com.csse3200.game.components.enemy"><code>ProjectileLauncherComponent</code></a> to understand which projectile
+ it should fire.</div>
 </dd>
 <dt><a href="com/csse3200/game/entities/configs/consumables/ProjectileConsumableConfig.html#projectileSize" class="member-name-link">projectileSize</a> - Variable in class com.csse3200.game.entities.configs.consumables.<a href="com/csse3200/game/entities/configs/consumables/ProjectileConsumableConfig.html" title="class in com.csse3200.game.entities.configs.consumables">ProjectileConsumableConfig</a></dt>
 <dd>&nbsp;</dd>
@@ -3557,6 +3599,10 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/csse3200/game/rendering/DebugRenderer.html#setActive(boolean)" class="member-name-link">setActive(boolean)</a> - Method in class com.csse3200.game.rendering.<a href="com/csse3200/game/rendering/DebugRenderer.html" title="class in com.csse3200.game.rendering">DebugRenderer</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/entities/configs/projectiles/ActiveProjectile.html#setActiveProjectileType(com.csse3200.game.entities.configs.ActiveProjectileTypes)" class="member-name-link">setActiveProjectileType(ActiveProjectileTypes)</a> - Method in class com.csse3200.game.entities.configs.projectiles.<a href="com/csse3200/game/entities/configs/projectiles/ActiveProjectile.html" title="class in com.csse3200.game.entities.configs.projectiles">ActiveProjectile</a></dt>
+<dd>
+<div class="block">Sets the projectile type of this active projectile</div>
+</dd>
 <dt><a href="com/csse3200/game/physics/components/ColliderComponent.html#setAsBox(com.badlogic.gdx.math.Vector2)" class="member-name-link">setAsBox(Vector2)</a> - Method in class com.csse3200.game.physics.components.<a href="com/csse3200/game/physics/components/ColliderComponent.html" title="class in com.csse3200.game.physics.components">ColliderComponent</a></dt>
 <dd>
 <div class="block">Set physics as a box with a given size.</div>
@@ -3655,6 +3701,10 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/csse3200/game/physics/components/ColliderComponent.html#setFriction(float)" class="member-name-link">setFriction(float)</a> - Method in class com.csse3200.game.physics.components.<a href="com/csse3200/game/physics/components/ColliderComponent.html" title="class in com.csse3200.game.physics.components">ColliderComponent</a></dt>
 <dd>
 <div class="block">Set friction.</div>
+</dd>
+<dt><a href="com/csse3200/game/entities/configs/projectiles/ActiveProjectile.html#setGravityStrength(float)" class="member-name-link">setGravityStrength(float)</a> - Method in class com.csse3200.game.entities.configs.projectiles.<a href="com/csse3200/game/entities/configs/projectiles/ActiveProjectile.html" title="class in com.csse3200.game.entities.configs.projectiles">ActiveProjectile</a></dt>
+<dd>
+<div class="block">Sets the gravity strength of the projectile, used if set to ARC projectile type.</div>
 </dd>
 <dt><a href="com/csse3200/game/components/player/StaminaComponent.html#setGrounded(boolean)" class="member-name-link">setGrounded(boolean)</a> - Method in class com.csse3200.game.components.player.<a href="com/csse3200/game/components/player/StaminaComponent.html" title="class in com.csse3200.game.components.player">StaminaComponent</a></dt>
 <dd>
@@ -3763,6 +3813,8 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">For use in test code</div>
 </dd>
+<dt><a href="com/csse3200/game/entities/configs/projectiles/ActiveProjectile.html#setProjectileSpeed(float)" class="member-name-link">setProjectileSpeed(float)</a> - Method in class com.csse3200.game.entities.configs.projectiles.<a href="com/csse3200/game/entities/configs/projectiles/ActiveProjectile.html" title="class in com.csse3200.game.entities.configs.projectiles">ActiveProjectile</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/components/WeaponsStatsComponent.html#setProjectileTexturePath(java.lang.String)" class="member-name-link">setProjectileTexturePath(String)</a> - Method in class com.csse3200.game.components.<a href="com/csse3200/game/components/WeaponsStatsComponent.html" title="class in com.csse3200.game.components">WeaponsStatsComponent</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/physics/components/ColliderComponent.html#setRestitution(float)" class="member-name-link">setRestitution(float)</a> - Method in class com.csse3200.game.physics.components.<a href="com/csse3200/game/physics/components/ColliderComponent.html" title="class in com.csse3200.game.physics.components">ColliderComponent</a></dt>
@@ -3820,6 +3872,10 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/csse3200/game/physics/components/PhysicsMovementComponent.html#setTarget(com.badlogic.gdx.math.Vector2)" class="member-name-link">setTarget(Vector2)</a> - Method in class com.csse3200.game.physics.components.<a href="com/csse3200/game/physics/components/PhysicsMovementComponent.html" title="class in com.csse3200.game.physics.components">PhysicsMovementComponent</a></dt>
 <dd>
 <div class="block">Set a target to move towards.</div>
+</dd>
+<dt><a href="com/csse3200/game/entities/configs/projectiles/ActiveProjectile.html#setTarget(com.csse3200.game.entities.Entity)" class="member-name-link">setTarget(Entity)</a> - Method in class com.csse3200.game.entities.configs.projectiles.<a href="com/csse3200/game/entities/configs/projectiles/ActiveProjectile.html" title="class in com.csse3200.game.entities.configs.projectiles">ActiveProjectile</a></dt>
+<dd>
+<div class="block">Sets the target that the projectile will continuously follow, used if set to FOLLOW_TARGET projectile type.</div>
 </dd>
 <dt><a href="com/csse3200/game/components/items/ItemComponent.html#setTexture(java.lang.String)" class="member-name-link">setTexture(String)</a> - Method in class com.csse3200.game.components.items.<a href="com/csse3200/game/components/items/ItemComponent.html" title="class in com.csse3200.game.components.items">ItemComponent</a></dt>
 <dd>
@@ -3955,10 +4011,6 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Spawns the enemies based on the room number given.</div>
 </dd>
-<dt><a href="com/csse3200/game/areas/GameArea.html#spawnEnemyProjectile(com.badlogic.gdx.math.Vector2,com.csse3200.game.components.WeaponsStatsComponent)" class="member-name-link">spawnEnemyProjectile(Vector2, WeaponsStatsComponent)</a> - Method in class com.csse3200.game.areas.<a href="com/csse3200/game/areas/GameArea.html" title="class in com.csse3200.game.areas">GameArea</a></dt>
-<dd>
-<div class="block">Spawns projectiles from enemies.</div>
-</dd>
 <dt><a href="com/csse3200/game/areas/GameArea.html#spawnEntity(com.csse3200.game.entities.Entity)" class="member-name-link">spawnEntity(Entity)</a> - Method in class com.csse3200.game.areas.<a href="com/csse3200/game/areas/GameArea.html" title="class in com.csse3200.game.areas">GameArea</a></dt>
 <dd>
 <div class="block">Spawn entity at its current position</div>
@@ -3979,6 +4031,10 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Adds GhostGPT enemies onto the map.</div>
 </dd>
+<dt><a href="com/csse3200/game/areas/GameArea.html#spawnGhostGPTProjectile(com.badlogic.gdx.math.Vector2,com.csse3200.game.components.WeaponsStatsComponent)" class="member-name-link">spawnGhostGPTProjectile(Vector2, WeaponsStatsComponent)</a> - Method in class com.csse3200.game.areas.<a href="com/csse3200/game/areas/GameArea.html" title="class in com.csse3200.game.areas">GameArea</a></dt>
+<dd>
+<div class="block">Spawns the projectile used by the Ghost GPT Enemy</div>
+</dd>
 <dt><a href="com/csse3200/game/areas/GameArea.html#spawnGrokDroid(int,float,com.csse3200.game.entities.Entity,java.util.HashMap)" class="member-name-link">spawnGrokDroid(int, float, Entity, HashMap&lt;String, ArrayList&lt;Vector2&gt;&gt;)</a> - Method in class com.csse3200.game.areas.<a href="com/csse3200/game/areas/GameArea.html" title="class in com.csse3200.game.areas">GameArea</a></dt>
 <dd>
 <div class="block">Adds GrokDroid enemies onto the map.</div>
@@ -3991,6 +4047,10 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/csse3200/game/areas/KeycardSpawnerSystem.html#spawnKeycards(com.csse3200.game.areas.GameArea)" class="member-name-link">spawnKeycards(GameArea)</a> - Static method in class com.csse3200.game.areas.<a href="com/csse3200/game/areas/KeycardSpawnerSystem.html" title="class in com.csse3200.game.areas">KeycardSpawnerSystem</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/areas/GameArea.html#spawnTurret(int,float,com.csse3200.game.entities.Entity,java.util.HashMap)" class="member-name-link">spawnTurret(int, float, Entity, HashMap&lt;String, ArrayList&lt;Vector2&gt;&gt;)</a> - Method in class com.csse3200.game.areas.<a href="com/csse3200/game/areas/GameArea.html" title="class in com.csse3200.game.areas">GameArea</a></dt>
+<dd>
+<div class="block">Adds Turret enemies onto the map.</div>
+</dd>
 <dt><a href="com/csse3200/game/areas/GameArea.html#spawnVroomba(int,float,com.csse3200.game.entities.Entity,java.util.HashMap)" class="member-name-link">spawnVroomba(int, float, Entity, HashMap&lt;String, ArrayList&lt;Vector2&gt;&gt;)</a> - Method in class com.csse3200.game.areas.<a href="com/csse3200/game/areas/GameArea.html" title="class in com.csse3200.game.areas">GameArea</a></dt>
 <dd>
 <div class="block">Adds Vroomba enemies onto the map.</div>
@@ -4497,6 +4557,8 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/components/tasks/WanderTask.html#update()" class="member-name-link">update()</a> - Method in class com.csse3200.game.components.tasks.<a href="com/csse3200/game/components/tasks/WanderTask.html" title="class in com.csse3200.game.components.tasks">WanderTask</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/entities/configs/projectiles/ActiveProjectile.html#update()" class="member-name-link">update()</a> - Method in class com.csse3200.game.entities.configs.projectiles.<a href="com/csse3200/game/entities/configs/projectiles/ActiveProjectile.html" title="class in com.csse3200.game.entities.configs.projectiles">ActiveProjectile</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/entities/Entity.html#update()" class="member-name-link">update()</a> - Method in class com.csse3200.game.entities.<a href="com/csse3200/game/entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a></dt>
 <dd>
 <div class="block">Perform an update on all components.</div>
@@ -4593,6 +4655,10 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Returns the enum constant of this class with the specified name.</div>
 </dd>
+<dt><a href="com/csse3200/game/entities/configs/ActiveProjectileTypes.html#valueOf(java.lang.String)" class="member-name-link">valueOf(String)</a> - Static method in enum class com.csse3200.game.entities.configs.<a href="com/csse3200/game/entities/configs/ActiveProjectileTypes.html" title="enum class in com.csse3200.game.entities.configs">ActiveProjectileTypes</a></dt>
+<dd>
+<div class="block">Returns the enum constant of this class with the specified name.</div>
+</dd>
 <dt><a href="com/csse3200/game/entities/configs/Consumables.html#valueOf(java.lang.String)" class="member-name-link">valueOf(String)</a> - Static method in enum class com.csse3200.game.entities.configs.<a href="com/csse3200/game/entities/configs/Consumables.html" title="enum class in com.csse3200.game.entities.configs">Consumables</a></dt>
 <dd>
 <div class="block">Returns the enum constant of this class with the specified name.</div>
@@ -4602,6 +4668,10 @@ loadScripts(document, 'script');</script>
 <div class="block">Returns the enum constant of this class with the specified name.</div>
 </dd>
 <dt><a href="com/csse3200/game/entities/configs/projectiles/ProjectileTarget.html#valueOf(java.lang.String)" class="member-name-link">valueOf(String)</a> - Static method in enum class com.csse3200.game.entities.configs.projectiles.<a href="com/csse3200/game/entities/configs/projectiles/ProjectileTarget.html" title="enum class in com.csse3200.game.entities.configs.projectiles">ProjectileTarget</a></dt>
+<dd>
+<div class="block">Returns the enum constant of this class with the specified name.</div>
+</dd>
+<dt><a href="com/csse3200/game/entities/configs/Projectiles.html#valueOf(java.lang.String)" class="member-name-link">valueOf(String)</a> - Static method in enum class com.csse3200.game.entities.configs.<a href="com/csse3200/game/entities/configs/Projectiles.html" title="enum class in com.csse3200.game.entities.configs">Projectiles</a></dt>
 <dd>
 <div class="block">Returns the enum constant of this class with the specified name.</div>
 </dd>
@@ -4654,6 +4724,11 @@ the order they are declared.</div>
 <div class="block">Returns an array containing the constants of this enum class, in
 the order they are declared.</div>
 </dd>
+<dt><a href="com/csse3200/game/entities/configs/ActiveProjectileTypes.html#values()" class="member-name-link">values()</a> - Static method in enum class com.csse3200.game.entities.configs.<a href="com/csse3200/game/entities/configs/ActiveProjectileTypes.html" title="enum class in com.csse3200.game.entities.configs">ActiveProjectileTypes</a></dt>
+<dd>
+<div class="block">Returns an array containing the constants of this enum class, in
+the order they are declared.</div>
+</dd>
 <dt><a href="com/csse3200/game/entities/configs/Consumables.html#values()" class="member-name-link">values()</a> - Static method in enum class com.csse3200.game.entities.configs.<a href="com/csse3200/game/entities/configs/Consumables.html" title="enum class in com.csse3200.game.entities.configs">Consumables</a></dt>
 <dd>
 <div class="block">Returns an array containing the constants of this enum class, in
@@ -4665,6 +4740,11 @@ the order they are declared.</div>
 the order they are declared.</div>
 </dd>
 <dt><a href="com/csse3200/game/entities/configs/projectiles/ProjectileTarget.html#values()" class="member-name-link">values()</a> - Static method in enum class com.csse3200.game.entities.configs.projectiles.<a href="com/csse3200/game/entities/configs/projectiles/ProjectileTarget.html" title="enum class in com.csse3200.game.entities.configs.projectiles">ProjectileTarget</a></dt>
+<dd>
+<div class="block">Returns an array containing the constants of this enum class, in
+the order they are declared.</div>
+</dd>
+<dt><a href="com/csse3200/game/entities/configs/Projectiles.html#values()" class="member-name-link">values()</a> - Static method in enum class com.csse3200.game.entities.configs.<a href="com/csse3200/game/entities/configs/Projectiles.html" title="enum class in com.csse3200.game.entities.configs">Projectiles</a></dt>
 <dd>
 <div class="block">Returns an array containing the constants of this enum class, in
 the order they are declared.</div>
