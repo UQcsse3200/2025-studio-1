@@ -21,6 +21,16 @@ public class PowerupsFactory {
         return powerup;
     }
 
+    public static Entity createUnlimitedAmmo() {
+        Entity powerup = createBasePowerup("unlimitedammo");
+
+        powerup.addComponent(new TextureRenderComponent("images/rifle.png"));
+        powerup.getComponent(TextureRenderComponent.class).scaleEntity();
+        powerup.getComponent(PhysicsComponent.class).getBody().setUserData(powerup);
+
+        return powerup;
+    }
+
     public static Entity createBasePowerup(String type) {
         Entity powerup = new Entity()
                 .addComponent(new PhysicsComponent())

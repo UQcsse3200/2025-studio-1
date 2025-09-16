@@ -199,7 +199,8 @@ public class ForestGameArea extends GameArea {
     private Entity bullet;
     private Entity pistol;
     private Entity rifle;
-
+    private Entity rapidFirePowerup;
+    private Entity unlimitedAmmoPowerup;
 
   /**
    * Initialise this ForestGameArea to use the provided TerrainFactory and camera helper.
@@ -239,11 +240,12 @@ public class ForestGameArea extends GameArea {
     rifle = spawnRifle();
     lightsaber = spawnLightsaber();
 
-    Entity rapidFirePowerup = spawnRapidFirePowerup();
+//    rapidFirePowerup = spawnRapidFirePowerup();
+    unlimitedAmmoPowerup = spawnUnlimitedAmmoPowerup();
 //  Entity bullet = spawnBullet();
 
     //These are commented out since there is no equip feature yet
-     this.equipItem(pistol);
+    this.equipItem(pistol);
     // this.equipItem(lightsaber);
     // this.equipItem(dagger);
     // this.equipItem(rifle);
@@ -516,10 +518,16 @@ public class ForestGameArea extends GameArea {
     return newRifle;
   }
 
-  private Entity spawnRapidFirePowerup() {
-    Entity newRapidFirePowerup = PowerupsFactory.createRapidFire();
-    spawnEntityAt(newRapidFirePowerup, new GridPoint2(2, 40), true, true);
-    return newRapidFirePowerup;
+//  private Entity spawnRapidFirePowerup() {
+//    Entity newRapidFirePowerup = PowerupsFactory.createRapidFire();
+//    spawnEntityAt(newRapidFirePowerup, new GridPoint2(2, 40), true, true);
+//    return newRapidFirePowerup;
+//  }
+
+  private Entity spawnUnlimitedAmmoPowerup() {
+    Entity newUnlimitedAmmoPowerup = PowerupsFactory.createRapidFire();
+    spawnEntityAt(newUnlimitedAmmoPowerup, new GridPoint2(2, 40), true, true);
+    return newUnlimitedAmmoPowerup;
   }
 
 
