@@ -22,6 +22,7 @@ import com.csse3200.game.physics.components.PhysicsComponent;
 import com.csse3200.game.rendering.AnimationRenderComponent;
 import com.csse3200.game.rendering.TextureRenderComponent;
 import com.csse3200.game.services.ServiceLocator;
+import com.csse3200.game.components.ShopInteractComponent;
 import com.csse3200.game.components.player.ItemPickUpComponent;
 
 
@@ -29,12 +30,10 @@ import com.csse3200.game.components.player.ItemPickUpComponent;
  * Factory to create a player entity.
  *
  * <p>Predefined player properties are loaded from a config stored as a json file and should have
- * the properties stores in 'PlayerConfig'.
+ * the properties stored in 'PlayerConfig'.
  */
 public class PlayerFactory {
-  private static final PlayerConfig stats =
-      FileLoader.readClass(PlayerConfig.class, "configs/player.json");
-//  private static final PlayerConfig stats = safeLoadPlayerConfig();
+  private static final PlayerConfig stats = safeLoadPlayerConfig();
 
   private static PlayerConfig safeLoadPlayerConfig() {
     PlayerConfig cfg = FileLoader.readClass(PlayerConfig.class, "configs/player.json");
@@ -75,7 +74,8 @@ public class PlayerFactory {
             .addComponent(new PlayerInventoryDisplay(playerInventory))
             .addComponent(new StaminaComponent())
             .addComponent(animator)
-            .addComponent(new PlayerAnimationController());
+            .addComponent(new PlayerAnimationController())
+            .addComponent(new ShopInteractComponent(2.0f));
 
     player.getComponent(AnimationRenderComponent.class).scaleEntity(2f);
     PhysicsUtils.setScaledCollider(player, 0.6f, 0.3f);
@@ -83,15 +83,13 @@ public class PlayerFactory {
     PhysicsUtils.setScaledCollider(player, 0.3f,0.5f);
     player.getComponent(WeaponsStatsComponent.class).setCoolDown(0.2f);
 
-    //Unequip player at spawn
+    //Unequip player at spawn TODO Nandini
     PlayerActions actions = player.getComponent(PlayerActions.class);
     actions.create();
     actions.unequipPlayer();  //start without a weapon equipped
 
     return player;
   }
-
-
 
   /**
    * Add player animations to animation render component.

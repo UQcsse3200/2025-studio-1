@@ -4,17 +4,16 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.World;
-import com.csse3200.game.components.ItemComponent;
+import com.csse3200.game.components.items.ItemComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
 import com.csse3200.game.extensions.GameExtension;
 import com.csse3200.game.physics.components.PhysicsComponent;
-import com.csse3200.game.rendering.TextureRenderComponent;
 import com.csse3200.game.services.GameTime;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
@@ -60,7 +59,10 @@ class PlayerActionsTest {
     physField.setAccessible(true);
     physField.set(actions, physicsComponent);
 
+    Input mockInput = mock(Input.class);
+    Gdx.input = mockInput;
     actions.walk(new Vector2(1f, 0f));
+    when(mockInput.isKeyPressed(Input.Keys.D)).thenReturn(true);
     actions.update();
 
     Vector2 expectedImpulse = new Vector2(6f, 0f); // (3 - 0) * mass(2)

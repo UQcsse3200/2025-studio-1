@@ -1,4 +1,5 @@
 package com.csse3200.game.input;
+
 import com.csse3200.game.components.player.KeyboardPlayerInputComponent;
 import com.csse3200.game.ui.terminal.KeyboardTerminalInputComponent;
 import org.slf4j.Logger;
