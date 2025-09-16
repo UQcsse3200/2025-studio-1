@@ -9,8 +9,6 @@ import com.csse3200.game.physics.components.PhysicsComponent;
 import com.csse3200.game.rendering.TextureRenderComponent;
 import com.badlogic.gdx.graphics.Color;
 import com.csse3200.game.rendering.SolidColorRenderComponent;
-import com.csse3200.game.rendering.DoorRenderComponent;
-
 
 
 /**
@@ -205,6 +203,7 @@ public class ObstacleFactory {
     PhysicsUtils.setScaledCollider(platform2, 0.7f, 0.55f);
     return platform2;
  }
+
   /** creating the clock used in reception room **/
   public static Entity createholoclock() {
     Entity clockSpawn =
@@ -232,6 +231,47 @@ public class ObstacleFactory {
     comic_standSpawn.scaleHeight(1.5f);
     return comic_standSpawn;
 }
+  /**Creates a bit bigger platforms for Main hall **/
+  public static Entity createplatform3() {
+    Entity platform3 =
+            new Entity()
+                    .addComponent(new TextureRenderComponent("images/platform-3.png"))
+                    .addComponent(new PhysicsComponent())
+                    .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
+
+    platform3.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
+    platform3.getComponent(TextureRenderComponent.class).scaleEntity();
+    platform3.scaleHeight(3f);
+    PhysicsUtils.setScaledCollider(platform3, 0.7f, 0.5f);
+    return platform3;
+  }
+  /**creates Sofa in bottom left in main hall**/
+  public static Entity createMhall_sofa() {
+    Entity Mhall_sofaSpawn =
+            new Entity()
+                    .addComponent(new TextureRenderComponent("images/Mhall-sofa.png"));
+    Mhall_sofaSpawn.getComponent(TextureRenderComponent.class).scaleEntity();
+    Mhall_sofaSpawn.scaleHeight(3f);
+    return Mhall_sofaSpawn;
+  }
+  /**creates a screen decoration for main hall**/
+  public static Entity createMhall_screen() {
+    Entity Mhall_screenSpawn =
+            new Entity()
+                    .addComponent(new TextureRenderComponent("images/Mhall-screen.png"));
+    Mhall_screenSpawn.getComponent(TextureRenderComponent.class).scaleEntity();
+    Mhall_screenSpawn.scaleHeight(1.5f);
+    return Mhall_screenSpawn;
+  }
+  /**creates a holographic decoration for main hall**/
+  public static Entity createMhall_holo() {
+    Entity Mhall_holoSpawn =
+            new Entity()
+                    .addComponent(new TextureRenderComponent("images/Mhall-holo.png"));
+    Mhall_holoSpawn.getComponent(TextureRenderComponent.class).scaleEntity();
+    Mhall_holoSpawn.scaleHeight(1.5f);
+    return Mhall_holoSpawn;
+  }
   /**
    * Purple spawn pad prop. Solid so it rests on the ground like other props.
    * @return a static pad entity
