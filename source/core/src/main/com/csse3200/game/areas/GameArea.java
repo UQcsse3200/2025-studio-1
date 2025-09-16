@@ -45,6 +45,8 @@ public abstract class GameArea implements Disposable {
   /** Prevents re-entrant room transitions across areas */
   protected static boolean isTransitioning = false;
 
+  private final float VERTICAL_HEIGHT_OFFSET = 9.375f;
+
   protected EnemyWaves wavesManager; // manage waves via terminal command
 
   protected GameArea(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
@@ -452,8 +454,8 @@ public abstract class GameArea implements Disposable {
     float viewHeight = cam.viewportHeight;
     float leftX = camPos.x - viewWidth / 2f;
     float rightX = camPos.x + viewWidth / 2f;
-    float bottomY = camPos.y - viewHeight / 2f;
-    float topY = camPos.y + viewHeight / 2f;
+    float bottomY = camPos.y - VERTICAL_HEIGHT_OFFSET / 2f;
+    float topY = camPos.y + VERTICAL_HEIGHT_OFFSET / 2f;
     return new Bounds(leftX, rightX, bottomY, topY, viewWidth, viewHeight, camPos);
   }
 
