@@ -230,6 +230,7 @@ public class ForestGameArea extends GameArea {
     //this.equipItem(lightsaber);
     //this.equipItem(dagger);
     //this.equipItem(rifle);
+//    this.equipItem(null); //setting to null because it's leading the player to spawn with weapon at the start
 
     spawnFloor();
     spawnBottomRightDoor();
