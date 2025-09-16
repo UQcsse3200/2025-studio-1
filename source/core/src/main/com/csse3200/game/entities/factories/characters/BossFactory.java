@@ -146,7 +146,7 @@ public class BossFactory {
         float patrolHalfWidth = 3f;
         float leftX  = patrolCenterX - patrolHalfWidth;
         float rightX = patrolCenterX + patrolHalfWidth;
-        float patrolY = 8f;
+        float patrolY = 9f;
         float patrolSpeed = 4f;
 
         boss2
@@ -155,8 +155,8 @@ public class BossFactory {
                 .addComponent(new AttackProtectionComponent())
                 .addComponent(new AttackProtectionDisplay())
                 .addComponent(new com.csse3200.game.components.boss.Boss2HealthPhaseSwitcher(
-                        0.5f,   // phase2 阈值 / threshold
-                        0.3f,   // angry  阈值 / threshold
+                        0.5f,   // phase2 threshold
+                        0.3f,   // angry   threshold
                         "idle", "phase2", "angry"
                 ))
                 .addComponent(new BossStageComponent(boss2))
