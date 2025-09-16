@@ -46,6 +46,7 @@ public abstract class GameArea implements Disposable {
   protected static boolean isTransitioning = false;
 
   protected EnemyWaves wavesManager; // manage waves via terminal command
+    protected static int roomNumber = 1;
 
   protected GameArea(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
     this.terrainFactory = terrainFactory;
@@ -119,14 +120,7 @@ public abstract class GameArea implements Disposable {
    * with 2 being any number, otherwise returns 1.
    */
   public int getRoomNumber() { // changed from protected to public for EnemyWaves access
-    String name = getClass().getSimpleName();
-    // Look for digits after Floor or Room (e.g., MainHall, Reception,Storage etc.)
-    Matcher m = Pattern.compile("(?:Floor|Room)(\\d+)").matcher(name);
-    if (m.find()) {
-      try { return Integer.parseInt(m.group(1)); } catch (NumberFormatException ignored) {}
-    }
-    // Fallback: default first floor
-    return 1;
+    return roomNumber;
   }
 
   /**
@@ -190,7 +184,10 @@ public abstract class GameArea implements Disposable {
               spawnGhostGPT(total, scaleFactor, player, positions);
               spawnGrokDroid(total, scaleFactor, player, positions);
               break;
-          default: throw new IllegalStateException("Unexpected room number: " + roomNumber);
+          default:
+              spawnGhostGPT(total, scaleFactor, player, positions);
+              spawnGrokDroid(total, scaleFactor, player, positions);
+              break;
       }
   }
 
@@ -295,9 +292,8 @@ public abstract class GameArea implements Disposable {
               respectiveSpawns.add(new Vector2(11.1f, 10f));
               positions.put("Deepspin", (ArrayList<Vector2>) respectiveSpawns.clone());
               respectiveSpawns.clear();
-              respectiveSpawns.add(new Vector2(2.5f, 5f));
+              respectiveSpawns.add(new Vector2(12f, 5f));
               positions.put("Turret", (ArrayList<Vector2>) respectiveSpawns.clone());
-
               break;
           case 2:
               respectiveSpawns.add(new Vector2(2.7f, 8f));
@@ -355,7 +351,16 @@ public abstract class GameArea implements Disposable {
               respectiveSpawns.add(new Vector2(11.3f, 8f));
               positions.put("GrokDroid", (ArrayList<Vector2>) respectiveSpawns.clone());
               break;
-          default: throw new IllegalStateException("Unexpected room number: " + roomNumber);
+          default:
+              respectiveSpawns.add(new Vector2(13f, 4f));
+              respectiveSpawns.add(new Vector2(10f, 4f));
+              respectiveSpawns.add(new Vector2(2.7f, 8f));
+              positions.put("GhostGpt", (ArrayList<Vector2>) respectiveSpawns.clone());
+              respectiveSpawns.clear();
+              respectiveSpawns.add(new Vector2(8.4f, 10f));
+              respectiveSpawns.add(new Vector2(11.3f, 8f));
+              positions.put("GrokDroid", (ArrayList<Vector2>) respectiveSpawns.clone());
+              break;
       }
       return positions;
   }
