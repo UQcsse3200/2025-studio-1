@@ -41,6 +41,7 @@ public class ElevatorGameArea extends GameArea {
     spawnEntity(keycard);
     spawnBordersAndDoors();
     spawnPlayer();
+    spawnObjectDoors(new GridPoint2(0, 6), new GridPoint2(28, 19));
     spawnFloor();
     spawnPlatforms();
     spawnDesk();
@@ -65,13 +66,7 @@ public class ElevatorGameArea extends GameArea {
     leftDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadOffice));
     spawnEntity(leftDoor);
 
-    // left door sprite
-    Entity leftDoorSprite = new Entity()
-            .addComponent(new TextureRenderComponent("images/KeycardDoor.png"));
-    leftDoorSprite.getComponent(TextureRenderComponent.class).scaleEntity();
-    leftDoorSprite.scaleHeight(leftDoorHeight);
-    leftDoorSprite.setPosition(b.leftX , leftDoorY+0.6f);
-    spawnEntity(leftDoorSprite);
+
 
     float rightDoorHeight = Math.max(1f, b.viewHeight * 0.2f);
     float rightDoorY = b.bottomY + 7.0f; // slightly above ground
@@ -93,13 +88,6 @@ public class ElevatorGameArea extends GameArea {
     }));
     spawnEntity(rightDoor);
 
-    // right door sprite
-    Entity rightDoorSprite = new Entity()
-            .addComponent(new TextureRenderComponent("images/KeycardDoor.png"));
-    rightDoorSprite.getComponent(TextureRenderComponent.class).scaleEntity();
-    rightDoorSprite.scaleHeight(rightDoorHeight);
-    rightDoorSprite.setPosition(b.rightX - WALL_WIDTH - 1.2f, rightDoorY);
-    spawnEntity(rightDoorSprite);
   }
 
   private void spawnPlayer() {

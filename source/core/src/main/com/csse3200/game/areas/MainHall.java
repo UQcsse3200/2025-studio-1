@@ -33,6 +33,7 @@ public class MainHall extends GameArea {
     spawnsofa();
     spawnscreen();
     spawnholo();
+    spawnObjectDoors(new GridPoint2(0, 6), new GridPoint2(28, 17));
     spawnWallsAndDoor();
     spawnPlayer();
     spawnFloor();
