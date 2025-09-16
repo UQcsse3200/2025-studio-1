@@ -195,6 +195,7 @@ class CombatStatsComponentTest {
   @Test
   void takeDamageRemovesHealth() {
     CombatStatsComponent combat = new CombatStatsComponent(100);
+    Entity entity = new Entity().addComponent(combat); // Add so the damage message can be broadcast
     assertEquals(100, combat.getHealth());
     combat.takeDamage(50);
     assertEquals(50, combat.getHealth());
