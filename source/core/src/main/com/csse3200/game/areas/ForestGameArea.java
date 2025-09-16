@@ -186,7 +186,8 @@ public class ForestGameArea extends GameArea {
     "images/explosion_2.atlas",
     "images/boss_explosion.atlas",
           "images/boss2_combined.atlas",
-          "images/Boss3_Attacks.atlas"
+          "images/Boss3_Attacks.atlas",
+          "images/boss3_phase2.atlas"
   };
 
 
@@ -559,7 +560,7 @@ public class ForestGameArea extends GameArea {
 
   //new added boss3
   private void spawnBoss3() {
-    GridPoint2 pos = new GridPoint2(20, 12);
+    GridPoint2 pos = new GridPoint2(15, 16);
 
     Entity boss3 = BossFactory.createBoss3(player);
     spawnEntityAt(boss3, pos, true, true);
