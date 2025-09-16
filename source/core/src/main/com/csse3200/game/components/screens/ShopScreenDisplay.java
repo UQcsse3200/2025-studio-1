@@ -21,7 +21,13 @@ import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.scenes.scene2d.ui.Container;
 import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 
-
+/**
+ * Screen which displays the shop screen.
+ * <p>
+ *     Displays purchasable items which are clickable and trigger a purchase event. Displays
+ *     current balance as well as error messages.
+ * </p>
+ */
 public class ShopScreenDisplay extends UIComponent {
     // Error messages
     private static final String ERROR_MESSAGE = "Unable to purchase";
@@ -60,12 +66,20 @@ public class ShopScreenDisplay extends UIComponent {
     private ItemScreenDisplay itemPopup;
     Image background;
 
-
+    /**
+     * UI component that displays the shop screen
+     * Allows player to interact with the shop and displays relevant error messages.
+     * @param area Game area containing player
+     * @param manager Shop manager to handle purchases
+     */
     public ShopScreenDisplay(ForestGameArea area, ShopManager manager) {
         this.game = area;
         this.catalog = manager.getCatalog();
         this.manager = manager;
     }
+    /**
+    Creates a new ShopScreen Display and sets up UI components
+    **/
     @Override
     public void create() {
         entity.getEvents().addListener("purchaseFailed", this::showError);
@@ -87,13 +101,24 @@ public class ShopScreenDisplay extends UIComponent {
         hide();
     }
 
+    /**
+     * Draw method overridden
+     * @param batch Batch to render to.
+     */
     @Override
     public void draw(SpriteBatch batch) {
         // Stage draws everything
     }
 
+    /**
+     * Returns the Stage associated with the shop screen
+     * @return the stage object
+     */
     public Stage getStage() { return stage; }
 
+    /**
+     * Cleans up resources and disposes of UI elements.
+     */
     @Override
     public void dispose() {
         if (root != null) { root.remove(); root = null; }
@@ -105,6 +130,10 @@ public class ShopScreenDisplay extends UIComponent {
         super.dispose();
     }
 
+    /**
+     * Shows the shop screen.
+     * Pauses the game, refreshes the catalog, and updates balance display
+     */
     public void show() {
         ServiceLocator.getTimeSource().setPaused(true);
         refreshCatalog();
@@ -123,6 +152,9 @@ public class ShopScreenDisplay extends UIComponent {
         }
     }
 
+    /**
+     * Hides the shop screen and resumes game time.
+     */
     public void hide() {
         ServiceLocator.getTimeSource().setPaused(false);
         if (frame != null) {
@@ -188,7 +220,7 @@ public class ShopScreenDisplay extends UIComponent {
         Image divider = new Image(new TextureRegionDrawable(new TextureRegion(pixelTex)));
         divider.setColor(1f, 1f, 1f, 0.08f);
         root.add(divider)
-                .width(PANEL_W - 40f)  // match your side padding
+                .width(PANEL_W - 40f)
                 .height(2f)
                 .padBottom(8f)
                 .row();
@@ -215,7 +247,7 @@ public class ShopScreenDisplay extends UIComponent {
     private void refreshCatalog() {
         if (grid == null) return;
         grid.clearChildren();
-        populateGrid(); // re-adds all cells and rows
+        populateGrid();
     }
 
     // One footer row (Button and Balance)
@@ -251,7 +283,7 @@ public class ShopScreenDisplay extends UIComponent {
         root.add(footerStack).growX().padTop(8f).padBottom(10f).row();
     }
 
-    // Keep balance in sync with InventoryComponent#setProcessor().
+    // Keep balance in sync
     private void subscribeCurrencyUpdates() {
         game.getPlayer().getEvents().addListener("updateProcessor", (Integer p) -> {
             if (currencyLabel != null) {
