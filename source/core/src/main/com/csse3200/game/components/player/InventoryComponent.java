@@ -39,18 +39,12 @@ private int inventoryCount = 0;
    */
   public InventoryComponent(int processor) {
     setProcessor(processor);
-//    entity.getEvents().addListener("load player", this::loadInventory);
-//    commented out in case i need later
     for (int idx = this.minCapacity; idx < this.maxCapacity; idx++) {
       this.items.add(idx, null);
       this.itemTexs.add(idx, null);
     }
   }
-//
-//
-//  private void loadInventory() {
-//    InventoryComponent loadIn = FileLoader.readInventory()
-//  }
+
 
 
   /**

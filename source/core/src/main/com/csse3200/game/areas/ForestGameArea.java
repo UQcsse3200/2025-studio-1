@@ -477,14 +477,6 @@ public class ForestGameArea extends GameArea {
     return newPlayer;
   }
 
-
-  private Entity spawnPlayer(int loading) {
-    Entity newPlayer = PlayerFactory.createPlayer();
-    spawnEntityAt(newPlayer, PLAYER_SPAWN, true, true);
-
-    return newPlayer;
-  }
-
   private Entity spawnDagger() {
     Entity newDagger = WeaponsFactory.createWeapon(Weapons.DAGGER);
     Vector2 newDaggerOffset = new Vector2(0.7f, 0.3f);

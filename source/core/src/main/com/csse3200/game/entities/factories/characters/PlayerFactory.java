@@ -24,13 +24,8 @@ import com.csse3200.game.physics.components.ColliderComponent;
 import com.csse3200.game.physics.components.HitboxComponent;
 import com.csse3200.game.physics.components.PhysicsComponent;
 import com.csse3200.game.rendering.AnimationRenderComponent;
-import com.csse3200.game.rendering.TextureRenderComponent;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.components.ShopInteractComponent;
-
-import java.util.EventListener;
-import java.util.List;
-import java.util.Optional;
 
 /**
  * Factory to create a player entity.
@@ -51,15 +46,6 @@ public class PlayerFactory {
       cfg.baseAttack = 10;
     }
     return cfg;
-  }
-
-  private static PlayerConfig overwrite(List<String> inventory, int CPU, int health) {
-    PlayerConfig cfgOverwrite = new PlayerConfig();
-    cfgOverwrite.gold = CPU;
-    cfgOverwrite.health = health;
-    Entity listen = new Entity();
-
-    return cfgOverwrite;
   }
 
   /**
