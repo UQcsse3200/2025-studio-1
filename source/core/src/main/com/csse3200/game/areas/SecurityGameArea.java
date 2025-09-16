@@ -98,7 +98,7 @@ public class SecurityGameArea extends GameArea {
     spawnEntityAt(redLight, redLightPos, false, false);
 
     /** Monitor (decorative)**/
-    GridPoint2 monitorPos = new GridPoint2(7, 6);
+    GridPoint2 monitorPos = new GridPoint2(12, 6);
     Entity monitor = ObstacleFactory.createSecurityMonitor();
     spawnEntityAt(monitor, monitorPos, false, false);
 
