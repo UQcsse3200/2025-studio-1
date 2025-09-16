@@ -299,3 +299,11 @@ boss.setPosition(new Vector2(0f, 0f));
     assertEquals(0, entities.registered, "Out of range: should not spawn");
 }
 
+Ling Fang talk with chatgpt
+add a attack concroller in others' code
+if (!timer <= 0f) {
+pauseAI(false);
+dwellCounter = 0f;
+triggerAnim("boss2:patrol");
+state = State.PATROL;
+}
