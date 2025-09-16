@@ -20,9 +20,7 @@ public class TerminalDisplay extends BaseScreenDisplay {
     private static final float MARGIN_BOT = 8f;
 
     private Table container;
-    private Table promptBox;
     private Label label;
-    private Cell<?> promptCell;
 
     private Terminal terminal;
 
@@ -49,7 +47,7 @@ public class TerminalDisplay extends BaseScreenDisplay {
         stage.addActor(container);
 
         // prompt background
-        promptBox = new Table();
+        Table promptBox = new Table();
         promptBox.align(Align.left);
         promptBox.setClip(true);
 
@@ -76,7 +74,7 @@ public class TerminalDisplay extends BaseScreenDisplay {
                 .padBottom(V_PADDING);
 
         // width = 10% of container (screen) width; auto-updates on resize
-        promptCell = container.add(promptBox)
+        container.add(promptBox)
                 .width(Value.percentWidth(WIDTH_RATIO, container))
                 .left()
                 .padBottom(MARGIN_BOT);
@@ -98,16 +96,6 @@ public class TerminalDisplay extends BaseScreenDisplay {
 
         String message = terminal.getEnteredMessage();
         label.setText("> " + (message == null ? "" : message));
-    }
-
-    public void resize(int width, int height) {
-        // keep layout in sync with viewport; percent width will follow automatically
-        stage.getViewport().update(width, height, true);
-        if (container != null) {
-            container.setFillParent(true);
-            container.invalidateHierarchy();
-            container.validate();
-        }
     }
 
     @Override
