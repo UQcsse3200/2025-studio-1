@@ -51,6 +51,7 @@ public class MainGameScreen extends ScreenAdapter {
   private Entity pauseOverlay;
   private boolean isPauseVisible = false;
 
+
   public MainGameScreen(GdxGame game) {
     this.game = game;
 
@@ -77,15 +78,19 @@ public class MainGameScreen extends ScreenAdapter {
     logger.debug("Initialising main game screen entities");
     TerrainFactory terrainFactory = new TerrainFactory(renderer.getCamera());
     forestGameArea = new ForestGameArea(terrainFactory, renderer.getCamera());
+    com.csse3200.game.services.ServiceLocator.registerGameArea(forestGameArea);
     forestGameArea.create();
   }
 
   @Override
   public void render(float delta) {
-    if (!isPauseVisible) {
+    if (!isPauseVisible && !(ServiceLocator.getTimeSource().isPaused())
+            && !com.csse3200.game.services.ServiceLocator.isTransitioning()) {
       physicsEngine.update();
     }
-    ServiceLocator.getEntityService().update();
+    if (!com.csse3200.game.services.ServiceLocator.isTransitioning()) {
+      ServiceLocator.getEntityService().update();
+    }
     Entity player = forestGameArea.getPlayer();
     //show death screen when player is dead
     if (player != null) {
@@ -101,8 +106,8 @@ public class MainGameScreen extends ScreenAdapter {
       } else {
         hidePauseOverlay();
       }
-      return;
     }
+
   }
 
   @Override
@@ -166,7 +171,6 @@ public class MainGameScreen extends ScreenAdapter {
         .addComponent(new Terminal(this.game))
         .addComponent(inputComponent)
         .addComponent(new TerminalDisplay());
-
     ServiceLocator.getEntityService().register(ui);
   }
 
@@ -199,4 +203,6 @@ public class MainGameScreen extends ScreenAdapter {
     }
     isPauseVisible = false;
   }
+
+
 }

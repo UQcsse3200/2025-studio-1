@@ -12,4 +12,5 @@ public class NPCConfigs {
   public DeepspinConfig deepSpin = new DeepspinConfig();
   public GrokDroidConfig grokDroid = new GrokDroidConfig();
   public VroombaConfig vroomba = new VroombaConfig();
+  public TurretConfig turret = new TurretConfig();
 }

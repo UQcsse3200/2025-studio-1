@@ -1,6 +1,7 @@
 package com.csse3200.game.components.boss;
 
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.components.Component;
 import com.csse3200.game.entities.Entity;
@@ -127,7 +128,7 @@ public class CocoonSpawnerComponent extends Component {
         com.csse3200.game.physics.PhysicsUtils.setScaledCollider(cocoon, 0.8f, 0.8f);
 
         cocoon.getComponent(com.csse3200.game.physics.components.PhysicsComponent.class)
-                .getBody().setType(com.badlogic.gdx.physics.box2d.BodyDef.BodyType.StaticBody);
+                .setBodyType(BodyDef.BodyType.StaticBody);
 
         return cocoon;
     }

@@ -349,7 +349,6 @@ public class BossFactory {
 
 
 
-    // Base：只负责渲染、碰撞、起始动画（不要主动触发 phase2）
     public static Entity createBaseBoss2(Entity target) {
         Entity boss = new Entity()
                 .addComponent(new PhysicsComponent())
@@ -370,7 +369,6 @@ public class BossFactory {
         // 碰撞体缩放
         PhysicsUtils.setScaledCollider(boss, 0.9f, 0.4f);
 
-        // 延迟到 create() 再做首帧缩放与播放
         boss.addComponent(new ApplyInitialBoss2Setup(4f, "idle"));
 
         return boss;
@@ -396,6 +394,9 @@ public class BossFactory {
     public static Entity createRobotWithCocoons(Entity target) {
         // Create original robot using existing method
         Entity robot = createRobot(target);
+        robot
+                .addComponent(new PhysicsComponent())
+                .addComponent(new ColliderComponent());
 
         // Add cocoon spawner component to existing robot
         Vector2[] cocoonPositions = getDefaultCocoonPositions();
