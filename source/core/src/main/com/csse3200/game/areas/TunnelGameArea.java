@@ -6,9 +6,11 @@ import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.entities.Entity;
+import com.csse3200.game.entities.configs.ItemSpawnConfig;
 import com.csse3200.game.entities.factories.characters.PlayerFactory;
 import com.csse3200.game.entities.factories.characters.NPCFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
+import com.csse3200.game.entities.spawner.ItemSpawner;
 
 /** Tunnel room: minimal walls with left door back to Storage. */
 public class TunnelGameArea extends GameArea {
@@ -34,6 +36,9 @@ public class TunnelGameArea extends GameArea {
     spawnGrokDroids();
 
     spawnFloor();
+
+    ItemSpawner itemSpawner = new ItemSpawner(this);
+    itemSpawner.spawnItems(ItemSpawnConfig.tunnelmap());
   }
 
   private void spawnBordersAndDoors() {

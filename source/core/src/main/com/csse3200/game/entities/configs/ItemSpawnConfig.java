@@ -54,6 +54,17 @@ public class ItemSpawnConfig {
 
         return config;
     }
+
+    /** Server Room spawning. Spawns a rifle on the purple spawn pad */
+    public static Map<String, List<ItemSpawner.ItemSpawnInfo>> tunnelmap() {
+        Map<String, List<ItemSpawner.ItemSpawnInfo>> config = new HashMap<>();
+
+        config.put(Weapons.PISTOL.name(), Arrays.asList(
+                new ItemSpawner.ItemSpawnInfo(new GridPoint2(8, 18), 1)
+        ));
+
+        return config;
+    }
     //  for a new map just add more methods
 
 }
