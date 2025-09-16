@@ -26,7 +26,7 @@ import com.csse3200.game.physics.components.*;
 import com.csse3200.game.rendering.AnimationRenderComponent;
 import com.csse3200.game.rendering.TextureRenderComponent;
 import com.csse3200.game.services.ServiceLocator;
-import com.csse3200.game.components.player.BossStatusDisplay;
+import com.csse3200.game.components.enemy.BossStatusDisplay;
 import com.csse3200.game.components.WeaponsStatsComponent;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.math.Vector2;
@@ -101,7 +101,9 @@ public class BossFactory {
                         1.0f,
                         defenseHp,
                         false
-                ));
+                ))
+                .addComponent(new AttackProtectionComponent())
+                .addComponent(new AttackProtectionDisplay());
 
         // Replace original defense component with new cocoon defense component
         Vector2[] cocoonPositions = getDefaultCocoonPositions();
@@ -161,7 +163,7 @@ public class BossFactory {
                 .addComponent(new FireballAttackComponent(target, 1.5f, 8f, 6f, config.baseAttack + 2))
                 .addComponent(new BossChargeSkillComponent(
                         target,
-                        6f,
+                        7f,
                         5f,
                         0.4f,
                         12f,
@@ -206,6 +208,9 @@ public class BossFactory {
                 .addComponent(new WeaponsStatsComponent(config.baseAttack))
                 .addComponent(new EnemyDeathRewardComponent(100, playerInventory))
                 .addComponent(new BossDeathComponent())
+                .addComponent(new DamageReductionComponent())
+                .addComponent(new AttackProtectionComponent())
+                .addComponent(new AttackProtectionDisplay())
                 .addComponent(new TextureRenderComponent("images/Boss_3.png"))
                 .addComponent(new BossStatusDisplay("Boss_3"));;
 
@@ -259,7 +264,7 @@ public class BossFactory {
                 .addComponent(new ColliderComponent())
                 .addComponent(new HitboxComponent().setLayer(PhysicsLayer.ENEMY_PROJECTILE))
                 .addComponent(new CombatStatsComponent(1))
-                .addComponent(new WeaponsStatsComponent(12))
+                .addComponent(new WeaponsStatsComponent(1))
                 .addComponent(new PhysicsProjectileComponent())
                 .addComponent(new TouchAttackComponent(PhysicsLayer.PLAYER, 1f));
         fireball.setPosition(from);
@@ -333,7 +338,7 @@ public class BossFactory {
         @Override public void create() {
             AnimationRenderComponent arc = entity.getComponent(AnimationRenderComponent.class);
             if (arc != null) {
-                arc.scaleEntity();                      // 此时 entity 已注入，不会 NPE
+                arc.scaleEntity();
                 Vector2 s = entity.getScale();
                 entity.setScale(s.x * scaleK, s.y * scaleK);
                 if (arc.hasAnimation(startAnim)) arc.startAnimation(startAnim);

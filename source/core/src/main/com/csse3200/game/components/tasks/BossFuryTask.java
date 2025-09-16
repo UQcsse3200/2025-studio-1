@@ -6,7 +6,7 @@ import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.components.WeaponsStatsComponent;
 import com.csse3200.game.physics.components.PhysicsMovementComponent;
 import com.csse3200.game.rendering.AnimationRenderComponent;
-import com.csse3200.game.components.player.BossStatusDisplay;
+import com.csse3200.game.components.enemy.BossStatusDisplay;
 
 /** Boss's fury form */
 public class BossFuryTask extends Component {
