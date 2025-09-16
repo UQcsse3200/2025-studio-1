@@ -7,11 +7,15 @@ import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.factories.characters.PlayerFactory;
+import com.csse3200.game.entities.factories.characters.NPCFactory;
+import com.csse3200.game.entities.factories.system.ObstacleFactory;
 
 /** Tunnel room: minimal walls with left door back to Storage. */
 public class TunnelGameArea extends GameArea {
   private static final float WALL_WIDTH = 0.1f;
   private static final GridPoint2 PLAYER_SPAWN = new GridPoint2(10, 10);
+
+  private Entity player;
 
   public TunnelGameArea(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
     super(terrainFactory, cameraComponent);
@@ -20,11 +24,15 @@ public class TunnelGameArea extends GameArea {
   @Override
   public void create() {
     GenericLayout.ensureGenericAssets(this);
-    GenericLayout.setupTerrainWithOverlay(this, terrainFactory, TerrainType.FOREST_DEMO,
+    GenericLayout.setupTerrainWithOverlay(this, terrainFactory, TerrainType.TUNNEL_ROOM,
         new Color(0.08f, 0.08f, 0.12f, 0.28f));
 
     spawnBordersAndDoors();
-    spawnPlayer();
+    player =spawnPlayer();
+    spawnPlatforms();
+    spawnSpawnPads();
+    spawnGrokDroids();
+
     spawnFloor();
   }
 
@@ -36,9 +44,58 @@ public class TunnelGameArea extends GameArea {
     addSolidWallBottom(b, WALL_WIDTH);
   }
 
-  private void spawnPlayer() {
+  private Entity spawnPlayer() {
     Entity player = PlayerFactory.createPlayer();
     spawnEntityAt(player, PLAYER_SPAWN, true, true);
+    return player;
+  }
+
+  /**
+   * Two generic big thick platforms and a few small thin platforms above.
+   * The big thick platforms can serve as 'cover'  for the player,
+   * and the thin  platforms will require jumping to reach.
+   */
+  private void spawnPlatforms() {
+    Entity platform1 = ObstacleFactory.createThickFloor();
+    GridPoint2 platform1Pos = new GridPoint2(10, 6);
+    spawnEntityAt(platform1, platform1Pos, true, false);
+    Entity platform2 = ObstacleFactory.createThickFloor();
+    GridPoint2 platform2Pos = new GridPoint2(20, 6);
+    spawnEntityAt(platform2, platform2Pos, true, false);
+
+    Entity thinPlatform1 = ObstacleFactory.createThinFloor();
+    GridPoint2 thinPlatform1Pos = new GridPoint2(8, 16);
+    spawnEntityAt(thinPlatform1, thinPlatform1Pos, true, false);
+    Entity thinPlatform2 = ObstacleFactory.createThinFloor();
+    GridPoint2 thinPlatform2Pos = new GridPoint2(22, 16);
+    spawnEntityAt(thinPlatform2, thinPlatform2Pos, true, false);
+  }
+
+  /**
+   * Create the spawn pads for the enemies and items.
+   * Red spawn pad spawns enemies, on right side of room.
+   * Purple spawn pad spawns items, on top left platform.
+   */
+  private void spawnSpawnPads() {
+    Entity enemyPad = ObstacleFactory.createRedSpawnPad();
+    GridPoint2 enemyPadPos = new GridPoint2(25, 6);
+    spawnEntityAt(enemyPad, enemyPadPos, true, false);
+
+    Entity itemPad = ObstacleFactory.createPurpleSpawnPad();
+    GridPoint2 itemPadPos = new GridPoint2(8, 17);
+    spawnEntityAt(itemPad, itemPadPos, true, false);
+  }
+
+  /**
+   * Spawn 2 high-level grok droids in the room as enemies.
+   */
+  private void spawnGrokDroids() {
+    Entity grok1 = NPCFactory.createGrokDroid(player, this, 3f);
+    GridPoint2 grok1Pos = new GridPoint2(25, 7);
+    spawnEntityAt(grok1, grok1Pos, true, false);
+    Entity grok2 = NPCFactory.createGrokDroid(player, this, 3f);
+    GridPoint2 grok2Pos = new GridPoint2(25, 7);
+    spawnEntityAt(grok2, grok2Pos, true, false);
   }
 
   private void loadServer() {
