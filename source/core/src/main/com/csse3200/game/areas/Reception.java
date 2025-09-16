@@ -156,6 +156,7 @@ public class Reception extends GameArea {
     Entity stand1 = ObstacleFactory.createcomic_stand();
     stand1.setPosition(PlatformX, PlatformY);
     spawnEntity(stand1);
+  }
 
   @Override
   public String toString() {
@@ -169,7 +170,7 @@ public class Reception extends GameArea {
   public Entity getPlayer() {
     return null;
   }
-}
+
 }
 
 
