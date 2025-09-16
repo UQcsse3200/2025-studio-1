@@ -164,12 +164,12 @@ public abstract class GameArea implements Disposable {
               spawnTurret(total,scaleFactor, player, positions);
               break;
           case 2:
-              spawnDeepspin(total, scaleFactor, player, positions);
               spawnVroomba(total, scaleFactor, player, positions);
+              spawnGhostGPT(total, scaleFactor, player, positions);
               break;
           case 3:
               spawnVroomba(total, scaleFactor, player, positions);
-              spawnGhostGPT(total, scaleFactor, player, positions);
+              spawnDeepspin(total, scaleFactor, player, positions);
               break;
           case 4:
               spawnGhostGPT(total, scaleFactor, player, positions);
