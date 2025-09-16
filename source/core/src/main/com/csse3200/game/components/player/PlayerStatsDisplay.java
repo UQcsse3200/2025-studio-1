@@ -7,7 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.csse3200.game.components.AmmoStatsComponent;
 import com.csse3200.game.components.CombatStatsComponent;
-import com.csse3200.game.components.ItemComponent;
+import com.csse3200.game.components.items.ItemComponent;
 import com.csse3200.game.components.MagazineComponent;
 import com.csse3200.game.entities.configs.ItemTypes;
 import com.csse3200.game.services.ServiceLocator;
@@ -198,7 +198,7 @@ public class PlayerStatsDisplay extends UIComponent {
   public void updateAmmoUI() {
 
     int ammoReserves = entity.getComponent(AmmoStatsComponent.class).getAmmo();
-    Entity equipped = entity.getComponent(InventoryComponent.class).getCurrentItem();
+    Entity equipped = entity.getComponent(InventoryComponent.class).getCurrItem();
 
     if (equipped == null) {
 
