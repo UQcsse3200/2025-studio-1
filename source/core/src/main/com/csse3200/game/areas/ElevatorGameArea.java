@@ -30,7 +30,7 @@ public class ElevatorGameArea extends GameArea {
   public void create() {
     GenericLayout.ensureGenericAssets(this);
     /** Ensure the thin floor texture is available for the elevator room **/
-    ensureTextures(new String[] { "foreg_sprites/general/ThinFloor3.png", "images/Elevator background.png","images/keycard_lvl2.png","images/KeycardDoor.png" });
+      ensureTextures(new String[] { "foreg_sprites/general/ThinFloor3.png", "images/Elevator background.png","images/keycard_lvl2.png","images/KeycardDoor.png", "images/Office and elevator/Office platform.png", "images/Office and elevator/Office desk.png" });
     /** Use the dedicated elevator background **/
     terrain = terrainFactory.createTerrain(TerrainType.ELEVATOR);
     spawnEntity(new Entity().addComponent(terrain));
@@ -42,6 +42,8 @@ public class ElevatorGameArea extends GameArea {
     spawnBordersAndDoors();
     spawnPlayer();
     spawnFloor();
+    spawnPlatforms();
+    spawnDesk();
       }
 
   private void spawnBordersAndDoors() {
@@ -64,7 +66,7 @@ public class ElevatorGameArea extends GameArea {
     spawnEntity(leftDoor);
 
     float rightDoorHeight = Math.max(1f, b.viewHeight * 0.2f);
-    float rightDoorY = b.bottomY; // ground level
+    float rightDoorY = b.bottomY + 7.0f; // slightly above ground
     float rightTopSegHeight = Math.max(0f, b.topY - (rightDoorY + rightDoorHeight));
     if (rightTopSegHeight > 0f) {
       Entity rightTop = ObstacleFactory.createWall(WALL_WIDTH, rightTopSegHeight);
@@ -88,7 +90,34 @@ public class ElevatorGameArea extends GameArea {
     Entity player = com.csse3200.game.entities.factories.characters.PlayerFactory.createPlayer();
     spawnEntityAt(player, PLAYER_SPAWN, true, true);
   }
+    /** Place the desk in the elevator room */
+    private void spawnDesk() {
+        Entity desk = new Entity()
+                .addComponent(new TextureRenderComponent("images/Office and elevator/Office desk.png"));
+        desk.getComponent(TextureRenderComponent.class).scaleEntity();
+        desk.scaleHeight(3.0f);
+        desk.setPosition(7f, 3f);
+        spawnEntity(desk);
+    }
 
+    /** Spawn a few floating platforms */
+    private void spawnPlatforms() {
+        float p1x = 1f, p1y = 4f;
+        float p2x = 5f, p2y = 6f;
+        float p3x = 10f, p3y = 6f;
+
+        Entity plat1 = com.csse3200.game.entities.factories.system.ObstacleFactory.createElevatorPlatform();
+        plat1.setPosition(p1x, p1y);
+        spawnEntity(plat1);
+
+        Entity plat2 = com.csse3200.game.entities.factories.system.ObstacleFactory.createElevatorPlatform();
+        plat2.setPosition(p2x, p2y);
+        spawnEntity(plat2);
+
+        Entity plat3 = com.csse3200.game.entities.factories.system.ObstacleFactory.createElevatorPlatform();
+        plat3.setPosition(p3x, p3y);
+        spawnEntity(plat3);
+    }
   private void loadOffice() {
     clearAndLoad(() -> new OfficeGameArea(terrainFactory, cameraComponent));
   }
