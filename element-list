@@ -22,6 +22,7 @@ com.csse3200.game.concurrency
 com.csse3200.game.effects
 com.csse3200.game.entities
 com.csse3200.game.entities.configs
+com.csse3200.game.entities.configs.benches
 com.csse3200.game.entities.configs.characters
 com.csse3200.game.entities.configs.consumables
 com.csse3200.game.entities.configs.projectiles

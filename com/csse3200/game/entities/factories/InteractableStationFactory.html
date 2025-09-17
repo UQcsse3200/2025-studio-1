@@ -111,9 +111,9 @@ loadScripts(document, 'script');</script>
 <div class="block">Creates a base interactable station</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../Entity.html" title="class in com.csse3200.game.entities">Entity</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#createComputerBench()" class="member-name-link">createComputerBench</a>()</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#createStation(com.csse3200.game.entities.configs.Benches)" class="member-name-link">createStation</a><wbr>(<a href="../configs/Benches.html" title="enum class in com.csse3200.game.entities.configs">Benches</a>&nbsp;benchType)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Creates the interactable computer bench for upgrading weapons</div>
+<div class="block">Create an interactable station</div>
 </div>
 </div>
 </div>
@@ -133,22 +133,24 @@ loadScripts(document, 'script');</script>
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="createComputerBench()">
-<h3>createComputerBench</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../Entity.html" title="class in com.csse3200.game.entities">Entity</a></span>&nbsp;<span class="element-name">createComputerBench</span>()</div>
-<div class="block">Creates the interactable computer bench for upgrading weapons</div>
-<dl class="notes">
-<dt>Returns:</dt>
-<dd>the bench</dd>
-</dl>
-</section>
-</li>
-<li>
 <section class="detail" id="createBaseStation()">
 <h3>createBaseStation</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../Entity.html" title="class in com.csse3200.game.entities">Entity</a></span>&nbsp;<span class="element-name">createBaseStation</span>()</div>
 <div class="block">Creates a base interactable station</div>
 <dl class="notes">
+<dt>Returns:</dt>
+<dd>the station</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="createStation(com.csse3200.game.entities.configs.Benches)">
+<h3>createStation</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../Entity.html" title="class in com.csse3200.game.entities">Entity</a></span>&nbsp;<span class="element-name">createStation</span><wbr><span class="parameters">(<a href="../configs/Benches.html" title="enum class in com.csse3200.game.entities.configs">Benches</a>&nbsp;benchType)</span></div>
+<div class="block">Create an interactable station</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>benchType</code> - the type of station</dd>
 <dt>Returns:</dt>
 <dd>the station</dd>
 </dl>
