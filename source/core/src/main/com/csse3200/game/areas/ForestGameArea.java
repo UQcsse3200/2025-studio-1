@@ -9,8 +9,13 @@ import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.items.ItemHoldComponent;
 import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.components.KeycardGateComponent;
+import com.csse3200.game.components.attachments.BulletEnhancerComponent;
+import com.csse3200.game.components.attachments.LaserComponent;
+import com.csse3200.game.rendering.AnimationRenderComponent;
+import com.csse3200.game.components.WeaponsStatsComponent;
 import com.csse3200.game.components.player.InventoryComponent;
 import com.csse3200.game.entities.Entity;
+import com.csse3200.game.entities.configs.Benches;
 import com.csse3200.game.entities.configs.Weapons;
 import com.csse3200.game.entities.factories.characters.BossFactory;
 import com.csse3200.game.entities.factories.items.ItemFactory;
@@ -45,8 +50,6 @@ import org.slf4j.LoggerFactory;
  */
 public class ForestGameArea extends GameArea {
   private static final Logger logger = LoggerFactory.getLogger(ForestGameArea.class);
-
-  private static final int NUM_TREES = 7;
   private static final GridPoint2 PLAYER_SPAWN = new GridPoint2(3, 20);
   private static final int NUM_ITEMS = 5;//this is for ItemFactory
   // private static final int NUM_TURRETS = 1;
@@ -95,6 +98,16 @@ public class ForestGameArea extends GameArea {
     "images/player.png",
     "images/mud.png",
     "images/heart.png",
+    "images/healthBench.png",
+    "images/laserball.png",
+    "images/computerBench.png",
+    "images/boss_idle.png",
+    "images/robot-2.png",
+    "images/warning.png",
+    "images/missle.png",
+    "images/white_cocoon.png",
+    "images/speedBench.png",
+    "images/waterBullet.png",
     "images/VendingMachine.png",
     HEART,
     "images/heart.png",
@@ -111,7 +124,7 @@ public class ForestGameArea extends GameArea {
     "images/ServerRoomBackgroundResize.png",
     "foreg_sprites/furniture/ServerRack.png",
     "foreg_sprites/furniture/ServerRack2.png",
-    "foreg_sprites/furniture/Vent.png",
+    "foreg_sprites/furniture/Vent.png"
     };
 
   /** General prop textures (floors, tiles, etc.). */
@@ -175,7 +188,7 @@ public class ForestGameArea extends GameArea {
 
   private static final String[] forestTextureAtlases = {
     "images/robot-2.atlas", "images/fireball.atlas", "images/blackhole.atlas", "images/Robot_1.atlas",
-    "images/boss_idle.atlas",
+          "images/boss_idle.atlas",
     "images/terrain_iso_grass.atlas",
     "images/ghost.atlas",
     "images/ghostKing.atlas",
@@ -187,6 +200,8 @@ public class ForestGameArea extends GameArea {
     "images/explosion_1.atlas",
     "images/explosion_2.atlas",
     "images/player.atlas",
+          "images/boss_explosion.atlas",
+          "images/Boss3_Attacks.atlas",
     "images/player.atlas",
     "images/terrain_iso_grass.atlas",
     "images/ghost.atlas",
@@ -194,22 +209,29 @@ public class ForestGameArea extends GameArea {
     "images/ghostGPT.atlas",
     "images/explosion_1.atlas",
     "images/explosion_2.atlas",
-    "images/boss_explosion.atlas"
+    "images/boss_explosion.atlas",
+          "images/boss2_combined.atlas",
+          "images/Boss3_Attacks.atlas",
+          "images/boss3_phase2.atlas"
   };
+  private static final String[] forestSounds = {"sounds/Impact4.ogg",
+          "sounds/shot_failed.mp3",
+          "sounds/reload.mp3",
+          "sounds/laser_blast.mp3",
+          "sounds/ammo_replenished.mp3"};
 
   private static final String[] playerSound1 = {"sounds/jump.mp3"};
-  private static final String[] forestSounds = {"sounds/Impact4.ogg"};
-
+  private static final String[] enemySounds = {"sounds/enemyDamage.mp3", "sounds/enemyDeath.mp3"};
   private static final String BACKGROUND_MUSIC = "sounds/BGM_03.mp3";
 
   private static final String[] forestMusic = {BACKGROUND_MUSIC};
 
-  private Entity player;
-  private Entity dagger;
-  private Entity lightsaber;
-  private Entity bullet;
-  private Entity pistol;
-  private Entity rifle;
+    private Entity player;
+    private Entity dagger;
+    private Entity lightsaber;
+    private Entity bullet;
+    private Entity pistol;
+    private Entity rifle;
 
 
   /**
@@ -238,25 +260,15 @@ public class ForestGameArea extends GameArea {
     displayUI();
     spawnTerrain();
     spawnComputerBench();
+    spawnHealthBench();
+    spawnSpeedBench();
+
     player = spawnPlayer();
-    dagger = spawnDagger();
-    pistol = spawnPistol();
-    rifle = spawnRifle();
-    lightsaber = spawnLightsaber();
-
-    //These are commented out since there is no equip feature yet
-    // this.equipItem(pistol);
-    // this.equipItem(lightsaber);
-    // this.equipItem(dagger);
-//    this.equipItem(rifle);
-//    this.equipItem(ConsumableFactory.createConsumable(Consumables.GENERIC_HEAL_ITEM));
-
+    ServiceLocator.registerPlayer(player);
     spawnFloor();
     spawnBottomRightDoor();
     spawnMarblePlatforms();
     spawnShopKiosk();
-    // spawnGhosts();
-    // spawnGhostKing();
     SecureRandom random = new SecureRandom();
     int choice = random.nextInt(3);
     switch (choice) {
@@ -277,7 +289,6 @@ public class ForestGameArea extends GameArea {
 
     spawnItems();
   }
-
   private void spawnRobots() {
     GridPoint2 pos = new GridPoint2(8, 13);
       Entity robot = BossFactory.createRobot(player);
@@ -362,6 +373,7 @@ public class ForestGameArea extends GameArea {
    * This is called by the door/keycard logic when the player exits.
    */
   private void loadNextLevel() {
+      roomNumber++;
     // Use the safe, render-thread transition helper
     clearAndLoad(() -> new Reception(terrainFactory, cameraComponent));
   }
@@ -388,10 +400,22 @@ public class ForestGameArea extends GameArea {
   }
 
   private void spawnComputerBench() {
-    Entity bench = InteractableStationFactory.createComputerBench();
-    spawnEntityAt(bench, new GridPoint2(10, 7), true, true);
+    Entity bench = InteractableStationFactory.createStation(Benches.COMPUTER_BENCH);
+    spawnEntityAt(bench, new GridPoint2(2, 7), true, true);
 
   }
+
+  private void spawnHealthBench() {
+    Entity bench = InteractableStationFactory.createStation(Benches.HEALTH_BENCH);
+    spawnEntityAt(bench, new GridPoint2(8, 7), true, true);
+  }
+
+  private void spawnSpeedBench() {
+    Entity bench = InteractableStationFactory.createStation(Benches.SPEED_BENCH);
+    spawnEntityAt(bench, new GridPoint2(25, 7), true, true);
+  }
+
+
 
   /**
    * Places a large door sprite at the bottom-right platform. The door uses a keycard gate:
@@ -413,7 +437,6 @@ public class ForestGameArea extends GameArea {
 
     spawnEntity(door);
   }
-
   /**
    * Places two platforms within the room for players to jump on.
    */
@@ -498,45 +521,14 @@ public class ForestGameArea extends GameArea {
     spawnEntityAt(item, PLAYER_SPAWN, true, true);
   }
 
-    /**
-     * This function takes in a string name for an item,
-     * it then spawns the item at the players location so that they're holding it.
-     * @param itemName  A valid name of an item that is spawnable within the game
-     *          (i.e. dagger, pistol, rifle, lightsaber)
-     */
-    private boolean spawnAndEquipItem(String itemName) {
-        Entity item;
-        switch (itemName) {
-            case "dagger":
-                item = spawnDagger();
-                equipItem(item);
-                return true;
-            case "pistol":
-                item = spawnPistol();
-                equipItem(item);
-                return true;
-            case "rifle":
-                item = spawnRifle();
-                equipItem(item);
-                return true;
-            case "lightsaber":
-                item = spawnLightsaber();
-                equipItem(item);
-                return true;
-            default:
-                logger.debug("Invalid item name: {}", itemName);
-                return false;
-        }
-    }
-
-
   private Entity spawnLightsaber() {
     Entity newLightsaber = WeaponsFactory.createWeapon(Weapons.LIGHTSABER);
-    Vector2 newLightsaberOffset = new Vector2(0.7f, -0.1f);
+    Vector2 newLightsaberOffset = new Vector2(0.9f, -0.2f);
     newLightsaber.addComponent(new ItemHoldComponent(this.player, newLightsaberOffset));
-    //Commented out since lightsaber animation is a work in progress
-    //AnimationRenderComponent lightSaberAnimator = WeaponsFactory.createAnimation("images/lightSaber.atlas", this.player);
-    //newLightsaber.addComponent(lightSaberAnimator);
+    AnimationRenderComponent lightSaberAnimator = WeaponsFactory.createAnimation("images/lightSaber.atlas", this.player);
+    newLightsaber.addComponent(lightSaberAnimator);
+    lightSaberAnimator.startAnimation("anim");
+
     return newLightsaber;
   }
 
@@ -549,9 +541,15 @@ public class ForestGameArea extends GameArea {
 
   private Entity spawnRifle() {
     Entity newRifle = WeaponsFactory.createWeapon(Weapons.RIFLE);
-    Vector2 newRifleOffset = new Vector2(0.25f, 0.15f);
+    Vector2 newRifleOffset = new Vector2(0.8f, 0.15f);
     newRifle.addComponent(new ItemHoldComponent(this.player, newRifleOffset));
     return newRifle;
+  }
+
+  private Entity spawnRapidFirePowerup() {
+    Entity newRapidFirePowerup = PowerupsFactory.createRapidFire();
+    spawnEntityAt(newRapidFirePowerup, new GridPoint2(2, 40), true, true);
+    return newRapidFirePowerup;
   }
 
   private void spawnBoss2() {
@@ -562,12 +560,11 @@ public class ForestGameArea extends GameArea {
 
   //new added boss3
   private void spawnBoss3() {
-    GridPoint2 pos = new GridPoint2(20, 12);
+    GridPoint2 pos = new GridPoint2(15, 16);
 
     Entity boss3 = BossFactory.createBoss3(player);
     spawnEntityAt(boss3, pos, true, true);
   }
-
   public void spawnItem(Entity item, GridPoint2 position) {
     spawnEntityAt(item, position, false, false);
   }
@@ -596,6 +593,7 @@ public class ForestGameArea extends GameArea {
     resourceService.loadTextureAtlases(forestTextureAtlases);
     resourceService.loadSounds(playerSound1);
     resourceService.loadSounds(forestSounds);
+    resourceService.loadSounds(enemySounds);
     resourceService.loadMusic(forestMusic);
 
     while (resourceService.loadForMillis(10)) {

@@ -4,6 +4,8 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.csse3200.game.components.TouchAttackComponent;
 import com.csse3200.game.components.WeaponsStatsComponent;
+import com.csse3200.game.components.attachments.BulletEnhancerComponent;
+import com.csse3200.game.components.player.InventoryComponent;
 import com.csse3200.game.entities.configs.ActiveProjectileTypes;
 import com.csse3200.game.entities.configs.projectiles.ActiveProjectile;
 import com.csse3200.game.entities.Entity;
@@ -12,6 +14,7 @@ import com.csse3200.game.entities.configs.projectiles.ProjectileConfig;
 import com.csse3200.game.entities.configs.projectiles.ProjectileTarget;
 import com.csse3200.game.physics.components.*;
 import com.csse3200.game.rendering.TextureRenderWithRotationComponent;
+import com.csse3200.game.services.ServiceLocator;
 
 
 /**
@@ -153,7 +156,16 @@ public class ProjectileFactory {
      */
     public static Entity createPistolBullet(WeaponsStatsComponent source) {
         ProjectileTarget target = ProjectileTarget.ENEMY;
-        return createProjectile(target, source, "images/round.png");
+        Entity item = ServiceLocator.getPlayer().getComponent(InventoryComponent.class).getCurrItem();
+        //Player's weapon has the water bullet upgrade
+        if (item.hasComponent(BulletEnhancerComponent.class)) {
+            Entity projectile = createProjectile(target, source, "images/waterBullet.png");
+            projectile.scaleHeight(0.85f);
+            return projectile;
+        }
+        Entity projectile = createProjectile(target, source, "images/round.png");
+        projectile.scaleHeight(0.85f);
+        return projectile;
     }
 
     /**
