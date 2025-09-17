@@ -44,8 +44,15 @@ class TerminalAutocompleteTest {
     void exactPrefix_returnsTopKLexicographic() {
         terminal.setEnteredMessage("d");
         bypassDebounce(terminal);
-        List<String> s = terminal.getAutocompleteSuggestions();
-        assertEquals(List.of("damageMultiplier", "deathscreen", "debug", "disableDamage"), s);
+        List<String> s = terminal.getAutocompleteSuggestions()
+                .stream()
+                .map(String::valueOf)
+                .toList();
+
+        assertEquals(
+                List.of("damageMultiplier", "deathscreen", "debug", "disableDamage", "doorOverride"),
+                s
+        );
     }
 
     @Test
