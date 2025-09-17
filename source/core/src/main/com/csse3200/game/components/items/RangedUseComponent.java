@@ -19,8 +19,29 @@ import com.csse3200.game.physics.components.PhysicsProjectileComponent;
 import com.csse3200.game.rendering.TextureRenderWithRotationComponent;
 import com.csse3200.game.services.ServiceLocator;
 
+/**
+ * Component responsible for handling ranged item usage (e.g., guns, bombs).
+ * <p>
+ * When used, this component:
+ * <ul>
+ *   <li>Plays an attack sound</li>
+ *   <li>Creates a projectile entity (bullet or bomb)</li>
+ *   <li>Fires the projectile toward the mouse input</li>
+ *   <li>If the item is a consumable bomb, schedules its timed behavior
+ *       (rotation, pulsing, stopping, and explosion)</li>
+ * </ul>
+ */
 public class RangedUseComponent extends ItemActionsComponent {
 
+    /**
+     * Uses the ranged weapon/item for the given player.
+     * <p>
+     * Spawns and fires a projectile toward the cursor position.
+     * If the item is a consumable (e.g., bomb), schedules delayed
+     * explosion behavior.
+     *
+     * @param player the entity representing the player using the item
+     */
     public void use(Entity player) {
         playAttackSound();
 
@@ -38,13 +59,20 @@ public class RangedUseComponent extends ItemActionsComponent {
         }
     }
 
+    /**
+     * Plays the attack sound for the ranged weapon.
+     */
     void playAttackSound() {
         Sound attackSound = ServiceLocator.getResourceService()
                 .getAsset("sounds/Impact4.ogg", Sound.class);
         attackSound.play();
     }
 
-    /** Finds and returns the active camera in the entity service. */
+    /**
+     * Finds and returns the active {@link Camera} from the entity service.
+     *
+     * @return the active camera, or {@code null} if none found
+     */
     Camera getActiveCamera() {
         for (Entity entity : ServiceLocator.getEntityService().getEntities()) {
             if (entity.hasComponent(CameraComponent.class)) {
@@ -54,7 +82,14 @@ public class RangedUseComponent extends ItemActionsComponent {
         return null;
     }
 
-    /** Creates either a bomb or regular projectile depending on consumable state. */
+    /**
+     * Creates either a bomb or a standard projectile entity depending
+     * on whether this item is a consumable.
+     *
+     * @param weaponsStats the stats of the weapon
+     * @param texturePath  the texture path for the projectile
+     * @return the created projectile entity
+     */
     Entity createProjectileEntity(WeaponsStatsComponent weaponsStats, String texturePath) {
         boolean isConsumable = entity.hasComponent(ConsumableComponent.class);
         return isConsumable
@@ -62,7 +97,18 @@ public class RangedUseComponent extends ItemActionsComponent {
                 : ProjectileFactory.createProjectile(ProjectileTarget.ENEMY, weaponsStats, texturePath);
     }
 
-    /** Initializes projectile position, registers it, and fires it toward input. */
+    /**
+     * Initializes a projectile entity (bullet).
+     * <ul>
+     *   <li>Places it at the player's position</li>
+     *   <li>Registers it in the entity service</li>
+     *   <li>Fires it toward the mouse input</li>
+     * </ul>
+     *
+     * @param bullet the projectile entity
+     * @param player the player entity
+     * @param cam    the active camera
+     */
     private void initializeBullet(Entity bullet, Entity player, Camera cam) {
         PhysicsProjectileComponent projectilePhysics = bullet.getComponent(PhysicsProjectileComponent.class);
 
@@ -82,6 +128,14 @@ public class RangedUseComponent extends ItemActionsComponent {
         );
     }
 
+    /**
+     * Starts the bomb timer for a consumable projectile.
+     * <p>
+     * Schedules its rotation, stop, pulsing animation, and eventual explosion.
+     *
+     * @param duration duration before explosion
+     * @param bullet   the bomb entity
+     */
     private void bombTimer(float duration, Entity bullet) {
         ConsumableComponent consumable = entity.getComponent(ConsumableComponent.class);
 
@@ -91,6 +145,11 @@ public class RangedUseComponent extends ItemActionsComponent {
         scheduleExplosion(bullet, consumable, duration);
     }
 
+    /**
+     * Continuously rotates the bullet until it is removed.
+     *
+     * @param bullet the bullet entity
+     */
     private void scheduleBulletRotation(Entity bullet) {
         Timer.schedule(new Timer.Task() {
             @Override
@@ -108,13 +167,13 @@ public class RangedUseComponent extends ItemActionsComponent {
                 TextureRenderWithRotationComponent render = bullet.getComponent(TextureRenderWithRotationComponent.class);
                 render.setRotationWithRepeat(render.getRotation() + (float) 10.0);
             }
-        }, 0f, 1/60f);
+        }, 0f, 1 / 60f);
     }
 
-
-
     /**
-     * Stops the bullet's movement after a given delay.
+     * Stops the bullet's movement after a short delay.
+     *
+     * @param bullet the bullet entity
      */
     private void scheduleBulletStop(Entity bullet) {
         Timer.schedule(new Timer.Task() {
@@ -125,11 +184,13 @@ public class RangedUseComponent extends ItemActionsComponent {
                     physics.getBody().setLinearVelocity(Vector2.Zero);
                 }
             }
-        }, (float) 0.5);
+        }, 0.5f);
     }
 
     /**
-     * Makes the bullet pulse (grow/shrink) until it is disposed.
+     * Makes the bullet pulse (grow/shrink repeatedly) until it is disposed.
+     *
+     * @param bullet the bullet entity
      */
     private void scheduleBulletPulse(Entity bullet) {
         final Vector2 baseScale = bullet.getScale().cpy();
@@ -164,11 +225,18 @@ public class RangedUseComponent extends ItemActionsComponent {
 
                 enlarge = !enlarge;
             }
-        }, (float) 0.5, (float) 0.2);
+        }, 0.5f, 0.2f);
     }
 
     /**
      * Creates an explosion at the bullet's position after a delay.
+     * <p>
+     * Applies all effects from the consumable to the explosion entity
+     * and disposes both the bullet and the explosion afterward.
+     *
+     * @param bullet     the bullet entity
+     * @param consumable the consumable component defining the explosion's effects
+     * @param delay      delay before the explosion
      */
     private void scheduleExplosion(Entity bullet, ConsumableComponent consumable, float delay) {
         Timer.schedule(new Timer.Task() {
