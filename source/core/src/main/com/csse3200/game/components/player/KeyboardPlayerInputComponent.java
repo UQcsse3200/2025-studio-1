@@ -25,7 +25,7 @@ public class KeyboardPlayerInputComponent extends InputComponent {
 
   private long timeSinceKeyPress = 0;
   private int doublePressKeyCode = -1;
-
+  private boolean holding = false;
   public KeyboardPlayerInputComponent() {
     super(5);
   }
@@ -69,7 +69,12 @@ public class KeyboardPlayerInputComponent extends InputComponent {
         entity.getEvents().trigger("anim");
         return true;
       case Keys.E:
-        triggerInteract();
+
+        if (!holding) {
+          triggerInteract();
+          holding = true;
+        }
+
         return true;
       default:
         return false;
@@ -155,6 +160,7 @@ public class KeyboardPlayerInputComponent extends InputComponent {
         return true;
       case Keys.P:
       case Keys.E:
+        holding = false;
         triggerAddItem();
         return true;
       case Keys.R:

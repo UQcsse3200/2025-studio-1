@@ -42,10 +42,12 @@ public class TunnelGameArea extends GameArea {
   }
 
   private void loadStorage() {
+      roomNumber++;
     clearAndLoad(() -> new StorageGameArea(terrainFactory, cameraComponent));
   }
 
   private void loadShipping() {
+      roomNumber++;
     clearAndLoad(() -> new ShippingGameArea(terrainFactory, cameraComponent));
   }
 }

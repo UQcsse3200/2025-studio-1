@@ -99,7 +99,13 @@ public class ForestGameArea extends GameArea {
     "images/mud.png",
     "images/heart.png",
     "images/healthBench.png",
+    "images/laserball.png",
     "images/computerBench.png",
+    "images/boss_idle.png",
+    "images/robot-2.png",
+    "images/warning.png",
+    "images/missle.png",
+    "images/white_cocoon.png",
     "images/speedBench.png",
     "images/waterBullet.png",
     "images/VendingMachine.png",
@@ -118,7 +124,7 @@ public class ForestGameArea extends GameArea {
     "images/ServerRoomBackgroundResize.png",
     "foreg_sprites/furniture/ServerRack.png",
     "foreg_sprites/furniture/ServerRack2.png",
-    "foreg_sprites/furniture/Vent.png",
+    "foreg_sprites/furniture/Vent.png"
     };
 
   /** General prop textures (floors, tiles, etc.). */
@@ -194,6 +200,8 @@ public class ForestGameArea extends GameArea {
     "images/explosion_1.atlas",
     "images/explosion_2.atlas",
     "images/player.atlas",
+          "images/boss_explosion.atlas",
+          "images/Boss3_Attacks.atlas",
     "images/player.atlas",
     "images/terrain_iso_grass.atlas",
     "images/ghost.atlas",
@@ -201,7 +209,10 @@ public class ForestGameArea extends GameArea {
     "images/ghostGPT.atlas",
     "images/explosion_1.atlas",
     "images/explosion_2.atlas",
-    "images/boss_explosion.atlas"
+    "images/boss_explosion.atlas",
+          "images/boss2_combined.atlas",
+          "images/Boss3_Attacks.atlas",
+          "images/boss3_phase2.atlas"
   };
   private static final String[] forestSounds = {"sounds/Impact4.ogg",
           "sounds/shot_failed.mp3",
@@ -210,6 +221,7 @@ public class ForestGameArea extends GameArea {
           "sounds/ammo_replenished.mp3"};
 
   private static final String[] playerSound1 = {"sounds/jump.mp3"};
+  private static final String[] enemySounds = {"sounds/enemyDamage.mp3", "sounds/enemyDeath.mp3"};
   private static final String BACKGROUND_MUSIC = "sounds/BGM_03.mp3";
 
   private static final String[] forestMusic = {BACKGROUND_MUSIC};
@@ -361,6 +373,7 @@ public class ForestGameArea extends GameArea {
    * This is called by the door/keycard logic when the player exits.
    */
   private void loadNextLevel() {
+      roomNumber++;
     // Use the safe, render-thread transition helper
     clearAndLoad(() -> new Reception(terrainFactory, cameraComponent));
   }
@@ -547,7 +560,7 @@ public class ForestGameArea extends GameArea {
 
   //new added boss3
   private void spawnBoss3() {
-    GridPoint2 pos = new GridPoint2(20, 12);
+    GridPoint2 pos = new GridPoint2(15, 16);
 
     Entity boss3 = BossFactory.createBoss3(player);
     spawnEntityAt(boss3, pos, true, true);
@@ -580,6 +593,7 @@ public class ForestGameArea extends GameArea {
     resourceService.loadTextureAtlases(forestTextureAtlases);
     resourceService.loadSounds(playerSound1);
     resourceService.loadSounds(forestSounds);
+    resourceService.loadSounds(enemySounds);
     resourceService.loadMusic(forestMusic);
 
     while (resourceService.loadForMillis(10)) {
