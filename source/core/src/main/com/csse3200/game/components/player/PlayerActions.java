@@ -526,4 +526,20 @@ public class PlayerActions extends Component {
       entity.getEvents().trigger("anim");
     }
   }
+
+  /**
+   * Sets time since last attack, used for testing
+   * @param timeSinceLastAttack time since last attack
+   */
+  public void setTimeSinceLastAttack(float timeSinceLastAttack) {
+    this.timeSinceLastAttack = timeSinceLastAttack;
+  }
+
+  /**
+   * Sets the camera, used for testing
+   * @param camera camera
+   */
+  public void setCamera(Camera camera) {
+    this.camera = camera;
+  }
 }
