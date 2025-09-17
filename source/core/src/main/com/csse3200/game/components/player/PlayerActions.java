@@ -96,9 +96,9 @@ public class PlayerActions extends Component {
     entity.getEvents().addListener("crouchStop", () -> crouching = false);
     entity.getEvents().addListener("sprintStart", this::startSprinting);
     entity.getEvents().addListener("sprintStop", this::stopSprinting);
+    entity.getEvents().addListener("reload", this::reload);
 
     // Find camera from any entity with CameraComponent
-    entity.getEvents().addListener("reload", this::reload);
     Array<Entity> entities = ServiceLocator.getEntityService().getEntities();
     for (Entity entity: entities) {
       if (entity.getComponent(CameraComponent.class) != null) {
@@ -342,7 +342,7 @@ public class PlayerActions extends Component {
   }
 
   /** Fires a projectile towards the mouse cursor. */
-  void shoot() {
+  public void shoot() {
 
 
     WeaponsStatsComponent weapon = getCurrentWeaponStats();
@@ -386,7 +386,6 @@ public class PlayerActions extends Component {
 
 
     mag.setCurrentAmmo(mag.getCurrentAmmo() - 1);
-
     timeSinceLastAttack = 0;
   }
 
@@ -471,4 +470,24 @@ public class PlayerActions extends Component {
       System.out.println("TRIGGERED");
     }
   }
-}
+
+  /**
+   * Sets time since last attack, used for testing
+   * @param timeSinceLastAttack time since last attack
+   */
+
+  void setTimeSinceLastAttack(float timeSinceLastAttack) {
+
+    this.timeSinceLastAttack = timeSinceLastAttack;
+  }
+
+  /**
+   * Sets the camera, used for testing
+   * @param camera camera
+   */
+  void setCamera(Camera camera) {
+
+    this.camera = camera;
+
+  }
+ }
