@@ -16,7 +16,6 @@ public class Terminal extends Component {
     private final Map<String, Command> commands;
     private String enteredMessage = "";
     private boolean isOpen = false;
-    private final GdxGame game;
 
     // --- Autocomplete state ---
     private final RadixTrie trie = new RadixTrie();
@@ -37,7 +36,6 @@ public class Terminal extends Component {
 
     public Terminal(Map<String, Command> commands, GdxGame game) {
         this.commands = commands;
-        this.game = game;
 
         addCommand("debug", new DebugCommand());
         addCommand("winscreen", new EndScreenCommand(game, GdxGame.ScreenType.WIN_SCREEN));
@@ -166,7 +164,7 @@ public class Terminal extends Component {
         if (!s.isEmpty()) {
             // replace first token with suggestion
             String rest = stripFirstToken(enteredMessage);
-            setEnteredMessage(s.get(0) + rest);
+            setEnteredMessage(s.getFirst() + rest);
         }
     }
 
