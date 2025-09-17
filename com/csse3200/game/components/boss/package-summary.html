@@ -87,8 +87,64 @@ loadScripts(document, 'script');</script>
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Class</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="BossStageComponent.html" title="class in com.csse3200.game.components.boss">BossStageComponent</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab2">&nbsp;</div>
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="AttackProtectionComponent.html" title="class in com.csse3200.game.components.boss">AttackProtectionComponent</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab2">
+<div class="block">AttackProtectionCounterComponent
+
+ Listens to "updateHealth" from CombatStatsComponent.</div>
+</div>
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="AttackProtectionDisplay.html" title="class in com.csse3200.game.components.boss">AttackProtectionDisplay</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab2">
+<div class="block">AttackProtectionDisplay (always gray)
+ - listens to "updateHealth"
+ - each health drop: bar -= 1/6
+ - after 6 hits: wait 2s then restore to full
+ - positioned directly under BossStatusDisplay with the same width
+ visual only</div>
+</div>
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="Boss2HealthPhaseSwitcher.html" title="class in com.csse3200.game.components.boss">Boss2HealthPhaseSwitcher</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab2">
+<div class="block">Switch boss animation by HP ratio (3 stages: idle / phase2 / angry).</div>
+</div>
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="Boss3HealthPhaseSwitcher.html" title="class in com.csse3200.game.components.boss">Boss3HealthPhaseSwitcher</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab2">
+<div class="block">A component that switches Boss-3's rendering from a static PNG
+
+ This allows the boss to visually "crack" or change form at 50%, 40%, and 25% health.</div>
+</div>
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="BossDefenseComponent.html" title="class in com.csse3200.game.components.boss">BossDefenseComponent</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab2">
+<div class="block">Trigger for the boss's defense phase (one-time).</div>
+</div>
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="BossStageComponent.html" title="class in com.csse3200.game.components.boss">BossStageComponent</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab2">&nbsp;</div>
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="CocoonSpawnerComponent.html" title="class in com.csse3200.game.components.boss">CocoonSpawnerComponent</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab2">
+<div class="block">Cocoon Spawner Component - Spawns white cocoons when Boss health drops to 30%
+ Works together with existing BossDefenseComponent for invulnerability
+ Only handles cocoon spawning and tracking, not Boss defense state</div>
+</div>
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="DamageReductionComponent.html" title="class in com.csse3200.game.components.boss">DamageReductionComponent</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab2">
+<div class="block">Adds a damage reduction component
+ while activated, reduces the "determined damage" by a certain percentage (1 = complete immunity)
+ over a specified duration.</div>
+</div>
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="IndividualCocoonComponent.html" title="class in com.csse3200.game.components.boss">IndividualCocoonComponent</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab2">
+<div class="block">Individual Cocoon Component - Handles behavior for individual cocoon entities
+ Cocoons are regular enemies that can be damaged and destroyed normally
+ When destroyed, they notify the Boss defense system via death events</div>
+</div>
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="MissleMovementComponent.html" title="class in com.csse3200.game.components.boss">MissleMovementComponent</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab2">
+<div class="block">let the missle down by the y direction</div>
+</div>
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="MissueAttackComponent.html" title="class in com.csse3200.game.components.boss">MissueAttackComponent</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab2">
+<div class="block">Spawns random ground warnings at a fixed cooldown; after a short warning time,
+ a missile is spawned above that position and falls straight down.</div>
+</div>
 </div>
 </div>
 </li>

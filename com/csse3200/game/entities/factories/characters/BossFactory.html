@@ -37,7 +37,7 @@ loadScripts(document, 'script');</script>
 <li>
 <p>Summary:</p>
 <ul>
-<li>Nested</li>
+<li><a href="#nested-class-summary">Nested</a></li>
 <li>Field</li>
 <li><a href="#constructor-summary">Constr</a></li>
 <li><a href="#method-summary">Method</a></li>
@@ -57,7 +57,7 @@ loadScripts(document, 'script');</script>
 <div id="navbar-sub-list">
 <ul class="sub-nav-list">
 <li>Summary:&nbsp;</li>
-<li>Nested&nbsp;|&nbsp;</li>
+<li><a href="#nested-class-summary">Nested</a>&nbsp;|&nbsp;</li>
 <li>Field&nbsp;|&nbsp;</li>
 <li><a href="#constructor-summary">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method-summary">Method</a></li>
@@ -97,6 +97,21 @@ loadScripts(document, 'script');</script>
 </section>
 <section class="summary">
 <ul class="summary-list">
+<!-- ======== NESTED CLASS SUMMARY ======== -->
+<li>
+<section class="nested-class-summary" id="nested-class-summary">
+<h2>Nested Class Summary</h2>
+<div class="caption"><span>Nested Classes</span></div>
+<div class="summary-table three-column-summary">
+<div class="table-header col-first">Modifier and Type</div>
+<div class="table-header col-second">Class</div>
+<div class="table-header col-last">Description</div>
+<div class="col-first even-row-color"><code>static class&nbsp;</code></div>
+<div class="col-second even-row-color"><code><a href="BossFactory.ApplyInitialBoss2Setup.html" class="type-name-link" title="class in com.csse3200.game.entities.factories.characters">BossFactory.ApplyInitialBoss2Setup</a></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+</div>
+</section>
+</li>
 <!-- ======== CONSTRUCTOR SUMMARY ======== -->
 <li>
 <section class="constructor-summary" id="constructor-summary">
@@ -147,8 +162,24 @@ loadScripts(document, 'script');</script>
  com.badlogic.gdx.math.Vector2&nbsp;velocity)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../../Entity.html" title="class in com.csse3200.game.entities">Entity</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#createRobot(com.csse3200.game.entities.Entity)" class="member-name-link">createRobot</a><wbr>(<a href="../../Entity.html" title="class in com.csse3200.game.entities">Entity</a>&nbsp;target)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#createMissle(com.badlogic.gdx.math.Vector2)" class="member-name-link">createMissle</a><wbr>(com.badlogic.gdx.math.Vector2&nbsp;from)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../../Entity.html" title="class in com.csse3200.game.entities">Entity</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#createRobot(com.csse3200.game.entities.Entity)" class="member-name-link">createRobot</a><wbr>(<a href="../../Entity.html" title="class in com.csse3200.game.entities">Entity</a>&nbsp;target)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../../Entity.html" title="class in com.csse3200.game.entities">Entity</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#createRobotWithCocoons(com.csse3200.game.entities.Entity)" class="member-name-link">createRobotWithCocoons</a><wbr>(<a href="../../Entity.html" title="class in com.csse3200.game.entities">Entity</a>&nbsp;target)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Create Robot with cocoon spawning capability (enhanced version)</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../../Entity.html" title="class in com.csse3200.game.entities">Entity</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#createWarning(com.badlogic.gdx.math.Vector2)" class="member-name-link">createWarning</a><wbr>(com.badlogic.gdx.math.Vector2&nbsp;pos)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static com.badlogic.gdx.math.Vector2[]</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getDefaultCocoonPositions()" class="member-name-link">getDefaultCocoonPositions</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Get default spawn positions for cocoons</div>
+</div>
 </div>
 </div>
 </div>
@@ -221,6 +252,18 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
+<section class="detail" id="createWarning(com.badlogic.gdx.math.Vector2)">
+<h3>createWarning</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../../Entity.html" title="class in com.csse3200.game.entities">Entity</a></span>&nbsp;<span class="element-name">createWarning</span><wbr><span class="parameters">(com.badlogic.gdx.math.Vector2&nbsp;pos)</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="createMissle(com.badlogic.gdx.math.Vector2)">
+<h3>createMissle</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../../Entity.html" title="class in com.csse3200.game.entities">Entity</a></span>&nbsp;<span class="element-name">createMissle</span><wbr><span class="parameters">(com.badlogic.gdx.math.Vector2&nbsp;from)</span></div>
+</section>
+</li>
+<li>
 <section class="detail" id="createBaseNPC(com.csse3200.game.entities.Entity)">
 <h3>createBaseNPC</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../../Entity.html" title="class in com.csse3200.game.entities">Entity</a></span>&nbsp;<span class="element-name">createBaseNPC</span><wbr><span class="parameters">(<a href="../../Entity.html" title="class in com.csse3200.game.entities">Entity</a>&nbsp;target)</span></div>
@@ -238,6 +281,30 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="createBaseBoss2(com.csse3200.game.entities.Entity)">
 <h3>createBaseBoss2</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../../Entity.html" title="class in com.csse3200.game.entities">Entity</a></span>&nbsp;<span class="element-name">createBaseBoss2</span><wbr><span class="parameters">(<a href="../../Entity.html" title="class in com.csse3200.game.entities">Entity</a>&nbsp;target)</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="getDefaultCocoonPositions()">
+<h3>getDefaultCocoonPositions</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">com.badlogic.gdx.math.Vector2[]</span>&nbsp;<span class="element-name">getDefaultCocoonPositions</span>()</div>
+<div class="block">Get default spawn positions for cocoons</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>Array of cocoon spawn positions</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="createRobotWithCocoons(com.csse3200.game.entities.Entity)">
+<h3>createRobotWithCocoons</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../../Entity.html" title="class in com.csse3200.game.entities">Entity</a></span>&nbsp;<span class="element-name">createRobotWithCocoons</span><wbr><span class="parameters">(<a href="../../Entity.html" title="class in com.csse3200.game.entities">Entity</a>&nbsp;target)</span></div>
+<div class="block">Create Robot with cocoon spawning capability (enhanced version)</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>target</code> - The player entity that the boss will chase and attack</dd>
+<dt>Returns:</dt>
+<dd>Enhanced Robot entity with cocoon spawning capability</dd>
+</dl>
 </section>
 </li>
 </ul>
