@@ -18,7 +18,7 @@ public class SoundComponent extends Component {
      * @param event the name of the event
      * @param sound the path of the sound file to play
      * @requires sound has already been registered with the resourceService
-     * @returns whether the sound was successfully registered
+     * @return whether the sound was successfully registered
      */
     public boolean registerSound(String event, String sound) {
         if (this.entity == null) {
