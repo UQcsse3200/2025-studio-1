@@ -11,6 +11,7 @@ import com.csse3200.game.services.ServiceLocator;
  */
 public abstract class RenderComponent extends Component implements Renderable, Disposable {
   private static final int DEFAULT_LAYER = 1;
+  private boolean disabled = false;
 
   @Override
   public void create() {
@@ -49,4 +50,12 @@ public abstract class RenderComponent extends Component implements Renderable, D
    * @param batch Batch to render to.
    */
   protected abstract void draw(SpriteBatch batch);
+
+  public void disableComponent() {
+    this.disabled = true;
+  }
+
+  public boolean isDisabled() {
+    return this.disabled;
+  }
 }

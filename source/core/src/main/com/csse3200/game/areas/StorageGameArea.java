@@ -39,10 +39,12 @@ public class StorageGameArea extends GameArea {
   }
 
   private void loadResearch() {
+      roomNumber--;
     clearAndLoad(() -> new ResearchGameArea(terrainFactory, cameraComponent));
   }
 
   private void loadShipping() {
+      roomNumber++;
     clearAndLoad(() -> new ShippingGameArea(terrainFactory, cameraComponent));
   }
 }

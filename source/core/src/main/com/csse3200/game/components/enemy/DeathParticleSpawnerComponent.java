@@ -113,10 +113,10 @@ public class DeathParticleSpawnerComponent extends Component {
       if (arc != null && arc.getCurrentAnimation() != null && arc.isFinished()) {
         scheduled = true;
         // Defer disposal to after current frame to avoid nested iteration over components array
-        Gdx.app.postRunnable(() -> {
+        Gdx.app.postRunnable(() ->
           // Extra null/flag safety
-            entity.dispose();
-        });
+            entity.dispose()
+        );
       }
     }
   }
