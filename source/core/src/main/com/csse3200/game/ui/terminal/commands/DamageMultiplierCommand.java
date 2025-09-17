@@ -18,41 +18,47 @@ public class DamageMultiplierCommand implements Command {
 
     @Override
     public boolean action(ArrayList<String> args) {
-        if (!isValid(args)) {
-            logger.debug("Invalid arguments received for 'damageMultiplier' command: {}", args);
+        // validate arg count
+        if (args == null || args.size() != 1) return false;
+
+        // parse + validate multiplier
+        String raw = args.get(0).trim();
+        final float multiplier;
+        try {
+            multiplier = Float.parseFloat(raw);
+        } catch (NumberFormatException e) {
+            return false; // non-numeric
+        }
+        if (!Float.isFinite(multiplier) || multiplier < 0f) {
+            return false; // NaN/Inf/negative
+        }
+
+        // fetch services only after validation
+        var es = ServiceLocator.getEntityService();
+        if (es == null) {
+            // choose behaviour; false = can't apply
             return false;
         }
 
-        String arg = args.getFirst();
-        Array<Entity> entityList = ServiceLocator.getEntityService().getEntities();
+        var entities = es.getEntities();
+        if (entities == null || entities.size == 0) {
+            // parsed fine; nothing to update
+            return true;
+        }
 
-        return switch (arg.toLowerCase()) {
-            case "on" -> {
-                setDamageMultiplierStatus(entityList, true);
-                yield true;
-            }
-            case "off" -> {
-                setDamageMultiplierStatus(entityList, false);
-                yield true;
-            }
-            default -> {
-                logger.debug("Unrecognised argument received for 'damageMultiplier' command: {}", args);
-                yield false;
-            }
-        };
+        setDamageMultiplier(entities, multiplier);
+        return true;
     }
 
-    boolean isValid(ArrayList<String> args) {
-        return args.size() == 1;
-    }
+    boolean isValid(ArrayList<String> args) { return args.size() == 1; }
 
-    void setDamageMultiplierStatus(Array<Entity> entityList, boolean status) {
-        for (int i = 0; i < entityList.size; i++) {
-            Entity entity = entityList.get(i);
-            WeaponsStatsComponent comp = entity.getComponent(WeaponsStatsComponent.class);
+    void setDamageMultiplier(com.badlogic.gdx.utils.Array<Entity> entityList, float value) {
+        if (entityList == null) return; // <-- null-safe
+        for (Entity entity : entityList) {
+            var comp = entity.getComponent(WeaponsStatsComponent.class);
             if (comp != null) {
-                comp.setDamageBoostEnabled(status);
-                logger.info("Damage multiplier set to {} for entity {}", status, entity);
+                comp.setDamageMultiplier(value);
+                logger.info("Damage multiplier set to {} for entity {}", value, entity);
             }
         }
     }

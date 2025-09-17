@@ -1,5 +1,6 @@
 package com.csse3200.game.ui.terminal;
 
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
@@ -32,12 +33,10 @@ public class TerminalDisplay extends BaseScreenDisplay {
     private Table container;
     private Table promptBox;
     private Label label;
-    private Label.LabelStyle promptLabelStyle;
     private Label.LabelStyle suggestionLabelStyle;
 
     // Suggestions popup
     private Table suggestionsBox;
-    private Drawable suggestionsBg;
     private Drawable suggestionHoverBg;
     private List<String> lastShown = new ArrayList<>(SUGGESTION_MAX);
 
@@ -77,7 +76,7 @@ public class TerminalDisplay extends BaseScreenDisplay {
         if (bg == null) bg = skin.newDrawable("white", new Color(0f, 0f, 0f, 0.6f));
         promptBox.setBackground(bg);
 
-        promptLabelStyle = new Label.LabelStyle(skin.get(Label.LabelStyle.class));
+        Label.LabelStyle promptLabelStyle = new Label.LabelStyle(skin.get(Label.LabelStyle.class));
 
         suggestionLabelStyle = new Label.LabelStyle(promptLabelStyle);
         suggestionLabelStyle.fontColor = Color.WHITE;
@@ -110,13 +109,29 @@ public class TerminalDisplay extends BaseScreenDisplay {
         suggestionsBox = new Table();
         suggestionsBox.align(Align.bottomLeft);
         suggestionsBox.setTouchable(Touchable.enabled);
-        suggestionsBg = skin.newDrawable("white", new Color(0f, 0f, 0f, 0.75f));
+        Drawable suggestionsBg = skin.newDrawable("white", new Color(0f, 0f, 0f, 0.75f));
         suggestionHoverBg = skin.newDrawable("white", new Color(1f, 1f, 1f, 0.10f));
         suggestionsBox.setBackground(suggestionsBg);
         suggestionsBox.setVisible(false);
 
         // Anchor suggestions directly above the promptBox by placing it in the same column
         stage.addActor(suggestionsBox);
+
+        // NEW: collapse suggestions on F1, but don't consume the key
+        stage.addCaptureListener(new InputListener() {
+            @Override
+            public boolean keyDown(InputEvent event, int keycode) {
+                if (keycode == Input.Keys.F1) {
+                    if (suggestionsBox != null && suggestionsBox.isVisible()) {
+                        suggestionsBox.setVisible(false);
+                        lastShown.clear();
+                    }
+                    // return false so other listeners (e.g., the terminal toggle) still receive F1
+                    return false;
+                }
+                return false;
+            }
+        });
 
         container.setVisible(false);
     }
@@ -130,7 +145,14 @@ public class TerminalDisplay extends BaseScreenDisplay {
             container.setVisible(open);
             if (open) container.toFront();
         }
-        if (!open) return;
+        if (!open) {
+            if (suggestionsBox != null && suggestionsBox.isVisible()) {
+                suggestionsBox.setVisible(false);
+                lastShown.clear();
+            }
+            return;
+        }
+
 
         // update prompt text
         String message = terminal.getEnteredMessage();
@@ -140,7 +162,7 @@ public class TerminalDisplay extends BaseScreenDisplay {
         List<String> suggestions = terminal.getAutocompleteSuggestions();
         // show only when we have a non-empty first token and suggestions exist
         String prefix = extractFirstToken(message);
-        boolean show = prefix != null && !prefix.isEmpty() && suggestions != null && !suggestions.isEmpty();
+        boolean show = !prefix.isEmpty() && suggestions != null && !suggestions.isEmpty();
 
         if (show) {
             if (!sameList(suggestions, lastShown)) {
@@ -233,21 +255,29 @@ public class TerminalDisplay extends BaseScreenDisplay {
         }
         return true;
     }
+    private static String safeString(String s) {
+        return (s == null) ? "" : s;
+    }
 
-    private static String extractFirstToken(String s) {
-        if (s == null) return "";
+    private static int skipFirstToken(String s, boolean returnStart) {
+        s = (s == null) ? "" : s;
         int i = 0;
         while (i < s.length() && Character.isWhitespace(s.charAt(i))) i++;
         int start = i;
         while (i < s.length() && !Character.isWhitespace(s.charAt(i))) i++;
-        return s.substring(start, i);
+        return returnStart ? start : i;
+    }
+
+    private static String extractFirstToken(String s) {
+        s = (s == null) ? "" : s;
+        int start = skipFirstToken(s, true);
+        int end   = skipFirstToken(s, false);
+        return s.substring(start, end);
     }
 
     private static String stripFirstToken(String s) {
-        if (s == null) return "";
-        int i = 0;
-        while (i < s.length() && Character.isWhitespace(s.charAt(i))) i++;
-        while (i < s.length() && !Character.isWhitespace(s.charAt(i))) i++;
-        return s.substring(i); // keeps trailing part (incl. whitespace)
+        s = (s == null) ? "" : s;
+        int end = skipFirstToken(s, false);
+        return s.substring(end);
     }
 }
