@@ -202,7 +202,7 @@ public class InventoryComponent extends Component {
    *
    * @return true if the inventory is full, false otherwise
    */
-  public Boolean isFull() {
+  public boolean isFull() {
     return this.inventoryCount == this.maxCapacity;
   }
 
@@ -265,6 +265,7 @@ public class InventoryComponent extends Component {
   public void setCurrItem(Entity item) {
     this.currItem = item;
   }
+
   /**
    * Get the current item
    * @return the current item
@@ -272,4 +273,5 @@ public class InventoryComponent extends Component {
   public Entity getCurrItem() {
      return this.currItem;
   }
+
 }
