@@ -15,8 +15,9 @@ public class WeaponsStatsComponent extends Component {
 
     private static final Logger logger = LoggerFactory.getLogger(WeaponsStatsComponent.class);
 
+
     /** Default attack cooldown (seconds). */
-    private static final int DEFAULT_COOLDOWN = 0;
+    private static final int DEFAULT_COOLDOWN = 0.2f;
 
     /** Default setting for whether this weapon deals damage. */
     private static final boolean DEFAULT_DISABLE_DAMAGE = false;
@@ -73,7 +74,11 @@ public class WeaponsStatsComponent extends Component {
      * @param coolDown cooldown in seconds (clamped to minimum 0)
      */
     public void setCoolDown(float coolDown) {
-        this.coolDown = Math.max(0, coolDown);
+        if (coolDown < 0f) {
+            this.coolDown = Math.max(0.2f, coolDown);
+        } else {
+            this.coolDown = coolDown;
+        }
     }
 
     /**

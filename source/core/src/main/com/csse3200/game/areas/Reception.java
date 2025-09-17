@@ -31,6 +31,7 @@ public class Reception extends GameArea {
     spawnFloor();
     spawnholoclock();
     spawnplatform2();
+    spawnObjectDoors(new GridPoint2(0, 6), new GridPoint2(28, 20));
     spawndesk_reception();
     spawncomic_stand();
 
@@ -98,10 +99,12 @@ public class Reception extends GameArea {
   }
 
   private void loadForest() {
+      roomNumber--;
     clearAndLoad(() -> new ForestGameArea(terrainFactory, cameraComponent));
   }
 
   private void loadBackToFloor5() {
+      roomNumber++;
     clearAndLoad(() -> new MainHall(terrainFactory, cameraComponent));
   }
 

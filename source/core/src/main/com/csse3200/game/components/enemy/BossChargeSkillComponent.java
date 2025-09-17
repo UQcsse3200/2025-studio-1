@@ -33,7 +33,8 @@ public class BossChargeSkillComponent extends Component {
     private int patrolDir = 1;
     private float anchorX;
     private State state = State.PATROL;
-
+    private boolean attack = true;
+    private boolean crash = false;
     private GameTime time;
     private AITaskComponent ai;
 
@@ -78,6 +79,7 @@ public class BossChargeSkillComponent extends Component {
 
     @Override
     public void update() {
+        if (!attack) return;
         float dt = time.getDeltaTime();
 
         switch (state) {
@@ -88,7 +90,10 @@ public class BossChargeSkillComponent extends Component {
                 if (p.x >= patrolRightX) { p.x = patrolRightX; patrolDir = -1; }
                 if (p.x <= patrolLeftX)  { p.x = patrolLeftX;  patrolDir =  1; }
                 entity.setPosition(p);
-
+                if (!crash) {
+                    dwellCounter = 0f;
+                    break;
+                }
                 float dist = entity.getCenterPosition().dst(target.getCenterPosition());
                 if (dist <= triggerRange) {
                     dwellCounter += dt;
@@ -107,6 +112,13 @@ public class BossChargeSkillComponent extends Component {
             }
 
             case PREP: {
+                if (!crash) {
+                    pauseAI(false);
+                    dwellCounter = 0f;
+                    triggerAnim("boss2:patrol");
+                    state = State.PATROL;
+                    break;
+                }
                 timer -= dt;
                 if (timer <= 0f) {
                     Vector2 from = entity.getCenterPosition();
@@ -121,6 +133,12 @@ public class BossChargeSkillComponent extends Component {
             }
 
             case CHARGING: {
+                if (!crash) {
+                    vel.setZero();
+                    triggerAnim("boss2:return");
+                    state = State.RETURN;
+                    break;
+                }
                 Vector2 pos = entity.getPosition();
                 pos.add(vel.x * dt, vel.y * dt);
                 entity.setPosition(pos);
@@ -173,6 +191,12 @@ public class BossChargeSkillComponent extends Component {
 
     private void triggerAnim(String evt) {
         entity.getEvents().trigger(evt);
+    }
+    public void setAttack(boolean attack) {
+        this.attack = attack;
+    }
+    public void setCrash(boolean crash) {
+        this.crash = crash;
     }
 }
 
