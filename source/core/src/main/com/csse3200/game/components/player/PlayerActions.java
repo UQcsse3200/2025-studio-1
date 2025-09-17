@@ -72,6 +72,7 @@ public class PlayerActions extends Component {
   // Tracks time since last attack for cooldown purposes
   private float timeSinceLastAttack = 0;
 
+  private Camera camera;
   /**
    * Initializes the component by setting required components and
    * registering event listeners for all player actions.
