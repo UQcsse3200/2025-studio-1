@@ -1,95 +1,92 @@
 package com.csse3200.game.components;
 
-import com.csse3200.game.effects.Effect;
-import com.csse3200.game.effects.RapidFireEffect;
-import com.csse3200.game.entities.Entity;
+import com.csse3200.game.components.Component;
 import com.csse3200.game.services.ServiceLocator;
+import com.csse3200.game.components.CombatStatsComponent;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class PowerupComponent extends Component {
-    private final List<Effect> activeEffects = new ArrayList<>();
-    private Entity equippedWeapon;
 
-    public void setEquippedWeapon(Entity weapon) {
-        this.equippedWeapon = weapon;
+    private WeaponsStatsComponent playerStats;
+    private float duration;
+    private float elapsed = 0f;
+
+    // Rapid Fire variables
+    private float originalCooldown;
+    private boolean rapidFireActive = false;
+
+    // Damage Boost variables
+    private int originalAttack;
+    private boolean damageBoostActive = false;
+
+    public PowerupComponent() {
+        this.rapidFireActive = false;
+        this.damageBoostActive = false;
     }
 
-    public Entity getEquippedWeapon() {
-        return equippedWeapon;
+    // Existing rapid fire method
+    public void applyRapidFire(WeaponsStatsComponent stats, float duration) {
+        this.playerStats = stats;
+        this.duration = duration;
+        this.elapsed = 0f;
+        this.originalCooldown = stats.getCoolDown();
+
+        stats.setCoolDown(0f);
+        this.rapidFireActive = true;
     }
 
-    public void addEffect(Effect effect) {
-        if (effect instanceof RapidFireEffect rapidfire && equippedWeapon != null) {
-            if (rapidfire.apply(equippedWeapon)) {
-                activeEffects.add(rapidfire);
-            }
-        }
+    // NEW: Damage boost method
+    public void applyDamageBoost(WeaponsStatsComponent stats, int boostAmount, float duration) {
+        this.playerStats = stats;
+        this.duration = duration;
+        this.elapsed = 0f;
+        this.originalAttack = stats.getBaseAttack();
+
+        // Apply the damage boost
+        stats.setBaseAttack(originalAttack + boostAmount);
+        this.damageBoostActive = true;
     }
 
     @Override
     public void update() {
+        if (!rapidFireActive && !damageBoostActive) {
+            return; // No active powerups
+        }
+
         float dt = ServiceLocator.getTimeSource().getDeltaTime();
+        elapsed += dt;
 
-        for (int i = activeEffects.size() - 1; i >= 0; i--) {
-            Effect effect = activeEffects.get(i);
+        // Check if duration expired
+        if (elapsed >= duration) {
+            if (playerStats != null) {
+                // Restore rapid fire
+                if (rapidFireActive) {
+                    playerStats.setCoolDown(originalCooldown);
+                    rapidFireActive = false;
+                }
 
-            if (effect instanceof RapidFireEffect rapidFireEffect) {
-                rapidFireEffect.update(dt);
-                if (!rapidFireEffect.isActive()) {
-                    activeEffects.remove(i);
+                // Restore damage boost
+                if (damageBoostActive) {
+                    playerStats.setBaseAttack(originalAttack);
+                    damageBoostActive = false;
                 }
             }
         }
     }
+
+    // Helper methods for UI or checking status
+    public boolean isDamageBoostActive() {
+        return damageBoostActive;
+    }
+
+    public boolean isRapidFireActive() {
+        return rapidFireActive;
+    }
+
+    public float getRemainingDuration() {
+        return Math.max(0, duration - elapsed);
+    }
 }
-
-
-
-
-
-//package com.csse3200.game.components;
-//
-//import com.csse3200.game.components.Component;
-//import com.csse3200.game.services.ServiceLocator;
-//import com.csse3200.game.components.CombatStatsComponent;
-//
-//import java.util.ArrayList;
-//import java.util.List;
-//
-//public class PowerupComponent extends Component {
-//
-//    private WeaponsStatsComponent playerStats;
-//    private float duration;
-//    private float elapsed = 0f;
-//    private float originalCooldown;
-//    private boolean active = false;
-//
-//    public PowerupComponent() {
-//        this.active = false;
-//    }
-//
-//    public void applyRapidFire(WeaponsStatsComponent stats, float duration) {
-//        this.playerStats = stats;
-//        this.duration = duration;
-//        this.elapsed = 0f;
-//        this.originalCooldown = stats.getCoolDown();
-//
-//        stats.setCoolDown(0f);
-//        this.active = true;
-//    }
-//
-//    @Override
-//    public void update() {
-//        float dt = ServiceLocator.getTimeSource().getDeltaTime();
-//        elapsed += dt;
-//
-//        if (elapsed >= duration) {
-//            if (playerStats != null) {
-//                playerStats.setCoolDown(originalCooldown);
-//            }
-//            active = false;
-//        }
-//    }
-//}

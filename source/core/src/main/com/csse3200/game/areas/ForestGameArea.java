@@ -240,13 +240,14 @@ public class ForestGameArea extends GameArea {
     lightsaber = spawnLightsaber();
 
     Entity rapidFirePowerup = spawnRapidFirePowerup();
+    Entity damageBoostPowerup = spawnDamageBoostPowerup();
 //  Entity bullet = spawnBullet();
 
     //These are commented out since there is no equip feature yet
-     this.equipItem(pistol);
+    // this.equipItem(pistol);
     // this.equipItem(lightsaber);
     // this.equipItem(dagger);
-    // this.equipItem(rifle);
+     this.equipItem(rifle);
 
 
     spawnFloor();
@@ -492,12 +493,11 @@ public class ForestGameArea extends GameArea {
 
   private Entity spawnLightsaber() {
     Entity newLightsaber = WeaponsFactory.createWeapon(Weapons.LIGHTSABER);
-    Vector2 newLightsaberOffset = new Vector2(0.9f, -0.2f);
+    Vector2 newLightsaberOffset = new Vector2(0.7f, -0.1f);
     newLightsaber.addComponent(new ItemHoldComponent(this.player, newLightsaberOffset));
-    AnimationRenderComponent lightSaberAnimator = WeaponsFactory.createAnimation("images/lightSaber.atlas", this.player);
-    newLightsaber.addComponent(lightSaberAnimator);
-    lightSaberAnimator.startAnimation("anim");
-
+    //Commented out since lightsaber animation is a work in progress
+    //AnimationRenderComponent lightSaberAnimator = WeaponsFactory.createAnimation("images/lightSaber.atlas", this.player);
+    //newLightsaber.addComponent(lightSaberAnimator);
     return newLightsaber;
   }
 
@@ -518,9 +518,15 @@ public class ForestGameArea extends GameArea {
 
   private Entity spawnRapidFirePowerup() {
     Entity newRapidFirePowerup = PowerupsFactory.createRapidFire();
-    spawnEntityAt(newRapidFirePowerup, new GridPoint2(2, 40), true, true);
+    spawnEntityAt(newRapidFirePowerup, new GridPoint2(25, 20), true, true);
     return newRapidFirePowerup;
   }
+
+    private Entity spawnDamageBoostPowerup() {
+        Entity newDamageBoostPowerup = PowerupsFactory.createDamageBoost();
+        spawnEntityAt(newDamageBoostPowerup, new GridPoint2(2, 25), true, true);
+        return newDamageBoostPowerup;
+    }
 
 
   // Enemy Projectiles
