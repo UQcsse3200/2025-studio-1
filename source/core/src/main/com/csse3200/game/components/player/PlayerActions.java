@@ -524,4 +524,120 @@ public class PlayerActions extends Component {
       entity.getEvents().trigger("anim");
     }
   }
+
+  /**
+   * equipSlot(int slotIndex) selects the item slot in the inventory for the item that the player wants to equip
+   * @param slotIndex
+   */
+  public void equipSlot(int slotIndex){
+      InventoryComponent inventory = entity.getComponent(InventoryComponent.class);
+      if(inventory == null)return;  //player does not have any existing inventory
+
+      int inventoryIndex = slotIndex-1; //slot index for inventory are 0 based
+
+      Entity item = inventory.get(inventoryIndex);
+      if(item == null){
+          //if the inventory is empty prints a message on the console
+          Gdx.app.log("Inventory " , "No item in slot - " + slotIndex);
+          return;
+      }
+
+      //select the slot at inventoryIndex
+      inventory.setSelectSlot(inventoryIndex);
+      //equip the player with the weapon at that slot
+      inventory.setEquippedSlot(inventoryIndex);
+      //set that weapon as the current item in use in inventory
+      inventory.setCurrItem(item);
+      entity.getEvents().trigger("focus item", inventoryIndex);
+  }
+
+    /**
+     * this function is to unequip the player
+     */
+    public void unequipPlayer(){
+        InventoryComponent inventory = entity.getComponent(InventoryComponent.class);
+        if (inventory == null) return;
+
+        inventory.setEquippedSlot(-1);
+        inventory.setCurrItem(null);
+        entity.getEvents().trigger("focus item", -1);
+    }
+
+
+    /**
+     * if player already has a weapon --> unequip first
+     * sets new weapon as equipped
+     * repositions the weapon to appear in player's hand
+     */
+    Entity currentWeapon = null;
+
+    public void equipWeapon(Entity weapon) {
+        if (currentWeapon != null) {
+            unequipWeapon();
+        }
+        currentWeapon = weapon;
+
+        TextureRenderComponent renderComp = weapon.getComponent(TextureRenderComponent.class);
+        if (renderComp != null) {
+            renderComp.setEnabled(true);
+        }
+
+        updateWeaponPosition();
+    }
+
+    /**
+     * ensures that no weapon is equipped and weapon’s
+     * texture (sprite) is no longer visible in the game.
+     */
+    public void unequipWeapon() {
+        if (currentWeapon == null) return;
+
+        TextureRenderComponent renderComp = currentWeapon.getComponent(TextureRenderComponent.class);
+        if (renderComp != null) {
+            renderComp.setEnabled(false);
+        }
+
+        currentWeapon = null;
+    }
+
+    //to represent relative difference between the
+    //player's body position and player's hand.
+    float handOffsetX = 5f;
+    float handOffsetY = 10f;
+
+    /**
+     * this function sets the coordinates for the weapon in player's hand
+     */
+    public void updateWeaponPosition() {
+        if (currentWeapon == null) return;
+
+        PhysicsComponent physics = currentWeapon.getComponent(PhysicsComponent.class);
+        if (physics == null) {
+            System.out.println("Weapon has no PhysicsComponent," +
+                "\nupdating position directly");
+            // Directly update visual position without physics:
+            Vector2 playerPos = entity.getPosition();
+            if (facingRight) {
+                currentWeapon.setPosition(playerPos.x + handOffsetX, playerPos.y + handOffsetY);
+            } else {
+                currentWeapon.setPosition(playerPos.x - handOffsetX, playerPos.y + handOffsetY);
+            }
+            return;
+        }
+
+        Body body = physics.getBody();
+        if (body == null) {
+            System.out.println("Weapon's PhysicsComponent body is null," +
+                "\nskipping physics-based position update");
+            return; // Don't update position through physics if body not created
+        }
+
+        // Safe to use physics body
+        Vector2 playerPos = entity.getPosition();
+        if (facingRight) {
+            body.setTransform(playerPos.x + handOffsetX, playerPos.y + handOffsetY, 0f);
+        } else {
+            body.setTransform(playerPos.x - handOffsetX, playerPos.y + handOffsetY, 0f);
+        }
+    }
 }

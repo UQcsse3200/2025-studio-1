@@ -12,6 +12,7 @@ import com.csse3200.game.entities.factories.PowerupsFactory;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.input.InputComponent;
 import com.csse3200.game.services.ServiceLocator;
+import com.csse3200.game.rendering.TextureRenderComponent;
 import com.csse3200.game.utils.math.Vector2Utils;
 
 /**
@@ -170,6 +171,12 @@ public class KeyboardPlayerInputComponent extends InputComponent {
       case Keys.R:
         triggerDropFocused();
         return true;
+      case Keys.I:  //attach weapon to player's body
+         equipCurrentWeapon();
+         return true;
+      case Keys.O:  //detach weapon to player's body
+          unequipCurrentWeapon();
+         return true;
       default:
         return false;
     }
@@ -288,5 +295,49 @@ public class KeyboardPlayerInputComponent extends InputComponent {
     entity.getEvents().trigger("interact");
   }
 
+
+    /**
+     * equips the player with the weapon that is in the selected slot
+     */
+    public void equipCurrentWeapon() {
+        InventoryComponent inventory = entity.getComponent(InventoryComponent.class);
+        PlayerActions actions = entity.getComponent(PlayerActions.class);
+        if (inventory == null) return;  //no inventory
+
+        int selectedSlot = inventory.getSelectedSlot();
+        if (selectedSlot < 0 || selectedSlot >= inventory.getSize()) return;  // no slot selected
+
+        Entity weapon = inventory.get(selectedSlot);
+        if (weapon == null) {
+            System.out.println("No weapon in selected slot!");
+            return;
+        }
+
+        // Equip the weapon
+        inventory.setEquippedSlot(selectedSlot);
+        inventory.setCurrItem(weapon);
+//        String name = inventory.getCurrItem().getComponent(class )
+
+        entity.getEvents().trigger("focusItem", selectedSlot);  // Refresh UI & logic
+        System.out.println("Equipped weapon from slot " + selectedSlot);
+
+        actions.equipWeapon(weapon);
+    }
+
+    /**
+     * this function is to unequip the player
+     */
+    public void unequipCurrentWeapon(){
+        InventoryComponent inventory = entity.getComponent(InventoryComponent.class);
+        PlayerActions actions = entity.getComponent(PlayerActions.class);
+        if (inventory == null) return;
+
+        inventory.setEquippedSlot(-1);
+        inventory.setCurrItem(null);
+        entity.getEvents().trigger("focus item", -1);
+        System.out.println("Unequipped weapon");
+
+        actions.unequipWeapon();
+    }
 }
 
