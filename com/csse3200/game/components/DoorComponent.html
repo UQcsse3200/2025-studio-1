@@ -136,6 +136,14 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Called when the entity is created and registered.</div>
 </div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isOverrideUnlocked()" class="member-name-link">isOverrideUnlocked</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setOverrideUnlocked(boolean)" class="member-name-link">setOverrideUnlocked</a><wbr>(boolean&nbsp;enabled)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Enable/disable the unlock override for this door.</div>
+</div>
 </div>
 </div>
 </div>
@@ -180,6 +188,24 @@ loadScripts(document, 'script');</script>
 <dl class="notes">
 <dt>Overrides:</dt>
 <dd><code><a href="Component.html#create()">create</a></code>&nbsp;in class&nbsp;<code><a href="Component.html" title="class in com.csse3200.game.components">Component</a></code></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="setOverrideUnlocked(boolean)">
+<h3>setOverrideUnlocked</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setOverrideUnlocked</span><wbr><span class="parameters">(boolean&nbsp;enabled)</span></div>
+<div class="block">Enable/disable the unlock override for this door.
+ When enabled, other systems (e.g., KeycardGateComponent) should allow this door to open.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="isOverrideUnlocked()">
+<h3>isOverrideUnlocked</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isOverrideUnlocked</span>()</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>true if the unlock override is enabled for this door.</dd>
 </dl>
 </section>
 </li>

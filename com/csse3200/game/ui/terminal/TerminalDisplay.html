@@ -88,7 +88,9 @@ loadScripts(document, 'script');</script>
 <div class="inheritance"><a href="../../components/Component.html" title="class in com.csse3200.game.components">com.csse3200.game.components.Component</a>
 <div class="inheritance"><a href="../../rendering/RenderComponent.html" title="class in com.csse3200.game.rendering">com.csse3200.game.rendering.RenderComponent</a>
 <div class="inheritance"><a href="../UIComponent.html" title="class in com.csse3200.game.ui">com.csse3200.game.ui.UIComponent</a>
+<div class="inheritance"><a href="../../components/screens/BaseScreenDisplay.html" title="class in com.csse3200.game.components.screens">com.csse3200.game.components.screens.BaseScreenDisplay</a>
 <div class="inheritance">com.csse3200.game.ui.terminal.TerminalDisplay</div>
+</div>
 </div>
 </div>
 </div>
@@ -100,9 +102,7 @@ loadScripts(document, 'script');</script>
 </dl>
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">TerminalDisplay</span>
-<span class="extends-implements">extends <a href="../UIComponent.html" title="class in com.csse3200.game.ui">UIComponent</a></span></div>
-<div class="block">A ui component for displaying the debug terminal. The terminal is positioned at the bottom of the
- screen.</div>
+<span class="extends-implements">extends <a href="../../components/screens/BaseScreenDisplay.html" title="class in com.csse3200.game.components.screens">BaseScreenDisplay</a></span></div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -110,6 +110,9 @@ loadScripts(document, 'script');</script>
 <li>
 <section class="field-summary" id="field-summary">
 <h2>Field Summary</h2>
+<div class="inherited-list">
+<h3 id="fields-inherited-from-class-com.csse3200.game.components.screens.BaseScreenDisplay">Fields inherited from class&nbsp;com.csse3200.game.components.screens.<a href="../../components/screens/BaseScreenDisplay.html" title="class in com.csse3200.game.components.screens">BaseScreenDisplay</a></h3>
+<code><a href="../../components/screens/BaseScreenDisplay.html#game">game</a>, <a href="../../components/screens/BaseScreenDisplay.html#logger">logger</a>, <a href="../../components/screens/BaseScreenDisplay.html#neon">neon</a>, <a href="../../components/screens/BaseScreenDisplay.html#root">root</a></code></div>
 <div class="inherited-list">
 <h3 id="fields-inherited-from-class-com.csse3200.game.ui.UIComponent">Fields inherited from class&nbsp;com.csse3200.game.ui.<a href="../UIComponent.html" title="class in com.csse3200.game.ui">UIComponent</a></h3>
 <code><a href="../UIComponent.html#skin">skin</a>, <a href="../UIComponent.html#stage">stage</a></code></div>
@@ -126,7 +129,7 @@ loadScripts(document, 'script');</script>
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E()" class="member-name-link">TerminalDisplay</a>()</code></div>
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(com.csse3200.game.GdxGame)" class="member-name-link">TerminalDisplay</a><wbr>(<a href="../../GdxGame.html" title="class in com.csse3200.game">GdxGame</a>&nbsp;game)</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 </div>
 </section>
@@ -142,29 +145,32 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#create()" class="member-name-link">create</a>()</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#buildUI(com.badlogic.gdx.scenes.scene2d.ui.Table)" class="member-name-link">buildUI</a><wbr>(com.badlogic.gdx.scenes.scene2d.ui.Table&nbsp;root)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Called when the entity is created and registered.</div>
+<div class="block">Subclasses implement their UI here using the provided <code>root</code> table.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#dispose()" class="member-name-link">dispose</a>()</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#create()" class="member-name-link">create</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Called when the component is disposed.</div>
+<div class="block">Initialises common UI infrastructure and delegates to <a href="../../components/screens/BaseScreenDisplay.html#buildUI(com.badlogic.gdx.scenes.scene2d.ui.Table)"><code>BaseScreenDisplay.buildUI(Table)</code></a>.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#draw(com.badlogic.gdx.graphics.g2d.SpriteBatch)" class="member-name-link">draw</a><wbr>(com.badlogic.gdx.graphics.g2d.SpriteBatch&nbsp;batch)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Draw the renderable.</div>
+<div class="block">Stage handles rendering of attached actors.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>float</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getZIndex()" class="member-name-link">getZIndex</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Z index controls rendering order within a layer.</div>
+<div class="block">Default z-index; override in overlays that must sit above other UI.</div>
 </div>
 </div>
 </div>
 </div>
+<div class="inherited-list">
+<h3 id="methods-inherited-from-class-com.csse3200.game.components.screens.BaseScreenDisplay">Methods inherited from class&nbsp;com.csse3200.game.components.screens.<a href="../../components/screens/BaseScreenDisplay.html" title="class in com.csse3200.game.components.screens">BaseScreenDisplay</a></h3>
+<code><a href="../../components/screens/BaseScreenDisplay.html#addBody(com.badlogic.gdx.scenes.scene2d.ui.Table,java.lang.String,float,float)">addBody</a>, <a href="../../components/screens/BaseScreenDisplay.html#addTitle(com.badlogic.gdx.scenes.scene2d.ui.Table,java.lang.String,float,com.badlogic.gdx.graphics.Color,float)">addTitle</a>, <a href="../../components/screens/BaseScreenDisplay.html#backMainMenu()">backMainMenu</a>, <a href="../../components/screens/BaseScreenDisplay.html#button(java.lang.String,float,java.lang.Runnable)">button</a>, <a href="../../components/screens/BaseScreenDisplay.html#dispose()">dispose</a>, <a href="../../components/screens/BaseScreenDisplay.html#makeSolidTexture(com.badlogic.gdx.graphics.Color)">makeSolidTexture</a>, <a href="../../components/screens/BaseScreenDisplay.html#solidImage(com.badlogic.gdx.graphics.Color)">solidImage</a></code></div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-com.csse3200.game.ui.UIComponent">Methods inherited from class&nbsp;com.csse3200.game.ui.<a href="../UIComponent.html" title="class in com.csse3200.game.ui">UIComponent</a></h3>
 <code><a href="../UIComponent.html#getLayer()">getLayer</a></code></div>
@@ -195,9 +201,9 @@ loadScripts(document, 'script');</script>
 <h2>Constructor Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="&lt;init&gt;()">
+<section class="detail" id="&lt;init&gt;(com.csse3200.game.GdxGame)">
 <h3>TerminalDisplay</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">TerminalDisplay</span>()</div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">TerminalDisplay</span><wbr><span class="parameters">(<a href="../../GdxGame.html" title="class in com.csse3200.game">GdxGame</a>&nbsp;game)</span></div>
 </section>
 </li>
 </ul>
@@ -212,12 +218,28 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="create()">
 <h3>create</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">create</span>()</div>
-<div class="block"><span class="description-from-type-label">Description copied from class:&nbsp;<code><a href="../../components/Component.html#create()">Component</a></code></span></div>
-<div class="block">Called when the entity is created and registered. Initial logic such as calls to GetComponent
- should be made here, not in the constructor which is called before an entity is finished.</div>
+<div class="block"><span class="description-from-type-label">Description copied from class:&nbsp;<code><a href="../../components/screens/BaseScreenDisplay.html#create()">BaseScreenDisplay</a></code></span></div>
+<div class="block">Initialises common UI infrastructure and delegates to <a href="../../components/screens/BaseScreenDisplay.html#buildUI(com.badlogic.gdx.scenes.scene2d.ui.Table)"><code>BaseScreenDisplay.buildUI(Table)</code></a>.
+ <p>
+ Creates <a href="../../components/screens/BaseScreenDisplay.html#root"><code>BaseScreenDisplay.root</code></a>, adds it to the stage, initialises <a href="../../components/screens/BaseScreenDisplay.html#neon"><code>BaseScreenDisplay.neon</code></a>,
+ and then calls <a href="../../components/screens/BaseScreenDisplay.html#buildUI(com.badlogic.gdx.scenes.scene2d.ui.Table)"><code>BaseScreenDisplay.buildUI(Table)</code></a> for subclass-specific layout.</div>
 <dl class="notes">
 <dt>Overrides:</dt>
-<dd><code><a href="../UIComponent.html#create()">create</a></code>&nbsp;in class&nbsp;<code><a href="../UIComponent.html" title="class in com.csse3200.game.ui">UIComponent</a></code></dd>
+<dd><code><a href="../../components/screens/BaseScreenDisplay.html#create()">create</a></code>&nbsp;in class&nbsp;<code><a href="../../components/screens/BaseScreenDisplay.html" title="class in com.csse3200.game.components.screens">BaseScreenDisplay</a></code></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="buildUI(com.badlogic.gdx.scenes.scene2d.ui.Table)">
+<h3>buildUI</h3>
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">buildUI</span><wbr><span class="parameters">(com.badlogic.gdx.scenes.scene2d.ui.Table&nbsp;root)</span></div>
+<div class="block"><span class="description-from-type-label">Description copied from class:&nbsp;<code><a href="../../components/screens/BaseScreenDisplay.html#buildUI(com.badlogic.gdx.scenes.scene2d.ui.Table)">BaseScreenDisplay</a></code></span></div>
+<div class="block">Subclasses implement their UI here using the provided <code>root</code> table.</div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code><a href="../../components/screens/BaseScreenDisplay.html#buildUI(com.badlogic.gdx.scenes.scene2d.ui.Table)">buildUI</a></code>&nbsp;in class&nbsp;<code><a href="../../components/screens/BaseScreenDisplay.html" title="class in com.csse3200.game.components.screens">BaseScreenDisplay</a></code></dd>
+<dt>Parameters:</dt>
+<dd><code>root</code> - a fill-parent, centered <code>Table</code> already added to the stage</dd>
 </dl>
 </section>
 </li>
@@ -225,11 +247,11 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="draw(com.badlogic.gdx.graphics.g2d.SpriteBatch)">
 <h3>draw</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">draw</span><wbr><span class="parameters">(com.badlogic.gdx.graphics.g2d.SpriteBatch&nbsp;batch)</span></div>
-<div class="block"><span class="description-from-type-label">Description copied from class:&nbsp;<code><a href="../../rendering/RenderComponent.html#draw(com.badlogic.gdx.graphics.g2d.SpriteBatch)">RenderComponent</a></code></span></div>
-<div class="block">Draw the renderable. Should be called only by the renderer, not manually.</div>
+<div class="block"><span class="description-from-type-label">Description copied from class:&nbsp;<code><a href="../../components/screens/BaseScreenDisplay.html#draw(com.badlogic.gdx.graphics.g2d.SpriteBatch)">BaseScreenDisplay</a></code></span></div>
+<div class="block">Stage handles rendering of attached actors.</div>
 <dl class="notes">
-<dt>Specified by:</dt>
-<dd><code><a href="../../rendering/RenderComponent.html#draw(com.badlogic.gdx.graphics.g2d.SpriteBatch)">draw</a></code>&nbsp;in class&nbsp;<code><a href="../../rendering/RenderComponent.html" title="class in com.csse3200.game.rendering">RenderComponent</a></code></dd>
+<dt>Overrides:</dt>
+<dd><code><a href="../../components/screens/BaseScreenDisplay.html#draw(com.badlogic.gdx.graphics.g2d.SpriteBatch)">draw</a></code>&nbsp;in class&nbsp;<code><a href="../../components/screens/BaseScreenDisplay.html" title="class in com.csse3200.game.components.screens">BaseScreenDisplay</a></code></dd>
 <dt>Parameters:</dt>
 <dd><code>batch</code> - Batch to render to.</dd>
 </dl>
@@ -239,29 +261,15 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="getZIndex()">
 <h3>getZIndex</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">getZIndex</span>()</div>
-<div class="block"><span class="description-from-type-label">Description copied from interface:&nbsp;<code><a href="../../rendering/Renderable.html#getZIndex()">Renderable</a></code></span></div>
-<div class="block">Z index controls rendering order within a layer. Higher Z index is drawn on top.</div>
+<div class="block"><span class="description-from-type-label">Description copied from class:&nbsp;<code><a href="../../components/screens/BaseScreenDisplay.html#getZIndex()">BaseScreenDisplay</a></code></span></div>
+<div class="block">Default z-index; override in overlays that must sit above other UI.</div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="../../rendering/Renderable.html#getZIndex()">getZIndex</a></code>&nbsp;in interface&nbsp;<code><a href="../../rendering/Renderable.html" title="interface in com.csse3200.game.rendering">Renderable</a></code></dd>
 <dt>Overrides:</dt>
-<dd><code><a href="../UIComponent.html#getZIndex()">getZIndex</a></code>&nbsp;in class&nbsp;<code><a href="../UIComponent.html" title="class in com.csse3200.game.ui">UIComponent</a></code></dd>
+<dd><code><a href="../../components/screens/BaseScreenDisplay.html#getZIndex()">getZIndex</a></code>&nbsp;in class&nbsp;<code><a href="../../components/screens/BaseScreenDisplay.html" title="class in com.csse3200.game.components.screens">BaseScreenDisplay</a></code></dd>
 <dt>Returns:</dt>
 <dd>Z index</dd>
-</dl>
-</section>
-</li>
-<li>
-<section class="detail" id="dispose()">
-<h3>dispose</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">dispose</span>()</div>
-<div class="block"><span class="description-from-type-label">Description copied from class:&nbsp;<code><a href="../../components/Component.html#dispose()">Component</a></code></span></div>
-<div class="block">Called when the component is disposed. Dispose of any internal resources here.</div>
-<dl class="notes">
-<dt>Specified by:</dt>
-<dd><code>dispose</code>&nbsp;in interface&nbsp;<code>com.badlogic.gdx.utils.Disposable</code></dd>
-<dt>Overrides:</dt>
-<dd><code><a href="../../rendering/RenderComponent.html#dispose()">dispose</a></code>&nbsp;in class&nbsp;<code><a href="../../rendering/RenderComponent.html" title="class in com.csse3200.game.rendering">RenderComponent</a></code></dd>
 </dl>
 </section>
 </li>

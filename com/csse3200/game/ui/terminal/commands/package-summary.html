@@ -78,12 +78,14 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color"><a href="../package-summary.html">com.csse3200.game.ui.terminal</a></div>
 <div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><a href="../autocomplete/package-summary.html">com.csse3200.game.ui.terminal.autocomplete</a></div>
+<div class="col-last odd-row-color">&nbsp;</div>
 </div>
 </div>
 </li>
 <li>
 <div id="class-summary">
-<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button id="class-summary-tab0" role="tab" aria-selected="true" aria-controls="class-summary.tabpanel" tabindex="0" onkeydown="switchTab(event)" onclick="show('class-summary', 'class-summary', 2)" class="active-table-tab">All Classes and Interfaces</button><button id="class-summary-tab1" role="tab" aria-selected="false" aria-controls="class-summary.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('class-summary', 'class-summary-tab1', 2)" class="table-tab">Interfaces</button><button id="class-summary-tab2" role="tab" aria-selected="false" aria-controls="class-summary.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('class-summary', 'class-summary-tab2', 2)" class="table-tab">Classes</button></div>
+<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button id="class-summary-tab0" role="tab" aria-selected="true" aria-controls="class-summary.tabpanel" tabindex="0" onkeydown="switchTab(event)" onclick="show('class-summary', 'class-summary', 2)" class="active-table-tab">All Classes and Interfaces</button><button id="class-summary-tab1" role="tab" aria-selected="false" aria-controls="class-summary.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('class-summary', 'class-summary-tab1', 2)" class="table-tab">Interfaces</button><button id="class-summary-tab2" role="tab" aria-selected="false" aria-controls="class-summary.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('class-summary', 'class-summary-tab2', 2)" class="table-tab">Classes</button><button id="class-summary-tab4" role="tab" aria-selected="false" aria-controls="class-summary.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('class-summary', 'class-summary-tab4', 2)" class="table-tab">Record Classes</button></div>
 <div id="class-summary.tabpanel" role="tabpanel" aria-labelledby="class-summary-tab0">
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Class</div>
@@ -92,21 +94,49 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color class-summary class-summary-tab1">
 <div class="block">A generic command class.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="DebugCommand.html" title="class in com.csse3200.game.ui.terminal.commands">DebugCommand</a></div>
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="DamageMultiplierCommand.html" title="class in com.csse3200.game.ui.terminal.commands">DamageMultiplierCommand</a></div>
 <div class="col-last odd-row-color class-summary class-summary-tab2">
+<div class="block">A command for toggling boosted outgoing weapon damage (cheat code).</div>
+</div>
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="DebugCommand.html" title="class in com.csse3200.game.ui.terminal.commands">DebugCommand</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">A command for toggling debug mode on and off.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="DisableDamageCommand.html" title="class in com.csse3200.game.ui.terminal.commands">DisableDamageCommand</a></div>
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="DisableDamageCommand.html" title="class in com.csse3200.game.ui.terminal.commands">DisableDamageCommand</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab2">
+<div class="block">A command for toggling whether a player takes damage.</div>
+</div>
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="DoorOverrideCommand.html" title="class in com.csse3200.game.ui.terminal.commands">DoorOverrideCommand</a></div>
 <div class="col-last even-row-color class-summary class-summary-tab2">
-<div class="block">A command for toggling whether a player takes damage</div>
+<div class="block">Cheat command to toggle the door-unlock override on all doors.</div>
+</div>
+<div class="col-first odd-row-color class-summary class-summary-tab4"><a href="EndScreenCommand.html" title="class in com.csse3200.game.ui.terminal.commands">EndScreenCommand</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab4">
+<div class="block">A command for switching to the Win Screen or other end screens.</div>
+</div>
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="InfiniteDashCommand.html" title="class in com.csse3200.game.ui.terminal.commands">InfiniteDashCommand</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab2">
+<div class="block">A command for toggling whether a player can infinitely dash</div>
+</div>
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="InfiniteJumpsCommand.html" title="class in com.csse3200.game.ui.terminal.commands">InfiniteJumpsCommand</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab2">
+<div class="block">A command for toggling whether a player has infinite jumps</div>
+</div>
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="InfiniteStaminaCommand.html" title="class in com.csse3200.game.ui.terminal.commands">InfiniteStaminaCommand</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab2">
+<div class="block">A command for toggling whether a player uses stamina</div>
+</div>
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="PickupAllCommand.html" title="class in com.csse3200.game.ui.terminal.commands">PickupAllCommand</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab2">
+<div class="block">A command for toggling whether a player can pick up items in the world at once.</div>
+</div>
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="TeleportCommand.html" title="class in com.csse3200.game.ui.terminal.commands">TeleportCommand</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab2">
+<div class="block">Teleport the player to the center of the map.</div>
 </div>
 <div class="col-first odd-row-color class-summary class-summary-tab2"><a href="WavesCommand.html" title="class in com.csse3200.game.ui.terminal.commands">WavesCommand</a></div>
 <div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">Starts enemy waves in the current ForestGameArea.</div>
-</div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="WinScreenCommand.html" title="class in com.csse3200.game.ui.terminal.commands">WinScreenCommand</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab2">
-<div class="block">A command for switching to the Win Screen.</div>
 </div>
 </div>
 </div>

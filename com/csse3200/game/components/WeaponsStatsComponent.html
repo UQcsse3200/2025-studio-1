@@ -93,9 +93,11 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">WeaponsStatsComponent</span>
 <span class="extends-implements">extends <a href="Component.html" title="class in com.csse3200.game.components">Component</a></span></div>
-<div class="block">Component used to store information related to combat such as health, attack, etc. Any entities
- which engage it combat should have an instance of this class registered. This class can be
- extended for more specific combat needs.</div>
+<div class="block">Component used to store weapon-related combat statistics such as attack damage,
+ cooldown, upgrade stages, and cheat modifiers.
+ <p>
+ Any entity that uses weapons in combat should have an instance of this component.
+ </p></div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -117,10 +119,12 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
 <div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(int)" class="member-name-link">WeaponsStatsComponent</a><wbr>(int&nbsp;baseAttack)</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">Constructs a <code>WeaponsStatsComponent</code> with a base attack value.</div>
+</div>
 <div class="col-constructor-name odd-row-color"><code><a href="#%3Cinit%3E(com.csse3200.game.entities.configs.weapons.WeaponConfig)" class="member-name-link">WeaponsStatsComponent</a><wbr>(<a href="../entities/configs/weapons/WeaponConfig.html" title="class in com.csse3200.game.entities.configs.weapons">WeaponConfig</a>&nbsp;config)</code></div>
 <div class="col-last odd-row-color">
-<div class="block">Construct a Weapons Stats Component (Attack System)</div>
+<div class="block">Constructs a <code>WeaponsStatsComponent</code> from a weapon configuration.</div>
 </div>
 </div>
 </section>
@@ -139,53 +143,67 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getBaseAttack()" class="member-name-link">getBaseAttack</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Returns the entity's base attack damage.</div>
+<div class="block">Gets the current effective attack damage for this weapon.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>float</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getCoolDown()" class="member-name-link">getCoolDown</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">gets the entity's cooldown between attacks (seconds).</div>
+<div class="block">Gets the cooldown time between attacks.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getMaxUpgradeStage()" class="member-name-link">getMaxUpgradeStage</a>()</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>float</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getDamageMultiplier()" class="member-name-link">getDamageMultiplier</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Gets the max upgrades stage</div>
+<div class="block">Gets the current damage multiplier applied to this weapon.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getProjectileTexturePath()" class="member-name-link">getProjectileTexturePath</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getUpgradeStage()" class="member-name-link">getUpgradeStage</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Gets the current upgrade stage</div>
-</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isMaxUpgraded()" class="member-name-link">isMaxUpgraded</a>()</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getMaxUpgradeStage()" class="member-name-link">getMaxUpgradeStage</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Checks if the weapon is already max upgraded</div>
+<div class="block">Gets the maximum upgrade stage.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setBaseAttack(int)" class="member-name-link">setBaseAttack</a><wbr>(int&nbsp;attack)</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getProjectileTexturePath()" class="member-name-link">getProjectileTexturePath</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Sets the entity's attack damage.</div>
+<div class="block">Gets the texture path for this weapon's projectile, if applicable.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getUpgradeStage()" class="member-name-link">getUpgradeStage</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Gets the current upgrade stage.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isMaxUpgraded()" class="member-name-link">isMaxUpgraded</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Checks if this weapon is already fully upgraded.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setCoolDown(float)" class="member-name-link">setCoolDown</a><wbr>(float&nbsp;coolDown)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setBaseAttack(int)" class="member-name-link">setBaseAttack</a><wbr>(int&nbsp;attack)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Set the entity's hit cooldown (seconds)</div>
+<div class="block">Sets the base attack damage (before multipliers).</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setCoolDown(float)" class="member-name-link">setCoolDown</a><wbr>(float&nbsp;coolDown)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Sets the cooldown time between attacks.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setDamageMultiplier(float)" class="member-name-link">setDamageMultiplier</a><wbr>(float&nbsp;multiplier)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Sets the damage multiplier for this weapon.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setDisableDamage(boolean)" class="member-name-link">setDisableDamage</a><wbr>(boolean&nbsp;status)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Sets whether the player can receive any damage.</div>
+<div class="block">Enables or disables damage output for this weapon.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setProjectileTexturePath(java.lang.String)" class="member-name-link">setProjectileTexturePath</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;projectileTexturePath)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Sets the texture path for this weapon's projectile, if applicable.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#upgrade()" class="member-name-link">upgrade</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Upgrades the weapon</div>
+<div class="block">Upgrades this weapon to the next stage, if not already maxed out.</div>
 </div>
 </div>
 </div>
@@ -211,10 +229,10 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="&lt;init&gt;(com.csse3200.game.entities.configs.weapons.WeaponConfig)">
 <h3>WeaponsStatsComponent</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">WeaponsStatsComponent</span><wbr><span class="parameters">(<a href="../entities/configs/weapons/WeaponConfig.html" title="class in com.csse3200.game.entities.configs.weapons">WeaponConfig</a>&nbsp;config)</span></div>
-<div class="block">Construct a Weapons Stats Component (Attack System)</div>
+<div class="block">Constructs a <code>WeaponsStatsComponent</code> from a weapon configuration.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>config</code> - attack damage (must be <code>&gt;= 0</code>)</dd>
+<dd><code>config</code> - the weapon configuration (must specify non-negative damage)</dd>
 </dl>
 </section>
 </li>
@@ -222,6 +240,11 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="&lt;init&gt;(int)">
 <h3>WeaponsStatsComponent</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">WeaponsStatsComponent</span><wbr><span class="parameters">(int&nbsp;baseAttack)</span></div>
+<div class="block">Constructs a <code>WeaponsStatsComponent</code> with a base attack value.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>baseAttack</code> - the initial base attack damage (must be <code>&gt;= 0</code>)</dd>
+</dl>
 </section>
 </li>
 </ul>
@@ -236,10 +259,10 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="setCoolDown(float)">
 <h3>setCoolDown</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setCoolDown</span><wbr><span class="parameters">(float&nbsp;coolDown)</span></div>
-<div class="block">Set the entity's hit cooldown (seconds)</div>
+<div class="block">Sets the cooldown time between attacks.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>coolDown</code> - coolDown</dd>
+<dd><code>coolDown</code> - cooldown in seconds (clamped to minimum 0)</dd>
 </dl>
 </section>
 </li>
@@ -247,17 +270,26 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="getCoolDown()">
 <h3>getCoolDown</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">getCoolDown</span>()</div>
-<div class="block">gets the entity's cooldown between attacks (seconds).</div>
+<div class="block">Gets the cooldown time between attacks.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>cooldown in seconds</dd>
+</dl>
 </section>
 </li>
 <li>
 <section class="detail" id="getBaseAttack()">
 <h3>getBaseAttack</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">getBaseAttack</span>()</div>
-<div class="block">Returns the entity's base attack damage.</div>
+<div class="block">Gets the current effective attack damage for this weapon.
+ <p>
+ The effective damage is calculated as:
+ <code>baseAttack × damageMultiplier</code>.
+ </p>
+ The value is clamped to the range of an <code>int</code>.</div>
 <dl class="notes">
 <dt>Returns:</dt>
-<dd>base attack damage</dd>
+<dd>effective attack damage</dd>
 </dl>
 </section>
 </li>
@@ -265,10 +297,10 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="setBaseAttack(int)">
 <h3>setBaseAttack</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setBaseAttack</span><wbr><span class="parameters">(int&nbsp;attack)</span></div>
-<div class="block">Sets the entity's attack damage. Attack damage has a minimum bound of 0.</div>
+<div class="block">Sets the base attack damage (before multipliers).</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>attack</code> - Attack damage</dd>
+<dd><code>attack</code> - base attack damage (must be <code>&gt;= 0</code>)</dd>
 </dl>
 </section>
 </li>
@@ -276,22 +308,32 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="setProjectileTexturePath(java.lang.String)">
 <h3>setProjectileTexturePath</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setProjectileTexturePath</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;projectileTexturePath)</span></div>
+<div class="block">Sets the texture path for this weapon's projectile, if applicable.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>projectileTexturePath</code> - path to the projectile texture</dd>
+</dl>
 </section>
 </li>
 <li>
 <section class="detail" id="getProjectileTexturePath()">
 <h3>getProjectileTexturePath</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">getProjectileTexturePath</span>()</div>
+<div class="block">Gets the texture path for this weapon's projectile, if applicable.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>projectile texture path, or <code>null</code> if none</dd>
+</dl>
 </section>
 </li>
 <li>
 <section class="detail" id="getUpgradeStage()">
 <h3>getUpgradeStage</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">getUpgradeStage</span>()</div>
-<div class="block">Gets the current upgrade stage</div>
+<div class="block">Gets the current upgrade stage.</div>
 <dl class="notes">
 <dt>Returns:</dt>
-<dd>the upgrades stage</dd>
+<dd>current upgrade stage (starts at 1)</dd>
 </dl>
 </section>
 </li>
@@ -299,10 +341,10 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="getMaxUpgradeStage()">
 <h3>getMaxUpgradeStage</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">getMaxUpgradeStage</span>()</div>
-<div class="block">Gets the max upgrades stage</div>
+<div class="block">Gets the maximum upgrade stage.</div>
 <dl class="notes">
 <dt>Returns:</dt>
-<dd>the max upgrades stage</dd>
+<dd>maximum upgrade stage</dd>
 </dl>
 </section>
 </li>
@@ -310,10 +352,10 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="isMaxUpgraded()">
 <h3>isMaxUpgraded</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isMaxUpgraded</span>()</div>
-<div class="block">Checks if the weapon is already max upgraded</div>
+<div class="block">Checks if this weapon is already fully upgraded.</div>
 <dl class="notes">
 <dt>Returns:</dt>
-<dd>if the weapon is already max upgraded</dd>
+<dd><code>true</code> if the upgrade stage is at maximum, <code>false</code> otherwise</dd>
 </dl>
 </section>
 </li>
@@ -321,18 +363,49 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="upgrade()">
 <h3>upgrade</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">upgrade</span>()</div>
-<div class="block">Upgrades the weapon</div>
+<div class="block">Upgrades this weapon to the next stage, if not already maxed out.
+ <p>
+ Each upgrade doubles the base attack damage.
+ </p></div>
 </section>
 </li>
 <li>
 <section class="detail" id="setDisableDamage(boolean)">
 <h3>setDisableDamage</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setDisableDamage</span><wbr><span class="parameters">(boolean&nbsp;status)</span></div>
-<div class="block">Sets whether the player can receive any damage. True means no damage received
- and false means damage can be received.</div>
+<div class="block">Enables or disables damage output for this weapon.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>status</code> - Status of whether entity can be damaged</dd>
+<dd><code>status</code> - <code>true</code> to disable damage, <code>false</code> to allow damage</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="setDamageMultiplier(float)">
+<h3>setDamageMultiplier</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setDamageMultiplier</span><wbr><span class="parameters">(float&nbsp;multiplier)</span></div>
+<div class="block">Sets the damage multiplier for this weapon.
+
+ <p>The multiplier must be non-negative and finite. For example:</p>
+ <ul>
+   <li><code>1.0</code> = normal damage (default)</li>
+   <li><code>2.0</code> = double damage</li>
+   <li><code>0.5</code> = half damage</li>
+ </ul></div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>multiplier</code> - the new damage multiplier</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getDamageMultiplier()">
+<h3>getDamageMultiplier</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">getDamageMultiplier</span>()</div>
+<div class="block">Gets the current damage multiplier applied to this weapon.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>current damage multiplier (default <code>1.0</code>)</dd>
 </dl>
 </section>
 </li>
