@@ -69,7 +69,6 @@ public class KeyboardPlayerInputComponent extends InputComponent {
         entity.getEvents().trigger("anim");
         return true;
       case Keys.E:
-        System.out.println("PRESSED E");
         triggerInteract();
         return true;
       default:
