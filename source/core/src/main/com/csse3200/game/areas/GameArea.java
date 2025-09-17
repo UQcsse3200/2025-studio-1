@@ -44,11 +44,15 @@ public abstract class GameArea implements Disposable {
   /** Prevents re-entrant room transitions across areas */
   protected static boolean isTransitioning = false;
 
+
+  private final float VERTICAL_HEIGHT_OFFSET = 9.375f;
+
   private static final String deepSpin = "DeepSpin";
   private static final String ghostGpt = "GhostGPT";
   private static final String vroomba = "Vroomba";
   private static final String grokDroid = "GrokDroid";
   private static final String turret = "Turret";
+
 
   protected EnemyWaves wavesManager; // manage waves via terminal command
   protected static int roomNumber = 1;
@@ -482,8 +486,8 @@ public abstract class GameArea implements Disposable {
     float viewHeight = cam.viewportHeight;
     float leftX = camPos.x - viewWidth / 2f;
     float rightX = camPos.x + viewWidth / 2f;
-    float bottomY = camPos.y - viewHeight / 2f;
-    float topY = camPos.y + viewHeight / 2f;
+    float bottomY = camPos.y - VERTICAL_HEIGHT_OFFSET / 2f;
+    float topY = camPos.y + VERTICAL_HEIGHT_OFFSET / 2f;
     return new Bounds(leftX, rightX, bottomY, topY, viewWidth, viewHeight, camPos);
   }
 
