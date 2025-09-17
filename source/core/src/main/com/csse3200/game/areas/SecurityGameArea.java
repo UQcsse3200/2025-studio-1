@@ -130,10 +130,12 @@ public class SecurityGameArea extends GameArea {
     spawnEntityAt(deepspin, new GridPoint2(22, 12), true, false);
   }
   private void loadBackToFloor5() {
+      roomNumber--;
     clearAndLoad(() -> new MainHall(terrainFactory, cameraComponent));
   }
 
   private void loadOffice() {
+      roomNumber++;
     clearAndLoad(() -> new OfficeGameArea(terrainFactory, cameraComponent));
   }
 

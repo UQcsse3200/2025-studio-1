@@ -2,17 +2,23 @@ package com.csse3200.game.entities.factories.items;
 
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.csse3200.game.components.MagazineComponent;
+import com.csse3200.game.components.attachments.BulletEnhancerComponent;
 import com.csse3200.game.components.items.ItemHoldComponent;
 import com.csse3200.game.components.items.MeleeUseComponent;
 import com.csse3200.game.components.items.RangedUseComponent;
 import com.csse3200.game.components.WeaponsStatsComponent;
+import com.csse3200.game.components.attachments.LaserComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.components.items.ItemComponent;
 import com.csse3200.game.entities.configs.ItemTypes;
 import com.csse3200.game.entities.configs.Weapons;
 import com.csse3200.game.entities.configs.weapons.RangedWeaponConfig;
+import com.csse3200.game.entities.configs.weapons.RifleConfig;
 import com.csse3200.game.entities.configs.weapons.WeaponConfig;
 import com.csse3200.game.rendering.AnimationRenderComponent;
+import com.csse3200.game.rendering.TextureRenderComponent;
+import com.csse3200.game.rendering.TextureRenderWithRotationComponent;
 
 /**
  * Factory to create non-playable character (NPC) entities with predefined components.
@@ -42,29 +48,32 @@ public class WeaponsFactory {
         Entity weapon = ItemFactory.createItem(config.texturePath);
         weapon.addComponent(new WeaponsStatsComponent(config));
         WeaponsStatsComponent weaponStats = weapon.getComponent(WeaponsStatsComponent.class);
+        weaponStats.setCoolDown(0.2f);
+
 
         ItemComponent item = weapon.getComponent(ItemComponent.class);
 
         // Attach type to weapon
         switch (config.weaponType) {
             case RANGED:
-                RangedWeaponConfig rangedConfig = (RangedWeaponConfig) config;
-                weapon.addComponent(new RangedUseComponent());
-
                 item.setType(ItemTypes.RANGED);
-                weaponStats.setProjectileTexturePath(rangedConfig.projectileTexturePath);
+                weapon.addComponent(new MagazineComponent(20));
+                // using TextureRenderWithRotationComponent to allow guns to follow cursor
+                weapon.addComponent(new TextureRenderWithRotationComponent(config.texturePath));
+                weapon.getComponent(TextureRenderComponent.class).disableComponent();
+                if (weaponType.getConfig() instanceof RifleConfig) {
+                    weapon.addComponent(new LaserComponent());
+                    weapon.addComponent(new BulletEnhancerComponent());
+                }
                 break;
-
             case MELEE:
                 item.setType(ItemTypes.MELEE);
-                weapon.addComponent(new MeleeUseComponent());
+                weapon.getComponent(TextureRenderComponent.class).disableComponent();
                 break;
-
             default:
                 item.setType(ItemTypes.NONE);
                 break;
         }
-        weapon.create();
         return weapon;
     }
 
