@@ -44,6 +44,8 @@ public class Terminal extends Component {
         addCommand("waves", new WavesCommand());
         addCommand("damageMultiplier", new DamageMultiplierCommand());
         addCommand("pickupAll", new PickupAllCommand());
+        addCommand("doorOverride", new DoorOverrideCommand());
+//        addCommand("teleport", new TeleportCommand());
 
         // Initial index build
         rebuildAutocompleteIndex();
