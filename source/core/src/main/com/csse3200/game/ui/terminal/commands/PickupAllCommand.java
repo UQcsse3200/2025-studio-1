@@ -29,7 +29,15 @@ public class PickupAllCommand implements Command {
     }
 
     private Entity findPlayer() {
-        Array<Entity> entities = ServiceLocator.getEntityService().getEntities();
+        var es = ServiceLocator.getEntityService();
+        if (es == null) {
+            logger.debug("pickupAll: no EntityService registered");
+            return null;
+        }
+
+        Array<Entity> entities = es.getEntities();
+        if (entities == null) return null;
+
         for (Entity e : entities) {
             if (e.getComponent(KeyboardPlayerInputComponent.class) != null) {
                 return e;
