@@ -154,40 +154,51 @@ public class RadixTrie {
         if (prefix == null) prefix = "";
         Node node = root;
         String rem = prefix;
+        String built = "";
+
+        // --- walk to prefix location (same logic as yours) ---
         while (!rem.isEmpty()) {
             char c0 = rem.charAt(0);
             List<Edge> bucket = node.children.get(c0);
             if (bucket == null || bucket.isEmpty()) return Collections.emptyList();
 
-            // lower_bound style: binary search by label
             int idx = lowerBound(bucket, rem);
             boolean advanced = false;
-            // check idx and neighbors for LCP progress
+
             for (int j = Math.max(0, idx - 1); j <= Math.min(bucket.size() - 1, idx + 1); j++) {
                 Edge e = bucket.get(j);
                 int lcp = lcpLen(rem, e.label);
                 if (lcp == 0) continue;
+
                 if (lcp < rem.length()) {
                     if (lcp == e.label.length()) {
-                        // edge fully consumed; go down
+                        // edge fully consumed; descend
                         node = e.next;
+                        built += e.label;
                         rem = rem.substring(lcp);
                         advanced = true;
                         break;
                     } else {
-                        // prefix falls inside this edge: no deeper node yet
-                        return e.next.topK.isEmpty() ? Collections.emptyList()
-                                : new ArrayList<>(e.next.topK);
+                        // inside the edge: completions are under e.next
+                        node = e.next;
+                        built += e.label;
+                        rem = "";
+                        advanced = true;
+                        break;
                     }
                 } else {
                     // whole prefix consumed on/within this edge
                     if (lcp < e.label.length()) {
                         // inside the edge
-                        return e.next.topK.isEmpty() ? Collections.emptyList()
-                                : new ArrayList<>(e.next.topK);
-                    } else {
-                        // exactly at the node below
                         node = e.next;
+                        built += e.label;
+                        rem = "";
+                        advanced = true;
+                        break;
+                    } else {
+                        // exactly at child node
+                        node = e.next;
+                        built += e.label;
                         rem = "";
                         advanced = true;
                         break;
@@ -196,7 +207,64 @@ public class RadixTrie {
             }
             if (!advanced) return Collections.emptyList();
         }
-        return new ArrayList<>(node.topK);
+
+        // --- deterministic lexicographic DFS from `node`, capped at 5 ---
+        final int K = 5;
+        ArrayList<String> out = new ArrayList<>(K);
+
+        // include exact word first if node is terminal and we ended at a node boundary
+        if (node.terminal) {
+            // If prefix ended mid-edge we already advanced into that child above;
+            // so here it's safe to add the built word.
+            out.add(built);
+            if (out.size() == K) return out;
+        }
+
+        // prepare stack: push children in reverse lexicographic order so pop yields lex order
+        java.util.Deque<Object[]> stack = new java.util.ArrayDeque<>();
+
+        // ensure each bucket is sorted by edge label
+        for (java.util.Map.Entry<Character, java.util.List<Edge>> en : node.children.entrySet()) {
+            en.getValue().sort(java.util.Comparator.comparing(e -> e.label));
+        }
+        java.util.List<Character> keys = new java.util.ArrayList<>(node.children.keySet());
+        java.util.Collections.sort(keys);
+        java.util.Collections.reverse(keys);
+        for (char k : keys) {
+            java.util.List<Edge> edges = node.children.get(k);
+            java.util.List<Edge> copy = new java.util.ArrayList<>(edges);
+            java.util.Collections.reverse(copy); // since already sorted asc, reverse to push
+            for (Edge e : copy) {
+                stack.push(new Object[]{ e.next, built + e.label });
+            }
+        }
+
+        while (!stack.isEmpty() && out.size() < K) {
+            Object[] fr = stack.pop();
+            Node cur = (Node) fr[0];
+            String word = (String) fr[1];
+
+            if (cur.terminal) {
+                out.add(word);
+                if (out.size() == K) break;
+            }
+            // push cur's children (same reverse-lex trick)
+            for (java.util.Map.Entry<Character, java.util.List<Edge>> en : cur.children.entrySet()) {
+                en.getValue().sort(java.util.Comparator.comparing(e -> e.label));
+            }
+            java.util.List<Character> ks = new java.util.ArrayList<>(cur.children.keySet());
+            java.util.Collections.sort(ks);
+            java.util.Collections.reverse(ks);
+            for (char k : ks) {
+                java.util.List<Edge> edges = cur.children.get(k);
+                java.util.List<Edge> copy = new java.util.ArrayList<>(edges);
+                java.util.Collections.reverse(copy);
+                for (Edge e : copy) {
+                    stack.push(new Object[]{ e.next, word + e.label });
+                }
+            }
+        }
+        return out;
     }
 
     // --- helpers ---
