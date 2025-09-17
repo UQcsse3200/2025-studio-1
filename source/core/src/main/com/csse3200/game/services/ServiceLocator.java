@@ -1,6 +1,7 @@
 package com.csse3200.game.services;
 
 import com.csse3200.game.areas.GameArea;
+import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
 import com.csse3200.game.events.EventHandler;
 import com.csse3200.game.input.InputService;
@@ -26,6 +27,12 @@ public class ServiceLocator {
   private static InputService inputService;
   private static ResourceService resourceService;
   private static GameArea gameArea;
+  private static Entity player;
+
+  public static Entity getPlayer() {
+    return player;
+  }
+  private static volatile boolean transitioning = false;
 
   public static EntityService getEntityService() {
     return entityService;
@@ -52,11 +59,18 @@ public class ServiceLocator {
   }
 
   public static GameArea getGameArea() {return gameArea;}
+  public static boolean isTransitioning() { return transitioning; }
+  public static void setTransitioning(boolean value) { transitioning = value; }
 
   public static void registerGameArea(GameArea theArea) {
     logger.debug("Registering game area service {}", theArea);
     gameArea = theArea;
   }
+
+  public static void registerPlayer(Entity person) {
+    player = person;
+  }
+
   public static void registerEntityService(EntityService service) {
     logger.debug("Registering entity service {}", service);
     entityService = service;
