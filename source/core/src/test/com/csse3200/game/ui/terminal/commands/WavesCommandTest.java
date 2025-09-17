@@ -40,6 +40,7 @@ class WavesCommandTest {
     public StubGameArea() { super(null, null); }
     @Override public void create() { /* not needed */ }
     @Override public void startWaves(Entity player) { this.playerPassed = player; calls++; }
+    @Override public Entity getPlayer() { return null; }
   }
 
   /**
