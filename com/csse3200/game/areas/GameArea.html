@@ -351,6 +351,16 @@ implements com.badlogic.gdx.utils.Disposable</span></div>
 <div class="block">Adds GrokDroid enemies onto the map.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#spawnItem(com.csse3200.game.entities.Entity,com.badlogic.gdx.math.GridPoint2)" class="member-name-link">spawnItem</a><wbr>(<a href="../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a>&nbsp;item,
+ com.badlogic.gdx.math.GridPoint2&nbsp;position)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#spawnObjectDoors(com.badlogic.gdx.math.GridPoint2,com.badlogic.gdx.math.GridPoint2)" class="member-name-link">spawnObjectDoors</a><wbr>(com.badlogic.gdx.math.GridPoint2&nbsp;leftDoorPos,
+ com.badlogic.gdx.math.GridPoint2&nbsp;rightDoorPos)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Spawns decorative object doors (non-functional) at given positions.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#spawnTurret(int,float,com.csse3200.game.entities.Entity,java.util.Map)" class="member-name-link">spawnTurret</a><wbr>(int&nbsp;total,
  float&nbsp;scaleFactor,
  <a href="../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a>&nbsp;player,
@@ -794,6 +804,26 @@ implements com.badlogic.gdx.utils.Disposable</span></div>
 <h3>clearAndLoad</h3>
 <div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">clearAndLoad</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;<a href="GameArea.html" title="class in com.csse3200.game.areas">GameArea</a>&gt;&nbsp;nextAreaSupplier)</span></div>
 <div class="block">Helper to clear current entities and transition to a new area.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="spawnObjectDoors(com.badlogic.gdx.math.GridPoint2,com.badlogic.gdx.math.GridPoint2)">
+<h3>spawnObjectDoors</h3>
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">spawnObjectDoors</span><wbr><span class="parameters">(com.badlogic.gdx.math.GridPoint2&nbsp;leftDoorPos,
+ com.badlogic.gdx.math.GridPoint2&nbsp;rightDoorPos)</span></div>
+<div class="block">Spawns decorative object doors (non-functional) at given positions.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>leftDoorPos</code> - grid position for the left/bottom decorative door</dd>
+<dd><code>rightDoorPos</code> - grid position for the right/top decorative door</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="spawnItem(com.csse3200.game.entities.Entity,com.badlogic.gdx.math.GridPoint2)">
+<h3>spawnItem</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">spawnItem</span><wbr><span class="parameters">(<a href="../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a>&nbsp;item,
+ com.badlogic.gdx.math.GridPoint2&nbsp;position)</span></div>
 </section>
 </li>
 </ul>

@@ -821,11 +821,26 @@ loadScripts(document, 'script');</script>
 <div class="block">The create function for the Server Room.</div>
 </dd>
 <dt><a href="com/csse3200/game/areas/ShippingGameArea.html#create()" class="member-name-link">create()</a> - Method in class com.csse3200.game.areas.<a href="com/csse3200/game/areas/ShippingGameArea.html" title="class in com.csse3200.game.areas">ShippingGameArea</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Create the game area, including terrain, static entities (trees), dynamic entities (player)
+ Entry point for this room.</div>
+</dd>
 <dt><a href="com/csse3200/game/areas/StorageGameArea.html#create()" class="member-name-link">create()</a> - Method in class com.csse3200.game.areas.<a href="com/csse3200/game/areas/StorageGameArea.html" title="class in com.csse3200.game.areas">StorageGameArea</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Create the game area, including terrain, static entities (platforms), dynamic entities (player)
+ Entry point for this room.</div>
+</dd>
 <dt><a href="com/csse3200/game/areas/TunnelGameArea.html#create()" class="member-name-link">create()</a> - Method in class com.csse3200.game.areas.<a href="com/csse3200/game/areas/TunnelGameArea.html" title="class in com.csse3200.game.areas">TunnelGameArea</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Creates the tunnel room with the following steps:
+ - Loads background with GenericLayout methods
+ - spawns the borders and doors
+ - spawns the player in and
+ - spawns the platforms and spawn pads
+ - spawns 2 grok droids as enemies
+ - spawns the floor overlay
+ - spawns items using the ItemSpawner and the tunnelmap configuration</div>
+</dd>
 <dt><a href="com/csse3200/game/components/attachments/BulletEnhancerComponent.html#create()" class="member-name-link">create()</a> - Method in class com.csse3200.game.components.attachments.<a href="com/csse3200/game/components/attachments/BulletEnhancerComponent.html" title="class in com.csse3200.game.components.attachments">BulletEnhancerComponent</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/components/boss/AttackProtectionComponent.html#create()" class="member-name-link">create()</a> - Method in class com.csse3200.game.components.boss.<a href="com/csse3200/game/components/boss/AttackProtectionComponent.html" title="class in com.csse3200.game.components.boss">AttackProtectionComponent</a></dt>
@@ -1046,11 +1061,19 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">creating the help desk used in reception room</div>
 </dd>
+<dt><a href="com/csse3200/game/entities/factories/system/ObstacleFactory.html#createDoor()" class="member-name-link">createDoor()</a> - Static method in class com.csse3200.game.entities.factories.system.<a href="com/csse3200/game/entities/factories/system/ObstacleFactory.html" title="class in com.csse3200.game.entities.factories.system">ObstacleFactory</a></dt>
+<dd>
+<div class="block">Makes a static door, no collision so that the player can pass through.</div>
+</dd>
 <dt><a href="com/csse3200/game/entities/factories/DoorFactory.html#createDoor(float,float,java.lang.Runnable)" class="member-name-link">createDoor(float, float, Runnable)</a> - Static method in class com.csse3200.game.entities.factories.<a href="com/csse3200/game/entities/factories/DoorFactory.html" title="class in com.csse3200.game.entities.factories">DoorFactory</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/entities/factories/system/ObstacleFactory.html#createDoorTrigger(float,float)" class="member-name-link">createDoorTrigger(float, float)</a> - Static method in class com.csse3200.game.entities.factories.system.<a href="com/csse3200/game/entities/factories/system/ObstacleFactory.html" title="class in com.csse3200.game.entities.factories.system">ObstacleFactory</a></dt>
 <dd>
 <div class="block">Thin trigger line used for doors/exits.</div>
+</dd>
+<dt><a href="com/csse3200/game/entities/factories/system/ObstacleFactory.html#createElevatorPlatform()" class="member-name-link">createElevatorPlatform()</a> - Static method in class com.csse3200.game.entities.factories.system.<a href="com/csse3200/game/entities/factories/system/ObstacleFactory.html" title="class in com.csse3200.game.entities.factories.system">ObstacleFactory</a></dt>
+<dd>
+<div class="block">creating the platform for Elevator area</div>
 </dd>
 <dt><a href="com/csse3200/game/entities/factories/ProjectileFactory.html#createEnemyLaserProjectile(com.badlogic.gdx.math.Vector2,com.csse3200.game.components.WeaponsStatsComponent)" class="member-name-link">createEnemyLaserProjectile(Vector2, WeaponsStatsComponent)</a> - Static method in class com.csse3200.game.entities.factories.<a href="com/csse3200/game/entities/factories/ProjectileFactory.html" title="class in com.csse3200.game.entities.factories">ProjectileFactory</a></dt>
 <dd>
@@ -1108,12 +1131,18 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/entities/factories/KeycardFactory.html#createKeycard(int)" class="member-name-link">createKeycard(int)</a> - Static method in class com.csse3200.game.entities.factories.<a href="com/csse3200/game/entities/factories/KeycardFactory.html" title="class in com.csse3200.game.entities.factories">KeycardFactory</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/entities/factories/system/ObstacleFactory.html#createLaboratory()" class="member-name-link">createLaboratory()</a> - Static method in class com.csse3200.game.entities.factories.system.<a href="com/csse3200/game/entities/factories/system/ObstacleFactory.html" title="class in com.csse3200.game.entities.factories.system">ObstacleFactory</a></dt>
+<dd>
+<div class="block">Creates a laboratory main station entity with collision.</div>
+</dd>
 <dt><a href="com/csse3200/game/entities/factories/system/ObstacleFactory.html#createLargeEnergyPod()" class="member-name-link">createLargeEnergyPod()</a> - Static method in class com.csse3200.game.entities.factories.system.<a href="com/csse3200/game/entities/factories/system/ObstacleFactory.html" title="class in com.csse3200.game.entities.factories.system">ObstacleFactory</a></dt>
 <dd>
 <div class="block">Glowing energy pod that acts as a solid prop on the floor.</div>
 </dd>
 <dt><a href="com/csse3200/game/entities/factories/system/ObstacleFactory.html#createLargeSecurityCamera()" class="member-name-link">createLargeSecurityCamera()</a> - Static method in class com.csse3200.game.entities.factories.system.<a href="com/csse3200/game/entities/factories/system/ObstacleFactory.html" title="class in com.csse3200.game.entities.factories.system">ObstacleFactory</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Creates a large security camera entity.</div>
+</dd>
 <dt><a href="com/csse3200/game/entities/factories/system/ObstacleFactory.html#createLongFloor()" class="member-name-link">createLongFloor()</a> - Static method in class com.csse3200.game.entities.factories.system.<a href="com/csse3200/game/entities/factories/system/ObstacleFactory.html" title="class in com.csse3200.game.entities.factories.system">ObstacleFactory</a></dt>
 <dd>
 <div class="block">Long, thin floor piece for platforms/walkways.</div>
@@ -1122,11 +1151,31 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Creates a Marble Platform for Fancy Rooms</div>
 </dd>
+<dt><a href="com/csse3200/game/entities/factories/system/ObstacleFactory.html#createMhall_holo()" class="member-name-link">createMhall_holo()</a> - Static method in class com.csse3200.game.entities.factories.system.<a href="com/csse3200/game/entities/factories/system/ObstacleFactory.html" title="class in com.csse3200.game.entities.factories.system">ObstacleFactory</a></dt>
+<dd>
+<div class="block">creates a holographic decoration for main hall</div>
+</dd>
+<dt><a href="com/csse3200/game/entities/factories/system/ObstacleFactory.html#createMhall_screen()" class="member-name-link">createMhall_screen()</a> - Static method in class com.csse3200.game.entities.factories.system.<a href="com/csse3200/game/entities/factories/system/ObstacleFactory.html" title="class in com.csse3200.game.entities.factories.system">ObstacleFactory</a></dt>
+<dd>
+<div class="block">creates a screen decoration for main hall</div>
+</dd>
+<dt><a href="com/csse3200/game/entities/factories/system/ObstacleFactory.html#createMhall_sofa()" class="member-name-link">createMhall_sofa()</a> - Static method in class com.csse3200.game.entities.factories.system.<a href="com/csse3200/game/entities/factories/system/ObstacleFactory.html" title="class in com.csse3200.game.entities.factories.system">ObstacleFactory</a></dt>
+<dd>
+<div class="block">creates Sofa in bottom left in main hall</div>
+</dd>
+<dt><a href="com/csse3200/game/entities/factories/system/ObstacleFactory.html#createMicroscope()" class="member-name-link">createMicroscope()</a> - Static method in class com.csse3200.game.entities.factories.system.<a href="com/csse3200/game/entities/factories/system/ObstacleFactory.html" title="class in com.csse3200.game.entities.factories.system">ObstacleFactory</a></dt>
+<dd>
+<div class="block">Creates a microscope entity with collision.</div>
+</dd>
 <dt><a href="com/csse3200/game/entities/factories/characters/BossFactory.html#createMissle(com.badlogic.gdx.math.Vector2)" class="member-name-link">createMissle(Vector2)</a> - Static method in class com.csse3200.game.entities.factories.characters.<a href="com/csse3200/game/entities/factories/characters/BossFactory.html" title="class in com.csse3200.game.entities.factories.characters">BossFactory</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/entities/factories/system/ObstacleFactory.html#createOfficeDesk()" class="member-name-link">createOfficeDesk()</a> - Static method in class com.csse3200.game.entities.factories.system.<a href="com/csse3200/game/entities/factories/system/ObstacleFactory.html" title="class in com.csse3200.game.entities.factories.system">ObstacleFactory</a></dt>
 <dd>
 <div class="block">Front-facing office desk placed on the thin floor.</div>
+</dd>
+<dt><a href="com/csse3200/game/entities/factories/system/ObstacleFactory.html#createOfficeElevatorPlatform()" class="member-name-link">createOfficeElevatorPlatform()</a> - Static method in class com.csse3200.game.entities.factories.system.<a href="com/csse3200/game/entities/factories/system/ObstacleFactory.html" title="class in com.csse3200.game.entities.factories.system">ObstacleFactory</a></dt>
+<dd>
+<div class="block">creating the platform for Office area</div>
 </dd>
 <dt><a href="com/csse3200/game/entities/factories/ProjectileFactory.html#createPistolBullet(com.csse3200.game.components.WeaponsStatsComponent)" class="member-name-link">createPistolBullet(WeaponsStatsComponent)</a> - Static method in class com.csse3200.game.entities.factories.<a href="com/csse3200/game/entities/factories/ProjectileFactory.html" title="class in com.csse3200.game.entities.factories">ProjectileFactory</a></dt>
 <dd>
@@ -1135,6 +1184,10 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/csse3200/game/entities/factories/system/ObstacleFactory.html#createplatform2()" class="member-name-link">createplatform2()</a> - Static method in class com.csse3200.game.entities.factories.system.<a href="com/csse3200/game/entities/factories/system/ObstacleFactory.html" title="class in com.csse3200.game.entities.factories.system">ObstacleFactory</a></dt>
 <dd>
 <div class="block">creating the platform used in reception room</div>
+</dd>
+<dt><a href="com/csse3200/game/entities/factories/system/ObstacleFactory.html#createplatform3()" class="member-name-link">createplatform3()</a> - Static method in class com.csse3200.game.entities.factories.system.<a href="com/csse3200/game/entities/factories/system/ObstacleFactory.html" title="class in com.csse3200.game.entities.factories.system">ObstacleFactory</a></dt>
+<dd>
+<div class="block">Creates a bit bigger platforms for Main hall</div>
 </dd>
 <dt><a href="com/csse3200/game/entities/factories/characters/PlayerFactory.html#createPlayer()" class="member-name-link">createPlayer()</a> - Static method in class com.csse3200.game.entities.factories.characters.<a href="com/csse3200/game/entities/factories/characters/PlayerFactory.html" title="class in com.csse3200.game.entities.factories.characters">PlayerFactory</a></dt>
 <dd>
@@ -1162,13 +1215,23 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/csse3200/game/entities/factories/PowerupsFactory.html#createRapidFire()" class="member-name-link">createRapidFire()</a> - Static method in class com.csse3200.game.entities.factories.<a href="com/csse3200/game/entities/factories/PowerupsFactory.html" title="class in com.csse3200.game.entities.factories">PowerupsFactory</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/entities/factories/system/ObstacleFactory.html#createRedLight()" class="member-name-link">createRedLight()</a> - Static method in class com.csse3200.game.entities.factories.system.<a href="com/csse3200/game/entities/factories/system/ObstacleFactory.html" title="class in com.csse3200.game.entities.factories.system">ObstacleFactory</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Creates a red security light entity.</div>
+</dd>
 <dt><a href="com/csse3200/game/entities/factories/system/ObstacleFactory.html#createRedSpawnPad()" class="member-name-link">createRedSpawnPad()</a> - Static method in class com.csse3200.game.entities.factories.system.<a href="com/csse3200/game/entities/factories/system/ObstacleFactory.html" title="class in com.csse3200.game.entities.factories.system">ObstacleFactory</a></dt>
 <dd>
 <div class="block">Red spawn pad prop.</div>
 </dd>
 <dt><a href="com/csse3200/game/entities/factories/system/RenderFactory.html#createRenderer()" class="member-name-link">createRenderer()</a> - Static method in class com.csse3200.game.entities.factories.system.<a href="com/csse3200/game/entities/factories/system/RenderFactory.html" title="class in com.csse3200.game.entities.factories.system">RenderFactory</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/entities/factories/system/ObstacleFactory.html#createResearchDesk()" class="member-name-link">createResearchDesk()</a> - Static method in class com.csse3200.game.entities.factories.system.<a href="com/csse3200/game/entities/factories/system/ObstacleFactory.html" title="class in com.csse3200.game.entities.factories.system">ObstacleFactory</a></dt>
+<dd>
+<div class="block">Creates a research desk entity with collision.</div>
+</dd>
+<dt><a href="com/csse3200/game/entities/factories/system/ObstacleFactory.html#createResearchPod()" class="member-name-link">createResearchPod()</a> - Static method in class com.csse3200.game.entities.factories.system.<a href="com/csse3200/game/entities/factories/system/ObstacleFactory.html" title="class in com.csse3200.game.entities.factories.system">ObstacleFactory</a></dt>
+<dd>
+<div class="block">Creates a research pod entity with collision.</div>
+</dd>
 <dt><a href="com/csse3200/game/entities/factories/characters/BossFactory.html#createRobot(com.csse3200.game.entities.Entity)" class="member-name-link">createRobot(Entity)</a> - Static method in class com.csse3200.game.entities.factories.characters.<a href="com/csse3200/game/entities/factories/characters/BossFactory.html" title="class in com.csse3200.game.entities.factories.characters">BossFactory</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/entities/factories/characters/NPCFactory.html#createRobot(com.csse3200.game.entities.Entity)" class="member-name-link">createRobot(Entity)</a> - Static method in class com.csse3200.game.entities.factories.characters.<a href="com/csse3200/game/entities/factories/characters/NPCFactory.html" title="class in com.csse3200.game.entities.factories.characters">NPCFactory</a></dt>
@@ -1180,11 +1243,17 @@ loadScripts(document, 'script');</script>
 <div class="block">Create Robot with cocoon spawning capability (enhanced version)</div>
 </dd>
 <dt><a href="com/csse3200/game/entities/factories/system/ObstacleFactory.html#createSecurityMonitor()" class="member-name-link">createSecurityMonitor()</a> - Static method in class com.csse3200.game.entities.factories.system.<a href="com/csse3200/game/entities/factories/system/ObstacleFactory.html" title="class in com.csse3200.game.entities.factories.system">ObstacleFactory</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Creates a security monitor entity.</div>
+</dd>
 <dt><a href="com/csse3200/game/entities/factories/system/ObstacleFactory.html#createSecurityPlatform()" class="member-name-link">createSecurityPlatform()</a> - Static method in class com.csse3200.game.entities.factories.system.<a href="com/csse3200/game/entities/factories/system/ObstacleFactory.html" title="class in com.csse3200.game.entities.factories.system">ObstacleFactory</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Creates a security platform entity.</div>
+</dd>
 <dt><a href="com/csse3200/game/entities/factories/system/ObstacleFactory.html#createSecuritySystem()" class="member-name-link">createSecuritySystem()</a> - Static method in class com.csse3200.game.entities.factories.system.<a href="com/csse3200/game/entities/factories/system/ObstacleFactory.html" title="class in com.csse3200.game.entities.factories.system">ObstacleFactory</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Creates a security system console entity.</div>
+</dd>
 <dt><a href="com/csse3200/game/entities/factories/system/ObstacleFactory.html#createServerRack1()" class="member-name-link">createServerRack1()</a> - Static method in class com.csse3200.game.entities.factories.system.<a href="com/csse3200/game/entities/factories/system/ObstacleFactory.html" title="class in com.csse3200.game.entities.factories.system">ObstacleFactory</a></dt>
 <dd>
 <div class="block">Server rack (first variant, lighter colour).</div>
@@ -3262,6 +3331,8 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Builds common static props and triggers used by the level (trees, floors, desks, crates, etc.).</div>
 </dd>
+<dt><a href="com/csse3200/game/areas/terrain/TerrainFactory.TerrainType.html#OFFICE" class="member-name-link">OFFICE</a> - Enum constant in enum class com.csse3200.game.areas.terrain.<a href="com/csse3200/game/areas/terrain/TerrainFactory.TerrainType.html" title="enum class in com.csse3200.game.areas.terrain">TerrainFactory.TerrainType</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/areas/OfficeGameArea.html" class="type-name-link" title="class in com.csse3200.game.areas">OfficeGameArea</a> - Class in <a href="com/csse3200/game/areas/package-summary.html">com.csse3200.game.areas</a></dt>
 <dd>
 <div class="block">Office room: minimal walls and two doors (left--Security, right--Elevator).</div>
@@ -3810,12 +3881,18 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/physics/raycast/SingleHitCallback.html#reportRayFixture(com.badlogic.gdx.physics.box2d.Fixture,com.badlogic.gdx.math.Vector2,com.badlogic.gdx.math.Vector2,float)" class="member-name-link">reportRayFixture(Fixture, Vector2, Vector2, float)</a> - Method in class com.csse3200.game.physics.raycast.<a href="com/csse3200/game/physics/raycast/SingleHitCallback.html" title="class in com.csse3200.game.physics.raycast">SingleHitCallback</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/areas/terrain/TerrainFactory.TerrainType.html#RESEARCH_ROOM" class="member-name-link">RESEARCH_ROOM</a> - Enum constant in enum class com.csse3200.game.areas.terrain.<a href="com/csse3200/game/areas/terrain/TerrainFactory.TerrainType.html" title="enum class in com.csse3200.game.areas.terrain">TerrainFactory.TerrainType</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/areas/ResearchGameArea.html" class="type-name-link" title="class in com.csse3200.game.areas">ResearchGameArea</a> - Class in <a href="com/csse3200/game/areas/package-summary.html">com.csse3200.game.areas</a></dt>
 <dd>
-<div class="block">Research room: minimal walls and a left door back to Elevator.</div>
+<div class="block">Research room: futuristic laboratory with desks, pods, microscopes, and screens.</div>
 </dd>
 <dt><a href="com/csse3200/game/areas/ResearchGameArea.html#%3Cinit%3E(com.csse3200.game.areas.terrain.TerrainFactory,com.csse3200.game.components.CameraComponent)" class="member-name-link">ResearchGameArea(TerrainFactory, CameraComponent)</a> - Constructor for class com.csse3200.game.areas.<a href="com/csse3200/game/areas/ResearchGameArea.html" title="class in com.csse3200.game.areas">ResearchGameArea</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/entities/configs/ItemSpawnConfig.html#researchmap()" class="member-name-link">researchmap()</a> - Static method in class com.csse3200.game.entities.configs.<a href="com/csse3200/game/entities/configs/ItemSpawnConfig.html" title="class in com.csse3200.game.entities.configs">ItemSpawnConfig</a></dt>
+<dd>
+<div class="block">Research Room spawning.</div>
+</dd>
 <dt><a href="com/csse3200/game/rendering/Renderer.html#resize(int,int)" class="member-name-link">resize(int, int)</a> - Method in class com.csse3200.game.rendering.<a href="com/csse3200/game/rendering/Renderer.html" title="class in com.csse3200.game.rendering">Renderer</a></dt>
 <dd>
 <div class="block">Resize the renderer to a new screen size.</div>
@@ -3926,6 +4003,10 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/csse3200/game/areas/SecurityGameArea.html#%3Cinit%3E(com.csse3200.game.areas.terrain.TerrainFactory,com.csse3200.game.components.CameraComponent)" class="member-name-link">SecurityGameArea(TerrainFactory, CameraComponent)</a> - Constructor for class com.csse3200.game.areas.<a href="com/csse3200/game/areas/SecurityGameArea.html" title="class in com.csse3200.game.areas">SecurityGameArea</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/entities/configs/ItemSpawnConfig.html#securitymap()" class="member-name-link">securitymap()</a> - Static method in class com.csse3200.game.entities.configs.<a href="com/csse3200/game/entities/configs/ItemSpawnConfig.html" title="class in com.csse3200.game.entities.configs">ItemSpawnConfig</a></dt>
+<dd>
+<div class="block">Security Room spawning.</div>
+</dd>
 <dt><a href="com/csse3200/game/areas/terrain/TerrainFactory.TerrainType.html#SERVER_ROOM" class="member-name-link">SERVER_ROOM</a> - Enum constant in enum class com.csse3200.game.areas.terrain.<a href="com/csse3200/game/areas/terrain/TerrainFactory.TerrainType.html" title="enum class in com.csse3200.game.areas.terrain">TerrainFactory.TerrainType</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/areas/ServerGameArea.html" class="type-name-link" title="class in com.csse3200.game.areas">ServerGameArea</a> - Class in <a href="com/csse3200/game/areas/package-summary.html">com.csse3200.game.areas</a></dt>
@@ -4311,10 +4392,17 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/areas/ShippingGameArea.html" class="type-name-link" title="class in com.csse3200.game.areas">ShippingGameArea</a> - Class in <a href="com/csse3200/game/areas/package-summary.html">com.csse3200.game.areas</a></dt>
 <dd>
-<div class="block">Shipping Room</div>
+<div class="block">The "Shipping" area of the game map.</div>
 </dd>
 <dt><a href="com/csse3200/game/areas/ShippingGameArea.html#%3Cinit%3E(com.csse3200.game.areas.terrain.TerrainFactory,com.csse3200.game.components.CameraComponent)" class="member-name-link">ShippingGameArea(TerrainFactory, CameraComponent)</a> - Constructor for class com.csse3200.game.areas.<a href="com/csse3200/game/areas/ShippingGameArea.html" title="class in com.csse3200.game.areas">ShippingGameArea</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Initialise this ShippingGameArea to use the provided TerrainFactory and camera helper.</div>
+</dd>
+<dt><a href="com/csse3200/game/entities/configs/ItemSpawnConfig.html#shippingmap()" class="member-name-link">shippingmap()</a> - Static method in class com.csse3200.game.entities.configs.<a href="com/csse3200/game/entities/configs/ItemSpawnConfig.html" title="class in com.csse3200.game.entities.configs">ItemSpawnConfig</a></dt>
+<dd>
+<div class="block">Gives a list of items(including weapons) and their spawn locations for the shipping map
+ Each item can have multiple spawn locations and each location can have multiple items</div>
+</dd>
 <dt><a href="com/csse3200/game/entities/configs/weapons/RangedWeaponConfig.html#shootTimer" class="member-name-link">shootTimer</a> - Variable in class com.csse3200.game.entities.configs.weapons.<a href="com/csse3200/game/entities/configs/weapons/RangedWeaponConfig.html" title="class in com.csse3200.game.entities.configs.weapons">RangedWeaponConfig</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/components/shop/ShopDemo.html" class="type-name-link" title="class in com.csse3200.game.components.shop">ShopDemo</a> - Class in <a href="com/csse3200/game/components/shop/package-summary.html">com.csse3200.game.components.shop</a></dt>
@@ -4413,6 +4501,10 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/csse3200/game/areas/GameArea.html#spawnFloor()" class="member-name-link">spawnFloor()</a> - Method in class com.csse3200.game.areas.<a href="com/csse3200/game/areas/GameArea.html" title="class in com.csse3200.game.areas">GameArea</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/areas/OfficeGameArea.html#spawnFloor()" class="member-name-link">spawnFloor()</a> - Method in class com.csse3200.game.areas.<a href="com/csse3200/game/areas/OfficeGameArea.html" title="class in com.csse3200.game.areas">OfficeGameArea</a></dt>
+<dd>
+<div class="block">Add a thin floor</div>
+</dd>
 <dt><a href="com/csse3200/game/areas/GameArea.html#spawnGhostGPT(int,float,com.csse3200.game.entities.Entity,java.util.Map)" class="member-name-link">spawnGhostGPT(int, float, Entity, Map&lt;String, ArrayList&lt;Vector2&gt;&gt;)</a> - Method in class com.csse3200.game.areas.<a href="com/csse3200/game/areas/GameArea.html" title="class in com.csse3200.game.areas">GameArea</a></dt>
 <dd>
 <div class="block">Adds GhostGPT enemies onto the map.</div>
@@ -4427,12 +4519,18 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/csse3200/game/areas/ForestGameArea.html#spawnItem(com.csse3200.game.entities.Entity,com.badlogic.gdx.math.GridPoint2)" class="member-name-link">spawnItem(Entity, GridPoint2)</a> - Method in class com.csse3200.game.areas.<a href="com/csse3200/game/areas/ForestGameArea.html" title="class in com.csse3200.game.areas">ForestGameArea</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/areas/GameArea.html#spawnItem(com.csse3200.game.entities.Entity,com.badlogic.gdx.math.GridPoint2)" class="member-name-link">spawnItem(Entity, GridPoint2)</a> - Method in class com.csse3200.game.areas.<a href="com/csse3200/game/areas/GameArea.html" title="class in com.csse3200.game.areas">GameArea</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/entities/spawner/ItemSpawner.html#spawnItems(java.util.Map)" class="member-name-link">spawnItems(Map&lt;String, List&lt;ItemSpawner.ItemSpawnInfo&gt;&gt;)</a> - Method in class com.csse3200.game.entities.spawner.<a href="com/csse3200/game/entities/spawner/ItemSpawner.html" title="class in com.csse3200.game.entities.spawner">ItemSpawner</a></dt>
 <dd>
 <div class="block">Spawns items in the game area based on the provided information.</div>
 </dd>
 <dt><a href="com/csse3200/game/areas/KeycardSpawnerSystem.html#spawnKeycards(com.csse3200.game.areas.GameArea)" class="member-name-link">spawnKeycards(GameArea)</a> - Static method in class com.csse3200.game.areas.<a href="com/csse3200/game/areas/KeycardSpawnerSystem.html" title="class in com.csse3200.game.areas">KeycardSpawnerSystem</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/areas/GameArea.html#spawnObjectDoors(com.badlogic.gdx.math.GridPoint2,com.badlogic.gdx.math.GridPoint2)" class="member-name-link">spawnObjectDoors(GridPoint2, GridPoint2)</a> - Method in class com.csse3200.game.areas.<a href="com/csse3200/game/areas/GameArea.html" title="class in com.csse3200.game.areas">GameArea</a></dt>
+<dd>
+<div class="block">Spawns decorative object doors (non-functional) at given positions.</div>
+</dd>
 <dt><a href="com/csse3200/game/areas/GameArea.html#spawnTurret(int,float,com.csse3200.game.entities.Entity,java.util.Map)" class="member-name-link">spawnTurret(int, float, Entity, Map&lt;String, ArrayList&lt;Vector2&gt;&gt;)</a> - Method in class com.csse3200.game.areas.<a href="com/csse3200/game/areas/GameArea.html" title="class in com.csse3200.game.areas">GameArea</a></dt>
 <dd>
 <div class="block">Adds Turret enemies onto the map.</div>
@@ -4549,12 +4647,21 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Stop the currently running animation.</div>
 </dd>
+<dt><a href="com/csse3200/game/areas/terrain/TerrainFactory.TerrainType.html#STORAGE" class="member-name-link">STORAGE</a> - Enum constant in enum class com.csse3200.game.areas.terrain.<a href="com/csse3200/game/areas/terrain/TerrainFactory.TerrainType.html" title="enum class in com.csse3200.game.areas.terrain">TerrainFactory.TerrainType</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/entities/configs/ItemSpawnConfig.html#storage1map()" class="member-name-link">storage1map()</a> - Static method in class com.csse3200.game.entities.configs.<a href="com/csse3200/game/entities/configs/ItemSpawnConfig.html" title="class in com.csse3200.game.entities.configs">ItemSpawnConfig</a></dt>
+<dd>
+<div class="block">Gives a list of items(including weapons) and their spawn locations for the storage map
+ Each item can have multiple spawn locations and each location can have multiple items</div>
+</dd>
 <dt><a href="com/csse3200/game/areas/StorageGameArea.html" class="type-name-link" title="class in com.csse3200.game.areas">StorageGameArea</a> - Class in <a href="com/csse3200/game/areas/package-summary.html">com.csse3200.game.areas</a></dt>
 <dd>
-<div class="block">Storage room: minimal walls with left--Research and right--Tunnel.</div>
+<div class="block">The "Storage" area of the game map.</div>
 </dd>
 <dt><a href="com/csse3200/game/areas/StorageGameArea.html#%3Cinit%3E(com.csse3200.game.areas.terrain.TerrainFactory,com.csse3200.game.components.CameraComponent)" class="member-name-link">StorageGameArea(TerrainFactory, CameraComponent)</a> - Constructor for class com.csse3200.game.areas.<a href="com/csse3200/game/areas/StorageGameArea.html" title="class in com.csse3200.game.areas">StorageGameArea</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Initialise this StorageGameArea to use the provided TerrainFactory and camera helper.</div>
+</dd>
 <dt><a href="com/csse3200/game/GdxGame.ScreenType.html#STORY" class="member-name-link">STORY</a> - Enum constant in enum class com.csse3200.game.<a href="com/csse3200/game/GdxGame.ScreenType.html" title="enum class in com.csse3200.game">GdxGame.ScreenType</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/screens/StoryScreen.html" class="type-name-link" title="class in com.csse3200.game.screens">StoryScreen</a> - Class in <a href="com/csse3200/game/screens/package-summary.html">com.csse3200.game.screens</a></dt>
@@ -4816,12 +4923,18 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Attempt to execute a movement.</div>
 </dd>
+<dt><a href="com/csse3200/game/areas/terrain/TerrainFactory.TerrainType.html#TUNNEL_ROOM" class="member-name-link">TUNNEL_ROOM</a> - Enum constant in enum class com.csse3200.game.areas.terrain.<a href="com/csse3200/game/areas/terrain/TerrainFactory.TerrainType.html" title="enum class in com.csse3200.game.areas.terrain">TerrainFactory.TerrainType</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/areas/TunnelGameArea.html" class="type-name-link" title="class in com.csse3200.game.areas">TunnelGameArea</a> - Class in <a href="com/csse3200/game/areas/package-summary.html">com.csse3200.game.areas</a></dt>
 <dd>
-<div class="block">Tunnel room: minimal walls with left door back to Storage.</div>
+<div class="block">Tunnel room: minimal walls with left door back to Server Room.</div>
 </dd>
 <dt><a href="com/csse3200/game/areas/TunnelGameArea.html#%3Cinit%3E(com.csse3200.game.areas.terrain.TerrainFactory,com.csse3200.game.components.CameraComponent)" class="member-name-link">TunnelGameArea(TerrainFactory, CameraComponent)</a> - Constructor for class com.csse3200.game.areas.<a href="com/csse3200/game/areas/TunnelGameArea.html" title="class in com.csse3200.game.areas">TunnelGameArea</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/entities/configs/ItemSpawnConfig.html#tunnelmap()" class="member-name-link">tunnelmap()</a> - Static method in class com.csse3200.game.entities.configs.<a href="com/csse3200/game/entities/configs/ItemSpawnConfig.html" title="class in com.csse3200.game.entities.configs">ItemSpawnConfig</a></dt>
+<dd>
+<div class="block">Server Room spawning.</div>
+</dd>
 <dt><a href="com/csse3200/game/entities/configs/characters/NPCConfigs.html#turret" class="member-name-link">turret</a> - Variable in class com.csse3200.game.entities.configs.characters.<a href="com/csse3200/game/entities/configs/characters/NPCConfigs.html" title="class in com.csse3200.game.entities.configs.characters">NPCConfigs</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/entities/configs/characters/TurretConfig.html" class="type-name-link" title="class in com.csse3200.game.entities.configs.characters">TurretConfig</a> - Class in <a href="com/csse3200/game/entities/configs/characters/package-summary.html">com.csse3200.game.entities.configs.characters</a></dt>

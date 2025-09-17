@@ -97,7 +97,10 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">ShippingGameArea</span>
 <span class="extends-implements">extends <a href="GameArea.html" title="class in com.csse3200.game.areas">GameArea</a></span></div>
-<div class="block">Shipping Room</div>
+<div class="block">The "Shipping" area of the game map. This class:
+ - Builds the terrain (background)
+ - Spawns the player and necessary props
+ - Generates the doors to the previous and next room</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -129,7 +132,9 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(com.csse3200.game.areas.terrain.TerrainFactory,com.csse3200.game.components.CameraComponent)" class="member-name-link">ShippingGameArea</a><wbr>(<a href="terrain/TerrainFactory.html" title="class in com.csse3200.game.areas.terrain">TerrainFactory</a>&nbsp;terrainFactory,
  <a href="../components/CameraComponent.html" title="class in com.csse3200.game.components">CameraComponent</a>&nbsp;cameraComponent)</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">Initialise this ShippingGameArea to use the provided TerrainFactory and camera helper.</div>
+</div>
 </div>
 </section>
 </li>
@@ -147,14 +152,15 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#create()" class="member-name-link">create</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Create the game area in the world.</div>
+<div class="block">Create the game area, including terrain, static entities (trees), dynamic entities (player)
+ Entry point for this room.</div>
 </div>
 </div>
 </div>
 </div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-com.csse3200.game.areas.GameArea">Methods inherited from class&nbsp;com.csse3200.game.areas.<a href="GameArea.html" title="class in com.csse3200.game.areas">GameArea</a></h3>
-<code><a href="GameArea.html#addSolidWallBottom(com.csse3200.game.areas.GameArea.Bounds,float)">addSolidWallBottom</a>, <a href="GameArea.html#addSolidWallLeft(com.csse3200.game.areas.GameArea.Bounds,float)">addSolidWallLeft</a>, <a href="GameArea.html#addSolidWallRight(com.csse3200.game.areas.GameArea.Bounds,float)">addSolidWallRight</a>, <a href="GameArea.html#addSolidWallTop(com.csse3200.game.areas.GameArea.Bounds,float)">addSolidWallTop</a>, <a href="GameArea.html#addVerticalDoorLeft(com.csse3200.game.areas.GameArea.Bounds,float,java.lang.Runnable)">addVerticalDoorLeft</a>, <a href="GameArea.html#addVerticalDoorRight(com.csse3200.game.areas.GameArea.Bounds,float,java.lang.Runnable)">addVerticalDoorRight</a>, <a href="GameArea.html#beginTransition()">beginTransition</a>, <a href="GameArea.html#clearAndLoad(java.util.function.Supplier)">clearAndLoad</a>, <a href="GameArea.html#dispose()">dispose</a>, <a href="GameArea.html#endTransition()">endTransition</a>, <a href="GameArea.html#ensurePlayerAtlas()">ensurePlayerAtlas</a>, <a href="GameArea.html#ensureTextures(java.lang.String%5B%5D)">ensureTextures</a>, <a href="GameArea.html#getBaseDifficultyScale()">getBaseDifficultyScale</a>, <a href="GameArea.html#getCameraBounds(com.csse3200.game.components.CameraComponent)">getCameraBounds</a>, <a href="GameArea.html#getEnemySpawnPosition(int)">getEnemySpawnPosition</a>, <a href="GameArea.html#getEntities()">getEntities</a>, <a href="GameArea.html#getRoomNumber()">getRoomNumber</a>, <a href="GameArea.html#getRoomSpawnPosition(java.lang.String)">getRoomSpawnPosition</a>, <a href="GameArea.html#loadArea(java.lang.Class)">loadArea</a>, <a href="GameArea.html#removeEntity(com.csse3200.game.entities.Entity)">removeEntity</a>, <a href="GameArea.html#setupTerrainWithOverlay(com.csse3200.game.areas.terrain.TerrainFactory,com.csse3200.game.areas.terrain.TerrainFactory.TerrainType,com.badlogic.gdx.graphics.Color)">setupTerrainWithOverlay</a>, <a href="GameArea.html#spawnDeepspin(int,float,com.csse3200.game.entities.Entity,java.util.Map)">spawnDeepspin</a>, <a href="GameArea.html#spawnEnemies(int,int,float,com.csse3200.game.entities.Entity)">spawnEnemies</a>, <a href="GameArea.html#spawnEntity(com.csse3200.game.entities.Entity)">spawnEntity</a>, <a href="GameArea.html#spawnEntityAt(com.csse3200.game.entities.Entity,com.badlogic.gdx.math.GridPoint2,boolean,boolean)">spawnEntityAt</a>, <a href="GameArea.html#spawnEntityInRoom(java.lang.String,com.csse3200.game.entities.Entity)">spawnEntityInRoom</a>, <a href="GameArea.html#spawnFloor()">spawnFloor</a>, <a href="GameArea.html#spawnGhostGPT(int,float,com.csse3200.game.entities.Entity,java.util.Map)">spawnGhostGPT</a>, <a href="GameArea.html#spawnGhostGPTProjectile(com.badlogic.gdx.math.Vector2,com.csse3200.game.components.WeaponsStatsComponent)">spawnGhostGPTProjectile</a>, <a href="GameArea.html#spawnGrokDroid(int,float,com.csse3200.game.entities.Entity,java.util.Map)">spawnGrokDroid</a>, <a href="GameArea.html#spawnTurret(int,float,com.csse3200.game.entities.Entity,java.util.Map)">spawnTurret</a>, <a href="GameArea.html#spawnVroomba(int,float,com.csse3200.game.entities.Entity,java.util.Map)">spawnVroomba</a>, <a href="GameArea.html#startWaves(com.csse3200.game.entities.Entity)">startWaves</a>, <a href="GameArea.html#unloadAssets(java.lang.String%5B%5D)">unloadAssets</a></code></div>
+<code><a href="GameArea.html#addSolidWallBottom(com.csse3200.game.areas.GameArea.Bounds,float)">addSolidWallBottom</a>, <a href="GameArea.html#addSolidWallLeft(com.csse3200.game.areas.GameArea.Bounds,float)">addSolidWallLeft</a>, <a href="GameArea.html#addSolidWallRight(com.csse3200.game.areas.GameArea.Bounds,float)">addSolidWallRight</a>, <a href="GameArea.html#addSolidWallTop(com.csse3200.game.areas.GameArea.Bounds,float)">addSolidWallTop</a>, <a href="GameArea.html#addVerticalDoorLeft(com.csse3200.game.areas.GameArea.Bounds,float,java.lang.Runnable)">addVerticalDoorLeft</a>, <a href="GameArea.html#addVerticalDoorRight(com.csse3200.game.areas.GameArea.Bounds,float,java.lang.Runnable)">addVerticalDoorRight</a>, <a href="GameArea.html#beginTransition()">beginTransition</a>, <a href="GameArea.html#clearAndLoad(java.util.function.Supplier)">clearAndLoad</a>, <a href="GameArea.html#dispose()">dispose</a>, <a href="GameArea.html#endTransition()">endTransition</a>, <a href="GameArea.html#ensurePlayerAtlas()">ensurePlayerAtlas</a>, <a href="GameArea.html#ensureTextures(java.lang.String%5B%5D)">ensureTextures</a>, <a href="GameArea.html#getBaseDifficultyScale()">getBaseDifficultyScale</a>, <a href="GameArea.html#getCameraBounds(com.csse3200.game.components.CameraComponent)">getCameraBounds</a>, <a href="GameArea.html#getEnemySpawnPosition(int)">getEnemySpawnPosition</a>, <a href="GameArea.html#getEntities()">getEntities</a>, <a href="GameArea.html#getRoomNumber()">getRoomNumber</a>, <a href="GameArea.html#getRoomSpawnPosition(java.lang.String)">getRoomSpawnPosition</a>, <a href="GameArea.html#loadArea(java.lang.Class)">loadArea</a>, <a href="GameArea.html#removeEntity(com.csse3200.game.entities.Entity)">removeEntity</a>, <a href="GameArea.html#setupTerrainWithOverlay(com.csse3200.game.areas.terrain.TerrainFactory,com.csse3200.game.areas.terrain.TerrainFactory.TerrainType,com.badlogic.gdx.graphics.Color)">setupTerrainWithOverlay</a>, <a href="GameArea.html#spawnDeepspin(int,float,com.csse3200.game.entities.Entity,java.util.Map)">spawnDeepspin</a>, <a href="GameArea.html#spawnEnemies(int,int,float,com.csse3200.game.entities.Entity)">spawnEnemies</a>, <a href="GameArea.html#spawnEntity(com.csse3200.game.entities.Entity)">spawnEntity</a>, <a href="GameArea.html#spawnEntityAt(com.csse3200.game.entities.Entity,com.badlogic.gdx.math.GridPoint2,boolean,boolean)">spawnEntityAt</a>, <a href="GameArea.html#spawnEntityInRoom(java.lang.String,com.csse3200.game.entities.Entity)">spawnEntityInRoom</a>, <a href="GameArea.html#spawnFloor()">spawnFloor</a>, <a href="GameArea.html#spawnGhostGPT(int,float,com.csse3200.game.entities.Entity,java.util.Map)">spawnGhostGPT</a>, <a href="GameArea.html#spawnGhostGPTProjectile(com.badlogic.gdx.math.Vector2,com.csse3200.game.components.WeaponsStatsComponent)">spawnGhostGPTProjectile</a>, <a href="GameArea.html#spawnGrokDroid(int,float,com.csse3200.game.entities.Entity,java.util.Map)">spawnGrokDroid</a>, <a href="GameArea.html#spawnItem(com.csse3200.game.entities.Entity,com.badlogic.gdx.math.GridPoint2)">spawnItem</a>, <a href="GameArea.html#spawnObjectDoors(com.badlogic.gdx.math.GridPoint2,com.badlogic.gdx.math.GridPoint2)">spawnObjectDoors</a>, <a href="GameArea.html#spawnTurret(int,float,com.csse3200.game.entities.Entity,java.util.Map)">spawnTurret</a>, <a href="GameArea.html#spawnVroomba(int,float,com.csse3200.game.entities.Entity,java.util.Map)">spawnVroomba</a>, <a href="GameArea.html#startWaves(com.csse3200.game.entities.Entity)">startWaves</a>, <a href="GameArea.html#unloadAssets(java.lang.String%5B%5D)">unloadAssets</a></code></div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-java.lang.Object">Methods inherited from class&nbsp;java.lang.<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></h3>
 <code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#clone()" title="class or interface in java.lang" class="external-link">clone</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#equals(java.lang.Object)" title="class or interface in java.lang" class="external-link">equals</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#finalize()" title="class or interface in java.lang" class="external-link">finalize</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#getClass()" title="class or interface in java.lang" class="external-link">getClass</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#hashCode()" title="class or interface in java.lang" class="external-link">hashCode</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#notify()" title="class or interface in java.lang" class="external-link">notify</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#notifyAll()" title="class or interface in java.lang" class="external-link">notifyAll</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#toString()" title="class or interface in java.lang" class="external-link">toString</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#wait()" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#wait(long)" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#wait(long,int)" title="class or interface in java.lang" class="external-link">wait</a></code></div>
@@ -174,6 +180,15 @@ loadScripts(document, 'script');</script>
 <h3>ShippingGameArea</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">ShippingGameArea</span><wbr><span class="parameters">(<a href="terrain/TerrainFactory.html" title="class in com.csse3200.game.areas.terrain">TerrainFactory</a>&nbsp;terrainFactory,
  <a href="../components/CameraComponent.html" title="class in com.csse3200.game.components">CameraComponent</a>&nbsp;cameraComponent)</span></div>
+<div class="block">Initialise this ShippingGameArea to use the provided TerrainFactory and camera helper.
+ The camera is used to size the screen-edge walls and place the right-side door trigger.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>terrainFactory</code> - TerrainFactory used to create the terrain for the GameArea (required).</dd>
+<dd><code>cameraComponent</code> - Camera helper supplying an OrthographicCamera (optional but used here).</dd>
+<dt>Requires:</dt>
+<dd>terrainFactory != null</dd>
+</dl>
 </section>
 </li>
 </ul>
@@ -188,8 +203,11 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="create()">
 <h3>create</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">create</span>()</div>
-<div class="block"><span class="description-from-type-label">Description copied from class:&nbsp;<code><a href="GameArea.html#create()">GameArea</a></code></span></div>
-<div class="block">Create the game area in the world.</div>
+<div class="block">Create the game area, including terrain, static entities (trees), dynamic entities (player)
+ Entry point for this room. This:
+ - Loads textures
+ - Creates the terrain, walls, and UI label
+ - Spawns player, props, and enemies (to be added)</div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="GameArea.html#create()">create</a></code>&nbsp;in class&nbsp;<code><a href="GameArea.html" title="class in com.csse3200.game.areas">GameArea</a></code></dd>
