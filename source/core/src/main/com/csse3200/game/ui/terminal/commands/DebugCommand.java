@@ -22,18 +22,21 @@ public class DebugCommand implements Command {
       return false;
     }
 
-    String arg = args.get(0);
-    switch (arg) {
-      case "on":
-        ServiceLocator.getRenderService().getDebug().setActive(true);
-        return true;
-      case "off":
-        ServiceLocator.getRenderService().getDebug().setActive(false);
-        return true;
-      default:
-        logger.debug("Unrecognised argument received for 'debug' command: {}", args);
-        return false;
-    }
+    String arg = args.getFirst();
+      return switch (arg) {
+          case "on" -> {
+              ServiceLocator.getRenderService().getDebug().setActive(true);
+              yield true;
+          }
+          case "off" -> {
+              ServiceLocator.getRenderService().getDebug().setActive(false);
+              yield true;
+          }
+          default -> {
+              logger.debug("Unrecognised argument received for 'debug' command: {}", args);
+              yield false;
+          }
+      };
   }
 
   /**
