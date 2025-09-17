@@ -125,9 +125,11 @@ public class ForestGameArea extends GameArea {
     "images/Conveyor.png",
     "images/ServerRoomBackground.png",
     "images/ServerRoomBackgroundResize.png",
+    "images/TunnelRoomBackgResize.png",
     "foreg_sprites/furniture/ServerRack.png",
     "foreg_sprites/furniture/ServerRack2.png",
-    "foreg_sprites/furniture/Vent.png"
+    "foreg_sprites/furniture/Vent.png",
+    "images/Storage.png"
     };
 
   /** General prop textures (floors, tiles, etc.). */
@@ -143,9 +145,17 @@ public class ForestGameArea extends GameArea {
     "foreg_sprites/general/ThinFloor3.png",
     "foreg_sprites/general/Test.png"
   };
+  private static final String[] researchTextures = {
+    "images/ResearchBackground.png",
 
+    "foreg_sprites/Research/Laboratory.png",
+    "foreg_sprites/Research/Microscope.png",
+    "foreg_sprites/Research/ResearchDesk.png",
+    "foreg_sprites/Research/ResearchPod.png"
+  };
   private static final String[] securityTextures = {
     "images/SecurityBackground.png",
+
     "foreg_sprites/general/ThinFloor3.png",
     "foreg_sprites/Security/Monitor.png",
     "foreg_sprites/Security/Platform.png",
@@ -593,6 +603,7 @@ public class ForestGameArea extends GameArea {
     resourceService.loadTextures(spawnPadTextures);
     resourceService.loadTextures(officeTextures);
     resourceService.loadTextures(securityTextures);
+    resourceService.loadTextures(researchTextures);
     resourceService.loadTextureAtlases(forestTextureAtlases);
     resourceService.loadSounds(playerSound1);
     resourceService.loadSounds(forestSounds);
