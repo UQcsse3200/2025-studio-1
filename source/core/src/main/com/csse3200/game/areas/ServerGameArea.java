@@ -7,13 +7,10 @@ import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.factories.characters.PlayerFactory;
-import com.csse3200.game.services.ResourceService;
+import com.csse3200.game.entities.factories.characters.NPCFactory;
 import com.csse3200.game.services.ServiceLocator;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector2;
-import com.csse3200.game.components.ItemHoldComponent;
-import com.csse3200.game.entities.configs.Weapons;
-import com.csse3200.game.entities.factories.items.WeaponsFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.entities.configs.ItemSpawnConfig;
 import com.csse3200.game.entities.spawner.ItemSpawner;
@@ -28,136 +25,6 @@ import org.slf4j.LoggerFactory;
  */
 public class ServerGameArea extends GameArea {
   private static final Logger logger = LoggerFactory.getLogger(ServerGameArea.class);
-
-  /** Files or pictures used by the game (enemy/props,etc.). */
-  private static final String HEART = "images/heart.png";
-
-  /** Server Room background images */
-  private static final String[] serverBackground = {
-    "images/ServerRoomBackground.png",
-    "images/ServerRoomBackgroundResize.png",
-  };
-
-  /** Server Room server rack sprites + vent */
-  private static final String[] serverRacks = {
-    "foreg_sprites/furniture/ServerRack.png",
-    "foreg_sprites/furniture/ServerRack2.png",
-    "foreg_sprites/furniture/Vent.png",
-  };
-
-  /** 'Forest Textures' contains important weapon and NPC sprites */
-  private static final String[] forestTextures = {
-    "images/box_boy_leaf.png",
-    "images/tree.png",
-    "images/ghost_king.png",
-    "images/ghost_1.png",
-    "images/grass_1.png",
-    "images/grass_2.png",
-    "images/grass_3.png",
-    "images/hex_grass_1.png",
-    "images/hex_grass_2.png",
-    "images/hex_grass_3.png",
-    "images/iso_grass_1.png",
-    "images/iso_grass_2.png",
-    "images/iso_grass_3.png",
-    "images/robot-2-attack.png",
-    "images/robot-2-common.png",
-    "images/fireball1.png",
-    "images/blackhole1.png",
-    "images/Robot_1.png",
-    "images/Robot_1_attack_Right.png",
-    "images/Boss_3.png",
-    "images/mud.png",
-    "images/mud_ball_1.png",
-    "images/mud_ball_2.png",
-    "images/mud_ball_3.png",
-    "images/lightsaber.png",
-    "images/lightsaberSingle.png",
-    "images/ammo.png",
-    "images/round.png",
-    "images/pistol.png",
-    "images/rifle.png",
-    "images/dagger.png",
-    "images/laser_shot.png",
-    "images/Spawn.png",
-    "images/SpawnResize.png",
-    "images/LobbyWIP.png",
-    "images/door.png",
-    "images/KeycardDoor.png",
-    "images/player.png",
-    "images/mud.png",
-    HEART,
-    "images/MarblePlatform.png",
-    "images/computerBench.png",
-  };
-
-  /** General prop textures (floors, tiles, etc.). */
-  private static final String[] generalTextures = {
-    "foreg_sprites/general/LongFloor.png",
-    "foreg_sprites/general/Railing.png",
-    "foreg_sprites/general/SmallSquare.png",
-    "foreg_sprites/general/SmallStair.png",
-    "foreg_sprites/general/SquareTile.png",
-    "foreg_sprites/general/ThickFloor.png",
-    "foreg_sprites/general/ThinFloor.png",
-    "foreg_sprites/general/ThinFloor2.png",
-    "foreg_sprites/general/ThinFloor3.png",
-    "foreg_sprites/general/Test.png",
-    "foreg_sprites/office/Crate.png",
-  };
-
-  /** Spawn pad textures. */
-  private static final String[] spawnPadTextures = {
-    "foreg_sprites/spawn_pads/SpawnPadPurple.png",
-    "foreg_sprites/spawn_pads/SpawnPadRed.png",
-  };
-
-  /** Futuristic props used in this room (camera, energy pod, crates). */
-  private static final String[] futuristicTextures = {
-    "foreg_sprites/futuristic/SecurityCamera3.png",
-    "foreg_sprites/futuristic/EnergyPod.png",
-    "foreg_sprites/futuristic/storage_crate_green2.png",
-    "foreg_sprites/futuristic/storage_crate_dark2.png",
-  };
-
-  /** keycard textures  */
-  private static final String[] keycardTextures = {
-    "images/keycard_lvl1.png",
-    "images/keycard_lvl2.png",
-    "images/keycard_lvl3.png",
-    "images/keycard_lvl4.png",
-  };
-
-  /** Texture atlases for animated entities */
-  private static final String[] forestTextureAtlases = {
-    "images/robot-2.atlas", "images/fireball.atlas", "images/blackhole.atlas", "images/Robot_1.atlas",
-    "images/boss_idle.atlas",
-    "images/terrain_iso_grass.atlas",
-    "images/ghost.atlas",
-    "images/ghostKing.atlas",
-    "images/ghostGPT.atlas",
-    "images/Deepspin.atlas",
-    "images/Grokdroid.atlas",
-    "images/Vroomba.atlas",
-    "images/explosion_1.atlas",
-    "images/explosion_2.atlas",
-    "images/player.atlas",
-    "images/player.atlas",
-    "images/terrain_iso_grass.atlas",
-    "images/ghost.atlas",
-    "images/ghostKing.atlas",
-    "images/ghostGPT.atlas",
-    "images/explosion_1.atlas",
-    "images/explosion_2.atlas",
-  };
-
-
-  private static final String[] playerSound1 = {"sounds/jump.mp3"};
-  private static final String[] forestSounds = {"sounds/Impact4.ogg"};
-
-  private static final String BACKGROUND_MUSIC = "sounds/BGM_03.mp3";
-
-  private static final String[] forestMusic = {BACKGROUND_MUSIC};
 
   private static final float WALL_WIDTH = 0.1f;
   private static final GridPoint2 PLAYER_SPAWN = new GridPoint2(10, 10);
@@ -187,7 +54,6 @@ public class ServerGameArea extends GameArea {
     GenericLayout.setupTerrainWithOverlay(this, terrainFactory, TerrainType.SERVER_ROOM,
         new Color(0.10f, 0.12f, 0.10f, 0.24f));
 
-    loadAssets();
     displayUI();
     spawnTerrain();
     spawnBigWall();
@@ -196,9 +62,11 @@ public class ServerGameArea extends GameArea {
     spawnCratesAndRailing();
     spawnSpawnPads();
     spawnBordersAndDoors();
+    spawnObjectDoors(new GridPoint2(0, 6), new GridPoint2(28, 21));
 
     spawnFloor();
     player = spawnPlayer();
+    spawnGPTs();
 
     ItemSpawner itemSpawner = new ItemSpawner(this);
     itemSpawner.spawnItems(ItemSpawnConfig.servermap());
@@ -290,24 +158,24 @@ public class ServerGameArea extends GameArea {
   }
 
   /**
+   * Spawn 2 high-level GPTs in the room as enemies.
+   */
+  private void spawnGPTs() {
+    Entity ghost1 = NPCFactory.createGhostGPT(player, this, 2.5f);
+    GridPoint2 ghost1Pos = new GridPoint2(25, 20);
+    spawnEntityAt(ghost1, ghost1Pos, true, false);
+    Entity ghost2 = NPCFactory.createGhostGPT(player, this, 2.5f);
+    GridPoint2 ghost2Pos = new GridPoint2(25, 20);
+    spawnEntityAt(ghost2, ghost2Pos, true, false);
+  }
+
+  /**
    * Adds a very tall thick-floor as a background wall/divider.
    */
   private void spawnBigWall() {
     GridPoint2 wallSpawn = new GridPoint2(-14, 0);
     Entity bigWall = ObstacleFactory.createBigThickFloor();
     spawnEntityAt(bigWall, wallSpawn, true, false);
-  }
-
-
-  /**
-   * Spawns a rifle on top of the purple spawn pad.
-   * @return Entity rifle
-   */
-  private Entity spawnRifle() {
-    Entity newRifle = WeaponsFactory.createWeapon(Weapons.RIFLE);
-    Vector2 newRifleOffset = new Vector2(0.25f, 0.15f);
-    newRifle.addComponent(new ItemHoldComponent(this.player, newRifleOffset));
-    return newRifle;
   }
 
   /**
@@ -368,31 +236,6 @@ public class ServerGameArea extends GameArea {
   }
 
   /**
-   * Loads all textures, atlases, sounds and music needed by this room.
-   * Blocks briefly until loading is complete. If you add new art, put it here.
-   */
-  private void loadAssets() {
-    logger.debug("Loading assets");
-    ResourceService resourceService = ServiceLocator.getResourceService();
-    resourceService.loadTextures(serverBackground);
-    resourceService.loadTextures(futuristicTextures);
-    resourceService.loadTextures(keycardTextures);
-    resourceService.loadTextures(generalTextures);
-    resourceService.loadTextures(forestTextures);
-    resourceService.loadTextures(spawnPadTextures);
-    resourceService.loadTextures(serverRacks);
-    resourceService.loadTextureAtlases(forestTextureAtlases);
-    resourceService.loadSounds(playerSound1);
-    resourceService.loadSounds(forestSounds);
-    resourceService.loadMusic(forestMusic);
-
-    while (resourceService.loadForMillis(10)) {
-      // This could be upgraded to a loading screen
-      logger.info("Loading... {}%", resourceService.getProgress());
-    }
-  }
-
-  /**
    * Getter method for the player entity
    * @return Entity player
    */
@@ -400,16 +243,40 @@ public class ServerGameArea extends GameArea {
     return player;
   }
 
+  /**
+   * Spawns the borders and doors of the room.
+   * Left door -> Storage, Right door -> Tunnel
+   * Different to genericLayout as the right door is up high
+   * at the third platfomr level.
+   */
   private void spawnBordersAndDoors() {
-    GenericLayout.addLeftRightDoorsAndWalls(this, cameraComponent, WALL_WIDTH,
-        this::loadStorage, this::loadTunnel);
+    if (cameraComponent == null) return;
+    Bounds b = getCameraBounds(cameraComponent);
+    addSolidWallLeft(b, WALL_WIDTH);
+    float leftDoorHeight = Math.max(1f, b.viewHeight * 0.2f);
+    float leftDoorY = b.bottomY;
+    Entity leftDoor = ObstacleFactory.createDoorTrigger(WALL_WIDTH, leftDoorHeight);
+    leftDoor.setPosition(b.leftX + 0.001f, leftDoorY);
+    leftDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadStorage));
+    spawnEntity(leftDoor);
+
+    addSolidWallRight(b, WALL_WIDTH);
+
+    float rightDoorHeight = Math.max(1f, b.viewHeight * 0.2f);
+    float rightDoorY = b.topY - rightDoorHeight;
+    Entity rightDoor = ObstacleFactory.createDoorTrigger(WALL_WIDTH, rightDoorHeight);
+    rightDoor.setPosition(b.rightX - WALL_WIDTH - 0.001f, rightDoorY);
+    rightDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadTunnel));
+    spawnEntity(rightDoor);
   }
 
   private void loadTunnel() {
+      roomNumber--;
     clearAndLoad(() -> new TunnelGameArea(terrainFactory, cameraComponent));
   }
 
   private void loadStorage() {
+      roomNumber++;
     clearAndLoad(() -> new StorageGameArea(terrainFactory, cameraComponent));
   }
 }

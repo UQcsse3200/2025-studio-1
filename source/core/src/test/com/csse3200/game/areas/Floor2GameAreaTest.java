@@ -54,8 +54,8 @@ class Floor2GameAreaTest {
     // Verify bounds calculation
     assertEquals(40f, b.leftX, 0.001f);   // 50 - 20/2
     assertEquals(60f, b.rightX, 0.001f);  // 50 + 20/2
-    assertEquals(45f, b.bottomY, 0.001f); // 50 - 10/2
-    assertEquals(55f, b.topY, 0.001f);    // 50 + 10/2
+    assertEquals(45.3125f, b.bottomY, 0.001f); // 50 - 9.375/2
+    assertEquals(54.6875f, b.topY, 0.001f);    // 50 + 9.375/2
     assertEquals(20f, b.viewWidth, 0.001f);
     assertEquals(10f, b.viewHeight, 0.001f);
     assertEquals(new Vector2(50f, 50f), b.camPos);
@@ -84,7 +84,7 @@ class Floor2GameAreaTest {
     
     assertEquals(4f, doorWidth, 0.001f); // 20 * 0.2
     assertEquals(48f, doorX, 0.001f);   // 50 - 4/2
-    assertEquals(45.1f, expectedBottomDoorY, 0.001f); // 45 + 0.1
+    assertEquals(45.4125f, expectedBottomDoorY, 0.001f); // 45 + 0.1
 
     // Test left/right door positioning (should be at bottomY)
     float leftDoorX = b.leftX + 0.001f;
@@ -93,7 +93,7 @@ class Floor2GameAreaTest {
     
     assertEquals(40.001f, leftDoorX, 0.001f);
     assertEquals(59.899f, rightDoorX, 0.001f);
-    assertEquals(45f, expectedSideDoorY, 0.001f);
+    assertEquals(45.3125f, expectedSideDoorY, 0.001f);
   }
 }
 

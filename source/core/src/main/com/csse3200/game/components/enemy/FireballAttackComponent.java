@@ -14,7 +14,7 @@ public class FireballAttackComponent extends Component {
     private final int damage;
 
     private float timer = 0f;
-
+    private boolean attack = true;
     public FireballAttackComponent(Entity target, float cooldown, float range,
                                    float speed, int damage) {
         this.target = target;
@@ -26,6 +26,9 @@ public class FireballAttackComponent extends Component {
 
     @Override
     public void update() {
+        if (!attack ) {
+            return;
+        }
         timer -= ServiceLocator.getTimeSource().getDeltaTime();
         if (timer > 0) {
             return;
@@ -47,5 +50,9 @@ public class FireballAttackComponent extends Component {
         } else {
             ServiceLocator.getEntityService().register(fireball);
         }
+    }
+    public void setAttack(boolean attack)
+    {
+        this.attack = attack;
     }
 }

@@ -9,8 +9,13 @@ import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.items.ItemHoldComponent;
 import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.components.KeycardGateComponent;
+import com.csse3200.game.components.attachments.BulletEnhancerComponent;
+import com.csse3200.game.components.attachments.LaserComponent;
+import com.csse3200.game.rendering.AnimationRenderComponent;
+import com.csse3200.game.components.WeaponsStatsComponent;
 import com.csse3200.game.components.player.InventoryComponent;
 import com.csse3200.game.entities.Entity;
+import com.csse3200.game.entities.configs.Benches;
 import com.csse3200.game.entities.configs.Weapons;
 import com.csse3200.game.entities.factories.characters.BossFactory;
 import com.csse3200.game.entities.factories.items.ItemFactory;
@@ -49,6 +54,8 @@ public class ForestGameArea extends GameArea {
   private static final int NUM_ITEMS = 5;//this is for ItemFactory
   // private static final int NUM_TURRETS = 1;
   private static final float WALL_WIDTH = 0.1f;
+
+  private final float VERTICAL_HEIGHT_OFFSET = 9.375f;
 
   /** Files or pictures used by the game (enemy/props,etc.). */
   private static final String HEART = "images/heart.png";
@@ -93,23 +100,36 @@ public class ForestGameArea extends GameArea {
     "images/player.png",
     "images/mud.png",
     "images/heart.png",
-    "images/computerBench.png",
-    "images/VendingMachine.png",
+    "images/healthBench.png",
     "images/laserball.png",
-    HEART,
-    "images/MarblePlatform.png",
-    "images/monster.png",
-    "images/electriczap.png",
     "images/computerBench.png",
+    "images/boss_idle.png",
+    "images/robot-2.png",
+    "images/warning.png",
+    "images/missle.png",
+    "images/white_cocoon.png",
+    "images/speedBench.png",
+    "images/waterBullet.png",
+    "images/VendingMachine.png",
+    HEART,
+    "images/heart.png",
+    "images/laserball.png",
+    "images/MarblePlatform.png",
+    "images/computerBench.png",
+    "images/monster.png",
+    "images/electric_zap.png",
+    "images/lightning_bottle.png",
     "images/Shipping.png",
     "images/ShipmentBoxLid.png",
     "images/ShipmentCrane.png",
     "images/Conveyor.png",
     "images/ServerRoomBackground.png",
     "images/ServerRoomBackgroundResize.png",
+    "images/TunnelRoomBackgResize.png",
     "foreg_sprites/furniture/ServerRack.png",
     "foreg_sprites/furniture/ServerRack2.png",
     "foreg_sprites/furniture/Vent.png",
+    "images/Storage.png"
     };
 
   /** General prop textures (floors, tiles, etc.). */
@@ -125,9 +145,17 @@ public class ForestGameArea extends GameArea {
     "foreg_sprites/general/ThinFloor3.png",
     "foreg_sprites/general/Test.png"
   };
+  private static final String[] researchTextures = {
+    "images/ResearchBackground.png",
 
+    "foreg_sprites/Research/Laboratory.png",
+    "foreg_sprites/Research/Microscope.png",
+    "foreg_sprites/Research/ResearchDesk.png",
+    "foreg_sprites/Research/ResearchPod.png"
+  };
   private static final String[] securityTextures = {
     "images/SecurityBackground.png",
+
     "foreg_sprites/general/ThinFloor3.png",
     "foreg_sprites/Security/Monitor.png",
     "foreg_sprites/Security/Platform.png",
@@ -186,6 +214,7 @@ public class ForestGameArea extends GameArea {
     "images/explosion_2.atlas",
     "images/player.atlas",
           "images/boss_explosion.atlas",
+          "images/Boss3_Attacks.atlas",
     "images/player.atlas",
     "images/terrain_iso_grass.atlas",
     "images/ghost.atlas",
@@ -193,22 +222,29 @@ public class ForestGameArea extends GameArea {
     "images/ghostGPT.atlas",
     "images/explosion_1.atlas",
     "images/explosion_2.atlas",
-    "images/boss_explosion.atlas"
+    "images/boss_explosion.atlas",
+          "images/boss2_combined.atlas",
+          "images/Boss3_Attacks.atlas",
+          "images/boss3_phase2.atlas"
   };
+  private static final String[] forestSounds = {"sounds/Impact4.ogg",
+          "sounds/shot_failed.mp3",
+          "sounds/reload.mp3",
+          "sounds/laser_blast.mp3",
+          "sounds/ammo_replenished.mp3"};
 
   private static final String[] playerSound1 = {"sounds/jump.mp3"};
-  private static final String[] forestSounds = {"sounds/Impact4.ogg"};
-
+  private static final String[] enemySounds = {"sounds/enemyDamage.mp3", "sounds/enemyDeath.mp3"};
   private static final String BACKGROUND_MUSIC = "sounds/BGM_03.mp3";
 
   private static final String[] forestMusic = {BACKGROUND_MUSIC};
 
-  private Entity player;
-  private Entity dagger;
-  private Entity lightsaber;
-  private Entity bullet;
-  private Entity pistol;
-  private Entity rifle;
+    private Entity player;
+    private Entity dagger;
+    private Entity lightsaber;
+    private Entity bullet;
+    private Entity pistol;
+    private Entity rifle;
 
 
   /**
@@ -237,24 +273,15 @@ public class ForestGameArea extends GameArea {
     displayUI();
     spawnTerrain();
     spawnComputerBench();
-    player = spawnPlayer();
-    dagger = spawnDagger();
-    pistol = spawnPistol();
-    rifle = spawnRifle();
-    lightsaber = spawnLightsaber();
+    spawnHealthBench();
+    spawnSpeedBench();
 
-    //These are commented out since there is no equip feature yet
-    // this.equipItem(pistol);
-    // this.equipItem(lightsaber);
-    // this.equipItem(dagger);
-    this.equipItem(rifle);
-//    this.equipItem(ConsumableFactory.createConsumable(Consumables.GENERIC_HEAL_ITEM));
+    player = spawnPlayer();
+    ServiceLocator.registerPlayer(player);
     spawnFloor();
     spawnBottomRightDoor();
     spawnMarblePlatforms();
     spawnShopKiosk();
-    // spawnGhosts();
-    // spawnGhostKing();
     SecureRandom random = new SecureRandom();
     int choice = random.nextInt(3);
     switch (choice) {
@@ -305,8 +332,8 @@ public class ForestGameArea extends GameArea {
       float viewHeight = cam.viewportHeight;
       float leftX = camPos.x - viewWidth / 2f;
       float rightX = camPos.x + viewWidth / 2f;
-      float bottomY = camPos.y - viewHeight / 2f;
-      float topY = camPos.y + viewHeight / 2f;
+      float bottomY = camPos.y - VERTICAL_HEIGHT_OFFSET / 2f;
+      float topY = camPos.y + VERTICAL_HEIGHT_OFFSET / 2f;
 
       // Left screen border
       Entity left = ObstacleFactory.createWall(WALL_WIDTH, viewHeight);
@@ -359,6 +386,7 @@ public class ForestGameArea extends GameArea {
    * This is called by the door/keycard logic when the player exits.
    */
   private void loadNextLevel() {
+      roomNumber++;
     // Use the safe, render-thread transition helper
     clearAndLoad(() -> new Reception(terrainFactory, cameraComponent));
   }
@@ -385,10 +413,22 @@ public class ForestGameArea extends GameArea {
   }
 
   private void spawnComputerBench() {
-    Entity bench = InteractableStationFactory.createComputerBench();
-    spawnEntityAt(bench, new GridPoint2(10, 7), true, true);
+    Entity bench = InteractableStationFactory.createStation(Benches.COMPUTER_BENCH);
+    spawnEntityAt(bench, new GridPoint2(2, 7), true, true);
 
   }
+
+  private void spawnHealthBench() {
+    Entity bench = InteractableStationFactory.createStation(Benches.HEALTH_BENCH);
+    spawnEntityAt(bench, new GridPoint2(8, 7), true, true);
+  }
+
+  private void spawnSpeedBench() {
+    Entity bench = InteractableStationFactory.createStation(Benches.SPEED_BENCH);
+    spawnEntityAt(bench, new GridPoint2(25, 7), true, true);
+  }
+
+
 
   /**
    * Places a large door sprite at the bottom-right platform. The door uses a keycard gate:
@@ -496,11 +536,12 @@ public class ForestGameArea extends GameArea {
 
   private Entity spawnLightsaber() {
     Entity newLightsaber = WeaponsFactory.createWeapon(Weapons.LIGHTSABER);
-    Vector2 newLightsaberOffset = new Vector2(0.7f, -0.1f);
+    Vector2 newLightsaberOffset = new Vector2(0.9f, -0.2f);
     newLightsaber.addComponent(new ItemHoldComponent(this.player, newLightsaberOffset));
-    //Commented out since lightsaber animation is a work in progress
-    //AnimationRenderComponent lightSaberAnimator = WeaponsFactory.createAnimation("images/lightSaber.atlas", this.player);
-    //newLightsaber.addComponent(lightSaberAnimator);
+    AnimationRenderComponent lightSaberAnimator = WeaponsFactory.createAnimation("images/lightSaber.atlas", this.player);
+    newLightsaber.addComponent(lightSaberAnimator);
+    lightSaberAnimator.startAnimation("anim");
+
     return newLightsaber;
   }
 
@@ -513,9 +554,15 @@ public class ForestGameArea extends GameArea {
 
   private Entity spawnRifle() {
     Entity newRifle = WeaponsFactory.createWeapon(Weapons.RIFLE);
-    Vector2 newRifleOffset = new Vector2(0.25f, 0.15f);
+    Vector2 newRifleOffset = new Vector2(0.8f, 0.15f);
     newRifle.addComponent(new ItemHoldComponent(this.player, newRifleOffset));
     return newRifle;
+  }
+
+  private Entity spawnRapidFirePowerup() {
+    Entity newRapidFirePowerup = PowerupsFactory.createRapidFire();
+    spawnEntityAt(newRapidFirePowerup, new GridPoint2(2, 40), true, true);
+    return newRapidFirePowerup;
   }
 
   private void spawnBoss2() {
@@ -526,7 +573,7 @@ public class ForestGameArea extends GameArea {
 
   //new added boss3
   private void spawnBoss3() {
-    GridPoint2 pos = new GridPoint2(20, 12);
+    GridPoint2 pos = new GridPoint2(15, 16);
 
     Entity boss3 = BossFactory.createBoss3(player);
     spawnEntityAt(boss3, pos, true, true);
@@ -556,9 +603,11 @@ public class ForestGameArea extends GameArea {
     resourceService.loadTextures(spawnPadTextures);
     resourceService.loadTextures(officeTextures);
     resourceService.loadTextures(securityTextures);
+    resourceService.loadTextures(researchTextures);
     resourceService.loadTextureAtlases(forestTextureAtlases);
     resourceService.loadSounds(playerSound1);
     resourceService.loadSounds(forestSounds);
+    resourceService.loadSounds(enemySounds);
     resourceService.loadMusic(forestMusic);
 
     while (resourceService.loadForMillis(10)) {
