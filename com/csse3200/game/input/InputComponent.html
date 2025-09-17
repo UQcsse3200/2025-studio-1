@@ -186,7 +186,7 @@ implements com.badlogic.gdx.InputProcessor, com.badlogic.gdx.input.GestureDetect
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns True as this component is pausable.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final boolean</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#keyDown(int)" class="member-name-link">keyDown</a><wbr>(int&nbsp;keycode)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Handles key down events from the game engine.</div>
@@ -206,7 +206,7 @@ implements com.badlogic.gdx.InputProcessor, com.badlogic.gdx.input.GestureDetect
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#keyTyped(char)" class="member-name-link">keyTyped</a><wbr>(char&nbsp;character)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final boolean</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#keyUp(int)" class="member-name-link">keyUp</a><wbr>(int&nbsp;keycode)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Handles the key up events from the game engine.</div>
@@ -397,7 +397,7 @@ implements com.badlogic.gdx.InputProcessor, com.badlogic.gdx.input.GestureDetect
 <li>
 <section class="detail" id="keyDown(int)">
 <h3>keyDown</h3>
-<div class="member-signature"><span class="modifiers">public final</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">keyDown</span><wbr><span class="parameters">(int&nbsp;keycode)</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">keyDown</span><wbr><span class="parameters">(int&nbsp;keycode)</span></div>
 <div class="block">Handles key down events from the game engine. This is final
  to ensure the logic is inherited by all children while delegating
  specific key handling to the <a href="#keyPressed(int)"><code>keyPressed(int)</code></a> method.</div>
@@ -444,7 +444,7 @@ implements com.badlogic.gdx.InputProcessor, com.badlogic.gdx.input.GestureDetect
 <li>
 <section class="detail" id="keyUp(int)">
 <h3>keyUp</h3>
-<div class="member-signature"><span class="modifiers">public final</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">keyUp</span><wbr><span class="parameters">(int&nbsp;keycode)</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">keyUp</span><wbr><span class="parameters">(int&nbsp;keycode)</span></div>
 <div class="block">Handles the key up events from the game engine. This is final
  to ensure that the logic is inherited by all the children while
  delegating specific key handling to the <a href="#keyReleased(int)"><code>keyReleased(int)</code></a>

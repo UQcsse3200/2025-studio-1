@@ -38,7 +38,7 @@ loadScripts(document, 'script');</script>
 <p>Summary:</p>
 <ul>
 <li><a href="#nested-class-summary">Nested</a></li>
-<li>Field</li>
+<li><a href="#field-summary">Field</a></li>
 <li><a href="#constructor-summary">Constr</a></li>
 <li><a href="#method-summary">Method</a></li>
 </ul>
@@ -46,7 +46,7 @@ loadScripts(document, 'script');</script>
 <li>
 <p>Detail:</p>
 <ul>
-<li>Field</li>
+<li><a href="#field-detail">Field</a></li>
 <li><a href="#constructor-detail">Constr</a></li>
 <li><a href="#method-detail">Method</a></li>
 </ul>
@@ -58,13 +58,13 @@ loadScripts(document, 'script');</script>
 <ul class="sub-nav-list">
 <li>Summary:&nbsp;</li>
 <li><a href="#nested-class-summary">Nested</a>&nbsp;|&nbsp;</li>
-<li>Field&nbsp;|&nbsp;</li>
+<li><a href="#field-summary">Field</a>&nbsp;|&nbsp;</li>
 <li><a href="#constructor-summary">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method-summary">Method</a></li>
 </ul>
 <ul class="sub-nav-list">
 <li>Detail:&nbsp;</li>
-<li>Field&nbsp;|&nbsp;</li>
+<li><a href="#field-detail">Field</a>&nbsp;|&nbsp;</li>
 <li><a href="#constructor-detail">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method-detail">Method</a></li>
 </ul>
@@ -113,6 +113,21 @@ loadScripts(document, 'script');</script>
 </div>
 </section>
 </li>
+<!-- =========== FIELD SUMMARY =========== -->
+<li>
+<section class="field-summary" id="field-summary">
+<h2>Field Summary</h2>
+<div class="caption"><span>Fields</span></div>
+<div class="summary-table three-column-summary">
+<div class="table-header col-first">Modifier and Type</div>
+<div class="table-header col-second">Field</div>
+<div class="table-header col-last">Description</div>
+<div class="col-first even-row-color"><code>static com.badlogic.gdx.utils.Json</code></div>
+<div class="col-second even-row-color"><code><a href="#jsonSave" class="member-name-link">jsonSave</a></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+</div>
+</section>
+</li>
 <!-- ======== CONSTRUCTOR SUMMARY ======== -->
 <li>
 <section class="constructor-summary" id="constructor-summary">
@@ -150,17 +165,38 @@ loadScripts(document, 'script');</script>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Read generic Java classes from a JSON file.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#writeClass(java.lang.Object,java.lang.String)" class="member-name-link">writeClass</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;object,
- <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;filename)</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../components/player/InventoryComponent.html" title="class in com.csse3200.game.components.player">InventoryComponent</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#readInventory(java.util.List,int)" class="member-name-link">readInventory</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;inventory,
+ int&nbsp;CPU)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Write generic Java classes to a JSON file.</div>
+<div class="block">Reads Inventory component of a save file json
+ - currently a placeholder for refacotring end sprint 2 / into sprint 3</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#writeClass(java.lang.Object,java.lang.String,com.csse3200.game.files.FileLoader.Location)" class="member-name-link">writeClass</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;object,
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static &lt;T&gt;&nbsp;T</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#readPlayer(java.lang.Class,java.lang.String,com.csse3200.game.files.FileLoader.Location)" class="member-name-link">readPlayer</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;<a href="../services/SaveLoadService.PlayerInfo.html" title="class in com.csse3200.game.services">SaveLoadService.PlayerInfo</a>&gt;&nbsp;player,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;filename,
  <a href="FileLoader.Location.html" title="enum class in com.csse3200.game.files">FileLoader.Location</a>&nbsp;location)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Read playerinfo from a JSON file and write into class.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#writeClass(com.csse3200.game.services.SaveLoadService.PlayerInfo,java.lang.String,com.csse3200.game.files.FileLoader.Location)" class="member-name-link">writeClass</a><wbr>(<a href="../services/SaveLoadService.PlayerInfo.html" title="class in com.csse3200.game.services">SaveLoadService.PlayerInfo</a>&nbsp;playerInfo,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;filename,
+ <a href="FileLoader.Location.html" title="enum class in com.csse3200.game.files">FileLoader.Location</a>&nbsp;location)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Write specific player instance to a JSON file.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#writeClass(java.lang.Object,java.lang.String)" class="member-name-link">writeClass</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;object,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;filename)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Write generic Java classes to a JSON file.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#writeClass(java.lang.Object,java.lang.String,com.csse3200.game.files.FileLoader.Location)" class="member-name-link">writeClass</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;object,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;filename,
+ <a href="FileLoader.Location.html" title="enum class in com.csse3200.game.files">FileLoader.Location</a>&nbsp;location)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Write generic Java classes to a JSON file.</div>
 </div>
 </div>
@@ -175,6 +211,20 @@ loadScripts(document, 'script');</script>
 </section>
 <section class="details">
 <ul class="details-list">
+<!-- ============ FIELD DETAIL =========== -->
+<li>
+<section class="field-details" id="field-detail">
+<h2>Field Details</h2>
+<ul class="member-list">
+<li>
+<section class="detail" id="jsonSave">
+<h3>jsonSave</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">com.badlogic.gdx.utils.Json</span>&nbsp;<span class="element-name">jsonSave</span></div>
+</section>
+</li>
+</ul>
+</section>
+</li>
 <!-- ========= CONSTRUCTOR DETAIL ======== -->
 <li>
 <section class="constructor-details" id="constructor-detail">
@@ -234,6 +284,39 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
+<section class="detail" id="readPlayer(java.lang.Class,java.lang.String,com.csse3200.game.files.FileLoader.Location)">
+<h3>readPlayer</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="type-parameters">&lt;T&gt;</span>&nbsp;<span class="return-type">T</span>&nbsp;<span class="element-name">readPlayer</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;<a href="../services/SaveLoadService.PlayerInfo.html" title="class in com.csse3200.game.services">SaveLoadService.PlayerInfo</a>&gt;&nbsp;player,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;filename,
+ <a href="FileLoader.Location.html" title="enum class in com.csse3200.game.files">FileLoader.Location</a>&nbsp;location)</span></div>
+<div class="block">Read playerinfo from a JSON file and write into class.</div>
+<dl class="notes">
+<dt>Type Parameters:</dt>
+<dd><code>T</code> - Class type to read JSON into</dd>
+<dt>Parameters:</dt>
+<dd><code>player</code> - class type</dd>
+<dd><code>filename</code> - file to read from</dd>
+<dd><code>location</code> - File storage type. See</dd>
+<dt>Returns:</dt>
+<dd>instance of class, may be null</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="readInventory(java.util.List,int)">
+<h3>readInventory</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../components/player/InventoryComponent.html" title="class in com.csse3200.game.components.player">InventoryComponent</a></span>&nbsp;<span class="element-name">readInventory</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;inventory,
+ int&nbsp;CPU)</span></div>
+<div class="block">Reads Inventory component of a save file json
+ - currently a placeholder for refacotring end sprint 2 / into sprint 3</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>inventory</code> - string representation of the items</dd>
+<dd><code>CPU</code> - processor count to be loaded in</dd>
+</dl>
+</section>
+</li>
+<li>
 <section class="detail" id="writeClass(java.lang.Object,java.lang.String)">
 <h3>writeClass</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">writeClass</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;object,
@@ -256,6 +339,22 @@ loadScripts(document, 'script');</script>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>object</code> - Java object to write.</dd>
+<dd><code>filename</code> - File to write to.</dd>
+<dd><code>location</code> - File storage type. See
+     https://github.com/libgdx/libgdx/wiki/File-handling#file-storage-types</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="writeClass(com.csse3200.game.services.SaveLoadService.PlayerInfo,java.lang.String,com.csse3200.game.files.FileLoader.Location)">
+<h3>writeClass</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">writeClass</span><wbr><span class="parameters">(<a href="../services/SaveLoadService.PlayerInfo.html" title="class in com.csse3200.game.services">SaveLoadService.PlayerInfo</a>&nbsp;playerInfo,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;filename,
+ <a href="FileLoader.Location.html" title="enum class in com.csse3200.game.files">FileLoader.Location</a>&nbsp;location)</span></div>
+<div class="block">Write specific player instance to a JSON file.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>playerInfo</code> - information required to load the player back in</dd>
 <dd><code>filename</code> - File to write to.</dd>
 <dd><code>location</code> - File storage type. See
      https://github.com/libgdx/libgdx/wiki/File-handling#file-storage-types</dd>

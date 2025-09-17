@@ -136,6 +136,11 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Called when the component is created.</div>
 </div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#createItemFromTexture(java.lang.String)" class="member-name-link">createItemFromTexture</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;texture)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">The method recreates an item entity based on its texture path.</div>
+</div>
 </div>
 </div>
 </div>
@@ -183,6 +188,23 @@ loadScripts(document, 'script');</script>
 <dl class="notes">
 <dt>Overrides:</dt>
 <dd><code><a href="../Component.html#create()">create</a></code>&nbsp;in class&nbsp;<code><a href="../Component.html" title="class in com.csse3200.game.components">Component</a></code></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="createItemFromTexture(java.lang.String)">
+<h3>createItemFromTexture</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a></span>&nbsp;<span class="element-name">createItemFromTexture</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;texture)</span></div>
+<div class="block">The method recreates an item entity based on its texture path.
+ This method is used when dropping items from the inventory back into the world.
+ Since inventory only stores the texture reference the texture string is used here
+ as a lookup key to recreate the appropriate entity using the relevant factory class.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>texture</code> - the texture file path associated with the item in inventory</dd>
+<dt>Returns:</dt>
+<dd>a new <a href="../../entities/Entity.html" title="class in com.csse3200.game.entities"><code>Entity</code></a> matching the texture, or <code>null</code> if the
+ texture does not correspond to a known item type.</dd>
 </dl>
 </section>
 </li>
