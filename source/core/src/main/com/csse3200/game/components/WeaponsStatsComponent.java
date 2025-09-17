@@ -13,13 +13,14 @@ public class WeaponsStatsComponent extends Component {
 
     private static final Logger logger = LoggerFactory.getLogger(WeaponsStatsComponent.class);
 
-    private static final int DEFAULT_COOLDOWN = 0;
+    private static final float DEFAULT_COOLDOWN = 0.2f;
     private static final boolean DEFAULT_DISABLE_DAMAGE = false;
 
     /** Base attack damage used when this component attacks another. Non-negative */
     private int baseAttack;
     private float coolDown;
     private boolean disableDamage;
+    private String projectileTexturePath;
     private int upgradeStage = 1;
     private final int maxUpgradeStage = 4;
 
@@ -46,7 +47,11 @@ public class WeaponsStatsComponent extends Component {
      * @param coolDown coolDown
      */
     public void setCoolDown(float coolDown) {
-        this.coolDown = Math.max(0, coolDown);
+        if (coolDown < 0f) {
+            this.coolDown = Math.max(0.2f, coolDown);
+        } else {
+            this.coolDown = coolDown;
+        }
     }
 
     /**
@@ -78,6 +83,14 @@ public class WeaponsStatsComponent extends Component {
         } else {
             logger.error("Can not set base attack to a negative attack value");
         }
+    }
+
+    public void setProjectileTexturePath(String projectileTexturePath) {
+        this.projectileTexturePath = projectileTexturePath;
+    }
+
+    public String getProjectileTexturePath() {
+        return this.projectileTexturePath;
     }
 
     private boolean canAttack() {

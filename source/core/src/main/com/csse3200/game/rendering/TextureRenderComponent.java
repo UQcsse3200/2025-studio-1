@@ -33,8 +33,10 @@ public class TextureRenderComponent extends RenderComponent {
 
   @Override
   protected void draw(SpriteBatch batch) {
-    Vector2 position = entity.getPosition();
-    Vector2 scale = entity.getScale();
-    batch.draw(texture, position.x, position.y, scale.x, scale.y);
+    if (!isDisabled()) {
+      Vector2 position = entity.getPosition();
+      Vector2 scale = entity.getScale();
+      batch.draw(texture, position.x, position.y, scale.x, scale.y);
+    }
   }
 }

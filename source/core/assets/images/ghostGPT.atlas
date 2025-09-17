@@ -12,7 +12,7 @@ angry_float
   index: 0
 angry_float
   rotate: false
-  xy: 29, 40
+  xy: 30, 40
   size: 18, 30
   orig: 170, 300
   offset: 0, 0
@@ -26,7 +26,7 @@ angry_float
   index: 2
 angry_float
   rotate: false
-  xy: 51, 40
+  xy: 53, 40
   size: 18, 30
   orig: 170, 300
   offset: 0, 0
@@ -47,7 +47,7 @@ float
   index: 0
 float
   rotate: false
-  xy: 29, 7
+  xy: 30, 7
   size: 18, 30
   orig: 170, 300
   offset: 0, 0
@@ -61,7 +61,7 @@ float
   index: 2
 float
   rotate: false
-  xy: 51, 7
+  xy: 53, 7
   size: 18, 30
   orig: 170, 300
   offset: 0, 0

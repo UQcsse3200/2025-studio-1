@@ -20,7 +20,7 @@ public class InteractableStationFactory {
      * Creates a base interactable station
      * @return the station
      */
-    private static Entity createBaseStation() {
+    public static Entity createBaseStation() {
         Entity base = new Entity()
                 .addComponent(new PhysicsComponent())
                 .addComponent(new ColliderComponent().setLayer(PhysicsLayer.STATION));
