@@ -12,12 +12,18 @@ import com.csse3200.game.components.shop.CatalogEntry;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.UIComponent;
 
+/**
+ * Popup screen which displays information about a shop item
+ */
 public class ItemScreenDisplay extends UIComponent {
     private CatalogEntry entry;      // set on open()
     private Table root;              // centers the modal
     private Texture whiteTex;        // disposed in dispose()
     private boolean whiteTexOwned;   // guard double-dispose
 
+    /**
+     * A popup which displays information about a shop item in the game.
+     */
     public ItemScreenDisplay() {}
 
     @Override
@@ -25,25 +31,24 @@ public class ItemScreenDisplay extends UIComponent {
         super.create();
     }
 
-    /** Build and show the popup for the given entry. Safe to call repeatedly. */
+    /** Build and show the popup for the given entry.
+     * Safe to call repeatedly. */
     public void open(CatalogEntry entry) {
         // Don’t stack UIs
         close();
 
-        // Fallback: ensure stage exists even if create() hasn’t run
+        // ensure stage exists even if create() hasn’t run
         if (stage == null) {
             stage = ServiceLocator.getRenderService().getStage();
         }
 
         this.entry = entry;
 
-        // --- Root container ---
         root = new Table();
         root.setFillParent(true);
         root.center();
         stage.addActor(root);
 
-        // --- Modal box ---
         Table box = new Table();
         box.pad(14f);
         box.defaults().pad(6f).center();
@@ -59,14 +64,13 @@ public class ItemScreenDisplay extends UIComponent {
         title.setFontScale(1.2f);
         box.add(title).padBottom(8f).row();
 
-        // Icon: clone drawable if possible; otherwise skip gracefully
         Actor popupIcon = null;
         try {
             Actor tileIcon = entry.getIconActor(skin);
             if (tileIcon instanceof Image) {
                 var d = ((Image) tileIcon).getDrawable();
                 if (d != null) {
-                    popupIcon = new Image(d); // fresh Image; no parent conflicts
+                    popupIcon = new Image(d);
                 }
             }
         } catch (Exception ignored) {

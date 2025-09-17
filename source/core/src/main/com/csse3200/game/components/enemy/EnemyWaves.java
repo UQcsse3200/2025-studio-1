@@ -78,11 +78,9 @@ public class EnemyWaves extends Component {
     }
     float effectiveScale = scalingFactor * baseScale;
     logger.info("EnemyWaves: spawning wave {} of {} (waveScale={}, baseScale={}, effective={})", waveNumber + 1, maxWaves, scalingFactor, baseScale, effectiveScale);
-    //gameArea.spawnGhostGPT(baseGhosts, effectiveScale, player);
-    //gameArea.spawnVroomba(baseVroombas, effectiveScale, player);
 
-      // Change gameArea.getRoomNumber() to any number between 2 and 7 to get different enemies.
-      gameArea.spawnEnemies(gameArea.getRoomNumber(), baseEnemies, effectiveScale, player);
+    // Change gameArea.getRoomNumber() to any number between 2 and 7 to get different enemies.
+    gameArea.spawnEnemies(gameArea.getRoomNumber(), baseEnemies, effectiveScale, player);
 
     waveNumber++;
     scalingFactor += 0.25f; // incremental per-wave multiplier
