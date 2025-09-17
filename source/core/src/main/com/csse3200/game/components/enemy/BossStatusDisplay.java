@@ -1,4 +1,4 @@
-package com.csse3200.game.components.player;
+package com.csse3200.game.components.enemy;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
@@ -71,7 +71,7 @@ public class BossStatusDisplay extends Component {
             System.out.println("[BOSS UI] Health updated: " + health + "/" + maxHealth +
                     " (" + (int)(healthPercentage * 100) + "%)");
             // Change color to red when health drops to 50% or below
-            if (maxHealth > 0 && healthPercentage <= 0.5f) {
+            if (healthPercentage <= 0.5f) {
                 setHealthBarColor(Color.RED);
             } else {
                 setHealthBarColor(COLOR_HEALTH);

@@ -99,10 +99,12 @@ public class ShippingGameArea extends GameArea {
   }
 
   private void loadTunnel() {
+      roomNumber--;
     clearAndLoad(() -> new TunnelGameArea(terrainFactory, cameraComponent));
   }
 
   private void loadServer() {
+      roomNumber++;
     clearAndLoad(() -> new ServerGameArea(terrainFactory, cameraComponent));
   }
 }

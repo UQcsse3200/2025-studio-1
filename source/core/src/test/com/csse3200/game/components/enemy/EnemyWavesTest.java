@@ -17,7 +17,7 @@ import org.mockito.Mockito;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
-public class EnemyWavesTest{
+class EnemyWavesTest{
     private GameArea gameArea;
     private Entity player;
     private EntityService entityService;
