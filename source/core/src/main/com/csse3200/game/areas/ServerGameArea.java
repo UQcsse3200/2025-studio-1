@@ -154,6 +154,7 @@ public class ServerGameArea extends GameArea {
 
   private static final String[] playerSound1 = {"sounds/jump.mp3"};
   private static final String[] forestSounds = {"sounds/Impact4.ogg"};
+  private static final String[] enemySounds = {"sounds/enemyDamage.mp3", "sounds/enemyDeath.mp3"};
 
   private static final String BACKGROUND_MUSIC = "sounds/BGM_03.mp3";
 
@@ -384,6 +385,7 @@ public class ServerGameArea extends GameArea {
     resourceService.loadTextureAtlases(forestTextureAtlases);
     resourceService.loadSounds(playerSound1);
     resourceService.loadSounds(forestSounds);
+    resourceService.loadSounds(enemySounds);
     resourceService.loadMusic(forestMusic);
 
     while (resourceService.loadForMillis(10)) {
@@ -406,10 +408,12 @@ public class ServerGameArea extends GameArea {
   }
 
   private void loadTunnel() {
+      roomNumber--;
     clearAndLoad(() -> new TunnelGameArea(terrainFactory, cameraComponent));
   }
 
   private void loadStorage() {
+      roomNumber++;
     clearAndLoad(() -> new StorageGameArea(terrainFactory, cameraComponent));
   }
 }

@@ -207,6 +207,7 @@ public class ForestGameArea extends GameArea {
           "sounds/ammo_replenished.mp3"};
 
   private static final String[] playerSound1 = {"sounds/jump.mp3"};
+  private static final String[] enemySounds = {"sounds/enemyDamage.mp3", "sounds/enemyDeath.mp3"};
   private static final String BACKGROUND_MUSIC = "sounds/BGM_03.mp3";
 
   private static final String[] forestMusic = {BACKGROUND_MUSIC};
@@ -363,6 +364,7 @@ public class ForestGameArea extends GameArea {
    * This is called by the door/keycard logic when the player exits.
    */
   private void loadNextLevel() {
+      roomNumber++;
     // Use the safe, render-thread transition helper
     clearAndLoad(() -> new Reception(terrainFactory, cameraComponent));
   }
@@ -570,6 +572,7 @@ public class ForestGameArea extends GameArea {
     resourceService.loadTextureAtlases(forestTextureAtlases);
     resourceService.loadSounds(playerSound1);
     resourceService.loadSounds(forestSounds);
+    resourceService.loadSounds(enemySounds);
     resourceService.loadMusic(forestMusic);
 
     while (resourceService.loadForMillis(10)) {

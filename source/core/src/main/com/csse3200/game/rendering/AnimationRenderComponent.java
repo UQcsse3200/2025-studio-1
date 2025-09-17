@@ -149,29 +149,29 @@ public class AnimationRenderComponent extends RenderComponent {
   }
 
   /**
-   * Starts the playback of the desired animation. Once the current animation is done, it will play the next animation
-   * specified by the nextName parameter.
+   * Starts the playback of the desired animation. Once the current animation is done, it will play the last looped
+   * animation
    * @requires currentName references a normal animation (non looping).
-   * @param currentName name of the animation to play.
+   * @param name name of the animation to play.
    */
-  public void playAnimationOnce(String currentName) {
-    Animation<TextureRegion> animation = animations.getOrDefault(currentName, null);
+  public void playAnimationOnce(String name) {
+    Animation<TextureRegion> animation = animations.getOrDefault(name, null);
     if (animation == null) {
-      startAnimation(currentName); // null errors are handled in here
-    } else if (animation.getPlayMode() == PlayMode.LOOP) {
+      startAnimation(name); // null errors are handled in here
+    } else if (animation.getPlayMode() != PlayMode.NORMAL && animation.getPlayMode() != PlayMode.REVERSED) {
       logger.error(
               "Attempted to play animation {} until done, but it was a looping animation.",
-              currentName);
+              name);
       return;
     }
 
     if (playOnce) { // already playing a one loop animation
       String temp = nextAnimationName;
-      startAnimation(currentName);
+      startAnimation(name);
       nextAnimationName = temp;
     } else {
       String temp = currentAnimationName;
-      startAnimation(currentName);
+      startAnimation(name);
       nextAnimationName = temp;
     }
     playOnce = true;
