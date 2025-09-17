@@ -253,14 +253,6 @@ public class ForestGameArea extends GameArea {
 
     player = spawnPlayer();
     ServiceLocator.registerPlayer(player);
-    dagger = spawnDagger();
-    pistol = spawnPistol();
-    rifle = spawnRifle();
-    lightsaber = spawnLightsaber();
-    rifle.addComponent(new LaserComponent());
-    rifle.addComponent(new BulletEnhancerComponent());
-    this.equipItem(rifle);
-
     spawnFloor();
     spawnBottomRightDoor();
     spawnMarblePlatforms();

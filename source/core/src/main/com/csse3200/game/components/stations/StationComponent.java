@@ -165,7 +165,6 @@ public class StationComponent extends Component {
      * Triggers the upgrade from the station
      */
     public void upgrade() {
-        System.out.println(this.config.benchType.getString());
         this.config.upgrade(playerNear, player, buyPrompt);
     }
 }
