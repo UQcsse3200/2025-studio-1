@@ -46,10 +46,12 @@ public class ResearchGameArea extends GameArea {
   }
 
   private void loadElevator() {
+      roomNumber--;
     clearAndLoad(() -> new ElevatorGameArea(terrainFactory, cameraComponent));
   }
 
   private void loadStorage() {
+      roomNumber++;
     clearAndLoad(() -> new StorageGameArea(terrainFactory, cameraComponent));
   }
 }
