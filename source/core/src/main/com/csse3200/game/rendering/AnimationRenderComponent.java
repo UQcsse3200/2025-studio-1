@@ -43,7 +43,7 @@ public class AnimationRenderComponent extends RenderComponent {
   private float animationPlayTime;
   private boolean disposeAtlas = false;
 
-  private boolean stopIfDone;
+  private boolean playOnce;
   private String nextAnimationName;
 
   /**
@@ -140,7 +140,7 @@ public class AnimationRenderComponent extends RenderComponent {
       return;
     }
 
-    stopIfDone = false;
+    playOnce = false;
     nextAnimationName = null;
     currentAnimation = animation;
     currentAnimationName = name;
@@ -149,26 +149,32 @@ public class AnimationRenderComponent extends RenderComponent {
   }
 
   /**
-   * Starts the playback of the desired animation. Once the current animation is done, it will play the next animation
-   * specified by the nextName parameter.
+   * Starts the playback of the desired animation. Once the current animation is done, it will play the last looped
+   * animation
    * @requires currentName references a normal animation (non looping).
-   * @param currentName name of the animation to play.
-   * @param nextName name of the animation to play after the current animation is done.
+   * @param name name of the animation to play.
    */
-  public void playAnimationOnce(String currentName, String nextName) {
-    Animation<TextureRegion> animation = animations.getOrDefault(currentName, null);
+  public void playAnimationOnce(String name) {
+    Animation<TextureRegion> animation = animations.getOrDefault(name, null);
     if (animation == null) {
-      startAnimation(currentName); // null errors are handled in here
-    } else if (animation.getPlayMode() == PlayMode.LOOP) {
+      startAnimation(name); // null errors are handled in here
+    } else if (animation.getPlayMode() != PlayMode.NORMAL && animation.getPlayMode() != PlayMode.REVERSED) {
       logger.error(
               "Attempted to play animation {} until done, but it was a looping animation.",
-              currentName);
+              name);
       return;
     }
 
-    startAnimation(currentName);
-    stopIfDone = true;
-    nextAnimationName = nextName;
+    if (playOnce) { // already playing a one loop animation
+      String temp = nextAnimationName;
+      startAnimation(name);
+      nextAnimationName = temp;
+    } else {
+      String temp = currentAnimationName;
+      startAnimation(name);
+      nextAnimationName = temp;
+    }
+    playOnce = true;
   }
 
   /**
@@ -207,9 +213,9 @@ public class AnimationRenderComponent extends RenderComponent {
   protected void draw(SpriteBatch batch) {
     if (currentAnimation == null) {
       return;
-    } else if (stopIfDone && isFinished()) {
+    } else if (playOnce && isFinished()) {
       startAnimation(nextAnimationName);
-      stopIfDone = false;
+      playOnce = false;
       nextAnimationName = null;
     }
 

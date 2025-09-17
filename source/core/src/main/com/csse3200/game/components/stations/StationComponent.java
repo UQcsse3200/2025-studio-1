@@ -193,7 +193,6 @@ public class StationComponent extends Component {
             } else {
                 buyPrompt.setText("You are broke! Fries in the bag!");
             }
-
         }
     }
 }

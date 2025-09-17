@@ -28,6 +28,6 @@ public class GhostAnimationController extends Component {
   }
 
   void animateDamageTaken() {
-    animator.playAnimationOnce("damage_taken", animator.getCurrentAnimation());
+    animator.playAnimationOnce("damage_taken");
   }
 }

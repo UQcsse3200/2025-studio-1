@@ -272,4 +272,5 @@ public class InventoryComponent extends Component {
   public Entity getCurrItem() {
      return this.currItem;
   }
+
 }
