@@ -155,7 +155,8 @@ public class StationComponent extends Component {
         if (!(data instanceof BodyUserData userData)) return;
         Entity otherEntity = userData.entity;
         if (otherEntity.getComponent(PlayerActions.class) != null) {
-            otherEntity.getEvents().removeListener("interact");
+            otherEntity.getEvents().removeListener("interact", this::upgrade);
+
             playerNear = false;
             buyPrompt.setVisible(false);
         }
@@ -165,6 +166,7 @@ public class StationComponent extends Component {
      * Triggers the upgrade from the station
      */
     public void upgrade() {
+        System.out.println(config.benchType.getString() + " " + playerNear);
         this.config.upgrade(playerNear, player, buyPrompt);
     }
 }

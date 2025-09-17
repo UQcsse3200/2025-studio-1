@@ -23,7 +23,6 @@ public class HealthBenchConfig extends BenchConfig {
 
     @Override
     public void upgrade(boolean playerNear, Entity player, Label buyPrompt) {
-        System.out.println("UPGRADED");
         //check the player and the upgrade hasnt been used yet
         if (playerNear && player != null && !upgradeUsed
                 && player.getComponent(InventoryComponent.class).hasProcessor(price)) {
