@@ -29,7 +29,7 @@ class EnemyHealthDisplayTest {
         // Create an enemy with 10 health
         Entity enemy = new Entity().addComponent(new CombatStatsComponent(10));
         // Create EnemyHealthDisplay and override create() to use a mocked ProgressBar
-        EnemyHealthDisplay display = new EnemyHealthDisplay() {
+        EnemyHealthDisplay display = new EnemyHealthDisplay(0.5f) {
             @Override
             public void create() {
                 maxHealth = entity.getComponent(CombatStatsComponent.class).getMaxHealth();
@@ -56,10 +56,8 @@ class EnemyHealthDisplayTest {
         assertEquals(6, display.getCurrentHealth());
     }
 
-    @Test
-    void testUpdateRunsWithoutCrashing() {
-        Entity enemy = new Entity().addComponent(new CombatStatsComponent(10));
-        EnemyHealthDisplay display = new EnemyHealthDisplay() {
+    private EnemyHealthDisplay createTestDisplay() {
+        return new EnemyHealthDisplay() {
             @Override
             public void create() {
                 maxHealth = entity.getComponent(CombatStatsComponent.class).getMaxHealth();
@@ -69,10 +67,34 @@ class EnemyHealthDisplayTest {
                 stage.addActor(healthBar);
             }
         };
+    }
+
+    @Test
+    void testUpdateRunsWithoutCrashing() {
+        Entity enemy = new Entity().addComponent(new CombatStatsComponent(10));
+        EnemyHealthDisplay display = createTestDisplay();
         enemy.addComponent(display);
         display.create();
+        // Call update() and assert it does not throw when enemy change position
         enemy.setPosition(1, 2);
-        // Call update() and assert it does not throw
         assertDoesNotThrow(display::update);
+    }
+
+    @Test
+    public void testUpdateWhenEntityNull() {
+        EnemyHealthDisplay display = createTestDisplay();
+        display.update();  // will print log message and return without error
+    }
+
+    @Test
+    public void testDisposeRemovesHealthBar() throws Exception {
+        Entity enemy = new Entity().addComponent(new CombatStatsComponent(10));
+        EnemyHealthDisplay display = createTestDisplay();
+        enemy.addComponent(display);
+        display.create();
+
+        ProgressBar mockHealthBar = display.healthBar;
+        display.dispose();
+        verify(mockHealthBar).remove(); // ensure remove() called
     }
 }
