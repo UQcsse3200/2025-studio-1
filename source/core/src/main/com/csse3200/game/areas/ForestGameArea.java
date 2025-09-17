@@ -9,6 +9,10 @@ import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.items.ItemHoldComponent;
 import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.components.KeycardGateComponent;
+import com.csse3200.game.components.attachments.BulletEnhancerComponent;
+import com.csse3200.game.components.attachments.LaserComponent;
+import com.csse3200.game.rendering.AnimationRenderComponent;
+import com.csse3200.game.components.WeaponsStatsComponent;
 import com.csse3200.game.components.player.InventoryComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.Weapons;
@@ -93,6 +97,8 @@ public class ForestGameArea extends GameArea {
     "images/player.png",
     "images/mud.png",
     "images/heart.png",
+    "images/computerBench.png",
+    "images/waterBullet.png",
     "images/VendingMachine.png",
     HEART,
     "images/heart.png",
@@ -195,20 +201,23 @@ public class ForestGameArea extends GameArea {
     "images/explosion_2.atlas",
     "images/boss_explosion.atlas"
   };
+  private static final String[] forestSounds = {"sounds/Impact4.ogg",
+          "sounds/shot_failed.mp3",
+          "sounds/reload.mp3",
+          "sounds/laser_blast.mp3",
+          "sounds/ammo_replenished.mp3"};
 
   private static final String[] playerSound1 = {"sounds/jump.mp3"};
-  private static final String[] forestSounds = {"sounds/Impact4.ogg"};
-
   private static final String BACKGROUND_MUSIC = "sounds/BGM_03.mp3";
 
   private static final String[] forestMusic = {BACKGROUND_MUSIC};
 
-  private Entity player;
-  private Entity dagger;
-  private Entity lightsaber;
-  private Entity bullet;
-  private Entity pistol;
-  private Entity rifle;
+    private Entity player;
+    private Entity dagger;
+    private Entity lightsaber;
+    private Entity bullet;
+    private Entity pistol;
+    private Entity rifle;
 
 
   /**
@@ -238,23 +247,19 @@ public class ForestGameArea extends GameArea {
     spawnTerrain();
     spawnComputerBench();
     player = spawnPlayer();
+    ServiceLocator.registerPlayer(player);
     dagger = spawnDagger();
     pistol = spawnPistol();
     rifle = spawnRifle();
     lightsaber = spawnLightsaber();
-
-    //These are commented out since there is no equip feature yet
-    // this.equipItem(pistol);
-    // this.equipItem(lightsaber);
-    // this.equipItem(dagger);
+    rifle.addComponent(new LaserComponent());
+    rifle.addComponent(new BulletEnhancerComponent());
     this.equipItem(rifle);
-//    this.equipItem(ConsumableFactory.createConsumable(Consumables.HEALTH_MONSTER_DRINK));
+
     spawnFloor();
     spawnBottomRightDoor();
     spawnMarblePlatforms();
     spawnShopKiosk();
-    // spawnGhosts();
-    // spawnGhostKing();
     SecureRandom random = new SecureRandom();
     int choice = random.nextInt(3);
     switch (choice) {
@@ -496,11 +501,12 @@ public class ForestGameArea extends GameArea {
 
   private Entity spawnLightsaber() {
     Entity newLightsaber = WeaponsFactory.createWeapon(Weapons.LIGHTSABER);
-    Vector2 newLightsaberOffset = new Vector2(0.7f, -0.1f);
+    Vector2 newLightsaberOffset = new Vector2(0.9f, -0.2f);
     newLightsaber.addComponent(new ItemHoldComponent(this.player, newLightsaberOffset));
-    //Commented out since lightsaber animation is a work in progress
-    //AnimationRenderComponent lightSaberAnimator = WeaponsFactory.createAnimation("images/lightSaber.atlas", this.player);
-    //newLightsaber.addComponent(lightSaberAnimator);
+    AnimationRenderComponent lightSaberAnimator = WeaponsFactory.createAnimation("images/lightSaber.atlas", this.player);
+    newLightsaber.addComponent(lightSaberAnimator);
+    lightSaberAnimator.startAnimation("anim");
+
     return newLightsaber;
   }
 
@@ -513,9 +519,15 @@ public class ForestGameArea extends GameArea {
 
   private Entity spawnRifle() {
     Entity newRifle = WeaponsFactory.createWeapon(Weapons.RIFLE);
-    Vector2 newRifleOffset = new Vector2(0.25f, 0.15f);
+    Vector2 newRifleOffset = new Vector2(0.8f, 0.15f);
     newRifle.addComponent(new ItemHoldComponent(this.player, newRifleOffset));
     return newRifle;
+  }
+
+  private Entity spawnRapidFirePowerup() {
+    Entity newRapidFirePowerup = PowerupsFactory.createRapidFire();
+    spawnEntityAt(newRapidFirePowerup, new GridPoint2(2, 40), true, true);
+    return newRapidFirePowerup;
   }
 
   private void spawnBoss2() {
