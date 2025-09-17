@@ -10,7 +10,9 @@ import com.csse3200.game.entities.EntityService;
 import com.csse3200.game.services.GameTime;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
 
 import static org.mockito.Mockito.*;
@@ -29,7 +31,10 @@ public class BossAttack1Tests {
     void setUp() {
         // Minimal Gdx stub so postRunnable
         Application app = mock(Application.class);
-        doAnswer(inv -> { ((Runnable)inv.getArgument(0)).run(); return null; })
+        doAnswer(inv -> {
+            ((Runnable) inv.getArgument(0)).run();
+            return null;
+        })
                 .when(app).postRunnable(any(Runnable.class));
         Gdx.app = app;
 
@@ -39,7 +44,7 @@ public class BossAttack1Tests {
         when(time.getDeltaTime()).thenReturn(0.016f);
 
         resources = mock(ResourceService.class);
-        entities  = mock(EntityService.class);
+        entities = mock(EntityService.class);
 
         when(ServiceLocator.getTimeSource()).thenReturn(time);
         when(ServiceLocator.getResourceService()).thenReturn(resources);
@@ -61,7 +66,8 @@ public class BossAttack1Tests {
 
     @Test
     void bossattack1tests_noTarget_noSpawn() {
-        Entity owner = new Entity(); owner.setPosition(new Vector2(0,0));
+        Entity owner = new Entity();
+        owner.setPosition(new Vector2(0, 0));
         EnemyMudBallAttackComponent atk = addAttack(owner, null);
 
         atk.update();
@@ -71,8 +77,10 @@ public class BossAttack1Tests {
 
     @Test
     void bossattack1tests_outOfRange_noSpawn() {
-        Entity owner = new Entity(); owner.setPosition(new Vector2(0,0));
-        Entity target = new Entity(); target.setPosition(new Vector2(10,0)); // > range
+        Entity owner = new Entity();
+        owner.setPosition(new Vector2(0, 0));
+        Entity target = new Entity();
+        target.setPosition(new Vector2(10, 0)); // > range
         EnemyMudBallAttackComponent atk = addAttack(owner, target);
 
         atk.update();
@@ -82,8 +90,10 @@ public class BossAttack1Tests {
 
     @Test
     void bossattack1tests_missingAtlas_noSpawn_butAttemptsLazyLoad() {
-        Entity owner = new Entity(); owner.setPosition(new Vector2(0,0));
-        Entity target = new Entity(); target.setPosition(new Vector2(1,0)); // within range
+        Entity owner = new Entity();
+        owner.setPosition(new Vector2(0, 0));
+        Entity target = new Entity();
+        target.setPosition(new Vector2(1, 0)); // within range
         EnemyMudBallAttackComponent atk = addAttack(owner, target);
 
         when(resources.getAsset(anyString(), eq(TextureAtlas.class))).thenReturn(null);
@@ -97,8 +107,10 @@ public class BossAttack1Tests {
 
     @Test
     void bossattack1tests_missingRegions_noSpawn() {
-        Entity owner = new Entity(); owner.setPosition(new Vector2(0,0));
-        Entity target = new Entity(); target.setPosition(new Vector2(1,0)); // within range
+        Entity owner = new Entity();
+        owner.setPosition(new Vector2(0, 0));
+        Entity target = new Entity();
+        target.setPosition(new Vector2(1, 0)); // within range
         EnemyMudBallAttackComponent atk = addAttack(owner, target);
 
         TextureAtlas atlas = mock(TextureAtlas.class);

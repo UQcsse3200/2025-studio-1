@@ -17,8 +17,13 @@ import static org.mockito.Mockito.*;
 
 class DamageMultiplierCommandTests {
 
-    private static ArrayList<String> args(String... a) { return new ArrayList<>(List.of(a)); }
-    private static boolean run(DamageMultiplierCommand cmd, String arg) { return cmd.action(args(arg)); }
+    private static ArrayList<String> args(String... a) {
+        return new ArrayList<>(List.of(a));
+    }
+
+    private static boolean run(DamageMultiplierCommand cmd, String arg) {
+        return cmd.action(args(arg));
+    }
 
     @Test
     void acceptsValidMultiplier_integer() {

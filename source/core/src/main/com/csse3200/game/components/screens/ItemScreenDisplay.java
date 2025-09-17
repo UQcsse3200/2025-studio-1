@@ -6,7 +6,10 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.csse3200.game.components.shop.CatalogEntry;
 import com.csse3200.game.services.ServiceLocator;
@@ -24,15 +27,18 @@ public class ItemScreenDisplay extends UIComponent {
     /**
      * A popup which displays information about a shop item in the game.
      */
-    public ItemScreenDisplay() {}
+    public ItemScreenDisplay() {
+    }
 
     @Override
     public void create() {
         super.create();
     }
 
-    /** Build and show the popup for the given entry.
-     * Safe to call repeatedly. */
+    /**
+     * Build and show the popup for the given entry.
+     * Safe to call repeatedly.
+     */
     public void open(CatalogEntry entry) {
         // Don’t stack UIs
         close();
@@ -89,7 +95,10 @@ public class ItemScreenDisplay extends UIComponent {
         // Close button
         TextButton closeBtn = new TextButton("Close", skin);
         closeBtn.addListener(new com.badlogic.gdx.scenes.scene2d.utils.ChangeListener() {
-            @Override public void changed(ChangeEvent event, Actor actor) { close(); }
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                close();
+            }
         });
         box.add(closeBtn).padTop(8f);
 
@@ -97,9 +106,14 @@ public class ItemScreenDisplay extends UIComponent {
         root.add(box).width(420f);
     }
 
-    /** Remove popup UI (component stays attached and reusable). */
+    /**
+     * Remove popup UI (component stays attached and reusable).
+     */
     public void close() {
-        if (root != null) { root.remove(); root = null; }
+        if (root != null) {
+            root.remove();
+            root = null;
+        }
         if (whiteTexOwned && whiteTex != null) {
             whiteTex.dispose();
             whiteTex = null;

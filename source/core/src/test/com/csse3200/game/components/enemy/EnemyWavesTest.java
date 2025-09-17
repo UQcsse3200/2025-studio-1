@@ -17,7 +17,7 @@ import org.mockito.Mockito;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
-class EnemyWavesTest{
+class EnemyWavesTest {
     private GameArea gameArea;
     private Entity player;
     private EntityService entityService;
@@ -31,6 +31,7 @@ class EnemyWavesTest{
 
     /**
      * Create one enemy with the given health
+     *
      * @param health The health that the enemy should have.
      * @return The enemy {@link Entity} with the given health
      */
@@ -45,6 +46,7 @@ class EnemyWavesTest{
 
     /**
      * Simulate time progression for tick evaluation
+     *
      * @param ms The time that is added on to the waveEndTime
      */
     private void advanceTimeAndTick(long ms) {

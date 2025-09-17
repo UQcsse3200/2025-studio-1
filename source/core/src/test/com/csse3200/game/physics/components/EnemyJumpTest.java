@@ -5,7 +5,7 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.csse3200.game.entities.Entity;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.Mockito.*;
 
 class EnemyJumpTest {
@@ -134,13 +134,13 @@ class EnemyJumpTest {
         when(body.getMass()).thenReturn(1f);
 
         Entity e = new Entity();
-        e.setPosition(0f,0f);
+        e.setPosition(0f, 0f);
         e.addComponent(physicsComponent);
         PhysicsMovementComponent movement = new PhysicsMovementComponent();
         e.addComponent(movement);
         movement.create();
 
-        movement.setTarget(new Vector2(2f,0f));
+        movement.setTarget(new Vector2(2f, 0f));
         movement.dispose();
         movement.update(); // Should not apply anything
         verify(body, never()).applyLinearImpulse(any(Vector2.class), any(), anyBoolean());

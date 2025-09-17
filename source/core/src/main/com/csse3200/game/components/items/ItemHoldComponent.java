@@ -8,8 +8,8 @@ import com.csse3200.game.entities.Entity;
  * A component that makes an item follow the player at a given offset.
  */
 public class ItemHoldComponent extends Component {
-    private Entity player;
-    private Vector2 offset;
+    private final Entity player;
+    private final Vector2 offset;
 
 
     public ItemHoldComponent(Entity player, Vector2 offset) {

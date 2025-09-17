@@ -3,7 +3,6 @@ package com.csse3200.game.ui.terminal.commands;
 import com.csse3200.game.components.WeaponsStatsComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.services.ServiceLocator;
-import com.badlogic.gdx.utils.Array;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -50,7 +49,9 @@ public class DamageMultiplierCommand implements Command {
         return true;
     }
 
-    boolean isValid(ArrayList<String> args) { return args.size() == 1; }
+    boolean isValid(ArrayList<String> args) {
+        return args.size() == 1;
+    }
 
     void setDamageMultiplier(com.badlogic.gdx.utils.Array<Entity> entityList, float value) {
         if (entityList == null) return; // <-- null-safe

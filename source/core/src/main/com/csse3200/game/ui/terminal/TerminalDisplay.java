@@ -4,14 +4,18 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.*;
-import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.Value;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Align;
-import com.badlogic.gdx.scenes.scene2d.ui.Value;
-import com.csse3200.game.components.screens.BaseScreenDisplay;
 import com.csse3200.game.GdxGame;
+import com.csse3200.game.components.screens.BaseScreenDisplay;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,12 +26,12 @@ public class TerminalDisplay extends BaseScreenDisplay {
 
     // Layout
     private static final float WIDTH_RATIO = 0.20f; // 20% of screen width
-    private static final float H_PADDING   = 16f;
-    private static final float V_PADDING   = 10f;
-    private static final float MARGIN_BOT  = 8f;
+    private static final float H_PADDING = 16f;
+    private static final float V_PADDING = 10f;
+    private static final float MARGIN_BOT = 8f;
     private static final float SUGGESTION_ROW_PAD_X = 10f;
     private static final float SUGGESTION_ROW_PAD_Y = 6f;
-    private static final int   SUGGESTION_MAX = 5;
+    private static final int SUGGESTION_MAX = 5;
     private final Vector2 tmp = new Vector2();
 
     private Table container;
@@ -215,12 +219,13 @@ public class TerminalDisplay extends BaseScreenDisplay {
             // Hover + click behaviour
             row.addListener(new InputListener() {
                 @Override
-                public boolean mouseMoved (InputEvent event, float x, float y) {
+                public boolean mouseMoved(InputEvent event, float x, float y) {
                     row.setBackground(suggestionHoverBg);
                     return false;
                 }
+
                 @Override
-                public void exit (InputEvent event, float x, float y, int pointer, Actor toActor) {
+                public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
                     row.setBackground((Drawable) null);
                 }
             });
@@ -255,6 +260,7 @@ public class TerminalDisplay extends BaseScreenDisplay {
         }
         return true;
     }
+
     private static String safeString(String s) {
         return (s == null) ? "" : s;
     }
@@ -271,7 +277,7 @@ public class TerminalDisplay extends BaseScreenDisplay {
     private static String extractFirstToken(String s) {
         s = (s == null) ? "" : s;
         int start = skipFirstToken(s, true);
-        int end   = skipFirstToken(s, false);
+        int end = skipFirstToken(s, false);
         return s.substring(start, end);
     }
 

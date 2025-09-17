@@ -1,12 +1,11 @@
 package com.csse3200.game.components.boss;
-import com.csse3200.game.rendering.*;
 
-import com.csse3200.game.components.Component;
 import com.csse3200.game.components.CombatStatsComponent;
+import com.csse3200.game.components.Component;
+import com.csse3200.game.components.enemy.BlackholeComponent;
+import com.csse3200.game.components.enemy.BossChargeSkillComponent;
+import com.csse3200.game.components.enemy.FireballAttackComponent;
 import com.csse3200.game.entities.Entity;
-import com.csse3200.game.entities.factories.characters.BossFactory;
-import com.csse3200.game.components.enemy.*;
-import com.csse3200.game.components.boss.*;
 
 public class BossStageComponent extends Component {
     private int currentStage = 1;
@@ -17,15 +16,16 @@ public class BossStageComponent extends Component {
     public BossStageComponent(Entity boss) {
         this.boss = boss;
     }
+
     @Override
     public void update() {
         CombatStatsComponent stats = boss.getComponent(CombatStatsComponent.class);
         int currentHp = stats.getHealth();
         int maxHp = stats.getMaxHealth();
-        if (currentStage == 1 && currentHp <= maxHp*stage2) {
+        if (currentStage == 1 && currentHp <= maxHp * stage2) {
             enterStage2();
         }
-        if (currentStage == 2 && currentHp  <= maxHp*stage3) {
+        if (currentStage == 2 && currentHp <= maxHp * stage3) {
             enterStage3();
         }
     }
@@ -37,6 +37,7 @@ public class BossStageComponent extends Component {
         BossChargeSkillComponent move = entity.getComponent(BossChargeSkillComponent.class);
         move.setCrash(true);
     }
+
     private void enterStage3() {
         currentStage = 3;
         FireballAttackComponent fireball = entity.getComponent(FireballAttackComponent.class);

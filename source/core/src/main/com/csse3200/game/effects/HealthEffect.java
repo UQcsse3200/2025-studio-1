@@ -35,7 +35,7 @@ public class HealthEffect extends Effect {
      *
      * @param entity the entity receiving the effect
      * @return {@code true} if the effect was applied,
-     *         {@code false} if the entity had no combat stats
+     * {@code false} if the entity had no combat stats
      */
     @Override
     public boolean apply(Entity entity) {

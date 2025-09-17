@@ -4,17 +4,18 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-
 import com.csse3200.game.GdxGame;
 import com.csse3200.game.GdxGame.ScreenType;
 import com.csse3200.game.ui.NeonStyles;
 import com.csse3200.game.ui.UIComponent;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,16 +34,26 @@ import java.util.ArrayList;
  * Subclasses implement {@link #buildUI(Table)} to construct their specific UI.
  */
 public abstract class BaseScreenDisplay extends UIComponent {
-    /** Class-scoped logger for subclasses. */
+    /**
+     * Class-scoped logger for subclasses.
+     */
     protected final Logger logger = LoggerFactory.getLogger(getClass());
-    /** Game reference used for screen navigation helpers. */
+    /**
+     * Game reference used for screen navigation helpers.
+     */
     protected final GdxGame game;
 
-    /** Root table added to the stage; fill-parent and centered. */
+    /**
+     * Root table added to the stage; fill-parent and centered.
+     */
     protected Table root;
-    /** Shared style builder for rounded neon buttons. */
+    /**
+     * Shared style builder for rounded neon buttons.
+     */
     protected NeonStyles neon;
-    /** Textures created via helpers and disposed automatically. */
+    /**
+     * Textures created via helpers and disposed automatically.
+     */
     private final ArrayList<Texture> managedTextures = new ArrayList<>();
 
     /**
@@ -83,11 +94,11 @@ public abstract class BaseScreenDisplay extends UIComponent {
     /**
      * Adds a title label using the skin's {@code "title"} style.
      *
-     * @param to         table to add the title to
-     * @param text       title text
-     * @param fontScale  scale for the title font
-     * @param color      optional tint colour for the title (may be {@code null})
-     * @param padBottom  bottom padding applied after the title row
+     * @param to        table to add the title to
+     * @param text      title text
+     * @param fontScale scale for the title font
+     * @param color     optional tint colour for the title (may be {@code null})
+     * @param padBottom bottom padding applied after the title row
      * @return the created {@link Label}
      */
     protected Label addTitle(Table to, String text, float fontScale, Color color, float padBottom) {
@@ -107,10 +118,10 @@ public abstract class BaseScreenDisplay extends UIComponent {
     /**
      * Adds a body label by cloning the skin's {@code "small"} style and forcing a white font colour.
      *
-     * @param to         table to add the body text to
-     * @param text       body text
-     * @param fontScale  scale for the body font
-     * @param padBottom  bottom padding applied after the body row
+     * @param to        table to add the body text to
+     * @param text      body text
+     * @param fontScale scale for the body font
+     * @param padBottom bottom padding applied after the body row
      * @return the created {@link Label}
      */
     protected Label addBody(Table to, String text, float fontScale, float padBottom) {
@@ -136,7 +147,8 @@ public abstract class BaseScreenDisplay extends UIComponent {
         TextButton b = new TextButton(text, neon.buttonRounded());
         b.getLabel().setFontScale(labelScale);
         b.addListener(new ChangeListener() {
-            @Override public void changed(ChangeEvent event, Actor actor) {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
                 logger.debug("{} clicked on {}", text, getClass().getSimpleName());
                 if (onClick != null) onClick.run();
             }
@@ -181,11 +193,19 @@ public abstract class BaseScreenDisplay extends UIComponent {
         game.setScreen(ScreenType.MAIN_MENU);
     }
 
-    /** Stage handles rendering of attached actors. */
-    @Override public void draw(SpriteBatch batch) { /* Stage draws itself */ }
+    /**
+     * Stage handles rendering of attached actors.
+     */
+    @Override
+    public void draw(SpriteBatch batch) { /* Stage draws itself */ }
 
-    /** Default z-index; override in overlays that must sit above other UI. */
-    @Override public float getZIndex() { return 2f; }
+    /**
+     * Default z-index; override in overlays that must sit above other UI.
+     */
+    @Override
+    public float getZIndex() {
+        return 2f;
+    }
 
     /**
      * Removes the root table from the stage and disposes any helper-created textures.

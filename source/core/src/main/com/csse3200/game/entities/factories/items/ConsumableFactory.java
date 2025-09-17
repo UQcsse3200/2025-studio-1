@@ -1,9 +1,9 @@
 package com.csse3200.game.entities.factories.items;
 
+import com.csse3200.game.components.WeaponsStatsComponent;
 import com.csse3200.game.components.items.ConsumableComponent;
 import com.csse3200.game.components.items.ConsumableUseComponent;
 import com.csse3200.game.components.items.ItemComponent;
-import com.csse3200.game.components.WeaponsStatsComponent;
 import com.csse3200.game.components.items.RangedUseComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.Consumables;
