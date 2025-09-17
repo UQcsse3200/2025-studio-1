@@ -86,6 +86,12 @@ public class PlayerFactory {
     PhysicsUtils.setScaledCollider(player, 0.3f,0.5f);
     player.getComponent(WeaponsStatsComponent.class).setCoolDown(0.2f);
 
+    //Unequip player at spawn
+    PlayerActions actions = player.getComponent(PlayerActions.class);
+    actions.create();
+    actions.unequipPlayer();  //start without a weapon equipped
+
+
     // pick up rapid fire powerup
     // remove this if we have item pickup available
     // (disposes entity when player go near it)
@@ -144,7 +150,7 @@ public class PlayerFactory {
     animator.addAnimation("left_fall", 0.1f, Animation.PlayMode.NORMAL);
     animator.startAnimation("right_stand");
   }
-  
+
   /**
    * Create a full-featured player entity that uses arrow keys for movement,
    * matching the main player visuals/animations.
