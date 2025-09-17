@@ -207,7 +207,6 @@ public class ForestGameArea extends GameArea {
           "sounds/ammo_replenished.mp3"};
 
   private static final String[] playerSound1 = {"sounds/jump.mp3"};
-  private static final String[] forestSounds = {"sounds/Impact4.ogg"};
   private static final String[] enemySounds = {"sounds/enemyDamage.mp3", "sounds/enemyDeath.mp3"};
   private static final String BACKGROUND_MUSIC = "sounds/BGM_03.mp3";
 
