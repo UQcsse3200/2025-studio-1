@@ -312,6 +312,7 @@ public class KeyboardPlayerInputComponent extends InputComponent {
         // Equip the weapon
         inventory.setEquippedSlot(selectedSlot);
         inventory.setCurrItem(weapon);
+//        String name = inventory.getCurrItem().getComponent(class )
 
         entity.getEvents().trigger("focusItem", selectedSlot);  // Refresh UI & logic
         System.out.println("Equipped weapon from slot " + selectedSlot);
