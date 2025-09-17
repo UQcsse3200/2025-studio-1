@@ -243,11 +243,17 @@ loadScripts(document, 'script');</script>
  returns unchanged if not active or <code>incoming &lt;= 0</code>.</div>
 </dd>
 <dt><a href="com/csse3200/game/effects/AreaEffect.html#apply(com.csse3200.game.entities.Entity)" class="member-name-link">apply(Entity)</a> - Method in class com.csse3200.game.effects.<a href="com/csse3200/game/effects/AreaEffect.html" title="class in com.csse3200.game.effects">AreaEffect</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Applies this area effect to all entities within range of the given center entity.</div>
+</dd>
 <dt><a href="com/csse3200/game/effects/Effect.html#apply(com.csse3200.game.entities.Entity)" class="member-name-link">apply(Entity)</a> - Method in class com.csse3200.game.effects.<a href="com/csse3200/game/effects/Effect.html" title="class in com.csse3200.game.effects">Effect</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Applies this effect to the given entity.</div>
+</dd>
 <dt><a href="com/csse3200/game/effects/HealthEffect.html#apply(com.csse3200.game.entities.Entity)" class="member-name-link">apply(Entity)</a> - Method in class com.csse3200.game.effects.<a href="com/csse3200/game/effects/HealthEffect.html" title="class in com.csse3200.game.effects">HealthEffect</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Applies the health effect to the given entity.</div>
+</dd>
 <dt><a href="com/csse3200/game/effects/RapidFireEffect.html#apply(com.csse3200.game.entities.Entity)" class="member-name-link">apply(Entity)</a> - Method in class com.csse3200.game.effects.<a href="com/csse3200/game/effects/RapidFireEffect.html" title="class in com.csse3200.game.effects">RapidFireEffect</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/entities/factories/characters/BossFactory.ApplyInitialBoss2Setup.html#%3Cinit%3E(float,java.lang.String)" class="member-name-link">ApplyInitialBoss2Setup(float, String)</a> - Constructor for class com.csse3200.game.entities.factories.characters.<a href="com/csse3200/game/entities/factories/characters/BossFactory.ApplyInitialBoss2Setup.html" title="class in com.csse3200.game.entities.factories.characters">BossFactory.ApplyInitialBoss2Setup</a></dt>
@@ -261,9 +267,14 @@ loadScripts(document, 'script');</script>
 <div class="block">Projectile affected by gravity, following an arc trajectory.</div>
 </dd>
 <dt><a href="com/csse3200/game/effects/AreaEffect.html" class="type-name-link" title="class in com.csse3200.game.effects">AreaEffect</a> - Class in <a href="com/csse3200/game/effects/package-summary.html">com.csse3200.game.effects</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">An <a href="com/csse3200/game/effects/Effect.html" title="class in com.csse3200.game.effects"><code>Effect</code></a> that applies multiple inner effects to all valid entities
+ within a certain radius of a central entity.</div>
+</dd>
 <dt><a href="com/csse3200/game/effects/AreaEffect.html#%3Cinit%3E(java.util.List,int)" class="member-name-link">AreaEffect(List&lt;Effect&gt;, int)</a> - Constructor for class com.csse3200.game.effects.<a href="com/csse3200/game/effects/AreaEffect.html" title="class in com.csse3200.game.effects">AreaEffect</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Creates a new <code>AreaEffect</code>.</div>
+</dd>
 <dt><a href="com/csse3200/game/areas/GameArea.html#areaEntities" class="member-name-link">areaEntities</a> - Variable in class com.csse3200.game.areas.<a href="com/csse3200/game/areas/GameArea.html" title="class in com.csse3200.game.areas">GameArea</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/components/boss/CocoonSpawnerComponent.html#areCocoonsSpawned()" class="member-name-link">areCocoonsSpawned()</a> - Method in class com.csse3200.game.components.boss.<a href="com/csse3200/game/components/boss/CocoonSpawnerComponent.html" title="class in com.csse3200.game.components.boss">CocoonSpawnerComponent</a></dt>
@@ -745,21 +756,30 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/csse3200/game/entities/configs/ItemTypes.html#CONSUMABLE" class="member-name-link">CONSUMABLE</a> - Enum constant in enum class com.csse3200.game.entities.configs.<a href="com/csse3200/game/entities/configs/ItemTypes.html" title="enum class in com.csse3200.game.entities.configs">ItemTypes</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/components/items/ConsumableComponent.html" class="type-name-link" title="class in com.csse3200.game.components.items">ConsumableComponent</a> - Class in <a href="com/csse3200/game/components/items/package-summary.html">com.csse3200.game.components.items</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Component representing a consumable item that can apply one or more <a href="com/csse3200/game/effects/Effect.html" title="class in com.csse3200.game.effects"><code>Effect</code></a>s
+ to an entity when used.</div>
+</dd>
 <dt><a href="com/csse3200/game/components/items/ConsumableComponent.html#%3Cinit%3E(java.util.ArrayList,int)" class="member-name-link">ConsumableComponent(ArrayList&lt;Effect&gt;, int)</a> - Constructor for class com.csse3200.game.components.items.<a href="com/csse3200/game/components/items/ConsumableComponent.html" title="class in com.csse3200.game.components.items">ConsumableComponent</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Creates a consumable component with the specified effects and duration.</div>
+</dd>
 <dt><a href="com/csse3200/game/entities/configs/consumables/ConsumableConfig.html" class="type-name-link" title="class in com.csse3200.game.entities.configs.consumables">ConsumableConfig</a> - Class in <a href="com/csse3200/game/entities/configs/consumables/package-summary.html">com.csse3200.game.entities.configs.consumables</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/entities/configs/consumables/ConsumableConfig.html#%3Cinit%3E()" class="member-name-link">ConsumableConfig()</a> - Constructor for class com.csse3200.game.entities.configs.consumables.<a href="com/csse3200/game/entities/configs/consumables/ConsumableConfig.html" title="class in com.csse3200.game.entities.configs.consumables">ConsumableConfig</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/entities/factories/items/ConsumableFactory.html" class="type-name-link" title="class in com.csse3200.game.entities.factories.items">ConsumableFactory</a> - Class in <a href="com/csse3200/game/entities/factories/items/package-summary.html">com.csse3200.game.entities.factories.items</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Factory class responsible for creating consumable items in the game.</div>
+</dd>
 <dt><a href="com/csse3200/game/entities/factories/items/ConsumableFactory.html#%3Cinit%3E()" class="member-name-link">ConsumableFactory()</a> - Constructor for class com.csse3200.game.entities.factories.items.<a href="com/csse3200/game/entities/factories/items/ConsumableFactory.html" title="class in com.csse3200.game.entities.factories.items">ConsumableFactory</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/entities/configs/Consumables.html" class="type-name-link" title="enum class in com.csse3200.game.entities.configs">Consumables</a> - Enum Class in <a href="com/csse3200/game/entities/configs/package-summary.html">com.csse3200.game.entities.configs</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/components/items/ConsumableUseComponent.html" class="type-name-link" title="class in com.csse3200.game.components.items">ConsumableUseComponent</a> - Class in <a href="com/csse3200/game/components/items/package-summary.html">com.csse3200.game.components.items</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Component responsible for handling the usage of consumable items.</div>
+</dd>
 <dt><a href="com/csse3200/game/components/items/ConsumableUseComponent.html#%3Cinit%3E()" class="member-name-link">ConsumableUseComponent()</a> - Constructor for class com.csse3200.game.components.items.<a href="com/csse3200/game/components/items/ConsumableUseComponent.html" title="class in com.csse3200.game.components.items">ConsumableUseComponent</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/physics/PhysicsLayer.html#contains(short,short)" class="member-name-link">contains(short, short)</a> - Static method in class com.csse3200.game.physics.<a href="com/csse3200/game/physics/PhysicsLayer.html" title="class in com.csse3200.game.physics">PhysicsLayer</a></dt>
@@ -1009,7 +1029,9 @@ loadScripts(document, 'script');</script>
 <div class="block">creating the comic stand used in reception room</div>
 </dd>
 <dt><a href="com/csse3200/game/entities/factories/items/ConsumableFactory.html#createConsumable(com.csse3200.game.entities.configs.Consumables)" class="member-name-link">createConsumable(Consumables)</a> - Static method in class com.csse3200.game.entities.factories.items.<a href="com/csse3200/game/entities/factories/items/ConsumableFactory.html" title="class in com.csse3200.game.entities.factories.items">ConsumableFactory</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Creates a consumable entity of the specified type.</div>
+</dd>
 <dt><a href="com/csse3200/game/entities/factories/system/ObstacleFactory.html#createConveyor()" class="member-name-link">createConveyor()</a> - Static method in class com.csse3200.game.entities.factories.system.<a href="com/csse3200/game/entities/factories/system/ObstacleFactory.html" title="class in com.csse3200.game.entities.factories.system">ObstacleFactory</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/entities/factories/system/ObstacleFactory.html#createCrate()" class="member-name-link">createCrate()</a> - Static method in class com.csse3200.game.entities.factories.system.<a href="com/csse3200/game/entities/factories/system/ObstacleFactory.html" title="class in com.csse3200.game.entities.factories.system">ObstacleFactory</a></dt>
@@ -1571,11 +1593,17 @@ loadScripts(document, 'script');</script>
 <div class="block">Entity position needs to be updated to match the new physics position.</div>
 </dd>
 <dt><a href="com/csse3200/game/effects/Effect.html" class="type-name-link" title="class in com.csse3200.game.effects">Effect</a> - Class in <a href="com/csse3200/game/effects/package-summary.html">com.csse3200.game.effects</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Base class for all gameplay effects that can be applied to entities.</div>
+</dd>
 <dt><a href="com/csse3200/game/effects/Effect.html#%3Cinit%3E()" class="member-name-link">Effect()</a> - Constructor for class com.csse3200.game.effects.<a href="com/csse3200/game/effects/Effect.html" title="class in com.csse3200.game.effects">Effect</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Creates a new effect.</div>
+</dd>
 <dt><a href="com/csse3200/game/effects/AreaEffect.html#effects" class="member-name-link">effects</a> - Variable in class com.csse3200.game.effects.<a href="com/csse3200/game/effects/AreaEffect.html" title="class in com.csse3200.game.effects">AreaEffect</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">The list of effects to apply to each entity within the area.</div>
+</dd>
 <dt><a href="com/csse3200/game/entities/configs/consumables/ConsumableConfig.html#effects" class="member-name-link">effects</a> - Variable in class com.csse3200.game.entities.configs.consumables.<a href="com/csse3200/game/entities/configs/consumables/ConsumableConfig.html" title="class in com.csse3200.game.entities.configs.consumables">ConsumableConfig</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/areas/terrain/TerrainFactory.TerrainType.html#ELEVATOR" class="member-name-link">ELEVATOR</a> - Enum constant in enum class com.csse3200.game.areas.terrain.<a href="com/csse3200/game/areas/terrain/TerrainFactory.TerrainType.html" title="enum class in com.csse3200.game.areas.terrain">TerrainFactory.TerrainType</a></dt>
@@ -1784,7 +1812,9 @@ loadScripts(document, 'script');</script>
 <div class="block">Fires multiple laser projectiles, classified as enemy projectiles, at once</div>
 </dd>
 <dt><a href="com/csse3200/game/components/items/ConsumableComponent.html#firesProjectile()" class="member-name-link">firesProjectile()</a> - Method in class com.csse3200.game.components.items.<a href="com/csse3200/game/components/items/ConsumableComponent.html" title="class in com.csse3200.game.components.items">ConsumableComponent</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Checks whether this consumable triggers projectile behavior.</div>
+</dd>
 <dt><a href="com/csse3200/game/physics/raycast/RaycastHit.html#fixture" class="member-name-link">fixture</a> - Variable in class com.csse3200.game.physics.raycast.<a href="com/csse3200/game/physics/raycast/RaycastHit.html" title="class in com.csse3200.game.physics.raycast">RaycastHit</a></dt>
 <dd>
 <div class="block">Fixture which was hit.</div>
@@ -1910,22 +1940,10 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/GdxGame.ScreenType.html" class="type-name-link" title="enum class in com.csse3200.game">GdxGame.ScreenType</a> - Enum Class in <a href="com/csse3200/game/package-summary.html">com.csse3200.game</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/csse3200/game/entities/configs/Consumables.html#GENERIC_HEAL_ITEM" class="member-name-link">GENERIC_HEAL_ITEM</a> - Enum constant in enum class com.csse3200.game.entities.configs.<a href="com/csse3200/game/entities/configs/Consumables.html" title="enum class in com.csse3200.game.entities.configs">Consumables</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="com/csse3200/game/entities/configs/Consumables.html#GENERIC_PROJECTILE_CONSUMABLE" class="member-name-link">GENERIC_PROJECTILE_CONSUMABLE</a> - Enum constant in enum class com.csse3200.game.entities.configs.<a href="com/csse3200/game/entities/configs/Consumables.html" title="enum class in com.csse3200.game.entities.configs">Consumables</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="com/csse3200/game/entities/configs/consumables/GenericHealItemConfig.html" class="type-name-link" title="class in com.csse3200.game.entities.configs.consumables">GenericHealItemConfig</a> - Class in <a href="com/csse3200/game/entities/configs/consumables/package-summary.html">com.csse3200.game.entities.configs.consumables</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="com/csse3200/game/entities/configs/consumables/GenericHealItemConfig.html#%3Cinit%3E()" class="member-name-link">GenericHealItemConfig()</a> - Constructor for class com.csse3200.game.entities.configs.consumables.<a href="com/csse3200/game/entities/configs/consumables/GenericHealItemConfig.html" title="class in com.csse3200.game.entities.configs.consumables">GenericHealItemConfig</a></dt>
-<dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/areas/GenericLayout.html" class="type-name-link" title="class in com.csse3200.game.areas">GenericLayout</a> - Class in <a href="com/csse3200/game/areas/package-summary.html">com.csse3200.game.areas</a></dt>
 <dd>
 <div class="block">Helper for setting up minimal generic rooms (terrain, overlay, walls, doors, player).</div>
 </dd>
-<dt><a href="com/csse3200/game/entities/configs/consumables/GenericProjectileConsumableConfig.html" class="type-name-link" title="class in com.csse3200.game.entities.configs.consumables">GenericProjectileConsumableConfig</a> - Class in <a href="com/csse3200/game/entities/configs/consumables/package-summary.html">com.csse3200.game.entities.configs.consumables</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="com/csse3200/game/entities/configs/consumables/GenericProjectileConsumableConfig.html#%3Cinit%3E()" class="member-name-link">GenericProjectileConsumableConfig()</a> - Constructor for class com.csse3200.game.entities.configs.consumables.<a href="com/csse3200/game/entities/configs/consumables/GenericProjectileConsumableConfig.html" title="class in com.csse3200.game.entities.configs.consumables">GenericProjectileConsumableConfig</a></dt>
-<dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/files/UserSettings.html#get()" class="member-name-link">get()</a> - Static method in class com.csse3200.game.files.<a href="com/csse3200/game/files/UserSettings.html" title="class in com.csse3200.game.files">UserSettings</a></dt>
 <dd>
 <div class="block">Get the stored user settings</div>
@@ -2058,13 +2076,21 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/csse3200/game/components/screens/TutorialStep.html#getDescription()" class="member-name-link">getDescription()</a> - Method in class com.csse3200.game.components.screens.<a href="com/csse3200/game/components/screens/TutorialStep.html" title="class in com.csse3200.game.components.screens">TutorialStep</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/components/items/ConsumableComponent.html#getDuration()" class="member-name-link">getDuration()</a> - Method in class com.csse3200.game.components.items.<a href="com/csse3200/game/components/items/ConsumableComponent.html" title="class in com.csse3200.game.components.items">ConsumableComponent</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Gets the duration of this consumable's effects.</div>
+</dd>
 <dt><a href="com/csse3200/game/components/items/ConsumableComponent.html#getEffect(java.lang.Class)" class="member-name-link">getEffect(Class&lt;? extends Effect&gt;)</a> - Method in class com.csse3200.game.components.items.<a href="com/csse3200/game/components/items/ConsumableComponent.html" title="class in com.csse3200.game.components.items">ConsumableComponent</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Retrieves the first effect of the specified type from this consumable.</div>
+</dd>
 <dt><a href="com/csse3200/game/components/items/ConsumableComponent.html#getEffects()" class="member-name-link">getEffects()</a> - Method in class com.csse3200.game.components.items.<a href="com/csse3200/game/components/items/ConsumableComponent.html" title="class in com.csse3200.game.components.items">ConsumableComponent</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Retrieves all effects associated with this consumable.</div>
+</dd>
 <dt><a href="com/csse3200/game/effects/AreaEffect.html#getEffects()" class="member-name-link">getEffects()</a> - Method in class com.csse3200.game.effects.<a href="com/csse3200/game/effects/AreaEffect.html" title="class in com.csse3200.game.effects">AreaEffect</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Gets the list of inner effects that this area effect applies.</div>
+</dd>
 <dt><a href="com/csse3200/game/areas/GameArea.html#getEnemySpawnPosition(int)" class="member-name-link">getEnemySpawnPosition(int)</a> - Method in class com.csse3200.game.areas.<a href="com/csse3200/game/areas/GameArea.html" title="class in com.csse3200.game.areas">GameArea</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/ui/terminal/Terminal.html#getEnteredMessage()" class="member-name-link">getEnteredMessage()</a> - Method in class com.csse3200.game.ui.terminal.<a href="com/csse3200/game/ui/terminal/Terminal.html" title="class in com.csse3200.game.ui.terminal">Terminal</a></dt>
@@ -2257,6 +2283,10 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Not required for game, unimplemented</div>
 </dd>
+<dt><a href="com/csse3200/game/effects/AreaEffect.html#getRadius()" class="member-name-link">getRadius()</a> - Method in class com.csse3200.game.effects.<a href="com/csse3200/game/effects/AreaEffect.html" title="class in com.csse3200.game.effects">AreaEffect</a></dt>
+<dd>
+<div class="block">Gets the radius of the area in which this effect applies.</div>
+</dd>
 <dt><a href="com/csse3200/game/services/GameTime.html#getRawDeltaTime()" class="member-name-link">getRawDeltaTime()</a> - Method in class com.csse3200.game.services.<a href="com/csse3200/game/services/GameTime.html" title="class in com.csse3200.game.services">GameTime</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/components/boss/CocoonSpawnerComponent.html#getRemainingCocoonsCount()" class="member-name-link">getRemainingCocoonsCount()</a> - Method in class com.csse3200.game.components.boss.<a href="com/csse3200/game/components/boss/CocoonSpawnerComponent.html" title="class in com.csse3200.game.components.boss">CocoonSpawnerComponent</a></dt>
@@ -2276,6 +2306,8 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/csse3200/game/areas/RoomAccessRegistry.html#getRoomsAccessibleBy(int)" class="member-name-link">getRoomsAccessibleBy(int)</a> - Static method in class com.csse3200.game.areas.<a href="com/csse3200/game/areas/RoomAccessRegistry.html" title="class in com.csse3200.game.areas">RoomAccessRegistry</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/areas/GameArea.html#getRoomSpawnPosition(java.lang.String)" class="member-name-link">getRoomSpawnPosition(String)</a> - Method in class com.csse3200.game.areas.<a href="com/csse3200/game/areas/GameArea.html" title="class in com.csse3200.game.areas">GameArea</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/rendering/TextureRenderWithRotationComponent.html#getRotation()" class="member-name-link">getRotation()</a> - Method in class com.csse3200.game.rendering.<a href="com/csse3200/game/rendering/TextureRenderWithRotationComponent.html" title="class in com.csse3200.game.rendering">TextureRenderWithRotationComponent</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/entities/Entity.html#getScale()" class="member-name-link">getScale()</a> - Method in class com.csse3200.game.entities.<a href="com/csse3200/game/entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a></dt>
 <dd>
@@ -2525,6 +2557,8 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/entities/configs/ItemTypes.html#HEALTH_BENCH" class="member-name-link">HEALTH_BENCH</a> - Enum constant in enum class com.csse3200.game.entities.configs.<a href="com/csse3200/game/entities/configs/ItemTypes.html" title="enum class in com.csse3200.game.entities.configs">ItemTypes</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/entities/configs/Consumables.html#HEALTH_MONSTER_DRINK" class="member-name-link">HEALTH_MONSTER_DRINK</a> - Enum constant in enum class com.csse3200.game.entities.configs.<a href="com/csse3200/game/entities/configs/Consumables.html" title="enum class in com.csse3200.game.entities.configs">Consumables</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/entities/configs/benches/HealthBenchConfig.html" class="type-name-link" title="class in com.csse3200.game.entities.configs.benches">HealthBenchConfig</a> - Class in <a href="com/csse3200/game/entities/configs/benches/package-summary.html">com.csse3200.game.entities.configs.benches</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/entities/configs/benches/HealthBenchConfig.html#%3Cinit%3E()" class="member-name-link">HealthBenchConfig()</a> - Constructor for class com.csse3200.game.entities.configs.benches.<a href="com/csse3200/game/entities/configs/benches/HealthBenchConfig.html" title="class in com.csse3200.game.entities.configs.benches">HealthBenchConfig</a></dt>
@@ -2532,8 +2566,17 @@ loadScripts(document, 'script');</script>
 <div class="block">Initialise HealthBenchConfig</div>
 </dd>
 <dt><a href="com/csse3200/game/effects/HealthEffect.html" class="type-name-link" title="class in com.csse3200.game.effects">HealthEffect</a> - Class in <a href="com/csse3200/game/effects/package-summary.html">com.csse3200.game.effects</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">An <a href="com/csse3200/game/effects/Effect.html" title="class in com.csse3200.game.effects"><code>Effect</code></a> that modifies an entity's health by applying
+ damage or healing.</div>
+</dd>
 <dt><a href="com/csse3200/game/effects/HealthEffect.html#%3Cinit%3E(int)" class="member-name-link">HealthEffect(int)</a> - Constructor for class com.csse3200.game.effects.<a href="com/csse3200/game/effects/HealthEffect.html" title="class in com.csse3200.game.effects">HealthEffect</a></dt>
+<dd>
+<div class="block">Creates a new health effect.</div>
+</dd>
+<dt><a href="com/csse3200/game/entities/configs/consumables/HealthMonsterDrinkConfig.html" class="type-name-link" title="class in com.csse3200.game.entities.configs.consumables">HealthMonsterDrinkConfig</a> - Class in <a href="com/csse3200/game/entities/configs/consumables/package-summary.html">com.csse3200.game.entities.configs.consumables</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/entities/configs/consumables/HealthMonsterDrinkConfig.html#%3Cinit%3E()" class="member-name-link">HealthMonsterDrinkConfig()</a> - Constructor for class com.csse3200.game.entities.configs.consumables.<a href="com/csse3200/game/entities/configs/consumables/HealthMonsterDrinkConfig.html" title="class in com.csse3200.game.entities.configs.consumables">HealthMonsterDrinkConfig</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/files/UserSettings.DisplaySettings.html#height" class="member-name-link">height</a> - Variable in class com.csse3200.game.files.<a href="com/csse3200/game/files/UserSettings.DisplaySettings.html" title="class in com.csse3200.game.files">UserSettings.DisplaySettings</a></dt>
 <dd>&nbsp;</dd>
@@ -2952,6 +2995,12 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/csse3200/game/utils/math/Vector2Utils.html#LEFT" class="member-name-link">LEFT</a> - Static variable in class com.csse3200.game.utils.math.<a href="com/csse3200/game/utils/math/Vector2Utils.html" title="class in com.csse3200.game.utils.math">Vector2Utils</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/areas/GameArea.Bounds.html#leftX" class="member-name-link">leftX</a> - Variable in class com.csse3200.game.areas.<a href="com/csse3200/game/areas/GameArea.Bounds.html" title="class in com.csse3200.game.areas">GameArea.Bounds</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/entities/configs/Consumables.html#LIGHTNING_IN_A_BOTTLE" class="member-name-link">LIGHTNING_IN_A_BOTTLE</a> - Enum constant in enum class com.csse3200.game.entities.configs.<a href="com/csse3200/game/entities/configs/Consumables.html" title="enum class in com.csse3200.game.entities.configs">Consumables</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/entities/configs/consumables/LightningInABottleConfig.html" class="type-name-link" title="class in com.csse3200.game.entities.configs.consumables">LightningInABottleConfig</a> - Class in <a href="com/csse3200/game/entities/configs/consumables/package-summary.html">com.csse3200.game.entities.configs.consumables</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/entities/configs/consumables/LightningInABottleConfig.html#%3Cinit%3E()" class="member-name-link">LightningInABottleConfig()</a> - Constructor for class com.csse3200.game.entities.configs.consumables.<a href="com/csse3200/game/entities/configs/consumables/LightningInABottleConfig.html" title="class in com.csse3200.game.entities.configs.consumables">LightningInABottleConfig</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/entities/configs/Weapons.html#LIGHTSABER" class="member-name-link">LIGHTSABER</a> - Enum constant in enum class com.csse3200.game.entities.configs.<a href="com/csse3200/game/entities/configs/Weapons.html" title="enum class in com.csse3200.game.entities.configs">Weapons</a></dt>
 <dd>&nbsp;</dd>
@@ -3543,7 +3592,9 @@ loadScripts(document, 'script');</script>
 <h2 class="title" id="I:R">R</h2>
 <dl class="index">
 <dt><a href="com/csse3200/game/effects/AreaEffect.html#radius" class="member-name-link">radius</a> - Variable in class com.csse3200.game.effects.<a href="com/csse3200/game/effects/AreaEffect.html" title="class in com.csse3200.game.effects">AreaEffect</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">The radius of the area (in world units).</div>
+</dd>
 <dt><a href="com/csse3200/game/utils/math/RandomUtils.html#random(com.badlogic.gdx.math.GridPoint2,com.badlogic.gdx.math.GridPoint2)" class="member-name-link">random(GridPoint2, GridPoint2)</a> - Static method in class com.csse3200.game.utils.math.<a href="com/csse3200/game/utils/math/RandomUtils.html" title="class in com.csse3200.game.utils.math">RandomUtils</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/utils/math/RandomUtils.html#random(com.badlogic.gdx.math.Vector2,com.badlogic.gdx.math.Vector2)" class="member-name-link">random(Vector2, Vector2)</a> - Static method in class com.csse3200.game.utils.math.<a href="com/csse3200/game/utils/math/RandomUtils.html" title="class in com.csse3200.game.utils.math">RandomUtils</a></dt>
@@ -3555,7 +3606,9 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/csse3200/game/entities/configs/ItemTypes.html#RANGED" class="member-name-link">RANGED</a> - Enum constant in enum class com.csse3200.game.entities.configs.<a href="com/csse3200/game/entities/configs/ItemTypes.html" title="enum class in com.csse3200.game.entities.configs">ItemTypes</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/components/items/RangedUseComponent.html" class="type-name-link" title="class in com.csse3200.game.components.items">RangedUseComponent</a> - Class in <a href="com/csse3200/game/components/items/package-summary.html">com.csse3200.game.components.items</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Component responsible for handling ranged item usage (e.g., guns, bombs).</div>
+</dd>
 <dt><a href="com/csse3200/game/components/items/RangedUseComponent.html#%3Cinit%3E()" class="member-name-link">RangedUseComponent()</a> - Constructor for class com.csse3200.game.components.items.<a href="com/csse3200/game/components/items/RangedUseComponent.html" title="class in com.csse3200.game.components.items">RangedUseComponent</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/entities/configs/weapons/RangedWeaponConfig.html" class="type-name-link" title="class in com.csse3200.game.entities.configs.weapons">RangedWeaponConfig</a> - Class in <a href="com/csse3200/game/entities/configs/weapons/package-summary.html">com.csse3200.game.entities.configs.weapons</a></dt>
@@ -4146,6 +4199,8 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Set the rotation value this rendering component will use to rotate the texture.</div>
 </dd>
+<dt><a href="com/csse3200/game/rendering/TextureRenderWithRotationComponent.html#setRotationWithRepeat(float)" class="member-name-link">setRotationWithRepeat(float)</a> - Method in class com.csse3200.game.rendering.<a href="com/csse3200/game/rendering/TextureRenderWithRotationComponent.html" title="class in com.csse3200.game.rendering">TextureRenderWithRotationComponent</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/components/screens/BaseEndScreenDisplays.html#setRound(int)" class="member-name-link">setRound(int)</a> - Method in class com.csse3200.game.components.screens.<a href="com/csse3200/game/components/screens/BaseEndScreenDisplays.html" title="class in com.csse3200.game.components.screens">BaseEndScreenDisplays</a></dt>
 <dd>
 <div class="block">Updates the displayed round number.</div>
@@ -5034,13 +5089,17 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/csse3200/game/ui/AnimatedClipImage.html#usage-heading" class="search-tag-link">Usage</a> - Search tag in class com.csse3200.game.ui.AnimatedClipImage</dt>
 <dd>Section</dd>
 <dt><a href="com/csse3200/game/components/items/ConsumableUseComponent.html#use(com.csse3200.game.entities.Entity)" class="member-name-link">use(Entity)</a> - Method in class com.csse3200.game.components.items.<a href="com/csse3200/game/components/items/ConsumableUseComponent.html" title="class in com.csse3200.game.components.items">ConsumableUseComponent</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Uses the consumable item on the given player.</div>
+</dd>
 <dt><a href="com/csse3200/game/components/items/ItemActionsComponent.html#use(com.csse3200.game.entities.Entity)" class="member-name-link">use(Entity)</a> - Method in class com.csse3200.game.components.items.<a href="com/csse3200/game/components/items/ItemActionsComponent.html" title="class in com.csse3200.game.components.items">ItemActionsComponent</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/components/items/MeleeUseComponent.html#use(com.csse3200.game.entities.Entity)" class="member-name-link">use(Entity)</a> - Method in class com.csse3200.game.components.items.<a href="com/csse3200/game/components/items/MeleeUseComponent.html" title="class in com.csse3200.game.components.items">MeleeUseComponent</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/components/items/RangedUseComponent.html#use(com.csse3200.game.entities.Entity)" class="member-name-link">use(Entity)</a> - Method in class com.csse3200.game.components.items.<a href="com/csse3200/game/components/items/RangedUseComponent.html" title="class in com.csse3200.game.components.items">RangedUseComponent</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Uses the ranged weapon/item for the given player.</div>
+</dd>
 <dt><a href="com/csse3200/game/components/UseInterface.html#use(com.csse3200.game.entities.Entity)" class="member-name-link">use(Entity)</a> - Method in interface com.csse3200.game.components.<a href="com/csse3200/game/components/UseInterface.html" title="interface in com.csse3200.game.components">UseInterface</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/components/UseInterface.html" class="type-name-link" title="interface in com.csse3200.game.components">UseInterface</a> - Interface in <a href="com/csse3200/game/components/package-summary.html">com.csse3200.game.components</a></dt>

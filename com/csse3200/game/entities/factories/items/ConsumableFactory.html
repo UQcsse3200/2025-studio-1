@@ -91,6 +91,11 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">ConsumableFactory</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
+<div class="block">Factory class responsible for creating consumable items in the game.
+ <p>
+ Consumables can either be standard items that apply effects directly
+ or projectile-based items (e.g., bombs or throwable items) that
+ use <a href="../../../components/items/RangedUseComponent.html" title="class in com.csse3200.game.components.items"><code>RangedUseComponent</code></a> and <a href="../../../components/WeaponsStatsComponent.html" title="class in com.csse3200.game.components"><code>WeaponsStatsComponent</code></a>.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -120,7 +125,9 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../../Entity.html" title="class in com.csse3200.game.entities">Entity</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#createConsumable(com.csse3200.game.entities.configs.Consumables)" class="member-name-link">createConsumable</a><wbr>(<a href="../../configs/Consumables.html" title="enum class in com.csse3200.game.entities.configs">Consumables</a>&nbsp;consumableType)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Creates a consumable entity of the specified type.</div>
+</div>
 </div>
 </div>
 </div>
@@ -156,6 +163,21 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="createConsumable(com.csse3200.game.entities.configs.Consumables)">
 <h3>createConsumable</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../../Entity.html" title="class in com.csse3200.game.entities">Entity</a></span>&nbsp;<span class="element-name">createConsumable</span><wbr><span class="parameters">(<a href="../../configs/Consumables.html" title="enum class in com.csse3200.game.entities.configs">Consumables</a>&nbsp;consumableType)</span></div>
+<div class="block">Creates a consumable entity of the specified type.
+ <p>
+ The returned entity will have:
+ <ul>
+   <li>A <a href="../../../components/items/ConsumableComponent.html" title="class in com.csse3200.game.components.items"><code>ConsumableComponent</code></a> containing its effects and duration</li>
+   <li>A <a href="../../../components/items/ConsumableUseComponent.html" title="class in com.csse3200.game.components.items"><code>ConsumableUseComponent</code></a> to handle usage</li>
+   <li>Optional projectile behavior if the configuration specifies a projectile</li>
+   <li>Its item type set to <a href="../../configs/ItemTypes.html#CONSUMABLE"><code>ItemTypes.CONSUMABLE</code></a></li>
+ </ul></div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>consumableType</code> - the type of consumable to create</dd>
+<dt>Returns:</dt>
+<dd>the created consumable entity</dd>
+</dl>
 </section>
 </li>
 </ul>

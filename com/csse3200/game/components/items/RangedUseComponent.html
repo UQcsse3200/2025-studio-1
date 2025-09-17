@@ -95,6 +95,16 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">RangedUseComponent</span>
 <span class="extends-implements">extends <a href="ItemActionsComponent.html" title="class in com.csse3200.game.components.items">ItemActionsComponent</a></span></div>
+<div class="block">Component responsible for handling ranged item usage (e.g., guns, bombs).
+ <p>
+ When used, this component:
+ <ul>
+   <li>Plays an attack sound</li>
+   <li>Creates a projectile entity (bullet or bomb)</li>
+   <li>Fires the projectile toward the mouse input</li>
+   <li>If the item is a consumable bomb, schedules its timed behavior
+       (rotation, pulsing, stopping, and explosion)</li>
+ </ul></div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -133,7 +143,9 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#use(com.csse3200.game.entities.Entity)" class="member-name-link">use</a><wbr>(<a href="../../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a>&nbsp;player)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Uses the ranged weapon/item for the given player.</div>
+</div>
 </div>
 </div>
 </div>
@@ -175,9 +187,16 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="use(com.csse3200.game.entities.Entity)">
 <h3>use</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">use</span><wbr><span class="parameters">(<a href="../../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a>&nbsp;player)</span></div>
+<div class="block">Uses the ranged weapon/item for the given player.
+ <p>
+ Spawns and fires a projectile toward the cursor position.
+ If the item is a consumable (e.g., bomb), schedules delayed
+ explosion behavior.</div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="ItemActionsComponent.html#use(com.csse3200.game.entities.Entity)">use</a></code>&nbsp;in class&nbsp;<code><a href="ItemActionsComponent.html" title="class in com.csse3200.game.components.items">ItemActionsComponent</a></code></dd>
+<dt>Parameters:</dt>
+<dd><code>player</code> - the entity representing the player using the item</dd>
 </dl>
 </section>
 </li>

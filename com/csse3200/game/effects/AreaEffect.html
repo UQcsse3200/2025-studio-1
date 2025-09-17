@@ -93,6 +93,20 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">AreaEffect</span>
 <span class="extends-implements">extends <a href="Effect.html" title="class in com.csse3200.game.effects">Effect</a></span></div>
+<div class="block">An <a href="Effect.html" title="class in com.csse3200.game.effects"><code>Effect</code></a> that applies multiple inner effects to all valid entities
+ within a certain radius of a central entity.
+ <p>
+ <code>AreaEffect</code> is typically used for area-of-effect (AoE) items,
+ such as explosions, healing zones, or buffs/debuffs that impact
+ multiple nearby entities at once.
+ <p>
+ Validation rules:
+ <ul>
+   <li>The effect list cannot be <code>null</code> or empty.</li>
+   <li>Inner effects cannot contain <code>null</code> values.</li>
+   <li>Nested <code>AreaEffect</code>s are not allowed (to prevent infinite recursion).</li>
+   <li>Radius must be strictly positive.</li>
+ </ul></div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -107,10 +121,14 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/ArrayList.html" title="class or interface in java.util" class="external-link">ArrayList</a><wbr>&lt;<a href="Effect.html" title="class in com.csse3200.game.effects">Effect</a>&gt;</code></div>
 <div class="col-second even-row-color"><code><a href="#effects" class="member-name-link">effects</a></code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">The list of effects to apply to each entity within the area.</div>
+</div>
 <div class="col-first odd-row-color"><code>int</code></div>
 <div class="col-second odd-row-color"><code><a href="#radius" class="member-name-link">radius</a></code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-last odd-row-color">
+<div class="block">The radius of the area (in world units).</div>
+</div>
 </div>
 </section>
 </li>
@@ -124,7 +142,9 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(java.util.List,int)" class="member-name-link">AreaEffect</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="Effect.html" title="class in com.csse3200.game.effects">Effect</a>&gt;&nbsp;effects,
  int&nbsp;radius)</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">Creates a new <code>AreaEffect</code>.</div>
+</div>
 </div>
 </section>
 </li>
@@ -141,10 +161,19 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#apply(com.csse3200.game.entities.Entity)" class="member-name-link">apply</a><wbr>(<a href="../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a>&nbsp;center)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Applies this area effect to all entities within range of the given center entity.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/ArrayList.html" title="class or interface in java.util" class="external-link">ArrayList</a><wbr>&lt;<a href="Effect.html" title="class in com.csse3200.game.effects">Effect</a>&gt;</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getEffects()" class="member-name-link">getEffects</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Gets the list of inner effects that this area effect applies.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getRadius()" class="member-name-link">getRadius</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Gets the radius of the area in which this effect applies.</div>
+</div>
 </div>
 </div>
 </div>
@@ -166,12 +195,14 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="effects">
 <h3>effects</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/ArrayList.html" title="class or interface in java.util" class="external-link">ArrayList</a>&lt;<a href="Effect.html" title="class in com.csse3200.game.effects">Effect</a>&gt;</span>&nbsp;<span class="element-name">effects</span></div>
+<div class="block">The list of effects to apply to each entity within the area.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="radius">
 <h3>radius</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">radius</span></div>
+<div class="block">The radius of the area (in world units).</div>
 </section>
 </li>
 </ul>
@@ -187,6 +218,14 @@ loadScripts(document, 'script');</script>
 <h3>AreaEffect</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">AreaEffect</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="Effect.html" title="class in com.csse3200.game.effects">Effect</a>&gt;&nbsp;effects,
  int&nbsp;radius)</span></div>
+<div class="block">Creates a new <code>AreaEffect</code>.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>effects</code> - list of effects to apply to entities in range</dd>
+<dd><code>radius</code> - radius of the effect area (must be positive)</dd>
+<dt>Throws:</dt>
+<dd><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/IllegalArgumentException.html" title="class or interface in java.lang" class="external-link">IllegalArgumentException</a></code> - if arguments are invalid (see validation rules)</dd>
+</dl>
 </section>
 </li>
 </ul>
@@ -201,15 +240,44 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="getEffects()">
 <h3>getEffects</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/ArrayList.html" title="class or interface in java.util" class="external-link">ArrayList</a>&lt;<a href="Effect.html" title="class in com.csse3200.game.effects">Effect</a>&gt;</span>&nbsp;<span class="element-name">getEffects</span>()</div>
+<div class="block">Gets the list of inner effects that this area effect applies.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>list of effects</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getRadius()">
+<h3>getRadius</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">getRadius</span>()</div>
+<div class="block">Gets the radius of the area in which this effect applies.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>radius of the effect</dd>
+</dl>
 </section>
 </li>
 <li>
 <section class="detail" id="apply(com.csse3200.game.entities.Entity)">
 <h3>apply</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">apply</span><wbr><span class="parameters">(<a href="../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a>&nbsp;center)</span></div>
+<div class="block">Applies this area effect to all entities within range of the given center entity.
+ <p>
+ Entities are affected if:
+ <ul>
+   <li>They are within the radius (distance calculated from their center positions).</li>
+   <li>They have a <a href="../components/CombatStatsComponent.html" title="class in com.csse3200.game.components"><code>CombatStatsComponent</code></a>.</li>
+   <li>They are not the player (identified by <a href="../components/player/PlayerActions.html" title="class in com.csse3200.game.components.player"><code>PlayerActions</code></a>).</li>
+ </ul>
+ Each valid entity receives all inner effects in sequence.</div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="Effect.html#apply(com.csse3200.game.entities.Entity)">apply</a></code>&nbsp;in class&nbsp;<code><a href="Effect.html" title="class in com.csse3200.game.effects">Effect</a></code></dd>
+<dt>Parameters:</dt>
+<dd><code>center</code> - the entity at the center of the area effect</dd>
+<dt>Returns:</dt>
+<dd><code>true</code> if at least one effect was successfully applied, otherwise <code>false</code></dd>
 </dl>
 </section>
 </li>

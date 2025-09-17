@@ -93,6 +93,15 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">ConsumableComponent</span>
 <span class="extends-implements">extends <a href="../Component.html" title="class in com.csse3200.game.components">Component</a></span></div>
+<div class="block">Component representing a consumable item that can apply one or more <a href="../../effects/Effect.html" title="class in com.csse3200.game.effects"><code>Effect</code></a>s
+ to an entity when used.
+ <p>
+ A consumable may directly apply effects (e.g., healing, buffs), or it may
+ trigger projectile-like behavior if the entity also has a
+ <a href="../WeaponsStatsComponent.html" title="class in com.csse3200.game.components"><code>WeaponsStatsComponent</code></a>.
+ <p>
+ Effects can also be nested within an <a href="../../effects/AreaEffect.html" title="class in com.csse3200.game.effects"><code>AreaEffect</code></a>, which bundles
+ multiple effects together.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -115,7 +124,9 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(java.util.ArrayList,int)" class="member-name-link">ConsumableComponent</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/ArrayList.html" title="class or interface in java.util" class="external-link">ArrayList</a>&lt;<a href="../../effects/Effect.html" title="class in com.csse3200.game.effects">Effect</a>&gt;&nbsp;effects,
  int&nbsp;duration)</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">Creates a consumable component with the specified effects and duration.</div>
+</div>
 </div>
 </section>
 </li>
@@ -132,16 +143,24 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#firesProjectile()" class="member-name-link">firesProjectile</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Checks whether this consumable triggers projectile behavior.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getDuration()" class="member-name-link">getDuration</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Gets the duration of this consumable's effects.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../../effects/Effect.html" title="class in com.csse3200.game.effects">Effect</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getEffect(java.lang.Class)" class="member-name-link">getEffect</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;? extends <a href="../../effects/Effect.html" title="class in com.csse3200.game.effects">Effect</a>&gt;&nbsp;effectClass)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Retrieves the first effect of the specified type from this consumable.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/ArrayList.html" title="class or interface in java.util" class="external-link">ArrayList</a><wbr>&lt;<a href="../../effects/Effect.html" title="class in com.csse3200.game.effects">Effect</a>&gt;</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getEffects()" class="member-name-link">getEffects</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Retrieves all effects associated with this consumable.</div>
+</div>
 </div>
 </div>
 </div>
@@ -167,6 +186,12 @@ loadScripts(document, 'script');</script>
 <h3>ConsumableComponent</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">ConsumableComponent</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/ArrayList.html" title="class or interface in java.util" class="external-link">ArrayList</a>&lt;<a href="../../effects/Effect.html" title="class in com.csse3200.game.effects">Effect</a>&gt;&nbsp;effects,
  int&nbsp;duration)</span></div>
+<div class="block">Creates a consumable component with the specified effects and duration.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>effects</code> - list of effects this consumable applies</dd>
+<dd><code>duration</code> - how long the effects last</dd>
+</dl>
 </section>
 </li>
 </ul>
@@ -181,24 +206,53 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="getEffects()">
 <h3>getEffects</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/ArrayList.html" title="class or interface in java.util" class="external-link">ArrayList</a>&lt;<a href="../../effects/Effect.html" title="class in com.csse3200.game.effects">Effect</a>&gt;</span>&nbsp;<span class="element-name">getEffects</span>()</div>
+<div class="block">Retrieves all effects associated with this consumable.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>the list of effects</dd>
+</dl>
 </section>
 </li>
 <li>
 <section class="detail" id="getEffect(java.lang.Class)">
 <h3>getEffect</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../../effects/Effect.html" title="class in com.csse3200.game.effects">Effect</a></span>&nbsp;<span class="element-name">getEffect</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;? extends <a href="../../effects/Effect.html" title="class in com.csse3200.game.effects">Effect</a>&gt;&nbsp;effectClass)</span></div>
+<div class="block">Retrieves the first effect of the specified type from this consumable.
+ <p>
+ If the consumable contains an <a href="../../effects/AreaEffect.html" title="class in com.csse3200.game.effects"><code>AreaEffect</code></a>, its inner effects are
+ also searched recursively.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>effectClass</code> - the class of effect to search for</dd>
+<dt>Returns:</dt>
+<dd>the first matching effect, or <code>null</code> if none found</dd>
+</dl>
 </section>
 </li>
 <li>
 <section class="detail" id="getDuration()">
 <h3>getDuration</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">getDuration</span>()</div>
+<div class="block">Gets the duration of this consumable's effects.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>duration of effects</dd>
+</dl>
 </section>
 </li>
 <li>
 <section class="detail" id="firesProjectile()">
 <h3>firesProjectile</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">firesProjectile</span>()</div>
+<div class="block">Checks whether this consumable triggers projectile behavior.
+ <p>
+ A consumable is considered to fire a projectile if its entity
+ has a <a href="../WeaponsStatsComponent.html" title="class in com.csse3200.game.components"><code>WeaponsStatsComponent</code></a>.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd><code>true</code> if the consumable fires a projectile,
+         <code>false</code> otherwise</dd>
+</dl>
 </section>
 </li>
 </ul>
