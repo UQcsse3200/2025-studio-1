@@ -5,6 +5,10 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.math.Vector2;
+import com.csse3200.game.components.TagComponent;
+import com.csse3200.game.components.items.ItemComponent;
+import com.csse3200.game.entities.configs.ItemTypes;
+import com.csse3200.game.entities.factories.PowerupsFactory;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.input.InputComponent;
 import com.csse3200.game.services.ServiceLocator;
@@ -22,7 +26,7 @@ public class KeyboardPlayerInputComponent extends InputComponent {
 
   private long timeSinceKeyPress = 0;
   private int doublePressKeyCode = -1;
-
+  private boolean holding = false;
   public KeyboardPlayerInputComponent() {
     super(5);
   }
@@ -56,13 +60,23 @@ public class KeyboardPlayerInputComponent extends InputComponent {
         triggerSprintEvent();
         return true;
 
+      case Keys.Q:
+        triggerReloadEvent();
+        return true;
       case Keys.SPACE:
         triggerJumpEvent();
         Sound jump = ServiceLocator.getResourceService().getAsset("sounds/jump.mp3", Sound.class);
         jump.play();
         entity.getEvents().trigger("anim");
         return true;
+      case Keys.E:
 
+        if (!holding) {
+          triggerInteract();
+          holding = true;
+        }
+
+        return true;
       default:
         return false;
     }
@@ -85,11 +99,15 @@ public class KeyboardPlayerInputComponent extends InputComponent {
     if (button == Input.Buttons.LEFT) {
       InventoryComponent inventory = entity.getComponent(InventoryComponent.class);
       Entity item = inventory.get(focusedItem);
-      if (item == null){
+      if (item == null) {
         return false;
       }
-
-      item.getEvents().trigger("use", entity);
+      ItemComponent itemInfo = item.getComponent(ItemComponent.class);
+      if (itemInfo.getType() == ItemTypes.RANGED) {
+        entity.getEvents().trigger("shoot");
+      } else if (itemInfo.getType() == ItemTypes.MELEE) {
+        entity.getEvents().trigger("attack");
+      }
       return true;
     }
     return false;
@@ -141,9 +159,10 @@ public class KeyboardPlayerInputComponent extends InputComponent {
         focusedItem = 4;
         triggerSelectItem();
         return true;
+      case Keys.P:
       case Keys.E:
+        holding = false;
         triggerAddItem();
-        triggerInteract();
         return true;
       case Keys.R:
         triggerDropFocused();
@@ -209,6 +228,11 @@ public class KeyboardPlayerInputComponent extends InputComponent {
     } else {
       entity.getEvents().trigger("walk", walkDirection);
     }
+  }
+
+  private void triggerReloadEvent() {
+
+    entity.getEvents().trigger("reload");
   }
 
   /**

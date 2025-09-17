@@ -5,7 +5,11 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.csse3200.game.components.AmmoStatsComponent;
 import com.csse3200.game.components.CombatStatsComponent;
+import com.csse3200.game.components.items.ItemComponent;
+import com.csse3200.game.components.MagazineComponent;
+import com.csse3200.game.entities.configs.ItemTypes;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.UIComponent;
 
@@ -50,6 +54,7 @@ public class PlayerStatsDisplay extends UIComponent {
   private TextButton killEnemyButton;
   private ProgressBar staminaBar;
   private Label processorLabel;
+  private Label ammoLabel;
 
   /**
    * Creates reusable ui styles and adds actors to the stage.
@@ -62,6 +67,12 @@ public class PlayerStatsDisplay extends UIComponent {
     entity.getEvents().addListener("updateHealth", this::updatePlayerHealthUI);
     entity.getEvents().addListener("updateProcessor", this::updatePlayerProcessorUI);
     entity.getEvents().addListener("staminaChanged", this::updatePlayerStaminaUI);
+    entity.getEvents().addListener("shoot", this::updateAmmoUI);
+    entity.getEvents().addListener("reload", this::updateAmmoUI);
+    entity.getEvents().addListener("pick up", this::updateAmmoUI);
+    entity.getEvents().addListener("ammo replenished", this::updateAmmoUI);
+    entity.getEvents().addListener("focus item", this::updateAmmoUIAfterSwitch);
+
   }
 
   /**
@@ -116,6 +127,11 @@ public class PlayerStatsDisplay extends UIComponent {
     CharSequence processorText = String.format("Processor: %d", processor);
     processorLabel = new Label(processorText, skin, "large");
 
+    // Ammo label
+    int ammo = entity.getComponent(AmmoStatsComponent.class).getAmmo();
+    CharSequence ammoText = String.format("Ammo: %d", ammo);
+    ammoLabel = new Label(ammoText, skin, "large");
+
     // Layout:
     // Row 1: Health bar
     table.add(healthBar).width(BAR_WIDTH).height(BAR_HEIGHT).pad(5);
@@ -125,6 +141,9 @@ public class PlayerStatsDisplay extends UIComponent {
     table.row();
     // Row 3: Processor label
     table.add(processorLabel).left().padLeft(10f);
+    table.row();
+    // Row 4: Ammo label
+    table.add(ammoLabel).left().padLeft(10f);
     table.row();
 
     killEnemyButton = new TextButton("Kill Enemy", skin);
@@ -170,6 +189,56 @@ public class PlayerStatsDisplay extends UIComponent {
   public void updatePlayerProcessorUI(int processor) {
     CharSequence text = String.format("Processor: %d", processor);
     processorLabel.setText(text);
+  }
+
+
+  /**
+   * Updates the Player's ammo display on the UI when they shoot or reload
+   */
+  public void updateAmmoUI() {
+
+    int ammoReserves = entity.getComponent(AmmoStatsComponent.class).getAmmo();
+    Entity equipped = entity.getComponent(InventoryComponent.class).getCurrItem();
+
+    if (equipped == null) {
+
+      CharSequence text = String.format("Ammo: %d", ammoReserves);
+      ammoLabel.setText(text);
+      return;
+    }
+
+    ItemComponent itemInfo = equipped.getComponent(ItemComponent.class);
+    if (itemInfo.getType() == ItemTypes.RANGED) {
+
+      MagazineComponent mag = equipped.getComponent(MagazineComponent.class);
+      CharSequence text = String.format("Ammo: %d/%d", ammoReserves, mag.getCurrentAmmo());
+      ammoLabel.setText(text);
+    }
+  }
+
+  /**
+   * Updates the ammo UI after the inventory slot is switched
+   */
+  public void updateAmmoUIAfterSwitch(int focusItem) {
+
+    int ammoReserves = entity.getComponent(AmmoStatsComponent.class).getAmmo();
+    Entity equipped = entity.getComponent(InventoryComponent.class).get(focusItem);
+
+    if (equipped == null) {
+
+      CharSequence text = String.format("Ammo: %d", ammoReserves);
+      ammoLabel.setText(text);
+      return;
+    }
+
+    ItemComponent itemInfo = equipped.getComponent(ItemComponent.class);
+    if (itemInfo.getType() == ItemTypes.RANGED) {
+
+      MagazineComponent mag = equipped.getComponent(MagazineComponent.class);
+      CharSequence text = String.format("Ammo: %d/%d", ammoReserves, mag.getCurrentAmmo());
+      ammoLabel.setText(text);
+    }
+
   }
 
   /**
