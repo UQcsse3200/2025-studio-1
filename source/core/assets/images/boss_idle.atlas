@@ -1,82 +1,236 @@
-boss_idle.png
-size: 10800, 546
+boss_merged.png
+size: 10800,1322
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
-default
+idle
   rotate: false
-  xy: 0, 0
-  size: 1080, 546
-  orig: 1080, 546
-  offset: 0, 0
+  xy: 0,0
+  size: 1080,661
+  orig: 1080,661
+  offset: 0,0
   index: 0
 idle
   rotate: false
-  xy: 0, 0
-  size: 1080, 546
-  orig: 1080, 546
-  offset: 0, 0
-  index: 0
-idle
-  rotate: false
-  xy: 1080, 0
-  size: 1080, 546
-  orig: 1080, 546
-  offset: 0, 0
+  xy: 1080,0
+  size: 1080,661
+  orig: 1080,661
+  offset: 0,0
   index: 1
 idle
   rotate: false
-  xy: 2160, 0
-  size: 1080, 546
-  orig: 1080, 546
-  offset: 0, 0
+  xy: 2160,0
+  size: 1080,661
+  orig: 1080,661
+  offset: 0,0
   index: 2
 idle
   rotate: false
-  xy: 3240, 0
-  size: 1080, 546
-  orig: 1080, 546
-  offset: 0, 0
+  xy: 3240,0
+  size: 1080,661
+  orig: 1080,661
+  offset: 0,0
   index: 3
 idle
   rotate: false
-  xy: 4320, 0
-  size: 1080, 546
-  orig: 1080, 546
-  offset: 0, 0
+  xy: 4320,0
+  size: 1080,661
+  orig: 1080,661
+  offset: 0,0
   index: 4
 idle
   rotate: false
-  xy: 5400, 0
-  size: 1080, 546
-  orig: 1080, 546
-  offset: 0, 0
+  xy: 5400,0
+  size: 1080,661
+  orig: 1080,661
+  offset: 0,0
   index: 5
 idle
   rotate: false
-  xy: 6480, 0
-  size: 1080, 546
-  orig: 1080, 546
-  offset: 0, 0
+  xy: 6480,0
+  size: 1080,661
+  orig: 1080,661
+  offset: 0,0
   index: 6
 idle
   rotate: false
-  xy: 7560, 0
-  size: 1080, 546
-  orig: 1080, 546
-  offset: 0, 0
+  xy: 7560,0
+  size: 1080,661
+  orig: 1080,661
+  offset: 0,0
   index: 7
 idle
   rotate: false
-  xy: 8640, 0
-  size: 1080, 546
-  orig: 1080, 546
-  offset: 0, 0
+  xy: 8640,0
+  size: 1080,661
+  orig: 1080,661
+  offset: 0,0
   index: 8
 idle
   rotate: false
-  xy: 9720, 0
-  size: 1080, 546
-  orig: 1080, 546
-  offset: 0, 0
+  xy: 9720,0
+  size: 1080,661
+  orig: 1080,661
+  offset: 0,0
   index: 9
+default
+  rotate: false
+  xy: 0,0
+  size: 1080,661
+  orig: 1080,661
+  offset: 0,0
+  index: 0
+phase2
+  rotate: false
+  xy: 0,661
+  size: 1080,661
+  orig: 1080,661
+  offset: 0,0
+  index: 0
+phase2
+  rotate: false
+  xy: 1080,661
+  size: 1080,661
+  orig: 1080,661
+  offset: 0,0
+  index: 1
+phase2
+  rotate: false
+  xy: 2160,661
+  size: 1080,661
+  orig: 1080,661
+  offset: 0,0
+  index: 2
+phase2
+  rotate: false
+  xy: 3240,661
+  size: 1080,661
+  orig: 1080,661
+  offset: 0,0
+  index: 3
+phase2
+  rotate: false
+  xy: 4320,661
+  size: 1080,661
+  orig: 1080,661
+  offset: 0,0
+  index: 4
+phase2
+  rotate: false
+  xy: 5400,661
+  size: 1080,661
+  orig: 1080,661
+  offset: 0,0
+  index: 5
+phase2
+  rotate: false
+  xy: 6480,661
+  size: 1080,661
+  orig: 1080,661
+  offset: 0,0
+  index: 6
+phase2
+  rotate: false
+  xy: 7560,661
+  size: 1080,661
+  orig: 1080,661
+  offset: 0,0
+  index: 7
+phase2
+  rotate: false
+  xy: 8640,661
+  size: 1080,661
+  orig: 1080,661
+  offset: 0,0
+  index: 8
+phase2
+  rotate: false
+  xy: 9720,661
+  size: 1080,661
+  orig: 1080,661
+  offset: 0,0
+  index: 9
+default
+  rotate: false
+  xy: 0,661
+  size: 1080,661
+  orig: 1080,661
+  offset: 0,0
+  index: 0
+angry
+  rotate: false
+  xy: 0,1322
+  size: 1080,661
+  orig: 1080,661
+  offset: 0,0
+  index: 0
+angry
+  rotate: false
+  xy: 1080,1322
+  size: 1080,661
+  orig: 1080,661
+  offset: 0,0
+  index: 1
+angry
+  rotate: false
+  xy: 2160,1322
+  size: 1080,661
+  orig: 1080,661
+  offset: 0,0
+  index: 2
+angry
+  rotate: false
+  xy: 3240,1322
+  size: 1080,661
+  orig: 1080,661
+  offset: 0,0
+  index: 3
+angry
+  rotate: false
+  xy: 4320,1322
+  size: 1080,661
+  orig: 1080,661
+  offset: 0,0
+  index: 4
+angry
+  rotate: false
+  xy: 5400,1322
+  size: 1080,661
+  orig: 1080,661
+  offset: 0,0
+  index: 5
+angry
+  rotate: false
+  xy: 6480,1322
+  size: 1080,661
+  orig: 1080,661
+  offset: 0,0
+  index: 6
+angry
+  rotate: false
+  xy: 7560,1322
+  size: 1080,661
+  orig: 1080,661
+  offset: 0,0
+  index: 7
+angry
+  rotate: false
+  xy: 8640,1322
+  size: 1080,661
+  orig: 1080,661
+  offset: 0,0
+  index: 8
+angry
+  rotate: false
+  xy: 9720,1322
+  size: 1080,661
+  orig: 1080,661
+  offset: 0,0
+  index: 9
+default
+  rotate: false
+  xy: 0,1322
+  size: 1080,661
+  orig: 1080,661
+  offset: 0,0
+  index: 0

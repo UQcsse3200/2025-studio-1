@@ -138,6 +138,7 @@ public class StorageGameArea extends GameArea {
    * Clears the game area and loads the previous section (Shipping).
    */
   private void loadShipping() {
+      roomNumber++;
     clearAndLoad(() -> new ShippingGameArea(terrainFactory, cameraComponent));
   }
 }
