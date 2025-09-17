@@ -198,14 +198,14 @@ public class WeaponsStatsComponent extends Component {
 
     /**
      * Sets the damage multiplier for this weapon.
-     * <p>
-     * The multiplier must be non-negative and finite. For example:
+     *
+     * <p>The multiplier must be non-negative and finite. For example:</p>
      * <ul>
      *   <li>{@code 1.0} = normal damage (default)</li>
      *   <li>{@code 2.0} = double damage</li>
      *   <li>{@code 0.5} = half damage</li>
      * </ul>
-     * </p>
+     *
      *
      * @param multiplier the new damage multiplier
      */
