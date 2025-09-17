@@ -58,7 +58,6 @@ public class MainGameScreen extends ScreenAdapter {
   private Entity pauseOverlay;
   private boolean isPauseVisible = false;
 
-
   public MainGameScreen(GdxGame game) {
     this.game = game;
 
@@ -94,7 +93,7 @@ public class MainGameScreen extends ScreenAdapter {
   @Override
   public void render(float delta) {
     if (!isPauseVisible && !(ServiceLocator.getTimeSource().isPaused())
-            && !com.csse3200.game.services.ServiceLocator.isTransitioning()) {
+            && !ServiceLocator.isTransitioning()) {
       physicsEngine.update();
     }
     if (!com.csse3200.game.services.ServiceLocator.isTransitioning()) {
@@ -116,7 +115,6 @@ public class MainGameScreen extends ScreenAdapter {
         hidePauseOverlay();
       }
     }
-
   }
 
   @Override
@@ -178,7 +176,8 @@ public class MainGameScreen extends ScreenAdapter {
         .addComponent(new MainGameExitDisplay())
         .addComponent(new Terminal(this.game))
         .addComponent(inputComponent)
-        .addComponent(new TerminalDisplay());
+        .addComponent(new TerminalDisplay(this.game));
+
     ServiceLocator.getEntityService().register(ui);
   }
 
