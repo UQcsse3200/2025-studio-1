@@ -1639,15 +1639,15 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">If there is a projectile launcher present, fire lasers.</div>
 </dd>
-<dt><a href="com/csse3200/game/components/enemy/ProjectileLauncherComponent.html#FireProjectile(com.badlogic.gdx.math.Vector2,com.badlogic.gdx.math.Vector2,com.badlogic.gdx.math.Vector2)" class="member-name-link">FireProjectile(Vector2, Vector2, Vector2)</a> - Method in class com.csse3200.game.components.enemy.<a href="com/csse3200/game/components/enemy/ProjectileLauncherComponent.html" title="class in com.csse3200.game.components.enemy">ProjectileLauncherComponent</a></dt>
+<dt><a href="com/csse3200/game/components/enemy/ProjectileLauncherComponent.html#fireProjectile(com.badlogic.gdx.math.Vector2,com.badlogic.gdx.math.Vector2,com.badlogic.gdx.math.Vector2)" class="member-name-link">fireProjectile(Vector2, Vector2, Vector2)</a> - Method in class com.csse3200.game.components.enemy.<a href="com/csse3200/game/components/enemy/ProjectileLauncherComponent.html" title="class in com.csse3200.game.components.enemy">ProjectileLauncherComponent</a></dt>
 <dd>
 <div class="block">Fires a projectile, classified as an enemy projectile, in the direction specified.</div>
 </dd>
-<dt><a href="com/csse3200/game/components/enemy/ProjectileLauncherComponent.html#FireProjectileBurstFire(int,float,com.badlogic.gdx.math.Vector2,com.badlogic.gdx.math.Vector2,com.badlogic.gdx.math.Vector2)" class="member-name-link">FireProjectileBurstFire(int, float, Vector2, Vector2, Vector2)</a> - Method in class com.csse3200.game.components.enemy.<a href="com/csse3200/game/components/enemy/ProjectileLauncherComponent.html" title="class in com.csse3200.game.components.enemy">ProjectileLauncherComponent</a></dt>
+<dt><a href="com/csse3200/game/components/enemy/ProjectileLauncherComponent.html#fireProjectileBurstFire(int,float,com.badlogic.gdx.math.Vector2,com.badlogic.gdx.math.Vector2,com.badlogic.gdx.math.Vector2)" class="member-name-link">fireProjectileBurstFire(int, float, Vector2, Vector2, Vector2)</a> - Method in class com.csse3200.game.components.enemy.<a href="com/csse3200/game/components/enemy/ProjectileLauncherComponent.html" title="class in com.csse3200.game.components.enemy">ProjectileLauncherComponent</a></dt>
 <dd>
 <div class="block">A quick burst of repeated laser projectile firings.</div>
 </dd>
-<dt><a href="com/csse3200/game/components/enemy/ProjectileLauncherComponent.html#FireProjectileMultishot(int,float,com.badlogic.gdx.math.Vector2,com.badlogic.gdx.math.Vector2,com.badlogic.gdx.math.Vector2)" class="member-name-link">FireProjectileMultishot(int, float, Vector2, Vector2, Vector2)</a> - Method in class com.csse3200.game.components.enemy.<a href="com/csse3200/game/components/enemy/ProjectileLauncherComponent.html" title="class in com.csse3200.game.components.enemy">ProjectileLauncherComponent</a></dt>
+<dt><a href="com/csse3200/game/components/enemy/ProjectileLauncherComponent.html#fireProjectileMultishot(int,float,com.badlogic.gdx.math.Vector2,com.badlogic.gdx.math.Vector2,com.badlogic.gdx.math.Vector2)" class="member-name-link">fireProjectileMultishot(int, float, Vector2, Vector2, Vector2)</a> - Method in class com.csse3200.game.components.enemy.<a href="com/csse3200/game/components/enemy/ProjectileLauncherComponent.html" title="class in com.csse3200.game.components.enemy">ProjectileLauncherComponent</a></dt>
 <dd>
 <div class="block">Fires multiple laser projectiles, classified as enemy projectiles, at once</div>
 </dd>
@@ -3437,6 +3437,10 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/services/ServiceLocator.html#registerResourceService(com.csse3200.game.services.ResourceService)" class="member-name-link">registerResourceService(ResourceService)</a> - Static method in class com.csse3200.game.services.<a href="com/csse3200/game/services/ServiceLocator.html" title="class in com.csse3200.game.services">ServiceLocator</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/components/SoundComponent.html#registerSound(java.lang.String,java.lang.String)" class="member-name-link">registerSound(String, String)</a> - Method in class com.csse3200.game.components.<a href="com/csse3200/game/components/SoundComponent.html" title="class in com.csse3200.game.components">SoundComponent</a></dt>
+<dd>
+<div class="block">Registers the sound to play when the given event is triggered.</div>
+</dd>
 <dt><a href="com/csse3200/game/services/ServiceLocator.html#registerTimeSource(com.csse3200.game.services.GameTime)" class="member-name-link">registerTimeSource(GameTime)</a> - Static method in class com.csse3200.game.services.<a href="com/csse3200/game/services/ServiceLocator.html" title="class in com.csse3200.game.services">ServiceLocator</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/components/MagazineComponent.html#reload(com.csse3200.game.entities.Entity)" class="member-name-link">reload(Entity)</a> - Method in class com.csse3200.game.components.<a href="com/csse3200/game/components/MagazineComponent.html" title="class in com.csse3200.game.components">MagazineComponent</a></dt>
@@ -3615,6 +3619,8 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/csse3200/game/areas/RoomAccessRegistry.html" class="type-name-link" title="class in com.csse3200.game.areas">RoomAccessRegistry</a> - Class in <a href="com/csse3200/game/areas/package-summary.html">com.csse3200.game.areas</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/areas/RoomAccessRegistry.html#%3Cinit%3E()" class="member-name-link">RoomAccessRegistry()</a> - Constructor for class com.csse3200.game.areas.<a href="com/csse3200/game/areas/RoomAccessRegistry.html" title="class in com.csse3200.game.areas">RoomAccessRegistry</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/areas/GameArea.html#roomNumber" class="member-name-link">roomNumber</a> - Static variable in class com.csse3200.game.areas.<a href="com/csse3200/game/areas/GameArea.html" title="class in com.csse3200.game.areas">GameArea</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/components/screens/BaseScreenDisplay.html#root" class="member-name-link">root</a> - Variable in class com.csse3200.game.components.screens.<a href="com/csse3200/game/components/screens/BaseScreenDisplay.html" title="class in com.csse3200.game.components.screens">BaseScreenDisplay</a></dt>
 <dd>
@@ -4103,11 +4109,17 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Create a sorted intmap with the specified capacity</div>
 </dd>
+<dt><a href="com/csse3200/game/components/SoundComponent.html" class="type-name-link" title="class in com.csse3200.game.components">SoundComponent</a> - Class in <a href="com/csse3200/game/components/package-summary.html">com.csse3200.game.components</a></dt>
+<dd>
+<div class="block">Sound handler for entities.</div>
+</dd>
+<dt><a href="com/csse3200/game/components/SoundComponent.html#%3Cinit%3E()" class="member-name-link">SoundComponent()</a> - Constructor for class com.csse3200.game.components.<a href="com/csse3200/game/components/SoundComponent.html" title="class in com.csse3200.game.components">SoundComponent</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/areas/terrain/TerrainFactory.TerrainType.html#SPAWN_ROOM" class="member-name-link">SPAWN_ROOM</a> - Enum constant in enum class com.csse3200.game.areas.terrain.<a href="com/csse3200/game/areas/terrain/TerrainFactory.TerrainType.html" title="enum class in com.csse3200.game.areas.terrain">TerrainFactory.TerrainType</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/areas/GenericLayout.html#spawnArrowPlayerAt(com.csse3200.game.areas.GameArea,com.badlogic.gdx.math.GridPoint2)" class="member-name-link">spawnArrowPlayerAt(GameArea, GridPoint2)</a> - Static method in class com.csse3200.game.areas.<a href="com/csse3200/game/areas/GenericLayout.html" title="class in com.csse3200.game.areas">GenericLayout</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/csse3200/game/areas/GameArea.html#spawnDeepspin(int,float,com.csse3200.game.entities.Entity,java.util.HashMap)" class="member-name-link">spawnDeepspin(int, float, Entity, HashMap&lt;String, ArrayList&lt;Vector2&gt;&gt;)</a> - Method in class com.csse3200.game.areas.<a href="com/csse3200/game/areas/GameArea.html" title="class in com.csse3200.game.areas">GameArea</a></dt>
+<dt><a href="com/csse3200/game/areas/GameArea.html#spawnDeepspin(int,float,com.csse3200.game.entities.Entity,java.util.Map)" class="member-name-link">spawnDeepspin(int, float, Entity, Map&lt;String, ArrayList&lt;Vector2&gt;&gt;)</a> - Method in class com.csse3200.game.areas.<a href="com/csse3200/game/areas/GameArea.html" title="class in com.csse3200.game.areas">GameArea</a></dt>
 <dd>
 <div class="block">Adds DeepSpin enemies onto the map.</div>
 </dd>
@@ -4131,7 +4143,7 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/csse3200/game/areas/GameArea.html#spawnFloor()" class="member-name-link">spawnFloor()</a> - Method in class com.csse3200.game.areas.<a href="com/csse3200/game/areas/GameArea.html" title="class in com.csse3200.game.areas">GameArea</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/csse3200/game/areas/GameArea.html#spawnGhostGPT(int,float,com.csse3200.game.entities.Entity,java.util.HashMap)" class="member-name-link">spawnGhostGPT(int, float, Entity, HashMap&lt;String, ArrayList&lt;Vector2&gt;&gt;)</a> - Method in class com.csse3200.game.areas.<a href="com/csse3200/game/areas/GameArea.html" title="class in com.csse3200.game.areas">GameArea</a></dt>
+<dt><a href="com/csse3200/game/areas/GameArea.html#spawnGhostGPT(int,float,com.csse3200.game.entities.Entity,java.util.Map)" class="member-name-link">spawnGhostGPT(int, float, Entity, Map&lt;String, ArrayList&lt;Vector2&gt;&gt;)</a> - Method in class com.csse3200.game.areas.<a href="com/csse3200/game/areas/GameArea.html" title="class in com.csse3200.game.areas">GameArea</a></dt>
 <dd>
 <div class="block">Adds GhostGPT enemies onto the map.</div>
 </dd>
@@ -4139,7 +4151,7 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Spawns the projectile used by the Ghost GPT Enemy</div>
 </dd>
-<dt><a href="com/csse3200/game/areas/GameArea.html#spawnGrokDroid(int,float,com.csse3200.game.entities.Entity,java.util.HashMap)" class="member-name-link">spawnGrokDroid(int, float, Entity, HashMap&lt;String, ArrayList&lt;Vector2&gt;&gt;)</a> - Method in class com.csse3200.game.areas.<a href="com/csse3200/game/areas/GameArea.html" title="class in com.csse3200.game.areas">GameArea</a></dt>
+<dt><a href="com/csse3200/game/areas/GameArea.html#spawnGrokDroid(int,float,com.csse3200.game.entities.Entity,java.util.Map)" class="member-name-link">spawnGrokDroid(int, float, Entity, Map&lt;String, ArrayList&lt;Vector2&gt;&gt;)</a> - Method in class com.csse3200.game.areas.<a href="com/csse3200/game/areas/GameArea.html" title="class in com.csse3200.game.areas">GameArea</a></dt>
 <dd>
 <div class="block">Adds GrokDroid enemies onto the map.</div>
 </dd>
@@ -4151,11 +4163,11 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/csse3200/game/areas/KeycardSpawnerSystem.html#spawnKeycards(com.csse3200.game.areas.GameArea)" class="member-name-link">spawnKeycards(GameArea)</a> - Static method in class com.csse3200.game.areas.<a href="com/csse3200/game/areas/KeycardSpawnerSystem.html" title="class in com.csse3200.game.areas">KeycardSpawnerSystem</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/csse3200/game/areas/GameArea.html#spawnTurret(int,float,com.csse3200.game.entities.Entity,java.util.HashMap)" class="member-name-link">spawnTurret(int, float, Entity, HashMap&lt;String, ArrayList&lt;Vector2&gt;&gt;)</a> - Method in class com.csse3200.game.areas.<a href="com/csse3200/game/areas/GameArea.html" title="class in com.csse3200.game.areas">GameArea</a></dt>
+<dt><a href="com/csse3200/game/areas/GameArea.html#spawnTurret(int,float,com.csse3200.game.entities.Entity,java.util.Map)" class="member-name-link">spawnTurret(int, float, Entity, Map&lt;String, ArrayList&lt;Vector2&gt;&gt;)</a> - Method in class com.csse3200.game.areas.<a href="com/csse3200/game/areas/GameArea.html" title="class in com.csse3200.game.areas">GameArea</a></dt>
 <dd>
 <div class="block">Adds Turret enemies onto the map.</div>
 </dd>
-<dt><a href="com/csse3200/game/areas/GameArea.html#spawnVroomba(int,float,com.csse3200.game.entities.Entity,java.util.HashMap)" class="member-name-link">spawnVroomba(int, float, Entity, HashMap&lt;String, ArrayList&lt;Vector2&gt;&gt;)</a> - Method in class com.csse3200.game.areas.<a href="com/csse3200/game/areas/GameArea.html" title="class in com.csse3200.game.areas">GameArea</a></dt>
+<dt><a href="com/csse3200/game/areas/GameArea.html#spawnVroomba(int,float,com.csse3200.game.entities.Entity,java.util.Map)" class="member-name-link">spawnVroomba(int, float, Entity, Map&lt;String, ArrayList&lt;Vector2&gt;&gt;)</a> - Method in class com.csse3200.game.areas.<a href="com/csse3200/game/areas/GameArea.html" title="class in com.csse3200.game.areas">GameArea</a></dt>
 <dd>
 <div class="block">Adds Vroomba enemies onto the map.</div>
 </dd>

@@ -191,7 +191,7 @@ loadScripts(document, 'script');</script>
 <div class="block">Has the playing animation finished? This will always be false for looping animations.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#playAnimationOnce(java.lang.String)" class="member-name-link">playAnimationOnce</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;currentName)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#playAnimationOnce(java.lang.String)" class="member-name-link">playAnimationOnce</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;name)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Starts the playback of the desired animation.</div>
 </div>
@@ -357,12 +357,12 @@ loadScripts(document, 'script');</script>
 <li>
 <section class="detail" id="playAnimationOnce(java.lang.String)">
 <h3>playAnimationOnce</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">playAnimationOnce</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;currentName)</span></div>
-<div class="block">Starts the playback of the desired animation. Once the current animation is done, it will play the next animation
- specified by the nextName parameter.</div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">playAnimationOnce</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;name)</span></div>
+<div class="block">Starts the playback of the desired animation. Once the current animation is done, it will play the last looped
+ animation</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>currentName</code> - name of the animation to play.</dd>
+<dd><code>name</code> - name of the animation to play.</dd>
 <dt>Requires:</dt>
 <dd>currentName references a normal animation (non looping).</dd>
 </dl>
