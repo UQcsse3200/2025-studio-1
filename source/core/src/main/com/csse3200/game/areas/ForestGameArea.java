@@ -116,6 +116,15 @@ public class ForestGameArea extends GameArea {
 
   /** General prop textures (floors, tiles, etc.). */
   private static final String[] generalTextures = {
+    "foreg_sprites/general/LongFloor.png",
+    "foreg_sprites/general/Railing.png",
+    "foreg_sprites/general/SmallSquare.png",
+    "foreg_sprites/general/SmallStair.png",
+    "foreg_sprites/general/SquareTile.png",
+    "foreg_sprites/general/ThickFloor.png",
+    "foreg_sprites/general/ThinFloor.png",
+    "foreg_sprites/general/ThinFloor2.png",
+    "foreg_sprites/general/ThinFloor3.png",
     "foreg_sprites/general/Test.png"
   };
 
