@@ -27,7 +27,9 @@ public class BossAnimationController extends Component {
 
 
     private void onChaseStart() {
-        if (animator == null) return;
+        if (animator == null) {
+            return;
+        }
         if (inFury) {
             animator.startAnimation("fury");
         } else {
@@ -41,7 +43,9 @@ public class BossAnimationController extends Component {
     }
 
     private void playIdle() {
-        if (animator == null) return;
+        if (animator == null) {
+            return;
+        }
         if (inFury) {
             animator.startAnimation("fury");
         } else {
@@ -49,7 +53,21 @@ public class BossAnimationController extends Component {
         }
     }
 
-    private void playAttack() { if (animator != null) animator.startAnimation("attack"); }
-    private void playFury() { if (animator != null) animator.startAnimation("fury");}
-    private void playDeath() { if (animator != null) animator.startAnimation("death"); }
+    private void playAttack() {
+        if (animator != null) {
+            animator.startAnimation("attack");
+        }
+    }
+
+    private void playFury() {
+        if (animator != null) {
+            animator.startAnimation("fury");
+        }
+    }
+
+    private void playDeath() {
+        if (animator != null) {
+            animator.startAnimation("death");
+        }
+    }
 }

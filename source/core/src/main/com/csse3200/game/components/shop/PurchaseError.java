@@ -24,10 +24,19 @@ public enum PurchaseError {
         this.code = i;
     }
 
+    /**
+     * Returns the code associated with a PurchaseError
+     * @return an integer representing the PurchaseError
+     */
     public int getCode() {
         return code;
     }
 
+    /**
+     * Creates PurchaseError from a integer error code
+     * @param code The code representing the error.
+     * @return The PurchaseError.
+     */
     public static PurchaseError fromCode(int code) {
         for (PurchaseError e : PurchaseError.values()) {
             if (e.code == code) {

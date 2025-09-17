@@ -8,13 +8,20 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.utils.Array;
+import com.csse3200.game.components.CameraComponent;
+import com.csse3200.game.components.CombatStatsComponent;
+import com.csse3200.game.components.Component;
+import com.csse3200.game.components.MagazineComponent;
 import com.csse3200.game.components.*;
 import com.csse3200.game.entities.Entity;
+import com.csse3200.game.entities.configs.weapons.PistolConfig;
 import com.csse3200.game.entities.factories.ProjectileFactory;
 import com.csse3200.game.physics.PhysicsLayer;
 import com.csse3200.game.physics.components.HitboxComponent;
 import com.csse3200.game.physics.components.PhysicsComponent;
 import com.csse3200.game.physics.components.PhysicsProjectileComponent;
+import com.csse3200.game.rendering.AnimationRenderComponent;
+import com.csse3200.game.rendering.TextureRenderComponent;
 import com.csse3200.game.services.ServiceLocator;
 import com.badlogic.gdx.utils.Timer;
 
@@ -31,9 +38,9 @@ public class PlayerActions extends Component {
   private PhysicsComponent physicsComponent;
 
   // Movement Constants
-  private static final Vector2 MAX_SPEED = new Vector2(3f, 3f);
-  private static final Vector2 CROUCH_SPEED = new Vector2(1.5f, 3f);
-  private static final Vector2 SPRINT_SPEED = new Vector2(7f, 3f);
+  private static Vector2 MAX_SPEED = new Vector2(3f, 3f);
+  private static Vector2 CROUCH_SPEED = new Vector2(1.5f, 3f);
+  private static Vector2 SPRINT_SPEED = new Vector2(7f, 3f);
   private static final Vector2 JUMP_VELOCITY = new Vector2(0f, 15f);
   private static final Vector2 DASH_SPEED = new Vector2(20f, 9.8f);
   private static final float DASH_DURATION = 0.1f;
@@ -65,9 +72,7 @@ public class PlayerActions extends Component {
   // Tracks time since last attack for cooldown purposes
   private float timeSinceLastAttack = 0;
 
-  // Camera reference for world coordinates
   private Camera camera;
-
   /**
    * Initializes the component by setting required components and
    * registering event listeners for all player actions.
@@ -81,6 +86,7 @@ public class PlayerActions extends Component {
     entity.getEvents().addListener("walk", this::walk);
     entity.getEvents().addListener("walkStop", this::stopWalking);
     entity.getEvents().addListener("attack", this::attack);
+    entity.getEvents().addListener("attack", this::weaponAnimation);
     entity.getEvents().addListener("shoot", this::shoot);
     entity.getEvents().addListener("jumpAttempt", this::jump);
     entity.getEvents().addListener("sprintAttempt", this::sprintAttempt);
@@ -90,10 +96,12 @@ public class PlayerActions extends Component {
     entity.getEvents().addListener("sprintStart", this::startSprinting);
     entity.getEvents().addListener("sprintStop", this::stopSprinting);
     // Find camera from any entity with CameraComponent
+    entity.getEvents().addListener("reload", this::reload);
     Array<Entity> entities = ServiceLocator.getEntityService().getEntities();
     for (Entity entity: entities) {
       if (entity.getComponent(CameraComponent.class) != null) {
         camera = entity.getComponent(CameraComponent.class).getCamera();
+
       }
     }
   }
@@ -350,16 +358,33 @@ public class PlayerActions extends Component {
     if (weapon == null) {
       return;
     }
+
+    InventoryComponent inventory = entity.getComponent(InventoryComponent.class);
+    Entity gun = inventory.getCurrItem();
+
+    MagazineComponent mag = gun.getComponent(MagazineComponent.class);
     // Check for cooldown, defaulting to zero if no current weapon
     float coolDown = weapon.getCoolDown();
-    if (this.timeSinceLastAttack < coolDown) return;
+    if (this.timeSinceLastAttack < coolDown || mag.reloading()) {
+      return;
+    }
 
-    Sound attackSound = ServiceLocator.getResourceService().getAsset("sounds/Impact4.ogg", Sound.class);
+    if (mag.getCurrentAmmo() <= 0) {
+      Sound attackSound = ServiceLocator.getResourceService()
+              .getAsset("sounds/shot_failed.mp3", Sound.class);
+      attackSound.play();
+      return;
+    }
+
+
+    Sound attackSound = ServiceLocator.getResourceService()
+            .getAsset("sounds/laser_blast.mp3", Sound.class);
     attackSound.play();
 
     Entity bullet = ProjectileFactory.createPistolBullet(weapon);
     Vector2 origin = new Vector2(entity.getPosition());
-    bullet.setPosition(origin);
+    bullet.setPosition(new Vector2(origin.x - bullet.getScale().x / 2f + 2f,
+            origin.y + 0.6f - bullet.getScale().y / 2f));
     com.csse3200.game.areas.GameArea area = ServiceLocator.getGameArea();
     if (area != null) {
       area.spawnEntity(bullet);
@@ -371,6 +396,9 @@ public class PlayerActions extends Component {
 
     Vector3 destination = camera.unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
     projectilePhysics.fire(new Vector2(destination.x - origin.x, destination.y - origin.y), 5);
+
+
+    mag.setCurrentAmmo(mag.getCurrentAmmo() - 1);
 
     timeSinceLastAttack = 0;
   }
@@ -408,7 +436,7 @@ public class PlayerActions extends Component {
     timeSinceLastAttack = 0;
   }
 
-  private WeaponsStatsComponent getCurrentWeaponStats() {
+  public WeaponsStatsComponent getCurrentWeaponStats() {
     InventoryComponent inv = entity.getComponent(InventoryComponent.class);
     if (inv != null) {
       WeaponsStatsComponent curr = inv.getCurrItemStats();
@@ -416,4 +444,200 @@ public class PlayerActions extends Component {
     }
     return entity.getComponent(WeaponsStatsComponent.class);
   }
+
+  /**
+   * Upgrades the speed of the player
+   */
+  public void upgradeSpeed() {
+    MAX_SPEED.x *= 1.25F;
+    MAX_SPEED.y *= 1.25F;
+    CROUCH_SPEED.x *= 1.25F;
+    CROUCH_SPEED.y *= 1.25F;
+    SPRINT_SPEED.x *= 1.25F;
+    SPRINT_SPEED.y *= 1.25F;
+
+  }
+
+  /**
+   *
+   * @return the max speed vector
+   */
+  public Vector2 getMaxSpeed() {
+    return MAX_SPEED;
+  }
+
+  /**
+   *
+   * @return the crouch speed
+   */
+  public Vector2 getCrouchSpeed() {
+    return CROUCH_SPEED;
+  }
+
+  /**
+   *
+   * @return the sprint speed
+   */
+  public Vector2 getSprintSpeed() {
+    return SPRINT_SPEED;
+  }
+
+
+
+  /**
+   * Makes player reload their equipped weapon
+   */
+  void reload() {
+
+
+    InventoryComponent inventory = entity.getComponent(InventoryComponent.class);
+    Entity equippedItem = inventory.getCurrItem();
+
+    if (equippedItem != null) {
+      MagazineComponent mag = equippedItem.getComponent(MagazineComponent.class);
+      if (mag != null) {
+
+        if (mag.reloading()) {
+
+          return;
+        }
+
+        Sound reloadSound;
+
+        if (mag.reload(entity)) {
+          reloadSound = ServiceLocator.getResourceService()
+                  .getAsset("sounds/reload.mp3", Sound.class);
+        }
+
+        else {
+          reloadSound = ServiceLocator.getResourceService()
+                  .getAsset("sounds/shot_failed.mp3", Sound.class);
+        }
+
+        reloadSound.play();
+      }
+    }
+  }
+
+  void weaponAnimation() {
+    if (entity.getComponent(AnimationRenderComponent.class) != null) {
+      entity.getEvents().trigger("anim");
+    }
+  }
+
+  /**
+   * equipSlot(int slotIndex) selects the item slot in the inventory for the item that the player wants to equip
+   * @param slotIndex
+   */
+  public void equipSlot(int slotIndex){
+      InventoryComponent inventory = entity.getComponent(InventoryComponent.class);
+      if(inventory == null)return;  //player does not have any existing inventory
+
+      int inventoryIndex = slotIndex-1; //slot index for inventory are 0 based
+
+      Entity item = inventory.get(inventoryIndex);
+      if(item == null){
+          //if the inventory is empty prints a message on the console
+          Gdx.app.log("Inventory " , "No item in slot - " + slotIndex);
+          return;
+      }
+
+      //select the slot at inventoryIndex
+      inventory.setSelectSlot(inventoryIndex);
+      //equip the player with the weapon at that slot
+      inventory.setEquippedSlot(inventoryIndex);
+      //set that weapon as the current item in use in inventory
+      inventory.setCurrItem(item);
+      entity.getEvents().trigger("focus item", inventoryIndex);
+  }
+
+    /**
+     * this function is to unequip the player
+     */
+    public void unequipPlayer(){
+        InventoryComponent inventory = entity.getComponent(InventoryComponent.class);
+        if (inventory == null) return;
+
+        inventory.setEquippedSlot(-1);
+        inventory.setCurrItem(null);
+        entity.getEvents().trigger("focus item", -1);
+    }
+
+
+    /**
+     * if player already has a weapon --> unequip first
+     * sets new weapon as equipped
+     * repositions the weapon to appear in player's hand
+     */
+    Entity currentWeapon = null;
+
+    public void equipWeapon(Entity weapon) {
+        if (currentWeapon != null) {
+            unequipWeapon();
+        }
+        currentWeapon = weapon;
+
+        TextureRenderComponent renderComp = weapon.getComponent(TextureRenderComponent.class);
+        if (renderComp != null) {
+            renderComp.setEnabled(true);
+        }
+
+        updateWeaponPosition();
+    }
+
+    /**
+     * ensures that no weapon is equipped and weapon’s
+     * texture (sprite) is no longer visible in the game.
+     */
+    public void unequipWeapon() {
+        if (currentWeapon == null) return;
+
+        TextureRenderComponent renderComp = currentWeapon.getComponent(TextureRenderComponent.class);
+        if (renderComp != null) {
+            renderComp.setEnabled(false);
+        }
+
+        currentWeapon = null;
+    }
+
+    //to represent relative difference between the
+    //player's body position and player's hand.
+    float handOffsetX = 5f;
+    float handOffsetY = 10f;
+
+    /**
+     * this function sets the coordinates for the weapon in player's hand
+     */
+    public void updateWeaponPosition() {
+        if (currentWeapon == null) return;
+
+        PhysicsComponent physics = currentWeapon.getComponent(PhysicsComponent.class);
+        if (physics == null) {
+            System.out.println("Weapon has no PhysicsComponent," +
+                "\nupdating position directly");
+            // Directly update visual position without physics:
+            Vector2 playerPos = entity.getPosition();
+            if (facingRight) {
+                currentWeapon.setPosition(playerPos.x + handOffsetX, playerPos.y + handOffsetY);
+            } else {
+                currentWeapon.setPosition(playerPos.x - handOffsetX, playerPos.y + handOffsetY);
+            }
+            return;
+        }
+
+        Body body = physics.getBody();
+        if (body == null) {
+            System.out.println("Weapon's PhysicsComponent body is null," +
+                "\nskipping physics-based position update");
+            return; // Don't update position through physics if body not created
+        }
+
+        // Safe to use physics body
+        Vector2 playerPos = entity.getPosition();
+        if (facingRight) {
+            body.setTransform(playerPos.x + handOffsetX, playerPos.y + handOffsetY, 0f);
+        } else {
+            body.setTransform(playerPos.x - handOffsetX, playerPos.y + handOffsetY, 0f);
+        }
+    }
 }
