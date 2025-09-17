@@ -151,6 +151,20 @@ public class MainHall extends GameArea {
     holo1.setPosition(PlatformX, PlatformY);
     spawnEntity(holo1);
   }
+
+  public Entity getPlayer() {
+    //tempoary placeholder return null to stop errors
+    return null;
+  }
+
+  @Override
+  public String toString() {
+    return "Mainhall";
+  }
+
+  public static MainHall load(TerrainFactory terrainFactory, CameraComponent camera) {
+    return (new MainHall(terrainFactory, camera));
+  }
 }
 
 

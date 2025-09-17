@@ -8,6 +8,7 @@ import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.entities.factories.characters.PlayerFactory;
+import com.csse3200.game.services.SaveLoadService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -158,7 +159,21 @@ public class Reception extends GameArea {
     Entity stand1 = ObstacleFactory.createcomic_stand();
     stand1.setPosition(PlatformX, PlatformY);
     spawnEntity(stand1);
-}
+  }
+
+  @Override
+  public String toString() {
+    return "Reception";
+  }
+
+  public static Reception load(TerrainFactory terrainFactory, CameraComponent camera) {
+    return (new Reception(terrainFactory, camera));
+  }
+
+  public Entity getPlayer() {
+    return null;
+  }
+
 }
 
 

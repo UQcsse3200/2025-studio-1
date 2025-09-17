@@ -3,7 +3,6 @@ package com.csse3200.game.services;
 import com.csse3200.game.areas.GameArea;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
-import com.csse3200.game.events.EventHandler;
 import com.csse3200.game.input.InputService;
 import com.csse3200.game.physics.PhysicsService;
 import com.csse3200.game.rendering.RenderService;
@@ -27,6 +26,7 @@ public class ServiceLocator {
   private static InputService inputService;
   private static ResourceService resourceService;
   private static GameArea gameArea;
+  private static SaveLoadService saveLoadService;
   private static Entity player;
 
   public static Entity getPlayer() {
@@ -61,6 +61,8 @@ public class ServiceLocator {
   public static GameArea getGameArea() {return gameArea;}
   public static boolean isTransitioning() { return transitioning; }
   public static void setTransitioning(boolean value) { transitioning = value; }
+
+  public static SaveLoadService getSaveLoadService() {return saveLoadService;}
 
   public static void registerGameArea(GameArea theArea) {
     logger.debug("Registering game area service {}", theArea);
@@ -101,6 +103,11 @@ public class ServiceLocator {
     resourceService = source;
   }
 
+  public static void registerSaveLoadService(SaveLoadService source) {
+    logger.debug("Registering save service {}", source);
+    saveLoadService = source;
+  }
+
   public static void clear() {
     entityService = null;
     renderService = null;
@@ -109,6 +116,7 @@ public class ServiceLocator {
     inputService = null;
     resourceService = null;
     gameArea = null;
+    saveLoadService = null;
   }
   private static final com.csse3200.game.events.EventHandler globalEvents = new com.csse3200.game.events.EventHandler();
 

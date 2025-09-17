@@ -141,6 +141,21 @@ public class ResearchGameArea extends GameArea {
   private void loadShipping() {
     clearAndLoad(() -> new ShippingGameArea(terrainFactory, cameraComponent));
   }
+
+  @Override
+  public String toString() {
+    return "Research";
+  }
+
+  @Override
+  public Entity getPlayer() {
+    //placeholder
+    return null;
+  }
+
+  public static ResearchGameArea load(TerrainFactory terrainFactory, CameraComponent camera) {
+    return (new ResearchGameArea(terrainFactory, camera));
+  }
 }
 
 

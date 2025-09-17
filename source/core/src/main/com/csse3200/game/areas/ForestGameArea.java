@@ -26,6 +26,7 @@ import com.csse3200.game.entities.configs.ItemSpawnConfig;
 import com.csse3200.game.entities.factories.*;
 import com.csse3200.game.entities.spawner.ItemSpawner;
 import com.csse3200.game.services.ResourceService;
+import com.csse3200.game.services.SaveLoadService;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import com.csse3200.game.rendering.TextureRenderComponent;
@@ -35,6 +36,7 @@ import com.csse3200.game.components.shop.ShopDemo;
 
 
 import java.security.SecureRandom;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -147,7 +149,6 @@ public class ForestGameArea extends GameArea {
   };
   private static final String[] researchTextures = {
     "images/ResearchBackground.png",
-
     "foreg_sprites/Research/Laboratory.png",
     "foreg_sprites/Research/Microscope.png",
     "foreg_sprites/Research/ResearchDesk.png",
@@ -155,7 +156,6 @@ public class ForestGameArea extends GameArea {
   };
   private static final String[] securityTextures = {
     "images/SecurityBackground.png",
-
     "foreg_sprites/general/ThinFloor3.png",
     "foreg_sprites/Security/Monitor.png",
     "foreg_sprites/Security/Platform.png",
@@ -302,6 +302,7 @@ public class ForestGameArea extends GameArea {
 
     spawnItems();
   }
+
   private void spawnRobots() {
     GridPoint2 pos = new GridPoint2(8, 13);
       Entity robot = BossFactory.createRobot(player);
@@ -516,6 +517,7 @@ public class ForestGameArea extends GameArea {
   private Entity spawnPlayer() {
     Entity newPlayer = PlayerFactory.createPlayer();
     spawnEntityAt(newPlayer, PLAYER_SPAWN, true, true);
+
     return newPlayer;
   }
 
@@ -637,7 +639,18 @@ public class ForestGameArea extends GameArea {
   }
 
   // Removed area-specific dispose to avoid double disposal during transitions
+
+
   public Entity getPlayer() {
     return player;
+  }
+
+  @Override
+  public String toString() {
+    return "Forest";
+  }
+
+  public static ForestGameArea load(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
+    return (new ForestGameArea(terrainFactory, cameraComponent));
   }
 }

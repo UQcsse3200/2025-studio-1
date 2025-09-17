@@ -4,10 +4,12 @@ import com.csse3200.game.components.Component;
 import com.csse3200.game.components.WeaponsStatsComponent;
 import com.csse3200.game.components.items.ItemComponent;
 import com.csse3200.game.entities.Entity;
+import com.csse3200.game.files.FileLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A component intended to be used by the player to track their inventory.
@@ -20,7 +22,7 @@ public class InventoryComponent extends Component {
 
   private static final Logger logger = LoggerFactory.getLogger(InventoryComponent.class);
 
-  private int inventoryCount = 0;
+private int inventoryCount = 0;
   private final int maxCapacity = 5;
   private final int minCapacity = 0;
   private final ArrayList<Entity> items = new ArrayList<>(maxCapacity);
@@ -31,7 +33,6 @@ public class InventoryComponent extends Component {
   private int equippedSlot = -1; // no slot is equipped initially
   private int keycardLevel = 0;
 
-
   /**
    * Constructs an inventory for the player and a beginning currency amount
    * to start with.
@@ -40,12 +41,13 @@ public class InventoryComponent extends Component {
    */
   public InventoryComponent(int processor) {
     setProcessor(processor);
-
     for (int idx = this.minCapacity; idx < this.maxCapacity; idx++) {
       this.items.add(idx, null);
       this.itemTexs.add(idx, null);
     }
   }
+
+
 
   /**
    * setter method for the keycard level

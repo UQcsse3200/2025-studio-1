@@ -170,4 +170,18 @@ public class ShippingGameArea extends GameArea {
   private void loadStorage() {
     clearAndLoad(() -> new StorageGameArea(terrainFactory, cameraComponent));
   }
+
+  @Override
+  public String toString() {
+    return "Shipping";
+  }
+
+  public Entity getPlayer(){
+    //placeholder
+    return null;
+  }
+
+  public static ShippingGameArea load(TerrainFactory terrainFactory, CameraComponent camera) {
+    return (new ShippingGameArea(terrainFactory, camera));
+  }
 }

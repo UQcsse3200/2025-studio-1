@@ -3,13 +3,14 @@ package com.csse3200.game.areas;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.GridPoint2;
 import com.csse3200.game.areas.terrain.TerrainFactory;
-import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
-import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.ItemSpawnConfig;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.entities.factories.characters.PlayerFactory;
 import com.csse3200.game.entities.spawner.ItemSpawner;
+
+import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
+import com.csse3200.game.components.CameraComponent;
 
 /** Minimal generic Security room: walls, doors, and a subtle background overlay. */
 public class SecurityGameArea extends GameArea {
@@ -139,4 +140,18 @@ public class SecurityGameArea extends GameArea {
     clearAndLoad(() -> new OfficeGameArea(terrainFactory, cameraComponent));
   }
 
+  @Override
+  public String toString() {
+    return "Security";
+  }
+
+  @Override
+  public Entity getPlayer() {
+    //placeholder
+    return null;
+  }
+
+  public static SecurityGameArea load(TerrainFactory terrainFactory, CameraComponent camera) {
+    return (new SecurityGameArea(terrainFactory, camera));
+  }
 }

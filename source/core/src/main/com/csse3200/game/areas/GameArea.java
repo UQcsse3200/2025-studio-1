@@ -53,7 +53,6 @@ public abstract class GameArea implements Disposable {
   private static final String grokDroid = "GrokDroid";
   private static final String turret = "Turret";
 
-
   protected EnemyWaves wavesManager; // manage waves via terminal command
   protected static int roomNumber = 1;
 
@@ -260,6 +259,7 @@ public abstract class GameArea implements Disposable {
           spawnEntity(vroomba);
       }
   }
+
     /**
      * Adds Turret enemies onto the map.
      * @param total The total number of Turret to be spawned.
@@ -397,7 +397,6 @@ public abstract class GameArea implements Disposable {
    *
    * @param entity   entity to spawn (not yet registered)
    */
-
   public void spawnEntityInRoom(String roomName, Entity entity) {
     Vector2 pos = getRoomSpawnPosition(roomName);
     entity.setPosition(pos);
@@ -597,6 +596,7 @@ public abstract class GameArea implements Disposable {
       });
     });
   }
+
     /**
      * Spawns decorative object doors (non-functional) at given positions.
      *
@@ -617,4 +617,18 @@ public abstract class GameArea implements Disposable {
   public void spawnItem(Entity item, GridPoint2 position) {
     spawnEntityAt(item, position, false, false);
   }
+
+  @Override
+  public String toString() {
+    return "GameArea";
+  }
+
+//  public abstract Entity spawnPlayer(List<String> inventory, int CPU, int health);
+
+  /**
+   * allows manipulation of player character by loading function
+   *
+   * @return player entity
+   */
+  public abstract Entity getPlayer();
 }
