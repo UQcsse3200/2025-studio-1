@@ -7,26 +7,28 @@ import com.csse3200.game.entities.factories.items.WeaponsFactory;
 
 import java.util.ArrayList;
 
-import static com.csse3200.game.entities.configs.Consumables.GENERIC_HEAL_ITEM;
-import static com.csse3200.game.entities.configs.Consumables.GENERIC_PROJECTILE_CONSUMABLE;
+import static com.csse3200.game.entities.configs.Consumables.HEALTH_MONSTER_DRINK;
+import static com.csse3200.game.entities.configs.Consumables.LIGHTNING_IN_A_BOTTLE;
 
 public class ShopDemo {
     public static CatalogService makeDemoCatalog() {
-      ArrayList<CatalogEntry> demoEntries=  new ArrayList<>();
-        Entity healthPotion = ConsumableFactory.createConsumable(GENERIC_HEAL_ITEM);
-        Entity bomb = ConsumableFactory.createConsumable(GENERIC_PROJECTILE_CONSUMABLE);
+
+      // NOTE: temporary solution to add items. In the future, will be determined by room, player level, etc.
+
+      ArrayList<CatalogEntry> demoEntries = new ArrayList<>();
+        Entity healthPotion = ConsumableFactory.createConsumable(HEALTH_MONSTER_DRINK);
+        Entity bomb = ConsumableFactory.createConsumable(LIGHTNING_IN_A_BOTTLE);
         Entity weapon = WeaponsFactory.createWeapon(Weapons.RIFLE);
         Entity lightsaber = WeaponsFactory.createWeapon(Weapons.LIGHTSABER);
         Entity pistol = WeaponsFactory.createWeapon(Weapons.PISTOL);
         Entity dagger = WeaponsFactory.createWeapon(Weapons.DAGGER);
 
-        // Add one simple item (no icon -> null)
         demoEntries.add(new CatalogEntry(
-                healthPotion,   // itemKey
-                1,               // price
-                true,             // enabled
-                10,               // maxStack
-                1                // bundleQuantity
+                healthPotion,
+                1,
+                true,
+                10,
+                1
         ));
 
         demoEntries.add(new CatalogEntry(
@@ -39,10 +41,10 @@ public class ShopDemo {
 
         demoEntries.add(new CatalogEntry(
                 weapon,
-                10,               // price
-                true,             // enabled
-                1,               // maxStack
-                1               // bundleQuantity
+                10,
+                true,
+                1,
+                1
         ));
 
         demoEntries.add(new CatalogEntry(
