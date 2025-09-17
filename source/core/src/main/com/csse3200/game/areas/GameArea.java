@@ -167,6 +167,7 @@ public abstract class GameArea implements Disposable {
       switch (roomNumber) {
           case 1:
               spawnDeepspin(total, scaleFactor, player, positions);
+              spawnTurret(total,scaleFactor, player, positions);
               break;
           case 2:
               spawnDeepspin(total, scaleFactor, player, positions);
@@ -216,6 +217,7 @@ public abstract class GameArea implements Disposable {
   public void spawnDeepspin(
           int total, float scaleFactor, Entity player, HashMap<String, ArrayList<Vector2>> positions) {
       ArrayList<Vector2> spawnPositions = positions.get("Deepspin");
+
       for (Vector2 pos : spawnPositions) {
           Entity deepSpin = NPCFactory.createDeepspin(player, this, scaleFactor);
           deepSpin.setPosition(pos);
@@ -252,15 +254,29 @@ public abstract class GameArea implements Disposable {
           spawnEntity(vroomba);
       }
   }
+    /**
+     * Adds Turret enemies onto the map.
+     * @param total The total number of Turret to be spawned.
+     * @param scaleFactor The scale of increase in difficulty of the GhostGPT
+     */
+    public void spawnTurret(
+            int total, float scaleFactor, Entity player, HashMap<String, ArrayList<Vector2>> positions) {
+        ArrayList<Vector2> spawnPositions = positions.get("Turret");
+        for (Vector2 pos : spawnPositions) {
+            Entity turret = NPCFactory.createTurret(player, this, scaleFactor);
+            turret.setPosition(pos);
+            spawnEntity(turret);
+        }
+    }
 
   /**
-   * Spawns projectiles from enemies.
+   * Spawns the projectile used by the Ghost GPT Enemy
    * @param directionToFire The direction in which the projectile is to be fired.
-   * @param source The entity that the projectile is coming from.
+   * @param source The damage and other statistics that the projectile will use.
    * @return The spawned projectile {@link Entity}
    */
-  public Entity spawnEnemyProjectile(Vector2 directionToFire, WeaponsStatsComponent source) {
-    Entity laser = ProjectileFactory.createEnemyProjectile(directionToFire, source);
+  public Entity spawnGhostGPTProjectile(Vector2 directionToFire, WeaponsStatsComponent source) {
+    Entity laser = ProjectileFactory.createEnemyLaserProjectile(directionToFire, source);
     spawnEntityAt(laser, new GridPoint2(0, 0), true, true);
     PhysicsProjectileComponent laserPhysics = laser.getComponent(PhysicsProjectileComponent.class);
     int projectileSpeed = 5; // Should be abstracted from WeaponsStatsComponent in future implementation
@@ -278,6 +294,10 @@ public abstract class GameArea implements Disposable {
               respectiveSpawns.add(new Vector2(8.2f, 11f));
               respectiveSpawns.add(new Vector2(11.1f, 10f));
               positions.put("Deepspin", (ArrayList<Vector2>) respectiveSpawns.clone());
+              respectiveSpawns.clear();
+              respectiveSpawns.add(new Vector2(2.5f, 5f));
+              positions.put("Turret", (ArrayList<Vector2>) respectiveSpawns.clone());
+
               break;
           case 2:
               respectiveSpawns.add(new Vector2(2.7f, 8f));
