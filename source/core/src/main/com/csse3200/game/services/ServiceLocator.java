@@ -1,8 +1,8 @@
 package com.csse3200.game.services;
 
 import com.csse3200.game.areas.GameArea;
+import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
-import com.csse3200.game.events.EventHandler;
 import com.csse3200.game.input.InputService;
 import com.csse3200.game.physics.PhysicsService;
 import com.csse3200.game.rendering.RenderService;
@@ -27,6 +27,11 @@ public class ServiceLocator {
   private static ResourceService resourceService;
   private static GameArea gameArea;
   private static SaveLoadService saveLoadService;
+  private static Entity player;
+
+  public static Entity getPlayer() {
+    return player;
+  }
   private static volatile boolean transitioning = false;
 
   public static EntityService getEntityService() {
@@ -63,6 +68,11 @@ public class ServiceLocator {
     logger.debug("Registering game area service {}", theArea);
     gameArea = theArea;
   }
+
+  public static void registerPlayer(Entity person) {
+    player = person;
+  }
+
   public static void registerEntityService(EntityService service) {
     logger.debug("Registering entity service {}", service);
     entityService = service;
