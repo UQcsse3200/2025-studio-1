@@ -38,9 +38,9 @@ public class PlayerActions extends Component {
   private PhysicsComponent physicsComponent;
 
   // Movement Constants
-  private static final Vector2 MAX_SPEED = new Vector2(3f, 3f);
-  private static final Vector2 CROUCH_SPEED = new Vector2(1.5f, 3f);
-  private static final Vector2 SPRINT_SPEED = new Vector2(7f, 3f);
+  private static Vector2 MAX_SPEED = new Vector2(3f, 3f);
+  private static Vector2 CROUCH_SPEED = new Vector2(1.5f, 3f);
+  private static Vector2 SPRINT_SPEED = new Vector2(7f, 3f);
   private static final Vector2 JUMP_VELOCITY = new Vector2(0f, 15f);
   private static final Vector2 DASH_SPEED = new Vector2(20f, 9.8f);
   private static final float DASH_DURATION = 0.1f;
@@ -446,6 +446,45 @@ public class PlayerActions extends Component {
     }
     return entity.getComponent(WeaponsStatsComponent.class);
   }
+
+  /**
+   * Upgrades the speed of the player
+   */
+  public void upgradeSpeed() {
+    MAX_SPEED.x *= 1.25F;
+    MAX_SPEED.y *= 1.25F;
+    CROUCH_SPEED.x *= 1.25F;
+    CROUCH_SPEED.y *= 1.25F;
+    SPRINT_SPEED.x *= 1.25F;
+    SPRINT_SPEED.y *= 1.25F;
+
+  }
+
+  /**
+   *
+   * @return the max speed vector
+   */
+  public Vector2 getMaxSpeed() {
+    return MAX_SPEED;
+  }
+
+  /**
+   *
+   * @return the crouch speed
+   */
+  public Vector2 getCrouchSpeed() {
+    return CROUCH_SPEED;
+  }
+
+  /**
+   *
+   * @return the sprint speed
+   */
+  public Vector2 getSprintSpeed() {
+    return SPRINT_SPEED;
+  }
+
+
 
   /**
    * Makes player reload their equipped weapon

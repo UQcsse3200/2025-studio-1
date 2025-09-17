@@ -15,6 +15,7 @@ import com.csse3200.game.rendering.AnimationRenderComponent;
 import com.csse3200.game.components.WeaponsStatsComponent;
 import com.csse3200.game.components.player.InventoryComponent;
 import com.csse3200.game.entities.Entity;
+import com.csse3200.game.entities.configs.Benches;
 import com.csse3200.game.entities.configs.Weapons;
 import com.csse3200.game.entities.factories.characters.BossFactory;
 import com.csse3200.game.entities.factories.items.ItemFactory;
@@ -97,15 +98,15 @@ public class ForestGameArea extends GameArea {
     "images/player.png",
     "images/mud.png",
     "images/heart.png",
-          "images/laserball.png",
+    "images/healthBench.png",
+    "images/laserball.png",
     "images/computerBench.png",
-          "images/boss_idle.png",
-          "images/robot-2.png",
-          "images/warning.png",
-          "images/missle.png",
-          "images/white_cocoon.png",
-    "images/computerBench.png",
-    "images/computerBench.png",
+    "images/boss_idle.png",
+    "images/robot-2.png",
+    "images/warning.png",
+    "images/missle.png",
+    "images/white_cocoon.png",
+    "images/speedBench.png",
     "images/waterBullet.png",
     "images/VendingMachine.png",
     HEART,
@@ -259,16 +260,11 @@ public class ForestGameArea extends GameArea {
     displayUI();
     spawnTerrain();
     spawnComputerBench();
+    spawnHealthBench();
+    spawnSpeedBench();
+
     player = spawnPlayer();
     ServiceLocator.registerPlayer(player);
-    dagger = spawnDagger();
-    pistol = spawnPistol();
-    rifle = spawnRifle();
-    lightsaber = spawnLightsaber();
-    rifle.addComponent(new LaserComponent());
-    rifle.addComponent(new BulletEnhancerComponent());
-    this.equipItem(rifle);
-
     spawnFloor();
     spawnBottomRightDoor();
     spawnMarblePlatforms();
@@ -404,10 +400,22 @@ public class ForestGameArea extends GameArea {
   }
 
   private void spawnComputerBench() {
-    Entity bench = InteractableStationFactory.createComputerBench();
-    spawnEntityAt(bench, new GridPoint2(10, 7), true, true);
+    Entity bench = InteractableStationFactory.createStation(Benches.COMPUTER_BENCH);
+    spawnEntityAt(bench, new GridPoint2(2, 7), true, true);
 
   }
+
+  private void spawnHealthBench() {
+    Entity bench = InteractableStationFactory.createStation(Benches.HEALTH_BENCH);
+    spawnEntityAt(bench, new GridPoint2(8, 7), true, true);
+  }
+
+  private void spawnSpeedBench() {
+    Entity bench = InteractableStationFactory.createStation(Benches.SPEED_BENCH);
+    spawnEntityAt(bench, new GridPoint2(25, 7), true, true);
+  }
+
+
 
   /**
    * Places a large door sprite at the bottom-right platform. The door uses a keycard gate:

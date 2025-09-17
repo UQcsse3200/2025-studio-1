@@ -265,6 +265,7 @@ public class InventoryComponent extends Component {
   public void setCurrItem(Entity item) {
     this.currItem = item;
   }
+
   /**
    * Get the current item
    * @return the current item
