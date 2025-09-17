@@ -6,6 +6,8 @@ import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.CameraComponent;
+import com.csse3200.game.entities.Entity;
+import com.csse3200.game.services.SaveLoadService;
 import com.csse3200.game.components.InventoryComponent;
 import com.csse3200.game.components.KeycardGateComponent;
 import com.csse3200.game.components.KeycardPickupComponent;
@@ -144,6 +146,22 @@ public class ElevatorGameArea extends GameArea {
       floor.setPosition(floor.getPosition().x, floor.getPosition().y - 0.3f);
     }
   }
+
+  @Override
+  public String toString() {
+    return "Elevator";
+  }
+
+  @Override
+  public Entity getPlayer() {
+    // placeholder for errors
+    return null;
+  }
+
+  public static ElevatorGameArea load(TerrainFactory terrainFactory, CameraComponent camera) {
+    return (new ElevatorGameArea(terrainFactory, camera));
+  }
+
 }
 
 

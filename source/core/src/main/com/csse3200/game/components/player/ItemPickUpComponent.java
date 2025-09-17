@@ -216,7 +216,7 @@ public class ItemPickUpComponent extends Component {
          * @return a new {@link Entity} matching the texture, or {@code null} if the
          * texture does not correspond to a known item type.
          */
-    private Entity createItemFromTexture(String texture) {
+    public Entity createItemFromTexture(String texture) {
         logger.trace("createItemFromTexture({})", texture);
         if (texture.endsWith("dagger.png"))            return WeaponsFactory.createWeapon(Weapons.DAGGER);
         if (texture.endsWith("pistol.png"))            return WeaponsFactory.createWeapon(Weapons.PISTOL);
