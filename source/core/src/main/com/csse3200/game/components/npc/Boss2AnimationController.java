@@ -1,21 +1,20 @@
 package com.csse3200.game.components.npc;
 
 import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.csse3200.game.components.Component;
-import com.csse3200.game.rendering.AnimationRenderComponent;
 import com.csse3200.game.events.listeners.EventListener0;
+import com.csse3200.game.rendering.AnimationRenderComponent;
 
 public class Boss2AnimationController extends Component {
     public static class Names {
-        public String idle     = "idle";
-        public String patrol   = "patrol";
-        public String prep     = "prep";
-        public String charge   = "charge";
-        public String ret      = "return";   // back-to-line
+        public String idle = "idle";
+        public String patrol = "patrol";
+        public String prep = "prep";
+        public String charge = "charge";
+        public String ret = "return";   // back-to-line
         public String cooldown = "cooldown";
-        public String death    = "death";
-        public String hurt     = "hurt";
+        public String death = "death";
+        public String hurt = "hurt";
     }
 
     public static class Speeds {
@@ -34,12 +33,16 @@ public class Boss2AnimationController extends Component {
     private final Animation.PlayMode loopMode;
     private AnimationRenderComponent arc;
 
-    /** Use default names (idle/patrol/prep/charge/return/cooldown/death/hurt) and default speeds. */
+    /**
+     * Use default names (idle/patrol/prep/charge/return/cooldown/death/hurt) and default speeds.
+     */
     public Boss2AnimationController() {
         this(new Names(), new Speeds(), Animation.PlayMode.LOOP);
     }
 
-    /** Fully custom names and speeds. Set any name to null to disable that animation. */
+    /**
+     * Fully custom names and speeds. Set any name to null to disable that animation.
+     */
     public Boss2AnimationController(Names names, Speeds speeds, Animation.PlayMode loopMode) {
         this.names = names != null ? names : new Names();
         this.speeds = speeds != null ? speeds : new Speeds();
@@ -64,14 +67,14 @@ public class Boss2AnimationController extends Component {
         }
 
         // Register animations declared in atlas by base name
-        addIfNotNull(names.idle,     speeds.idle,     Animation.PlayMode.LOOP);
-        addIfNotNull(names.patrol,   speeds.patrol,   Animation.PlayMode.LOOP);
-        addIfNotNull(names.prep,     speeds.prep,     loopMode);
-        addIfNotNull(names.charge,   speeds.charge,   loopMode);
-        addIfNotNull(names.ret,      speeds.ret,      loopMode);
+        addIfNotNull(names.idle, speeds.idle, Animation.PlayMode.LOOP);
+        addIfNotNull(names.patrol, speeds.patrol, Animation.PlayMode.LOOP);
+        addIfNotNull(names.prep, speeds.prep, loopMode);
+        addIfNotNull(names.charge, speeds.charge, loopMode);
+        addIfNotNull(names.ret, speeds.ret, loopMode);
         addIfNotNull(names.cooldown, speeds.cooldown, loopMode);
-        addIfNotNull(names.hurt,     speeds.hurt,     Animation.PlayMode.NORMAL);
-        addIfNotNull(names.death,    speeds.death,    Animation.PlayMode.NORMAL);
+        addIfNotNull(names.hurt, speeds.hurt, Animation.PlayMode.NORMAL);
+        addIfNotNull(names.death, speeds.death, Animation.PlayMode.NORMAL);
 
         // Event wiring (two naming styles supported)
         on("boss2:idle", () -> play(names.idle));
@@ -105,6 +108,7 @@ public class Boss2AnimationController extends Component {
     private void on(String evt, EventListener0 l) {
         entity.getEvents().addListener(evt, l);
     }
+
     private void play(String name) {
         if (arc == null || name == null) return;
         // Only start if this animation was registered

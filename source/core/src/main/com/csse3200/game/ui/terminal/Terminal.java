@@ -1,10 +1,10 @@
 package com.csse3200.game.ui.terminal;
 
-import com.csse3200.game.components.Component;
-import com.csse3200.game.ui.terminal.commands.*;
 import com.csse3200.game.GdxGame;
+import com.csse3200.game.components.Component;
 import com.csse3200.game.ui.terminal.autocomplete.BKTree;
 import com.csse3200.game.ui.terminal.autocomplete.RadixTrie;
+import com.csse3200.game.ui.terminal.commands.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,9 +30,17 @@ public class Terminal extends Component {
     private String lastPrefix = "";
     private List<String> lastSuggestions = Collections.emptyList();
 
-    public Terminal() { this(new HashMap<>(), null); }
-    public Terminal(GdxGame game) { this(new HashMap<>(), game); }
-    public Terminal(Map<String, Command> commands) { this(commands, null); }
+    public Terminal() {
+        this(new HashMap<>(), null);
+    }
+
+    public Terminal(GdxGame game) {
+        this(new HashMap<>(), game);
+    }
+
+    public Terminal(Map<String, Command> commands) {
+        this(commands, null);
+    }
 
     public Terminal(Map<String, Command> commands, GdxGame game) {
         this.commands = commands;
@@ -56,11 +64,19 @@ public class Terminal extends Component {
     }
 
     // --- Public getters ---
-    public String getEnteredMessage() { return enteredMessage; }
-    public boolean isOpen() { return isOpen; }
+    public String getEnteredMessage() {
+        return enteredMessage;
+    }
+
+    public boolean isOpen() {
+        return isOpen;
+    }
 
     // --- Open/close ---
-    public void toggleIsOpen() { if (isOpen) setClosed(); else setOpen(); }
+    public void toggleIsOpen() {
+        if (isOpen) setClosed();
+        else setOpen();
+    }
 
     public void setOpen() {
         logger.debug("Opening terminal");
@@ -136,6 +152,7 @@ public class Terminal extends Component {
     }
 
     // --- Autocomplete surface API for UI layer (TerminalDisplay) ---
+
     /**
      * Returns up to 5 suggestions based on the current prefix (first token).
      * Debounced (~20ms). If there are no trie hits and prefix non-empty, falls back to BK-tree with
@@ -164,7 +181,9 @@ public class Terminal extends Component {
         return lastSuggestions;
     }
 
-    /** UI can call this to accept the top suggestion into the input. */
+    /**
+     * UI can call this to accept the top suggestion into the input.
+     */
     public void acceptTopSuggestion() {
         List<String> s = getAutocompleteSuggestions();
         if (!s.isEmpty()) {

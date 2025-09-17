@@ -43,7 +43,7 @@ public class InfiniteStaminaCommand implements Command {
     }
 
     void setInfiniteStaminaStatus(Array<Entity> entityList, boolean status) {
-        for(Entity entity : entityList) {
+        for (Entity entity : entityList) {
             if (entity.getComponent(PlayerActions.class) != null) {
                 entity.getComponent(PlayerActions.class).infStamina();
             }

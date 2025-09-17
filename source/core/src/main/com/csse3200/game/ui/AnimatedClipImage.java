@@ -64,7 +64,7 @@ public class AnimatedClipImage extends Image {
     public AnimatedClipImage(TutorialClip clip) {
         Built built = buildAnimation(clip);
         this.animation = built.animation;
-        this.looping = clip.loop;
+        this.looping = clip.loop();
         this.loadedPaths = built.paths;
 
         this.drawable = new TextureRegionDrawable(animation.getKeyFrame(0));
@@ -74,7 +74,8 @@ public class AnimatedClipImage extends Image {
     /**
      * Internal holder for the build results.
      */
-    private record Built(Animation<TextureRegion> animation, List<String> paths) { }
+    private record Built(Animation<TextureRegion> animation, List<String> paths) {
+    }
 
     /**
      * Loads all textures for the clip, validates existence, and builds the {@link Animation}.
@@ -90,12 +91,12 @@ public class AnimatedClipImage extends Image {
      */
     private static Built buildAnimation(TutorialClip clip) {
         ResourceService rs = ServiceLocator.getResourceService();
-        List<String> paths = new ArrayList<>(clip.frameCount);
+        List<String> paths = new ArrayList<>(clip.frameCount());
 
         // Build and validate the list of frame paths
-        for (int i = 1; i <= clip.frameCount; i++) {
-            String filename = String.format(clip.pattern, i);
-            String path = new File(clip.folder, filename).getPath();
+        for (int i = 1; i <= clip.frameCount(); i++) {
+            String filename = String.format(clip.pattern(), i);
+            String path = new File(clip.folder(), filename).getPath();
             FileHandle fh = Gdx.files.internal(path);
             if (!fh.exists()) {
                 throw new GdxRuntimeException("Missing tutorial frame: " + path);
@@ -107,8 +108,8 @@ public class AnimatedClipImage extends Image {
         rs.loadAll();
 
         // Convert each Texture into a TextureRegion
-        TextureRegion[] regions = new TextureRegion[clip.frameCount];
-        for (int i = 0; i < clip.frameCount; i++) {
+        TextureRegion[] regions = new TextureRegion[clip.frameCount()];
+        for (int i = 0; i < clip.frameCount(); i++) {
             Texture tex = rs.getAsset(paths.get(i), Texture.class);
             if (tex == null) {
                 throw new GdxRuntimeException("Null texture: " + paths.get(i));
@@ -117,7 +118,7 @@ public class AnimatedClipImage extends Image {
             regions[i] = new TextureRegion(tex);
         }
 
-        float frameDuration = 1f / Math.max(1f, clip.fps);
+        float frameDuration = 1f / Math.max(1f, clip.fps());
         return new Built(new Animation<>(frameDuration, regions), paths);
     }
 

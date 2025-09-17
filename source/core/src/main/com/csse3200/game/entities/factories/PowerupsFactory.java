@@ -1,6 +1,6 @@
 package com.csse3200.game.entities.factories;
 
-import com.csse3200.game.components.*;
+import com.csse3200.game.components.TagComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.physics.PhysicsLayer;
 import com.csse3200.game.physics.PhysicsUtils;

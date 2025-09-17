@@ -81,8 +81,7 @@ public class EnemyProjectileDamageComponent extends Component {
      */
     private Entity toEntity(Object obj) {
         if (obj instanceof Entity) return (Entity) obj;
-        if (obj instanceof Fixture) {
-            Fixture f = (Fixture) obj;
+        if (obj instanceof Fixture f) {
             // Check fixture's userData
             Object u1 = f.getUserData();
             if (u1 instanceof Entity) {
@@ -112,11 +111,16 @@ public class EnemyProjectileDamageComponent extends Component {
 
     private String layerName(int layer) {
         switch (layer) {
-            case PhysicsLayer.PLAYER: return "PLAYER";
-            case PhysicsLayer.NPC: return "NPC";
-            case PhysicsLayer.OBSTACLE: return "OBSTACLE";
-            case PhysicsLayer.NONE: return "NONE";
-            default: return "unknown(" + layer + ")";
+            case PhysicsLayer.PLAYER:
+                return "PLAYER";
+            case PhysicsLayer.NPC:
+                return "NPC";
+            case PhysicsLayer.OBSTACLE:
+                return "OBSTACLE";
+            case PhysicsLayer.NONE:
+                return "NONE";
+            default:
+                return "unknown(" + layer + ")";
         }
     }
 }

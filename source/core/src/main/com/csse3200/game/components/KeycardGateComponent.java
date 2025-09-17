@@ -13,15 +13,21 @@ import com.csse3200.game.physics.components.ColliderComponent;
  * has the required keycard level in their InventoryComponent.
  */
 public class KeycardGateComponent extends Component {
-    /** Global cheat: when true, all keycard checks are bypassed. */
+    /**
+     * Global cheat: when true, all keycard checks are bypassed.
+     */
     private static volatile boolean GLOBAL_OVERRIDE = false;
 
-    /** Enable/disable the global keycard-gate override. */
+    /**
+     * Enable/disable the global keycard-gate override.
+     */
     public static void setGlobalOverride(boolean enabled) {
         GLOBAL_OVERRIDE = enabled;
     }
 
-    /** @return true if the global override is enabled. */
+    /**
+     * @return true if the global override is enabled.
+     */
     public static boolean isGlobalOverride() {
         return GLOBAL_OVERRIDE;
     }

@@ -10,7 +10,7 @@ public enum ActiveProjectileTypes {
     ARC,
 
     /**
-     *  Projectile that continuously adjusts its path to follow a target.
+     * Projectile that continuously adjusts its path to follow a target.
      */
-    FOLLOW_TARGET;
+    FOLLOW_TARGET
 }

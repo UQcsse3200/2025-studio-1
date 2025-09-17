@@ -3,19 +3,18 @@ package com.csse3200.game.components.enemy;
 import com.badlogic.gdx.audio.Sound;
 import com.csse3200.game.components.AmmoStatsComponent;
 import com.csse3200.game.components.CombatStatsComponent;
-import com.csse3200.game.components.MagazineComponent;
 import com.csse3200.game.components.player.InventoryComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.when;
 
@@ -40,7 +39,7 @@ public class EnemyDeathRewardComponentTest {
         int reward = 15;
 
         Entity player = new Entity().addComponent(new InventoryComponent(startingProcessor))
-                        .addComponent(new AmmoStatsComponent(12));
+                .addComponent(new AmmoStatsComponent(12));
         player.create();
         InventoryComponent inventory = player.getComponent(InventoryComponent.class);
 
