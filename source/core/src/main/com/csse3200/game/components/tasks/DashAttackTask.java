@@ -10,7 +10,9 @@ import com.csse3200.game.physics.raycast.RaycastHit;
 import com.csse3200.game.rendering.DebugRenderer;
 import com.csse3200.game.services.ServiceLocator;
 
-/** Chases a target entity indefinitely and the entity being visible causes a speed increase */
+/**
+ * Chases a target entity indefinitely and the entity being visible causes a speed increase
+ */
 public class DashAttackTask extends DefaultTask implements PriorityTask {
     private final Entity target;
     private final int priority;
@@ -24,9 +26,9 @@ public class DashAttackTask extends DefaultTask implements PriorityTask {
     private MovementTask movementTask;
 
     /**
-     * @param target The entity to chase.
+     * @param target   The entity to chase.
      * @param priority Task priority when chasing (0 when not chasing).
-     * @param speed The vector representing the speed of the dash.
+     * @param speed    The vector representing the speed of the dash.
      * @param cooldown The cooldown time in milliseconds
      * @param dashTime The amount of timme the enemy will dash for in milliseconds
      */
@@ -59,8 +61,8 @@ public class DashAttackTask extends DefaultTask implements PriorityTask {
         if (ServiceLocator.getTimeSource().getTime() - lastDashTime > cooldown + dashTime) {
             movementTask.setSpeed(speed); // Dash
             lastDashTime = ServiceLocator.getTimeSource().getTime();
-        // If the enemy has run out of dash time and is now on cooldown, stand still
-        } else if (ServiceLocator.getTimeSource().getTime() - lastDashTime > dashTime){
+            // If the enemy has run out of dash time and is now on cooldown, stand still
+        } else if (ServiceLocator.getTimeSource().getTime() - lastDashTime > dashTime) {
             movementTask.setSpeed(new Vector2(0f, 0f));
         }
         if (movementTask.getStatus() != Status.ACTIVE) {

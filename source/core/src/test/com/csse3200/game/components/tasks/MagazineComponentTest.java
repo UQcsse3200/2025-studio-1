@@ -1,16 +1,13 @@
 package com.csse3200.game.components.tasks;
 
 
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.physics.box2d.Body;
-import com.csse3200.game.components.*;
+import com.csse3200.game.components.AmmoStatsComponent;
+import com.csse3200.game.components.InventoryComponent;
+import com.csse3200.game.components.MagazineComponent;
+import com.csse3200.game.components.WeaponsStatsComponent;
 import com.csse3200.game.entities.Entity;
-import com.csse3200.game.entities.configs.Weapons;
-import com.csse3200.game.entities.configs.weapons.PistolConfig;
-import com.csse3200.game.entities.factories.items.WeaponsFactory;
 import com.csse3200.game.extensions.GameExtension;
 import com.csse3200.game.physics.PhysicsEngine;
-import com.csse3200.game.physics.PhysicsService;
 import com.csse3200.game.services.GameTime;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
@@ -22,8 +19,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.when;
 
 
 @ExtendWith(GameExtension.class)
@@ -71,7 +68,7 @@ class MagazineComponentTest {
     @Test
     void fullMagazineReloadFails() {
 
-        Assert.assertEquals(false, magazine.reload(player));
+        Assert.assertFalse(magazine.reload(player));
         Assert.assertEquals(1000, ammo.getAmmo());
     }
 
@@ -80,7 +77,7 @@ class MagazineComponentTest {
 
         ammo.setAmmo(0);
         magazine.setCurrentAmmo(4);
-        Assert.assertEquals(false, magazine.reload(player));
+        Assert.assertFalse(magazine.reload(player));
         Assert.assertEquals(0, ammo.getAmmo());
     }
 
@@ -89,7 +86,7 @@ class MagazineComponentTest {
 
         ammo.setAmmo(5);
         magazine.setCurrentAmmo(7);
-        Assert.assertEquals(true, magazine.reload(player));
+        Assert.assertTrue(magazine.reload(player));
         Assert.assertEquals(0, ammo.getAmmo());
         Assert.assertEquals(12, magazine.getCurrentAmmo());
     }
@@ -99,7 +96,7 @@ class MagazineComponentTest {
 
 
         magazine.setCurrentAmmo(9);
-        Assert.assertEquals(true, magazine.reload(player));
+        Assert.assertTrue(magazine.reload(player));
         Assert.assertEquals(997, ammo.getAmmo());
         Assert.assertEquals(12, magazine.getCurrentAmmo());
     }

@@ -2,7 +2,8 @@
 package com.csse3200.game.ui.terminal;
 
 import com.csse3200.game.ui.terminal.commands.FakeCommand;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 

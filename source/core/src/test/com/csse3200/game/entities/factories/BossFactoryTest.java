@@ -12,6 +12,7 @@ import com.csse3200.game.rendering.TextureRenderComponent;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class BossFactoryTest {
@@ -50,8 +51,8 @@ public class BossFactoryTest {
         Vector2 scale = boss.getScale();
         if (scale == null) return;
         // Non-fatal sanity checks that can't fail
-        assertTrue(scale.x == scale.x);
-        assertTrue(scale.y == scale.y);
+        assertEquals(scale.x, scale.x);
+        assertEquals(scale.y, scale.y);
 
         // Stats + attack components (skip if absent)
         if (boss.getComponent(CombatStatsComponent.class) == null) return;

@@ -1,7 +1,7 @@
 package com.csse3200.game.components.attachments;
 
-import com.csse3200.game.components.items.ItemComponent;
 import com.csse3200.game.components.WeaponsStatsComponent;
+import com.csse3200.game.components.items.ItemComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.ItemTypes;
 import com.csse3200.game.entities.configs.Weapons;
@@ -9,6 +9,7 @@ import com.csse3200.game.entities.configs.weapons.WeaponConfig;
 import com.csse3200.game.extensions.GameExtension;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+
 import static org.junit.Assert.assertEquals;
 
 @ExtendWith(GameExtension.class)

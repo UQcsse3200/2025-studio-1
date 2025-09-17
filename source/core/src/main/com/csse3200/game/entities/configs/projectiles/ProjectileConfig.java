@@ -18,18 +18,19 @@ public class ProjectileConfig {
 
     /**
      * Creates a ProjectileConfig for a projectile.
-     * @param target The target of the projectile
+     *
+     * @param target      The target of the projectile
      * @param texturePath The path to the projectile's texture
      */
     public ProjectileConfig(ProjectileTarget target, String texturePath) {
         switch (target) {
             case PLAYER -> {
-                    this.projectileType = PhysicsLayer.FRIENDLY_PROJECTILE;
-                    this.target = PhysicsLayer.PLAYER;
+                this.projectileType = PhysicsLayer.FRIENDLY_PROJECTILE;
+                this.target = PhysicsLayer.PLAYER;
             }
             case ENEMY -> {
-                    this.projectileType = PhysicsLayer.ENEMY_PROJECTILE;
-                    this.target = PhysicsLayer.NPC;
+                this.projectileType = PhysicsLayer.ENEMY_PROJECTILE;
+                this.target = PhysicsLayer.NPC;
             }
             default -> throw new IllegalArgumentException("Unknown target: " + target);
         }

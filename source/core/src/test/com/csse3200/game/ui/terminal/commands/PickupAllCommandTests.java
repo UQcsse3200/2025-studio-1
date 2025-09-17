@@ -14,11 +14,12 @@ import java.util.ArrayList;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.mockStatic;
 
 class PickupAllCommandTests {
 
-    private static ArrayList<String> noArgs() { return new ArrayList<>(); }
+    private static ArrayList<String> noArgs() {
+        return new ArrayList<>();
+    }
 
     @Test
     void triggersPickupAll_whenPlayerFound() {
@@ -65,7 +66,8 @@ class PickupAllCommandTests {
             var events = mock(EventHandler.class);
             when(notPlayer.getEvents()).thenReturn(events);
             assertFalse(cmd.action(noArgs()));
-            verify(notPlayer, times(1)).getComponent(KeyboardPlayerInputComponent.class);            }
+            verify(notPlayer, times(1)).getComponent(KeyboardPlayerInputComponent.class);
+        }
     }
 
     @Test

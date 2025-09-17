@@ -1,24 +1,25 @@
 package com.csse3200.game.ui.terminal.commands;
 
-import org.junit.jupiter.api.Test;
-
 import com.badlogic.gdx.utils.Array;
 import com.csse3200.game.components.WeaponsStatsComponent;
 import com.csse3200.game.components.player.PlayerActions;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
 import com.csse3200.game.services.ServiceLocator;
-
+import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
 class DisableDamageCommandTests {
-    private static ArrayList<String> args(String s) { return new ArrayList<>(List.of(s)); }
+    private static ArrayList<String> args(String s) {
+        return new ArrayList<>(List.of(s));
+    }
 
     @Test
     void turnsOffDamage_onlyForPlayerWithWeapons() {

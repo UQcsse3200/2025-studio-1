@@ -5,7 +5,7 @@ import java.util.*;
 /**
  * Compressed (radix) trie with per-node cached top-5 completions.
  * Insert all command names once; suggestions are then O(m + k) where:
- *  - m = prefix traversal, k = number of edges inspected on the path.
+ * - m = prefix traversal, k = number of edges inspected on the path.
  * Returns at most 5 suggestions in lexicographic order.
  */
 public class RadixTrie {
@@ -22,7 +22,11 @@ public class RadixTrie {
     private static final class Edge {
         String label; // compressed edge label
         Node next;
-        Edge(String label, Node next) { this.label = label; this.next = next; }
+
+        Edge(String label, Node next) {
+            this.label = label;
+            this.next = next;
+        }
     }
 
     private final Node root = new Node();
@@ -69,14 +73,14 @@ public class RadixTrie {
                     if (lcp < e.label.length()) {
                         // split existing edge
                         String common = e.label.substring(0, lcp);
-                        String eRest  = e.label.substring(lcp);
+                        String eRest = e.label.substring(lcp);
                         Node mid = new Node();
                         // mid inherits e.next via new edge eRest
                         mid.children.computeIfAbsent(eRest.charAt(0), k -> new ArrayList<>())
                                 .add(new Edge(eRest, e.next));
                         // replace e with common->mid
                         e.label = common;
-                        e.next  = mid;
+                        e.next = mid;
                         // keep children’s buckets sorted
                         sortBucket(mid.children.get(eRest.charAt(0)));
                     }
@@ -123,7 +127,7 @@ public class RadixTrie {
         } else if (lcp > 0) {
             // split edge at lcp
             String common = e.label.substring(0, lcp);
-            String eRest  = e.label.substring(lcp);
+            String eRest = e.label.substring(lcp);
             Node mid = new Node();
             // existing edge becomes mid child
             mid.children.computeIfAbsent(eRest.charAt(0), k -> new ArrayList<>())
@@ -131,7 +135,7 @@ public class RadixTrie {
             sortBucket(mid.children.get(eRest.charAt(0)));
             // update original edge to common->mid
             e.label = common;
-            e.next  = mid;
+            e.next = mid;
 
             String remRest = remaining.substring(lcp);
             if (remRest.isEmpty()) {
@@ -235,7 +239,7 @@ public class RadixTrie {
             java.util.List<Edge> copy = new java.util.ArrayList<>(edges);
             java.util.Collections.reverse(copy); // since already sorted asc, reverse to push
             for (Edge e : copy) {
-                stack.push(new Object[]{ e.next, built + e.label });
+                stack.push(new Object[]{e.next, built + e.label});
             }
         }
 
@@ -260,7 +264,7 @@ public class RadixTrie {
                 java.util.List<Edge> copy = new java.util.ArrayList<>(edges);
                 java.util.Collections.reverse(copy);
                 for (Edge e : copy) {
-                    stack.push(new Object[]{ e.next, word + e.label });
+                    stack.push(new Object[]{e.next, word + e.label});
                 }
             }
         }

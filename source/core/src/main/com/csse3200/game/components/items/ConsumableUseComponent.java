@@ -38,7 +38,7 @@ public class ConsumableUseComponent extends ItemActionsComponent {
      * <p>
      * - If the consumable has only one left, it is removed entirely.<br>
      * - Otherwise, its stack count is decremented and the inventory is
-     *   notified via the {@code "update item count"} event.
+     * notified via the {@code "update item count"} event.
      *
      * @param player the entity representing the player whose inventory will be updated
      */

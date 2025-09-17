@@ -1,22 +1,5 @@
 package com.csse3200.game.components.items;
 
-import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.graphics.Camera;
-import com.csse3200.game.components.CameraComponent;
-import com.csse3200.game.components.WeaponsStatsComponent;
-import com.csse3200.game.entities.Entity;
-import com.csse3200.game.entities.EntityService;
-import com.csse3200.game.entities.configs.Consumables;
-import com.csse3200.game.entities.configs.Weapons;
-import com.csse3200.game.entities.factories.items.ConsumableFactory;
-import com.csse3200.game.entities.factories.items.WeaponsFactory;
-import com.csse3200.game.entities.factories.system.RenderFactory;
-import com.csse3200.game.services.ResourceService;
-import com.csse3200.game.services.ServiceLocator;
-import org.junit.jupiter.api.*;
-
-import static org.junit.jupiter.api.Assertions.*;
-
 // ------------------- NEEDS TO BE FIXED ----------------------------
 /*
 @DisplayName("RangedUseComponent Testing")
