@@ -29,6 +29,13 @@ public class EventHandler {
     listeners = new HashMap<>(0);
   }
 
+  public void removeListener(String eventName, EventListener0 listener) {
+    var eventListeners = listeners.get(eventName);
+    if (eventListeners != null) {
+      eventListeners.removeValue(listener, true);
+    }
+  }
+
   /**
    * Add a listener to an event with zero arguments
    *
