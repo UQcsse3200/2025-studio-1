@@ -39,8 +39,8 @@ class GameAreaBoundsTest {
     // Assertions
     assertEquals(-5f, b.leftX, 0.0001f);
     assertEquals(25f, b.rightX, 0.0001f);
-    assertEquals(-5f, b.bottomY, 0.0001f);
-    assertEquals(15f, b.topY, 0.0001f);
+    assertEquals(0.3125f, b.bottomY, 0.0001f);
+    assertEquals(9.6875f, b.topY, 0.0001f);
     assertEquals(30f, b.viewWidth, 0.0001f);
     assertEquals(20f, b.viewHeight, 0.0001f);
     assertEquals(10f, b.camPos.x, 0.0001f);

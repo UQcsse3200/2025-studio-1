@@ -9,6 +9,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
+import com.csse3200.game.components.items.ItemComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
 import com.csse3200.game.extensions.GameExtension;
@@ -340,5 +341,66 @@ class PlayerActionsTest {
                     Math.abs(v.x - expected.x) <= (float) 0.001 &&
                     Math.abs(v.y - expected.y) <= (float) 0.001
     );
+  }
+
+  @Nested
+  @DisplayName("Testing inventory and equipped actions")
+
+    class InventoryActionsTests{
+      InventoryComponent inventory;
+      PlayerActions actions;
+      Entity player;
+
+      @BeforeEach
+      void setup(){
+          inventory = new InventoryComponent(5);
+          actions = new PlayerActions();
+          player =  new Entity().addComponent(actions).addComponent(inventory);
+          player.create();
+      }
+
+      @Test
+      /**
+       * should select slot, set as equipped slot, and set as current item if slot is not empty
+       */
+      void testingEquipSlot(){
+          Entity item = new Entity();
+          item.addComponent(new ItemComponent());
+
+          inventory.addItem(item);
+          inventory.setEquippedSlot(2);
+
+          assertEquals(1, inventory.getEquippedSlot());
+      }
+
+      /**
+       * should not return any slot if the inventory is empty
+       */
+      @Test
+      void testingEmptySlot(){
+          Entity item = new Entity();
+          item.addComponent(new ItemComponent());
+
+          inventory.addItem(item);
+          inventory.setEquippedSlot(0);
+
+          assertEquals(-1, inventory.getEquippedSlot(), "Inventory is empty");
+      }
+
+
+      /**
+       * should not select any slot and return a message for invalid slot index
+       */
+      @Test
+      void testingInvalidEquipSlot(){
+          Entity item = new Entity();
+          item.addComponent(new ItemComponent());
+
+          inventory.addItem(item);
+          inventory.setEquippedSlot(7);
+
+          assertFalse(inventory.getEquippedSlot() < 5  && inventory.getEquippedSlot() <= 0,
+              "Invalid equipped Slot");
+      }
   }
 }

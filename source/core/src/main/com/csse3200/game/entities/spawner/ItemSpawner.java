@@ -1,7 +1,7 @@
 package com.csse3200.game.entities.spawner;
 
 import com.badlogic.gdx.math.GridPoint2;
-import com.csse3200.game.areas.ForestGameArea;
+import com.csse3200.game.areas.*;
 import com.csse3200.game.areas.GameArea;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.Weapons;
@@ -80,8 +80,23 @@ public class ItemSpawner {
     private void spawnInGameArea(Entity item, GridPoint2 position) {
         if (gameArea instanceof ForestGameArea forestArea) {
             forestArea.spawnItem(item, position);
+        } else if (gameArea instanceof TunnelGameArea tunnelArea) {
+            tunnelArea.spawnItem(item, position);
+        }
+          else if(gameArea instanceof ResearchGameArea researchArea) {
+            researchArea.spawnItem(item, position);
+        }
+          else if(gameArea instanceof SecurityGameArea securityArea) {
+            securityArea.spawnItem(item, position);
+        } else if (gameArea instanceof ServerGameArea serverArea) {
+            serverArea.spawnItem(item, position);
+        } else if (gameArea instanceof ShippingGameArea shippingGameArea) {
+            shippingGameArea.spawnItem(item, position);
+        } else if (gameArea instanceof StorageGameArea storageGameArea) {
+            storageGameArea.spawnItem(item, position);
         }
     }
+
 
     /**
      * Creates an item entity based on the provided type
