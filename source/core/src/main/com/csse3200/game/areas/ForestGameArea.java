@@ -55,6 +55,8 @@ public class ForestGameArea extends GameArea {
   // private static final int NUM_TURRETS = 1;
   private static final float WALL_WIDTH = 0.1f;
 
+  private final float VERTICAL_HEIGHT_OFFSET = 9.375f;
+
   /** Files or pictures used by the game (enemy/props,etc.). */
   private static final String HEART = "images/heart.png";
   private static final String[] forestTextures = {
@@ -115,7 +117,8 @@ public class ForestGameArea extends GameArea {
     "images/MarblePlatform.png",
     "images/computerBench.png",
     "images/monster.png",
-    "images/electriczap.png",
+    "images/electric_zap.png",
+    "images/lightning_bottle.png",
     "images/Shipping.png",
     "images/ShipmentBoxLid.png",
     "images/ShipmentCrane.png",
@@ -319,8 +322,8 @@ public class ForestGameArea extends GameArea {
       float viewHeight = cam.viewportHeight;
       float leftX = camPos.x - viewWidth / 2f;
       float rightX = camPos.x + viewWidth / 2f;
-      float bottomY = camPos.y - viewHeight / 2f;
-      float topY = camPos.y + viewHeight / 2f;
+      float bottomY = camPos.y - VERTICAL_HEIGHT_OFFSET / 2f;
+      float topY = camPos.y + VERTICAL_HEIGHT_OFFSET / 2f;
 
       // Left screen border
       Entity left = ObstacleFactory.createWall(WALL_WIDTH, viewHeight);

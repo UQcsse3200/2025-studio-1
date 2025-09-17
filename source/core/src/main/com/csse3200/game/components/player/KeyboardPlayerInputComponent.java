@@ -96,6 +96,10 @@ public class KeyboardPlayerInputComponent extends InputComponent {
    */
   @Override
   public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+    if (ServiceLocator.getTimeSource().isPaused()) {
+      return false;
+    }
+
     if (button == Input.Buttons.LEFT) {
       InventoryComponent inventory = entity.getComponent(InventoryComponent.class);
       Entity item = inventory.get(focusedItem);
