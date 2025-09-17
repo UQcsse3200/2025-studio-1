@@ -138,6 +138,22 @@ public class TunnelGameArea extends GameArea {
   private void loadServer() {
     clearAndLoad(() -> new ServerGameArea(terrainFactory, cameraComponent));
   }
+
+  @Override
+  public String toString() {
+    return "Tunnel";
+  }
+
+  @Override
+  public Entity getPlayer() {
+    //placeholder
+    return null;
+  }
+
+  public static TunnelGameArea load(TerrainFactory terrainFactory, CameraComponent camera) {
+    return (new TunnelGameArea(terrainFactory, camera));
+  }
+
 }
 
 

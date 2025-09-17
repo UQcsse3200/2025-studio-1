@@ -7,7 +7,7 @@ import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.factories.characters.PlayerFactory;
-import com.csse3200.game.rendering.SolidColorRenderComponent;
+import com.csse3200.game.services.SaveLoadService;
 
 /** Office room: minimal walls and two doors (left--Security, right--Elevator). */
 public class OfficeGameArea extends GameArea {
@@ -133,6 +133,21 @@ public class OfficeGameArea extends GameArea {
   private void loadElevator() {
       roomNumber++;
     clearAndLoad(() -> new ElevatorGameArea(terrainFactory, cameraComponent));
+  }
+
+  @Override
+  public String toString() {
+    return "Office";
+  }
+
+  @Override
+  public Entity getPlayer() {
+    //placeholder see previous
+    return null;
+  }
+
+  public static OfficeGameArea load(TerrainFactory terrainFactory, CameraComponent camera) {
+    return (new OfficeGameArea(terrainFactory, camera));
   }
 }
 

@@ -74,7 +74,7 @@ public abstract class InputComponent extends Component
      * @return true if the even was handled, false otherwise
      */
   @Override
-  public final boolean keyDown(int keycode) {
+  public boolean keyDown(int keycode) {
       if (this.isPauseable() && ServiceLocator.getTimeSource().isPaused()) {
           return false;
       }
@@ -106,7 +106,7 @@ public abstract class InputComponent extends Component
      * @return true if the even was handled, false otherwise
      */
   @Override
-  public final boolean keyUp(int keycode) {
+  public boolean keyUp(int keycode) {
       if (this.isPauseable() && ServiceLocator.getTimeSource().isPaused()) {
           return false;
       }

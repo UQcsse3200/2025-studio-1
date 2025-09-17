@@ -141,6 +141,22 @@ public class StorageGameArea extends GameArea {
       roomNumber++;
     clearAndLoad(() -> new ShippingGameArea(terrainFactory, cameraComponent));
   }
+
+  @Override
+  public String toString() {
+    return "Storage";
+  }
+
+  @Override
+  public Entity getPlayer() {
+    // placeholder
+    return null;
+  }
+
+  public static StorageGameArea load(TerrainFactory terrainFactory, CameraComponent camera) {
+
+    return (new StorageGameArea(terrainFactory, camera));
+  }
 }
 
 

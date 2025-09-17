@@ -65,6 +65,7 @@ public class ServerGameArea extends GameArea {
     spawnObjectDoors(new GridPoint2(0, 6), new GridPoint2(28, 21));
 
     spawnFloor();
+
     player = spawnPlayer();
     spawnGPTs();
 
@@ -278,5 +279,15 @@ public class ServerGameArea extends GameArea {
   private void loadStorage() {
       roomNumber++;
     clearAndLoad(() -> new StorageGameArea(terrainFactory, cameraComponent));
+  }
+
+
+  @Override
+  public String toString() {
+    return "Server";
+  }
+
+  public static ServerGameArea load(TerrainFactory terrainFactory, CameraComponent camera) {
+    return (new ServerGameArea(terrainFactory, camera));
   }
 }

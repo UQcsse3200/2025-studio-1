@@ -3,8 +3,16 @@ package com.csse3200.game.files;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Json;
+import com.csse3200.game.areas.GameArea;
+import com.csse3200.game.components.player.InventoryComponent;
+import com.csse3200.game.components.player.ItemPickUpComponent;
+import com.csse3200.game.entities.Entity;
+import com.csse3200.game.services.SaveLoadService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.lang.reflect.InvocationTargetException;
+import java.util.List;
 
 /**
  * Wrapper for reading Java objects from JSON files.
@@ -15,6 +23,7 @@ import org.slf4j.LoggerFactory;
 public class FileLoader {
   private static final Logger logger = LoggerFactory.getLogger(FileLoader.class);
   static final Json json = new Json();
+  public static Json jsonSave = new Json();
 
   /**
    * Read generic Java classes from a JSON file. Properties in the JSON file will override class
@@ -43,11 +52,11 @@ public class FileLoader {
   public static <T> T readClass(Class<T> type, String filename, Location location) {
     logger.debug("Reading class {} from {}", type.getSimpleName(), filename);
     FileHandle file = getFileHandle(filename, location);
+
     if (file == null) {
       logger.error("Failed to create file handle for {}", filename);
       return null;
     }
-
     T object;
     try {
       object = json.fromJson(type, file);
@@ -63,11 +72,76 @@ public class FileLoader {
   }
 
   /**
-   * Write generic Java classes to a JSON file.
+   * Read playerinfo from a JSON file and write into class.
    *
-   * @param object Java object to write.
-   * @param filename File to write to.
+   * @param player class type
+   * @param filename file to read from
+   * @param location File storage type. See
+   * @param <T> Class type to read JSON into
+   * @return instance of class, may be null
    */
+  public static <T> T  readPlayer(Class<SaveLoadService.PlayerInfo> player, String filename, Location location) {
+    logger.debug("Reading class {} from {}", player.getSimpleName(), filename);
+    FileHandle file = getFileHandle(filename, location);
+
+    if (file == null) {
+      logger.error("Failed to create file handle for {}", filename);
+      return null;
+    }
+    Object object;
+    try {
+      object = json.fromJson(player, file);
+    } catch (Exception e) {
+      logger.error(e.getMessage());
+      return null;
+    }
+
+
+    if (object == null) {
+      String path = file.path();
+      logger.error("Error creating {} class instance from {}", player.getSimpleName(), path);
+    }
+    logger.info(json.prettyPrint(object));
+
+    return (T) object;
+  }
+
+
+  /**
+   * Reads Inventory component of a save file json
+   * - currently a placeholder for refacotring end sprint 2 / into sprint 3
+   * @param inventory  string representation of the items
+   * @param CPU processor count to be loaded in
+   */
+  public static InventoryComponent readInventory(List<String> inventory, int CPU) {
+    InventoryComponent loadInventory = new InventoryComponent(CPU);
+    ItemPickUpComponent loadIn = new ItemPickUpComponent(loadInventory);
+    logger.info("item pick up");
+
+    if (!inventory.isEmpty()) {
+      for (int i = 0; i < inventory.size(); i++) {
+        loadIn.createItemFromTexture(inventory.get(i));
+        loadInventory.addItem(
+                loadIn.createItemFromTexture(inventory.get(i)));
+        logger.info("Item {} added to inventory", inventory.get(i));
+      }
+    }
+    return loadInventory;
+  }
+
+
+
+
+
+
+
+
+  /**
+     * Write generic Java classes to a JSON file.
+     *
+     * @param object Java object to write.
+     * @param filename File to write to.
+     */
   public static void writeClass(Object object, String filename) {
     writeClass(object, filename, Location.EXTERNAL);
   }
@@ -86,6 +160,23 @@ public class FileLoader {
     assert file != null;
     file.writeString(json.prettyPrint(object), false);
   }
+
+  /**
+   * Write specific player instance to a JSON file.
+   *
+   * @param playerInfo information required to load the player back in
+   * @param filename File to write to.
+   * @param location File storage type. See
+   *     https://github.com/libgdx/libgdx/wiki/File-handling#file-storage-types
+   */
+  public static void writeClass(SaveLoadService.PlayerInfo playerInfo, String filename, Location location) {
+
+    logger.debug("Reading class {} from {}", playerInfo.getClass().getSimpleName(), filename);
+    FileHandle file = getFileHandle(filename, location);
+    assert file != null;
+    file.writeString(json.prettyPrint(playerInfo), false);
+  }
+
 
   private static FileHandle getFileHandle(String filename, Location location) {
     switch (location) {
