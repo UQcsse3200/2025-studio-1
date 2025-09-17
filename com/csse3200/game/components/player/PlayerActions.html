@@ -140,6 +140,14 @@ loadScripts(document, 'script');</script>
 <div class="block">Initializes the component by setting required components and
  registering event listeners for all player actions.</div>
 </div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#equipSlot(int)" class="member-name-link">equipSlot</a><wbr>(int&nbsp;slotIndex)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">equipSlot(int slotIndex) selects the item slot in the inventory for the item that the player wants to equip</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#equipWeapon(com.csse3200.game.entities.Entity)" class="member-name-link">equipWeapon</a><wbr>(<a href="../../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a>&nbsp;weapon)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.badlogic.gdx.math.Vector2</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getCrouchSpeed()" class="member-name-link">getCrouchSpeed</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
@@ -168,13 +176,29 @@ loadScripts(document, 'script');</script>
 <div class="block">Cheat: infinite stamina.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#unequipPlayer()" class="member-name-link">unequipPlayer</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">this function is to unequip the player</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#unequipWeapon()" class="member-name-link">unequipWeapon</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">ensures that no weapon is equipped and weapon’s
+ texture (sprite) is no longer visible in the game.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#update()" class="member-name-link">update</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Updates player movement, speed, and grounded status.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#upgradeSpeed()" class="member-name-link">upgradeSpeed</a>()</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#updateWeaponPosition()" class="member-name-link">updateWeaponPosition</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">this function sets the coordinates for the weapon in player's hand</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#upgradeSpeed()" class="member-name-link">upgradeSpeed</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Upgrades the speed of the player</div>
 </div>
 </div>
@@ -297,6 +321,45 @@ loadScripts(document, 'script');</script>
 <dt>Returns:</dt>
 <dd>the sprint speed</dd>
 </dl>
+</section>
+</li>
+<li>
+<section class="detail" id="equipSlot(int)">
+<h3>equipSlot</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">equipSlot</span><wbr><span class="parameters">(int&nbsp;slotIndex)</span></div>
+<div class="block">equipSlot(int slotIndex) selects the item slot in the inventory for the item that the player wants to equip</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>slotIndex</code> - </dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="unequipPlayer()">
+<h3>unequipPlayer</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">unequipPlayer</span>()</div>
+<div class="block">this function is to unequip the player</div>
+</section>
+</li>
+<li>
+<section class="detail" id="equipWeapon(com.csse3200.game.entities.Entity)">
+<h3>equipWeapon</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">equipWeapon</span><wbr><span class="parameters">(<a href="../../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a>&nbsp;weapon)</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="unequipWeapon()">
+<h3>unequipWeapon</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">unequipWeapon</span>()</div>
+<div class="block">ensures that no weapon is equipped and weapon’s
+ texture (sprite) is no longer visible in the game.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="updateWeaponPosition()">
+<h3>updateWeaponPosition</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">updateWeaponPosition</span>()</div>
+<div class="block">this function sets the coordinates for the weapon in player's hand</div>
 </section>
 </li>
 </ul>
