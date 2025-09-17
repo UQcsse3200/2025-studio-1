@@ -362,8 +362,16 @@ public class PlayerActions extends Component {
     InventoryComponent inventory = entity.getComponent(InventoryComponent.class);
     Entity gun = inventory.getCurrItem();
 
+    if (gun == null) {
+      return;
+    }
+
     MagazineComponent mag = gun.getComponent(MagazineComponent.class);
     // Check for cooldown, defaulting to zero if no current weapon
+
+    if (mag == null) {
+      return;
+    }
     float coolDown = weapon.getCoolDown();
     if (this.timeSinceLastAttack < coolDown || mag.reloading()) {
       return;
