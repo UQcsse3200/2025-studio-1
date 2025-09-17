@@ -10,16 +10,16 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 
 /**
- * A command for toggling whether a player uses stamina
+ * A command for toggling whether a player can infinitely dash
  */
-public class InfiniteStaminaCommand implements Command {
+public class InfiniteDashCommand implements Command {
     private Array<Entity> entityList;
     private static final Logger logger = LoggerFactory.getLogger(DebugCommand.class);
 
 
     public boolean action(ArrayList<String> args) {
         if (!isValid(args)) {
-            logger.debug("Invalid arguments received for 'infinite_stamina' command: {}", args);
+            logger.debug("Invalid arguments received for 'infinite_dash' command: {}", args);
             return false;
         }
 
@@ -27,13 +27,13 @@ public class InfiniteStaminaCommand implements Command {
         entityList = ServiceLocator.getEntityService().getEntities();
         switch (arg) {
             case "on":
-                setInfiniteStaminaStatus(entityList, true);
+                setInfiniteDashStatus(entityList, true);
                 return true;
             case "off":
-                setInfiniteStaminaStatus(entityList, false);
+                setInfiniteDashStatus(entityList, false);
                 return true;
             default:
-                logger.debug("Unrecognised argument received for 'infinite_stamina' command: {}", args);
+                logger.debug("Unrecognised argument received for 'infinite_dash' command: {}", args);
                 return false;
         }
     }
@@ -42,10 +42,10 @@ public class InfiniteStaminaCommand implements Command {
         return args.size() == 1;
     }
 
-    void setInfiniteStaminaStatus(Array<Entity> entityList, boolean status) {
+    void setInfiniteDashStatus(Array<Entity> entityList, boolean status) {
         for(Entity entity : entityList) {
             if (entity.getComponent(PlayerActions.class) != null) {
-                entity.getComponent(PlayerActions.class).infStamina();
+                entity.getComponent(PlayerActions.class).infDash();
             }
         }
     }
