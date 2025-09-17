@@ -17,7 +17,7 @@ public class WeaponsStatsComponent extends Component {
 
 
     /** Default attack cooldown (seconds). */
-    private static final int DEFAULT_COOLDOWN = 0.2f;
+    private static final float DEFAULT_COOLDOWN = 0.2f;
 
     /** Default setting for whether this weapon deals damage. */
     private static final boolean DEFAULT_DISABLE_DAMAGE = false;
