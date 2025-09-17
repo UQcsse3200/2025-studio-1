@@ -23,6 +23,8 @@ public class CombatStatsComponent extends Component {
 
   private int thresholdForBuff = 20;
 
+  private boolean healthUpgraded;
+
 
   /**
    * Construct a combat Stats Component (Health + Attack System)
@@ -32,6 +34,7 @@ public class CombatStatsComponent extends Component {
   public CombatStatsComponent(int health) {
     setMaxHealth(health);
     setHealth(health);
+    healthUpgraded = false;
   }
 
   /**
@@ -118,7 +121,16 @@ public class CombatStatsComponent extends Component {
      return this.maxHealth;
   }
 
-
+  /**
+   * <p>Doubles player maximum health when player interacts with a HealthBench. Only applied once.</p>
+   */
+  public void upgradeMaxHealth() {
+    if (!healthUpgraded) {
+      healthUpgraded = true;
+      this.setMaxHealth(maxHealth * 2);
+      this.setHealth(maxHealth); // regenerate player
+    }
+  }
 
   /**
    * Apply damage to this entity.
