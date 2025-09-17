@@ -24,7 +24,7 @@ public class WeaponsTest {
     void setupCorrect() {
         assertInstanceOf(LightsaberConfig.class, lightsaber);
         assertInstanceOf(DaggerConfig.class, dagger);
-        assertInstanceOf(RifleConfig.class, rifle);
+        assertInstanceOf(WeaponConfigsTest.class, rifle);
         assertInstanceOf(PistolConfig.class, pistol);
     }
 }
