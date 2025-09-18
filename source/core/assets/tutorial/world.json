@@ -1,0 +1,48 @@
+{
+  "version": 1,
+  "rooms": [
+    {
+      "id": "reception",
+      "music": "sounds/sound1.ogg",
+      "spawns": [
+        {
+          "name": "player",
+          "x": 3,
+          "y": 4
+        }
+      ],
+      "items": [
+        {
+          "ref": "crate.wood",
+          "x": 10,
+          "y": 6
+        },
+        {
+          "ref": "enemy.basic",
+          "x": 12,
+          "y": 8,
+          "params": {
+            "hp": 65,
+            "ai": "chase"
+          }
+        }
+      ]
+    }
+  ],
+  "items": {
+    "enemy.basic": {
+      "type": "Enemy",
+      "sprite": "enemies/basic",
+      "defaults": {
+        "hp": 50
+      }
+    },
+    "crate.wood": {
+      "type": "Prop",
+      "sprite": "props/crate_wood",
+      "defaults": {
+        "breakable": true
+      }
+    }
+  }
+}
