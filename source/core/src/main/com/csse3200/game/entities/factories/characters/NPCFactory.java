@@ -304,7 +304,7 @@ public class NPCFactory {
    *
    * @param target entity to chase
    * @param area the area/space it is living in
-   * @param scalingFactor The scale of increase in health and attack of the GhostGPT
+   * @param scalingFactor The scale of increase in health and attack of the Turret
    * @return entity
    */
   public static Entity createTurret(Entity target, GameArea area, float scalingFactor) {
