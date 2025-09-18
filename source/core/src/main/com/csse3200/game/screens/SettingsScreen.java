@@ -8,14 +8,14 @@ import com.csse3200.game.input.InputDecorator;
 
 
 public class SettingsScreen extends BaseScreen {
-  public SettingsScreen(GdxGame game) {
-    super(game, "images/menu_background.png");
-  }
+    public SettingsScreen(GdxGame game) {
+        super(game, "images/menu_background.png");
+    }
 
-  @Override
-  protected Entity createUIScreen(Stage stage) {
-    return new Entity()
-            .addComponent(new SettingsMenuDisplay(game))
-            .addComponent(new InputDecorator(stage, 10));
-  }
+    @Override
+    protected Entity createUIScreen(Stage stage) {
+        return new Entity()
+                .addComponent(new SettingsMenuDisplay(game))
+                .addComponent(new InputDecorator(stage, 10));
+    }
 }

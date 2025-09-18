@@ -1,10 +1,10 @@
 package com.csse3200.game.entities.spawner;
 
 import com.badlogic.gdx.math.GridPoint2;
+import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.csse3200.game.areas.ForestGameArea;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.physics.components.PhysicsComponent;
-import com.badlogic.gdx.physics.box2d.BodyDef;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -27,6 +27,7 @@ class ItemSpawnerTest {
         mockForestArea = mock(ForestGameArea.class);
         spawner = new ItemSpawner(mockForestArea);
     }
+
     /**
      * tests that the makeItem method returns null for an unknown item type
      */
@@ -67,7 +68,7 @@ class ItemSpawnerTest {
     void testItemSpawnInfo() {
         GridPoint2 pos = new GridPoint2(3, 4);
         ItemSpawner.ItemSpawnInfo info = new ItemSpawner.ItemSpawnInfo(pos, 5);
-        assertEquals(pos, info.position, "Position should be stored correctly");
-        assertEquals(5, info.quantity, "Quantity should be stored correctly");
+        assertEquals(pos, info.position(), "Position should be stored correctly");
+        assertEquals(5, info.quantity(), "Quantity should be stored correctly");
     }
 }

@@ -12,7 +12,10 @@ public class BKTree {
     private static final class Node {
         final String term;
         final Map<Integer, Node> children = new HashMap<>();
-        Node(String t) { term = t; }
+
+        Node(String t) {
+            term = t;
+        }
     }
 
     private Node root;
@@ -57,7 +60,9 @@ public class BKTree {
         return out;
     }
 
-    /** Fast Levenshtein with early exit for distance > 2 (tiny commands). */
+    /**
+     * Fast Levenshtein with early exit for distance > 2 (tiny commands).
+     */
     private static int distLE2(String a, String b) {
         // small optimization: if |len(a)-len(b)| > 2, bail early with >2
         int la = a.length(), lb = b.length();
@@ -65,7 +70,7 @@ public class BKTree {
         if (diff > 2) return diff; // already > 2
         // classic DP but trimmed because la,lb are tiny (command words)
         int[] prev = new int[lb + 1];
-        int[] cur  = new int[lb + 1];
+        int[] cur = new int[lb + 1];
         for (int j = 0; j <= lb; j++) prev[j] = j;
         for (int i = 1; i <= la; i++) {
             cur[0] = i;
@@ -78,7 +83,9 @@ public class BKTree {
             }
             // early exit: if minimal in row already exceeds 2, we can stop
             if (rowMin > 2) return rowMin;
-            int[] tmp = prev; prev = cur; cur = tmp;
+            int[] tmp = prev;
+            prev = cur;
+            cur = tmp;
         }
         return prev[lb];
     }

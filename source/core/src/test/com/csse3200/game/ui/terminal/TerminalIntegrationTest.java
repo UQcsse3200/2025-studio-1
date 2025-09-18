@@ -6,11 +6,14 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class TerminalIntegrationTest {
 
-    /** Move the last-keystroke timestamp far into the past so debounce passes. */
+    /**
+     * Move the last-keystroke timestamp far into the past so debounce passes.
+     */
     private static void bypassDebounce(Terminal t) {
         try {
             var f = Terminal.class.getDeclaredField("lastKeystrokeNs");
@@ -32,7 +35,7 @@ class TerminalIntegrationTest {
         t.setEnteredMessage("de");
         bypassDebounce(t);
         List<String> s = t.getAutocompleteSuggestions();
-        assertEquals(List.of("deathscreen","debug"), s.subList(0, Math.min(2, s.size())));
+        assertEquals(List.of("deathscreen", "debug"), s.subList(0, Math.min(2, s.size())));
 
         // Accept top suggestion "deathscreen", args preserved
         t.setEnteredMessage("de 42 hard");
@@ -43,6 +46,6 @@ class TerminalIntegrationTest {
         // Execute
         assertTrue(t.processMessage());
         assertEquals(1, death.invocations.size());
-        assertEquals(List.of("42","hard"), death.invocations.get(0));
+        assertEquals(List.of("42", "hard"), death.invocations.get(0));
     }
 }

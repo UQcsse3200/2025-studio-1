@@ -16,43 +16,43 @@ import java.util.ArrayList;
  * Usage: waves
  */
 public class WavesCommand implements Command {
-  private static final Logger logger = LoggerFactory.getLogger(WavesCommand.class);
+    private static final Logger logger = LoggerFactory.getLogger(WavesCommand.class);
 
-  @Override
-  public boolean action(ArrayList<String> args) {
-    GameArea ga = ServiceLocator.getGameArea();
-    if (ga == null) {
-      logger.warn("WavesCommand: Current GameArea is not a ForestGameArea; cannot start waves");
-      return false;
+    @Override
+    public boolean action(ArrayList<String> args) {
+        GameArea ga = ServiceLocator.getGameArea();
+        if (ga == null) {
+            logger.warn("WavesCommand: Current GameArea is not a ForestGameArea; cannot start waves");
+            return false;
+        }
+        Entity player = null;
+
+        EntityService es = ServiceLocator.getEntityService();
+        if (es == null) {
+            logger.debug("No EntityService registered; cannot kill enemy");
+            return false;
+        }
+
+        for (Entity e : es.getEntities()) {
+            CombatStatsComponent stats = e.getComponent(CombatStatsComponent.class);
+            if (stats == null || !isPlayer(e)) {
+                continue;
+            }
+            player = e;
+            break;
+        }
+
+        if (player != null) {
+            ga.startWaves(player);
+
+            logger.info("WavesCommand: Enemy waves started");
+            return true;
+        }
+        return false;
     }
-    Entity player = null;
 
-    EntityService es = ServiceLocator.getEntityService();
-    if (es == null) {
-      logger.debug("No EntityService registered; cannot kill enemy");
-      return false;
+    private boolean isPlayer(Entity e) {
+        return e.getComponent(StaminaComponent.class) != null;
     }
-
-    for (Entity e : es.getEntities()) {
-      CombatStatsComponent stats = e.getComponent(CombatStatsComponent.class);
-      if (stats == null || !isPlayer(e)) {
-        continue;
-      }
-      player = e;
-      break;
-    }
-
-    if (player != null) {
-      ga.startWaves(player);
-
-      logger.info("WavesCommand: Enemy waves started");
-      return true;
-    }
-    return false;
-  }
-
-  private boolean isPlayer(Entity e) {
-    return e.getComponent(StaminaComponent.class) != null;
-  }
 }
 

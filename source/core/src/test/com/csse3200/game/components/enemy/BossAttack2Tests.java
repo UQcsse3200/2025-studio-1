@@ -7,7 +7,10 @@ import com.csse3200.game.entities.EntityService;
 import com.csse3200.game.services.GameTime;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
 
 import java.lang.reflect.Field;
@@ -28,7 +31,10 @@ public class BossAttack2Tests {
     void setUp() {
         // Minimal Gdx.app so postRunnable works
         Application app = mock(Application.class);
-        doAnswer(inv -> { ((Runnable) inv.getArgument(0)).run(); return null; })
+        doAnswer(inv -> {
+            ((Runnable) inv.getArgument(0)).run();
+            return null;
+        })
                 .when(app).postRunnable(any(Runnable.class));
         Gdx.app = app;
 
@@ -38,7 +44,7 @@ public class BossAttack2Tests {
         when(time.getDeltaTime()).thenReturn(0.016f);
 
         resources = mock(ResourceService.class);
-        entities  = mock(EntityService.class);
+        entities = mock(EntityService.class);
 
         when(ServiceLocator.getTimeSource()).thenReturn(time);
         when(ServiceLocator.getResourceService()).thenReturn(resources);

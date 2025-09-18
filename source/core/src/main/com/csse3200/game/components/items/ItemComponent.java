@@ -52,6 +52,7 @@ public class ItemComponent extends Component {
     /**
      * Gets the current number of existing items that are the same within
      * the game
+     *
      * @return the count for the item
      */
     public int getCount() {
@@ -60,6 +61,7 @@ public class ItemComponent extends Component {
 
     /**
      * setCount to set item_count at a given value
+     *
      * @param count sets the item count
      */
     public void setCount(int count) {
@@ -68,21 +70,27 @@ public class ItemComponent extends Component {
 
     /**
      * Sets the texture path of the current item
+     *
      * @param texture sets the texture path of the current item
      */
-    public void setTexture(String texture) {this.texture = texture;}
+    public void setTexture(String texture) {
+        this.texture = texture;
+    }
 
     /**
      * Returns the texture path of the current item
      */
-    public String getTexture() { return this.texture; }
+    public String getTexture() {
+        return this.texture;
+    }
 
     /**
      * Gets the description for the item
+     *
      * @return A formatted description of the item
      * with its; name, id, type, and current count.
      */
-    public String getDescription(){
+    public String getDescription() {
         return ("Item : " + this.getName()
                 + "\nId : " + entity.getId()
                 + "\nType : " + this.getType()

@@ -2,8 +2,8 @@ package com.csse3200.game.services;
 
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.areas.GameArea;
-import com.csse3200.game.components.Component;
 import com.csse3200.game.components.CombatStatsComponent;
+import com.csse3200.game.components.Component;
 import com.csse3200.game.components.player.InventoryComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.extensions.GameExtension;
@@ -26,13 +26,13 @@ class SaveLoadServiceTest {
 
     private static final String SLOT_ID = "slot1";
     private static final String AREA_ID = "Area#Test";
-    private static final int    MAX_HEALTH = 100;
-    private static final int    INITIAL_HEALTH = 80;
-    private static final float  POS_X = 5.0f;
-    private static final float  POS_Y = 7.0f;
+    private static final int MAX_HEALTH = 100;
+    private static final int INITIAL_HEALTH = 80;
+    private static final float POS_X = 5.0f;
+    private static final float POS_Y = 7.0f;
     private static final double FLOAT_EPS = 1e-4;
-    private static final int    INVENTORY_PROCESSES = 1;
-    private static final int    EXPECTED_ROUND_NUMBER = 2;
+    private static final int INVENTORY_PROCESSES = 1;
+    private static final int EXPECTED_ROUND_NUMBER = 2;
 
     static class FakeEntity extends Entity {
         private final List<Component> comps = new ArrayList<>();

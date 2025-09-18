@@ -1,11 +1,12 @@
 // src/test/java/com/csse3200/game/ui/terminal/autocomplete/BKTreeTest.java
 package com.csse3200.game.ui.terminal.autocomplete;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class BKTreeTest {
 
@@ -14,7 +15,7 @@ public class BKTreeTest {
     @BeforeEach
     void setUp() {
         bk = new BKTree();
-        for (String s : List.of("debug","deathscreen","disableDamage","waves","pickupAll")) {
+        for (String s : List.of("debug", "deathscreen", "disableDamage", "waves", "pickupAll")) {
             bk.insert(s);
         }
     }
