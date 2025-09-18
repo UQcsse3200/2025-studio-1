@@ -1,10 +1,9 @@
 package com.csse3200.game.entities.configs.benches;
 
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.csse3200.game.components.player.InventoryComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.ItemTypes;
-
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 
 public abstract class BenchConfig {
     public ItemTypes benchType = ItemTypes.BENCH;
@@ -14,6 +13,7 @@ public abstract class BenchConfig {
 
     /**
      * Subtracts the price of the station from the player
+     *
      * @param player the player
      */
     public void subtractPrice(Entity player) {
@@ -23,6 +23,7 @@ public abstract class BenchConfig {
 
     /**
      * Gets the price of the station
+     *
      * @return the price of the station
      */
     public int getPrice() {
@@ -31,9 +32,10 @@ public abstract class BenchConfig {
 
     /**
      * Triggers the station's upgrade
+     *
      * @param playerNear is the player near
-     * @param player the player Entity
-     * @param buyPrompt the buyPrompt for the station
+     * @param player     the player Entity
+     * @param buyPrompt  the buyPrompt for the station
      */
     public abstract void upgrade(boolean playerNear, Entity player, Label buyPrompt);
 

@@ -1,27 +1,29 @@
 package com.csse3200.game.components.tasks;
 
 import com.badlogic.gdx.math.Vector2;
-import com.csse3200.game.components.Component;
 import com.csse3200.game.components.CombatStatsComponent;
+import com.csse3200.game.components.Component;
 import com.csse3200.game.components.WeaponsStatsComponent;
+import com.csse3200.game.components.enemy.BossStatusDisplay;
 import com.csse3200.game.physics.components.PhysicsMovementComponent;
 import com.csse3200.game.rendering.AnimationRenderComponent;
-import com.csse3200.game.components.enemy.BossStatusDisplay;
 
-/** Boss's fury form */
+/**
+ * Boss's fury form
+ */
 public class BossFuryTask extends Component {
     private final float thresholdRatio;
     private final float speedMultiplier;
-    private final int   damageBonus;
+    private final int damageBonus;
     private final Float newCooldown;
 
     private boolean triggered = false;
     private int maxHealth = -1;
 
     public BossFuryTask(float thresholdRatio,
-                              float speedMultiplier,
-                              int damageBonus,
-                              Float newCooldown) {
+                        float speedMultiplier,
+                        int damageBonus,
+                        Float newCooldown) {
         this.thresholdRatio = thresholdRatio;
         this.speedMultiplier = speedMultiplier;
         this.damageBonus = damageBonus;

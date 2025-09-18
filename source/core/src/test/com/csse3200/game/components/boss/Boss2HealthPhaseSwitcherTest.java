@@ -7,7 +7,8 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Slimmed smoke tests for Boss2HealthPhaseSwitcher.
@@ -43,7 +44,7 @@ class Boss2HealthPhaseSwitcherTest {
 
         List<String> events = new ArrayList<>();
         boss.getEvents().addListener("boss2:phase2", () -> events.add("phase2"));
-        boss.getEvents().addListener("boss2:angry",  () -> events.add("angry"));
+        boss.getEvents().addListener("boss2:angry", () -> events.add("angry"));
 
         // Drop HP well below thresholds; without ARC, switcher should do nothing and emit nothing
         stats.setHealth(200);

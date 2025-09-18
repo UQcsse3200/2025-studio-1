@@ -50,7 +50,9 @@ public class DisableDamageCommand implements Command {
         return a != null && (a.equalsIgnoreCase("on") || a.equalsIgnoreCase("off"));
     }
 
-    /** Returns count of entities updated. */
+    /**
+     * Returns count of entities updated.
+     */
     int setDisableDamageStatus(Array<Entity> entityList, boolean status) {
         int changed = 0;
         for (Entity entity : entityList) {

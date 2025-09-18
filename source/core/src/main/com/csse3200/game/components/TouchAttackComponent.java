@@ -19,68 +19,70 @@ import com.csse3200.game.physics.components.PhysicsProjectileComponent;
  * if target entity has a PhysicsComponent.
  */
 public class TouchAttackComponent extends Component {
-  private final short targetLayer;
-  private float knockbackForce = 0f;
-  private HitboxComponent hitboxComponent;
+    private final short targetLayer;
+    private float knockbackForce = 0f;
+    private HitboxComponent hitboxComponent;
 
-  /**
-   * Create a component which attacks entities on collision, without knockback.
-   * @param targetLayer The physics layer of the target's collider.
-   */
-  public TouchAttackComponent(short targetLayer) {
-    this.targetLayer = targetLayer;
-  }
-
-  /**
-   * Create a component which attacks entities on collision, with knockback.
-   * @param targetLayer The physics layer of the target's collider.
-   * @param knockback The magnitude of the knockback applied to the entity.
-   */
-  public TouchAttackComponent(short targetLayer, float knockback) {
-    this.targetLayer = targetLayer;
-    this.knockbackForce = knockback;
-  }
-
-  @Override
-  public void create() {
-    entity.getEvents().addListener("collisionStart", this::onCollisionStart);
-    hitboxComponent = entity.getComponent(HitboxComponent.class);
-  }
-
-  private void onCollisionStart(Fixture me, Fixture other) {
-    if (hitboxComponent.getFixture() != me) {
-      // Not triggered by hitbox, ignore
-      return;
+    /**
+     * Create a component which attacks entities on collision, without knockback.
+     *
+     * @param targetLayer The physics layer of the target's collider.
+     */
+    public TouchAttackComponent(short targetLayer) {
+        this.targetLayer = targetLayer;
     }
 
-    if (!PhysicsLayer.contains(targetLayer, other.getFilterData().categoryBits)) {
-      // Doesn't match our target layer, ignore
-      return;
+    /**
+     * Create a component which attacks entities on collision, with knockback.
+     *
+     * @param targetLayer The physics layer of the target's collider.
+     * @param knockback   The magnitude of the knockback applied to the entity.
+     */
+    public TouchAttackComponent(short targetLayer, float knockback) {
+        this.targetLayer = targetLayer;
+        this.knockbackForce = knockback;
     }
 
-    // Try to attack target.
-    Entity target = ((BodyUserData) other.getBody().getUserData()).entity;
-    Entity attacker = ((BodyUserData) me.getBody().getUserData()).entity;
-
-    CombatStatsComponent targetStats = target.getComponent(CombatStatsComponent.class);
-    WeaponsStatsComponent attackerWeapon = attacker.getComponent(WeaponsStatsComponent.class);
-
-    if (targetStats != null && attackerWeapon != null) {
-      targetStats.takeDamage(attackerWeapon.getBaseAttack());
+    @Override
+    public void create() {
+        entity.getEvents().addListener("collisionStart", this::onCollisionStart);
+        hitboxComponent = entity.getComponent(HitboxComponent.class);
     }
 
-    // Apply knockback
-    PhysicsComponent physicsComponent = target.getComponent(PhysicsComponent.class);
-    if (physicsComponent != null && knockbackForce > 0f) {
-      Body targetBody = physicsComponent.getBody();
-      Vector2 direction = target.getCenterPosition().sub(entity.getCenterPosition());
-      Vector2 impulse = direction.setLength(knockbackForce);
-      targetBody.applyLinearImpulse(impulse, targetBody.getWorldCenter(), true);
-    }
+    private void onCollisionStart(Fixture me, Fixture other) {
+        if (hitboxComponent.getFixture() != me) {
+            // Not triggered by hitbox, ignore
+            return;
+        }
 
-    //disposes entity if it is a projectile
-    if (entity.hasComponent(PhysicsProjectileComponent.class)) {
-      entity.setToRemove();
+        if (!PhysicsLayer.contains(targetLayer, other.getFilterData().categoryBits)) {
+            // Doesn't match our target layer, ignore
+            return;
+        }
+
+        // Try to attack target.
+        Entity target = ((BodyUserData) other.getBody().getUserData()).entity;
+        Entity attacker = ((BodyUserData) me.getBody().getUserData()).entity;
+
+        CombatStatsComponent targetStats = target.getComponent(CombatStatsComponent.class);
+        WeaponsStatsComponent attackerWeapon = attacker.getComponent(WeaponsStatsComponent.class);
+
+        if (targetStats != null && attackerWeapon != null) {
+            targetStats.takeDamage(attackerWeapon.getBaseAttack());
+        }
+
+        // Apply knockback
+        PhysicsComponent physicsComponent = target.getComponent(PhysicsComponent.class);
+        if (physicsComponent != null && knockbackForce > 0f) {
+            Body targetBody = physicsComponent.getBody();
+            Vector2 direction = target.getCenterPosition().sub(entity.getCenterPosition());
+            Vector2 impulse = direction.setLength(knockbackForce);
+            targetBody.applyLinearImpulse(impulse, targetBody.getWorldCenter(), true);
+        }
+
+        //disposes entity if it is a projectile
+        if (entity.hasComponent(PhysicsProjectileComponent.class)) {
+            entity.setToRemove();
+        }
     }
-  }
 }

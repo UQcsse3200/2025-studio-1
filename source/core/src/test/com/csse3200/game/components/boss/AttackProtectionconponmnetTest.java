@@ -20,10 +20,15 @@ public class AttackProtectionconponmnetTest {
         // Ensure a time source exists for DamageReductionComponent.start(...)
         ServiceLocator.registerTimeSource(new GameTime());
     }
+
     @After
     public void teardown() {
-        try { ServiceLocator.clear(); } catch (Throwable ignored) {}
+        try {
+            ServiceLocator.clear();
+        } catch (Throwable ignored) {
+        }
     }
+
     /**
      * After the hit limit of consecutive health drops is reached, no-damage starts.
      * While active, takeDamage() should not reduce health.

@@ -1,8 +1,8 @@
 package com.csse3200.game.areas;
 
+import com.badlogic.gdx.math.MathUtils;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.factories.KeycardFactory;
-import com.badlogic.gdx.math.MathUtils;
 
 public class KeycardSpawnerSystem {
 

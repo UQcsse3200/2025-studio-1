@@ -62,7 +62,7 @@ class DebugCommandTests {
 
             DebugCommand cmd = new DebugCommand();
             assertFalse(cmd.action(new ArrayList<>()));                    // no args
-            assertFalse(cmd.action(new ArrayList<>(List.of("on","off")))); // too many
+            assertFalse(cmd.action(new ArrayList<>(List.of("on", "off")))); // too many
             assertFalse(cmd.action(new ArrayList<>(List.of("blah"))));     // unknown
 
             verifyNoInteractions(debug);

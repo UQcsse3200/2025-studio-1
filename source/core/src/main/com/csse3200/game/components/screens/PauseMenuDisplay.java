@@ -2,13 +2,11 @@ package com.csse3200.game.components.screens;
 
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
-import com.badlogic.gdx.scenes.scene2d.ui.*;
-
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.csse3200.game.GdxGame;
 
 /**
@@ -35,7 +33,9 @@ public class PauseMenuDisplay extends BaseScreenDisplay {
      *
      * @param game game instance used for screen navigation actions
      */
-    public PauseMenuDisplay(GdxGame game) { super(game); }
+    public PauseMenuDisplay(GdxGame game) {
+        super(game);
+    }
 
     /**
      * Builds the pause UI:
@@ -99,7 +99,9 @@ public class PauseMenuDisplay extends BaseScreenDisplay {
         final InputListener escOnce = new InputListener() {
             /** Prevents repeated ESC events (debounce). */
             private boolean handled = false;
-            @Override public boolean keyDown(InputEvent event, int keycode) {
+
+            @Override
+            public boolean keyDown(InputEvent event, int keycode) {
                 if (keycode == Input.Keys.ESCAPE && !handled) {
                     handled = true;                       // first ESC only
                     entity.getEvents().trigger("resume"); // resume game
@@ -117,7 +119,10 @@ public class PauseMenuDisplay extends BaseScreenDisplay {
      *
      * @return draw order value for this UI component
      */
-    @Override public float getZIndex() { return 100f; }
+    @Override
+    public float getZIndex() {
+        return 100f;
+    }
 
     /**
      * Removes the dimmer from the Stage and delegates to base disposal.
@@ -125,7 +130,10 @@ public class PauseMenuDisplay extends BaseScreenDisplay {
      */
     @Override
     public void dispose() {
-        if (dimmer != null) { dimmer.remove(); dimmer = null; }
+        if (dimmer != null) {
+            dimmer.remove();
+            dimmer = null;
+        }
         super.dispose();
     }
 }

@@ -16,7 +16,8 @@ import com.csse3200.game.entities.configs.benches.ComputerBenchConfig;
 import com.csse3200.game.entities.configs.benches.HealthBenchConfig;
 import com.csse3200.game.entities.configs.benches.SpeedBenchConfig;
 import com.csse3200.game.extensions.GameExtension;
-import com.csse3200.game.physics.*;
+import com.csse3200.game.physics.BodyUserData;
+import com.csse3200.game.physics.PhysicsService;
 import com.csse3200.game.rendering.RenderService;
 import com.csse3200.game.services.ServiceLocator;
 import org.junit.jupiter.api.*;
@@ -24,7 +25,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(GameExtension.class)
 public class StationComponentTests {
@@ -169,7 +171,7 @@ public class StationComponentTests {
             //Check if the damage is increased when upgrading
             int initialDamage = weapon.getComponent(WeaponsStatsComponent.class).getBaseAttack();
             stationComponent.upgrade();
-            assertTrue(initialDamage <  weapon.getComponent(WeaponsStatsComponent.class).getBaseAttack());
+            assertTrue(initialDamage < weapon.getComponent(WeaponsStatsComponent.class).getBaseAttack());
         }
 
         @Test

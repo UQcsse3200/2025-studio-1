@@ -4,10 +4,13 @@ import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.services.GameTime;
 import com.csse3200.game.services.ServiceLocator;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class BossChargeSkillComponentTest {
@@ -17,8 +20,15 @@ public class BossChargeSkillComponentTest {
      */
     static class TestTime extends GameTime {
         private float dt = 0f;
-        void setDelta(float dt) { this.dt = dt; }
-        @Override public float getDeltaTime() { return dt; }
+
+        void setDelta(float dt) {
+            this.dt = dt;
+        }
+
+        @Override
+        public float getDeltaTime() {
+            return dt;
+        }
     }
 
     private TestTime time;
@@ -82,19 +92,19 @@ public class BossChargeSkillComponentTest {
         boss.setPosition(0f, 0f); // create() will snap Y to patrolY
 
         List<String> events = new ArrayList<>();
-        boss.getEvents().addListener("boss2:patrol",   () -> events.add("patrol"));
-        boss.getEvents().addListener("boss2:prep",     () -> events.add("prep"));
-        boss.getEvents().addListener("boss2:charge",   () -> events.add("charge"));
-        boss.getEvents().addListener("boss2:return",   () -> events.add("return"));
+        boss.getEvents().addListener("boss2:patrol", () -> events.add("patrol"));
+        boss.getEvents().addListener("boss2:prep", () -> events.add("prep"));
+        boss.getEvents().addListener("boss2:charge", () -> events.add("charge"));
+        boss.getEvents().addListener("boss2:return", () -> events.add("return"));
         boss.getEvents().addListener("boss2:cooldown", () -> events.add("cooldown"));
 
         // Use short timings so the state machine advances quickly during the test
-        float triggerRange   = 100f;
-        float dwellTime      = 0.1f;
-        float prepareTime    = 0.05f;
-        float chargeSpeed    = 6f;
+        float triggerRange = 100f;
+        float dwellTime = 0.1f;
+        float prepareTime = 0.05f;
+        float chargeSpeed = 6f;
         float chargeDuration = 0.1f;
-        float cooldown       = 0.05f;
+        float cooldown = 0.05f;
 
         BossChargeSkillComponent comp = new BossChargeSkillComponent(
                 target,
@@ -140,7 +150,9 @@ public class BossChargeSkillComponentTest {
                 "After cooldown it should trigger boss2:patrol again");
     }
 
-    /** Advance the state machine by repeatedly calling update() with a fixed step. */
+    /**
+     * Advance the state machine by repeatedly calling update() with a fixed step.
+     */
     private void advance(BossChargeSkillComponent comp, float total, float step) {
         float t = 0f;
         while (t < total) {

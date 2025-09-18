@@ -10,14 +10,13 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 class EndScreenCommandTests {
 
     private static boolean run(Command cmd, String... args) {
         return cmd.action(new ArrayList<>(List.of(args)));
     }
-    
+
     @Test
     void switchesScreenAndReturnsTrue() {
         GdxGame game = mock(GdxGame.class);

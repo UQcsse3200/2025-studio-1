@@ -56,7 +56,7 @@ public class ShopManager extends Component {
      * </p>
      *
      * @param player the entity attempting the purchase (must have an {@link InventoryComponent})
-     * @param item the catalog entry being purchased
+     * @param item   the catalog entry being purchased
      * @param amount the quantity to purchase
      * @return a {@link PurchaseResult} indicating success or failure and the reason
      */
@@ -77,7 +77,7 @@ public class ShopManager extends Component {
 
         final int cost = entry.price();
 
-         // Check user has sufficient funds
+        // Check user has sufficient funds
         if (!hasSufficientFunds(inventory, amount, cost)) {
             return fail(item, PurchaseError.INSUFFICIENT_FUNDS);
         }

@@ -91,7 +91,7 @@ public class ConsumableComponent extends Component {
      * has a {@link WeaponsStatsComponent}.
      *
      * @return {@code true} if the consumable fires a projectile,
-     *         {@code false} otherwise
+     * {@code false} otherwise
      */
     public boolean firesProjectile() {
         return entity.hasComponent(WeaponsStatsComponent.class);

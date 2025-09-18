@@ -14,6 +14,7 @@ public class BlackholeComponent extends Component {
 
     private float timer = 0f;
     private boolean attack = true;
+
     public BlackholeComponent(Entity target, float cooldown, float range) {
         this.target = target;
         this.cooldown = cooldown;
@@ -22,7 +23,7 @@ public class BlackholeComponent extends Component {
 
     @Override
     public void update() {
-        if (!attack ) {
+        if (!attack) {
             return;
         }
         float dt = ServiceLocator.getTimeSource().getDeltaTime();
@@ -46,8 +47,8 @@ public class BlackholeComponent extends Component {
         Entity blackhole = BossFactory.createBlackhole(spawnPos, target);
         ServiceLocator.getEntityService().register(blackhole);
     }
-    public void setAttack(boolean attack)
-    {
+
+    public void setAttack(boolean attack) {
         this.attack = attack;
     }
 }
