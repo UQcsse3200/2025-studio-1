@@ -1,8 +1,9 @@
 package com.csse3200.game.components.screens;
 
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.scenes.scene2d.ui.*;
-
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.csse3200.game.GdxGame;
 
 /**
@@ -21,22 +22,38 @@ import com.csse3200.game.GdxGame;
  * This class extends {@link BaseScreenDisplay} for shared UI helpers and lifecycle.
  */
 public class BaseEndScreenDisplays extends BaseScreenDisplay {
-    /** Title text displayed at the top (e.g., "Victory", "DEFEATED"). */
+    /**
+     * Title text displayed at the top (e.g., "Victory", "DEFEATED").
+     */
     private final String titleText;
-    /** Colour applied to the title text. */
-    private final Color  titleColor;
-    /** Label for the primary action button (e.g., "Continue", "Try Again"). */
+    /**
+     * Colour applied to the title text.
+     */
+    private final Color titleColor;
+    /**
+     * Label for the primary action button (e.g., "Continue", "Try Again").
+     */
     private final String primaryText;
-    /** Behaviour executed when the primary action is invoked. */
+    /**
+     * Behaviour executed when the primary action is invoked.
+     */
     private final Runnable primaryAction;
-    /** Label for the secondary action button (defaults to "Main Menu"). */
+    /**
+     * Label for the secondary action button (defaults to "Main Menu").
+     */
     private final String secondaryText;
-    /** Behaviour executed when the secondary action is invoked. */
+    /**
+     * Behaviour executed when the secondary action is invoked.
+     */
     private final Runnable secondaryAction;
 
-    /** Reference to the round label for runtime updates. */
+    /**
+     * Reference to the round label for runtime updates.
+     */
     private Label roundLabelRef;
-    /** Reference to the time label for runtime updates. */
+    /**
+     * Reference to the time label for runtime updates.
+     */
     private Label timeLabelRef;
 
     /**
@@ -132,35 +149,45 @@ public class BaseEndScreenDisplays extends BaseScreenDisplay {
      *
      * @return title font scale (default {@code 3.0f})
      */
-    protected float titleFontScale() { return 3.0f; }
+    protected float titleFontScale() {
+        return 3.0f;
+    }
 
     /**
      * Font scale for informational labels (round/time).
      *
      * @return info label font scale (default {@code 3.0f})
      */
-    protected float infoFontScale() { return 3.0f; }
+    protected float infoFontScale() {
+        return 3.0f;
+    }
 
     /**
      * Font scale for button labels.
      *
      * @return button label font scale (default {@code 2.0f})
      */
-    protected float buttonLabelScale() { return 2.0f; }
+    protected float buttonLabelScale() {
+        return 2.0f;
+    }
 
     /**
      * Horizontal gap between the primary and secondary buttons.
      *
      * @return gap in pixels (default {@code 30f})
      */
-    protected float buttonsGap() { return 30f; }
+    protected float buttonsGap() {
+        return 30f;
+    }
 
     /**
      * Vertical padding applied beneath title and info blocks.
      *
      * @return padding in pixels (default {@code 50f})
      */
-    protected float blockPad() { return 50f; }
+    protected float blockPad() {
+        return 50f;
+    }
 
     /**
      * Formats seconds into {@code mm:ss}.

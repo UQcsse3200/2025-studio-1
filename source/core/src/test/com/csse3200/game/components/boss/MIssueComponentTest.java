@@ -16,10 +16,23 @@ import static org.junit.Assert.assertEquals;
 public class MIssueComponentTest {
 
     static class FixedTime extends GameTime {
-        private final float dt; private long now=0L;
-        FixedTime(float dt){ this.dt=dt; }
-        @Override public float getDeltaTime(){ return dt; }
-        @Override public long getTime(){ now += (long)(dt*1000f); return now; }
+        private final float dt;
+        private long now = 0L;
+
+        FixedTime(float dt) {
+            this.dt = dt;
+        }
+
+        @Override
+        public float getDeltaTime() {
+            return dt;
+        }
+
+        @Override
+        public long getTime() {
+            now += (long) (dt * 1000f);
+            return now;
+        }
     }
 
     @Before
@@ -29,7 +42,12 @@ public class MIssueComponentTest {
     }
 
     @After
-    public void tearDown() { try { ServiceLocator.clear(); } catch (Throwable ignored) {} }
+    public void tearDown() {
+        try {
+            ServiceLocator.clear();
+        } catch (Throwable ignored) {
+        }
+    }
 
     private static float getTimer(MissueAttackComponent c) throws Exception {
         Field f = MissueAttackComponent.class.getDeclaredField("timer");
@@ -48,7 +66,8 @@ public class MIssueComponentTest {
     public void disabled_timerNotAdvance_noSpawn() throws Exception {
         Entity boss = new Entity();
         MissueAttackComponent comp = new MissueAttackComponent();
-        boss.addComponent(comp); boss.create();
+        boss.addComponent(comp);
+        boss.create();
         comp.setAttack(false);
         comp.update();
         assertEquals(0f, getTimer(comp), 1e-6);

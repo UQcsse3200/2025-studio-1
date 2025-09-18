@@ -19,120 +19,122 @@ import com.csse3200.game.services.ServiceLocator;
  * {@link PhysicsContactListener }
  */
 public class PhysicsComponent extends Component {
-  private static final float GROUND_FRICTION = 5f;
-  private final PhysicsEngine physics;
-  private Body body;
-  private final BodyDef bodyDef = new BodyDef();
+    private static final float GROUND_FRICTION = 5f;
+    private final PhysicsEngine physics;
+    private Body body;
+    private final BodyDef bodyDef = new BodyDef();
 
-  /** Create a physics component with default settings. */
-  public PhysicsComponent() {
-    this(ServiceLocator.getPhysicsService().getPhysics());
-    this.prio = ComponentPriority.HIGH;
-  }
-
-  /**
-   * Create a physics component
-   *
-   * @param engine The physics engine to attach the component to
-   */
-  public PhysicsComponent(PhysicsEngine engine) {
-    this.physics = engine;
-    bodyDef.type = BodyType.DynamicBody;
-    bodyDef.fixedRotation = true;
-    bodyDef.linearDamping = GROUND_FRICTION;
-    bodyDef.angle = 0f;
-    bodyDef.active = false;
-  }
-
-  /**
-   * Set body type
-   *
-   * @param bodyType body type, default = dynamic
-   * @return self
-   */
-  public PhysicsComponent setBodyType(BodyType bodyType) {
-    if (body != null) {
-      body.setType(bodyType);
-    } else {
-      bodyDef.type = bodyType;
+    /**
+     * Create a physics component with default settings.
+     */
+    public PhysicsComponent() {
+        this(ServiceLocator.getPhysicsService().getPhysics());
+        this.prio = ComponentPriority.HIGH;
     }
-    return this;
-  }
 
-  /**
-   * Get the physics body.
-   *
-   * @return physics body if entity has been created, null otherwise.
-   */
-  public Body getBody() {
-    return body;
-  }
+    /**
+     * Create a physics component
+     *
+     * @param engine The physics engine to attach the component to
+     */
+    public PhysicsComponent(PhysicsEngine engine) {
+        this.physics = engine;
+        bodyDef.type = BodyType.DynamicBody;
+        bodyDef.fixedRotation = true;
+        bodyDef.linearDamping = GROUND_FRICTION;
+        bodyDef.angle = 0f;
+        bodyDef.active = false;
+    }
+
+    /**
+     * Set body type
+     *
+     * @param bodyType body type, default = dynamic
+     * @return self
+     */
+    public PhysicsComponent setBodyType(BodyType bodyType) {
+        if (body != null) {
+            body.setType(bodyType);
+        } else {
+            bodyDef.type = bodyType;
+        }
+        return this;
+    }
+
+    /**
+     * Get the physics body.
+     *
+     * @return physics body if entity has been created, null otherwise.
+     */
+    public Body getBody() {
+        return body;
+    }
 
     /**
      *
      */
-  @Override
-  public void create() {
-      System.out.println("PhysicsComponent.create() called for entity: " + entity);
-      if (body == null) {
-          body = physics.createBody(bodyDef);
-          System.out.println("Physics body created: " + body);
-      }
+    @Override
+    public void create() {
+        System.out.println("PhysicsComponent.create() called for entity: " + entity);
+        if (body == null) {
+            body = physics.createBody(bodyDef);
+            System.out.println("Physics body created: " + body);
+        }
 
-      Vector2 pos = entity.getPosition();
-      if (pos == null) {
-          pos = new Vector2(0, 0);
-      }
+        Vector2 pos = entity.getPosition();
+        if (pos == null) {
+            pos = new Vector2(0, 0);
+        }
 
-      body.setTransform(pos, 0f);
-      body.setActive(true);
+        body.setTransform(pos, 0f);
+        body.setActive(true);
 
-      BodyUserData userData = new BodyUserData();
-      userData.entity = this.entity;
-      body.setUserData(userData);
+        BodyUserData userData = new BodyUserData();
+        userData.entity = this.entity;
+        body.setUserData(userData);
 
-      entity.getEvents().addListener("setPosition", (Vector2 newPos) -> {
-          if (body != null) {
-              body.setTransform(newPos, 0f);
-          }
-      });
-  }
+        entity.getEvents().addListener("setPosition", (Vector2 newPos) -> {
+            if (body != null) {
+                body.setTransform(newPos, 0f);
+            }
+        });
+    }
 
-  /**
-   * Entity position needs to be updated to match the new physics position. This should happen
-   * before other updates, which may use the new position.
-   */
-  @Override
-  public void earlyUpdate() {
-    Vector2 bodyPos = body.getPosition();
-    // Don't notify position changes due to physics
-    entity.setPosition(bodyPos, false);
-  }
+    /**
+     * Entity position needs to be updated to match the new physics position. This should happen
+     * before other updates, which may use the new position.
+     */
+    @Override
+    public void earlyUpdate() {
+        Vector2 bodyPos = body.getPosition();
+        // Don't notify position changes due to physics
+        entity.setPosition(bodyPos, false);
+    }
 
-  @Override
-  public void dispose() {
-      if (body != null) {
-        // Destroy immediately on render thread to avoid overlap with next area's creations
-        physics.destroyBody(body);
-        body = null;
-      }
-  }
+    @Override
+    public void dispose() {
+        if (body != null) {
+            // Destroy immediately on render thread to avoid overlap with next area's creations
+            physics.destroyBody(body);
+            body = null;
+        }
+    }
 
-  @Override
-  public void setEnabled(boolean enabled) {
-    super.setEnabled(enabled);
-    body.setActive(enabled);
-  }
+    @Override
+    public void setEnabled(boolean enabled) {
+        super.setEnabled(enabled);
+        body.setActive(enabled);
+    }
 
-  public enum AlignX {
-    LEFT,
-    CENTER,
-    RIGHT
-  }
+    public enum AlignX {
+        LEFT,
+        CENTER,
+        RIGHT
+    }
 
-  public enum AlignY {
-    BOTTOM,
-    CENTER,
-    TOP
-  }
+    public enum AlignY {
+        BOTTOM,
+        CENTER,
+        TOP
+    }
 }

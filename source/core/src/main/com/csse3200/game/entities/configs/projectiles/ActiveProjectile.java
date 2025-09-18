@@ -25,6 +25,7 @@ public class ActiveProjectile extends Entity {
 
     /**
      * Sets the gravity strength of the projectile, used if set to ARC projectile type.
+     *
      * @param gravityStrength The strength of the gravity affecting the projectile
      */
     public void setGravityStrength(float gravityStrength) {
@@ -33,6 +34,7 @@ public class ActiveProjectile extends Entity {
 
     /**
      * Sets the target that the projectile will continuously follow, used if set to FOLLOW_TARGET projectile type.
+     *
      * @param target The target entity to follow/home into
      */
     public void setTarget(Entity target) {
@@ -41,6 +43,7 @@ public class ActiveProjectile extends Entity {
 
     /**
      * Sets the projectile type of this active projectile
+     *
      * @param type The type of this active projectile
      */
     public void setActiveProjectileType(ActiveProjectileTypes type) {
@@ -66,9 +69,15 @@ public class ActiveProjectile extends Entity {
         super.update();
 
         // Don't update it if any of the following parts are missing
-        if (physicsComponent == null) { return; }
-        if (renderComponent == null) { return; }
-        if (activeProjectileType == null) { return; }
+        if (physicsComponent == null) {
+            return;
+        }
+        if (renderComponent == null) {
+            return;
+        }
+        if (activeProjectileType == null) {
+            return;
+        }
 
         // Defines how the projectile moves over its lifetime
         switch (activeProjectileType) {

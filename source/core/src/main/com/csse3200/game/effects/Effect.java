@@ -19,7 +19,8 @@ public abstract class Effect {
      * {@code Effect} without requiring their own explicit
      * constructor if no initialization is needed.
      */
-    public Effect() {}
+    public Effect() {
+    }
 
     /**
      * Applies this effect to the given entity.
@@ -31,7 +32,7 @@ public abstract class Effect {
      *
      * @param entity the target entity
      * @return {@code true} if the effect was successfully applied,
-     *         {@code false} otherwise
+     * {@code false} otherwise
      */
     public abstract boolean apply(Entity entity);
 }

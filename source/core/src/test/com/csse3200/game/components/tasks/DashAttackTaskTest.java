@@ -15,7 +15,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -29,7 +28,7 @@ class DashAttackTaskTest {
         renderService.setDebug(mock(DebugRenderer.class));
         ServiceLocator.registerRenderService(renderService);
         GameTime gameTime = mock(GameTime.class);
-        when(gameTime.getDeltaTime()).thenReturn(20/1000f);
+        when(gameTime.getDeltaTime()).thenReturn(20 / 1000f);
         when(gameTime.getTime()).thenReturn(0L);
         ServiceLocator.registerTimeSource(gameTime);
         ServiceLocator.registerPhysicsService(new PhysicsService());
@@ -49,7 +48,7 @@ class DashAttackTaskTest {
         float initialDistance = entity.getPosition().dst(target.getPosition());
         // Run the game for a few cycles
         for (int i = 0; i < 200; i++) {
-            when(ServiceLocator.getTimeSource().getTime()).thenReturn( i * 20L);
+            when(ServiceLocator.getTimeSource().getTime()).thenReturn(i * 20L);
             entity.earlyUpdate();
             entity.update();
             ServiceLocator.getPhysicsService().getPhysics().update();
@@ -72,7 +71,7 @@ class DashAttackTaskTest {
         float initialDistance = entity.getPosition().dst(target.getPosition());
         // Run the game for a few cycles
         for (int i = 0; i < 100; i++) {
-            when(ServiceLocator.getTimeSource().getTime()).thenReturn( i * 20L);
+            when(ServiceLocator.getTimeSource().getTime()).thenReturn(i * 20L);
             entity.earlyUpdate();
             entity.update();
             ServiceLocator.getPhysicsService().getPhysics().update();

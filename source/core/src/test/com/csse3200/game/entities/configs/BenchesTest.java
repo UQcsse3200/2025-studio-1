@@ -3,6 +3,7 @@ package com.csse3200.game.entities.configs;
 import com.csse3200.game.entities.configs.benches.BenchConfig;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class BenchesTest {

@@ -5,9 +5,14 @@ import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
 import com.csse3200.game.extensions.GameExtension;
 import com.csse3200.game.services.ServiceLocator;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+
 import java.lang.reflect.Field;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -24,7 +29,9 @@ class ItemPickUpComponentTest {
     private InventoryComponent inventory;
     private ItemPickUpComponent pickup;
 
-    /** Two helper methods to let us test the code directly. */
+    /**
+     * Two helper methods to let us test the code directly.
+     */
 
     private static void setPrivate(Object obj, String fieldName, Object value) {
         try {

@@ -15,6 +15,7 @@ public enum Benches {
 
     /**
      * Constructor for Benches
+     *
      * @param config the config of the bench
      */
     Benches(BenchConfig config) {

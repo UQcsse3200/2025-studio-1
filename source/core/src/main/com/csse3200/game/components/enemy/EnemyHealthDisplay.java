@@ -25,7 +25,7 @@ public class EnemyHealthDisplay extends Component {
     private static final float BAR_WIDTH = 70f;
     private static final float BAR_HEIGHT = 5f;
     // Colours
-    private static final Color COLOR_BG  = Color.DARK_GRAY;
+    private static final Color COLOR_BG = Color.DARK_GRAY;
     private static final Color COLOR_HEALTH = Color.RED;
     protected Stage stage;
     // Vertical offset for positioning the health bar above the enemy sprite
@@ -35,7 +35,8 @@ public class EnemyHealthDisplay extends Component {
     private static final float WORLD_TO_STAGE_X = 129.4814725781657f;
     private static final float WORLD_TO_STAGE_Y = 135.3720388672149f;
 
-    public EnemyHealthDisplay() {}
+    public EnemyHealthDisplay() {
+    }
 
     public EnemyHealthDisplay(float offsetY) {
         this.offsetY = offsetY;
@@ -63,6 +64,7 @@ public class EnemyHealthDisplay extends Component {
     /**
      * Updates the enemy's health on the UI.
      * Also update private variable currentHealth for testing purpose.
+     *
      * @param health enemy health
      */
     public void updateEnemyHealthUI(int health) {
@@ -82,7 +84,9 @@ public class EnemyHealthDisplay extends Component {
         return new TextureRegionDrawable(new TextureRegion(texture));
     }
 
-    /** Creates a simple horizontal bar style with a colored fill and dark background. */
+    /**
+     * Creates a simple horizontal bar style with a colored fill and dark background.
+     */
     private ProgressBar.ProgressBarStyle makeBarStyle(Color fill, float barHeight) {
         ProgressBar.ProgressBarStyle style = new ProgressBar.ProgressBarStyle();
         style.background = makeColorDrawable(COLOR_BG);
@@ -124,7 +128,11 @@ public class EnemyHealthDisplay extends Component {
         if (healthBar != null) healthBar.remove();
     }
 
-    public int getMaxHealth() { return maxHealth; }
+    public int getMaxHealth() {
+        return maxHealth;
+    }
 
-    public int getCurrentHealth() { return currentHealth; }
+    public int getCurrentHealth() {
+        return currentHealth;
+    }
 }

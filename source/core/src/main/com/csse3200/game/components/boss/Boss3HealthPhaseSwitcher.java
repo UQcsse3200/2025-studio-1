@@ -15,17 +15,14 @@ import java.util.List;
 
 /**
  * A component that switches Boss-3's rendering from a static PNG
- *
+ * <p>
  * This allows the boss to visually "crack" or change form at 50%, 40%, and 25% health.
  * The atlas is pre-attached during entity creation, but disabled until triggered.
- *
+ * <p>
  * The thresholds are ratios of current health / max health.
  */
 public class Boss3HealthPhaseSwitcher extends Component {
-    private static class Phase {
-        final float threshold;
-        final String animName;
-        Phase(float t, String n) { threshold = t; animName = n; }
+    private record Phase(float threshold, String animName) {
     }
 
     private final String atlasPath;
@@ -65,7 +62,7 @@ public class Boss3HealthPhaseSwitcher extends Component {
 
     /**
      * @return Current health ratio (0.0–1.0) of the boss entity,
-     *         or 1.0 if combat stats are missing.
+     * or 1.0 if combat stats are missing.
      */
     private float getHealthRatio() {
         CombatStatsComponent stats = entity.getComponent(CombatStatsComponent.class);
