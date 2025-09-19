@@ -5,7 +5,6 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.csse3200.game.areas.*;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.Weapons;
-import com.csse3200.game.entities.factories.items.WeaponsFactory;
 import com.csse3200.game.entities.factories.items.WorldPickUpFactory;
 import com.csse3200.game.physics.components.PhysicsComponent;
 import org.slf4j.Logger;
@@ -103,12 +102,13 @@ public class ItemSpawner {
 
 
     /**
-     * Creates an world pickable item entity based on the provided type
-     * This method currently supports weapon types defined in the Weapons enum
-     * Additional item types like consumables, perishables, etc. can be added accordingly
+     * Creates a new world-pickable item entity from the given type string.
+     * If the type matches a {@link Weapons} enum constant, a corresponding
+     * weapon pickup entity is created via {@link WorldPickUpFactory}.
      *
      * @param type which is the type of item to be created
-     * @return the created item entity or null if the type is unknown
+     * @return A new {@link Entity} representing the item, or {@code null} if the
+     * type does not match any known item.
      */
     protected Entity makeItem(String type) {
         try {
