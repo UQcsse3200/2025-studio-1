@@ -259,12 +259,15 @@ public class ForestGameArea extends GameArea {
     loadAssets();
     displayUI();
     spawnTerrain();
+
+
+    player = spawnPlayer();
+    ServiceLocator.registerPlayer(player);
+
     spawnComputerBench();
     spawnHealthBench();
     spawnSpeedBench();
 
-    player = spawnPlayer();
-    ServiceLocator.registerPlayer(player);
     spawnFloor();
     spawnBottomRightDoor();
     spawnMarblePlatforms();
