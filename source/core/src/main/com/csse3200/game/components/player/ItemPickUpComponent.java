@@ -14,6 +14,7 @@ import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.physics.BodyUserData;
 import com.csse3200.game.physics.components.PhysicsComponent;
 import com.csse3200.game.services.ServiceLocator;
+import com.csse3200.game.entities.factories.items.WorldPickUpFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -122,15 +123,37 @@ public class ItemPickUpComponent extends Component {
             logger.warn("pickUpItem called with null item");
             return;
         }
+        ItemComponent ic = item.getComponent(ItemComponent.class);
+        String tex = (ic != null) ? ic.getTexture() : null;
+        if (tex == null) {
+            logger.warn("Pickup has no ItemComponent/texture");
+            return;
+        }
 
-        boolean added = inventory.addItem(item);
+        Entity weapon = weaponFromTexture(tex);
+        if (weapon == null) {
+            logger.warn("Unknown pickup texture {}, ignoring", ic.getTexture());
+            return;
+        }
+
+        boolean added = inventory.addItem(weapon);
         if (added) {
             item.dispose();
             targetItem = null;
             logger.info("Picked up item and added to inventory");
         } else {
+            weapon.dispose();
             logger.info("Inventory full. Cannot pick up item");
         }
+    }
+
+    private Entity weaponFromTexture(String texture) {
+        for (Weapons w : Weapons.values()) {
+            if (texture.equals(w.getConfig().texturePath)) {
+                return WeaponsFactory.createWeapon(w);
+            }
+        }
+        return null;
     }
 
     /**
@@ -187,7 +210,8 @@ public class ItemPickUpComponent extends Component {
             return;
         }
         // Attempt to recreate a new item entity from the stored texture
-        Entity newItem = createItemFromTexture(tex);
+        //Entity newItem = createItemFromTexture(tex);
+        Entity newItem = WorldPickUpFactory.createPickupFromTexture(tex);
         if (newItem == null) {
             return;
         }
