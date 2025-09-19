@@ -6,6 +6,7 @@ import com.csse3200.game.areas.*;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.Weapons;
 import com.csse3200.game.entities.factories.items.WeaponsFactory;
+import com.csse3200.game.entities.factories.items.WorldPickUpFactory;
 import com.csse3200.game.physics.components.PhysicsComponent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -102,7 +103,7 @@ public class ItemSpawner {
 
 
     /**
-     * Creates an item entity based on the provided type
+     * Creates an world pickable item entity based on the provided type
      * This method currently supports weapon types defined in the Weapons enum
      * Additional item types like consumables, perishables, etc. can be added accordingly
      *
@@ -112,9 +113,8 @@ public class ItemSpawner {
     protected Entity makeItem(String type) {
         try {
             Weapons weapon = Weapons.valueOf(type.toUpperCase());
-            return WeaponsFactory.createWeapon(weapon);
+            return WorldPickUpFactory.createWeaponPickup(weapon);
         } catch (IllegalArgumentException e) {
-            //try consumables/perishables(other items)
             switch (type.toLowerCase()) {
                 default:
                     logger.warn("Unknown item type: {}", type);
