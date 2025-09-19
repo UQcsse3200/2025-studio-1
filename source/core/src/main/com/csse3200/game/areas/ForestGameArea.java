@@ -11,6 +11,7 @@ import com.csse3200.game.components.KeycardGateComponent;
 import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import com.csse3200.game.components.items.ItemHoldComponent;
 import com.csse3200.game.components.player.InventoryComponent;
+import com.csse3200.game.components.screens.games.PoolScreenDisplay;
 import com.csse3200.game.components.shop.CatalogService;
 import com.csse3200.game.components.shop.ShopDemo;
 import com.csse3200.game.components.shop.ShopManager;
@@ -310,6 +311,10 @@ public class ForestGameArea extends GameArea {
         spawnEntity(keycard);
 
         spawnItems();
+
+        Entity poolUi = new Entity()
+                .addComponent(new PoolScreenDisplay());
+        spawnEntity(poolUi);
     }
 
     private void spawnRobots() {
