@@ -4,7 +4,6 @@ import com.csse3200.game.components.items.ItemComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
 import com.csse3200.game.extensions.GameExtension;
-import com.csse3200.game.physics.PhysicsEngine;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,14 +12,10 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import static org.mockito.Mockito.*;
-import static org.mockito.ArgumentMatchers.*;
-
 import com.badlogic.gdx.graphics.Texture;
 import com.csse3200.game.physics.PhysicsService;
-
-import java.lang.reflect.Field;
-
 import static org.junit.jupiter.api.Assertions.*;
+import java.lang.reflect.Field;
 
 /**
  * Unit tests for ItemPickUpComponent focusing on event-driven behaviour:
@@ -66,8 +61,11 @@ class ItemPickUpComponentTest {
         pickup = new ItemPickUpComponent(inventory);
         ServiceLocator.registerEntityService(new EntityService());
 
+        // Create a mock ResourceService
         ResourceService rs = mock(ResourceService.class);
+        // Make getAsset to always return a mock Texture when asked for any texture path
         when(rs.getAsset(anyString(), eq(Texture.class))).thenReturn(mock(Texture.class));
+        // Register the mocked ResourceService and PhysicsService
         ServiceLocator.registerResourceService(rs);
         ServiceLocator.registerPhysicsService(mock(PhysicsService.class));
 
