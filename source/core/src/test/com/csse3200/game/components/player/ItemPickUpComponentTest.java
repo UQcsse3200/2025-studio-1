@@ -4,12 +4,19 @@ import com.csse3200.game.components.items.ItemComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
 import com.csse3200.game.extensions.GameExtension;
+import com.csse3200.game.physics.PhysicsEngine;
+import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import static org.mockito.Mockito.*;
+import static org.mockito.ArgumentMatchers.*;
+
+import com.badlogic.gdx.graphics.Texture;
+import com.csse3200.game.physics.PhysicsService;
 
 import java.lang.reflect.Field;
 
@@ -59,6 +66,11 @@ class ItemPickUpComponentTest {
         pickup = new ItemPickUpComponent(inventory);
         ServiceLocator.registerEntityService(new EntityService());
 
+        ResourceService rs = mock(ResourceService.class);
+        when(rs.getAsset(anyString(), eq(Texture.class))).thenReturn(mock(Texture.class));
+        ServiceLocator.registerResourceService(rs);
+        ServiceLocator.registerPhysicsService(mock(PhysicsService.class));
+
         player = new Entity()
                 .addComponent(inventory)
                 .addComponent(pickup);
@@ -72,7 +84,9 @@ class ItemPickUpComponentTest {
         @Test
         @DisplayName("Picking up a valid target item adds it to inventory and clears target")
         void pickUpAddsItemAndClearsTarget() {
-            Entity worldItem = new Entity().addComponent(new ItemComponent());
+            var ic = new ItemComponent();
+            ic.setTexture("images/pistol.png");
+            Entity worldItem = new Entity().addComponent(ic);
             worldItem.create();
 
             // Simulate collision target present
@@ -81,7 +95,12 @@ class ItemPickUpComponentTest {
             player.getEvents().trigger("pick up");
 
             assertEquals(1, inventory.getSize(), "Item should be added to inventory");
-            assertSame(worldItem, inventory.get(0), "First slot should contain picked up item");
+
+            Entity stored = inventory.get(0);
+            assertNotNull(stored, "Inventory slot 0 should be populated");
+            assertNotSame(worldItem, stored, "Stored entity should be a created weapon, not the world shell");
+            assertNotNull(stored.getComponent(ItemComponent.class),
+                    "Stored entity should have ItemComponent (weapon)");
 
             assertNull(getPrivate(pickup, "targetItem"), "targetItem should be cleared after pickup");
         }
