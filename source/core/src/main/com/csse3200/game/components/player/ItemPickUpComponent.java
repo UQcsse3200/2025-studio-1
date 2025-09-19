@@ -226,8 +226,7 @@ public class ItemPickUpComponent extends Component {
             logger.debug("Drop: no texture info on item; skipping world respawn");
             return;
         }
-        // Attempt to recreate a new item entity from the stored texture
-        //Entity newItem = createItemFromTexture(tex);
+        // Attempt to recreate a new world-pickable item entity from the stored texture
         Entity newItem = WorldPickUpFactory.createPickupFromTexture(tex);
         if (newItem == null) {
             return;
