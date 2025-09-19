@@ -102,8 +102,10 @@ public class StationComponent extends Component {
 
     @Override
     public void create() {
+        setPlayer(ServiceLocator.getPlayer());
         entity.getEvents().addListener("collisionStart", this::onCollisionStart);
         entity.getEvents().addListener("collisionEnd", this::onCollisionEnd);
+        ServiceLocator.getPlayer().getEvents().addListener("interact", this::upgrade);
 
         //Font
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(
@@ -136,7 +138,6 @@ public class StationComponent extends Component {
         if (otherEntity.getComponent(PlayerActions.class) != null) {
             player = otherEntity;
             playerNear = true;
-            otherEntity.getEvents().addListener("interact", this::upgrade);
             buyPrompt.setVisible(true);
             float screenX = ServiceLocator.getRenderService().getStage().getWidth() / 2f;
             float screenY = ServiceLocator.getRenderService().getStage().getHeight() / 2f;
@@ -155,8 +156,6 @@ public class StationComponent extends Component {
         if (!(data instanceof BodyUserData userData)) return;
         Entity otherEntity = userData.entity;
         if (otherEntity.getComponent(PlayerActions.class) != null) {
-            otherEntity.getEvents().removeListener("interact", this::upgrade);
-
             playerNear = false;
             buyPrompt.setVisible(false);
         }
