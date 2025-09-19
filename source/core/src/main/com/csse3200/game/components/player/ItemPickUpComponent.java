@@ -113,8 +113,16 @@ public class ItemPickUpComponent extends Component {
     }
 
     /**
-     * Attempts to add an item to the player's inventory.
-     * Clears the target item reference if successful.
+     * Attempts to convert the specified world item into an inventory item
+     * and add it to the player's inventory.
+     * The method checks for an {@link ItemComponent} and its texture path,
+     * maps the texture to a known weapon type weaponFromTexture(String),
+     * and creates a new weapon entity for storage in the inventory.
+     * - If the item is successfully added, the original world entity is disposed
+     * and the active targetItem reference is cleared.
+     * - If the inventory is full, the newly created weapon entity is disposed,
+     * and the world item remains untouched.
+     * - If the texture is missing or unknown, the pickup attempt is ignored.
      *
      * @param item that player is currently touching
      */
@@ -147,6 +155,15 @@ public class ItemPickUpComponent extends Component {
         }
     }
 
+    /**
+     * Resolves a texture path string into a corresponding weapon entity.
+     * This method compares the given texture path against the Weapons
+     * enum configuration and, if matched, creates the appropriate weapon
+     * using the {@link WeaponsFactory}.
+     * @param texture The texture file path associated with the world item.
+     * @return A new {@link Entity} representing the weapon, or null if the
+     * texture does not correspond to any known weapon type.
+     */
     private Entity weaponFromTexture(String texture) {
         for (Weapons w : Weapons.values()) {
             if (texture.equals(w.getConfig().texturePath)) {
