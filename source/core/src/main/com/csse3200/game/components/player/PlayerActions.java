@@ -186,9 +186,7 @@ public class PlayerActions extends Component {
             if (crouching && touchingGround()) {
                 maxX = CROUCH_SPEED.x;
             } else {
-                boolean allowSprint = (
-                        sprinting && touchingGround() && stamina.hasStamina(SPRINT_COST)
-                );
+                boolean allowSprint = (sprinting && touchingGround() && stamina.hasStamina(SPRINT_COST));
                 maxX = allowSprint ? SPRINT_SPEED.x : MAX_SPEED.x;
             }
             targetVx = walkDirection.x * maxX;
@@ -385,53 +383,45 @@ public class PlayerActions extends Component {
      * Fires a projectile towards the mouse cursor.
      */
     void shoot() {
-        if (ServiceLocator.getTimeSource().isPaused() || timesinceLastReload < 1.5f)
-            return;
-
-        WeaponsStatsComponent weapon = getCurrentWeaponStats();
-        if (weapon == null) {
-            System.out.println("No weapon");
-            return;
-        }
+        if (ServiceLocator.getTimeSource().isPaused() || timesinceLastReload < 1.5f) return;
 
         InventoryComponent inventory = entity.getComponent(InventoryComponent.class);
-        Entity gun = inventory.getCurrItem();
-
+        Entity gun = inventory.getCurrSlot();
         if (gun == null) {
             System.out.println("No gun");
             return;
         }
-
+        WeaponsStatsComponent gunStats = gun.getComponent(WeaponsStatsComponent.class);
+        if (gunStats == null) {
+            System.out.println("No weapon stats");
+            return;
+        }
         MagazineComponent mag = gun.getComponent(MagazineComponent.class);
-        // Check for cooldown, defaulting to zero if no current weapon
 
         if (mag == null) {
             System.out.println("No mag");
             return;
         }
+        // Check for cooldown, defaulting to zero if no current weapon
         mag.update();
-        float coolDown = weapon.getCoolDown();
+        float coolDown = gunStats.getCoolDown();
         if (this.timeSinceLastAttack < coolDown) {
             System.out.println("cooldown: " + this.timeSinceLastAttack);
             return;
         }
 
         if (mag.getCurrentAmmo() <= 0) {
-            Sound attackSound = ServiceLocator.getResourceService()
-                    .getAsset("sounds/shot_failed.mp3", Sound.class);
+            Sound attackSound = ServiceLocator.getResourceService().getAsset("sounds/shot_failed.mp3", Sound.class);
             attackSound.play();
             return;
         }
 
-
-        Sound attackSound = ServiceLocator.getResourceService()
-                .getAsset("sounds/laser_blast.mp3", Sound.class);
+        Sound attackSound = ServiceLocator.getResourceService().getAsset("sounds/laser_blast.mp3", Sound.class);
         attackSound.play();
 
-        Entity bullet = ProjectileFactory.createPistolBullet(weapon);
+        Entity bullet = ProjectileFactory.createPistolBullet(gunStats);
         Vector2 origin = new Vector2(entity.getPosition());
-        bullet.setPosition(new Vector2(origin.x - bullet.getScale().x / 2f + 2f,
-                origin.y + 0.6f - bullet.getScale().y / 2f));
+        bullet.setPosition(new Vector2(origin.x - bullet.getScale().x / 2f + 2f, origin.y + 0.6f - bullet.getScale().y / 2f));
         com.csse3200.game.areas.GameArea area = ServiceLocator.getGameArea();
         if (area != null) {
             area.spawnEntity(bullet);
@@ -454,8 +444,7 @@ public class PlayerActions extends Component {
      * Performs a melee attack against nearby enemies.
      */
     void attack() {
-        if (ServiceLocator.getTimeSource().isPaused())
-            return;
+        if (ServiceLocator.getTimeSource().isPaused()) return;
         WeaponsStatsComponent weapon = getCurrentWeaponStats();
         float coolDown = weapon != null ? weapon.getCoolDown() : 0;
         if (this.timeSinceLastAttack < coolDown) return;
@@ -536,10 +525,10 @@ public class PlayerActions extends Component {
 
 
         InventoryComponent inventory = entity.getComponent(InventoryComponent.class);
-        Entity equippedItem = inventory.getCurrItem();
+        Entity gun = inventory.getCurrSlot();
 
-        if (equippedItem != null) {
-            MagazineComponent mag = equippedItem.getComponent(MagazineComponent.class);
+        if (gun != null) {
+            MagazineComponent mag = gun.getComponent(MagazineComponent.class);
             if (mag != null) {
 
                 if (timesinceLastReload <= 1.5f) {
@@ -550,11 +539,9 @@ public class PlayerActions extends Component {
                 Sound reloadSound;
 
                 if (mag.reload(entity)) {
-                    reloadSound = ServiceLocator.getResourceService()
-                            .getAsset("sounds/reload.mp3", Sound.class);
+                    reloadSound = ServiceLocator.getResourceService().getAsset("sounds/reload.mp3", Sound.class);
                 } else {
-                    reloadSound = ServiceLocator.getResourceService()
-                            .getAsset("sounds/shot_failed.mp3", Sound.class);
+                    reloadSound = ServiceLocator.getResourceService().getAsset("sounds/shot_failed.mp3", Sound.class);
                 }
 
                 reloadSound.play();
@@ -658,8 +645,7 @@ public class PlayerActions extends Component {
 
         PhysicsComponent physics = currentWeapon.getComponent(PhysicsComponent.class);
         if (physics == null) {
-            System.out.println("Weapon has no PhysicsComponent," +
-                    "\nupdating position directly");
+            System.out.println("Weapon has no PhysicsComponent," + "\nupdating position directly");
             // Directly update visual position without physics:
             Vector2 playerPos = entity.getPosition();
             if (facingRight) {
@@ -672,8 +658,7 @@ public class PlayerActions extends Component {
 
         Body body = physics.getBody();
         if (body == null) {
-            System.out.println("Weapon's PhysicsComponent body is null," +
-                    "\nskipping physics-based position update");
+            System.out.println("Weapon's PhysicsComponent body is null," + "\nskipping physics-based position update");
             return; // Don't update position through physics if body not created
         }
 
