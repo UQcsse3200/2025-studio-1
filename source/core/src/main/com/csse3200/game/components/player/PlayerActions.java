@@ -66,6 +66,7 @@ public class PlayerActions extends Component {
 
     // Tracks time since last attack for cooldown purposes
     private float timeSinceLastAttack = 0;
+    private float timesinceLastReload = 0;
 
     private Camera camera;
 
@@ -129,6 +130,7 @@ public class PlayerActions extends Component {
         }
 
         timeSinceLastAttack += ServiceLocator.getTimeSource().getDeltaTime();
+        timesinceLastReload += ServiceLocator.getTimeSource().getDeltaTime();
     }
 
     /**
@@ -383,11 +385,12 @@ public class PlayerActions extends Component {
      * Fires a projectile towards the mouse cursor.
      */
     void shoot() {
-        if (ServiceLocator.getTimeSource().isPaused())
+        if (ServiceLocator.getTimeSource().isPaused() || timesinceLastReload < 1.5f)
             return;
 
         WeaponsStatsComponent weapon = getCurrentWeaponStats();
         if (weapon == null) {
+            System.out.println("No weapon");
             return;
         }
 
@@ -395,6 +398,7 @@ public class PlayerActions extends Component {
         Entity gun = inventory.getCurrItem();
 
         if (gun == null) {
+            System.out.println("No gun");
             return;
         }
 
@@ -402,10 +406,13 @@ public class PlayerActions extends Component {
         // Check for cooldown, defaulting to zero if no current weapon
 
         if (mag == null) {
+            System.out.println("No mag");
             return;
         }
+        mag.update();
         float coolDown = weapon.getCoolDown();
-        if (this.timeSinceLastAttack < coolDown || mag.reloading()) {
+        if (this.timeSinceLastAttack < coolDown) {
+            System.out.println("cooldown: " + this.timeSinceLastAttack);
             return;
         }
 
@@ -501,7 +508,6 @@ public class PlayerActions extends Component {
     }
 
     /**
-     *
      * @return the max speed vector
      */
     public Vector2 getMaxSpeed() {
@@ -509,7 +515,6 @@ public class PlayerActions extends Component {
     }
 
     /**
-     *
      * @return the crouch speed
      */
     public Vector2 getCrouchSpeed() {
@@ -517,7 +522,6 @@ public class PlayerActions extends Component {
     }
 
     /**
-     *
      * @return the sprint speed
      */
     public Vector2 getSprintSpeed() {
@@ -538,7 +542,7 @@ public class PlayerActions extends Component {
             MagazineComponent mag = equippedItem.getComponent(MagazineComponent.class);
             if (mag != null) {
 
-                if (mag.reloading()) {
+                if (timesinceLastReload <= 1.5f) {
 
                     return;
                 }
@@ -554,6 +558,7 @@ public class PlayerActions extends Component {
                 }
 
                 reloadSound.play();
+                timesinceLastReload = 0f;
             }
         }
     }
