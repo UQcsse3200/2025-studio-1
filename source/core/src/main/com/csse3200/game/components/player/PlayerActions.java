@@ -420,8 +420,9 @@ public class PlayerActions extends Component {
         attackSound.play();
 
         Entity bullet = ProjectileFactory.createPistolBullet(gunStats);
-        Vector2 origin = new Vector2(entity.getPosition());
-        bullet.setPosition(new Vector2(origin.x - bullet.getScale().x / 2f + 2f, origin.y + 0.6f - bullet.getScale().y / 2f));
+        Vector2 origin = new Vector2(entity.getCenterPosition());
+        bullet.setPosition(new Vector2(origin.x - bullet.getScale().x / 2f,
+                origin.y - bullet.getScale().y / 2f));
         com.csse3200.game.areas.GameArea area = ServiceLocator.getGameArea();
         if (area != null) {
             area.spawnEntity(bullet);
@@ -445,8 +446,16 @@ public class PlayerActions extends Component {
      */
     void attack() {
         if (ServiceLocator.getTimeSource().isPaused()) return;
-        WeaponsStatsComponent weapon = getCurrentWeaponStats();
-        float coolDown = weapon != null ? weapon.getCoolDown() : 0;
+        InventoryComponent inventory = entity.getComponent(InventoryComponent.class);
+        Entity melee = inventory.getCurrSlot();
+        if (melee == null) {
+            return;
+        }
+        WeaponsStatsComponent meleeStats = melee.getComponent(WeaponsStatsComponent.class);
+        if (meleeStats == null) {
+            return;
+        }
+        float coolDown = meleeStats != null ? meleeStats.getCoolDown() : 0;
         if (this.timeSinceLastAttack < coolDown) return;
 
         Sound attackSound = ServiceLocator.getResourceService().getAsset("sounds/Impact4.ogg", Sound.class);
