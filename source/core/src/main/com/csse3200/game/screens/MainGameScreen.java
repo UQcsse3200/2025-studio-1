@@ -30,6 +30,7 @@ import com.csse3200.game.services.GameTime;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.SaveLoadService;
 import com.csse3200.game.services.ServiceLocator;
+import com.csse3200.game.services.CountdownTimerService;
 import com.csse3200.game.ui.terminal.Terminal;
 import com.csse3200.game.ui.terminal.TerminalDisplay;
 import org.slf4j.Logger;
@@ -50,6 +51,8 @@ public class MainGameScreen extends ScreenAdapter {
     private final Renderer renderer;
     private final PhysicsEngine physicsEngine;
     private final GameArea gameArea;
+
+    private CountdownTimerService countdownTimer;
 
 
     private Entity pauseOverlay;
@@ -85,6 +88,8 @@ public class MainGameScreen extends ScreenAdapter {
         gameArea = new ForestGameArea(terrainFactory, renderer.getCamera());
         com.csse3200.game.services.ServiceLocator.registerGameArea(gameArea);
         gameArea.create();
+
+        countdownTimer = new CountdownTimerService(ServiceLocator.getTimeSource(), 60000);
     }
 
     @Override
@@ -111,6 +116,10 @@ public class MainGameScreen extends ScreenAdapter {
             } else {
                 hidePauseOverlay();
             }
+        }
+
+        if (countdownTimer.isTimeUP()) {
+            game.setScreen(ScreenType.DEATH_SCREEN);
         }
     }
 
