@@ -623,6 +623,25 @@ public abstract class GameArea implements Disposable {
 
         /** Ensure transition happens on the render thread to avoid race conditions **/
         Gdx.app.postRunnable(() -> {
+            /** Before disposing, cache player stamina if available **/
+            try {
+                Entity currentPlayer = ServiceLocator.getPlayer();
+                if (currentPlayer != null) {
+                    com.csse3200.game.components.player.StaminaComponent sc =
+                            currentPlayer.getComponent(com.csse3200.game.components.player.StaminaComponent.class);
+                    if (sc != null) {
+                        ServiceLocator.setCachedPlayerStamina(sc.getStamina());
+                    }
+                    com.csse3200.game.components.CombatStatsComponent hc =
+                            currentPlayer.getComponent(com.csse3200.game.components.CombatStatsComponent.class);
+                    if (hc != null) {
+                        ServiceLocator.setCachedPlayerHealth(hc.getHealth());
+                    }
+                }
+            } catch (Exception ignored) {
+                // Safe best-effort: do not crash transitions if anything goes wrong
+            }
+
             /** Phase 1: disable and dispose current area's entities **/
             for (Entity entity : areaEntities) {
                 entity.dispose();
