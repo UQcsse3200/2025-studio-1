@@ -277,6 +277,8 @@ public class ForestGameArea extends GameArea {
      */
     @Override
     public void create() {
+        this.baseScaling = 1f;
+
         ServiceLocator.registerGameArea(this);
         loadAssets();
         displayUI();
