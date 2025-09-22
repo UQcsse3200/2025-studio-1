@@ -30,15 +30,15 @@ You are welcome to explore, contribute, or adapt this project for your own learn
 Here’s a look at **Clash of Clankers** in action:
 
 <div style="text-align: center;">
-  <img src="assets/wiki/readme/screenshot1.png" alt="Main Menu" width="600"/>
+  <img src="assets/wiki/readme/mainmenu.png" alt="Main Menu" width="2056"/>
 </div>  
 
 <div style="text-align: center;">
-  <img src="assets/wiki/readme/screenshot2.png" alt="Gameplay Screenshot" width="600"/>
+  <img src="assets/wiki/readme/lobby.png" alt="Gameplay Screenshot" width="2056"/>
 </div>  
 
 <div style="text-align: center;">
-  <img src="assets/wiki/readme/demo.gif" alt="Gameplay Demo" width="600"/>
+  <img src="assets/wiki/readme/demo.gif" alt="Gameplay Demo" width="1280"/>
 </div>
 
 > (Screenshots and GIF to be replaced with actual gameplay)*
