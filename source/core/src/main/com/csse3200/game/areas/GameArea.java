@@ -41,6 +41,8 @@ public abstract class GameArea implements Disposable {
     protected List<Entity> areaEntities;
     protected TerrainFactory terrainFactory;
     protected CameraComponent cameraComponent;
+
+    protected float baseScaling = 0f;
     /**
      * Prevents re-entrant room transitions across areas
      */
