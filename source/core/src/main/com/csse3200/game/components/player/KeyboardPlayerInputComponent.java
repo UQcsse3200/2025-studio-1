@@ -20,6 +20,7 @@ public class KeyboardPlayerInputComponent extends InputComponent {
     private final Vector2 walkDirection = Vector2.Zero.cpy();
 
     private int focusedItem = -1;
+    private boolean equipped = false;
 
     private long timeSinceKeyPress = 0;
     private int doublePressKeyCode = -1;
@@ -61,20 +62,21 @@ public class KeyboardPlayerInputComponent extends InputComponent {
             case Keys.Q:
                 triggerReloadEvent();
                 return true;
+
             case Keys.SPACE:
                 triggerJumpEvent();
                 Sound jump = ServiceLocator.getResourceService().getAsset("sounds/jump.mp3", Sound.class);
                 jump.play();
                 entity.getEvents().trigger("anim");
                 return true;
-            case Keys.E:
 
+            case Keys.E:
                 if (!holding) {
                     triggerInteract();
                     holding = true;
                 }
-
                 return true;
+
             default:
                 return false;
         }
@@ -123,6 +125,7 @@ public class KeyboardPlayerInputComponent extends InputComponent {
      */
     @Override
     public boolean keyReleased(int keycode) {
+        final int OFFSET = 8;
         switch (keycode) {
             case Keys.A:
                 walkDirection.sub(Vector2Utils.LEFT);
@@ -142,24 +145,19 @@ public class KeyboardPlayerInputComponent extends InputComponent {
                 triggerStopCrouchingEvent();
                 return true;
             case Keys.NUM_1:
-                focusedItem = 0;
-                triggerSelectItem();
+                checkSlot(Keys.NUM_1 - OFFSET);
                 return true;
             case Keys.NUM_2:
-                focusedItem = 1;
-                triggerSelectItem();
+                checkSlot(Keys.NUM_2 - OFFSET);
                 return true;
             case Keys.NUM_3:
-                focusedItem = 2;
-                triggerSelectItem();
+                checkSlot(Keys.NUM_3 - OFFSET);
                 return true;
             case Keys.NUM_4:
-                focusedItem = 3;
-                triggerSelectItem();
+                checkSlot(Keys.NUM_4 - OFFSET);
                 return true;
             case Keys.NUM_5:
-                focusedItem = 4;
-                triggerSelectItem();
+                checkSlot(Keys.NUM_5 - OFFSET);
                 return true;
             case Keys.P:
             case Keys.E:
@@ -168,12 +166,6 @@ public class KeyboardPlayerInputComponent extends InputComponent {
                 return true;
             case Keys.R:
                 triggerDropFocused();
-                return true;
-            case Keys.I:  //attach weapon to player's body
-                equipCurrentWeapon();
-                return true;
-            case Keys.O:  //detach weapon to player's body
-                unequipCurrentWeapon();
                 return true;
             default:
                 return false;
@@ -301,11 +293,30 @@ public class KeyboardPlayerInputComponent extends InputComponent {
         entity.getEvents().trigger("interact");
     }
 
+    /**
+     * Checks if the player is holding an item to be equipped if an item is equipped
+     * then unequip's item in given slot, if an item is not currently equipped then
+     * equips item in given slot.
+     *
+     * @param slot The slot to check
+     */
+    public void checkSlot(int slot) {
+        if (focusedItem != slot)
+            unequipCurrentItem();
+
+        focusedItem = slot;
+        if (!equipped) {
+            triggerSelectItem();
+            equipCurrentItem();
+        } else {
+            unequipCurrentItem();
+        }
+    }
 
     /**
      * equips the player with the weapon that is in the selected slot
      */
-    public void equipCurrentWeapon() {
+    public void equipCurrentItem() {
         InventoryComponent inventory = entity.getComponent(InventoryComponent.class);
         PlayerActions actions = entity.getComponent(PlayerActions.class);
         if (inventory == null) return;  //no inventory
@@ -328,12 +339,13 @@ public class KeyboardPlayerInputComponent extends InputComponent {
         System.out.println("Equipped weapon from slot " + selectedSlot);
 
         actions.equipWeapon(weapon);
+        equipped = true;
     }
 
     /**
      * this function is to unequip the player
      */
-    public void unequipCurrentWeapon() {
+    public void unequipCurrentItem() {
         InventoryComponent inventory = entity.getComponent(InventoryComponent.class);
         PlayerActions actions = entity.getComponent(PlayerActions.class);
         if (inventory == null) return;
@@ -344,6 +356,7 @@ public class KeyboardPlayerInputComponent extends InputComponent {
         System.out.println("Unequipped weapon");
 
         actions.unequipWeapon();
+        equipped = false;
     }
 }
 
