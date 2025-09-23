@@ -2,7 +2,6 @@ package com.csse3200.game.components.difficultymenu;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
@@ -15,13 +14,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.csse3200.game.areas.difficulty.Difficulty;
 import com.csse3200.game.areas.difficulty.DifficultyType;
-import com.csse3200.game.components.mainmenu.MainMenuDisplay;
 
 /**
  * A ui component for displaying the Main menu.
  */
 public class DifficultyMenuDisplay extends UIComponent {
-    private static final Logger logger = LoggerFactory.getLogger(MainMenuDisplay.class);
+    private static final Logger logger = LoggerFactory.getLogger(DifficultyMenuDisplay.class);
     private static final float Z_INDEX = 2f;
     private Table table;
     private NeonStyles neon;
