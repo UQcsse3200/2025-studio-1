@@ -388,25 +388,21 @@ public class PlayerActions extends Component {
         InventoryComponent inventory = entity.getComponent(InventoryComponent.class);
         Entity gun = inventory.getCurrSlot();
         if (gun == null) {
-            System.out.println("No gun");
             return;
         }
         WeaponsStatsComponent gunStats = gun.getComponent(WeaponsStatsComponent.class);
         if (gunStats == null) {
-            System.out.println("No weapon stats");
             return;
         }
         MagazineComponent mag = gun.getComponent(MagazineComponent.class);
 
         if (mag == null) {
-            System.out.println("No mag");
             return;
         }
         // Check for cooldown, defaulting to zero if no current weapon
         mag.update();
         float coolDown = gunStats.getCoolDown();
         if (this.timeSinceLastAttack < coolDown) {
-            System.out.println("cooldown: " + this.timeSinceLastAttack);
             return;
         }
 
@@ -449,17 +445,14 @@ public class PlayerActions extends Component {
         InventoryComponent inventory = entity.getComponent(InventoryComponent.class);
         Entity melee = inventory.getCurrSlot();
         if (melee == null) {
-            System.out.println("no melle");
             return;
         }
         WeaponsStatsComponent meleeStats = melee.getComponent(WeaponsStatsComponent.class);
         if (meleeStats == null) {
-            System.out.println("no stats");
             return;
         }
         float coolDown = meleeStats != null ? meleeStats.getCoolDown() : 0;
         if (this.timeSinceLastAttack < coolDown) {
-            System.out.println("cooldown :(");
             return;
         }
         Sound attackSound = ServiceLocator.getResourceService().getAsset("sounds/Impact4.ogg", Sound.class);
