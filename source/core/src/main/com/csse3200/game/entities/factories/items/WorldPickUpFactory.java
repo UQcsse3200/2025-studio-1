@@ -17,7 +17,7 @@ public class WorldPickUpFactory {
         Entity pickup = new Entity()
                 .addComponent(new TextureRenderComponent(tex))
                 .addComponent(new PhysicsComponent())
-                .addComponent(new ColliderComponent())
+                //.addComponent(new ColliderComponent())
                 .addComponent(new HitboxComponent())
                 .addComponent(new ItemComponent());
 
