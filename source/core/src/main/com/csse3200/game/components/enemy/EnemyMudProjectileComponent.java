@@ -3,7 +3,6 @@ package com.csse3200.game.components.enemy;
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.components.Component;
 import com.csse3200.game.components.TouchAttackComponent;
-import com.csse3200.game.entities.Entity;
 import com.csse3200.game.physics.PhysicsLayer;
 import com.csse3200.game.rendering.TextureRenderComponent;
 import com.csse3200.game.services.ServiceLocator;
@@ -11,7 +10,7 @@ import com.csse3200.game.services.ServiceLocator;
 /**
  * Enemy mud projectile: Moves in a straight line with a set lifetime,
  * and automatically destroys itself when the lifetime expires.
- *
+ * <p>
  * Requires: The same Entity should already contain
  * TextureRenderComponent("images/mud.png") and TouchAttackComponent(PLAYER).
  */

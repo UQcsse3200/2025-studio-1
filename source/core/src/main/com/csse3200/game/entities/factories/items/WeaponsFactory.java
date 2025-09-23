@@ -3,16 +3,14 @@ package com.csse3200.game.entities.factories.items;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.csse3200.game.components.MagazineComponent;
-import com.csse3200.game.components.items.ItemHoldComponent;
-import com.csse3200.game.components.items.MeleeUseComponent;
-import com.csse3200.game.components.items.RangedUseComponent;
 import com.csse3200.game.components.WeaponsStatsComponent;
+import com.csse3200.game.components.attachments.BulletEnhancerComponent;
 import com.csse3200.game.components.attachments.LaserComponent;
-import com.csse3200.game.entities.Entity;
 import com.csse3200.game.components.items.ItemComponent;
+import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.ItemTypes;
 import com.csse3200.game.entities.configs.Weapons;
-import com.csse3200.game.entities.configs.weapons.RangedWeaponConfig;
+import com.csse3200.game.entities.configs.weapons.RifleConfig;
 import com.csse3200.game.entities.configs.weapons.WeaponConfig;
 import com.csse3200.game.rendering.AnimationRenderComponent;
 import com.csse3200.game.rendering.TextureRenderComponent;
@@ -59,6 +57,10 @@ public class WeaponsFactory {
                 // using TextureRenderWithRotationComponent to allow guns to follow cursor
                 weapon.addComponent(new TextureRenderWithRotationComponent(config.texturePath));
                 weapon.getComponent(TextureRenderComponent.class).disableComponent();
+                if (weaponType.getConfig() instanceof RifleConfig) {
+                    weapon.addComponent(new LaserComponent());
+                    weapon.addComponent(new BulletEnhancerComponent());
+                }
                 break;
             case MELEE:
                 item.setType(ItemTypes.MELEE);
@@ -73,8 +75,9 @@ public class WeaponsFactory {
 
     /**
      * Creates an animation component that can be used with a weapon.
+     *
      * @param atlasName Name of the animation atlas.
-     * @param player Current player.
+     * @param player    Current player.
      * @return An AnimationRenderComponent that can be attached to a weapon.
      */
     public static AnimationRenderComponent createAnimation(String atlasName, Entity player) {

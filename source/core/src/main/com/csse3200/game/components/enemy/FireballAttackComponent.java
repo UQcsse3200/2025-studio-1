@@ -3,8 +3,8 @@ package com.csse3200.game.components.enemy;
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.components.Component;
 import com.csse3200.game.entities.Entity;
-import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.entities.factories.characters.BossFactory;
+import com.csse3200.game.services.ServiceLocator;
 
 public class FireballAttackComponent extends Component {
     private final Entity target;
@@ -14,6 +14,7 @@ public class FireballAttackComponent extends Component {
     private final int damage;
 
     private float timer = 0f;
+    private boolean attack = true;
 
     public FireballAttackComponent(Entity target, float cooldown, float range,
                                    float speed, int damage) {
@@ -26,6 +27,9 @@ public class FireballAttackComponent extends Component {
 
     @Override
     public void update() {
+        if (!attack) {
+            return;
+        }
         timer -= ServiceLocator.getTimeSource().getDeltaTime();
         if (timer > 0) {
             return;
@@ -47,5 +51,9 @@ public class FireballAttackComponent extends Component {
         } else {
             ServiceLocator.getEntityService().register(fireball);
         }
+    }
+
+    public void setAttack(boolean attack) {
+        this.attack = attack;
     }
 }

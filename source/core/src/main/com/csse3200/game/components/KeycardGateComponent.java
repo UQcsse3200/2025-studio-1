@@ -13,7 +13,26 @@ import com.csse3200.game.physics.components.ColliderComponent;
  * has the required keycard level in their InventoryComponent.
  */
 public class KeycardGateComponent extends Component {
-    /** Initializes the gate with a required keycard level and an optional unlock callback. */
+    /**
+     * Global cheat: when true, all keycard checks are bypassed.
+     */
+    private static volatile boolean GLOBAL_OVERRIDE = false;
+
+    /**
+     * Enable/disable the global keycard-gate override.
+     */
+    public static void setGlobalOverride(boolean enabled) {
+        GLOBAL_OVERRIDE = enabled;
+    }
+
+    /**
+     * @return true if the global override is enabled.
+     */
+    public static boolean isGlobalOverride() {
+        return GLOBAL_OVERRIDE;
+    }
+
+    // --- existing fields ---
     private final int requiredLevel;
     private final Runnable onUnlock;
     private boolean unlocked = false;
@@ -25,29 +44,37 @@ public class KeycardGateComponent extends Component {
 
     @Override
     public void create() {
-        /** Registers a listener for collision events when the component is created. */
         entity.getEvents().addListener("collisionStart", this::onCollisionStart);
     }
 
     private void onCollisionStart(Fixture me, Fixture other) {
-        /** Handles collision logic: checks if the player has the required keycard level and unlocks the gate if true. */
         Object meUd = me.getBody().getUserData();
         Object otherUd = other.getBody().getUserData();
-
-        if (!(meUd instanceof BodyUserData) || !(otherUd instanceof BodyUserData)) {
-            return;
-        }
+        if (!(meUd instanceof BodyUserData) || !(otherUd instanceof BodyUserData)) return;
 
         Entity meEntity = ((BodyUserData) meUd).entity;
         Entity otherEntity = ((BodyUserData) otherUd).entity;
         if (meEntity == null || otherEntity == null) return;
         if (meEntity != this.entity) return;
 
+        // === cheat bypass ===
+        if (GLOBAL_OVERRIDE) {
+            if (!unlocked) {
+                unlock();
+                Gdx.app.log("KeycardGate", "Override enabled: gate unlocked (bypassing level " + requiredLevel + ")");
+                if (onUnlock != null) {
+                    Gdx.app.postRunnable(onUnlock);
+                }
+            }
+            return;
+        }
+
+        // === normal keycard check ===
         InventoryComponent inventory = otherEntity.getComponent(InventoryComponent.class);
         if (inventory != null) {
-            Gdx.app.log("KeycardGate", "Gate sees keycard level: " + inventory.getKeycardLevel());
-
-            if (inventory.getKeycardLevel() >= requiredLevel) {
+            int level = inventory.getKeycardLevel();
+            Gdx.app.log("KeycardGate", "Gate sees keycard level: " + level);
+            if (level >= requiredLevel) {
                 if (!unlocked) {
                     unlock();
                     Gdx.app.log("KeycardGate", "Gate unlocked. Allowing passage.");
@@ -62,7 +89,6 @@ public class KeycardGateComponent extends Component {
     }
 
     public void unlock() {
-        /** Sets the gate to unlocked and makes its collider non-blocking (sensor mode). */
         unlocked = true;
         ColliderComponent collider = entity.getComponent(ColliderComponent.class);
         if (collider != null) {
@@ -71,7 +97,6 @@ public class KeycardGateComponent extends Component {
     }
 
     public boolean isUnlocked() {
-        /** Returns whether the gate has already been unlocked. */
         return unlocked;
     }
 }

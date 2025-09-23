@@ -1,4 +1,4 @@
-package com.csse3200.game.components.player;
+package com.csse3200.game.components.enemy;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
@@ -9,8 +9,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.csse3200.game.components.Component;
 import com.csse3200.game.components.CombatStatsComponent;
+import com.csse3200.game.components.Component;
 import com.csse3200.game.services.ServiceLocator;
 
 import java.util.ArrayList;
@@ -29,7 +29,7 @@ public class BossStatusDisplay extends Component {
     private final List<Texture> disposableTextures = new ArrayList<>();
     private Table table;
     private ProgressBar healthBar;
-    private String bossName;
+    private final String bossName;
     private int maxHealth = 100;
     private String phase = "NORMAL";
 
@@ -69,9 +69,9 @@ public class BossStatusDisplay extends Component {
 
             float healthPercentage = (float) health / maxHealth;
             System.out.println("[BOSS UI] Health updated: " + health + "/" + maxHealth +
-                    " (" + (int)(healthPercentage * 100) + "%)");
+                    " (" + (int) (healthPercentage * 100) + "%)");
             // Change color to red when health drops to 50% or below
-            if (maxHealth > 0 && healthPercentage <= 0.5f) {
+            if (healthPercentage <= 0.5f) {
                 setHealthBarColor(Color.RED);
             } else {
                 setHealthBarColor(COLOR_HEALTH);

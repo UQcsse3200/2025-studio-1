@@ -13,6 +13,7 @@ public class KeyboardInputFactory extends InputFactory {
 
     /**
      * Creates an input handler for the player.
+     *
      * @return Player input handler
      */
     @Override

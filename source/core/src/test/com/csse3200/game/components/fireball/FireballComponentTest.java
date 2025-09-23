@@ -3,32 +3,43 @@ package com.csse3200.game.components.fireball;
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.components.enemy.FireballAttackComponent;
 import com.csse3200.game.entities.Entity;
-import com.csse3200.game.extensions.GameExtension;
 import com.csse3200.game.entities.EntityService;
+import com.csse3200.game.extensions.GameExtension;
 import com.csse3200.game.services.GameTime;
 import com.csse3200.game.services.ServiceLocator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ExtendWith(GameExtension.class)
 class FireballComponentTest {
     static class TestGameTime extends GameTime {
         private float dt = 0f;
-        void tick() { this.dt = (float) 0.1; }
-        @Override public float getDeltaTime() { return dt; }
+
+        void tick() {
+            this.dt = (float) 0.1;
+        }
+
+        @Override
+        public float getDeltaTime() {
+            return dt;
+        }
     }
+
     static class CountingEntityService extends EntityService {
         public int registered = 0;
+
         @Override
         public void register(Entity entity) {
             registered++;
         }
     }
+
     private TestGameTime time;
     private CountingEntityService entities;
+
     @BeforeEach
     void setUp() {
         time = new TestGameTime();
@@ -36,6 +47,7 @@ class FireballComponentTest {
         entities = new CountingEntityService();
         ServiceLocator.registerEntityService(entities);
     }
+
     @Test
     void doesNotShootWhenTargetOutOfRange() {
         Entity shooter = new Entity();

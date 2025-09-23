@@ -1,6 +1,7 @@
 package com.csse3200.game.entities.configs.consumables;
 
 import com.csse3200.game.effects.Effect;
+
 import java.util.ArrayList;
 
 public abstract class ConsumableConfig {
@@ -11,5 +12,6 @@ public abstract class ConsumableConfig {
     public String texturePath;
     public int maxStack = 1;  // 1 for no stack
 
-    public ConsumableConfig() {}
+    public ConsumableConfig() {
+    }
 }

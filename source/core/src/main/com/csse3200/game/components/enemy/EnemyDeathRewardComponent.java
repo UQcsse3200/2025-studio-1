@@ -36,7 +36,6 @@ public class EnemyDeathRewardComponent extends Component {
         playerInventory.addProcessor(rewardProcessor);
 
 
-
         //1/4 chance of enemy adding ammo to the player
         Random rand = new Random();
 

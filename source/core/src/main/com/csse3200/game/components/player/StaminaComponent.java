@@ -45,6 +45,7 @@ public class StaminaComponent extends Component {
 
     /**
      * Returns whether the player has enough stamina to perform the movement.
+     *
      * @param amount the stamina cost
      * @return if the player has sufficient stamina
      */
@@ -54,6 +55,7 @@ public class StaminaComponent extends Component {
 
     /**
      * Attempt to execute a movement.
+     *
      * @param amount the amount of stamina required.
      * @return whether the movement can be completed.
      */
@@ -76,6 +78,7 @@ public class StaminaComponent extends Component {
 
     /**
      * Updates the infiniteStamina parameter
+     *
      * @param infiniteStamina whether the player should have infinite stamina.
      */
     public void setInfiniteStamina(boolean infiniteStamina) {
@@ -122,7 +125,8 @@ public class StaminaComponent extends Component {
     private void startTask() {
         if (task != null) task.cancel();
         task = Timer.schedule(new Timer.Task() {
-            @Override public void run() {
+            @Override
+            public void run() {
                 tick();
             }
         }, TICK_SEC, TICK_SEC);
