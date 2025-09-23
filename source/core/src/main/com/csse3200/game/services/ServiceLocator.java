@@ -139,7 +139,6 @@ public class ServiceLocator {
         resourceService = null;
         gameArea = null;
         saveLoadService = null;
-        difficulty = null;
     }
 
     private static final com.csse3200.game.events.EventHandler globalEvents = new com.csse3200.game.events.EventHandler();
