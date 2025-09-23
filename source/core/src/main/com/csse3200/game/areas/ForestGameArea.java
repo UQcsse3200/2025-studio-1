@@ -292,12 +292,12 @@ public class ForestGameArea extends GameArea {
         spawnMarblePlatforms();
         spawnShopKiosk();
         SecureRandom random = new SecureRandom();
-//        int choice = random.nextInt(3);
-//        switch (choice) {
-//            case 0 -> spawnBoss2();
-//            case 1 -> spawnRobots();
-//            default -> spawnBoss3();
-//        }
+        int choice = random.nextInt(3);
+        switch (choice) {
+            case 0 -> spawnBoss2();
+            case 1 -> spawnRobots();
+            default -> spawnBoss3();
+        }
         playMusic();
         ItemSpawner itemSpawner = new ItemSpawner(this);
         itemSpawner.spawnItems(ItemSpawnConfig.forestmap());
