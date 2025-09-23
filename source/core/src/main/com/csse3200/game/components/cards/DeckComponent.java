@@ -23,8 +23,8 @@ public class DeckComponent extends Component {
         position = 0;
     }
 
-    public Card drawCard(Card card) {
-        return deck.get(position);
+    public Card drawCard() {
+        return deck.get(position++);
     }
 
     public void resetDeck() {

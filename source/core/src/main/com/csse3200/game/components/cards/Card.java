@@ -13,6 +13,14 @@ public class Card {
         return rank.getSymbol() + suit.getSymbol();
     }
 
+    public Suit getSuit() {
+        return suit;
+    }
+
+    public Rank getRank() {
+        return rank;
+    }
+
     public int getValue() {
         return rank.getValue();
     }
