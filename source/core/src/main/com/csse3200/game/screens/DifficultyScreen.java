@@ -6,7 +6,6 @@ import com.csse3200.game.components.difficultymenu.DifficultyMenuDisplay;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.input.InputDecorator;
 
-
 public class DifficultyScreen extends BaseScreen {
     public DifficultyScreen(GdxGame game) {
         super(game, "images/menu_background.png");
