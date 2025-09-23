@@ -7,6 +7,7 @@ import com.csse3200.game.extensions.GameExtension;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(GameExtension.class)
 class DifficultyTest {
@@ -31,12 +32,12 @@ class DifficultyTest {
      */
     @Test
     void roomProgression() {
-        assert 0f < difficultyNormal.getRoomDifficulty(1f);
-        assert difficultyNormal.getRoomDifficulty(1f) < difficultyNormal.getRoomDifficulty(2f);
-        assert difficultyNormal.getRoomDifficulty(2f) < difficultyNormal.getRoomDifficulty(5f);
-        assert difficultyNormal.getRoomDifficulty(5f) < difficultyNormal.getRoomDifficulty(9f);
-        assert difficultyNormal.getRoomDifficulty(9f) < difficultyNormal.getRoomDifficulty(10f);
-        assert difficultyNormal.getRoomDifficulty(10f) < 5f;
+        assertTrue(0f < difficultyNormal.getRoomDifficulty(1f));
+        assertTrue(difficultyNormal.getRoomDifficulty(1f) < difficultyNormal.getRoomDifficulty(2f));
+        assertTrue(difficultyNormal.getRoomDifficulty(2f) < difficultyNormal.getRoomDifficulty(5f));
+        assertTrue(difficultyNormal.getRoomDifficulty(5f) < difficultyNormal.getRoomDifficulty(9f));
+        assertTrue(difficultyNormal.getRoomDifficulty(9f) < difficultyNormal.getRoomDifficulty(10f));
+        assertTrue(difficultyNormal.getRoomDifficulty(10f) < 5f);
     }
 
     /**
@@ -49,11 +50,11 @@ class DifficultyTest {
         float diff3 = difficultyHard.getRoomDifficulty(2f);
         float diff4 = difficultyInsane.getRoomDifficulty(2f);
 
-        assert 0f < diff1
+        assertTrue(0f < diff1
                 && diff1 < diff2
                 && diff2 < diff3
                 && diff3 < diff4
-                && diff4 < 5f;
+                && diff4 < 5f);
     }
 
     /**
@@ -64,8 +65,8 @@ class DifficultyTest {
         float minDiff = difficultyEasy.getRoomDifficulty(1f);
         float maxDiff = difficultyInsane.getRoomDifficulty(10f);
 
-        assert 0 < minDiff
+        assertTrue(0 < minDiff
                 && minDiff < maxDiff
-                && maxDiff < 5f;
+                && maxDiff < 5f);
     }
 }
