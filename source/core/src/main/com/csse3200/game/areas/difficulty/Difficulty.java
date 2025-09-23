@@ -12,7 +12,7 @@ public class Difficulty {
      * Constructor, requires a set diffType from the 
      * difficultyType enum
      */
-    Difficulty(DifficultyType diffType) {
+    public Difficulty(DifficultyType diffType) {
         this.diffType = diffType;
     }
 

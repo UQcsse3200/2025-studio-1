@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
@@ -14,6 +15,7 @@ import com.csse3200.game.ui.NeonStyles;
 import com.csse3200.game.ui.UIComponent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import com.csse3200.game.areas.difficulty.Difficulty;
 import com.csse3200.game.areas.difficulty.DifficultyType;
 import com.csse3200.game.components.mainmenu.MainMenuDisplay;;
 
@@ -26,6 +28,7 @@ public class DifficultyMenuDisplay extends UIComponent {
     private Table table;
     private NeonStyles neon;
     private final GdxGame game;
+    private DifficultyType diffType;
 
     public DifficultyMenuDisplay(GdxGame game) {
         this.game = game;
@@ -39,7 +42,6 @@ public class DifficultyMenuDisplay extends UIComponent {
         super.create();
         neon = new NeonStyles(0.70f);
         addActors();
-
     }
 
     /**
@@ -53,13 +55,6 @@ public class DifficultyMenuDisplay extends UIComponent {
         // Column position
         float leftPad = stage.getWidth() * 0.12f;
         table.center().left().padLeft(leftPad);
-
-        // Logo image
-        Image title =
-                new Image(
-                        ServiceLocator.getResourceService()
-                                .getAsset("images/logo.png", Texture.class));
-        logger.debug("Logo image added");
 
         // Button sizing relative to screen
         float btnW = stage.getWidth() * 0.34f;
@@ -87,8 +82,7 @@ public class DifficultyMenuDisplay extends UIComponent {
                 new ChangeListener() {
                     @Override
                     public void changed(ChangeEvent changeEvent, Actor actor) {
-                        logger.debug("Difficulty set to easy");
-                        entity.getEvents().trigger("setDiffEasy");
+                        diffEasy();
                     }
                 });
 
@@ -96,8 +90,7 @@ public class DifficultyMenuDisplay extends UIComponent {
                 new ChangeListener() {
                     @Override
                     public void changed(ChangeEvent changeEvent, Actor actor) {
-                        logger.debug("Difficulty set to normal");
-                        entity.getEvents().trigger("setDiffNormal");
+                        diffNormal();
                     }
                 });
 
@@ -105,8 +98,7 @@ public class DifficultyMenuDisplay extends UIComponent {
                 new ChangeListener() {
                     @Override
                     public void changed(ChangeEvent changeEvent, Actor actor) {
-                        logger.debug("Difficulty set to hard");
-                        entity.getEvents().trigger("setDiffHard");
+                        diffHard();
                     }
                 });
 
@@ -114,8 +106,7 @@ public class DifficultyMenuDisplay extends UIComponent {
                 new ChangeListener() {
                     @Override
                     public void changed(ChangeEvent changeEvent, Actor actor) {
-                        logger.debug("Difficulty set to insane");
-                        entity.getEvents().trigger("setDiffInsane");
+                        diffInsane();
                     }
                 });
 
@@ -123,14 +114,11 @@ public class DifficultyMenuDisplay extends UIComponent {
                 new ChangeListener() {
                     @Override
                     public void changed(ChangeEvent changeEvent, Actor actor) {
-                        logger.debug("Exited Difficulty Set Screen");
-                        entity.getEvents().trigger("applyDiff");
+                        applyDiff();
                     }
                 });
 
         // Column layout
-        table.add(title).left().padBottom(40f).padLeft(-10f);
-        table.row();
         table.add(easyBtn).padTop(15f).left();
         table.row();
         table.add(normalBtn).padTop(15f).left();
@@ -151,6 +139,48 @@ public class DifficultyMenuDisplay extends UIComponent {
     @Override
     public float getZIndex() {
         return Z_INDEX;
+    }
+
+    /**
+     * Swaps difficulty to Easy.
+     */
+    private void diffEasy() {
+        logger.info("Difficulty set to Easy");
+        this.diffType = DifficultyType.EASY;
+    }
+
+    /**
+     * Swaps difficulty to Normal.
+     */
+    private void diffNormal() {
+        logger.info("Difficulty set to Normal");
+        this.diffType = DifficultyType.NORMAL;
+    }
+
+    /**
+     * Swaps difficulty to Hard.
+     */
+    private void diffHard() {
+        logger.info("Difficulty set to Hard");
+        this.diffType = DifficultyType.HARD;
+    }
+
+    /**
+     * Swaps difficulty to Insane.
+     */
+    private void diffInsane() {
+        logger.info("Difficulty set to Insane");
+        this.diffType = DifficultyType.INSANE;
+    }
+
+    /**
+     * Applies the difficulty to service locator
+     * and then switches back to main menu
+     */
+    private void applyDiff() {
+        logger.info("Difficulty Set and Applied");
+        ServiceLocator.registerDifficulty(new Difficulty(this.diffType));
+        game.setScreen(ScreenType.MAIN_MENU);
     }
 
     /**
