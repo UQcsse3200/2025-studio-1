@@ -6,6 +6,7 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.csse3200.game.areas.GameArea;
 import com.csse3200.game.components.Component;
+import com.csse3200.game.components.MagazineComponent;
 import com.csse3200.game.components.items.ItemComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.Weapons;
@@ -143,6 +144,11 @@ public class ItemPickUpComponent extends Component {
             logger.warn("Unknown pickup texture {}, ignoring", ic.getTexture());
             return;
         }
+
+        weapon.create();
+        // The two following lines of code were generate by ChatGPT
+        MagazineComponent mag = weapon.getComponent(MagazineComponent.class);
+        if (mag != null) mag.setTimeSinceLastReload(999f);
 
         boolean added = inventory.addItem(weapon);
         if (added) {
