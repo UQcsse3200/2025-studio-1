@@ -91,7 +91,7 @@ public class EnemyWaves extends Component {
         logger.info("EnemyWaves: spawning wave {} of {} (waveScale={}, baseScale={}, effective={})", waveNumber + 1, maxWaves, scalingFactor, baseScale, effectiveScale);
 
         // Change gameArea.getRoomNumber() to any number between 2 and 7 to get different enemies.
-        gameArea.spawnEnemies(gameArea.getRoomNumber(), baseEnemies, effectiveScale, player);
+        gameArea.spawnEnemies(gameArea.toString(), baseEnemies, effectiveScale, player);
 
         waveNumber++;
         scalingFactor += 0.25f; // incremental per-wave multiplier
