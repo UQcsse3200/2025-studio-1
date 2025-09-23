@@ -44,13 +44,20 @@ public class ProjectileFactory {
         ProjectileConfig config = new ProjectileConfig(target, texturePath);
 
         // Create the projectile and add components
-        Entity projectile = new Entity().addComponent(new PhysicsComponent()).addComponent(new PhysicsProjectileComponent()).addComponent(new WeaponsStatsComponent(source.getBaseAttack())).addComponent(new TextureRenderWithRotationComponent(config.texturePath)).addComponent(new ColliderComponent()).addComponent(new HitboxComponent().setLayer(config.projectileType)).addComponent(new TouchAttackComponent(config.target, 1f));
-
+        Entity projectile = new Entity()
+                .addComponent(new PhysicsComponent())
+                .addComponent(new PhysicsProjectileComponent())
+                .addComponent(new WeaponsStatsComponent(source.getBaseAttack()))
+                .addComponent(new TextureRenderWithRotationComponent(config.texturePath))
+                .addComponent(new ColliderComponent())
+                .addComponent(new HitboxComponent().setLayer(config.projectileType))
+                .addComponent(new TouchAttackComponent(config.target, 1f));
         projectile.getComponent(PhysicsComponent.class).setBodyType(BodyDef.BodyType.DynamicBody);
 
         // Ensure the collision is only checked between the projectile and the target
         ColliderComponent collider = projectile.getComponent(ColliderComponent.class);
-        collider.setLayer(config.projectileType).setFilter(config.projectileType, config.target);
+        collider.setLayer(config.projectileType)
+                .setFilter(config.projectileType, config.target);
 
         return projectile;
     }
@@ -64,18 +71,27 @@ public class ProjectileFactory {
      * @param gravityStrength The strength of gravity affecting the projectile during its lifetime.
      * @return An entity for the projectile
      */
-    public static ActiveProjectile createArcProjectile(ProjectileTarget target, WeaponsStatsComponent source, String texturePath, float gravityStrength) {
+    public static ActiveProjectile createArcProjectile(ProjectileTarget target, WeaponsStatsComponent source, String texturePath,
+                                                       float gravityStrength) {
         // Create a config based on the projectile's target
         ProjectileConfig config = new ProjectileConfig(target, texturePath);
 
         // Create the projectile and add components
-        ActiveProjectile projectile = (ActiveProjectile) new ActiveProjectile().addComponent(new PhysicsComponent()).addComponent(new PhysicsProjectileComponent()).addComponent(new WeaponsStatsComponent(source.getBaseAttack())).addComponent(new TextureRenderWithRotationComponent(config.texturePath)).addComponent(new ColliderComponent()).addComponent(new HitboxComponent().setLayer(config.projectileType)).addComponent(new TouchAttackComponent(config.target, 1f));
+        ActiveProjectile projectile = (ActiveProjectile) new ActiveProjectile()
+                .addComponent(new PhysicsComponent())
+                .addComponent(new PhysicsProjectileComponent())
+                .addComponent(new WeaponsStatsComponent(source.getBaseAttack()))
+                .addComponent(new TextureRenderWithRotationComponent(config.texturePath))
+                .addComponent(new ColliderComponent())
+                .addComponent(new HitboxComponent().setLayer(config.projectileType))
+                .addComponent(new TouchAttackComponent(config.target, 1f));
 
         projectile.getComponent(PhysicsComponent.class).setBodyType(BodyDef.BodyType.DynamicBody);
 
         // Ensure the collision is only checked between the projectile and the target
         ColliderComponent collider = projectile.getComponent(ColliderComponent.class);
-        collider.setLayer(config.projectileType).setFilter(config.projectileType, config.target);
+        collider.setLayer(config.projectileType)
+                .setFilter(config.projectileType, config.target);
 
         projectile.setGravityStrength(gravityStrength);
         projectile.setActiveProjectileType(ActiveProjectileTypes.ARC);
@@ -93,19 +109,26 @@ public class ProjectileFactory {
      * @param speed        The speed of the projectile
      * @return An entity for the projectile
      */
-    public static ActiveProjectile createFollowingProjectile(ProjectileTarget target, WeaponsStatsComponent source, String texturePath, Entity targetEntity, float speed) {
+    public static ActiveProjectile createFollowingProjectile(ProjectileTarget target, WeaponsStatsComponent source,
+                                                             String texturePath, Entity targetEntity, float speed) {
         // Create a config based on the projectile's target
         ProjectileConfig config = new ProjectileConfig(target, texturePath);
 
         // Create the projectile and add components
-        ActiveProjectile projectile = (ActiveProjectile) new ActiveProjectile().addComponent(new PhysicsComponent()).addComponent(new PhysicsProjectileComponent()).addComponent(new WeaponsStatsComponent(source.getBaseAttack())).addComponent(new TextureRenderWithRotationComponent(config.texturePath)).addComponent(new ColliderComponent()).addComponent(new HitboxComponent().setLayer(config.projectileType)).addComponent(new TouchAttackComponent(config.target, 1f));
-
+        ActiveProjectile projectile = (ActiveProjectile) new ActiveProjectile()
+                .addComponent(new PhysicsComponent())
+                .addComponent(new PhysicsProjectileComponent())
+                .addComponent(new WeaponsStatsComponent(source.getBaseAttack()))
+                .addComponent(new TextureRenderWithRotationComponent(config.texturePath))
+                .addComponent(new ColliderComponent())
+                .addComponent(new HitboxComponent().setLayer(config.projectileType))
+                .addComponent(new TouchAttackComponent(config.target, 1f));
         projectile.getComponent(PhysicsComponent.class).setBodyType(BodyDef.BodyType.DynamicBody);
 
         // Ensure the collision is only checked between the projectile and the target
         ColliderComponent collider = projectile.getComponent(ColliderComponent.class);
-        collider.setLayer(config.projectileType).setFilter(config.projectileType, config.target);
-
+        collider.setLayer(config.projectileType)
+                .setFilter(config.projectileType, config.target);
         projectile.setTarget(targetEntity);
         projectile.setProjectileSpeed(speed);
         projectile.setActiveProjectileType(ActiveProjectileTypes.FOLLOW_TARGET);
@@ -118,8 +141,11 @@ public class ProjectileFactory {
         ProjectileConfig config = new ProjectileConfig(target, texturePath);
 
         // Create the projectile and add components
-        Entity projectile = new Entity().addComponent(new PhysicsComponent()).addComponent(new PhysicsProjectileComponent()).addComponent(new WeaponsStatsComponent(source.getBaseAttack())).addComponent(new TextureRenderWithRotationComponent(config.texturePath));
-
+        Entity projectile = new Entity()
+                .addComponent(new PhysicsComponent())
+                .addComponent(new PhysicsProjectileComponent())
+                .addComponent(new WeaponsStatsComponent(source.getBaseAttack()))
+                .addComponent(new TextureRenderWithRotationComponent(config.texturePath));
         projectile.getComponent(PhysicsComponent.class).setBodyType(BodyDef.BodyType.DynamicBody);
 
         return projectile;
