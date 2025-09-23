@@ -397,7 +397,6 @@ public class ForestGameArea extends GameArea {
      * This is called by the door/keycard logic when the player exits.
      */
     private void loadNextLevel() {
-        roomNumber++;
         // Use the safe, render-thread transition helper
         clearAndLoad(() -> new Reception(terrainFactory, cameraComponent));
     }

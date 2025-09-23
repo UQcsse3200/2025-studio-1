@@ -56,7 +56,6 @@ public abstract class GameArea implements Disposable {
     private static final String turret = "Turret";
 
     protected EnemyWaves wavesManager; // manage waves via terminal command
-    protected static int roomNumber = 1;
 
     protected GameArea(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
         this.terrainFactory = terrainFactory;
@@ -139,7 +138,19 @@ public abstract class GameArea implements Disposable {
      * with 2 being any number, otherwise returns 1.
      */
     public int getRoomNumber() { // changed from protected to public for EnemyWaves access
-        return roomNumber;
+        return switch (this.toString()) {
+            case "Reception" -> 2;
+            case "Mainhall" -> 3;
+            case "Security" -> 4;
+            case "Office" -> 5;
+            case "Elevator" -> 6;
+            case "Research" -> 7;
+            case "Shipping" -> 8;
+            case "Storage" -> 9;
+            case "Server" -> 10;
+            case "Tunnel" -> 11;
+            default -> 1;
+        };
     }
 
     /**
@@ -172,38 +183,63 @@ public abstract class GameArea implements Disposable {
     /**
      * Spawns the enemies based on the room number given.
      *
-     * @param roomNumber  The number of the current floor/room.
+     * @param roomName    The name of the current floor/room.
      * @param total       The total number of enemies to be spawned.
      * @param scaleFactor The scaling factor of the difficulty of the enemies to be spawned.
      * @param player      The player {@link Entity} that is to be target by the enemies.
      */
-    public void spawnEnemies(int roomNumber, int total, float scaleFactor, Entity player) {
-        Map<String, ArrayList<Vector2>> positions = getEnemySpawnPosition(roomNumber);
-        switch (roomNumber) {
-            case 1:
+    public void spawnEnemies(String roomName, int total, float scaleFactor, Entity player) {
+        Map<String, ArrayList<Vector2>> positions = getEnemySpawnPosition(roomName);
+        switch (roomName) {
+            case "Forest":
                 spawnDeepspin(total, scaleFactor, player, positions);
                 spawnTurret(total, scaleFactor, player, positions);
                 break;
-            case 2:
+            case "Reception":
                 spawnVroomba(total, scaleFactor, player, positions);
                 spawnGhostGPT(total, scaleFactor, player, positions);
                 break;
-            case 3:
+            case "Mainhall":
                 spawnVroomba(total, scaleFactor, player, positions);
                 spawnDeepspin(total, scaleFactor, player, positions);
                 break;
-            case 4:
+            case "Security":
                 spawnGhostGPT(total, scaleFactor, player, positions);
                 spawnDeepspin(total, scaleFactor, player, positions);
                 break;
-            case 5:
+            case "Office":
                 spawnGhostGPT(total, scaleFactor, player, positions);
                 spawnDeepspin(total, scaleFactor, player, positions);
                 spawnVroomba(total, scaleFactor, player, positions);
                 break;
-            case 6, 7:
+            case "Elevator":
                 spawnGhostGPT(total, scaleFactor, player, positions);
                 spawnGrokDroid(total, scaleFactor, player, positions);
+                break;
+            case "Research":
+                spawnTurret(total, scaleFactor, player, positions);
+                spawnGhostGPT(total, scaleFactor, player, positions);
+                spawnGrokDroid(total, scaleFactor, player, positions);
+                break;
+            case "Shipping":
+                spawnGhostGPT(total, scaleFactor, player, positions);
+                spawnGrokDroid(total, scaleFactor, player, positions);
+                spawnVroomba(total, scaleFactor, player, positions);
+                break;
+            case "Storage":
+                spawnTurret(total, scaleFactor, player, positions);
+                spawnGrokDroid(total, scaleFactor, player, positions);
+                break;
+            case "Server":
+                spawnGhostGPT(total, scaleFactor, player, positions);
+                spawnDeepspin(total, scaleFactor, player, positions);
+                spawnTurret(total, scaleFactor, player, positions);
+                break;
+            case "Tunnel":
+                spawnGhostGPT(total, scaleFactor, player, positions);
+                spawnGrokDroid(total, scaleFactor, player, positions);
+                spawnTurret(total, scaleFactor, player, positions);
+                spawnVroomba(total, scaleFactor, player, positions);
                 break;
             default:
                 spawnGhostGPT(total, scaleFactor, player, positions);
@@ -309,11 +345,11 @@ public abstract class GameArea implements Disposable {
         return laser;
     }
 
-    protected Map<String, ArrayList<Vector2>> getEnemySpawnPosition(int roomNumber) {
+    protected Map<String, ArrayList<Vector2>> getEnemySpawnPosition(String roomName) {
         HashMap<String, ArrayList<Vector2>> positions = new HashMap<>();
         ArrayList<Vector2> respectiveSpawns = new ArrayList<>();
-        switch (roomNumber) {
-            case 1:
+        switch (roomName) {
+            case "Forest":
                 respectiveSpawns.add(new Vector2(2.5f, 11f));
                 respectiveSpawns.add(new Vector2(5.4f, 11f));
                 respectiveSpawns.add(new Vector2(8.2f, 11f));
@@ -323,7 +359,7 @@ public abstract class GameArea implements Disposable {
                 respectiveSpawns.add(new Vector2(12f, 5f));
                 positions.put(turret, (ArrayList<Vector2>) respectiveSpawns.clone());
                 break;
-            case 2:
+            case "Reception":
                 respectiveSpawns.add(new Vector2(5.7f, 5f));
                 respectiveSpawns.add(new Vector2(1.5f, 7f));
                 positions.put(vroomba, (ArrayList<Vector2>) respectiveSpawns.clone());
@@ -331,16 +367,16 @@ public abstract class GameArea implements Disposable {
                 respectiveSpawns.add(new Vector2(11.5f, 10f));
                 positions.put(ghostGpt, (ArrayList<Vector2>) respectiveSpawns.clone());
                 break;
-            case 3:
-                respectiveSpawns.add(new Vector2(8.4f, 10f));
+            case "Mainhall":
+                respectiveSpawns.add(new Vector2(10f, 10f));
                 respectiveSpawns.add(new Vector2(2f, 10f));
                 positions.put(deepSpin, (ArrayList<Vector2>) respectiveSpawns.clone());
                 respectiveSpawns.clear();
-                respectiveSpawns.add(new Vector2(12f, 5f));
-                respectiveSpawns.add(new Vector2(2f, 5f));
+                respectiveSpawns.add(new Vector2(11f, 6f));
+                respectiveSpawns.add(new Vector2(2f, 8f));
                 positions.put(vroomba, (ArrayList<Vector2>) respectiveSpawns.clone());
                 break;
-            case 4:
+            case "Security":
                 respectiveSpawns.add(new Vector2(12f, 10f));
                 respectiveSpawns.add(new Vector2(2f, 5f));
                 positions.put(ghostGpt, (ArrayList<Vector2>) respectiveSpawns.clone());
@@ -349,34 +385,84 @@ public abstract class GameArea implements Disposable {
                 respectiveSpawns.add(new Vector2(3f, 10f));
                 positions.put(deepSpin, (ArrayList<Vector2>) respectiveSpawns.clone());
                 break;
-            case 5:
-                respectiveSpawns.add(new Vector2(2.7f, 8f));
+            case "Office":
+                respectiveSpawns.add(new Vector2(12f, 3f));
                 positions.put(ghostGpt, (ArrayList<Vector2>) respectiveSpawns.clone());
                 respectiveSpawns.clear();
-                respectiveSpawns.add(new Vector2(5.6f, 10f));
+                respectiveSpawns.add(new Vector2(6f, 6f));
                 positions.put(vroomba, (ArrayList<Vector2>) respectiveSpawns.clone());
                 respectiveSpawns.clear();
                 respectiveSpawns.add(new Vector2(8.2f, 11f));
-                respectiveSpawns.add(new Vector2(11.1f, 10f));
+                respectiveSpawns.add(new Vector2(2f, 10f));
                 positions.put(deepSpin, (ArrayList<Vector2>) respectiveSpawns.clone());
                 break;
-            case 6:
+            case "Elevator":
                 respectiveSpawns.add(new Vector2(13f, 4f));
-                respectiveSpawns.add(new Vector2(10f, 4f));
+                respectiveSpawns.add(new Vector2(11f, 8f));
                 positions.put(ghostGpt, (ArrayList<Vector2>) respectiveSpawns.clone());
                 respectiveSpawns.clear();
                 respectiveSpawns.add(new Vector2(8.4f, 10f));
-                respectiveSpawns.add(new Vector2(11.3f, 8f));
+                respectiveSpawns.add(new Vector2(2f, 8f));
                 positions.put(grokDroid, (ArrayList<Vector2>) respectiveSpawns.clone());
                 break;
-            case 7:
-                respectiveSpawns.add(new Vector2(11f, 10f));
-                respectiveSpawns.add(new Vector2(2f, 5f));
-                respectiveSpawns.add(new Vector2(11f, 5f));
+            case "Research":
+                respectiveSpawns.add(new Vector2(12f, 11f));
+                positions.put(turret, (ArrayList<Vector2>) respectiveSpawns.clone());
+                respectiveSpawns.clear();
+                respectiveSpawns.add(new Vector2(2f, 7f));
+                respectiveSpawns.add(new Vector2(11f, 4f));
                 positions.put(ghostGpt, (ArrayList<Vector2>) respectiveSpawns.clone());
                 respectiveSpawns.clear();
                 respectiveSpawns.add(new Vector2(3f, 10f));
-                respectiveSpawns.add(new Vector2(7f, 8f));
+                respectiveSpawns.add(new Vector2(5f, 10f));
+                positions.put(grokDroid, (ArrayList<Vector2>) respectiveSpawns.clone());
+                break;
+            case "Shipping":
+                respectiveSpawns.add(new Vector2(12f, 11f));
+                respectiveSpawns.add(new Vector2(2f, 5f));
+                positions.put(ghostGpt, (ArrayList<Vector2>) respectiveSpawns.clone());
+                respectiveSpawns.clear();
+                respectiveSpawns.add(new Vector2(12f, 5f));
+                positions.put(vroomba, (ArrayList<Vector2>) respectiveSpawns.clone());
+                respectiveSpawns.clear();
+                respectiveSpawns.add(new Vector2(3f, 10f));
+                respectiveSpawns.add(new Vector2(5f, 10f));
+                positions.put(grokDroid, (ArrayList<Vector2>) respectiveSpawns.clone());
+                break;
+            case "Storage":
+                respectiveSpawns.add(new Vector2(12f, 5f));
+                positions.put(turret, (ArrayList<Vector2>) respectiveSpawns.clone());
+                respectiveSpawns.clear();
+                respectiveSpawns.add(new Vector2(12f, 11f));
+                respectiveSpawns.add(new Vector2(12f, 8f));
+                respectiveSpawns.add(new Vector2(8f, 8f));
+                positions.put(grokDroid, (ArrayList<Vector2>) respectiveSpawns.clone());
+                break;
+            case "Server":
+                respectiveSpawns.add(new Vector2(12f, 11f));
+                respectiveSpawns.add(new Vector2(7.6f, 4f));
+                respectiveSpawns.add(new Vector2(11f, 8f));
+                positions.put(ghostGpt, (ArrayList<Vector2>) respectiveSpawns.clone());
+                respectiveSpawns.clear();
+                respectiveSpawns.add(new Vector2(2f, 4f));
+                positions.put(turret, (ArrayList<Vector2>) respectiveSpawns.clone());
+                respectiveSpawns.clear();
+                respectiveSpawns.add(new Vector2(3f, 10f));
+                respectiveSpawns.add(new Vector2(5f, 10f));
+                positions.put(deepSpin, (ArrayList<Vector2>) respectiveSpawns.clone());
+                break;
+            case "Tunnel":
+                respectiveSpawns.add(new Vector2(12f, 4f));
+                respectiveSpawns.add(new Vector2(3f, 4f));
+                positions.put(ghostGpt, (ArrayList<Vector2>) respectiveSpawns.clone());
+                respectiveSpawns.clear();
+                respectiveSpawns.add(new Vector2(10f, 10f));
+                positions.put(turret, (ArrayList<Vector2>) respectiveSpawns.clone());
+                respectiveSpawns.clear();
+                respectiveSpawns.add(new Vector2(4f, 10f));
+                positions.put(vroomba, (ArrayList<Vector2>) respectiveSpawns.clone());
+                respectiveSpawns.clear();
+                respectiveSpawns.add(new Vector2(6f, 10f));
                 positions.put(grokDroid, (ArrayList<Vector2>) respectiveSpawns.clone());
                 break;
             default:
