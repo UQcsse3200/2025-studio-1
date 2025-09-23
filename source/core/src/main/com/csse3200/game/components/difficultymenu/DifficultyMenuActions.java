@@ -1,9 +1,12 @@
 package com.csse3200.game.components.difficultymenu;
 
 import com.csse3200.game.GdxGame;
+import com.csse3200.game.GdxGame.ScreenType;
 import com.csse3200.game.areas.difficulty.DifficultyType;
+import com.csse3200.game.areas.difficulty.Difficulty;
 import com.csse3200.game.components.Component;
 import com.csse3200.game.components.mainmenu.MainMenuActions;
+import com.csse3200.game.services.ServiceLocator;
 
 import java.security.spec.ECPrivateKeySpec;
 
@@ -17,11 +20,10 @@ import org.slf4j.LoggerFactory;
 public class DifficultyMenuActions extends Component {
     private static final Logger logger = LoggerFactory.getLogger(MainMenuActions.class);
     private final GdxGame game;
-    private final DifficultyMenuDisplay menuDisplay;
+    private DifficultyType diffType;
 
-    public MainMenuActions(GdxGame game, DifficultyMenuDisplay difficultyMenuDisplay) {
+    public DifficultyMenuActions(GdxGame game) {
         this.game = game;
-        this.menuDsiplay = difficultyMenuDisplay;
     }
 
     @Override
@@ -30,6 +32,7 @@ public class DifficultyMenuActions extends Component {
         entity.getEvents().addListener("setDiffNormal", this::diffNormal);
         entity.getEvents().addListener("setDiffHard", this::diffHard);
         entity.getEvents().addListener("setDiffInsane", this::diffInsane);
+        entity.getEvents().addListener("applyDiff", this::applyDiff);
     }
 
     /**
@@ -37,7 +40,7 @@ public class DifficultyMenuActions extends Component {
      */
     private void diffEasy() {
         logger.info("Difficulty set to Easy");
-        menuDisplay.setDiffType(DifficultyType.EASY);
+        this.diffType = DifficultyType.EASY;
     }
 
     /**
@@ -45,7 +48,7 @@ public class DifficultyMenuActions extends Component {
      */
     private void diffNormal() {
         logger.info("Difficulty set to Normal");
-        menuDisplay.setDiffType(DifficultyType.NORMAL);
+        this.diffType = DifficultyType.NORMAL;
     }
 
     /**
@@ -53,7 +56,7 @@ public class DifficultyMenuActions extends Component {
      */
     private void diffHard() {
         logger.info("Difficulty set to Hard");
-        menuDisplay.setDiffType(DifficultyType.HARD);
+        this.diffType = DifficultyType.HARD;
     }
 
     /**
@@ -61,7 +64,17 @@ public class DifficultyMenuActions extends Component {
      */
     private void diffInsane() {
         logger.info("Difficulty set to Insane");
-        menuDisplay.setDiffType(DifficultyType.INSANE);
+        this.diffType = DifficultyType.INSANE;
+    }
+
+    /**
+     * Applies the difficulty to service locator
+     * and then switches back to main menu
+     */
+    private void applyDiff() {
+        logger.info("Difficulty Set");
+        ServiceLocator.registerDifficulty(new Difficulty(this.diffType));
+        game.setScreen(ScreenType.MAIN_MENU);
     }
 
     /**

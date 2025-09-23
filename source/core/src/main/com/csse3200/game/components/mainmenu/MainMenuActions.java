@@ -24,6 +24,7 @@ public class MainMenuActions extends Component {
         entity.getEvents().addListener("exit", this::onExit);
         entity.getEvents().addListener("settings", this::onSettings);
         entity.getEvents().addListener("tutorial", this::onTutorial);
+        entity.getEvents().addListener("difficulty", this::onDifficulty);
     }
 
     /**
@@ -62,5 +63,10 @@ public class MainMenuActions extends Component {
     private void onTutorial() {
         logger.info("Tutorial triggered");
         game.setScreen(GdxGame.ScreenType.TUTORIAL_SCREEN);
+    }
+
+    private void onDifficulty() {
+        logger.info("Launching Difficulty screen");
+        game.setScreen(GdxGame.ScreenType.DIFFICULTY_SCREEN);
     }
 }
