@@ -21,16 +21,16 @@ com.badlogic.gdx.graphics.Color: {
 		a: 1
 	}
 	color: {
-		r: 0.98611116
-		g: 0
-		b: 1
-		a: 1
+		r: 0
+		g: 0.75
+		b: 0.85
+		a: 0.9
 	}
 	pressed: {
-		r: 0.985234
-		g: 0.5
-		b: 1
-		a: 1
+		r: 0.85
+		g: 0.2
+		b: 0.65
+		a: 0.9
 	}
 	selection: {
 		r: 0
