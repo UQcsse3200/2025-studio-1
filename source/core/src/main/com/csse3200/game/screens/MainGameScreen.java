@@ -8,6 +8,8 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.csse3200.game.GdxGame;
 import com.csse3200.game.GdxGame.ScreenType;
 import com.csse3200.game.areas.*;
+import com.csse3200.game.areas.difficulty.Difficulty;
+import com.csse3200.game.areas.difficulty.DifficultyType;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.components.gamearea.PerformanceDisplay;
