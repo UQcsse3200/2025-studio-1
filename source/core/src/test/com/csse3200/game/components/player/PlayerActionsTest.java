@@ -3,8 +3,10 @@ package com.csse3200.game.components.player;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
+import com.csse3200.game.components.WeaponsStatsComponent;
 import com.csse3200.game.components.items.ItemComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
@@ -51,9 +53,7 @@ class PlayerActionsTest {
         when(body.getWorldCenter()).thenReturn(worldCenter);
 
         PlayerActions actions = new PlayerActions();
-        Entity player = new Entity()
-                .addComponent(actions)
-                .addComponent(new StaminaComponent());
+        Entity player = new Entity().addComponent(actions).addComponent(new StaminaComponent());
         player.create();
 
         Field physField = PlayerActions.class.getDeclaredField("physicsComponent");
@@ -81,9 +81,7 @@ class PlayerActionsTest {
         when(body.getWorldCenter()).thenReturn(worldCenter);
 
         PlayerActions actions = new PlayerActions();
-        Entity player = new Entity()
-                .addComponent(actions)
-                .addComponent(new StaminaComponent());
+        Entity player = new Entity().addComponent(actions).addComponent(new StaminaComponent());
         player.create();
 
         Field physField = PlayerActions.class.getDeclaredField("physicsComponent");
@@ -105,9 +103,7 @@ class PlayerActionsTest {
         when(body.getWorldCenter()).thenReturn(worldCenter);
 
         PlayerActions actions = new PlayerActions();
-        Entity player = new Entity()
-                .addComponent(actions)
-                .addComponent(new StaminaComponent());
+        Entity player = new Entity().addComponent(actions).addComponent(new StaminaComponent());
         player.create();
 
         Field physField = PlayerActions.class.getDeclaredField("physicsComponent");
@@ -130,16 +126,22 @@ class PlayerActionsTest {
 
     @Test
     void shouldPlayAttackSound() {
+        ItemComponent mockItem = mock(ItemComponent.class);
+        when(mockItem.getTexture()).thenReturn("images/mud.png");
         ResourceService resourceService = mock(ResourceService.class);
         Sound sound = mock(Sound.class);
         when(resourceService.getAsset("sounds/Impact4.ogg", Sound.class)).thenReturn(sound);
         ServiceLocator.registerResourceService(resourceService);
 
         PlayerActions actions = new PlayerActions();
-        Entity player = new Entity()
-                .addComponent(actions)
-                .addComponent(new StaminaComponent())
-                .addComponent(new com.csse3200.game.components.CombatStatsComponent(100)); // hp, atk
+        actions.setTimeSinceLastAttack(1.5f);
+        Entity player = new Entity().addComponent(actions).addComponent(new StaminaComponent()).addComponent(new InventoryComponent(50)).addComponent(new com.csse3200.game.components.CombatStatsComponent(100)); // hp, atk
+
+        Entity weapon = new Entity();
+        weapon.addComponent(mockItem);
+        weapon.addComponent(new WeaponsStatsComponent(20));
+        player.getComponent(InventoryComponent.class).addItem(weapon);
+        player.getComponent(InventoryComponent.class).setSelectSlot(0);
         player.create();
 
         actions.attack();
@@ -157,9 +159,7 @@ class PlayerActionsTest {
         when(body.getLinearVelocity()).thenReturn(new Vector2(0f, 0f)); // grounded first
 
         PlayerActions actions = new PlayerActions();
-        Entity player = new Entity()
-                .addComponent(actions)
-                .addComponent(new StaminaComponent());
+        Entity player = new Entity().addComponent(actions).addComponent(new StaminaComponent());
         player.create();
 
         Field physField = PlayerActions.class.getDeclaredField("physicsComponent");
@@ -192,9 +192,7 @@ class PlayerActionsTest {
         when(body.getLinearVelocity()).thenReturn(new Vector2(0f, -1f)); // falling
 
         PlayerActions actions = new PlayerActions();
-        Entity player = new Entity()
-                .addComponent(actions)
-                .addComponent(new StaminaComponent());
+        Entity player = new Entity().addComponent(actions).addComponent(new StaminaComponent());
         player.create();
 
         Field physField = PlayerActions.class.getDeclaredField("physicsComponent");
@@ -225,9 +223,7 @@ class PlayerActionsTest {
         when(body.getWorldCenter()).thenReturn(worldCenter);
 
         PlayerActions actions = new PlayerActions();
-        Entity player = new Entity()
-                .addComponent(actions)
-                .addComponent(new StaminaComponent());
+        Entity player = new Entity().addComponent(actions).addComponent(new StaminaComponent());
         player.create();
 
         Field physField = PlayerActions.class.getDeclaredField("physicsComponent");
@@ -261,9 +257,7 @@ class PlayerActionsTest {
         when(body.getWorldCenter()).thenReturn(worldCenter);
 
         PlayerActions actions = new PlayerActions();
-        Entity player = new Entity()
-                .addComponent(actions)
-                .addComponent(new StaminaComponent());
+        Entity player = new Entity().addComponent(actions).addComponent(new StaminaComponent());
         player.create();
 
         Field physField = PlayerActions.class.getDeclaredField("physicsComponent");
@@ -298,9 +292,7 @@ class PlayerActionsTest {
         when(body.getWorldCenter()).thenReturn(worldCenter);
 
         PlayerActions actions = new PlayerActions();
-        Entity player = new Entity()
-                .addComponent(actions)
-                .addComponent(new StaminaComponent());
+        Entity player = new Entity().addComponent(actions).addComponent(new StaminaComponent());
         player.create();
 
         Field physField = PlayerActions.class.getDeclaredField("physicsComponent");
@@ -337,11 +329,7 @@ class PlayerActionsTest {
     }
 
     private static Vector2 approx(Vector2 expected) {
-        return org.mockito.ArgumentMatchers.argThat(v ->
-                v != null &&
-                        Math.abs(v.x - expected.x) <= (float) 0.001 &&
-                        Math.abs(v.y - expected.y) <= (float) 0.001
-        );
+        return org.mockito.ArgumentMatchers.argThat(v -> v != null && Math.abs(v.x - expected.x) <= (float) 0.001 && Math.abs(v.y - expected.y) <= (float) 0.001);
     }
 
     @Nested
@@ -399,8 +387,7 @@ class PlayerActionsTest {
             inventory.addItem(item);
             inventory.setEquippedSlot(7);
 
-            assertFalse(inventory.getEquippedSlot() < 5 && inventory.getEquippedSlot() <= 0,
-                    "Invalid equipped Slot");
+            assertFalse(inventory.getEquippedSlot() < 5 && inventory.getEquippedSlot() <= 0, "Invalid equipped Slot");
         }
     }
 }

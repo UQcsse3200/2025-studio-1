@@ -449,15 +449,19 @@ public class PlayerActions extends Component {
         InventoryComponent inventory = entity.getComponent(InventoryComponent.class);
         Entity melee = inventory.getCurrSlot();
         if (melee == null) {
+            System.out.println("no melle");
             return;
         }
         WeaponsStatsComponent meleeStats = melee.getComponent(WeaponsStatsComponent.class);
         if (meleeStats == null) {
+            System.out.println("no stats");
             return;
         }
         float coolDown = meleeStats != null ? meleeStats.getCoolDown() : 0;
-        if (this.timeSinceLastAttack < coolDown) return;
-
+        if (this.timeSinceLastAttack < coolDown) {
+            System.out.println("cooldown :(");
+            return;
+        }
         Sound attackSound = ServiceLocator.getResourceService().getAsset("sounds/Impact4.ogg", Sound.class);
         attackSound.play();
 
@@ -679,4 +683,14 @@ public class PlayerActions extends Component {
             body.setTransform(playerPos.x - handOffsetX, playerPos.y + handOffsetY, 0f);
         }
     }
+
+    /**
+     * Setter method used for testing
+     *
+     * @param timeSinceLastAttack time since last attack
+     */
+    void setTimeSinceLastAttack(float timeSinceLastAttack) {
+        this.timeSinceLastAttack = timeSinceLastAttack;
+    }
+
 }
