@@ -11,7 +11,9 @@ import com.csse3200.game.physics.components.PhysicsComponent;
 import com.csse3200.game.rendering.TextureRenderComponent;
 
 public final class ShopFactory {
-    private ShopFactory() { throw new IllegalStateException("Instantiating static util class"); }
+    private ShopFactory() {
+        throw new IllegalStateException("Instantiating static util class");
+    }
 
     public static Entity createShop(ForestGameArea area,
                                     ShopManager manager,
@@ -33,7 +35,10 @@ public final class ShopFactory {
 
         HitboxComponent hitbox = shop.getComponent(HitboxComponent.class);
         hitbox.setAsBox(new Vector2(1.0f, 1.2f));
-        try { hitbox.setSensor(true); } catch (Throwable ignored) {}
+        try {
+            hitbox.setSensor(true);
+        } catch (Throwable ignored) {
+        }
 
         return shop;
     }

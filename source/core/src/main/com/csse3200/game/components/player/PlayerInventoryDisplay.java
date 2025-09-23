@@ -1,18 +1,17 @@
 package com.csse3200.game.components.player;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Scaling;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.utils.Align;
-import com.badlogic.gdx.scenes.scene2d.ui.Container;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.UIComponent;
 import org.slf4j.Logger;
@@ -30,15 +29,17 @@ public class PlayerInventoryDisplay extends UIComponent {
 
     private static final int NUM_SLOTS = 5;
     private static final float SLOT_SIZE = 96f;
-    private static final float SLOT_PAD  = 10f;
+    private static final float SLOT_PAD = 10f;
 
     private int focusedIndex = -1;
 
     private final InventoryComponent inventory;
 
-    /** TODO what happens if this is gone, along with the
+    /**
+     * TODO what happens if this is gone, along with the
      * Constructs the PlayerInventory display, takes in an InventoryComponent
      * so that it can handle displaying the item textures etc.
+     *
      * @param inventory An already initialised InventoryComponent
      */
     public PlayerInventoryDisplay(InventoryComponent inventory) {
@@ -58,7 +59,8 @@ public class PlayerInventoryDisplay extends UIComponent {
 
     /**
      * Function to draw the inventory boxes
-     * @param r,g,b,a fill color + transparency
+     *
+     * @param r,g,b,a     fill color + transparency
      * @param borderWidth width of box border
      * @param br,bg,bb,ba border color + transparency
      */
@@ -91,10 +93,10 @@ public class PlayerInventoryDisplay extends UIComponent {
         table.padBottom(20f);
 
         Drawable normalBg = createSlotBg(0.2f, 0.2f, 0.2f, 0.6f, 2, 1f, 1f, 1f, 1f);
-        Drawable focusBg  = createSlotBg(1f, 1f, 0f, 0.6f, 2, 1f, 1f, 0f, 1f);
+        Drawable focusBg = createSlotBg(1f, 1f, 0f, 0.6f, 2, 1f, 1f, 0f, 1f);
 
-        Drawable badgeBg  = createBadgeBg(0f, 0f, 0f, 0.65f);
-        BitmapFont font   = new BitmapFont();
+        Drawable badgeBg = createBadgeBg(0f, 0f, 0f, 0.65f);
+        BitmapFont font = new BitmapFont();
         Label.LabelStyle countStyle = new Label.LabelStyle(font, Color.WHITE);
 
         for (int i = 0; i < NUM_SLOTS; i++) {
@@ -108,7 +110,9 @@ public class PlayerInventoryDisplay extends UIComponent {
         setFocusedIndex(focusedIndex);
     }
 
-    /** Add an item to the first empty slot. */
+    /**
+     * Add an item to the first empty slot.
+     */
     public void addInventoryItem(String texturePath) {
         int idx = firstEmptySlot();
         if (idx == -1) {
@@ -118,21 +122,27 @@ public class PlayerInventoryDisplay extends UIComponent {
         addItem(idx, texturePath);
     }
 
-    /** Put an item in a specific slot. */
+    /**
+     * Put an item in a specific slot.
+     */
     public void addItem(int index, String texturePath) {
         if (index < 0 || index >= slots.size) return;
         Texture tex = ServiceLocator.getResourceService().getAsset(texturePath, Texture.class);
         slots.get(index).setItem(tex);
     }
 
-    /** Clear a specific slot (keeps background square, hides item). */
+    /**
+     * Clear a specific slot (keeps background square, hides item).
+     */
     public void clearSlot(int index) {
         if (index < 0 || index >= slots.size) return;
         slots.get(index).clearItem();
         if (index == focusedIndex) setFocusedIndex(-1);
     }
 
-    /** Remove everything (backgrounds remain visible). */
+    /**
+     * Remove everything (backgrounds remain visible).
+     */
     public void clearAll() {
         for (int i = 0; i < slots.size; i++) clearSlot(i);
         setFocusedIndex(-1);
@@ -140,6 +150,7 @@ public class PlayerInventoryDisplay extends UIComponent {
 
     /**
      * Function that finds the first available slot
+     *
      * @return index of the place of the first empty spot. If none are found
      * returns -1
      */
@@ -150,7 +161,9 @@ public class PlayerInventoryDisplay extends UIComponent {
         return -1;
     }
 
-    /** Focus a specific slot; pass -1 to clear focus. */
+    /**
+     * Focus a specific slot; pass -1 to clear focus.
+     */
     public void setFocusedIndex(int index) {
         // clear previous focus
         if (focusedIndex >= 0 && focusedIndex < slots.size) {
@@ -201,7 +214,9 @@ public class PlayerInventoryDisplay extends UIComponent {
         return new TextureRegionDrawable(new TextureRegion(texture));
     }
 
-    /** A single inventory slot (background square + item image layered). */
+    /**
+     * A single inventory slot (background square + item image layered).
+     */
     private static class Slot extends Stack {
         private final Image bg;
         private final Drawable normalBg;
@@ -214,7 +229,7 @@ public class PlayerInventoryDisplay extends UIComponent {
 
         Slot(Drawable normalBg, Drawable focusBg, Drawable badgeBg, Label.LabelStyle countStyle) {
             this.normalBg = normalBg;
-            this.focusBg  = focusBg;
+            this.focusBg = focusBg;
 
             bg = new Image(normalBg);
 

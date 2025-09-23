@@ -15,12 +15,12 @@ import com.csse3200.game.services.ServiceLocator;
 
 public class LaserComponent extends RenderComponent {
     private final ShapeRenderer shapeRenderer = new ShapeRenderer();
-    private Color color = Color.RED;
+    private final Color color = Color.RED;
     private Camera camera;
 
     public LaserComponent() {
         Array<Entity> entities = ServiceLocator.getEntityService().getEntities();
-        for (Entity entity: entities) {
+        for (Entity entity : entities) {
             if (entity.getComponent(CameraComponent.class) != null) {
                 camera = entity.getComponent(CameraComponent.class).getCamera();
             }

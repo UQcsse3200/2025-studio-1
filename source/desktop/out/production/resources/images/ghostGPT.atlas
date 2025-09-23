@@ -1,0 +1,68 @@
+ghostGPT.png
+size: 3600, 1036
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+angry_float
+  rotate: false
+  xy: 7, 40
+  size: 18, 30
+  orig: 170, 300
+  offset: 0, 0
+  index: 0
+angry_float
+  rotate: false
+  xy: 30, 40
+  size: 18, 30
+  orig: 170, 300
+  offset: 0, 0
+  index: 1
+angry_float
+  rotate: false
+  xy: 7, 40
+  size: 18, 30
+  orig: 170, 300
+  offset: 0, 0
+  index: 2
+angry_float
+  rotate: false
+  xy: 53, 40
+  size: 18, 30
+  orig: 170, 300
+  offset: 0, 0
+  index: 3
+default
+  rotate: false
+  xy: 7, 7
+  size: 18, 30
+  orig: 170, 300
+  offset: 0, 0
+  index: 0
+float
+  rotate: false
+  xy: 7, 7
+  size: 18, 30
+  orig: 170, 300
+  offset: 0, 0
+  index: 0
+float
+  rotate: false
+  xy: 30, 7
+  size: 18, 30
+  orig: 170, 300
+  offset: 0, 0
+  index: 1
+float
+  rotate: false
+  xy: 7, 7
+  size: 18, 30
+  orig: 170, 300
+  offset: 0, 0
+  index: 2
+float
+  rotate: false
+  xy: 53, 7
+  size: 18, 30
+  orig: 170, 300
+  offset: 0, 0
+  index: 3

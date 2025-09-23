@@ -10,7 +10,8 @@ import org.junit.jupiter.api.*;
 
 import java.util.ArrayList;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ShopInteractComponentTest {
 
@@ -80,7 +81,7 @@ class ShopInteractComponentTest {
         void triggersOnlyNearestWhenMultipleInRange() {
             ShopInteractComponent input = makePlayer(0, 0, 6f);
             boolean[] nearHit = {false};
-            boolean[] farHit  = {false};
+            boolean[] farHit = {false};
             makeShop(4, 0, farHit);   // distance 4
             makeShop(2, 0, nearHit);  // distance 2 (nearest)
 

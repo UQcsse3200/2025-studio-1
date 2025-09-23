@@ -10,56 +10,57 @@ import org.slf4j.LoggerFactory;
  * events is triggered.
  */
 public class MainMenuActions extends Component {
-  private static final Logger logger = LoggerFactory.getLogger(MainMenuActions.class);
-  private GdxGame game;
+    private static final Logger logger = LoggerFactory.getLogger(MainMenuActions.class);
+    private final GdxGame game;
 
-  public MainMenuActions(GdxGame game) {
-    this.game = game;
-  }
+    public MainMenuActions(GdxGame game) {
+        this.game = game;
+    }
 
-  @Override
-  public void create() {
-    entity.getEvents().addListener("start", this::onStart);
-    entity.getEvents().addListener("load", this::onLoad);
-    entity.getEvents().addListener("exit", this::onExit);
-    entity.getEvents().addListener("settings", this::onSettings);
-    entity.getEvents().addListener("tutorial", this::onTutorial);
-  }
+    @Override
+    public void create() {
+        entity.getEvents().addListener("start", this::onStart);
+        entity.getEvents().addListener("load", this::onLoad);
+        entity.getEvents().addListener("exit", this::onExit);
+        entity.getEvents().addListener("settings", this::onSettings);
+        entity.getEvents().addListener("tutorial", this::onTutorial);
+    }
 
-  /**
-   * Swaps to the Main Game screen.
-   */
-  private void onStart() {
-    logger.info("Start game");
-    game.setScreen(GdxGame.ScreenType.STORY);
-  }
+    /**
+     * Swaps to the Main Game screen.
+     */
+    private void onStart() {
+        logger.info("Start game");
+        game.setScreen(GdxGame.ScreenType.STORY);
+    }
 
-  /**
-   * Intended for loading a saved game state.
-   * Load functionality is not actually implemented.
-   */
-  private void onLoad() {
-    logger.info("Load game");
-  }
+    /**
+     * Intended for loading a saved game state.
+     * Load functionality is not actually implemented.
+     */
+    private void onLoad() {
+        logger.info("Load game");
+        game.setScreen(GdxGame.ScreenType.LOAD_GAME);
+    }
 
-  /**
-   * Exits the game.
-   */
-  private void onExit() {
-    logger.info("Exit game");
-    game.exit();
-  }
+    /**
+     * Exits the game.
+     */
+    private void onExit() {
+        logger.info("Exit game");
+        game.exit();
+    }
 
-  /**
-   * Swaps to the Settings screen.
-   */
-  private void onSettings() {
-    logger.info("Launching settings screen");
-    game.setScreen(GdxGame.ScreenType.SETTINGS);
-  }
+    /**
+     * Swaps to the Settings screen.
+     */
+    private void onSettings() {
+        logger.info("Launching settings screen");
+        game.setScreen(GdxGame.ScreenType.SETTINGS);
+    }
 
-  private void onTutorial() {
-    logger.info("Tutorial triggered");
-    game.setScreen(GdxGame.ScreenType.TUTORIAL_SCREEN);
-  }
+    private void onTutorial() {
+        logger.info("Tutorial triggered");
+        game.setScreen(GdxGame.ScreenType.TUTORIAL_SCREEN);
+    }
 }
