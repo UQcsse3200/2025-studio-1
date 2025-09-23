@@ -1,9 +1,12 @@
 package com.csse3200.game.components.player;
 
+import com.badlogic.gdx.physics.box2d.Body;
 import com.csse3200.game.components.items.ItemComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
 import com.csse3200.game.extensions.GameExtension;
+import com.csse3200.game.physics.PhysicsEngine;
+import com.csse3200.game.rendering.RenderService;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
 import org.junit.jupiter.api.BeforeEach;
@@ -67,7 +70,15 @@ class ItemPickUpComponentTest {
         when(rs.getAsset(anyString(), eq(Texture.class))).thenReturn(mock(Texture.class));
         // Register the mocked ResourceService and PhysicsService
         ServiceLocator.registerResourceService(rs);
-        ServiceLocator.registerPhysicsService(mock(PhysicsService.class));
+        RenderService renderService = mock(RenderService.class);
+        ServiceLocator.registerRenderService(renderService);
+
+        PhysicsService physicsService = mock(PhysicsService.class);
+        PhysicsEngine physicsEngine = mock(PhysicsEngine.class);
+        when(physicsService.getPhysics()).thenReturn(physicsEngine);
+        when(physicsEngine.createBody(any())).thenReturn(mock(Body.class));
+        ServiceLocator.registerPhysicsService(physicsService);
+        //ServiceLocator.registerPhysicsService(mock(PhysicsService.class));
 
         player = new Entity()
                 .addComponent(inventory)
