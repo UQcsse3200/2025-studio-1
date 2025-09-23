@@ -9,7 +9,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.csse3200.game.GdxGame;
 import com.csse3200.game.services.ServiceLocator;
-import com.csse3200.game.ui.NeonStyles;
 import com.csse3200.game.ui.UIComponent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,7 +20,6 @@ public class MainMenuDisplay extends UIComponent {
     private static final Logger logger = LoggerFactory.getLogger(MainMenuDisplay.class);
     private static final float Z_INDEX = 2f;
     private Table table;
-    private NeonStyles neon;
     private final GdxGame game;
 
     public MainMenuDisplay(GdxGame game) {
@@ -34,9 +32,7 @@ public class MainMenuDisplay extends UIComponent {
     @Override
     public void create() {
         super.create();
-        neon = new NeonStyles(0.70f);
         addActors();
-
     }
 
     /**
@@ -63,14 +59,12 @@ public class MainMenuDisplay extends UIComponent {
         float btnH = Math.max(64f, stage.getHeight() * 0.08f);
         table.defaults().width(btnW).height(btnH);
 
-        TextButton.TextButtonStyle style = neon.buttonRounded();
-
         // Create buttons
-        TextButton startBtn = new TextButton("Start", style);
-        TextButton loadBtn = new TextButton("Load", style);
-        TextButton settingsBtn = new TextButton("Settings", style);
-        TextButton exitBtn = new TextButton("Exit", style);
-        TextButton tutorialBtn = new TextButton("Tutorial", style);
+        TextButton startBtn = new TextButton("Start", skin);
+        TextButton loadBtn = new TextButton("Load", skin);
+        TextButton settingsBtn = new TextButton("Settings", skin);
+        TextButton exitBtn = new TextButton("Exit", skin);
+        TextButton tutorialBtn = new TextButton("Tutorial", skin);
 
         // Label text size
         startBtn.getLabel().setFontScale(2.0f);

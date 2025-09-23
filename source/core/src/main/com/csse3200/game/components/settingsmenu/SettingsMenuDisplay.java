@@ -16,7 +16,6 @@ import com.csse3200.game.GdxGame.ScreenType;
 import com.csse3200.game.files.UserSettings;
 import com.csse3200.game.files.UserSettings.DisplaySettings;
 import com.csse3200.game.services.ServiceLocator;
-import com.csse3200.game.ui.NeonStyles;
 import com.csse3200.game.ui.UIComponent;
 import com.csse3200.game.utils.StringDecorator;
 import org.slf4j.Logger;
@@ -36,7 +35,6 @@ public class SettingsMenuDisplay extends UIComponent {
     private CheckBox vsyncCheck;
     private Slider uiScaleSlider;
     private SelectBox<StringDecorator<DisplayMode>> displayModeSelect;
-    private NeonStyles neon;
 
 
     public SettingsMenuDisplay(GdxGame game) {
@@ -50,7 +48,6 @@ public class SettingsMenuDisplay extends UIComponent {
     @Override
     public void create() {
         super.create();
-        neon = new NeonStyles(0.70f);
         addActors();
     }
 
@@ -298,10 +295,8 @@ public class SettingsMenuDisplay extends UIComponent {
      * their change listeners.
      */
     private Table makeMenuBtns() {
-        TextButton.TextButtonStyle style = neon.buttonRounded();
-
-        TextButton exitBtn = new TextButton("Exit", style);
-        TextButton applyBtn = new TextButton("Apply", style);
+        TextButton exitBtn = new TextButton("Exit", skin);
+        TextButton applyBtn = new TextButton("Apply", skin);
 
         // Label text size
         exitBtn.getLabel().setFontScale(1.5f);
