@@ -12,4 +12,8 @@ public class Card {
     public String getName() {
         return rank.getSymbol() + suit.getSymbol();
     }
+
+    public int getValue() {
+        return rank.getValue();
+    }
 }
