@@ -277,19 +277,6 @@ public class InventoryComponent extends Component {
     }
 
     /**
-     * Get the current item
-     *
-     * @return the current item
-     */
-    public Entity getCurrSlot() {
-        if (selectedSlot >= 0 && selectedSlot < items.size()) {
-            return items.get(selectedSlot);
-        }
-        return null;
-    }
-
-
-    /**
      *
      * @param slotIndex takes the index of the slot selected
      */
@@ -299,22 +286,9 @@ public class InventoryComponent extends Component {
         }
     }
 
-    /**
-     * Returns the item that is currently selected in the inventory.
-     *
-     * @return the selected item, or null if no slot is selected
-     */
-    public int getSelectedSlot() {
-        if (selectedSlot >= 0 && selectedSlot < items.size()) {
-            return selectedSlot;
-        }
-        return -1; // no item selected
-    }
-
-
     @Override
     /**
-     * to setup the component to respond whenever player focuses on an
+     * to set up the component to respond whenever player focuses on an
      * inventory item
      */
     public void create() {
