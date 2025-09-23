@@ -2,6 +2,7 @@ package com.csse3200.game.areas;
 
 import com.csse3200.game.areas.difficulty.Difficulty;
 import com.csse3200.game.areas.difficulty.DifficultyType;
+import com.csse3200.game.extensions.GameExtension;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
