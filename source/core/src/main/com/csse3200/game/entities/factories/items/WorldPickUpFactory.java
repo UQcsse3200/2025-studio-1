@@ -32,7 +32,7 @@ public class WorldPickUpFactory {
 
     /**
      * Build from texture when dropping
-     * /
+     */
     public static Entity createPickupFromTexture(String texture) {
         for (Weapons w : Weapons.values()) {
             if (texture.equals(w.getConfig().texturePath)) {
