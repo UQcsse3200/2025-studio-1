@@ -71,6 +71,7 @@ public class MainMenuDisplay extends UIComponent {
         TextButton settingsBtn = new TextButton("Settings", style);
         TextButton exitBtn = new TextButton("Exit", style);
         TextButton tutorialBtn = new TextButton("Tutorial", style);
+        TextButton difficultyBtn = new TextButton("Difficulty", style);
 
         // Label text size
         startBtn.getLabel().setFontScale(2.0f);
@@ -78,6 +79,7 @@ public class MainMenuDisplay extends UIComponent {
         settingsBtn.getLabel().setFontScale(2.0f);
         exitBtn.getLabel().setFontScale(2.0f);
         tutorialBtn.getLabel().setFontScale(2.0f);
+        difficultyBtn.getLabel().setFontScale(2.0f);
 
         // Button actions
         startBtn.addListener(
@@ -124,6 +126,14 @@ public class MainMenuDisplay extends UIComponent {
             }
         });
 
+        difficultyBtn.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                logger.debug("Difficulty button clicked");
+                entity.getEvents().trigger("difficulty");
+            }
+        });
+
         // Column layout
         table.add(title).left().padBottom(40f).padLeft(-10f);
         table.row();
@@ -136,6 +146,8 @@ public class MainMenuDisplay extends UIComponent {
         table.add(exitBtn).padTop(15f).left();
         table.row();
         table.add(tutorialBtn).padTop(15f).left();
+        table.row();
+        table.add(difficultyBtn).padTop(15f).left();
         stage.addActor(table);
     }
 

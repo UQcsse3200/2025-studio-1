@@ -8,12 +8,14 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.csse3200.game.GdxGame;
+import com.csse3200.game.GdxGame.ScreenType;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.NeonStyles;
 import com.csse3200.game.ui.UIComponent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.csse3200.game.areas.difficulty.DifficultyType;;
+import com.csse3200.game.areas.difficulty.DifficultyType;
+import com.csse3200.game.components.mainmenu.MainMenuDisplay;;
 
 /**
  * A ui component for displaying the Main menu.
@@ -21,12 +23,11 @@ import com.csse3200.game.areas.difficulty.DifficultyType;;
 public class DifficultyMenuDisplay extends UIComponent {
     private static final Logger logger = LoggerFactory.getLogger(MainMenuDisplay.class);
     private static final float Z_INDEX = 2f;
-    private final Difficultytype diffType;
     private Table table;
     private NeonStyles neon;
     private final GdxGame game;
 
-    public MainMenuDisplay(GdxGame game) {
+    public DifficultyMenuDisplay(GdxGame game) {
         this.game = game;
     }
 
@@ -68,19 +69,21 @@ public class DifficultyMenuDisplay extends UIComponent {
         TextButton.TextButtonStyle style = neon.buttonRounded();
 
         // Create buttons
-        TextButton EasyBtn = new TextButton("Easy", style);
-        TextButton MediumBtn = new TextButton("Medium", style);
-        TextButton HardBtn = new TextButton("Hard", style);
-        TextButton InsaneBtn = new TextButton("Insane", style);
+        TextButton easyBtn = new TextButton("Easy", style);
+        TextButton normalBtn = new TextButton("Normal", style);
+        TextButton hardBtn = new TextButton("Hard", style);
+        TextButton insaneBtn = new TextButton("Insane", style);
+        TextButton applyBtn = new TextButton("Apply", style);
 
         // Label text size
-        EasyBtn.getLabel().setFontScale(2.0f);
-        MediumBtn.getLabel().setFontScale(2.0f);
-        HardBtn.getLabel().setFontScale(2.0f);
-        InsaneBtn.getLabel().setFontScale(2.0f);
+        easyBtn.getLabel().setFontScale(2.0f);
+        normalBtn.getLabel().setFontScale(2.0f);
+        hardBtn.getLabel().setFontScale(2.0f);
+        insaneBtn.getLabel().setFontScale(2.0f);
+        applyBtn.getLabel().setFontScale(2.0f);
 
         // Button actions
-        EasyBtn.addListener(
+        easyBtn.addListener(
                 new ChangeListener() {
                     @Override
                     public void changed(ChangeEvent changeEvent, Actor actor) {
@@ -89,53 +92,54 @@ public class DifficultyMenuDisplay extends UIComponent {
                     }
                 });
 
-        MediumBtn.addListener(
+        normalBtn.addListener(
                 new ChangeListener() {
                     @Override
                     public void changed(ChangeEvent changeEvent, Actor actor) {
-                        logger.debug("Load button clicked");
-                        entity.getEvents().trigger("setDiffMedium");
+                        logger.debug("Difficulty set to normal");
+                        entity.getEvents().trigger("setDiffNormal");
                     }
                 });
 
-        settingsBtn.addListener(
+        hardBtn.addListener(
                 new ChangeListener() {
                     @Override
                     public void changed(ChangeEvent changeEvent, Actor actor) {
-                        logger.debug("Settings button clicked");
-                        entity.getEvents().trigger("settings");
+                        logger.debug("Difficulty set to hard");
+                        entity.getEvents().trigger("setDiffHard");
                     }
                 });
 
-        exitBtn.addListener(
+        insaneBtn.addListener(
                 new ChangeListener() {
                     @Override
                     public void changed(ChangeEvent changeEvent, Actor actor) {
-                        logger.debug("Exit button clicked");
-                        entity.getEvents().trigger("exit");
+                        logger.debug("Difficulty set to insane");
+                        entity.getEvents().trigger("setDiffInsane");
                     }
                 });
 
-        tutorialBtn.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                logger.debug("Tutorial button clicked");
-                entity.getEvents().trigger("tutorial");
-            }
-        });
+        applyBtn.addListener(
+                new ChangeListener() {
+                    @Override
+                    public void changed(ChangeEvent changeEvent, Actor actor) {
+                        logger.debug("Exited Difficulty Set Screen");
+                        entity.getEvents().trigger("applyDiff");
+                    }
+                });
 
         // Column layout
         table.add(title).left().padBottom(40f).padLeft(-10f);
         table.row();
-        table.add(startBtn).padTop(15f).left();
+        table.add(easyBtn).padTop(15f).left();
         table.row();
-        table.add(loadBtn).padTop(15f).left();
+        table.add(normalBtn).padTop(15f).left();
         table.row();
-        table.add(settingsBtn).padTop(15f).left();
+        table.add(hardBtn).padTop(15f).left();
         table.row();
-        table.add(exitBtn).padTop(15f).left();
+        table.add(insaneBtn).padTop(15f).left();
         table.row();
-        table.add(tutorialBtn).padTop(15f).left();
+        table.add(applyBtn).padTop(15f).left();
         stage.addActor(table);
     }
 
@@ -156,21 +160,5 @@ public class DifficultyMenuDisplay extends UIComponent {
     public void dispose() {
         table.clear();
         super.dispose();
-    }
-
-    /**
-     * setter method for the diffType
-     * @param diffType sets this.diffType
-     */
-    public void setDiffType(DifficultyType diffType) {
-        this.diffType = diffType;
-    }
-
-    /**
-     * Returns this.diffType
-     * @return DifficultyType this.diffType
-     */
-    public DifficultyType getDiffType() {
-        return this.diffType;
     }
 }
