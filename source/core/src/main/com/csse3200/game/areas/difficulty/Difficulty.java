@@ -28,4 +28,9 @@ public class Difficulty {
     public float getRoomDifficulty(float roomDifficulty) {
         return (0.1f * roomDifficulty + (diffType.getScaler() - 1));
     }
+
+    @Override
+    public String toString() {
+        return this.diffType.toString();
+    }
 }
