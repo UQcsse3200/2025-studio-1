@@ -14,7 +14,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.csse3200.game.GdxGame;
 import com.csse3200.game.GdxGame.ScreenType;
-import com.csse3200.game.ui.NeonStyles;
 import com.csse3200.game.ui.UIComponent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,7 +26,6 @@ import java.util.ArrayList;
  * Centralises common wiring for Scene2D-based screens:
  * <ul>
  *   <li>Creates and adds a fill-parent {@link Table} root to the stage</li>
- *   <li>Initialises shared {@link NeonStyles} for buttons</li>
  *   <li>Provides helpers for adding titles, body text, and buttons</li>
  *   <li>Manages auto-disposal of helper-created {@link Texture} assets</li>
  * </ul>
@@ -47,10 +45,7 @@ public abstract class BaseScreenDisplay extends UIComponent {
      * Root table added to the stage; fill-parent and centered.
      */
     protected Table root;
-    /**
-     * Shared style builder for rounded neon buttons.
-     */
-    protected NeonStyles neon;
+
     /**
      * Textures created via helpers and disposed automatically.
      */
@@ -68,13 +63,11 @@ public abstract class BaseScreenDisplay extends UIComponent {
     /**
      * Initialises common UI infrastructure and delegates to {@link #buildUI(Table)}.
      * <p>
-     * Creates {@link #root}, adds it to the stage, initialises {@link #neon},
      * and then calls {@link #buildUI(Table)} for subclass-specific layout.
      */
     @Override
     public void create() {
         super.create();
-        neon = new NeonStyles(0.70f);
         root = new Table();
         root.setFillParent(true);
         root.center();
@@ -125,7 +118,7 @@ public abstract class BaseScreenDisplay extends UIComponent {
      * @return the created {@link Label}
      */
     protected Label addBody(Table to, String text, float fontScale, float padBottom) {
-        Label.LabelStyle baseSmall = skin.get("small", Label.LabelStyle.class);
+        Label.LabelStyle baseSmall = skin.get( Label.LabelStyle.class);
         Label.LabelStyle small = new Label.LabelStyle(baseSmall);
         small.fontColor = skin.getColor("white");
         Label lbl = new Label(text, small);
@@ -144,7 +137,7 @@ public abstract class BaseScreenDisplay extends UIComponent {
      * @return the configured {@link TextButton}
      */
     protected TextButton button(String text, float labelScale, Runnable onClick) {
-        TextButton b = new TextButton(text, neon.buttonRounded());
+        TextButton b = new TextButton(text, skin);
         b.getLabel().setFontScale(labelScale);
         b.addListener(new ChangeListener() {
             @Override
