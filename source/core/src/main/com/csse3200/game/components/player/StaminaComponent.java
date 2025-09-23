@@ -75,7 +75,30 @@ public class StaminaComponent extends Component {
         emitChanged();
         return true;
     }
+    /**
+     * Returns the current stamina value.
+     *
+     * @return current stamina
+     */
+    public float getStamina() {
+        return stamina;
+    }
 
+    /**
+     * Sets the current stamina value, clamped between 0 and MAX_STAMINA.
+     * Triggers a UI update if the integer value changes.
+     *
+     * @param value new stamina value
+     */
+    public void setStamina(float value) {
+        float clamped = Math.max(0f, Math.min(MAX_STAMINA, value));
+        if ((int) clamped != (int) stamina) {
+            stamina = clamped;
+            emitChanged();
+        } else {
+            stamina = clamped;
+        }
+    }
     /**
      * Updates the infiniteStamina parameter
      *
@@ -165,6 +188,11 @@ public class StaminaComponent extends Component {
         }
         lastEmittedStamina = curr;
         entity.getEvents().trigger("staminaChanged", curr, MAX_STAMINA);
+        // Keep a live copy in the global cache for safe cross-area restoration
+        try {
+            com.csse3200.game.services.ServiceLocator.setCachedPlayerStamina(stamina);
+        } catch (Exception ignored) {
+        }
     }
 
     /**
