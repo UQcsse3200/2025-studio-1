@@ -37,19 +37,18 @@ public class Terminal extends Component {
     public Terminal(Map<String, Command> commands, GdxGame game) {
         this.commands = commands;
 
-        addCommand("debug", new DebugCommand());
-        addCommand("winscreen", new EndScreenCommand(game, GdxGame.ScreenType.WIN_SCREEN));
-        addCommand("deathscreen", new EndScreenCommand(game, GdxGame.ScreenType.DEATH_SCREEN));
-        addCommand("disableDamage", new DisableDamageCommand());
-        addCommand("waves", new WavesCommand());
         addCommand("damageMultiplier", new DamageMultiplierCommand());
-        addCommand("pickupAll", new PickupAllCommand());
-        addCommand("infiniteStamina", new InfiniteStaminaCommand());
+        addCommand("deathscreen", new EndScreenCommand(game, GdxGame.ScreenType.DEATH_SCREEN));
+        addCommand("debug", new DebugCommand());
+        addCommand("disableDamage", new DisableDamageCommand());
+        addCommand("doorOverride", new DoorOverrideCommand());
         addCommand("infiniteDash", new InfiniteDashCommand());
         addCommand("infiniteJumps", new InfiniteJumpsCommand());
-
-        addCommand("doorOverride", new DoorOverrideCommand());
-//        addCommand("teleport", new TeleportCommand());
+        addCommand("infiniteStamina", new InfiniteStaminaCommand());
+        addCommand("pickupAll", new PickupAllCommand());
+        addCommand("waves", new WavesCommand());
+        addCommand("winscreen", new EndScreenCommand(game, GdxGame.ScreenType.WIN_SCREEN));
+        // addCommand("teleport", new TeleportCommand());
 
         // Initial index build
         rebuildAutocompleteIndex();
