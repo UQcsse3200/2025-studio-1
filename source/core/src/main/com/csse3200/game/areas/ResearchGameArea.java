@@ -10,14 +10,17 @@ import com.csse3200.game.entities.configs.ItemSpawnConfig;
 import com.csse3200.game.entities.factories.characters.PlayerFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.entities.spawner.ItemSpawner;
+import com.csse3200.game.services.ServiceLocator;
 
 /**
- * Research room: futuristic laboratory with desks, pods, microscopes, and screens.
+ * Research room: futuristic laboratory with desks, pods, microscopes, and
+ * screens.
  * Left door -> Elevator, Right door -> Storage.
  */
 public class ResearchGameArea extends GameArea {
     private static final float WALL_WIDTH = 0.1f;
     private static final GridPoint2 PLAYER_SPAWN = new GridPoint2(10, 10);
+    private int roomDiffNumber = 6;
     private Entity player;
 
     public ResearchGameArea(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
@@ -40,7 +43,8 @@ public class ResearchGameArea extends GameArea {
     }
 
     private void spawnBordersAndDoors() {
-        if (cameraComponent == null) return;
+        if (cameraComponent == null)
+            return;
         Bounds b = getCameraBounds(cameraComponent);
         addSolidWallLeft(b, WALL_WIDTH);
         float leftDoorHeight = Math.max(1f, b.viewHeight() * 0.2f);
@@ -108,7 +112,6 @@ public class ResearchGameArea extends GameArea {
         GridPoint2 podPos = new GridPoint2(19, 6);
         spawnEntityAt(ObstacleFactory.createResearchPod(), podPos, true, false);
 
-
         // Laboratory main station
         GridPoint2 labPos = new GridPoint2(26, 6);
         spawnEntityAt(ObstacleFactory.createLaboratory(), labPos, true, false);
@@ -124,14 +127,17 @@ public class ResearchGameArea extends GameArea {
      * Spawn a pair of enemies to keep Research lively.
      */
     private void spawnEnemies() {
-        if (player == null) return;
+        if (player == null)
+            return;
 
         // Vroomba near the bottom platforms
-        Entity vroomba = com.csse3200.game.entities.factories.characters.NPCFactory.createVroomba(player, 1.4f);
+        Entity vroomba = com.csse3200.game.entities.factories.characters.NPCFactory.createVroomba(player,
+                ServiceLocator.getDifficulty().getRoomDifficulty(this.roomDiffNumber));
         spawnEntityAt(vroomba, new GridPoint2(6, 6), true, false);
 
         // Deepspin near the top right area
-        Entity deepspin = com.csse3200.game.entities.factories.characters.NPCFactory.createDeepspin(player, this, 1.3f);
+        Entity deepspin = com.csse3200.game.entities.factories.characters.NPCFactory.createDeepspin(player, this,
+                ServiceLocator.getDifficulty().getRoomDifficulty(this.roomDiffNumber));
         spawnEntityAt(deepspin, new GridPoint2(24, 15), true, false);
     }
 
@@ -151,7 +157,7 @@ public class ResearchGameArea extends GameArea {
 
     @Override
     public Entity getPlayer() {
-        //placeholder
+        // placeholder
         return null;
     }
 
@@ -159,5 +165,3 @@ public class ResearchGameArea extends GameArea {
         return (new ResearchGameArea(terrainFactory, camera));
     }
 }
-
-
