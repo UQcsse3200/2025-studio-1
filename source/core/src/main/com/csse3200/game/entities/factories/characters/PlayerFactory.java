@@ -73,6 +73,7 @@ public class PlayerFactory {
                         .addComponent(new PlayerAnimationController())
                         .addComponent(new PowerupComponent())
                         .addComponent(new PlayerAnimationController())
+                        .addComponent(new PlayerEquipComponent())
                         .addComponent(new ShopInteractComponent(2.0f));
 
         player.getComponent(AnimationRenderComponent.class).scaleEntity(2f);
