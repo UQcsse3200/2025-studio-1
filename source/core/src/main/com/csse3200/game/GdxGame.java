@@ -3,8 +3,11 @@ package com.csse3200.game;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
 import com.csse3200.game.files.UserSettings;
 import com.csse3200.game.screens.*;
+import com.csse3200.game.services.ResourceService;
+import com.csse3200.game.services.ServiceLocator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,6 +20,8 @@ import static com.badlogic.gdx.Gdx.app;
  */
 public class GdxGame extends Game {
     private static final Logger logger = LoggerFactory.getLogger(GdxGame.class);
+    private static final String MENU_MUSIC = "sounds/menuMusic.mp3";
+    private Music menuMusic;
 
     @Override
     public void create() {
@@ -25,6 +30,20 @@ public class GdxGame extends Game {
 
         // Sets background to light yellow
         Gdx.gl.glClearColor(248f / 255f, 249 / 255f, 178 / 255f, 1);
+
+        ServiceLocator.registerResourceService(new ResourceService());
+        ServiceLocator.getResourceService().loadMusic(new String[]{MENU_MUSIC});
+        ServiceLocator.getResourceService().loadAll();
+
+        menuMusic = ServiceLocator.getResourceService().getAsset(MENU_MUSIC, Music.class);
+        if (menuMusic != null) {
+            menuMusic.setLooping(true);
+            menuMusic.setVolume(0.5f);
+            menuMusic.play();
+            logger.info("Menu music started");
+        } else {
+            logger.warn("Menu music asset not loaded!");
+        }
 
         setScreen(ScreenType.MAIN_MENU);
     }
@@ -45,6 +64,22 @@ public class GdxGame extends Game {
      */
     public void setScreen(ScreenType screenType) {
         logger.info("Setting game screen to {}", screenType);
+
+        if (screenType == ScreenType.MAIN_GAME
+                || screenType == ScreenType.DEATH_SCREEN
+                || screenType == ScreenType.WIN_SCREEN) {
+            if (menuMusic != null && menuMusic.isPlaying()) {
+                logger.info("Stopping menu music for {}", screenType);
+                menuMusic.stop();
+            }
+        } else {
+            // play menu music if we're in a menu-type screen
+            if (menuMusic != null && !menuMusic.isPlaying()) {
+                logger.info("Starting menu music for {}", screenType);
+                menuMusic.play();
+            }
+        }
+
         Screen currentScreen = getScreen();
         if (currentScreen != null) {
             currentScreen.dispose();
@@ -55,6 +90,13 @@ public class GdxGame extends Game {
     @Override
     public void dispose() {
         logger.debug("Disposing of current screen");
+
+        if (menuMusic != null) {
+            menuMusic.stop();
+            menuMusic.dispose();
+        }
+        ServiceLocator.getResourceService().unloadAssets(new String[]{MENU_MUSIC});
+
         getScreen().dispose();
     }
 
