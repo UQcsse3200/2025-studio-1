@@ -21,9 +21,6 @@ public class KeyboardPlayerInputComponent extends InputComponent {
 
     private int focusedItem = -1;
     private boolean equipped = false;
-
-    private long timeSinceKeyPress = 0;
-    private int doublePressKeyCode = -1;
     private boolean holding = false;
 
     public KeyboardPlayerInputComponent() {
@@ -42,13 +39,11 @@ public class KeyboardPlayerInputComponent extends InputComponent {
             case Keys.A:
                 walkDirection.add(Vector2Utils.LEFT);
                 triggerWalkEvent();
-                checkForDashInput(keycode);
                 return true;
 
             case Keys.D:
                 walkDirection.add(Vector2Utils.RIGHT);
                 triggerWalkEvent();
-                checkForDashInput(keycode);
                 return true;
 
             case Keys.S:
@@ -57,6 +52,10 @@ public class KeyboardPlayerInputComponent extends InputComponent {
 
             case Keys.SHIFT_LEFT:
                 triggerSprintEvent();
+                return true;
+
+            case Keys.CONTROL_LEFT:
+                triggerDashEvent();
                 return true;
 
             case Keys.Q:
@@ -173,46 +172,6 @@ public class KeyboardPlayerInputComponent extends InputComponent {
     }
 
     /**
-     * Checks if the current key press should trigger a dash action.
-     * Uses timing between consecutive presses of the same key.
-     *
-     * @param keycode the code of the key that was pressed
-     */
-    private void checkForDashInput(int keycode) {
-        if (isDoubleKeyPress(keycode)) {
-            entity.getEvents().trigger("dashAttempt");
-        }
-    }
-
-    /**
-     * Determines if a key press is a valid double press
-     * based on timing and key code.
-     *
-     * @param keycode the code of the key being checked
-     * @return true if the key press qualifies as a double press
-     */
-    private boolean isDoubleKeyPress(int keycode) {
-        boolean validDoubleKey = false;
-        long timeDif = System.currentTimeMillis() - timeSinceKeyPress;
-        long DOUBLE_KEY_INTERVAL = 300;
-        if (keycode == doublePressKeyCode && timeDif < DOUBLE_KEY_INTERVAL) {
-            validDoubleKey = true;
-        }
-        updateDoubleKeyPress(keycode);
-        return validDoubleKey;
-    }
-
-    /**
-     * Updates tracking data for double key press detection.
-     *
-     * @param keycode the key code that was just pressed
-     */
-    private void updateDoubleKeyPress(int keycode) {
-        timeSinceKeyPress = System.currentTimeMillis();
-        doublePressKeyCode = keycode;
-    }
-
-    /**
      * Triggers either a walk or stop walking event based
      * on the current walking direction.
      */
@@ -262,6 +221,10 @@ public class KeyboardPlayerInputComponent extends InputComponent {
      */
     private void triggerJumpEvent() {
         entity.getEvents().trigger("jumpAttempt");
+    }
+
+    private void triggerDashEvent() {
+        entity.getEvents().trigger("dashAttempt");
     }
 
     /**
