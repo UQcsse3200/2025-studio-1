@@ -141,9 +141,7 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected <a href="../Entity.html" title="class in com.csse3200.game.entities">Entity</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#makeItem(java.lang.String)" class="member-name-link">makeItem</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;type)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Creates an item entity based on the provided type
- This method currently supports weapon types defined in the Weapons enum
- Additional item types like consumables, perishables, etc.</div>
+<div class="block">Creates a new world-pickable item entity from the given type string.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#spawnItems(java.util.Map)" class="member-name-link">spawnItems</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="ItemSpawner.ItemSpawnInfo.html" title="class in com.csse3200.game.entities.spawner">ItemSpawner.ItemSpawnInfo</a>&gt;&gt;&nbsp;config)</code></div>
@@ -197,14 +195,15 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="makeItem(java.lang.String)">
 <h3>makeItem</h3>
 <div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type"><a href="../Entity.html" title="class in com.csse3200.game.entities">Entity</a></span>&nbsp;<span class="element-name">makeItem</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;type)</span></div>
-<div class="block">Creates an item entity based on the provided type
- This method currently supports weapon types defined in the Weapons enum
- Additional item types like consumables, perishables, etc. can be added accordingly</div>
+<div class="block">Creates a new world-pickable item entity from the given type string.
+ If the type matches a <a href="../configs/Weapons.html" title="enum class in com.csse3200.game.entities.configs"><code>Weapons</code></a> enum constant, a corresponding
+ weapon pickup entity is created via <a href="../factories/items/WorldPickUpFactory.html" title="class in com.csse3200.game.entities.factories.items"><code>WorldPickUpFactory</code></a>.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>type</code> - which is the type of item to be created</dd>
 <dt>Returns:</dt>
-<dd>the created item entity or null if the type is unknown</dd>
+<dd>A new <a href="../Entity.html" title="class in com.csse3200.game.entities"><code>Entity</code></a> representing the item, or <code>null</code> if the
+ type does not match any known item.</dd>
 </dl>
 </section>
 </li>
