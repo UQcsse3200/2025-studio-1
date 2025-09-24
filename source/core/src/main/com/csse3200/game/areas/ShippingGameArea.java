@@ -23,7 +23,6 @@ import javax.swing.*;
 public class ShippingGameArea extends GameArea {
   private static final float WALL_WIDTH = 0.1f;
   private static final GridPoint2 PLAYER_SPAWN = new GridPoint2(10, 10);
-  private Entity player;
 
   /**
    * Initialise this ShippingGameArea to use the provided TerrainFactory and camera helper.
@@ -50,8 +49,8 @@ public class ShippingGameArea extends GameArea {
         new Color(0.12f, 0.12f, 0.10f, 0.26f));
 
     spawnBordersAndDoors();
-    player = spawnPlayer();
-    spawnGrokDroids();
+      player = spawnPlayer(PlayerSpawnSpec.of(getRoomId(), PLAYER_SPAWN));
+      spawnGrokDroids();
     spawnVroombaAndDeepspin();
     spawnFloor();
     spawnShipmentBoxLid();
@@ -124,12 +123,6 @@ public class ShippingGameArea extends GameArea {
     rightDoor.setPosition(b.rightX - WALL_WIDTH - 0.001f, rightDoorY);
     rightDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadStorage));
     spawnEntity(rightDoor);
-  }
-
-  private Entity spawnPlayer() {
-    Entity player = PlayerFactory.createPlayer();
-    spawnEntityAt(player, PLAYER_SPAWN, true, true);
-    return player;
   }
 
   /**

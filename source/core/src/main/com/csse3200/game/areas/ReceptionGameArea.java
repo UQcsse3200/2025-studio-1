@@ -12,13 +12,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /** Second floor with different background and arrow-key controls. */
-public class Reception extends GameArea {
-  private static final Logger logger = LoggerFactory.getLogger(Reception.class);
+public class ReceptionGameArea extends GameArea {
+  private static final Logger logger = LoggerFactory.getLogger(ReceptionGameArea.class);
   private static final GridPoint2 PLAYER_SPAWN = new GridPoint2(8, 10);
   private static final float WALL_WIDTH = 0.1f;
   private static final int NUM_TREES = 8; // Number of trees to spawn
 
-  public Reception(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
+  public ReceptionGameArea(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
     super(terrainFactory, cameraComponent);
   }
 
@@ -27,7 +27,7 @@ public class Reception extends GameArea {
     ensureAssets();
     spawnTerrain();
     spawnWallsAndDoor();
-    spawnPlayer();
+    player = spawnPlayer(PlayerSpawnSpec.of(getRoomId(), PLAYER_SPAWN));
     spawnFloor();
     spawnholoclock();
     spawnplatform2();
@@ -37,7 +37,7 @@ public class Reception extends GameArea {
 
 
     Entity ui = new Entity();
-    ui.addComponent(new com.csse3200.game.components.gamearea.FloorLabelDisplay("Reception"));
+    ui.addComponent(new com.csse3200.game.components.gamearea.FloorLabelDisplay("ReceptionGameArea"));
     spawnEntity(ui);
   }
 

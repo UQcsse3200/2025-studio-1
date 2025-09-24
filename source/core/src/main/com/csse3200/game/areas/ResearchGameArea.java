@@ -31,7 +31,7 @@ public class ResearchGameArea extends GameArea {
             new Color(0.10f, 0.12f, 0.18f, 0.28f)); // subtle lab-themed overlay
     spawnObjectDoors(new GridPoint2(0, 6), new GridPoint2(28, 20));
     spawnBordersAndDoors();
-    player = spawnPlayer();
+    player = spawnPlayer(PlayerSpawnSpec.of("", new GridPoint2(PLAYER_SPAWN)));
     spawnPlatforms();
     spawnResearchProps();
     spawnEnemies();
@@ -39,7 +39,7 @@ public class ResearchGameArea extends GameArea {
     itemSpawner.spawnItems(ItemSpawnConfig.researchmap());
   }
 
-  private void spawnBordersAndDoors() {
+  protected void spawnBordersAndDoors() {
     if (cameraComponent == null) return;
     Bounds b = getCameraBounds(cameraComponent);
     addSolidWallLeft(b, WALL_WIDTH);
@@ -60,13 +60,7 @@ public class ResearchGameArea extends GameArea {
     spawnEntity(rightDoor);
   }
 
-  private Entity spawnPlayer() {
-    Entity player = PlayerFactory.createPlayer();
-    spawnEntityAt(player, PLAYER_SPAWN, true, true);
-    return player;
-  }
-
-  private void spawnPlatforms() {
+    protected void spawnPlatforms() {
     for (int i = 0; i < 5; i++) {
       GridPoint2 platformPos = new GridPoint2(i * 6 + 3, 5);
       Entity platform = ObstacleFactory.createThinFloor();
@@ -95,7 +89,7 @@ public class ResearchGameArea extends GameArea {
    * - Research Screen (decorative)
    * - Laboratory main station (collidable)
    */
-  private void spawnResearchProps() {
+  protected void spawnResearchProps() {
     // Desk
     GridPoint2 deskPos = new GridPoint2(5, 11);
     spawnEntityAt(ObstacleFactory.createResearchDesk(), deskPos, true, false);
@@ -121,7 +115,7 @@ public class ResearchGameArea extends GameArea {
   }
 
   /** Spawn a pair of enemies to keep Research lively. */
-  private void spawnEnemies() {
+  protected void spawnEnemies() {
     if (player == null) return;
 
     // Vroomba near the bottom platforms

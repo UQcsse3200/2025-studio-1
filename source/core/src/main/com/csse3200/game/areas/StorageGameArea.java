@@ -21,7 +21,6 @@ import com.csse3200.game.entities.spawner.ItemSpawner;
 public class StorageGameArea extends GameArea {
   private static final float WALL_WIDTH = 0.1f;
   private static final GridPoint2 PLAYER_SPAWN = new GridPoint2(4, 20);
-  private Entity player;
 
   /**
    * Initialise this StorageGameArea to use the provided TerrainFactory and camera helper.
@@ -48,8 +47,9 @@ public class StorageGameArea extends GameArea {
         new Color(0.12f, 0.12f, 0.10f, 0.26f));
 
     spawnBordersAndDoors();
-    player = spawnPlayer();
-    spawnFloor();
+      player = spawnPlayer(PlayerSpawnSpec.of(getRoomId(), PLAYER_SPAWN));
+
+      spawnFloor();
     spawnShipmentBoxLid();
     spawnConveyor();
     spawnGrokDroids();

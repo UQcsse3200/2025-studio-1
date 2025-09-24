@@ -29,8 +29,6 @@ public class ServerGameArea extends GameArea {
   private static final float WALL_WIDTH = 0.1f;
   private static final GridPoint2 PLAYER_SPAWN = new GridPoint2(10, 10);
 
-  private Entity player;
-
   /**
    * Constructor for the Server Room, simples calls GameArea constructor.
    * @param terrainFactory the game's terrain factory (set in MainGameScreen)
@@ -65,8 +63,8 @@ public class ServerGameArea extends GameArea {
     spawnObjectDoors(new GridPoint2(0, 6), new GridPoint2(28, 21));
 
     spawnFloor();
-    player = spawnPlayer();
-    spawnGPTs();
+      player = spawnPlayer(PlayerSpawnSpec.of(getRoomId(), PLAYER_SPAWN));
+      spawnGPTs();
 
     ItemSpawner itemSpawner = new ItemSpawner(this);
     itemSpawner.spawnItems(ItemSpawnConfig.servermap());
@@ -81,16 +79,6 @@ public class ServerGameArea extends GameArea {
     ui.addComponent(new GameAreaDisplay("Box Forest"))
             .addComponent(new com.csse3200.game.components.gamearea.FloorLabelDisplay("Floor 1"));
     spawnEntity(ui);
-  }
-
-  /**
-   * Getter method for the player entity
-   * @return Entity player
-   */
-  private Entity spawnPlayer() {
-    Entity newPlayer = PlayerFactory.createPlayer();
-    spawnEntityAt(newPlayer, PLAYER_SPAWN, true, true);
-    return newPlayer;
   }
 
   /**

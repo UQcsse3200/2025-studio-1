@@ -1,6 +1,7 @@
 package com.csse3200.game.entities;
 
 import com.badlogic.gdx.utils.Array;
+import com.csse3200.game.services.ServiceLocator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,10 +23,10 @@ public class EntityService {
    * @param entity new entity.
    */
   public void register(Entity entity) {
-    if (com.csse3200.game.services.ServiceLocator.isTransitioning()) {
+    if (ServiceLocator.getTransitioning()) {
       // Defer registration until after transition to avoid leaking into the wrong area
       com.badlogic.gdx.Gdx.app.postRunnable(() -> {
-        if (!com.csse3200.game.services.ServiceLocator.isTransitioning()) {
+        if (!ServiceLocator.getTransitioning()) {
           logger.debug("Deferred-registering {} in entity service", entity);
           entities.add(entity);
           entity.create();
@@ -51,7 +52,7 @@ public class EntityService {
    * Update all registered entities. Should only be called from the main game loop.
    */
   public void update() {
-    if (com.csse3200.game.services.ServiceLocator.isTransitioning()) {
+    if (com.csse3200.game.services.ServiceLocator.getTransitioning()) {
       return;
     }
     Array<Entity> toRemove = new Array<>();

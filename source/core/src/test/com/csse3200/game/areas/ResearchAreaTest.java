@@ -4,30 +4,21 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.mockStatic;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.doCallRealMethod;
-import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.*;
 
 import com.badlogic.gdx.math.GridPoint2;
-import com.csse3200.game.entities.Entity;
-import com.csse3200.game.entities.EntityService;
-import com.csse3200.game.entities.factories.characters.PlayerFactory;
-import com.csse3200.game.extensions.GameExtension;
-import com.csse3200.game.services.ServiceLocator;
-import com.csse3200.game.areas.*;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.components.CameraComponent;
-
-import org.junit.jupiter.api.Assertions;
+import com.csse3200.game.entities.Entity;
+import com.csse3200.game.entities.factories.characters.PlayerFactory;
+import com.csse3200.game.entities.spawner.ItemSpawner;
+import com.csse3200.game.extensions.GameExtension;
+import java.lang.reflect.Method;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.MockedConstruction;
 import org.mockito.MockedStatic;
-
-import java.util.ArrayList;
 
 @ExtendWith(GameExtension.class)
 class ResearchAreaTest {
@@ -37,31 +28,108 @@ class ResearchAreaTest {
     private ResearchGameArea researchGameArea;
 
     @BeforeEach
-    void beforeEach() {
-        ServiceLocator.registerEntityService(new EntityService());
+    void setUp() {
         terrainFactory = mock(TerrainFactory.class);
         cameraComponent = mock(CameraComponent.class);
         researchGameArea = spy(new ResearchGameArea(terrainFactory, cameraComponent));
 
-        doNothing().when(researchGameArea)
+        // Prevent side effects from real spawning
+        doNothing()
+                .when(researchGameArea)
                 .spawnEntityAt(any(Entity.class), any(GridPoint2.class), anyBoolean(), anyBoolean());
     }
 
+    private static Method spawnPlayerMethod() throws Exception {
+        Method m = GameArea.class.getDeclaredMethod("spawnPlayer", PlayerSpawnSpec.class);
+        m.setAccessible(true);
+        return m;
+    }
+
     @Test
-    void testSpawnPlayerCallsPlayerFactory() throws Exception {
-        try (MockedStatic<PlayerFactory> playerFactoryMock = mockStatic(PlayerFactory.class)) {
-            Entity mockPlayer = mock(Entity.class);
-            playerFactoryMock.when(PlayerFactory::createPlayer).thenReturn(mockPlayer);
+    void testSpawnPlayer_usesSpecSupplierAndFlags() throws Exception {
+        Entity mockPlayer = mock(Entity.class);
 
-            var method = ResearchGameArea.class.getDeclaredMethod("spawnPlayer");
-            method.setAccessible(true);
-            method.invoke(researchGameArea); // returns null because method is void
+        PlayerSpawnSpec spec =
+                PlayerSpawnSpec.of("research", new GridPoint2(7, 8))
+                        .withFactory(() -> mockPlayer)   // override supplier
+                        .withCenter(false)               // custom flags
+                        .withCollidable(false);
 
-            // Verify PlayerFactory was used
-            playerFactoryMock.verify(PlayerFactory::createPlayer);
+        Object ret = spawnPlayerMethod().invoke(researchGameArea, spec);
 
-            // Verify the player was spawned
-            verify(researchGameArea).spawnEntityAt(eq(mockPlayer), any(GridPoint2.class), eq(true), eq(true));
+        // Uses the supplier-provided player and propagates flags and cell
+        verify(researchGameArea)
+                .spawnEntityAt(eq(mockPlayer), eq(new GridPoint2(7, 8)), eq(false), eq(false));
+
+        assert ret == mockPlayer;
+    }
+
+    @Test
+    void testSpawnPlayer_usesDefaultPlayerFactory() throws Exception {
+        Entity mockPlayer = mock(Entity.class);
+        try (MockedStatic<PlayerFactory> pf = mockStatic(PlayerFactory.class)) {
+            pf.when(PlayerFactory::createPlayer).thenReturn(mockPlayer);
+
+            PlayerSpawnSpec spec = PlayerSpawnSpec.of("research", new GridPoint2(3, 4)); // defaults: center=true, collidable=true
+
+            Object ret = spawnPlayerMethod().invoke(researchGameArea, spec);
+
+            // Default factory must be invoked
+            pf.verify(PlayerFactory::createPlayer);
+
+            // Spawned at the spec cell with default flags
+            verify(researchGameArea)
+                    .spawnEntityAt(eq(mockPlayer), eq(new GridPoint2(3, 4)), eq(true), eq(true));
+
+            assert ret == mockPlayer;
+        }
+    }
+
+    @Test
+    void testCreate_callsSpawnPlayerWithDefaultSpec() {
+        Entity mockPlayer = mock(Entity.class);
+
+        // Return a player when create() calls spawnPlayer(...)
+        doReturn(mockPlayer).when(researchGameArea).spawnPlayer(any(PlayerSpawnSpec.class));
+
+        // *** CRITICAL: bypass entity-building helpers that touch textures/assets ***
+        // ResearchGameArea helpers:
+        doNothing().when(researchGameArea).spawnBordersAndDoors();
+        doNothing().when(researchGameArea).spawnPlatforms();
+        doNothing().when(researchGameArea).spawnResearchProps();
+        doNothing().when(researchGameArea).spawnEnemies();
+
+        // GameArea helper used by create() (left/right door cells)
+        doNothing().when(researchGameArea)
+                .spawnObjectDoors(any(GridPoint2.class), any(GridPoint2.class));
+
+        // Stub static layout calls + ItemSpawner construction to avoid assets
+        try (MockedStatic<GenericLayout> gl = mockStatic(GenericLayout.class);
+             MockedConstruction<ItemSpawner> itemSpawnerCtor =
+                     mockConstruction(ItemSpawner.class, (mock, ctx) -> {
+                         doNothing().when(mock).spawnItems(any());
+                     })) {
+
+            // Act
+            researchGameArea.create();
+
+            // Assert default spec: (10,10), center=true, collidable=true
+            verify(researchGameArea)
+                    .spawnPlayer(argThat(spec -> {
+                        GridPoint2 gp = spec.cell();
+                        return gp != null
+                                && gp.x == 10 && gp.y == 10
+                                && spec.centerOnTile()
+                                && spec.collidable();
+                    }));
+
+            // Sanity: the heavy helpers were indeed bypassed
+            verify(researchGameArea).spawnBordersAndDoors();
+            verify(researchGameArea).spawnPlatforms();
+            verify(researchGameArea).spawnResearchProps();
+            verify(researchGameArea).spawnEnemies();
+            verify(researchGameArea)
+                    .spawnObjectDoors(any(GridPoint2.class), any(GridPoint2.class));
         }
     }
 
@@ -69,20 +137,18 @@ class ResearchAreaTest {
     void testTraversals() throws Exception {
         doNothing().when(researchGameArea).clearAndLoad(any());
 
-        var method = ResearchGameArea.class.getDeclaredMethod("loadElevator");
-        method.setAccessible(true);
-        method.invoke(researchGameArea);
+        var loadElevator = ResearchGameArea.class.getDeclaredMethod("loadElevator");
+        loadElevator.setAccessible(true);
+        loadElevator.invoke(researchGameArea);
 
-        verify(researchGameArea).clearAndLoad(argThat(supplier -> {
-            return supplier.get() instanceof ElevatorGameArea;
-        }));
+        verify(researchGameArea)
+                .clearAndLoad(argThat(supplier -> supplier.get() instanceof ElevatorGameArea));
 
-        var method2 = ResearchGameArea.class.getDeclaredMethod("loadShipping");
-        method2.setAccessible(true);
-        method2.invoke(researchGameArea);
+        var loadShipping = ResearchGameArea.class.getDeclaredMethod("loadShipping");
+        loadShipping.setAccessible(true);
+        loadShipping.invoke(researchGameArea);
 
-        verify(researchGameArea).clearAndLoad(argThat(supplier -> {
-            return supplier.get() instanceof ShippingGameArea;
-        }));
+        verify(researchGameArea)
+                .clearAndLoad(argThat(supplier -> supplier.get() instanceof ShippingGameArea));
     }
 }

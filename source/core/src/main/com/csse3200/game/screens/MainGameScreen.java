@@ -4,7 +4,8 @@ import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.csse3200.game.GdxGame;
-import com.csse3200.game.areas.ForestGameArea;
+import com.csse3200.game.areas.AreaRouter;
+import com.csse3200.game.areas.*;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.components.maingame.MainGameActions;
 import com.csse3200.game.components.screens.PauseMenuDisplay;
@@ -46,7 +47,6 @@ public class MainGameScreen extends ScreenAdapter {
   private final GdxGame game;
   private final Renderer renderer;
   private final PhysicsEngine physicsEngine;
-  private final ForestGameArea forestGameArea;
 
   private Entity pauseOverlay;
   private boolean isPauseVisible = false;
@@ -76,21 +76,40 @@ public class MainGameScreen extends ScreenAdapter {
 
     logger.debug("Initialising main game screen entities");
     TerrainFactory terrainFactory = new TerrainFactory(renderer.getCamera());
-    forestGameArea = new ForestGameArea(terrainFactory, renderer.getCamera());
-    com.csse3200.game.services.ServiceLocator.registerGameArea(forestGameArea);
-    forestGameArea.create();
+    AreaRouter router = new AreaRouter()
+            .registerAll(
+                    ElevatorGameArea.class,
+                    ForestGameArea.class,
+                    GameArea.class,
+                    OfficeGameArea.class,
+                    ResearchGameArea.class,
+                    SecurityGameArea.class,
+                    ServerGameArea.class,
+                    ShippingGameArea.class,
+                    StorageGameArea.class,
+                    TunnelGameArea.class
+            );
+
+//    forestGameArea = new ForestGameArea(terrainFactory, renderer.getCamera());
+
+    var startArea = router.create("Forest", terrainFactory, renderer.getCamera());
+    ServiceLocator.registerGameArea(startArea);
+    startArea.create();
   }
 
   @Override
   public void render(float delta) {
-    if (!isPauseVisible && !(ServiceLocator.getTimeSource().isPaused())
-            && !ServiceLocator.isTransitioning()) {
+    if (!isPauseVisible
+            && !(ServiceLocator.getTimeSource().isPaused())
+            && !ServiceLocator.getTransitioning()) {
       physicsEngine.update();
     }
-    if (!com.csse3200.game.services.ServiceLocator.isTransitioning()) {
+    if (!com.csse3200.game.services.ServiceLocator.getTransitioning()) {
       ServiceLocator.getEntityService().update();
     }
-    Entity player = forestGameArea.getPlayer();
+
+    GameArea current = ServiceLocator.getGameArea();
+    Entity player = current != null ? current.getPlayer() : null;
     //show death screen when player is dead
     if (player != null) {
       var playerStat = player.getComponent(CombatStatsComponent.class);

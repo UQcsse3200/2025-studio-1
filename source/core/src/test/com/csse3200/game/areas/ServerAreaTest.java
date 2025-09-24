@@ -1,33 +1,21 @@
 package com.csse3200.game.areas;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyBoolean;
-import static org.mockito.ArgumentMatchers.argThat;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.mockStatic;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.doCallRealMethod;
-import static org.mockito.Mockito.doNothing;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
 
 import com.badlogic.gdx.math.GridPoint2;
+import com.csse3200.game.areas.terrain.TerrainFactory;
+import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
 import com.csse3200.game.entities.factories.characters.PlayerFactory;
 import com.csse3200.game.extensions.GameExtension;
 import com.csse3200.game.services.ServiceLocator;
-import com.csse3200.game.areas.*;
-import com.csse3200.game.areas.terrain.TerrainFactory;
-import com.csse3200.game.components.CameraComponent;
-
-import org.junit.jupiter.api.Assertions;
+import java.lang.reflect.Method;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.MockedStatic;
-
-import java.util.ArrayList;
 
 @ExtendWith(GameExtension.class)
 class ServerAreaTest {
@@ -43,24 +31,40 @@ class ServerAreaTest {
         cameraComponent = mock(CameraComponent.class);
         serverGameArea = spy(new ServerGameArea(terrainFactory, cameraComponent));
 
-        doNothing().when(serverGameArea)
+        // Don’t execute real spawns during test
+        doNothing().when(serverGameArea).spawnEntity(any(Entity.class));
+        doNothing()
+                .when(serverGameArea)
                 .spawnEntityAt(any(Entity.class), any(GridPoint2.class), anyBoolean(), anyBoolean());
     }
 
+    private static Method spawnPlayerMethod() throws Exception {
+        Method m = GameArea.class.getDeclaredMethod("spawnPlayer", PlayerSpawnSpec.class);
+        m.setAccessible(true);
+        return m;
+    }
+
     @Test
-    void testSpawnPlayerCallsPlayerFactory() throws Exception {
-        try (MockedStatic<PlayerFactory> playerFactoryMock = mockStatic(PlayerFactory.class)) {
-            Entity mockPlayer = mock(Entity.class);
-            playerFactoryMock.when(PlayerFactory::createPlayer).thenReturn(mockPlayer);
+    void testSpawnPlayer_usesPlayerFactory_andSpawnsAtSpecCellWithDefaultFlags() throws Exception {
+        Entity mockPlayer = mock(Entity.class);
 
-            var method = ServerGameArea.class.getDeclaredMethod("spawnPlayer");
-            method.setAccessible(true);
-            Entity result = (Entity) method.invoke(serverGameArea);
+        try (MockedStatic<PlayerFactory> pf = mockStatic(PlayerFactory.class)) {
+            pf.when(PlayerFactory::createPlayer).thenReturn(mockPlayer);
 
-            // Verify PlayerFactory used and player spawned
-            playerFactoryMock.verify(PlayerFactory::createPlayer);
-            verify(serverGameArea).spawnEntityAt(eq(mockPlayer), any(GridPoint2.class), eq(true), eq(true));
-            Assertions.assertEquals(mockPlayer, result);
+            // Explicit cell so we can assert forwarding
+            GridPoint2 cell = new GridPoint2(7, 9);
+            PlayerSpawnSpec spec = PlayerSpawnSpec.of("server-room", cell); // defaults center=true, collidable=true
+
+            Object ret = spawnPlayerMethod().invoke(serverGameArea, spec);
+
+            // Factory invoked
+            pf.verify(PlayerFactory::createPlayer);
+
+            // Spawned at given cell with default flags
+            verify(serverGameArea).spawnEntityAt(eq(mockPlayer), eq(cell), eq(true), eq(true));
+
+            // Method returns the player
+            assert ret == mockPlayer;
         }
     }
 
@@ -68,20 +72,14 @@ class ServerAreaTest {
     void testTraversals() throws Exception {
         doNothing().when(serverGameArea).clearAndLoad(any());
 
-        var method = ServerGameArea.class.getDeclaredMethod("loadTunnel");
-        method.setAccessible(true);
-        method.invoke(serverGameArea);
+        var m1 = ServerGameArea.class.getDeclaredMethod("loadTunnel");
+        m1.setAccessible(true);
+        m1.invoke(serverGameArea);
+        verify(serverGameArea).clearAndLoad(argThat(s -> s.get() instanceof TunnelGameArea));
 
-        verify(serverGameArea).clearAndLoad(argThat(supplier -> {
-            return supplier.get() instanceof TunnelGameArea;
-        }));
-
-        var method2 = ServerGameArea.class.getDeclaredMethod("loadStorage");
-        method2.setAccessible(true);
-        method2.invoke(serverGameArea);
-
-        verify(serverGameArea).clearAndLoad(argThat(supplier -> {
-            return supplier.get() instanceof StorageGameArea;
-        }));
+        var m2 = ServerGameArea.class.getDeclaredMethod("loadStorage");
+        m2.setAccessible(true);
+        m2.invoke(serverGameArea);
+        verify(serverGameArea).clearAndLoad(argThat(s -> s.get() instanceof StorageGameArea));
     }
 }

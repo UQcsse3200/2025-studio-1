@@ -33,8 +33,8 @@ public class OfficeGameArea extends GameArea {
       spawnEntity(new Entity().addComponent(terrain));
 
     spawnBordersAndDoors();
-    spawnPlayer();
-    spawnFloor();
+      player = spawnPlayer(PlayerSpawnSpec.of(getRoomId(), PLAYER_SPAWN));
+      spawnFloor();
     spawnObjectDoors(new GridPoint2(0, 14), new GridPoint2(28, 20));
     spawnPlatforms();
     spawnOfficeProps();
@@ -68,10 +68,6 @@ public class OfficeGameArea extends GameArea {
 
   }
 
-  private void spawnPlayer() {
-    Entity player = PlayerFactory.createPlayer();
-    spawnEntityAt(player, PLAYER_SPAWN, true, true);
-  }
     private void spawnOfficeProps() {
         // Simple: render two office sprites via TextureRenderComponent-only entities
         Entity decor = new Entity()

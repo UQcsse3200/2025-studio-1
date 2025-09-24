@@ -48,7 +48,7 @@ class Floor2GameAreaTest {
     when(cameraComponent.getCamera()).thenReturn(cam);
     when(cameraComponent.getEntity()).thenReturn(camEntity);
 
-    Reception area = new Reception(mock(TerrainFactory.class), cameraComponent);
+    ReceptionGameArea area = new ReceptionGameArea(mock(TerrainFactory.class), cameraComponent);
     GameArea.Bounds b = area.getCameraBounds(cameraComponent);
 
     // Verify bounds calculation
@@ -74,7 +74,7 @@ class Floor2GameAreaTest {
     when(cameraComponent.getCamera()).thenReturn(cam);
     when(cameraComponent.getEntity()).thenReturn(camEntity);
 
-    Reception area = new Reception(mock(TerrainFactory.class), cameraComponent);
+      ReceptionGameArea area = new ReceptionGameArea(mock(TerrainFactory.class), cameraComponent);
     GameArea.Bounds b = area.getCameraBounds(cameraComponent);
 
     // Test bottom door positioning (should be at bottomY + 0.1f)

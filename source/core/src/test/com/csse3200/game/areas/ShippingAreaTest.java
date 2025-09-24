@@ -1,33 +1,21 @@
 package com.csse3200.game.areas;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyBoolean;
-import static org.mockito.ArgumentMatchers.argThat;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.mockStatic;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.doCallRealMethod;
-import static org.mockito.Mockito.doNothing;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
 
 import com.badlogic.gdx.math.GridPoint2;
+import com.csse3200.game.areas.terrain.TerrainFactory;
+import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
 import com.csse3200.game.entities.factories.characters.PlayerFactory;
 import com.csse3200.game.extensions.GameExtension;
 import com.csse3200.game.services.ServiceLocator;
-import com.csse3200.game.areas.*;
-import com.csse3200.game.areas.terrain.TerrainFactory;
-import com.csse3200.game.components.CameraComponent;
-
-import org.junit.jupiter.api.Assertions;
+import java.lang.reflect.Method;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.MockedStatic;
-
-import java.util.ArrayList;
 
 @ExtendWith(GameExtension.class)
 class ShippingAreaTest {
@@ -43,25 +31,40 @@ class ShippingAreaTest {
         cameraComponent = mock(CameraComponent.class);
         shippingGameArea = spy(new ShippingGameArea(terrainFactory, cameraComponent));
 
-        doNothing().when(shippingGameArea)
+        // Don’t execute real spawns during test
+        doNothing().when(shippingGameArea).spawnEntity(any(Entity.class));
+        doNothing()
+                .when(shippingGameArea)
                 .spawnEntityAt(any(Entity.class), any(GridPoint2.class), anyBoolean(), anyBoolean());
     }
 
+    private static Method spawnPlayerMethod() throws Exception {
+        Method m = GameArea.class.getDeclaredMethod("spawnPlayer", PlayerSpawnSpec.class);
+        m.setAccessible(true);
+        return m;
+    }
+
     @Test
-    void testSpawnPlayerCallsPlayerFactory() throws Exception {
-        try (MockedStatic<PlayerFactory> playerFactoryMock = mockStatic(PlayerFactory.class)) {
-            Entity mockPlayer = mock(Entity.class);
-            playerFactoryMock.when(PlayerFactory::createPlayer).thenReturn(mockPlayer);
+    void testSpawnPlayer_usesPlayerFactory_andSpawnsAtSpecCellWithDefaultFlags() throws Exception {
+        Entity mockPlayer = mock(Entity.class);
 
-            var method = ShippingGameArea.class.getDeclaredMethod("spawnPlayer");
-            method.setAccessible(true);
-            method.invoke(shippingGameArea); // returns null because method is void
+        try (MockedStatic<PlayerFactory> pf = mockStatic(PlayerFactory.class)) {
+            pf.when(PlayerFactory::createPlayer).thenReturn(mockPlayer);
 
-            // Verify PlayerFactory was used
-            playerFactoryMock.verify(PlayerFactory::createPlayer);
+            // Choose a specific cell so we can assert forwarding
+            GridPoint2 cell = new GridPoint2(8, 6);
+            PlayerSpawnSpec spec = PlayerSpawnSpec.of("shipping", cell); // defaults: center=true, collidable=true
 
-            // Verify the player was spawned
-            verify(shippingGameArea).spawnEntityAt(eq(mockPlayer), any(GridPoint2.class), eq(true), eq(true));
+            Object ret = spawnPlayerMethod().invoke(shippingGameArea, spec);
+
+            // Factory used
+            pf.verify(PlayerFactory::createPlayer);
+
+            // Spawned at given cell with default flags
+            verify(shippingGameArea).spawnEntityAt(eq(mockPlayer), eq(cell), eq(true), eq(true));
+
+            // spawnPlayer returns the created player
+            assert ret == mockPlayer;
         }
     }
 
@@ -69,20 +72,14 @@ class ShippingAreaTest {
     void testTraversals() throws Exception {
         doNothing().when(shippingGameArea).clearAndLoad(any());
 
-        var method = ShippingGameArea.class.getDeclaredMethod("loadResearch");
-        method.setAccessible(true);
-        method.invoke(shippingGameArea);
+        var loadResearch = ShippingGameArea.class.getDeclaredMethod("loadResearch");
+        loadResearch.setAccessible(true);
+        loadResearch.invoke(shippingGameArea);
+        verify(shippingGameArea).clearAndLoad(argThat(s -> s.get() instanceof ResearchGameArea));
 
-        verify(shippingGameArea).clearAndLoad(argThat(supplier -> {
-            return supplier.get() instanceof ResearchGameArea;
-        }));
-
-        var method2 = ShippingGameArea.class.getDeclaredMethod("loadStorage");
-        method2.setAccessible(true);
-        method2.invoke(shippingGameArea);
-
-        verify(shippingGameArea).clearAndLoad(argThat(supplier -> {
-            return supplier.get() instanceof StorageGameArea;
-        }));
+        var loadStorage = ShippingGameArea.class.getDeclaredMethod("loadStorage");
+        loadStorage.setAccessible(true);
+        loadStorage.invoke(shippingGameArea);
+        verify(shippingGameArea).clearAndLoad(argThat(s -> s.get() instanceof StorageGameArea));
     }
 }

@@ -17,8 +17,6 @@ public class TunnelGameArea extends GameArea {
   private static final float WALL_WIDTH = 0.1f;
   private static final GridPoint2 PLAYER_SPAWN = new GridPoint2(10, 10);
 
-  private Entity player;
-
   public TunnelGameArea(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
     super(terrainFactory, cameraComponent);
   }
@@ -40,8 +38,9 @@ public class TunnelGameArea extends GameArea {
         new Color(0.08f, 0.08f, 0.12f, 0.28f));
 
     spawnBordersAndDoors();
-    player = spawnPlayer();
-    spawnPlatforms();
+      player = spawnPlayer(PlayerSpawnSpec.of(getRoomId(), PLAYER_SPAWN));
+
+      spawnPlatforms();
     spawnSpawnPads();
     spawnGrokDroids();
     spawnObjectDoors();
