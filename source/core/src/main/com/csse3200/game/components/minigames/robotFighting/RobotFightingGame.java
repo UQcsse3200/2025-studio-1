@@ -10,6 +10,8 @@ public class RobotFightingGame {
     private final Entity gameEntity;
     private final RobotFightingDisplay gameDisplay;
 
+    private boolean gameDisplayed = false;
+
     public RobotFightingGame() {
         encouragingMessages = FileLoader.readClass(RobotFightingText.class, "games/robot-fighting.json");
 
@@ -20,7 +22,14 @@ public class RobotFightingGame {
     }
 
     private void handleInteract() {
-        gameDisplay.show();
+        if (gameDisplayed) {
+            gameDisplay.hide();
+            gameDisplayed = false;
+        } else {
+            gameDisplay.show();
+            gameDisplayed = true;
+        }
+
     }
 
     private Entity initGameEntity() {
