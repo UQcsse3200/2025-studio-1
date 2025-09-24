@@ -20,9 +20,6 @@ public class KeyboardPlayerInputComponent extends InputComponent {
     private final Vector2 walkDirection = Vector2.Zero.cpy();
 
     private int focusedItem = -1;
-
-    private long timeSinceKeyPress = 0;
-    private int doublePressKeyCode = -1;
     private boolean holding = false;
 
     public KeyboardPlayerInputComponent() {
@@ -41,13 +38,11 @@ public class KeyboardPlayerInputComponent extends InputComponent {
             case Keys.A:
                 walkDirection.add(Vector2Utils.LEFT);
                 triggerWalkEvent();
-                checkForDashInput(keycode);
                 return true;
 
             case Keys.D:
                 walkDirection.add(Vector2Utils.RIGHT);
                 triggerWalkEvent();
-                checkForDashInput(keycode);
                 return true;
 
             case Keys.S:
@@ -58,23 +53,28 @@ public class KeyboardPlayerInputComponent extends InputComponent {
                 triggerSprintEvent();
                 return true;
 
+            case Keys.CONTROL_LEFT:
+                triggerDashEvent();
+                return true;
+
             case Keys.Q:
                 triggerReloadEvent();
                 return true;
+
             case Keys.SPACE:
                 triggerJumpEvent();
                 Sound jump = ServiceLocator.getResourceService().getAsset("sounds/jump.mp3", Sound.class);
                 jump.play();
                 entity.getEvents().trigger("anim");
                 return true;
-            case Keys.E:
 
+            case Keys.E:
                 if (!holding) {
                     triggerInteract();
                     holding = true;
                 }
-
                 return true;
+
             default:
                 return false;
         }
@@ -181,46 +181,6 @@ public class KeyboardPlayerInputComponent extends InputComponent {
     }
 
     /**
-     * Checks if the current key press should trigger a dash action.
-     * Uses timing between consecutive presses of the same key.
-     *
-     * @param keycode the code of the key that was pressed
-     */
-    private void checkForDashInput(int keycode) {
-        if (isDoubleKeyPress(keycode)) {
-            entity.getEvents().trigger("dashAttempt");
-        }
-    }
-
-    /**
-     * Determines if a key press is a valid double press
-     * based on timing and key code.
-     *
-     * @param keycode the code of the key being checked
-     * @return true if the key press qualifies as a double press
-     */
-    private boolean isDoubleKeyPress(int keycode) {
-        boolean validDoubleKey = false;
-        long timeDif = System.currentTimeMillis() - timeSinceKeyPress;
-        long DOUBLE_KEY_INTERVAL = 300;
-        if (keycode == doublePressKeyCode && timeDif < DOUBLE_KEY_INTERVAL) {
-            validDoubleKey = true;
-        }
-        updateDoubleKeyPress(keycode);
-        return validDoubleKey;
-    }
-
-    /**
-     * Updates tracking data for double key press detection.
-     *
-     * @param keycode the key code that was just pressed
-     */
-    private void updateDoubleKeyPress(int keycode) {
-        timeSinceKeyPress = System.currentTimeMillis();
-        doublePressKeyCode = keycode;
-    }
-
-    /**
      * Triggers either a walk or stop walking event based
      * on the current walking direction.
      */
@@ -270,6 +230,10 @@ public class KeyboardPlayerInputComponent extends InputComponent {
      */
     private void triggerJumpEvent() {
         entity.getEvents().trigger("jumpAttempt");
+    }
+
+    private void triggerDashEvent() {
+        entity.getEvents().trigger("dashAttempt");
     }
 
     /**
@@ -324,7 +288,7 @@ public class KeyboardPlayerInputComponent extends InputComponent {
         inventory.setCurrItem(weapon);
 //        String name = inventory.getCurrItem().getComponent(class )
 
-        entity.getEvents().trigger("focusItem", selectedSlot);  // Refresh UI & logic
+        entity.getEvents().trigger("focus item", selectedSlot);  // Refresh UI & logic
         System.out.println("Equipped weapon from slot " + selectedSlot);
 
         actions.equipWeapon(weapon);
@@ -346,4 +310,3 @@ public class KeyboardPlayerInputComponent extends InputComponent {
         actions.unequipWeapon();
     }
 }
-
