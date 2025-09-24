@@ -10,7 +10,6 @@ import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.ItemTypes;
 import com.csse3200.game.input.InputComponent;
 import com.csse3200.game.services.ServiceLocator;
-import com.csse3200.game.ui.terminal.Terminal;
 import com.csse3200.game.utils.math.Vector2Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -273,6 +272,8 @@ public class KeyboardPlayerInputComponent extends InputComponent {
             unequipCurrentItem();
 
         focusedItem = slot;
+        triggerSelectItem();
+
         if (!equipped) {
             equipCurrentItem();
         } else {
@@ -284,15 +285,14 @@ public class KeyboardPlayerInputComponent extends InputComponent {
      * equips the player with the weapon that is in the selected slot
      */
     public void equipCurrentItem() {
-        triggerSelectItem();
-
+        equipped = true;
         InventoryComponent inventory = entity.getComponent(InventoryComponent.class);
         PlayerActions actions = entity.getComponent(PlayerActions.class);
         if (inventory == null) return;  //no inventory
 
         Entity item = inventory.get(focusedItem);
         if (item == null) {
-            System.out.println("Nothing in selected slot!");
+            logger.debug("Nothing in selected slot! $& {}", focusedItem);
             return;
         }
 
@@ -307,14 +307,12 @@ public class KeyboardPlayerInputComponent extends InputComponent {
         logger.debug("Equipped weapon from slot " + focusedItem);
 
         actions.equipWeapon(item);
-        equipped = true;
     }
 
     /**
      * this function is to unequip the player
      */
     public void unequipCurrentItem() {
-        equipped = false;
         focusedItem = -1;
 
         InventoryComponent inventory = entity.getComponent(InventoryComponent.class);
@@ -328,5 +326,6 @@ public class KeyboardPlayerInputComponent extends InputComponent {
         logger.debug("Unequipped weapon");
 
         actions.unequipWeapon();
+        equipped = false;
     }
 }
