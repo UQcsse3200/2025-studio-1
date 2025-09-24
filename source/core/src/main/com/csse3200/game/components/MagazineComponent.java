@@ -67,8 +67,6 @@ public class MagazineComponent extends Component {
      */
 
     public boolean reload(Entity player) {
-
-        System.out.println("attempted reload in mag");
         if (currentAmmo == maxAmmo) {
 
             return false;
@@ -104,7 +102,6 @@ public class MagazineComponent extends Component {
     public boolean reloading() {
 
         float reloadDuration = 1.5f;
-        System.out.println("Since last Reload: " + this.timeSinceLastReload);
         return this.timeSinceLastReload <= reloadDuration;
     }
 
