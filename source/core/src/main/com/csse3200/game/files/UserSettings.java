@@ -93,6 +93,8 @@ public class UserSettings {
          */
         public float uiScale = 1f;
         public DisplaySettings displayMode = null;
+
+        public boolean musicEnabled = true;
     }
 
     /**

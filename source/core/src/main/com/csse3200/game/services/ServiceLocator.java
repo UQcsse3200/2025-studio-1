@@ -28,6 +28,7 @@ public class ServiceLocator {
     private static GameArea gameArea;
     private static SaveLoadService saveLoadService;
     private static Entity player;
+    private static MusicService musicService;
 
     public static Entity getPlayer() {
         return player;
@@ -75,6 +76,10 @@ public class ServiceLocator {
         return saveLoadService;
     }
 
+    public static MusicService getMusicService() {
+        return musicService;
+    }
+
     public static void registerGameArea(GameArea theArea) {
         logger.debug("Registering game area service {}", theArea);
         gameArea = theArea;
@@ -117,6 +122,11 @@ public class ServiceLocator {
     public static void registerSaveLoadService(SaveLoadService source) {
         logger.debug("Registering save service {}", source);
         saveLoadService = source;
+    }
+
+    public static void registerMusicService(MusicService source) {
+        logger.debug("Registering music service {}", source);
+        musicService = source;
     }
 
     public static void clear() {
