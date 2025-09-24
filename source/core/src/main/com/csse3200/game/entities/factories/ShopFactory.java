@@ -27,6 +27,8 @@ public final class ShopFactory {
                 .addComponent(new ShopScreenDisplay(area, manager));
         shop.create();
 
+        shop.setInteractable(true);
+
         PhysicsComponent phys = shop.getComponent(PhysicsComponent.class);
         phys.setBodyType(BodyDef.BodyType.StaticBody);
         phys.getBody().setUserData(shop);
