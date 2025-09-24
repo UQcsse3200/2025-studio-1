@@ -24,6 +24,7 @@ import com.csse3200.game.services.ServiceLocator;
 public class EnemyMudBallAttackComponent extends Component {
     private static final String ATTACKS_ATLAS_PATH = "images/Boss3_Attacks.atlas";
     private static final String DEFAULT_PROJECTILE_ANIM = "boss3_attack_cpu";
+    private final String BOSS3 = "Boss3";
 
     private final Entity target;
     private final float cooldown, range, speed, life;
@@ -98,14 +99,14 @@ public class EnemyMudBallAttackComponent extends Component {
         }
 
         // Lazy load
-        Gdx.app.log("Boss3", "Lazy-loading " + ATTACKS_ATLAS_PATH);
+        Gdx.app.log(BOSS3, "Lazy-loading " + ATTACKS_ATLAS_PATH);
         rs.loadTextureAtlases(new String[]{ATTACKS_ATLAS_PATH});
         while (rs.loadForMillis(1)) { /* spin until loaded */ }
 
         try {
             attacksAtlas = rs.getAsset(ATTACKS_ATLAS_PATH, TextureAtlas.class);
         } catch (GdxRuntimeException ex) {
-            Gdx.app.error("Boss3", "Failed to load attacks atlas: " + ATTACKS_ATLAS_PATH, ex);
+            Gdx.app.error(BOSS3, "Failed to load attacks atlas: " + ATTACKS_ATLAS_PATH, ex);
             attacksAtlas = null;
         }
         return attacksAtlas;
@@ -122,7 +123,7 @@ public class EnemyMudBallAttackComponent extends Component {
             return;
         }
         if (atlas.findRegions(projectileAnimName).size == 0) {
-            Gdx.app.error("Boss3", "No regions '" + projectileAnimName + "' in " + ATTACKS_ATLAS_PATH);
+            Gdx.app.error(BOSS3, "No regions '" + projectileAnimName + "' in " + ATTACKS_ATLAS_PATH);
             timer = Math.max(timer, 0.25f);
             return;
         }

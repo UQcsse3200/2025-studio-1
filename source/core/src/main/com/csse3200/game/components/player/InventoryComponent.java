@@ -27,6 +27,7 @@ public class InventoryComponent extends Component {
     private final ArrayList<String> itemTexs = new ArrayList<>(maxCapacity);
     private int processor;
     private Entity currItem;
+    private int selectedSlot = -1;
     private int equippedSlot = -1; // no slot is equipped initially
     private int keycardLevel = 0;
 
@@ -43,7 +44,6 @@ public class InventoryComponent extends Component {
             this.itemTexs.add(idx, null);
         }
     }
-
 
     /**
      * setter method for the keycard level
