@@ -10,6 +10,7 @@ import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.components.KeycardGateComponent;
 import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import com.csse3200.game.components.items.ItemHoldComponent;
+import com.csse3200.game.components.minigames.robotFighting.RobotFightingGame;
 import com.csse3200.game.components.player.InventoryComponent;
 import com.csse3200.game.components.shop.CatalogService;
 import com.csse3200.game.components.shop.ShopDemo;
@@ -310,6 +311,8 @@ public class ForestGameArea extends GameArea {
         spawnEntity(keycard);
 
         spawnItems();
+
+        spawnRobotFightingGame();
     }
 
     private void spawnRobots() {
@@ -590,6 +593,11 @@ public class ForestGameArea extends GameArea {
 
         Entity boss3 = BossFactory.createBoss3(player);
         spawnEntityAt(boss3, pos, true, true);
+    }
+
+    private void spawnRobotFightingGame() {
+        GridPoint2 pos = new GridPoint2(3, 20);
+        spawnEntityAt(new RobotFightingGame().getGameEntity(), pos, true, true);
     }
 
     public void spawnItem(Entity item, GridPoint2 position) {
