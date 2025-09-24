@@ -37,7 +37,7 @@ public class SettingsMenuDisplay extends UIComponent {
     private Slider uiScaleSlider;
     private SelectBox<StringDecorator<DisplayMode>> displayModeSelect;
     private NeonStyles neon;
-
+    private CheckBox musicCheck;
 
     public SettingsMenuDisplay(GdxGame game) {
         super();
@@ -119,6 +119,10 @@ public class SettingsMenuDisplay extends UIComponent {
         displayModeSelect.setItems(getDisplayModes(selectedMonitor));
         displayModeSelect.setSelected(getActiveMode(displayModeSelect.getItems()));
 
+        Label musicLabel = new Label("Music:", skin);
+        musicCheck = new CheckBox("", skin);
+        musicCheck.setChecked(settings.musicEnabled);
+
         // White labels
         makeWhite(
                 fpsLabel,
@@ -126,7 +130,8 @@ public class SettingsMenuDisplay extends UIComponent {
                 vsyncLabel,
                 uiScaleLabel,
                 uiScaleValue,
-                displayModeLabel
+                displayModeLabel,
+                musicLabel
         );
 
         // TextField style
@@ -151,6 +156,7 @@ public class SettingsMenuDisplay extends UIComponent {
             if (cb.checkboxOver != null) cb.checkboxOver = skin.newDrawable(cb.checkboxOver, Color.WHITE);
             fullScreenCheck.setStyle(cb);
             vsyncCheck.setStyle(cb);
+            musicCheck.setStyle(cb);
         }
         logger.debug("CheckBox styled");
 
@@ -243,11 +249,22 @@ public class SettingsMenuDisplay extends UIComponent {
         table.add(displayModeLabel).right().padRight(15f);
         table.add(displayModeSelect).left();
 
+        table.row().padTop(10f);
+        table.add(musicLabel).right().padRight(15f);
+        table.add(musicCheck).left();
+
         // Events on inputs
         uiScaleSlider.addListener(
                 (Event event) -> {
                     float value = uiScaleSlider.getValue();
                     uiScaleValue.setText(String.format("%.2fx", value));
+                    return true;
+                });
+
+        musicCheck.addListener(
+                (Event event) -> {
+                    settings.musicEnabled = musicCheck.isChecked();
+                    UserSettings.set(settings, true);
                     return true;
                 });
 
@@ -354,8 +371,10 @@ public class SettingsMenuDisplay extends UIComponent {
         settings.uiScale = uiScaleSlider.getValue();
         settings.displayMode = new DisplaySettings(displayModeSelect.getSelected().object);
         settings.vsync = vsyncCheck.isChecked();
+        settings.musicEnabled = musicCheck.isChecked();
 
         UserSettings.set(settings, true);
+        ServiceLocator.getMusicService().setMenuMusicPlaying(musicCheck.isChecked());
     }
 
     /**
