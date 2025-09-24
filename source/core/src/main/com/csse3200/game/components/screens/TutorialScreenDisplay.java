@@ -132,7 +132,7 @@ public class TutorialScreenDisplay extends BaseScreenDisplay {
         root.row();
 
         // Bottom controls
-        TextButton mainMenuBtn = button("Main Menu", 1.5f, () -> {
+        TextButton mainMenuBtn = button("Main Menu", 2.0f, () -> {
             ServiceLocator.getButtonSoundService().playClick();
             backMainMenu();
         });

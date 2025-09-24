@@ -58,11 +58,7 @@ public class SettingsMenuDisplay extends UIComponent {
     private void addActors() {
         // Title label
         Label title = new Label("Settings", skin, "title");
-        Label.LabelStyle titleStyle = new Label.LabelStyle(title.getStyle());
-        titleStyle.fontColor = new com.badlogic.gdx.graphics.Color(0f, 0.95f, 1f, 1f);
-        title.setStyle(titleStyle);
-
-        title.setFontScale(1.20f);
+        title.setFontScale(1.5f);
 
         // Build the tables
         Table settingsTable = makeSettingsTable();
@@ -72,10 +68,10 @@ public class SettingsMenuDisplay extends UIComponent {
         rootTable.setFillParent(true);
 
         // Title row
-        rootTable.add(title).expandX().top().padTop(30f);
+        rootTable.add(title).expandX().top().padTop(70f);
 
         // Settings rows
-        rootTable.row().padTop(30f);
+        rootTable.row();
         rootTable.add(settingsTable).expandX().expandY();
 
         // Buttons
@@ -94,42 +90,31 @@ public class SettingsMenuDisplay extends UIComponent {
         UserSettings.Settings settings = UserSettings.get();
 
         // Create components
-        Label fpsLabel = new Label("FPS Cap:", skin);
+        Label fpsLabel = new Label("FPS Cap:", skin, "white");
         fpsText = new TextField(Integer.toString(settings.fps), skin);
 
-        Label fullScreenLabel = new Label("Fullscreen:", skin);
+        Label fullScreenLabel = new Label("Fullscreen:", skin, "white");
         fullScreenCheck = new CheckBox("", skin);
         fullScreenCheck.setChecked(settings.fullscreen);
 
-        Label vsyncLabel = new Label("VSync:", skin);
+        Label vsyncLabel = new Label("VSync:", skin, "white");
         vsyncCheck = new CheckBox("", skin);
         vsyncCheck.setChecked(settings.vsync);
 
-        Label uiScaleLabel = new Label("ui Scale (Unused):", skin);
+        Label uiScaleLabel = new Label("ui Scale (Unused):", skin, "white");
         uiScaleSlider = new Slider(0.2f, 2f, 0.1f, false, skin);
         uiScaleSlider.setValue(settings.uiScale);
-        Label uiScaleValue = new Label(String.format("%.2fx", settings.uiScale), skin);
+        Label uiScaleValue = new Label(String.format("%.2fx", settings.uiScale), skin, "white");
 
-        Label displayModeLabel = new Label("Resolution:", skin);
+        Label displayModeLabel = new Label("Resolution:", skin, "white");
         displayModeSelect = new SelectBox<>(skin);
         Monitor selectedMonitor = Gdx.graphics.getMonitor();
         displayModeSelect.setItems(getDisplayModes(selectedMonitor));
         displayModeSelect.setSelected(getActiveMode(displayModeSelect.getItems()));
 
-        Label musicLabel = new Label("Music:", skin);
+        Label musicLabel = new Label("Music:", skin, "white");
         musicCheck = new CheckBox("", skin);
         musicCheck.setChecked(settings.isMusicEnabled());
-
-        // White labels
-        makeWhite(
-                fpsLabel,
-                fullScreenLabel,
-                vsyncLabel,
-                uiScaleLabel,
-                uiScaleValue,
-                displayModeLabel,
-                musicLabel
-        );
 
         // TextField style
         {
@@ -236,7 +221,7 @@ public class SettingsMenuDisplay extends UIComponent {
 
         table.row().padTop(10f);
         Table uiScaleTable = new Table();
-        uiScaleTable.add(uiScaleSlider).width(100).left();
+        uiScaleTable.add(uiScaleSlider).width(150).left();
         uiScaleTable.add(uiScaleValue).left().padLeft(5f).expandX();
 
         table.add(uiScaleLabel).right().padRight(15f);
@@ -413,17 +398,5 @@ public class SettingsMenuDisplay extends UIComponent {
     public void dispose() {
         rootTable.clear();
         super.dispose();
-    }
-
-    /**
-     * Sets the provided labels' font colour to white by cloning their styles.
-     */
-    private static void makeWhite(Label... labels) {
-        for (Label l : labels) {
-            Label.LabelStyle st = new Label.LabelStyle(l.getStyle());
-            st.fontColor = Color.WHITE;
-            l.setStyle(st);
-            logger.debug("Label styled to white");
-        }
     }
 }
