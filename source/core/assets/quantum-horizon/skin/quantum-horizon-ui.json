@@ -56,6 +56,12 @@ com.badlogic.gdx.graphics.Color: {
 		b: 0.7176471
 		a: 1
 	}
+	select-box-background: {
+		r: 1
+		g: 1
+		b: 1
+		a: 0.2
+	}
 }
 com.badlogic.gdx.scenes.scene2d.ui.Skin$TintedDrawable: {
 	button-c: {
@@ -96,23 +102,23 @@ com.badlogic.gdx.scenes.scene2d.ui.Skin$TintedDrawable: {
 	}
 	radio-button-c: {
 		name: radio-button
-		color: color
+		color: white
 	}
 	select-box-c: {
 		name: select-box
-		color: color
+		color: select-box-background
 	}
 	slider-horizontal-c: {
 		name: slider-horizontal
-		color: color
+		color: white
 	}
 	slider-knob-horizontal-c: {
 		name: slider-knob-horizontal
-		color: color
+		color: white
 	}
 	slider-knob-over-horizontal-c: {
 		name: slider-knob-over-horizontal
-		color: color
+		color: white
 	}
 	slider-knob-over-vertical-c: {
 		name: slider-knob-over-vertical
@@ -140,7 +146,7 @@ com.badlogic.gdx.scenes.scene2d.ui.Skin$TintedDrawable: {
 	}
 	textfield-c: {
 		name: textfield
-		color: color
+		color: white
 	}
 	tooltip-c: {
 		name: tooltip
@@ -177,7 +183,7 @@ com.badlogic.gdx.scenes.scene2d.ui.Skin$TintedDrawable: {
 	}
 	radio-button-off-c: {
 		name: radio-button-off
-		color: color
+		color: white
 	}
 	pattern-bg-back: {
 		name: pattern-bg
@@ -189,7 +195,7 @@ com.badlogic.gdx.scenes.scene2d.ui.Skin$TintedDrawable: {
 	}
 	scroll-bar-back-vertical-c: {
 		name: scroll-bar-back-vertical
-		color: color
+		color: white
 	}
 	scroll-bar-knob-horizontal-c: {
 		name: scroll-bar-knob-horizontal
@@ -197,7 +203,7 @@ com.badlogic.gdx.scenes.scene2d.ui.Skin$TintedDrawable: {
 	}
 	scroll-bar-knob-vertical-c: {
 		name: scroll-bar-knob-vertical
-		color: color
+		color: white
 	}
 	progress-bar-horizontal-c: {
 		name: progress-bar-horizontal
@@ -225,7 +231,7 @@ com.badlogic.gdx.scenes.scene2d.ui.Skin$TintedDrawable: {
 	}
 	selection: {
 		name: white
-		color: selection
+		color: select-box-background
 	}
 	touchpad-c: {
 		name: touchpad
@@ -265,7 +271,7 @@ com.badlogic.gdx.scenes.scene2d.ui.Skin$TintedDrawable: {
 	}
 	list-pressed: {
 		name: list
-		color: pressed
+		color: select-box-background
 	}
 }
 com.badlogic.gdx.scenes.scene2d.ui.Button$ButtonStyle: {
@@ -318,6 +324,10 @@ com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle: {
 	title: {
 		font: title
 		fontColor: color
+	}
+	white: {
+		font: font
+		fontColor: white
 	}
 }
 com.badlogic.gdx.scenes.scene2d.ui.List$ListStyle: {

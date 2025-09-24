@@ -125,12 +125,12 @@ public class PlayerStatsDisplay extends UIComponent {
         // Processor label
         int processor = entity.getComponent(InventoryComponent.class).getProcessor();
         CharSequence processorText = String.format("Processor: %d", processor);
-        processorLabel = new Label(processorText, skin, "large");
+        processorLabel = new Label(processorText, skin);
 
         // Ammo label
         int ammo = entity.getComponent(AmmoStatsComponent.class).getAmmo();
         CharSequence ammoText = String.format("Ammo: %d", ammo);
-        ammoLabel = new Label(ammoText, skin, "large");
+        ammoLabel = new Label(ammoText, skin);
 
         // Layout:
         // Row 1: Health bar

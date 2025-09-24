@@ -20,7 +20,7 @@ public class PerformanceDisplay extends UIComponent {
     }
 
     private void addActors() {
-        profileLabel = new Label(getStats(), skin, "small");
+        profileLabel = new Label(getStats(), skin);
         stage.addActor(profileLabel);
     }
 
