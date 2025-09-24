@@ -33,6 +33,7 @@ class ItemPickUpComponentTest {
     private Entity player;
     private InventoryComponent inventory;
     private ItemPickUpComponent pickup;
+    private PlayerEquipComponent equip;
 
     /**
      * Two helper methods to let us test the code directly.
@@ -62,6 +63,7 @@ class ItemPickUpComponentTest {
     void setUp() {
         inventory = new InventoryComponent(/*processor=*/0);
         pickup = new ItemPickUpComponent(inventory);
+        equip = new PlayerEquipComponent();
         ServiceLocator.registerEntityService(new EntityService());
 
         // Create a mock ResourceService
@@ -82,6 +84,7 @@ class ItemPickUpComponentTest {
 
         player = new Entity()
                 .addComponent(inventory)
+                .addComponent(equip)
                 .addComponent(pickup);
         player.create();
     }
