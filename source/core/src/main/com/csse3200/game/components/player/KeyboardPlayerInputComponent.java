@@ -294,10 +294,11 @@ public class KeyboardPlayerInputComponent extends InputComponent {
         // Equip the weapon
         inventory.setEquippedSlot(focusedItem);
         inventory.setCurrItem(item);
-        String texture = inventory.getTex(focusedItem);
+        String tex = inventory.getTex(focusedItem);
+
 
         entity.getEvents().trigger("focusItem", focusedItem);  // Refresh UI & logic
-        entity.getEvents().trigger("equip", item);  // Display item in players hand
+        entity.getEvents().trigger("equip", tex);  // Display item in players hand
         System.out.println("Equipped weapon from slot " + focusedItem);
 
         actions.equipWeapon(item);
@@ -321,6 +322,6 @@ public class KeyboardPlayerInputComponent extends InputComponent {
         entity.getEvents().trigger("unequip");
         System.out.println("Unequipped weapon");
 
-//        actions.unequipWeapon();
+        actions.unequipWeapon();
     }
 }
