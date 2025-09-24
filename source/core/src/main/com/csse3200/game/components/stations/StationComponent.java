@@ -1,10 +1,15 @@
 package com.csse3200.game.components.stations;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.physics.box2d.Fixture;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.csse3200.game.components.Component;
 import com.csse3200.game.components.player.PlayerActions;
@@ -112,23 +117,48 @@ public class StationComponent extends Component {
         entity.getEvents().addListener("collisionEnd", this::onCollisionEnd);
         ServiceLocator.getPlayer().getEvents().addListener("interact", this::upgrade);
 
-        //Font
-        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(
-                Gdx.files.internal("fonts/ithaca.ttf"));
-        FreeTypeFontGenerator.FreeTypeFontParameter params =
-                new FreeTypeFontGenerator.FreeTypeFontParameter();
-        params.size = 20; // font size in pixels
+        //This part is AI generated
+        // Font setup with mipmapping for smoother scaling
+        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/ithaca.ttf"));
+        FreeTypeFontGenerator.FreeTypeFontParameter params = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        params.size = 28; // base font size
+        params.minFilter = Texture.TextureFilter.Linear;  // smooth scaling
+        params.magFilter = Texture.TextureFilter.Linear;
+        params.borderColor = Color.BLACK;
+        params.borderWidth = 2; // gives outline for readability
+        params.shadowColor = new Color(0, 0, 0, 0.6f);
+        params.shadowOffsetX = 2;
+        params.shadowOffsetY = 2;
+
         BitmapFont font = generator.generateFont(params);
-        generator.dispose(); // free generator memory
+        generator.dispose();
+
+        // Label style
         Label.LabelStyle labelStyle = new Label.LabelStyle();
         labelStyle.font = font;
-        labelStyle.font.getData().setScale(2f);
+        labelStyle.fontColor = Color.WHITE;
 
-        buyPrompt = new Label("", labelStyle);
+        // Add a background (9-patch image or simple tinted drawable)
+        Texture bgTexture = new Texture(Gdx.files.internal("images/textbg.png"));
+        NinePatch ninePatch = new NinePatch(bgTexture, 10, 10, 10, 10);
+        labelStyle.background = new NinePatchDrawable(ninePatch);
+
+        buyPrompt = new Label(config.promptText, labelStyle);
         buyPrompt.setVisible(false);
-        buyPrompt.setText(config.promptText);
+        buyPrompt.setAlignment(Align.center); // center text inside background
+        buyPrompt.setSize(500f, 100f);   // set box size
+        buyPrompt.setWrap(true);        // wrap text if needed
+        buyPrompt.setOrigin(Align.center);
+        buyPrompt.setPosition(
+                ServiceLocator.getRenderService().getStage().getWidth() / 2f,
+                ServiceLocator.getRenderService().getStage().getHeight() / 2f, // bottom quarter of screen
+                Align.center
+        );
+        buyPrompt.setTouchable(Touchable.disabled); // don't block clicks
+
         ServiceLocator.getRenderService().getStage().addActor(buyPrompt);
     }
+
 
     /**
      * Updates when the player collides with the station
@@ -145,9 +175,6 @@ public class StationComponent extends Component {
             player = otherEntity;
             playerNear = true;
             buyPrompt.setVisible(true);
-            float screenX = ServiceLocator.getRenderService().getStage().getWidth() / 2f;
-            float screenY = ServiceLocator.getRenderService().getStage().getHeight() / 2f;
-            buyPrompt.setPosition(screenX - 200f, screenY - 100f, Align.bottom);
             buyPrompt.setText(config.promptText);
         }
     }
