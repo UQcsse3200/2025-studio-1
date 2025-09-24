@@ -12,7 +12,7 @@ import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.components.gamearea.PerformanceDisplay;
 import com.csse3200.game.components.maingame.MainGameActions;
-import com.csse3200.game.components.maingame.MainGameExitDisplay;
+import com.csse3200.game.components.maingame.MainGameDisplay;
 import com.csse3200.game.components.player.InventoryComponent;
 import com.csse3200.game.components.player.ItemPickUpComponent;
 import com.csse3200.game.components.screens.PauseMenuDisplay;
@@ -81,6 +81,7 @@ public class MainGameScreen extends ScreenAdapter {
         renderer.getDebug().renderPhysicsWorld(physicsEngine.getWorld());
 
         loadAssets();
+        countdownTimer = new CountdownTimerService(ServiceLocator.getTimeSource(), 60000);
         createUI();
 
         logger.debug("Initialising main game screen entities");
@@ -89,7 +90,6 @@ public class MainGameScreen extends ScreenAdapter {
         com.csse3200.game.services.ServiceLocator.registerGameArea(gameArea);
         gameArea.create();
 
-        countdownTimer = new CountdownTimerService(ServiceLocator.getTimeSource(), 60000);
     }
 
     @Override
@@ -179,7 +179,7 @@ public class MainGameScreen extends ScreenAdapter {
         ui.addComponent(new InputDecorator(stage, 10))
                 .addComponent(new PerformanceDisplay())
                 .addComponent(new MainGameActions(this.game))
-                .addComponent(new MainGameExitDisplay())
+                .addComponent(new MainGameDisplay(countdownTimer))
                 .addComponent(new Terminal(this.game))
                 .addComponent(inputComponent)
                 .addComponent(new TerminalDisplay(this.game));
