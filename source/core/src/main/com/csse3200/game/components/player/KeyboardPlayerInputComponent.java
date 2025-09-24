@@ -21,6 +21,7 @@ import org.slf4j.LoggerFactory;
  */
 public class KeyboardPlayerInputComponent extends InputComponent {
     private static final Logger logger = LoggerFactory.getLogger(KeyboardPlayerInputComponent.class);
+
     private final Vector2 walkDirection = Vector2.Zero.cpy();
 
     private int focusedItem = -1;
