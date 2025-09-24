@@ -73,7 +73,7 @@ public class PlayerFactory {
                         .addComponent(new PlayerAnimationController())
                         .addComponent(new PowerupComponent())
                         .addComponent(new PlayerAnimationController())
-                        .addComponent(new ShopInteractComponent(2.0f));
+                        .addComponent(new InteractComponent());
 
         player.getComponent(AnimationRenderComponent.class).scaleEntity(2f);
         PhysicsUtils.setScaledCollider(player, 0.6f, 0.3f);
