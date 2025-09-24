@@ -107,7 +107,9 @@ class PlayerActionsTest {
         when(body.getWorldCenter()).thenReturn(worldCenter);
 
         PlayerActions actions = new PlayerActions();
-        Entity player = new Entity().addComponent(actions).addComponent(new StaminaComponent());
+        Entity player = new Entity()
+                .addComponent(actions)
+                .addComponent(new StaminaComponent());
         player.create();
 
         Field physField = PlayerActions.class.getDeclaredField("physicsComponent");

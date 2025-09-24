@@ -186,7 +186,9 @@ public class PlayerActions extends Component {
             if (crouching && touchingGround()) {
                 maxX = CROUCH_SPEED.x;
             } else {
-                boolean allowSprint = (sprinting && touchingGround() && stamina.hasStamina(SPRINT_COST));
+                boolean allowSprint = (
+                        sprinting && touchingGround() && stamina.hasStamina(SPRINT_COST)
+                );
                 maxX = allowSprint ? SPRINT_SPEED.x : MAX_SPEED.x;
             }
             targetVx = walkDirection.x * maxX;
@@ -651,7 +653,8 @@ public class PlayerActions extends Component {
 
         PhysicsComponent physics = currentWeapon.getComponent(PhysicsComponent.class);
         if (physics == null) {
-            System.out.println("Weapon has no PhysicsComponent," + "\nupdating position directly");
+            System.out.println("Weapon has no PhysicsComponent," +
+                    "\nupdating position directly");
             // Directly update visual position without physics:
             Vector2 playerPos = entity.getPosition();
             if (facingRight) {
@@ -664,7 +667,8 @@ public class PlayerActions extends Component {
 
         Body body = physics.getBody();
         if (body == null) {
-            System.out.println("Weapon's PhysicsComponent body is null," + "\nskipping physics-based position update");
+            System.out.println("Weapon's PhysicsComponent body is null," +
+                    "\nskipping physics-based position update");
             return; // Don't update position through physics if body not created
         }
 
