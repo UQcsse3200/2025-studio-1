@@ -7,6 +7,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.components.Component;
+import com.csse3200.game.components.TouchAttackComponent;
 import com.csse3200.game.components.WeaponsStatsComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.physics.PhysicsLayer;
@@ -15,7 +16,6 @@ import com.csse3200.game.physics.components.HitboxComponent;
 import com.csse3200.game.physics.components.PhysicsComponent;
 import com.csse3200.game.rendering.AnimationRenderComponent;
 import com.csse3200.game.services.ServiceLocator;
-import com.csse3200.game.components.TouchAttackComponent;
 
 /**
  * Tech projectile attack for Boss3.
@@ -94,7 +94,8 @@ public class EnemyMudBallAttackComponent extends Component {
         try {
             attacksAtlas = rs.getAsset(ATTACKS_ATLAS_PATH, TextureAtlas.class);
             if (attacksAtlas != null) return attacksAtlas;
-        } catch (GdxRuntimeException ignored) {}
+        } catch (GdxRuntimeException ignored) {
+        }
 
         // Lazy load
         Gdx.app.log("Boss3", "Lazy-loading " + ATTACKS_ATLAS_PATH);
@@ -132,7 +133,7 @@ public class EnemyMudBallAttackComponent extends Component {
                 .addComponent(new HitboxComponent().setLayer(PhysicsLayer.ENEMY_PROJECTILE))
                 .addComponent(new EnemyProjectileMovementComponent(velocity, life))
                 .addComponent(new CombatStatsComponent(1))
-                .addComponent(new WeaponsStatsComponent(dmg/3))
+                .addComponent(new WeaponsStatsComponent(dmg / 3))
                 .addComponent(new TouchAttackComponent(PhysicsLayer.PLAYER, 0f));
 
         AnimationRenderComponent arc = new AnimationRenderComponent(atlas);

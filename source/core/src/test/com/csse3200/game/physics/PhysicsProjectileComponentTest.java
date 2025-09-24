@@ -1,12 +1,4 @@
 package com.csse3200.game.physics;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyFloat;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.reset;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -23,12 +15,18 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
+
 @ExtendWith(GameExtension.class)
 @ExtendWith(MockitoExtension.class)
 public class PhysicsProjectileComponentTest {
-    @Mock PhysicsEngine engine;
-    @Mock Body body;
-    @Mock GameTime timeSource;
+    @Mock
+    PhysicsEngine engine;
+    @Mock
+    Body body;
+    @Mock
+    GameTime timeSource;
 
     @BeforeEach
     void beforeEach() {
@@ -77,7 +75,7 @@ public class PhysicsProjectileComponentTest {
         Entity entity = makeEntityWithProjectile(projectile);
 
         entity.getComponent(PhysicsProjectileComponent.class)
-                        .fire(new Vector2(1, 0), 3f);
+                .fire(new Vector2(1, 0), 3f);
 
         verify(body).setLinearVelocity(new Vector2(3f, 0));
     }

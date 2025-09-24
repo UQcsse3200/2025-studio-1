@@ -36,7 +36,9 @@ public class ShopManagerTest {
         return inv;
     }
 
-    /** Attach manager to an entity so it can fire events without NPEs. */
+    /**
+     * Attach manager to an entity so it can fire events without NPEs.
+     */
     private ShopManager mkManager(CatalogService catalog) {
         ShopManager m = new ShopManager(catalog);
         Entity shop = new Entity();

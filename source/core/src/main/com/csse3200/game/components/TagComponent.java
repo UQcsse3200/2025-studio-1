@@ -17,6 +17,7 @@ public class TagComponent extends Component {
 
     /**
      * Tag component constructor
+     *
      * @param tag a string assigned to the entity
      */
 
@@ -27,6 +28,7 @@ public class TagComponent extends Component {
 
     /**
      * Gives the entity's tag
+     *
      * @return tag
      */
 

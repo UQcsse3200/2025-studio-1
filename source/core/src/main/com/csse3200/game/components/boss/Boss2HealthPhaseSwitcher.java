@@ -1,7 +1,7 @@
 package com.csse3200.game.components.boss;
 
-import com.csse3200.game.components.Component;
 import com.csse3200.game.components.CombatStatsComponent;
+import com.csse3200.game.components.Component;
 import com.csse3200.game.rendering.AnimationRenderComponent;
 
 /**
@@ -19,27 +19,27 @@ public class Boss2HealthPhaseSwitcher extends Component {
     private AnimationRenderComponent arc;
 
     private boolean enteredPhase2 = false;
-    private boolean enteredAngry  = false;
+    private boolean enteredAngry = false;
 
     private String current = null;
 
     public Boss2HealthPhaseSwitcher(float phase2Threshold,
-                                   float angryThreshold,
-                                   String idleName,
-                                   String phase2Name,
-                                   String angryName) {
+                                    float angryThreshold,
+                                    String idleName,
+                                    String phase2Name,
+                                    String angryName) {
         // 合法化与存储 / sanitize & store
         this.phase2Threshold = Math.max(0f, Math.min(1f, phase2Threshold));
-        this.angryThreshold  = Math.max(0f, Math.min(this.phase2Threshold, angryThreshold));
-        this.idleName  = idleName;
+        this.angryThreshold = Math.max(0f, Math.min(this.phase2Threshold, angryThreshold));
+        this.idleName = idleName;
         this.phase2Name = phase2Name;
-        this.angryName  = angryName;
+        this.angryName = angryName;
     }
 
     @Override
     public void create() {
         stats = entity.getComponent(CombatStatsComponent.class);
-        arc   = entity.getComponent(AnimationRenderComponent.class);
+        arc = entity.getComponent(AnimationRenderComponent.class);
         // 初始时就根据当前血量播一次
         playForCurrentHp();
     }
@@ -59,7 +59,7 @@ public class Boss2HealthPhaseSwitcher extends Component {
 
     private void playForCurrentHp() {
         int max = stats.getMaxHealth();
-        int hp  = stats.getHealth();
+        int hp = stats.getHealth();
         if (max <= 0) return;
 
         float ratio = hp / (float) max;

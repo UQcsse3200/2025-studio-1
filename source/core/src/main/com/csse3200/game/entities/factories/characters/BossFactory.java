@@ -6,16 +6,16 @@ import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.ai.tasks.AITaskComponent;
 import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.components.Component;
-import com.csse3200.game.components.enemy.*;
-import com.csse3200.game.components.npc.Boss2AnimationController;
-import com.csse3200.game.components.npc.BossAnimationController;
 import com.csse3200.game.components.TouchAttackComponent;
+import com.csse3200.game.components.WeaponsStatsComponent;
+import com.csse3200.game.components.boss.*;
+import com.csse3200.game.components.enemy.*;
+import com.csse3200.game.components.npc.BossAnimationController;
 import com.csse3200.game.components.player.InventoryComponent;
 import com.csse3200.game.components.tasks.BossChaseTask;
 import com.csse3200.game.components.tasks.BossFuryTask;
 import com.csse3200.game.components.tasks.ChaseTask;
 import com.csse3200.game.components.tasks.WanderTask;
-import com.csse3200.game.components.boss.*;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.characters.BaseEntityConfig;
 import com.csse3200.game.entities.configs.characters.NPCConfigs;
@@ -26,13 +26,6 @@ import com.csse3200.game.physics.components.*;
 import com.csse3200.game.rendering.AnimationRenderComponent;
 import com.csse3200.game.rendering.TextureRenderComponent;
 import com.csse3200.game.services.ServiceLocator;
-import com.csse3200.game.components.enemy.BossStatusDisplay;
-import com.csse3200.game.components.WeaponsStatsComponent;
-import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.math.Vector2;
-import com.csse3200.game.components.boss.CocoonSpawnerComponent;
-import com.csse3200.game.components.boss.IndividualCocoonComponent;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 
 /**
@@ -48,10 +41,10 @@ public class BossFactory {
     public static Entity createRobot(Entity target) {
         AnimationRenderComponent animator = new AnimationRenderComponent(
                 ServiceLocator.getResourceService().getAsset("images/Robot_1.atlas", TextureAtlas.class));
-        animator.addAnimation("Idle",   0.12f, Animation.PlayMode.LOOP);
+        animator.addAnimation("Idle", 0.12f, Animation.PlayMode.LOOP);
         animator.addAnimation("attack", 0.06f, Animation.PlayMode.LOOP);
-        animator.addAnimation("fury",   0.10f, Animation.PlayMode.LOOP);
-        animator.addAnimation("die",    0.10f, Animation.PlayMode.NORMAL);
+        animator.addAnimation("fury", 0.10f, Animation.PlayMode.LOOP);
+        animator.addAnimation("die", 0.10f, Animation.PlayMode.NORMAL);
 
         Vector2 moveSpeed = new Vector2(2.5f, 2.5f);
 
@@ -89,7 +82,7 @@ public class BossFactory {
                 1.5f,
                 5,
                 0.25f
-                ));
+        ));
 
         int maxHp = robot.getComponent(CombatStatsComponent.class).getHealth();
         int defenseHp = Math.round(maxHp * 0.30f);
@@ -142,9 +135,9 @@ public class BossFactory {
         BaseEntityConfig config = configs.boss2;
         InventoryComponent playerInventory =
                 (target != null) ? target.getComponent(InventoryComponent.class) : null;
-        float patrolCenterX   = 5f;
+        float patrolCenterX = 5f;
         float patrolHalfWidth = 3f;
-        float leftX  = patrolCenterX - patrolHalfWidth;
+        float leftX = patrolCenterX - patrolHalfWidth;
         float rightX = patrolCenterX + patrolHalfWidth;
         float patrolY = 9f;
         float patrolSpeed = 4f;
@@ -212,7 +205,7 @@ public class BossFactory {
                 .addComponent(new AttackProtectionComponent())
                 .addComponent(new AttackProtectionDisplay())
                 .addComponent(new TextureRenderComponent("images/Boss_3.png"))
-                .addComponent(new BossStatusDisplay("Boss_3"));;
+                .addComponent(new BossStatusDisplay("Boss_3"));
 
         boss3.getComponent(TextureRenderComponent.class).scaleEntity();
         boss3.setScale(new Vector2(2f, 2f));
@@ -246,10 +239,10 @@ public class BossFactory {
         return boss3;
     }
 
-    public static Entity createBlackhole(Vector2 pos,Entity target){
+    public static Entity createBlackhole(Vector2 pos, Entity target) {
         Entity Blackhole = new Entity()
                 .addComponent(new TextureRenderComponent("images/blackhole1.png"))
-                .addComponent(new BlackholeAttackComponent(target,1.5f,4f));
+                .addComponent(new BlackholeAttackComponent(target, 1.5f, 4f));
         Blackhole.setPosition(pos);
         Blackhole.getComponent(TextureRenderComponent.class).scaleEntity();
         Vector2 s = Blackhole.getScale();
@@ -257,6 +250,7 @@ public class BossFactory {
         Blackhole.setScale(s.x * k, s.y * k);
         return Blackhole;
     }
+
     public static Entity createFireball(Vector2 from, Vector2 velocity) {
         Entity fireball = new Entity()
                 .addComponent(new PhysicsComponent())
@@ -276,12 +270,14 @@ public class BossFactory {
                 .setFilter(PhysicsLayer.ENEMY_PROJECTILE, PhysicsLayer.PLAYER);
         return fireball;
     }
+
     public static Entity createWarning(Vector2 pos) {
         Entity warning = new Entity()
                 .addComponent(new TextureRenderComponent("images/warning.png"));
         warning.setPosition(pos);
         return warning;
     }
+
     public static Entity createMissle(Vector2 from) {
         Entity missle = new Entity()
                 .addComponent(new PhysicsComponent())
@@ -303,6 +299,7 @@ public class BossFactory {
                 .setFilter(PhysicsLayer.ENEMY_PROJECTILE, PhysicsLayer.PLAYER);
         return missle;
     }
+
     /**
      * Creates a base NPC entity with default wandering, chasing, physics,
      * and touch attack behavior. This is used as a template for other bosses or NPCs.
@@ -332,10 +329,14 @@ public class BossFactory {
     public static class ApplyInitialBoss2Setup extends Component {
         private final float scaleK;
         private final String startAnim;
+
         public ApplyInitialBoss2Setup(float scaleK, String startAnim) {
-            this.scaleK = scaleK; this.startAnim = startAnim;
+            this.scaleK = scaleK;
+            this.startAnim = startAnim;
         }
-        @Override public void create() {
+
+        @Override
+        public void create() {
             AnimationRenderComponent arc = entity.getComponent(AnimationRenderComponent.class);
             if (arc != null) {
                 arc.scaleEntity();
@@ -345,8 +346,6 @@ public class BossFactory {
             }
         }
     }
-
-
 
 
     public static Entity createBaseBoss2(Entity target) {
@@ -362,7 +361,7 @@ public class BossFactory {
 
         AnimationRenderComponent arc = new AnimationRenderComponent(atlas);
         arc.setDisposeAtlas(false);
-        arc.addAnimation("idle",   0.10f, Animation.PlayMode.LOOP);
+        arc.addAnimation("idle", 0.10f, Animation.PlayMode.LOOP);
         arc.addAnimation("phase2", 0.1f, Animation.PlayMode.LOOP);
         arc.addAnimation("angry", 0.1f, Animation.PlayMode.LOOP);
         boss.addComponent(arc);
@@ -376,10 +375,11 @@ public class BossFactory {
 
     /**
      * Get default spawn positions for cocoons
+     *
      * @return Array of cocoon spawn positions
      */
     public static Vector2[] getDefaultCocoonPositions() {
-        return new Vector2[] {
+        return new Vector2[]{
                 new Vector2(5f, 6f),
                 new Vector2(9f, 3f),
                 new Vector2(12f, 3f),
@@ -388,6 +388,7 @@ public class BossFactory {
 
     /**
      * Create Robot with cocoon spawning capability (enhanced version)
+     *
      * @param target The player entity that the boss will chase and attack
      * @return Enhanced Robot entity with cocoon spawning capability
      */

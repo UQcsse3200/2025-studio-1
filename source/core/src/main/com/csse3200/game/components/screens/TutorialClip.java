@@ -16,27 +16,16 @@ package com.csse3200.game.components.screens;
  *   fps = 30f
  *   loop = true
  * </pre>
+ *
+ * @param folder     Folder containing the PNG frames, relative to the assets root.
+ * @param pattern    {@link String#format(String, Object...)} pattern for frame filenames, typically
+ *                   including a numeric placeholder (e.g., {@code "%03d"}).
+ *                   <p>Example: {@code "move_%03d.png"} produces {@code move_000.png}, {@code move_001.png}, …</p>
+ * @param frameCount Total number of frames available for this clip (must be ≥ 1).
+ * @param fps        Playback rate in frames per second (must be &gt; 0).
+ * @param loop       Whether playback should loop when it reaches the final frame.
  */
-public class TutorialClip {
-    /** Folder containing the PNG frames, relative to the assets root. */
-    public final String folder;
-
-    /**
-     * {@link String#format(String, Object...)} pattern for frame filenames, typically
-     * including a numeric placeholder (e.g., {@code "%03d"}).
-     * <p>Example: {@code "move_%03d.png"} produces {@code move_000.png}, {@code move_001.png}, …</p>
-     */
-    public final String pattern;
-
-    /** Total number of frames available for this clip (must be ≥ 1). */
-    public final int frameCount;
-
-    /** Playback rate in frames per second (must be &gt; 0). */
-    public final float fps;
-
-    /** Whether playback should loop when it reaches the final frame. */
-    public final boolean loop;
-
+public record TutorialClip(String folder, String pattern, int frameCount, float fps, boolean loop) {
     /**
      * Creates a clip description for building an animation from numbered PNG frames.
      *
@@ -46,11 +35,6 @@ public class TutorialClip {
      * @param fps        playback frames per second (must be &gt; 0)
      * @param loop       whether playback should loop
      */
-    public TutorialClip(String folder, String pattern, int frameCount, float fps, boolean loop) {
-        this.folder = folder;
-        this.pattern = pattern;
-        this.frameCount = frameCount;
-        this.fps = fps;
-        this.loop = loop;
+    public TutorialClip {
     }
 }

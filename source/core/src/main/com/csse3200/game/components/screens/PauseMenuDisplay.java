@@ -5,8 +5,8 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
-import com.badlogic.gdx.scenes.scene2d.ui.*;
-
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.csse3200.game.GdxGame;
 
 /**
@@ -33,7 +33,9 @@ public class PauseMenuDisplay extends BaseScreenDisplay {
      *
      * @param game game instance used for screen navigation actions
      */
-    public PauseMenuDisplay(GdxGame game) { super(game); }
+    public PauseMenuDisplay(GdxGame game) {
+        super(game);
+    }
 
     /**
      * Builds the pause UI:
@@ -64,11 +66,28 @@ public class PauseMenuDisplay extends BaseScreenDisplay {
         addTitle(root, "Game Paused", 2.0f, Color.WHITE, 24f);
 
         // Buttons
+//        TextButton resumeBtn   = new TextButton("Resume", style);
+//        TextButton restartBtm = new TextButton("Restart", style);
+//        TextButton mainBtn     = new TextButton("Main Menu", style);
+//        TextButton saveBtn     = new TextButton("Save", style);
+
+        // Label text size
+//        resumeBtn.getLabel().setFontScale(1.8f);
+//        restartBtm.getLabel().setFontScale(1.8f);
+//        mainBtn.getLabel().setFontScale(1.8f);
+//        saveBtn.getLabel().setFontScale(1.8f);
+        logger.debug("Buttons created");
+
         Table panel = new Table();
         panel.defaults().pad(10f);
         panel.add(button("Resume", 1.8f, () -> entity.getEvents().trigger("resume"))).row();
         panel.add(button("Restart", 1.8f, () -> game.setScreen(GdxGame.ScreenType.MAIN_GAME))).row();
         panel.add(button("Main Menu", 1.8f, this::backMainMenu)).row();
+        panel.add(button("save", 1.8f, () -> {
+            entity.getEvents().trigger("save");
+            backMainMenu();
+        })).row();
+
 
         root.add(panel);
 
@@ -76,10 +95,13 @@ public class PauseMenuDisplay extends BaseScreenDisplay {
         stage.setKeyboardFocus(root);
         root.setTouchable(Touchable.enabled);
 
+
         final InputListener escOnce = new InputListener() {
             /** Prevents repeated ESC events (debounce). */
             private boolean handled = false;
-            @Override public boolean keyDown(InputEvent event, int keycode) {
+
+            @Override
+            public boolean keyDown(InputEvent event, int keycode) {
                 if (keycode == Input.Keys.ESCAPE && !handled) {
                     handled = true;                       // first ESC only
                     entity.getEvents().trigger("resume"); // resume game
@@ -97,7 +119,10 @@ public class PauseMenuDisplay extends BaseScreenDisplay {
      *
      * @return draw order value for this UI component
      */
-    @Override public float getZIndex() { return 100f; }
+    @Override
+    public float getZIndex() {
+        return 100f;
+    }
 
     /**
      * Removes the dimmer from the Stage and delegates to base disposal.
@@ -105,7 +130,10 @@ public class PauseMenuDisplay extends BaseScreenDisplay {
      */
     @Override
     public void dispose() {
-        if (dimmer != null) { dimmer.remove(); dimmer = null; }
+        if (dimmer != null) {
+            dimmer.remove();
+            dimmer = null;
+        }
         super.dispose();
     }
 }

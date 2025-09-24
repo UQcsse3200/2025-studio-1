@@ -13,21 +13,29 @@ import com.csse3200.game.services.ServiceLocator;
 /**
  * Plays a one-shot explosion animation when the owning Boss entity dies,
  * then disposes the temporary effect entity and the Boss entity itself safely.
- *
+ * <p>
  * Assumptions:
  * - The texture atlas "images/boss_explosion.atlas" is preloaded in ResourceService.
  * - The atlas contains regions named "boss_explosion" with sequential indices (0..N).
  * - The game's rendering uses nearest filtering for crisp pixel-art (as set in the atlas).
  */
 public class BossDeathComponent extends Component {
-    /** Path of the prebuilt atlas that contains frames for the boss death explosion. */
+    /**
+     * Path of the prebuilt atlas that contains frames for the boss death explosion.
+     */
     private static final String ATLAS_PATH = "images/boss_explosion.atlas";
-    /** Base region name in the atlas; frames must be named with this base plus ascending indices. */
-    private static final String ANIM_NAME  = "boss_explosion";
+    /**
+     * Base region name in the atlas; frames must be named with this base plus ascending indices.
+     */
+    private static final String ANIM_NAME = "boss_explosion";
 
-    /** Frame duration in seconds (lower = faster). */
+    /**
+     * Frame duration in seconds (lower = faster).
+     */
     private final float frameDuration;
-    /** Visual scale multiplier applied after sizing the effect to the frame size. Use integers (2/3/4) for pixel art. */
+    /**
+     * Visual scale multiplier applied after sizing the effect to the frame size. Use integers (2/3/4) for pixel art.
+     */
     private final float scaleMultiplier;
 
     /**
@@ -40,6 +48,7 @@ public class BossDeathComponent extends Component {
 
     /**
      * Custom configuration.
+     *
      * @param frameDuration   Seconds per frame, clamped to a small positive value.
      * @param scaleMultiplier Scale multiplier for the explosion entity; integer values keep pixel-art crisp.
      */
@@ -61,7 +70,7 @@ public class BossDeathComponent extends Component {
     /**
      * Spawns a temporary effect entity at the boss position, plays the explosion once,
      * and schedules safe disposal of both the effect and the boss entity.
-     *
+     * <p>
      * This method is defensive:
      * - If the atlas isn't loaded in ResourceService, it logs and returns without crashing.
      * - Uses postRunnable() to avoid modifying entity lists during iteration.

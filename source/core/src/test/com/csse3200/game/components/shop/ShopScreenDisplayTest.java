@@ -6,7 +6,8 @@ import org.junit.jupiter.api.*;
 
 import java.util.ArrayList;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ShopScreenDisplayTest {
 
@@ -26,10 +27,14 @@ class ShopScreenDisplayTest {
             // ForestGameArea not needed for these tests, so we pass null.
             super(null, manager);
         }
-        @Override public void show() {
+
+        @Override
+        public void show() {
             ServiceLocator.getTimeSource().setPaused(true);
         }
-        @Override public void hide() {
+
+        @Override
+        public void hide() {
             ServiceLocator.getTimeSource().setPaused(false);
         }
     }

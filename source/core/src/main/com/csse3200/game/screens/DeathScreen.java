@@ -6,6 +6,7 @@ import com.csse3200.game.components.screens.BaseEndScreenDisplays;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.input.InputDecorator;
 import com.csse3200.game.services.ServiceLocator;
+
 /**
  * Screen shown when the player is defeated.
  * <p>
