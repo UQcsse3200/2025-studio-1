@@ -67,18 +67,6 @@ public class PauseMenuDisplay extends BaseScreenDisplay {
         addTitle(root, "Game Paused", 2.0f, Color.WHITE, 24f);
 
         // Buttons
-//        TextButton resumeBtn   = new TextButton("Resume", style);
-//        TextButton restartBtm = new TextButton("Restart", style);
-//        TextButton mainBtn     = new TextButton("Main Menu", style);
-//        TextButton saveBtn     = new TextButton("Save", style);
-
-        // Label text size
-//        resumeBtn.getLabel().setFontScale(1.8f);
-//        restartBtm.getLabel().setFontScale(1.8f);
-//        mainBtn.getLabel().setFontScale(1.8f);
-//        saveBtn.getLabel().setFontScale(1.8f);
-        logger.debug("Buttons created");
-
         Table panel = new Table();
         panel.defaults().pad(10f);
         panel.add(button("Resume", 1.8f, () -> {
@@ -86,12 +74,12 @@ public class PauseMenuDisplay extends BaseScreenDisplay {
             entity.getEvents().trigger("resume");
         })).row();
 
-        panel.add(button("Restart", 1.8f, () -> {
+        panel.add(button("Restart", 2f, () -> {
             ServiceLocator.getButtonSoundService().playClick();
             game.setScreen(GdxGame.ScreenType.MAIN_GAME);
         })).row();
 
-        panel.add(button("Main Menu", 1.8f, () -> {
+        panel.add(button("Main Menu", 2f, () -> {
             ServiceLocator.getButtonSoundService().playClick();
             backMainMenu();
         })).row();
@@ -102,13 +90,11 @@ public class PauseMenuDisplay extends BaseScreenDisplay {
             backMainMenu();
         })).row();
 
-
-        root.add(panel);
+        root.add(panel).center().expandX().row();
 
         // Keyboard focus + one-shot ESC to resume
         stage.setKeyboardFocus(root);
         root.setTouchable(Touchable.enabled);
-
 
         final InputListener escOnce = new InputListener() {
             /** Prevents repeated ESC events (debounce). */
