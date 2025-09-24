@@ -40,6 +40,7 @@ public class Entity {
     private Vector2 position = Vector2.Zero.cpy();
     private Vector2 scale = new Vector2(1, 1);
     private Array<Component> createdComponents;
+    private boolean interactable = false;
 
     public Entity() {
         id = nextId;
@@ -297,6 +298,14 @@ public class Entity {
      */
     public int getId() {
         return id;
+    }
+
+    public boolean isInteractable() {
+        return interactable;
+    }
+
+    public void setInteractable(boolean interactable) {
+        this.interactable = interactable;
     }
 
     /**
