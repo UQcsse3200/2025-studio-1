@@ -11,7 +11,7 @@ import java.util.ArrayList;
  * Handles "interact" event triggered by pressing E as seen in KeyboardPlayerInputComponent
  */
 public class InteractComponent extends HitboxComponent{
-    private ArrayList<Entity> collidedEntities = new ArrayList<>();
+    private final ArrayList<Entity> collidedEntities = new ArrayList<>();
 
     @Override
     public void create() {
@@ -23,14 +23,12 @@ public class InteractComponent extends HitboxComponent{
     }
 
     private void entityCollide(Fixture me, Fixture other) {
-        System.out.println("entity collided");
         Object data = other.getBody().getUserData();
         if (!(data instanceof BodyUserData userData)) return;
 
         Entity otherEntity = userData.entity;
         if (otherEntity.isInteractable()) {
             collidedEntities.add(otherEntity);
-            System.out.println(collidedEntities);
         }
     }
 
