@@ -8,21 +8,26 @@ import com.csse3200.game.rendering.AnimationRenderComponent;
  * of the events is triggered.
  */
 public class GhostAnimationController extends Component {
-  AnimationRenderComponent animator;
+    AnimationRenderComponent animator;
 
-  @Override
-  public void create() {
-    super.create();
-    animator = this.entity.getComponent(AnimationRenderComponent.class);
-    entity.getEvents().addListener("wanderStart", this::animateWander);
-    entity.getEvents().addListener("chaseStart", this::animateChase);
-  }
+    @Override
+    public void create() {
+        super.create();
+        animator = this.entity.getComponent(AnimationRenderComponent.class);
+        entity.getEvents().addListener("wanderStart", this::animateWander);
+        entity.getEvents().addListener("chaseStart", this::animateChase);
+        entity.getEvents().addListener("damageTaken", this::animateDamageTaken);
+    }
 
-  void animateWander() {
-    animator.startAnimation("float");
-  }
+    void animateWander() {
+        animator.startAnimation("float");
+    }
 
-  void animateChase() {
-    animator.startAnimation("angry_float");
-  }
+    void animateChase() {
+        animator.startAnimation("angry_float");
+    }
+
+    void animateDamageTaken() {
+        animator.playAnimationOnce("damage_taken");
+    }
 }

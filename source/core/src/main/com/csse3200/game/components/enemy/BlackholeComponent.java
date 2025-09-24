@@ -13,6 +13,7 @@ public class BlackholeComponent extends Component {
     private final float range;
 
     private float timer = 0f;
+    private boolean attack = true;
 
     public BlackholeComponent(Entity target, float cooldown, float range) {
         this.target = target;
@@ -22,6 +23,9 @@ public class BlackholeComponent extends Component {
 
     @Override
     public void update() {
+        if (!attack) {
+            return;
+        }
         float dt = ServiceLocator.getTimeSource().getDeltaTime();
         timer -= dt;
         if (timer > 0) return;
@@ -36,12 +40,15 @@ public class BlackholeComponent extends Component {
     }
 
     private void spawnBlackholeNearPlayer(Vector2 playerPos) {
-        float offset = MathUtils.randomSign() * MathUtils.random(1f, 3f);
-
-        float spawnX = playerPos.x + offset;
-        float spawnY = playerPos.y;
-        Vector2 spawnPos = new Vector2(spawnX, spawnY);
+        float offsetY = 2.5f;
+        int dir = MathUtils.randomBoolean() ? 1 : -1;
+        float offsetX = 1f;
+        Vector2 spawnPos = new Vector2(playerPos.x + offsetX, playerPos.y - offsetY);
         Entity blackhole = BossFactory.createBlackhole(spawnPos, target);
         ServiceLocator.getEntityService().register(blackhole);
+    }
+
+    public void setAttack(boolean attack) {
+        this.attack = attack;
     }
 }

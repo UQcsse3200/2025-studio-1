@@ -3,6 +3,7 @@ package com.csse3200.game.components.enemy;
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.components.Component;
+import com.csse3200.game.components.TouchAttackComponent;
 import com.csse3200.game.components.WeaponsStatsComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.physics.PhysicsLayer;
@@ -50,22 +51,26 @@ public class EnemyMudRingSprayComponent extends Component {
         WeaponsStatsComponent bossStats = entity.getComponent(WeaponsStatsComponent.class);
         if (bossStats != null) dmg = bossStats.getBaseAttack();
 
-        float step = (float)(Math.PI * 2 / count);
+        float step = (float) (Math.PI * 2 / count);
         for (int i = 0; i < count; i++) {
             float ang = angleOffset + step * i;
-            Vector2 vel = new Vector2((float)Math.cos(ang), (float)Math.sin(ang)).scl(speed);
+            Vector2 vel = new Vector2((float) Math.cos(ang), (float) Math.sin(ang)).scl(speed);
             spawnOne(center, vel, dmg);
         }
     }
 
     private void spawnOne(Vector2 start, Vector2 velocity, int dmg) {
+        dmg = dmg / 8; // attack do less damage
+
         Entity proj = new Entity()
                 .addComponent(new PhysicsComponent())
                 .addComponent(new ColliderComponent().setSensor(true))
                 .addComponent(new HitboxComponent().setLayer(PhysicsLayer.NPC))
                 .addComponent(new TextureRenderComponent("images/mud.png"))
                 .addComponent(new EnemyProjectileMovementComponent(velocity, life))
-                .addComponent(new EnemyProjectileDamageComponent(dmg));
+                .addComponent(new CombatStatsComponent(1)) // Add health to the projectile
+                .addComponent(new WeaponsStatsComponent(dmg)) // Add damage to the projectile
+                .addComponent(new TouchAttackComponent(PhysicsLayer.PLAYER, 0f));
 
         proj.setPosition(start);
         proj.getComponent(TextureRenderComponent.class).scaleEntity();

@@ -1,16 +1,17 @@
 package com.csse3200.game.entities.factories;
 
+import com.badlogic.gdx.math.MathUtils;
+import com.csse3200.game.components.KeycardPickupComponent;
 import com.csse3200.game.entities.Entity;
-import com.csse3200.game.physics.components.PhysicsComponent;
-import com.csse3200.game.rendering.TextureRenderComponent;
+import com.csse3200.game.physics.PhysicsLayer;
 import com.csse3200.game.physics.components.ColliderComponent;
 import com.csse3200.game.physics.components.HitboxComponent;
-import com.csse3200.game.physics.PhysicsLayer;
-import com.csse3200.game.components.KeycardPickupComponent;
-import com.badlogic.gdx.math.MathUtils;
+import com.csse3200.game.physics.components.PhysicsComponent;
+import com.csse3200.game.rendering.TextureRenderComponent;
 
 import java.util.ArrayList;
 import java.util.List;
+
 /**
  * Factory class for creating keycard entities used in gated access gameplay.
  * Provides methods to create specific, random, or all keycard levels with appropriate components.
@@ -30,7 +31,7 @@ public class KeycardFactory {
 
 
         com.csse3200.game.physics.PhysicsUtils.setScaledCollider(keycard, 0.5f, 0.5f);
-       // keycard.getComponent(PhysicsComponent.class).BodyUserData(keycard);
+        // keycard.getComponent(PhysicsComponent.class).BodyUserData(keycard);
         return keycard;
     }
 

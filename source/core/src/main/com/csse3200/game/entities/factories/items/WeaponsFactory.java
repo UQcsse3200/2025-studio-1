@@ -2,13 +2,19 @@ package com.csse3200.game.entities.factories.items;
 
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.csse3200.game.components.MagazineComponent;
 import com.csse3200.game.components.WeaponsStatsComponent;
+import com.csse3200.game.components.attachments.BulletEnhancerComponent;
+import com.csse3200.game.components.attachments.LaserComponent;
+import com.csse3200.game.components.items.ItemComponent;
 import com.csse3200.game.entities.Entity;
-import com.csse3200.game.components.ItemComponent;
 import com.csse3200.game.entities.configs.ItemTypes;
 import com.csse3200.game.entities.configs.Weapons;
+import com.csse3200.game.entities.configs.weapons.RifleConfig;
 import com.csse3200.game.entities.configs.weapons.WeaponConfig;
 import com.csse3200.game.rendering.AnimationRenderComponent;
+import com.csse3200.game.rendering.TextureRenderComponent;
+import com.csse3200.game.rendering.TextureRenderWithRotationComponent;
 
 /**
  * Factory to create non-playable character (NPC) entities with predefined components.
@@ -37,23 +43,41 @@ public class WeaponsFactory {
         WeaponConfig config = weaponType.getConfig();
         Entity weapon = ItemFactory.createItem(config.texturePath);
         weapon.addComponent(new WeaponsStatsComponent(config));
+        WeaponsStatsComponent weaponStats = weapon.getComponent(WeaponsStatsComponent.class);
+        weaponStats.setCoolDown(0.2f);
+
 
         ItemComponent item = weapon.getComponent(ItemComponent.class);
 
         // Attach type to weapon
         switch (config.weaponType) {
-            case RANGED -> item.setType(ItemTypes.RANGED);
-            case MELEE -> item.setType(ItemTypes.MELEE);
-            default -> item.setType(ItemTypes.NONE);
+            case RANGED:
+                item.setType(ItemTypes.RANGED);
+                weapon.addComponent(new MagazineComponent(20));
+                // using TextureRenderWithRotationComponent to allow guns to follow cursor
+                weapon.addComponent(new TextureRenderWithRotationComponent(config.texturePath));
+                weapon.getComponent(TextureRenderComponent.class).disableComponent();
+                if (weaponType.getConfig() instanceof RifleConfig) {
+                    weapon.addComponent(new LaserComponent());
+                    weapon.addComponent(new BulletEnhancerComponent());
+                }
+                break;
+            case MELEE:
+                item.setType(ItemTypes.MELEE);
+                weapon.getComponent(TextureRenderComponent.class).disableComponent();
+                break;
+            default:
+                item.setType(ItemTypes.NONE);
+                break;
         }
-
         return weapon;
     }
 
     /**
      * Creates an animation component that can be used with a weapon.
+     *
      * @param atlasName Name of the animation atlas.
-     * @param player Current player.
+     * @param player    Current player.
      * @return An AnimationRenderComponent that can be attached to a weapon.
      */
     public static AnimationRenderComponent createAnimation(String atlasName, Entity player) {

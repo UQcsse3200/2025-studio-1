@@ -1,7 +1,7 @@
 package com.csse3200.game.entities.factories.items;
 
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
-import com.csse3200.game.components.ItemComponent;
+import com.csse3200.game.components.items.ItemComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.physics.components.HitboxComponent;
 import com.csse3200.game.physics.components.PhysicsComponent;
@@ -18,6 +18,7 @@ public class ItemFactory {
      * Creates and configures a new item entity.
      * The item has a texture, physics, and other needed parts.
      * This class is called by other Factories, to add other components as needed.
+     *
      * @param texture texture path of the item's texture
      * @return entity representing an item
      */
@@ -31,8 +32,7 @@ public class ItemFactory {
         item.getComponent(ItemComponent.class).setTexture(texture);
         item.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
         item.getComponent(TextureRenderComponent.class).scaleEntity();
-        item.getComponent(PhysicsComponent.class).getBody().setUserData(item);
-
+        // Body is created in PhysicsComponent.create(), so avoid touching it here.
         return item;
     }
 

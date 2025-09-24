@@ -1,4 +1,5 @@
 package com.csse3200.game.input;
+
 import com.csse3200.game.components.player.KeyboardPlayerInputComponent;
 import com.csse3200.game.ui.terminal.KeyboardTerminalInputComponent;
 import org.slf4j.Logger;
@@ -12,6 +13,7 @@ public class KeyboardInputFactory extends InputFactory {
 
     /**
      * Creates an input handler for the player.
+     *
      * @return Player input handler
      */
     @Override

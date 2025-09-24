@@ -10,7 +10,9 @@ import com.csse3200.game.physics.raycast.RaycastHit;
 import com.csse3200.game.rendering.DebugRenderer;
 import com.csse3200.game.services.ServiceLocator;
 
-/** Chases a target entity indefinitely and the entity being visible causes a speed increase */
+/**
+ * Chases a target entity indefinitely and the entity being visible causes a speed increase
+ */
 public class GPTSlowChaseTask extends DefaultTask implements PriorityTask {
     private final Entity target;
     private final int priority;
@@ -21,9 +23,9 @@ public class GPTSlowChaseTask extends DefaultTask implements PriorityTask {
     private MovementTask movementTask;
 
     /**
-     * @param target The entity to chase.
+     * @param target   The entity to chase.
      * @param priority Task priority when chasing (0 when not chasing).
-     * @param speed The speed at which the enemy will chase the player.
+     * @param speed    The speed at which the enemy will chase the player.
      */
     public GPTSlowChaseTask(Entity target, int priority, Vector2 speed) {
         this.target = target;
