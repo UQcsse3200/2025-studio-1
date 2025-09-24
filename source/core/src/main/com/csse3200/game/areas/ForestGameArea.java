@@ -309,8 +309,8 @@ public class ForestGameArea extends GameArea {
         itemSpawner.spawnItems(ItemSpawnConfig.forestmap());
 
         // Place a keycard on the floor so the player can unlock the door
-        float keycardX = 1f;
-        float keycardY = 15f;
+        float keycardX = 3f;
+        float keycardY = 7f;
         Entity keycard = KeycardFactory.createKeycard(1);
         keycard.setPosition(new Vector2(keycardX, keycardY));
         spawnEntity(keycard);
