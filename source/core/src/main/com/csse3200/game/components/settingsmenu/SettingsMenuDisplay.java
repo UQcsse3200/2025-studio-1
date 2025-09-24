@@ -3,13 +3,11 @@ package com.csse3200.game.components.settingsmenu;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Graphics.DisplayMode;
 import com.badlogic.gdx.Graphics.Monitor;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Event;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Array;
 import com.csse3200.game.GdxGame;
 import com.csse3200.game.GdxGame.ScreenType;
@@ -58,11 +56,7 @@ public class SettingsMenuDisplay extends UIComponent {
     private void addActors() {
         // Title label
         Label title = new Label("Settings", skin, "title");
-        Label.LabelStyle titleStyle = new Label.LabelStyle(title.getStyle());
-        titleStyle.fontColor = new com.badlogic.gdx.graphics.Color(0f, 0.95f, 1f, 1f);
-        title.setStyle(titleStyle);
-
-        title.setFontScale(1.20f);
+        title.setFontScale(1.5f);
 
         // Build the tables
         Table settingsTable = makeSettingsTable();
@@ -72,10 +66,10 @@ public class SettingsMenuDisplay extends UIComponent {
         rootTable.setFillParent(true);
 
         // Title row
-        rootTable.add(title).expandX().top().padTop(30f);
+        rootTable.add(title).expandX().top().padTop(70f);
 
         // Settings rows
-        rootTable.row().padTop(30f);
+        rootTable.row();
         rootTable.add(settingsTable).expandX().expandY();
 
         // Buttons
@@ -94,125 +88,27 @@ public class SettingsMenuDisplay extends UIComponent {
         UserSettings.Settings settings = UserSettings.get();
 
         // Create components
-        Label fpsLabel = new Label("FPS Cap:", skin);
+        Label fpsLabel = new Label("FPS Cap:", skin, "white");
         fpsText = new TextField(Integer.toString(settings.fps), skin);
 
-        Label fullScreenLabel = new Label("Fullscreen:", skin);
+        Label fullScreenLabel = new Label("Fullscreen:", skin, "white");
         fullScreenCheck = new CheckBox("", skin);
         fullScreenCheck.setChecked(settings.fullscreen);
 
-        Label vsyncLabel = new Label("VSync:", skin);
+        Label vsyncLabel = new Label("VSync:", skin, "white");
         vsyncCheck = new CheckBox("", skin);
         vsyncCheck.setChecked(settings.vsync);
 
-        Label uiScaleLabel = new Label("ui Scale (Unused):", skin);
+        Label uiScaleLabel = new Label("ui Scale (Unused):", skin, "white");
         uiScaleSlider = new Slider(0.2f, 2f, 0.1f, false, skin);
         uiScaleSlider.setValue(settings.uiScale);
-        Label uiScaleValue = new Label(String.format("%.2fx", settings.uiScale), skin);
+        Label uiScaleValue = new Label(String.format("%.2fx", settings.uiScale), skin, "white");
 
-        Label displayModeLabel = new Label("Resolution:", skin);
+        Label displayModeLabel = new Label("Resolution:", skin, "white");
         displayModeSelect = new SelectBox<>(skin);
         Monitor selectedMonitor = Gdx.graphics.getMonitor();
         displayModeSelect.setItems(getDisplayModes(selectedMonitor));
         displayModeSelect.setSelected(getActiveMode(displayModeSelect.getItems()));
-
-        // White labels
-        makeWhite(
-                fpsLabel,
-                fullScreenLabel,
-                vsyncLabel,
-                uiScaleLabel,
-                uiScaleValue,
-                displayModeLabel
-        );
-
-        // TextField style
-        {
-            TextField.TextFieldStyle tf = new TextField.TextFieldStyle(fpsText.getStyle());
-            tf.fontColor = Color.WHITE;
-            tf.focusedFontColor = Color.WHITE;
-            tf.messageFontColor = new Color(1f, 1f, 1f, 0.6f);
-            if (tf.cursor != null) tf.cursor = skin.newDrawable(tf.cursor, Color.WHITE);
-            if (tf.selection != null) tf.selection = skin.newDrawable(tf.selection, new Color(1f, 1f, 1f, 0.25f));
-            if (tf.background != null) tf.background = skin.newDrawable(tf.background, new Color(1f, 1f, 1f, 0.15f));
-            fpsText.setStyle(tf);
-        }
-        logger.debug("TextField styled");
-
-        // CheckBox style
-        {
-            CheckBox.CheckBoxStyle cb = new CheckBox.CheckBoxStyle(fullScreenCheck.getStyle());
-            cb.fontColor = Color.WHITE;
-            if (cb.checkboxOn != null) cb.checkboxOn = skin.newDrawable(cb.checkboxOn, Color.WHITE);
-            if (cb.checkboxOff != null) cb.checkboxOff = skin.newDrawable(cb.checkboxOff, new Color(1f, 1f, 1f, 0.35f));
-            if (cb.checkboxOver != null) cb.checkboxOver = skin.newDrawable(cb.checkboxOver, Color.WHITE);
-            fullScreenCheck.setStyle(cb);
-            vsyncCheck.setStyle(cb);
-        }
-        logger.debug("CheckBox styled");
-
-        // Slider style
-        {
-            Slider.SliderStyle ss = new Slider.SliderStyle(uiScaleSlider.getStyle());
-
-            if (ss.background != null) ss.background = skin.newDrawable(ss.background, new Color(1f, 1f, 1f, 0.25f));
-            if (ss.knobBefore != null) ss.knobBefore = skin.newDrawable(ss.knobBefore, new Color(1f, 1f, 1f, 0.35f));
-            if (ss.knobAfter != null) ss.knobAfter = skin.newDrawable(ss.knobAfter, new Color(1f, 1f, 1f, 0.15f));
-
-            final Drawable plainKnob =
-                    ss.knob != null ? skin.newDrawable(ss.knob, Color.WHITE) : null;
-
-            ss.knob = plainKnob;
-            ss.knobOver = plainKnob;
-            ss.knobDown = plainKnob;
-
-            uiScaleSlider.setStyle(ss);
-            uiScaleSlider.invalidateHierarchy();
-        }
-        logger.debug("Slider styled");
-
-        // SelectBox style
-        {
-            Drawable tfBg = fpsText.getStyle().background;
-
-            SelectBox.SelectBoxStyle sb = new SelectBox.SelectBoxStyle(displayModeSelect.getStyle());
-            sb.fontColor = Color.WHITE;
-
-            // Closed state backgrounds
-            if (tfBg != null) {
-                sb.background = skin.newDrawable(tfBg, new Color(1f, 1f, 1f, 0.15f));
-                sb.backgroundOver = skin.newDrawable(tfBg, new Color(1f, 1f, 1f, 0.25f));
-                sb.backgroundOpen = skin.newDrawable(tfBg, new Color(1f, 1f, 1f, 0.25f));
-                sb.backgroundDisabled = skin.newDrawable(tfBg, new Color(1f, 1f, 1f, 0.10f));
-            }
-            logger.debug("SelectBox styled");
-
-            // Dropdown list
-            List.ListStyle ls = new List.ListStyle(sb.listStyle);
-            ls.fontColorSelected = Color.WHITE;
-            ls.fontColorUnselected = Color.WHITE;
-            if (ls.selection != null) ls.selection = skin.newDrawable(ls.selection, new Color(1f, 1f, 1f, 0.15f));
-            if (ls.background != null) ls.background = skin.newDrawable(ls.background, new Color(1f, 1f, 1f, 0.08f));
-            else if (tfBg != null) ls.background = skin.newDrawable(tfBg, new Color(1f, 1f, 1f, 0.08f));
-            sb.listStyle = ls;
-            logger.debug("Dropdown list styled");
-
-            // ScrollPane inside the dropdown
-            if (sb.scrollStyle != null) {
-                ScrollPane.ScrollPaneStyle sp = new ScrollPane.ScrollPaneStyle(sb.scrollStyle);
-                logger.debug("Dropdown scroll styled");
-                if (sp.background != null)
-                    sp.background = skin.newDrawable(sp.background, new Color(1f, 1f, 1f, 0.05f));
-                if (sp.vScrollKnob != null) sp.vScrollKnob = skin.newDrawable(sp.vScrollKnob, Color.WHITE);
-                if (sp.vScroll != null) sp.vScroll = skin.newDrawable(sp.vScroll, new Color(1f, 1f, 1f, 0.15f));
-                if (sp.hScrollKnob != null) sp.hScrollKnob = skin.newDrawable(sp.hScrollKnob, Color.WHITE);
-                if (sp.hScroll != null) sp.hScroll = skin.newDrawable(sp.hScroll, new Color(1f, 1f, 1f, 0.15f));
-                sb.scrollStyle = sp;
-            }
-            displayModeSelect.setStyle(sb);
-            displayModeSelect.invalidateHierarchy();
-        }
-
 
         // Layout table
         Table table = new Table();
@@ -230,7 +126,7 @@ public class SettingsMenuDisplay extends UIComponent {
 
         table.row().padTop(10f);
         Table uiScaleTable = new Table();
-        uiScaleTable.add(uiScaleSlider).width(100).left();
+        uiScaleTable.add(uiScaleSlider).width(150).left();
         uiScaleTable.add(uiScaleValue).left().padLeft(5f).expandX();
 
         table.add(uiScaleLabel).right().padRight(15f);
@@ -392,17 +288,5 @@ public class SettingsMenuDisplay extends UIComponent {
     public void dispose() {
         rootTable.clear();
         super.dispose();
-    }
-
-    /**
-     * Sets the provided labels' font colour to white by cloning their styles.
-     */
-    private static void makeWhite(Label... labels) {
-        for (Label l : labels) {
-            Label.LabelStyle st = new Label.LabelStyle(l.getStyle());
-            st.fontColor = Color.WHITE;
-            l.setStyle(st);
-            logger.debug("Label styled to white");
-        }
     }
 }

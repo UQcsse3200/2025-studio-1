@@ -131,7 +131,7 @@ public class TutorialScreenDisplay extends BaseScreenDisplay {
         root.row();
 
         // Bottom controls
-        TextButton mainMenuBtn = button("Main Menu", 1.5f, this::backMainMenu);
+        TextButton mainMenuBtn = button("Main Menu", 2.0f, this::backMainMenu);
         root.add(mainMenuBtn).colspan(2).center().padTop(20f);
 
         // Listeners
