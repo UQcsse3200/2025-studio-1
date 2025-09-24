@@ -4,12 +4,14 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.components.KeycardGateComponent;
 import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import com.csse3200.game.components.items.ItemHoldComponent;
+import com.csse3200.game.components.player.ItemPickUpComponent;
 import com.csse3200.game.components.player.PlayerEquipComponent;
 import com.csse3200.game.components.shop.CatalogService;
 import com.csse3200.game.components.shop.ShopDemo;
@@ -28,6 +30,9 @@ import com.csse3200.game.entities.factories.items.ItemFactory;
 import com.csse3200.game.entities.factories.items.WeaponsFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.entities.spawner.ItemSpawner;
+import com.csse3200.game.physics.PhysicsLayer;
+import com.csse3200.game.physics.components.HitboxComponent;
+import com.csse3200.game.physics.components.PhysicsComponent;
 import com.csse3200.game.rendering.AnimationRenderComponent;
 import com.csse3200.game.rendering.TextureRenderComponent;
 import com.csse3200.game.services.ResourceService;
@@ -543,12 +548,24 @@ public class ForestGameArea extends GameArea {
         return newDagger;
     }
 
-    /**
+    /** FIXME Layer is behind player, does that matter???
+     * FIXME Also need to fix positioning so that it actually looks like the player is holding the weapon
      * Sets the equipped item in the PlayerEquipComponent to be the given item
      *
-     * @param item Is an existing Item entity, within the players inventory
+     * @param tex Is an existing Item texture path, within the players inventory
      */
-    private void equipItem(Entity item) {
+    private void equipItem(String tex) {
+        Entity item = player.getComponent(ItemPickUpComponent.class).createItemFromTexture(tex);
+        if (item == null) return;
+
+        item.getComponent(HitboxComponent.class).setLayer(PhysicsLayer.OBSTACLE);
+
+        // Make dropped items static so they behave like map-placed items
+        PhysicsComponent phys = item.getComponent(PhysicsComponent.class);
+        if (phys != null) phys.setBodyType(BodyDef.BodyType.StaticBody);
+
+        // get the game area and spawn the item
+        ServiceLocator.getGameArea().spawnEntity(item);
 
         Vector2 offset = new Vector2(0.7f, 0.3f);
         player.getComponent(PlayerEquipComponent.class).setItem(item, offset);
