@@ -91,10 +91,10 @@ public class PlayerStatsDisplay extends BaseScreenDisplay {
 
         // Processor label
         int processor = (inventory != null) ? inventory.getProcessor() : 0;
-        processorLabel = new Label(formatProcessor(processor), skin, "large");
+        processorLabel = new Label(formatProcessor(processor), skin, "white");
 
         // Ammo label
-        ammoLabel = new Label(formatAmmoLabel(), skin, "large");
+        ammoLabel = new Label(formatAmmoLabel(), skin, "white");
 
         // Layout top-left
         root.top().left().padTop(45f).padLeft(5f);
