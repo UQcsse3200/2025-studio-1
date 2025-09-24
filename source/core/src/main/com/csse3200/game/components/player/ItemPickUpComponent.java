@@ -6,6 +6,7 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.csse3200.game.areas.GameArea;
 import com.csse3200.game.components.Component;
+import com.csse3200.game.components.MagazineComponent;
 import com.csse3200.game.components.items.ItemComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.Weapons;
@@ -14,6 +15,7 @@ import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.physics.BodyUserData;
 import com.csse3200.game.physics.components.PhysicsComponent;
 import com.csse3200.game.services.ServiceLocator;
+import com.csse3200.game.entities.factories.items.WorldPickUpFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -112,8 +114,16 @@ public class ItemPickUpComponent extends Component {
     }
 
     /**
-     * Attempts to add an item to the player's inventory.
-     * Clears the target item reference if successful.
+     * Attempts to convert the specified world item into an inventory item
+     * and add it to the player's inventory.
+     * The method checks for an {@link ItemComponent} and its texture path,
+     * maps the texture to a known weapon type weaponFromTexture(String),
+     * and creates a new weapon entity for storage in the inventory.
+     * - If the item is successfully added, the original world entity is disposed
+     * and the active targetItem reference is cleared.
+     * - If the inventory is full, the newly created weapon entity is disposed,
+     * and the world item remains untouched.
+     * - If the texture is missing or unknown, the pickup attempt is ignored.
      *
      * @param item that player is currently touching
      */
@@ -122,15 +132,51 @@ public class ItemPickUpComponent extends Component {
             logger.warn("pickUpItem called with null item");
             return;
         }
+        ItemComponent ic = item.getComponent(ItemComponent.class);
+        String tex = (ic != null) ? ic.getTexture() : null;
+        if (tex == null) {
+            logger.warn("Pickup has no ItemComponent/texture");
+            return;
+        }
 
-        boolean added = inventory.addItem(item);
+        Entity weapon = weaponFromTexture(tex);
+        if (weapon == null) {
+            logger.warn("Unknown pickup texture {}, ignoring", ic.getTexture());
+            return;
+        }
+
+        weapon.create();
+        // The two following lines of code were generate by ChatGPT
+        MagazineComponent mag = weapon.getComponent(MagazineComponent.class);
+        if (mag != null) mag.setTimeSinceLastReload(999f);
+
+        boolean added = inventory.addItem(weapon);
         if (added) {
             item.dispose();
             targetItem = null;
             logger.info("Picked up item and added to inventory");
         } else {
+            weapon.dispose();
             logger.info("Inventory full. Cannot pick up item");
         }
+    }
+
+    /**
+     * Resolves a texture path string into a corresponding weapon entity.
+     * This method compares the given texture path against the Weapons
+     * enum configuration and, if matched, creates the appropriate weapon
+     * using the {@link WeaponsFactory}.
+     * @param texture The texture file path associated with the world item.
+     * @return A new {@link Entity} representing the weapon, or null if the
+     * texture does not correspond to any known weapon type.
+     */
+    private Entity weaponFromTexture(String texture) {
+        for (Weapons w : Weapons.values()) {
+            if (texture.equals(w.getConfig().texturePath)) {
+                return WeaponsFactory.createWeapon(w);
+            }
+        }
+        return null;
     }
 
     /**
@@ -186,8 +232,8 @@ public class ItemPickUpComponent extends Component {
             logger.debug("Drop: no texture info on item; skipping world respawn");
             return;
         }
-        // Attempt to recreate a new item entity from the stored texture
-        Entity newItem = createItemFromTexture(tex);
+        // Attempt to recreate a new world-pickable item entity from the stored texture
+        Entity newItem = WorldPickUpFactory.createPickupFromTexture(tex);
         if (newItem == null) {
             return;
         }
