@@ -10,7 +10,7 @@ import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.components.KeycardGateComponent;
 import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import com.csse3200.game.components.items.ItemHoldComponent;
-import com.csse3200.game.components.player.InventoryComponent;
+import com.csse3200.game.components.player.PlayerEquipComponent;
 import com.csse3200.game.components.shop.CatalogService;
 import com.csse3200.game.components.shop.ShopDemo;
 import com.csse3200.game.components.shop.ShopManager;
@@ -529,6 +529,9 @@ public class ForestGameArea extends GameArea {
         Entity newPlayer = PlayerFactory.createPlayer();
         spawnEntityAt(newPlayer, PLAYER_SPAWN, true, true);
 
+        newPlayer.getEvents().addListener("equip", this::equipItem);
+        newPlayer.getEvents().addListener("unequip", this::unequipItem);
+
         return newPlayer;
     }
 
@@ -540,11 +543,22 @@ public class ForestGameArea extends GameArea {
         return newDagger;
     }
 
+    /**
+     * Sets the equipped item in the PlayerEquipComponent to be the given item
+     *
+     * @param item Is an existing Item entity, within the players inventory
+     */
     private void equipItem(Entity item) {
-        InventoryComponent inventory = this.player.getComponent(InventoryComponent.class);
-        inventory.addItem(item);
-        inventory.setCurrItem(item);
-        spawnEntityAt(item, PLAYER_SPAWN, true, true);
+
+        Vector2 offset = new Vector2(0.7f, 0.3f);
+        player.getComponent(PlayerEquipComponent.class).setItem(item, offset);
+    }
+
+    /**
+     * Sets the equipped item in the PlayerEquipComponent to be null, along with the offset
+     */
+    private void unequipItem() {
+        player.getComponent(PlayerEquipComponent.class).setItem(null, null);
     }
 
     private Entity spawnLightsaber() {
