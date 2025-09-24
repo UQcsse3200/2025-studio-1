@@ -1,10 +1,12 @@
 package com.csse3200.game.entities.configs.benches;
 
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.csse3200.game.components.WeaponsStatsComponent;
 import com.csse3200.game.components.player.InventoryComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.ItemTypes;
+import com.csse3200.game.services.ServiceLocator;
 
 public class ComputerBenchConfig extends BenchConfig {
 
@@ -33,6 +35,7 @@ public class ComputerBenchConfig extends BenchConfig {
                         currItemStats.upgrade();
                         subtractPrice(player);
                         buyPrompt.setText("Item has been upgraded");
+                        playUpgradeSound();
                     } else if (currItemStats.isMaxUpgraded()) { //Check the gun can be upgraded
                         buyPrompt.setText("Weapon is fully upgraded already!");
                     } else {
