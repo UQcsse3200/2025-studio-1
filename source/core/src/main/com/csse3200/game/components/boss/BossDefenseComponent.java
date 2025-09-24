@@ -1,7 +1,7 @@
 package com.csse3200.game.components.boss;
 
-import com.csse3200.game.components.Component;
 import com.csse3200.game.components.CombatStatsComponent;
+import com.csse3200.game.components.Component;
 import com.csse3200.game.components.WeaponsStatsComponent;
 import com.csse3200.game.services.GameTime;
 import com.csse3200.game.services.ServiceLocator;
@@ -24,9 +24,9 @@ public class BossDefenseComponent extends Component {
     private final GameTime time = ServiceLocator.getTimeSource();
 
     /**
-     * @param durationSec Defense duration (seconds)
-     * @param reduction Damage reduction ratio, range [0, 1] (1 represents complete immunity)
-     * @param triggerHp Trigger threshold: Current HP ≤ this value triggers the attack
+     * @param durationSec               Defense duration (seconds)
+     * @param reduction                 Damage reduction ratio, range [0, 1] (1 represents complete immunity)
+     * @param triggerHp                 Trigger threshold: Current HP ≤ this value triggers the attack
      * @param closeAttackWhileDefending Whether to close self-damage during defense
      */
     public BossDefenseComponent(float durationSec, float reduction, int triggerHp,

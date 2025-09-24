@@ -22,6 +22,7 @@ public class StationComponent extends Component {
 
     /**
      * Initialise the station component
+     *
      * @param config config for the type of bench
      */
     public StationComponent(BenchConfig config) {
@@ -30,6 +31,7 @@ public class StationComponent extends Component {
 
     /**
      * Sets if the player is near
+     *
      * @param near is the player near
      */
     public void setPlayerNear(boolean near) {
@@ -38,6 +40,7 @@ public class StationComponent extends Component {
 
     /**
      * Sets the config
+     *
      * @param config the config
      */
     public void setConfig(BenchConfig config) {
@@ -46,6 +49,7 @@ public class StationComponent extends Component {
 
     /**
      * Sets buy prompt
+     *
      * @param prompt the buyPrompt
      */
     public void setBuyPrompt(Label prompt) {
@@ -54,6 +58,7 @@ public class StationComponent extends Component {
 
     /**
      * Sets the player interacting with the bench
+     *
      * @param player interacting with the bench
      */
     public void setPlayer(Entity player) {
@@ -127,7 +132,8 @@ public class StationComponent extends Component {
 
     /**
      * Updates when the player collides with the station
-     * @param me the station
+     *
+     * @param me    the station
      * @param other the player colliding
      */
     protected void onCollisionStart(Fixture me, Fixture other) {
@@ -148,7 +154,8 @@ public class StationComponent extends Component {
 
     /**
      * Updates when the player stops colliding with the station
-     * @param me the station
+     *
+     * @param me    the station
      * @param other the player
      */
     protected void onCollisionEnd(Fixture me, Fixture other) {

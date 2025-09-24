@@ -33,7 +33,7 @@ public class StoryScreen extends ScreenAdapter {
     };
 
     private int currentLine = 0;
-    private float typeSpeed = 0.03f;
+    private final float typeSpeed = 0.03f;
     private float typeTimer = 0f;
     private int charIndex = 0;
     private boolean typing;
@@ -41,7 +41,7 @@ public class StoryScreen extends ScreenAdapter {
     public StoryScreen(GdxGame game) {
         this.game = game;
     }
-    
+
     @Override
     public void show() {
         stage = new Stage(new ScreenViewport());

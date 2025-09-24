@@ -15,7 +15,7 @@ public class BossAnimationController extends Component {
         }
 
         entity.getEvents().addListener("wanderStart", this::playIdle);
-        entity.getEvents().addListener("chaseStart",  this::onChaseStart);
+        entity.getEvents().addListener("chaseStart", this::onChaseStart);
 
         // Boss event
         entity.getEvents().addListener("boss:attackStart", this::playAttack);

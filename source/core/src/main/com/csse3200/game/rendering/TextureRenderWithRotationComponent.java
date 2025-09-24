@@ -1,5 +1,6 @@
 package com.csse3200.game.rendering;
 
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
@@ -10,7 +11,6 @@ import com.csse3200.game.components.WeaponsStatsComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.utils.math.Vector2Utils;
-import com.badlogic.gdx.graphics.*;
 
 import static com.badlogic.gdx.Gdx.input;
 
@@ -31,10 +31,20 @@ public class TextureRenderWithRotationComponent extends TextureRenderComponent {
 
     /**
      * Set the rotation value this rendering component will use to rotate the texture.
+     *
      * @param value The rotation value, in degrees.
      */
     public void setRotation(float value) {
         rotation = value;
+    }
+
+    public void setRotationWithRepeat(float value) {
+        rotation = value;
+        hasSetRotation = true;
+    }
+
+    public float getRotation() {
+        return rotation;
     }
 
     @Override

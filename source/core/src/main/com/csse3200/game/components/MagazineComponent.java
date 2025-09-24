@@ -8,14 +8,15 @@ import com.csse3200.game.services.ServiceLocator;
  * Stores and manages a given weapon's magazine information
  */
 
-public class MagazineComponent extends Component{
+public class MagazineComponent extends Component {
 
     private int currentAmmo;
-    private int maxAmmo;
+    private final int maxAmmo;
     private float timeSinceLastReload;
 
     /**
      * Constructs an magazine component
+     *
      * @param maxAmmo the maximum amount of ammunition that can be held by the weapon
      */
 
@@ -39,6 +40,7 @@ public class MagazineComponent extends Component{
 
     /**
      * Returns current amount of ammo in magazine
+     *
      * @return ammo in magazine
      */
 
@@ -49,6 +51,7 @@ public class MagazineComponent extends Component{
 
     /**
      * Sets the current ammo to a new value
+     *
      * @param newAmmo ammunition to be stored in the magazine
      */
 
@@ -59,6 +62,7 @@ public class MagazineComponent extends Component{
 
     /**
      * Reloads the magazine from player's current ammo supply
+     *
      * @return true if reload is successful and adds ammunition to the magazine, false otherwise
      */
 
@@ -69,7 +73,7 @@ public class MagazineComponent extends Component{
             return false;
         }
 
-        AmmoStatsComponent ammoStats =  player.getComponent(AmmoStatsComponent.class);
+        AmmoStatsComponent ammoStats = player.getComponent(AmmoStatsComponent.class);
         int ammoReserves = ammoStats.getAmmo();
         if (ammoReserves <= 0) {
 
@@ -80,9 +84,7 @@ public class MagazineComponent extends Component{
 
             this.setCurrentAmmo(currentAmmo + ammoReserves);
             ammoStats.setAmmo(0);
-        }
-
-        else {
+        } else {
             int reloadedAmmo = maxAmmo - currentAmmo;
             this.setCurrentAmmo(maxAmmo);
             ammoStats.setAmmo(ammoReserves - reloadedAmmo);
@@ -94,6 +96,7 @@ public class MagazineComponent extends Component{
 
     /**
      * Determines if the weapon is currently reloading
+     *
      * @return true if the weapon is undergoing a reload, false otherwise
      */
 
@@ -105,6 +108,7 @@ public class MagazineComponent extends Component{
 
     /**
      * Sets the time since last reload, used for testing purposes
+     *
      * @param timeSinceLastReload designated time since last reload
      */
 

@@ -15,9 +15,9 @@ import com.csse3200.game.rendering.TextureRenderComponent;
 public class InteractableStationFactory {
 
 
-
     /**
      * Creates a base interactable station
+     *
      * @return the station
      */
     public static Entity createBaseStation() {
@@ -32,6 +32,7 @@ public class InteractableStationFactory {
 
     /**
      * Create an interactable station
+     *
      * @param benchType the type of station
      * @return the station
      */

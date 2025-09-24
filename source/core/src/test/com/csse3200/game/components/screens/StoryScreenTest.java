@@ -1,8 +1,8 @@
 package com.csse3200.game.components.screens;
 
-import com.csse3200.game.screens.StoryScreen;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.csse3200.game.GdxGame;
+import com.csse3200.game.screens.StoryScreen;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -10,7 +10,7 @@ import org.mockito.Mockito;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 public class StoryScreenTest {
     private GdxGame mockGame;

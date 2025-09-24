@@ -2,8 +2,8 @@ package com.csse3200.game.components;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.physics.box2d.Fixture;
-import com.csse3200.game.entities.Entity;
 import com.csse3200.game.components.player.InventoryComponent;
+import com.csse3200.game.entities.Entity;
 import com.csse3200.game.physics.BodyUserData;
 import com.csse3200.game.physics.components.PhysicsComponent;
 
@@ -15,8 +15,10 @@ public class KeycardPickupComponent extends Component {
         /** Initializes the component with a specific keycard level to grant on pickup. */
         this.level = level;
     }
+
     @Override
-    public void create() {  Gdx.app.log("KeycardPickup", "Listener registered for collisionStart");
+    public void create() {
+        Gdx.app.log("KeycardPickup", "Listener registered for collisionStart");
         entity.getEvents().addListener("collisionStart", this::onCollisionStart);
 
         PhysicsComponent physics = entity.getComponent(PhysicsComponent.class);

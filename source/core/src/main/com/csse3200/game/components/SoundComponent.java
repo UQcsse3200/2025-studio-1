@@ -15,10 +15,11 @@ public class SoundComponent extends Component {
 
     /**
      * Registers the sound to play when the given event is triggered. Returns true if successful and false if not.
+     *
      * @param event the name of the event
      * @param sound the path of the sound file to play
-     * @requires sound has already been registered with the resourceService
      * @return whether the sound was successfully registered
+     * @requires sound has already been registered with the resourceService
      */
     public boolean registerSound(String event, String sound) {
         if (this.entity == null) {
@@ -30,7 +31,9 @@ public class SoundComponent extends Component {
         }
         this.entity.getEvents().addListener(
                 event,
-                () -> {ServiceLocator.getResourceService().getAsset(sound, Sound.class).play();}
+                () -> {
+                    ServiceLocator.getResourceService().getAsset(sound, Sound.class).play();
+                }
         );
         return true;
     }

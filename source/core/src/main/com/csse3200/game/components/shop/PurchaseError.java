@@ -26,6 +26,7 @@ public enum PurchaseError {
 
     /**
      * Returns the code associated with a PurchaseError
+     *
      * @return an integer representing the PurchaseError
      */
     public int getCode() {
@@ -34,6 +35,7 @@ public enum PurchaseError {
 
     /**
      * Creates PurchaseError from a integer error code
+     *
      * @param code The code representing the error.
      * @return The PurchaseError.
      */
