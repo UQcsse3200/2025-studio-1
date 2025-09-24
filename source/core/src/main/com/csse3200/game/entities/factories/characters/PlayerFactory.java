@@ -85,8 +85,6 @@ public class PlayerFactory {
         //Unequip player at spawn
         PlayerActions actions = player.getComponent(PlayerActions.class);
         actions.create();
-        actions.unequipPlayer();  //start without a weapon equipped
-
 
         // pick up rapid fire powerup
         // remove this if we have item pickup available
