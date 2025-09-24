@@ -1,7 +1,9 @@
 package com.csse3200.game.components.minigames.robotFighting;
 
 import com.csse3200.game.entities.Entity;
+import com.csse3200.game.entities.factories.InteractableStationFactory;
 import com.csse3200.game.files.FileLoader;
+import com.csse3200.game.rendering.TextureRenderComponent;
 
 import java.awt.*;
 
@@ -33,8 +35,9 @@ public class RobotFightingGame {
     }
 
     private Entity initGameEntity() {
-        Entity game = new Entity();
+        Entity game = InteractableStationFactory.createBaseStation();
         game.addComponent(new RobotFightingDisplay());
+        game.addComponent(new TextureRenderComponent("images/tree.png"));
 
         game.setInteractable(true);
 
@@ -43,9 +46,5 @@ public class RobotFightingGame {
 
     public Entity getGameEntity() {
         return gameEntity;
-    }
-
-    public void startGame() {
-        
     }
 }
