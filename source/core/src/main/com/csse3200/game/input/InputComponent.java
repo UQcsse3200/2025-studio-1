@@ -79,9 +79,6 @@ public abstract class InputComponent extends Component
      */
     @Override
     public boolean keyDown(int keycode) {
-        if (this.isPauseable() && ServiceLocator.getTimeSource().isPaused()) {
-            return false;
-        }
         return this.keyPressed(keycode);
     }
 
@@ -113,9 +110,6 @@ public abstract class InputComponent extends Component
      */
     @Override
     public boolean keyUp(int keycode) {
-        if (this.isPauseable() && ServiceLocator.getTimeSource().isPaused()) {
-            return false;
-        }
         return this.keyReleased(keycode);
     }
 

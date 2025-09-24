@@ -37,7 +37,8 @@ public class RobotFightingDisplay extends UIComponent {
     private Texture pixelTex;
     private Label currencyLabel;
     private ItemScreenDisplay itemPopup;
-    Image background;
+    private Image background;
+    private Table welcomeRoot;
 
     private final GameArea game = ServiceLocator.getGameArea();
 
@@ -55,6 +56,7 @@ public class RobotFightingDisplay extends UIComponent {
         entity.addComponent(itemPopup);
 
         buildBackdrop();
+        buildWelcomeScreen(); // <--- new
         buildRootTable();
         addHeader();
         buildGrid();
@@ -63,6 +65,43 @@ public class RobotFightingDisplay extends UIComponent {
 
         hide();
     }
+
+    private void buildWelcomeScreen() {
+        welcomeRoot = new Table();
+        welcomeRoot.setFillParent(true);
+        welcomeRoot.center().pad(20);
+
+        // Title
+        Label.LabelStyle titleStyle = new Label.LabelStyle(skin.get(Label.LabelStyle.class));
+        titleStyle.fontColor = TITLE_COLOR;
+        Label title = new Label("Welcome to Robot Warriors!", titleStyle);
+        title.setFontScale(2f);
+
+        // Subtitle
+        Label.LabelStyle subStyle = new Label.LabelStyle(skin.get(Label.LabelStyle.class));
+        subStyle.fontColor = Color.WHITE;
+        Label subtitle = new Label("Press start to enter the arena.", subStyle);
+        subtitle.setFontScale(1.2f);
+
+        // Start button
+        TextButton startBtn = new TextButton("Start Game",
+                skin.get("default", TextButton.TextButtonStyle.class));
+        startBtn.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                welcomeRoot.setVisible(false);  // hide welcome
+                root.setVisible(true);          // show main game UI
+            }
+        });
+
+        // Layout
+        welcomeRoot.add(title).padBottom(20).row();
+        welcomeRoot.add(subtitle).padBottom(40).row();
+        welcomeRoot.add(startBtn).width(200f).height(60f).row();
+
+        stage.addActor(welcomeRoot);
+    }
+
 
     /**
      * Draw method overridden
@@ -128,8 +167,8 @@ public class RobotFightingDisplay extends UIComponent {
         if (background != null) {
             background.setVisible(true);
         }
-        if (root != null) {
-            root.setVisible(true);
+        if (welcomeRoot != null) {
+            welcomeRoot.setVisible(true);
         }
         if (dimmer != null) {
             dimmer.setVisible(true);
@@ -152,6 +191,9 @@ public class RobotFightingDisplay extends UIComponent {
         }
         if (dimmer != null) {
             dimmer.setVisible(false);
+        }
+        if (welcomeRoot != null) {
+            welcomeRoot.setVisible(false);
         }
     }
 
@@ -190,6 +232,7 @@ public class RobotFightingDisplay extends UIComponent {
         root.top().pad(20);
         root.defaults().pad(10);
         stage.addActor(root);
+        root.setVisible(false);
     }
 
     // Adds title and Divider
@@ -197,7 +240,7 @@ public class RobotFightingDisplay extends UIComponent {
         Label.LabelStyle titleStyle = new Label.LabelStyle(skin.get(Label.LabelStyle.class));
         titleStyle.fontColor = TITLE_COLOR;
 
-        Label title = new Label("Shop", titleStyle);
+        Label title = new Label("Robot Warriors", titleStyle);
         title.setFontScale(1.8f);
         root.add(title).padBottom(10).row();
 
