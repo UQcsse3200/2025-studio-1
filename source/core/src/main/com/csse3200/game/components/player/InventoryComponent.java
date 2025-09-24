@@ -27,7 +27,6 @@ public class InventoryComponent extends Component {
     private final ArrayList<String> itemTexs = new ArrayList<>(maxCapacity);
     private int processor;
     private Entity currItem;
-    private int selectedSlot = -1; // -1 = no selectedSlot
     private int equippedSlot = -1; // no slot is equipped initially
     private int keycardLevel = 0;
 
@@ -274,35 +273,6 @@ public class InventoryComponent extends Component {
      */
     public Entity getCurrItem() {
         return this.currItem;
-    }
-
-    /**
-     *
-     * @param slotIndex takes the index of the slot selected
-     */
-    public void setSelectSlot(int slotIndex) {
-        if (slotIndex >= 0 && slotIndex < this.items.size()) {
-            this.selectedSlot = slotIndex;
-        }
-    }
-
-    @Override
-    /**
-     * to set up the component to respond whenever player focuses on an
-     * inventory item
-     */
-    public void create() {
-        super.create();
-        entity.getEvents().addListener("focus item", this::onFocusItem);
-    }
-
-    /**
-     *
-     * @param slotIndex puts focus on the item at that slot
-     */
-    private void onFocusItem(int slotIndex) {
-        setSelectSlot(slotIndex);
-        entity.getEvents().trigger("inventoryItemSelected", slotIndex);
     }
 
     /**

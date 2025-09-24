@@ -10,13 +10,17 @@ import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.ItemTypes;
 import com.csse3200.game.input.InputComponent;
 import com.csse3200.game.services.ServiceLocator;
+import com.csse3200.game.ui.terminal.Terminal;
 import com.csse3200.game.utils.math.Vector2Utils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Input handler for the player for keyboard and touch (mouse) input.
  * This input handler only uses keyboard input.
  */
 public class KeyboardPlayerInputComponent extends InputComponent {
+    private static final Logger logger = LoggerFactory.getLogger(KeyboardPlayerInputComponent.class);
     private final Vector2 walkDirection = Vector2.Zero.cpy();
 
     private int focusedItem = -1;
@@ -299,7 +303,7 @@ public class KeyboardPlayerInputComponent extends InputComponent {
 
         entity.getEvents().trigger("focusItem", focusedItem);  // Refresh UI & logic
         entity.getEvents().trigger("equip", tex);  // Display item in players hand
-        System.out.println("Equipped weapon from slot " + focusedItem);
+        logger.debug("Equipped weapon from slot " + focusedItem);
 
         actions.equipWeapon(item);
         equipped = true;
@@ -320,7 +324,7 @@ public class KeyboardPlayerInputComponent extends InputComponent {
         inventory.setCurrItem(null);
         entity.getEvents().trigger("focus item", focusedItem);
         entity.getEvents().trigger("unequip");
-        System.out.println("Unequipped weapon");
+        logger.debug("Unequipped weapon");
 
         actions.unequipWeapon();
     }
