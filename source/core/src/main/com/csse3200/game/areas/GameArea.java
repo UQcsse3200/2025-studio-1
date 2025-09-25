@@ -132,6 +132,16 @@ public abstract class GameArea implements Disposable {
     }
 
     /**
+     * Returns the room name corresponding to the current floor.
+     *
+     * @return the name of the current room
+     *
+     */
+    public String getRoomName () {
+        return this.toString();
+    }
+
+    /**
      * Returns the room number corresponding to the current floor.
      *
      * @return Room number as an int if the floor name is in the format "Floor2"
@@ -244,6 +254,43 @@ public abstract class GameArea implements Disposable {
             default:
                 spawnGhostGPT(total, scaleFactor, player, positions);
                 spawnGrokDroid(total, scaleFactor, player, positions);
+                break;
+        }
+    }
+    /**
+     * Spawns the enemies based on the enemy name
+     * @param roomName The number of the current floor/room.
+     * @param total The total number of enemies to be spawned.
+     * @param scaleFactor The scaling factor of the difficulty of the enemies to be spawned.
+     * @param player The player {@link Entity} that is to be target by the enemies.
+     */
+    public void spawn(String name, String roomName, int total, float scaleFactor, Entity player){
+        HashMap<String, ArrayList<Vector2>> positions = new HashMap<>();
+        ArrayList<Vector2> respectiveSpawns = new ArrayList<>();
+        respectiveSpawns.add(new Vector2(12f, 4f));
+        switch (name) {
+            case (ghostGpt):
+                positions.put(ghostGpt, (ArrayList<Vector2>) respectiveSpawns.clone());
+                spawnGhostGPT(total, scaleFactor, player, positions);
+                break;
+            case (grokDroid):
+                positions.put(grokDroid, (ArrayList<Vector2>) respectiveSpawns.clone());
+                spawnGrokDroid(total, scaleFactor, player, positions);
+                break;
+
+            case (deepSpin):
+                positions.put(deepSpin, (ArrayList<Vector2>) respectiveSpawns.clone());
+                spawnDeepspin(total, scaleFactor, player, positions);
+                break;
+
+            case (turret):
+                positions.put(turret, (ArrayList<Vector2>) respectiveSpawns.clone());
+                spawnTurret(total, scaleFactor, player, positions);
+                break;
+
+            case(vroomba):
+                positions.put(vroomba, (ArrayList<Vector2>) respectiveSpawns.clone());
+                spawnVroomba(total, scaleFactor, player, positions);
                 break;
         }
     }

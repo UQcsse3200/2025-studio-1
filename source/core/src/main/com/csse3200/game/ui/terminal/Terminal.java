@@ -55,7 +55,7 @@ public class Terminal extends Component {
         addCommand("infiniteStamina", new InfiniteStaminaCommand());
         addCommand("infiniteDash", new InfiniteDashCommand());
         addCommand("infiniteJumps", new InfiniteJumpsCommand());
-
+        addCommand("spawn", new SpawnCommand());
         addCommand("doorOverride", new DoorOverrideCommand());
 //        addCommand("teleport", new TeleportCommand());
 
