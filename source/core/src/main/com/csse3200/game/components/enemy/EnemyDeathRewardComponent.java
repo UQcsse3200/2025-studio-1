@@ -7,6 +7,7 @@ import com.csse3200.game.components.player.InventoryComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.services.ServiceLocator;
 
+import java.security.SecureRandom;
 import java.util.Random;
 
 /**
@@ -14,7 +15,7 @@ import java.util.Random;
  */
 public class EnemyDeathRewardComponent extends Component {
     //1/4 chance of enemy adding ammo to the player
-    private Random random = new Random();
+    private final Random random = new SecureRandom();
     private final int rewardProcessor;
     private final InventoryComponent playerInventory;
 

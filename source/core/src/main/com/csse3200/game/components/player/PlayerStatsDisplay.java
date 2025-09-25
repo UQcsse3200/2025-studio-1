@@ -39,7 +39,7 @@ public class PlayerStatsDisplay extends UIComponent {
     private static final float BAR_HEIGHT = 30f;
 
     // Constants
-    private final String AMMO_AMOUNT = "Ammo :%d";
+    private final String ammoAmount = "Ammo :%d";
 
     // Colours
     private static final Color COLOR_BG = Color.DARK_GRAY;
@@ -132,7 +132,7 @@ public class PlayerStatsDisplay extends UIComponent {
 
         // Ammo label
         int ammo = entity.getComponent(AmmoStatsComponent.class).getAmmo();
-        CharSequence ammoText = String.format(AMMO_AMOUNT, ammo);
+        CharSequence ammoText = String.format(ammoAmount, ammo);
         ammoLabel = new Label(ammoText, skin, "large");
 
         // Layout:
@@ -208,7 +208,7 @@ public class PlayerStatsDisplay extends UIComponent {
 
         if (equipped == null) {
 
-            CharSequence text = String.format(AMMO_AMOUNT, ammoReserves);
+            CharSequence text = String.format(ammoAmount, ammoReserves);
             ammoLabel.setText(text);
             return;
         }
@@ -232,7 +232,7 @@ public class PlayerStatsDisplay extends UIComponent {
 
         if (equipped == null) {
 
-            CharSequence text = String.format(AMMO_AMOUNT, ammoReserves);
+            CharSequence text = String.format(ammoAmount, ammoReserves);
             ammoLabel.setText(text);
             return;
         }
