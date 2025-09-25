@@ -1,9 +1,15 @@
 package com.csse3200.game.components.player;
 
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.physics.box2d.Body;
 import com.csse3200.game.components.items.ItemComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
 import com.csse3200.game.extensions.GameExtension;
+import com.csse3200.game.physics.PhysicsEngine;
+import com.csse3200.game.physics.PhysicsService;
+import com.csse3200.game.rendering.RenderService;
+import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -14,6 +20,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import java.lang.reflect.Field;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 /**
  * Unit tests for ItemPickUpComponent focusing on event-driven behaviour:
@@ -28,6 +35,7 @@ class ItemPickUpComponentTest {
     private Entity player;
     private InventoryComponent inventory;
     private ItemPickUpComponent pickup;
+    private PlayerEquipComponent equip;
 
     /**
      * Two helper methods to let us test the code directly.
@@ -56,11 +64,29 @@ class ItemPickUpComponentTest {
     @BeforeEach
     void setUp() {
         inventory = new InventoryComponent(/*processor=*/0);
-        pickup = new ItemPickUpComponent(inventory);
+        pickup = spy(new ItemPickUpComponent(inventory));
+        equip = new PlayerEquipComponent();
         ServiceLocator.registerEntityService(new EntityService());
+
+        // Create a mock ResourceService
+        ResourceService rs = mock(ResourceService.class);
+        // Make getAsset to always return a mock Texture when asked for any texture path
+        when(rs.getAsset(anyString(), eq(Texture.class))).thenReturn(mock(Texture.class));
+        // Register the mocked ResourceService and PhysicsService
+        ServiceLocator.registerResourceService(rs);
+        RenderService renderService = mock(RenderService.class);
+        ServiceLocator.registerRenderService(renderService);
+
+        PhysicsService physicsService = mock(PhysicsService.class);
+        PhysicsEngine physicsEngine = mock(PhysicsEngine.class);
+        when(physicsService.getPhysics()).thenReturn(physicsEngine);
+        when(physicsEngine.createBody(any())).thenReturn(mock(Body.class));
+        ServiceLocator.registerPhysicsService(physicsService);
+        //ServiceLocator.registerPhysicsService(mock(PhysicsService.class));
 
         player = new Entity()
                 .addComponent(inventory)
+                .addComponent(equip)
                 .addComponent(pickup);
         player.create();
     }
@@ -72,7 +98,14 @@ class ItemPickUpComponentTest {
         @Test
         @DisplayName("Picking up a valid target item adds it to inventory and clears target")
         void pickUpAddsItemAndClearsTarget() {
-            Entity worldItem = new Entity().addComponent(new ItemComponent());
+            Entity dummyItem = new Entity().addComponent(new ItemComponent());
+
+            // return dummyItem instead of creating a new one
+            doReturn(dummyItem).when(pickup).createItemFromTexture(anyString());
+
+            var ic = new ItemComponent();
+            ic.setTexture("images/pistol.png");
+            Entity worldItem = new Entity().addComponent(ic);
             worldItem.create();
 
             // Simulate collision target present
@@ -81,7 +114,12 @@ class ItemPickUpComponentTest {
             player.getEvents().trigger("pick up");
 
             assertEquals(1, inventory.getSize(), "Item should be added to inventory");
-            assertSame(worldItem, inventory.get(0), "First slot should contain picked up item");
+
+            Entity stored = inventory.get(0);
+            assertNotNull(stored, "Inventory slot 0 should be populated");
+            assertNotSame(worldItem, stored, "Stored entity should be a created weapon, not the world shell");
+            assertNotNull(stored.getComponent(ItemComponent.class),
+                    "Stored entity should have ItemComponent (weapon)");
 
             assertNull(getPrivate(pickup, "targetItem"), "targetItem should be cleared after pickup");
         }
