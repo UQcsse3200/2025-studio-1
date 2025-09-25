@@ -8,9 +8,12 @@ public class BlackJackGame extends Component {
     private List<Card> dealerHand;
     private List<Card> playerHand;
     private Deck deck;
+    private boolean winner;
 
     public void create() {
         deck = new Deck();
+        dealerHand = new ArrayList<>();
+        playerHand = new ArrayList<>();
         entity.getEvents().addListener("start", this::startGame);
         entity.getEvents().addListener("drawCard", this::drawCard);
         entity.getEvents().addListener("stand", this::dealerTurn);
@@ -33,27 +36,30 @@ public class BlackJackGame extends Component {
     }
 
     private void dealerTurn() {
-        while (getHandValue(dealerHand) < 17) {
-            dealerHand.add(deck.drawCard());
-        }
-        if (getHandValue(dealerHand) > 21) {
-            entity.getEvents().trigger("dealerbust");
-        } else
-            if (getHandValue(playerHand) > getHandValue(dealerHand)) {
+        if (!winner) {
+            while (getHandValue(dealerHand) < 17) {
+                dealerHand.add(deck.drawCard());
+            }
+            if (getHandValue(dealerHand) > 21) {
+                entity.getEvents().trigger("dealerbust");
+            } else if (getHandValue(playerHand) > getHandValue(dealerHand)) {
                 entity.getEvents().trigger("playerwin");
             } else if (getHandValue(playerHand) < getHandValue(dealerHand)) {
                 entity.getEvents().trigger("dealerwin");
             } else {
                 entity.getEvents().trigger("tie");
             }
+            winner = true;
+        }
 
 
     }
 
     private void startGame() {
+        winner = false;
         deck.resetDeck();
-        dealerHand = new ArrayList<>();
-        playerHand = new ArrayList<>();
+        dealerHand.clear();
+        playerHand.clear();
         playerHand.add(deck.drawCard());
         playerHand.add(deck.drawCard());
         dealerHand.add(deck.drawCard());
@@ -61,9 +67,12 @@ public class BlackJackGame extends Component {
     }
 
     private void drawCard() {
-        playerHand.add(deck.drawCard());
-        if (getHandValue(playerHand) > 21) {
-            entity.getEvents().trigger("playerbust");
+        if(!winner) {
+            playerHand.add(deck.drawCard());
+            if (getHandValue(playerHand) > 21) {
+                winner = true;
+                entity.getEvents().trigger("playerbust");
+            }
         }
     }
 
