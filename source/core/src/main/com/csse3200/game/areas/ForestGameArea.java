@@ -552,7 +552,7 @@ public class ForestGameArea extends GameArea {
         return newDagger;
     }
 
-    /* FIXME: TODO list
+    /* FIXME: TODO list (DO TESTING)
   = item is behind player when equipped
   = can pick up item that the player has equipped
   = the sword and dagger don't seem to be appearing
