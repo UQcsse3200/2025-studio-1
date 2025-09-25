@@ -86,12 +86,13 @@ public class GdxGame extends Game {
             case LOAD_GAME -> new MainGameScreen(this, "placeholder");
             case TUTORIAL_SCREEN -> new TutorialScreen(this);
             case STORY -> new StoryScreen(this);
+            case DIFFICULTY_SCREEN -> new DifficultyScreen(this);
         };
     }
 
     public enum ScreenType {
         MAIN_MENU, MAIN_GAME, SETTINGS, DEATH_SCREEN, WIN_SCREEN, TUTORIAL_SCREEN,
-        STORY, LOAD_GAME
+        STORY, LOAD_GAME, DIFFICULTY_SCREEN,
     }
 
     /**

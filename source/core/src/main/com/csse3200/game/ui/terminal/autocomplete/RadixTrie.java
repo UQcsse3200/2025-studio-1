@@ -236,8 +236,8 @@ public class RadixTrie {
         java.util.Collections.reverse(keys);
         for (char k : keys) {
             java.util.List<Edge> edges = node.children.get(k);
-            java.util.List<Edge> copy = new java.util.ArrayList<>(edges);
-            java.util.Collections.reverse(copy); // since already sorted asc, reverse to push
+            java.util.List<Edge> copy = edges.reversed();
+            copy.reversed(); // since already sorted asc, reverse to push
             for (Edge e : copy) {
                 stack.push(new Object[]{e.next, built + e.label});
             }
@@ -261,8 +261,7 @@ public class RadixTrie {
             java.util.Collections.reverse(ks);
             for (char k : ks) {
                 java.util.List<Edge> edges = cur.children.get(k);
-                java.util.List<Edge> copy = new java.util.ArrayList<>(edges);
-                java.util.Collections.reverse(copy);
+                java.util.List<Edge> copy = edges.reversed();
                 for (Edge e : copy) {
                     stack.push(new Object[]{e.next, word + e.label});
                 }
