@@ -121,7 +121,7 @@ public class SettingsMenuDisplay extends UIComponent {
 
         Label musicLabel = new Label("Music:", skin);
         musicCheck = new CheckBox("", skin);
-        musicCheck.setChecked(settings.musicEnabled);
+        musicCheck.setChecked(settings.isMusicEnabled());
 
         // White labels
         makeWhite(
@@ -263,7 +263,7 @@ public class SettingsMenuDisplay extends UIComponent {
 
         musicCheck.addListener(
                 (Event event) -> {
-                    settings.musicEnabled = musicCheck.isChecked();
+                    settings.setMusicEnabled(musicCheck.isChecked());
                     UserSettings.set(settings, true);
                     return true;
                 });
@@ -371,7 +371,7 @@ public class SettingsMenuDisplay extends UIComponent {
         settings.uiScale = uiScaleSlider.getValue();
         settings.displayMode = new DisplaySettings(displayModeSelect.getSelected().object);
         settings.vsync = vsyncCheck.isChecked();
-        settings.musicEnabled = musicCheck.isChecked();
+        settings.setMusicEnabled(musicCheck.isChecked());
 
         UserSettings.set(settings, true);
         ServiceLocator.getMusicService().setMenuMusicPlaying(musicCheck.isChecked());

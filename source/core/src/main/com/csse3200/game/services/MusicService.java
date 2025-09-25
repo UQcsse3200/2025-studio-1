@@ -13,12 +13,11 @@ public class MusicService {
     private static final String MENU_MUSIC = "sounds/menuMusic.mp3";
     private Music menuMusic;
 
-    public MusicService() {
-        ServiceLocator.getGlobalEvents().addListener("screenChanged", this::updateForScreen);
-    }
-
     public void load(ResourceService resourceService) {
         logger.info("Loading music assets");
+
+        ServiceLocator.getGlobalEvents().addListener("screenChanged", this::updateForScreen);
+
         resourceService.loadMusic(new String[]{MENU_MUSIC});
         resourceService.loadAll();
 
@@ -27,14 +26,14 @@ public class MusicService {
             menuMusic.setLooping(true);
             menuMusic.setVolume(0.5f);
 
-            if (UserSettings.get().musicEnabled) {
+            if (UserSettings.get().isMusicEnabled()) {
                 menuMusic.play();
             }
         }
     }
 
     public void updateForScreen(String screenType) {
-        boolean musicEnabled = UserSettings.get().musicEnabled;
+        boolean musicEnabled = UserSettings.get().isMusicEnabled();
 
         boolean stopMusic = screenType.equals("MAIN_GAME")
                 || screenType.equals("DEATH_SCREEN")
