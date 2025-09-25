@@ -1,12 +1,17 @@
 package com.csse3200.game.components.cards;
 
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import org.w3c.dom.Text;
+
 public class Card {
     Suit suit;
     Rank rank;
+    TextureRegion texture;
 
-    public Card(Suit suit, Rank rank) {
+    public Card(Suit suit, Rank rank, TextureRegion texture) {
         this.suit = suit;
         this.rank = rank;
+        this.texture = texture;
     }
 
     @Override
@@ -28,5 +33,9 @@ public class Card {
 
     public int getValue() {
         return rank.getValue();
+    }
+
+    public TextureRegion getTexture() {
+        return texture;
     }
 }
