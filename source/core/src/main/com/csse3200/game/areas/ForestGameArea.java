@@ -35,6 +35,7 @@ import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import com.csse3200.game.components.minigames.slots.SlotsGame;
 
 import java.security.SecureRandom;
 
@@ -164,7 +165,8 @@ public class ForestGameArea extends GameArea {
             "foreg_sprites/Security/SecuritySystem.png",
             "foreg_sprites/futuristic/storage_crate_green2.png",
             "foreg_sprites/futuristic/storage_crate_dark2.png",
-            "foreg_sprites/futuristic/SecurityCamera3.png"
+            "foreg_sprites/futuristic/SecurityCamera3.png",
+            "images/slots_kiosk.png"
     };
 
     /**
@@ -313,6 +315,9 @@ public class ForestGameArea extends GameArea {
         spawnItems();
 
         spawnRobotFightingGame();
+
+        spawnSlotsGame();
+
     }
 
     private void spawnRobots() {
@@ -598,6 +603,10 @@ public class ForestGameArea extends GameArea {
     private void spawnRobotFightingGame() {
         GridPoint2 pos = new GridPoint2(3, 20);
         spawnEntityAt(new RobotFightingGame().getGameEntity(), pos, true, true);
+    }
+    private void spawnSlotsGame() {
+        GridPoint2 pos = new GridPoint2(21, 7);
+        spawnEntityAt(new SlotsGame().getGameEntity(), pos, true, true);
     }
 
     public void spawnItem(Entity item, GridPoint2 position) {
