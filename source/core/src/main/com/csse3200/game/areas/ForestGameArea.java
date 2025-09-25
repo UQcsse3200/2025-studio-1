@@ -552,8 +552,16 @@ public class ForestGameArea extends GameArea {
         return newDagger;
     }
 
-    /** FIXME Layer is behind player, does that matter???
-     * FIXME Also need to fix positioning so that it actually looks like the player is holding the weapon
+    /* FIXME: TODO list
+  = item is behind player when equipped
+  = can pick up item that the player has equipped
+  = the sword and dagger don't seem to be appearing
+  = when equipping different items, the image is not in the same
+  place/it appears in a slightly different place
+    */
+
+
+    /**
      * Sets the equipped item in the PlayerEquipComponent to be the given item
      *
      * @param tex Is an existing Item texture path, within the players inventory
