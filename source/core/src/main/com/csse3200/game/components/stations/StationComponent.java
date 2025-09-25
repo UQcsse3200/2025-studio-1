@@ -117,7 +117,6 @@ public class StationComponent extends Component {
         entity.getEvents().addListener("collisionEnd", this::onCollisionEnd);
         ServiceLocator.getPlayer().getEvents().addListener("interact", this::upgrade);
 
-        //This part is AI generated
         // Font setup with mipmapping for smoother scaling
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/ithaca.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter params = new FreeTypeFontGenerator.FreeTypeFontParameter();
@@ -155,10 +154,8 @@ public class StationComponent extends Component {
                 Align.center
         );
         buyPrompt.setTouchable(Touchable.disabled); // don't block clicks
-
         ServiceLocator.getRenderService().getStage().addActor(buyPrompt);
     }
-
 
     /**
      * Updates when the player collides with the station
