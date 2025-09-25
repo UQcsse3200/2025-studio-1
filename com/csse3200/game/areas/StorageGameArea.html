@@ -119,7 +119,7 @@ loadScripts(document, 'script');</script>
 <h2>Field Summary</h2>
 <div class="inherited-list">
 <h3 id="fields-inherited-from-class-com.csse3200.game.areas.GameArea">Fields inherited from class&nbsp;com.csse3200.game.areas.<a href="GameArea.html" title="class in com.csse3200.game.areas">GameArea</a></h3>
-<code><a href="GameArea.html#areaEntities">areaEntities</a>, <a href="GameArea.html#cameraComponent">cameraComponent</a>, <a href="GameArea.html#isTransitioning">isTransitioning</a>, <a href="GameArea.html#roomNumber">roomNumber</a>, <a href="GameArea.html#terrain">terrain</a>, <a href="GameArea.html#terrainFactory">terrainFactory</a>, <a href="GameArea.html#wavesManager">wavesManager</a></code></div>
+<code><a href="GameArea.html#areaEntities">areaEntities</a>, <a href="GameArea.html#baseScaling">baseScaling</a>, <a href="GameArea.html#cameraComponent">cameraComponent</a>, <a href="GameArea.html#isTransitioning">isTransitioning</a>, <a href="GameArea.html#roomNumber">roomNumber</a>, <a href="GameArea.html#terrain">terrain</a>, <a href="GameArea.html#terrainFactory">terrainFactory</a>, <a href="GameArea.html#wavesManager">wavesManager</a></code></div>
 </section>
 </li>
 <!-- ======== CONSTRUCTOR SUMMARY ======== -->
@@ -133,7 +133,8 @@ loadScripts(document, 'script');</script>
 <div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(com.csse3200.game.areas.terrain.TerrainFactory,com.csse3200.game.components.CameraComponent)" class="member-name-link">StorageGameArea</a><wbr>(<a href="terrain/TerrainFactory.html" title="class in com.csse3200.game.areas.terrain">TerrainFactory</a>&nbsp;terrainFactory,
  <a href="../components/CameraComponent.html" title="class in com.csse3200.game.components">CameraComponent</a>&nbsp;cameraComponent)</code></div>
 <div class="col-last even-row-color">
-<div class="block">Initialise this StorageGameArea to use the provided TerrainFactory and camera helper.</div>
+<div class="block">Initialise this StorageGameArea to use the provided TerrainFactory and camera
+ helper.</div>
 </div>
 </div>
 </section>
@@ -152,7 +153,8 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#create()" class="member-name-link">create</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Create the game area, including terrain, static entities (platforms), dynamic entities (player)
+<div class="block">Create the game area, including terrain, static entities (platforms), dynamic
+ entities (player)
  Entry point for this room.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a></code></div>
@@ -192,12 +194,16 @@ loadScripts(document, 'script');</script>
 <h3>StorageGameArea</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">StorageGameArea</span><wbr><span class="parameters">(<a href="terrain/TerrainFactory.html" title="class in com.csse3200.game.areas.terrain">TerrainFactory</a>&nbsp;terrainFactory,
  <a href="../components/CameraComponent.html" title="class in com.csse3200.game.components">CameraComponent</a>&nbsp;cameraComponent)</span></div>
-<div class="block">Initialise this StorageGameArea to use the provided TerrainFactory and camera helper.
- The camera is used to size the screen-edge walls and place the right-side door trigger.</div>
+<div class="block">Initialise this StorageGameArea to use the provided TerrainFactory and camera
+ helper.
+ The camera is used to size the screen-edge walls and place the right-side
+ door trigger.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>terrainFactory</code> - TerrainFactory used to create the terrain for the GameArea (required).</dd>
-<dd><code>cameraComponent</code> - Camera helper supplying an OrthographicCamera (optional but used here).</dd>
+<dd><code>terrainFactory</code> - TerrainFactory used to create the terrain for the
+                        GameArea (required).</dd>
+<dd><code>cameraComponent</code> - Camera helper supplying an OrthographicCamera
+                        (optional but used here).</dd>
 <dt>Requires:</dt>
 <dd>terrainFactory != null</dd>
 </dl>
@@ -215,7 +221,8 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="create()">
 <h3>create</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">create</span>()</div>
-<div class="block">Create the game area, including terrain, static entities (platforms), dynamic entities (player)
+<div class="block">Create the game area, including terrain, static entities (platforms), dynamic
+ entities (player)
  Entry point for this room. This:
  - Loads textures
  - Creates the terrain, walls, and UI label

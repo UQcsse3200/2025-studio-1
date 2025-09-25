@@ -103,7 +103,7 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">TextureRenderComponent</span>
 <span class="extends-implements">extends <a href="RenderComponent.html" title="class in com.csse3200.game.rendering">RenderComponent</a></span></div>
-<div class="block">Render a static texture.</div>
+<div class="block">Render a static texture, with optional fade (alpha).</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -147,13 +147,23 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Draw the renderable.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected com.badlogic.gdx.graphics.Texture</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getTexture()" class="member-name-link">getTexture</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#scaleEntity()" class="member-name-link">scaleEntity</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>float</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getAlpha()" class="member-name-link">getAlpha</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Gets the current opacity (alpha multiplier).</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected com.badlogic.gdx.graphics.Texture</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getTexture()" class="member-name-link">getTexture</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#scaleEntity()" class="member-name-link">scaleEntity</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Scale the entity to a width of 1 and a height matching the texture's ratio</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setAlpha(float)" class="member-name-link">setAlpha</a><wbr>(float&nbsp;alpha)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Sets the opacity (alpha multiplier 0-1) for fade effects.</div>
 </div>
 </div>
 </div>
@@ -218,6 +228,24 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="getTexture()">
 <h3>getTexture</h3>
 <div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">com.badlogic.gdx.graphics.Texture</span>&nbsp;<span class="element-name">getTexture</span>()</div>
+</section>
+</li>
+<li>
+<section class="detail" id="setAlpha(float)">
+<h3>setAlpha</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setAlpha</span><wbr><span class="parameters">(float&nbsp;alpha)</span></div>
+<div class="block">Sets the opacity (alpha multiplier 0-1) for fade effects.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>alpha</code> - value from 0.0 (fully transparent) to 1.0 (fully opaque)</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getAlpha()">
+<h3>getAlpha</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">getAlpha</span>()</div>
+<div class="block">Gets the current opacity (alpha multiplier).</div>
 </section>
 </li>
 <li>
