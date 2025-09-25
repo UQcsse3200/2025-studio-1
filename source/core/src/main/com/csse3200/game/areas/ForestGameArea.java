@@ -98,7 +98,6 @@ public class ForestGameArea extends GameArea {
             "images/dagger.png",
             "images/laser_shot.png",
             "images/Spawn.png",
-            "images/SpawnResize.png",
             "images/LobbyWIP.png",
             "images/door.png",
             "images/KeycardDoor.png",
@@ -122,7 +121,6 @@ public class ForestGameArea extends GameArea {
             "images/monster.png",
             "images/electric_zap.png",
             "images/lightning_bottle.png",
-            "images/Shipping.png",
             "images/ShipmentBoxLid.png",
             "images/ShipmentCrane.png",
             "images/Conveyor.png",
@@ -132,7 +130,13 @@ public class ForestGameArea extends GameArea {
             "foreg_sprites/furniture/ServerRack.png",
             "foreg_sprites/furniture/ServerRack2.png",
             "foreg_sprites/furniture/Vent.png",
-            "images/Storage.png"
+    };
+
+    private static final String[] backgroundTextures = {
+            "backgrounds/Reception.png",
+            "backgrounds/Shipping.png",
+            "backgrounds/SpawnResize.png",
+            "backgrounds/Storage.png"
     };
 
     /**
@@ -280,6 +284,8 @@ public class ForestGameArea extends GameArea {
      */
     @Override
     public void create() {
+        this.baseScaling = 1f;
+
         ServiceLocator.registerGameArea(this);
         loadAssets();
         displayUI();
@@ -306,8 +312,8 @@ public class ForestGameArea extends GameArea {
         itemSpawner.spawnItems(ItemSpawnConfig.forestmap());
 
         // Place a keycard on the floor so the player can unlock the door
-        float keycardX = 1f;
-        float keycardY = 15f;
+        float keycardX = 3f;
+        float keycardY = 7f;
         Entity keycard = KeycardFactory.createKeycard(1);
         keycard.setPosition(new Vector2(keycardX, keycardY));
         spawnEntity(keycard);
@@ -642,6 +648,7 @@ public class ForestGameArea extends GameArea {
         resourceService.loadTextures(futuristicTextures);
         resourceService.loadTextures(keycardTextures);
         resourceService.loadTextures(generalTextures);
+        resourceService.loadTextures(backgroundTextures);
         resourceService.loadTextures(forestTextures);
         resourceService.loadTextures(spawnPadTextures);
         resourceService.loadTextures(officeTextures);
@@ -669,6 +676,7 @@ public class ForestGameArea extends GameArea {
         resourceService.unloadAssets(keycardTextures);
         resourceService.unloadAssets(futuristicTextures);
         resourceService.unloadAssets(playerSound1);
+        resourceService.unloadAssets(backgroundTextures);
         resourceService.unloadAssets(forestTextures);
         resourceService.unloadAssets(generalTextures);
         resourceService.unloadAssets(forestTextureAtlases);
