@@ -16,8 +16,6 @@ public class MusicService {
     public void load(ResourceService resourceService) {
         logger.info("Loading music assets");
 
-        ServiceLocator.getGlobalEvents().addListener("screenChanged", this::updateForScreen);
-
         resourceService.loadMusic(new String[]{MENU_MUSIC});
         resourceService.loadAll();
 

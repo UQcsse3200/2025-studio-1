@@ -35,6 +35,8 @@ public class GdxGame extends Game {
         MusicService musicService = new MusicService();
         ServiceLocator.registerMusicService(musicService);
 
+        ServiceLocator.getGlobalEvents().addListener("screenChanged", musicService::updateForScreen);
+
         musicService.load(resourceService);
         setScreen(ScreenType.MAIN_MENU);
     }
