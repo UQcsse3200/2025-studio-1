@@ -11,6 +11,7 @@ import com.csse3200.game.entities.factories.characters.NPCFactory;
 import com.csse3200.game.entities.factories.characters.PlayerFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.entities.spawner.ItemSpawner;
+import com.csse3200.game.services.ServiceLocator;
 
 /**
  * Tunnel room: minimal walls with left door back to Server Room.
@@ -18,6 +19,7 @@ import com.csse3200.game.entities.spawner.ItemSpawner;
 public class TunnelGameArea extends GameArea {
     private static final float WALL_WIDTH = 0.1f;
     private static final GridPoint2 PLAYER_SPAWN = new GridPoint2(10, 10);
+    private static final float ROOM_DIFF_NUMBER = 10;
 
     private Entity player;
 
@@ -82,8 +84,8 @@ public class TunnelGameArea extends GameArea {
 
     /**
      * Two generic big thick platforms and a few small thin platforms above.
-     * The big thick platforms can serve as 'cover'  for the player,
-     * and the thin  platforms will require jumping to reach.
+     * The big thick platforms can serve as 'cover' for the player,
+     * and the thin platforms will require jumping to reach.
      */
     private void spawnPlatforms() {
         Entity platform1 = ObstacleFactory.createThickFloor();
@@ -120,10 +122,12 @@ public class TunnelGameArea extends GameArea {
      * Spawn 2 high-level grok droids in the room as enemies.
      */
     private void spawnGrokDroids() {
-        Entity grok1 = NPCFactory.createGrokDroid(player, this, 3f);
+        Entity grok1 = NPCFactory.createGrokDroid(player, this,
+                ServiceLocator.getDifficulty().getRoomDifficulty(TunnelGameArea.ROOM_DIFF_NUMBER));
         GridPoint2 grok1Pos = new GridPoint2(25, 7);
         spawnEntityAt(grok1, grok1Pos, true, false);
-        Entity grok2 = NPCFactory.createGrokDroid(player, this, 3f);
+        Entity grok2 = NPCFactory.createGrokDroid(player, this,
+                ServiceLocator.getDifficulty().getRoomDifficulty(TunnelGameArea.ROOM_DIFF_NUMBER));
         GridPoint2 grok2Pos = new GridPoint2(25, 7);
         spawnEntityAt(grok2, grok2Pos, true, false);
     }
@@ -149,7 +153,7 @@ public class TunnelGameArea extends GameArea {
 
     @Override
     public Entity getPlayer() {
-        //placeholder
+        // placeholder
         return null;
     }
 
@@ -158,5 +162,3 @@ public class TunnelGameArea extends GameArea {
     }
 
 }
-
-
