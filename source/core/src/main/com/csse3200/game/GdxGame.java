@@ -5,6 +5,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.csse3200.game.files.UserSettings;
 import com.csse3200.game.screens.*;
+import com.csse3200.game.services.ResourceService;
+import com.csse3200.game.services.ServiceLocator;
+import com.csse3200.game.services.MusicService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,6 +29,15 @@ public class GdxGame extends Game {
         // Sets background to light yellow
         Gdx.gl.glClearColor(248f / 255f, 249 / 255f, 178 / 255f, 1);
 
+        ResourceService resourceService = new ResourceService();
+        ServiceLocator.registerResourceService(resourceService);
+
+        MusicService musicService = new MusicService();
+        ServiceLocator.registerMusicService(musicService);
+
+        ServiceLocator.getGlobalEvents().addListener("screenChanged", musicService::updateForScreen);
+
+        musicService.load(resourceService);
         setScreen(ScreenType.MAIN_MENU);
     }
 
@@ -45,6 +57,7 @@ public class GdxGame extends Game {
      */
     public void setScreen(ScreenType screenType) {
         logger.info("Setting game screen to {}", screenType);
+        ServiceLocator.getGlobalEvents().trigger("screenChanged", screenType.name());
         Screen currentScreen = getScreen();
         if (currentScreen != null) {
             currentScreen.dispose();
