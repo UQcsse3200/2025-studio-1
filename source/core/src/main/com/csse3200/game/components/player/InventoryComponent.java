@@ -120,6 +120,15 @@ public class InventoryComponent extends Component {
     }
 
     /**
+     * Returns the current item that is being selected
+     *
+     * @return The item that is currently being selected
+     */
+    public Entity getCurrSlot() {
+        return this.currItem;
+    }
+
+    /**
      * Adds an item to the next free inventory position for the player to hold
      * i.e. addItem(d) [a, b, _, c] -> [a, b, _, c, d]
      *
@@ -293,8 +302,9 @@ public class InventoryComponent extends Component {
 
 
     /**
+     * Gets the currently equipped slot
      *
-     * @return the slot that is currently equipped
+     * @return the slot index that is currently equipped
      */
     public int getEquippedSlot() {
         return this.equippedSlot;
