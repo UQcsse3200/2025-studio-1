@@ -205,7 +205,7 @@ public class PlayerStatsDisplay extends UIComponent {
     public void updateAmmoUI() {
 
         int ammoReserves = entity.getComponent(AmmoStatsComponent.class).getAmmo();
-        Entity equipped = entity.getComponent(InventoryComponent.class).getCurrItem();
+        Entity equipped = entity.getComponent(InventoryComponent.class).getCurrSlot();
 
         if (equipped == null) {
 
