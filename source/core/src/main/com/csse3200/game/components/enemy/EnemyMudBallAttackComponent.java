@@ -24,7 +24,7 @@ import com.csse3200.game.services.ServiceLocator;
 public class EnemyMudBallAttackComponent extends Component {
     private static final String ATTACKS_ATLAS_PATH = "images/Boss3_Attacks.atlas";
     private static final String DEFAULT_PROJECTILE_ANIM = "boss3_attack_cpu";
-    private final String BOSS3 = "Boss3";
+    private static final String BOSS3 = "Boss3";
 
     private final Entity target;
     private final float cooldown, range, speed, life;

@@ -25,7 +25,7 @@ public class BossChargeSkillComponent extends Component {
     private final float patrolY;
     private final float patrolSpeed;
 
-    private final String BOSS_PATROL = "boss2:patrol";
+    private static final String BOSS_PATROL = "boss2:patrol";
 
     private final Vector2 lockedPos = new Vector2();
     private final Vector2 vel = new Vector2();

@@ -304,7 +304,7 @@ public class KeyboardPlayerInputComponent extends InputComponent {
 
         entity.getEvents().trigger("focusItem", focusedItem);  // Refresh UI & logic
         entity.getEvents().trigger("equip", tex);  // Display item in players hand
-        logger.debug("Equipped weapon from slot " + focusedItem);
+        logger.debug("Equipped weapon from slot {}", focusedItem);
 
         actions.equipWeapon(item);
     }

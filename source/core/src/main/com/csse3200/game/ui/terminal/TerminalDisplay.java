@@ -34,7 +34,7 @@ public class TerminalDisplay extends BaseScreenDisplay {
     private static final int SUGGESTION_MAX = 5;
     private final Vector2 tmp = new Vector2();
 
-    private final String WHITE = "white";
+    private static final String WHITE = "white";
 
     private Table container;
     private Table promptBox;

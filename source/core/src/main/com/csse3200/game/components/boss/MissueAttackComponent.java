@@ -25,7 +25,8 @@ public class MissueAttackComponent extends Component {
     private static final int COUNT = 1;           // warnings per spawn wave
     private static final float WARN_TIME = 2f;     // seconds a warning stays before missile drops
     private static final float SKY_HEIGHT = 7f;    // missile spawn height above ground warning
-    private static final float MIN_X = 0f, MAX_X = 30f; // horizontal range for warnings
+    private static final float MIN_X = 0f;
+    private static final float MAX_X = 30f; // horizontal range for warnings
 
     /**
      * Whether the system is active (true = spawning warnings/missiles).

@@ -14,8 +14,6 @@ import com.csse3200.game.physics.components.ColliderComponent;
  */
 public class KeycardGateComponent extends Component {
 
-    private final String KEYCARD_GATE = "KeycardGate";
-
     /**
      * Global cheat: when true, all keycard checks are bypassed.
      */
@@ -61,6 +59,7 @@ public class KeycardGateComponent extends Component {
         if (meEntity != this.entity) return;
 
         // === cheat bypass ===
+        String KEYCARD_GATE = "KeycardGate";
         if (GLOBAL_OVERRIDE) {
             if (!unlocked) {
                 unlock();
