@@ -27,7 +27,6 @@ public class InventoryComponent extends Component {
     private final ArrayList<String> itemTexs = new ArrayList<>(maxCapacity);
     private int processor;
     private Entity currItem;
-    private int selectedSlot = -1; // -1 = no selectedSlot
     private int equippedSlot = -1; // no slot is equipped initially
     private int keycardLevel = 0;
 
@@ -44,7 +43,6 @@ public class InventoryComponent extends Component {
             this.itemTexs.add(idx, null);
         }
     }
-
 
     /**
      * setter method for the keycard level
@@ -274,61 +272,6 @@ public class InventoryComponent extends Component {
      */
     public Entity getCurrItem() {
         return this.currItem;
-    }
-
-    /**
-     * Get the current item
-     *
-     * @return the current item
-     */
-    public Entity getCurrSlot() {
-        if (selectedSlot >= 0 && selectedSlot < items.size()) {
-            return items.get(selectedSlot);
-        }
-        return null;
-    }
-
-
-    /**
-     *
-     * @param slotIndex takes the index of the slot selected
-     */
-    public void setSelectSlot(int slotIndex) {
-        if (slotIndex >= 0 && slotIndex < this.items.size()) {
-            this.selectedSlot = slotIndex;
-        }
-    }
-
-    /**
-     * Returns the item that is currently selected in the inventory.
-     *
-     * @return the selected item, or null if no slot is selected
-     */
-    public int getSelectedSlot() {
-        if (selectedSlot >= 0 && selectedSlot < items.size()) {
-            return selectedSlot;
-        }
-        return -1; // no item selected
-    }
-
-
-    @Override
-    /**
-     * to setup the component to respond whenever player focuses on an
-     * inventory item
-     */
-    public void create() {
-        super.create();
-        entity.getEvents().addListener("focus item", this::onFocusItem);
-    }
-
-    /**
-     *
-     * @param slotIndex puts focus on the item at that slot
-     */
-    private void onFocusItem(int slotIndex) {
-        setSelectSlot(slotIndex);
-        entity.getEvents().trigger("inventoryItemSelected", slotIndex);
     }
 
     /**
