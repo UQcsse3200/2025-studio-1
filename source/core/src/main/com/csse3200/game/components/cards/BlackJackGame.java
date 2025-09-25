@@ -7,10 +7,10 @@ import java.util.ArrayList;
 public class BlackJackGame extends Component {
     private List<Card> dealerHand;
     private List<Card> playerHand;
-    private DeckComponent deck;
+    private Deck deck;
 
     public void create() {
-        deck = entity.getComponent(DeckComponent.class);
+        deck = new Deck();
         entity.getEvents().addListener("start", this::startGame);
         entity.getEvents().addListener("drawCard", this::drawCard);
         entity.getEvents().addListener("stand", this::dealerTurn);

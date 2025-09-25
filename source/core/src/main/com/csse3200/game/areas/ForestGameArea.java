@@ -8,9 +8,11 @@ import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.components.KeycardGateComponent;
+import com.csse3200.game.components.cards.BlackJackGame;
 import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import com.csse3200.game.components.items.ItemHoldComponent;
 import com.csse3200.game.components.player.InventoryComponent;
+import com.csse3200.game.components.screens.BlackjackScreenDisplay;
 import com.csse3200.game.components.shop.CatalogService;
 import com.csse3200.game.components.shop.ShopDemo;
 import com.csse3200.game.components.shop.ShopManager;
@@ -54,6 +56,7 @@ public class ForestGameArea extends GameArea {
     private static final float WALL_WIDTH = 0.1f;
 
     private final float VERTICAL_HEIGHT_OFFSET = 9.375f;
+    private BlackjackScreenDisplay blackjack;
 
     /**
      * Files or pictures used by the game (enemy/props,etc.).
@@ -310,6 +313,11 @@ public class ForestGameArea extends GameArea {
         spawnEntity(keycard);
 
         spawnItems();
+        Entity blackjack = new Entity();
+        blackjack.addComponent(new BlackJackGame());
+        blackjack.addComponent(new BlackjackScreenDisplay());
+        blackjack.getEvents().trigger("show");
+
     }
 
     private void spawnRobots() {
