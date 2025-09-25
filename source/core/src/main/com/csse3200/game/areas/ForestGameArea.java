@@ -56,8 +56,6 @@ public class ForestGameArea extends GameArea {
     private static final float WALL_WIDTH = 0.1f;
 
     private final float VERTICAL_HEIGHT_OFFSET = 9.375f;
-    private BlackjackScreenDisplay blackjack;
-
     /**
      * Files or pictures used by the game (enemy/props,etc.).
      */
@@ -287,6 +285,7 @@ public class ForestGameArea extends GameArea {
         spawnComputerBench();
         spawnHealthBench();
         spawnSpeedBench();
+        spawnBlackjack();
 
         player = spawnPlayer();
         ServiceLocator.registerPlayer(player);
@@ -313,11 +312,6 @@ public class ForestGameArea extends GameArea {
         spawnEntity(keycard);
 
         spawnItems();
-        Entity blackjack = new Entity();
-        blackjack.addComponent(new BlackJackGame());
-        blackjack.addComponent(new BlackjackScreenDisplay());
-        blackjack.getEvents().trigger("show");
-
     }
 
     private void spawnRobots() {
@@ -434,6 +428,16 @@ public class ForestGameArea extends GameArea {
     private void spawnComputerBench() {
         Entity bench = InteractableStationFactory.createStation(Benches.COMPUTER_BENCH);
         spawnEntityAt(bench, new GridPoint2(2, 7), true, true);
+
+    }
+
+    private void spawnBlackjack() {
+        Entity blackjack = InteractableStationFactory.createBaseStation();
+        blackjack.addComponent(new TextureRenderComponent("images/box_boy_leaf.png"));
+        blackjack.addComponent(new BlackJackGame());
+        blackjack.addComponent(new BlackjackScreenDisplay());
+        spawnEntityAt(blackjack, new GridPoint2(20, 7), true, true);
+        blackjack.getEvents().trigger("hide");
 
     }
 

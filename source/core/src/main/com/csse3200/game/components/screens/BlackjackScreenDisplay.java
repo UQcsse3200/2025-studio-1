@@ -22,17 +22,18 @@ public class BlackjackScreenDisplay extends UIComponent {
     private Label dealerLabel;
     private Label playerLabel;
     private Label resultLabel;
+    private TextButton restartBtn;
 
-    private final BlackJackGame gameLogic;
+    private BlackJackGame gameLogic;
     private Texture pixelTex;
+    private boolean dealerTurn;
 
-    public BlackjackScreenDisplay() {
-        this.gameLogic = entity.getComponent(BlackJackGame.class);
-    }
+
 
     @Override
     public void create() {
         super.create();
+        gameLogic = entity.getComponent(BlackJackGame.class);
 
         pixelTex = makeSolidTexture(Color.WHITE);
 
@@ -41,14 +42,16 @@ public class BlackjackScreenDisplay extends UIComponent {
         addDealerSection();
         addPlayerSection();
         addButtons();
+        dealerTurn = false;
 
         // Listen for game events
-        entity.getEvents().addListener("playerbust", () -> setResult("Player Busts! Dealer Wins"));
-        entity.getEvents().addListener("dealerbust", () -> setResult("Dealer Busts! Player Wins"));
-        entity.getEvents().addListener("playerwin", () -> setResult("Player Wins!"));
-        entity.getEvents().addListener("dealerwin", () -> setResult("Dealer Wins!"));
-        entity.getEvents().addListener("tie", () -> setResult("It's a Tie!"));
-        entity.getEvents().addListener("show", this::show);
+        entity.getEvents().addListener("playerbust", () -> showRestart("Player Busts! Dealer Wins"));
+        entity.getEvents().addListener("dealerbust", () -> showRestart("Dealer Busts! Player Wins"));
+        entity.getEvents().addListener("playerwin", () -> showRestart("Player Wins!"));
+        entity.getEvents().addListener("dealerwin", () -> showRestart("Dealer Wins!"));
+        entity.getEvents().addListener("tie", () -> showRestart("It's a Tie!"));
+        entity.getEvents().addListener("interact", this::show);
+        entity.getEvents().addListener("hide", this::hide);
     }
 
     @Override
@@ -80,7 +83,7 @@ public class BlackjackScreenDisplay extends UIComponent {
                 (stage.getWidth() - PANEL_W) / 2f,
                 (stage.getHeight() - PANEL_H) / 2f
         );
-        background.setColor(Color.DARK_GRAY);
+        background.setColor(Color.GREEN);
         stage.addActor(background);
     }
 
@@ -123,6 +126,7 @@ public class BlackjackScreenDisplay extends UIComponent {
         standBtn.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
+                dealerTurn = true;
                 entity.getEvents().trigger("stand");
                 updateHands();
             }
@@ -136,6 +140,24 @@ public class BlackjackScreenDisplay extends UIComponent {
                 entity.getEvents().trigger("start");
             }
         });
+
+        // Restart button (hidden initially)
+        restartBtn = new TextButton("Restart", skin);
+        restartBtn.setVisible(false);
+        restartBtn.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                dealerTurn = false;
+                restartBtn.setVisible(false);  // hide button again
+                resultLabel.setText("");        // clear previous result
+                entity.getEvents().trigger("start"); // start new game
+                updateHands();
+            }
+        });
+
+// Add restart button below the result label
+        root.add(restartBtn).padTop(10f).center().row();
+
 
         // Put Hit + Stand side by side
         Table buttonRow = new Table();
@@ -166,8 +188,13 @@ public class BlackjackScreenDisplay extends UIComponent {
 
 
     private void updateHands() {
-        dealerLabel.setText("Dealer: " + gameLogic.getDealerHand() +
-                " (" + gameLogic.dealerHandValue() + ")");
+        if (!dealerTurn) {
+            dealerLabel.setText("Dealer: " + gameLogic.getDealerHand().getFirst() +
+                    " (" + gameLogic.getDealerHand().getFirst().getValue() + ")");
+        } else {
+            dealerLabel.setText("Dealer: " + gameLogic.getDealerHand() +
+                    " (" + gameLogic.dealerHandValue() + ")");
+        }
         playerLabel.setText("Player: " + gameLogic.getPlayerHand() +
                 " (" + gameLogic.playerHandValue() + ")");
     }
@@ -188,4 +215,10 @@ public class BlackjackScreenDisplay extends UIComponent {
     public Stage getStage() {
         return stage;
     }
+
+    private void showRestart(String msg) {
+        setResult(msg);         // show result
+        restartBtn.setVisible(true); // show restart button
+    }
+
 }
