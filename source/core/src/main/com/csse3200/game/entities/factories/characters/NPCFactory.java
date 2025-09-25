@@ -151,8 +151,8 @@ public class NPCFactory {
         SoundComponent soundComponent = new SoundComponent();
         deepspin.addComponent(soundComponent);
 
-        soundComponent.registerSound("damageTaken", "sounds/enemyDamage.mp3");
-        soundComponent.registerSound("death", "sounds/enemyDeath.mp3");
+        soundComponent.registerSound("damageTaken", "sounds/deepspinDamage.mp3");
+        soundComponent.registerSound("death", "sounds/deepspinDeath.mp3");
 
         AITaskComponent aiComponent =
                 new AITaskComponent()
@@ -267,6 +267,12 @@ public class NPCFactory {
                         .addTask(new GPTGroundSlowChaseTask(target, 10, 0.3f, 15f))
                         .addTask(new GPTGroundFastChaseTask(target, 10, 1.2f));
 
+
+        SoundComponent soundComponent = new SoundComponent();
+        vroomba.addComponent(soundComponent);
+
+        soundComponent.registerSound("damageTaken", "sounds/vroombaDamage.mp3");
+        soundComponent.registerSound("death", "sounds/vroombaDeath.mp3");
 
         // Get player's inventory for reward system
         InventoryComponent playerInventory = null;
