@@ -141,31 +141,38 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#equipCurrentWeapon()" class="member-name-link">equipCurrentWeapon</a>()</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#checkSlot(int)" class="member-name-link">checkSlot</a><wbr>(int&nbsp;slot)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Checks if the player is holding an item to be equipped if an item is equipped
+ then unequip's item in given slot, if an item is not currently equipped then
+ equips item in given slot.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#equipCurrentItem()" class="member-name-link">equipCurrentItem</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">equips the player with the weapon that is in the selected slot</div>
 </div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#keyPressed(int)" class="member-name-link">keyPressed</a><wbr>(int&nbsp;keycode)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Triggers player events on specific keycodes.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#keyPressed(int)" class="member-name-link">keyPressed</a><wbr>(int&nbsp;keycode)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#keyReleased(int)" class="member-name-link">keyReleased</a><wbr>(int&nbsp;keycode)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Triggers player events on specific keycodes.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#keyReleased(int)" class="member-name-link">keyReleased</a><wbr>(int&nbsp;keycode)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Triggers player events on specific keycodes.</div>
-</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#touchDown(int,int,int,int)" class="member-name-link">touchDown</a><wbr>(int&nbsp;screenX,
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#touchDown(int,int,int,int)" class="member-name-link">touchDown</a><wbr>(int&nbsp;screenX,
  int&nbsp;screenY,
  int&nbsp;pointer,
  int&nbsp;button)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Handles mouse button presses.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#unequipCurrentWeapon()" class="member-name-link">unequipCurrentWeapon</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#unequipCurrentItem()" class="member-name-link">unequipCurrentItem</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">this function is to unequip the player</div>
 </div>
 </div>
@@ -280,16 +287,29 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="equipCurrentWeapon()">
-<h3>equipCurrentWeapon</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">equipCurrentWeapon</span>()</div>
+<section class="detail" id="checkSlot(int)">
+<h3>checkSlot</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">checkSlot</span><wbr><span class="parameters">(int&nbsp;slot)</span></div>
+<div class="block">Checks if the player is holding an item to be equipped if an item is equipped
+ then unequip's item in given slot, if an item is not currently equipped then
+ equips item in given slot.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>slot</code> - The slot to check</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="equipCurrentItem()">
+<h3>equipCurrentItem</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">equipCurrentItem</span>()</div>
 <div class="block">equips the player with the weapon that is in the selected slot</div>
 </section>
 </li>
 <li>
-<section class="detail" id="unequipCurrentWeapon()">
-<h3>unequipCurrentWeapon</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">unequipCurrentWeapon</span>()</div>
+<section class="detail" id="unequipCurrentItem()">
+<h3>unequipCurrentItem</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">unequipCurrentItem</span>()</div>
 <div class="block">this function is to unequip the player</div>
 </section>
 </li>
