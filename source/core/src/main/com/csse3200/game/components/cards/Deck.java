@@ -1,16 +1,14 @@
 package com.csse3200.game.components.cards;
 
-import com.csse3200.game.components.Component;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class DeckComponent extends Component {
+public class Deck {
     List<Card> deck;
     int position;
 
-    public DeckComponent() {
+    public Deck() {
         deck = new ArrayList<>();
         for (Suit suit : Suit.values()) {
             for(Rank rank : Rank.values()) {
