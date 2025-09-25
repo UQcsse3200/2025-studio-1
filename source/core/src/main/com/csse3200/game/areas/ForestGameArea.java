@@ -130,7 +130,8 @@ public class ForestGameArea extends GameArea {
             "foreg_sprites/furniture/ServerRack.png",
             "foreg_sprites/furniture/ServerRack2.png",
             "foreg_sprites/furniture/Vent.png",
-            "images/Storage.png"
+            "images/Storage.png",
+            "images/cards.png"
     };
 
     /**
@@ -234,7 +235,8 @@ public class ForestGameArea extends GameArea {
             "images/boss_explosion.atlas",
             "images/boss2_combined.atlas",
             "images/Boss3_Attacks.atlas",
-            "images/boss3_phase2.atlas"
+            "images/boss3_phase2.atlas",
+            "images/cards.atlas"
     };
     private static final String[] forestSounds = {"sounds/Impact4.ogg",
             "sounds/shot_failed.mp3",
@@ -300,7 +302,7 @@ public class ForestGameArea extends GameArea {
             case 1 -> spawnRobots();
             default -> spawnBoss3();
         }
-        playMusic();
+        //playMusic();
         ItemSpawner itemSpawner = new ItemSpawner(this);
         itemSpawner.spawnItems(ItemSpawnConfig.forestmap());
 
