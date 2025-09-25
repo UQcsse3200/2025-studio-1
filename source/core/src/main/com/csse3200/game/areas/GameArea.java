@@ -48,14 +48,13 @@ public abstract class GameArea implements Disposable {
      */
     protected static boolean isTransitioning = false;
 
-
     private final float VERTICAL_HEIGHT_OFFSET = 9.375f;
 
-    private static final String deepSpin = "DeepSpin";
-    private static final String ghostGpt = "GhostGPT";
-    private static final String vroomba = "Vroomba";
-    private static final String grokDroid = "GrokDroid";
-    private static final String turret = "Turret";
+    private static final String DEEP_SPIN = "DeepSpin";
+    private static final String GHOST_GPT = "GhostGPT";
+    private static final String VROOMBA = "Vroomba";
+    private static final String GROK_DROID = "GrokDroid";
+    private static final String TURRET = "Turret";
 
     protected EnemyWaves wavesManager; // manage waves via terminal command
     protected static int roomNumber = 1;
@@ -222,7 +221,7 @@ public abstract class GameArea implements Disposable {
      */
     public void spawnGhostGPT(
             int total, float scaleFactor, Entity player, Map<String, ArrayList<Vector2>> positions) {
-        ArrayList<Vector2> spawnPositions = positions.get(ghostGpt);
+        ArrayList<Vector2> spawnPositions = positions.get(GHOST_GPT);
         for (Vector2 pos : spawnPositions) {
             Entity ghostGpt = NPCFactory.createGhostGPT(player, this, scaleFactor);
             ghostGpt.setPosition(pos);
@@ -238,7 +237,7 @@ public abstract class GameArea implements Disposable {
      */
     public void spawnDeepspin(
             int total, float scaleFactor, Entity player, Map<String, ArrayList<Vector2>> positions) {
-        ArrayList<Vector2> spawnPositions = positions.get(deepSpin);
+        ArrayList<Vector2> spawnPositions = positions.get(DEEP_SPIN);
 
         for (Vector2 pos : spawnPositions) {
             Entity deepSpin = NPCFactory.createDeepspin(player, this, scaleFactor);
@@ -255,7 +254,7 @@ public abstract class GameArea implements Disposable {
      */
     public void spawnGrokDroid(
             int total, float scaleFactor, Entity player, Map<String, ArrayList<Vector2>> positions) {
-        ArrayList<Vector2> spawnPositions = positions.get(grokDroid);
+        ArrayList<Vector2> spawnPositions = positions.get(GROK_DROID);
         for (Vector2 pos : spawnPositions) {
             Entity grokDroid = NPCFactory.createGrokDroid(player, this, scaleFactor);
             grokDroid.setPosition(pos);
@@ -271,7 +270,7 @@ public abstract class GameArea implements Disposable {
      */
     public void spawnVroomba(
             int total, float scaleFactor, Entity player, Map<String, ArrayList<Vector2>> positions) {
-        ArrayList<Vector2> spawnPositions = positions.get(vroomba);
+        ArrayList<Vector2> spawnPositions = positions.get(VROOMBA);
         for (Vector2 pos : spawnPositions) {
             Entity vroomba = NPCFactory.createVroomba(player, scaleFactor);
             vroomba.setPosition(pos);
@@ -287,7 +286,7 @@ public abstract class GameArea implements Disposable {
      */
     public void spawnTurret(
             int total, float scaleFactor, Entity player, Map<String, ArrayList<Vector2>> positions) {
-        ArrayList<Vector2> spawnPositions = positions.get(turret);
+        ArrayList<Vector2> spawnPositions = positions.get(TURRET);
         for (Vector2 pos : spawnPositions) {
             Entity turret = NPCFactory.createTurret(player, this, scaleFactor);
             turret.setPosition(pos);
@@ -320,76 +319,76 @@ public abstract class GameArea implements Disposable {
                 respectiveSpawns.add(new Vector2(5.4f, 11f));
                 respectiveSpawns.add(new Vector2(8.2f, 11f));
                 respectiveSpawns.add(new Vector2(11.1f, 10f));
-                positions.put(deepSpin, (ArrayList<Vector2>) respectiveSpawns.clone());
+                positions.put(DEEP_SPIN, (ArrayList<Vector2>) respectiveSpawns.clone());
                 respectiveSpawns.clear();
                 respectiveSpawns.add(new Vector2(12f, 5f));
-                positions.put(turret, (ArrayList<Vector2>) respectiveSpawns.clone());
+                positions.put(TURRET, (ArrayList<Vector2>) respectiveSpawns.clone());
                 break;
             case 2:
                 respectiveSpawns.add(new Vector2(5.7f, 5f));
                 respectiveSpawns.add(new Vector2(1.5f, 7f));
-                positions.put(vroomba, (ArrayList<Vector2>) respectiveSpawns.clone());
+                positions.put(VROOMBA, (ArrayList<Vector2>) respectiveSpawns.clone());
                 respectiveSpawns.clear();
                 respectiveSpawns.add(new Vector2(11.5f, 10f));
-                positions.put(ghostGpt, (ArrayList<Vector2>) respectiveSpawns.clone());
+                positions.put(GHOST_GPT, (ArrayList<Vector2>) respectiveSpawns.clone());
                 break;
             case 3:
                 respectiveSpawns.add(new Vector2(8.4f, 10f));
                 respectiveSpawns.add(new Vector2(2f, 10f));
-                positions.put(deepSpin, (ArrayList<Vector2>) respectiveSpawns.clone());
+                positions.put(DEEP_SPIN, (ArrayList<Vector2>) respectiveSpawns.clone());
                 respectiveSpawns.clear();
                 respectiveSpawns.add(new Vector2(12f, 5f));
                 respectiveSpawns.add(new Vector2(2f, 5f));
-                positions.put(vroomba, (ArrayList<Vector2>) respectiveSpawns.clone());
+                positions.put(VROOMBA, (ArrayList<Vector2>) respectiveSpawns.clone());
                 break;
             case 4:
                 respectiveSpawns.add(new Vector2(12f, 10f));
                 respectiveSpawns.add(new Vector2(2f, 5f));
-                positions.put(ghostGpt, (ArrayList<Vector2>) respectiveSpawns.clone());
+                positions.put(GHOST_GPT, (ArrayList<Vector2>) respectiveSpawns.clone());
                 respectiveSpawns.clear();
                 respectiveSpawns.add(new Vector2(7f, 11f));
                 respectiveSpawns.add(new Vector2(3f, 10f));
-                positions.put(deepSpin, (ArrayList<Vector2>) respectiveSpawns.clone());
+                positions.put(DEEP_SPIN, (ArrayList<Vector2>) respectiveSpawns.clone());
                 break;
             case 5:
                 respectiveSpawns.add(new Vector2(2.7f, 8f));
-                positions.put(ghostGpt, (ArrayList<Vector2>) respectiveSpawns.clone());
+                positions.put(GHOST_GPT, (ArrayList<Vector2>) respectiveSpawns.clone());
                 respectiveSpawns.clear();
                 respectiveSpawns.add(new Vector2(5.6f, 10f));
-                positions.put(vroomba, (ArrayList<Vector2>) respectiveSpawns.clone());
+                positions.put(VROOMBA, (ArrayList<Vector2>) respectiveSpawns.clone());
                 respectiveSpawns.clear();
                 respectiveSpawns.add(new Vector2(8.2f, 11f));
                 respectiveSpawns.add(new Vector2(11.1f, 10f));
-                positions.put(deepSpin, (ArrayList<Vector2>) respectiveSpawns.clone());
+                positions.put(DEEP_SPIN, (ArrayList<Vector2>) respectiveSpawns.clone());
                 break;
             case 6:
                 respectiveSpawns.add(new Vector2(13f, 4f));
                 respectiveSpawns.add(new Vector2(10f, 4f));
-                positions.put(ghostGpt, (ArrayList<Vector2>) respectiveSpawns.clone());
+                positions.put(GHOST_GPT, (ArrayList<Vector2>) respectiveSpawns.clone());
                 respectiveSpawns.clear();
                 respectiveSpawns.add(new Vector2(8.4f, 10f));
                 respectiveSpawns.add(new Vector2(11.3f, 8f));
-                positions.put(grokDroid, (ArrayList<Vector2>) respectiveSpawns.clone());
+                positions.put(GROK_DROID, (ArrayList<Vector2>) respectiveSpawns.clone());
                 break;
             case 7:
                 respectiveSpawns.add(new Vector2(11f, 10f));
                 respectiveSpawns.add(new Vector2(2f, 5f));
                 respectiveSpawns.add(new Vector2(11f, 5f));
-                positions.put(ghostGpt, (ArrayList<Vector2>) respectiveSpawns.clone());
+                positions.put(GHOST_GPT, (ArrayList<Vector2>) respectiveSpawns.clone());
                 respectiveSpawns.clear();
                 respectiveSpawns.add(new Vector2(3f, 10f));
                 respectiveSpawns.add(new Vector2(7f, 8f));
-                positions.put(grokDroid, (ArrayList<Vector2>) respectiveSpawns.clone());
+                positions.put(GROK_DROID, (ArrayList<Vector2>) respectiveSpawns.clone());
                 break;
             default:
                 respectiveSpawns.add(new Vector2(12f, 11f));
                 respectiveSpawns.add(new Vector2(7.6f, 4f));
                 respectiveSpawns.add(new Vector2(2f, 4f));
-                positions.put(ghostGpt, (ArrayList<Vector2>) respectiveSpawns.clone());
+                positions.put(GHOST_GPT, (ArrayList<Vector2>) respectiveSpawns.clone());
                 respectiveSpawns.clear();
                 respectiveSpawns.add(new Vector2(5f, 10f));
                 respectiveSpawns.add(new Vector2(2f, 10f));
-                positions.put(grokDroid, (ArrayList<Vector2>) respectiveSpawns.clone());
+                positions.put(GROK_DROID, (ArrayList<Vector2>) respectiveSpawns.clone());
                 break;
         }
         return positions;
