@@ -1,5 +1,6 @@
 package com.csse3200.game.components.stations;
 
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -11,7 +12,6 @@ import com.csse3200.game.components.WeaponsStatsComponent;
 import com.csse3200.game.components.player.InventoryComponent;
 import com.csse3200.game.components.player.PlayerActions;
 import com.csse3200.game.entities.Entity;
-import com.csse3200.game.entities.configs.benches.BenchConfig;
 import com.csse3200.game.entities.configs.benches.ComputerBenchConfig;
 import com.csse3200.game.entities.configs.benches.HealthBenchConfig;
 import com.csse3200.game.entities.configs.benches.SpeedBenchConfig;
@@ -19,6 +19,7 @@ import com.csse3200.game.extensions.GameExtension;
 import com.csse3200.game.physics.BodyUserData;
 import com.csse3200.game.physics.PhysicsService;
 import com.csse3200.game.rendering.RenderService;
+import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -44,10 +45,14 @@ public class StationComponentTests {
         renderService.setStage(mock(Stage.class));
         ServiceLocator.registerRenderService(renderService);
         ServiceLocator.registerPhysicsService(new PhysicsService());
-
+        ResourceService resourceService = mock(ResourceService.class);
+        ServiceLocator.registerResourceService(resourceService);
+        Sound sound = mock(Sound.class);
+        when(resourceService.getAsset("sounds/upgradeSound.mp3", Sound.class)).thenReturn(sound);
+        when(sound.play()).thenReturn(1L);
         //Make station, player, inventory
-        BenchConfig config = new ComputerBenchConfig();
-        stationComponent = new StationComponent(config);
+
+        stationComponent = new StationComponent(new ComputerBenchConfig());
         stationComponent.setPlayerNear(true);
         player = new Entity();
         inventory = new InventoryComponent(10000);
@@ -113,7 +118,8 @@ public class StationComponentTests {
         @Test
         void notEnoughMoneyShouldNotUpgrade() {
 
-            player.getComponent(InventoryComponent.class).addProcessor(-player.getComponent(InventoryComponent.class).getProcessor()); //Make the player broke
+            player.getComponent(InventoryComponent.class)
+                    .addProcessor(-player.getComponent(InventoryComponent.class).getProcessor()); //Make the player broke
             stationComponent.upgrade();
             assertEquals("You are broke! Fries in the bag!", stationComponent.getBuyPrompt().getText().toString());
 
@@ -172,7 +178,8 @@ public class StationComponentTests {
             when(other.getBody().getUserData()).thenReturn(userData);
             stationComponent.onCollisionStart(me, other);
 
-            assertEquals("Press E to upgrade weapon for " + stationComponent.getPrice(), stationComponent.getBuyPrompt().getText().toString());
+            assertEquals("Press E to upgrade weapon for " + stationComponent.getPrice(),
+                    stationComponent.getBuyPrompt().getText().toString());
         }
 
         @Test

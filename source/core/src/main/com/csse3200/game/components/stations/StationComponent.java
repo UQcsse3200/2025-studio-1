@@ -146,7 +146,7 @@ public class StationComponent extends Component {
         buyPrompt.setVisible(false);
         buyPrompt.setAlignment(Align.center); // center text inside background
         buyPrompt.setSize(500f, 100f);   // set box size
-        buyPrompt.setWrap(true);        // wrap text if needed
+        buyPrompt.setWrap(true); // wrap text if needed
         buyPrompt.setOrigin(Align.center);
         buyPrompt.setPosition(
                 ServiceLocator.getRenderService().getStage().getWidth() / 2f,
@@ -173,6 +173,7 @@ public class StationComponent extends Component {
             playerNear = true;
             buyPrompt.setVisible(true);
             buyPrompt.setText(config.promptText);
+
         }
     }
 

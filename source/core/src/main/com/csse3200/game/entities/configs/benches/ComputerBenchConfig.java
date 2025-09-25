@@ -18,7 +18,6 @@ public class ComputerBenchConfig extends BenchConfig {
         texturePath = "images/computerBench.png";
         price = 1000;
         promptText = "Press E to upgrade weapon for " + price;
-
     }
 
     @Override
