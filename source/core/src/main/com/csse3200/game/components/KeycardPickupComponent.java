@@ -12,7 +12,7 @@ public class KeycardPickupComponent extends Component {
     private final int level;
     private boolean collected = false;
 
-    private final String keycardPickup = "KeycardPickup";
+    private static final String keycardPickup = "KeycardPickup";
 
     public KeycardPickupComponent(int level) {
         /** Initializes the component with a specific keycard level to grant on pickup. */

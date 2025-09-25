@@ -39,7 +39,7 @@ public class PlayerStatsDisplay extends UIComponent {
     private static final float BAR_HEIGHT = 30f;
 
     // Constants
-    private final String ammoAmount = "Ammo :%d";
+    private static final String ammoAmount = "Ammo :%d";
 
     // Colours
     private static final Color COLOR_BG = Color.DARK_GRAY;
