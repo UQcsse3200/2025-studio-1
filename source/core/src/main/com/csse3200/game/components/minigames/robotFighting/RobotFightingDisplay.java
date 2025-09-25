@@ -40,6 +40,8 @@ public class RobotFightingDisplay extends UIComponent {
     private Table betRoot;
     private TextField betInput;
 
+
+
     private final GameArea game = ServiceLocator.getGameArea();
 
     public RobotFightingDisplay() {
@@ -101,8 +103,14 @@ public class RobotFightingDisplay extends UIComponent {
 
     private void buildBetScreen() {
         betRoot = new Table();
-        betRoot.setFillParent(true);
+        betRoot.setSize(PANEL_W, PANEL_H);
+        betRoot.setPosition(background.getX(), background.getY());
         betRoot.center().pad(20);
+        Label.LabelStyle balStyle = new Label.LabelStyle(skin.get(Label.LabelStyle.class));
+        balStyle.fontColor = GOLD;
+        currencyLabel = new Label("", balStyle);
+        currencyLabel.setFontScale(1.2f);
+        updateBalanceLabel(currencyLabel);
 
         Label.LabelStyle titleStyle = new Label.LabelStyle(skin.get(Label.LabelStyle.class));
         titleStyle.fontColor = TITLE_COLOR;
@@ -171,6 +179,15 @@ public class RobotFightingDisplay extends UIComponent {
 
         betRoot.add(confirmBtn).width(200f).height(60f).padBottom(20).row();
 
+        // Add a row that grows, then push the label to bottom-right
+        betRoot.add(currencyLabel)
+                .expand()        // take up all remaining space
+                .bottom()
+                .right()
+                .pad(10)
+                .row();
+
+
         stage.addActor(betRoot);
         betRoot.setVisible(false);
     }
@@ -185,10 +202,26 @@ public class RobotFightingDisplay extends UIComponent {
         }
     }
 
+    private int parseBalance() {
+        String balanceStr = currencyLabel.getText().toString().trim();
+        if (balanceStr.startsWith("Balance: $")) {
+            balanceStr = balanceStr.substring("Balance: $".length());
+        }
+        try {
+            return Integer.parseInt(balanceStr);
+        } catch (NumberFormatException e) {
+            return 0;
+        }
+    }
+
     private void adjustBet(int delta) {
         int current = parseBet();
         int newBet = Math.max(0, current + delta); // no negative bets
         betInput.setText(String.valueOf(newBet));
+
+        int currentBal = parseBalance();
+        int newBal = Math.max(currentBal - current, 0);
+        currencyLabel.setText("Balance: $" + newBal);
     }
 
     private void updateBalanceLabel(Label label) {
@@ -371,12 +404,6 @@ public class RobotFightingDisplay extends UIComponent {
 
     // One footer row (Button and Balance)
     private void addFooter() {
-        Label.LabelStyle balStyle = new Label.LabelStyle(skin.get(Label.LabelStyle.class));
-        balStyle.fontColor = GOLD;
-        currencyLabel = new Label("", balStyle);
-        currencyLabel.setFontScale(1.2f);
-        updateBalanceLabel(currencyLabel);
-
         // Close button
         TextButton closeBtn = new TextButton(
                 "Close Shop",
@@ -397,7 +424,6 @@ public class RobotFightingDisplay extends UIComponent {
         centerRow.add(closeBtn).expandX().center();
 
         Table rightRow = new Table();
-        rightRow.add(currencyLabel).expandX().right().padRight(12f);
 
         footerStack.add(centerRow);
         footerStack.add(rightRow);
