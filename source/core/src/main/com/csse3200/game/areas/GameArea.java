@@ -41,6 +41,8 @@ public abstract class GameArea implements Disposable {
     protected List<Entity> areaEntities;
     protected TerrainFactory terrainFactory;
     protected CameraComponent cameraComponent;
+
+    protected float baseScaling = 0f;
     /**
      * Prevents re-entrant room transitions across areas
      */
@@ -623,6 +625,23 @@ public abstract class GameArea implements Disposable {
 
         /** Ensure transition happens on the render thread to avoid race conditions **/
         Gdx.app.postRunnable(() -> {
+            /** Before disposing, cache player stamina if available **/
+            try {
+                Entity currentPlayer = ServiceLocator.getPlayer();
+                if (currentPlayer != null) {
+                    com.csse3200.game.components.player.StaminaComponent sc =
+                            currentPlayer.getComponent(com.csse3200.game.components.player.StaminaComponent.class);
+                    if (sc != null) {
+                        ServiceLocator.setCachedPlayerStamina(sc.getStamina());
+                    }
+                    com.csse3200.game.components.CombatStatsComponent hc =
+                            currentPlayer.getComponent(com.csse3200.game.components.CombatStatsComponent.class);
+                    if (hc != null) {
+                        ServiceLocator.setCachedPlayerHealth(hc.getHealth());
+                    }
+                }
+            } catch (Exception ignored) {
+            }
             /** Phase 1: disable and dispose current area's entities **/
             for (Entity entity : areaEntities) {
                 entity.dispose();
