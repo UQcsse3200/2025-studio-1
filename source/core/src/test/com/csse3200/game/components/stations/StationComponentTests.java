@@ -23,10 +23,8 @@ import com.csse3200.game.services.ServiceLocator;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(GameExtension.class)
 public class StationComponentTests {
@@ -58,14 +56,13 @@ public class StationComponentTests {
         player.addComponent(new PlayerActions());
         stationComponent.setPlayer(player);
 
-
         //Make weapon
         weapon = new Entity();
         weapon.addComponent(new WeaponsStatsComponent(10));
 
         //Assign player to the station, and weapon to the player
         player.getComponent(InventoryComponent.class).setCurrItem(weapon);
-
+        ServiceLocator.registerPlayer(player);
 
         //Make the buyPrompt
         BitmapFont font = new BitmapFont();
@@ -83,6 +80,31 @@ public class StationComponentTests {
         speedStationComponent.setPlayer(player);
         speedStationComponent.setPlayerNear(true);
         speedStationComponent.setBuyPrompt(buyPrompt);
+    }
+
+    @Nested
+    @DisplayName("Get and Set Tests")
+    class getSetTests {
+        @Test
+        void shouldSetGetConfig() {
+            stationComponent.setConfig(new SpeedBenchConfig());
+            assertTrue(stationComponent.getConfig() instanceof SpeedBenchConfig);
+        }
+
+        @Test
+        void shouldSetGetPlayer() {
+            assertNotNull(stationComponent.getPlayer());
+        }
+
+        @Test
+        void shouldSetGetPlayerNear() {
+            stationComponent.setPlayerNear(false);
+            assertFalse(stationComponent.isPlayerNear());
+            stationComponent.setPlayerNear(true);
+            assertTrue(stationComponent.isPlayerNear());
+        }
+
+
     }
 
     @Nested
@@ -151,6 +173,41 @@ public class StationComponentTests {
             stationComponent.onCollisionStart(me, other);
 
             assertEquals("Press E to upgrade weapon for " + stationComponent.getPrice(), stationComponent.getBuyPrompt().getText().toString());
+        }
+
+        @Test
+        void shouldNotCollideWithNotPlayer() {
+            stationComponent.setPlayerNear(false);
+
+            assertEquals("", stationComponent.getBuyPrompt().getText().toString());
+            Fixture me = mock(Fixture.class);
+            Fixture other = mock(Fixture.class);
+            Body body = mock(Body.class);
+            when(other.getBody()).thenReturn(body);
+            when(body.getUserData()).thenReturn(player);
+            BodyUserData userData = new BodyUserData();
+            //Not a player
+            userData.entity = new Entity();
+            when(other.getBody().getUserData()).thenReturn(userData);
+            stationComponent.onCollisionStart(me, other);
+            assertFalse(stationComponent.isPlayerNear());
+        }
+
+        @Test
+        void onCollisionEndWorksForPlayer() {
+            //Make two mock fixtures and call uncollide and check if the label is gone
+            Fixture me = mock(Fixture.class);
+            Fixture other = mock(Fixture.class);
+            Body body = mock(Body.class);
+            when(other.getBody()).thenReturn(body);
+            when(body.getUserData()).thenReturn(player);
+            BodyUserData userData = new BodyUserData();
+            userData.entity = player;
+            player.addComponent(new PlayerActions());
+            when(other.getBody().getUserData()).thenReturn(userData);
+            stationComponent.onCollisionEnd(me, other);
+            assertEquals("", stationComponent.getBuyPrompt().getText().toString());
+            assertFalse(stationComponent.isPlayerNear());
         }
     }
 
@@ -296,6 +353,4 @@ public class StationComponentTests {
     void afterEach() {
         ServiceLocator.clear();
     }
-
-
 }
