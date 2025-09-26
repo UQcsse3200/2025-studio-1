@@ -64,7 +64,6 @@ public class WeaponsFactory {
                 break;
             case MELEE:
                 item.setType(ItemTypes.MELEE);
-                weapon.getComponent(TextureRenderComponent.class).disableComponent();
                 break;
             default:
                 item.setType(ItemTypes.NONE);
