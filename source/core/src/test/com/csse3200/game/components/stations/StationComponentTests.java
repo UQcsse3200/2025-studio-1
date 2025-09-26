@@ -1,5 +1,6 @@
 package com.csse3200.game.components.stations;
 
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -11,7 +12,6 @@ import com.csse3200.game.components.WeaponsStatsComponent;
 import com.csse3200.game.components.player.InventoryComponent;
 import com.csse3200.game.components.player.PlayerActions;
 import com.csse3200.game.entities.Entity;
-import com.csse3200.game.entities.configs.benches.BenchConfig;
 import com.csse3200.game.entities.configs.benches.ComputerBenchConfig;
 import com.csse3200.game.entities.configs.benches.HealthBenchConfig;
 import com.csse3200.game.entities.configs.benches.SpeedBenchConfig;
@@ -19,14 +19,13 @@ import com.csse3200.game.extensions.GameExtension;
 import com.csse3200.game.physics.BodyUserData;
 import com.csse3200.game.physics.PhysicsService;
 import com.csse3200.game.rendering.RenderService;
+import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(GameExtension.class)
 public class StationComponentTests {
@@ -46,10 +45,14 @@ public class StationComponentTests {
         renderService.setStage(mock(Stage.class));
         ServiceLocator.registerRenderService(renderService);
         ServiceLocator.registerPhysicsService(new PhysicsService());
-
+        ResourceService resourceService = mock(ResourceService.class);
+        ServiceLocator.registerResourceService(resourceService);
+        Sound sound = mock(Sound.class);
+        when(resourceService.getAsset("sounds/upgradeSound.mp3", Sound.class)).thenReturn(sound);
+        when(sound.play()).thenReturn(1L);
         //Make station, player, inventory
-        BenchConfig config = new ComputerBenchConfig();
-        stationComponent = new StationComponent(config);
+
+        stationComponent = new StationComponent(new ComputerBenchConfig());
         stationComponent.setPlayerNear(true);
         player = new Entity();
         inventory = new InventoryComponent(10000);
@@ -58,14 +61,13 @@ public class StationComponentTests {
         player.addComponent(new PlayerActions());
         stationComponent.setPlayer(player);
 
-
         //Make weapon
         weapon = new Entity();
         weapon.addComponent(new WeaponsStatsComponent(10));
 
         //Assign player to the station, and weapon to the player
         player.getComponent(InventoryComponent.class).setCurrItem(weapon);
-
+        ServiceLocator.registerPlayer(player);
 
         //Make the buyPrompt
         BitmapFont font = new BitmapFont();
@@ -86,12 +88,38 @@ public class StationComponentTests {
     }
 
     @Nested
+    @DisplayName("Get and Set Tests")
+    class getSetTests {
+        @Test
+        void shouldSetGetConfig() {
+            stationComponent.setConfig(new SpeedBenchConfig());
+            assertTrue(stationComponent.getConfig() instanceof SpeedBenchConfig);
+        }
+
+        @Test
+        void shouldSetGetPlayer() {
+            assertNotNull(stationComponent.getPlayer());
+        }
+
+        @Test
+        void shouldSetGetPlayerNear() {
+            stationComponent.setPlayerNear(false);
+            assertFalse(stationComponent.isPlayerNear());
+            stationComponent.setPlayerNear(true);
+            assertTrue(stationComponent.isPlayerNear());
+        }
+
+
+    }
+
+    @Nested
     @DisplayName("CurrencyTests")
     class CurrencyTests {
         @Test
         void notEnoughMoneyShouldNotUpgrade() {
 
-            player.getComponent(InventoryComponent.class).addProcessor(-player.getComponent(InventoryComponent.class).getProcessor()); //Make the player broke
+            player.getComponent(InventoryComponent.class)
+                    .addProcessor(-player.getComponent(InventoryComponent.class).getProcessor()); //Make the player broke
             stationComponent.upgrade();
             assertEquals("You are broke! Fries in the bag!", stationComponent.getBuyPrompt().getText().toString());
 
@@ -150,7 +178,43 @@ public class StationComponentTests {
             when(other.getBody().getUserData()).thenReturn(userData);
             stationComponent.onCollisionStart(me, other);
 
-            assertEquals("Press E to upgrade weapon for " + stationComponent.getPrice(), stationComponent.getBuyPrompt().getText().toString());
+            assertEquals("Press E to upgrade weapon for " + stationComponent.getPrice(),
+                    stationComponent.getBuyPrompt().getText().toString());
+        }
+
+        @Test
+        void shouldNotCollideWithNotPlayer() {
+            stationComponent.setPlayerNear(false);
+
+            assertEquals("", stationComponent.getBuyPrompt().getText().toString());
+            Fixture me = mock(Fixture.class);
+            Fixture other = mock(Fixture.class);
+            Body body = mock(Body.class);
+            when(other.getBody()).thenReturn(body);
+            when(body.getUserData()).thenReturn(player);
+            BodyUserData userData = new BodyUserData();
+            //Not a player
+            userData.entity = new Entity();
+            when(other.getBody().getUserData()).thenReturn(userData);
+            stationComponent.onCollisionStart(me, other);
+            assertFalse(stationComponent.isPlayerNear());
+        }
+
+        @Test
+        void onCollisionEndWorksForPlayer() {
+            //Make two mock fixtures and call uncollide and check if the label is gone
+            Fixture me = mock(Fixture.class);
+            Fixture other = mock(Fixture.class);
+            Body body = mock(Body.class);
+            when(other.getBody()).thenReturn(body);
+            when(body.getUserData()).thenReturn(player);
+            BodyUserData userData = new BodyUserData();
+            userData.entity = player;
+            player.addComponent(new PlayerActions());
+            when(other.getBody().getUserData()).thenReturn(userData);
+            stationComponent.onCollisionEnd(me, other);
+            assertEquals("", stationComponent.getBuyPrompt().getText().toString());
+            assertFalse(stationComponent.isPlayerNear());
         }
     }
 
@@ -296,6 +360,4 @@ public class StationComponentTests {
     void afterEach() {
         ServiceLocator.clear();
     }
-
-
 }

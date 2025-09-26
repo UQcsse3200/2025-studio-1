@@ -31,6 +31,7 @@ public class SpeedBenchConfig extends BenchConfig {
             player.getComponent(PlayerActions.class).upgradeSpeed();
             upgradeUsed = true;
             buyPrompt.setText("Upgrade Successful!");
+            playUpgradeSound();
 
         } else if (upgradeUsed) { //Tell user if upgrade has been used
             buyPrompt.setText("Upgrade Already Used!");
