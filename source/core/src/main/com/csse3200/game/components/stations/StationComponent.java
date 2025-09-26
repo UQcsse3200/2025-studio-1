@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import com.badlogic.gdx.utils.Align;
@@ -24,6 +25,8 @@ public class StationComponent extends Component {
     private Entity player = null;
     private Label buyPrompt;
     public BenchConfig config;
+    private Image logo;   // floating logo
+
 
     /**
      * Initialise the station component
@@ -173,7 +176,6 @@ public class StationComponent extends Component {
             playerNear = true;
             buyPrompt.setVisible(true);
             buyPrompt.setText(config.promptText);
-
         }
     }
 
