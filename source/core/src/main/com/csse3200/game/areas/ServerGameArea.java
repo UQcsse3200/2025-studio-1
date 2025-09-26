@@ -63,7 +63,7 @@ public class ServerGameArea extends GameArea {
         spawnCratesAndRailing();
         spawnSpawnPads();
         spawnBordersAndDoors();
-        spawnObjectDoors(new GridPoint2(0, 6), new GridPoint2(28, 21));
+        spawnObjectDoors(new GridPoint2(0, 7), new GridPoint2(28, 21));
 
         spawnFloor();
 

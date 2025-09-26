@@ -56,12 +56,12 @@ class OfficeAreaTest {
     void testTraversals() throws Exception {
         doNothing().when(officeGameArea).clearAndLoad(any());
 
-        var method = OfficeGameArea.class.getDeclaredMethod("loadSecurity");
+        var method = OfficeGameArea.class.getDeclaredMethod("loadMovingBossRoom");
         method.setAccessible(true);
         method.invoke(officeGameArea);
 
         verify(officeGameArea).clearAndLoad(argThat(supplier -> {
-            return supplier.get() instanceof SecurityGameArea;
+            return supplier.get() instanceof MovingBossRoom;
         }));
 
         var method2 = OfficeGameArea.class.getDeclaredMethod("loadElevator");
