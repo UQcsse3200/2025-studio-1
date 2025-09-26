@@ -12,6 +12,7 @@ import com.csse3200.game.services.ServiceLocator;
 public abstract class RenderComponent extends Component implements Renderable, Disposable {
     private static final int DEFAULT_LAYER = 1;
     private boolean disabled = false;
+    private Float customZIndex = null;
 
     @Override
     public void create() {
@@ -43,7 +44,19 @@ public abstract class RenderComponent extends Component implements Renderable, D
     @Override
     public float getZIndex() {
         // The smaller the Y value, the higher the Z index, so that closer entities are drawn in front
+        if (customZIndex != null)
+            return customZIndex;
         return -entity.getPosition().y;
+    }
+
+    /**
+     * This function sets the Z index for the component the
+     * higher the Z index, so that closer entities are drawn in front
+     *
+     * @param value
+     */
+    public void setZIndex(Float value) {
+        customZIndex = value;
     }
 
     /**
