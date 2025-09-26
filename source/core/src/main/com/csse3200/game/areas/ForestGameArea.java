@@ -402,6 +402,10 @@ public class ForestGameArea extends GameArea {
         clearAndLoad(() -> new Reception(terrainFactory, cameraComponent));
     }
 
+    private void loadCasinoNoChange() {
+        clearAndLoad(() -> new CasinoGameArea(terrainFactory, cameraComponent));
+    }
+
     /**
      * Builds the upper walkway: three thin floors, a long ceiling light, and a front-facing desk.
      */
