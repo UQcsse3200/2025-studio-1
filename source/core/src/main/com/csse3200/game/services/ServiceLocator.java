@@ -29,6 +29,7 @@ public class ServiceLocator {
     private static GameArea gameArea;
     private static SaveLoadService saveLoadService;
     private static Entity player;
+    private static MusicService musicService;
     private static Difficulty difficulty;
 
     private static Float cachedPlayerStamina; // preserved across area transitions
@@ -77,6 +78,10 @@ public class ServiceLocator {
 
     public static SaveLoadService getSaveLoadService() {
         return saveLoadService;
+    }
+
+    public static MusicService getMusicService() {
+        return musicService;
     }
 
     public static Difficulty getDifficulty() {
@@ -152,6 +157,11 @@ public class ServiceLocator {
     public static void registerSaveLoadService(SaveLoadService source) {
         logger.debug("Registering save service {}", source);
         saveLoadService = source;
+    }
+
+    public static void registerMusicService(MusicService source) {
+        logger.debug("Registering music service {}", source);
+        musicService = source;
     }
 
     public static void registerDifficulty(Difficulty source) {
