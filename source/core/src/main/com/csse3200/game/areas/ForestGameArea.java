@@ -555,7 +555,6 @@ public class ForestGameArea extends GameArea {
     }
 
     /* FIXME: TODO list (DO TESTING)
-  = item is behind player when equipped
   = can pick up item that the player has equipped
   = when equipping different items, the image is not in the same
   place/it appears in a slightly different place
