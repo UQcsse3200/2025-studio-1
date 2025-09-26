@@ -34,7 +34,9 @@ import com.csse3200.game.physics.PhysicsLayer;
 import com.csse3200.game.physics.components.HitboxComponent;
 import com.csse3200.game.physics.components.PhysicsComponent;
 import com.csse3200.game.rendering.AnimationRenderComponent;
+import com.csse3200.game.rendering.RenderComponent;
 import com.csse3200.game.rendering.TextureRenderComponent;
+import com.csse3200.game.rendering.TextureRenderWithRotationComponent;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
 import org.slf4j.Logger;
@@ -558,6 +560,7 @@ public class ForestGameArea extends GameArea {
   = when equipping different items, the image is not in the same
   place/it appears in a slightly different place
     */
+
     /**
      * Sets the equipped item in the PlayerEquipComponent to be the given item
      *
@@ -566,6 +569,20 @@ public class ForestGameArea extends GameArea {
     private void equipItem(String tex) {
         Entity item = player.getComponent(ItemPickUpComponent.class).createItemFromTexture(tex);
         if (item == null) return;
+
+        // Get the players Z index
+        float playerZ = player.getComponent(AnimationRenderComponent.class).getZIndex();
+
+        // Get the relevant components from the item
+        TextureRenderComponent texComp = item.getComponent(TextureRenderComponent.class);
+        TextureRenderWithRotationComponent texRotComp = item.getComponent(
+                TextureRenderWithRotationComponent.class);
+
+        // Update the Z index for the item
+        if (texRotComp != null) {
+            texRotComp.setZIndex(playerZ + 0.01f);
+        } else if (texComp != null)
+            texComp.setZIndex(playerZ + 0.01f);
 
         item.getComponent(HitboxComponent.class).setLayer(PhysicsLayer.OBSTACLE);
 
@@ -576,6 +593,7 @@ public class ForestGameArea extends GameArea {
         // get the game area and spawn the item
         ServiceLocator.getGameArea().spawnEntity(item);
 
+        // update offset from the players position
         Vector2 offset = new Vector2(0.7f, 0.3f);
         player.getComponent(PlayerEquipComponent.class).setItem(item, offset);
     }
