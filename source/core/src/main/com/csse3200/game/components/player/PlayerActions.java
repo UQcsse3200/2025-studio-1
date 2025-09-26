@@ -66,6 +66,7 @@ public class PlayerActions extends Component {
 
     // Tracks time since last attack for cooldown purposes
     private float timeSinceLastAttack = 0;
+    private float timesinceLastReload = 0;
 
     private Camera camera;
 
@@ -129,6 +130,7 @@ public class PlayerActions extends Component {
         }
 
         timeSinceLastAttack += ServiceLocator.getTimeSource().getDeltaTime();
+        timesinceLastReload += ServiceLocator.getTimeSource().getDeltaTime();
     }
 
     /**
@@ -383,48 +385,42 @@ public class PlayerActions extends Component {
      * Fires a projectile towards the mouse cursor.
      */
     void shoot() {
-        if (ServiceLocator.getTimeSource().isPaused())
-            return;
-
-        WeaponsStatsComponent weapon = getCurrentWeaponStats();
-        if (weapon == null) {
-            return;
-        }
+        if (ServiceLocator.getTimeSource().isPaused() || timesinceLastReload < 1.5f) return;
 
         InventoryComponent inventory = entity.getComponent(InventoryComponent.class);
-        Entity gun = inventory.getCurrItem();
-
+        Entity gun = inventory.getCurrSlot();
         if (gun == null) {
             return;
         }
-
+        WeaponsStatsComponent gunStats = gun.getComponent(WeaponsStatsComponent.class);
+        if (gunStats == null) {
+            return;
+        }
         MagazineComponent mag = gun.getComponent(MagazineComponent.class);
-        // Check for cooldown, defaulting to zero if no current weapon
 
         if (mag == null) {
             return;
         }
-        float coolDown = weapon.getCoolDown();
-        if (this.timeSinceLastAttack < coolDown || mag.reloading()) {
+        // Check for cooldown, defaulting to zero if no current weapon
+        mag.update();
+        float coolDown = gunStats.getCoolDown();
+        if (this.timeSinceLastAttack < coolDown) {
             return;
         }
 
         if (mag.getCurrentAmmo() <= 0) {
-            Sound attackSound = ServiceLocator.getResourceService()
-                    .getAsset("sounds/shot_failed.mp3", Sound.class);
+            Sound attackSound = ServiceLocator.getResourceService().getAsset("sounds/shot_failed.mp3", Sound.class);
             attackSound.play();
             return;
         }
 
-
-        Sound attackSound = ServiceLocator.getResourceService()
-                .getAsset("sounds/laser_blast.mp3", Sound.class);
+        Sound attackSound = ServiceLocator.getResourceService().getAsset("sounds/laser_blast.mp3", Sound.class);
         attackSound.play();
 
-        Entity bullet = ProjectileFactory.createPistolBullet(weapon);
-        Vector2 origin = new Vector2(entity.getPosition());
-        bullet.setPosition(new Vector2(origin.x - bullet.getScale().x / 2f + 2f,
-                origin.y + 0.6f - bullet.getScale().y / 2f));
+        Entity bullet = ProjectileFactory.createPistolBullet(gunStats);
+        Vector2 origin = new Vector2(entity.getCenterPosition());
+        bullet.setPosition(new Vector2(origin.x - bullet.getScale().x / 2f,
+                origin.y - bullet.getScale().y / 2f));
         com.csse3200.game.areas.GameArea area = ServiceLocator.getGameArea();
         if (area != null) {
             area.spawnEntity(bullet);
@@ -447,12 +443,20 @@ public class PlayerActions extends Component {
      * Performs a melee attack against nearby enemies.
      */
     void attack() {
-        if (ServiceLocator.getTimeSource().isPaused())
+        if (ServiceLocator.getTimeSource().isPaused()) return;
+        InventoryComponent inventory = entity.getComponent(InventoryComponent.class);
+        Entity melee = inventory.getCurrSlot();
+        if (melee == null) {
             return;
-        WeaponsStatsComponent weapon = getCurrentWeaponStats();
-        float coolDown = weapon != null ? weapon.getCoolDown() : 0;
-        if (this.timeSinceLastAttack < coolDown) return;
-
+        }
+        WeaponsStatsComponent meleeStats = melee.getComponent(WeaponsStatsComponent.class);
+        if (meleeStats == null) {
+            return;
+        }
+        float coolDown = meleeStats != null ? meleeStats.getCoolDown() : 0;
+        if (this.timeSinceLastAttack < coolDown) {
+            return;
+        }
         Sound attackSound = ServiceLocator.getResourceService().getAsset("sounds/Impact4.ogg", Sound.class);
         attackSound.play();
 
@@ -501,7 +505,6 @@ public class PlayerActions extends Component {
     }
 
     /**
-     *
      * @return the max speed vector
      */
     public Vector2 getMaxSpeed() {
@@ -509,7 +512,6 @@ public class PlayerActions extends Component {
     }
 
     /**
-     *
      * @return the crouch speed
      */
     public Vector2 getCrouchSpeed() {
@@ -517,7 +519,6 @@ public class PlayerActions extends Component {
     }
 
     /**
-     *
      * @return the sprint speed
      */
     public Vector2 getSprintSpeed() {
@@ -532,13 +533,13 @@ public class PlayerActions extends Component {
 
 
         InventoryComponent inventory = entity.getComponent(InventoryComponent.class);
-        Entity equippedItem = inventory.getCurrItem();
+        Entity gun = inventory.getCurrSlot();
 
-        if (equippedItem != null) {
-            MagazineComponent mag = equippedItem.getComponent(MagazineComponent.class);
+        if (gun != null) {
+            MagazineComponent mag = gun.getComponent(MagazineComponent.class);
             if (mag != null) {
 
-                if (mag.reloading()) {
+                if (timesinceLastReload <= 1.5f) {
 
                     return;
                 }
@@ -546,14 +547,13 @@ public class PlayerActions extends Component {
                 Sound reloadSound;
 
                 if (mag.reload(entity)) {
-                    reloadSound = ServiceLocator.getResourceService()
-                            .getAsset("sounds/reload.mp3", Sound.class);
+                    reloadSound = ServiceLocator.getResourceService().getAsset("sounds/reload.mp3", Sound.class);
                 } else {
-                    reloadSound = ServiceLocator.getResourceService()
-                            .getAsset("sounds/shot_failed.mp3", Sound.class);
+                    reloadSound = ServiceLocator.getResourceService().getAsset("sounds/shot_failed.mp3", Sound.class);
                 }
 
                 reloadSound.play();
+                timesinceLastReload = 0f;
             }
         }
     }
@@ -640,4 +640,14 @@ public class PlayerActions extends Component {
             body.setTransform(playerPos.x - handOffsetX, playerPos.y + handOffsetY, 0f);
         }
     }
+
+    /**
+     * Setter method used for testing
+     *
+     * @param timeSinceLastAttack time since last attack
+     */
+    void setTimeSinceLastAttack(float timeSinceLastAttack) {
+        this.timeSinceLastAttack = timeSinceLastAttack;
+    }
+
 }
