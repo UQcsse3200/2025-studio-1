@@ -1,5 +1,9 @@
 package com.csse3200.game.entities.configs;
 
+import com.badlogic.gdx.math.Vector2;
+import static com.csse3200.game.entities.configs.Weapons.*;
+
+
 public enum ItemTypes {
     NONE("none"),
     MELEE("melee"),
@@ -9,12 +13,17 @@ public enum ItemTypes {
     BENCH("bench"),
     HEALTH_BENCH("healthbench"),
     COMPUTER_BENCH("computerbench"),
-    SPEED_BENCH("speedbench");
+    SPEED_BENCH("speedbench"),
+    //added weapon types
+    LIGHTSABER("lightsaber"),
+    DAGGER("dagger"),
+    RIFLE("rifle"),
+    PISTOL("pistol");
 
-    private final String string;
+    private final String typeName;
 
-    ItemTypes(String string) {
-        this.string = string;
+    ItemTypes(String typeName) {
+        this.typeName = typeName;
     }
 
     /**
@@ -22,7 +31,9 @@ public enum ItemTypes {
      *
      * @return the string value associated with this {@link ItemTypes} constant
      */
-    public String getString() {
-        return string;
+    public String getTypeName() {
+        return typeName;
     }
+
+
 }
