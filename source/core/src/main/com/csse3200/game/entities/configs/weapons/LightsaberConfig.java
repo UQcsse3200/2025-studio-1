@@ -1,5 +1,7 @@
 package com.csse3200.game.entities.configs.weapons;
 
+import com.badlogic.gdx.math.Vector2;
+
 /**
  * Configuration for the lightsaber weapon
  */

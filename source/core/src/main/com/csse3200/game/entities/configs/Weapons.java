@@ -1,12 +1,13 @@
 package com.csse3200.game.entities.configs;
 
+import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.entities.configs.weapons.*;
 
 public enum Weapons {
     LIGHTSABER(new LightsaberConfig()),
     DAGGER(new DaggerConfig()),
     RIFLE(new RifleConfig()),
-    PISTOL(new PistolConfig());
+    PISTOL(new PistolConfig()),;
 
     private final WeaponConfig config;
 

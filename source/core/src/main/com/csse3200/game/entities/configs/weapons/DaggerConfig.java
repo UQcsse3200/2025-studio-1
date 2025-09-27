@@ -1,5 +1,7 @@
 package com.csse3200.game.entities.configs.weapons;
 
+import com.badlogic.gdx.math.Vector2;
+
 public class DaggerConfig extends MeleeWeaponConfig {
     public DaggerConfig() {
         damage = 2;
