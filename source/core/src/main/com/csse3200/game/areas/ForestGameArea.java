@@ -10,6 +10,7 @@ import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.components.KeycardGateComponent;
 import com.csse3200.game.components.gamearea.GameAreaDisplay;
+import com.csse3200.game.components.items.ItemComponent;
 import com.csse3200.game.components.items.ItemHoldComponent;
 import com.csse3200.game.components.player.ItemPickUpComponent;
 import com.csse3200.game.components.player.PlayerEquipComponent;
@@ -43,6 +44,8 @@ import org.slf4j.LoggerFactory;
 
 import java.security.SecureRandom;
 
+import static com.csse3200.game.entities.configs.Weapons.*;
+
 /**
  * A playable “Forest” style room. This class:
  * - Loads assets for this scene
@@ -60,6 +63,8 @@ public class ForestGameArea extends GameArea {
     private static final float WALL_WIDTH = 0.1f;
 
     private final float VERTICAL_HEIGHT_OFFSET = 9.375f;
+    private Weapons weapons;
+    private ItemComponent item;
 
     /**
      * Files or pictures used by the game (enemy/props,etc.).
@@ -546,7 +551,7 @@ public class ForestGameArea extends GameArea {
     }
 
     private Entity spawnDagger() {
-        Entity newDagger = WeaponsFactory.createWeapon(Weapons.DAGGER);
+        Entity newDagger = WeaponsFactory.createWeapon(DAGGER);
         Vector2 newDaggerOffset = new Vector2(0.7f, 0.3f);
         newDagger.addComponent(new ItemHoldComponent(this.player, newDaggerOffset));
 
@@ -555,8 +560,8 @@ public class ForestGameArea extends GameArea {
 
     /* FIXME: TODO list (DO TESTING)
   = can pick up item that the player has equipped
-  = when equipping different items, the image is not in the same
-  place/it appears in a slightly different place
+  = when equipping different items, the image is not
+   in the same place/it appears in a slightly different place
     */
 
     /**
@@ -574,7 +579,7 @@ public class ForestGameArea extends GameArea {
         // Get the relevant components from the item
         TextureRenderComponent texComp = item.getComponent(TextureRenderComponent.class);
         TextureRenderWithRotationComponent texRotComp = item.getComponent(
-                TextureRenderWithRotationComponent.class);
+            TextureRenderWithRotationComponent.class);
 
         // Update the Z index for the item
         if (texRotComp != null) {
@@ -592,10 +597,25 @@ public class ForestGameArea extends GameArea {
         ServiceLocator.getGameArea().spawnEntity(item);
 
         // update offset from the players position
-        Vector2 offset = new Vector2(0.7f, 0.3f);
-        player.getComponent(PlayerEquipComponent.class).setItem(item, offset);
-    }
+//        Vector2 offset = new Vector2(0.7f, 0.3f);
+//        player.getComponent(PlayerEquipComponent.class).setItem(item, offset);
 
+        Vector2 offset = item.getComponent(ItemComponent.class).getEquipOffset();
+        player.getComponent(PlayerEquipComponent.class).setItem(item, offset);
+
+//        FIXME : Tried a fix to set the offset
+//        Vector2 offset_rifle = new Vector2(0.8f, 0.15f);
+//        Vector2 offset_pistol = new Vector2(0.75f, -0.1f);
+//        Vector2 offset_dagger = new Vector2(1.0f, 0.3f);
+//        Vector2 offset_lightsaber = new Vector2(0.7f, -0.2f);
+//
+//
+//        if(weapons == Weapons.RIFLE) {player.getComponent(PlayerEquipComponent.class).setItem(item, offset_rifle);}
+//        if(weapons == Weapons.PISTOL) {player.getComponent(PlayerEquipComponent.class).setItem(item, offset_pistol);}
+//        if (weapons == Weapons.DAGGER) {player.getComponent(PlayerEquipComponent.class).setItem(item, offset_dagger);}
+//        if (weapons == Weapons.LIGHTSABER) {player.getComponent(PlayerEquipComponent.class).setItem(item, offset_lightsaber);}
+
+    }
     /**
      * Sets the equipped item in the PlayerEquipComponent to be null, along with the offset
      */
@@ -604,7 +624,7 @@ public class ForestGameArea extends GameArea {
     }
 
     private Entity spawnLightsaber() {
-        Entity newLightsaber = WeaponsFactory.createWeapon(Weapons.LIGHTSABER);
+        Entity newLightsaber = WeaponsFactory.createWeapon(LIGHTSABER);
         Vector2 newLightsaberOffset = new Vector2(0.9f, -0.2f);
         newLightsaber.addComponent(new ItemHoldComponent(this.player, newLightsaberOffset));
         AnimationRenderComponent lightSaberAnimator = WeaponsFactory.createAnimation("images/lightSaber.atlas", this.player);
@@ -622,7 +642,7 @@ public class ForestGameArea extends GameArea {
     }
 
     private Entity spawnRifle() {
-        Entity newRifle = WeaponsFactory.createWeapon(Weapons.RIFLE);
+        Entity newRifle = WeaponsFactory.createWeapon(RIFLE);
         Vector2 newRifleOffset = new Vector2(0.8f, 0.15f);
         newRifle.addComponent(new ItemHoldComponent(this.player, newRifleOffset));
         return newRifle;
