@@ -1,0 +1,13 @@
+{
+areaId: Forest
+inventory: [
+	images/pistol.png
+]
+Health: 98
+ProcessNumber: 10100
+position: {
+	x: 5.1005635
+	y: 3.6149988
+}
+RoundNumber: 2
+}
