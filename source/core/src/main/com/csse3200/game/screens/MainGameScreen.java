@@ -113,8 +113,10 @@ public class MainGameScreen extends ScreenAdapter {
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
             if (!isPauseVisible) {
                 showPauseOverlay();
+                countdownTimer.pause();
             } else {
                 hidePauseOverlay();
+                countdownTimer.resume();
             }
         }
 
