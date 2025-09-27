@@ -125,25 +125,25 @@ public class PlayerStatsDisplay extends UIComponent {
         // Processor label
         int processor = entity.getComponent(InventoryComponent.class).getProcessor();
         CharSequence processorText = String.format("Processor: %d", processor);
-        processorLabel = new Label(processorText, skin);
+        processorLabel = new Label(processorText, skin, "white");
 
         // Ammo label
         int ammo = entity.getComponent(AmmoStatsComponent.class).getAmmo();
         CharSequence ammoText = String.format("Ammo: %d", ammo);
-        ammoLabel = new Label(ammoText, skin);
+        ammoLabel = new Label(ammoText, skin, "white");
 
         // Layout:
         // Row 1: Health bar
-        table.add(healthBar).width(BAR_WIDTH).height(BAR_HEIGHT).pad(5);
+        table.add(healthBar).width(BAR_WIDTH).height(BAR_HEIGHT).pad(5).left();
         table.row();
         // Row 2: Stamina bar
-        table.add(staminaBar).width(BAR_WIDTH).height(BAR_HEIGHT).pad(5);
+        table.add(staminaBar).width(BAR_WIDTH).height(BAR_HEIGHT).pad(5).left();
         table.row();
         // Row 3: Processor label
-        table.add(processorLabel).left().padLeft(10f);
+        table.add(processorLabel).left().padLeft(5f);
         table.row();
         // Row 4: Ammo label
-        table.add(ammoLabel).left().padLeft(10f);
+        table.add(ammoLabel).left().padLeft(5f);
         table.row();
 
         killEnemyButton = new TextButton("Kill Enemy", skin);
