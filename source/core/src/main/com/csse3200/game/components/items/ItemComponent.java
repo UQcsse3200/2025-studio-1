@@ -1,13 +1,23 @@
 package com.csse3200.game.components.items;
 
+import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.components.Component;
 import com.csse3200.game.entities.configs.ItemTypes;
+import com.csse3200.game.entities.configs.Weapons;
+import com.csse3200.game.entities.configs.weapons.DaggerConfig;
+import com.csse3200.game.entities.configs.weapons.LightsaberConfig;
+import com.csse3200.game.entities.configs.weapons.PistolConfig;
+import com.csse3200.game.entities.configs.weapons.RifleConfig;
+
+import static com.csse3200.game.entities.configs.Weapons.*;
+import static com.csse3200.game.entities.configs.projectiles.ProjectileConfig.itemType;
 
 public class ItemComponent extends Component {
     private String name;
     private ItemTypes type;
     private int count = 1;
     private String texture;
+//    private ItemTypes weapons;
 
     public ItemComponent() {
         this.type = ItemTypes.NONE;
@@ -96,6 +106,28 @@ public class ItemComponent extends Component {
                 + "\nType : " + this.getType()
                 + "\nCount : " + this.getCount());
     }
+
+    public Vector2 getEquipOffset() {
+        if ("rifle" == type.getTypeName()) return new Vector2(0.8f, 0.15f);
+        if ("lightsaber" == type.getTypeName()) return new Vector2(0.7f, -0.2f);
+        if ("dagger" == type.getTypeName()) return new Vector2(1.0f, 0.3f);
+        if ("pistol" == type.getTypeName()) return new Vector2(0.75f, -0.1f);
+        return new Vector2(0.7f, 0.3f);
+
+//        switch (weapons) {
+//            case LIGHTSABER:
+//                return new Vector2(0.7f, -0.2f);  //works while facing left
+//            case RIFLE:
+//                return new Vector2(0.8f, 0.15f);
+//            case DAGGER:
+//                return new Vector2(1.0f, 0.3f);
+//            case PISTOL:
+//                return new Vector2(0.75f, -0.1f);
+//            default:
+//                return new Vector2(0.7f, 0.3f);
+//        }
+    }
+
 }
 
 
