@@ -48,6 +48,7 @@ public class WeaponsFactory {
 
 
         ItemComponent item = weapon.getComponent(ItemComponent.class);
+        setItemNameFromConfig(config, item);
 
         // Attach type to weapon
         switch (config.weaponType) {
@@ -86,6 +87,13 @@ public class WeaponsFactory {
         player.getEvents().addListener("anim", () -> animator.startAnimation("anim"));
         return animator;
     }
+
+    public static void setItemNameFromConfig(WeaponConfig config, ItemComponent item) {
+        if (config.getName() != null && !config.getName().isEmpty()) {
+            item.setName(config.getName());
+        }
+    }
+
 
     private WeaponsFactory() {
         throw new IllegalStateException("Instantiating static util class");
