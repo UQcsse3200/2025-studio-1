@@ -67,7 +67,6 @@ public class MagazineComponent extends Component {
      */
 
     public boolean reload(Entity player) {
-
         if (currentAmmo == maxAmmo) {
 
             return false;
@@ -116,5 +115,6 @@ public class MagazineComponent extends Component {
 
         this.timeSinceLastReload = timeSinceLastReload;
     }
+
 
 }
