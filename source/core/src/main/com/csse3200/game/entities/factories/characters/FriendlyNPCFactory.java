@@ -6,7 +6,7 @@ import com.csse3200.game.rendering.TextureRenderComponent;
 public class FriendlyNPCFactory {
     public static Entity createTip() {
         Entity tip = new Entity()
-                .addComponent(new TextureRenderComponent("images/fireball.png"));
+                .addComponent(new TextureRenderComponent("images/!.png"));
 
         tip.getComponent(TextureRenderComponent.class).scaleEntity();
 
