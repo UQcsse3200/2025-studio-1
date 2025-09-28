@@ -15,6 +15,7 @@ import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.components.DoorComponent;
 import com.csse3200.game.components.WeaponsStatsComponent;
 import com.csse3200.game.components.enemy.EnemyWaves;
+import com.csse3200.game.components.enemy.EnemyWavesDisplay;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.factories.ProjectileFactory;
 import com.csse3200.game.entities.factories.characters.NPCFactory;
@@ -126,6 +127,7 @@ public abstract class GameArea implements Disposable {
             int room = getRoomNumber();
             int maxWaves = room > 4 ? 2 : 1; // mimic original behaviour: higher rooms get 2 waves
             wavesManager = new EnemyWaves(maxWaves, this, player);
+            EnemyWavesDisplay waveDisplay = new EnemyWavesDisplay(wavesManager);
             Gdx.app.log("GameArea", "Initializing waves: room=" + room + " maxWaves=" + maxWaves);
         }
         wavesManager.startWave();
