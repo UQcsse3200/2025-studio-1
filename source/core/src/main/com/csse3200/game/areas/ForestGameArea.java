@@ -132,7 +132,8 @@ public class ForestGameArea extends GameArea {
             "foreg_sprites/furniture/Vent.png",
             "images/Storage.png",
             "images/!.png",
-            "images/NpcDialogue.png"
+            "images/NpcDialogue.png",
+            "images/nurse_npc.png"
     };
 
     /**
@@ -237,7 +238,9 @@ public class ForestGameArea extends GameArea {
             "images/boss2_combined.atlas",
             "images/Boss3_Attacks.atlas",
             "images/boss3_phase2.atlas",
-            "images/!animation.atlas"
+            "images/!animation.atlas",
+            "images/guidance_npc.atlas",
+            "images/assister_npc.atlas"
     };
     private static final String[] forestSounds = {"sounds/Impact4.ogg",
             "sounds/shot_failed.mp3",
