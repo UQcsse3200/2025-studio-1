@@ -1,28 +1,33 @@
 package com.csse3200.game.entities.factories.characters;
 
+import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.csse3200.game.components.friendlynpc.TipComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.rendering.TextureRenderComponent;
 import com.csse3200.game.components.friendlynpc.DialogueDisplay;
+import com.csse3200.game.rendering.AnimationRenderComponent;
+import com.csse3200.game.services.ServiceLocator;
+
 
 public class FriendlyNPCFactory {
     public static Entity createTip() {
-        Entity tip = new Entity()
-                .addComponent(new TextureRenderComponent("images/!.png"));
-
-        tip.getComponent(TextureRenderComponent.class).scaleEntity();
-
+        TextureAtlas atlas = ServiceLocator.getResourceService()
+                .getAsset("images/!animation.atlas", TextureAtlas.class);
+        AnimationRenderComponent arc = new AnimationRenderComponent(atlas);
+        arc.addAnimation("float",       0.12f, Animation.PlayMode.LOOP);
+        Entity tip = new Entity().addComponent(arc);
+        arc.scaleEntity();
+        arc.startAnimation("float");
         return tip;
     }
 
     public static Entity createTest(Entity player) {
         Entity test = new Entity()
                 .addComponent(new TextureRenderComponent("images/fireball.png"))
-                .addComponent(new DialogueDisplay()); ;
+                .addComponent(new DialogueDisplay());
         test.getComponent(TextureRenderComponent.class).scaleEntity();
         test.addComponent(new TipComponent(test, player, 3f));
-
-        System.out.println("Created test NPC with DialogueDisplay - dialogue box should appear at bottom of screen");
         return test;
     }
 
