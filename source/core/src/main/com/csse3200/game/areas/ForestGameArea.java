@@ -166,7 +166,12 @@ public class ForestGameArea extends GameArea {
             "foreg_sprites/futuristic/storage_crate_green2.png",
             "foreg_sprites/futuristic/storage_crate_dark2.png",
             "foreg_sprites/futuristic/SecurityCamera3.png",
-            "images/slots_kiosk.png"
+            "images/slots_kiosk.png",
+            "images/bell.png",
+            "images/cherry.png",
+            "images/diamond.png",
+            "images/lemon.png",
+            "images/watermelon.png"
     };
 
     /**

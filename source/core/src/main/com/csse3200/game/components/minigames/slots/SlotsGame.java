@@ -26,26 +26,18 @@ public class SlotsGame {
     }
 
     private Entity initGameEntity() {
-        // Base kiosk with hitbox/interact set up by your factory
         Entity e = InteractableStationFactory.createBaseStation();
 
-        // 1) Add the display first and keep a reference
         SlotsDisplay display = new SlotsDisplay();
         e.addComponent(display);
 
-        // 2) Add a texture that actually exists in your assets and is preloaded
         TextureRenderComponent tex = new TextureRenderComponent("images/slots_kiosk.png");
         e.addComponent(tex);
-        tex.scaleEntity();            // optional: match your pixels-per-unit
+        tex.scaleEntity();
 
-        // 3) (Optional) hotkey: press '9' to toggle the UI
-        e.addComponent(new SlotsHotkeyComponent(display));
 
-        // Ensure it’s interactable via your existing prompt/key
         e.setInteractable(true);
 
-        // If your engine doesn’t auto-call create() when spawning, do it here:
-        // e.create();
 
         return e;
     }
