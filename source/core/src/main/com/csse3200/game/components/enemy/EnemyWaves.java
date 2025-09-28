@@ -7,6 +7,7 @@ import com.csse3200.game.components.Component;
 import com.csse3200.game.components.npc.GhostAnimationController;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
+import com.csse3200.game.events.EventHandler;
 import com.csse3200.game.services.ServiceLocator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,10 +32,13 @@ public class EnemyWaves extends Component {
     private Timer.Task task;
     private long waveEndTime = 0; // timestamp when last enemy of a wave died
 
+    private final EventHandler eventHandler;
+
     public EnemyWaves(int maxWaves, GameArea area, Entity player) {
         this.maxWaves = Math.max(1, maxWaves);
         this.gameArea = area;
         this.player = player;
+        eventHandler = new EventHandler();
     }
 
     public EnemyWaves(GameArea area, Entity player) {
@@ -236,5 +240,9 @@ public class EnemyWaves extends Component {
      */
     public void setWaveEndTime(long waveEndTime) {
         this.waveEndTime = waveEndTime;
+    }
+
+    public EventHandler getEvents() {
+        return eventHandler;
     }
 }
