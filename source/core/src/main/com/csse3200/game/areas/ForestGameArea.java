@@ -246,7 +246,8 @@ public class ForestGameArea extends GameArea {
             "sounds/shot_failed.mp3",
             "sounds/reload.mp3",
             "sounds/laser_blast.mp3",
-            "sounds/ammo_replenished.mp3"};
+            "sounds/ammo_replenished.mp3",
+            "sounds/upgradeSound.mp3"};
 
     private static final String[] playerSound1 = {"sounds/jump.mp3"};
     private static final String[] enemySounds = {"sounds/enemyDamage.mp3", "sounds/enemyDeath.mp3"};
@@ -290,12 +291,13 @@ public class ForestGameArea extends GameArea {
         loadAssets();
         displayUI();
         spawnTerrain();
+        player = spawnPlayer();
+        ServiceLocator.registerPlayer(player);
+
         spawnComputerBench();
         spawnHealthBench();
         spawnSpeedBench();
 
-        player = spawnPlayer();
-        ServiceLocator.registerPlayer(player);
         spawnFloor();
         spawnBottomRightDoor();
         spawnMarblePlatforms();
