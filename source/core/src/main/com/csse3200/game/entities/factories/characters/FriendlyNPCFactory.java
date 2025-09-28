@@ -3,6 +3,7 @@ package com.csse3200.game.entities.factories.characters;
 import com.csse3200.game.components.friendlynpc.TipComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.rendering.TextureRenderComponent;
+import com.csse3200.game.components.friendlynpc.DialogueDisplay;
 
 public class FriendlyNPCFactory {
     public static Entity createTip() {
@@ -16,9 +17,12 @@ public class FriendlyNPCFactory {
 
     public static Entity createTest(Entity player) {
         Entity test = new Entity()
-                .addComponent(new TextureRenderComponent("images/fireball.png"));
+                .addComponent(new TextureRenderComponent("images/fireball.png"))
+                .addComponent(new DialogueDisplay()); ;
         test.getComponent(TextureRenderComponent.class).scaleEntity();
         test.addComponent(new TipComponent(test, player, 3f));
+
+        System.out.println("Created test NPC with DialogueDisplay - dialogue box should appear at bottom of screen");
         return test;
     }
 
