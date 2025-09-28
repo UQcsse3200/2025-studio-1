@@ -829,4 +829,37 @@ public abstract class GameArea implements Disposable {
      * @return player entity
      */
     public abstract Entity getPlayer();
+
+    /**
+     * Transition to another area by its name (case-insensitive), if known.
+     * Returns true if a transition was initiated.
+     */
+    public boolean transitionToArea(String areaName) {
+        if (areaName == null || areaName.isEmpty()) return false;
+        String key = areaName.trim();
+        // normalise common variants
+        key = key.replace(" ", ""); // allow "Main Hall" -> "MainHall"
+        String lower = key.toLowerCase();
+
+        Class<? extends GameArea> target = null;
+        // Map of recognised rooms (keep in sync with MainGameScreen and toString() names)
+        if (lower.equals("forest")) target = com.csse3200.game.areas.ForestGameArea.class;
+        else if (lower.equals("elevator")) target = com.csse3200.game.areas.ElevatorGameArea.class;
+        else if (lower.equals("office")) target = com.csse3200.game.areas.OfficeGameArea.class;
+        else if (lower.equals("mainhall") || lower.equals("mainhallway") || lower.equals("hall")) target = com.csse3200.game.areas.MainHall.class;
+        else if (lower.equals("reception")) target = com.csse3200.game.areas.Reception.class;
+        else if (lower.equals("tunnel")) target = com.csse3200.game.areas.TunnelGameArea.class;
+        else if (lower.equals("security")) target = com.csse3200.game.areas.SecurityGameArea.class;
+        else if (lower.equals("storage")) target = com.csse3200.game.areas.StorageGameArea.class;
+        else if (lower.equals("shipping")) target = com.csse3200.game.areas.ShippingGameArea.class;
+        else if (lower.equals("server")) target = com.csse3200.game.areas.ServerGameArea.class;
+        else if (lower.equals("research")) target = com.csse3200.game.areas.ResearchGameArea.class;
+
+        if (target == null) {
+            Gdx.app.log("GameArea", "transitionToArea: unknown area name '" + areaName + "'");
+            return false;
+        }
+        loadArea(target);
+        return true;
+    }
 }
