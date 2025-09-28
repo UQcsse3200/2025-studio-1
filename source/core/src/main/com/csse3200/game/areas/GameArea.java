@@ -787,6 +787,11 @@ public abstract class GameArea implements Disposable {
                     GameArea next = nextAreaSupplier.get();
                     ServiceLocator.registerGameArea(next);
                     next.create();
+                    // mark next area as discovered when entered
+                    com.csse3200.game.services.DiscoveryService ds = ServiceLocator.getDiscoveryService();
+                    if (ds != null && next != null) {
+                        ds.discover(next.toString());
+                    }
                 } finally {
                     endTransition();
                 }
