@@ -1,11 +1,9 @@
 package com.csse3200.game.components.friendlynpc;
 
-import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.components.Component;
 import com.csse3200.game.entities.Entity;
-import com.csse3200.game.rendering.TextureRenderComponent;
+import com.csse3200.game.entities.factories.characters.FriendlyNPCFactory;
 import com.csse3200.game.services.ServiceLocator;
-
 
 public class TipComponent extends Component {
     private final Entity npc;
@@ -19,14 +17,12 @@ public class TipComponent extends Component {
         this.player = player;
         this.triggerDist = triggerDist;
     }
-
     @Override
     public void update() {
         float d = npc.getPosition().dst(player.getPosition());
         if (d <= triggerDist && tip == null) {
-            tip = new Entity().addComponent(new TextureRenderComponent("images/!.png"));
-            tip.getComponent(TextureRenderComponent.class).scaleEntity();
-            tip.setPosition(npc.getPosition().x, npc.getPosition().y + 1.5f);
+            tip = FriendlyNPCFactory.createTip();
+            tip.setPosition(npc.getPosition().x, npc.getPosition().y + 1f);
             ServiceLocator.getEntityService().register(tip);
         }
 
