@@ -26,10 +26,7 @@ import com.csse3200.game.physics.PhysicsEngine;
 import com.csse3200.game.physics.PhysicsService;
 import com.csse3200.game.rendering.RenderService;
 import com.csse3200.game.rendering.Renderer;
-import com.csse3200.game.services.GameTime;
-import com.csse3200.game.services.ResourceService;
-import com.csse3200.game.services.SaveLoadService;
-import com.csse3200.game.services.ServiceLocator;
+import com.csse3200.game.services.*;
 import com.csse3200.game.ui.terminal.Terminal;
 import com.csse3200.game.ui.terminal.TerminalDisplay;
 import org.slf4j.Logger;
@@ -68,6 +65,7 @@ public class MainGameScreen extends ScreenAdapter {
         ServiceLocator.registerInputService(new InputService());
         ServiceLocator.registerResourceService(new ResourceService());
         ServiceLocator.registerSaveLoadService(new SaveLoadService());
+        ServiceLocator.registerDiscoveryService(new DiscoveryService()); // NEW: track discovered rooms
 
 
         ServiceLocator.registerEntityService(new EntityService());
@@ -85,6 +83,11 @@ public class MainGameScreen extends ScreenAdapter {
         gameArea = new ForestGameArea(terrainFactory, renderer.getCamera());
         com.csse3200.game.services.ServiceLocator.registerGameArea(gameArea);
         gameArea.create();
+        // mark initial area as discovered
+        DiscoveryService dsInit = ServiceLocator.getDiscoveryService();
+        if (dsInit != null && gameArea != null) {
+            dsInit.discover(gameArea.toString());
+        }
     }
 
     @Override
@@ -241,6 +244,7 @@ public class MainGameScreen extends ScreenAdapter {
         ServiceLocator.registerInputService(new InputService());
         ServiceLocator.registerResourceService(new ResourceService());
         ServiceLocator.registerSaveLoadService(new SaveLoadService());
+        ServiceLocator.registerDiscoveryService(new DiscoveryService());
 
 
         ServiceLocator.registerEntityService(new EntityService());
@@ -275,6 +279,11 @@ public class MainGameScreen extends ScreenAdapter {
         gameArea = areaLoad;
         com.csse3200.game.services.ServiceLocator.registerGameArea(gameArea);
         gameArea.create();
+        // Mark initial area as discovered
+        DiscoveryService ds = ServiceLocator.getDiscoveryService();
+        if (ds != null && gameArea != null) {
+            ds.discover(gameArea.toString());
+        }
         InventoryComponent help = gameArea.getPlayer().getComponent(InventoryComponent.class);
         ItemPickUpComponent testLoading = new ItemPickUpComponent(help);
         //repopulates the inventory

@@ -30,6 +30,7 @@ public class ServiceLocator {
     private static SaveLoadService saveLoadService;
     private static Entity player;
     private static Difficulty difficulty;
+    private static DiscoveryService discoveryService; // track discovered rooms
 
     private static Float cachedPlayerStamina; // preserved across area transitions
     private static Integer cachedPlayerHealth; // preserved across area transitions
@@ -81,6 +82,10 @@ public class ServiceLocator {
 
     public static Difficulty getDifficulty() {
         return difficulty;
+    }
+
+    public static DiscoveryService getDiscoveryService() {
+        return discoveryService;
     }
 
     public static void registerGameArea(GameArea theArea) {
@@ -159,6 +164,11 @@ public class ServiceLocator {
         difficulty = source;
     }
 
+    public static void registerDiscoveryService(DiscoveryService service) {
+        logger.debug("Registering discovery service {}", service);
+        discoveryService = service;
+    }
+
     public static void clear() {
         entityService = null;
         renderService = null;
@@ -170,6 +180,7 @@ public class ServiceLocator {
         saveLoadService = null;
         cachedPlayerStamina = null;
         cachedPlayerHealth = null;
+        discoveryService = null;
     }
 
     private static final com.csse3200.game.events.EventHandler globalEvents = new com.csse3200.game.events.EventHandler();
