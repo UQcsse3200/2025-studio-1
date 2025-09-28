@@ -129,12 +129,10 @@ public class OfficeGameArea extends GameArea {
     }
 
     private void loadSecurity() {
-        roomNumber--;
         clearAndLoad(() -> new SecurityGameArea(terrainFactory, cameraComponent));
     }
 
     private void loadElevator() {
-        roomNumber++;
         clearAndLoad(() -> new ElevatorGameArea(terrainFactory, cameraComponent));
     }
 

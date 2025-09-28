@@ -135,12 +135,10 @@ public class SecurityGameArea extends GameArea {
     }
 
     private void loadBackToFloor5() {
-        roomNumber--;
         clearAndLoad(() -> new MainHall(terrainFactory, cameraComponent));
     }
 
     private void loadOffice() {
-        roomNumber++;
         clearAndLoad(() -> new OfficeGameArea(terrainFactory, cameraComponent));
     }
 
