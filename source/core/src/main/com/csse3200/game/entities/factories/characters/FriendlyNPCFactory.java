@@ -12,4 +12,32 @@ public class FriendlyNPCFactory {
 
         return tip;
     }
+
+    public static Entity createTest() {
+        Entity test = new Entity()
+                .addComponent(new TextureRenderComponent("images/!.png"));
+        test.getComponent(TextureRenderComponent.class).scaleEntity();
+        return test;
+    }
+
+    public static Entity createNPC1() {
+        Entity npc1 = new Entity()
+                .addComponent(new TextureRenderComponent("images/!.png"));
+        npc1.getComponent(TextureRenderComponent.class).scaleEntity();
+        return npc1;
+    }
+
+    public static Entity createNPC2() {
+        Entity npc2 = new Entity()
+                .addComponent(new TextureRenderComponent("images/!.png"));
+        npc2.getComponent(TextureRenderComponent.class).scaleEntity();
+        return npc2;
+    }
+
+    public static Entity createNPC3() {
+        Entity npc3 = new Entity()
+                .addComponent(new TextureRenderComponent("images/!.png"));
+        npc3.getComponent(TextureRenderComponent.class).scaleEntity();
+        return npc3;
+    }
 }
