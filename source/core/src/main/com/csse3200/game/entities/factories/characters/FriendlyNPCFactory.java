@@ -24,7 +24,7 @@ public class FriendlyNPCFactory {
         Entity test = new Entity()
                 .addComponent(new TextureRenderComponent("images/fireball.png"));
         test.getComponent(TextureRenderComponent.class).scaleEntity();
-        test.addComponent(new TipComponent(test, player, 1f));
+        test.addComponent(new TipComponent(test, player, 3f));
         return test;
     }
 
