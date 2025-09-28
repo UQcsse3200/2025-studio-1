@@ -1,7 +1,9 @@
 package com.csse3200.game.components.screens;
 
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.csse3200.game.GdxGame;
 
 
@@ -15,5 +17,19 @@ public class LeaderboardScreenDisplay extends BaseScreenDisplay {
     @Override
     protected void buildUI(Table root) {
 
+        addTitle(root, "Leaderboard", 2.5f, Color.GOLD, 30f);
+
+        Table panel = new Table();
+        panel.defaults().pad(10f);
+
+        // Temporary sample leaderboard
+        panel.add(new Label("1. Player A - 1200", skin)).row();
+        panel.add(new Label("2. Player B - 1000", skin)).row();
+        panel.add(new Label("3. Player C - 800", skin)).row();
+
+        // Back button
+        panel.add(button("Back", 1.5f, () -> game.setScreen(GdxGame.ScreenType.MAIN_MENU))).row();
+
+        root.add(panel).center();
     }
 }
