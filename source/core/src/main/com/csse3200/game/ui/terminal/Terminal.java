@@ -57,7 +57,7 @@ public class Terminal extends Component {
         addCommand("infiniteJumps", new InfiniteJumpsCommand());
         addCommand("spawn", new SpawnCommand());
         addCommand("doorOverride", new DoorOverrideCommand());
-//        addCommand("teleport", new TeleportCommand());
+        addCommand("teleport", new TeleportCommand());
 
         // Initial index build
         rebuildAutocompleteIndex();
@@ -189,7 +189,7 @@ public class Terminal extends Component {
         if (!s.isEmpty()) {
             // replace first token with suggestion
             String rest = stripFirstToken(enteredMessage);
-            setEnteredMessage(s.getFirst() + rest);
+            setEnteredMessage(s.get(0) + rest);
         }
     }
 
