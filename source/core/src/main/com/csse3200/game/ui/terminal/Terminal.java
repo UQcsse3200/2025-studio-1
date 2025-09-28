@@ -58,6 +58,7 @@ public class Terminal extends Component {
         addCommand("spawn", new SpawnCommand());
         addCommand("doorOverride", new DoorOverrideCommand());
         addCommand("teleport", new TeleportCommand());
+        addCommand("travel", new TravelCommand());
 
         // Initial index build
         rebuildAutocompleteIndex();
