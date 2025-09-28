@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.csse3200.game.files.UserSettings;
 import com.csse3200.game.screens.*;
+import com.csse3200.game.screens.LeaderboardScreen;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.services.MusicService;
@@ -88,12 +89,14 @@ public class GdxGame extends Game {
             case TUTORIAL_SCREEN -> new TutorialScreen(this);
             case STORY -> new StoryScreen(this);
             case DIFFICULTY_SCREEN -> new DifficultyScreen(this);
+            case LEADERBOARD -> new LeaderboardScreen(this);
+
         };
     }
 
     public enum ScreenType {
         MAIN_MENU, MAIN_GAME, SETTINGS, DEATH_SCREEN, WIN_SCREEN, TUTORIAL_SCREEN,
-        STORY, LOAD_GAME, DIFFICULTY_SCREEN,
+        STORY, LOAD_GAME, DIFFICULTY_SCREEN,LEADERBOARD,
     }
 
     /**
