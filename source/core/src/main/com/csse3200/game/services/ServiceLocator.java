@@ -27,7 +27,7 @@ public class ServiceLocator {
     private static ResourceService resourceService;
     private static GameArea gameArea;
     private static SaveLoadService saveLoadService;
-    private static Entity player;
+    public static Entity player;
 
     public static Entity getPlayer() {
         return player;

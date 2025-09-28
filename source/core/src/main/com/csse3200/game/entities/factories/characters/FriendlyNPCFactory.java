@@ -1,5 +1,6 @@
 package com.csse3200.game.entities.factories.characters;
 
+import com.csse3200.game.components.friendlynpc.TipComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.rendering.TextureRenderComponent;
 
@@ -13,10 +14,11 @@ public class FriendlyNPCFactory {
         return tip;
     }
 
-    public static Entity createTest() {
+    public static Entity createTest(Entity player) {
         Entity test = new Entity()
-                .addComponent(new TextureRenderComponent("images/!.png"));
+                .addComponent(new TextureRenderComponent("images/fireball.png"));
         test.getComponent(TextureRenderComponent.class).scaleEntity();
+        test.addComponent(new TipComponent(test, player, 1f));
         return test;
     }
 

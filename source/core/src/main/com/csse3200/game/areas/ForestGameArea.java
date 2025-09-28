@@ -23,6 +23,7 @@ import com.csse3200.game.entities.factories.KeycardFactory;
 import com.csse3200.game.entities.factories.PowerupsFactory;
 import com.csse3200.game.entities.factories.ShopFactory;
 import com.csse3200.game.entities.factories.characters.BossFactory;
+import com.csse3200.game.entities.factories.characters.FriendlyNPCFactory;
 import com.csse3200.game.entities.factories.characters.PlayerFactory;
 import com.csse3200.game.entities.factories.items.ItemFactory;
 import com.csse3200.game.entities.factories.items.WeaponsFactory;
@@ -129,7 +130,8 @@ public class ForestGameArea extends GameArea {
             "foreg_sprites/furniture/ServerRack.png",
             "foreg_sprites/furniture/ServerRack2.png",
             "foreg_sprites/furniture/Vent.png",
-            "images/Storage.png"
+            "images/Storage.png",
+            "images/!.png"
     };
 
     /**
@@ -284,7 +286,6 @@ public class ForestGameArea extends GameArea {
         spawnComputerBench();
         spawnHealthBench();
         spawnSpeedBench();
-
         player = spawnPlayer();
         ServiceLocator.registerPlayer(player);
         spawnFloor();
@@ -301,6 +302,7 @@ public class ForestGameArea extends GameArea {
         playMusic();
         ItemSpawner itemSpawner = new ItemSpawner(this);
         itemSpawner.spawnItems(ItemSpawnConfig.forestmap());
+        spawnnpctest();
 
         // Place a keycard on the floor so the player can unlock the door
         float keycardX = 1f;
@@ -576,6 +578,12 @@ public class ForestGameArea extends GameArea {
         Entity newRapidFirePowerup = PowerupsFactory.createRapidFire();
         spawnEntityAt(newRapidFirePowerup, new GridPoint2(2, 40), true, true);
         return newRapidFirePowerup;
+    }
+
+    private void spawnnpctest() {
+        GridPoint2 pos = new GridPoint2(15, 16);
+        Entity test = FriendlyNPCFactory.createTest(player);
+        spawnEntityAt(test, pos, true, true);
     }
 
     private void spawnBoss2() {

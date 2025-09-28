@@ -24,7 +24,7 @@ public class TipComponent extends Component {
     public void update() {
         float d = npc.getPosition().dst(player.getPosition());
         if (d <= triggerDist && tip == null) {
-            tip = new Entity().addComponent(new TextureRenderComponent("images/fireball.png"));
+            tip = new Entity().addComponent(new TextureRenderComponent("images/!.png"));
             tip.getComponent(TextureRenderComponent.class).scaleEntity();
             tip.setPosition(npc.getPosition().x, npc.getPosition().y + 1.5f);
             ServiceLocator.getEntityService().register(tip);
