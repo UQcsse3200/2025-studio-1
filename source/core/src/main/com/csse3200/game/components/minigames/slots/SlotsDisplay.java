@@ -14,12 +14,13 @@ import com.badlogic.gdx.utils.Align;
 import com.csse3200.game.components.screens.ItemScreenDisplay;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.UIComponent;
+import com.badlogic.gdx.utils.Scaling;
+
 
 import java.util.Random;
 
 public class SlotsDisplay extends UIComponent {
 
-    // Panel sizing/colors (mirrors RobotFighting style)
     private static final float PANEL_W = 1280f;
     private static final float PANEL_H = 720f;
     private static final Color PANEL_COLOR = Color.valueOf("0B132B");
@@ -36,16 +37,28 @@ public class SlotsDisplay extends UIComponent {
     private TextField betInput;
     private Label rowLabel;
     private Label resultLabel;
+    private Label.LabelStyle whiteLabelStyle, winLabelStyle, loseLabelStyle;
+    private final java.util.Random rng = new java.util.Random();
+    private com.badlogic.gdx.scenes.scene2d.ui.Image[] reelImgs = new com.badlogic.gdx.scenes.scene2d.ui.Image[3];
 
-    // Simple internal balance to mirror your console version.
     private int balance = 100;
 
-    // Slot machine state
-    private final String[] symbols = {"🍒", "🍉", "🍋", "🔔", "⭐"};
-    private final Random random = new Random();
 
-    // Optional popup (kept for parity with other UIs)
     private ItemScreenDisplay itemPopup;
+
+    private enum SlotSymbol {
+        CHERRY("images/cherry.png",    3,  2),
+        WATERMELON("images/watermelon.png", 4, 3),
+        LEMON("images/lemon.png",      5,  4),
+        BELL("images/bell.png",       10,  5),
+        DIAMOND("images/diamond.png", 20, 10);
+
+        final String texturePath;
+        final int tripleMult, pairMult;
+        SlotSymbol(String path, int triple, int pair) {
+            this.texturePath = path; this.tripleMult = triple; this.pairMult = pair;
+        }
+    }
 
     @Override
     public void create() {
@@ -108,52 +121,96 @@ public class SlotsDisplay extends UIComponent {
     }
 
     private void buildMain() {
-        // Bet row
-        Table betRow = new Table();
+        Label.LabelStyle whiteStyle = new Label.LabelStyle(skin.get(Label.LabelStyle.class));
+        whiteStyle.fontColor = Color.WHITE;
 
-        Label betLabel = new Label("Bet:", skin);
+        Label.LabelStyle winStyle = new Label.LabelStyle(whiteStyle);
+        winStyle.fontColor = Color.GREEN;
+
+        Label.LabelStyle loseStyle = new Label.LabelStyle(whiteStyle);
+        loseStyle.fontColor = Color.RED;
+
+        Table reels = new Table();
+        for (int i = 0; i < 3; i++) {
+            Texture tex = ServiceLocator.getResourceService().getAsset("images/cherry.png", Texture.class);
+            reelImgs[i] = new Image(new TextureRegionDrawable(new TextureRegion(tex)));
+            reelImgs[i].setScaling(Scaling.fit);
+            reels.add(reelImgs[i]).size(128, 128).pad(8);
+        }
+        root.add(reels).padTop(12f).row();
+
+        Table betRow = new Table();
+        Label betLabel = new Label("Bet:", whiteStyle);
         betInput = new TextField("", skin);
         betInput.setMessageText("Enter bet amount");
         betInput.setAlignment(Align.center);
 
         TextButton minusBtn = new TextButton("-10", skin);
         TextButton plusBtn = new TextButton("+10", skin);
-        minusBtn.addListener(new ChangeListener() {
-            @Override public void changed(ChangeEvent event, Actor actor) {
-                adjustBet(-10);
-            }
-        });
-        plusBtn.addListener(new ChangeListener() {
-            @Override public void changed(ChangeEvent event, Actor actor) {
-                adjustBet(10);
-            }
-        });
+        minusBtn.addListener(new ChangeListener() { @Override public void changed(ChangeEvent e, Actor a){ adjustBet(-10);} });
+        plusBtn.addListener(new ChangeListener()  { @Override public void changed(ChangeEvent e, Actor a){ adjustBet(10);}  });
 
         betRow.add(betLabel).padRight(8f);
         betRow.add(minusBtn).width(80).height(48).padRight(8f);
         betRow.add(betInput).width(160).padRight(8f);
         betRow.add(plusBtn).width(80).height(48);
-
         root.add(betRow).padTop(10f).row();
 
-        // Spin button
         TextButton spinBtn = new TextButton("Spin", skin);
-        spinBtn.addListener(new ChangeListener() {
-            @Override public void changed(ChangeEvent event, Actor actor) {
-                onSpin();
-            }
-        });
+        spinBtn.addListener(new ChangeListener() { @Override public void changed(ChangeEvent e, Actor a){ onSpin(); }});
         root.add(spinBtn).width(220f).height(64f).padTop(10f).row();
 
-        // Row display
-        rowLabel = new Label("— | — | —", skin);
-        rowLabel.setFontScale(1.4f);
-        root.add(rowLabel).padTop(16f).row();
+        resultLabel = new Label("Place a bet and spin!", whiteStyle);
+        this.winLabelStyle  = winStyle;
+        this.loseLabelStyle = loseStyle;
+        this.whiteLabelStyle = whiteStyle;
 
-        // Result/payout display
-        resultLabel = new Label("Place a bet and spin!", skin);
         root.add(resultLabel).padTop(10f).row();
     }
+
+
+    private SlotSymbol[] spinRow() {
+        SlotSymbol[] vals = SlotSymbol.values(), row = new SlotSymbol[3];
+        for (int i = 0; i < 3; i++) row[i] = vals[rng.nextInt(vals.length)];
+        return row;
+    }
+
+    private void showRow(SlotSymbol[] row) {
+        for (int i = 0; i < 3; i++) {
+            Texture tex = ServiceLocator.getResourceService().getAsset(row[i].texturePath, Texture.class);
+            reelImgs[i].setDrawable(new TextureRegionDrawable(new TextureRegion(tex)));
+        }
+    }
+
+    private int getPayout(SlotSymbol[] row, int bet) {
+        if (row[0] == row[1] && row[1] == row[2]) return bet * row[0].tripleMult;
+        if (row[0] == row[1]) return bet * row[0].pairMult;
+        if (row[1] == row[2]) return bet * row[1].pairMult;
+        return 0;
+    }
+
+    private void onSpin() {
+        int bet = parseBet();
+        if (bet <= 0) { resultLabel.setStyle(loseLabelStyle); resultLabel.setText("Bet must be greater than 0."); return; }
+        if (bet > balance) { resultLabel.setStyle(loseLabelStyle); resultLabel.setText("Insufficient funds."); return; }
+
+        balance -= bet; updateBalanceLabel();
+
+        SlotSymbol[] row = spinRow();
+        showRow(row);
+
+        int payout = getPayout(row, bet);
+        if (payout > 0) {
+            balance += payout;
+            resultLabel.setStyle(winLabelStyle);
+            resultLabel.setText("You won $" + payout + "!");
+        } else {
+            resultLabel.setStyle(loseLabelStyle);
+            resultLabel.setText("Sorry, you lost this round.");
+        }
+        updateBalanceLabel();
+    }
+
 
     private void addFooter() {
         Label.LabelStyle balStyle = new Label.LabelStyle(skin.get(Label.LabelStyle.class));
@@ -183,34 +240,6 @@ public class SlotsDisplay extends UIComponent {
         root.add(footerStack).growX().padTop(12f).row();
     }
 
-    private void onSpin() {
-        int bet = parseBet();
-
-        if (bet <= 0) {
-            resultLabel.setText("Bet must be greater than 0.");
-            return;
-        }
-        if (bet > balance) {
-            resultLabel.setText("Insufficient funds.");
-            return;
-        }
-
-        balance -= bet;
-        updateBalanceLabel();
-
-        String[] row = spinRow();
-        rowLabel.setText(String.join(" | ", row));
-        int payout = getPayout(row, bet);
-
-        if (payout > 0) {
-            balance += payout;
-            resultLabel.setText("You won $" + payout + "!");
-        } else {
-            resultLabel.setText("Sorry, you lost this round.");
-        }
-        updateBalanceLabel();
-    }
-
     private int parseBet() {
         String s = betInput.getText().trim();
         try {
@@ -230,50 +259,6 @@ public class SlotsDisplay extends UIComponent {
         currencyLabel.setText("Balance: $" + balance);
     }
 
-    private String[] spinRow() {
-        String[] row = new String[3];
-        for (int i = 0; i < 3; i++) {
-            row[i] = symbols[random.nextInt(symbols.length)];
-        }
-        return row;
-    }
-
-    private int getPayout(String[] row, int bet) {
-        // Triple match
-        if (row[0].equals(row[1]) && row[1].equals(row[2])) {
-            return switch (row[0]) {
-                case "🍒" -> bet * 3;
-                case "🍉" -> bet * 4;
-                case "🍋" -> bet * 5;
-                case "🔔" -> bet * 10;
-                case "⭐" -> bet * 20;
-                default -> 0;
-            };
-        }
-        // Two-in-a-row (left pair)
-        else if (row[0].equals(row[1])) {
-            return switch (row[0]) {
-                case "🍒" -> bet * 2;
-                case "🍉" -> bet * 3;
-                case "🍋" -> bet * 4;
-                case "🔔" -> bet * 5;
-                case "⭐" -> bet * 10;
-                default -> 0;
-            };
-        }
-        // Two-in-a-row (right pair)
-        else if (row[1].equals(row[2])) {
-            return switch (row[1]) {
-                case "🍒" -> bet * 2;
-                case "🍉" -> bet * 3;
-                case "🍋" -> bet * 4;
-                case "🔔" -> bet * 5;
-                case "⭐" -> bet * 10;
-                default -> 0;
-            };
-        }
-        return 0;
-    }
 
     @Override
     public void draw(SpriteBatch batch) {
@@ -292,7 +277,7 @@ public class SlotsDisplay extends UIComponent {
         if (root != null) root.setVisible(true);
         if (dimmer != null) dimmer.setVisible(true);
 
-        betInput.setText("10"); // nice default
+        betInput.setText("10");
     }
 
     public void hide() {
