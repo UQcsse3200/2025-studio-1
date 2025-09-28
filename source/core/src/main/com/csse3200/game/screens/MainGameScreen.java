@@ -106,7 +106,7 @@ public class MainGameScreen extends ScreenAdapter {
         if (player != null) {
             var playerStat = player.getComponent(CombatStatsComponent.class);
             if (playerStat != null && playerStat.isDead()) {
-                game.setScreen(ScreenType.DEATH_SCREEN);
+                setDeathScreen();
             }
         }
         renderer.render();
@@ -121,7 +121,7 @@ public class MainGameScreen extends ScreenAdapter {
         }
 
         if (countdownTimer.isTimeUP()) {
-            game.setScreen(ScreenType.DEATH_SCREEN);
+            setDeathScreen();
         }
     }
 
@@ -182,7 +182,7 @@ public class MainGameScreen extends ScreenAdapter {
                 .addComponent(new PerformanceDisplay())
                 .addComponent(new MainGameActions(this.game))
                 .addComponent(new MainGameDisplay(countdownTimer))
-                .addComponent(new Terminal(this.game))
+                .addComponent(new Terminal(this.game, countdownTimer))
                 .addComponent(inputComponent)
                 .addComponent(new TerminalDisplay(this.game));
 
@@ -228,6 +228,16 @@ public class MainGameScreen extends ScreenAdapter {
         } else {
             logger.info("Save data failed");
         }
+    }
+
+    private long getCompleteTime(){
+        return (countdownTimer.getDuration() - countdownTimer.getRemainingMs()) / 1000;
+    }
+
+    private void setDeathScreen(){
+        DeathScreen deathScreen = new DeathScreen(game);
+        deathScreen.updateTime(getCompleteTime());
+        game.setScreen(deathScreen);
     }
 
 

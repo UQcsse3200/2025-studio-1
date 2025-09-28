@@ -50,4 +50,8 @@ public class CountdownTimerService {
     public boolean isPaused() {
         return paused;
     }
+
+    public long getDuration(){
+        return duration;
+    }
 }
