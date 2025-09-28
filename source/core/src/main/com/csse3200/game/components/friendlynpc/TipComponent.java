@@ -26,7 +26,7 @@ public class TipComponent extends Component {
         if (d <= triggerDist && tip == null) {
             tip = new Entity().addComponent(new TextureRenderComponent("images/!.png"));
             tip.getComponent(TextureRenderComponent.class).scaleEntity();
-            tip.setPosition(npc.getPosition().x, npc.getPosition().y + 1.5f);
+            tip.setPosition(npc.getPosition().x, npc.getPosition().y + 1f);
             ServiceLocator.getEntityService().register(tip);
         }
 
