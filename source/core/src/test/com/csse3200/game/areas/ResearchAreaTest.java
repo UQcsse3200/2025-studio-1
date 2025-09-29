@@ -64,12 +64,12 @@ class ResearchAreaTest {
             return supplier.get() instanceof ElevatorGameArea;
         }));
 
-        var method2 = ResearchGameArea.class.getDeclaredMethod("loadShipping");
+        var method2 = ResearchGameArea.class.getDeclaredMethod("loadFlyingBossRoom");
         method2.setAccessible(true);
         method2.invoke(researchGameArea);
 
         verify(researchGameArea).clearAndLoad(argThat(supplier -> {
-            return supplier.get() instanceof ShippingGameArea;
+            return supplier.get() instanceof FlyingBossRoom;
         }));
     }
 }
