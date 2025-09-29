@@ -11,14 +11,16 @@ import java.util.List;
  */
 public class InventoryOperations {
 
-    private InventoryOperations() {}
+    private InventoryOperations() {
+    }
 
     /**
      * Adds item to an inventory, either on a new slot or stacks on an existing slot.
+     *
      * @param inventory The player's inventory to add to
-     * @param item The item being added
-     * @param amount The number of items added
-     * @param maxStack The max number of items that a player can hold
+     * @param item      The item being added
+     * @param amount    The number of items added
+     * @param maxStack  The max number of items that a player can hold
      * @return The inventory slot the item was added to on success, or the failure result including a message and status code.
      */
     public static int addOrStack(InventoryComponent inventory, Entity item,
@@ -43,7 +45,7 @@ public class InventoryOperations {
             }
 
             int currentQuantity = existingItemComponent.getCount();
-            if  (currentQuantity + amount > maxStack) {
+            if (currentQuantity + amount > maxStack) {
                 return PurchaseError.LIMIT_REACHED.getCode();
             }
             existingItemComponent.setCount(currentQuantity + amount);
@@ -67,11 +69,11 @@ public class InventoryOperations {
     }
 
     /**
-     /**
+     * /**
      * Finds the index of the slot that contains the same {@link Entity} reference.
      *
      * @param inventory the player's inventory
-     * @param item the entity to locate
+     * @param item      the entity to locate
      * @return the index if found; otherwise {@code -1}
      */
     private static int findIndexForItem(InventoryComponent inventory, Entity item) {

@@ -72,7 +72,6 @@ public abstract class BaseTerminalInputComponent extends InputComponent {
         return false;
     }
 
-
     /**
      * Handles input if the terminal is open. This is because keyUp events are
      * triggered alongside keyTyped events. If the user is typing in the terminal, the input shouldn't

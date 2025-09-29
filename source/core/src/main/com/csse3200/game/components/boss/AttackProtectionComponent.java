@@ -4,7 +4,7 @@ import com.csse3200.game.components.Component;
 
 /**
  * AttackProtectionCounterComponent
- *
+ * <p>
  * Listens to "updateHealth" from CombatStatsComponent.
  * - Each time health decreases, count one hit.
  * - When hit count reaches limit, start no-damage via DamageReductionComponent.start(1f, seconds).
@@ -13,8 +13,8 @@ public class AttackProtectionComponent extends Component {
     private int lastHealth = Integer.MIN_VALUE;
     private int hits = 0;
 
-    private int limit;      // hits required to trigger
-    private float seconds;  // no-damage duration
+    private final int limit;      // hits required to trigger
+    private final float seconds;  // no-damage duration
 
     public AttackProtectionComponent() {
         this(6, 2f);

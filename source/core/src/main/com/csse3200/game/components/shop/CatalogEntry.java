@@ -31,12 +31,12 @@ public record CatalogEntry(
      * Constructs a CatalogEntry, storing the details around an item that can
      * be purchased from the shop
      *
-     * @param item The unique identifiable itemKey
-     * @param price The price (per unit) of the item
-     * @param enabled Whether this item can currently be purchased by the player.
-     *                (E.g., disabled due to max stack, not enough processors, etc.)
-     * @param maxStack The max number of this item that can be stored in one inventory
-     *                 slot (1 if stackable is false)
+     * @param item           The unique identifiable itemKey
+     * @param price          The price (per unit) of the item
+     * @param enabled        Whether this item can currently be purchased by the player.
+     *                       (E.g., disabled due to max stack, not enough processors, etc.)
+     * @param maxStack       The max number of this item that can be stored in one inventory
+     *                       slot (1 if stackable is false)
      * @param bundleQuantity How many units of the item sold per purchase.
      * @throws IllegalArgumentException if any of the arguments are invalid
      *                                  (e.g., null item, non-positive price, invalid stack/bundle size).
@@ -57,7 +57,7 @@ public record CatalogEntry(
      */
     public Actor getIconActor(Skin skin) {
         Texture texture = new Texture(item.getComponent(ItemComponent.class).getTexture());
-        TextureRegionDrawable icon  = new TextureRegionDrawable(texture);
+        TextureRegionDrawable icon = new TextureRegionDrawable(texture);
         return new ImageButton(icon);
     }
 
@@ -99,8 +99,6 @@ public record CatalogEntry(
             throw new IllegalArgumentException("maxStack cannot be negative for stackables");
         }
     }
-
-
 
 
 }

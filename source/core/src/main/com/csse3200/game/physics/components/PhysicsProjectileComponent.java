@@ -1,22 +1,22 @@
 package com.csse3200.game.physics.components;
+
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.Fixture;
 import com.csse3200.game.components.Component;
-import com.csse3200.game.entities.Entity;
-import com.csse3200.game.physics.BodyUserData;
 import com.csse3200.game.services.ServiceLocator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/** Movement controller for a projectile entity */
-public class PhysicsProjectileComponent extends Component{
+/**
+ * Movement controller for a projectile entity
+ */
+public class PhysicsProjectileComponent extends Component {
 
     private static final Logger logger = LoggerFactory.
             getLogger(PhysicsProjectileComponent.class);
     private PhysicsComponent physicsComponent;
     private Vector2 initialVelocity;
-    private float lifetime = 5f;
+    private final float lifetime = 5f;
     private float lived = 0f;
 
     /**
@@ -69,6 +69,7 @@ public class PhysicsProjectileComponent extends Component{
 
     /**
      * Setter function used for tests
+     *
      * @param lived assigned lived time for a projectile
      */
     public void setLived(float lived) {

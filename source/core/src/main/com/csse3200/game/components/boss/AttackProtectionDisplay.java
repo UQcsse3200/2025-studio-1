@@ -9,8 +9,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.csse3200.game.components.Component;
 import com.csse3200.game.components.CombatStatsComponent;
+import com.csse3200.game.components.Component;
 import com.csse3200.game.services.ServiceLocator;
 
 import java.util.ArrayList;
@@ -26,14 +26,14 @@ import java.util.List;
  */
 public class AttackProtectionDisplay extends Component {
     // ui (match BossStatusDisplay length = 800f)
-    private static final float width  = 800f; // same as BossStatusDisplay.BAR_WIDTH
+    private static final float width = 800f; // same as BossStatusDisplay.BAR_WIDTH
     private static final float height = 16f;
-    private static final float gap    = 6f;   // vertical space below the boss bar
-    private static final Color bg   = Color.DARK_GRAY;
+    private static final float gap = 6f;   // vertical space below the boss bar
+    private static final Color bg = Color.DARK_GRAY;
     private static final Color fill = Color.GRAY;
 
     // behavior
-    private static final float step  = 1f / 6f;
+    private static final float step = 1f / 6f;
     private static final float delay = 2f;
 
     private final List<Texture> textures = new ArrayList<>();

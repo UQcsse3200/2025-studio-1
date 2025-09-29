@@ -14,7 +14,9 @@ public class DoorComponent extends Component {
     private final Runnable onEntered;
     private boolean triggered = false;
 
-    /** When true, any gating logic (e.g., keycards) should be bypassed. */
+    /**
+     * When true, any gating logic (e.g., keycards) should be bypassed.
+     */
     private boolean overrideUnlocked = false;
 
     public DoorComponent(Runnable onEntered) {
@@ -34,7 +36,9 @@ public class DoorComponent extends Component {
         this.overrideUnlocked = enabled;
     }
 
-    /** @return true if the unlock override is enabled for this door. */
+    /**
+     * @return true if the unlock override is enabled for this door.
+     */
     public boolean isOverrideUnlocked() {
         return overrideUnlocked;
     }

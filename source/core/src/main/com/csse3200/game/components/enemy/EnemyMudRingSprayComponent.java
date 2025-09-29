@@ -3,6 +3,7 @@ package com.csse3200.game.components.enemy;
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.components.Component;
+import com.csse3200.game.components.TouchAttackComponent;
 import com.csse3200.game.components.WeaponsStatsComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.physics.PhysicsLayer;
@@ -11,7 +12,6 @@ import com.csse3200.game.physics.components.HitboxComponent;
 import com.csse3200.game.physics.components.PhysicsComponent;
 import com.csse3200.game.rendering.TextureRenderComponent;
 import com.csse3200.game.services.ServiceLocator;
-import com.csse3200.game.components.TouchAttackComponent;
 
 /**
  * Circular mud spray (fires `count` projectiles evenly around a circle).
@@ -51,10 +51,10 @@ public class EnemyMudRingSprayComponent extends Component {
         WeaponsStatsComponent bossStats = entity.getComponent(WeaponsStatsComponent.class);
         if (bossStats != null) dmg = bossStats.getBaseAttack();
 
-        float step = (float)(Math.PI * 2 / count);
+        float step = (float) (Math.PI * 2 / count);
         for (int i = 0; i < count; i++) {
             float ang = angleOffset + step * i;
-            Vector2 vel = new Vector2((float)Math.cos(ang), (float)Math.sin(ang)).scl(speed);
+            Vector2 vel = new Vector2((float) Math.cos(ang), (float) Math.sin(ang)).scl(speed);
             spawnOne(center, vel, dmg);
         }
     }

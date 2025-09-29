@@ -10,7 +10,9 @@ import com.csse3200.game.physics.raycast.RaycastHit;
 import com.csse3200.game.rendering.DebugRenderer;
 import com.csse3200.game.services.ServiceLocator;
 
-/** Chases a target entity until they get too far away or go above */
+/**
+ * Chases a target entity until they get too far away or go above
+ */
 public class BossChaseTask extends DefaultTask implements PriorityTask {
     private final Entity target;
     private final int priority;
@@ -24,9 +26,9 @@ public class BossChaseTask extends DefaultTask implements PriorityTask {
     private static final float ABOVE_EPS = 1f;
 
     /**
-     * @param target The entity to chase.
-     * @param priority Task priority when chasing (0 when not chasing).
-     * @param viewDistance Maximum distance from the entity at which chasing can start.
+     * @param target           The entity to chase.
+     * @param priority         Task priority when chasing (0 when not chasing).
+     * @param viewDistance     Maximum distance from the entity at which chasing can start.
      * @param maxChaseDistance Maximum distance from the entity while chasing before giving up.
      */
     public BossChaseTask(Entity target, int priority, float viewDistance, float maxChaseDistance) {
@@ -77,7 +79,7 @@ public class BossChaseTask extends DefaultTask implements PriorityTask {
 
     private boolean isTargetAbove() {
         float myY = owner.getEntity().getCenterPosition().y;
-        float ty  = target.getCenterPosition().y;
+        float ty = target.getCenterPosition().y;
         return ty > myY + ABOVE_EPS;
     }
 

@@ -13,9 +13,9 @@ import static com.csse3200.game.entities.configs.Consumables.LIGHTNING_IN_A_BOTT
 public class ShopDemo {
     public static CatalogService makeDemoCatalog() {
 
-      // NOTE: temporary solution to add items. In the future, will be determined by room, player level, etc.
+        // NOTE: temporary solution to add items. In the future, will be determined by room, player level, etc.
 
-      ArrayList<CatalogEntry> demoEntries = new ArrayList<>();
+        ArrayList<CatalogEntry> demoEntries = new ArrayList<>();
         Entity healthPotion = ConsumableFactory.createConsumable(HEALTH_MONSTER_DRINK);
         Entity bomb = ConsumableFactory.createConsumable(LIGHTNING_IN_A_BOTTLE);
         Entity weapon = WeaponsFactory.createWeapon(Weapons.RIFLE);

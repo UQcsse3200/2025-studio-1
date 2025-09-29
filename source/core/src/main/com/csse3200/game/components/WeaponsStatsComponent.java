@@ -16,28 +16,44 @@ public class WeaponsStatsComponent extends Component {
     private static final Logger logger = LoggerFactory.getLogger(WeaponsStatsComponent.class);
 
 
-    /** Default attack cooldown (seconds). */
+    /**
+     * Default attack cooldown (seconds).
+     */
     private static final float DEFAULT_COOLDOWN = 0.2f;
 
-    /** Default setting for whether this weapon deals damage. */
+    /**
+     * Default setting for whether this weapon deals damage.
+     */
     private static final boolean DEFAULT_DISABLE_DAMAGE = false;
 
-    /** Base attack damage before multipliers are applied (must be non-negative). */
+    /**
+     * Base attack damage before multipliers are applied (must be non-negative).
+     */
     private int baseAttack;
 
-    /** Cooldown (in seconds) between attacks. */
+    /**
+     * Cooldown (in seconds) between attacks.
+     */
     private float coolDown;
 
-    /** Flag that disables all outgoing damage when true. */
+    /**
+     * Flag that disables all outgoing damage when true.
+     */
     private boolean disableDamage;
 
-    /** Path to the projectile's texture if this weapon fires projectiles. */
+    /**
+     * Path to the projectile's texture if this weapon fires projectiles.
+     */
     private String projectileTexturePath;
 
-    /** Current weapon upgrade stage, starting from 1. */
+    /**
+     * Current weapon upgrade stage, starting from 1.
+     */
     private int upgradeStage = 1;
 
-    /** Maximum number of upgrades allowed. */
+    /**
+     * Maximum number of upgrades allowed.
+     */
     private final int maxUpgradeStage = 4;
 
     /**
@@ -205,7 +221,6 @@ public class WeaponsStatsComponent extends Component {
      *   <li>{@code 2.0} = double damage</li>
      *   <li>{@code 0.5} = half damage</li>
      * </ul>
-     *
      *
      * @param multiplier the new damage multiplier
      */

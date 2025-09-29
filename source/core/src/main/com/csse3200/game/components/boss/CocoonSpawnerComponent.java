@@ -6,6 +6,7 @@ import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.components.Component;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.services.ServiceLocator;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,6 +27,7 @@ public class CocoonSpawnerComponent extends Component {
 
     /**
      * Constructor
+     *
      * @param healthThreshold Health percentage threshold to spawn cocoons (0.0-1.0)
      * @param cocoonPositions Array of spawn positions for cocoons
      */

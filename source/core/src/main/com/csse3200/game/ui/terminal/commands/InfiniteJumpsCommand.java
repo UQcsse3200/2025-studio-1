@@ -43,7 +43,7 @@ public class InfiniteJumpsCommand implements Command {
     }
 
     void setInfiniteJumpsStatus(Array<Entity> entityList, boolean status) {
-        for(Entity entity : entityList) {
+        for (Entity entity : entityList) {
             if (entity.getComponent(PlayerActions.class) != null) {
                 entity.getComponent(PlayerActions.class).infJumps();
             }

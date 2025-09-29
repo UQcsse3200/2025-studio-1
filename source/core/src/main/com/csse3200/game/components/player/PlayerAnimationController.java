@@ -1,8 +1,8 @@
 package com.csse3200.game.components.player;
 
+import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.components.Component;
 import com.csse3200.game.rendering.AnimationRenderComponent;
-import com.badlogic.gdx.math.Vector2;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,24 +15,36 @@ import org.slf4j.LoggerFactory;
  * based on the player's state and direction.</p>
  */
 public class PlayerAnimationController extends Component {
-    /** The animation component used to play animations. */
+    /**
+     * The animation component used to play animations.
+     */
     AnimationRenderComponent animator;
 
     private static final Logger logger = LoggerFactory.getLogger(PlayerAnimationController.class);
 
-    /** True if the player is facing right, false if left. */
+    /**
+     * True if the player is facing right, false if left.
+     */
     private boolean facingRight = true;
 
-    /** True if the player is stopped, false if moving. */
+    /**
+     * True if the player is stopped, false if moving.
+     */
     private boolean stopped = true;
 
-    /** True if the player is sprinting. */
+    /**
+     * True if the player is sprinting.
+     */
     private boolean sprinting = false;
 
-    /** True if the player is crouching. */
+    /**
+     * True if the player is crouching.
+     */
     private boolean crouching = false;
 
-    /** True if the player is falling. */
+    /**
+     * True if the player is falling.
+     */
     private boolean falling = true;
 
     /**
@@ -83,7 +95,9 @@ public class PlayerAnimationController extends Component {
         }
     }
 
-    /** Plays the walking animation for the current facing direction. */
+    /**
+     * Plays the walking animation for the current facing direction.
+     */
     void animateWalk() {
         if (facingRight) {
             logger.debug("Animating right walk");
@@ -94,7 +108,9 @@ public class PlayerAnimationController extends Component {
         }
     }
 
-    /** Plays the sprinting animation for the current facing direction. */
+    /**
+     * Plays the sprinting animation for the current facing direction.
+     */
     void animateSprint() {
         if (facingRight) {
             logger.debug("Animating right sprint");
@@ -105,7 +121,9 @@ public class PlayerAnimationController extends Component {
         }
     }
 
-    /** Plays the jump animation for the current facing direction. */
+    /**
+     * Plays the jump animation for the current facing direction.
+     */
     void animateJump() {
         if (facingRight) {
             logger.debug("Animating right jump");
@@ -116,7 +134,9 @@ public class PlayerAnimationController extends Component {
         }
     }
 
-    /** Stops movement and plays idle animation if the player is not falling. */
+    /**
+     * Stops movement and plays idle animation if the player is not falling.
+     */
     void stopMoving() {
         stopped = true;
         if (!falling) {
@@ -124,7 +144,9 @@ public class PlayerAnimationController extends Component {
         }
     }
 
-    /** Plays the idle animation for the current facing direction. */
+    /**
+     * Plays the idle animation for the current facing direction.
+     */
     void animateIdle() {
         if (crouching) {
             animateCrouchIdle();
@@ -139,7 +161,9 @@ public class PlayerAnimationController extends Component {
         }
     }
 
-    /** Plays the dash animation for the current facing direction. */
+    /**
+     * Plays the dash animation for the current facing direction.
+     */
     void animateDash() {
         if (facingRight) {
             logger.debug("Animating right dash");
@@ -150,7 +174,9 @@ public class PlayerAnimationController extends Component {
         }
     }
 
-    /** Plays the crouch animation for the current facing direction. */
+    /**
+     * Plays the crouch animation for the current facing direction.
+     */
     void animateCrouch() {
         if (facingRight) {
             logger.debug("Animating right crouch");
@@ -161,7 +187,9 @@ public class PlayerAnimationController extends Component {
         }
     }
 
-    /** Plays the idle crouch animation for the current facing direction. */
+    /**
+     * Plays the idle crouch animation for the current facing direction.
+     */
     void animateCrouchIdle() {
         if (facingRight) {
             logger.debug("Animating right stand crouch");
@@ -172,7 +200,9 @@ public class PlayerAnimationController extends Component {
         }
     }
 
-    /** Plays the falling animation for the current facing direction. */
+    /**
+     * Plays the falling animation for the current facing direction.
+     */
     void animateFall() {
         if (facingRight) {
             animator.startAnimation("right_fall");
@@ -181,19 +211,25 @@ public class PlayerAnimationController extends Component {
         }
     }
 
-    /** Starts crouching and plays the appropriate crouch idle animation. */
+    /**
+     * Starts crouching and plays the appropriate crouch idle animation.
+     */
     void startCrouching() {
         crouching = true;
         animateCrouchIdle();
     }
 
-    /** Stops crouching and returns to the idle animation. */
+    /**
+     * Stops crouching and returns to the idle animation.
+     */
     void stopCrouching() {
         crouching = false;
         animateIdle();
     }
 
-    /** Starts sprinting and updates the movement animation if applicable. */
+    /**
+     * Starts sprinting and updates the movement animation if applicable.
+     */
     void startSprinting() {
         sprinting = true;
         if (!stopped) {
@@ -201,7 +237,9 @@ public class PlayerAnimationController extends Component {
         }
     }
 
-    /** Stops sprinting and updates the movement or idle animation. */
+    /**
+     * Stops sprinting and updates the movement or idle animation.
+     */
     void stopSprinting() {
         sprinting = false;
         if (!stopped) {

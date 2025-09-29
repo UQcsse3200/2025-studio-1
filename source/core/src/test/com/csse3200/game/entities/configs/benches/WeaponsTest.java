@@ -1,9 +1,13 @@
 package com.csse3200.game.entities.configs.benches;
 
 import com.csse3200.game.entities.configs.Weapons;
-import com.csse3200.game.entities.configs.weapons.*;
+import com.csse3200.game.entities.configs.weapons.DaggerConfig;
+import com.csse3200.game.entities.configs.weapons.LightsaberConfig;
+import com.csse3200.game.entities.configs.weapons.PistolConfig;
+import com.csse3200.game.entities.configs.weapons.WeaponConfig;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 
 public class WeaponsTest {
