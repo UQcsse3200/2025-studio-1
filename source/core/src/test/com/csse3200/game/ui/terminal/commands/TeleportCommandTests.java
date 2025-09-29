@@ -9,8 +9,11 @@ import com.csse3200.game.entities.EntityService;
 import com.csse3200.game.extensions.GameExtension;
 import com.csse3200.game.rendering.RenderService;
 import com.csse3200.game.services.ServiceLocator;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.MockedStatic;
 
 import java.util.ArrayList;
 
@@ -61,8 +64,14 @@ class TeleportCommandTests {
         ServiceLocator.registerGameArea(area);
         ServiceLocator.registerEntityService(es);
 
-        assertFalse(command.action(new ArrayList<>()));
+        // Ensure no stray global player can make this pass
+        try (MockedStatic<ServiceLocator> sl = mockStatic(ServiceLocator.class, CALLS_REAL_METHODS)) {
+            sl.when(ServiceLocator::getPlayer).thenReturn(null);
+            assertFalse(command.action(new ArrayList<>()));
+        }
     }
+
+    // ---------- TRAVEL TESTS (kept here per your file; statically mock global player) ----------
 
     @Test
     void travelToCameraCenterSucceeds() {
@@ -74,7 +83,6 @@ class TeleportCommandTests {
         var entities = new Array<Entity>();
         entities.add(player);
 
-        // Force fallback to EntityService
         when(area.getPlayer()).thenReturn(null);
         when(es.getEntities()).thenReturn(entities);
 
@@ -82,13 +90,17 @@ class TeleportCommandTests {
         cam.position.set(4.0f, -6.5f, 0f);
         when(rs.getCamera()).thenReturn(cam);
 
+        ServiceLocator.clear();
         ServiceLocator.registerGameArea(area);
         ServiceLocator.registerEntityService(es);
         ServiceLocator.registerRenderService(rs);
 
         var cmd = new TravelCommand();
-        var ok = cmd.action(new ArrayList<>()); // no args => camera center
-        assertTrue(ok);
+        try (MockedStatic<ServiceLocator> sl = mockStatic(ServiceLocator.class, CALLS_REAL_METHODS)) {
+            sl.when(ServiceLocator::getPlayer).thenReturn(player);
+            var ok = cmd.action(new ArrayList<>()); // no args => camera center
+            assertTrue(ok);
+        }
 
         var pos = player.getPosition();
         assertEquals(4.0f, pos.x, 1e-5);
@@ -112,13 +124,17 @@ class TeleportCommandTests {
         cam.position.set(-8f, 5f, 0f);
         when(rs.getCamera()).thenReturn(cam);
 
+        ServiceLocator.clear();
         ServiceLocator.registerGameArea(area);
         ServiceLocator.registerEntityService(es);
         ServiceLocator.registerRenderService(rs);
 
         var cmd = new TravelCommand();
-        var ok = cmd.action(new ArrayList<>(java.util.List.of("center")));
-        assertTrue(ok);
+        try (MockedStatic<ServiceLocator> sl = mockStatic(ServiceLocator.class, CALLS_REAL_METHODS)) {
+            sl.when(ServiceLocator::getPlayer).thenReturn(player);
+            var ok = cmd.action(new ArrayList<>(java.util.List.of("center")));
+            assertTrue(ok);
+        }
 
         var pos = player.getPosition();
         assertEquals(-8f, pos.x, 1e-5);
@@ -137,18 +153,23 @@ class TeleportCommandTests {
         when(area.getPlayer()).thenReturn(null);
         when(es.getEntities()).thenReturn(entities);
 
+        ServiceLocator.clear();
         ServiceLocator.registerGameArea(area);
         ServiceLocator.registerEntityService(es);
 
         var cmd = new TravelCommand();
-        var args = new ArrayList<>(java.util.List.of("7.75", "9.5"));
-        var ok = cmd.action(args);
-        assertTrue(ok);
+        try (MockedStatic<ServiceLocator> sl = mockStatic(ServiceLocator.class, CALLS_REAL_METHODS)) {
+            sl.when(ServiceLocator::getPlayer).thenReturn(player);
+            var ok = cmd.action(new ArrayList<>(java.util.List.of("7.75", "9.5")));
+            assertTrue(ok);
+        }
 
         var pos = player.getPosition();
         assertEquals(7.75f, pos.x, 1e-5);
         assertEquals(9.5f, pos.y, 1e-5);
     }
+
+    // ---------- TELEPORT TESTS ----------
 
     @Test
     void teleportToCameraCenterFailsWhenNoCamera() {
@@ -186,9 +207,14 @@ class TeleportCommandTests {
         ServiceLocator.registerGameArea(area);
         ServiceLocator.registerEntityService(es);
 
-        var args = new ArrayList<>(java.util.List.of("7.75", "9.5"));
-        var ok = command.action(args);
-        assertTrue(ok);
+        // Ensure TeleportCommand uses THIS player even if a global exists
+        try (MockedStatic<ServiceLocator> sl = mockStatic(ServiceLocator.class, CALLS_REAL_METHODS)) {
+            sl.when(ServiceLocator::getPlayer).thenReturn(player);
+
+            var args = new ArrayList<>(java.util.List.of("7.75", "9.5"));
+            var ok = command.action(args);
+            assertTrue(ok);
+        }
 
         var pos = player.getPosition();
         assertEquals(7.75f, pos.x, 1e-5);
