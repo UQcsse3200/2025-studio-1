@@ -57,10 +57,6 @@ public class WeaponsFactory {
                 // using TextureRenderWithRotationComponent to allow guns to follow cursor
                 weapon.addComponent(new TextureRenderWithRotationComponent(config.texturePath));
                 weapon.getComponent(TextureRenderComponent.class).disableComponent();
-                if (weaponType.getConfig() instanceof RifleConfig) {
-                    weapon.addComponent(new LaserComponent());
-                    weapon.addComponent(new BulletEnhancerComponent());
-                }
                 break;
             case MELEE:
                 item.setType(ItemTypes.MELEE);
@@ -69,6 +65,19 @@ public class WeaponsFactory {
             default:
                 item.setType(ItemTypes.NONE);
                 break;
+        }
+        return weapon;
+    }
+
+    public static Entity createWeaponWithAttachment(Weapons weaponType, boolean laser, boolean bullet) {
+        Entity weapon = createWeapon(weaponType);
+
+        if (laser) {
+            weapon.addComponent(new LaserComponent());
+        }
+
+        if (bullet) {
+            weapon.addComponent(new BulletEnhancerComponent());
         }
         return weapon;
     }

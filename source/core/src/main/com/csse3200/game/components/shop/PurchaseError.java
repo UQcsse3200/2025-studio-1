@@ -16,6 +16,7 @@ public enum PurchaseError {
     LIMIT_REACHED(-5),
     INVALID_ITEM(-6),
     UNEXPECTED(-7),
+    INVALID_WEAPON(-8)
     ;
 
     private final int code;
