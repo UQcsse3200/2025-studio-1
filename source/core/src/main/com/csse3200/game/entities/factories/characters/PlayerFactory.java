@@ -73,7 +73,10 @@ public class PlayerFactory {
                         .addComponent(new PlayerAnimationController())
                         .addComponent(new PowerupComponent())
                         .addComponent(new PlayerAnimationController())
+                        .addComponent(new PlayerEquipComponent())
                         .addComponent(new ShopInteractComponent(2.0f));
+        // Ensure global player reference is up-to-date for transitions
+        ServiceLocator.registerPlayer(player);
 
         player.getComponent(AnimationRenderComponent.class).scaleEntity(2f);
         PhysicsUtils.setScaledCollider(player, 0.6f, 0.3f);
@@ -84,8 +87,33 @@ public class PlayerFactory {
         //Unequip player at spawn
         PlayerActions actions = player.getComponent(PlayerActions.class);
         actions.create();
-        actions.unequipPlayer();  //start without a weapon equipped
 
+        // Restore stamina from previous area if cached
+        try {
+            Float cached = ServiceLocator.getCachedPlayerStamina();
+            if (cached != null) {
+                StaminaComponent stamina = player.getComponent(StaminaComponent.class);
+                if (stamina != null) {
+                    stamina.setStamina(cached);
+                }
+                // Clear cache after applying to avoid reusing stale values
+                ServiceLocator.setCachedPlayerStamina(null);
+            }
+        } catch (Exception ignored) {
+        }
+
+        // Restore health from previous area if cached
+        try {
+            Integer cachedHealth = ServiceLocator.getCachedPlayerHealth();
+            if (cachedHealth != null) {
+                CombatStatsComponent stats = player.getComponent(CombatStatsComponent.class);
+                if (stats != null) {
+                    stats.setHealth(cachedHealth);
+                }
+                ServiceLocator.setCachedPlayerHealth(null);
+            }
+        } catch (Exception ignored) {
+        }
 
         // pick up rapid fire powerup
         // remove this if we have item pickup available
