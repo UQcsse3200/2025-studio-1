@@ -25,7 +25,7 @@ public class FriendlyNPCFactory {
 
     public static Entity createTest(Entity player) {
         Entity test = new Entity()
-                .addComponent(new TextureRenderComponent("images/fireball.png"))
+                .addComponent(new TextureRenderComponent("images/nurse_npc.png"))
                 .addComponent(new NpcDialogueDataComponent(
                         "Friendly NPC", "", new String[]{
                         "Hello",
