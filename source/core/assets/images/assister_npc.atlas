@@ -3,56 +3,56 @@ size: 1536, 1024
 format: RGBA8888
 filter: Linear,Linear
 repeat: none
-walk_right_1
+walk_right
   rotate: false
   xy: 0, 512
   size: 384, 512
   orig: 384, 512
   offset: 0, 0
   index: -1
-walk_right_2
+walk_right
   rotate: false
   xy: 384, 512
   size: 384, 512
   orig: 384, 512
   offset: 0, 0
   index: -1
-walk_right_3
+walk_right
   rotate: false
   xy: 768, 512
   size: 384, 512
   orig: 384, 512
   offset: 0, 0
   index: -1
-walk_right_4
+walk_right
   rotate: false
   xy: 1152, 512
   size: 384, 512
   orig: 384, 512
   offset: 0, 0
   index: -1
-walk_left_1
+walk_left
   rotate: false
   xy: 0, 0
   size: 384, 512
   orig: 384, 512
   offset: 0, 0
   index: -1
-walk_left_2
+walk_left
   rotate: false
   xy: 384, 0
   size: 384, 512
   orig: 384, 512
   offset: 0, 0
   index: -1
-walk_left_3
+walk_left
   rotate: false
   xy: 768, 0
   size: 384, 512
   orig: 384, 512
   offset: 0, 0
   index: -1
-walk_left_4
+walk_left
   rotate: false
   xy: 1152, 0
   size: 384, 512
