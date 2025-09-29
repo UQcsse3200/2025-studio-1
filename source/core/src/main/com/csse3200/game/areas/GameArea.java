@@ -125,7 +125,7 @@ public abstract class GameArea implements Disposable {
     public void startWaves(Entity player) {
         if (wavesManager == null || wavesManager.allWavesFinished()) {
             int room = getRoomNumber();
-            int maxWaves = room > 1 ? 2 : 1; // mimic original behaviour: higher rooms get 2 waves
+            int maxWaves = room > 4 ? 2 : 1; // mimic original behaviour: higher rooms get 2 waves
             wavesManager = new EnemyWaves(maxWaves, this, player);
             EnemyWavesDisplay waveDisplay = new EnemyWavesDisplay(wavesManager);
             Gdx.app.log("GameArea", "Initializing waves: room=" + room + " maxWaves=" + maxWaves);
