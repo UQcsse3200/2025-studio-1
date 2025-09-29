@@ -10,6 +10,7 @@ import com.csse3200.game.entities.configs.ItemSpawnConfig;
 import com.csse3200.game.entities.factories.characters.PlayerFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.entities.spawner.ItemSpawner;
+import com.csse3200.game.components.minigames.whackamole.WhackAMoleGame;
 
 /**
  * Minimal generic Casino room: walls, a single right-side door, and a subtle background overlay.
@@ -29,11 +30,21 @@ public class CasinoGameArea extends GameArea {
         GenericLayout.setupTerrainWithOverlay(this, terrainFactory, TerrainType.CASINO,
                 new Color(0.08f, 0.08f, 0.1f, 0.30f));
 
+        ensureAssets();
         spawnBordersAndDoors();
         spawnFloor();
         player = spawnPlayer();
+        spawnWhackAMoleGame();
         ItemSpawner itemSpawner = new ItemSpawner(this);
         itemSpawner.spawnItems(ItemSpawnConfig.securitymap());
+    }
+
+    private void ensureAssets() {
+        String[] needed = new String[]{
+                "images/mole.png"
+        };
+        ensureTextures(needed);
+        ensurePlayerAtlas();
     }
 
     private void spawnBordersAndDoors() {
@@ -62,6 +73,11 @@ public class CasinoGameArea extends GameArea {
         Entity player = PlayerFactory.createPlayer();
         spawnEntityAt(player, PLAYER_SPAWN, true, true);
         return player;
+    }
+
+    private void spawnWhackAMoleGame() {
+        GridPoint2 pos = new GridPoint2(5, 7);
+        spawnEntityAt(new WhackAMoleGame().getGameEntity(), pos, true, true);
     }
 
     private void loadSpawnFromCasino() {
