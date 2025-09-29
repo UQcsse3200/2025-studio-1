@@ -2,6 +2,7 @@ package com.csse3200.game.entities.factories.characters;
 
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.csse3200.game.components.friendlynpc.NpcDialogueDataComponent;
 import com.csse3200.game.components.friendlynpc.TipComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.rendering.TextureRenderComponent;
@@ -25,7 +26,18 @@ public class FriendlyNPCFactory {
     public static Entity createTest(Entity player) {
         Entity test = new Entity()
                 .addComponent(new TextureRenderComponent("images/fireball.png"))
+                .addComponent(new NpcDialogueDataComponent(
+                        "Friendly NPC", "", new String[]{
+                        "Hello",
+                        "Click the dialog box to continue to the next sentence.",
+                        "At the end, this sentence will automatically close."
+                }
+                ))
                 .addComponent(new DialogueDisplay());
+        var data = test.getComponent(NpcDialogueDataComponent.class);
+        var ui   = test.getComponent(DialogueDisplay.class);
+        ui.showFirst(data);    // 显示第一句
+
         test.getComponent(TextureRenderComponent.class).scaleEntity();
         test.addComponent(new TipComponent(test, player, 3f));
         return test;

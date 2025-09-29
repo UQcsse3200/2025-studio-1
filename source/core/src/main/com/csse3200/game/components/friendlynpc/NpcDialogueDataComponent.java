@@ -15,7 +15,7 @@ public class NpcDialogueDataComponent extends Component {
 
     /**
      * @param name  NPC name
-     * @param portraitPath Image resource path
+     * @param portraitPath Image resource path (Can be "" to indicate no avatar)
      * @param lines words
      */
     public NpcDialogueDataComponent(String name, String portraitPath, String[] lines) {
