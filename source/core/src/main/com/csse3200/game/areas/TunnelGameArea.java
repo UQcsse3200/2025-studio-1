@@ -11,6 +11,7 @@ import com.csse3200.game.entities.factories.characters.NPCFactory;
 import com.csse3200.game.entities.factories.characters.PlayerFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.entities.spawner.ItemSpawner;
+import com.csse3200.game.services.ServiceLocator;
 
 /**
  * Tunnel room: minimal walls with left door back to Server Room.
@@ -18,6 +19,7 @@ import com.csse3200.game.entities.spawner.ItemSpawner;
 public class TunnelGameArea extends GameArea {
     private static final float WALL_WIDTH = 0.1f;
     private static final GridPoint2 PLAYER_SPAWN = new GridPoint2(10, 10);
+    private static final float ROOM_DIFF_NUMBER = 10;
 
     private Entity player;
 
@@ -46,7 +48,7 @@ public class TunnelGameArea extends GameArea {
         spawnPlatforms();
         spawnSpawnPads();
         spawnGrokDroids();
-        spawnObjectDoors();
+        spawnObjectDoors(new GridPoint2(0, 7), new GridPoint2(28, 7));
 
         spawnFloor();
 
@@ -62,10 +64,25 @@ public class TunnelGameArea extends GameArea {
      * Spawns the borders and doors of the room.
      */
     private void spawnBordersAndDoors() {
+        if (cameraComponent == null)
+            return;
         Bounds b = getCameraBounds(cameraComponent);
-        addVerticalDoorLeft(b, WALL_WIDTH, this::loadServer);
-        addSolidWallTop(b, WALL_WIDTH);
-        addSolidWallBottom(b, WALL_WIDTH);
+        addSolidWallLeft(b, WALL_WIDTH);
+        float leftDoorHeight = Math.max(1f, b.viewHeight() * 0.2f);
+        float leftDoorY = b.bottomY();
+        Entity leftDoor = ObstacleFactory.createDoorTrigger(WALL_WIDTH, leftDoorHeight);
+        leftDoor.setPosition(b.leftX() + 0.001f, leftDoorY);
+        leftDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadServer));
+        spawnEntity(leftDoor);
+
+        addSolidWallRight(b, WALL_WIDTH);
+
+        float rightDoorHeight = Math.max(1f, b.viewHeight() * 0.2f);
+        float rightDoorY = b.bottomY();
+        Entity rightDoor = ObstacleFactory.createDoorTrigger(WALL_WIDTH, rightDoorHeight);
+        rightDoor.setPosition(b.rightX() - WALL_WIDTH - 0.001f, rightDoorY);
+        rightDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadBossRoom));
+        spawnEntity(rightDoor);
     }
 
     /**
@@ -82,8 +99,8 @@ public class TunnelGameArea extends GameArea {
 
     /**
      * Two generic big thick platforms and a few small thin platforms above.
-     * The big thick platforms can serve as 'cover'  for the player,
-     * and the thin  platforms will require jumping to reach.
+     * The big thick platforms can serve as 'cover' for the player,
+     * and the thin platforms will require jumping to reach.
      */
     private void spawnPlatforms() {
         Entity platform1 = ObstacleFactory.createThickFloor();
@@ -120,26 +137,22 @@ public class TunnelGameArea extends GameArea {
      * Spawn 2 high-level grok droids in the room as enemies.
      */
     private void spawnGrokDroids() {
-        Entity grok1 = NPCFactory.createGrokDroid(player, this, 3f);
+        Entity grok1 = NPCFactory.createGrokDroid(player, this,
+                ServiceLocator.getDifficulty().getRoomDifficulty(TunnelGameArea.ROOM_DIFF_NUMBER));
         GridPoint2 grok1Pos = new GridPoint2(25, 7);
         spawnEntityAt(grok1, grok1Pos, true, false);
-        Entity grok2 = NPCFactory.createGrokDroid(player, this, 3f);
+        Entity grok2 = NPCFactory.createGrokDroid(player, this,
+                ServiceLocator.getDifficulty().getRoomDifficulty(TunnelGameArea.ROOM_DIFF_NUMBER));
         GridPoint2 grok2Pos = new GridPoint2(25, 7);
         spawnEntityAt(grok2, grok2Pos, true, false);
     }
 
-    /**
-     * Spawn entity door at the bottom left, and no door to the right
-     * as this is the last room (currently).
-     */
-    private void spawnObjectDoors() {
-        Entity leftDoor = ObstacleFactory.createDoor();
-        GridPoint2 leftDoorSpawn = new GridPoint2(0, 7);
-        spawnEntityAt(leftDoor, leftDoorSpawn, false, false);
-    }
-
     private void loadServer() {
         clearAndLoad(() -> new ServerGameArea(terrainFactory, cameraComponent));
+    }
+
+    private void loadBossRoom() {
+        clearAndLoad(() -> new StaticBossRoom(terrainFactory, cameraComponent));
     }
 
     @Override
@@ -149,7 +162,7 @@ public class TunnelGameArea extends GameArea {
 
     @Override
     public Entity getPlayer() {
-        //placeholder
+        // placeholder
         return null;
     }
 
@@ -158,5 +171,3 @@ public class TunnelGameArea extends GameArea {
     }
 
 }
-
-
