@@ -1,77 +1,77 @@
 package com.csse3200.game.areas;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.GridPoint2;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.factories.characters.PlayerFactory;
-import com.csse3200.game.rendering.SolidColorRenderComponent;
 
-/** Office room: minimal walls and two doors (left--Security, right--Elevator). */
+/**
+ * Office room: minimal walls and two doors (left--Security, right--Elevator).
+ */
 public class OfficeGameArea extends GameArea {
-  private static final float WALL_WIDTH = 0.1f;
-  private static final GridPoint2 PLAYER_SPAWN = new GridPoint2(10, 10);
+    private static final float WALL_WIDTH = 0.1f;
+    private static final GridPoint2 PLAYER_SPAWN = new GridPoint2(10, 10);
 
-  public OfficeGameArea(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
-    super(terrainFactory, cameraComponent);
-  }
+    public OfficeGameArea(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
+        super(terrainFactory, cameraComponent);
+    }
 
-  @Override
-  public void create() {
-    GenericLayout.ensureGenericAssets(this);
-      ensureTextures(new String[] {
-              "images/Office and elevator/Office Background.png",
-              "images/Office and elevator/Office stuff.png",
-              "images/Office and elevator/table chair ceo.png",
-              "foreg_sprites/general/ThinFloor3.png",
-              "images/Office and elevator/Platform for elevator.png"
-      });
-      // Use dedicated office background
-      terrain = terrainFactory.createTerrain(TerrainType.OFFICE);
-      spawnEntity(new Entity().addComponent(terrain));
+    @Override
+    public void create() {
+        GenericLayout.ensureGenericAssets(this);
+        ensureTextures(new String[]{
+                "images/Office and elevator/Office Background.png",
+                "images/Office and elevator/Office stuff.png",
+                "images/Office and elevator/table chair ceo.png",
+                "foreg_sprites/general/ThinFloor3.png",
+                "images/Office and elevator/Platform for elevator.png"
+        });
+        // Use dedicated office background
+        terrain = terrainFactory.createTerrain(TerrainType.OFFICE);
+        spawnEntity(new Entity().addComponent(terrain));
 
-    spawnBordersAndDoors();
-    spawnPlayer();
-    spawnFloor();
-    spawnObjectDoors(new GridPoint2(0, 14), new GridPoint2(28, 20));
-    spawnPlatforms();
-    spawnOfficeProps();
-  }
+        spawnBordersAndDoors();
+        spawnPlayer();
+        spawnFloor();
+        spawnObjectDoors(new GridPoint2(0, 14), new GridPoint2(28, 20));
+        spawnPlatforms();
+        spawnOfficeProps();
+    }
 
-  // Assets ensured via GenericLayout
+    // Assets ensured via GenericLayout
 
-  private void spawnBordersAndDoors() {
-      Bounds b = getCameraBounds(cameraComponent);
+    private void spawnBordersAndDoors() {
+        Bounds b = getCameraBounds(cameraComponent);
 
-      addVerticalDoorLeft(b, WALL_WIDTH, this::loadSecurity);
-      // Raise the right door higher than center
-      addSolidWallTop(b, WALL_WIDTH);
-      addSolidWallBottom(b, WALL_WIDTH);
-
-
-
-      float rightDoorHeight = Math.max(1f, b.viewHeight * 0.2f);
-      float rightDoorY = b.bottomY + 7.0f; // higher placement
-      float rightTopSegHeight = Math.max(0f, b.topY - (rightDoorY + rightDoorHeight));
-      if (rightTopSegHeight > 0f) {
-          Entity rightTop = com.csse3200.game.entities.factories.system.ObstacleFactory.createWall(WALL_WIDTH, rightTopSegHeight);
-          rightTop.setPosition(b.rightX - WALL_WIDTH, rightDoorY + rightDoorHeight);
-          spawnEntity(rightTop);
-      }
-      Entity rightDoor = com.csse3200.game.entities.factories.system.ObstacleFactory.createDoorTrigger(WALL_WIDTH, rightDoorHeight);
-      rightDoor.setPosition(b.rightX - WALL_WIDTH - 0.001f, rightDoorY);
-      rightDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadElevator));
-      spawnEntity(rightDoor);
+        addVerticalDoorLeft(b, WALL_WIDTH, this::loadSecurity);
+        // Raise the right door higher than center
+        addSolidWallTop(b, WALL_WIDTH);
+        addSolidWallBottom(b, WALL_WIDTH);
 
 
-  }
+        float rightDoorHeight = Math.max(1f, b.viewHeight() * 0.2f);
+        float rightDoorY = b.bottomY() + 7.0f; // higher placement
+        float rightTopSegHeight = Math.max(0f, b.topY() - (rightDoorY + rightDoorHeight));
+        if (rightTopSegHeight > 0f) {
+            Entity rightTop = com.csse3200.game.entities.factories.system.ObstacleFactory.createWall(WALL_WIDTH, rightTopSegHeight);
+            rightTop.setPosition(b.rightX() - WALL_WIDTH, rightDoorY + rightDoorHeight);
+            spawnEntity(rightTop);
+        }
+        Entity rightDoor = com.csse3200.game.entities.factories.system.ObstacleFactory.createDoorTrigger(WALL_WIDTH, rightDoorHeight);
+        rightDoor.setPosition(b.rightX() - WALL_WIDTH - 0.001f, rightDoorY);
+        rightDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadElevator));
+        spawnEntity(rightDoor);
 
-  private void spawnPlayer() {
-    Entity player = PlayerFactory.createPlayer();
-    spawnEntityAt(player, PLAYER_SPAWN, true, true);
-  }
+
+    }
+
+    private void spawnPlayer() {
+        Entity player = PlayerFactory.createPlayer();
+        spawnEntityAt(player, PLAYER_SPAWN, true, true);
+    }
+
     private void spawnOfficeProps() {
         // Simple: render two office sprites via TextureRenderComponent-only entities
         Entity decor = new Entity()
@@ -89,12 +89,14 @@ public class OfficeGameArea extends GameArea {
         spawnEntity(ceoChair);
     }
 
-    /** Spawn platforms  */
+    /**
+     * Spawn platforms
+     */
     private void spawnPlatforms() {
         float p1x = 5f, p1y = 4f;
-        float p2x = -1f,   p2y = 4f;
-        float p3x = 8f,   p3y = 6f;
-        float p4x = 13f,  p4y = 8f;
+        float p2x = -1f, p2y = 4f;
+        float p3x = 8f, p3y = 6f;
+        float p4x = 13f, p4y = 8f;
 
         Entity platform1 = com.csse3200.game.entities.factories.system.ObstacleFactory.createOfficeElevatorPlatform();
         platform1.setPosition(p1x, p1y);
@@ -125,15 +127,29 @@ public class OfficeGameArea extends GameArea {
             floor.setPosition(floor.getPosition().x, floor.getPosition().y - 0.3f);
         }
     }
-  private void loadSecurity() {
-      roomNumber--;
-    clearAndLoad(() -> new SecurityGameArea(terrainFactory, cameraComponent));
-  }
 
-  private void loadElevator() {
-      roomNumber++;
-    clearAndLoad(() -> new ElevatorGameArea(terrainFactory, cameraComponent));
-  }
+    private void loadSecurity() {
+        clearAndLoad(() -> new SecurityGameArea(terrainFactory, cameraComponent));
+    }
+
+    private void loadElevator() {
+        clearAndLoad(() -> new ElevatorGameArea(terrainFactory, cameraComponent));
+    }
+
+    @Override
+    public String toString() {
+        return "Office";
+    }
+
+    @Override
+    public Entity getPlayer() {
+        //placeholder see previous
+        return null;
+    }
+
+    public static OfficeGameArea load(TerrainFactory terrainFactory, CameraComponent camera) {
+        return (new OfficeGameArea(terrainFactory, camera));
+    }
 }
 
 

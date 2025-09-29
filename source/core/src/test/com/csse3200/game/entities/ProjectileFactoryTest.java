@@ -1,10 +1,5 @@
 package com.csse3200.game.entities;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.*;
-
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Files;
 import com.badlogic.gdx.Gdx;
@@ -32,11 +27,15 @@ import com.csse3200.game.rendering.TextureRenderWithRotationComponent;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(GameExtension.class)
 @ExtendWith(MockitoExtension.class)
@@ -52,7 +51,8 @@ public class ProjectileFactoryTest {
 
     @BeforeAll
     static void setUp() throws NoSuchFieldException, IllegalAccessException {
-        app = new HeadlessApplication(new ApplicationAdapter(){}, new HeadlessApplicationConfiguration());
+        app = new HeadlessApplication(new ApplicationAdapter() {
+        }, new HeadlessApplicationConfiguration());
 
         // Load Box2D native libs
         Box2D.init();
@@ -80,7 +80,7 @@ public class ProjectileFactoryTest {
         ServiceLocator.registerRenderService(renderService);
 
         Entity pistol = WeaponsFactory.createWeapon(Weapons.PISTOL);
-        when(player.getComponent(InventoryComponent.class).getCurrItem()).thenReturn(pistol);
+        when(player.getComponent(InventoryComponent.class).getCurrSlot()).thenReturn(pistol);
         pistolBullet = ProjectileFactory.createPistolBullet(
                 pistol.getComponent(WeaponsStatsComponent.class)
         );
@@ -88,7 +88,7 @@ public class ProjectileFactoryTest {
     }
 
 
-   @Test
+    @Test
     void correctPistolBulletComponents() {
         assertTrue(pistolBullet.hasComponent(PhysicsComponent.class));
         assertTrue(pistolBullet.hasComponent(PhysicsProjectileComponent.class));

@@ -15,7 +15,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
 /**
@@ -117,7 +118,8 @@ class DoorOverrideCommandTests {
         // Ensure there's no EntityService registered
         try {
             ServiceLocator.clear();
-        } catch (Throwable ignored) {}
+        } catch (Throwable ignored) {
+        }
 
         try (MockedStatic<KeycardGateComponent> keycardMock = mockStatic(KeycardGateComponent.class)) {
             boolean ok = cmd.action(new ArrayList<>(List.of("on")));

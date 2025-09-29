@@ -1,17 +1,18 @@
 package com.csse3200.game.components.boss;
 
 import com.csse3200.game.components.CombatStatsComponent;
-import com.csse3200.game.entities.Entity;
 import com.csse3200.game.components.enemy.BlackholeComponent;
 import com.csse3200.game.components.enemy.BossChargeSkillComponent;
 import com.csse3200.game.components.enemy.FireballAttackComponent;
+import com.csse3200.game.entities.Entity;
 import com.csse3200.game.services.GameTime;
 import com.csse3200.game.services.ServiceLocator;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class BossStageComponentTest {
 
@@ -22,7 +23,10 @@ public class BossStageComponentTest {
 
     @After
     public void tearDown() {
-        try { ServiceLocator.clear(); } catch (Throwable ignored) {}
+        try {
+            ServiceLocator.clear();
+        } catch (Throwable ignored) {
+        }
     }
 
     private static boolean getBool(Object obj, String field) throws Exception {

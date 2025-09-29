@@ -10,5 +10,5 @@ public enum Projectiles {
     /**
      * The laser that the GHOST_GPT enemy fires.
      */
-    GHOSTGPT_LASER;
+    GHOSTGPT_LASER
 }

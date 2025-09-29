@@ -1,0 +1,82 @@
+boss_idle.png
+size: 10800, 546
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+default
+  rotate: false
+  xy: 0, 0
+  size: 1080, 546
+  orig: 1080, 546
+  offset: 0, 0
+  index: 0
+idle
+  rotate: false
+  xy: 0, 0
+  size: 1080, 546
+  orig: 1080, 546
+  offset: 0, 0
+  index: 0
+idle
+  rotate: false
+  xy: 1080, 0
+  size: 1080, 546
+  orig: 1080, 546
+  offset: 0, 0
+  index: 1
+idle
+  rotate: false
+  xy: 2160, 0
+  size: 1080, 546
+  orig: 1080, 546
+  offset: 0, 0
+  index: 2
+idle
+  rotate: false
+  xy: 3240, 0
+  size: 1080, 546
+  orig: 1080, 546
+  offset: 0, 0
+  index: 3
+idle
+  rotate: false
+  xy: 4320, 0
+  size: 1080, 546
+  orig: 1080, 546
+  offset: 0, 0
+  index: 4
+idle
+  rotate: false
+  xy: 5400, 0
+  size: 1080, 546
+  orig: 1080, 546
+  offset: 0, 0
+  index: 5
+idle
+  rotate: false
+  xy: 6480, 0
+  size: 1080, 546
+  orig: 1080, 546
+  offset: 0, 0
+  index: 6
+idle
+  rotate: false
+  xy: 7560, 0
+  size: 1080, 546
+  orig: 1080, 546
+  offset: 0, 0
+  index: 7
+idle
+  rotate: false
+  xy: 8640, 0
+  size: 1080, 546
+  orig: 1080, 546
+  offset: 0, 0
+  index: 8
+idle
+  rotate: false
+  xy: 9720, 0
+  size: 1080, 546
+  orig: 1080, 546
+  offset: 0, 0
+  index: 9

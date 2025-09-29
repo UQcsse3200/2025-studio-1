@@ -12,6 +12,7 @@ public class MissleMovementComponent extends Component {
     public MissleMovementComponent(float speed) {
         this.speed = speed;
     }
+
     /**
      * let the missue do the movement by changing the position
      */

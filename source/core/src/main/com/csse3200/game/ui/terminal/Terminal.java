@@ -14,9 +14,9 @@ public class Terminal extends Component {
     private static final Logger logger = LoggerFactory.getLogger(Terminal.class);
 
     // --- Autocomplete tuning ---
-    private static final int   SUGGESTION_LIMIT = 5;
-    private static final int   FUZZY_DISTANCE   = 1;
-    private static final long  DEBOUNCE_NS      = 20_000_000L; // ~20ms
+    private static final int SUGGESTION_LIMIT = 5;
+    private static final int FUZZY_DISTANCE = 1;
+    private static final long DEBOUNCE_NS = 20_000_000L; // ~20ms
 
     private final Map<String, Command> commands;
 
@@ -26,51 +26,90 @@ public class Terminal extends Component {
     // Autocomplete state
     // Recreated on full rebuild for a true "clear and reindex".
     private RadixTrie trie = new RadixTrie();
-    private BKTree    bkTree = new BKTree();
+    private BKTree bkTree = new BKTree();
     private volatile boolean indexDirty = false;
 
     private long lastKeystrokeNs = 0L;
     private String lastPrefix = "";
     private List<String> lastSuggestions = Collections.emptyList();
 
-    public Terminal() { this(new LinkedHashMap<>(), null); }
-    public Terminal(GdxGame game) { this(new LinkedHashMap<>(), game); }
-    public Terminal(Map<String, Command> commands) { this(commands, null); }
+    public Terminal() {
+        this(new LinkedHashMap<>(), null);
+    }
+
+    public Terminal(GdxGame game) {
+        this(new LinkedHashMap<>(), game);
+    }
+
+    public Terminal(Map<String, Command> commands) {
+        this(commands, null);
+    }
 
     public Terminal(Map<String, Command> commands, GdxGame game) {
         this.commands = Objects.requireNonNullElseGet(commands, LinkedHashMap::new);
 
-        // Register commands (alphabetical for discoverability)
         addCommand("damageMultiplier", new DamageMultiplierCommand());
-        addCommand("deathscreen",      new EndScreenCommand(game, GdxGame.ScreenType.DEATH_SCREEN));
-        addCommand("debug",            new DebugCommand());
-        addCommand("disableDamage",    new DisableDamageCommand());
-        addCommand("doorOverride",     new DoorOverrideCommand());
-        addCommand("infiniteDash",     new InfiniteDashCommand());
-        addCommand("infiniteJumps",    new InfiniteJumpsCommand());
-        addCommand("infiniteStamina",  new InfiniteStaminaCommand());
-        addCommand("kill",             new KillCommand());
-        addCommand("pickupAll",        new PickupAllCommand());
-        addCommand("waves",            new WavesCommand());
-        addCommand("winscreen",        new EndScreenCommand(game, GdxGame.ScreenType.WIN_SCREEN));
-        // addCommand("teleport",      new TeleportCommand());
+        addCommand("debug", new DebugCommand());
+        addCommand("deathScreen", new EndScreenCommand(game, GdxGame.ScreenType.DEATH_SCREEN));
+        addCommand("disableDamage", new DisableDamageCommand());
+        addCommand("doorOverride", new DoorOverrideCommand());
+        addCommand("infiniteStamina", new InfiniteStaminaCommand());
+        addCommand("infiniteDash", new InfiniteDashCommand());
+        addCommand("infiniteJumps", new InfiniteJumpsCommand());
+        addCommand("kill", new KillCommand());
+        addCommand("pickupAll", new PickupAllCommand());
+        addCommand("spawn", new SpawnCommand());
+        addCommand("teleport", new TeleportCommand());
+        addCommand("travel", new TravelCommand());
+        addCommand("waves", new WavesCommand());
+        addCommand("winScreen", new EndScreenCommand(game, GdxGame.ScreenType.WIN_SCREEN));
 
+        // Initial index build
         rebuildAutocompleteIndex();
     }
 
+    private static String extractFirstToken(String s) {
+        if (s == null) return "";
+        int i = 0;
+        while (i < s.length() && Character.isWhitespace(s.charAt(i))) i++;
+        int start = i;
+        while (i < s.length() && !Character.isWhitespace(s.charAt(i))) i++;
+        return s.substring(start, i);
+    }
+
+    private static String stripFirstToken(String s) {
+        if (s == null) return "";
+        int i = 0;
+        while (i < s.length() && Character.isWhitespace(s.charAt(i))) i++;
+        while (i < s.length() && !Character.isWhitespace(s.charAt(i))) i++;
+        return s.substring(i); // retains whitespace before args, OK for your parser
+    }
+
     // --- Public getters ---
-    public String  getEnteredMessage() { return enteredMessage; }
-    public boolean isOpen()            { return isOpen; }
+    public String getEnteredMessage() {
+        return enteredMessage;
+    }
+
+    public void setEnteredMessage(String text) {
+        enteredMessage = Objects.requireNonNullElse(text, "");
+        touchKeystroke();
+    }
+
+    public boolean isOpen() {
+        return isOpen;
+    }
 
     // --- Open/close ---
     public void toggleIsOpen() {
         if (isOpen) setClosed();
         else setOpen();
     }
+
     public void setOpen() {
         logger.debug("Opening terminal");
         isOpen = true;
     }
+
     public void setClosed() {
         logger.debug("Closing terminal");
         isOpen = false;
@@ -94,7 +133,9 @@ public class Terminal extends Component {
         indexDirty = true; // signal cache invalidation for suggestions
     }
 
-    /** Full reindex: rebuild tries from the current command set. */
+    /**
+     * Full reindex: rebuild tries from the current command set.
+     */
     public void rebuildAutocompleteIndex() {
         // recreate structures for a real "clear + build"
         trie = new RadixTrie();
@@ -129,6 +170,8 @@ public class Terminal extends Component {
         return cmd.action(args);
     }
 
+    // --- Autocomplete surface API for UI layer (TerminalDisplay) ---
+
     // --- Typing handlers (update debounce + invalidate suggestion cache) ---
     public void appendToMessage(char character) {
         logger.debug("Appending '{}' to message", character);
@@ -145,12 +188,6 @@ public class Terminal extends Component {
         }
     }
 
-    public void setEnteredMessage(String text) {
-        enteredMessage = Objects.requireNonNullElse(text, "");
-        touchKeystroke();
-    }
-
-    // --- Autocomplete surface API for UI layer (TerminalDisplay) ---
     /**
      * Returns up to 5 suggestions based on the current prefix (first token).
      * Debounced (~20ms). If there are no trie hits and prefix non-empty, falls back to BK-tree with
@@ -179,7 +216,9 @@ public class Terminal extends Component {
         return lastSuggestions;
     }
 
-    /** UI can call this to accept the top suggestion into the input. */
+    /**
+     * UI can call this to accept the top suggestion into the input.
+     */
     public void acceptTopSuggestion() {
         var suggestions = getAutocompleteSuggestions();
         if (suggestions.isEmpty()) return;
@@ -193,22 +232,5 @@ public class Terminal extends Component {
     private void touchKeystroke() {
         lastKeystrokeNs = System.nanoTime();
         lastPrefix = null; // invalidate cached prefix
-    }
-
-    private static String extractFirstToken(String s) {
-        if (s == null) return "";
-        int i = 0;
-        while (i < s.length() && Character.isWhitespace(s.charAt(i))) i++;
-        int start = i;
-        while (i < s.length() && !Character.isWhitespace(s.charAt(i))) i++;
-        return s.substring(start, i);
-    }
-
-    private static String stripFirstToken(String s) {
-        if (s == null) return "";
-        int i = 0;
-        while (i < s.length() && Character.isWhitespace(s.charAt(i))) i++;
-        while (i < s.length() && !Character.isWhitespace(s.charAt(i))) i++;
-        return s.substring(i); // retains whitespace before args, OK for your parser
     }
 }

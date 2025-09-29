@@ -14,10 +14,11 @@ import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.mockStatic;
 
 class WavesCommandTests {
-    private static ArrayList<String> noArgs() { return new ArrayList<>(); }
+    private static ArrayList<String> noArgs() {
+        return new ArrayList<>();
+    }
 
     @Test
     void triggersWaveHandling_whenPlayerFound() {

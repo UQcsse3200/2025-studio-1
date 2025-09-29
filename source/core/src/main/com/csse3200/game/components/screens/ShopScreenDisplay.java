@@ -6,26 +6,24 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Scaling;
+import com.csse3200.game.areas.ForestGameArea;
 import com.csse3200.game.components.shop.CatalogEntry;
 import com.csse3200.game.components.shop.CatalogService;
 import com.csse3200.game.components.shop.PurchaseError;
 import com.csse3200.game.components.shop.ShopManager;
-import com.csse3200.game.areas.ForestGameArea;
 import com.csse3200.game.services.ServiceLocator;
-import com.csse3200.game.ui.*;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.utils.Scaling;
-import com.badlogic.gdx.scenes.scene2d.ui.Container;
-import com.badlogic.gdx.scenes.scene2d.ui.Stack;
+import com.csse3200.game.ui.UIComponent;
 
 /**
  * Screen which displays the shop screen.
  * <p>
- *     Displays purchasable items which are clickable and trigger a purchase event. Displays
- *     current balance as well as error messages.
+ * Displays purchasable items which are clickable and trigger a purchase event. Displays
+ * current balance as well as error messages.
  * </p>
  */
 public class ShopScreenDisplay extends UIComponent {
@@ -42,14 +40,14 @@ public class ShopScreenDisplay extends UIComponent {
     // UI constants
     private static final float PANEL_W = 720f;
     private static final float PANEL_H = 600f;
-    private static final int   GRID_COLUMNS = 4;
+    private static final int GRID_COLUMNS = 4;
     private static final float CELL_W = 150f;
     private static final float CELL_H = 180f;
     private static final float ICON_SIZE = 96f;
 
     private static final Color PANEL_COLOR = Color.valueOf("0B132B");
     private static final Color TITLE_COLOR = Color.valueOf("00E5FF");
-    private static final Color GOLD        = Color.valueOf("FFD54F");
+    private static final Color GOLD = Color.valueOf("FFD54F");
 
     // Dependencies
     private final ForestGameArea game;
@@ -69,7 +67,8 @@ public class ShopScreenDisplay extends UIComponent {
     /**
      * UI component that displays the shop screen
      * Allows player to interact with the shop and displays relevant error messages.
-     * @param area Game area containing player
+     *
+     * @param area    Game area containing player
      * @param manager Shop manager to handle purchases
      */
     public ShopScreenDisplay(ForestGameArea area, ShopManager manager) {
@@ -77,9 +76,10 @@ public class ShopScreenDisplay extends UIComponent {
         this.catalog = manager.getCatalog();
         this.manager = manager;
     }
+
     /**
-    Creates a new ShopScreen Display and sets up UI components
-    **/
+     * Creates a new ShopScreen Display and sets up UI components
+     **/
     @Override
     public void create() {
         entity.getEvents().addListener("purchaseFailed", this::showError);
@@ -103,6 +103,7 @@ public class ShopScreenDisplay extends UIComponent {
 
     /**
      * Draw method overridden
+     *
      * @param batch Batch to render to.
      */
     @Override
@@ -112,21 +113,42 @@ public class ShopScreenDisplay extends UIComponent {
 
     /**
      * Returns the Stage associated with the shop screen
+     *
      * @return the stage object
      */
-    public Stage getStage() { return stage; }
+    public Stage getStage() {
+        return stage;
+    }
 
     /**
      * Cleans up resources and disposes of UI elements.
      */
     @Override
     public void dispose() {
-        if (root != null) { root.remove(); root = null; }
-        if (dimmer != null) { dimmer.remove(); dimmer = null; }
-        if (frame != null) { frame.remove(); frame = null; }
-        if (pixelTex != null) { pixelTex.dispose(); pixelTex = null; }
-        if (itemPopup != null) { itemPopup.dispose(); itemPopup = null; }
-        if (background != null) {background.remove(); background = null; }
+        if (root != null) {
+            root.remove();
+            root = null;
+        }
+        if (dimmer != null) {
+            dimmer.remove();
+            dimmer = null;
+        }
+        if (frame != null) {
+            frame.remove();
+            frame = null;
+        }
+        if (pixelTex != null) {
+            pixelTex.dispose();
+            pixelTex = null;
+        }
+        if (itemPopup != null) {
+            itemPopup.dispose();
+            itemPopup = null;
+        }
+        if (background != null) {
+            background.remove();
+            background = null;
+        }
         super.dispose();
     }
 
@@ -264,7 +286,10 @@ public class ShopScreenDisplay extends UIComponent {
                 skin.get("default", TextButton.TextButtonStyle.class)
         );
         closeBtn.addListener(new ChangeListener() {
-            @Override public void changed(ChangeEvent event, Actor actor) { hide(); }
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                hide();
+            }
         });
 
         // Two overlayed rows: one centers the button, one right-aligns balance

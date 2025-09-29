@@ -17,7 +17,7 @@ import org.mockito.Mockito;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
-class EnemyWavesTest{
+class EnemyWavesTest {
     private GameArea gameArea;
     private Entity player;
     private EntityService entityService;
@@ -31,6 +31,7 @@ class EnemyWavesTest{
 
     /**
      * Create one enemy with the given health
+     *
      * @param health The health that the enemy should have.
      * @return The enemy {@link Entity} with the given health
      */
@@ -45,6 +46,7 @@ class EnemyWavesTest{
 
     /**
      * Simulate time progression for tick evaluation
+     *
      * @param ms The time that is added on to the waveEndTime
      */
     private void advanceTimeAndTick(long ms) {
@@ -95,7 +97,7 @@ class EnemyWavesTest{
     @DisplayName("Start wave function actually spawns the wave")
     void testStartWaveSpawnsImmediatelyOnFirstCall() {
         enemyWaves.startWave();
-        verify(gameArea).spawnEnemies(anyInt(), anyInt(), anyFloat(), eq(player));
+        verify(gameArea).spawnEnemies(anyString(), anyInt(), anyFloat(), eq(player));
     }
 
     @Test
@@ -104,13 +106,13 @@ class EnemyWavesTest{
         when(gameArea.getBaseDifficultyScale()).thenReturn(2f);
 
         enemyWaves.startWave(); // spawns wave 1
-        verify(gameArea).spawnEnemies(anyInt(), anyInt(), eq(2f), eq(player));
+        verify(gameArea).spawnEnemies(anyString(), anyInt(), eq(2f), eq(player));
 
         entities.clear();
         advanceTimeAndTick(WAVE_DELAY_MS + 100);
 
         // Scaling test
-        verify(gameArea).spawnEnemies(anyInt(), anyInt(), eq(2.5f), eq(player));
+        verify(gameArea).spawnEnemies(anyString(), anyInt(), eq(2.5f), eq(player));
     }
 
     @Test
@@ -139,7 +141,7 @@ class EnemyWavesTest{
         verifyNoInteractions(gameArea);
 
         advanceTimeAndTick(WAVE_DELAY_MS + 100);
-        verify(gameArea).spawnEnemies(anyInt(), anyInt(), anyFloat(), eq(player));
+        verify(gameArea).spawnEnemies(anyString(), anyInt(), anyFloat(), eq(player));
     }
 
     @Test
@@ -180,7 +182,7 @@ class EnemyWavesTest{
         when(gameArea.getBaseDifficultyScale()).thenReturn(2f);
         enemyWaves.startWave();
 
-        verify(gameArea).spawnEnemies(anyInt(), anyInt(), anyFloat(), eq(player));
+        verify(gameArea).spawnEnemies(anyString(), anyInt(), anyFloat(), eq(player));
     }
 
     @Test
@@ -196,7 +198,7 @@ class EnemyWavesTest{
         reset(gameArea);
 
         advanceTimeAndTick(WAVE_DELAY_MS + 100);
-        verify(gameArea).spawnEnemies(anyInt(), anyInt(), anyFloat(), eq(player));
+        verify(gameArea).spawnEnemies(anyString(), anyInt(), anyFloat(), eq(player));
     }
 
     @Test
@@ -277,10 +279,10 @@ class EnemyWavesTest{
     @Test
     @DisplayName("Check that the correct room number is passed to spawnEnemies()")
     void testDelegatesWithCorrectRoomNumber() {
-        when(gameArea.getRoomNumber()).thenReturn(3);
+        when(gameArea.toString()).thenReturn("Mainhall");
 
         enemyWaves.startWave();
 
-        verify(gameArea).spawnEnemies(eq(3), anyInt(), anyFloat(), eq(player));
+        verify(gameArea).spawnEnemies(eq("Mainhall"), anyInt(), anyFloat(), eq(player));
     }
 }

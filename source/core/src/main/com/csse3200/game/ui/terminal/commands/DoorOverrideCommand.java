@@ -58,7 +58,9 @@ public class DoorOverrideCommand implements Command {
         return true;
     }
 
-    /** Valid args are exactly one token: "on" or "off". */
+    /**
+     * Valid args are exactly one token: "on" or "off".
+     */
     boolean isValid(ArrayList<String> args) {
         if (args == null || args.size() != 1) return false;
         String a = args.getFirst();

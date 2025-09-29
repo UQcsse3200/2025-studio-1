@@ -50,7 +50,7 @@ class TerminalAutocompleteTest {
                 .toList();
 
         assertEquals(
-                List.of("damageMultiplier", "deathscreen", "debug", "disableDamage", "doorOverride"),
+                List.of("damageMultiplier", "deathScreen", "debug", "disableDamage", "doorOverride"),
                 s
         );
     }

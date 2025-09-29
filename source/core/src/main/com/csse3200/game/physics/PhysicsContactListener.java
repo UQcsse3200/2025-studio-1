@@ -21,40 +21,39 @@ import org.slf4j.LoggerFactory;
  * otherFixture)
  */
 public class PhysicsContactListener implements ContactListener {
-  private static final Logger logger = LoggerFactory.getLogger(PhysicsContactListener.class);
+    private static final Logger logger = LoggerFactory.getLogger(PhysicsContactListener.class);
 
-  @Override
-  public void beginContact(Contact contact) {
-    triggerEventOn(contact.getFixtureA(), "collisionStart", contact.getFixtureB());
-    triggerEventOn(contact.getFixtureB(), "collisionStart", contact.getFixtureA());
-  }
-
-  @Override
-  public void endContact(Contact contact) {
-    triggerEventOn(contact.getFixtureA(), "collisionEnd", contact.getFixtureB());
-    triggerEventOn(contact.getFixtureB(), "collisionEnd", contact.getFixtureA());
-  }
-
-  @Override
-  public void preSolve(Contact contact, Manifold oldManifold) {
-    // Nothing to do before resolving contact
-  }
-
-  @Override
-  public void postSolve(Contact contact, ContactImpulse impulse) {
-    // Nothing to do after resolving contact
-  }
-
-  private void triggerEventOn(Fixture fixture, String evt, Fixture otherFixture) {
-    if (!(fixture.getBody().getUserData() instanceof BodyUserData) ||
-        !(otherFixture.getBody().getUserData() instanceof BodyUserData)) {
-      return; // Safety: skip if no entity data
+    @Override
+    public void beginContact(Contact contact) {
+        triggerEventOn(contact.getFixtureA(), "collisionStart", contact.getFixtureB());
+        triggerEventOn(contact.getFixtureB(), "collisionStart", contact.getFixtureA());
     }
 
-    BodyUserData userData = (BodyUserData) fixture.getBody().getUserData();
-    if (userData != null && userData.entity != null) {
-      logger.debug("{} on entity {}", evt, userData.entity);
-      userData.entity.getEvents().trigger(evt, fixture, otherFixture);
+    @Override
+    public void endContact(Contact contact) {
+        triggerEventOn(contact.getFixtureA(), "collisionEnd", contact.getFixtureB());
+        triggerEventOn(contact.getFixtureB(), "collisionEnd", contact.getFixtureA());
     }
-  }
+
+    @Override
+    public void preSolve(Contact contact, Manifold oldManifold) {
+        // Nothing to do before resolving contact
+    }
+
+    @Override
+    public void postSolve(Contact contact, ContactImpulse impulse) {
+        // Nothing to do after resolving contact
+    }
+
+    private void triggerEventOn(Fixture fixture, String evt, Fixture otherFixture) {
+        if (!(fixture.getBody().getUserData() instanceof BodyUserData userData) ||
+                !(otherFixture.getBody().getUserData() instanceof BodyUserData)) {
+            return; // Safety: skip if no entity data
+        }
+
+        if (userData != null && userData.entity != null) {
+            logger.debug("{} on entity {}", evt, userData.entity);
+            userData.entity.getEvents().trigger(evt, fixture, otherFixture);
+        }
+    }
 }

@@ -7,20 +7,20 @@ import com.badlogic.gdx.graphics.Color;
  * Uses a higher rendering layer than the default layer.
  */
 public class DoorRenderComponent extends SolidColorRenderComponent {
-  private static final int DOOR_LAYER = 999; // Very high layer to ensure doors are absolutely on top of everything
+    private static final int DOOR_LAYER = 999; // Very high layer to ensure doors are absolutely on top of everything
 
-  public DoorRenderComponent(Color color) {
-    super(color);
-  }
+    public DoorRenderComponent(Color color) {
+        super(color);
+    }
 
-  @Override
-  public int getLayer() {
-    return DOOR_LAYER;
-  }
+    @Override
+    public int getLayer() {
+        return DOOR_LAYER;
+    }
 
-  @Override
-  public float getZIndex() {
-    // Doors should always be rendered on top within their layer, regardless of Y position
-    return Float.MAX_VALUE;
-  }
+    @Override
+    public float getZIndex() {
+        // Doors should always be rendered on top within their layer, regardless of Y position
+        return Float.MAX_VALUE;
+    }
 }

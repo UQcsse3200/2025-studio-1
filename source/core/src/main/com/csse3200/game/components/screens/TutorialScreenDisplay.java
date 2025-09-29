@@ -3,7 +3,10 @@ package com.csse3200.game.components.screens;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Scaling;
@@ -22,14 +25,22 @@ import java.util.List;
  * and lifecycle management (stage root, styles, and auto-disposal).
  */
 public class TutorialScreenDisplay extends BaseScreenDisplay {
-    /** Ordered list of tutorial steps to display. */
+    /**
+     * Ordered list of tutorial steps to display.
+     */
     private final List<TutorialStep> steps;
-    /** Index of the currently displayed tutorial step. */
+    /**
+     * Index of the currently displayed tutorial step.
+     */
     protected int currentStep = 0;
 
-    /** Left navigation arrow texture, loaded once per screen instance. */
+    /**
+     * Left navigation arrow texture, loaded once per screen instance.
+     */
     private Texture arrowLeft;
-    /** Right navigation arrow texture, loaded once per screen instance. */
+    /**
+     * Right navigation arrow texture, loaded once per screen instance.
+     */
     private Texture arrowRight;
 
     /**
@@ -50,7 +61,7 @@ public class TutorialScreenDisplay extends BaseScreenDisplay {
     @Override
     public void create() {
         // Load per-screen textures once, then let BaseScreenDisplay set up stage/root/skin
-        arrowLeft  = new Texture("images/arrow-left.png");
+        arrowLeft = new Texture("images/arrow-left.png");
         arrowRight = new Texture("images/arrow-right.png");
         super.create();
     }
@@ -77,12 +88,12 @@ public class TutorialScreenDisplay extends BaseScreenDisplay {
         TutorialStep step = steps.get(stepIndex);
 
         // Title
-        addTitle(root, step.getTitle(), 3f, null, 20f);
+        addTitle(root, step.title(), 3f, null, 20f);
 
         // Description (clone small style; keep text white)
         Label.LabelStyle small = new Label.LabelStyle(skin.get("small", Label.LabelStyle.class));
         small.fontColor = skin.getColor("white");
-        Label desc = new Label(step.getDescription(), small);
+        Label desc = new Label(step.description(), small);
         desc.setFontScale(2f);
         root.add(desc).colspan(2).center().padBottom(20f);
         root.row();
@@ -93,9 +104,9 @@ public class TutorialScreenDisplay extends BaseScreenDisplay {
         ImageButton nextBtn = new ImageButton(new TextureRegionDrawable(new TextureRegion(arrowRight)));
 
         AnimatedClipImage anim = null;
-        if (step.getClip() != null) {
+        if (step.clip() != null) {
             try {
-                anim = new AnimatedClipImage(step.getClip());
+                anim = new AnimatedClipImage(step.clip());
                 anim.setScaling(Scaling.fit);
                 anim.setSize(800f, 450f);
             } catch (Exception ex) {
@@ -125,7 +136,8 @@ public class TutorialScreenDisplay extends BaseScreenDisplay {
 
         // Listeners
         prevBtn.addListener(new ChangeListener() {
-            @Override public void changed(ChangeEvent event, Actor actor) {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
                 if (currentStep > 0) {
                     currentStep--;
                     showStep(currentStep);
@@ -134,7 +146,8 @@ public class TutorialScreenDisplay extends BaseScreenDisplay {
         });
 
         nextBtn.addListener(new ChangeListener() {
-            @Override public void changed(ChangeEvent event, Actor actor) {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
                 if (currentStep < steps.size() - 1) {
                     currentStep++;
                     showStep(currentStep);
@@ -149,8 +162,14 @@ public class TutorialScreenDisplay extends BaseScreenDisplay {
      */
     @Override
     public void dispose() {
-        if (arrowLeft  != null) { arrowLeft.dispose();  arrowLeft = null; }
-        if (arrowRight != null) { arrowRight.dispose(); arrowRight = null; }
+        if (arrowLeft != null) {
+            arrowLeft.dispose();
+            arrowLeft = null;
+        }
+        if (arrowRight != null) {
+            arrowRight.dispose();
+            arrowRight = null;
+        }
         super.dispose();
     }
 }

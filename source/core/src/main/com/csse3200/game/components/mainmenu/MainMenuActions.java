@@ -1,7 +1,11 @@
 package com.csse3200.game.components.mainmenu;
 
 import com.csse3200.game.GdxGame;
+import com.csse3200.game.areas.difficulty.Difficulty;
+import com.csse3200.game.areas.difficulty.DifficultyType;
 import com.csse3200.game.components.Component;
+import com.csse3200.game.services.ServiceLocator;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -10,56 +14,71 @@ import org.slf4j.LoggerFactory;
  * events is triggered.
  */
 public class MainMenuActions extends Component {
-  private static final Logger logger = LoggerFactory.getLogger(MainMenuActions.class);
-  private GdxGame game;
+    private static final Logger logger = LoggerFactory.getLogger(MainMenuActions.class);
+    private final GdxGame game;
 
-  public MainMenuActions(GdxGame game) {
-    this.game = game;
-  }
+    public MainMenuActions(GdxGame game) {
+        this.game = game;
+    }
 
-  @Override
-  public void create() {
-    entity.getEvents().addListener("start", this::onStart);
-    entity.getEvents().addListener("load", this::onLoad);
-    entity.getEvents().addListener("exit", this::onExit);
-    entity.getEvents().addListener("settings", this::onSettings);
-    entity.getEvents().addListener("tutorial", this::onTutorial);
-  }
+    @Override
+    public void create() {
+        entity.getEvents().addListener("start", this::onStart);
+        entity.getEvents().addListener("load", this::onLoad);
+        entity.getEvents().addListener("exit", this::onExit);
+        entity.getEvents().addListener("settings", this::onSettings);
+        entity.getEvents().addListener("tutorial", this::onTutorial);
+        entity.getEvents().addListener("difficulty", this::onDifficulty);
+    }
 
-  /**
-   * Swaps to the Main Game screen.
-   */
-  private void onStart() {
-    logger.info("Start game");
-    game.setScreen(GdxGame.ScreenType.STORY);
-  }
+    /**
+     * Swaps to the Main Game screen.
+     */
+    private void onStart() {
+        logger.info("Start game");
 
-  /**
-   * Intended for loading a saved game state.
-   * Load functionality is not actually implemented.
-   */
-  private void onLoad() {
-    logger.info("Load game");
-  }
+        // Set the difficulty if it has not been set
+        if (ServiceLocator.getDifficulty() == null) {
+            ServiceLocator.registerDifficulty(new Difficulty(DifficultyType.NORMAL));
+        }
+ 
+        logger.info("Started game with difficulty: {}", ServiceLocator.getDifficulty());
 
-  /**
-   * Exits the game.
-   */
-  private void onExit() {
-    logger.info("Exit game");
-    game.exit();
-  }
+        game.setScreen(GdxGame.ScreenType.STORY);
+    }
 
-  /**
-   * Swaps to the Settings screen.
-   */
-  private void onSettings() {
-    logger.info("Launching settings screen");
-    game.setScreen(GdxGame.ScreenType.SETTINGS);
-  }
+    /**
+     * Intended for loading a saved game state.
+     * Load functionality is not actually implemented.
+     */
+    private void onLoad() {
+        logger.info("Load game");
+        game.setScreen(GdxGame.ScreenType.LOAD_GAME);
+    }
 
-  private void onTutorial() {
-    logger.info("Tutorial triggered");
-    game.setScreen(GdxGame.ScreenType.TUTORIAL_SCREEN);
-  }
+    /**
+     * Exits the game.
+     */
+    private void onExit() {
+        logger.info("Exit game");
+        game.exit();
+    }
+
+    /**
+     * Swaps to the Settings screen.
+     */
+    private void onSettings() {
+        logger.info("Launching settings screen");
+        game.setScreen(GdxGame.ScreenType.SETTINGS);
+    }
+
+    private void onTutorial() {
+        logger.info("Tutorial triggered");
+        game.setScreen(GdxGame.ScreenType.TUTORIAL_SCREEN);
+    }
+
+    private void onDifficulty() {
+        logger.info("Launching Difficulty screen");
+        game.setScreen(GdxGame.ScreenType.DIFFICULTY_SCREEN);
+    }
 }

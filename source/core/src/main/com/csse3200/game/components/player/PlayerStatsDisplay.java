@@ -1,67 +1,67 @@
 package com.csse3200.game.components.player;
 
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.csse3200.game.components.AmmoStatsComponent;
 import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.components.MagazineComponent;
+import com.csse3200.game.components.enemy.EnemyDeathRewardComponent;
 import com.csse3200.game.components.items.ItemComponent;
+import com.csse3200.game.components.screens.BaseScreenDisplay;
 import com.csse3200.game.entities.Entity;
+import com.csse3200.game.entities.EntityService;
 import com.csse3200.game.entities.configs.ItemTypes;
-import com.csse3200.game.ui.UIComponent;
+import com.csse3200.game.services.ServiceLocator;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
+import static java.lang.Math.clamp;
 
-/** A UI component for displaying player stats (health, stamina, processor, ammo). */
-public class PlayerStatsDisplay extends UIComponent {
+public class PlayerStatsDisplay extends BaseScreenDisplay {
     // UI constants
     private static final float BAR_WIDTH = 200f;
     private static final float BAR_HEIGHT = 30f;
+    private static final float PAD = 5f;
+    private static final int PCT_MAX = 100;
 
     // Colours
     private static final Color COLOR_BG = Color.DARK_GRAY;
     private static final Color COLOR_HEALTH = Color.RED;
     private static final Color COLOR_STAMINA = Color.GREEN;
-
-    // Track textures we create so we can dispose them explicitly
-    private final List<Texture> disposableTextures = new ArrayList<>();
-
-    // Cached UI
-    private Table table;
+    // Ammo formats (dedupe string literals)
+    private static final String AMMO_SINGLE_FMT = "Ammo: %d";
+    private static final String AMMO_DUAL_FMT = "Ammo: %d/%d";
+    // Cached components (may be null if not present)
+    private CombatStatsComponent combat;
+    private InventoryComponent inventory;
+    private AmmoStatsComponent ammoStats;
+    // UI
     private ProgressBar healthBar;
     private ProgressBar staminaBar;
     private Label processorLabel;
     private Label ammoLabel;
 
-    // Cached components (avoid repeated lookups)
-    private CombatStatsComponent combatStats;
-    private AmmoStatsComponent ammoStats;
-    private InventoryComponent inventory;
+    public PlayerStatsDisplay() {
+        super(null);
+    }
 
     @Override
     public void create() {
-        super.create();
-
-        // cache frequently-used components once
-        combatStats = entity.getComponent(CombatStatsComponent.class);
-        ammoStats = entity.getComponent(AmmoStatsComponent.class);
+        // Cache BEFORE super.create(), since super.create() -> buildUI() needs these
+        combat = entity.getComponent(CombatStatsComponent.class);
         inventory = entity.getComponent(InventoryComponent.class);
+        ammoStats = entity.getComponent(AmmoStatsComponent.class);
 
-        addActors();
+        super.create(); // sets up root/neon and calls buildUI(root)
+        registerListeners();
+    }
 
+    private void registerListeners() {
         entity.getEvents().addListener("updateHealth", this::updatePlayerHealthUI);
-        entity.getEvents().addListener("updateProcessor", this::updatePlayerProcessorUI);
         entity.getEvents().addListener("staminaChanged", this::updatePlayerStaminaUI);
+        entity.getEvents().addListener("updateProcessor", this::updatePlayerProcessorUI);
         entity.getEvents().addListener("shoot", this::updateAmmoUI);
         entity.getEvents().addListener("reload", this::updateAmmoUI);
         entity.getEvents().addListener("pick up", this::updateAmmoUI);
@@ -69,173 +69,152 @@ public class PlayerStatsDisplay extends UIComponent {
         entity.getEvents().addListener("focus item", this::updateAmmoUIAfterSwitch);
     }
 
-    /**
-     * Helper to create a colored drawable from a 1x1 pixel texture.
-     */
-    private Drawable makeColorDrawable(Color color) {
-        Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
-        try {
-            pixmap.setColor(color);
-            pixmap.fill();
-            Texture texture = new Texture(pixmap);
-            disposableTextures.add(texture);
-            return new TextureRegionDrawable(new TextureRegion(texture));
-        } finally {
-            pixmap.dispose();
-        }
+    /* Build & draw */
+    @Override
+    protected void buildUI(Table root) {
+        // Health bar: use real max if available, otherwise [0..100]
+        int healthVal = (combat != null) ? combat.getHealth() : 0;
+        int maxHealth = (combat != null) ? combat.getMaxHealth() : PCT_MAX;
+
+        healthBar = new ProgressBar(0, maxHealth, 1, false, makeBarStyle(COLOR_HEALTH));
+        healthBar.setAnimateDuration(0f);
+        healthBar.setValue(clamp(healthVal, 0, maxHealth));
+
+        // Stamina bar as percentage [0..100]
+        staminaBar = new ProgressBar(0, PCT_MAX, 1, false, makeBarStyle(COLOR_STAMINA));
+        staminaBar.setAnimateDuration(0f);
+        staminaBar.setValue(PCT_MAX);
+
+        // Processor label
+        int processor = (inventory != null) ? inventory.getProcessor() : 0;
+        processorLabel = new Label(formatProcessor(processor), skin, "large");
+
+        // Ammo label
+        ammoLabel = new Label(formatAmmoLabel(), skin, "large");
+
+        // Layout top-left
+        root.top().left().padTop(45f).padLeft(5f);
+        root.add(healthBar).width(BAR_WIDTH).height(BAR_HEIGHT).pad(PAD);
+        root.row();
+        root.add(staminaBar).width(BAR_WIDTH).height(BAR_HEIGHT).pad(PAD);
+        root.row();
+        root.add(processorLabel).left().padLeft(10f);
+        root.row();
+        root.add(ammoLabel).left().padLeft(10f);
+        root.row();
     }
 
-    /**
-     * Creates a simple horizontal bar style with a colored fill and dark background.
-     */
+    @Override
+    public void draw(SpriteBatch batch) { /* Stage handles rendering */ }
+
+    /* Update handlers */
+
+    public void updatePlayerHealthUI(int health) {
+        if (healthBar == null) return;
+        float max = healthBar.getMaxValue();
+        healthBar.setValue(clamp(health, 0, (int) max));
+    }
+
+    public void updatePlayerStaminaUI(int current, int max) {
+        if (staminaBar == null || max <= 0) return;
+        float pct = 100f * current / max;
+        staminaBar.setValue(clamp(pct, 0f, 100f));
+    }
+
+    public void updatePlayerProcessorUI(int processor) {
+        if (processorLabel == null) return;
+        processorLabel.setText(formatProcessor(processor));
+    }
+
+    public void updateAmmoUI() {
+        if (ammoLabel == null) return;
+        ammoLabel.setText(formatAmmoLabel());
+    }
+
+    public void updateAmmoUIAfterSwitch(int focusItem) {
+        if (ammoLabel == null) return;
+        ammoLabel.setText(formatAmmoLabelAfterSwitch(focusItem));
+    }
+
+    /* =========================
+       Internals
+       ========================= */
+
     private ProgressBar.ProgressBarStyle makeBarStyle(Color fill) {
+        TextureRegionDrawable bg = new TextureRegionDrawable(new com.badlogic.gdx.graphics.g2d.TextureRegion(makeSolidTexture(COLOR_BG)));
+        TextureRegionDrawable before = new TextureRegionDrawable(new com.badlogic.gdx.graphics.g2d.TextureRegion(makeSolidTexture(fill)));
+
+        bg.setMinHeight(PlayerStatsDisplay.BAR_HEIGHT);
+        before.setMinHeight(PlayerStatsDisplay.BAR_HEIGHT);
+
         ProgressBar.ProgressBarStyle style = new ProgressBar.ProgressBarStyle();
-        style.background = makeColorDrawable(COLOR_BG);
-        style.background.setMinHeight(BAR_HEIGHT);
-        style.knobBefore = makeColorDrawable(fill);
-        style.knobBefore.setMinHeight(BAR_HEIGHT);
+        style.background = bg;
+        style.knobBefore = before;
         style.knob = null; // continuous fill
         return style;
     }
 
-    /**
-     * Creates actors and positions them on the stage using a table.
-     */
-    private void addActors() {
-        table = new Table();
-        table.top().left();
-        table.setFillParent(true);
-        table.padTop(45f).padLeft(5f);
-
-        // Health bar
-        ProgressBar.ProgressBarStyle healthBarStyle = makeBarStyle(COLOR_HEALTH);
-        int health = combatStats != null ? combatStats.getHealth() : 0;
-        healthBar = new ProgressBar(0, 100, 1, false, healthBarStyle);
-        healthBar.setValue(health);
-        healthBar.setAnimateDuration(0f);
-
-        // Stamina bar (0..100 shows percent so UI is decoupled from gameplay max)
-        ProgressBar.ProgressBarStyle staminaStyle = makeBarStyle(COLOR_STAMINA);
-        staminaBar = new ProgressBar(0, 100, 1, false, staminaStyle);
-        staminaBar.setValue(100);
-        staminaBar.setAnimateDuration(0f);
-
-        // Processor label
-        int processor = inventory != null ? inventory.getProcessor() : 0;
-        processorLabel = new Label(String.format(Locale.ROOT, "Processor: %d", processor), skin, "large");
-
-        // Ammo label
-        int ammoReserves = ammoStats != null ? ammoStats.getAmmo() : 0;
-        ammoLabel = new Label(String.format(Locale.ROOT, "Ammo: %d", ammoReserves), skin, "large");
-
-        // Layout
-        table.add(healthBar).width(BAR_WIDTH).height(BAR_HEIGHT).pad(5);
-        table.row();
-        table.add(staminaBar).width(BAR_WIDTH).height(BAR_HEIGHT).pad(5);
-        table.row();
-        table.add(processorLabel).left().padLeft(10f);
-        table.row();
-        table.add(ammoLabel).left().padLeft(10f);
-        table.row();
-
-        // IMPORTANT: add to stage so it actually renders
-        stage.addActor(table);
+    private String formatProcessor(int p) {
+        return String.format("Processor: %d", p);
     }
 
-    @Override
-    public void draw(SpriteBatch batch) {
-        // draw is handled by the stage
-    }
+    // Centralised ammo formatting (DRY)
+    private String formatAmmo(Entity equipped, int reserves) {
+        if (equipped == null) return String.format(AMMO_SINGLE_FMT, reserves);
 
-    /**
-     * Updates the player's health on the UI (expects 0..100).
-     */
-    public void updatePlayerHealthUI(int health) {
-        if (healthBar != null) healthBar.setValue(Math.clamp(health, 0, 100));
-    }
-
-    /**
-     * Updates the player's stamina on the UI.
-     */
-    public void updatePlayerStaminaUI(int current, int max) {
-        if (staminaBar == null || max <= 0) return;
-        float pct = (current * 100f) / max;
-        staminaBar.setValue(Math.clamp(pct, 0f, 100f));
-    }
-
-    /**
-     * Updates the player's processor on the UI.
-     */
-    public void updatePlayerProcessorUI(int processor) {
-        if (processorLabel != null) {
-            processorLabel.setText(String.format(Locale.ROOT, "Processor: %d", processor));
+        ItemComponent info = equipped.getComponent(ItemComponent.class);
+        if (info == null || info.getType() != ItemTypes.RANGED) {
+            return String.format(AMMO_SINGLE_FMT, reserves);
         }
+
+        MagazineComponent mag = equipped.getComponent(MagazineComponent.class);
+        int inMag = (mag != null) ? mag.getCurrentAmmo() : 0;
+        return String.format(AMMO_DUAL_FMT, reserves, inMag);
     }
 
-    /**
-     * Updates the ammo display (shoot/reload/pickup/etc.).
-     */
-    public void updateAmmoUI() {
-        if (ammoLabel == null) return;
-
-        int reserves = ammoStats != null ? ammoStats.getAmmo() : 0;
-        Entity equipped = inventory != null ? inventory.getCurrItem() : null;
-        setAmmoText(reserves, equipped);
+    private String formatAmmoLabel() {
+        int reserves = (ammoStats != null) ? ammoStats.getAmmo() : 0;
+        Entity equipped = (inventory != null) ? inventory.getCurrItem() : null;
+        return formatAmmo(equipped, reserves);
     }
 
-    /**
-     * Updates the ammo display when the inventory slot is switched.
-     */
-    public void updateAmmoUIAfterSwitch(int focusItem) {
-        if (ammoLabel == null) return;
-
-        int reserves = ammoStats != null ? ammoStats.getAmmo() : 0;
+    private String formatAmmoLabelAfterSwitch(int focusItem) {
+        int reserves = (ammoStats != null) ? ammoStats.getAmmo() : 0;
         Entity equipped = (inventory != null) ? inventory.get(focusItem) : null;
-        setAmmoText(reserves, equipped);
+        return formatAmmo(equipped, reserves);
     }
 
-    private void setAmmoText(int reserves, Entity equipped) {
-        // default: show reserves only
-        CharSequence text = String.format(Locale.ROOT, "Ammo: %d", reserves);
+    /**
+     * Debug helper: kill a single enemy with rewards.
+     * (No continue/break warnings; early-return exits loop on first kill.)
+     */
+    @SuppressWarnings("unused")
+    private void killOneEnemy() {
+        EntityService es = ServiceLocator.getEntityService();
+        if (es == null) {
+            logger.debug("No EntityService registered; cannot kill enemy");
+            return;
+        }
+        for (Entity e : es.getEntities()) {
+            boolean isPlayer = (e == this.entity);
+            CombatStatsComponent stats = e.getComponent(CombatStatsComponent.class);
+            boolean invalid = (stats == null || stats.getHealth() <= 0);
+            boolean noReward = (e.getComponent(EnemyDeathRewardComponent.class) == null);
 
-        if (equipped != null) {
-            ItemComponent itemInfo = equipped.getComponent(ItemComponent.class);
-            if (itemInfo != null && itemInfo.getType() == ItemTypes.RANGED) {
-                MagazineComponent mag = equipped.getComponent(MagazineComponent.class);
-                if (mag != null) {
-                    text = String.format(Locale.ROOT, "Ammo: %d/%d", reserves, mag.getCurrentAmmo());
-                }
+            if (!isPlayer && !invalid && !noReward) {
+                logger.debug("Killing enemy {} via debug button", e);
+                stats.setHealth(0);
+                return; // stop after killing one
             }
         }
-        ammoLabel.setText(text);
     }
 
-    /**
-     * For use in test code
-     */
+    /* ---- Test hooks ---- */
     protected void setHealthBar(ProgressBar bar) {
         this.healthBar = bar;
     }
 
-    /**
-     * For use in test code
-     */
     protected void setProcessorLabel(Label label) {
         this.processorLabel = label;
-    }
-
-    @Override
-    public void dispose() {
-        super.dispose();
-        if (table != null) table.remove();
-        if (healthBar != null) healthBar.remove();
-        if (staminaBar != null) staminaBar.remove();
-        if (processorLabel != null) processorLabel.remove();
-        if (ammoLabel != null) ammoLabel.remove();
-
-        for (Texture tex : disposableTextures) {
-            if (tex != null) tex.dispose();
-        }
-        disposableTextures.clear();
     }
 }
