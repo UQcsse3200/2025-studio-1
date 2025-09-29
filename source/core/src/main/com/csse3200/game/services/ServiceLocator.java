@@ -31,6 +31,7 @@ public class ServiceLocator {
     private static Entity player;
     private static MusicService musicService;
     private static Difficulty difficulty;
+    private static ButtonSoundService buttonSoundService;
 
     private static Float cachedPlayerStamina; // preserved across area transitions
     private static Integer cachedPlayerHealth; // preserved across area transitions
@@ -86,6 +87,10 @@ public class ServiceLocator {
 
     public static Difficulty getDifficulty() {
         return difficulty;
+    }
+
+    public static ButtonSoundService getButtonSoundService() {
+        return buttonSoundService;
     }
 
     public static void registerGameArea(GameArea theArea) {
@@ -167,6 +172,11 @@ public class ServiceLocator {
     public static void registerDifficulty(Difficulty source) {
         logger.debug("Registering difficulty {}", source);
         difficulty = source;
+    }
+
+    public static void registerButtonSoundService(ButtonSoundService source) {
+        logger.debug("Registering button sound service {}", source);
+        buttonSoundService = source;
     }
 
     public static void clear() {
