@@ -4,12 +4,15 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.components.KeycardGateComponent;
 import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import com.csse3200.game.components.items.ItemHoldComponent;
+import com.csse3200.game.components.player.ItemPickUpComponent;
+import com.csse3200.game.components.player.PlayerEquipComponent;
 import com.csse3200.game.components.minigames.robotFighting.RobotFightingGame;
 import com.csse3200.game.components.player.InventoryComponent;
 import com.csse3200.game.components.shop.CatalogService;
@@ -29,6 +32,9 @@ import com.csse3200.game.entities.factories.items.ItemFactory;
 import com.csse3200.game.entities.factories.items.WeaponsFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.entities.spawner.ItemSpawner;
+import com.csse3200.game.physics.PhysicsLayer;
+import com.csse3200.game.physics.components.HitboxComponent;
+import com.csse3200.game.physics.components.PhysicsComponent;
 import com.csse3200.game.rendering.AnimationRenderComponent;
 import com.csse3200.game.rendering.TextureRenderComponent;
 import com.csse3200.game.services.ResourceService;
@@ -94,13 +100,11 @@ public class ForestGameArea extends GameArea {
             "images/dagger.png",
             "images/laser_shot.png",
             "images/Spawn.png",
-            "images/SpawnResize.png",
             "images/LobbyWIP.png",
             "images/door.png",
             "images/KeycardDoor.png",
             "images/player.png",
             "images/mud.png",
-            "images/heart.png",
             "images/healthBench.png",
             "images/laserball.png",
             "images/computerBench.png",
@@ -113,14 +117,12 @@ public class ForestGameArea extends GameArea {
             "images/waterBullet.png",
             "images/VendingMachine.png",
             HEART,
-            "images/heart.png",
             "images/laserball.png",
             "images/MarblePlatform.png",
             "images/computerBench.png",
             "images/monster.png",
             "images/electric_zap.png",
             "images/lightning_bottle.png",
-            "images/Shipping.png",
             "images/ShipmentBoxLid.png",
             "images/ShipmentCrane.png",
             "images/Conveyor.png",
@@ -130,7 +132,15 @@ public class ForestGameArea extends GameArea {
             "foreg_sprites/furniture/ServerRack.png",
             "foreg_sprites/furniture/ServerRack2.png",
             "foreg_sprites/furniture/Vent.png",
-            "images/Storage.png"
+            "images/Storage.png",
+            "images/casino.png"
+    };
+
+    private static final String[] backgroundTextures = {
+            "backgrounds/Reception.png",
+            "backgrounds/Shipping.png",
+            "backgrounds/SpawnResize.png",
+            "backgrounds/Storage.png"
     };
 
     /**
@@ -240,7 +250,8 @@ public class ForestGameArea extends GameArea {
             "sounds/shot_failed.mp3",
             "sounds/reload.mp3",
             "sounds/laser_blast.mp3",
-            "sounds/ammo_replenished.mp3"};
+            "sounds/ammo_replenished.mp3",
+            "sounds/upgradeSound.mp3"};
 
     private static final String[] playerSound1 = {"sounds/jump.mp3"};
     private static final String[] enemySounds = {"sounds/enemyDamage.mp3", "sounds/enemyDeath.mp3"};
@@ -278,16 +289,19 @@ public class ForestGameArea extends GameArea {
      */
     @Override
     public void create() {
+        this.baseScaling = 1f;
+
         ServiceLocator.registerGameArea(this);
         loadAssets();
         displayUI();
         spawnTerrain();
+        player = spawnPlayer();
+        ServiceLocator.registerPlayer(player);
+
         spawnComputerBench();
         spawnHealthBench();
         spawnSpeedBench();
 
-        player = spawnPlayer();
-        ServiceLocator.registerPlayer(player);
         spawnFloor();
         spawnBottomRightDoor();
         spawnMarblePlatforms();
@@ -304,8 +318,8 @@ public class ForestGameArea extends GameArea {
         itemSpawner.spawnItems(ItemSpawnConfig.forestmap());
 
         // Place a keycard on the floor so the player can unlock the door
-        float keycardX = 1f;
-        float keycardY = 15f;
+        float keycardX = 3f;
+        float keycardY = 7f;
         Entity keycard = KeycardFactory.createKeycard(1);
         keycard.setPosition(new Vector2(keycardX, keycardY));
         spawnEntity(keycard);
@@ -392,6 +406,10 @@ public class ForestGameArea extends GameArea {
             rightDoor.setPosition(rightX - WALL_WIDTH - 0.001f, rightDoorY);
             rightDoor.addComponent(new com.csse3200.game.components.DoorComponent(() -> this.loadNextLevel()));
             // spawnEntity(rightDoor);
+
+            // Left edge wall with door (used helper instead of manual split)
+            Bounds b = getCameraBounds(cameraComponent);
+            addVerticalDoorLeft(b, WALL_WIDTH, this::loadCasino);
         }
     }
 
@@ -403,6 +421,10 @@ public class ForestGameArea extends GameArea {
         roomNumber++;
         // Use the safe, render-thread transition helper
         clearAndLoad(() -> new Reception(terrainFactory, cameraComponent));
+    }
+
+    private void loadCasino() {
+        clearAndLoad(() -> new CasinoGameArea(terrainFactory, cameraComponent));
     }
 
     /**
@@ -532,6 +554,9 @@ public class ForestGameArea extends GameArea {
         Entity newPlayer = PlayerFactory.createPlayer();
         spawnEntityAt(newPlayer, PLAYER_SPAWN, true, true);
 
+        newPlayer.getEvents().addListener("equip", this::equipItem);
+        newPlayer.getEvents().addListener("unequip", this::unequipItem);
+
         return newPlayer;
     }
 
@@ -543,11 +568,34 @@ public class ForestGameArea extends GameArea {
         return newDagger;
     }
 
-    private void equipItem(Entity item) {
-        InventoryComponent inventory = this.player.getComponent(InventoryComponent.class);
-        inventory.addItem(item);
-        inventory.setCurrItem(item);
-        spawnEntityAt(item, PLAYER_SPAWN, true, true);
+    /** FIXME Layer is behind player, does that matter???
+     * FIXME Also need to fix positioning so that it actually looks like the player is holding the weapon
+     * Sets the equipped item in the PlayerEquipComponent to be the given item
+     *
+     * @param tex Is an existing Item texture path, within the players inventory
+     */
+    private void equipItem(String tex) {
+        Entity item = player.getComponent(ItemPickUpComponent.class).createItemFromTexture(tex);
+        if (item == null) return;
+
+        item.getComponent(HitboxComponent.class).setLayer(PhysicsLayer.OBSTACLE);
+
+        // Make dropped items static so they behave like map-placed items
+        PhysicsComponent phys = item.getComponent(PhysicsComponent.class);
+        if (phys != null) phys.setBodyType(BodyDef.BodyType.StaticBody);
+
+        // get the game area and spawn the item
+        ServiceLocator.getGameArea().spawnEntity(item);
+
+        Vector2 offset = new Vector2(0.7f, 0.3f);
+        player.getComponent(PlayerEquipComponent.class).setItem(item, offset);
+    }
+
+    /**
+     * Sets the equipped item in the PlayerEquipComponent to be null, along with the offset
+     */
+    private void unequipItem() {
+        player.getComponent(PlayerEquipComponent.class).setItem(null, null);
     }
 
     private Entity spawnLightsaber() {
@@ -621,6 +669,7 @@ public class ForestGameArea extends GameArea {
         resourceService.loadTextures(futuristicTextures);
         resourceService.loadTextures(keycardTextures);
         resourceService.loadTextures(generalTextures);
+        resourceService.loadTextures(backgroundTextures);
         resourceService.loadTextures(forestTextures);
         resourceService.loadTextures(spawnPadTextures);
         resourceService.loadTextures(officeTextures);
@@ -648,6 +697,7 @@ public class ForestGameArea extends GameArea {
         resourceService.unloadAssets(keycardTextures);
         resourceService.unloadAssets(futuristicTextures);
         resourceService.unloadAssets(playerSound1);
+        resourceService.unloadAssets(backgroundTextures);
         resourceService.unloadAssets(forestTextures);
         resourceService.unloadAssets(generalTextures);
         resourceService.unloadAssets(forestTextureAtlases);
