@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.GridPoint2;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.CameraComponent;
+import com.csse3200.game.components.minigames.pool.PoolGame;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.ItemSpawnConfig;
 import com.csse3200.game.entities.factories.characters.PlayerFactory;
@@ -35,6 +36,7 @@ public class CasinoGameArea extends GameArea {
         spawnFloor();
         player = spawnPlayer();
         spawnWhackAMoleGame();
+        spawnPoolGame();
         ItemSpawner itemSpawner = new ItemSpawner(this);
         itemSpawner.spawnItems(ItemSpawnConfig.securitymap());
     }
@@ -42,7 +44,10 @@ public class CasinoGameArea extends GameArea {
     private void ensureAssets() {
         String[] needed = new String[]{
                 "images/mole.png",
-                "images/hole.png"
+                "images/hole.png",
+                "images/pool/table.png",
+                "images/pool/cueball.png",
+                "images/pool/cue.png"
         };
         ensureTextures(needed);
     }
@@ -78,6 +83,11 @@ public class CasinoGameArea extends GameArea {
     private void spawnWhackAMoleGame() {
         GridPoint2 pos = new GridPoint2(5, 7);
         spawnEntityAt(new WhackAMoleGame().getGameEntity(), pos, true, true);
+    }
+
+    private void spawnPoolGame() {
+        GridPoint2 pos = new GridPoint2(10, 7);
+        spawnEntityAt(new PoolGame().getGameEntity(), pos, true, true);
     }
 
     private void loadSpawnFromCasino() {
