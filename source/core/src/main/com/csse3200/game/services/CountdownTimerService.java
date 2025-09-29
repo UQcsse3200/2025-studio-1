@@ -2,7 +2,7 @@ package com.csse3200.game.services;
 
 public class CountdownTimerService {
     private final GameTime gameTime;
-    private long duration;
+    private final long duration;
     private long startTime;
     private long pauseTime;
     private boolean paused;
