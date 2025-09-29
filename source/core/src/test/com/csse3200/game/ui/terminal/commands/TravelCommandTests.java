@@ -11,8 +11,11 @@ import com.csse3200.game.extensions.GameExtension;
 import com.csse3200.game.rendering.RenderService;
 import com.csse3200.game.services.DiscoveryService;
 import com.csse3200.game.services.ServiceLocator;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.MockedStatic;
 
 import java.util.ArrayList;
 
@@ -62,7 +65,10 @@ class TravelCommandTests {
         ServiceLocator.registerGameArea(area);
         ServiceLocator.registerEntityService(es);
 
-        assertFalse(command.action(new ArrayList<>()));
+        try (MockedStatic<ServiceLocator> sl = mockStatic(ServiceLocator.class, CALLS_REAL_METHODS)) {
+            sl.when(ServiceLocator::getPlayer).thenReturn(null); // ensure global is null too
+            assertFalse(command.action(new ArrayList<>()));
+        }
     }
 
     @Test
@@ -71,15 +77,13 @@ class TravelCommandTests {
         var es = mock(EntityService.class);
         var rs = mock(RenderService.class);
 
-        // Real player entity with Keyboard input so findPlayer() picks it up
         var player = new Entity().addComponent(new KeyboardPlayerInputComponent());
         var entities = new Array<Entity>();
         entities.add(player);
 
-        when(area.getPlayer()).thenReturn(null);   // force fallback path
+        when(area.getPlayer()).thenReturn(null);   // allow resolver to choose; global will be our player
         when(es.getEntities()).thenReturn(entities);
 
-        // Real camera
         var cam = new OrthographicCamera();
         cam.position.set(10.25f, -4.5f, 0f);
         when(rs.getCamera()).thenReturn(cam);
@@ -88,8 +92,11 @@ class TravelCommandTests {
         ServiceLocator.registerEntityService(es);
         ServiceLocator.registerRenderService(rs);
 
-        var ok = command.action(new ArrayList<>()); // center
-        assertTrue(ok);
+        try (MockedStatic<ServiceLocator> sl = mockStatic(ServiceLocator.class, CALLS_REAL_METHODS)) {
+            sl.when(ServiceLocator::getPlayer).thenReturn(player);
+            var ok = command.action(new ArrayList<>()); // center (camera)
+            assertTrue(ok);
+        }
 
         Vector2 pos = player.getPosition();
         assertEquals(10.25f, pos.x, 1e-5);
@@ -114,7 +121,10 @@ class TravelCommandTests {
         ServiceLocator.registerEntityService(es);
         ServiceLocator.registerRenderService(rs);
 
-        assertFalse(command.action(new ArrayList<>()));
+        try (MockedStatic<ServiceLocator> sl = mockStatic(ServiceLocator.class, CALLS_REAL_METHODS)) {
+            sl.when(ServiceLocator::getPlayer).thenReturn(player);
+            assertFalse(command.action(new ArrayList<>()));
+        }
     }
 
     @Test
@@ -132,10 +142,13 @@ class TravelCommandTests {
         ServiceLocator.registerGameArea(area);
         ServiceLocator.registerEntityService(es);
 
-        var args = new ArrayList<>(java.util.List.of("7.75", "9.5"));
-        var ok = command.action(args);
+        try (MockedStatic<ServiceLocator> sl = mockStatic(ServiceLocator.class, CALLS_REAL_METHODS)) {
+            sl.when(ServiceLocator::getPlayer).thenReturn(player);
+            var args = new ArrayList<>(java.util.List.of("7.75", "9.5"));
+            var ok = command.action(args);
+            assertTrue(ok);
+        }
 
-        assertTrue(ok);
         var pos = player.getPosition();
         assertEquals(7.75f, pos.x, 1e-5);
         assertEquals(9.5f, pos.y, 1e-5);
@@ -157,8 +170,12 @@ class TravelCommandTests {
         ServiceLocator.registerEntityService(es);
         // Intentionally NOT registering DiscoveryService
 
-        var args = new ArrayList<>(java.util.List.of("Reception"));
-        assertFalse(command.action(args));
+        try (MockedStatic<ServiceLocator> sl = mockStatic(ServiceLocator.class, CALLS_REAL_METHODS)) {
+            sl.when(ServiceLocator::getPlayer).thenReturn(player);
+            var args = new ArrayList<>(java.util.List.of("Reception"));
+            assertFalse(command.action(args));
+        }
+
         verify(area, never()).transitionToArea(anyString());
     }
 
@@ -180,8 +197,12 @@ class TravelCommandTests {
         ServiceLocator.registerEntityService(es);
         ServiceLocator.registerDiscoveryService(ds);
 
-        var args = new ArrayList<>(java.util.List.of("Reception"));
-        assertFalse(command.action(args));
+        try (MockedStatic<ServiceLocator> sl = mockStatic(ServiceLocator.class, CALLS_REAL_METHODS)) {
+            sl.when(ServiceLocator::getPlayer).thenReturn(player);
+            var args = new ArrayList<>(java.util.List.of("Reception"));
+            assertFalse(command.action(args));
+        }
+
         verify(area, never()).transitionToArea(anyString());
     }
 
@@ -204,10 +225,13 @@ class TravelCommandTests {
         ServiceLocator.registerEntityService(es);
         ServiceLocator.registerDiscoveryService(ds);
 
-        var args = new ArrayList<>(java.util.List.of("Reception"));
-        var ok = command.action(args);
+        try (MockedStatic<ServiceLocator> sl = mockStatic(ServiceLocator.class, CALLS_REAL_METHODS)) {
+            sl.when(ServiceLocator::getPlayer).thenReturn(player);
+            var args = new ArrayList<>(java.util.List.of("Reception"));
+            var ok = command.action(args);
+            assertTrue(ok);
+        }
 
-        assertTrue(ok);
         verify(area, times(1)).transitionToArea("Reception");
     }
 
@@ -230,10 +254,13 @@ class TravelCommandTests {
         ServiceLocator.registerEntityService(es);
         ServiceLocator.registerDiscoveryService(ds);
 
-        var args = new ArrayList<>(java.util.List.of("UnknownRoom"));
-        var ok = command.action(args);
+        try (MockedStatic<ServiceLocator> sl = mockStatic(ServiceLocator.class, CALLS_REAL_METHODS)) {
+            sl.when(ServiceLocator::getPlayer).thenReturn(player);
+            var args = new ArrayList<>(java.util.List.of("UnknownRoom"));
+            var ok = command.action(args);
+            assertFalse(ok);
+        }
 
-        assertFalse(ok);
         verify(area, times(1)).transitionToArea("UnknownRoom");
     }
 
@@ -252,7 +279,10 @@ class TravelCommandTests {
         ServiceLocator.registerGameArea(area);
         ServiceLocator.registerEntityService(es);
 
-        var args = new ArrayList<>(java.util.List.of("12", "nope")); // mixed numeric / non-numeric
-        assertFalse(command.action(args));
+        try (MockedStatic<ServiceLocator> sl = mockStatic(ServiceLocator.class, CALLS_REAL_METHODS)) {
+            sl.when(ServiceLocator::getPlayer).thenReturn(player);
+            var args = new ArrayList<>(java.util.List.of("12", "nope")); // mixed numeric / non-numeric
+            assertFalse(command.action(args));
+        }
     }
 }
