@@ -42,24 +42,79 @@ public class FriendlyNPCFactory {
         return test;
     }
 
-    public static Entity createNPC1() {
-        Entity npc1 = new Entity()
-                .addComponent(new TextureRenderComponent("images/!.png"));
-        npc1.getComponent(TextureRenderComponent.class).scaleEntity();
-        return npc1;
+    /**
+     * Creates a Guidance NPC entity.
+     * <p>
+     * The Guidance NPC is a floating robot that provides story background,
+     * player guidance, and mission objectives. It uses the animation atlas
+     * ("guidance_npc.atlas") to loop through the "robot_fire" frames,
+     * giving the effect of hovering with a jet flame.
+     *
+     * @param player The player Entity, used to attach dialogue and interaction logic.
+     * @return A new Entity representing the Guidance NPC with dialogue, tips, and animation.
+     */
+    public static Entity createGuidanceNpc(Entity player) {
+        TextureAtlas atlas = ServiceLocator.getResourceService()
+                .getAsset("images/guidance_npc.atlas", TextureAtlas.class);
+
+        AnimationRenderComponent arc = new AnimationRenderComponent(atlas);
+        arc.addAnimation("robot_fire", 0.12f, Animation.PlayMode.LOOP);
+
+        Entity npc = new Entity()
+                .addComponent(arc)
+                .addComponent(new NpcDialogueDataComponent(
+                        "Guide", "", new String[]{
+                        "Welcome, pilot.",
+                        "Follow the beacons to reach the safe zone.",
+                        "Ping me if you need directions again."
+                }))
+                .addComponent(new DialogueDisplay())
+                .addComponent(new TipComponent(null, player, 3f))
+                .addComponent(new NpcInterationComponent(player, 3f));
+
+        arc.scaleEntity();
+        arc.startAnimation("robot_fire");
+        return npc;
     }
 
-    public static Entity createNPC2() {
-        Entity npc2 = new Entity()
-                .addComponent(new TextureRenderComponent("images/!.png"));
-        npc2.getComponent(TextureRenderComponent.class).scaleEntity();
-        return npc2;
+    /**
+     * Creates an Assister NPC entity.
+     * <p>
+     * The Assister is a friendly teammate NPC equipped with a gun.
+     * It uses an animation atlas ("assister_npc.atlas") that defines
+     * both left and right walking cycles. At runtime, the active
+     * animation can be switched depending on movement direction.
+     *
+     * @return A new Entity representing the Assister NPC with walking animations.
+     */
+    public static Entity createAssisterNpc() {
+        TextureAtlas atlas = ServiceLocator.getResourceService()
+                .getAsset("images/assister_npc.atlas", TextureAtlas.class);
+
+        AnimationRenderComponent arc = new AnimationRenderComponent(atlas);
+
+        arc.addAnimation("walk_right", 0.10f, Animation.PlayMode.LOOP);
+        arc.addAnimation("walk_left",  0.10f, Animation.PlayMode.LOOP);
+
+        Entity npc = new Entity().addComponent(arc);
+        arc.scaleEntity();
+        arc.startAnimation("walk_right"); // default facing
+        return npc;
     }
 
-    public static Entity createNPC3() {
-        Entity npc3 = new Entity()
-                .addComponent(new TextureRenderComponent("images/!.png"));
-        npc3.getComponent(TextureRenderComponent.class).scaleEntity();
-        return npc3;
+    /**
+     * Creates a Nurse NPC entity.
+     * <p>
+     * The Nurse is a static friendly NPC that represents a medic/healer.
+     * It uses a single PNG texture ("medic_npc.png") without animation,
+     * and can be used to restore or support the player’s health.
+     *
+     * @return A new Entity representing the Nurse NPC with a scaled texture.
+     */
+    public static Entity createNurseNpc() {
+        Entity npc = new Entity()
+                .addComponent(new TextureRenderComponent("images/nurse_npc.png"));
+        npc.getComponent(TextureRenderComponent.class).scaleEntity();
+        return npc;
     }
 }
