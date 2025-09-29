@@ -6,6 +6,7 @@ import com.csse3200.game.components.MagazineComponent;
 import com.csse3200.game.components.WeaponsStatsComponent;
 import com.csse3200.game.components.attachments.BulletEnhancerComponent;
 import com.csse3200.game.components.attachments.LaserComponent;
+import com.csse3200.game.components.items.ItemComponent;
 import com.csse3200.game.components.items.RangedUseComponent;
 import com.csse3200.game.components.player.InventoryComponent;
 import com.csse3200.game.entities.Entity;
@@ -88,17 +89,27 @@ public class ShopManager extends Component {
 
         // Check user has sufficient funds
         if (!hasSufficientFunds(inventory, amount, cost)) {
-            return fail(item, PurchaseError.INVALID_WEAPON);
+            return fail(item, PurchaseError.INSUFFICIENT_FUNDS);
         }
 
 //        Check if laser or bullet was purchased
         if (item.getItem().hasComponent(LaserComponent.class) || item.getItem().hasComponent(BulletEnhancerComponent.class)) {
-            Entity weapon = player.getComponent(InventoryComponent.class).getCurrSlot();
+            Entity weapon = inventory.get(inventory.getEquippedSlot());
             //Ensure the player is holding a ranged weapon
             if (weapon != null && weapon.hasComponent(MagazineComponent.class)) {
                 boolean laser = weapon.hasComponent(LaserComponent.class);
                 boolean bullet = weapon.hasComponent(BulletEnhancerComponent.class);
-                Entity newWeapon = WeaponsFactory.createWeaponWithAttachment(Weapons.RIFLE, laser, bullet);
+
+                Entity newWeapon;
+
+                if (weapon.getComponent(ItemComponent.class).getTexture().equals("images/pistol.png")) {
+                     newWeapon = WeaponsFactory.createWeaponWithAttachment(Weapons.PISTOL, laser, bullet);
+                } else if (weapon.getComponent(ItemComponent.class).getTexture().equals("images/rifle.png")) {
+                     newWeapon = WeaponsFactory.createWeaponWithAttachment(Weapons.RIFLE, laser, bullet);
+                } else {
+                    //Just default to rifle
+                    newWeapon = WeaponsFactory.createWeaponWithAttachment(Weapons.RIFLE, laser, bullet);
+                }
 
                 if (item.getItem().hasComponent(LaserComponent.class)) {
                     newWeapon.addComponent(new LaserComponent()).create();
