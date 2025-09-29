@@ -485,6 +485,10 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/csse3200/game/components/tasks/BossFuryTask.html#%3Cinit%3E(float,float,int,java.lang.Float)" class="member-name-link">BossFuryTask(float, float, int, Float)</a> - Constructor for class com.csse3200.game.components.tasks.<a href="com/csse3200/game/components/tasks/BossFuryTask.html" title="class in com.csse3200.game.components.tasks">BossFuryTask</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/entities/configs/ItemSpawnConfig.html#bossmap()" class="member-name-link">bossmap()</a> - Static method in class com.csse3200.game.entities.configs.<a href="com/csse3200/game/entities/configs/ItemSpawnConfig.html" title="class in com.csse3200.game.entities.configs">ItemSpawnConfig</a></dt>
+<dd>
+<div class="block">Boss room Spawning.</div>
+</dd>
 <dt><a href="com/csse3200/game/components/boss/BossStageComponent.html" class="type-name-link" title="class in com.csse3200.game.components.boss">BossStageComponent</a> - Class in <a href="com/csse3200/game/components/boss/package-summary.html">com.csse3200.game.components.boss</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/components/boss/BossStageComponent.html#%3Cinit%3E(com.csse3200.game.entities.Entity)" class="member-name-link">BossStageComponent(Entity)</a> - Constructor for class com.csse3200.game.components.boss.<a href="com/csse3200/game/components/boss/BossStageComponent.html" title="class in com.csse3200.game.components.boss">BossStageComponent</a></dt>
@@ -856,6 +860,17 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/areas/ElevatorGameArea.html#create()" class="member-name-link">create()</a> - Method in class com.csse3200.game.areas.<a href="com/csse3200/game/areas/ElevatorGameArea.html" title="class in com.csse3200.game.areas">ElevatorGameArea</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/areas/FlyingBossRoom.html#create()" class="member-name-link">create()</a> - Method in class com.csse3200.game.areas.<a href="com/csse3200/game/areas/FlyingBossRoom.html" title="class in com.csse3200.game.areas">FlyingBossRoom</a></dt>
+<dd>
+<div class="block">Creates the room by:
+ - spawning doors
+ - displaying the UI
+ - spawns player
+ - spawns platforms
+ - spanws walls
+ - spawns the flying boss
+ - spawns items</div>
+</dd>
 <dt><a href="com/csse3200/game/areas/ForestGameArea.html#create()" class="member-name-link">create()</a> - Method in class com.csse3200.game.areas.<a href="com/csse3200/game/areas/ForestGameArea.html" title="class in com.csse3200.game.areas">ForestGameArea</a></dt>
 <dd>
 <div class="block">Entry point for this room.</div>
@@ -866,6 +881,16 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/csse3200/game/areas/MainHall.html#create()" class="member-name-link">create()</a> - Method in class com.csse3200.game.areas.<a href="com/csse3200/game/areas/MainHall.html" title="class in com.csse3200.game.areas">MainHall</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/areas/MovingBossRoom.html#create()" class="member-name-link">create()</a> - Method in class com.csse3200.game.areas.<a href="com/csse3200/game/areas/MovingBossRoom.html" title="class in com.csse3200.game.areas">MovingBossRoom</a></dt>
+<dd>
+<div class="block">Creates the room by:
+ - loading assest
+ - displaying the UI
+ - spawning terrain (without door triggers)
+ - spawn player and rifle
+ - spawns static boss
+ - spawns floors</div>
+</dd>
 <dt><a href="com/csse3200/game/areas/OfficeGameArea.html#create()" class="member-name-link">create()</a> - Method in class com.csse3200.game.areas.<a href="com/csse3200/game/areas/OfficeGameArea.html" title="class in com.csse3200.game.areas">OfficeGameArea</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/areas/Reception.html#create()" class="member-name-link">create()</a> - Method in class com.csse3200.game.areas.<a href="com/csse3200/game/areas/Reception.html" title="class in com.csse3200.game.areas">Reception</a></dt>
@@ -883,6 +908,16 @@ loadScripts(document, 'script');</script>
 <div class="block">Create the game area, including terrain, static entities (trees), dynamic
  entities (player)
  Entry point for this room.</div>
+</dd>
+<dt><a href="com/csse3200/game/areas/StaticBossRoom.html#create()" class="member-name-link">create()</a> - Method in class com.csse3200.game.areas.<a href="com/csse3200/game/areas/StaticBossRoom.html" title="class in com.csse3200.game.areas">StaticBossRoom</a></dt>
+<dd>
+<div class="block">Creates the room by:
+ - loading assest
+ - displaying the UI
+ - spawning terrain (without door triggers)
+ - spawn player and rifle
+ - spawns static boss
+ - spawns floors</div>
 </dd>
 <dt><a href="com/csse3200/game/areas/StorageGameArea.html#create()" class="member-name-link">create()</a> - Method in class com.csse3200.game.areas.<a href="com/csse3200/game/areas/StorageGameArea.html" title="class in com.csse3200.game.areas">StorageGameArea</a></dt>
 <dd>
@@ -2075,6 +2110,14 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/csse3200/game/components/gamearea/FloorLabelDisplay.html#%3Cinit%3E(java.lang.String)" class="member-name-link">FloorLabelDisplay(String)</a> - Constructor for class com.csse3200.game.components.gamearea.<a href="com/csse3200/game/components/gamearea/FloorLabelDisplay.html" title="class in com.csse3200.game.components.gamearea">FloorLabelDisplay</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/areas/FlyingBossRoom.html" class="type-name-link" title="class in com.csse3200.game.areas">FlyingBossRoom</a> - Class in <a href="com/csse3200/game/areas/package-summary.html">com.csse3200.game.areas</a></dt>
+<dd>
+<div class="block">This is the room that holds the Flying Boss.</div>
+</dd>
+<dt><a href="com/csse3200/game/areas/FlyingBossRoom.html#%3Cinit%3E(com.csse3200.game.areas.terrain.TerrainFactory,com.csse3200.game.components.CameraComponent)" class="member-name-link">FlyingBossRoom(TerrainFactory, CameraComponent)</a> - Constructor for class com.csse3200.game.areas.<a href="com/csse3200/game/areas/FlyingBossRoom.html" title="class in com.csse3200.game.areas">FlyingBossRoom</a></dt>
+<dd>
+<div class="block">Creates a new FlyingBossRoom for the room where the flying boss spawns.</div>
+</dd>
 <dt><a href="com/csse3200/game/components/screens/TutorialClip.html#folder()" class="member-name-link">folder()</a> - Method in record class com.csse3200.game.components.screens.<a href="com/csse3200/game/components/screens/TutorialClip.html" title="class in com.csse3200.game.components.screens">TutorialClip</a></dt>
 <dd>
 <div class="block">Returns the value of the <a href="./com/csse3200/game/components/screens/TutorialClip.html#param-folder"><code>folder</code></a> record component.</div>
@@ -2506,6 +2549,8 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/areas/ElevatorGameArea.html#getPlayer()" class="member-name-link">getPlayer()</a> - Method in class com.csse3200.game.areas.<a href="com/csse3200/game/areas/ElevatorGameArea.html" title="class in com.csse3200.game.areas">ElevatorGameArea</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/areas/FlyingBossRoom.html#getPlayer()" class="member-name-link">getPlayer()</a> - Method in class com.csse3200.game.areas.<a href="com/csse3200/game/areas/FlyingBossRoom.html" title="class in com.csse3200.game.areas">FlyingBossRoom</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/areas/ForestGameArea.html#getPlayer()" class="member-name-link">getPlayer()</a> - Method in class com.csse3200.game.areas.<a href="com/csse3200/game/areas/ForestGameArea.html" title="class in com.csse3200.game.areas">ForestGameArea</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/areas/GameArea.html#getPlayer()" class="member-name-link">getPlayer()</a> - Method in class com.csse3200.game.areas.<a href="com/csse3200/game/areas/GameArea.html" title="class in com.csse3200.game.areas">GameArea</a></dt>
@@ -2513,6 +2558,8 @@ loadScripts(document, 'script');</script>
 <div class="block">allows manipulation of player character by loading function</div>
 </dd>
 <dt><a href="com/csse3200/game/areas/MainHall.html#getPlayer()" class="member-name-link">getPlayer()</a> - Method in class com.csse3200.game.areas.<a href="com/csse3200/game/areas/MainHall.html" title="class in com.csse3200.game.areas">MainHall</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/areas/MovingBossRoom.html#getPlayer()" class="member-name-link">getPlayer()</a> - Method in class com.csse3200.game.areas.<a href="com/csse3200/game/areas/MovingBossRoom.html" title="class in com.csse3200.game.areas">MovingBossRoom</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/areas/OfficeGameArea.html#getPlayer()" class="member-name-link">getPlayer()</a> - Method in class com.csse3200.game.areas.<a href="com/csse3200/game/areas/OfficeGameArea.html" title="class in com.csse3200.game.areas">OfficeGameArea</a></dt>
 <dd>&nbsp;</dd>
@@ -2527,6 +2574,8 @@ loadScripts(document, 'script');</script>
 <div class="block">Getter method for the player entity</div>
 </dd>
 <dt><a href="com/csse3200/game/areas/ShippingGameArea.html#getPlayer()" class="member-name-link">getPlayer()</a> - Method in class com.csse3200.game.areas.<a href="com/csse3200/game/areas/ShippingGameArea.html" title="class in com.csse3200.game.areas">ShippingGameArea</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/areas/StaticBossRoom.html#getPlayer()" class="member-name-link">getPlayer()</a> - Method in class com.csse3200.game.areas.<a href="com/csse3200/game/areas/StaticBossRoom.html" title="class in com.csse3200.game.areas">StaticBossRoom</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/areas/StorageGameArea.html#getPlayer()" class="member-name-link">getPlayer()</a> - Method in class com.csse3200.game.areas.<a href="com/csse3200/game/areas/StorageGameArea.html" title="class in com.csse3200.game.areas">StorageGameArea</a></dt>
 <dd>&nbsp;</dd>
@@ -3447,6 +3496,14 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Loads a list of music assets into the asset manager.</div>
 </dd>
+<dt><a href="com/csse3200/game/areas/MovingBossRoom.html#loadOffice()" class="member-name-link">loadOffice()</a> - Method in class com.csse3200.game.areas.<a href="com/csse3200/game/areas/MovingBossRoom.html" title="class in com.csse3200.game.areas">MovingBossRoom</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/areas/FlyingBossRoom.html#loadResearch()" class="member-name-link">loadResearch()</a> - Method in class com.csse3200.game.areas.<a href="com/csse3200/game/areas/FlyingBossRoom.html" title="class in com.csse3200.game.areas">FlyingBossRoom</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/areas/MovingBossRoom.html#loadSecurity()" class="member-name-link">loadSecurity()</a> - Method in class com.csse3200.game.areas.<a href="com/csse3200/game/areas/MovingBossRoom.html" title="class in com.csse3200.game.areas">MovingBossRoom</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/areas/FlyingBossRoom.html#loadShipping()" class="member-name-link">loadShipping()</a> - Method in class com.csse3200.game.areas.<a href="com/csse3200/game/areas/FlyingBossRoom.html" title="class in com.csse3200.game.areas">FlyingBossRoom</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/services/ResourceService.html#loadSounds(java.lang.String%5B%5D)" class="member-name-link">loadSounds(String[])</a> - Method in class com.csse3200.game.services.<a href="com/csse3200/game/services/ResourceService.html" title="class in com.csse3200.game.services">ResourceService</a></dt>
 <dd>
 <div class="block">Loads a list of sounds into the asset manager.</div>
@@ -3463,6 +3520,8 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Loads a list of texture assets into the asset manager.</div>
 </dd>
+<dt><a href="com/csse3200/game/areas/StaticBossRoom.html#loadTunnel()" class="member-name-link">loadTunnel()</a> - Method in class com.csse3200.game.areas.<a href="com/csse3200/game/areas/StaticBossRoom.html" title="class in com.csse3200.game.areas">StaticBossRoom</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/areas/terrain/TerrainFactory.TerrainType.html#LOBBY" class="member-name-link">LOBBY</a> - Enum constant in enum class com.csse3200.game.areas.terrain.<a href="com/csse3200/game/areas/terrain/TerrainFactory.TerrainType.html" title="enum class in com.csse3200.game.areas.terrain">TerrainFactory.TerrainType</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/files/FileLoader.Location.html#LOCAL" class="member-name-link">LOCAL</a> - Enum constant in enum class com.csse3200.game.files.<a href="com/csse3200/game/files/FileLoader.Location.html" title="enum class in com.csse3200.game.files">FileLoader.Location</a></dt>
@@ -3625,6 +3684,14 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/components/tasks/MovementTask.html#%3Cinit%3E(com.badlogic.gdx.math.Vector2,com.badlogic.gdx.math.Vector2)" class="member-name-link">MovementTask(Vector2, Vector2)</a> - Constructor for class com.csse3200.game.components.tasks.<a href="com/csse3200/game/components/tasks/MovementTask.html" title="class in com.csse3200.game.components.tasks">MovementTask</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/areas/MovingBossRoom.html" class="type-name-link" title="class in com.csse3200.game.areas">MovingBossRoom</a> - Class in <a href="com/csse3200/game/areas/package-summary.html">com.csse3200.game.areas</a></dt>
+<dd>
+<div class="block">This is the room that holds the Ground Moving Boss Boss.</div>
+</dd>
+<dt><a href="com/csse3200/game/areas/MovingBossRoom.html#%3Cinit%3E(com.csse3200.game.areas.terrain.TerrainFactory,com.csse3200.game.components.CameraComponent)" class="member-name-link">MovingBossRoom(TerrainFactory, CameraComponent)</a> - Constructor for class com.csse3200.game.areas.<a href="com/csse3200/game/areas/MovingBossRoom.html" title="class in com.csse3200.game.areas">MovingBossRoom</a></dt>
+<dd>
+<div class="block">Creates a new MovingBossRoom for the room where the flying boss spawns.</div>
+</dd>
 <dt><a href="com/csse3200/game/services/MusicService.html" class="type-name-link" title="class in com.csse3200.game.services">MusicService</a> - Class in <a href="com/csse3200/game/services/package-summary.html">com.csse3200.game.services</a></dt>
 <dd>
 <div class="block">Handles background music for the menu</div>
@@ -5095,6 +5162,14 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/csse3200/game/areas/GameArea.html#startWaves(com.csse3200.game.entities.Entity)" class="member-name-link">startWaves(Entity)</a> - Method in class com.csse3200.game.areas.<a href="com/csse3200/game/areas/GameArea.html" title="class in com.csse3200.game.areas">GameArea</a></dt>
 <dd>
 <div class="block">Start enemy waves from terminal command by typing "waves".</div>
+</dd>
+<dt><a href="com/csse3200/game/areas/StaticBossRoom.html" class="type-name-link" title="class in com.csse3200.game.areas">StaticBossRoom</a> - Class in <a href="com/csse3200/game/areas/package-summary.html">com.csse3200.game.areas</a></dt>
+<dd>
+<div class="block">This is the room that holds the static Boss.</div>
+</dd>
+<dt><a href="com/csse3200/game/areas/StaticBossRoom.html#%3Cinit%3E(com.csse3200.game.areas.terrain.TerrainFactory,com.csse3200.game.components.CameraComponent)" class="member-name-link">StaticBossRoom(TerrainFactory, CameraComponent)</a> - Constructor for class com.csse3200.game.areas.<a href="com/csse3200/game/areas/StaticBossRoom.html" title="class in com.csse3200.game.areas">StaticBossRoom</a></dt>
+<dd>
+<div class="block">Creates a new StaticBossRoom for the room where the static boss spawns.</div>
 </dd>
 <dt><a href="com/csse3200/game/physics/PhysicsLayer.html#STATION" class="member-name-link">STATION</a> - Static variable in class com.csse3200.game.physics.<a href="com/csse3200/game/physics/PhysicsLayer.html" title="class in com.csse3200.game.physics">PhysicsLayer</a></dt>
 <dd>&nbsp;</dd>
