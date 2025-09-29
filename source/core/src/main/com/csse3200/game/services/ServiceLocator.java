@@ -1,6 +1,7 @@
 package com.csse3200.game.services;
 
 import com.csse3200.game.areas.GameArea;
+import com.csse3200.game.areas.difficulty.Difficulty;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
 import com.csse3200.game.input.InputService;
@@ -28,7 +29,11 @@ public class ServiceLocator {
     private static GameArea gameArea;
     private static SaveLoadService saveLoadService;
     private static Entity player;
+    private static Difficulty difficulty;
+    private static DiscoveryService discoveryService; // track discovered rooms
 
+    private static Float cachedPlayerStamina; // preserved across area transitions
+    private static Integer cachedPlayerHealth; // preserved across area transitions
     public static Entity getPlayer() {
         return player;
     }
@@ -75,6 +80,14 @@ public class ServiceLocator {
         return saveLoadService;
     }
 
+    public static Difficulty getDifficulty() {
+        return difficulty;
+    }
+
+    public static DiscoveryService getDiscoveryService() {
+        return discoveryService;
+    }
+
     public static void registerGameArea(GameArea theArea) {
         logger.debug("Registering game area service {}", theArea);
         gameArea = theArea;
@@ -82,6 +95,33 @@ public class ServiceLocator {
 
     public static void registerPlayer(Entity person) {
         player = person;
+    }
+    /**
+     * Returns cached player stamina to restore after area transitions.
+     */
+    public static Float getCachedPlayerStamina() {
+        return cachedPlayerStamina;
+    }
+
+    /**
+     * Caches player stamina to be restored when the next player entity is created.
+     */
+    public static void setCachedPlayerStamina(Float value) {
+        cachedPlayerStamina = value;
+    }
+
+    /**
+     * Returns cached player health to restore after area transitions.
+     */
+    public static Integer getCachedPlayerHealth() {
+        return cachedPlayerHealth;
+    }
+
+    /**
+     * Caches player health to be restored when the next player entity is created.
+     */
+    public static void setCachedPlayerHealth(Integer value) {
+        cachedPlayerHealth = value;
     }
 
     public static void registerEntityService(EntityService service) {
@@ -119,6 +159,16 @@ public class ServiceLocator {
         saveLoadService = source;
     }
 
+    public static void registerDifficulty(Difficulty source) {
+        logger.debug("Registering difficulty {}", source);
+        difficulty = source;
+    }
+
+    public static void registerDiscoveryService(DiscoveryService service) {
+        logger.debug("Registering discovery service {}", service);
+        discoveryService = service;
+    }
+
     public static void clear() {
         entityService = null;
         renderService = null;
@@ -128,6 +178,9 @@ public class ServiceLocator {
         resourceService = null;
         gameArea = null;
         saveLoadService = null;
+        cachedPlayerStamina = null;
+        cachedPlayerHealth = null;
+        discoveryService = null;
     }
 
     private static final com.csse3200.game.events.EventHandler globalEvents = new com.csse3200.game.events.EventHandler();

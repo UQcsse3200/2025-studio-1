@@ -113,13 +113,17 @@ public class PlayerStatsDisplay extends UIComponent {
         ProgressBar.ProgressBarStyle healthBarStyle = makeBarStyle(COLOR_HEALTH, BAR_HEIGHT);
         int health = entity.getComponent(CombatStatsComponent.class).getHealth();
         healthBar = new ProgressBar(0, 100, 1, false, healthBarStyle);
-        healthBar.setValue(health);
+        // If a cached health exists (transition), prefer that to avoid flashes
+        Integer cachedHealth = com.csse3200.game.services.ServiceLocator.getCachedPlayerHealth();
+        healthBar.setValue(cachedHealth != null ? cachedHealth : health);
         healthBar.setAnimateDuration(0f);
 
         // Stamina bar (0..100 shows percent so UI is decoupled from gameplay max)
         ProgressBar.ProgressBarStyle staminaStyle = makeBarStyle(COLOR_STAMINA, BAR_HEIGHT);
         staminaBar = new ProgressBar(0, 100, 1, false, staminaStyle);
-        staminaBar.setValue(100);
+        StaminaComponent sc = entity.getComponent(StaminaComponent.class);
+        float startStamina = (sc != null) ? sc.getStamina() : 100f;
+        staminaBar.setValue(startStamina);
         staminaBar.setAnimateDuration(0f);
 
         // Processor label
@@ -201,7 +205,7 @@ public class PlayerStatsDisplay extends UIComponent {
     public void updateAmmoUI() {
 
         int ammoReserves = entity.getComponent(AmmoStatsComponent.class).getAmmo();
-        Entity equipped = entity.getComponent(InventoryComponent.class).getCurrItem();
+        Entity equipped = entity.getComponent(InventoryComponent.class).getCurrSlot();
 
         if (equipped == null) {
 

@@ -100,7 +100,7 @@ public class KeyboardPlayerInputComponent extends InputComponent {
 
         if (button == Input.Buttons.LEFT) {
             InventoryComponent inventory = entity.getComponent(InventoryComponent.class);
-            Entity item = inventory.get(focusedItem);
+            Entity item = inventory.getCurrSlot();
             if (item == null) {
                 return false;
             }

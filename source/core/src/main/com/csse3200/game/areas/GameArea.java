@@ -42,6 +42,8 @@ public abstract class GameArea implements Disposable {
     protected List<Entity> areaEntities;
     protected TerrainFactory terrainFactory;
     protected CameraComponent cameraComponent;
+
+    protected float baseScaling = 0f;
     /**
      * Prevents re-entrant room transitions across areas
      */
@@ -131,6 +133,16 @@ public abstract class GameArea implements Disposable {
             Gdx.app.log("GameArea", "Initializing waves: room=" + room + " maxWaves=" + maxWaves);
         }
         wavesManager.startWave();
+    }
+
+    /**
+     * Returns the room name corresponding to the current floor.
+     *
+     * @return the name of the current room
+     *
+     */
+    public String getRoomName () {
+        return this.toString();
     }
 
     /**
@@ -246,6 +258,43 @@ public abstract class GameArea implements Disposable {
             default:
                 spawnGhostGPT(total, scaleFactor, player, positions);
                 spawnGrokDroid(total, scaleFactor, player, positions);
+                break;
+        }
+    }
+    /**
+     * Spawns the enemies based on the enemy name
+     * @param roomName The number of the current floor/room.
+     * @param total The total number of enemies to be spawned.
+     * @param scaleFactor The scaling factor of the difficulty of the enemies to be spawned.
+     * @param player The player {@link Entity} that is to be target by the enemies.
+     */
+    public void spawn(String name, String roomName, int total, float scaleFactor, Entity player){
+        HashMap<String, ArrayList<Vector2>> positions = new HashMap<>();
+        ArrayList<Vector2> respectiveSpawns = new ArrayList<>();
+        respectiveSpawns.add(new Vector2(12f, 4f));
+        switch (name) {
+            case (ghostGpt):
+                positions.put(ghostGpt, (ArrayList<Vector2>) respectiveSpawns.clone());
+                spawnGhostGPT(total, scaleFactor, player, positions);
+                break;
+            case (grokDroid):
+                positions.put(grokDroid, (ArrayList<Vector2>) respectiveSpawns.clone());
+                spawnGrokDroid(total, scaleFactor, player, positions);
+                break;
+
+            case (deepSpin):
+                positions.put(deepSpin, (ArrayList<Vector2>) respectiveSpawns.clone());
+                spawnDeepspin(total, scaleFactor, player, positions);
+                break;
+
+            case (turret):
+                positions.put(turret, (ArrayList<Vector2>) respectiveSpawns.clone());
+                spawnTurret(total, scaleFactor, player, positions);
+                break;
+
+            case(vroomba):
+                positions.put(vroomba, (ArrayList<Vector2>) respectiveSpawns.clone());
+                spawnVroomba(total, scaleFactor, player, positions);
                 break;
         }
     }
@@ -711,6 +760,23 @@ public abstract class GameArea implements Disposable {
 
         /** Ensure transition happens on the render thread to avoid race conditions **/
         Gdx.app.postRunnable(() -> {
+            /** Before disposing, cache player stamina if available **/
+            try {
+                Entity currentPlayer = ServiceLocator.getPlayer();
+                if (currentPlayer != null) {
+                    com.csse3200.game.components.player.StaminaComponent sc =
+                            currentPlayer.getComponent(com.csse3200.game.components.player.StaminaComponent.class);
+                    if (sc != null) {
+                        ServiceLocator.setCachedPlayerStamina(sc.getStamina());
+                    }
+                    com.csse3200.game.components.CombatStatsComponent hc =
+                            currentPlayer.getComponent(com.csse3200.game.components.CombatStatsComponent.class);
+                    if (hc != null) {
+                        ServiceLocator.setCachedPlayerHealth(hc.getHealth());
+                    }
+                }
+            } catch (Exception ignored) {
+            }
             /** Phase 1: disable and dispose current area's entities **/
             for (Entity entity : areaEntities) {
                 entity.dispose();
@@ -723,6 +789,11 @@ public abstract class GameArea implements Disposable {
                     GameArea next = nextAreaSupplier.get();
                     ServiceLocator.registerGameArea(next);
                     next.create();
+                    // mark next area as discovered when entered
+                    com.csse3200.game.services.DiscoveryService ds = ServiceLocator.getDiscoveryService();
+                    if (ds != null && next != null) {
+                        ds.discover(next.toString());
+                    }
                 } finally {
                     endTransition();
                 }
@@ -765,4 +836,37 @@ public abstract class GameArea implements Disposable {
      * @return player entity
      */
     public abstract Entity getPlayer();
+
+    /**
+     * Transition to another area by its name (case-insensitive), if known.
+     * Returns true if a transition was initiated.
+     */
+    public boolean transitionToArea(String areaName) {
+        if (areaName == null || areaName.isEmpty()) return false;
+        String key = areaName.trim();
+        // normalise common variants
+        key = key.replace(" ", ""); // allow "Main Hall" -> "MainHall"
+        String lower = key.toLowerCase();
+
+        Class<? extends GameArea> target = null;
+        // Map of recognised rooms (keep in sync with MainGameScreen and toString() names)
+        if (lower.equals("forest")) target = com.csse3200.game.areas.ForestGameArea.class;
+        else if (lower.equals("elevator")) target = com.csse3200.game.areas.ElevatorGameArea.class;
+        else if (lower.equals("office")) target = com.csse3200.game.areas.OfficeGameArea.class;
+        else if (lower.equals("mainhall") || lower.equals("mainhallway") || lower.equals("hall")) target = com.csse3200.game.areas.MainHall.class;
+        else if (lower.equals("reception")) target = com.csse3200.game.areas.Reception.class;
+        else if (lower.equals("tunnel")) target = com.csse3200.game.areas.TunnelGameArea.class;
+        else if (lower.equals("security")) target = com.csse3200.game.areas.SecurityGameArea.class;
+        else if (lower.equals("storage")) target = com.csse3200.game.areas.StorageGameArea.class;
+        else if (lower.equals("shipping")) target = com.csse3200.game.areas.ShippingGameArea.class;
+        else if (lower.equals("server")) target = com.csse3200.game.areas.ServerGameArea.class;
+        else if (lower.equals("research")) target = com.csse3200.game.areas.ResearchGameArea.class;
+
+        if (target == null) {
+            Gdx.app.log("GameArea", "transitionToArea: unknown area name '" + areaName + "'");
+            return false;
+        }
+        loadArea(target);
+        return true;
+    }
 }
