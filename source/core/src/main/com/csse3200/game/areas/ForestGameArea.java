@@ -65,6 +65,7 @@ public class ForestGameArea extends GameArea {
      */
     private static final String HEART = "images/heart.png";
     private static final String[] forestTextures = {
+
             "images/box_boy_leaf.png",
             "images/tree.png",
             "images/ghost_king.png",

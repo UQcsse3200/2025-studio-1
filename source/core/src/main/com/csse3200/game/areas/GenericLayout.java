@@ -12,6 +12,7 @@ import com.csse3200.game.entities.factories.characters.PlayerFactory;
  * Helper for setting up minimal generic rooms (terrain, overlay, walls, doors, player).
  * Kept in the same package to access {@link GameArea}'s protected helpers.
  */
+
 public final class GenericLayout {
     private static final String[] GENERIC_TEXTURES = new String[]{
             // Terrain required by FOREST_DEMO

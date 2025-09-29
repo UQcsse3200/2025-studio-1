@@ -5,6 +5,7 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Json;
 import com.csse3200.game.components.player.InventoryComponent;
 import com.csse3200.game.components.player.ItemPickUpComponent;
+import com.csse3200.game.entities.Entity;
 import com.csse3200.game.services.SaveLoadService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -109,22 +110,18 @@ public class FileLoader {
      * - currently a placeholder for refacotring end sprint 2 / into sprint 3
      *
      * @param inventory string representation of the items
-     * @param CPU       processor count to be loaded in
+     * @param help       processor count to be loaded in
      */
-    public static InventoryComponent readInventory(List<String> inventory, int CPU) {
-        InventoryComponent loadInventory = new InventoryComponent(CPU);
-        ItemPickUpComponent loadIn = new ItemPickUpComponent(loadInventory);
-        logger.info("item pick up");
-
-        if (!inventory.isEmpty()) {
+    public static InventoryComponent readInventory(List<String> inventory, InventoryComponent help) {
+        ItemPickUpComponent testLoading = new ItemPickUpComponent(help);
+        //repopulates the inventory
+        if (inventory != null) {
             for (int i = 0; i < inventory.size(); i++) {
-                loadIn.createItemFromTexture(inventory.get(i));
-                loadInventory.addItem(
-                        loadIn.createItemFromTexture(inventory.get(i)));
-                logger.info("Item {} added to inventory", inventory.get(i));
+                Entity placehold = testLoading.createItemFromTexture(inventory.get(i));
+                help.addItem(placehold);
             }
         }
-        return loadInventory;
+        return help;
     }
 
 
@@ -162,7 +159,6 @@ public class FileLoader {
      *                   https://github.com/libgdx/libgdx/wiki/File-handling#file-storage-types
      */
     public static void writeClass(SaveLoadService.PlayerInfo playerInfo, String filename, Location location) {
-
         logger.debug("Reading class {} from {}", playerInfo.getClass().getSimpleName(), filename);
         FileHandle file = getFileHandle(filename, location);
         assert file != null;
