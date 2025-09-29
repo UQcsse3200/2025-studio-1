@@ -94,10 +94,18 @@ public class ShopManager extends Component {
 //        Check if laser or bullet was purchased
         if (item.getItem().hasComponent(LaserComponent.class) || item.getItem().hasComponent(BulletEnhancerComponent.class)) {
             Entity weapon = player.getComponent(InventoryComponent.class).getCurrSlot();
-            weapon.addComponent(new BulletEnhancerComponent());
             //Ensure the player is holding a ranged weapon
             if (weapon != null && weapon.hasComponent(MagazineComponent.class)) {
-                Entity newWeapon = WeaponsFactory.createWeaponWithAttachment(Weapons.RIFLE, true, true);
+                boolean laser = weapon.hasComponent(LaserComponent.class);
+                boolean bullet = weapon.hasComponent(BulletEnhancerComponent.class);
+                Entity newWeapon = WeaponsFactory.createWeaponWithAttachment(Weapons.RIFLE, laser, bullet);
+
+                if (item.getItem().hasComponent(LaserComponent.class)) {
+                    newWeapon.addComponent(new LaserComponent()).create();
+                } else if (item.getItem().hasComponent(BulletEnhancerComponent.class)) {
+                    newWeapon.addComponent(new BulletEnhancerComponent());
+                }
+
                 item = new CatalogEntry(
                         newWeapon,
                         10,
@@ -105,6 +113,7 @@ public class ShopManager extends Component {
                         1,
                         1
                 );
+                inventory.removeCurrItem();
             } else {
                 return fail(item, PurchaseError.INVALID_WEAPON);
             }

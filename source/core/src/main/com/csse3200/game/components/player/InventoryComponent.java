@@ -309,4 +309,14 @@ public class InventoryComponent extends Component {
     public int getEquippedSlot() {
         return this.equippedSlot;
     }
+
+    /**
+     * Removes the current item if there is one selected
+     */
+    public void removeCurrItem() {
+        if (this.equippedSlot != -1) {
+            items.remove(equippedSlot);
+            itemTexs.remove(equippedSlot);
+        }
+    }
 }
