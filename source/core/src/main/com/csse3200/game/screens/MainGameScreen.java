@@ -19,6 +19,7 @@ import com.csse3200.game.components.screens.PauseMenuDisplay;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
 import com.csse3200.game.entities.factories.system.RenderFactory;
+import com.csse3200.game.files.FileLoader;
 import com.csse3200.game.input.InputComponent;
 import com.csse3200.game.input.InputDecorator;
 import com.csse3200.game.input.InputService;
@@ -269,21 +270,15 @@ public class MainGameScreen extends ScreenAdapter {
             case "Storage" -> areaLoad = StorageGameArea.load(terrainFactory, renderer.getCamera());
             case "Shipping" -> areaLoad = ShippingGameArea.load(terrainFactory, renderer.getCamera());
             case "Server" -> areaLoad = ServerGameArea.load(terrainFactory, renderer.getCamera());
-            default -> logger.error("couldnt create Game area from file");
+            default -> logger.error("couldn't create Game area from file");
         }
 
         gameArea = areaLoad;
         com.csse3200.game.services.ServiceLocator.registerGameArea(gameArea);
         gameArea.create();
-        InventoryComponent help = gameArea.getPlayer().getComponent(InventoryComponent.class);
-        ItemPickUpComponent testLoading = new ItemPickUpComponent(help);
-        //repopulates the inventory
-        if (load.inventory != null) {
-            for (int i = 0; i < load.inventory.size(); i++) {
-                Entity placehold = testLoading.createItemFromTexture(load.inventory.get(i));
-                help.addItem(placehold);
-            }
-        }
+        // loads in inventory from save
+        FileLoader.readInventory(load.inventory,
+                gameArea.getPlayer().getComponent(InventoryComponent.class));
 
 
         // currently not needed: sprint 3 refactor to fix everything

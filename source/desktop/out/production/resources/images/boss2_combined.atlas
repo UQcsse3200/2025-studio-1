@@ -1,0 +1,96 @@
+boss2_combined.png
+size: 2048, 316
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+idle
+  rotate: false
+  xy: 0, 0
+  size: 205, 103
+  orig: 205, 103
+  offset: 0, 0
+  index: 0
+idle
+  rotate: false
+  xy: 205, 0
+  size: 205, 103
+  orig: 205, 103
+  offset: 0, 0
+  index: 1
+idle
+  rotate: false
+  xy: 410, 0
+  size: 205, 103
+  orig: 205, 103
+  offset: 0, 0
+  index: 2
+idle
+  rotate: false
+  xy: 615, 0
+  size: 205, 103
+  orig: 205, 103
+  offset: 0, 0
+  index: 3
+idle
+  rotate: false
+  xy: 820, 0
+  size: 205, 103
+  orig: 205, 103
+  offset: 0, 0
+  index: 4
+idle
+  rotate: false
+  xy: 1025, 0
+  size: 205, 103
+  orig: 205, 103
+  offset: 0, 0
+  index: 5
+idle
+  rotate: false
+  xy: 1230, 0
+  size: 205, 103
+  orig: 205, 103
+  offset: 0, 0
+  index: 6
+idle
+  rotate: false
+  xy: 1435, 0
+  size: 205, 103
+  orig: 205, 103
+  offset: 0, 0
+  index: 7
+idle
+  rotate: false
+  xy: 1640, 0
+  size: 204, 103
+  orig: 204, 103
+  offset: 0, 0
+  index: 8
+idle
+  rotate: false
+  xy: 1844, 0
+  size: 204, 103
+  orig: 204, 103
+  offset: 0, 0
+  index: 9
+default
+  rotate: false
+  xy: 0, 0
+  size: 205, 103
+  orig: 205, 103
+  offset: 0, 0
+  index: 0
+phase2
+  rotate: false
+  xy: 0, 103
+  size: 211, 213
+  orig: 211, 213
+  offset: 0, 0
+  index: 0
+phase2
+  rotate: false
+  xy: 211, 103
+  size: 211, 211
+  orig: 211, 211
+  offset: 0, 0
+  index: 1
