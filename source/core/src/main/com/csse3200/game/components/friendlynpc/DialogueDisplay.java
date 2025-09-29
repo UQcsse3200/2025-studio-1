@@ -41,28 +41,16 @@ public class DialogueDisplay extends Component {
     @Override
     public void create() {
         super.create();
-
-        try {
-            createDialogueBox();
-        } catch (Exception e) {
-            System.err.println("DialogueDisplay creation failed: " + e.getMessage());
-            e.printStackTrace();
-        }
-
-        // Fixed display: Display the first sentence (if there is data)immediately after the component is created
-        // enable clicking the next sentence
-        try {
+        createDialogueBox();
+        if (entity != null) {
             NpcDialogueDataComponent data = entity.getComponent(NpcDialogueDataComponent.class);
-            if (data != null && !data.isEmpty()) {
-                bindData(data); // Cache lines
-                showFirst(); // Display sentence 0
-            } else {
-                setText("No sentence available.");
-                show();
+            if (data != null) {
+                bindData(data);
             }
+        }
+        if (dialogueTable != null) {
+            hide();
             enableClickToNext();
-        } catch (Exception e) {
-            System.err.println("Auto show on create failed: " + e.getMessage());
         }
     }
 
