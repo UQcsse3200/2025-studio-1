@@ -130,6 +130,8 @@ public class ForestGameArea extends GameArea {
             "foreg_sprites/furniture/ServerRack.png",
             "foreg_sprites/furniture/ServerRack2.png",
             "foreg_sprites/furniture/Vent.png",
+            "images/Storage.png",
+            "images/casino.png"
     };
 
     private static final String[] backgroundTextures = {
@@ -398,6 +400,10 @@ public class ForestGameArea extends GameArea {
             rightDoor.setPosition(rightX - WALL_WIDTH - 0.001f, rightDoorY);
             rightDoor.addComponent(new com.csse3200.game.components.DoorComponent(() -> this.loadNextLevel()));
             // spawnEntity(rightDoor);
+
+            // Left edge wall with door (used helper instead of manual split)
+            Bounds b = getCameraBounds(cameraComponent);
+            addVerticalDoorLeft(b, WALL_WIDTH, this::loadCasino);
         }
     }
 
@@ -411,7 +417,7 @@ public class ForestGameArea extends GameArea {
         clearAndLoad(() -> new Reception(terrainFactory, cameraComponent));
     }
 
-    private void loadCasinoNoChange() {
+    private void loadCasino() {
         clearAndLoad(() -> new CasinoGameArea(terrainFactory, cameraComponent));
     }
 
