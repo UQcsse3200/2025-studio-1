@@ -1,8 +1,17 @@
 package com.csse3200.game.components.shop;
 
+import com.badlogic.gdx.utils.IntMap;
 import com.csse3200.game.components.Component;
+import com.csse3200.game.components.MagazineComponent;
+import com.csse3200.game.components.WeaponsStatsComponent;
+import com.csse3200.game.components.attachments.BulletEnhancerComponent;
+import com.csse3200.game.components.attachments.LaserComponent;
+import com.csse3200.game.components.items.RangedUseComponent;
 import com.csse3200.game.components.player.InventoryComponent;
 import com.csse3200.game.entities.Entity;
+import com.csse3200.game.entities.configs.Weapons;
+import com.csse3200.game.entities.factories.items.WeaponsFactory;
+import com.csse3200.game.services.ServiceLocator;
 
 
 /**
@@ -79,8 +88,28 @@ public class ShopManager extends Component {
 
         // Check user has sufficient funds
         if (!hasSufficientFunds(inventory, amount, cost)) {
-            return fail(item, PurchaseError.INSUFFICIENT_FUNDS);
+            return fail(item, PurchaseError.INVALID_WEAPON);
         }
+
+//        Check if laser or bullet was purchased
+        if (item.getItem().hasComponent(LaserComponent.class) || item.getItem().hasComponent(BulletEnhancerComponent.class)) {
+            Entity weapon = player.getComponent(InventoryComponent.class).getCurrSlot();
+            weapon.addComponent(new BulletEnhancerComponent());
+            //Ensure the player is holding a ranged weapon
+            if (weapon != null && weapon.hasComponent(MagazineComponent.class)) {
+                Entity newWeapon = WeaponsFactory.createWeaponWithAttachment(Weapons.RIFLE, true, true);
+                item = new CatalogEntry(
+                        newWeapon,
+                        10,
+                        true,
+                        1,
+                        1
+                );
+            } else {
+                return fail(item, PurchaseError.INVALID_WEAPON);
+            }
+        }
+
 
         // Add item to Inventory
         int idx = InventoryOperations.addOrStack(inventory, item.getItem(), amount,
@@ -88,6 +117,10 @@ public class ShopManager extends Component {
         if (idx < 0) {
             return fail(item, PurchaseError.fromCode(idx));
         }
+
+
+
+
 
         chargePlayer(inventory, amount, cost);
         return PurchaseResult.ok(item, 1);
