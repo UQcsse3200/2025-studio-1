@@ -9,6 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.UIComponent;
@@ -24,12 +25,20 @@ public class WhackAMoleDisplay extends UIComponent {
     private Table root;
     private Label scoreLabel;
     private TextButton startBtn, closeBtn;
-    private Image[] cells;
+    private Image[] moleImgs;
+    private int score = 0;
+    private TextureRegionDrawable moleDr, holeDr;
 
     @Override
     public void create() {
         super.create();
         entity.getEvents().addListener("interact", this::show); // open on interact
+
+        Texture moleTex = ServiceLocator.getResourceService().getAsset("images/mole.png", Texture.class);
+        Texture holeTex = ServiceLocator.getResourceService().getAsset("images/hole.png", Texture.class);
+        moleDr = new TextureRegionDrawable(new TextureRegion(moleTex));
+        holeDr = new TextureRegionDrawable(new TextureRegion(holeTex));
+
         buildBackdrop();
         buildRoot();
         buildHeader();
@@ -38,7 +47,7 @@ public class WhackAMoleDisplay extends UIComponent {
         hide(); // start hidden
     }
 
-    // --- UI build ---
+    // Build UI
     private void buildBackdrop() {
         pixel = solid(Color.WHITE);
 
@@ -76,8 +85,9 @@ public class WhackAMoleDisplay extends UIComponent {
         Label title = new Label("Whack-A-Mole", titleStyle);
         title.setFontScale(1.8f);
 
-        scoreLabel = new Label("Score: 0", skin);
-        scoreLabel.setColor(GOLD);
+        Label.LabelStyle scoreStyle = new Label.LabelStyle(skin.get(Label.LabelStyle.class));
+        scoreStyle.fontColor = GOLD;
+        scoreLabel = new Label("Score: 0", scoreStyle);
 
         Table hdr = new Table();
         hdr.add(title).left().expandX();
@@ -85,37 +95,48 @@ public class WhackAMoleDisplay extends UIComponent {
         root.add(hdr).growX().row();
 
         Image divider = new Image(new TextureRegionDrawable(new TextureRegion(pixel)));
-        divider.setColor(1f,1f,1f,0.08f);
-        root.add(divider).width(PANEL_W-40f).height(2f).row();
-
-        root.add(new Label("UI demo only (no logic yet).", skin)).padTop(4).row();
+        divider.setColor(1f, 1f, 1f, 0.08f);
+        root.add(divider).width(PANEL_W - 40f).height(2f).row();
     }
 
     private void buildGrid() {
         Table grid = new Table();
-        grid.defaults().pad(12).size(92f,92f).uniform(true);
-        cells = new Image[9];
+        grid.defaults().pad(12).size(92f, 92f).uniform(true);
+
+        moleImgs = new Image[9];
 
         for (int i = 0; i < 9; i++) {
-            Image cell = new Image(new TextureRegionDrawable(new TextureRegion(pixel)));
-            cell.setColor(0.20f,0.20f,0.20f,1f); // idle gray
-            cells[i] = cell;
+            Image hole = new Image(holeDr);
+            hole.setColor(0.20f, 0.20f, 0.20f, 1f);
 
-            // simple click feedback: flash brighter briefly
-            cell.addListener((event) -> {
-                if (event instanceof InputEvent ie && ie.getType() == InputEvent.Type.touchDown) {
-                    cell.setColor(0.35f,0.85f,0.35f,1f);
-                    stage.getActionsRequestRendering(); // immediate feel
-                    com.badlogic.gdx.utils.Timer.schedule(new com.badlogic.gdx.utils.Timer.Task() {
-                        @Override public void run() { cell.setColor(0.20f,0.20f,0.20f,1f); }
-                    }, 0.12f);
+            Image mole = new Image(moleDr);
+            mole.setVisible(false); // start hidden
+            moleImgs[i] = mole;
+
+            Stack cell = new Stack();
+            cell.add(hole);
+            cell.add(mole);
+
+            // Click to whack (only counts if mole visible)
+            cell.addListener(new ClickListener() {
+                @Override
+                public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                    if (mole.isVisible()) {
+                        mole.setColor(0.35f, 0.85f, 0.35f, 1f); // flash
+                        com.badlogic.gdx.utils.Timer.schedule(new com.badlogic.gdx.utils.Timer.Task() {
+                            @Override public void run() { mole.setColor(1f, 1f, 1f, 1f); }
+                        }, 0.10f);
+
+                        setScore(score + 1);
+                        entity.getEvents().trigger("wm:hit");
+                        mole.setVisible(false);
+                    }
                     return true;
                 }
-                return false;
             });
 
             grid.add(cell);
-            if ((i+1)%3==0) grid.row();
+            if ((i + 1) % 3 == 0) grid.row();
         }
 
         root.add(grid).padTop(6).row();
@@ -125,15 +146,22 @@ public class WhackAMoleDisplay extends UIComponent {
         startBtn = new TextButton("Start", skin);
         startBtn.addListener(new ChangeListener() {
             @Override public void changed(ChangeEvent event, Actor actor) {
-                // UI-only toggle; no gameplay yet
                 boolean starting = "Start".contentEquals(startBtn.getText());
                 startBtn.setText(starting ? "Stop" : "Start");
+                if (starting) {
+                    entity.getEvents().trigger("wm:start");
+                } else {
+                    entity.getEvents().trigger("wm:stop");
+                }
             }
         });
 
         closeBtn = new TextButton("Close", skin);
         closeBtn.addListener(new ChangeListener() {
             @Override public void changed(ChangeEvent event, Actor actor) {
+                // ensure loop stops & UI resets when closing
+                entity.getEvents().trigger("wm:stop");
+                prepareToPlay();
                 hide();
             }
         });
@@ -144,7 +172,41 @@ public class WhackAMoleDisplay extends UIComponent {
         root.add(footer).padTop(4).row();
     }
 
-    // --- Show / Hide ---
+    public void showMoleAt(int idx) {
+        if (idx >= 0 && idx < moleImgs.length) moleImgs[idx].setVisible(true);
+    }
+    public void hideMoleAt(int idx) {
+        if (idx >= 0 && idx < moleImgs.length) moleImgs[idx].setVisible(false);
+    }
+    public void hideAllMoles() {
+        if (moleImgs == null) return;
+        for (Image m : moleImgs) m.setVisible(false);
+    }
+
+    public void prepareToPlay() {
+        setScore(0);
+        hideAllMoles();
+        setRunning(false);
+    }
+
+    public void resetScore() {
+        score = 0;
+        if (scoreLabel != null) scoreLabel.setText("Score: 0");
+    }
+
+    public void setScore(int value) {
+        score = Math.max(0, value);
+        if (scoreLabel != null) scoreLabel.setText("Score: " + score);
+    }
+
+    public int getScore() {
+        return score;
+    }
+
+    public void setRunning(boolean running) {
+        if (startBtn != null) startBtn.setText(running ? "Stop" : "Start");
+    }
+
     public void show() {
         ServiceLocator.getTimeSource().setPaused(true);
         setVisible(true);
@@ -153,6 +215,7 @@ public class WhackAMoleDisplay extends UIComponent {
     public void hide() {
         ServiceLocator.getTimeSource().setPaused(false);
         setVisible(false);
+        entity.getEvents().trigger("wm:stop");
     }
 
     private void setVisible(boolean v) {
@@ -168,6 +231,13 @@ public class WhackAMoleDisplay extends UIComponent {
         Texture t = new Texture(pm);
         pm.dispose();
         return t;
+    }
+
+    public void showEnd(String title, String message) {
+        Dialog d = new Dialog(title, skin);
+        d.text(message);
+        d.button("OK", true);
+        d.show(stage);
     }
 
     @Override public void draw(SpriteBatch batch) { /* Stage draws */ }

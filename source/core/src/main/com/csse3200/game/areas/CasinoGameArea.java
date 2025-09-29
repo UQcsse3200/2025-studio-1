@@ -41,10 +41,10 @@ public class CasinoGameArea extends GameArea {
 
     private void ensureAssets() {
         String[] needed = new String[]{
-                "images/mole.png"
+                "images/mole.png",
+                "images/hole.png"
         };
         ensureTextures(needed);
-        ensurePlayerAtlas();
     }
 
     private void spawnBordersAndDoors() {
