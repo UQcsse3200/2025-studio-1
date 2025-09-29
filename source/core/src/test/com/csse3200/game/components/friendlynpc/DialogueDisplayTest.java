@@ -91,4 +91,32 @@ public class DialogueDisplayTest {
             assertDoesNotThrow(() -> dialogueDisplay.create());
         }
     }
+
+    @Test
+    void testShowFirstAndNextOrHide() {
+        // Prepare data
+        String[] lines = {"hello", "world"};
+        NpcDialogueDataComponent data = new NpcDialogueDataComponent("Mia", "", lines);
+
+        // Do not throw exception
+        assertDoesNotThrow(() -> dialogueDisplay.showFirst(data));
+
+        // Call nextOrHide twice to simulate sentence-by-sentence advancement
+        assertDoesNotThrow(dialogueDisplay::nextOrHide);
+        assertDoesNotThrow(dialogueDisplay::nextOrHide);
+    }
+
+    @Test
+    void testEmptyDataHandledGracefully() {
+        NpcDialogueDataComponent empty = new NpcDialogueDataComponent("", "", new String[0]);
+        assertDoesNotThrow(() -> dialogueDisplay.showFirst(empty));
+    }
+
+    @Test
+    void testSetTextShowHideSafe() {
+        assertDoesNotThrow(() -> dialogueDisplay.setText("some text"));
+        assertDoesNotThrow(dialogueDisplay::show);
+        assertDoesNotThrow(dialogueDisplay::hide);
+        assertDoesNotThrow(() -> dialogueDisplay.setText(null));
+    }
 }

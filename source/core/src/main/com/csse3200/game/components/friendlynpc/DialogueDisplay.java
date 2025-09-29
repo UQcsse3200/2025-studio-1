@@ -4,10 +4,13 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.csse3200.game.components.Component;
@@ -30,6 +33,11 @@ public class DialogueDisplay extends Component {
     private Table dialogueTable;
     private Label dialogueLabel;
 
+    private String speaker = "";
+    private String[] lines = new String[0];
+    private int index = -1; // -1 means not started
+    private boolean clickEnabled = false; // Only enable click listening once in update()
+
     @Override
     public void create() {
         super.create();
@@ -39,6 +47,22 @@ public class DialogueDisplay extends Component {
         } catch (Exception e) {
             System.err.println("DialogueDisplay creation failed: " + e.getMessage());
             e.printStackTrace();
+        }
+
+        // Fixed display: Display the first sentence (if there is data)immediately after the component is created
+        // enable clicking the next sentence
+        try {
+            NpcDialogueDataComponent data = entity.getComponent(NpcDialogueDataComponent.class);
+            if (data != null && !data.isEmpty()) {
+                bindData(data); // Cache lines
+                showFirst(); // Display sentence 0
+            } else {
+                setText("No sentence available.");
+                show();
+            }
+            enableClickToNext();
+        } catch (Exception e) {
+            System.err.println("Auto show on create failed: " + e.getMessage());
         }
     }
 
@@ -102,7 +126,8 @@ public class DialogueDisplay extends Component {
         dialogueTable.toFront();
 
         // Set sample text
-        dialogueLabel.setText("DIALOGUE BOX TEST - SUCCESS!");
+        //dialogueLabel.setText("DIALOGUE BOX TEST - SUCCESS!");
+        dialogueTable.setVisible(false);
         dialogueLabel.setColor(Color.BLACK);
     }
 
@@ -134,6 +159,15 @@ public class DialogueDisplay extends Component {
     }
 
     @Override
+    public void update() {
+        //Make sure to enable the listener only once
+        if (!clickEnabled) {
+            enableClickToNext();
+            clickEnabled = true;
+        }
+    }
+
+    @Override
     public void dispose() {
         super.dispose();
 
@@ -146,5 +180,140 @@ public class DialogueDisplay extends Component {
             }
         }
         disposableTextures.clear();
+    }
+
+    /**
+     *Sets the dialogue text on the label (without changing visibility).
+     * @param text the content to display; {@code null} is treated as empty
+     */
+    public void setText(String text) {
+        try {
+            if (dialogueLabel != null) {
+                dialogueLabel.setText(text == null ? "" : text);
+                dialogueLabel.setAlignment(Align.center);
+            }
+        } catch (Exception e) {
+            System.err.println("setText failed: " + e.getMessage());
+        }
+    }
+
+    public void show() {
+        try {
+            if (dialogueTable != null) dialogueTable.setVisible(true);
+        } catch (Exception e) {
+            System.err.println("show failed: " + e.getMessage());
+        }
+    }
+
+    public void hide() {
+        try {
+            if (dialogueTable != null) dialogueTable.setVisible(false);
+        } catch (Exception e) {
+            System.err.println("hide failed: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Binds the dialogue data to the internal cache of this component; does not display it immediately.
+     * @param data the {@link NpcDialogueDataComponent} to read lines from
+     */
+    public void bindData(NpcDialogueDataComponent data) {
+        try {
+            if (data != null && !data.isEmpty()) {
+                this.speaker = data.getName() == null ? "" : data.getName();
+                this.lines = data.getLines();
+                this.index = -1;
+            } else {
+                this.speaker = "";
+                this.lines = new String[0];
+                this.index = -1;
+            }
+        } catch (Exception e) {
+            System.err.println("bindData failed: " + e.getMessage());
+        }
+    }
+
+    public void showFirst() {
+        try {
+            if (dialogueTable != null && lines.length > 0) {
+                this.index = 0;
+                setLine(this.index);
+                dialogueTable.setVisible(true);
+            }
+        } catch (Exception e) {
+            System.err.println("showFirst failed: " + e.getMessage());
+        }
+    }
+
+    /**
+     *Shows the first line from the provided dialogue data.
+     * @param data the {@link NpcDialogueDataComponent} to read lines from
+     */
+    public void showFirst(NpcDialogueDataComponent data) {
+        try {
+            bindData(data);
+            showFirst();
+        } catch (Exception e) {
+            System.err.println("showFirst(data) failed: " + e.getMessage());
+        }
+    }
+
+    public void nextOrHide() {
+        try {
+            if (dialogueTable != null && dialogueTable.isVisible()) {
+                if (lines.length == 0) {
+                    hide();
+                } else {
+                    if (index + 1 < lines.length) {
+                        index = index + 1;
+                        setLine(index);
+                    } else {
+                        hide();
+                    }
+                }
+            }
+        } catch (Exception e) {
+            System.err.println("nextOrHide failed: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Enable the "click to next sentence" listener for the dialog Table (only needs to be enabled once).
+     */
+    public void enableClickToNext() {
+        try {
+            if (dialogueTable != null) {
+                dialogueTable.setTouchable(Touchable.enabled);
+                dialogueTable.clearListeners(); // Prevent duplicate overlap
+                dialogueTable.addListener(new ClickListener() {
+                    @Override
+                    public void clicked(InputEvent event, float x, float y) {
+                        try {
+                            nextOrHide();
+                        } catch (Exception e) {
+                            System.err.println("clicked->nextOrHide failed: " + e.getMessage());
+                            e.printStackTrace();
+                        }
+                    }
+                });
+            }
+        } catch (Exception e) {
+            System.err.println("enableClickToNext failed: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Renders the i-th dialogue line using the current speaker prefix.
+     * @param i zero-based index of the line to render
+     */
+    private void setLine(int i) {
+        try {
+            if (i >= 0 && i < lines.length) {
+                String body = lines[i] == null ? "" : lines[i];
+                setText((speaker == null || speaker.isEmpty()) ? body : (speaker + ": " + body));
+            }
+        } catch (Exception e) {
+            System.err.println("setLine failed: " + e.getMessage());
+        }
     }
 }
