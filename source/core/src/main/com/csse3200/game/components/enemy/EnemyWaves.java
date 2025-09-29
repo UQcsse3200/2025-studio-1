@@ -65,6 +65,7 @@ public class EnemyWaves extends Component {
         // If no waves spawned yet, spawn first immediately
         if (waveNumber == 0) {
             spawnWave();
+            this.eventHandler.trigger("spawnWave");
         }
     }
 
@@ -98,6 +99,7 @@ public class EnemyWaves extends Component {
         gameArea.spawnEnemies(gameArea.toString(), baseEnemies, effectiveScale, player);
 
         waveNumber++;
+        this.eventHandler.trigger("updateWaveNumber");
         scalingFactor += 0.25f; // incremental per-wave multiplier
     }
 
@@ -134,6 +136,9 @@ public class EnemyWaves extends Component {
                     task.cancel();
                     task = null; // stop ticking until restart
                     logger.info("EnemyWaves: session complete ({} waves)", maxWaves);
+                }
+                if (allWavesFinished()) {
+                    eventHandler.trigger("allWavesFinished");
                 }
             }
         } else {
@@ -241,6 +246,8 @@ public class EnemyWaves extends Component {
     public void setWaveEndTime(long waveEndTime) {
         this.waveEndTime = waveEndTime;
     }
+
+    public int getWaveDelayInSeconds() { return (int)WAVE_DELAY_MS / 1000; }
 
     public EventHandler getEvents() {
         return eventHandler;
