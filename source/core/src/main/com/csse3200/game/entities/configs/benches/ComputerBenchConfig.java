@@ -16,7 +16,6 @@ public class ComputerBenchConfig extends BenchConfig {
         texturePath = "images/computerBench.png";
         price = 1000;
         promptText = "Press E to upgrade weapon for " + price;
-
     }
 
     @Override
@@ -33,6 +32,7 @@ public class ComputerBenchConfig extends BenchConfig {
                         currItemStats.upgrade();
                         subtractPrice(player);
                         buyPrompt.setText("Item has been upgraded");
+                        playUpgradeSound();
                     } else if (currItemStats.isMaxUpgraded()) { //Check the gun can be upgraded
                         buyPrompt.setText("Weapon is fully upgraded already!");
                     } else {
