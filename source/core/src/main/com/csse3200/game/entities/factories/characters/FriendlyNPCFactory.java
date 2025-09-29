@@ -6,7 +6,7 @@ import com.csse3200.game.components.friendlynpc.NpcDialogueDataComponent;
 import com.csse3200.game.components.friendlynpc.TipComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.rendering.TextureRenderComponent;
-import com.csse3200.game.components.friendlynpc.DialogueDisplay;
+import com.csse3200.game.components.friendlynpc.*;
 import com.csse3200.game.rendering.AnimationRenderComponent;
 import com.csse3200.game.services.ServiceLocator;
 
@@ -36,10 +36,9 @@ public class FriendlyNPCFactory {
                 .addComponent(new DialogueDisplay());
         var data = test.getComponent(NpcDialogueDataComponent.class);
         var ui   = test.getComponent(DialogueDisplay.class);
-        ui.showFirst(data);    // 显示第一句
-
         test.getComponent(TextureRenderComponent.class).scaleEntity();
         test.addComponent(new TipComponent(test, player, 3f));
+        test.addComponent(new NpcInterationComponent(player, 3f));
         return test;
     }
 
