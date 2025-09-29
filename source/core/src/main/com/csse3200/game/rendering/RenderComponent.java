@@ -25,6 +25,8 @@ public abstract class RenderComponent extends Component implements Renderable, D
 
     @Override
     public void render(SpriteBatch batch) {
+        if (disabled)
+            return;
         draw(batch);
     }
 
@@ -51,10 +53,25 @@ public abstract class RenderComponent extends Component implements Renderable, D
      */
     protected abstract void draw(SpriteBatch batch);
 
+    /**
+     * Disables the component
+     */
     public void disableComponent() {
         this.disabled = true;
     }
 
+    /**
+     * Enables the component
+     */
+    public void enableComponent() {
+        this.disabled = false;
+    }
+
+    /**
+     * Checks if the component is disabled
+     *
+     * @return True if the component is disabled, false otherwise
+     */
     public boolean isDisabled() {
         return this.disabled;
     }
