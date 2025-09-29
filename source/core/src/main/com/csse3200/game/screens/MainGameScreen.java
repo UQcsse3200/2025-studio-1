@@ -120,6 +120,7 @@ public class MainGameScreen extends ScreenAdapter {
             }
         }
 
+        //switch to death screen when countdown timer is up
         if (countdownTimer.isTimeUP()) {
             setDeathScreen();
         }
@@ -230,10 +231,22 @@ public class MainGameScreen extends ScreenAdapter {
         }
     }
 
+    /**
+     * Calculates the total elapsed time of the countdown timer in second
+     *
+     * @return the elapsed time in seconds
+     */
     private long getCompleteTime(){
         return (countdownTimer.getDuration() - countdownTimer.getRemainingMs()) / 1000;
     }
 
+    /**
+     * Sets the game's screen to death screen
+     *
+     * <p>
+     *     Updates the death screen with the elapsed time before switching.
+     * </p>
+     */
     private void setDeathScreen(){
         DeathScreen deathScreen = new DeathScreen(game);
         deathScreen.updateTime(getCompleteTime());
