@@ -34,7 +34,7 @@ public class HomingPhysicsComponent extends PhysicsProjectileComponent {
             body.setLinearVelocity(initialVelocity);
         }
 
-        this.turnRate = 2f;
+        this.turnRate = 20f;
 
         //retrieves the camera used for getting the real cursor position
         Array<Entity> entities = ServiceLocator.getEntityService().getEntities();
@@ -80,20 +80,19 @@ public class HomingPhysicsComponent extends PhysicsProjectileComponent {
         //checks target entity is alive
         if (target != null && !target.getComponent(CombatStatsComponent.class).isDead()) {
 
-            System.out.println(target.getCenterPosition());
             //finds direction vector to the target
             Vector2 origin = entity.getCenterPosition();
             Vector2 destination = target.getCenterPosition();
             Vector2 desiredDirection = new Vector2(destination.x - origin.x,
                     destination.y - origin.y).nor();
 
+            Vector2 currentDirection = body.getLinearVelocity().nor();
+            Vector2 newDirection = currentDirection.lerp(desiredDirection,
+                    turnRate * dt).nor();
 
-            Vector2 currentVelocity = body.getLinearVelocity().nor();
-            Vector2 changedDirection = currentVelocity.lerp(desiredDirection, 2f * dt)
-                    .nor();
+            float speed = initialVelocity.len();
+            body.setLinearVelocity(newDirection.scl(speed));
 
-            float speed = body.getLinearVelocity().len();
-            body.setLinearVelocity(changedDirection.scl(speed));
         }
 
         lived += dt;
