@@ -14,6 +14,7 @@ import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.factories.ProjectileFactory;
 import com.csse3200.game.physics.PhysicsLayer;
 import com.csse3200.game.physics.components.HitboxComponent;
+import com.csse3200.game.physics.components.HomingPhysicsComponent;
 import com.csse3200.game.physics.components.PhysicsComponent;
 import com.csse3200.game.physics.components.PhysicsProjectileComponent;
 import com.csse3200.game.rendering.AnimationRenderComponent;
@@ -428,7 +429,7 @@ public class PlayerActions extends Component {
             ServiceLocator.getEntityService().register(bullet);
         }
 
-        PhysicsProjectileComponent projectilePhysics = bullet.getComponent(PhysicsProjectileComponent.class);
+        PhysicsProjectileComponent projectilePhysics = bullet.getComponent(HomingPhysicsComponent.class);
 
         Vector3 destination = camera.unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
         projectilePhysics.fire(new Vector2(destination.x - origin.x, destination.y - origin.y), 5);
