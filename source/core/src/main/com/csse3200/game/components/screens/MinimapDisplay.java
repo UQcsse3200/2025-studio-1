@@ -68,6 +68,7 @@ public class MinimapDisplay extends BaseScreenDisplay {
         if (dimmer.getStage() == null) {
             stage.addActor(dimmer);
         }
+        logger.debug("Created translucent background");
 
         // Ensure the minimap image sits above the dimmer (and HUD)
         root.toFront();
@@ -87,6 +88,7 @@ public class MinimapDisplay extends BaseScreenDisplay {
         minimapTable.add(scrollPane).center().width(300).height(300);
 
         root.addActor(minimapTable);
+        logger.debug("Created minimap actor");
 
         // Click to zoom in
         minimapImage.addListener(new InputListener() {
@@ -102,6 +104,7 @@ public class MinimapDisplay extends BaseScreenDisplay {
                     float zoomedHeight = 600f;
                     minimapImage.setSize(zoomedWidth, zoomedHeight);
                     scrollPane.setScrollingDisabled(false, false);
+                    logger.info("Minimap is now scrollable");
                     zoomedIn = true;
 
                     // Scroll so the clicked spot is centered
@@ -117,6 +120,7 @@ public class MinimapDisplay extends BaseScreenDisplay {
                     scrollPane.setScrollPercentX(scrollX);
                     scrollPane.setScrollPercentY(scrollY);
                 }
+                logger.info("Minimap zoomed in to point {} x, {} y", x, y);
                 return true;
             }
         });
