@@ -1,6 +1,7 @@
 package com.csse3200.game.services;
 
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Array;
 import com.csse3200.game.areas.*;
 import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.components.items.ItemComponent;
@@ -28,20 +29,21 @@ public class SaveLoadService {
      */
     public boolean save(String slot, GameArea gameArea) {
 
-
         PlayerInfo gs = new PlayerInfo();
         gs.areaId = gameArea.toString();
+        gs.inventory = new ArrayList<>();
         for (Entity e : gameArea.getEntities()) {
             if (e.getComponent(InventoryComponent.class) != null) {
                 logger.info("Inventory component found: Player found.");
                 CombatStatsComponent stat = e.getComponent(CombatStatsComponent.class);
                 InventoryComponent inv = e.getComponent(InventoryComponent.class);
-                gs.inventory = new ArrayList<>();
+
                 for (int i = 0; i < inv.getSize(); i++) {
                     if (inv.get(i).getComponent(ItemComponent.class) != null) {
                         gs.inventory.add(inv.getTex(i));
                     }
                 }
+
                 gs.Health = stat.getHealth();
                 gs.position.set(e.getPosition());
                 gs.ProcessNumber = inv.getProcessor();
@@ -80,7 +82,7 @@ public class SaveLoadService {
      */
     public static class PlayerInfo {
         public String areaId;
-        public List<String> inventory;
+        public ArrayList<String> inventory;
         public int Health;
         public int ProcessNumber;
         public Vector2 position = new Vector2();
