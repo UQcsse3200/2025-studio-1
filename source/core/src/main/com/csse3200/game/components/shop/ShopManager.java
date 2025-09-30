@@ -95,8 +95,6 @@ public class ShopManager extends Component {
             }
             Entity weapon = inventory.get(inventory.getEquippedSlot());
 
-
-
             //Check if this upgrade has already been done
             if (weapon.hasComponent(LaserComponent.class)
                     && item.getItem().hasComponent(LaserComponent.class)) {
@@ -139,17 +137,12 @@ public class ShopManager extends Component {
             }
         }
 
-
         // Add item to Inventory
         int idx = InventoryOperations.addOrStack(inventory, item.getItem(), amount,
                 entry.maxStack());
         if (idx < 0) {
             return fail(item, PurchaseError.fromCode(idx));
         }
-
-
-
-
 
         chargePlayer(inventory, amount, cost);
         return PurchaseResult.ok(item, 1);
