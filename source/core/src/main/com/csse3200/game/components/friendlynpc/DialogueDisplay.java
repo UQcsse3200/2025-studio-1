@@ -280,7 +280,6 @@ public class DialogueDisplay extends Component {
                             nextOrHide();
                         } catch (Exception e) {
                             System.err.println("clicked->nextOrHide failed: " + e.getMessage());
-                            e.printStackTrace();
                         }
                     }
                 });
