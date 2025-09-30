@@ -1,19 +1,74 @@
 package com.csse3200.game.components.shop;
 
+import com.badlogic.gdx.ApplicationAdapter;
+import com.badlogic.gdx.Files;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Graphics;
+import com.badlogic.gdx.backends.headless.HeadlessApplication;
+import com.badlogic.gdx.backends.headless.HeadlessApplicationConfiguration;
+import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.Box2D;
+import com.csse3200.game.components.ComponentPriority;
+import com.csse3200.game.components.MagazineComponent;
+import com.csse3200.game.components.attachments.BulletEnhancerComponent;
+import com.csse3200.game.components.attachments.LaserComponent;
 import com.csse3200.game.components.items.ItemComponent;
 import com.csse3200.game.components.player.InventoryComponent;
 import com.csse3200.game.entities.Entity;
+import com.csse3200.game.entities.configs.Weapons;
+import com.csse3200.game.entities.factories.items.WeaponsFactory;
+import com.csse3200.game.extensions.GameExtension;
+import com.csse3200.game.physics.PhysicsEngine;
+import com.csse3200.game.physics.PhysicsService;
+import com.csse3200.game.rendering.RenderService;
+import com.csse3200.game.services.ResourceService;
+import com.csse3200.game.services.ServiceLocator;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
 
 @DisplayName("ShopManager")
+@ExtendWith(GameExtension.class)
+
 public class ShopManagerTest {
+    static HeadlessApplication app;
+    private ShopManager shopManager;
+    private Entity player;
+    private InventoryComponent inventory;
+
+    @BeforeEach
+    void setup() {
+        player = new Entity();
+        inventory = mock(InventoryComponent.class);
+        player.addComponent(inventory);
+
+        PhysicsEngine physicsEngine = mock(PhysicsEngine.class);
+        Body physicsBody = mock(Body.class);
+        when(physicsEngine.createBody(any())).thenReturn(physicsBody);
+        PhysicsService physicsService = new PhysicsService(physicsEngine);
+        ServiceLocator.registerPhysicsService(physicsService);
+
+        ResourceService resourceService = mock(ResourceService.class);
+        ServiceLocator.registerResourceService(resourceService);
+        Texture texture = mock(Texture.class);
+        when(resourceService.getAsset(anyString(), eq(Texture.class))).thenReturn(texture);
+
+        RenderService renderService = mock(RenderService.class);
+        ServiceLocator.registerRenderService(renderService);
+    }
 
     private Entity mkItemEntity(String name) {
         Entity e = new Entity();
@@ -21,6 +76,15 @@ public class ShopManagerTest {
         ic.setName(name);
         ic.setTexture("x.png");
         e.addComponent(ic);
+        if (name.equals("laser")) {
+            LaserComponent laserComponent = mock(LaserComponent.class);
+            when(laserComponent.getPrio()).thenReturn(ComponentPriority.MEDIUM);
+            e.addComponent(laserComponent);
+        } else if (name.equals("bullet")) {
+            BulletEnhancerComponent comp = mock(BulletEnhancerComponent.class);
+            when(comp.getPrio()).thenReturn(ComponentPriority.MEDIUM);
+            e.addComponent(comp);
+        }
         e.create();
         return e;
     }
@@ -85,6 +149,46 @@ public class ShopManagerTest {
             assertEquals(PurchaseError.NONE, r.error());
             assertEquals(95, inv.getProcessor()); // 100 - 5
             assertEquals(2, arrows.getItem().getComponent(ItemComponent.class).getCount());
+        }
+
+        @Test
+        @DisplayName("Purchase Succeeds: Buying bullet attachment for ranged weapon")
+        void buyBulletOnRifleWeapon() {
+            CatalogEntry bullet = mkEntry("bullet", 5, true, 1, 1);
+            ShopManager manager = mkManager(new CatalogService(new ArrayList<>(List.of(bullet))));
+            Entity player = new Entity();
+            InventoryComponent inv = attachInventory(player, 100);
+            Entity weapon = WeaponsFactory.createWeaponWithAttachment(Weapons.RIFLE, false, false);
+            inv.addItem(weapon);
+            inv.setEquippedSlot(0);
+            assertEquals(inv.getCurrSlot(), weapon);
+
+            //Check if the purchase was ok and the player has the attachment
+            PurchaseResult r = manager.purchase(player, bullet, 1);
+            assertTrue(inv.getCurrSlot().hasComponent(BulletEnhancerComponent.class));
+            assertTrue(r.ok());
+            assertEquals(PurchaseError.NONE, r.error());
+            assertEquals(95, inv.getProcessor()); // 100 - 5
+        }
+
+        @Test
+        @DisplayName("Purchase Succeeds: Buying bullet attachment for ranged weapon")
+        void buyBulletOnPistolWeapon() {
+            CatalogEntry bullet = mkEntry("bullet", 5, true, 1, 1);
+            ShopManager manager = mkManager(new CatalogService(new ArrayList<>(List.of(bullet))));
+            Entity player = new Entity();
+            InventoryComponent inv = attachInventory(player, 100);
+            Entity weapon = WeaponsFactory.createWeaponWithAttachment(Weapons.PISTOL, false, false);
+            inv.addItem(weapon);
+            inv.setEquippedSlot(0);
+            assertEquals(inv.getCurrSlot(), weapon);
+
+            //Check if the purchase was ok and the player has the attachment
+            PurchaseResult r = manager.purchase(player, bullet, 1);
+            assertTrue(inv.getCurrSlot().hasComponent(BulletEnhancerComponent.class));
+            assertTrue(r.ok());
+            assertEquals(PurchaseError.NONE, r.error());
+            assertEquals(95, inv.getProcessor()); // 100 - 5
         }
     }
 
@@ -177,5 +281,58 @@ public class ShopManagerTest {
             assertEquals(PurchaseError.LIMIT_REACHED, r.error());
             assertEquals(100, inv.getProcessor(), "Funds should not be deducted on failure");
         }
+
+        @Test
+        @DisplayName("Fails when not a ranged weapon")
+        void failsWhenNotRangedWeapon() {
+            CatalogEntry bullet = mkEntry("bullet", 5, true, 1, 1);
+            ShopManager manager = mkManager(new CatalogService(new ArrayList<>(List.of(bullet))));
+            Entity player = new Entity();
+            InventoryComponent inv = attachInventory(player, 100);
+            Entity weapon = WeaponsFactory.createWeapon(Weapons.DAGGER);
+            inv.addItem(weapon);
+            inv.setEquippedSlot(0);
+            assertEquals(inv.getCurrSlot(), weapon);
+
+            PurchaseResult r = manager.purchase(player, bullet, 1);
+            assertFalse(inv.getCurrSlot().hasComponent(BulletEnhancerComponent.class));
+            assertFalse(r.ok());
+            assertEquals(PurchaseError.INVALID_WEAPON, r.error());
+            assertEquals(100, inv.getProcessor());
+        }
+
+        @Test
+        @DisplayName("Fails when not holding anything")
+        void failsWhenNotHolding() {
+            CatalogEntry bullet = mkEntry("bullet", 5, true, 1, 1);
+            ShopManager manager = mkManager(new CatalogService(new ArrayList<>(List.of(bullet))));
+            Entity player = new Entity();
+            InventoryComponent inv = attachInventory(player, 100);
+
+            PurchaseResult r = manager.purchase(player, bullet, 1);
+            assertFalse(r.ok());
+            assertEquals(PurchaseError.INVALID_WEAPON, r.error());
+            assertEquals(100, inv.getProcessor());
+        }
+
+        @Test
+        @DisplayName("Fails when gun already has attachment")
+        void failsWhenDuplicateAttachment() {
+            CatalogEntry bullet = mkEntry("bullet", 5, true, 1, 1);
+            ShopManager manager = mkManager(new CatalogService(new ArrayList<>(List.of(bullet))));
+            Entity player = new Entity();
+            InventoryComponent inv = attachInventory(player, 100);
+            Entity weapon = WeaponsFactory.createWeaponWithAttachment(Weapons.RIFLE, false, true);
+            inv.addItem(weapon);
+            inv.setEquippedSlot(0);
+            assertEquals(inv.getCurrSlot(), weapon);
+            assertTrue(weapon.hasComponent(BulletEnhancerComponent.class));
+
+            PurchaseResult r = manager.purchase(player, bullet, 1);
+            assertFalse(r.ok());
+            assertEquals(PurchaseError.ALREADY_HAVE_BULLET, r.error());
+            assertEquals(100, inv.getProcessor());
+        }
+
     }
 }
