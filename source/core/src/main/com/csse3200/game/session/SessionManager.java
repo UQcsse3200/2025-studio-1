@@ -1,4 +1,5 @@
 package com.csse3200.game.session;
+import com.csse3200.game.session.LeaderBoardManager;
 
 /**
  * SessionManager is responsible for :
@@ -28,9 +29,13 @@ public class SessionManager {
     }
 
     /**
-     * ends the current session
+     * if : the current session is not null --> reset leaderboard
+     * else : set currentSession as null
      */
     public void endSession() {
+        if (currentSession != null) {
+            currentSession.getLeaderBoardManager().reset(); // reset leaderboard
+        }
         currentSession = null;
     }
 }
