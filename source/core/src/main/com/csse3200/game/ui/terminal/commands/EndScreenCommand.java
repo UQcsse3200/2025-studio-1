@@ -43,12 +43,10 @@ public record EndScreenCommand(
     private void applyElapsedToCurrent(long elapsedSeconds) {
         try {
             Screen current = game.getScreen();
-            if (current instanceof WinScreen win) {
-                win.updateTime(elapsedSeconds);
-            } else if (current instanceof DeathScreen death) {
-                death.updateTime(elapsedSeconds);
-            } else {
-                logger.debug("Current screen not time-updatable: {}", current);
+            switch (current) {
+                case WinScreen win -> win.updateTime(elapsedSeconds);
+                case DeathScreen death -> death.updateTime(elapsedSeconds);
+                default -> logger.debug("Current screen not time-updatable: {}", current);
             }
         } catch (Exception e) {
             // Be defensive in tests/mocks where getScreen() may be null or not set up
