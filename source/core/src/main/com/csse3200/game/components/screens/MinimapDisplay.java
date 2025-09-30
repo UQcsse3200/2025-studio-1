@@ -77,7 +77,7 @@ public class MinimapDisplay extends BaseScreenDisplay {
 
         Texture minimapTexture = new Texture("images/minimap.png");
         minimapImage = new Image(new TextureRegionDrawable(minimapTexture));
-        minimapImage.setSize(300, 300); // Adjust as needed
+        minimapImage.setSize(800, 800); // Adjust as needed
 
         // Wrap in a scroll pane for panning when zoomed in
         scrollPane = new ScrollPane(minimapImage, skin);
@@ -85,7 +85,7 @@ public class MinimapDisplay extends BaseScreenDisplay {
 
         Table minimapTable = new Table();
         minimapTable.setFillParent(true);
-        minimapTable.add(scrollPane).center().width(300).height(300);
+        minimapTable.add(scrollPane).center().width(800).height(800);
 
         root.addActor(minimapTable);
         logger.debug("Created minimap actor");
@@ -100,8 +100,8 @@ public class MinimapDisplay extends BaseScreenDisplay {
                     float percentY = y / minimapImage.getHeight();
 
                     // Zoom in the entire minimap image
-                    float zoomedWidth = 600f;
-                    float zoomedHeight = 600f;
+                    float zoomedWidth = 1600f;
+                    float zoomedHeight = 1600f;
                     minimapImage.setSize(zoomedWidth, zoomedHeight);
                     scrollPane.setScrollingDisabled(false, false);
                     logger.info("Minimap is now scrollable");
