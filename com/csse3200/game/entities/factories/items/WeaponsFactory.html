@@ -124,6 +124,13 @@ loadScripts(document, 'script');</script>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Creates a new weapon entity based on the given weapon type.</div>
 </div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../../Entity.html" title="class in com.csse3200.game.entities">Entity</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#createWeaponWithAttachment(com.csse3200.game.entities.configs.Weapons,boolean,boolean)" class="member-name-link">createWeaponWithAttachment</a><wbr>(<a href="../../configs/Weapons.html" title="enum class in com.csse3200.game.entities.configs">Weapons</a>&nbsp;weaponType,
+ boolean&nbsp;laser,
+ boolean&nbsp;bullet)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Creates a weapon with attachments on it</div>
+</div>
 </div>
 </div>
 </div>
@@ -156,6 +163,23 @@ loadScripts(document, 'script');</script>
 <dd><code>weaponType</code> - the type of weapon to create (defines stats and configuration)</dd>
 <dt>Returns:</dt>
 <dd>a fully configured <a href="../../Entity.html" title="class in com.csse3200.game.entities"><code>Entity</code></a> representing the weapon</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="createWeaponWithAttachment(com.csse3200.game.entities.configs.Weapons,boolean,boolean)">
+<h3>createWeaponWithAttachment</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../../Entity.html" title="class in com.csse3200.game.entities">Entity</a></span>&nbsp;<span class="element-name">createWeaponWithAttachment</span><wbr><span class="parameters">(<a href="../../configs/Weapons.html" title="enum class in com.csse3200.game.entities.configs">Weapons</a>&nbsp;weaponType,
+ boolean&nbsp;laser,
+ boolean&nbsp;bullet)</span></div>
+<div class="block">Creates a weapon with attachments on it</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>weaponType</code> - the type of weapon</dd>
+<dd><code>laser</code> - true if laser attachment is wanted</dd>
+<dd><code>bullet</code> - true if bullet attachment is wanted</dd>
+<dt>Returns:</dt>
+<dd>the new weapon with attachments</dd>
 </dl>
 </section>
 </li>
