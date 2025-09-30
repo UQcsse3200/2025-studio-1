@@ -10,7 +10,7 @@ import java.util.List;
  */
 
 public class LeaderBoardManager {
-    private final List<RoundData> leaderBoard;
+    private List<RoundData> leaderBoard;
 
     /**
      * creates a new arraylist for each session
@@ -34,6 +34,15 @@ public class LeaderBoardManager {
      * data until then since the beginning of the session
      */
     public List<RoundData> getLeaderBoard() {return leaderBoard;}
+
+    /**
+     * if loadedLeaderboard != null --> leaderboard = loadedLeaderboard
+     * else create a new list to avoid NullPointException
+     * @param loadedLeaderboard is a list of leaderboard data that is to be loaded
+     */
+    public void setLeaderboard(List<RoundData> loadedLeaderboard) {
+        leaderBoard = loadedLeaderboard != null ? loadedLeaderboard : new ArrayList<>();
+    }
 
     /**
      * clears the leaderboard at the end of each session
