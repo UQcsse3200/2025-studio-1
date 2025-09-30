@@ -15,6 +15,7 @@ import com.csse3200.game.components.maingame.MainGameActions;
 import com.csse3200.game.components.maingame.MainGameExitDisplay;
 import com.csse3200.game.components.player.InventoryComponent;
 import com.csse3200.game.components.player.ItemPickUpComponent;
+import com.csse3200.game.components.screens.MinimapDisplay;
 import com.csse3200.game.components.screens.PauseMenuDisplay;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
@@ -53,7 +54,9 @@ public class MainGameScreen extends ScreenAdapter {
 
 
     private Entity pauseOverlay;
+    private Entity minimap;
     private boolean isPauseVisible = false;
+    private boolean isMinimapVisible = false;
 
     public MainGameScreen(GdxGame game) {
         this.game = game;
@@ -110,6 +113,13 @@ public class MainGameScreen extends ScreenAdapter {
                 showPauseOverlay();
             } else {
                 hidePauseOverlay();
+            }
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.TAB)) {
+            if (!isMinimapVisible) {
+                showMinimapOverlay();
+            } else {
+                hideMinimapOverlay();
             }
         }
     }
@@ -217,6 +227,29 @@ public class MainGameScreen extends ScreenAdapter {
         } else {
             logger.info("Save data failed");
         }
+    }
+
+    private void showMinimapOverlay() {
+        logger.info("Showing minimap overlay");
+        Stage stage = ServiceLocator.getRenderService().getStage();
+        minimap = new Entity()
+                .addComponent(new MinimapDisplay(game))
+                .addComponent(new InputDecorator(stage, 100));
+        minimap.getEvents().addListener("resume", this::hideMinimapOverlay);
+        ServiceLocator.getEntityService().register(minimap);
+        ServiceLocator.getTimeSource().setPaused(true);
+        isMinimapVisible = true;
+    }
+
+    private void hideMinimapOverlay() {
+        logger.info("Hiding minimap overlay");
+        if (minimap != null) {
+            minimap.dispose();
+            ServiceLocator.getEntityService().unregister(minimap);
+            ServiceLocator.getTimeSource().setPaused(false);
+            minimap = null;
+        }
+        isMinimapVisible = false;
     }
 
 
