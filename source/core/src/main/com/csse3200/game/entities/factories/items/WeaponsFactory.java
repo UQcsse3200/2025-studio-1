@@ -69,8 +69,19 @@ public class WeaponsFactory {
         return weapon;
     }
 
+    /**
+     * Creates a weapon with attachments on it
+     * @param weaponType the type of weapon
+     * @param laser true if laser attachment is wanted
+     * @param bullet true if bullet attachment is wanted
+     * @return the new weapon with attachments
+     */
     public static Entity createWeaponWithAttachment(Weapons weaponType, boolean laser, boolean bullet) {
         Entity weapon = createWeapon(weaponType);
+
+        if (weaponType != Weapons.PISTOL && weaponType != Weapons.RIFLE) {
+            return weapon;
+        }
 
         if (laser) {
             weapon.addComponent(new LaserComponent());
