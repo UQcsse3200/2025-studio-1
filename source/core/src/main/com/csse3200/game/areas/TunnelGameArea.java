@@ -51,6 +51,7 @@ public class TunnelGameArea extends GameArea {
         spawnObjectDoors(new GridPoint2(0, 7), new GridPoint2(28, 7));
 
         spawnFloor();
+        spawnPasswordTerminal(new GridPoint2(22, 17));
 
         ItemSpawner itemSpawner = new ItemSpawner(this);
         itemSpawner.spawnItems(ItemSpawnConfig.tunnelmap());
@@ -168,6 +169,11 @@ public class TunnelGameArea extends GameArea {
 
     public static TunnelGameArea load(TerrainFactory terrainFactory, CameraComponent camera) {
         return (new TunnelGameArea(terrainFactory, camera));
+    }
+
+    private void spawnPasswordTerminal(GridPoint2 pos) {
+        Entity terminal = ObstacleFactory.createSecuritySystem();
+        spawnEntityAt(terminal, pos, true, false);
     }
 
 }
