@@ -11,10 +11,7 @@ import com.csse3200.game.entities.configs.ActiveProjectileTypes;
 import com.csse3200.game.entities.configs.projectiles.ActiveProjectile;
 import com.csse3200.game.entities.configs.projectiles.ProjectileConfig;
 import com.csse3200.game.entities.configs.projectiles.ProjectileTarget;
-import com.csse3200.game.physics.components.ColliderComponent;
-import com.csse3200.game.physics.components.HitboxComponent;
-import com.csse3200.game.physics.components.PhysicsComponent;
-import com.csse3200.game.physics.components.PhysicsProjectileComponent;
+import com.csse3200.game.physics.components.*;
 import com.csse3200.game.rendering.TextureRenderWithRotationComponent;
 import com.csse3200.game.services.ServiceLocator;
 
@@ -166,6 +163,8 @@ public class ProjectileFactory {
             return projectile;
         }
         Entity projectile = createProjectile(target, source, "images/round.png");
+        projectile.addComponent(new HomingPhysicsComponent());
+        projectile.getComponent(HomingPhysicsComponent.class).setTurnRate(0.2f);
         projectile.scaleHeight(0.85f);
         return projectile;
     }
