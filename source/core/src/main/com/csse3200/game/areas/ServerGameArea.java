@@ -27,6 +27,7 @@ public class ServerGameArea extends GameArea {
 
     private static final float WALL_WIDTH = 0.1f;
     private static final GridPoint2 PLAYER_SPAWN = new GridPoint2(10, 10);
+    private static final float ROOM_DIFF_NUMBER = 9;
 
     private Entity player;
 
@@ -62,7 +63,7 @@ public class ServerGameArea extends GameArea {
         spawnCratesAndRailing();
         spawnSpawnPads();
         spawnBordersAndDoors();
-        spawnObjectDoors(new GridPoint2(0, 6), new GridPoint2(28, 21));
+        spawnObjectDoors(new GridPoint2(0, 7), new GridPoint2(28, 21));
 
         spawnFloor();
 
@@ -163,10 +164,10 @@ public class ServerGameArea extends GameArea {
      * Spawn 2 high-level GPTs in the room as enemies.
      */
     private void spawnGPTs() {
-        Entity ghost1 = NPCFactory.createGhostGPT(player, this, 2.5f);
+        Entity ghost1 = NPCFactory.createGhostGPT(player, this, ServiceLocator.getDifficulty().getRoomDifficulty(ServerGameArea.ROOM_DIFF_NUMBER));
         GridPoint2 ghost1Pos = new GridPoint2(25, 20);
         spawnEntityAt(ghost1, ghost1Pos, true, false);
-        Entity ghost2 = NPCFactory.createGhostGPT(player, this, 2.5f);
+        Entity ghost2 = NPCFactory.createGhostGPT(player, this, ServiceLocator.getDifficulty().getRoomDifficulty(ServerGameArea.ROOM_DIFF_NUMBER));
         GridPoint2 ghost2Pos = new GridPoint2(25, 20);
         spawnEntityAt(ghost2, ghost2Pos, true, false);
     }

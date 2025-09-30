@@ -3,6 +3,7 @@ package com.csse3200.game.entities.factories.system;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+import com.csse3200.game.components.BreakablePlatformComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.physics.PhysicsLayer;
 import com.csse3200.game.physics.PhysicsUtils;
@@ -531,7 +532,8 @@ public class ObstacleFactory {
                 new Entity()
                         .addComponent(new TextureRenderComponent("foreg_sprites/Security/Platform.png"))
                         .addComponent(new PhysicsComponent())
-                        .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
+                        .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE))
+                        .addComponent(new BreakablePlatformComponent());
 
         platform.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
         platform.getComponent(TextureRenderComponent.class).scaleEntity();
@@ -539,6 +541,7 @@ public class ObstacleFactory {
         PhysicsUtils.setScaledCollider(platform, 0.3f, 0.6f);
         return platform;
     }
+
 
     /**
      * Creates a red security light entity.
