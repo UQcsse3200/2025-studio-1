@@ -110,18 +110,18 @@ public class FileLoader {
      * - currently a placeholder for refacotring end sprint 2 / into sprint 3
      *
      * @param inventory string representation of the items
-     * @param help       processor count to be loaded in
+     * @param playerInventory Inventory that will be populated
      */
-    public static InventoryComponent readInventory(List<String> inventory, InventoryComponent help) {
-        ItemPickUpComponent testLoading = new ItemPickUpComponent(help);
+    public static InventoryComponent readInventory(List<String> inventory, InventoryComponent playerInventory) {
+        ItemPickUpComponent testLoading = new ItemPickUpComponent(playerInventory);
         //repopulates the inventory
         if (inventory != null) {
             for (int i = 0; i < inventory.size(); i++) {
                 Entity placehold = testLoading.createItemFromTexture(inventory.get(i));
-                help.addItem(placehold);
+                playerInventory.addItem(placehold);
             }
         }
-        return help;
+        return playerInventory;
     }
 
 

@@ -11,6 +11,7 @@ import com.csse3200.game.areas.*;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.components.gamearea.PerformanceDisplay;
+import com.csse3200.game.components.items.ConsumableComponent;
 import com.csse3200.game.components.maingame.MainGameActions;
 import com.csse3200.game.components.maingame.MainGameExitDisplay;
 import com.csse3200.game.components.player.InventoryComponent;
@@ -18,6 +19,7 @@ import com.csse3200.game.components.player.ItemPickUpComponent;
 import com.csse3200.game.components.screens.PauseMenuDisplay;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
+import com.csse3200.game.entities.configs.Consumables;
 import com.csse3200.game.entities.factories.system.RenderFactory;
 import com.csse3200.game.files.FileLoader;
 import com.csse3200.game.input.InputComponent;
@@ -254,13 +256,12 @@ public class MainGameScreen extends ScreenAdapter {
         loadAssets();
         createUI();
         // null so default can return error
-        GameArea areaLoad = null;
+
         logger.debug("Initialising main game screen entities");
         TerrainFactory terrainFactory = new TerrainFactory(renderer.getCamera());
-
+        GameArea areaLoad = ForestGameArea.load(terrainFactory, renderer.getCamera());
         //cases for all current areas
         switch (load.areaId) {
-            case "Forest" -> areaLoad = ForestGameArea.load(terrainFactory, renderer.getCamera());
             case "Elevator" -> areaLoad = ElevatorGameArea.load(terrainFactory, renderer.getCamera());
             case "Office" -> areaLoad = OfficeGameArea.load(terrainFactory, renderer.getCamera());
             case "Mainhall" -> areaLoad = MainHall.load(terrainFactory, renderer.getCamera());
@@ -274,18 +275,15 @@ public class MainGameScreen extends ScreenAdapter {
         }
 
         gameArea = areaLoad;
-        com.csse3200.game.services.ServiceLocator.registerGameArea(gameArea);
+        ServiceLocator.registerGameArea(gameArea);
         gameArea.create();
-        // loads in inventory from save
+        gameArea.getPlayer().getComponent(InventoryComponent.class).setProcessor(load.ProcessNumber);
+        gameArea.getPlayer().getComponent(CombatStatsComponent.class).setHealth(load.Health);
+        gameArea.getPlayer().getComponent(InventoryComponent.class).get(1).getComponent(ConsumableComponent.class);
         FileLoader.readInventory(load.inventory,
                 gameArea.getPlayer().getComponent(InventoryComponent.class));
 
-
-        // currently not needed: sprint 3 refactor to fix everything
-//    gameArea.getPlayer().getEvents().trigger("load player", load.inventory, load.ProcessNumber);
-        // functionally bad but if it works
-//    gameArea.loadIn(load.inventory, load.Health,load.ProcessNumber, load.position.x, load.position.y);
-
     }
+
 
 }
