@@ -2,6 +2,7 @@ package com.csse3200.game.components;
 
 import com.csse3200.game.effects.Effect;
 import com.csse3200.game.effects.RapidFireEffect;
+import com.csse3200.game.effects.UnlimitedAmmoEffect;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.services.ServiceLocator;
 
@@ -25,6 +26,10 @@ public class PowerupComponent extends Component {
             if (rapidfire.apply(equippedWeapon)) {
                 activeEffects.add(rapidfire);
             }
+        } else if (effect instanceof UnlimitedAmmoEffect unlimitedammo && equippedWeapon != null) {
+            if (unlimitedammo.apply(equippedWeapon)) {
+                activeEffects.add(unlimitedammo);
+            }
         }
     }
 
@@ -38,6 +43,13 @@ public class PowerupComponent extends Component {
             if (effect instanceof RapidFireEffect rapidFireEffect) {
                 rapidFireEffect.update(dt);
                 if (!rapidFireEffect.isActive()) {
+                    activeEffects.remove(i);
+                }
+            }
+
+            else if (effect instanceof UnlimitedAmmoEffect unlimitedAmmoEffect) {
+                unlimitedAmmoEffect.update(dt);
+                if (!unlimitedAmmoEffect.isActive()) {
                     activeEffects.remove(i);
                 }
             }
