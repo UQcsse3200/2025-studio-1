@@ -714,6 +714,27 @@ public class ObstacleFactory {
     }
 
     /**
+     * Spikes. Takes health from player upon contact
+     * 
+     * @return Entity spike entity
+     */
+    public static Entity createSpikes() {
+        Entity spikes = new Entity()
+                .addComponent(new TextureRenderComponent("foreg_sprites/extras/Spikes.png"))
+                .addComponent(new PhysicsComponent())
+                .addComponent(new ColliderComponent())
+                .addComponent(new HitboxComponent().setLayer(PhysicsLayer.OBSTACLE))
+                .addComponent(new TouchAttackComponent(PhysicsLayer.PLAYER, 25f))
+                .addComponent(new WeaponsStatsComponent(30));
+
+        spikes.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
+        spikes.getComponent(TextureRenderComponent.class).scaleEntity();
+        spikes.scaleHeight(1f);
+        PhysicsUtils.setScaledCollider(spikes, 1f, 1f);
+        return spikes;
+    }
+
+    /**
      * Makes a static door, no collision so that the player can pass through.
      */
     public static Entity createDoor() {
