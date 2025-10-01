@@ -12,6 +12,16 @@ import com.csse3200.game.entities.factories.characters.PlayerFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.entities.spawner.ItemSpawner;
 import com.csse3200.game.services.ServiceLocator;
+import com.csse3200.game.components.ProximityPromptComponent;
+
+import com.badlogic.gdx.math.Vector2;
+import com.csse3200.game.entities.configs.benches.BenchConfig;
+import com.csse3200.game.entities.factories.InteractableStationFactory;
+import com.csse3200.game.components.stations.StationComponent;
+import com.csse3200.game.physics.components.ColliderComponent;
+import com.csse3200.game.physics.components.PhysicsComponent;
+import com.csse3200.game.physics.PhysicsUtils;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 
 /**
  * Tunnel room: minimal walls with left door back to Server Room.
@@ -174,6 +184,32 @@ public class TunnelGameArea extends GameArea {
     private void spawnPasswordTerminal(GridPoint2 pos) {
         Entity terminal = ObstacleFactory.createSecuritySystem();
         spawnEntityAt(terminal, pos, true, false);
+
+        Entity hintStation = InteractableStationFactory.createBaseStation();
+        hintStation.addComponent(new StationComponent(makeTerminalHintConfig()));
+
+        PhysicsUtils.setScaledCollider(hintStation, 2.5f, 1.5f);
+        hintStation.getComponent(ColliderComponent.class)
+                .setAsBoxAligned(new Vector2(2.5f, 1.5f),
+                        PhysicsComponent.AlignX.CENTER, PhysicsComponent.AlignY.CENTER);
+
+        GridPoint2 hintPos = new GridPoint2(pos.x, pos.y + 2);
+        spawnEntityAt(hintStation, hintPos, true, false);
     }
 
+    private BenchConfig makeTerminalHintConfig() {
+        return new BenchConfig() {
+            {
+                this.texturePath = null;
+                this.promptText = "Press F1 to access terminal";
+            }
+            @Override
+            public int getPrice() {
+                return 0;
+            }
+            @Override
+            public void upgrade(boolean playerNear, com.csse3200.game.entities.Entity player, Label prompt) {
+            }
+        };
+    }
 }
