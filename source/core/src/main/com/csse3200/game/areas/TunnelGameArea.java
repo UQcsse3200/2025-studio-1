@@ -12,7 +12,6 @@ import com.csse3200.game.entities.factories.characters.PlayerFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.entities.spawner.ItemSpawner;
 import com.csse3200.game.services.ServiceLocator;
-import com.csse3200.game.components.ProximityPromptComponent;
 
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.entities.configs.benches.BenchConfig;
@@ -20,6 +19,7 @@ import com.csse3200.game.entities.factories.InteractableStationFactory;
 import com.csse3200.game.components.stations.StationComponent;
 import com.csse3200.game.physics.components.ColliderComponent;
 import com.csse3200.game.physics.components.PhysicsComponent;
+import com.csse3200.game.components.DoorComponent;
 import com.csse3200.game.physics.PhysicsUtils;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 
@@ -32,6 +32,9 @@ public class TunnelGameArea extends GameArea {
     private static final float ROOM_DIFF_NUMBER = 10;
 
     private Entity player;
+
+    private DoorComponent rightDoorComp;
+    public static volatile DoorComponent exposedRightDoor;
 
     public TunnelGameArea(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
         super(terrainFactory, cameraComponent);
@@ -94,6 +97,10 @@ public class TunnelGameArea extends GameArea {
         rightDoor.setPosition(b.rightX() - WALL_WIDTH - 0.001f, rightDoorY);
         rightDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadBossRoom));
         spawnEntity(rightDoor);
+
+        rightDoorComp = rightDoor.getComponent(DoorComponent.class);
+        rightDoorComp.setLocked(true);
+        TunnelGameArea.exposedRightDoor = rightDoorComp;
     }
 
     /**

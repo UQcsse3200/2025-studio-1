@@ -5,6 +5,8 @@ import com.csse3200.game.components.Component;
 import com.csse3200.game.ui.terminal.autocomplete.BKTree;
 import com.csse3200.game.ui.terminal.autocomplete.RadixTrie;
 import com.csse3200.game.ui.terminal.commands.*;
+import com.csse3200.game.areas.TunnelGameArea;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -55,7 +57,6 @@ public class Terminal extends Component {
         addCommand("infiniteStamina", new InfiniteStaminaCommand());
         addCommand("infiniteDash", new InfiniteDashCommand());
         addCommand("infiniteJumps", new InfiniteJumpsCommand());
-
         addCommand("doorOverride", new DoorOverrideCommand());
 //        addCommand("teleport", new TeleportCommand());
 
@@ -119,6 +120,15 @@ public class Terminal extends Component {
     public boolean processMessage() {
         logger.debug("Processing message");
         String message = enteredMessage.trim();
+
+        if (message.equals("0000")) {
+            if (TunnelGameArea.exposedRightDoor != null) {
+                TunnelGameArea.exposedRightDoor.setLocked(false);
+                setEnteredMessage("");
+                return true;
+            }
+        }
+
         String[] sections = message.split(" ");
         String command = sections[0];
         ArrayList<String> args = new ArrayList<>(Arrays.asList(sections).subList(1, sections.length));
