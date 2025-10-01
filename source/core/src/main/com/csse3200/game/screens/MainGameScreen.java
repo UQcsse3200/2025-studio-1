@@ -223,11 +223,10 @@ public class MainGameScreen extends ScreenAdapter {
         playerCurrency += amount;
     }
 
-    @Override
     /**
      * Reset leaderboard on exit
      */
-    public void dispose() {
+    public void disposeLeaderBoard() {
         if (session != null) {
             session.getLeaderBoardManager().reset();
         }
