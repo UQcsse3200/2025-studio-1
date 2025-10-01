@@ -36,7 +36,6 @@ public class MainGameDisplay extends UIComponent {
         table = new Table();
         table.top();
         table.setFillParent(true);
-        table.setDebug(true);
 
         TextButton mainMenuBtn = new TextButton("Exit", skin);
 
