@@ -18,7 +18,7 @@ import com.csse3200.game.services.ServiceLocator;
  */
 public class TunnelGameArea extends GameArea {
     private static final float WALL_WIDTH = 0.1f;
-    private static final GridPoint2 PLAYER_SPAWN = new GridPoint2(10, 10);
+    private static final GridPoint2 PLAYER_SPAWN = new GridPoint2(5, 7);
     private static final float ROOM_DIFF_NUMBER = 10;
 
     private Entity player;
@@ -49,6 +49,7 @@ public class TunnelGameArea extends GameArea {
         spawnSpawnPads();
         spawnGrokDroids();
         spawnObjectDoors(new GridPoint2(0, 7), new GridPoint2(28, 7));
+        spawnSpikes();
 
         spawnVisibleFloor();
 
@@ -145,6 +146,15 @@ public class TunnelGameArea extends GameArea {
                 ServiceLocator.getDifficulty().getRoomDifficulty(TunnelGameArea.ROOM_DIFF_NUMBER));
         GridPoint2 grok2Pos = new GridPoint2(25, 7);
         spawnEntityAt(grok2, grok2Pos, true, false);
+    }
+
+    /**
+     * Spawn the spikes
+     */
+    private void spawnSpikes() {
+        Entity spikes = ObstacleFactory.createSpikes();
+        GridPoint2 spikesSpawn = new GridPoint2(15, 7);
+        spawnEntityAt(spikes, spikesSpawn, true, false);
     }
 
     private void loadServer() {

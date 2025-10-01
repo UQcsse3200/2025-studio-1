@@ -242,6 +242,11 @@ public class ForestGameArea extends GameArea {
             "images/Boss3_Attacks.atlas",
             "images/boss3_phase2.atlas"
     };
+
+    private static final String[] extraTextures = {
+            "foreg_sprites/extras/Spikes.png",
+    };
+
     private static final String[] forestSounds = {"sounds/Impact4.ogg",
             "sounds/shot_failed.mp3",
             "sounds/reload.mp3",
@@ -649,6 +654,7 @@ public class ForestGameArea extends GameArea {
         resourceService.loadTextures(officeTextures);
         resourceService.loadTextures(securityTextures);
         resourceService.loadTextures(researchTextures);
+        resourceService.loadTextures(extraTextures);
         resourceService.loadTextureAtlases(forestTextureAtlases);
         resourceService.loadSounds(playerSound1);
         resourceService.loadSounds(forestSounds);
@@ -680,6 +686,7 @@ public class ForestGameArea extends GameArea {
         resourceService.unloadAssets(spawnPadTextures);
         resourceService.unloadAssets(officeTextures);
         resourceService.unloadAssets(securityTextures);
+        resourceService.unloadAssets(extraTextures);
     }
 
     // Removed area-specific dispose to avoid double disposal during transitions
