@@ -120,6 +120,15 @@ public abstract class GameArea implements Disposable {
         }
     }
 
+    protected void spawnVisibleFloor() {
+        for (int i = 0; i < 25; i += 4) {
+            GridPoint2 floorspawn = new GridPoint2(i, 3);
+
+            Entity floor = ObstacleFactory.createVisibleLongFloor();
+            spawnEntityAt(floor, floorspawn, false, false);
+        }
+    }
+
     /**
      * Start enemy waves from terminal command by typing "waves".
      */
