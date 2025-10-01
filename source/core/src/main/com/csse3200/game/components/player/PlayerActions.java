@@ -10,6 +10,7 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Timer;
 import com.csse3200.game.components.*;
+import com.csse3200.game.effects.UnlimitedAmmoEffect;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.factories.ProjectileFactory;
 import com.csse3200.game.physics.PhysicsLayer;
@@ -59,6 +60,9 @@ public class PlayerActions extends Component {
     private boolean crouching = false;
     private boolean grounded = true;
 
+    // Effects
+    private UnlimitedAmmoEffect unlimitedAmmoEffect = new UnlimitedAmmoEffect(10f, this);
+
     // Ability cooldowns / counters
     private int dashCooldown = 0;
     private int jumpsLeft = MAX_JUMPS;
@@ -101,6 +105,7 @@ public class PlayerActions extends Component {
 
             }
         }
+
     }
 
     /**
@@ -433,10 +438,18 @@ public class PlayerActions extends Component {
         Vector3 destination = camera.unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
         projectilePhysics.fire(new Vector2(destination.x - origin.x, destination.y - origin.y), 5);
 
-
-        mag.setCurrentAmmo(mag.getCurrentAmmo() - 1);
+        if (unlimitedAmmoEffect != null && unlimitedAmmoEffect.isActive()) {
+//            unlimitedAmmoEffect.apply(gun);  // dont call every shot
+        } else {
+            mag.setCurrentAmmo(mag.getCurrentAmmo() - 1);
+        }
+//        mag.setCurrentAmmo(mag.getCurrentAmmo() - 1);
 
         timeSinceLastAttack = 0;
+    }
+
+    public UnlimitedAmmoEffect getUnlimitedAmmoEffect() {
+        return unlimitedAmmoEffect;
     }
 
     /**

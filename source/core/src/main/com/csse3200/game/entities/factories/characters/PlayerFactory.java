@@ -7,9 +7,11 @@ import com.csse3200.game.components.player.*;
 import com.csse3200.game.components.player.InventoryComponent;
 import com.csse3200.game.effects.Effect;
 import com.csse3200.game.effects.RapidFireEffect;
+import com.csse3200.game.effects.UnlimitedAmmoEffect;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.characters.PlayerConfig;
 import com.csse3200.game.entities.configs.consumables.RapidFireConsumableConfig;
+import com.csse3200.game.entities.configs.consumables.UnlimitedAmmoConsumableConfig;
 import com.csse3200.game.files.FileLoader;
 import com.csse3200.game.input.InputComponent;
 import com.csse3200.game.physics.PhysicsLayer;
@@ -119,29 +121,47 @@ public class PlayerFactory {
         // remove this if we have item pickup available
         // (disposes entity when player go near it)
         player.addComponent(new Component() {
+            @Override
             public void update() {
                 var entities = ServiceLocator.getEntityService().getEntities();
                 for (int i = 0; i < entities.size; i++) {
-                    Entity entityRapidFirePowerup = entities.get(i);
-                    TagComponent tag = entityRapidFirePowerup.getComponent(TagComponent.class);
+                    Entity entityPowerup = entities.get(i);
+                    TagComponent tag = entityPowerup.getComponent(TagComponent.class);
 
-                    if (tag != null && tag.getTag().equals("rapidfire")) {
-                        if (entityRapidFirePowerup.getCenterPosition().dst(player.getCenterPosition()) < 1f) {
+                    if (tag != null) {
+                        if (tag.getTag().equals("rapidfire")) {
+                            if (entityPowerup.getCenterPosition().dst(player.getCenterPosition()) < 1f) {
+                                InventoryComponent inventory = player.getComponent(InventoryComponent.class);
+                                Entity equippedWeapon = inventory.getCurrItem();
 
-                            InventoryComponent inventory = player.getComponent(InventoryComponent.class);
-                            Entity equippedWeapon = inventory.getCurrItem();
-
-                            if (equippedWeapon != null) {
-                                RapidFireConsumableConfig config = new RapidFireConsumableConfig();
-                                for (Effect e : config.effects) {
-                                    if (e instanceof RapidFireEffect rapidFireEffect) {
-                                        player.getComponent(PowerupComponent.class).setEquippedWeapon(equippedWeapon);
-                                        player.getComponent(PowerupComponent.class).addEffect(rapidFireEffect);
+                                if (equippedWeapon != null) {
+                                    RapidFireConsumableConfig config = new RapidFireConsumableConfig();
+                                    for (Effect e : config.effects) {
+                                        if (e instanceof RapidFireEffect rapidFireEffect) {
+                                            player.getComponent(PowerupComponent.class).setEquippedWeapon(equippedWeapon);
+                                            player.getComponent(PowerupComponent.class).addEffect(rapidFireEffect);
+                                        }
                                     }
                                 }
+                                entityPowerup.dispose();
                             }
+                        }
 
-                            entityRapidFirePowerup.dispose();
+                        if (tag.getTag().equals("unlimitedammo")) {
+                            if (entityPowerup.getCenterPosition().dst(player.getCenterPosition()) < 1f) {
+                                InventoryComponent inventory = player.getComponent(InventoryComponent.class);
+                                Entity equippedWeapon = inventory.getCurrItem();
+
+                                if (equippedWeapon != null) {
+                                    PowerupComponent powerup = player.getComponent(PowerupComponent.class);
+                                    powerup.setEquippedWeapon(equippedWeapon);
+                                    // Activate the effect that already exists in PlayerActions
+                                    PlayerActions playerActions = player.getComponent(PlayerActions.class);
+                                    playerActions.getUnlimitedAmmoEffect().apply(equippedWeapon);
+                                    powerup.addEffect(playerActions.getUnlimitedAmmoEffect());
+                                }
+                                entityPowerup.dispose();
+                            }
                         }
                     }
                 }
