@@ -95,7 +95,7 @@ loadScripts(document, 'script');</script>
 <dd><code><a href="Command.html" title="interface in com.csse3200.game.ui.terminal.commands">Command</a></code></dd>
 </dl>
 <hr>
-<div class="type-signature"><span class="modifiers">public record </span><span class="element-name type-name-label">EndScreenCommand</span>(<a href="../../../GdxGame.html" title="class in com.csse3200.game">GdxGame</a>&nbsp;game, <a href="../../../GdxGame.ScreenType.html" title="enum class in com.csse3200.game">GdxGame.ScreenType</a>&nbsp;screenType)
+<div class="type-signature"><span class="modifiers">public record </span><span class="element-name type-name-label">EndScreenCommand</span>(<a href="../../../GdxGame.html" title="class in com.csse3200.game">GdxGame</a>&nbsp;game, <a href="../../../GdxGame.ScreenType.html" title="enum class in com.csse3200.game">GdxGame.ScreenType</a>&nbsp;screenType, <a href="../../../services/CountdownTimerService.html" title="class in com.csse3200.game.services">CountdownTimerService</a>&nbsp;timer)
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Record.html" title="class or interface in java.lang" class="external-link">Record</a>
 implements <a href="Command.html" title="interface in com.csse3200.game.ui.terminal.commands">Command</a></span></div>
 <div class="block">A command for switching to the Win Screen or other end screens.</div>
@@ -110,8 +110,9 @@ implements <a href="Command.html" title="interface in com.csse3200.game.ui.termi
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(com.csse3200.game.GdxGame,com.csse3200.game.GdxGame.ScreenType)" class="member-name-link">EndScreenCommand</a><wbr>(<a href="../../../GdxGame.html" title="class in com.csse3200.game">GdxGame</a>&nbsp;game,
- <a href="../../../GdxGame.ScreenType.html" title="enum class in com.csse3200.game">GdxGame.ScreenType</a>&nbsp;screenType)</code></div>
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(com.csse3200.game.GdxGame,com.csse3200.game.GdxGame.ScreenType,com.csse3200.game.services.CountdownTimerService)" class="member-name-link">EndScreenCommand</a><wbr>(<a href="../../../GdxGame.html" title="class in com.csse3200.game">GdxGame</a>&nbsp;game,
+ <a href="../../../GdxGame.ScreenType.html" title="enum class in com.csse3200.game">GdxGame.ScreenType</a>&nbsp;screenType,
+ <a href="../../../services/CountdownTimerService.html" title="class in com.csse3200.game.services">CountdownTimerService</a>&nbsp;timer)</code></div>
 <div class="col-last even-row-color">
 <div class="block">Creates an instance of a <code>EndScreenCommand</code> record class.</div>
 </div>
@@ -154,9 +155,14 @@ implements <a href="Command.html" title="interface in com.csse3200.game.ui.termi
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns the value of the <code>screenType</code> record component.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#toString()" class="member-name-link">toString</a>()</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../../../services/CountdownTimerService.html" title="class in com.csse3200.game.services">CountdownTimerService</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#timer()" class="member-name-link">timer</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Returns the value of the <code>timer</code> record component.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#toString()" class="member-name-link">toString</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns a string representation of this record class.</div>
 </div>
 </div>
@@ -177,15 +183,17 @@ implements <a href="Command.html" title="interface in com.csse3200.game.ui.termi
 <h2>Constructor Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="&lt;init&gt;(com.csse3200.game.GdxGame,com.csse3200.game.GdxGame.ScreenType)">
+<section class="detail" id="&lt;init&gt;(com.csse3200.game.GdxGame,com.csse3200.game.GdxGame.ScreenType,com.csse3200.game.services.CountdownTimerService)">
 <h3>EndScreenCommand</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">EndScreenCommand</span><wbr><span class="parameters">(<a href="../../../GdxGame.html" title="class in com.csse3200.game">GdxGame</a>&nbsp;game,
- <a href="../../../GdxGame.ScreenType.html" title="enum class in com.csse3200.game">GdxGame.ScreenType</a>&nbsp;screenType)</span></div>
+ <a href="../../../GdxGame.ScreenType.html" title="enum class in com.csse3200.game">GdxGame.ScreenType</a>&nbsp;screenType,
+ <a href="../../../services/CountdownTimerService.html" title="class in com.csse3200.game.services">CountdownTimerService</a>&nbsp;timer)</span></div>
 <div class="block">Creates an instance of a <code>EndScreenCommand</code> record class.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>game</code> - the value for the <code>game</code> record component</dd>
 <dd><code>screenType</code> - the value for the <code>screenType</code> record component</dd>
+<dd><code>timer</code> - the value for the <code>timer</code> record component</dd>
 </dl>
 </section>
 </li>
@@ -273,6 +281,17 @@ implements <a href="Command.html" title="interface in com.csse3200.game.ui.termi
 <dl class="notes">
 <dt>Returns:</dt>
 <dd>the value of the <code>screenType</code> record component</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="timer()">
+<h3>timer</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../../../services/CountdownTimerService.html" title="class in com.csse3200.game.services">CountdownTimerService</a></span>&nbsp;<span class="element-name">timer</span>()</div>
+<div class="block">Returns the value of the <code>timer</code> record component.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>the value of the <code>timer</code> record component</dd>
 </dl>
 </section>
 </li>
