@@ -12,14 +12,34 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.scenes.scene2d.utils.DragListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.UIComponent;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+/**
+ * UI for the pool mini-game. Renders the table, HUD (scores/turn/fouls),
+ * and controls (start, shoot, reset, close), and forwards user actions
+ * to the provided Controller.
+ */
 public class PoolGameDisplay extends UIComponent {
-    private static final float PANEL_W = 940f, PANEL_H = 600f;
+
+    /** External callbacks for game logic. */
+    public interface Controller {
+        void onStart();
+        void onShoot(float dirX, float dirY, float power);
+        void onReset();
+        void onStop();
+    }
+
+    private Controller controller;
+    public void setController(Controller controller) { this.controller = controller; }
+
+    private static final Logger logger = LoggerFactory.getLogger(PoolGameDisplay.class);
+
+    private static final float PANEL_W = 1100f, PANEL_H = 800f;
     private static final Color PANEL_COLOR = Color.valueOf("0B132B");
     private static final Color TITLE_COLOR = Color.valueOf("00E5FF");
     private static final Color GOLD = Color.valueOf("FFD54F");
@@ -28,7 +48,7 @@ public class PoolGameDisplay extends UIComponent {
     private Image dimmer, frame, background;
     private Table root;
 
-    // Header / HUD
+    // HUD
     private Label titleLbl, p1Lbl, p2Lbl, turnLbl, foulLbl;
 
     // Controls
@@ -49,7 +69,7 @@ public class PoolGameDisplay extends UIComponent {
         super.create();
         entity.getEvents().addListener("interact", this::show);
 
-        // Load assets (replace with your paths)
+        // Asset load
         tableTex   = ServiceLocator.getResourceService().getAsset("images/pool/table.png", Texture.class);
         cueBallTex = ServiceLocator.getResourceService().getAsset("images/pool/cueball.png", Texture.class);
         cueTex     = ServiceLocator.getResourceService().getAsset("images/pool/cue.png", Texture.class);
@@ -62,36 +82,45 @@ public class PoolGameDisplay extends UIComponent {
         hide();
     }
 
+    /** Builds the dim background and panel chrome behind the UI. */
     private void buildBackdrop() {
         pixel = solid(Color.WHITE);
 
         dimmer = new Image(new TextureRegionDrawable(new TextureRegion(pixel)));
         dimmer.setFillParent(true);
-        dimmer.setColor(0,0,0,0.6f);
+        dimmer.setColor(0, 0, 0, 0.6f);
+        dimmer.setTouchable(Touchable.disabled);
         stage.addActor(dimmer);
 
         frame = new Image(new TextureRegionDrawable(new TextureRegion(pixel)));
         frame.setSize(PANEL_W + 8, PANEL_H + 8);
-        frame.setPosition((stage.getWidth()-frame.getWidth())/2f, (stage.getHeight()-frame.getHeight())/2f);
+        frame.setPosition((stage.getWidth() - frame.getWidth()) / 2f,
+                (stage.getHeight() - frame.getHeight()) / 2f);
         frame.setColor(Color.BLACK);
+        frame.setTouchable(Touchable.disabled);
         stage.addActor(frame);
 
         background = new Image(new TextureRegionDrawable(new TextureRegion(pixel)));
         background.setSize(PANEL_W, PANEL_H);
-        background.setPosition((stage.getWidth()-background.getWidth())/2f, (stage.getHeight()-background.getHeight())/2f);
+        background.setPosition((stage.getWidth() - background.getWidth()) / 2f,
+                (stage.getHeight() - background.getHeight()) / 2f);
         background.setColor(PANEL_COLOR);
+        background.setTouchable(Touchable.disabled);
         stage.addActor(background);
     }
 
+    /** Root table layout for all child UI. */
     private void buildRoot() {
         root = new Table();
         root.setSize(PANEL_W, PANEL_H);
         root.setPosition(background.getX(), background.getY());
         root.top().pad(16);
         root.defaults().pad(10);
+        root.setTouchable(Touchable.enabled);
         stage.addActor(root);
     }
 
+    /** Header with title, scores, current turn, and foul message area. */
     private void buildHeader() {
         Label.LabelStyle titleStyle = new Label.LabelStyle(skin.get(Label.LabelStyle.class));
         titleStyle.fontColor = TITLE_COLOR;
@@ -127,27 +156,44 @@ public class PoolGameDisplay extends UIComponent {
         root.add(foulRow).growX().padTop(2).row();
     }
 
+    /** Interactive table widget with aim handling. */
     private void buildTableArea() {
-        poolTable = new PoolTable(tableTex, cueBallTex, cueTex);
-        poolTable.setSize(PANEL_W - 40f, PANEL_H - 250f);
-        poolTable.setOrigin(Align.center);
+        float aspect = (float) tableTex.getWidth() / tableTex.getHeight();
+        float targetW = PANEL_W - 40f;
+        float targetH = targetW / aspect;
 
-        // Aim by dragging on table
-        poolTable.addListener(new DragListener() {
-            @Override public void dragStart(InputEvent event, float x, float y, int pointer) {
+        poolTable = new PoolTable(tableTex, cueBallTex, cueTex);
+        poolTable.setSize(targetW, targetH);
+        poolTable.setOrigin(Align.center);
+        poolTable.setTouchable(Touchable.enabled);
+
+        // Aim input
+        poolTable.addListener(new InputListener() {
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 poolTable.beginAim(x, y);
+                return true;
             }
-            @Override public void drag(InputEvent event, float x, float y, int pointer) {
+            @Override
+            public void touchDragged(InputEvent event, float x, float y, int pointer) {
                 poolTable.updateAim(x, y);
             }
-            @Override public void dragStop(InputEvent event, float x, float y, int pointer) {
+            @Override
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                poolTable.updateAim(x, y);
                 poolTable.finishAim();
+            }
+            @Override
+            public boolean mouseMoved(InputEvent event, float x, float y) {
+                poolTable.updateAim(x, y);
+                return false;
             }
         });
 
-        root.add(poolTable).growX().height(poolTable.getHeight()).padTop(6).row();
+        root.add(poolTable).size(targetW, targetH).padTop(6).row();
     }
 
+    /** Footer controls: power, guide toggle, and actions. */
     private void buildFooter() {
         powerSlider = new Slider(0f, 1f, 0.01f, false, skin);
         powerSlider.setValue(0.5f);
@@ -161,38 +207,44 @@ public class PoolGameDisplay extends UIComponent {
         });
 
         startBtn = new TextButton("Rack / Break", skin);
+        shootBtn = new TextButton("Shoot", skin);
+        resetBtn = new TextButton("Reset", skin);
+        closeBtn = new TextButton("Close", skin);
+
         startBtn.addListener(new ChangeListener() {
             @Override public void changed(ChangeEvent event, Actor actor) {
                 running = true;
+                if (controller != null) controller.onStart();
                 entity.getEvents().trigger("pool:start");
                 clearFoul();
             }
         });
 
-        shootBtn = new TextButton("Shoot", skin);
         shootBtn.addListener(new ChangeListener() {
             @Override public void changed(ChangeEvent event, Actor actor) {
                 if (!running) return;
+
                 Vector2 dir = poolTable.getAimDir();
                 if (dir.isZero(1e-4f)) return;
+
                 float power = powerSlider.getValue();
+                if (controller != null) controller.onShoot(dir.x, dir.y, power);
                 entity.getEvents().trigger("pool:shoot", dir.x, dir.y, power);
-                // Small feedback
                 poolTable.kickbackCue(Interpolation.sine);
             }
         });
 
-        resetBtn = new TextButton("Reset", skin);
         resetBtn.addListener(new ChangeListener() {
             @Override public void changed(ChangeEvent event, Actor actor) {
+                if (controller != null) controller.onReset();
                 entity.getEvents().trigger("pool:reset");
                 clearFoul();
             }
         });
 
-        closeBtn = new TextButton("Close", skin);
         closeBtn.addListener(new ChangeListener() {
             @Override public void changed(ChangeEvent event, Actor actor) {
+                if (controller != null) controller.onStop();
                 entity.getEvents().trigger("pool:stop");
                 hide();
             }
@@ -209,7 +261,7 @@ public class PoolGameDisplay extends UIComponent {
         root.add(controls).growX().padTop(8).row();
     }
 
-    // -------- Public API to update HUD from your game systems --------
+    // ----- HUD API -----
     public void setScores(int p1, int p2) {
         this.p1Score = Math.max(0, p1);
         this.p2Score = Math.max(0, p2);
@@ -222,22 +274,19 @@ public class PoolGameDisplay extends UIComponent {
         if (turnLbl != null) turnLbl.setText("Turn: " + (turnIdx == 0 ? "P1" : "P2"));
     }
 
-    public void setFoul(String msg) {
-        foulLbl.setText(msg == null ? "" : msg);
-    }
+    public void setFoul(String msg) { foulLbl.setText(msg == null ? "" : msg); }
     public void clearFoul() { foulLbl.setText(""); }
 
     public void setCueBall(Vector2 pos) { poolTable.setCueBall(pos); }
     public void setBalls(Vector2[] positions) { poolTable.setObjectBalls(positions); }
 
-    // -------- Show/Hide ----------
+    // ----- Visibility -----
     public void show() {
-        ServiceLocator.getTimeSource().setPaused(true);
+        running = true;
         setVisible(true);
     }
 
     public void hide() {
-        ServiceLocator.getTimeSource().setPaused(false);
         setVisible(false);
         entity.getEvents().trigger("pool:stop");
     }
@@ -246,28 +295,36 @@ public class PoolGameDisplay extends UIComponent {
         if (dimmer != null) dimmer.setVisible(v);
         if (frame != null) frame.setVisible(v);
         if (background != null) background.setVisible(v);
-        if (root != null) root.setVisible(v);
+        if (root != null) {
+            root.setVisible(v);
+            root.setTouchable(v ? Touchable.enabled : Touchable.disabled);
+        }
     }
 
-    @Override public void draw(SpriteBatch batch) { /* Stage draws */ }
+    @Override public void draw(SpriteBatch batch) { /* Stage draws the UI. */ }
 
     @Override public void dispose() {
         if (pixel != null) pixel.dispose();
         super.dispose();
     }
 
+    /** Creates a 1x1 solid-colour texture. */
     private static Texture solid(Color c) {
-        Pixmap pm = new Pixmap(1,1, Pixmap.Format.RGBA8888);
-        pm.setColor(c); pm.fill();
+        Pixmap pm = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
+        pm.setColor(c);
+        pm.fill();
         Texture t = new Texture(pm);
         pm.dispose();
         return t;
     }
 
-    // ======== Inner class: PoolTable (render + aim UI only) ========
+    /**
+     * Widget for rendering the table, cue ball, guide, and cue.
+     * Handles user input to compute the aim direction.
+     */
     private static class PoolTable extends Widget {
         private final Texture tableTex, cueBallTex, cueTex;
-        private final TextureRegionDrawable whitePx; // for dotted guide
+        private final TextureRegionDrawable whitePx; // 1x1 for guide dots
         private final Vector2 cueBall = new Vector2();
         private Vector2[] balls = new Vector2[0];
 
@@ -276,7 +333,7 @@ public class PoolGameDisplay extends UIComponent {
         private final Vector2 aimDir = new Vector2();
         private boolean aiming = false;
         private boolean showGuide = true;
-        private float cueKickT = 0f; // small kickback animation
+        private float cueKickT = 0f;
 
         PoolTable(Texture tableTex, Texture cueBallTex, Texture cueTex) {
             this.tableTex = tableTex;
@@ -286,20 +343,24 @@ public class PoolGameDisplay extends UIComponent {
             Texture px = solid(Color.WHITE);
             this.whitePx = new TextureRegionDrawable(new TextureRegion(px));
 
-            // Default cueball center
+            // Center cue ball by default
             setCueBall(new Vector2(0.5f, 0.5f));
         }
 
         void setGuideVisible(boolean v) { this.showGuide = v; }
 
+        /** Set cue ball using normalised [0,1] coordinates. */
         void setCueBall(Vector2 normPos) {
-            cueBall.set(MathUtils.clamp(normPos.x, 0f, 1f), MathUtils.clamp(normPos.y, 0f, 1f));
+            cueBall.set(MathUtils.clamp(normPos.x, 0f, 1f),
+                    MathUtils.clamp(normPos.y, 0f, 1f));
         }
 
+        /** Set object balls using normalised [0,1] coordinates. */
         void setObjectBalls(Vector2[] normPositions) {
             this.balls = normPositions != null ? normPositions : new Vector2[0];
         }
 
+        /** Begin aiming from the pointer location. */
         void beginAim(float x, float y) {
             aiming = true;
             aimStart.set(localToNorm(x, y));
@@ -307,24 +368,21 @@ public class PoolGameDisplay extends UIComponent {
             computeDir();
         }
 
+        /** Update the current aim with the pointer location. */
         void updateAim(float x, float y) {
             if (!aiming) return;
             aimEnd.set(localToNorm(x, y));
             computeDir();
         }
 
-        void finishAim() {
-            aiming = false;
-        }
+        /** Finish aiming; direction remains available via {@link #getAimDir()}. */
+        void finishAim() { aiming = false; }
 
-        Vector2 getAimDir() {
-            // Direction from cue ball towards aimEnd
-            return aimDir.cpy();
-        }
+        /** Copy of the current normalised aim direction. */
+        Vector2 getAimDir() { return aimDir.cpy(); }
 
-        void kickbackCue(Interpolation interp) {
-            cueKickT = 1f; // decay in act()
-        }
+        /** Trigger a brief cue kickback animation. */
+        void kickbackCue(Interpolation interp) { cueKickT = 1f; }
 
         @Override
         public void act(float delta) {
@@ -337,67 +395,65 @@ public class PoolGameDisplay extends UIComponent {
 
         @Override
         public void draw(Batch batch, float parentAlpha) {
-            // Draw table stretched to widget bounds
+            // Table
             Color c = getColor();
             batch.setColor(c.r, c.g, c.b, c.a * parentAlpha);
             batch.draw(tableTex, getX(), getY(), getWidth(), getHeight());
 
-            // Convert normalized to local pixels
+            // Positions
             float cbx = getX() + cueBall.x * getWidth();
             float cby = getY() + cueBall.y * getHeight();
             float ballPx = Math.min(getWidth(), getHeight()) * 0.035f;
 
-            // Draw object balls (if provided) — here as white placeholders
+            // Object balls (placeholder: using cueBallTex)
             if (balls != null) {
                 for (Vector2 b : balls) {
-                    float bx = getX() + b.x * getWidth() - ballPx/2f;
-                    float by = getY() + b.y * getHeight() - ballPx/2f;
+                    float bx = getX() + b.x * getWidth() - ballPx / 2f;
+                    float by = getY() + b.y * getHeight() - ballPx / 2f;
                     batch.draw(cueBallTex, bx, by, ballPx, ballPx);
                 }
             }
 
-            // Draw cue ball
-            batch.draw(cueBallTex, cbx - ballPx/2f, cby - ballPx/2f, ballPx, ballPx);
+            // Cue ball
+            batch.draw(cueBallTex, cbx - ballPx / 2f, cby - ballPx / 2f, ballPx, ballPx);
 
-            // Draw guide + cue if we have a direction
+            // Guide and cue
             if (!aimDir.isZero(1e-4f)) {
-                float angleDeg = aimDir.angleDeg();
-                // Dotted guide
                 if (showGuide) {
-                    batch.setColor(1,1,1,0.25f);
+                    batch.setColor(1, 1, 1, 0.25f);
                     float step = ballPx * 0.9f;
                     for (int i = 1; i <= 10; i++) {
                         float d = step * i;
                         float gx = cbx + aimDir.x * d;
                         float gy = cby + aimDir.y * d;
-                        batch.draw(((TextureRegionDrawable)whitePx).getRegion().getTexture(), gx-2, gy-2, 4, 4);
+                        batch.draw(((TextureRegionDrawable) whitePx).getRegion().getTexture(), gx - 2, gy - 2, 4, 4);
                     }
-                    batch.setColor(1,1,1,1);
+                    batch.setColor(1, 1, 1, 1);
                 }
-                // Cue sprite with slight kickback
+
                 float cueLen = ballPx * 7f;
-                float kick = (float)Math.pow(cueKickT, 2) * ballPx * 0.7f;
+                float kick = (float) Math.pow(cueKickT, 2) * ballPx * 0.7f;
                 float off = ballPx * 0.55f + kick;
-                float cx = cbx - aimDir.x * (off + cueLen/2f);
-                float cy = cby - aimDir.y * (off + cueLen/2f);
+                float cx = cbx - aimDir.x * (off + cueLen / 2f);
+                float cy = cby - aimDir.y * (off + cueLen / 2f);
 
                 batch.draw(cueTex,
                         cx, cy,
-                        cueLen/2f, ballPx * 0.25f,         // origin
-                        cueLen, ballPx * 0.5f,              // size
+                        cueLen / 2f, ballPx * 0.25f,   // origin
+                        cueLen, ballPx * 0.5f,        // size
                         1f, 1f
                 );
             }
         }
 
+        /** Recompute normalised aim direction from cue ball to aim target. */
         private void computeDir() {
-            // Direction is from cue ball towards current aim point
             Vector2 target = aiming ? aimEnd : aimStart;
             aimDir.set(target).sub(cueBall).nor();
-            // If aiming from inside the cue ball, zero out
             if (Float.isNaN(aimDir.x) || Float.isNaN(aimDir.y)) aimDir.setZero();
         }
 
+        /** Convert local widget coordinates to normalised [0,1] space. */
         private Vector2 localToNorm(float x, float y) {
             float nx = MathUtils.clamp(x / getWidth(), 0f, 1f);
             float ny = MathUtils.clamp(y / getHeight(), 0f, 1f);

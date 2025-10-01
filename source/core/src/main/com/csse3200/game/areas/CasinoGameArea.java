@@ -12,6 +12,7 @@ import com.csse3200.game.entities.factories.characters.PlayerFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.entities.spawner.ItemSpawner;
 import com.csse3200.game.components.minigames.whackamole.WhackAMoleGame;
+import com.csse3200.game.services.ServiceLocator;
 
 /**
  * Minimal generic Casino room: walls, a single right-side door, and a subtle background overlay.
@@ -87,8 +88,7 @@ public class CasinoGameArea extends GameArea {
 
     private void spawnPoolGame() {
         GridPoint2 pos = new GridPoint2(10, 7);
-        spawnEntityAt(new PoolGame().getGameEntity(), pos, true, true);
-    }
+        spawnEntityAt(new PoolGame(ServiceLocator.getPhysicsService().getPhysics()).getGameEntity(), pos, true, true);    }
 
     private void loadSpawnFromCasino() {
         clearAndLoad(() -> new ForestGameArea(terrainFactory, cameraComponent));
