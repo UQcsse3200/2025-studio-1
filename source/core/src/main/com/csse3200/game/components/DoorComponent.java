@@ -13,11 +13,13 @@ import com.csse3200.game.physics.PhysicsLayer;
 public class DoorComponent extends Component {
     private final Runnable onEntered;
     private boolean triggered = false;
+    private boolean locked = false;
 
     /**
      * When true, any gating logic (e.g., keycards) should be bypassed.
      */
     private boolean overrideUnlocked = false;
+
 
     public DoorComponent(Runnable onEntered) {
         this.onEntered = onEntered;
@@ -43,8 +45,17 @@ public class DoorComponent extends Component {
         return overrideUnlocked;
     }
 
+    public void setLocked(boolean locked) {
+        this.locked = locked;
+    }
+    public boolean isLocked() {
+        return locked;
+    }
+
     private void onCollisionStart(Fixture ownFixture, Fixture otherFixture) {
         if (triggered) return;
+
+        if (locked && !overrideUnlocked) return;
 
         short otherLayer = otherFixture.getFilterData().categoryBits;
         if (PhysicsLayer.contains(otherLayer, PhysicsLayer.PLAYER)) {
