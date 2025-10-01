@@ -75,12 +75,12 @@ public class FlyingBossRoom extends GameArea {
         spawnBigWall();
 
         spawnFlyingBoss();
-        spawnObjectDoors(new GridPoint2(0, 6), new GridPoint2(28, 6));
+        spawnObjectDoors(new GridPoint2(0, 7), new GridPoint2(28, 7));
 
         ItemSpawner itemSpawner = new ItemSpawner(this);
         itemSpawner.spawnItems(ItemSpawnConfig.bossmap());
 
-        spawnFloor();
+        spawnVisibleFloor();
     }
 
     private void displayUI() {

@@ -50,7 +50,7 @@ public class TunnelGameArea extends GameArea {
         spawnGrokDroids();
         spawnObjectDoors(new GridPoint2(0, 7), new GridPoint2(28, 7));
 
-        spawnFloor();
+        spawnVisibleFloor();
 
         ItemSpawner itemSpawner = new ItemSpawner(this);
         itemSpawner.spawnItems(ItemSpawnConfig.tunnelmap());

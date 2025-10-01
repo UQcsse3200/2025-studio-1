@@ -113,6 +113,25 @@ public class ObstacleFactory {
     }
 
     /**
+     * Create visible floor
+     * 
+     * @return a visible static floor Entity
+     */
+    public static Entity createVisibleLongFloor() {
+        Entity longFloor =
+                new Entity()
+                        .addComponent(new TextureRenderComponent("foreg_sprites/general/LongFloor.png"))
+                        .addComponent(new PhysicsComponent())
+                        .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
+
+        longFloor.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
+        longFloor.getComponent(TextureRenderComponent.class).scaleEntity();
+        longFloor.scaleHeight(2f);
+        PhysicsUtils.setScaledCollider(longFloor, 1f, 1f);
+        return longFloor;
+    }
+
+    /**
      * A very tall wall-like block (same art as thick floor but much taller).
      * Good for visual dividers in the background.
      *
