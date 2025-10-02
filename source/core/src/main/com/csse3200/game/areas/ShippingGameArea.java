@@ -188,8 +188,7 @@ public class ShippingGameArea extends GameArea {
     }
 
     public Entity getPlayer() {
-        // placeholder
-        return null;
+        return ServiceLocator.getPlayer();
     }
 
     public static ShippingGameArea load(TerrainFactory terrainFactory, CameraComponent camera) {

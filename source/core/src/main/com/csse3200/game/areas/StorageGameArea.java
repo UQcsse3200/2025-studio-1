@@ -158,8 +158,7 @@ public class StorageGameArea extends GameArea {
 
     @Override
     public Entity getPlayer() {
-        // placeholder
-        return null;
+        return ServiceLocator.getPlayer();
     }
 
     public static StorageGameArea load(TerrainFactory terrainFactory, CameraComponent camera) {

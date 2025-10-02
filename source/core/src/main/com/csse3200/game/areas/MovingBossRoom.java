@@ -133,7 +133,7 @@ public class MovingBossRoom extends GameArea {
     }
 
     public Entity getPlayer() {
-        return player;
+        return ServiceLocator.getPlayer();
     }
 
     public void loadSecurity() {
