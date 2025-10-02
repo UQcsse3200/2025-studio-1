@@ -9,7 +9,6 @@ import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Disposable;
-import com.csse3200.game.areas.*;
 import com.csse3200.game.areas.terrain.TerrainComponent;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.components.CameraComponent;
@@ -23,13 +22,11 @@ import com.csse3200.game.entities.factories.characters.NPCFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.physics.components.PhysicsProjectileComponent;
 import com.csse3200.game.rendering.SolidColorRenderComponent;
+import com.csse3200.game.services.DiscoveryService;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Supplier;
 
 /**
@@ -39,25 +36,20 @@ import java.util.function.Supplier;
  * <p>Support for enabling/disabling game areas could be added by making this a Component instead.
  */
 public abstract class GameArea implements Disposable {
-    protected TerrainComponent terrain;
-    protected List<Entity> areaEntities;
-    protected TerrainFactory terrainFactory;
-    protected CameraComponent cameraComponent;
-
-    protected float baseScaling = 0f;
-    /**
-     * Prevents re-entrant room transitions across areas
-     */
-    protected static boolean isTransitioning = false;
-
-    private final float VERTICAL_HEIGHT_OFFSET = 9.375f;
-
     private static final String DEEP_SPIN = "DeepSpin";
     private static final String GHOST_GPT = "GhostGPT";
     private static final String VROOMBA = "Vroomba";
     private static final String GROK_DROID = "GrokDroid";
     private static final String TURRET = "Turret";
-
+    protected TerrainComponent terrain;
+    protected List<Entity> areaEntities;
+    protected TerrainFactory terrainFactory;
+    protected CameraComponent cameraComponent;
+    protected float baseScaling = 0f;
+    /**
+     * Prevents re-entrant room transitions across areas
+     */
+    protected boolean isTransitioning = false;
     protected EnemyWaves wavesManager; // manage waves via terminal command
 
     protected GameArea(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
@@ -141,7 +133,7 @@ public abstract class GameArea implements Disposable {
      * @return the name of the current room
      *
      */
-    public String getRoomName () {
+    public String getRoomName() {
         return this.toString();
     }
 
@@ -200,7 +192,7 @@ public abstract class GameArea implements Disposable {
      * @param roomName    The name of the current floor/room.
      * @param total       The total number of enemies to be spawned.
      * @param scaleFactor The scaling factor of the difficulty of the enemies to be spawned.
-     * @param player      The player {@link Entity} that is to be target by the enemies.
+     * @param player      The player {@link Entity} that is to be targeted by the enemies.
      */
     public void spawnEnemies(String roomName, int total, float scaleFactor, Entity player) {
         Map<String, ArrayList<Vector2>> positions = getEnemySpawnPosition(roomName);
@@ -261,39 +253,41 @@ public abstract class GameArea implements Disposable {
                 break;
         }
     }
+
     /**
      * Spawns the enemies based on the enemy name
-     * @param roomName The number of the current floor/room.
-     * @param total The total number of enemies to be spawned.
+     *
+     * @param roomName    The number of the current floor/room.
+     * @param total       The total number of enemies to be spawned.
      * @param scaleFactor The scaling factor of the difficulty of the enemies to be spawned.
-     * @param player The player {@link Entity} that is to be target by the enemies.
+     * @param player      The player {@link Entity} that is to be targeted by the enemies.
      */
-    public void spawn(String name, String roomName, int total, float scaleFactor, Entity player){
+    public void spawn(String name, String roomName, int total, float scaleFactor, Entity player) {
         HashMap<String, ArrayList<Vector2>> positions = new HashMap<>();
         ArrayList<Vector2> respectiveSpawns = new ArrayList<>();
         respectiveSpawns.add(new Vector2(12f, 4f));
         switch (name) {
-            case (ghostGpt):
-                positions.put(ghostGpt, (ArrayList<Vector2>) respectiveSpawns.clone());
+            case (GHOST_GPT):
+                positions.put(GHOST_GPT, respectiveSpawns);
                 spawnGhostGPT(total, scaleFactor, player, positions);
                 break;
-            case (grokDroid):
-                positions.put(grokDroid, (ArrayList<Vector2>) respectiveSpawns.clone());
+            case (GROK_DROID):
+                positions.put(GROK_DROID, respectiveSpawns);
                 spawnGrokDroid(total, scaleFactor, player, positions);
                 break;
 
-            case (deepSpin):
-                positions.put(deepSpin, (ArrayList<Vector2>) respectiveSpawns.clone());
+            case (DEEP_SPIN):
+                positions.put(DEEP_SPIN, respectiveSpawns);
                 spawnDeepspin(total, scaleFactor, player, positions);
                 break;
 
-            case (turret):
-                positions.put(turret, (ArrayList<Vector2>) respectiveSpawns.clone());
+            case (TURRET):
+                positions.put(TURRET, respectiveSpawns);
                 spawnTurret(total, scaleFactor, player, positions);
                 break;
 
-            case(vroomba):
-                positions.put(vroomba, (ArrayList<Vector2>) respectiveSpawns.clone());
+            case (VROOMBA):
+                positions.put(VROOMBA, respectiveSpawns);
                 spawnVroomba(total, scaleFactor, player, positions);
                 break;
         }
@@ -371,7 +365,9 @@ public abstract class GameArea implements Disposable {
      * @param scaleFactor The scale of increase in difficulty of the GhostGPT
      */
     public void spawnTurret(
-            int total, float scaleFactor, Entity player, Map<String, ArrayList<Vector2>> positions) {
+            int total, float scaleFactor, Entity player,
+            Map<String, ArrayList<Vector2>> positions
+    ) {
         ArrayList<Vector2> spawnPositions = positions.get(TURRET);
         for (Vector2 pos : spawnPositions) {
             Entity turret = NPCFactory.createTurret(player, this, scaleFactor);
@@ -405,126 +401,126 @@ public abstract class GameArea implements Disposable {
                 respectiveSpawns.add(new Vector2(5.4f, 11f));
                 respectiveSpawns.add(new Vector2(8.2f, 11f));
                 respectiveSpawns.add(new Vector2(11.1f, 10f));
-                positions.put(DEEP_SPIN, (ArrayList<Vector2>) respectiveSpawns.clone());
+                positions.put(DEEP_SPIN, respectiveSpawns);
                 respectiveSpawns.clear();
                 respectiveSpawns.add(new Vector2(12f, 5f));
-                positions.put(TURRET, (ArrayList<Vector2>) respectiveSpawns.clone());
+                positions.put(TURRET, respectiveSpawns);
                 break;
             case "Reception":
                 respectiveSpawns.add(new Vector2(5.7f, 5f));
                 respectiveSpawns.add(new Vector2(1.5f, 7f));
-                positions.put(VROOMBA, (ArrayList<Vector2>) respectiveSpawns.clone());
+                positions.put(VROOMBA, respectiveSpawns);
                 respectiveSpawns.clear();
                 respectiveSpawns.add(new Vector2(11.5f, 10f));
-                positions.put(GHOST_GPT, (ArrayList<Vector2>) respectiveSpawns.clone());
+                positions.put(GHOST_GPT, respectiveSpawns);
                 break;
             case "Mainhall":
                 respectiveSpawns.add(new Vector2(10f, 10f));
                 respectiveSpawns.add(new Vector2(2f, 10f));
-                positions.put(deepSpin, (ArrayList<Vector2>) respectiveSpawns.clone());
+                positions.put(DEEP_SPIN, respectiveSpawns);
                 respectiveSpawns.clear();
                 respectiveSpawns.add(new Vector2(11f, 6f));
                 respectiveSpawns.add(new Vector2(2f, 8f));
-                positions.put(vroomba, (ArrayList<Vector2>) respectiveSpawns.clone());
+                positions.put(VROOMBA, respectiveSpawns);
                 break;
             case "Security":
                 respectiveSpawns.add(new Vector2(12f, 10f));
                 respectiveSpawns.add(new Vector2(2f, 5f));
-                positions.put(GHOST_GPT, (ArrayList<Vector2>) respectiveSpawns.clone());
+                positions.put(GHOST_GPT, respectiveSpawns);
                 respectiveSpawns.clear();
                 respectiveSpawns.add(new Vector2(7f, 11f));
                 respectiveSpawns.add(new Vector2(3f, 10f));
-                positions.put(DEEP_SPIN, (ArrayList<Vector2>) respectiveSpawns.clone());
+                positions.put(DEEP_SPIN, respectiveSpawns);
                 break;
             case "Office":
                 respectiveSpawns.add(new Vector2(12f, 3f));
-                positions.put(ghostGpt, (ArrayList<Vector2>) respectiveSpawns.clone());
+                positions.put(GHOST_GPT, respectiveSpawns);
                 respectiveSpawns.clear();
                 respectiveSpawns.add(new Vector2(6f, 6f));
-                positions.put(vroomba, (ArrayList<Vector2>) respectiveSpawns.clone());
+                positions.put(VROOMBA, respectiveSpawns);
                 respectiveSpawns.clear();
                 respectiveSpawns.add(new Vector2(8.2f, 11f));
                 respectiveSpawns.add(new Vector2(2f, 10f));
-                positions.put(deepSpin, (ArrayList<Vector2>) respectiveSpawns.clone());
+                positions.put(DEEP_SPIN, respectiveSpawns);
                 break;
             case "Elevator":
                 respectiveSpawns.add(new Vector2(13f, 4f));
                 respectiveSpawns.add(new Vector2(11f, 8f));
-                positions.put(ghostGpt, (ArrayList<Vector2>) respectiveSpawns.clone());
+                positions.put(GHOST_GPT, respectiveSpawns);
                 respectiveSpawns.clear();
                 respectiveSpawns.add(new Vector2(8.4f, 10f));
                 respectiveSpawns.add(new Vector2(2f, 8f));
-                positions.put(grokDroid, (ArrayList<Vector2>) respectiveSpawns.clone());
+                positions.put(GROK_DROID, respectiveSpawns);
                 break;
             case "Research":
                 respectiveSpawns.add(new Vector2(12f, 11f));
-                positions.put(turret, (ArrayList<Vector2>) respectiveSpawns.clone());
+                positions.put(TURRET, respectiveSpawns);
                 respectiveSpawns.clear();
                 respectiveSpawns.add(new Vector2(2f, 7f));
                 respectiveSpawns.add(new Vector2(11f, 4f));
-                positions.put(ghostGpt, (ArrayList<Vector2>) respectiveSpawns.clone());
+                positions.put(GHOST_GPT, respectiveSpawns);
                 respectiveSpawns.clear();
                 respectiveSpawns.add(new Vector2(3f, 10f));
                 respectiveSpawns.add(new Vector2(5f, 10f));
-                positions.put(grokDroid, (ArrayList<Vector2>) respectiveSpawns.clone());
+                positions.put(GROK_DROID, respectiveSpawns);
                 break;
             case "Shipping":
                 respectiveSpawns.add(new Vector2(12f, 11f));
                 respectiveSpawns.add(new Vector2(2f, 5f));
-                positions.put(ghostGpt, (ArrayList<Vector2>) respectiveSpawns.clone());
+                positions.put(GHOST_GPT, respectiveSpawns);
                 respectiveSpawns.clear();
                 respectiveSpawns.add(new Vector2(12f, 5f));
-                positions.put(vroomba, (ArrayList<Vector2>) respectiveSpawns.clone());
+                positions.put(VROOMBA, respectiveSpawns);
                 respectiveSpawns.clear();
                 respectiveSpawns.add(new Vector2(3f, 10f));
                 respectiveSpawns.add(new Vector2(5f, 10f));
-                positions.put(grokDroid, (ArrayList<Vector2>) respectiveSpawns.clone());
+                positions.put(GROK_DROID, respectiveSpawns);
                 break;
             case "Storage":
                 respectiveSpawns.add(new Vector2(12f, 5f));
-                positions.put(turret, (ArrayList<Vector2>) respectiveSpawns.clone());
+                positions.put(TURRET, respectiveSpawns);
                 respectiveSpawns.clear();
                 respectiveSpawns.add(new Vector2(12f, 11f));
                 respectiveSpawns.add(new Vector2(12f, 8f));
                 respectiveSpawns.add(new Vector2(8f, 8f));
-                positions.put(grokDroid, (ArrayList<Vector2>) respectiveSpawns.clone());
+                positions.put(GROK_DROID, respectiveSpawns);
                 break;
             case "Server":
                 respectiveSpawns.add(new Vector2(12f, 11f));
                 respectiveSpawns.add(new Vector2(7.6f, 4f));
                 respectiveSpawns.add(new Vector2(11f, 8f));
-                positions.put(ghostGpt, (ArrayList<Vector2>) respectiveSpawns.clone());
+                positions.put(GHOST_GPT, respectiveSpawns);
                 respectiveSpawns.clear();
                 respectiveSpawns.add(new Vector2(2f, 4f));
-                positions.put(turret, (ArrayList<Vector2>) respectiveSpawns.clone());
+                positions.put(TURRET, respectiveSpawns);
                 respectiveSpawns.clear();
                 respectiveSpawns.add(new Vector2(3f, 10f));
                 respectiveSpawns.add(new Vector2(5f, 10f));
-                positions.put(deepSpin, (ArrayList<Vector2>) respectiveSpawns.clone());
+                positions.put(DEEP_SPIN, respectiveSpawns);
                 break;
             case "Tunnel":
                 respectiveSpawns.add(new Vector2(12f, 4f));
                 respectiveSpawns.add(new Vector2(3f, 4f));
-                positions.put(ghostGpt, (ArrayList<Vector2>) respectiveSpawns.clone());
+                positions.put(GHOST_GPT, respectiveSpawns);
                 respectiveSpawns.clear();
                 respectiveSpawns.add(new Vector2(10f, 10f));
-                positions.put(turret, (ArrayList<Vector2>) respectiveSpawns.clone());
+                positions.put(TURRET, respectiveSpawns);
                 respectiveSpawns.clear();
                 respectiveSpawns.add(new Vector2(4f, 10f));
-                positions.put(vroomba, (ArrayList<Vector2>) respectiveSpawns.clone());
+                positions.put(VROOMBA, respectiveSpawns);
                 respectiveSpawns.clear();
                 respectiveSpawns.add(new Vector2(6f, 10f));
-                positions.put(grokDroid, (ArrayList<Vector2>) respectiveSpawns.clone());
+                positions.put(GROK_DROID, respectiveSpawns);
                 break;
             default:
                 respectiveSpawns.add(new Vector2(12f, 11f));
                 respectiveSpawns.add(new Vector2(7.6f, 4f));
                 respectiveSpawns.add(new Vector2(2f, 4f));
-                positions.put(GHOST_GPT, (ArrayList<Vector2>) respectiveSpawns.clone());
+                positions.put(GHOST_GPT, respectiveSpawns);
                 respectiveSpawns.clear();
                 respectiveSpawns.add(new Vector2(5f, 10f));
                 respectiveSpawns.add(new Vector2(2f, 10f));
-                positions.put(GROK_DROID, (ArrayList<Vector2>) respectiveSpawns.clone());
+                positions.put(GROK_DROID, respectiveSpawns);
                 break;
         }
         return positions;
@@ -641,13 +637,6 @@ public abstract class GameArea implements Disposable {
         }
     }
 
-    /**
-         * Camera bounds helper.
-         */
-        protected record Bounds(float leftX, float rightX, float bottomY, float topY, float viewWidth, float viewHeight,
-                                Vector2 camPos) {
-    }
-
     protected Bounds getCameraBounds(CameraComponent cameraComponent) {
         OrthographicCamera cam = (OrthographicCamera) cameraComponent.getCamera();
         Vector2 camPos = cameraComponent.getEntity().getPosition();
@@ -655,8 +644,9 @@ public abstract class GameArea implements Disposable {
         float viewHeight = cam.viewportHeight;
         float leftX = camPos.x - viewWidth / 2f;
         float rightX = camPos.x + viewWidth / 2f;
-        float bottomY = camPos.y - VERTICAL_HEIGHT_OFFSET / 2f;
-        float topY = camPos.y + VERTICAL_HEIGHT_OFFSET / 2f;
+        float verticalHeightOffset = 9.375f;
+        float bottomY = camPos.y - verticalHeightOffset / 2f;
+        float topY = camPos.y + verticalHeightOffset / 2f;
         return new Bounds(leftX, rightX, bottomY, topY, viewWidth, viewHeight, camPos);
     }
 
@@ -742,9 +732,10 @@ public abstract class GameArea implements Disposable {
                 return areaClass
                         .getConstructor(TerrainFactory.class, CameraComponent.class)
                         .newInstance(this.terrainFactory, this.cameraComponent);
-            } catch (Exception e) {
-                throw new RuntimeException("Failed to create " + areaClass.getSimpleName(), e);
+            } catch (ReflectiveOperationException e) {
+                throw new IllegalStateException("Failed to create " + areaClass.getSimpleName(), e);
             }
+
         });
     }
 
@@ -777,21 +768,21 @@ public abstract class GameArea implements Disposable {
                 }
             } catch (Exception ignored) {
             }
-            /** Phase 1: disable and dispose current area's entities **/
+            /* Phase 1: disable and dispose current area's entities */
             for (Entity entity : areaEntities) {
                 entity.dispose();
             }
             areaEntities.clear();
 
-            /** Phase 2: on the next frame, build the next area to avoid Box2D world-locked/native races **/
+            /* Phase 2: on the next frame, build the next area to avoid Box2D world-locked/native races */
             Gdx.app.postRunnable(() -> {
                 try {
                     GameArea next = nextAreaSupplier.get();
                     ServiceLocator.registerGameArea(next);
                     next.create();
                     // mark next area as discovered when entered
-                    com.csse3200.game.services.DiscoveryService ds = ServiceLocator.getDiscoveryService();
-                    if (ds != null && next != null) {
+                    DiscoveryService ds = ServiceLocator.getDiscoveryService();
+                    if (ds != null) {
                         ds.discover(next.toString());
                     }
                 } finally {
@@ -828,14 +819,14 @@ public abstract class GameArea implements Disposable {
         return "GameArea";
     }
 
-//  public abstract Entity spawnPlayer(List<String> inventory, int CPU, int health);
-
     /**
      * allows manipulation of player character by loading function
      *
      * @return player entity
      */
     public abstract Entity getPlayer();
+
+//  public abstract Entity spawnPlayer(List<String> inventory, int CPU, int health);
 
     /**
      * Transition to another area by its name (case-insensitive), if known.
@@ -849,17 +840,17 @@ public abstract class GameArea implements Disposable {
                 .toLowerCase(Locale.ROOT);
 
         Class<? extends GameArea> target = switch (lower) {
-            case "forest"    -> ForestGameArea.class;
-            case "elevator"  -> ElevatorGameArea.class;
-            case "office"    -> OfficeGameArea.class;
+            case "forest" -> ForestGameArea.class;
+            case "elevator" -> ElevatorGameArea.class;
+            case "office" -> OfficeGameArea.class;
             case "mainhall", "mainhallway", "hall" -> MainHall.class;
             case "reception" -> Reception.class;
-            case "tunnel"    -> TunnelGameArea.class;
-            case "security"  -> SecurityGameArea.class;
-            case "storage"   -> StorageGameArea.class;
-            case "shipping"  -> ShippingGameArea.class;
-            case "server"    -> ServerGameArea.class;
-            case "research"  -> ResearchGameArea.class;
+            case "tunnel" -> TunnelGameArea.class;
+            case "security" -> SecurityGameArea.class;
+            case "storage" -> StorageGameArea.class;
+            case "shipping" -> ShippingGameArea.class;
+            case "server" -> ServerGameArea.class;
+            case "research" -> ResearchGameArea.class;
             default -> {
                 Gdx.app.log("GameArea", "transitionToArea: unknown area name '" + areaName + "'");
                 yield null;
@@ -869,5 +860,12 @@ public abstract class GameArea implements Disposable {
         if (target == null) return false;
         loadArea(target);
         return true;
+    }
+
+    /**
+     * Camera bounds helper.
+     */
+    protected record Bounds(float leftX, float rightX, float bottomY, float topY, float viewWidth, float viewHeight,
+                            Vector2 camPos) {
     }
 }

@@ -26,32 +26,16 @@ public class Terminal extends Component {
 
     // Autocomplete state
     // Recreated on full rebuild for a true "clear and reindex".
-    private final RadixTrie trie = new RadixTrie();
-    private final BKTree bkTree = new BKTree();
+    private RadixTrie trie = new RadixTrie();
+    private BKTree bkTree = new BKTree();
     private volatile boolean indexDirty = false;
 
     private long lastKeystrokeNs = 0L;
     private String lastPrefix = "";
-    private List<String> lastSuggestions = Collections.emptyList();
-
-    public Terminal() {
-        this(new LinkedHashMap<>(), null);
-    }
-
-    public Terminal(GdxGame game) {
-        this(new LinkedHashMap<>(), game);
-    }
-
-    public Terminal(Map<String, Command> commands) {
-        this(commands, null, null);
-    }
-
-    public Terminal(GdxGame game, CountdownTimerService timer) {
-        this(new HashMap<>(), game, timer);
-    }
+    private List<String> lastSuggestions = Collections.emptyList();q
 
     public Terminal(Map<String, Command> commands, GdxGame game, CountdownTimerService timer) {
-        this.commands = commands;
+        this.commands = (commands != null) ? commands : new LinkedHashMap<>();
 
         addCommand("damageMultiplier", new DamageMultiplierCommand());
         addCommand("debug", new DebugCommand());
@@ -69,7 +53,6 @@ public class Terminal extends Component {
         addCommand("waves", new WavesCommand());
         addCommand("winScreen", new EndScreenCommand(game, GdxGame.ScreenType.WIN_SCREEN, timer));
 
-        // Initial index build
         rebuildAutocompleteIndex();
     }
 
@@ -228,7 +211,6 @@ public class Terminal extends Component {
         var suggestions = getAutocompleteSuggestions();
         if (suggestions.isEmpty()) return;
 
-        // replace first token with suggestion
         var rest = stripFirstToken(enteredMessage);
         setEnteredMessage(suggestions.getFirst() + rest);
     }
