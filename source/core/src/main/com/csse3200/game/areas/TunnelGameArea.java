@@ -153,11 +153,12 @@ public class TunnelGameArea extends GameArea {
      */
     private void spawnSpikes() {
         Entity spikes = ObstacleFactory.createSpikes();
-        GridPoint2 spikesSpawn = new GridPoint2(15, 7);
+        GridPoint2 spikesSpawn = new GridPoint2(15, 6);
         spawnEntityAt(spikes, spikesSpawn, true, false);
     }
 
     private void loadServer() {
+        ServerGameArea.setRoomSpawn(new GridPoint2(25, 19));
         clearAndLoad(() -> new ServerGameArea(terrainFactory, cameraComponent));
     }
 
