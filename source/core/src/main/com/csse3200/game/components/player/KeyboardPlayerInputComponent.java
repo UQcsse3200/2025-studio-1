@@ -11,15 +11,20 @@ import com.csse3200.game.entities.configs.ItemTypes;
 import com.csse3200.game.input.InputComponent;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.utils.math.Vector2Utils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Input handler for the player for keyboard and touch (mouse) input.
  * This input handler only uses keyboard input.
  */
 public class KeyboardPlayerInputComponent extends InputComponent {
+    private static final Logger logger = LoggerFactory.getLogger(KeyboardPlayerInputComponent.class);
+
     private final Vector2 walkDirection = Vector2.Zero.cpy();
 
     private int focusedItem = -1;
+    private boolean equipped = false;
     private boolean holding = false;
 
     public KeyboardPlayerInputComponent() {
@@ -123,6 +128,7 @@ public class KeyboardPlayerInputComponent extends InputComponent {
      */
     @Override
     public boolean keyReleased(int keycode) {
+        final int OFFSET = 8;
         switch (keycode) {
             case Keys.A:
                 walkDirection.sub(Vector2Utils.LEFT);
@@ -142,24 +148,19 @@ public class KeyboardPlayerInputComponent extends InputComponent {
                 triggerStopCrouchingEvent();
                 return true;
             case Keys.NUM_1:
-                focusedItem = 0;
-                triggerSelectItem();
+                checkSlot(Keys.NUM_1 - OFFSET);
                 return true;
             case Keys.NUM_2:
-                focusedItem = 1;
-                triggerSelectItem();
+                checkSlot(Keys.NUM_2 - OFFSET);
                 return true;
             case Keys.NUM_3:
-                focusedItem = 2;
-                triggerSelectItem();
+                checkSlot(Keys.NUM_3 - OFFSET);
                 return true;
             case Keys.NUM_4:
-                focusedItem = 3;
-                triggerSelectItem();
+                checkSlot(Keys.NUM_4 - OFFSET);
                 return true;
             case Keys.NUM_5:
-                focusedItem = 4;
-                triggerSelectItem();
+                checkSlot(Keys.NUM_5 - OFFSET);
                 return true;
             case Keys.P:
             case Keys.E:
@@ -168,12 +169,6 @@ public class KeyboardPlayerInputComponent extends InputComponent {
                 return true;
             case Keys.R:
                 triggerDropFocused();
-                return true;
-            case Keys.I:  //attach weapon to player's body
-                equipCurrentWeapon();
-                return true;
-            case Keys.O:  //detach weapon to player's body
-                unequipCurrentWeapon();
                 return true;
             default:
                 return false;
@@ -265,48 +260,72 @@ public class KeyboardPlayerInputComponent extends InputComponent {
         entity.getEvents().trigger("interact");
     }
 
+    /**
+     * Checks if the player is holding an item to be equipped if an item is equipped
+     * then unequip's item in given slot, if an item is not currently equipped then
+     * equips item in given slot.
+     *
+     * @param slot The slot to check
+     */
+    public void checkSlot(int slot) {
+        if (focusedItem != slot)
+            unequipCurrentItem();
+
+        focusedItem = slot;
+        triggerSelectItem();
+
+        if (!equipped) {
+            equipCurrentItem();
+        } else {
+            unequipCurrentItem();
+        }
+    }
 
     /**
      * equips the player with the weapon that is in the selected slot
      */
-    public void equipCurrentWeapon() {
+    public void equipCurrentItem() {
+        equipped = true;
         InventoryComponent inventory = entity.getComponent(InventoryComponent.class);
         PlayerActions actions = entity.getComponent(PlayerActions.class);
         if (inventory == null) return;  //no inventory
 
-        int selectedSlot = inventory.getSelectedSlot();
-        if (selectedSlot < 0 || selectedSlot >= inventory.getSize()) return;  // no slot selected
-
-        Entity weapon = inventory.get(selectedSlot);
-        if (weapon == null) {
-            System.out.println("No weapon in selected slot!");
+        Entity item = inventory.get(focusedItem);
+        if (item == null) {
+            logger.debug("Nothing in selected slot! $& {}", focusedItem);
             return;
         }
 
         // Equip the weapon
-        inventory.setEquippedSlot(selectedSlot);
-        inventory.setCurrItem(weapon);
-//        String name = inventory.getCurrItem().getComponent(class )
+        inventory.setEquippedSlot(focusedItem);
+        inventory.setCurrItem(item);
+        String tex = inventory.getTex(focusedItem);
 
-        entity.getEvents().trigger("focus item", selectedSlot);  // Refresh UI & logic
-        System.out.println("Equipped weapon from slot " + selectedSlot);
 
-        actions.equipWeapon(weapon);
+        entity.getEvents().trigger("focusItem", focusedItem);  // Refresh UI & logic
+        entity.getEvents().trigger("equip", tex);  // Display item in players hand
+        logger.debug("Equipped weapon from slot {}", focusedItem);
+
+        actions.equipWeapon(item);
     }
 
     /**
      * this function is to unequip the player
      */
-    public void unequipCurrentWeapon() {
+    public void unequipCurrentItem() {
+        focusedItem = -1;
+
         InventoryComponent inventory = entity.getComponent(InventoryComponent.class);
         PlayerActions actions = entity.getComponent(PlayerActions.class);
         if (inventory == null) return;
 
-        inventory.setEquippedSlot(-1);
+        inventory.setEquippedSlot(focusedItem);
         inventory.setCurrItem(null);
-        entity.getEvents().trigger("focus item", -1);
-        System.out.println("Unequipped weapon");
+        entity.getEvents().trigger("focus item", focusedItem);
+        entity.getEvents().trigger("unequip");
+        logger.debug("Unequipped weapon");
 
         actions.unequipWeapon();
+        equipped = false;
     }
 }

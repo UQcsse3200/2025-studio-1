@@ -226,6 +226,10 @@ public class ItemPickUpComponent extends Component {
             logger.warn("Drop failed: could not remove item at index {}", focusedIndex);
             return;
         }
+
+        // remove the item from being equipped
+        entity.getComponent(PlayerEquipComponent.class).setItem(null, null);
+
         focusedIndex = -1;
         // If no texture info was stored, skip respawning to the world
         if (tex == null) {

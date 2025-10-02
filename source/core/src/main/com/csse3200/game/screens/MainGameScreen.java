@@ -6,13 +6,12 @@ import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.csse3200.game.GdxGame;
-import com.csse3200.game.GdxGame.ScreenType;
 import com.csse3200.game.areas.*;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.components.gamearea.PerformanceDisplay;
 import com.csse3200.game.components.maingame.MainGameActions;
-import com.csse3200.game.components.maingame.MainGameExitDisplay;
+import com.csse3200.game.components.maingame.MainGameDisplay;
 import com.csse3200.game.components.player.InventoryComponent;
 import com.csse3200.game.components.player.ItemPickUpComponent;
 import com.csse3200.game.components.screens.PauseMenuDisplay;
@@ -48,6 +47,8 @@ public class MainGameScreen extends ScreenAdapter {
     private final PhysicsEngine physicsEngine;
     private final GameArea gameArea;
 
+    private CountdownTimerService countdownTimer;
+
 
     private Entity pauseOverlay;
     private boolean isPauseVisible = false;
@@ -76,6 +77,7 @@ public class MainGameScreen extends ScreenAdapter {
         renderer.getDebug().renderPhysicsWorld(physicsEngine.getWorld());
 
         loadAssets();
+        countdownTimer = new CountdownTimerService(ServiceLocator.getTimeSource(), 60000);
         createUI();
 
         logger.debug("Initialising main game screen entities");
@@ -104,16 +106,23 @@ public class MainGameScreen extends ScreenAdapter {
         if (player != null) {
             var playerStat = player.getComponent(CombatStatsComponent.class);
             if (playerStat != null && playerStat.isDead()) {
-                game.setScreen(ScreenType.DEATH_SCREEN);
+                setDeathScreen();
             }
         }
         renderer.render();
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
             if (!isPauseVisible) {
                 showPauseOverlay();
+                countdownTimer.pause();
             } else {
                 hidePauseOverlay();
+                countdownTimer.resume();
             }
+        }
+
+        //switch to death screen when countdown timer is up
+        if (countdownTimer.isTimeUP()) {
+            setDeathScreen();
         }
     }
 
@@ -173,8 +182,8 @@ public class MainGameScreen extends ScreenAdapter {
         ui.addComponent(new InputDecorator(stage, 10))
                 .addComponent(new PerformanceDisplay())
                 .addComponent(new MainGameActions(this.game))
-                .addComponent(new MainGameExitDisplay())
-                .addComponent(new Terminal(this.game))
+                .addComponent(new MainGameDisplay(countdownTimer))
+                .addComponent(new Terminal(this.game, countdownTimer))
                 .addComponent(inputComponent)
                 .addComponent(new TerminalDisplay(this.game));
 
@@ -220,6 +229,28 @@ public class MainGameScreen extends ScreenAdapter {
         } else {
             logger.info("Save data failed");
         }
+    }
+
+    /**
+     * Calculates the total elapsed time of the countdown timer in second
+     *
+     * @return the elapsed time in seconds
+     */
+    private long getCompleteTime(){
+        return (countdownTimer.getDuration() - countdownTimer.getRemainingMs()) / 1000;
+    }
+
+    /**
+     * Sets the game's screen to death screen
+     *
+     * <p>
+     *     Updates the death screen with the elapsed time before switching.
+     * </p>
+     */
+    private void setDeathScreen(){
+        DeathScreen deathScreen = new DeathScreen(game);
+        deathScreen.updateTime(getCompleteTime());
+        game.setScreen(deathScreen);
     }
 
 

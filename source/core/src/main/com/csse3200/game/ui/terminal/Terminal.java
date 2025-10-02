@@ -2,6 +2,7 @@ package com.csse3200.game.ui.terminal;
 
 import com.csse3200.game.GdxGame;
 import com.csse3200.game.components.Component;
+import com.csse3200.game.services.CountdownTimerService;
 import com.csse3200.game.ui.terminal.autocomplete.BKTree;
 import com.csse3200.game.ui.terminal.autocomplete.RadixTrie;
 import com.csse3200.game.ui.terminal.commands.*;
@@ -25,8 +26,8 @@ public class Terminal extends Component {
 
     // Autocomplete state
     // Recreated on full rebuild for a true "clear and reindex".
-    private RadixTrie trie = new RadixTrie();
-    private BKTree bkTree = new BKTree();
+    private final RadixTrie trie = new RadixTrie();
+    private final BKTree bkTree = new BKTree();
     private volatile boolean indexDirty = false;
 
     private long lastKeystrokeNs = 0L;
@@ -42,15 +43,19 @@ public class Terminal extends Component {
     }
 
     public Terminal(Map<String, Command> commands) {
-        this(commands, null);
+        this(commands, null, null);
     }
 
-    public Terminal(Map<String, Command> commands, GdxGame game) {
-        this.commands = Objects.requireNonNullElseGet(commands, LinkedHashMap::new);
+    public Terminal(GdxGame game, CountdownTimerService timer) {
+        this(new HashMap<>(), game, timer);
+    }
+
+    public Terminal(Map<String, Command> commands, GdxGame game, CountdownTimerService timer) {
+        this.commands = commands;
 
         addCommand("damageMultiplier", new DamageMultiplierCommand());
         addCommand("debug", new DebugCommand());
-        addCommand("deathScreen", new EndScreenCommand(game, GdxGame.ScreenType.DEATH_SCREEN));
+        addCommand("deathScreen", new EndScreenCommand(game, GdxGame.ScreenType.DEATH_SCREEN, timer));
         addCommand("disableDamage", new DisableDamageCommand());
         addCommand("doorOverride", new DoorOverrideCommand());
         addCommand("infiniteStamina", new InfiniteStaminaCommand());
@@ -62,7 +67,7 @@ public class Terminal extends Component {
         addCommand("teleport", new TeleportCommand());
         addCommand("travel", new TravelCommand());
         addCommand("waves", new WavesCommand());
-        addCommand("winScreen", new EndScreenCommand(game, GdxGame.ScreenType.WIN_SCREEN));
+        addCommand("winScreen", new EndScreenCommand(game, GdxGame.ScreenType.WIN_SCREEN, timer));
 
         // Initial index build
         rebuildAutocompleteIndex();

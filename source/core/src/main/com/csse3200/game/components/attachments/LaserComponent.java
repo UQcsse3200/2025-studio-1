@@ -29,7 +29,6 @@ public class LaserComponent extends RenderComponent {
 
     @Override
     public void draw(SpriteBatch batch) {
-
         Vector2 gunPos = entity.getPosition();
         gunPos.y += 0.35f;
         gunPos.x += 1f;

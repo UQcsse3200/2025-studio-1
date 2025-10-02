@@ -36,6 +36,11 @@ public class ShopScreenDisplay extends UIComponent {
     private static final String LIMIT_REACHED_MESSAGE = ". Item limit has been reached.";
     private static final String INVALID_ITEM_MESSAGE = ". Invalid item.";
     private static final String UNEXPECTED_MESSAGE = ". Unexpected error.";
+    private static final String INVALID_WEAPON_MESSAGE = ". This item does not support attachments.";
+    private static final String ALREADY_HAVE_LASER_MESSAGE = ". This weapon already has a laser sight.";
+    private static final String ALREADY_HAVE_BULLET_MESSAGE = ". This weapon already has " +
+            "the bullet enhancement attachment";
+
 
     // UI constants
     private static final float PANEL_W = 720f;
@@ -401,6 +406,9 @@ public class ShopScreenDisplay extends UIComponent {
             case LIMIT_REACHED -> LIMIT_REACHED_MESSAGE;
             case INVENTORY_FULL -> INVENTORY_FULL_MESSAGE;
             case INSUFFICIENT_FUNDS -> INSUFFICIENT_FUNDS_MESSAGE;
+            case INVALID_WEAPON -> INVALID_WEAPON_MESSAGE;
+            case ALREADY_HAVE_BULLET -> ALREADY_HAVE_BULLET_MESSAGE;
+            case ALREADY_HAVE_LASER -> ALREADY_HAVE_LASER_MESSAGE;
             default -> UNEXPECTED_MESSAGE;
         };
         Dialog dialog = new Dialog("Error", skin);

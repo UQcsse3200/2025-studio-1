@@ -45,7 +45,7 @@ public class OfficeGameArea extends GameArea {
     private void spawnBordersAndDoors() {
         Bounds b = getCameraBounds(cameraComponent);
 
-        addVerticalDoorLeft(b, WALL_WIDTH, this::loadSecurity);
+        addVerticalDoorLeft(b, WALL_WIDTH, this::loadMovingBossRoom);
         // Raise the right door higher than center
         addSolidWallTop(b, WALL_WIDTH);
         addSolidWallBottom(b, WALL_WIDTH);
@@ -129,7 +129,7 @@ public class OfficeGameArea extends GameArea {
     }
 
     private void loadSecurity() {
-        clearAndLoad(() -> new SecurityGameArea(terrainFactory, cameraComponent));
+        clearAndLoad(() -> new MovingBossRoom(terrainFactory, cameraComponent));
     }
 
     private void loadElevator() {

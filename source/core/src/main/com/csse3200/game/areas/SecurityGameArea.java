@@ -60,7 +60,7 @@ public class SecurityGameArea extends GameArea {
         float rightDoorY = b.topY() - rightDoorHeight;
         Entity rightDoor = ObstacleFactory.createDoorTrigger(WALL_WIDTH, rightDoorHeight);
         rightDoor.setPosition(b.rightX() - WALL_WIDTH - 0.001f, rightDoorY);
-        rightDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadOffice));
+        rightDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadMovingBossRoom));
         spawnEntity(rightDoor);
     }
 
@@ -146,7 +146,7 @@ public class SecurityGameArea extends GameArea {
     }
 
     private void loadOffice() {
-        clearAndLoad(() -> new OfficeGameArea(terrainFactory, cameraComponent));
+        clearAndLoad(() -> new MovingBossRoom(terrainFactory, cameraComponent));
     }
 
     @Override

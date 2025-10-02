@@ -1,6 +1,7 @@
 package com.csse3200.game.components.player;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
@@ -25,6 +26,9 @@ public class PlayerStatsDisplay extends BaseScreenDisplay {
     private static final float BAR_HEIGHT = 30f;
     private static final float PAD = 5f;
     private static final int PCT_MAX = 100;
+
+    // Constants
+    private static final String ammoAmount = "Ammo :%d";
 
     // Colours
     private static final Color COLOR_BG = Color.DARK_GRAY;
@@ -136,13 +140,11 @@ public class PlayerStatsDisplay extends BaseScreenDisplay {
         ammoLabel.setText(formatAmmoLabelAfterSwitch(focusItem));
     }
 
-    /* =========================
-       Internals
-       ========================= */
-
+    /* Internals */
     private ProgressBar.ProgressBarStyle makeBarStyle(Color fill) {
         TextureRegionDrawable bg = new TextureRegionDrawable(new com.badlogic.gdx.graphics.g2d.TextureRegion(makeSolidTexture(COLOR_BG)));
-        TextureRegionDrawable before = new TextureRegionDrawable(new com.badlogic.gdx.graphics.g2d.TextureRegion(makeSolidTexture(fill)));
+        TextureRegionDrawable before = new TextureRegionDrawable(new TextureRegion(makeSolidTexture(fill)));
+
 
         bg.setMinHeight(PlayerStatsDisplay.BAR_HEIGHT);
         before.setMinHeight(PlayerStatsDisplay.BAR_HEIGHT);

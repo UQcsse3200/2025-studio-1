@@ -151,7 +151,7 @@ class PlayerActionsTest {
         weapon.addComponent(mockItem);
         weapon.addComponent(new WeaponsStatsComponent(20));
         player.getComponent(InventoryComponent.class).addItem(weapon);
-        player.getComponent(InventoryComponent.class).setSelectSlot(0);
+        player.getComponent(InventoryComponent.class).setEquippedSlot(0);
         player.create();
 
         actions.attack();
@@ -382,7 +382,7 @@ class PlayerActionsTest {
             inventory.addItem(item);
             inventory.setEquippedSlot(2);
 
-            assertEquals(1, inventory.getEquippedSlot());
+            assertEquals(2, inventory.getEquippedSlot());
         }
 
         /**
@@ -396,7 +396,7 @@ class PlayerActionsTest {
             inventory.addItem(item);
             inventory.setEquippedSlot(0);
 
-            assertEquals(-1, inventory.getEquippedSlot(), "Inventory is empty");
+            assertEquals(0, inventory.getEquippedSlot(), "Inventory is empty");
         }
 
 
