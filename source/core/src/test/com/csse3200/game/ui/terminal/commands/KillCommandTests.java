@@ -15,60 +15,165 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
 /**
- * Mockito-based tests for KillCommand without unnecessary stubs.
- * Assumes KillCommand:
- *  - uses ServiceLocator.getPlayer() and ServiceLocator.getEntityService()
- *  - treats enemies as entities whose HitboxComponent has layer == PhysicsLayer.NPC
- *  - kills by calling CombatStatsComponent#setHealth(0)
+ * Branch-complete tests for KillCommand.
  */
 @ExtendWith(MockitoExtension.class)
-public class KillCommandTests {
+class KillCommandTests {
+    @Test
+    void action_returnsFalse_whenArgsNull() {
+        KillCommand cmd = new KillCommand();
+        assertFalse(cmd.action(null));
+    }
 
     @Test
-    void killAllEnemies_killsOnlyAliveNpcEnemies_andSkipsPlayerAndProjectiles() {
-        // ---- world + services ----
-        EntityService es = mock(EntityService.class);
+    void action_returnsFalse_whenArgsEmpty() {
+        KillCommand cmd = new KillCommand();
+        assertFalse(cmd.action(new ArrayList<>()));
+    }
+
+    @Test
+    void action_returnsFalse_whenUnknownSelector() {
+        KillCommand cmd = new KillCommand();
+        assertFalse(cmd.action(new ArrayList<>(List.of("@x"))));
+    }
+
+    @Test
+    void killPlayer_returnsFalse_whenPlayerMissing() {
+        try (MockedStatic<ServiceLocator> sl = mockStatic(ServiceLocator.class)) {
+            sl.when(ServiceLocator::getPlayer).thenReturn(null);
+
+            KillCommand cmd = new KillCommand();
+            assertFalse(cmd.action(new ArrayList<>(List.of("@p"))));
+        }
+    }
+
+    @Test
+    void killPlayer_returnsFalse_whenPlayerHasNoCombatStats() {
         Entity player = mock(Entity.class);
+        when(player.getComponent(CombatStatsComponent.class)).thenReturn(null);
 
-        // ---- entities ----
+        try (MockedStatic<ServiceLocator> sl = mockStatic(ServiceLocator.class)) {
+            sl.when(ServiceLocator::getPlayer).thenReturn(player);
+
+            KillCommand cmd = new KillCommand();
+            assertFalse(cmd.action(new ArrayList<>(List.of("@p"))));
+        }
+    }
+
+    @Test
+    void killPlayer_setsHealthToZero_whenStatsPresent() {
+        Entity player = mock(Entity.class);
+        CombatStatsComponent stats = mock(CombatStatsComponent.class);
+        when(player.getComponent(CombatStatsComponent.class)).thenReturn(stats);
+
+        try (MockedStatic<ServiceLocator> sl = mockStatic(ServiceLocator.class)) {
+            sl.when(ServiceLocator::getPlayer).thenReturn(player);
+
+            KillCommand cmd = new KillCommand();
+            assertTrue(cmd.action(new ArrayList<>(List.of("@p"))));
+            verify(stats, times(1)).setHealth(0);
+        }
+    }
+
+    // -------------------- @a (kill all enemies) service/entity edge cases --------------------
+
+    @Test
+    void killAllEnemies_returnsFalse_whenEntityServiceMissing() {
+        try (MockedStatic<ServiceLocator> sl = mockStatic(ServiceLocator.class)) {
+            sl.when(ServiceLocator::getEntityService).thenReturn(null);
+            // getPlayer must be stubbed because code calls it later only if ES present; here it won't be
+            KillCommand cmd = new KillCommand();
+            assertFalse(cmd.action(new ArrayList<>(List.of("@a"))));
+        }
+    }
+
+    @Test
+    void killAllEnemies_returnsTrue_whenEntitiesNull() {
+        EntityService es = mock(EntityService.class);
+        when(es.getEntities()).thenReturn(null);
+
+        try (MockedStatic<ServiceLocator> sl = mockStatic(ServiceLocator.class)) {
+            sl.when(ServiceLocator::getEntityService).thenReturn(es);
+            // getPlayer may be called; safe to return null here (no iteration happens)
+            sl.when(ServiceLocator::getPlayer).thenReturn(null);
+
+            KillCommand cmd = new KillCommand();
+            assertTrue(cmd.action(new ArrayList<>(List.of("@a")))); // nothing to kill -> true
+        }
+    }
+
+    @Test
+    void killAllEnemies_returnsTrue_whenEntitiesEmpty() {
+        EntityService es = mock(EntityService.class);
+        when(es.getEntities()).thenReturn(new Array<>());
+
+        try (MockedStatic<ServiceLocator> sl = mockStatic(ServiceLocator.class)) {
+            sl.when(ServiceLocator::getEntityService).thenReturn(es);
+            sl.when(ServiceLocator::getPlayer).thenReturn(null);
+
+            KillCommand cmd = new KillCommand();
+            assertTrue(cmd.action(new ArrayList<>(List.of("@a")))); // nothing to kill -> true
+        }
+    }
+
+    @Test
+    void killAllEnemies_killsOnlyAliveNpcEnemies_excludesPlayerAndNonNpcAndDead() {
+        EntityService es = mock(EntityService.class);
+
+        // Entities
+        Entity player = mock(Entity.class);
         Entity enemyAlive = mock(Entity.class);
-        Entity enemyDead  = mock(Entity.class);
-        Entity projectile = mock(Entity.class);
+        Entity enemyDead = mock(Entity.class);
+        Entity enemyAlive2 = mock(Entity.class);
+        Entity nonNpc = mock(Entity.class);
+        Entity npcNoStats = mock(Entity.class);
 
-        // components
-        CombatStatsComponent aliveStats = mock(CombatStatsComponent.class);
-        when(aliveStats.getHealth()).thenReturn(10);
+        // Components/stubs
+        CombatStatsComponent statsAlive1 = mock(CombatStatsComponent.class);
+        when(statsAlive1.getHealth()).thenReturn(15);
 
-        CombatStatsComponent deadStats  = mock(CombatStatsComponent.class);
-        when(deadStats.getHealth()).thenReturn(0);
+        CombatStatsComponent statsDead = mock(CombatStatsComponent.class);
+        when(statsDead.getHealth()).thenReturn(0);
 
-        CombatStatsComponent projectileStats = mock(CombatStatsComponent.class); // no getHealth() stub
+        CombatStatsComponent statsAlive2 = mock(CombatStatsComponent.class);
+        when(statsAlive2.getHealth()).thenReturn(5);
 
-        HitboxComponent enemyHb = mock(HitboxComponent.class);
-        when(enemyHb.getLayer()).thenReturn(PhysicsLayer.NPC);
+        CombatStatsComponent statsNonNpc = mock(CombatStatsComponent.class);
+        when(statsNonNpc.getHealth()).thenReturn(50);
 
-        HitboxComponent enemyDeadHb = mock(HitboxComponent.class);
-        when(enemyDeadHb.getLayer()).thenReturn(PhysicsLayer.NPC);
+        HitboxComponent hbNpc = mock(HitboxComponent.class);
+        when(hbNpc.getLayer()).thenReturn(PhysicsLayer.NPC);
 
-        HitboxComponent projectileHb = mock(HitboxComponent.class);
-        when(projectileHb.getLayer()).thenReturn(PhysicsLayer.ENEMY_PROJECTILE);
+        HitboxComponent hbNpc2 = mock(HitboxComponent.class);
+        when(hbNpc2.getLayer()).thenReturn(PhysicsLayer.NPC);
 
-        // wire components (each exactly once)
-        when(enemyAlive.getComponent(CombatStatsComponent.class)).thenReturn(aliveStats);
-        when(enemyAlive.getComponent(HitboxComponent.class)).thenReturn(enemyHb);
+        HitboxComponent hbNonNpc = mock(HitboxComponent.class);
+        when(hbNonNpc.getLayer()).thenReturn(PhysicsLayer.ENEMY_PROJECTILE);
 
-        when(enemyDead.getComponent(CombatStatsComponent.class)).thenReturn(deadStats);
-        when(enemyDead.getComponent(HitboxComponent.class)).thenReturn(enemyDeadHb);
+        // Wire components to entities
+        when(enemyAlive.getComponent(HitboxComponent.class)).thenReturn(hbNpc);
+        when(enemyAlive.getComponent(CombatStatsComponent.class)).thenReturn(statsAlive1);
 
-        when(projectile.getComponent(CombatStatsComponent.class)).thenReturn(projectileStats);
-        when(projectile.getComponent(HitboxComponent.class)).thenReturn(projectileHb);
+        when(enemyDead.getComponent(HitboxComponent.class)).thenReturn(hbNpc);
+        when(enemyDead.getComponent(CombatStatsComponent.class)).thenReturn(statsDead);
 
+        when(enemyAlive2.getComponent(HitboxComponent.class)).thenReturn(hbNpc2);
+        when(enemyAlive2.getComponent(CombatStatsComponent.class)).thenReturn(statsAlive2);
+
+        when(nonNpc.getComponent(HitboxComponent.class)).thenReturn(hbNonNpc);
+        when(nonNpc.getComponent(CombatStatsComponent.class)).thenReturn(statsNonNpc);
+
+        when(npcNoStats.getComponent(HitboxComponent.class)).thenReturn(hbNpc);
+        when(npcNoStats.getComponent(CombatStatsComponent.class)).thenReturn(null);
+
+        // World list includes player & all types
         Array<Entity> world = new Array<>();
-        world.addAll(player, enemyAlive, enemyDead, projectile);
+        world.addAll(player, enemyAlive, enemyDead, enemyAlive2, nonNpc, npcNoStats);
         when(es.getEntities()).thenReturn(world);
 
         try (MockedStatic<ServiceLocator> sl = mockStatic(ServiceLocator.class)) {
@@ -76,57 +181,17 @@ public class KillCommandTests {
             sl.when(ServiceLocator::getPlayer).thenReturn(player);
 
             KillCommand cmd = new KillCommand();
-            boolean ok = cmd.action(new ArrayList<>(List.of("@a")));
-            assertTrue(ok, "kill @a should return true when it executes");
+            assertTrue(cmd.action(new ArrayList<>(List.of("@a"))));
 
-            verify(aliveStats, times(1)).setHealth(0);
-            verify(deadStats,  never()).setHealth(anyInt());
-            verify(projectileStats, never()).setHealth(anyInt());
+            // Only alive NPCs, excluding the player, must be killed
+            verify(statsAlive1, times(1)).setHealth(0);
+            verify(statsAlive2, times(1)).setHealth(0);
+
+            // Dead NPC unchanged
+            verify(statsDead, never()).setHealth(anyInt());
+
+            // Non-NPC unchanged
+            verify(statsNonNpc, never()).setHealth(anyInt());
         }
-    }
-
-    @Test
-    void killPlayer_setsPlayerHealthToZero_whenPlayerHasCombatStats() {
-        Entity player = mock(Entity.class);
-        CombatStatsComponent playerStats = mock(CombatStatsComponent.class);
-        when(player.getComponent(CombatStatsComponent.class)).thenReturn(playerStats);
-
-        // No need to stub getEntityService() – it’s not used for @p
-        try (MockedStatic<ServiceLocator> sl = mockStatic(ServiceLocator.class)) {
-            sl.when(ServiceLocator::getPlayer).thenReturn(player);
-
-            KillCommand cmd = new KillCommand();
-            boolean ok = cmd.action(new ArrayList<>(List.of("@p")));
-            assertTrue(ok, "kill @p should return true");
-
-            verify(playerStats, times(1)).setHealth(0);
-        }
-    }
-
-    @Test
-    void killPlayer_returnsFalse_ifPlayerMissing() {
-        // Only stub what’s needed: getPlayer() -> null
-        try (MockedStatic<ServiceLocator> sl = mockStatic(ServiceLocator.class)) {
-            sl.when(ServiceLocator::getPlayer).thenReturn(null);
-
-            KillCommand cmd = new KillCommand();
-            boolean ok = cmd.action(new ArrayList<>(List.of("@p")));
-            assertFalse(ok, "kill @p should fail when no player is available");
-        }
-    }
-
-    @Test
-    void missingArgs_returnsFalse_andDoesNothing() {
-        // Don’t stub anything – action returns before any ServiceLocator calls.
-        KillCommand cmd = new KillCommand();
-        assertFalse(cmd.action(new ArrayList<>()), "missing selector should return false");
-    }
-
-    @Test
-    void unknownSelector_returnsFalse_andDoesNothing() {
-        // Don’t stub anything – action returns before any ServiceLocator calls.
-        KillCommand cmd = new KillCommand();
-        assertFalse(cmd.action(new ArrayList<>(List.of("@x"))),
-                "unknown selector should return false");
     }
 }

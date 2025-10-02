@@ -285,4 +285,221 @@ class TravelCommandTests {
             assertFalse(command.action(args));
         }
     }
+
+    @Test
+    void nullArgs_centerSucceedsWithCamera() {
+        var area = mock(GameArea.class);
+        var es = mock(EntityService.class);
+        var rs = mock(RenderService.class);
+
+        var player = new Entity().addComponent(new KeyboardPlayerInputComponent());
+        var entities = new Array<Entity>();
+        entities.add(player);
+
+        when(area.getPlayer()).thenReturn(null);
+        when(es.getEntities()).thenReturn(entities);
+
+        var cam = new OrthographicCamera();
+        cam.position.set(2.5f, -1f, 0f);
+        when(rs.getCamera()).thenReturn(cam);
+
+        ServiceLocator.registerGameArea(area);
+        ServiceLocator.registerEntityService(es);
+        ServiceLocator.registerRenderService(rs);
+
+        try (MockedStatic<ServiceLocator> sl = mockStatic(ServiceLocator.class, CALLS_REAL_METHODS)) {
+            sl.when(ServiceLocator::getPlayer).thenReturn(player);
+            assertTrue(command.action(null));
+        }
+
+        var pos = player.getPosition();
+        assertEquals(2.5f, pos.x, 1e-5);
+        assertEquals(-1f, pos.y, 1e-5);
+    }
+
+    @Test
+    void nullArgs_centerFailsWithoutRenderService() {
+        var area = mock(GameArea.class);
+        var es = mock(EntityService.class);
+
+        var player = new Entity().addComponent(new KeyboardPlayerInputComponent());
+        var entities = new Array<Entity>();
+        entities.add(player);
+
+        when(area.getPlayer()).thenReturn(null);
+        when(es.getEntities()).thenReturn(entities);
+
+        ServiceLocator.registerGameArea(area);
+        ServiceLocator.registerEntityService(es);
+        // no RenderService
+
+        try (MockedStatic<ServiceLocator> sl = mockStatic(ServiceLocator.class, CALLS_REAL_METHODS)) {
+            sl.when(ServiceLocator::getPlayer).thenReturn(player);
+            assertFalse(command.action(null));
+        }
+    }
+
+    @Test
+    void singleArg_centerKeyword_succeeds() {
+        var area = mock(GameArea.class);
+        var es = mock(EntityService.class);
+        var rs = mock(RenderService.class);
+
+        var player = new Entity().addComponent(new KeyboardPlayerInputComponent());
+        var entities = new Array<Entity>();
+        entities.add(player);
+
+        when(area.getPlayer()).thenReturn(null);
+        when(es.getEntities()).thenReturn(entities);
+
+        var cam = new OrthographicCamera();
+        cam.position.set(-3f, 8f, 0f);
+        when(rs.getCamera()).thenReturn(cam);
+
+        ServiceLocator.registerGameArea(area);
+        ServiceLocator.registerEntityService(es);
+        ServiceLocator.registerRenderService(rs);
+
+        try (MockedStatic<ServiceLocator> sl = mockStatic(ServiceLocator.class, CALLS_REAL_METHODS)) {
+            sl.when(ServiceLocator::getPlayer).thenReturn(player);
+            assertTrue(command.action(new ArrayList<>(java.util.List.of("  CeNtEr  "))));
+        }
+
+        var pos = player.getPosition();
+        assertEquals(-3f, pos.x, 1e-5);
+        assertEquals(8f, pos.y, 1e-5);
+    }
+
+    @Test
+    void singleArg_centerKeyword_failsWithoutRenderService() {
+        var area = mock(GameArea.class);
+        var es = mock(EntityService.class);
+
+        var player = new Entity().addComponent(new KeyboardPlayerInputComponent());
+        var entities = new Array<Entity>();
+        entities.add(player);
+
+        when(area.getPlayer()).thenReturn(null);
+        when(es.getEntities()).thenReturn(entities);
+
+        ServiceLocator.registerGameArea(area);
+        ServiceLocator.registerEntityService(es);
+
+        try (MockedStatic<ServiceLocator> sl = mockStatic(ServiceLocator.class, CALLS_REAL_METHODS)) {
+            sl.when(ServiceLocator::getPlayer).thenReturn(player);
+            assertFalse(command.action(new ArrayList<>(java.util.List.of("center"))));
+        }
+    }
+
+    @Test
+    void singleArg_numeric_isInvalid() {
+        var area = mock(GameArea.class);
+        var es = mock(EntityService.class);
+
+        var player = new Entity().addComponent(new KeyboardPlayerInputComponent());
+        var entities = new Array<Entity>();
+        entities.add(player);
+
+        when(area.getPlayer()).thenReturn(null);
+        when(es.getEntities()).thenReturn(entities);
+
+        ServiceLocator.registerGameArea(area);
+        ServiceLocator.registerEntityService(es);
+
+        try (MockedStatic<ServiceLocator> sl = mockStatic(ServiceLocator.class, CALLS_REAL_METHODS)) {
+            sl.when(ServiceLocator::getPlayer).thenReturn(player);
+            assertFalse(command.action(new ArrayList<>(java.util.List.of("123.45"))));
+        }
+    }
+
+    @Test
+    void twoArgs_withNullX_returnsFalse() {
+        var area = mock(GameArea.class);
+        var es = mock(EntityService.class);
+
+        var player = new Entity().addComponent(new KeyboardPlayerInputComponent());
+        var entities = new Array<Entity>();
+        entities.add(player);
+
+        when(area.getPlayer()).thenReturn(null);
+        when(es.getEntities()).thenReturn(entities);
+
+        ServiceLocator.registerGameArea(area);
+        ServiceLocator.registerEntityService(es);
+
+        var args = new ArrayList<String>();
+        args.add(null);
+        args.add("5");
+        try (MockedStatic<ServiceLocator> sl = mockStatic(ServiceLocator.class, CALLS_REAL_METHODS)) {
+            sl.when(ServiceLocator::getPlayer).thenReturn(player);
+            assertFalse(command.action(args));
+        }
+    }
+
+    @Test
+    void twoArgs_withNullY_returnsFalse() {
+        var area = mock(GameArea.class);
+        var es = mock(EntityService.class);
+
+        var player = new Entity().addComponent(new KeyboardPlayerInputComponent());
+        var entities = new Array<Entity>();
+        entities.add(player);
+
+        when(area.getPlayer()).thenReturn(null);
+        when(es.getEntities()).thenReturn(entities);
+
+        ServiceLocator.registerGameArea(area);
+        ServiceLocator.registerEntityService(es);
+
+        var args = new ArrayList<String>();
+        args.add("3.25");
+        args.add(null);
+        try (MockedStatic<ServiceLocator> sl = mockStatic(ServiceLocator.class, CALLS_REAL_METHODS)) {
+            sl.when(ServiceLocator::getPlayer).thenReturn(player);
+            assertFalse(command.action(args));
+        }
+    }
+
+    @Test
+    void tooManyArgs_returnsFalse() {
+        var area = mock(GameArea.class);
+        var es = mock(EntityService.class);
+
+        var player = new Entity().addComponent(new KeyboardPlayerInputComponent());
+        var entities = new Array<Entity>();
+        entities.add(player);
+
+        when(area.getPlayer()).thenReturn(null);
+        when(es.getEntities()).thenReturn(entities);
+
+        ServiceLocator.registerGameArea(area);
+        ServiceLocator.registerEntityService(es);
+
+        try (MockedStatic<ServiceLocator> sl = mockStatic(ServiceLocator.class, CALLS_REAL_METHODS)) {
+            sl.when(ServiceLocator::getPlayer).thenReturn(player);
+            assertFalse(command.action(new ArrayList<>(java.util.List.of("1", "2", "3"))));
+        }
+    }
+
+    @Test
+    void equalsIgnoreCaseTrim_nullLeft_shortCircuitsFalse() throws Exception {
+        var m = TravelCommand.class.getDeclaredMethod("equalsIgnoreCaseTrim", String.class);
+        m.setAccessible(true);
+        boolean res = (boolean) m.invoke(null, new Object[]{null});
+        assertFalse(res);
+    }
+
+    @Test
+    void equalsIgnoreCaseTrim_trueAfterTrimAndCase() throws Exception {
+        var m = TravelCommand.class.getDeclaredMethod("equalsIgnoreCaseTrim", String.class);
+        m.setAccessible(true);
+        assertTrue((boolean) m.invoke(null, "  CeNtEr  "));
+    }
+
+    @Test
+    void equalsIgnoreCaseTrim_nonMatch_false() throws Exception {
+        var m = TravelCommand.class.getDeclaredMethod("equalsIgnoreCaseTrim", String.class);
+        m.setAccessible(true);
+        assertFalse((boolean) m.invoke(null, "Reception"));
+    }
 }
