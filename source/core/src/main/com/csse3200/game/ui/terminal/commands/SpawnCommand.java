@@ -13,7 +13,7 @@ import java.util.ArrayList;
 
 /**
  * Spawns 1 enemy by name.
- * Usage: spawn <EnemyName>
+ * Usage: spawn EnemyName
  */
 public class SpawnCommand implements Command {
     private static final Logger logger = LoggerFactory.getLogger(SpawnCommand.class);

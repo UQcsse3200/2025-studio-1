@@ -7,7 +7,6 @@ import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
 import com.csse3200.game.rendering.RenderService;
 import com.csse3200.game.services.ServiceLocator;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,13 +17,30 @@ import static com.csse3200.game.ui.terminal.commands.util.CommandPlayers.resolve
 /**
  * Teleport the player.
  * Usage:
- *  - teleport                 -> move player to camera center
- *  - teleport center          -> same as above
- *  - teleport <x> <y>         -> move player to world coordinates (floats)
- *  - teleport <RoomName>      -> transition to another room/area by name (e.g., Reception, Office)
+ * - teleport                 -> move player to camera center
+ * - teleport center          -> same as above
+ * - teleport x y             -> move player to world coordinates (floats)
+ * - teleport RoomName        -> transition to another room/area by name (e.g., Reception, Office)
  */
 public class TeleportCommand implements Command {
     private static final Logger logger = LoggerFactory.getLogger(TeleportCommand.class);
+
+    private static boolean equalsIgnoreCaseTrim(String a, String b) {
+        return a != null && a.trim().equalsIgnoreCase(b);
+    }
+
+    private static boolean isNumeric(String s) {
+        return parseFloat(s) != null;
+    }
+
+    private static Float parseFloat(String s) {
+        if (s == null) return null;
+        try {
+            return Float.parseFloat(s.trim());
+        } catch (Exception e) {
+            return null;
+        }
+    }
 
     @Override
     public boolean action(ArrayList<String> args) {
@@ -43,7 +59,7 @@ public class TeleportCommand implements Command {
         // Prefer a globally-registered player; fallback: find keyboard-controlled entity
         Entity player = ServiceLocator.getPlayer();
         if (player == null) {
-            player =  resolve(es);
+            player = resolve(es);
         }
         if (player == null) {
             logger.warn("teleport: player not found");
@@ -105,22 +121,5 @@ public class TeleportCommand implements Command {
         player.setPosition(target);
         logger.info("teleport: moved player to camera center at ({}, {})", target.x, target.y);
         return true;
-    }
-
-    private static boolean equalsIgnoreCaseTrim(String a, String b) {
-        return a != null && a.trim().equalsIgnoreCase(b);
-    }
-
-    private static boolean isNumeric(String s) {
-        return parseFloat(s) != null;
-    }
-
-    private static Float parseFloat(String s) {
-        if (s == null) return null;
-        try {
-            return Float.parseFloat(s.trim());
-        } catch (Exception e) {
-            return null;
-        }
     }
 }
