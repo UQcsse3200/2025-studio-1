@@ -11,20 +11,15 @@ import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.ItemSpawnConfig;
 import com.csse3200.game.entities.factories.characters.NPCFactory;
-import com.csse3200.game.entities.factories.characters.PlayerFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.entities.spawner.ItemSpawner;
 import com.csse3200.game.services.ServiceLocator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Server Room. Has several platforms as well as server racks sprites.
  * Is attached to Tunnel Room.
  */
 public class ServerGameArea extends GameArea {
-    private static final Logger logger = LoggerFactory.getLogger(ServerGameArea.class);
-
     private static final float WALL_WIDTH = 0.1f;
     private static final GridPoint2 PLAYER_SPAWN = new GridPoint2(10, 10);
     private static final float ROOM_DIFF_NUMBER = 9;
@@ -91,9 +86,7 @@ public class ServerGameArea extends GameArea {
      * @return Entity player
      */
     private Entity spawnPlayer() {
-        Entity newPlayer = PlayerFactory.createPlayer();
-        spawnEntityAt(newPlayer, PLAYER_SPAWN, true, true);
-        return newPlayer;
+        return spawnOrRepositionPlayer(PLAYER_SPAWN);
     }
 
     /**
@@ -294,3 +287,4 @@ public class ServerGameArea extends GameArea {
         return (new ServerGameArea(terrainFactory, camera));
     }
 }
+

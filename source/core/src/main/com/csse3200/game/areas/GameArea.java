@@ -18,6 +18,7 @@ import com.csse3200.game.components.enemy.EnemyWaves;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.factories.ProjectileFactory;
 import com.csse3200.game.entities.factories.characters.NPCFactory;
+import com.csse3200.game.entities.factories.characters.PlayerFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.physics.components.PhysicsProjectileComponent;
 import com.csse3200.game.rendering.SolidColorRenderComponent;
@@ -614,38 +615,35 @@ public abstract class GameArea implements Disposable {
 
     /**
      * Helper to clear current entities and transition to a new area.
+     * Preserves the player entity across area transitions.
      */
     protected void clearAndLoad(Supplier<GameArea> nextAreaSupplier) {
         if (!beginTransition()) return;
 
         for (Entity entity : areaEntities) {
-            entity.setEnabled(false);
+            // Don't disable the player entity during transitions
+            if (entity != ServiceLocator.getPlayer()) {
+                entity.setEnabled(false);
+            }
         }
 
         /** Ensure transition happens on the render thread to avoid race conditions **/
         Gdx.app.postRunnable(() -> {
-            /** Before disposing, cache player stamina if available **/
-            try {
-                Entity currentPlayer = ServiceLocator.getPlayer();
-                if (currentPlayer != null) {
-                    com.csse3200.game.components.player.StaminaComponent sc =
-                            currentPlayer.getComponent(com.csse3200.game.components.player.StaminaComponent.class);
-                    if (sc != null) {
-                        ServiceLocator.setCachedPlayerStamina(sc.getStamina());
-                    }
-                    com.csse3200.game.components.CombatStatsComponent hc =
-                            currentPlayer.getComponent(com.csse3200.game.components.CombatStatsComponent.class);
-                    if (hc != null) {
-                        ServiceLocator.setCachedPlayerHealth(hc.getHealth());
-                    }
-                }
-            } catch (Exception ignored) {
-            }
-            /** Phase 1: disable and dispose current area's entities **/
+            /** Preserve player entity instead of disposing it **/
+            Entity currentPlayer = ServiceLocator.getPlayer();
+            
+            /** Phase 1: dispose all entities except the player **/
             for (Entity entity : areaEntities) {
-                entity.dispose();
+                if (entity != currentPlayer) {
+                    entity.dispose();
+                }
             }
             areaEntities.clear();
+            
+            /** Re-add the preserved player to the new area's entity list **/
+            if (currentPlayer != null) {
+                areaEntities.add(currentPlayer);
+            }
 
             /** Phase 2: on the next frame, build the next area to avoid Box2D world-locked/native races **/
             Gdx.app.postRunnable(() -> {
@@ -658,6 +656,31 @@ public abstract class GameArea implements Disposable {
                 }
             });
         });
+    }
+
+    /**
+     * Spawns or repositions the player entity. If a player already exists globally,
+     * it repositions them instead of creating a new one.
+     *
+     * @param spawnPosition The position to spawn/reposition the player
+     * @return The player entity (either existing or newly created)
+     */
+    protected Entity spawnOrRepositionPlayer(GridPoint2 spawnPosition) {
+        Entity existingPlayer = ServiceLocator.getPlayer();
+        
+        if (existingPlayer != null) {
+            // Reposition existing player
+            existingPlayer.setPosition(terrain.tileToWorldPosition(spawnPosition));
+            existingPlayer.setEnabled(true);
+            ServiceLocator.getEntityService().register(existingPlayer);
+            spawnEntity(existingPlayer);
+            return existingPlayer;
+        } else {
+            // Create new player (first time only)
+            Entity newPlayer = PlayerFactory.createPlayer();
+            spawnEntityAt(newPlayer, spawnPosition, true, true);
+            return newPlayer;
+        }
     }
 
     /**

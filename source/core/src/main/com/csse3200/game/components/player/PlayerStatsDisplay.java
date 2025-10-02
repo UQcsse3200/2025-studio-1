@@ -116,9 +116,7 @@ public class PlayerStatsDisplay extends UIComponent {
         ProgressBar.ProgressBarStyle healthBarStyle = makeBarStyle(COLOR_HEALTH, BAR_HEIGHT);
         int health = entity.getComponent(CombatStatsComponent.class).getHealth();
         healthBar = new ProgressBar(0, 100, 1, false, healthBarStyle);
-        // If a cached health exists (transition), prefer that to avoid flashes
-        Integer cachedHealth = com.csse3200.game.services.ServiceLocator.getCachedPlayerHealth();
-        healthBar.setValue(cachedHealth != null ? cachedHealth : health);
+        healthBar.setValue(health);
         healthBar.setAnimateDuration(0f);
 
         // Stamina bar (0..100 shows percent so UI is decoupled from gameplay max)

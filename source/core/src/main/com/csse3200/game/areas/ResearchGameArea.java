@@ -65,9 +65,7 @@ public class ResearchGameArea extends GameArea {
     }
 
     private Entity spawnPlayer() {
-        Entity player = PlayerFactory.createPlayer();
-        spawnEntityAt(player, PLAYER_SPAWN, true, true);
-        return player;
+        return spawnOrRepositionPlayer(PLAYER_SPAWN);
     }
 
     private void spawnPlatforms() {
