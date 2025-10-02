@@ -32,7 +32,7 @@ public class Terminal extends Component {
 
     private long lastKeystrokeNs = 0L;
     private String lastPrefix = "";
-    private List<String> lastSuggestions = Collections.emptyList();q
+    private List<String> lastSuggestions = Collections.emptyList();
 
     public Terminal(Map<String, Command> commands, GdxGame game, CountdownTimerService timer) {
         this.commands = (commands != null) ? commands : new LinkedHashMap<>();
