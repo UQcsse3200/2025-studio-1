@@ -1,5 +1,6 @@
 package com.csse3200.game.components;
 
+import com.csse3200.game.effects.AimbotEffect;
 import com.csse3200.game.effects.Effect;
 import com.csse3200.game.effects.RapidFireEffect;
 import com.csse3200.game.effects.UnlimitedAmmoEffect;
@@ -29,6 +30,10 @@ public class PowerupComponent extends Component {
         } else if (effect instanceof UnlimitedAmmoEffect unlimitedammo && equippedWeapon != null) {
             if (unlimitedammo.apply(equippedWeapon)) {
                 activeEffects.add(unlimitedammo);
+            }
+        } else if (effect instanceof AimbotEffect aimbot && equippedWeapon != null) {
+            if (aimbot.apply(equippedWeapon)) {
+                activeEffects.add(aimbot);
             }
         }
     }

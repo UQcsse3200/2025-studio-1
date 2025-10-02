@@ -11,10 +11,7 @@ import com.csse3200.game.entities.configs.ActiveProjectileTypes;
 import com.csse3200.game.entities.configs.projectiles.ActiveProjectile;
 import com.csse3200.game.entities.configs.projectiles.ProjectileConfig;
 import com.csse3200.game.entities.configs.projectiles.ProjectileTarget;
-import com.csse3200.game.physics.components.ColliderComponent;
-import com.csse3200.game.physics.components.HitboxComponent;
-import com.csse3200.game.physics.components.PhysicsComponent;
-import com.csse3200.game.physics.components.PhysicsProjectileComponent;
+import com.csse3200.game.physics.components.*;
 import com.csse3200.game.rendering.TextureRenderWithRotationComponent;
 import com.csse3200.game.services.ServiceLocator;
 
@@ -156,17 +153,23 @@ public class ProjectileFactory {
      *
      * @return pistol bullet entity
      */
-    public static Entity createPistolBullet(WeaponsStatsComponent source) {
+    public static Entity createPistolBullet(WeaponsStatsComponent source, boolean homing) {
         ProjectileTarget target = ProjectileTarget.ENEMY;
         Entity item = ServiceLocator.getPlayer().getComponent(InventoryComponent.class).getCurrSlot();
         //Player's weapon has the water bullet upgrade
         if (item.hasComponent(BulletEnhancerComponent.class)) {
             Entity projectile = createProjectile(target, source, "images/waterBullet.png");
             projectile.scaleHeight(0.85f);
+            if (homing) {
+                projectile.addComponent(new HomingPhysicsComponent());
+            }
             return projectile;
         }
         Entity projectile = createProjectile(target, source, "images/round.png");
         projectile.scaleHeight(0.85f);
+        if (homing) {
+            projectile.addComponent(new HomingPhysicsComponent());
+        }
         return projectile;
     }
 

@@ -33,6 +33,17 @@ public class PowerupsFactory {
         return powerup;
     }
 
+    public static Entity createAimBot() {
+        Entity powerup = createBasePowerup();
+
+        powerup.addComponent(new TextureRenderComponent("images/aimbot_powerup.png"));
+        powerup.getComponent(TextureRenderComponent.class).scaleEntity();
+        powerup.addComponent(new TagComponent("aimbot"));
+
+
+        return powerup;
+    }
+
     public static Entity createBasePowerup() {
         Entity powerup = new Entity()
                 .addComponent(new PhysicsComponent())
