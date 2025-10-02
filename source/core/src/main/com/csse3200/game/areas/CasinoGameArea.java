@@ -13,6 +13,8 @@ import com.csse3200.game.entities.spawner.ItemSpawner;
 
 /**
  * Minimal generic Casino room: walls, a single right-side door, and a subtle background overlay.
+ *
+ * Right door -> Spawn Room
  */
 public class CasinoGameArea extends GameArea {
     private static final float WALL_WIDTH = 0.1f;
@@ -23,6 +25,12 @@ public class CasinoGameArea extends GameArea {
         super(terrainFactory, cameraComponent);
     }
 
+    /**
+     * Entry point for this room. This:
+     * - Loads overlay
+     * - Creates Walls, Doors and Floor
+     * - Spawns player
+     */
     @Override
     public void create() {
         GenericLayout.ensureGenericAssets(this);
@@ -32,10 +40,13 @@ public class CasinoGameArea extends GameArea {
         spawnBordersAndDoors();
         spawnFloor();
         player = spawnPlayer();
-        ItemSpawner itemSpawner = new ItemSpawner(this);
-        itemSpawner.spawnItems(ItemSpawnConfig.securitymap());
     }
 
+    /**
+     * Spawns the borders and right door inside the room.
+     * Right door -> Spawn Room
+     * Uses a larger door to fit the casino png.
+     */
     private void spawnBordersAndDoors() {
         if (cameraComponent == null) return;
         Bounds b = getCameraBounds(cameraComponent);
@@ -58,13 +69,20 @@ public class CasinoGameArea extends GameArea {
         spawnEntity(rightDoor);
     }
 
+    /**
+     * Spawns the player at PLAYER_SPAWN and returns the entity.
+     */
     private Entity spawnPlayer() {
         Entity player = PlayerFactory.createPlayer();
         spawnEntityAt(player, PLAYER_SPAWN, true, true);
         return player;
     }
 
+    /**
+     * Disposes current entities and switches to ForestGameArea.
+     */
     private void loadSpawnFromCasino() {
+
         clearAndLoad(() -> new ForestGameArea(terrainFactory, cameraComponent));
     }
 
