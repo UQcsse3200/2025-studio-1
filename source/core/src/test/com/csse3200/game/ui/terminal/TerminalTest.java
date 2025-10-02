@@ -45,7 +45,7 @@ class TerminalTest {
     @Test
     void shouldAddCommand() {
         HashMap<String, Command> commands = new HashMap<>();
-        Terminal terminal = new Terminal(commands);
+        Terminal terminal = new Terminal(commands, null, null);
 
         int startingSize = commands.size();
 

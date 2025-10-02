@@ -26,7 +26,7 @@ class TerminalIntegrationTest {
 
     @Test
     void typing_suggests_then_accepts_top() {
-        Terminal t = new Terminal();
+        Terminal t = new Terminal(null, null, null);
         FakeCommand debug = new FakeCommand();
         FakeCommand death = new FakeCommand();
         t.addCommand("debug", debug);

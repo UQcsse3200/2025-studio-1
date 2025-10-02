@@ -4,7 +4,6 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.GridPoint2;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
-import com.csse3200.game.areas.difficulty.Difficulty;
 import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.ItemSpawnConfig;
@@ -24,6 +23,10 @@ public class SecurityGameArea extends GameArea {
 
     public SecurityGameArea(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
         super(terrainFactory, cameraComponent);
+    }
+
+    public static SecurityGameArea load(TerrainFactory terrainFactory, CameraComponent camera) {
+        return (new SecurityGameArea(terrainFactory, camera));
     }
 
     @Override
@@ -145,7 +148,7 @@ public class SecurityGameArea extends GameArea {
         clearAndLoad(() -> new MainHall(terrainFactory, cameraComponent));
     }
 
-    private void loadOffice() {
+    private void loadMovingBossRoom() {
         clearAndLoad(() -> new MovingBossRoom(terrainFactory, cameraComponent));
     }
 
@@ -158,9 +161,5 @@ public class SecurityGameArea extends GameArea {
     public Entity getPlayer() {
         // placeholder
         return null;
-    }
-
-    public static SecurityGameArea load(TerrainFactory terrainFactory, CameraComponent camera) {
-        return (new SecurityGameArea(terrainFactory, camera));
     }
 }
