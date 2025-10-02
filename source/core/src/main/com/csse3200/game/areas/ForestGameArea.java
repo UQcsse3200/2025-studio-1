@@ -688,7 +688,7 @@ public class ForestGameArea extends GameArea {
 
 
     public Entity getPlayer() {
-        return player;
+        return ServiceLocator.getPlayer();
     }
 
     @Override

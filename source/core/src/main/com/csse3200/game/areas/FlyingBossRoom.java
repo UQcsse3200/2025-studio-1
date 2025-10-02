@@ -148,7 +148,7 @@ public class FlyingBossRoom extends GameArea {
     }
 
     public Entity getPlayer() {
-        return player;
+        return ServiceLocator.getPlayer();
     }
 
     public void loadShipping() {

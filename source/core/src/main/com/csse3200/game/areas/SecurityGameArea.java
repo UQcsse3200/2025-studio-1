@@ -156,8 +156,7 @@ public class SecurityGameArea extends GameArea {
 
     @Override
     public Entity getPlayer() {
-        // placeholder
-        return null;
+        return ServiceLocator.getPlayer();
     }
 
     public static SecurityGameArea load(TerrainFactory terrainFactory, CameraComponent camera) {

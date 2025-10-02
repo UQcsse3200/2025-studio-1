@@ -237,7 +237,7 @@ public class ServerGameArea extends GameArea {
      * @return Entity player
      */
     public Entity getPlayer() {
-        return player;
+        return ServiceLocator.getPlayer();
     }
 
     /**

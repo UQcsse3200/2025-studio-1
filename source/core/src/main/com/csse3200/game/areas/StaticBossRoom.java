@@ -126,7 +126,7 @@ public class StaticBossRoom extends GameArea {
     }
 
     public Entity getPlayer() {
-        return player;
+        return ServiceLocator.getPlayer();
     }
 
     public void loadTunnel() {

@@ -6,6 +6,7 @@ import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.factories.characters.PlayerFactory;
+import com.csse3200.game.services.ServiceLocator;
 
 /**
  * Office room: minimal walls and two doors (left--Security, right--Elevator).
@@ -144,8 +145,7 @@ public class OfficeGameArea extends GameArea {
 
     @Override
     public Entity getPlayer() {
-        //placeholder see previous
-        return null;
+        return ServiceLocator.getPlayer();
     }
 
     public static OfficeGameArea load(TerrainFactory terrainFactory, CameraComponent camera) {
