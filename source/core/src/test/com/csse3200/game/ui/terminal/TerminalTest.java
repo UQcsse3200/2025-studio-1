@@ -18,7 +18,7 @@ class TerminalTest {
 
     @Test
     void shouldSetOpenClosed() {
-        Terminal terminal = spy(Terminal.class);
+        Terminal terminal = spy(new Terminal(null, null, null));
 
         terminal.setClosed();
         assertFalse(terminal.isOpen());
@@ -32,7 +32,7 @@ class TerminalTest {
 
     @Test
     void shouldToggleIsOpen() {
-        Terminal terminal = spy(Terminal.class);
+        Terminal terminal = spy(new Terminal(null, null, null));
 
         terminal.setClosed();
 
@@ -62,7 +62,7 @@ class TerminalTest {
 
     @Test
     void shouldProcessMessageNoArgs() {
-        Terminal terminal = new Terminal();
+        Terminal terminal = new Terminal(null, null, null);
 
         Class<ArrayList<String>> captorClass = (Class<ArrayList<String>>) (Class) ArrayList.class;
         ArgumentCaptor<ArrayList<String>> captor = ArgumentCaptor.forClass(captorClass);
@@ -78,7 +78,7 @@ class TerminalTest {
 
     @Test
     void shouldProcessMessageMultipleArgs() {
-        Terminal terminal = new Terminal();
+        Terminal terminal = new Terminal(null, null, null);
 
         Class<ArrayList<String>> captorClass = (Class<ArrayList<String>>) (Class) ArrayList.class;
         ArgumentCaptor<ArrayList<String>> captor = ArgumentCaptor.forClass(captorClass);
@@ -98,7 +98,7 @@ class TerminalTest {
 
     @Test
     void shouldModifyEnteredMessage() {
-        Terminal terminal = new Terminal();
+        Terminal terminal = new Terminal(null, null, null);
 
         terminal.appendToMessage('a');
         terminal.appendToMessage('b');
