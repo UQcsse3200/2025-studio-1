@@ -22,6 +22,7 @@ import com.csse3200.game.services.ServiceLocator;
  * asset loading/unloading, and background creation) is handled by {@link BaseScreen}.
  */
 public class DeathScreen extends BaseScreen {
+    private BaseEndScreenDisplays uiDisplay;
 
     /**
      * Constructs a new DeathScreen instance.
@@ -53,8 +54,13 @@ public class DeathScreen extends BaseScreen {
      */
     @Override
     protected Entity createUIScreen(Stage stage) {
+        uiDisplay = BaseEndScreenDisplays.defeated(game);
         return new Entity()
-                .addComponent(BaseEndScreenDisplays.defeated(game))
+                .addComponent(uiDisplay)
                 .addComponent(new InputDecorator(stage, 10));
+    }
+
+    public void updateTime(long second) {
+        uiDisplay.setElapsedSeconds(second);
     }
 }
