@@ -170,7 +170,6 @@ public class PlayerFactory {
                                 Entity equippedWeapon = inventory.getCurrItem();
 
                                 if (equippedWeapon != null) {
-                                    System.out.println("block executes");
                                     PowerupComponent powerup = player.getComponent(PowerupComponent.class);
                                     powerup.setEquippedWeapon(equippedWeapon);
                                     // Activate the effect that already exists in PlayerActions

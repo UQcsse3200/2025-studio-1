@@ -297,8 +297,9 @@ public class ForestGameArea extends GameArea {
         ServiceLocator.registerPlayer(player);
 
 //        spawnRapidFirePowerup();
-        //spawnUnlimitedAmmoPowerup();
+        spawnUnlimitedAmmoPowerup();
         spawnAimbotPowerup();
+        spawnRobots();
 
         spawnComputerBench();
         spawnHealthBench();
@@ -318,9 +319,6 @@ public class ForestGameArea extends GameArea {
         Entity keycard = KeycardFactory.createKeycard(1);
         keycard.setPosition(new Vector2(keycardX, keycardY));
         spawnEntity(keycard);
-        spawnRobots();
-        spawnRobots();
-        spawnRobots();
 
         spawnItems();
     }
@@ -622,8 +620,8 @@ public class ForestGameArea extends GameArea {
     }
 
     private void spawnAimbotPowerup() {
-        Entity newAimbotPowerup = PowerupsFactory.createAimBot();
-        spawnEntityAt(newAimbotPowerup, new GridPoint2(2,30), true, true);
+        Entity newAimbot = PowerupsFactory.createAimBot();
+        spawnEntityAt(newAimbot, new GridPoint2(2, 30), true, true);
     }
 
     private void spawnBoss2() {
