@@ -2,6 +2,7 @@ package com.csse3200.game.ui.terminal;
 
 import com.csse3200.game.GdxGame;
 import com.csse3200.game.components.Component;
+import com.csse3200.game.services.CountdownTimerService;
 import com.csse3200.game.ui.terminal.autocomplete.BKTree;
 import com.csse3200.game.ui.terminal.autocomplete.RadixTrie;
 import com.csse3200.game.ui.terminal.commands.*;
@@ -17,6 +18,9 @@ public class Terminal extends Component {
     private String enteredMessage = "";
     private boolean isOpen = false;
 
+    private final CountdownTimerService countdownTimer;
+
+
     // --- Autocomplete state ---
     private final RadixTrie trie = new RadixTrie();
     private final BKTree bkTree = new BKTree();
@@ -31,23 +35,28 @@ public class Terminal extends Component {
     private List<String> lastSuggestions = Collections.emptyList();
 
     public Terminal() {
-        this(new HashMap<>(), null);
+        this(new HashMap<>(), null, null);
     }
 
     public Terminal(GdxGame game) {
-        this(new HashMap<>(), game);
+        this(new HashMap<>(), game, null);
     }
 
     public Terminal(Map<String, Command> commands) {
-        this(commands, null);
+        this(commands, null, null);
     }
 
-    public Terminal(Map<String, Command> commands, GdxGame game) {
+    public Terminal(GdxGame game, CountdownTimerService timer) {
+        this(new HashMap<>(), game, timer);
+    }
+
+    public Terminal(Map<String, Command> commands, GdxGame game, CountdownTimerService timer) {
         this.commands = commands;
+        this.countdownTimer = timer;
 
         addCommand("debug", new DebugCommand());
-        addCommand("winscreen", new EndScreenCommand(game, GdxGame.ScreenType.WIN_SCREEN));
-        addCommand("deathscreen", new EndScreenCommand(game, GdxGame.ScreenType.DEATH_SCREEN));
+        addCommand("winscreen", new EndScreenCommand(game, GdxGame.ScreenType.WIN_SCREEN, countdownTimer));
+        addCommand("deathscreen", new EndScreenCommand(game, GdxGame.ScreenType.DEATH_SCREEN, countdownTimer));
         addCommand("disableDamage", new DisableDamageCommand());
         addCommand("waves", new WavesCommand());
         addCommand("damageMultiplier", new DamageMultiplierCommand());
