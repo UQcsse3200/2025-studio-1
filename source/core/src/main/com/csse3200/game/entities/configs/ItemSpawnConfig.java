@@ -139,6 +139,19 @@ public class ItemSpawnConfig {
 
         return config;
     }
+
+    /**
+     * Boss room Spawning. Spawns a rifle next to the player
+     */
+    public static Map<String, List<ItemSpawner.ItemSpawnInfo>> bossmap() {
+        Map<String, List<ItemSpawner.ItemSpawnInfo>> config = new HashMap<>();
+
+        config.put(Weapons.RIFLE.name(), List.of(
+                new ItemSpawner.ItemSpawnInfo(new GridPoint2(5, 7), 1)
+        ));
+
+        return config;
+    }
     //  for a new map just add more methods
 
 }
