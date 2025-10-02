@@ -297,9 +297,9 @@ public class ForestGameArea extends GameArea {
         ServiceLocator.registerPlayer(player);
 
 //        spawnRapidFirePowerup();
+        //spawnAimbotPowerup();
         spawnUnlimitedAmmoPowerup();
-        spawnAimbotPowerup();
-        spawnRobots();
+
 
         spawnComputerBench();
         spawnHealthBench();
@@ -554,7 +554,8 @@ public class ForestGameArea extends GameArea {
         return newDagger;
     }
 
-    /** FIXME Layer is behind player, does that matter???
+    /**
+     * FIXME Layer is behind player, does that matter???
      * FIXME Also need to fix positioning so that it actually looks like the player is holding the weapon
      * Sets the equipped item in the PlayerEquipComponent to be the given item
      *
