@@ -58,6 +58,13 @@ public class PowerupComponent extends Component {
                     activeEffects.remove(i);
                 }
             }
+
+            else if (effect instanceof AimbotEffect aimbotEffect) {
+                aimbotEffect.update(dt);
+                if (!aimbotEffect.isActive()) {
+                    activeEffects.remove(i);
+                }
+            }
         }
     }
 }
