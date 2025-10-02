@@ -163,6 +163,24 @@ public class PlayerFactory {
                                 entityPowerup.dispose();
                             }
                         }
+
+                        if (tag.getTag().equals("aimbot")) {
+                            if (entityPowerup.getCenterPosition().dst(player.getCenterPosition()) < 1f) {
+                                InventoryComponent inventory = player.getComponent(InventoryComponent.class);
+                                Entity equippedWeapon = inventory.getCurrItem();
+
+                                if (equippedWeapon != null) {
+                                    System.out.println("block executes");
+                                    PowerupComponent powerup = player.getComponent(PowerupComponent.class);
+                                    powerup.setEquippedWeapon(equippedWeapon);
+                                    // Activate the effect that already exists in PlayerActions
+                                    PlayerActions playerActions = player.getComponent(PlayerActions.class);
+                                    playerActions.getAimbotEffect().apply(equippedWeapon);
+                                    powerup.addEffect(playerActions.getAimbotEffect());
+                                }
+                                entityPowerup.dispose();
+                            }
+                        }
                     }
                 }
             }

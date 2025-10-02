@@ -82,7 +82,7 @@ public class ProjectileFactoryTest {
         Entity pistol = WeaponsFactory.createWeapon(Weapons.PISTOL);
         when(player.getComponent(InventoryComponent.class).getCurrSlot()).thenReturn(pistol);
         pistolBullet = ProjectileFactory.createPistolBullet(
-                pistol.getComponent(WeaponsStatsComponent.class)
+                pistol.getComponent(WeaponsStatsComponent.class), false
         );
 
     }
