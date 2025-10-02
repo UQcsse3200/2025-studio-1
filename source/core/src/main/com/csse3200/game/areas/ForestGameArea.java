@@ -609,7 +609,6 @@ public class ForestGameArea extends GameArea {
 //        Vector2 offset_dagger = new Vector2(1.0f, 0.3f);
 //        Vector2 offset_lightsaber = new Vector2(0.7f, -0.2f);
 //
-//
 //        if(weapons == Weapons.RIFLE) {player.getComponent(PlayerEquipComponent.class).setItem(item, offset_rifle);}
 //        if(weapons == Weapons.PISTOL) {player.getComponent(PlayerEquipComponent.class).setItem(item, offset_pistol);}
 //        if (weapons == Weapons.DAGGER) {player.getComponent(PlayerEquipComponent.class).setItem(item, offset_dagger);}
