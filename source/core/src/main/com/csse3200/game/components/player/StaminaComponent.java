@@ -188,11 +188,6 @@ public class StaminaComponent extends Component {
         }
         lastEmittedStamina = curr;
         entity.getEvents().trigger("staminaChanged", curr, MAX_STAMINA);
-        // Keep a live copy in the global cache for safe cross-area restoration
-        try {
-            com.csse3200.game.services.ServiceLocator.setCachedPlayerStamina(stamina);
-        } catch (Exception ignored) {
-        }
     }
 
     /**
