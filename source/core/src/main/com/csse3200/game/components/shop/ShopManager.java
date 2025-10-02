@@ -1,9 +1,14 @@
 package com.csse3200.game.components.shop;
 
 import com.csse3200.game.components.Component;
+import com.csse3200.game.components.MagazineComponent;
+import com.csse3200.game.components.attachments.BulletEnhancerComponent;
+import com.csse3200.game.components.attachments.LaserComponent;
+import com.csse3200.game.components.items.ItemComponent;
 import com.csse3200.game.components.player.InventoryComponent;
 import com.csse3200.game.entities.Entity;
-
+import com.csse3200.game.entities.configs.Weapons;
+import com.csse3200.game.entities.factories.items.WeaponsFactory;
 
 /**
  * Handles shop-related operations such as validating purchases,
@@ -80,6 +85,56 @@ public class ShopManager extends Component {
         // Check user has sufficient funds
         if (!hasSufficientFunds(inventory, amount, cost)) {
             return fail(item, PurchaseError.INSUFFICIENT_FUNDS);
+        }
+
+        // Check if laser or bullet was purchased
+        if (item.getItem().hasComponent(LaserComponent.class)
+                || item.getItem().hasComponent(BulletEnhancerComponent.class)) {
+            if (inventory.getCurrSlot() == null) {
+                return fail(item, PurchaseError.INVALID_WEAPON);
+            }
+            Entity weapon = inventory.get(inventory.getEquippedSlot());
+
+            //Check if this upgrade has already been done
+            if (weapon.hasComponent(LaserComponent.class)
+                    && item.getItem().hasComponent(LaserComponent.class)) {
+                return fail(item, PurchaseError.ALREADY_HAVE_LASER);
+            } else if (weapon.hasComponent(BulletEnhancerComponent.class)
+                    && item.getItem().hasComponent(BulletEnhancerComponent.class)) {
+                return fail(item, PurchaseError.ALREADY_HAVE_BULLET);
+            }
+            //Ensure the player is holding a ranged weapon
+            if (weapon != null && weapon.hasComponent(MagazineComponent.class)) {
+                boolean laser = weapon.hasComponent(LaserComponent.class);
+                boolean bullet = weapon.hasComponent(BulletEnhancerComponent.class);
+
+                Entity newWeapon;
+                // Recreate the weapon they're holding
+                if (weapon.getComponent(ItemComponent.class).getTexture().equals("images/pistol.png")) {
+                     newWeapon = WeaponsFactory.createWeaponWithAttachment(Weapons.PISTOL, laser, bullet);
+                } else if (weapon.getComponent(ItemComponent.class).getTexture().equals("images/rifle.png")) {
+                     newWeapon = WeaponsFactory.createWeaponWithAttachment(Weapons.RIFLE, laser, bullet);
+                } else {
+                    //Just default to rifle
+                    newWeapon = WeaponsFactory.createWeaponWithAttachment(Weapons.RIFLE, laser, bullet);
+                }
+                if (item.getItem().hasComponent(LaserComponent.class)) {
+                    newWeapon.addComponent(new LaserComponent()).create();
+                } else if (item.getItem().hasComponent(BulletEnhancerComponent.class)) {
+                    newWeapon.addComponent(new BulletEnhancerComponent());
+                }
+
+                item = new CatalogEntry(
+                        newWeapon,
+                        10,
+                        true,
+                        1,
+                        1
+                );
+                inventory.removeCurrItem();
+            } else {
+                return fail(item, PurchaseError.INVALID_WEAPON);
+            }
         }
 
         // Add item to Inventory

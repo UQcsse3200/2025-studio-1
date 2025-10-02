@@ -29,11 +29,13 @@ public class ServiceLocator {
     private static GameArea gameArea;
     private static SaveLoadService saveLoadService;
     private static Entity player;
+    private static MusicService musicService;
     private static Difficulty difficulty;
     private static DiscoveryService discoveryService; // track discovered rooms
-
+    private static ButtonSoundService buttonSoundService;
     private static Float cachedPlayerStamina; // preserved across area transitions
     private static Integer cachedPlayerHealth; // preserved across area transitions
+
     public static Entity getPlayer() {
         return player;
     }
@@ -80,12 +82,21 @@ public class ServiceLocator {
         return saveLoadService;
     }
 
+    public static MusicService getMusicService() {
+        return musicService;
+    }
+
     public static Difficulty getDifficulty() {
         return difficulty;
     }
 
+
     public static DiscoveryService getDiscoveryService() {
         return discoveryService;
+    }
+  
+    public static ButtonSoundService getButtonSoundService() {
+        return buttonSoundService;
     }
 
     public static void registerGameArea(GameArea theArea) {
@@ -159,6 +170,11 @@ public class ServiceLocator {
         saveLoadService = source;
     }
 
+    public static void registerMusicService(MusicService source) {
+        logger.debug("Registering music service {}", source);
+        musicService = source;
+    }
+
     public static void registerDifficulty(Difficulty source) {
         logger.debug("Registering difficulty {}", source);
         difficulty = source;
@@ -167,6 +183,11 @@ public class ServiceLocator {
     public static void registerDiscoveryService(DiscoveryService service) {
         logger.debug("Registering discovery service {}", service);
         discoveryService = service;
+    }
+  
+    public static void registerButtonSoundService(ButtonSoundService source) {
+        logger.debug("Registering button sound service {}", source);
+        buttonSoundService = source;
     }
 
     public static void clear() {
