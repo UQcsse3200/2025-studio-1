@@ -4,9 +4,10 @@ import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.components.Component;
 import com.csse3200.game.entities.Entity;
 
+
 /**
- * 伙伴传送跟随组件：
- * 如果距离目标超过 maxDistance，就瞬移到目标旁边。
+ * Partner Teleport Follower Component:
+ * If the distance to the target exceeds maxDistance, teleport to the target.
  */
 public class TeleportFollowComponent extends Component {
     private final Entity target;
@@ -25,7 +26,6 @@ public class TeleportFollowComponent extends Component {
         Vector2 targetPos = target.getPosition();
 
         if (myPos.dst(targetPos) > maxDistance) {
-            // 瞬移到玩家旁边（右边偏移 1f）
             entity.setPosition(targetPos.cpy().add(1f, 0f));
         }
     }
