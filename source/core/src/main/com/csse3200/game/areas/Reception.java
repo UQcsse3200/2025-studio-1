@@ -104,13 +104,11 @@ public class Reception extends GameArea {
     }
 
     private void loadForest() {
-        roomNumber--;
         ForestGameArea.setRoomSpawn(new GridPoint2(24, 8));
         clearAndLoad(() -> new ForestGameArea(terrainFactory, cameraComponent));
     }
 
     private void loadBackToFloor5() {
-        roomNumber++;
         MainHall.setRoomSpawn(new GridPoint2(8, 8));
         clearAndLoad(() -> new MainHall(terrainFactory, cameraComponent));
     }

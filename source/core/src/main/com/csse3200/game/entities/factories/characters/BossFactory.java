@@ -10,6 +10,8 @@ import com.csse3200.game.components.TouchAttackComponent;
 import com.csse3200.game.components.WeaponsStatsComponent;
 import com.csse3200.game.components.boss.*;
 import com.csse3200.game.components.enemy.*;
+import com.csse3200.game.components.friendlynpc.DialogueDisplay;
+import com.csse3200.game.components.friendlynpc.NpcDialogueDataComponent;
 import com.csse3200.game.components.npc.BossAnimationController;
 import com.csse3200.game.components.player.InventoryComponent;
 import com.csse3200.game.components.tasks.BossChaseTask;

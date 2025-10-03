@@ -127,13 +127,11 @@ public class ElevatorGameArea extends GameArea {
     }
 
     private void loadOffice() {
-        roomNumber--;
         OfficeGameArea.setRoomSpawn(new GridPoint2(27, 22));
         clearAndLoad(() -> new OfficeGameArea(terrainFactory, cameraComponent));
     }
 
     private void loadResearch() {
-        roomNumber++;
         ResearchGameArea.setRoomSpawn(new GridPoint2(6, 8));
         clearAndLoad(() -> new ResearchGameArea(terrainFactory, cameraComponent));
     }
