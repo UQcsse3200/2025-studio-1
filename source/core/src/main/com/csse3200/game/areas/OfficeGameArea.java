@@ -12,7 +12,7 @@ import com.csse3200.game.entities.factories.characters.PlayerFactory;
  */
 public class OfficeGameArea extends GameArea {
     private static final float WALL_WIDTH = 0.1f;
-    private static final GridPoint2 PLAYER_SPAWN = new GridPoint2(10, 10);
+    private static GridPoint2 PLAYER_SPAWN = new GridPoint2(10, 10);
 
     public OfficeGameArea(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
         super(terrainFactory, cameraComponent);
@@ -136,6 +136,16 @@ public class OfficeGameArea extends GameArea {
     private void loadElevator() {
         roomNumber++;
         clearAndLoad(() -> new ElevatorGameArea(terrainFactory, cameraComponent));
+    }
+
+    /**
+     * Setter method for the player spawn point
+     * should be used when the player is traversing through the rooms
+     * 
+     * @param newSpawn the new spawn point
+     */
+    public static void setRoomSpawn(GridPoint2 newSpawn) {
+        OfficeGameArea.PLAYER_SPAWN = newSpawn;
     }
 
     @Override

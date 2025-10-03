@@ -16,7 +16,7 @@ import org.slf4j.LoggerFactory;
  */
 public class Reception extends GameArea {
     private static final Logger logger = LoggerFactory.getLogger(Reception.class);
-    private static final GridPoint2 PLAYER_SPAWN = new GridPoint2(8, 10);
+    private static GridPoint2 PLAYER_SPAWN = new GridPoint2(8, 10);
     private static final float WALL_WIDTH = 0.1f;
     private static final int NUM_TREES = 8; // Number of trees to spawn
     private int roomDiffNumber = 2;
@@ -173,6 +173,16 @@ public class Reception extends GameArea {
         Entity stand1 = ObstacleFactory.createcomic_stand();
         stand1.setPosition(PlatformX, PlatformY);
         spawnEntity(stand1);
+    }
+
+    /**
+     * Setter method for the player spawn point
+     * should be used when the player is traversing through the rooms
+     * 
+     * @param newSpawn the new spawn point
+     */
+    public static void setRoomSpawn(GridPoint2 newSpawn) {
+        Reception.PLAYER_SPAWN = newSpawn;
     }
 
     @Override
