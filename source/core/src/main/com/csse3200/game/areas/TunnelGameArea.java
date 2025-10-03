@@ -170,7 +170,7 @@ public class TunnelGameArea extends GameArea {
     }
 
     private void loadBossRoom() {
-        clearAndLoad(() -> new StaticBossRoom(terrainFactory, cameraComponent));
+        clearAndLoad(() -> new SecretRoomGameArea(terrainFactory, cameraComponent));
     }
 
     @Override
