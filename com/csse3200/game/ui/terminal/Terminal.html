@@ -113,15 +113,6 @@ loadScripts(document, 'script');</script>
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E()" class="member-name-link">Terminal</a>()</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
-<div class="col-constructor-name odd-row-color"><code><a href="#%3Cinit%3E(com.csse3200.game.GdxGame)" class="member-name-link">Terminal</a><wbr>(<a href="../../GdxGame.html" title="class in com.csse3200.game">GdxGame</a>&nbsp;game)</code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(com.csse3200.game.GdxGame,com.csse3200.game.services.CountdownTimerService)" class="member-name-link">Terminal</a><wbr>(<a href="../../GdxGame.html" title="class in com.csse3200.game">GdxGame</a>&nbsp;game,
- <a href="../../services/CountdownTimerService.html" title="class in com.csse3200.game.services">CountdownTimerService</a>&nbsp;timer)</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
-<div class="col-constructor-name odd-row-color"><code><a href="#%3Cinit%3E(java.util.Map)" class="member-name-link">Terminal</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="commands/Command.html" title="interface in com.csse3200.game.ui.terminal.commands">Command</a>&gt;&nbsp;commands)</code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
 <div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(java.util.Map,com.csse3200.game.GdxGame,com.csse3200.game.services.CountdownTimerService)" class="member-name-link">Terminal</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="commands/Command.html" title="interface in com.csse3200.game.ui.terminal.commands">Command</a>&gt;&nbsp;commands,
  <a href="../../GdxGame.html" title="class in com.csse3200.game">GdxGame</a>&nbsp;game,
  <a href="../../services/CountdownTimerService.html" title="class in com.csse3200.game.services">CountdownTimerService</a>&nbsp;timer)</code></div>
@@ -171,7 +162,9 @@ loadScripts(document, 'script');</script>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#rebuildAutocompleteIndex()" class="member-name-link">rebuildAutocompleteIndex</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Full reindex: rebuild tries from the current command set.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setClosed()" class="member-name-link">setClosed</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
@@ -205,31 +198,6 @@ loadScripts(document, 'script');</script>
 <h2>Constructor Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="&lt;init&gt;()">
-<h3>Terminal</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">Terminal</span>()</div>
-</section>
-</li>
-<li>
-<section class="detail" id="&lt;init&gt;(com.csse3200.game.GdxGame)">
-<h3>Terminal</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">Terminal</span><wbr><span class="parameters">(<a href="../../GdxGame.html" title="class in com.csse3200.game">GdxGame</a>&nbsp;game)</span></div>
-</section>
-</li>
-<li>
-<section class="detail" id="&lt;init&gt;(java.util.Map)">
-<h3>Terminal</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">Terminal</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="commands/Command.html" title="interface in com.csse3200.game.ui.terminal.commands">Command</a>&gt;&nbsp;commands)</span></div>
-</section>
-</li>
-<li>
-<section class="detail" id="&lt;init&gt;(com.csse3200.game.GdxGame,com.csse3200.game.services.CountdownTimerService)">
-<h3>Terminal</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">Terminal</span><wbr><span class="parameters">(<a href="../../GdxGame.html" title="class in com.csse3200.game">GdxGame</a>&nbsp;game,
- <a href="../../services/CountdownTimerService.html" title="class in com.csse3200.game.services">CountdownTimerService</a>&nbsp;timer)</span></div>
-</section>
-</li>
-<li>
 <section class="detail" id="&lt;init&gt;(java.util.Map,com.csse3200.game.GdxGame,com.csse3200.game.services.CountdownTimerService)">
 <h3>Terminal</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">Terminal</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="commands/Command.html" title="interface in com.csse3200.game.ui.terminal.commands">Command</a>&gt;&nbsp;commands,
@@ -249,6 +217,12 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="getEnteredMessage()">
 <h3>getEnteredMessage</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">getEnteredMessage</span>()</div>
+</section>
+</li>
+<li>
+<section class="detail" id="setEnteredMessage(java.lang.String)">
+<h3>setEnteredMessage</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setEnteredMessage</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;text)</span></div>
 </section>
 </li>
 <li>
@@ -286,6 +260,7 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="rebuildAutocompleteIndex()">
 <h3>rebuildAutocompleteIndex</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">rebuildAutocompleteIndex</span>()</div>
+<div class="block">Full reindex: rebuild tries from the current command set.</div>
 </section>
 </li>
 <li>
@@ -304,12 +279,6 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="handleBackspace()">
 <h3>handleBackspace</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">handleBackspace</span>()</div>
-</section>
-</li>
-<li>
-<section class="detail" id="setEnteredMessage(java.lang.String)">
-<h3>setEnteredMessage</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setEnteredMessage</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;text)</span></div>
 </section>
 </li>
 <li>

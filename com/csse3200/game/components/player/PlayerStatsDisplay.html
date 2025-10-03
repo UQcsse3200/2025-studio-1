@@ -88,7 +88,9 @@ loadScripts(document, 'script');</script>
 <div class="inheritance"><a href="../Component.html" title="class in com.csse3200.game.components">com.csse3200.game.components.Component</a>
 <div class="inheritance"><a href="../../rendering/RenderComponent.html" title="class in com.csse3200.game.rendering">com.csse3200.game.rendering.RenderComponent</a>
 <div class="inheritance"><a href="../../ui/UIComponent.html" title="class in com.csse3200.game.ui">com.csse3200.game.ui.UIComponent</a>
+<div class="inheritance"><a href="../screens/BaseScreenDisplay.html" title="class in com.csse3200.game.components.screens">com.csse3200.game.components.screens.BaseScreenDisplay</a>
 <div class="inheritance">com.csse3200.game.components.player.PlayerStatsDisplay</div>
+</div>
 </div>
 </div>
 </div>
@@ -100,8 +102,7 @@ loadScripts(document, 'script');</script>
 </dl>
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">PlayerStatsDisplay</span>
-<span class="extends-implements">extends <a href="../../ui/UIComponent.html" title="class in com.csse3200.game.ui">UIComponent</a></span></div>
-<div class="block">A ui component for displaying player stats, e.g. health.</div>
+<span class="extends-implements">extends <a href="../screens/BaseScreenDisplay.html" title="class in com.csse3200.game.components.screens">BaseScreenDisplay</a></span></div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -109,6 +110,9 @@ loadScripts(document, 'script');</script>
 <li>
 <section class="field-summary" id="field-summary">
 <h2>Field Summary</h2>
+<div class="inherited-list">
+<h3 id="fields-inherited-from-class-com.csse3200.game.components.screens.BaseScreenDisplay">Fields inherited from class&nbsp;com.csse3200.game.components.screens.<a href="../screens/BaseScreenDisplay.html" title="class in com.csse3200.game.components.screens">BaseScreenDisplay</a></h3>
+<code><a href="../screens/BaseScreenDisplay.html#game">game</a>, <a href="../screens/BaseScreenDisplay.html#logger">logger</a>, <a href="../screens/BaseScreenDisplay.html#neon">neon</a>, <a href="../screens/BaseScreenDisplay.html#root">root</a></code></div>
 <div class="inherited-list">
 <h3 id="fields-inherited-from-class-com.csse3200.game.ui.UIComponent">Fields inherited from class&nbsp;com.csse3200.game.ui.<a href="../../ui/UIComponent.html" title="class in com.csse3200.game.ui">UIComponent</a></h3>
 <code><a href="../../ui/UIComponent.html#skin">skin</a>, <a href="../../ui/UIComponent.html#stage">stage</a></code></div>
@@ -141,63 +145,52 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#create()" class="member-name-link">create</a>()</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#buildUI(com.badlogic.gdx.scenes.scene2d.ui.Table)" class="member-name-link">buildUI</a><wbr>(com.badlogic.gdx.scenes.scene2d.ui.Table&nbsp;root)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Creates reusable ui styles and adds actors to the stage.</div>
+<div class="block">Subclasses implement their UI here using the provided <code>root</code> table.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#dispose()" class="member-name-link">dispose</a>()</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#create()" class="member-name-link">create</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Called when the component is disposed.</div>
+<div class="block">Initialises common UI infrastructure and delegates to <a href="../screens/BaseScreenDisplay.html#buildUI(com.badlogic.gdx.scenes.scene2d.ui.Table)"><code>BaseScreenDisplay.buildUI(Table)</code></a>.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#draw(com.badlogic.gdx.graphics.g2d.SpriteBatch)" class="member-name-link">draw</a><wbr>(com.badlogic.gdx.graphics.g2d.SpriteBatch&nbsp;batch)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Draw the renderable.</div>
+<div class="block">Stage handles rendering of attached actors.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setHealthBar(com.badlogic.gdx.scenes.scene2d.ui.ProgressBar)" class="member-name-link">setHealthBar</a><wbr>(com.badlogic.gdx.scenes.scene2d.ui.ProgressBar&nbsp;bar)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">For use in test code</div>
-</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setProcessorLabel(com.badlogic.gdx.scenes.scene2d.ui.Label)" class="member-name-link">setProcessorLabel</a><wbr>(com.badlogic.gdx.scenes.scene2d.ui.Label&nbsp;label)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">For use in test code</div>
-</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#updateAmmoUI()" class="member-name-link">updateAmmoUI</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Updates the Player's ammo display on the UI when they shoot or reload</div>
-</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#updateAmmoUIAfterSwitch(int)" class="member-name-link">updateAmmoUIAfterSwitch</a><wbr>(int&nbsp;focusItem)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Updates the ammo UI after the inventory slot is switched</div>
-</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#updatePlayerHealthUI(int)" class="member-name-link">updatePlayerHealthUI</a><wbr>(int&nbsp;health)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Updates the player's health on the UI.</div>
-</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#updatePlayerProcessorUI(int)" class="member-name-link">updatePlayerProcessorUI</a><wbr>(int&nbsp;processor)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Updates the player's processor on the UI.</div>
-</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#updatePlayerStaminaUI(int,int)" class="member-name-link">updatePlayerStaminaUI</a><wbr>(int&nbsp;current,
  int&nbsp;max)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Updates the player's stamina on the UI.</div>
-</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
 </div>
 <div class="inherited-list">
+<h3 id="methods-inherited-from-class-com.csse3200.game.components.screens.BaseScreenDisplay">Methods inherited from class&nbsp;com.csse3200.game.components.screens.<a href="../screens/BaseScreenDisplay.html" title="class in com.csse3200.game.components.screens">BaseScreenDisplay</a></h3>
+<code><a href="../screens/BaseScreenDisplay.html#addBody(com.badlogic.gdx.scenes.scene2d.ui.Table,java.lang.String,float,float)">addBody</a>, <a href="../screens/BaseScreenDisplay.html#addTitle(com.badlogic.gdx.scenes.scene2d.ui.Table,java.lang.String,float,com.badlogic.gdx.graphics.Color,float)">addTitle</a>, <a href="../screens/BaseScreenDisplay.html#backMainMenu()">backMainMenu</a>, <a href="../screens/BaseScreenDisplay.html#button(java.lang.String,float,java.lang.Runnable)">button</a>, <a href="../screens/BaseScreenDisplay.html#dispose()">dispose</a>, <a href="../screens/BaseScreenDisplay.html#getZIndex()">getZIndex</a>, <a href="../screens/BaseScreenDisplay.html#makeSolidTexture(com.badlogic.gdx.graphics.Color)">makeSolidTexture</a>, <a href="../screens/BaseScreenDisplay.html#solidImage(com.badlogic.gdx.graphics.Color)">solidImage</a></code></div>
+<div class="inherited-list">
 <h3 id="methods-inherited-from-class-com.csse3200.game.ui.UIComponent">Methods inherited from class&nbsp;com.csse3200.game.ui.<a href="../../ui/UIComponent.html" title="class in com.csse3200.game.ui">UIComponent</a></h3>
-<code><a href="../../ui/UIComponent.html#getLayer()">getLayer</a>, <a href="../../ui/UIComponent.html#getZIndex()">getZIndex</a></code></div>
+<code><a href="../../ui/UIComponent.html#getLayer()">getLayer</a></code></div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-com.csse3200.game.rendering.RenderComponent">Methods inherited from class&nbsp;com.csse3200.game.rendering.<a href="../../rendering/RenderComponent.html" title="class in com.csse3200.game.rendering">RenderComponent</a></h3>
 <code><a href="../../rendering/RenderComponent.html#compareTo(com.csse3200.game.rendering.Renderable)">compareTo</a>, <a href="../../rendering/RenderComponent.html#disableComponent()">disableComponent</a>, <a href="../../rendering/RenderComponent.html#enableComponent()">enableComponent</a>, <a href="../../rendering/RenderComponent.html#isDisabled()">isDisabled</a>, <a href="../../rendering/RenderComponent.html#render(com.badlogic.gdx.graphics.g2d.SpriteBatch)">render</a></code></div>
@@ -242,10 +235,28 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="create()">
 <h3>create</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">create</span>()</div>
-<div class="block">Creates reusable ui styles and adds actors to the stage.</div>
+<div class="block"><span class="description-from-type-label">Description copied from class:&nbsp;<code><a href="../screens/BaseScreenDisplay.html#create()">BaseScreenDisplay</a></code></span></div>
+<div class="block">Initialises common UI infrastructure and delegates to <a href="../screens/BaseScreenDisplay.html#buildUI(com.badlogic.gdx.scenes.scene2d.ui.Table)"><code>BaseScreenDisplay.buildUI(Table)</code></a>.
+ <p>
+ Creates <a href="../screens/BaseScreenDisplay.html#root"><code>BaseScreenDisplay.root</code></a>, adds it to the stage, initialises <a href="../screens/BaseScreenDisplay.html#neon"><code>BaseScreenDisplay.neon</code></a>,
+ and then calls <a href="../screens/BaseScreenDisplay.html#buildUI(com.badlogic.gdx.scenes.scene2d.ui.Table)"><code>BaseScreenDisplay.buildUI(Table)</code></a> for subclass-specific layout.</div>
 <dl class="notes">
 <dt>Overrides:</dt>
-<dd><code><a href="../../ui/UIComponent.html#create()">create</a></code>&nbsp;in class&nbsp;<code><a href="../../ui/UIComponent.html" title="class in com.csse3200.game.ui">UIComponent</a></code></dd>
+<dd><code><a href="../screens/BaseScreenDisplay.html#create()">create</a></code>&nbsp;in class&nbsp;<code><a href="../screens/BaseScreenDisplay.html" title="class in com.csse3200.game.components.screens">BaseScreenDisplay</a></code></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="buildUI(com.badlogic.gdx.scenes.scene2d.ui.Table)">
+<h3>buildUI</h3>
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">buildUI</span><wbr><span class="parameters">(com.badlogic.gdx.scenes.scene2d.ui.Table&nbsp;root)</span></div>
+<div class="block"><span class="description-from-type-label">Description copied from class:&nbsp;<code><a href="../screens/BaseScreenDisplay.html#buildUI(com.badlogic.gdx.scenes.scene2d.ui.Table)">BaseScreenDisplay</a></code></span></div>
+<div class="block">Subclasses implement their UI here using the provided <code>root</code> table.</div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code><a href="../screens/BaseScreenDisplay.html#buildUI(com.badlogic.gdx.scenes.scene2d.ui.Table)">buildUI</a></code>&nbsp;in class&nbsp;<code><a href="../screens/BaseScreenDisplay.html" title="class in com.csse3200.game.components.screens">BaseScreenDisplay</a></code></dd>
+<dt>Parameters:</dt>
+<dd><code>root</code> - a fill-parent, centered <code>Table</code> already added to the stage</dd>
 </dl>
 </section>
 </li>
@@ -253,11 +264,11 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="draw(com.badlogic.gdx.graphics.g2d.SpriteBatch)">
 <h3>draw</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">draw</span><wbr><span class="parameters">(com.badlogic.gdx.graphics.g2d.SpriteBatch&nbsp;batch)</span></div>
-<div class="block"><span class="description-from-type-label">Description copied from class:&nbsp;<code><a href="../../rendering/RenderComponent.html#draw(com.badlogic.gdx.graphics.g2d.SpriteBatch)">RenderComponent</a></code></span></div>
-<div class="block">Draw the renderable. Should be called only by the renderer, not manually.</div>
+<div class="block"><span class="description-from-type-label">Description copied from class:&nbsp;<code><a href="../screens/BaseScreenDisplay.html#draw(com.badlogic.gdx.graphics.g2d.SpriteBatch)">BaseScreenDisplay</a></code></span></div>
+<div class="block">Stage handles rendering of attached actors.</div>
 <dl class="notes">
-<dt>Specified by:</dt>
-<dd><code><a href="../../rendering/RenderComponent.html#draw(com.badlogic.gdx.graphics.g2d.SpriteBatch)">draw</a></code>&nbsp;in class&nbsp;<code><a href="../../rendering/RenderComponent.html" title="class in com.csse3200.game.rendering">RenderComponent</a></code></dd>
+<dt>Overrides:</dt>
+<dd><code><a href="../screens/BaseScreenDisplay.html#draw(com.badlogic.gdx.graphics.g2d.SpriteBatch)">draw</a></code>&nbsp;in class&nbsp;<code><a href="../screens/BaseScreenDisplay.html" title="class in com.csse3200.game.components.screens">BaseScreenDisplay</a></code></dd>
 <dt>Parameters:</dt>
 <dd><code>batch</code> - Batch to render to.</dd>
 </dl>
@@ -267,11 +278,6 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="updatePlayerHealthUI(int)">
 <h3>updatePlayerHealthUI</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">updatePlayerHealthUI</span><wbr><span class="parameters">(int&nbsp;health)</span></div>
-<div class="block">Updates the player's health on the UI.</div>
-<dl class="notes">
-<dt>Parameters:</dt>
-<dd><code>health</code> - player health</dd>
-</dl>
 </section>
 </li>
 <li>
@@ -279,65 +285,36 @@ loadScripts(document, 'script');</script>
 <h3>updatePlayerStaminaUI</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">updatePlayerStaminaUI</span><wbr><span class="parameters">(int&nbsp;current,
  int&nbsp;max)</span></div>
-<div class="block">Updates the player's stamina on the UI.</div>
-<dl class="notes">
-<dt>Parameters:</dt>
-<dd><code>current</code> - the current stamina value</dd>
-<dd><code>max</code> - the max stamina</dd>
-</dl>
 </section>
 </li>
 <li>
 <section class="detail" id="updatePlayerProcessorUI(int)">
 <h3>updatePlayerProcessorUI</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">updatePlayerProcessorUI</span><wbr><span class="parameters">(int&nbsp;processor)</span></div>
-<div class="block">Updates the player's processor on the UI.</div>
-<dl class="notes">
-<dt>Parameters:</dt>
-<dd><code>processor</code> - player processor</dd>
-</dl>
 </section>
 </li>
 <li>
 <section class="detail" id="updateAmmoUI()">
 <h3>updateAmmoUI</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">updateAmmoUI</span>()</div>
-<div class="block">Updates the Player's ammo display on the UI when they shoot or reload</div>
 </section>
 </li>
 <li>
 <section class="detail" id="updateAmmoUIAfterSwitch(int)">
 <h3>updateAmmoUIAfterSwitch</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">updateAmmoUIAfterSwitch</span><wbr><span class="parameters">(int&nbsp;focusItem)</span></div>
-<div class="block">Updates the ammo UI after the inventory slot is switched</div>
 </section>
 </li>
 <li>
 <section class="detail" id="setHealthBar(com.badlogic.gdx.scenes.scene2d.ui.ProgressBar)">
 <h3>setHealthBar</h3>
 <div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setHealthBar</span><wbr><span class="parameters">(com.badlogic.gdx.scenes.scene2d.ui.ProgressBar&nbsp;bar)</span></div>
-<div class="block">For use in test code</div>
 </section>
 </li>
 <li>
 <section class="detail" id="setProcessorLabel(com.badlogic.gdx.scenes.scene2d.ui.Label)">
 <h3>setProcessorLabel</h3>
 <div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setProcessorLabel</span><wbr><span class="parameters">(com.badlogic.gdx.scenes.scene2d.ui.Label&nbsp;label)</span></div>
-<div class="block">For use in test code</div>
-</section>
-</li>
-<li>
-<section class="detail" id="dispose()">
-<h3>dispose</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">dispose</span>()</div>
-<div class="block"><span class="description-from-type-label">Description copied from class:&nbsp;<code><a href="../Component.html#dispose()">Component</a></code></span></div>
-<div class="block">Called when the component is disposed. Dispose of any internal resources here.</div>
-<dl class="notes">
-<dt>Specified by:</dt>
-<dd><code>dispose</code>&nbsp;in interface&nbsp;<code>com.badlogic.gdx.utils.Disposable</code></dd>
-<dt>Overrides:</dt>
-<dd><code><a href="../../rendering/RenderComponent.html#dispose()">dispose</a></code>&nbsp;in class&nbsp;<code><a href="../../rendering/RenderComponent.html" title="class in com.csse3200.game.rendering">RenderComponent</a></code></dd>
-</dl>
 </section>
 </li>
 </ul>

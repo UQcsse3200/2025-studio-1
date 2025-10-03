@@ -142,23 +142,20 @@ implements com.badlogic.gdx.utils.Disposable</span></div>
 <div class="col-first even-row-color"><code>protected <a href="../components/CameraComponent.html" title="class in com.csse3200.game.components">CameraComponent</a></code></div>
 <div class="col-second even-row-color"><code><a href="#cameraComponent" class="member-name-link">cameraComponent</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code>protected static boolean</code></div>
+<div class="col-first odd-row-color"><code>protected boolean</code></div>
 <div class="col-second odd-row-color"><code><a href="#isTransitioning" class="member-name-link">isTransitioning</a></code></div>
 <div class="col-last odd-row-color">
 <div class="block">Prevents re-entrant room transitions across areas</div>
 </div>
-<div class="col-first even-row-color"><code>protected static int</code></div>
-<div class="col-second even-row-color"><code><a href="#roomNumber" class="member-name-link">roomNumber</a></code></div>
+<div class="col-first even-row-color"><code>protected <a href="terrain/TerrainComponent.html" title="class in com.csse3200.game.areas.terrain">TerrainComponent</a></code></div>
+<div class="col-second even-row-color"><code><a href="#terrain" class="member-name-link">terrain</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code>protected <a href="terrain/TerrainComponent.html" title="class in com.csse3200.game.areas.terrain">TerrainComponent</a></code></div>
-<div class="col-second odd-row-color"><code><a href="#terrain" class="member-name-link">terrain</a></code></div>
+<div class="col-first odd-row-color"><code>protected <a href="terrain/TerrainFactory.html" title="class in com.csse3200.game.areas.terrain">TerrainFactory</a></code></div>
+<div class="col-second odd-row-color"><code><a href="#terrainFactory" class="member-name-link">terrainFactory</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code>protected <a href="terrain/TerrainFactory.html" title="class in com.csse3200.game.areas.terrain">TerrainFactory</a></code></div>
-<div class="col-second even-row-color"><code><a href="#terrainFactory" class="member-name-link">terrainFactory</a></code></div>
+<div class="col-first even-row-color"><code>protected <a href="../components/enemy/EnemyWaves.html" title="class in com.csse3200.game.components.enemy">EnemyWaves</a></code></div>
+<div class="col-second even-row-color"><code><a href="#wavesManager" class="member-name-link">wavesManager</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code>protected <a href="../components/enemy/EnemyWaves.html" title="class in com.csse3200.game.components.enemy">EnemyWaves</a></code></div>
-<div class="col-second odd-row-color"><code><a href="#wavesManager" class="member-name-link">wavesManager</a></code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
 </div>
 </section>
 </li>
@@ -265,7 +262,7 @@ implements com.badlogic.gdx.utils.Disposable</span></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getCameraBounds(com.csse3200.game.components.CameraComponent)" class="member-name-link">getCameraBounds</a><wbr>(<a href="../components/CameraComponent.html" title="class in com.csse3200.game.components">CameraComponent</a>&nbsp;cameraComponent)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/ArrayList.html" title="class or interface in java.util" class="external-link">ArrayList</a>&lt;com.badlogic.gdx.math.Vector2&gt;&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getEnemySpawnPosition(int)" class="member-name-link">getEnemySpawnPosition</a><wbr>(int&nbsp;roomNumber)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getEnemySpawnPosition(java.lang.String)" class="member-name-link">getEnemySpawnPosition</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;roomName)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a>&gt;</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getEntities()" class="member-name-link">getEntities</a>()</code></div>
@@ -277,28 +274,42 @@ implements com.badlogic.gdx.utils.Disposable</span></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
 <div class="block">allows manipulation of player character by loading function</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getRoomNumber()" class="member-name-link">getRoomNumber</a>()</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getRoomName()" class="member-name-link">getRoomName</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Returns the room name corresponding to the current floor.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getRoomNumber()" class="member-name-link">getRoomNumber</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns the room number corresponding to the current floor.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected com.badlogic.gdx.math.Vector2</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getRoomSpawnPosition(java.lang.String)" class="member-name-link">getRoomSpawnPosition</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;roomName)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected &lt;T extends <a href="GameArea.html" title="class in com.csse3200.game.areas">GameArea</a>&gt;<br>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#loadArea(java.lang.Class)" class="member-name-link">loadArea</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;T&gt;&nbsp;areaClass)</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected com.badlogic.gdx.math.Vector2</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getRoomSpawnPosition(java.lang.String)" class="member-name-link">getRoomSpawnPosition</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;roomName)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#removeEntity(com.csse3200.game.entities.Entity)" class="member-name-link">removeEntity</a><wbr>(<a href="../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a>&nbsp;entity)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected &lt;T extends <a href="GameArea.html" title="class in com.csse3200.game.areas">GameArea</a>&gt;<br>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#loadArea(java.lang.Class)" class="member-name-link">loadArea</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;T&gt;&nbsp;areaClass)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#removeEntity(com.csse3200.game.entities.Entity)" class="member-name-link">removeEntity</a><wbr>(<a href="../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a>&nbsp;entity)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Remove an entity</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setupTerrainWithOverlay(com.csse3200.game.areas.terrain.TerrainFactory,com.csse3200.game.areas.terrain.TerrainFactory.TerrainType,com.badlogic.gdx.graphics.Color)" class="member-name-link">setupTerrainWithOverlay</a><wbr>(<a href="terrain/TerrainFactory.html" title="class in com.csse3200.game.areas.terrain">TerrainFactory</a>&nbsp;factory,
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setupTerrainWithOverlay(com.csse3200.game.areas.terrain.TerrainFactory,com.csse3200.game.areas.terrain.TerrainFactory.TerrainType,com.badlogic.gdx.graphics.Color)" class="member-name-link">setupTerrainWithOverlay</a><wbr>(<a href="terrain/TerrainFactory.html" title="class in com.csse3200.game.areas.terrain">TerrainFactory</a>&nbsp;factory,
  <a href="terrain/TerrainFactory.TerrainType.html" title="enum class in com.csse3200.game.areas.terrain">TerrainFactory.TerrainType</a>&nbsp;type,
  com.badlogic.gdx.graphics.Color&nbsp;overlayColor)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Create terrain of a given type and add an optional color overlay.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#spawn(java.lang.String,java.lang.String,int,float,com.csse3200.game.entities.Entity)" class="member-name-link">spawn</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;name,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;roomName,
+ int&nbsp;total,
+ float&nbsp;scaleFactor,
+ <a href="../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a>&nbsp;player)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Spawns the enemies based on the enemy name</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#spawnDeepspin(int,float,com.csse3200.game.entities.Entity,java.util.Map)" class="member-name-link">spawnDeepspin</a><wbr>(int&nbsp;total,
@@ -309,7 +320,7 @@ implements com.badlogic.gdx.utils.Disposable</span></div>
 <div class="block">Adds DeepSpin enemies onto the map.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#spawnEnemies(int,int,float,com.csse3200.game.entities.Entity)" class="member-name-link">spawnEnemies</a><wbr>(int&nbsp;roomNumber,
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#spawnEnemies(java.lang.String,int,float,com.csse3200.game.entities.Entity)" class="member-name-link">spawnEnemies</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;roomName,
  int&nbsp;total,
  float&nbsp;scaleFactor,
  <a href="../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a>&nbsp;player)</code></div>
@@ -392,9 +403,14 @@ implements com.badlogic.gdx.utils.Disposable</span></div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#toString()" class="member-name-link">toString</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#unloadAssets(java.lang.String%5B%5D)" class="member-name-link">unloadAssets</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>[]&nbsp;assetPaths)</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#transitionToArea(java.lang.String)" class="member-name-link">transitionToArea</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;areaName)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Transition to another area by its name (case-insensitive), if known.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#unloadAssets(java.lang.String%5B%5D)" class="member-name-link">unloadAssets</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>[]&nbsp;assetPaths)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Unload a set of assets if loaded.</div>
 </div>
 </div>
@@ -447,7 +463,7 @@ implements com.badlogic.gdx.utils.Disposable</span></div>
 <li>
 <section class="detail" id="isTransitioning">
 <h3>isTransitioning</h3>
-<div class="member-signature"><span class="modifiers">protected static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isTransitioning</span></div>
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isTransitioning</span></div>
 <div class="block">Prevents re-entrant room transitions across areas</div>
 </section>
 </li>
@@ -455,12 +471,6 @@ implements com.badlogic.gdx.utils.Disposable</span></div>
 <section class="detail" id="wavesManager">
 <h3>wavesManager</h3>
 <div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type"><a href="../components/enemy/EnemyWaves.html" title="class in com.csse3200.game.components.enemy">EnemyWaves</a></span>&nbsp;<span class="element-name">wavesManager</span></div>
-</section>
-</li>
-<li>
-<section class="detail" id="roomNumber">
-<h3>roomNumber</h3>
-<div class="member-signature"><span class="modifiers">protected static</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">roomNumber</span></div>
 </section>
 </li>
 </ul>
@@ -543,6 +553,17 @@ implements com.badlogic.gdx.utils.Disposable</span></div>
 </section>
 </li>
 <li>
+<section class="detail" id="getRoomName()">
+<h3>getRoomName</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">getRoomName</span>()</div>
+<div class="block">Returns the room name corresponding to the current floor.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>the name of the current room</dd>
+</dl>
+</section>
+</li>
+<li>
 <section class="detail" id="getRoomNumber()">
 <h3>getRoomNumber</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">getRoomNumber</span>()</div>
@@ -575,19 +596,37 @@ implements com.badlogic.gdx.utils.Disposable</span></div>
 </section>
 </li>
 <li>
-<section class="detail" id="spawnEnemies(int,int,float,com.csse3200.game.entities.Entity)">
+<section class="detail" id="spawnEnemies(java.lang.String,int,float,com.csse3200.game.entities.Entity)">
 <h3>spawnEnemies</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">spawnEnemies</span><wbr><span class="parameters">(int&nbsp;roomNumber,
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">spawnEnemies</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;roomName,
  int&nbsp;total,
  float&nbsp;scaleFactor,
  <a href="../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a>&nbsp;player)</span></div>
 <div class="block">Spawns the enemies based on the room number given.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>roomNumber</code> - The number of the current floor/room.</dd>
+<dd><code>roomName</code> - The name of the current floor/room.</dd>
 <dd><code>total</code> - The total number of enemies to be spawned.</dd>
 <dd><code>scaleFactor</code> - The scaling factor of the difficulty of the enemies to be spawned.</dd>
-<dd><code>player</code> - The player <a href="../entities/Entity.html" title="class in com.csse3200.game.entities"><code>Entity</code></a> that is to be target by the enemies.</dd>
+<dd><code>player</code> - The player <a href="../entities/Entity.html" title="class in com.csse3200.game.entities"><code>Entity</code></a> that is to be targeted by the enemies.</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="spawn(java.lang.String,java.lang.String,int,float,com.csse3200.game.entities.Entity)">
+<h3>spawn</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">spawn</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;name,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;roomName,
+ int&nbsp;total,
+ float&nbsp;scaleFactor,
+ <a href="../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a>&nbsp;player)</span></div>
+<div class="block">Spawns the enemies based on the enemy name</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>roomName</code> - The number of the current floor/room.</dd>
+<dd><code>total</code> - The total number of enemies to be spawned.</dd>
+<dd><code>scaleFactor</code> - The scaling factor of the difficulty of the enemies to be spawned.</dd>
+<dd><code>player</code> - The player <a href="../entities/Entity.html" title="class in com.csse3200.game.entities"><code>Entity</code></a> that is to be targeted by the enemies.</dd>
 </dl>
 </section>
 </li>
@@ -682,9 +721,9 @@ implements com.badlogic.gdx.utils.Disposable</span></div>
 </section>
 </li>
 <li>
-<section class="detail" id="getEnemySpawnPosition(int)">
+<section class="detail" id="getEnemySpawnPosition(java.lang.String)">
 <h3>getEnemySpawnPosition</h3>
-<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/ArrayList.html" title="class or interface in java.util" class="external-link">ArrayList</a>&lt;com.badlogic.gdx.math.Vector2&gt;&gt;</span>&nbsp;<span class="element-name">getEnemySpawnPosition</span><wbr><span class="parameters">(int&nbsp;roomNumber)</span></div>
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/ArrayList.html" title="class or interface in java.util" class="external-link">ArrayList</a>&lt;com.badlogic.gdx.math.Vector2&gt;&gt;</span>&nbsp;<span class="element-name">getEnemySpawnPosition</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;roomName)</span></div>
 </section>
 </li>
 <li>
@@ -862,6 +901,14 @@ implements com.badlogic.gdx.utils.Disposable</span></div>
 <dt>Returns:</dt>
 <dd>player entity</dd>
 </dl>
+</section>
+</li>
+<li>
+<section class="detail" id="transitionToArea(java.lang.String)">
+<h3>transitionToArea</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">transitionToArea</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;areaName)</span></div>
+<div class="block">Transition to another area by its name (case-insensitive), if known.
+ Returns true if a transition was initiated.</div>
 </section>
 </li>
 </ul>
