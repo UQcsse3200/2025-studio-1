@@ -25,6 +25,7 @@ import com.csse3200.game.entities.factories.KeycardFactory;
 import com.csse3200.game.entities.factories.PowerupsFactory;
 import com.csse3200.game.entities.factories.ShopFactory;
 import com.csse3200.game.entities.factories.characters.BossFactory;
+import com.csse3200.game.entities.factories.characters.FriendlyNPCFactory;
 import com.csse3200.game.entities.factories.characters.PlayerFactory;
 import com.csse3200.game.entities.factories.items.ItemFactory;
 import com.csse3200.game.entities.factories.items.WeaponsFactory;
@@ -130,6 +131,11 @@ public class ForestGameArea extends GameArea {
             "foreg_sprites/furniture/ServerRack.png",
             "foreg_sprites/furniture/ServerRack2.png",
             "foreg_sprites/furniture/Vent.png",
+            "images/Storage.png",
+            "images/!.png",
+            "images/NpcDialogue.png",
+            "images/nurse_npc.png",
+            "images/partner.png"
     };
 
     private static final String[] backgroundTextures = {
@@ -240,7 +246,10 @@ public class ForestGameArea extends GameArea {
             "images/boss_explosion.atlas",
             "images/boss2_combined.atlas",
             "images/Boss3_Attacks.atlas",
-            "images/boss3_phase2.atlas"
+            "images/boss3_phase2.atlas",
+            "images/!animation.atlas",
+            "images/guidance_npc.atlas",
+            "images/assister_npc.atlas"
     };
     private static final String[] forestSounds = {"sounds/Impact4.ogg",
             "sounds/shot_failed.mp3",
@@ -250,7 +259,12 @@ public class ForestGameArea extends GameArea {
             "sounds/upgradeSound.mp3"};
 
     private static final String[] playerSound1 = {"sounds/jump.mp3"};
-    private static final String[] enemySounds = {"sounds/enemyDamage.mp3", "sounds/enemyDeath.mp3"};
+    private static final String[] enemySounds = {
+            "sounds/deepspinDamage.mp3",
+            "sounds/deepspinDeath.mp3",
+            "sounds/vroombaDamage.mp3",
+            "sounds/vroombaDeath.mp3"
+    };
     private static final String BACKGROUND_MUSIC = "sounds/BGM_03.mp3";
 
     private static final String[] forestMusic = {BACKGROUND_MUSIC};
@@ -293,11 +307,9 @@ public class ForestGameArea extends GameArea {
         spawnTerrain();
         player = spawnPlayer();
         ServiceLocator.registerPlayer(player);
-
         spawnComputerBench();
         spawnHealthBench();
         spawnSpeedBench();
-
         spawnFloor();
         spawnBottomRightDoor();
         spawnMarblePlatforms();
@@ -305,7 +317,8 @@ public class ForestGameArea extends GameArea {
         playMusic();
         ItemSpawner itemSpawner = new ItemSpawner(this);
         itemSpawner.spawnItems(ItemSpawnConfig.forestmap());
-
+        spawnnpctest();
+        spawnPartnerNearPlayer();
         // Place a keycard on the floor so the player can unlock the door
         float keycardX = 3f;
         float keycardY = 7f;
@@ -401,7 +414,6 @@ public class ForestGameArea extends GameArea {
      * This is called by the door/keycard logic when the player exits.
      */
     private void loadNextLevel() {
-        roomNumber++;
         // Use the safe, render-thread transition helper
         clearAndLoad(() -> new Reception(terrainFactory, cameraComponent));
     }
@@ -606,6 +618,25 @@ public class ForestGameArea extends GameArea {
         Entity newRapidFirePowerup = PowerupsFactory.createRapidFire();
         spawnEntityAt(newRapidFirePowerup, new GridPoint2(2, 40), true, true);
         return newRapidFirePowerup;
+    }
+
+    private void spawnnpctest() {
+        GridPoint2 pos = new GridPoint2(8, 9);
+        Entity test = FriendlyNPCFactory.createTest(player);
+        spawnEntityAt(test, pos, true, true);
+    }
+
+    private void spawnPartnerNearPlayer() {
+        // 如果你有 grid 地图，用 spawnEntityAt；否则直接按坐标
+        Entity partner = FriendlyNPCFactory.createPartner(player);
+
+        // 方案 A：按瓦片生成（要确保相机看得到该瓦片）
+        GridPoint2 pos = new GridPoint2(8, 9);
+        spawnEntityAt(partner, pos, true, true);
+
+        // 方案 B：直接生成到玩家旁边（更容易看见）
+        // spawnEntity(partner);
+        // partner.setPosition(player.getPosition().cpy().add(1f, 0f));
     }
 
     private void spawnBoss2() {

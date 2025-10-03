@@ -23,6 +23,10 @@ public class SecretRoomGameArea extends GameArea {
     @Override
     public void create() {
         GenericLayout.ensureGenericAssets(this);
+        ensureTextures(new String[]{
+                "images/Office and elevator/Office Background.png",
+                "foreg_sprites/general/ThinFloor3.png",
+        });
 
         // Use the Office terrain as the background of this room
         terrain = terrainFactory.createTerrain(TerrainType.OFFICE);

@@ -13,7 +13,7 @@ import static org.mockito.Mockito.*;
 class KeyboardTerminalInputComponentTest {
     @Test
     void shouldToggleTerminalOpenClose() {
-        Terminal terminal = spy(Terminal.class);
+        Terminal terminal = spy(new Terminal(null, null, null));
         KeyboardTerminalInputComponent terminalInput = new KeyboardTerminalInputComponent(terminal);
 
         terminal.setClosed();

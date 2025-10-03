@@ -294,7 +294,7 @@ public class InventoryComponent extends Component {
 
         //set the selected slot
         //inventory.setSelectSlot(slotIndex-1);
-        this.equippedSlot = slotIndex - 1;
+        this.equippedSlot = slotIndex;
 
         //trigger the UI update and internal logic
         entity.getEvents().trigger("focus item", slotIndex);
@@ -308,5 +308,16 @@ public class InventoryComponent extends Component {
      */
     public int getEquippedSlot() {
         return this.equippedSlot;
+    }
+
+    /**
+     * Removes the current item if there is one selected
+     */
+    public void removeCurrItem() {
+        if (this.equippedSlot != -1) {
+            items.set(equippedSlot, null);
+            itemTexs.set(equippedSlot, null);
+            inventoryCount--;
+        }
     }
 }
