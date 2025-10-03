@@ -1,6 +1,11 @@
 package com.csse3200.game.session;
 
+import com.csse3200.game.areas.GameArea;
+import com.csse3200.game.entities.Entity;
 import com.csse3200.game.records.RoundData;
+import com.csse3200.game.components.player.InventoryComponent;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,6 +15,8 @@ import java.util.List;
  */
 
 public class LeaderBoardManager {
+    private static final Logger logger = LoggerFactory.getLogger(LeaderBoardManager.class);
+
     private List<RoundData> leaderBoard;
 
     /**
@@ -34,6 +41,33 @@ public class LeaderBoardManager {
      * data until then since the beginning of the session
      */
     public List<RoundData> getLeaderBoard() {return leaderBoard;}
+
+    public boolean addRoundFromInventory(InventoryComponent inv, float timeSeconds) {
+        if (inv == null) {
+            logger.warn("addRoundFromInventory called with null InventoryComponent");
+            return false;
+        }
+        int processors = inv.getProcessor();
+        addRound(processors, timeSeconds);
+        return true;
+    }
+
+    public boolean addRoundFromGameArea(GameArea area, float timeSeconds) {
+        if (area == null) {
+            logger.warn("addRoundFromGameArea called with null GameArea");
+            return false;
+        }
+        for (Entity e : area.getEntities()) {
+            InventoryComponent inv = e.getComponent(InventoryComponent.class);
+            if (inv != null) {
+                int processors = inv.getProcessor();
+                addRound(processors, timeSeconds);
+                return true;
+            }
+        }
+        logger.warn("No entity with InventoryComponent found while adding leaderboard round");
+        return false;
+    }
 
     /**
      * if loadedLeaderboard != null --> leaderboard = loadedLeaderboard
