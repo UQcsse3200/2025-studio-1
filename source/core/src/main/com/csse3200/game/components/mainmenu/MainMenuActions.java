@@ -44,7 +44,8 @@ public class MainMenuActions extends Component {
  
         logger.info("Started game with difficulty: {}", ServiceLocator.getDifficulty());
 
-        game.setScreen(GdxGame.ScreenType.STORY);
+        //choose the avtar on starting a new game
+        game.setScreen(GdxGame.ScreenType.CHOOSE_AVATAR);
     }
 
     /**
