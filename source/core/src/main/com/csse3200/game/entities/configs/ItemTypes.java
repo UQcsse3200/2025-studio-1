@@ -9,7 +9,10 @@ public enum ItemTypes {
     BENCH("bench"),
     HEALTH_BENCH("healthbench"),
     COMPUTER_BENCH("computerbench"),
-    SPEED_BENCH("speedbench");
+    SPEED_BENCH("speedbench"),
+    ARMOUR("armour"),
+    HOOD_ARMOUR("hoodarmour"),
+    CHESTPLATE_ARMOUR("chestplatearmour");
 
     private final String string;
 
