@@ -150,7 +150,6 @@ public class StorageGameArea extends GameArea {
      * Clears the game area and loads the previous section (Shipping).
      */
     private void loadShipping() {
-        roomNumber++;
         ShippingGameArea.setRoomSpawn(new GridPoint2(26, 20));
         clearAndLoad(() -> new ShippingGameArea(terrainFactory, cameraComponent));
     }

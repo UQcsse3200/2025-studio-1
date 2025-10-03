@@ -296,13 +296,11 @@ public class ServerGameArea extends GameArea {
     }
 
     private void loadTunnel() {
-        roomNumber--;
         TunnelGameArea.setRoomSpawn(new GridPoint2(4, 8));
         clearAndLoad(() -> new TunnelGameArea(terrainFactory, cameraComponent));
     }
 
     private void loadStorage() {
-        roomNumber++;
         StorageGameArea.setRoomSpawn(new GridPoint2(26, 8));
         clearAndLoad(() -> new StorageGameArea(terrainFactory, cameraComponent));
     }

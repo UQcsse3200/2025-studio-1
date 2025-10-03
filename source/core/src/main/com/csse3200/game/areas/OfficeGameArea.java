@@ -18,6 +18,12 @@ public class OfficeGameArea extends GameArea {
         super(terrainFactory, cameraComponent);
     }
 
+    public static OfficeGameArea load(TerrainFactory terrainFactory, CameraComponent camera) {
+        return (new OfficeGameArea(terrainFactory, camera));
+    }
+
+    // Assets ensured via GenericLayout
+
     @Override
     public void create() {
         GenericLayout.ensureGenericAssets(this);
@@ -39,8 +45,6 @@ public class OfficeGameArea extends GameArea {
         spawnPlatforms();
         spawnOfficeProps();
     }
-
-    // Assets ensured via GenericLayout
 
     private void spawnBordersAndDoors() {
         Bounds b = getCameraBounds(cameraComponent);
@@ -129,13 +133,11 @@ public class OfficeGameArea extends GameArea {
     }
 
     private void loadMovingBossRoom() {
-        roomNumber--;
         MovingBossRoom.setRoomSpawn(new GridPoint2(24, 8));
         clearAndLoad(() -> new MovingBossRoom(terrainFactory, cameraComponent));
     }
 
     private void loadElevator() {
-        roomNumber++;
         ElevatorGameArea.setRoomSpawn(new GridPoint2(6, 8));
         clearAndLoad(() -> new ElevatorGameArea(terrainFactory, cameraComponent));
     }
@@ -159,10 +161,6 @@ public class OfficeGameArea extends GameArea {
     public Entity getPlayer() {
         //placeholder see previous
         return null;
-    }
-
-    public static OfficeGameArea load(TerrainFactory terrainFactory, CameraComponent camera) {
-        return (new OfficeGameArea(terrainFactory, camera));
     }
 }
 
