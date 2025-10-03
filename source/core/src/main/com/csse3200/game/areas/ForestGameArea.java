@@ -53,7 +53,7 @@ import java.security.SecureRandom;
  */
 public class ForestGameArea extends GameArea {
     private static final Logger logger = LoggerFactory.getLogger(ForestGameArea.class);
-    private static final GridPoint2 PLAYER_SPAWN = new GridPoint2(3, 20);
+    private static GridPoint2 PLAYER_SPAWN = new GridPoint2(3, 20);
     private static final int NUM_ITEMS = 5;//this is for ItemFactory
     // private static final int NUM_TURRETS = 1;
     private static final float WALL_WIDTH = 0.1f;
@@ -408,6 +408,7 @@ public class ForestGameArea extends GameArea {
     private void loadNextLevel() {
         roomNumber++;
         // Use the safe, render-thread transition helper
+        Reception.setRoomSpawn(new GridPoint2(6, 10));
         clearAndLoad(() -> new Reception(terrainFactory, cameraComponent));
     }
 
@@ -694,6 +695,16 @@ public class ForestGameArea extends GameArea {
 
     public Entity getPlayer() {
         return player;
+    }
+
+    /**
+     * Setter method for the player spawn point
+     * should be used when the player is traversing through the rooms
+     * 
+     * @param newSpawn the new spawn point
+     */
+    public static void setRoomSpawn(GridPoint2 newSpawn) {
+        ForestGameArea.PLAYER_SPAWN = newSpawn;
     }
 
     @Override
