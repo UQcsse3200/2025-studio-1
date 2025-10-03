@@ -32,7 +32,6 @@ public class ServiceLocator {
     private static MusicService musicService;
     private static Difficulty difficulty;
     private static ButtonSoundService buttonSoundService;
-
     private static Float cachedPlayerStamina; // preserved across area transitions
     private static Integer cachedPlayerHealth; // preserved across area transitions
     public static Entity getPlayer() {
