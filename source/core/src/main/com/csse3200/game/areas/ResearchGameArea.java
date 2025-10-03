@@ -136,7 +136,6 @@ public class ResearchGameArea extends GameArea {
     }
 
     private void loadElevator() {
-        roomNumber--;
         clearAndLoad(() -> new ElevatorGameArea(terrainFactory, cameraComponent));
     }
 
