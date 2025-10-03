@@ -62,6 +62,7 @@ loadScripts(document, 'script');</script>
 <li><a href="com/csse3200/game/components/boss/package-tree.html">com.csse3200.game.components.boss</a>, </li>
 <li><a href="com/csse3200/game/components/difficultymenu/package-tree.html">com.csse3200.game.components.difficultymenu</a>, </li>
 <li><a href="com/csse3200/game/components/enemy/package-tree.html">com.csse3200.game.components.enemy</a>, </li>
+<li><a href="com/csse3200/game/components/friendlynpc/package-tree.html">com.csse3200.game.components.friendlynpc</a>, </li>
 <li><a href="com/csse3200/game/components/gamearea/package-tree.html">com.csse3200.game.components.gamearea</a>, </li>
 <li><a href="com/csse3200/game/components/items/package-tree.html">com.csse3200.game.components.items</a>, </li>
 <li><a href="com/csse3200/game/components/maingame/package-tree.html">com.csse3200.game.components.maingame</a>, </li>
@@ -177,9 +178,11 @@ loadScripts(document, 'script');</script>
 </ul>
 </li>
 <li class="circle">com.csse3200.game.components.<a href="com/csse3200/game/components/CombatStatsComponent.html" class="type-name-link" title="class in com.csse3200.game.components">CombatStatsComponent</a></li>
+<li class="circle">com.csse3200.game.components.friendlynpc.<a href="com/csse3200/game/components/friendlynpc/CompanionFollowShootComponent.html" class="type-name-link" title="class in com.csse3200.game.components.friendlynpc">CompanionFollowShootComponent</a></li>
 <li class="circle">com.csse3200.game.components.items.<a href="com/csse3200/game/components/items/ConsumableComponent.html" class="type-name-link" title="class in com.csse3200.game.components.items">ConsumableComponent</a></li>
 <li class="circle">com.csse3200.game.components.boss.<a href="com/csse3200/game/components/boss/DamageReductionComponent.html" class="type-name-link" title="class in com.csse3200.game.components.boss">DamageReductionComponent</a></li>
 <li class="circle">com.csse3200.game.components.enemy.<a href="com/csse3200/game/components/enemy/DeathParticleSpawnerComponent.html" class="type-name-link" title="class in com.csse3200.game.components.enemy">DeathParticleSpawnerComponent</a></li>
+<li class="circle">com.csse3200.game.components.friendlynpc.<a href="com/csse3200/game/components/friendlynpc/DialogueDisplay.html" class="type-name-link" title="class in com.csse3200.game.components.friendlynpc">DialogueDisplay</a></li>
 <li class="circle">com.csse3200.game.components.<a href="com/csse3200/game/components/DoorComponent.html" class="type-name-link" title="class in com.csse3200.game.components">DoorComponent</a></li>
 <li class="circle">com.csse3200.game.components.enemy.<a href="com/csse3200/game/components/enemy/EnemyDeathRewardComponent.html" class="type-name-link" title="class in com.csse3200.game.components.enemy">EnemyDeathRewardComponent</a></li>
 <li class="circle">com.csse3200.game.components.enemy.<a href="com/csse3200/game/components/enemy/EnemyHealthDisplay.html" class="type-name-link" title="class in com.csse3200.game.components.enemy">EnemyHealthDisplay</a></li>
@@ -229,6 +232,8 @@ loadScripts(document, 'script');</script>
 <li class="circle">com.csse3200.game.components.mainmenu.<a href="com/csse3200/game/components/mainmenu/MainMenuActions.html" class="type-name-link" title="class in com.csse3200.game.components.mainmenu">MainMenuActions</a></li>
 <li class="circle">com.csse3200.game.components.boss.<a href="com/csse3200/game/components/boss/MissleMovementComponent.html" class="type-name-link" title="class in com.csse3200.game.components.boss">MissleMovementComponent</a></li>
 <li class="circle">com.csse3200.game.components.boss.<a href="com/csse3200/game/components/boss/MissueAttackComponent.html" class="type-name-link" title="class in com.csse3200.game.components.boss">MissueAttackComponent</a></li>
+<li class="circle">com.csse3200.game.components.friendlynpc.<a href="com/csse3200/game/components/friendlynpc/NpcDialogueDataComponent.html" class="type-name-link" title="class in com.csse3200.game.components.friendlynpc">NpcDialogueDataComponent</a></li>
+<li class="circle">com.csse3200.game.components.friendlynpc.<a href="com/csse3200/game/components/friendlynpc/NpcInterationComponent.html" class="type-name-link" title="class in com.csse3200.game.components.friendlynpc">NpcInterationComponent</a></li>
 <li class="circle">com.csse3200.game.physics.components.<a href="com/csse3200/game/physics/components/PhysicsComponent.html" class="type-name-link" title="class in com.csse3200.game.physics.components">PhysicsComponent</a></li>
 <li class="circle">com.csse3200.game.physics.components.<a href="com/csse3200/game/physics/components/PhysicsMovementComponent.html" class="type-name-link" title="class in com.csse3200.game.physics.components">PhysicsMovementComponent</a> (implements com.csse3200.game.ai.movement.<a href="com/csse3200/game/ai/movement/MovementController.html" title="interface in com.csse3200.game.ai.movement">MovementController</a>)</li>
 <li class="circle">com.csse3200.game.physics.components.<a href="com/csse3200/game/physics/components/PhysicsProjectileComponent.html" class="type-name-link" title="class in com.csse3200.game.physics.components">PhysicsProjectileComponent</a></li>
@@ -282,7 +287,9 @@ loadScripts(document, 'script');</script>
 <li class="circle">com.csse3200.game.components.player.<a href="com/csse3200/game/components/player/StaminaComponent.html" class="type-name-link" title="class in com.csse3200.game.components.player">StaminaComponent</a></li>
 <li class="circle">com.csse3200.game.components.stations.<a href="com/csse3200/game/components/stations/StationComponent.html" class="type-name-link" title="class in com.csse3200.game.components.stations">StationComponent</a></li>
 <li class="circle">com.csse3200.game.components.<a href="com/csse3200/game/components/TagComponent.html" class="type-name-link" title="class in com.csse3200.game.components">TagComponent</a></li>
+<li class="circle">com.csse3200.game.components.friendlynpc.<a href="com/csse3200/game/components/friendlynpc/TeleportFollowComponent.html" class="type-name-link" title="class in com.csse3200.game.components.friendlynpc">TeleportFollowComponent</a></li>
 <li class="circle">com.csse3200.game.ui.terminal.<a href="com/csse3200/game/ui/terminal/Terminal.html" class="type-name-link" title="class in com.csse3200.game.ui.terminal">Terminal</a></li>
+<li class="circle">com.csse3200.game.components.friendlynpc.<a href="com/csse3200/game/components/friendlynpc/TipComponent.html" class="type-name-link" title="class in com.csse3200.game.components.friendlynpc">TipComponent</a></li>
 <li class="circle">com.csse3200.game.components.<a href="com/csse3200/game/components/TouchAttackComponent.html" class="type-name-link" title="class in com.csse3200.game.components">TouchAttackComponent</a></li>
 <li class="circle">com.csse3200.game.components.enemy.<a href="com/csse3200/game/components/enemy/VroombaSuicideComponent.html" class="type-name-link" title="class in com.csse3200.game.components.enemy">VroombaSuicideComponent</a></li>
 <li class="circle">com.csse3200.game.components.<a href="com/csse3200/game/components/WeaponsStatsComponent.html" class="type-name-link" title="class in com.csse3200.game.components">WeaponsStatsComponent</a></li>
@@ -338,6 +345,7 @@ loadScripts(document, 'script');</script>
 <li class="circle">com.csse3200.game.entities.<a href="com/csse3200/game/entities/EntityService.html" class="type-name-link" title="class in com.csse3200.game.entities">EntityService</a></li>
 <li class="circle">com.csse3200.game.events.<a href="com/csse3200/game/events/EventHandler.html" class="type-name-link" title="class in com.csse3200.game.events">EventHandler</a></li>
 <li class="circle">com.csse3200.game.files.<a href="com/csse3200/game/files/FileLoader.html" class="type-name-link" title="class in com.csse3200.game.files">FileLoader</a></li>
+<li class="circle">com.csse3200.game.entities.factories.characters.<a href="com/csse3200/game/entities/factories/characters/FriendlyNPCFactory.html" class="type-name-link" title="class in com.csse3200.game.entities.factories.characters">FriendlyNPCFactory</a></li>
 <li class="circle">com.badlogic.gdx.Game (implements com.badlogic.gdx.ApplicationListener)
 <ul>
 <li class="circle">com.csse3200.game.<a href="com/csse3200/game/GdxGame.html" class="type-name-link" title="class in com.csse3200.game">GdxGame</a></li>

@@ -9,6 +9,7 @@ com.csse3200.game.components.attachments
 com.csse3200.game.components.boss
 com.csse3200.game.components.difficultymenu
 com.csse3200.game.components.enemy
+com.csse3200.game.components.friendlynpc
 com.csse3200.game.components.gamearea
 com.csse3200.game.components.items
 com.csse3200.game.components.maingame
