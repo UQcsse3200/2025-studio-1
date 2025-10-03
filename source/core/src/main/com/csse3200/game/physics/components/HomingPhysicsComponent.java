@@ -112,5 +112,30 @@ public class HomingPhysicsComponent extends PhysicsProjectileComponent {
         this.turnRate = turnRate;
     }
 
+    /**
+     * gets the rate at which the projectile turns
+     * @return turn rate
+     */
+    public float getTurnRate() {
+        return turnRate;
+    }
+
+    /**
+     * sets the target entity, used for testing
+     * @param target entity to be targeted
+     */
+    public void setTargetEntity(Entity target) {
+        this.target = target;
+    }
+
+    /**
+     * Gets the targeted entity
+     * @return the target entity for the projectile
+     */
+    public Entity getTargetEntity() {
+
+        return this.target;
+    }
+
 }
 
