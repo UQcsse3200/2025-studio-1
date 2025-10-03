@@ -3,7 +3,7 @@ package com.csse3200.game.screens;
 
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.csse3200.game.GdxGame;
-import com.csse3200.game.components.screens.WinScreenDisplay;
+import com.csse3200.game.components.screens.BaseEndScreenDisplays;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.input.InputDecorator;
 import com.csse3200.game.services.ServiceLocator;
@@ -23,6 +23,7 @@ import com.csse3200.game.services.ServiceLocator;
  * and background creation) is handled by {@link BaseScreen}.
  */
 public class WinScreen extends BaseScreen {
+    private BaseEndScreenDisplays uiDisplay;
     /**
      * Constructs a new WinScreen instance.
      * <p>
@@ -37,7 +38,7 @@ public class WinScreen extends BaseScreen {
      * @param game the {@link GdxGame} instance, used for screen navigation
      */
     public WinScreen(GdxGame game) {
-        super(game, "images/menu_background.png");
+        super(game, "images/win_screen_background.png");
     }
 
     /**
@@ -45,7 +46,7 @@ public class WinScreen extends BaseScreen {
      * <p>
      * This entity includes:
      * <ul>
-     *   <li>{@link WinScreenDisplay} — the victory UI (title, round/time labels, buttons)</li>
+     *   <li>{@link BaseEndScreenDisplays} — the victory UI (title, round/time labels, buttons)</li>
      *   <li>{@link InputDecorator} — captures and forwards input events to the stage</li>
      * </ul>
      *
@@ -53,9 +54,14 @@ public class WinScreen extends BaseScreen {
      */
     @Override
     protected Entity createUIScreen(Stage stage) {
+        uiDisplay = BaseEndScreenDisplays.victory(game);
         return new Entity()
-                .addComponent(new WinScreenDisplay(game))
+                .addComponent(uiDisplay)
                 .addComponent(new InputDecorator(stage, 10));
+    }
+
+    public void updateTime(long second) {
+        uiDisplay.setElapsedSeconds(second);
     }
 }
 

@@ -2,10 +2,11 @@ package com.csse3200.game.screens;
 
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.csse3200.game.GdxGame;
-import com.csse3200.game.components.screens.DeathScreenDisplay;
+import com.csse3200.game.components.screens.BaseEndScreenDisplays;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.input.InputDecorator;
 import com.csse3200.game.services.ServiceLocator;
+
 /**
  * Screen shown when the player is defeated.
  * <p>
@@ -21,6 +22,7 @@ import com.csse3200.game.services.ServiceLocator;
  * asset loading/unloading, and background creation) is handled by {@link BaseScreen}.
  */
 public class DeathScreen extends BaseScreen {
+    private BaseEndScreenDisplays uiDisplay;
 
     /**
      * Constructs a new DeathScreen instance.
@@ -36,7 +38,7 @@ public class DeathScreen extends BaseScreen {
      * @param game the {@link GdxGame} instance, used for screen navigation
      */
     public DeathScreen(GdxGame game) {
-        super(game, "images/menu_background.png");
+        super(game, "images/death_screen_background.png");
     }
 
     /**
@@ -44,7 +46,7 @@ public class DeathScreen extends BaseScreen {
      * <p>
      * This entity includes:
      * <ul>
-     *   <li>{@link DeathScreenDisplay} — the defeat UI (title, round/time labels, buttons)</li>
+     *   <li>{@link BaseEndScreenDisplays} — the defeat UI (title, round/time labels, buttons)</li>
      *   <li>{@link InputDecorator} — captures and forwards input events to the stage</li>
      * </ul>
      *
@@ -52,8 +54,13 @@ public class DeathScreen extends BaseScreen {
      */
     @Override
     protected Entity createUIScreen(Stage stage) {
+        uiDisplay = BaseEndScreenDisplays.defeated(game);
         return new Entity()
-                .addComponent(new DeathScreenDisplay(game))
+                .addComponent(uiDisplay)
                 .addComponent(new InputDecorator(stage, 10));
+    }
+
+    public void updateTime(long second) {
+        uiDisplay.setElapsedSeconds(second);
     }
 }

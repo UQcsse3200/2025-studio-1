@@ -1,4 +1,9 @@
 .idea/
+!.idea/codeStyles/
+
+.vscode/
 
 ### Gradle ###
 .gradle/
+
+.DS_Store

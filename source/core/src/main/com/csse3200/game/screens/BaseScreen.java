@@ -10,7 +10,7 @@ import com.badlogic.gdx.utils.Scaling;
 import com.csse3200.game.GdxGame;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
-import com.csse3200.game.entities.factories.RenderFactory;
+import com.csse3200.game.entities.factories.system.RenderFactory;
 import com.csse3200.game.input.InputService;
 import com.csse3200.game.rendering.RenderService;
 import com.csse3200.game.rendering.Renderer;
@@ -32,23 +32,31 @@ import org.slf4j.LoggerFactory;
  * Subclasses override {@link #createUIScreen(Stage)} to provide their UI entity.
  */
 abstract class BaseScreen extends ScreenAdapter {
-    /** Logger for lifecycle and debugging events. */
+    /**
+     * Logger for lifecycle and debugging events.
+     */
     private static final Logger logger = LoggerFactory.getLogger(BaseScreen.class);
 
-    /** Game instance for navigation and context. */
+    /**
+     * Game instance for navigation and context.
+     */
     protected final GdxGame game;
 
-    /** Renderer responsible for drawing. */
+    /**
+     * Renderer responsible for drawing.
+     */
     protected final Renderer renderer;
 
-    /** Optional background textures to load and draw (may be empty). */
+    /**
+     * Optional background textures to load and draw (may be empty).
+     */
     private final String[] backgroundTextures;
 
     /**
      * Constructs a BaseScreen, registers services, creates a renderer,
      * loads optional background textures, and builds UI.
      *
-     * @param game the game instance
+     * @param game               the game instance
      * @param backgroundTextures optional list of texture paths for the background (can be empty)
      */
     protected BaseScreen(GdxGame game, String... backgroundTextures) {
@@ -102,7 +110,9 @@ abstract class BaseScreen extends ScreenAdapter {
         logger.debug("{} services cleared", getClass().getSimpleName());
     }
 
-    /** Loads optional background textures if provided. */
+    /**
+     * Loads optional background textures if provided.
+     */
     private void loadAssets() {
         if (backgroundTextures.length == 0) return;
         logger.debug("Loading {} assets", getClass().getSimpleName());
@@ -111,7 +121,9 @@ abstract class BaseScreen extends ScreenAdapter {
         resourceService.loadAll();
     }
 
-    /** Unloads optional background textures if provided. */
+    /**
+     * Unloads optional background textures if provided.
+     */
     private void unloadAssets() {
         if (backgroundTextures.length == 0) return;
         logger.debug("Unloading {} assets", getClass().getSimpleName());
@@ -119,7 +131,9 @@ abstract class BaseScreen extends ScreenAdapter {
         resourceService.unloadAssets(backgroundTextures);
     }
 
-    /** Creates background image (if textures provided) and registers the UI entity. */
+    /**
+     * Creates background image (if textures provided) and registers the UI entity.
+     */
     private void createUI() {
         logger.debug("Creating {} UI", getClass().getSimpleName());
         Stage stage = ServiceLocator.getRenderService().getStage();

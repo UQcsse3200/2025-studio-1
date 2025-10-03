@@ -16,77 +16,76 @@ import static com.badlogic.gdx.Gdx.app;
  * machine (See the State Pattern).
  */
 public class GdxGame extends Game {
-  private static final Logger logger = LoggerFactory.getLogger(GdxGame.class);
+    private static final Logger logger = LoggerFactory.getLogger(GdxGame.class);
 
-  @Override
-  public void create() {
-    logger.info("Creating game");
-    loadSettings();
+    @Override
+    public void create() {
+        logger.info("Creating game");
+        loadSettings();
 
-    // Sets background to light yellow
-    Gdx.gl.glClearColor(248f/255f, 249/255f, 178/255f, 1);
+        // Sets background to light yellow
+        Gdx.gl.glClearColor(248f / 255f, 249 / 255f, 178 / 255f, 1);
 
-    setScreen(ScreenType.MAIN_MENU);
-  }
-
-  /**
-   * Loads the game's settings.
-   */
-  private void loadSettings() {
-    logger.debug("Loading game settings");
-    UserSettings.Settings settings = UserSettings.get();
-    UserSettings.applySettings(settings);
-  }
-
-  /**
-   * Sets the game's screen to a new screen of the provided type.
-   * @param screenType screen type
-   */
-  public void setScreen(ScreenType screenType) {
-    logger.info("Setting game screen to {}", screenType);
-    Screen currentScreen = getScreen();
-    if (currentScreen != null) {
-      currentScreen.dispose();
+        setScreen(ScreenType.MAIN_MENU);
     }
-    setScreen(newScreen(screenType));
-  }
 
-  @Override
-  public void dispose() {
-    logger.debug("Disposing of current screen");
-    getScreen().dispose();
-  }
-
-  /**
-   * Create a new screen of the provided type.
-   * @param screenType screen type
-   * @return new screen
-   */
-  private Screen newScreen(ScreenType screenType) {
-    switch (screenType) {
-      case MAIN_MENU:
-        return new MainMenuScreen(this);
-      case MAIN_GAME:
-        return new MainGameScreen(this);
-      case SETTINGS:
-        return new SettingsScreen(this);
-      case DEATH_SCREEN:
-        return new DeathScreen(this);
-      case WIN_SCREEN:
-        return new WinScreen(this);
-      default:
-        return null;
+    /**
+     * Loads the game's settings.
+     */
+    private void loadSettings() {
+        logger.debug("Loading game settings");
+        UserSettings.Settings settings = UserSettings.get();
+        UserSettings.applySettings(settings);
     }
-  }
 
-  public enum ScreenType {
-    MAIN_MENU, MAIN_GAME, SETTINGS, DEATH_SCREEN, WIN_SCREEN
-  }
+    /**
+     * Sets the game's screen to a new screen of the provided type.
+     *
+     * @param screenType screen type
+     */
+    public void setScreen(ScreenType screenType) {
+        logger.info("Setting game screen to {}", screenType);
+        Screen currentScreen = getScreen();
+        if (currentScreen != null) {
+            currentScreen.dispose();
+        }
+        setScreen(newScreen(screenType));
+    }
 
-  /**
-   * Exit the game.
-   */
-  public void exit() {
-    app.exit();
-  }
+    @Override
+    public void dispose() {
+        logger.debug("Disposing of current screen");
+        getScreen().dispose();
+    }
+
+    /**
+     * Create a new screen of the provided type.
+     *
+     * @param screenType screen type
+     * @return new screen
+     */
+    private Screen newScreen(ScreenType screenType) {
+        return switch (screenType) {
+            case MAIN_MENU -> new MainMenuScreen(this);
+            case MAIN_GAME -> new MainGameScreen(this);
+            case SETTINGS -> new SettingsScreen(this);
+            case DEATH_SCREEN -> new DeathScreen(this);
+            case WIN_SCREEN -> new WinScreen(this);
+            case LOAD_GAME -> new MainGameScreen(this, "placeholder");
+            case TUTORIAL_SCREEN -> new TutorialScreen(this);
+            case STORY -> new StoryScreen(this);
+        };
+    }
+
+    public enum ScreenType {
+        MAIN_MENU, MAIN_GAME, SETTINGS, DEATH_SCREEN, WIN_SCREEN, TUTORIAL_SCREEN,
+        STORY, LOAD_GAME
+    }
+
+    /**
+     * Exit the game.
+     */
+    public void exit() {
+        app.exit();
+    }
 }
