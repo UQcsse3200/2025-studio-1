@@ -3,6 +3,7 @@ package com.csse3200.game.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.csse3200.game.GdxGame;
@@ -87,6 +88,7 @@ public class MainGameScreen extends ScreenAdapter {
         TerrainFactory terrainFactory = new TerrainFactory(renderer.getCamera());
         gameArea = new ForestGameArea(terrainFactory, renderer.getCamera());
         com.csse3200.game.services.ServiceLocator.registerGameArea(gameArea);
+        ForestGameArea.setRoomSpawn(new GridPoint2(3, 20));
         gameArea.create();
 
     }
@@ -306,6 +308,7 @@ public class MainGameScreen extends ScreenAdapter {
         }
 
         gameArea = areaLoad;
+        ForestGameArea.setRoomSpawn(new GridPoint2(3, 20));
         com.csse3200.game.services.ServiceLocator.registerGameArea(gameArea);
         gameArea.create();
         InventoryComponent help = gameArea.getPlayer().getComponent(InventoryComponent.class);

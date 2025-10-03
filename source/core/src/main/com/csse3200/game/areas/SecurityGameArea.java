@@ -143,11 +143,13 @@ public class SecurityGameArea extends GameArea {
 
     private void loadBackToFloor5() {
         roomNumber--;
+        MainHall.setRoomSpawn(new GridPoint2(24, 20));
         clearAndLoad(() -> new MainHall(terrainFactory, cameraComponent));
     }
 
     private void loadMovingBossRoom() {
         roomNumber++;
+        MovingBossRoom.setRoomSpawn(new GridPoint2(6, 8));
         clearAndLoad(() -> new MovingBossRoom(terrainFactory, cameraComponent));
     }
 

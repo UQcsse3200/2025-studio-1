@@ -130,11 +130,13 @@ public class OfficeGameArea extends GameArea {
 
     private void loadMovingBossRoom() {
         roomNumber--;
+        MovingBossRoom.setRoomSpawn(new GridPoint2(24, 8));
         clearAndLoad(() -> new MovingBossRoom(terrainFactory, cameraComponent));
     }
 
     private void loadElevator() {
         roomNumber++;
+        ElevatorGameArea.setRoomSpawn(new GridPoint2(6, 8));
         clearAndLoad(() -> new ElevatorGameArea(terrainFactory, cameraComponent));
     }
 

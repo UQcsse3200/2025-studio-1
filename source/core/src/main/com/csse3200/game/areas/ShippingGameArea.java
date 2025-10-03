@@ -174,6 +174,7 @@ public class ShippingGameArea extends GameArea {
      * Clears the game area and loads the previous section (Research).
      */
     private void loadFlyingBossRoom() {
+        FlyingBossRoom.setRoomSpawn(new GridPoint2(24, 8));
         clearAndLoad(() -> new FlyingBossRoom(terrainFactory, cameraComponent));
     }
 
@@ -181,6 +182,7 @@ public class ShippingGameArea extends GameArea {
      * Clears the game area and loads the next section (Storage).
      */
     private void loadStorage() {
+        StorageGameArea.setRoomSpawn(new GridPoint2(4, 20));
         clearAndLoad(() -> new StorageGameArea(terrainFactory, cameraComponent));
     }
 

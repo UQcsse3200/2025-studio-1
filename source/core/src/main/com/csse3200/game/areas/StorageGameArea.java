@@ -142,6 +142,7 @@ public class StorageGameArea extends GameArea {
      * Clears the game area and loads the next section (Servers).
      */
     private void loadServer() {
+        ServerGameArea.setRoomSpawn(new GridPoint2(6, 8));
         clearAndLoad(() -> new ServerGameArea(terrainFactory, cameraComponent));
     }
 
@@ -150,6 +151,7 @@ public class StorageGameArea extends GameArea {
      */
     private void loadShipping() {
         roomNumber++;
+        ShippingGameArea.setRoomSpawn(new GridPoint2(26, 20));
         clearAndLoad(() -> new ShippingGameArea(terrainFactory, cameraComponent));
     }
 
