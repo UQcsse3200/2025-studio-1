@@ -134,7 +134,8 @@ public class ForestGameArea extends GameArea {
             "images/Storage.png",
             "images/!.png",
             "images/NpcDialogue.png",
-            "images/nurse_npc.png"
+            "images/nurse_npc.png",
+            "images/partner.png"
     };
 
     private static final String[] backgroundTextures = {
@@ -312,7 +313,7 @@ public class ForestGameArea extends GameArea {
         ItemSpawner itemSpawner = new ItemSpawner(this);
         itemSpawner.spawnItems(ItemSpawnConfig.forestmap());
         spawnnpctest();
-
+        spawnPartnerNearPlayer();
         // Place a keycard on the floor so the player can unlock the door
         float keycardX = 3f;
         float keycardY = 7f;
@@ -619,6 +620,19 @@ public class ForestGameArea extends GameArea {
         GridPoint2 pos = new GridPoint2(8, 9);
         Entity test = FriendlyNPCFactory.createTest(player);
         spawnEntityAt(test, pos, true, true);
+    }
+
+    private void spawnPartnerNearPlayer() {
+        // 如果你有 grid 地图，用 spawnEntityAt；否则直接按坐标
+        Entity partner = FriendlyNPCFactory.createPartner(player);
+
+        // 方案 A：按瓦片生成（要确保相机看得到该瓦片）
+        GridPoint2 pos = new GridPoint2(8, 9);
+        spawnEntityAt(partner, pos, true, true);
+
+        // 方案 B：直接生成到玩家旁边（更容易看见）
+        // spawnEntity(partner);
+        // partner.setPosition(player.getPosition().cpy().add(1f, 0f));
     }
 
     private void spawnBoss2() {
