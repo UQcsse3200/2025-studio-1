@@ -49,7 +49,6 @@ public class FriendlyNPCFactory {
         var ui   = test.getComponent(DialogueDisplay.class);
         test.getComponent(TextureRenderComponent.class).scaleEntity();
         test.addComponent(new TipComponent(test, player, 3f));
-        test.addComponent(new CompanionFollowShootComponent());
         test.addComponent(new NpcInterationComponent(player, 3f));
         return test;
     }
