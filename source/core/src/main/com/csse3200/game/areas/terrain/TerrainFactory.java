@@ -72,11 +72,11 @@ public class TerrainFactory {
                 return createGameRooms(0.5f, lobbyBackground);
             case OFFICE:
                 TextureRegion officeBackground =
-                        new TextureRegion(resourceService.getAsset("images/Office and elevator/Office Background.png", Texture.class));
+                        new TextureRegion(resourceService.getAsset("backgrounds/Office.png", Texture.class));
                 return createGameRooms(0.5f, officeBackground);
             case SERVER_ROOM:
                 TextureRegion serverBackground =
-                        new TextureRegion(resourceService.getAsset("images/ServerRoomBackgroundResize.png", Texture.class));
+                        new TextureRegion(resourceService.getAsset("backgrounds/Server.png", Texture.class));
                 return createGameRooms(0.5f, serverBackground);
             case TUNNEL_ROOM:
                 TextureRegion tunnelBackground =
@@ -84,15 +84,15 @@ public class TerrainFactory {
                 return createGameRooms(0.5f, tunnelBackground);
             case SECURITY_ROOM:
                 TextureRegion securityBackground =
-                        new TextureRegion(resourceService.getAsset("images/SecurityBackground.png", Texture.class));
+                        new TextureRegion(resourceService.getAsset("backgrounds/Security.png", Texture.class));
                 return createGameRooms(0.5f, securityBackground);
             case RESEARCH_ROOM:
                 TextureRegion researchBackground =
-                        new TextureRegion(resourceService.getAsset("images/ResearchBackground.png", Texture.class));
+                        new TextureRegion(resourceService.getAsset("backgrounds/Research.png", Texture.class));
                 return createGameRooms(0.5f, researchBackground);
             case MAIN_HALL:
                 TextureRegion hallBackground =
-                        new TextureRegion(resourceService.getAsset("images/mainHall-background.png", Texture.class));
+                        new TextureRegion(resourceService.getAsset("backgrounds/MainHall.png", Texture.class));
                 return createGameRooms(0.5f, hallBackground);
             case SHIPPING:
                 TextureRegion shippingBackground =
