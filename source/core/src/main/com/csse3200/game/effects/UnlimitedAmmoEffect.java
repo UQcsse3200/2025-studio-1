@@ -23,7 +23,6 @@ public class UnlimitedAmmoEffect extends Effect {
 
         MagazineComponent mag = gun.getComponent(MagazineComponent.class);
         if (mag == null) return false;
-        
 
         this.magazine = mag;
         this.active = true;
