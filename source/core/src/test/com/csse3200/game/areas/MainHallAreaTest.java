@@ -15,6 +15,8 @@ import org.mockito.MockedStatic;
 
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 
 @ExtendWith(GameExtension.class)
 class MainHallAreaTest {
@@ -71,5 +73,22 @@ class MainHallAreaTest {
         verify(mainHall).clearAndLoad(argThat(supplier -> {
             return supplier.get() instanceof SecurityGameArea;
         }));
+    }
+
+    @Test
+    void testSpawnTraversal() throws Exception {
+        Reception prevRoom = spy(new Reception(terrainFactory, cameraComponent));
+
+        Field f = MainHall.class.getDeclaredField("PLAYER_SPAWN");
+        f.setAccessible(true);
+        Method m = Reception.class.getDeclaredMethod("loadBackToFloor5");
+
+        m.setAccessible(true);
+        m.invoke(prevRoom);
+
+        Object spawn = f.get(null);
+
+        GridPoint2 gridPoint = new GridPoint2(8, 8);
+        assert(spawn.equals(gridPoint));
     }
 }

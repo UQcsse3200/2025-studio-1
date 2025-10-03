@@ -17,6 +17,9 @@ import org.mockito.MockedStatic;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+
 @ExtendWith(GameExtension.class)
 class ServerAreaTest {
 
@@ -71,5 +74,22 @@ class ServerAreaTest {
         verify(serverGameArea).clearAndLoad(argThat(supplier -> {
             return supplier.get() instanceof StorageGameArea;
         }));
+    }
+
+    @Test
+    void testSpawnTraversal() throws Exception {
+        TunnelGameArea postRoom = spy(new TunnelGameArea(terrainFactory, cameraComponent));
+
+        Field f = ServerGameArea.class.getDeclaredField("PLAYER_SPAWN");
+        f.setAccessible(true);
+        Method m = TunnelGameArea.class.getDeclaredMethod("loadServer");
+
+        m.setAccessible(true);
+        m.invoke(postRoom);
+
+        Object spawn = f.get(null);
+
+        GridPoint2 gridPoint = new GridPoint2(25, 24);
+        assert(spawn.equals(gridPoint));
     }
 }
