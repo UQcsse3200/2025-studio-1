@@ -33,14 +33,13 @@ public class AvatarChoiceScreen extends BaseScreen {
 
     private Label nameLabel;
     private Label statsLabel;
-    private TextButton selectBtn;
-    private TextButton backBtn;
 
     private Table cardRow;
     private List<Avatar> avatars;
     private int selectedIndex = 0;
     static final String BgImage  = "images/menu_background.png";
     static final String SkinPath = "uiskin.json";
+
 
     static final float RootPadding            = 30f;
     static final float DefaultGap        = 20f;
@@ -104,31 +103,9 @@ public class AvatarChoiceScreen extends BaseScreen {
         statsLabel = new Label("", skin, "default");
         statsLabel.setWrap(true);
 
-        selectBtn = new TextButton("Select", skin);
-        backBtn = new TextButton("Back", skin);
-
-        selectBtn.addListener(e -> {
-            if (!selectBtn.isPressed()) return false;
-            Avatar chosen = avatars.get(selectedIndex);
-            AvatarRegistry.set(chosen);
-            // Proceed to StoryScreen
-            game.setScreen(new StoryScreen(game));
-            return true;
-        });
-
-        backBtn.addListener(e -> {
-            if (!backBtn.isPressed()) return false;
-            //escape to go back to main menu
-            game.setScreen(GdxGame.ScreenType.MAIN_MENU);
-            return true;
-        });
-
-
         Table infoCol = new Table();
         infoCol.add(nameLabel).left().row();
         infoCol.add(statsLabel).width(StatsLabelLWidth).left().top().padTop(CardRowCellPad).row();
-        infoCol.add(selectBtn).left().padTop(DefaultGap).row();
-        infoCol.add(backBtn).left().padTop(CardRowCellPad).row();
 
         root.add(titleLabel).colspan(RootColumnSpan).center().padBottom(DefaultGap).row();
         root.add(scrollPane).growX().height(ScrollHeight).colspan(RootColumnSpan).padBottom(DefaultGap).row();
@@ -178,7 +155,6 @@ public class AvatarChoiceScreen extends BaseScreen {
                     updateSelection(index);
                 }
             });
-
             cardRow.add(card).width(CardWidth).height(CardHeight);
         }
     }
@@ -188,10 +164,24 @@ public class AvatarChoiceScreen extends BaseScreen {
      * @param newIndex the position of the avatar that the player has selected
      */
     private void updateSelection(int newIndex) {
-        if (newIndex < 0 || newIndex >= avatars.size()) {
-            return;
+        final int n = cardRow.getChildren().size;
+        if (n == 0) return;
+
+        // wrap new index
+        int wrapped = ((newIndex % n) + n) % n;
+
+        // clear the previously selected card by index (not by stale reference)
+        if (selectedIndex >= 0 && selectedIndex < n) {
+            Table prev = (Table) cardRow.getChildren().get(selectedIndex);
+            prev.setColor(1f, 1f, 1f, 1f); // reset to white
         }
-        selectedIndex = newIndex;
+
+        // apply highlight to the new one
+        selectedIndex = wrapped;
+        Table now = (Table) cardRow.getChildren().get(selectedIndex);
+        now.setColor(1.0f, 1.0f, 0.6f, 1.0f);
+
+        // update the details
         Avatar a = avatars.get(selectedIndex);
         nameLabel.setText(a.displayName());
         statsLabel.setText(
@@ -199,16 +189,20 @@ public class AvatarChoiceScreen extends BaseScreen {
                         "Damage: " + a.baseDamage() + "\n" +
                         "Move Speed: " + a.moveSpeed() + "\n\n"
         );
+        statsLabel.setFontScale(NameFontScale);
     }
 
     @Override
     public void render(float delta) {
         super.render(delta);
         // Keyboard: left/right to change, ENTER to select, ESC to back/skip
-        if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT))  updateSelection(selectedIndex - 1);
-        if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)) updateSelection(selectedIndex + 1);
+        if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT)) {
+            updateSelection(selectedIndex - 1);
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)) {
+            updateSelection(selectedIndex + 1);
+        }
         if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER) || Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
-            selectBtn.toggle(); selectBtn.toggle(); // visual feedback
             Avatar chosen = avatars.get(selectedIndex);
             AvatarRegistry.set(chosen);
             game.setScreen(new StoryScreen(game));
@@ -216,12 +210,6 @@ public class AvatarChoiceScreen extends BaseScreen {
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
             game.setScreen(GdxGame.ScreenType.MAIN_MENU);
         }
-    }
-
-    @Override
-    public void show() {
-        super.show();
-        stage = new Stage(new ScreenViewport());
     }
 
     @Override
