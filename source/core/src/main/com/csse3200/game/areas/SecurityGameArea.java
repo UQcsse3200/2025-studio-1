@@ -23,6 +23,10 @@ public class SecurityGameArea extends GameArea {
         super(terrainFactory, cameraComponent);
     }
 
+    public static SecurityGameArea load(TerrainFactory terrainFactory, CameraComponent camera) {
+        return (new SecurityGameArea(terrainFactory, camera));
+    }
+
     @Override
     public void create() {
         GenericLayout.ensureGenericAssets(this);
@@ -135,13 +139,11 @@ public class SecurityGameArea extends GameArea {
     }
 
     private void loadBackToFloor5() {
-        roomNumber--;
         clearAndLoad(() -> new MainHall(terrainFactory, cameraComponent));
     }
 
-    private void loadOffice() {
-        roomNumber++;
-        clearAndLoad(() -> new OfficeGameArea(terrainFactory, cameraComponent));
+    private void loadMovingBossRoom() {
+        clearAndLoad(() -> new MovingBossRoom(terrainFactory, cameraComponent));
     }
 
     @Override
@@ -153,9 +155,5 @@ public class SecurityGameArea extends GameArea {
     public Entity getPlayer() {
         //placeholder
         return null;
-    }
-
-    public static SecurityGameArea load(TerrainFactory terrainFactory, CameraComponent camera) {
-        return (new SecurityGameArea(terrainFactory, camera));
     }
 }
