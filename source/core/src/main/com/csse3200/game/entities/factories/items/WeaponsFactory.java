@@ -46,7 +46,6 @@ public class WeaponsFactory {
         WeaponsStatsComponent weaponStats = weapon.getComponent(WeaponsStatsComponent.class);
         weaponStats.setCoolDown(0.2f);
 
-
         ItemComponent item = weapon.getComponent(ItemComponent.class);
 
         // Attach type to weapon
