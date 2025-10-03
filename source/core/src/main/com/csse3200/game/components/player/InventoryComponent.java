@@ -29,6 +29,7 @@ public class InventoryComponent extends Component {
     private Entity currItem;
     private int equippedSlot = -1; // no slot is equipped initially
     private int keycardLevel = 0;
+    private boolean doubleProcessors = false;
 
     /**
      * Constructs an inventory for the player and a beginning currency amount
@@ -308,5 +309,14 @@ public class InventoryComponent extends Component {
      */
     public int getEquippedSlot() {
         return this.equippedSlot;
+    }
+
+
+    public void setDoubleProcessors(boolean active) {
+        this.doubleProcessors = active;
+    }
+
+    public boolean hasDoubleProcessors() {
+        return doubleProcessors;
     }
 }

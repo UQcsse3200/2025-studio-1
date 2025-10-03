@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.csse3200.game.components.*;
 import com.csse3200.game.components.player.*;
 import com.csse3200.game.components.player.InventoryComponent;
+import com.csse3200.game.effects.DoubleProcessorsEffect;
 import com.csse3200.game.effects.Effect;
 import com.csse3200.game.effects.RapidFireEffect;
 import com.csse3200.game.effects.UnlimitedAmmoEffect;
@@ -155,7 +156,6 @@ public class PlayerFactory {
                                 if (equippedWeapon != null) {
                                     PowerupComponent powerup = player.getComponent(PowerupComponent.class);
                                     powerup.setEquippedWeapon(equippedWeapon);
-                                    // Activate the effect that already exists in PlayerActions
                                     PlayerActions playerActions = player.getComponent(PlayerActions.class);
                                     playerActions.getUnlimitedAmmoEffect().apply(equippedWeapon);
                                     powerup.addEffect(playerActions.getUnlimitedAmmoEffect());
@@ -172,10 +172,20 @@ public class PlayerFactory {
                                 if (equippedWeapon != null) {
                                     PowerupComponent powerup = player.getComponent(PowerupComponent.class);
                                     powerup.setEquippedWeapon(equippedWeapon);
-                                    // Activate the effect that already exists in PlayerActions
                                     PlayerActions playerActions = player.getComponent(PlayerActions.class);
                                     playerActions.getAimbotEffect().apply(equippedWeapon);
                                     powerup.addEffect(playerActions.getAimbotEffect());
+                                }
+                                entityPowerup.dispose();
+                            }
+                        }
+
+                        if (tag.getTag().equals("doubleprocessors")) {
+                            if (entityPowerup.getCenterPosition().dst(player.getCenterPosition()) < 1f) {
+                                PowerupComponent powerup = player.getComponent(PowerupComponent.class);
+                                if (powerup != null) {
+                                    DoubleProcessorsEffect effect = new DoubleProcessorsEffect(30f);
+                                    powerup.addEffect(effect);
                                 }
                                 entityPowerup.dispose();
                             }
