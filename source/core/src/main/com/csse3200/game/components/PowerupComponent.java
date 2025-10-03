@@ -1,9 +1,6 @@
 package com.csse3200.game.components;
 
-import com.csse3200.game.effects.AimbotEffect;
-import com.csse3200.game.effects.Effect;
-import com.csse3200.game.effects.RapidFireEffect;
-import com.csse3200.game.effects.UnlimitedAmmoEffect;
+import com.csse3200.game.effects.*;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.services.ServiceLocator;
 
@@ -35,6 +32,10 @@ public class PowerupComponent extends Component {
             if (aimbot.apply(equippedWeapon)) {
                 activeEffects.add(aimbot);
             }
+        } else if (effect instanceof DoubleProcessorsEffect doubleProcessors) {
+            if (doubleProcessors.apply(entity)) {
+                activeEffects.add(doubleProcessors);
+            }
         }
     }
 
@@ -62,6 +63,13 @@ public class PowerupComponent extends Component {
             else if (effect instanceof AimbotEffect aimbotEffect) {
                 aimbotEffect.update(dt);
                 if (!aimbotEffect.isActive()) {
+                    activeEffects.remove(i);
+                }
+            }
+
+            else if (effect instanceof DoubleProcessorsEffect doubleProcessorsEffect) {
+                doubleProcessorsEffect.update(dt);
+                if (!doubleProcessorsEffect.isActive()) {
                     activeEffects.remove(i);
                 }
             }

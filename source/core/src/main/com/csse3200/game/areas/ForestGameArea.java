@@ -96,6 +96,7 @@ public class ForestGameArea extends GameArea {
             "images/dagger.png",
             "images/rapidfirepowerup.png",
             "images/aimbot_powerup.png",
+            "images/doubleprocessorspowerup.png",
             "images/laser_shot.png",
             "images/Spawn.png",
             "images/LobbyWIP.png",
@@ -297,8 +298,12 @@ public class ForestGameArea extends GameArea {
         ServiceLocator.registerPlayer(player);
 
 //        spawnRapidFirePowerup();
-        //spawnAimbotPowerup();
-        spawnUnlimitedAmmoPowerup();
+//        spawnAimbotPowerup();
+//        spawnUnlimitedAmmoPowerup();
+        spawnDoubleProcessorsPowerup();
+
+        spawnBoss2();
+
 
 
         spawnComputerBench();
@@ -623,6 +628,11 @@ public class ForestGameArea extends GameArea {
     private void spawnAimbotPowerup() {
         Entity newAimbot = PowerupsFactory.createAimBot();
         spawnEntityAt(newAimbot, new GridPoint2(2, 30), true, true);
+    }
+
+    private void spawnDoubleProcessorsPowerup() {
+        Entity newUnlimitedAmmoPowerup = PowerupsFactory.createDoubleProcessors();
+        spawnEntityAt(newUnlimitedAmmoPowerup, new GridPoint2(2, 30), true, true);
     }
 
     private void spawnBoss2() {
