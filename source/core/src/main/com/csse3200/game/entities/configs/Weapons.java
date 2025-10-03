@@ -6,7 +6,8 @@ public enum Weapons {
     LIGHTSABER(new LightsaberConfig()),
     DAGGER(new DaggerConfig()),
     RIFLE(new RifleConfig()),
-    PISTOL(new PistolConfig());
+    PISTOL(new PistolConfig()),
+    LAUNCHER(new LauncherConfig());
 
     private final WeaponConfig config;
 

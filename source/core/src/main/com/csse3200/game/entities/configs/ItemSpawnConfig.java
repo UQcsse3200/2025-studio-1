@@ -40,6 +40,9 @@ public class ItemSpawnConfig {
         config.put(Weapons.LIGHTSABER.name(), List.of(
                 new ItemSpawner.ItemSpawnInfo(new GridPoint2(14, 7), 1)
         ));
+        config.put(Weapons.LAUNCHER.name(), List.of(
+                new ItemSpawner.ItemSpawnInfo(new GridPoint2(14, 14), 1)
+        ));
 
 
         return config;
