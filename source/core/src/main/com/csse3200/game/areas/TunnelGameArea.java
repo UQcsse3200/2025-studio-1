@@ -18,7 +18,7 @@ import com.csse3200.game.services.ServiceLocator;
  */
 public class TunnelGameArea extends GameArea {
     private static final float WALL_WIDTH = 0.1f;
-    private static final GridPoint2 PLAYER_SPAWN = new GridPoint2(5, 7);
+    private static GridPoint2 PLAYER_SPAWN = new GridPoint2(5, 7);
     private static final float ROOM_DIFF_NUMBER = 10;
 
     private Entity player;
@@ -164,6 +164,16 @@ public class TunnelGameArea extends GameArea {
 
     private void loadBossRoom() {
         clearAndLoad(() -> new StaticBossRoom(terrainFactory, cameraComponent));
+    }
+
+    /**
+     * Setter method for the player spawn point
+     * should be used when the player is traversing through the rooms
+     * 
+     * @param newSpawn the new spawn point
+     */
+    public static void setRoomSpawn(GridPoint2 newSpawn) {
+        TunnelGameArea.PLAYER_SPAWN = newSpawn;
     }
 
     @Override
