@@ -1,8 +1,8 @@
 package com.csse3200.game.components.player;
 
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -97,14 +97,14 @@ public class PlayerStatsDisplay extends BaseScreenDisplay {
         ammoLabel = new Label(formatAmmoLabel(), skin, "white");
 
         // Layout top-left
-        root.top().left().padTop(45f).padLeft(5f);
-        root.add(healthBar).width(BAR_WIDTH).height(BAR_HEIGHT).pad(PAD);
+        root.top().left().padTop(45f);
+        root.add(healthBar).width(BAR_WIDTH).height(BAR_HEIGHT).padLeft(PAD);
         root.row();
-        root.add(staminaBar).width(BAR_WIDTH).height(BAR_HEIGHT).pad(PAD);
+        root.add(staminaBar).width(BAR_WIDTH).height(BAR_HEIGHT).padLeft(PAD);
         root.row();
-        root.add(processorLabel).left().padLeft(10f);
+        root.add(processorLabel).left().padLeft(PAD);
         root.row();
-        root.add(ammoLabel).left().padLeft(10f);
+        root.add(ammoLabel).left().padLeft(PAD);
         root.row();
     }
 
