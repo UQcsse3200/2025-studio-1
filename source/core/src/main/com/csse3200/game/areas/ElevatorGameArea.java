@@ -19,7 +19,7 @@ import com.csse3200.game.rendering.TextureRenderComponent;
  **/
 public class ElevatorGameArea extends GameArea {
     private static final float WALL_WIDTH = 0.1f;
-    private static final GridPoint2 PLAYER_SPAWN = new GridPoint2(10, 10);
+    private static GridPoint2 PLAYER_SPAWN = new GridPoint2(10, 10);
 
     public ElevatorGameArea(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
         super(terrainFactory, cameraComponent);
@@ -147,6 +147,16 @@ public class ElevatorGameArea extends GameArea {
             spawnEntityAt(floor, floorspawn, false, false);
             floor.setPosition(floor.getPosition().x, floor.getPosition().y - 0.3f);
         }
+    }
+
+    /**
+     * Setter method for the player spawn point
+     * should be used when the player is traversing through the rooms
+     * 
+     * @param newSpawn the new spawn point
+     */
+    public static void setRoomSpawn(GridPoint2 newSpawn) {
+        ElevatorGameArea.PLAYER_SPAWN = newSpawn;
     }
 
     @Override
