@@ -121,6 +121,8 @@ public class Terminal extends Component {
         logger.debug("Processing message");
         String message = enteredMessage.trim();
 
+        // When the player types a password into the terminal, this method checks if it
+        // matches the required code. If the password is correct (in this case "0000"):
         if (message.equals("0000")) {
             if (TunnelGameArea.exposedRightDoor != null) {
                 TunnelGameArea.exposedRightDoor.setLocked(false);
