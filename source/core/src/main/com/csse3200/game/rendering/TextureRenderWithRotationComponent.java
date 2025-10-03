@@ -7,6 +7,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import com.csse3200.game.components.CameraComponent;
+import com.csse3200.game.components.MagazineComponent;
 import com.csse3200.game.components.WeaponsStatsComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.services.ServiceLocator;
@@ -23,7 +24,7 @@ public class TextureRenderWithRotationComponent extends TextureRenderComponent {
     private float rotation = 0;
     private boolean hasSetRotation = false;
     private Camera camera;
-
+    private boolean rotated = false;
     public TextureRenderWithRotationComponent(String texturePath) {
         super(texturePath); // still loads the Texture
         region = new TextureRegion(super.getTexture());
@@ -66,7 +67,7 @@ public class TextureRenderWithRotationComponent extends TextureRenderComponent {
         }
 
         // is a ranged weapon - follow mouse movement
-        if (entity.hasComponent(WeaponsStatsComponent.class)) {
+        if (entity.hasComponent(WeaponsStatsComponent.class) && entity.hasComponent(MagazineComponent.class)) {
             Vector3 mouseScreenPos = new Vector3(input.getX(), input.getY(), 0);
             if (camera != null) {
                 camera.unproject(mouseScreenPos); //convert mouse pos to world coordinates
@@ -74,6 +75,18 @@ public class TextureRenderWithRotationComponent extends TextureRenderComponent {
             Vector2 mouseWorldPos = new Vector2(0, 0);
             mouseWorldPos.set(mouseScreenPos.x, mouseScreenPos.y);
             rotation = (float) Vector2Utils.angleFromTo(entity.getPosition(), mouseWorldPos);
+        } else if (entity.hasComponent(WeaponsStatsComponent.class)) { //Bullet
+            if (!rotated) {
+                //Only rotate the bullet once to the mouse direction and then dont rotate anymore
+                Vector3 mouseScreenPos = new Vector3(input.getX(), input.getY(), 0);
+                if (camera != null) {
+                    camera.unproject(mouseScreenPos); //convert mouse pos to world coordinates
+                }
+                Vector2 mouseWorldPos = new Vector2(0, 0);
+                mouseWorldPos.set(mouseScreenPos.x, mouseScreenPos.y);
+                rotation = (float) Vector2Utils.angleFromTo(entity.getPosition(), mouseWorldPos);
+                rotated = true;
+            }
         }
 
         batch.draw(region, position.x, position.y,

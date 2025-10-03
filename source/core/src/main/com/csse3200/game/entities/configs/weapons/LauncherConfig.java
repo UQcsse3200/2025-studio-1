@@ -7,6 +7,7 @@ public class LauncherConfig extends RangedWeaponConfig {
         damage = 80;
         shootTimer = 2;
         texturePath = "images/rocketlauncher.png";
+        projectileTexturePath = "images/rocket.png";
     }
 
 }

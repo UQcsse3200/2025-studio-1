@@ -160,6 +160,11 @@ public class ProjectileFactory {
         ProjectileTarget target = ProjectileTarget.ENEMY;
         Entity item = ServiceLocator.getPlayer().getComponent(InventoryComponent.class).getCurrSlot();
         //Player's weapon has the water bullet upgrade
+        if (source.getRocket()) {
+            Entity projectile = createProjectile(target, source, "images/rocket.png");
+            projectile.scaleHeight(0.85f);
+            return projectile;
+        }
         if (item.hasComponent(BulletEnhancerComponent.class)) {
             Entity projectile = createProjectile(target, source, "images/waterBullet.png");
             projectile.scaleHeight(0.85f);
