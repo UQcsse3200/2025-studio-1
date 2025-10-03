@@ -46,8 +46,9 @@ public class WeaponsFactory {
         WeaponsStatsComponent weaponStats = weapon.getComponent(WeaponsStatsComponent.class);
         weaponStats.setCoolDown(0.2f);
 
-
+        //Set the weapon's name from the config
         ItemComponent item = weapon.getComponent(ItemComponent.class);
+        setItemNameFromConfig(config, item);
 
         // Attach type to weapon
         switch (config.weaponType) {
@@ -64,7 +65,6 @@ public class WeaponsFactory {
                 break;
             case MELEE:
                 item.setType(ItemTypes.MELEE);
-                weapon.getComponent(TextureRenderComponent.class).disableComponent();
                 break;
             default:
                 item.setType(ItemTypes.NONE);
@@ -87,6 +87,19 @@ public class WeaponsFactory {
         player.getEvents().addListener("anim", () -> animator.startAnimation("anim"));
         return animator;
     }
+
+    /**
+     * Copies the name from the specified {@link WeaponConfig} into the given {@link ItemComponent}.
+     * If the config's name is not null or empty, this sets the item's name to match the config.
+     * @param config is the weapon configuration containing the name to assign
+     * @param item is the ItemComponent whose name will be assigned
+     */
+    public static void setItemNameFromConfig(WeaponConfig config, ItemComponent item) {
+        if (config.getName() != null && !config.getName().isEmpty()) {
+            item.setName(config.getName());
+        }
+    }
+
 
     private WeaponsFactory() {
         throw new IllegalStateException("Instantiating static util class");

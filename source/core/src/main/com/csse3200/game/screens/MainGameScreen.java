@@ -30,6 +30,8 @@ import com.csse3200.game.services.GameTime;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.SaveLoadService;
 import com.csse3200.game.services.ServiceLocator;
+import com.csse3200.game.session.GameSession;
+import com.csse3200.game.session.SessionManager;
 import com.csse3200.game.ui.terminal.Terminal;
 import com.csse3200.game.ui.terminal.TerminalDisplay;
 import org.slf4j.Logger;
@@ -52,6 +54,12 @@ public class MainGameScreen extends ScreenAdapter {
     private final GameArea gameArea;
 
 
+    //Leaderboard & Session fields
+    private GameSession session;
+    private int playerCurrency = 0;
+    private float roundTime = 0f;
+
+
     private Entity pauseOverlay;
     private boolean isPauseVisible = false;
 
@@ -59,6 +67,11 @@ public class MainGameScreen extends ScreenAdapter {
         this.game = game;
 
         logger.debug("Initialising main game screen services");
+
+        //Initialize session for this playthrough
+        SessionManager sessionManager = new SessionManager();
+        session = sessionManager.startNewSession();  //starts a new empty leaderboard
+
         ServiceLocator.registerTimeSource(new GameTime());
 
         PhysicsService physicsService = new PhysicsService();
@@ -89,6 +102,9 @@ public class MainGameScreen extends ScreenAdapter {
 
     @Override
     public void render(float delta) {
+        //accumulates elapsed time
+        roundTime += delta;
+
         if (!isPauseVisible && !(ServiceLocator.getTimeSource().isPaused())
                 && !ServiceLocator.isTransitioning()) {
             physicsEngine.update();
@@ -176,6 +192,44 @@ public class MainGameScreen extends ScreenAdapter {
                 .addComponent(new TerminalDisplay(this.game));
 
         ServiceLocator.getEntityService().register(ui);
+    }
+
+    /**
+     * = This function checks if there is no running session then exit early.
+     * = else, record the result of just finished session & reset the counters
+     * for next round
+     */
+    private void endRound(){
+        if(session == null) return;
+
+        //add current round to leaderboard
+        session.getLeaderBoardManager().addRound(playerCurrency, roundTime);
+
+        //debug output
+        System.out.println("=== LEADERBOARD ===");
+        session.getLeaderBoardManager().getLeaderBoard().forEach(System.out::println);
+
+        //reset for next round
+        playerCurrency = 0;
+        roundTime = 0f;
+    }
+
+    /**
+     *
+     * @param amount adds the currency earned in the
+     *               round to the current currency
+     */
+    public void addCurrency(int amount) {
+        playerCurrency += amount;
+    }
+
+    /**
+     * Reset leaderboard on exit
+     */
+    public void disposeLeaderBoard() {
+        if (session != null) {
+            session.getLeaderBoardManager().reset();
+        }
     }
 
     /**
