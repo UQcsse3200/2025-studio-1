@@ -47,19 +47,29 @@ public class PlayerEquipComponentTest {
         assertEquals(getPrivateMember(component, "offset"), testOffset);
     }
 
+    /**
+     * Tests that calling setItem(null, offset) unequips the current item.
+     * Ensures the old item reference is cleared from PlayerEquipComponent.
+     * Verifies the internal item field becomes null after unequip.
+     *
+     * @throws NoSuchFieldException if reflection cannot access the private field
+     * @throws IllegalAccessException if field access is not allowed
+     */
     @Test
     public void setNullTest() throws NoSuchFieldException, IllegalAccessException {
-        Entity player = new Entity().addComponent(component);
+        PlayerEquipComponent component = new PlayerEquipComponent();
+        FakeEntity player = new FakeEntity(new Vector2(0, 0));
+        component.setEntity(player);
 
-        Entity testItem = mock(Entity.class);
-        Vector2 testOffset = new Vector2(1f, 2f);
+        FakeEntity testItem = new FakeEntity(new Vector2(1, 2));
 
-        component.setItem(testItem, testOffset);
-        component.setItem(null, testOffset);
+        component.setItem(testItem, new Vector2(1f, 2f));
+        component.setItem(null, new Vector2(1f, 2f));
 
         assertNotEquals(getPrivateMember(component, "item"), testItem);
         assertNull(getPrivateMember(component, "item"));
     }
+
 
     /**
      * Gets the private member with the given name -> must be "item" or "offset"
