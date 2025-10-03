@@ -17,6 +17,8 @@ import com.csse3200.game.components.shop.CatalogService;
 import com.csse3200.game.components.shop.ShopDemo;
 import com.csse3200.game.components.shop.ShopManager;
 import com.csse3200.game.entities.Entity;
+import com.csse3200.game.entities.configs.Armour;
+import com.csse3200.game.entities.factories.items.ArmourFactory;
 import com.csse3200.game.entities.configs.Benches;
 import com.csse3200.game.entities.configs.ItemSpawnConfig;
 import com.csse3200.game.entities.configs.Weapons;
@@ -135,7 +137,8 @@ public class ForestGameArea extends GameArea {
             "images/!.png",
             "images/NpcDialogue.png",
             "images/nurse_npc.png",
-            "images/partner.png"
+            "images/partner.png",
+            "images/armour-assets/chestplate.png"
     };
 
     private static final String[] backgroundTextures = {
@@ -322,6 +325,9 @@ public class ForestGameArea extends GameArea {
         spawnEntity(keycard);
 
         spawnItems();
+
+        //for testing purposes
+        spawnChestplate();
     }
 
     private void spawnRobots() {
@@ -553,6 +559,15 @@ public class ForestGameArea extends GameArea {
         newDagger.addComponent(new ItemHoldComponent(this.player, newDaggerOffset));
 
         return newDagger;
+    }
+
+    private Entity spawnChestplate() {
+        Entity newChestplate = ArmourFactory.createArmour(Armour.CHESTPLATE);
+        Vector2 chestplateOffset = new Vector2(5f, 5f);
+        spawnEntityAt(newChestplate, new GridPoint2(10, 10), true, true);
+//        Vector2 chestplateOffset = new Vector2(0.5f, 0.5f);
+        newChestplate.addComponent(new ItemHoldComponent(this.player, chestplateOffset));
+        return newChestplate;
     }
 
     /** FIXME Layer is behind player, does that matter???
