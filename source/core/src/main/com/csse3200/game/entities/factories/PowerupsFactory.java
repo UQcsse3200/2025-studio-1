@@ -25,7 +25,7 @@ public class PowerupsFactory {
     public static Entity createUnlimitedAmmo() {
         Entity powerup = createBasePowerup();
 
-        powerup.addComponent(new TextureRenderComponent("images/rifle.png"));
+        powerup.addComponent(new TextureRenderComponent("images/ammo.png"));
         powerup.getComponent(TextureRenderComponent.class).scaleEntity();
         powerup.addComponent(new TagComponent("unlimitedammo"));
 
@@ -39,6 +39,17 @@ public class PowerupsFactory {
         powerup.addComponent(new TextureRenderComponent("images/aimbot_powerup.png"));
         powerup.getComponent(TextureRenderComponent.class).scaleEntity();
         powerup.addComponent(new TagComponent("aimbot"));
+
+
+        return powerup;
+    }
+
+    public static Entity createDoubleProcessors() {
+        Entity powerup = createBasePowerup();
+
+        powerup.addComponent(new TextureRenderComponent("images/doubleprocessorspowerup.png"));
+        powerup.getComponent(TextureRenderComponent.class).scaleEntity();
+        powerup.addComponent(new TagComponent("doubleprocessors"));
 
 
         return powerup;
