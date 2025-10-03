@@ -1,5 +1,6 @@
 package com.csse3200.game.entities.factories.characters;
 
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.csse3200.game.components.friendlynpc.NpcDialogueDataComponent;
@@ -9,7 +10,17 @@ import com.csse3200.game.rendering.TextureRenderComponent;
 import com.csse3200.game.components.friendlynpc.*;
 import com.csse3200.game.rendering.AnimationRenderComponent;
 import com.csse3200.game.services.ServiceLocator;
-
+import com.badlogic.gdx.math.Vector2;
+import com.csse3200.game.ai.tasks.AITaskComponent;
+import com.csse3200.game.components.*;
+import com.csse3200.game.components.tasks.ChaseTask;
+import com.csse3200.game.components.tasks.WanderTask;
+import com.csse3200.game.physics.PhysicsLayer;
+import com.csse3200.game.physics.PhysicsUtils;
+import com.csse3200.game.physics.components.ColliderComponent;
+import com.csse3200.game.physics.components.HitboxComponent;
+import com.csse3200.game.physics.components.PhysicsComponent;
+import com.csse3200.game.physics.components.PhysicsMovementComponent;
 
 public class FriendlyNPCFactory {
     public static Entity createTip() {
@@ -38,6 +49,7 @@ public class FriendlyNPCFactory {
         var ui   = test.getComponent(DialogueDisplay.class);
         test.getComponent(TextureRenderComponent.class).scaleEntity();
         test.addComponent(new TipComponent(test, player, 3f));
+        test.addComponent(new CompanionFollowShootComponent());
         test.addComponent(new NpcInterationComponent(player, 3f));
         return test;
     }
@@ -116,5 +128,53 @@ public class FriendlyNPCFactory {
                 .addComponent(new TextureRenderComponent("images/nurse_npc.png"));
         npc.getComponent(TextureRenderComponent.class).scaleEntity();
         return npc;
+    }
+
+    public static Entity createPartner(Entity player) {
+        Entity partner = new Entity()
+                .addComponent(new TextureRenderComponent("images/partner.png"))
+                .addComponent(new CompanionFollowShootComponent());
+
+
+        partner.getComponent(TextureRenderComponent.class).scaleEntity();
+        partner.setScale(0.7f, 0.7f);
+
+        partner.addComponent(new Component() {
+
+            private final float STOP_RADIUS = 1.0f;
+            private final float TELEPORT_R  = 5.0f;
+            private final float SPEED       = 8.0f;
+            private final Vector2 TELEPORT_OFFSET = new Vector2(0.8f, 0f);
+
+            @Override
+            public void update() {
+                if (player == null) return;
+                float dt = 0.016f;
+                try {
+                    dt = com.csse3200.game.services.ServiceLocator.getTimeSource().getDeltaTime();
+                } catch (Exception ignored) {}
+
+                Vector2 myPos = entity.getPosition();
+                Vector2 plPos = player.getPosition();
+
+                Vector2 toPlayer = plPos.cpy().sub(myPos);
+                float d2 = toPlayer.len2();
+
+                if (d2 > TELEPORT_R * TELEPORT_R) {
+                    entity.setPosition(plPos.x + TELEPORT_OFFSET.x, plPos.y + TELEPORT_OFFSET.y);
+                    return;
+                }
+
+                if (d2 <= STOP_RADIUS * STOP_RADIUS) {
+                    return;
+                }
+
+                if (!toPlayer.isZero()) {
+                    toPlayer.nor().scl(SPEED * dt);
+                    entity.setPosition(myPos.x + toPlayer.x, myPos.y + toPlayer.y);
+                }
+            }
+        });
+        return partner;
     }
 }
