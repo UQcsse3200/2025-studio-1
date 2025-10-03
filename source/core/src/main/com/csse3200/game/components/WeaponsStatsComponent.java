@@ -1,5 +1,6 @@
 package com.csse3200.game.components;
 
+import com.csse3200.game.entities.configs.weapons.LauncherConfig;
 import com.csse3200.game.entities.configs.weapons.WeaponConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,6 +64,11 @@ public class WeaponsStatsComponent extends Component {
     private float damageMultiplier = 1f;
 
     /**
+     * Flag for if the weapon needs to make rocket bullets
+     */
+    private boolean rocket = false;
+
+    /**
      * Constructs a {@code WeaponsStatsComponent} from a weapon configuration.
      *
      * @param config the weapon configuration (must specify non-negative damage)
@@ -71,6 +77,10 @@ public class WeaponsStatsComponent extends Component {
         setBaseAttack(config.damage);
         setDisableDamage(DEFAULT_DISABLE_DAMAGE);
         setCoolDown(DEFAULT_COOLDOWN);
+
+        if (config instanceof LauncherConfig) {
+            rocket = true; //Used to make rocket bullets
+        }
     }
 
     /**
@@ -82,6 +92,22 @@ public class WeaponsStatsComponent extends Component {
         setBaseAttack(baseAttack);
         setDisableDamage(DEFAULT_DISABLE_DAMAGE);
         setCoolDown(DEFAULT_COOLDOWN);
+    }
+
+    /**
+     *
+     * @return the flag for if this weapon needs rocket bullets
+     */
+    public boolean getRocket() {
+        return this.rocket;
+    }
+
+    /**
+     * Sets if this weapon needs rocket bullets
+     * @param rocket true for rockets
+     */
+    public void setRocket(boolean rocket) {
+        this.rocket = rocket;
     }
 
     /**
