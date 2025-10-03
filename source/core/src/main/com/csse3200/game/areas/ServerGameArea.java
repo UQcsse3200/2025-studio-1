@@ -275,12 +275,10 @@ public class ServerGameArea extends GameArea {
     }
 
     private void loadTunnel() {
-        roomNumber--;
         clearAndLoad(() -> new TunnelGameArea(terrainFactory, cameraComponent));
     }
 
     private void loadStorage() {
-        roomNumber++;
         clearAndLoad(() -> new StorageGameArea(terrainFactory, cameraComponent));
     }
 
