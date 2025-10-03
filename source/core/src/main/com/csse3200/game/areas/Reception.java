@@ -187,7 +187,4 @@ public class Reception extends GameArea {
     public Entity getPlayer() {
         return null;
     }
-
 }
-
-
