@@ -67,6 +67,7 @@ public class NPCFactory {
         animator.setDisposeAtlas(false);
         animator.addAnimation("angry_float", 0.1f, Animation.PlayMode.LOOP);
         animator.addAnimation("float", 0.1f, Animation.PlayMode.LOOP);
+        animator.addAnimation("damage_taken", 0.1f, Animation.PlayMode.NORMAL);
 
 
         ProjectileLauncherComponent projComp = new ProjectileLauncherComponent(area, target, Projectiles.GHOSTGPT_LASER);
@@ -83,6 +84,12 @@ public class NPCFactory {
         }
 
         WeaponsStatsComponent ghostGPTStats = new WeaponsStatsComponent((int) (config.baseAttack * scalingFactor));
+
+        SoundComponent soundComponent = new SoundComponent();
+        ghostGPT.addComponent(soundComponent);
+        soundComponent.registerSound("damageTaken", "sounds/GPTDamage.mp3");
+        soundComponent.registerSound("death", "sounds/GPTDeath.mp3");
+
 
         ghostGPT
                 .addComponent(ghostGPTStats)
