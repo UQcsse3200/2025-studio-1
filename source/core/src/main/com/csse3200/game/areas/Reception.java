@@ -182,6 +182,9 @@ public class Reception extends GameArea {
      * @param newSpawn the new spawn point
      */
     public static void setRoomSpawn(GridPoint2 newSpawn) {
+        if (newSpawn == null) {
+            return;
+        }
         Reception.PLAYER_SPAWN = newSpawn;
     }
 

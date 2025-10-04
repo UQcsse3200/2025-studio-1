@@ -178,6 +178,9 @@ public class MainHall extends GameArea {
      * @param newSpawn the new spawn point
      */
     public static void setRoomSpawn(GridPoint2 newSpawn) {
+        if (newSpawn == null) {
+            return;
+        }
         MainHall.PLAYER_SPAWN = newSpawn;
     }
 

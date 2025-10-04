@@ -156,6 +156,9 @@ public class FlyingBossRoom extends GameArea {
      * @param newSpawn the new spawn point
      */
     public static void setRoomSpawn(GridPoint2 newSpawn) {
+        if (newSpawn == null) {
+            return;
+        }
         FlyingBossRoom.PLAYER_SPAWN = newSpawn;
     }
 

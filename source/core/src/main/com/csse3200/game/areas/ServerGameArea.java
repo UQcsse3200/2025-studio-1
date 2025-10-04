@@ -265,6 +265,9 @@ public class ServerGameArea extends GameArea {
      * @param newSpawn the new spawn point
      */
     public static void setRoomSpawn(GridPoint2 newSpawn) {
+        if (newSpawn == null) {
+            return;
+        }
         ServerGameArea.PLAYER_SPAWN = newSpawn;
     }
 

@@ -735,6 +735,9 @@ public class ForestGameArea extends GameArea {
      * @param newSpawn the new spawn point
      */
     public static void setRoomSpawn(GridPoint2 newSpawn) {
+        if (newSpawn == null) {
+            return;
+        }
         ForestGameArea.PLAYER_SPAWN = newSpawn;
     }
 
