@@ -97,7 +97,7 @@ class EnemyWavesTest {
     @DisplayName("Start wave function actually spawns the wave")
     void testStartWaveSpawnsImmediatelyOnFirstCall() {
         enemyWaves.startWave();
-        verify(gameArea).spawnEnemies(anyInt(), anyInt(), anyFloat(), eq(player));
+        verify(gameArea).spawnEnemies(anyString(), anyInt(), anyFloat(), eq(player));
     }
 
     @Test
@@ -106,13 +106,13 @@ class EnemyWavesTest {
         when(gameArea.getBaseDifficultyScale()).thenReturn(2f);
 
         enemyWaves.startWave(); // spawns wave 1
-        verify(gameArea).spawnEnemies(anyInt(), anyInt(), eq(2f), eq(player));
+        verify(gameArea).spawnEnemies(anyString(), anyInt(), eq(2f), eq(player));
 
         entities.clear();
         advanceTimeAndTick(WAVE_DELAY_MS + 100);
 
         // Scaling test
-        verify(gameArea).spawnEnemies(anyInt(), anyInt(), eq(2.5f), eq(player));
+        verify(gameArea).spawnEnemies(anyString(), anyInt(), eq(2.5f), eq(player));
     }
 
     @Test
@@ -141,7 +141,7 @@ class EnemyWavesTest {
         verifyNoInteractions(gameArea);
 
         advanceTimeAndTick(WAVE_DELAY_MS + 100);
-        verify(gameArea).spawnEnemies(anyInt(), anyInt(), anyFloat(), eq(player));
+        verify(gameArea).spawnEnemies(anyString(), anyInt(), anyFloat(), eq(player));
     }
 
     @Test
@@ -182,7 +182,7 @@ class EnemyWavesTest {
         when(gameArea.getBaseDifficultyScale()).thenReturn(2f);
         enemyWaves.startWave();
 
-        verify(gameArea).spawnEnemies(anyInt(), anyInt(), anyFloat(), eq(player));
+        verify(gameArea).spawnEnemies(anyString(), anyInt(), anyFloat(), eq(player));
     }
 
     @Test
@@ -198,7 +198,7 @@ class EnemyWavesTest {
         reset(gameArea);
 
         advanceTimeAndTick(WAVE_DELAY_MS + 100);
-        verify(gameArea).spawnEnemies(anyInt(), anyInt(), anyFloat(), eq(player));
+        verify(gameArea).spawnEnemies(anyString(), anyInt(), anyFloat(), eq(player));
     }
 
     @Test
@@ -279,10 +279,10 @@ class EnemyWavesTest {
     @Test
     @DisplayName("Check that the correct room number is passed to spawnEnemies()")
     void testDelegatesWithCorrectRoomNumber() {
-        when(gameArea.getRoomNumber()).thenReturn(3);
+        when(gameArea.toString()).thenReturn("Mainhall");
 
         enemyWaves.startWave();
 
-        verify(gameArea).spawnEnemies(eq(3), anyInt(), anyFloat(), eq(player));
+        verify(gameArea).spawnEnemies(eq("Mainhall"), anyInt(), anyFloat(), eq(player));
     }
 }
