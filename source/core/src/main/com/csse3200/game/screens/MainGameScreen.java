@@ -287,6 +287,7 @@ public class MainGameScreen extends ScreenAdapter {
         renderer.getDebug().renderPhysicsWorld(physicsEngine.getWorld());
 
         loadAssets();
+        countdownTimer = new CountdownTimerService(ServiceLocator.getTimeSource(), 60000);
         createUI();
         // null so default can return error
 
@@ -294,6 +295,7 @@ public class MainGameScreen extends ScreenAdapter {
         TerrainFactory terrainFactory = new TerrainFactory(renderer.getCamera());
         GameArea areaLoad = ForestGameArea.load(terrainFactory, renderer.getCamera());
         //cases for all current areas
+
         switch (load.areaId) {
             case "Elevator" -> areaLoad = ElevatorGameArea.load(terrainFactory, renderer.getCamera());
             case "Office" -> areaLoad = OfficeGameArea.load(terrainFactory, renderer.getCamera());
@@ -312,7 +314,6 @@ public class MainGameScreen extends ScreenAdapter {
         gameArea.create();
         gameArea.getPlayer().getComponent(InventoryComponent.class).setProcessor(load.ProcessNumber);
         gameArea.getPlayer().getComponent(CombatStatsComponent.class).setHealth(load.Health);
-        gameArea.getPlayer().getComponent(InventoryComponent.class).get(1).getComponent(ConsumableComponent.class);
         FileLoader.readInventory(load.inventory,
                 gameArea.getPlayer().getComponent(InventoryComponent.class));
 
