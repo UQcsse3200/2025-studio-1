@@ -545,7 +545,7 @@ public class ForestGameArea extends GameArea {
 
     /** Bottom-left teleporter for discovered-room travel */
     private void spawnTeleporter() {
-        Entity tp = TeleporterFactory.createTeleporter(new Vector2(0.5f, 3f));
+        Entity tp = TeleporterFactory.createTeleporter(new Vector2(2f, 3f));
         spawnEntity(tp);
     }
 

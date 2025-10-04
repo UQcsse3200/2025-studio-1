@@ -177,7 +177,7 @@ public class Reception extends GameArea {
 
     /** Spawn teleporter bottom-left avoiding desk (slightly offset). */
     private void spawnTeleporter() {
-        Entity tp = TeleporterFactory.createTeleporter(new Vector2(2f, 3.2f));
+        Entity tp = TeleporterFactory.createTeleporter(new Vector2(2.5f, 2.8f));
         spawnEntity(tp);
     }
 
