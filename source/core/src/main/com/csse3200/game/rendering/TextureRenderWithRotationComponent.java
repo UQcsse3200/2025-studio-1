@@ -25,8 +25,10 @@ public class TextureRenderWithRotationComponent extends TextureRenderComponent {
     private boolean hasSetRotation = false;
     private Camera camera;
     private boolean rotated = false;
+    private String texturePath; //For testing
     public TextureRenderWithRotationComponent(String texturePath) {
         super(texturePath); // still loads the Texture
+        this.texturePath = texturePath;
         region = new TextureRegion(super.getTexture());
     }
 
@@ -46,6 +48,14 @@ public class TextureRenderWithRotationComponent extends TextureRenderComponent {
 
     public float getRotation() {
         return rotation;
+    }
+
+    /**
+     *
+     * @return the texture path
+     */
+    public String getTexturePath() {
+        return this.texturePath;
     }
 
     @Override
