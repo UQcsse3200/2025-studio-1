@@ -1,5 +1,7 @@
 package com.csse3200.game.components;
 
+import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Fixture;
@@ -9,6 +11,8 @@ import com.csse3200.game.physics.PhysicsLayer;
 import com.csse3200.game.physics.components.HitboxComponent;
 import com.csse3200.game.physics.components.PhysicsComponent;
 import com.csse3200.game.physics.components.PhysicsProjectileComponent;
+import com.csse3200.game.rendering.AnimationRenderComponent;
+import com.csse3200.game.services.ServiceLocator;
 
 /**
  * When this entity touches a valid enemy's hitbox, deal damage to them and apply a knockback.
@@ -82,7 +86,51 @@ public class TouchAttackComponent extends Component {
 
         //disposes entity if it is a projectile
         if (entity.hasComponent(PhysicsProjectileComponent.class)) {
+            spawnExplosion(entity.getPosition());
+
             entity.setToRemove();
         }
     }
+
+
+    private void spawnExplosion(Vector2 position) {
+        TextureAtlas atlas = ServiceLocator.getResourceService()
+                .getAsset("images/rocketExplosion.atlas", TextureAtlas.class);
+
+        AnimationRenderComponent animator = new AnimationRenderComponent(atlas);
+        animator.addAnimation("rocketExplosion", 0.05f, Animation.PlayMode.NORMAL);
+
+        // Create the explosion entity first
+        Entity explosion = new Entity();
+        explosion.addComponent(animator);
+
+        // Add a self-removing component
+        explosion.addComponent(new Component() {
+            private float elapsedTime = 0f;
+            private final int frameCount = atlas.findRegions("rocketExplosion").size;
+            private final float frameDuration = 0.05f;
+            private final float animationDuration = frameCount * frameDuration;
+
+            @Override
+            public void update() {
+                elapsedTime += ServiceLocator.getTimeSource().getDeltaTime();
+                if (elapsedTime >= animationDuration) {
+                    explosion.setToRemove();
+                }
+            }
+        });
+
+        explosion.setScale(2f, 2f);
+        explosion.setPosition(position);
+
+        ServiceLocator.getEntityService().register(explosion);
+
+        animator.startAnimation("rocketExplosion");
+    }
+
+
+
+
+
+
 }

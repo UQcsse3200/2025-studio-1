@@ -131,7 +131,8 @@ public class ForestGameArea extends GameArea {
             "foreg_sprites/furniture/ServerRack2.png",
             "foreg_sprites/furniture/Vent.png",
             "images/rocketlauncher.png",
-            "images/rocket.png"
+            "images/rocket.png",
+            "images/rocketExplosion.png"
     };
 
     private static final String[] backgroundTextures = {
@@ -242,7 +243,8 @@ public class ForestGameArea extends GameArea {
             "images/boss_explosion.atlas",
             "images/boss2_combined.atlas",
             "images/Boss3_Attacks.atlas",
-            "images/boss3_phase2.atlas"
+            "images/boss3_phase2.atlas",
+            "images/rocketExplosion.atlas"
     };
     private static final String[] forestSounds = {"sounds/Impact4.ogg",
             "sounds/shot_failed.mp3",
@@ -258,12 +260,6 @@ public class ForestGameArea extends GameArea {
     private static final String[] forestMusic = {BACKGROUND_MUSIC};
 
     private Entity player;
-    private Entity dagger;
-    private Entity lightsaber;
-    private Entity bullet;
-    private Entity pistol;
-    private Entity rifle;
-
 
     /**
      * Initialise this ForestGameArea to use the provided TerrainFactory and camera helper.
@@ -299,6 +295,7 @@ public class ForestGameArea extends GameArea {
         spawnComputerBench();
         spawnHealthBench();
         spawnSpeedBench();
+        spawnRobots();
 
         spawnFloor();
         spawnBottomRightDoor();
