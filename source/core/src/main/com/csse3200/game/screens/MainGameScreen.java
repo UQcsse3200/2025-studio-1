@@ -69,6 +69,7 @@ public class MainGameScreen extends ScreenAdapter {
         //Initialize session for this playthrough
         SessionManager sessionManager = new SessionManager();
         session = sessionManager.startNewSession();  //starts a new empty leaderboard
+        ServiceLocator.registerLeaderBoardManager(session.getLeaderBoardManager());
 
         ServiceLocator.registerTimeSource(new GameTime());
 
@@ -285,42 +286,24 @@ public class MainGameScreen extends ScreenAdapter {
         ServiceLocator.getEntityService().register(ui);
     }
 
-    /**
-     * = This function checks if there is no running session then exit early.
-     * = else, record the result of just finished session & reset the counters
-     * for next round
-     */
-    private void endRound(){
-        if(session == null) return;
+    private void recordRoundForLeaderboard() {
+        if (session == null) return;
 
-        //add current round to leaderboard
-        session.getLeaderBoardManager().addRound(playerCurrency, roundTime);
-
-        //debug output
-        System.out.println("=== LEADERBOARD ===");
-        session.getLeaderBoardManager().getLeaderBoard().forEach(System.out::println);
-
-        //reset for next round
-        playerCurrency = 0;
-        roundTime = 0f;
-    }
-
-    /**
-     *
-     * @param amount adds the currency earned in the
-     *               round to the current currency
-     */
-    public void addCurrency(int amount) {
-        playerCurrency += amount;
-    }
-
-    /**
-     * Reset leaderboard on exit
-     */
-    public void disposeLeaderBoard() {
-        if (session != null) {
-            session.getLeaderBoardManager().reset();
+        // Currency = processors from the player's InventoryComponent
+        int processors = 0;
+        Entity player = (gameArea != null) ? gameArea.getPlayer() : null;
+        if (player != null) {
+            InventoryComponent inv = player.getComponent(InventoryComponent.class);
+            if (inv != null) {
+                processors = inv.getProcessor();
+            }
         }
+
+        // Time = from your countdown service (seconds)
+        float timeSeconds = (float) getCompleteTime();
+
+        session.getLeaderBoardManager().addRound(processors, timeSeconds);
+        session.getLeaderBoardManager().getLeaderBoard().forEach(System.out::println);
     }
 
     /**
@@ -381,6 +364,7 @@ public class MainGameScreen extends ScreenAdapter {
      * </p>
      */
     private void setDeathScreen() {
+        recordRoundForLeaderboard();
         DeathScreen deathScreen = new DeathScreen(game);
         deathScreen.updateTime(getCompleteTime());
         game.setScreen(deathScreen);
