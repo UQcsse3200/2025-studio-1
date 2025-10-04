@@ -9,6 +9,7 @@ import com.csse3200.game.screens.LeaderboardScreen;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.services.MusicService;
+import com.csse3200.game.services.ButtonSoundService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,9 +37,13 @@ public class GdxGame extends Game {
         MusicService musicService = new MusicService();
         ServiceLocator.registerMusicService(musicService);
 
+        ButtonSoundService buttonSoundService = new ButtonSoundService();
+        ServiceLocator.registerButtonSoundService(buttonSoundService);
+
         ServiceLocator.getGlobalEvents().addListener("screenChanged", musicService::updateForScreen);
 
         musicService.load(resourceService);
+        buttonSoundService.load(resourceService);
         setScreen(ScreenType.MAIN_MENU);
     }
 

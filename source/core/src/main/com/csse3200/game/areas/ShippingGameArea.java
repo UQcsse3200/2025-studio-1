@@ -120,7 +120,7 @@ public class ShippingGameArea extends GameArea {
         float leftDoorY = b.bottomY();
         Entity leftDoor = ObstacleFactory.createDoorTrigger(WALL_WIDTH, leftDoorHeight);
         leftDoor.setPosition(b.leftX() + 0.001f, leftDoorY);
-        leftDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadResearch));
+        leftDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadFlyingBossRoom));
         spawnEntity(leftDoor);
 
         addSolidWallRight(b, WALL_WIDTH);
@@ -173,8 +173,8 @@ public class ShippingGameArea extends GameArea {
     /**
      * Clears the game area and loads the previous section (Research).
      */
-    private void loadResearch() {
-        clearAndLoad(() -> new ResearchGameArea(terrainFactory, cameraComponent));
+    private void loadFlyingBossRoom() {
+        clearAndLoad(() -> new FlyingBossRoom(terrainFactory, cameraComponent));
     }
 
     /**
