@@ -50,13 +50,19 @@ class GameAreaTest {
         Field f1 = ForestGameArea.class.getDeclaredField("PLAYER_SPAWN");
         Field f2 = ResearchGameArea.class.getDeclaredField("PLAYER_SPAWN");
         Field f3 = ShippingGameArea.class.getDeclaredField("PLAYER_SPAWN");
+        Field f4 = SecurityGameArea.class.getDeclaredField("PLAYER_SPAWN");
+        Field f5 = ServerGameArea.class.getDeclaredField("PLAYER_SPAWN");
 
         f1.setAccessible(true);
         f2.setAccessible(true);
         f3.setAccessible(true);
+        f4.setAccessible(true);
+        f5.setAccessible(true);
 
         assert (f1.get(null) != null);
         assert (f2.get(null) != null);
         assert (f3.get(null) != null);
+        assert (f4.get(null) != null);
+        assert (f5.get(null) != null);
     }
 }

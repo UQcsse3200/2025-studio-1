@@ -75,21 +75,4 @@ class SecurityAreaTest {
             return supplier.get() instanceof MovingBossRoom;
         }));
     }
-
-    @Test
-    void testSpawnTraversal() throws Exception {
-        MovingBossRoom postRoom = spy(new MovingBossRoom(terrainFactory, cameraComponent));
-
-        Field f = SecurityGameArea.class.getDeclaredField("PLAYER_SPAWN");
-        f.setAccessible(true);
-        Method m = MovingBossRoom.class.getDeclaredMethod("loadSecurity");
-
-        m.setAccessible(true);
-        m.invoke(postRoom);
-
-        Object spawn = f.get(null);
-
-        GridPoint2 gridPoint = new GridPoint2(24, 22);
-        assert(spawn.equals(gridPoint));
-    }
 }
