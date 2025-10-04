@@ -11,6 +11,7 @@ import com.csse3200.game.components.player.InventoryComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.files.FileLoader;
 import com.csse3200.game.files.SaveGame;
+import com.csse3200.game.ui.terminal.commands.WavesCommand;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,13 +33,25 @@ public class SaveLoadService {
      */
     public boolean save(String slot, GameArea gameArea) {
         PlayerInfo gs = new PlayerInfo();
-        gs.areaId =
-        ServiceLocator.getGameArea().toString();
+        Entity player = new Entity();
+        if (ServiceLocator.getGameArea() != null) {
+            gs.areaId =
+                    ServiceLocator.getGameArea().toString();
+            player = gameArea.getPlayer();
+        } else {
+            gs.areaId = gameArea.toString();
+            logger.error("failed to load Game area creating new instance");
+            // if can't find through service locator will attempt hard check
+            for (Entity entity : gameArea.getEntities()) {
+                if (entity.getComponent(InventoryComponent.class) != null) {
+                    player = entity;
+                }
+            }
+        }
         // current placeholder for new class to improve cohesion between file savign and loading
 //        SaveGame save = new SaveGame();
 //        SaveGame.GameState gameState = new SaveGame.GameState();
 //        gameState.setInventory(ServiceLocator.getGameArea().getPlayer().getComponent(InventoryComponent.class));
-        Entity player = gameArea.getPlayer();
         if (player.getComponent(InventoryComponent.class) != null) {
                 logger.info("Inventory component found: Player found.");
                 CombatStatsComponent stat = player.getComponent(CombatStatsComponent.class);
@@ -52,6 +65,8 @@ public class SaveLoadService {
                 gs.Health = stat.getHealth();
                 gs.position.set(player.getPosition());
                 gs.ProcessNumber = inv.getProcessor();
+                // future solution
+                gs.RoundNumber = 2;
             }
 
         path = "saves" + File.separator + slot + ".json";
