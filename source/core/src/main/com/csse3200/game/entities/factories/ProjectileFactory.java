@@ -44,10 +44,12 @@ public class ProjectileFactory {
         ProjectileConfig config = new ProjectileConfig(target, texturePath);
 
         // Create the projectile and add components
+        WeaponsStatsComponent newWeaponStats = new WeaponsStatsComponent(source.getBaseAttack());
+        newWeaponStats.setRocket(source.getRocket());
         Entity projectile = new Entity()
                 .addComponent(new PhysicsComponent())
                 .addComponent(new PhysicsProjectileComponent())
-                .addComponent(new WeaponsStatsComponent(source.getBaseAttack()))
+                .addComponent(newWeaponStats)
                 .addComponent(new TextureRenderWithRotationComponent(config.texturePath))
                 .addComponent(new ColliderComponent())
                 .addComponent(new HitboxComponent().setLayer(config.projectileType))
