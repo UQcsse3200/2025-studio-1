@@ -1,5 +1,6 @@
 package com.csse3200.game.rendering;
 
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.extensions.GameExtension;
 import com.csse3200.game.services.ServiceLocator;
@@ -8,8 +9,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
@@ -61,5 +61,32 @@ class RenderComponentTest {
 
         entity2.setPosition(5f, -3f);
         assertTrue(component1.getZIndex() < component2.getZIndex());
+    }
+
+    @Test
+    void shouldDisableComponent() {
+        RenderComponent component = new RenderComponent() {
+            @Override
+            protected void draw(SpriteBatch batch) {
+                return;
+            }
+        };
+
+        component.disableComponent();
+        assertTrue(component.isDisabled());
+    }
+
+    @Test
+    void shouldEnableComponent() {
+        RenderComponent component = new RenderComponent() {
+            @Override
+            protected void draw(SpriteBatch batch) {
+                return;
+            }
+        };
+
+        component.disableComponent();
+        component.enableComponent();
+        assertFalse(component.isDisabled());
     }
 }
