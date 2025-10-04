@@ -156,6 +156,9 @@ public class ElevatorGameArea extends GameArea {
      * @param newSpawn the new spawn point
      */
     public static void setRoomSpawn(GridPoint2 newSpawn) {
+        if (newSpawn == null) {
+            return;
+        }
         ElevatorGameArea.PLAYER_SPAWN = newSpawn;
     }
 

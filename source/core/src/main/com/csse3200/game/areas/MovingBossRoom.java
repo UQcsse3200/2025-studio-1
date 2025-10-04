@@ -141,6 +141,9 @@ public class MovingBossRoom extends GameArea {
      * @param newSpawn the new spawn point
      */
     public static void setRoomSpawn(GridPoint2 newSpawn) {
+        if (newSpawn == null) {
+            return;
+        }
         MovingBossRoom.PLAYER_SPAWN = newSpawn;
     }
 

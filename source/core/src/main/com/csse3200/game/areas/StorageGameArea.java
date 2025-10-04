@@ -161,6 +161,9 @@ public class StorageGameArea extends GameArea {
      * @param newSpawn the new spawn point
      */
     public static void setRoomSpawn(GridPoint2 newSpawn) {
+        if (newSpawn == null) {
+            return;
+        }
         StorageGameArea.PLAYER_SPAWN = newSpawn;
     }
 

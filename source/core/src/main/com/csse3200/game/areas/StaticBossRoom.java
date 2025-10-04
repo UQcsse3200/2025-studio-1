@@ -134,6 +134,9 @@ public class StaticBossRoom extends GameArea {
      * @param newSpawn the new spawn point
      */
     public static void setRoomSpawn(GridPoint2 newSpawn) {
+        if (newSpawn == null) {
+            return;
+        }
         StaticBossRoom.PLAYER_SPAWN = newSpawn;
     }
 
