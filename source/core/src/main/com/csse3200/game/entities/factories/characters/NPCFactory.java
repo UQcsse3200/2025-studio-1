@@ -213,6 +213,12 @@ public class NPCFactory {
         animator.addAnimation("float", 0.1f, Animation.PlayMode.LOOP);
         animator.addAnimation("damage_taken", 0.1f, Animation.PlayMode.NORMAL);
 
+        SoundComponent soundComponent = new SoundComponent();
+        grokDroid.addComponent(soundComponent);
+
+        soundComponent.registerSound("damageTaken", "sounds/grokDamage.mp3");
+        soundComponent.registerSound("death", "sounds/grokDeath.mp3");
+
         AITaskComponent aiComponent =
                 new AITaskComponent()
                         .addTask(new GPTSlowChaseTask(target, 10, new Vector2(0.3f, 0.3f)))
@@ -335,6 +341,12 @@ public class NPCFactory {
         animator.setDisposeAtlas(false);
         animator.addAnimation("angry_float", 0.1f, Animation.PlayMode.LOOP);
         animator.addAnimation("float", 0.1f, Animation.PlayMode.LOOP);
+
+        SoundComponent soundComponent = new SoundComponent();
+        turret.addComponent(soundComponent);
+
+        soundComponent.registerSound("damageTaken", "sounds/turretDamage.mp3");
+        soundComponent.registerSound("death", "sounds/turretDeath.mp3");
 
         ProjectileLauncherComponent projComp = new ProjectileLauncherComponent(area, target, Projectiles.GHOSTGPT_LASER);
         // Has 0 speed due to stationary ememy
