@@ -48,11 +48,6 @@ public class CompanionFollowShootComponent extends Component {
         if (stats == null) return;
 
         Entity bullet = ProjectileFactory.createFireballBullet(stats);
-        bullet.getComponent(TextureRenderComponent.class).scaleEntity();
-
-        Vector2 s = bullet.getScale();
-        bullet.setScale(s.x / 3f, s.y / 3f);
-
         Vector2 from = entity.getCenterPosition();
         bullet.setPosition(from.x - bullet.getScale().x / 2f, from.y - bullet.getScale().y / 2f);
 

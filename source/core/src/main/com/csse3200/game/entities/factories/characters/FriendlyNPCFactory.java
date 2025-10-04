@@ -133,7 +133,7 @@ public class FriendlyNPCFactory {
         Entity partner = new Entity()
                 .addComponent(new TextureRenderComponent("images/partner.png"))
                 .addComponent(new PartnerFollowComponent(player))
-                .addComponent(new CompanionFollowShootComponent());
+                .addComponent(new AutoCompanionShootComponent());
 
         partner.getComponent(TextureRenderComponent.class).scaleEntity();
         partner.setScale(0.7f, 0.7f);
