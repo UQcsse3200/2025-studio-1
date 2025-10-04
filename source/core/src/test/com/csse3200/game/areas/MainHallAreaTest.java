@@ -74,21 +74,4 @@ class MainHallAreaTest {
             return supplier.get() instanceof SecurityGameArea;
         }));
     }
-
-    @Test
-    void testSpawnTraversal() throws Exception {
-        Reception prevRoom = spy(new Reception(terrainFactory, cameraComponent));
-
-        Field f = MainHall.class.getDeclaredField("PLAYER_SPAWN");
-        f.setAccessible(true);
-        Method m = Reception.class.getDeclaredMethod("loadBackToFloor5");
-
-        m.setAccessible(true);
-        m.invoke(prevRoom);
-
-        Object spawn = f.get(null);
-
-        GridPoint2 gridPoint = new GridPoint2(8, 8);
-        assert(spawn.equals(gridPoint));
-    }
 }

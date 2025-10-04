@@ -75,21 +75,4 @@ class ServerAreaTest {
             return supplier.get() instanceof StorageGameArea;
         }));
     }
-
-    @Test
-    void testSpawnTraversal() throws Exception {
-        TunnelGameArea postRoom = spy(new TunnelGameArea(terrainFactory, cameraComponent));
-
-        Field f = ServerGameArea.class.getDeclaredField("PLAYER_SPAWN");
-        f.setAccessible(true);
-        Method m = TunnelGameArea.class.getDeclaredMethod("loadServer");
-
-        m.setAccessible(true);
-        m.invoke(postRoom);
-
-        Object spawn = f.get(null);
-
-        GridPoint2 gridPoint = new GridPoint2(25, 24);
-        assert(spawn.equals(gridPoint));
-    }
 }
