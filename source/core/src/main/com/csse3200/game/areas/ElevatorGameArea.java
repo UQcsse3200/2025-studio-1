@@ -9,6 +9,7 @@ import com.csse3200.game.components.KeycardGateComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.factories.KeycardFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
+import com.csse3200.game.entities.factories.system.TeleporterFactory;
 import com.csse3200.game.physics.PhysicsLayer;
 import com.csse3200.game.physics.components.ColliderComponent;
 import com.csse3200.game.physics.components.HitboxComponent;
@@ -44,6 +45,7 @@ public class ElevatorGameArea extends GameArea {
         spawnFloor();
         spawnPlatforms();
         spawnDesk();
+        spawnTeleporter();
     }
 
     private void spawnBordersAndDoors() {
@@ -110,6 +112,7 @@ public class ElevatorGameArea extends GameArea {
      */
     private void spawnPlatforms() {
         float p1x = 1f, p1y = 4f;
+        // teleporter will be at (0.5,3f) below first platform
         float p2x = 5f, p2y = 6f;
         float p3x = 10f, p3y = 6f;
 
@@ -124,6 +127,12 @@ public class ElevatorGameArea extends GameArea {
         Entity plat3 = com.csse3200.game.entities.factories.system.ObstacleFactory.createElevatorPlatform();
         plat3.setPosition(p3x, p3y);
         spawnEntity(plat3);
+    }
+
+    /** Bottom-left teleporter for elevator */
+    private void spawnTeleporter() {
+        Entity tp = TeleporterFactory.createTeleporter(new Vector2(0.5f, 3f));
+        spawnEntity(tp);
     }
 
     private void loadOffice() {
@@ -163,5 +172,3 @@ public class ElevatorGameArea extends GameArea {
     }
 
 }
-
-
