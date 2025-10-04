@@ -198,35 +198,8 @@ public class ProjectileFactory {
     }
 
     public static Entity createFireballBullet(WeaponsStatsComponent baseStats) {
-        Entity bullet = new Entity()
-
-                .addComponent(new PhysicsComponent())
-
-                .addComponent(new ColliderComponent())
-                .addComponent(new HitboxComponent().setLayer(PhysicsLayer.ENEMY_PROJECTILE))
-
-                .addComponent(new PhysicsProjectileComponent())
-
-                .addComponent(new TextureRenderComponent("images/laserbullet.png"))
-
-                .addComponent(new WeaponsStatsComponent(
-                        baseStats != null ? baseStats.getBaseAttack() : 1));
-
-
-        bullet.getComponent(TextureRenderComponent.class).scaleEntity();
-
-
-
-        ColliderComponent col = bullet.getComponent(ColliderComponent.class);
-        if (col != null) {
-            short my   = PhysicsLayer.ENEMY_PROJECTILE;
-            short mask = PhysicsLayer.NPC;
-            col.setFilter(my, mask);
-        }
-
-
-        PhysicsUtils.setScaledCollider(bullet, 0.4f, 0.2f);
-
-        return bullet;
+        Entity projectile = createProjectile(ProjectileTarget.ENEMY, baseStats, "images/laserbullet.png");
+        projectile.scaleHeight(0.3f);
+        return projectile;
     }
 }
