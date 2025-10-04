@@ -49,8 +49,17 @@ public class WeaponConfigsTest {
         assertTrue(config.damage >= 0);
         assertTrue(config.hitTimer >= 0);
         assertTrue(config.range >= 0);
-
     }
 
-
+    @Test
+    void launcherConfigTest() {
+        RangedWeaponConfig config = new LauncherConfig();
+        assertNotNull(config.projectileTexturePath);
+        assertNotNull(config.texturePath);
+        assertTrue(config.reloadTimer >= 0);
+        assertTrue(config.ammoCapacity >= 0);
+        assertTrue(config.shootTimer >= 0);
+        assertTrue(config.damage >= 0);
+        assertEquals(config.weaponType, ItemTypes.RANGED);
+    }
 }
