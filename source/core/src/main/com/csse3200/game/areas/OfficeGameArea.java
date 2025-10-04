@@ -94,7 +94,7 @@ public class OfficeGameArea extends GameArea {
 
     /** Teleporter bottom-left */
     private void spawnTeleporter() {
-        Entity tp = TeleporterFactory.createTeleporter(new Vector2(2f, 3.2f));
+        Entity tp = TeleporterFactory.createTeleporter(new Vector2(5f, 3f));
         spawnEntity(tp);
     }
 

@@ -169,7 +169,7 @@ public class MainHall extends GameArea {
 
     /** Bottom-left teleporter for discovered-room travel */
     private void spawnTeleporter() {
-        Entity tp = TeleporterFactory.createTeleporter(new Vector2(2f, 3.2f));
+        Entity tp = TeleporterFactory.createTeleporter(new Vector2(4f, 3f));
         spawnEntity(tp);
     }
 

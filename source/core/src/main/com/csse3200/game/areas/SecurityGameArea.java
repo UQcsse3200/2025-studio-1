@@ -146,7 +146,7 @@ public class SecurityGameArea extends GameArea {
 
     /** Teleporter entity bottom-left */
     private void spawnTeleporter() {
-        Entity tp = TeleporterFactory.createTeleporter(new Vector2(2f, 3.2f));
+        Entity tp = TeleporterFactory.createTeleporter(new Vector2(2f, 2.8f));
         spawnEntity(tp);
     }
 
