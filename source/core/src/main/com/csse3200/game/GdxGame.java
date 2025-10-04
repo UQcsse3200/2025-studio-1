@@ -10,6 +10,7 @@ import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.services.MusicService;
 import com.csse3200.game.services.ButtonSoundService;
+import com.csse3200.game.session.LeaderBoardManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,6 +23,16 @@ import static com.badlogic.gdx.Gdx.app;
  */
 public class GdxGame extends Game {
     private static final Logger logger = LoggerFactory.getLogger(GdxGame.class);
+
+    private LeaderBoardManager carryOverLeaderBoard;
+
+    public void setCarryOverLeaderBoard(LeaderBoardManager lbm) {
+        this.carryOverLeaderBoard = lbm;
+    }
+
+    public LeaderBoardManager getCarryOverLeaderBoard() {
+        return carryOverLeaderBoard;
+    }
 
     @Override
     public void create() {
