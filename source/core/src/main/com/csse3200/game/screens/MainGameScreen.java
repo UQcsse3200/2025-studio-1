@@ -68,7 +68,13 @@ public class MainGameScreen extends ScreenAdapter {
 
         //Initialize session for this playthrough
         SessionManager sessionManager = new SessionManager();
-        session = sessionManager.startNewSession();  //starts a new empty leaderboard
+        session = sessionManager.startNewSession();
+
+        var prev = game.getCarryOverLeaderBoard();
+        if (prev != null && !prev.getLeaderBoard().isEmpty()) {
+            session.getLeaderBoardManager()
+                    .setLeaderboard(new java.util.ArrayList<>(prev.getLeaderBoard()));
+        }
         ServiceLocator.registerLeaderBoardManager(session.getLeaderBoardManager());
 
         ServiceLocator.registerTimeSource(new GameTime());
@@ -321,6 +327,9 @@ public class MainGameScreen extends ScreenAdapter {
         pauseOverlay.getEvents().addListener("resume", this::hidePauseOverlay);
         ServiceLocator.getEntityService().register(pauseOverlay);
         ServiceLocator.getTimeSource().setPaused(true);
+        if (!countdownTimer.isPaused()) {
+            countdownTimer.pause();
+        }
         isPauseVisible = true;
     }
 
@@ -335,6 +344,12 @@ public class MainGameScreen extends ScreenAdapter {
             ServiceLocator.getTimeSource().setPaused(false);
             pauseOverlay = null;
         }
+
+        ServiceLocator.getTimeSource().setPaused(false);
+        if (countdownTimer.isPaused()) {
+            countdownTimer.resume();
+        }
+
         isPauseVisible = false;
     }
 
@@ -365,6 +380,7 @@ public class MainGameScreen extends ScreenAdapter {
      */
     private void setDeathScreen() {
         recordRoundForLeaderboard();
+        game.setCarryOverLeaderBoard(session.getLeaderBoardManager());
         DeathScreen deathScreen = new DeathScreen(game);
         deathScreen.updateTime(getCompleteTime());
         game.setScreen(deathScreen);
