@@ -23,7 +23,7 @@ import static org.mockito.Mockito.*;
  * Tests for DoorOverrideCommand.
  */
 @ExtendWith(MockitoExtension.class)
-class DoorOverrideCommandTest {
+class DoorOverrideCommandTests {
 
     @AfterEach
     void tearDown() {

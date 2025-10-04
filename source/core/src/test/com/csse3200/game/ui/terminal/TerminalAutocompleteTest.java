@@ -28,7 +28,7 @@ class TerminalAutocompleteTest {
 
     @BeforeEach
     void setUp() {
-        terminal = new Terminal();
+        terminal = new Terminal(null, null, null);
         terminal.rebuildAutocompleteIndex();
     }
 
@@ -50,7 +50,7 @@ class TerminalAutocompleteTest {
                 .toList();
 
         assertEquals(
-                List.of("damageMultiplier", "deathscreen", "debug", "disableDamage", "doorOverride"),
+                List.of("damageMultiplier", "deathScreen", "debug", "disableDamage", "doorOverride"),
                 s
         );
     }
