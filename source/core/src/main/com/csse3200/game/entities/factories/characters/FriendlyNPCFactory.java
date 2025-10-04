@@ -132,48 +132,12 @@ public class FriendlyNPCFactory {
     public static Entity createPartner(Entity player) {
         Entity partner = new Entity()
                 .addComponent(new TextureRenderComponent("images/partner.png"))
+                .addComponent(new PartnerFollowComponent(player))
                 .addComponent(new CompanionFollowShootComponent());
-
 
         partner.getComponent(TextureRenderComponent.class).scaleEntity();
         partner.setScale(0.7f, 0.7f);
-
-        partner.addComponent(new Component() {
-
-            private final float STOP_RADIUS = 1.0f;
-            private final float TELEPORT_R  = 5.0f;
-            private final float SPEED       = 8.0f;
-            private final Vector2 TELEPORT_OFFSET = new Vector2(0.8f, 0f);
-
-            @Override
-            public void update() {
-                if (player == null) return;
-                float dt = 0.016f;
-                try {
-                    dt = com.csse3200.game.services.ServiceLocator.getTimeSource().getDeltaTime();
-                } catch (Exception ignored) {}
-
-                Vector2 myPos = entity.getPosition();
-                Vector2 plPos = player.getPosition();
-
-                Vector2 toPlayer = plPos.cpy().sub(myPos);
-                float d2 = toPlayer.len2();
-
-                if (d2 > TELEPORT_R * TELEPORT_R) {
-                    entity.setPosition(plPos.x + TELEPORT_OFFSET.x, plPos.y + TELEPORT_OFFSET.y);
-                    return;
-                }
-
-                if (d2 <= STOP_RADIUS * STOP_RADIUS) {
-                    return;
-                }
-
-                if (!toPlayer.isZero()) {
-                    toPlayer.nor().scl(SPEED * dt);
-                    entity.setPosition(myPos.x + toPlayer.x, myPos.y + toPlayer.y);
-                }
-            }
-        });
         return partner;
     }
+
 }
