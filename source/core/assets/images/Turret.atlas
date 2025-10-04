@@ -3,6 +3,20 @@ size: 100, 100
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
+damage_taken
+  rotate: false
+  xy: 3, 72
+  size: 27, 27
+  orig: 135, 135
+  offset: 0, 0
+  index: 0
+damage_taken
+  rotate: false
+  xy: 41, 73
+  size: 27, 27
+  orig: 135, 135
+  offset: 0, 0
+  index: 1
 angry_float
   rotate: false
   xy: 3, 39
