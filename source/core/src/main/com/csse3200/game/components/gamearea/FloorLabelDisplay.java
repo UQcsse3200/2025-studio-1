@@ -23,10 +23,10 @@ public class FloorLabelDisplay extends UIComponent {
         table.top().left();
         table.setFillParent(true);
         // Position below game area display with clear spacing
-        table.padTop(25f).padLeft(2f);
+        table.padTop(30f).padLeft(10f);
 
         Label label = new Label(floorName, skin, "white");
-        table.add(label).pad(8f);
+        table.add(label);
 
         stage.addActor(table);
     }
