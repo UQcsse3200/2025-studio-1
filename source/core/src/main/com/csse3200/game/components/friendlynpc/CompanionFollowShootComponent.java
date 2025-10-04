@@ -7,6 +7,7 @@ import com.csse3200.game.components.WeaponsStatsComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.factories.ProjectileFactory;
 import com.csse3200.game.physics.components.PhysicsProjectileComponent;
+import com.csse3200.game.rendering.TextureRenderComponent;
 import com.csse3200.game.services.ServiceLocator;
 
 public class CompanionFollowShootComponent extends Component {
@@ -46,7 +47,11 @@ public class CompanionFollowShootComponent extends Component {
         WeaponsStatsComponent stats = (pa != null) ? pa.getCurrentWeaponStats() : null;
         if (stats == null) return;
 
-        Entity bullet = ProjectileFactory.createPistolBullet(stats);
+        Entity bullet = ProjectileFactory.createFireballBullet(stats);
+        bullet.getComponent(TextureRenderComponent.class).scaleEntity();
+
+        Vector2 s = bullet.getScale();
+        bullet.setScale(s.x / 3f, s.y / 3f);
 
         Vector2 from = entity.getCenterPosition();
         bullet.setPosition(from.x - bullet.getScale().x / 2f, from.y - bullet.getScale().y / 2f);

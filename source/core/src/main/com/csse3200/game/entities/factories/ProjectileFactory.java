@@ -11,10 +11,13 @@ import com.csse3200.game.entities.configs.ActiveProjectileTypes;
 import com.csse3200.game.entities.configs.projectiles.ActiveProjectile;
 import com.csse3200.game.entities.configs.projectiles.ProjectileConfig;
 import com.csse3200.game.entities.configs.projectiles.ProjectileTarget;
+import com.csse3200.game.physics.PhysicsLayer;
+import com.csse3200.game.physics.PhysicsUtils;
 import com.csse3200.game.physics.components.ColliderComponent;
 import com.csse3200.game.physics.components.HitboxComponent;
 import com.csse3200.game.physics.components.PhysicsComponent;
 import com.csse3200.game.physics.components.PhysicsProjectileComponent;
+import com.csse3200.game.rendering.TextureRenderComponent;
 import com.csse3200.game.rendering.TextureRenderWithRotationComponent;
 import com.csse3200.game.services.ServiceLocator;
 
@@ -194,4 +197,36 @@ public class ProjectileFactory {
         throw new IllegalStateException("Instantiating static util class");
     }
 
+    public static Entity createFireballBullet(WeaponsStatsComponent baseStats) {
+        Entity bullet = new Entity()
+
+                .addComponent(new PhysicsComponent())
+
+                .addComponent(new ColliderComponent())
+                .addComponent(new HitboxComponent().setLayer(PhysicsLayer.ENEMY_PROJECTILE))
+
+                .addComponent(new PhysicsProjectileComponent())
+
+                .addComponent(new TextureRenderComponent("images/laserbullet.png"))
+
+                .addComponent(new WeaponsStatsComponent(
+                        baseStats != null ? baseStats.getBaseAttack() : 1));
+
+
+        bullet.getComponent(TextureRenderComponent.class).scaleEntity();
+
+
+
+        ColliderComponent col = bullet.getComponent(ColliderComponent.class);
+        if (col != null) {
+            short my   = PhysicsLayer.ENEMY_PROJECTILE;
+            short mask = PhysicsLayer.NPC;
+            col.setFilter(my, mask);
+        }
+
+
+        PhysicsUtils.setScaledCollider(bullet, 0.4f, 0.2f);
+
+        return bullet;
+    }
 }
