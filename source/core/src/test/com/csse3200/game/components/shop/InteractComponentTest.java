@@ -57,11 +57,10 @@ class InteractComponentTest {
     private Entity makePlayer() {
         Entity player = new Entity();
         player.setPosition(origin);
-        entityService.register(player);
 
-        InteractComponent interactComponent = new InteractComponent();
-        player.addComponent(interactComponent);
-        player.create();
+        player.addComponent(new InteractComponent());
+
+        entityService.register(player);
 
         return player;
     }
@@ -69,11 +68,11 @@ class InteractComponentTest {
 
     private Entity makeShop(float x, boolean[] firedFlag) {
         Entity shop = InteractableStationFactory.createBaseStation();
-        shop.setPosition(new Vector2(x, (float) 0));
-        entityService.register(shop);
-        shop.getEvents().addListener("interact", () -> firedFlag[0] = true);
+        shop.setPosition(new Vector2(x, 0));
 
-        shop.create();
+        entityService.register(shop);
+
+        shop.getEvents().addListener("interact", () -> firedFlag[0] = true);
 
         return shop;
     }
