@@ -12,6 +12,8 @@ import com.csse3200.game.physics.components.HitboxComponent;
 import com.csse3200.game.physics.components.PhysicsComponent;
 import com.csse3200.game.physics.components.PhysicsProjectileComponent;
 import com.csse3200.game.rendering.AnimationRenderComponent;
+import com.csse3200.game.rendering.TextureRenderComponent;
+import com.csse3200.game.rendering.TextureRenderWithRotationComponent;
 import com.csse3200.game.services.ServiceLocator;
 
 /**
@@ -86,8 +88,10 @@ public class TouchAttackComponent extends Component {
 
         //disposes entity if it is a projectile
         if (entity.hasComponent(PhysicsProjectileComponent.class)) {
-            spawnExplosion(entity.getPosition());
-
+            //Do explosion if it is a rocket only
+            if (entity.getComponent(WeaponsStatsComponent.class).getRocket()) {
+                spawnExplosion(entity.getPosition());
+            }
             entity.setToRemove();
         }
     }

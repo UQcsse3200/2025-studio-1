@@ -71,6 +71,8 @@ class TouchAttackComponentTest {
         entity.getEvents().trigger("collisionStart", entityFixture, targetFixture);
     }
 
+
+
     Entity createAttacker(short targetLayer) {
         Entity entity =
                 new Entity()
