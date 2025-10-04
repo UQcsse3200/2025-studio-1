@@ -32,6 +32,7 @@ public class LeaderBoardManager {
      * @param time taken to complete the round
      */
     public void addRound(int currency, float time){
+        logger.info("LeaderBoardManager.addRound currency={} time={}", currency, time);
         leaderBoard.add(new RoundData(currency, time));
     }
 
@@ -41,33 +42,6 @@ public class LeaderBoardManager {
      * data until then since the beginning of the session
      */
     public List<RoundData> getLeaderBoard() {return leaderBoard;}
-
-    public boolean addRoundFromInventory(InventoryComponent inv, float timeSeconds) {
-        if (inv == null) {
-            logger.warn("addRoundFromInventory called with null InventoryComponent");
-            return false;
-        }
-        int processors = inv.getProcessor();
-        addRound(processors, timeSeconds);
-        return true;
-    }
-
-    public boolean addRoundFromGameArea(GameArea area, float timeSeconds) {
-        if (area == null) {
-            logger.warn("addRoundFromGameArea called with null GameArea");
-            return false;
-        }
-        for (Entity e : area.getEntities()) {
-            InventoryComponent inv = e.getComponent(InventoryComponent.class);
-            if (inv != null) {
-                int processors = inv.getProcessor();
-                addRound(processors, timeSeconds);
-                return true;
-            }
-        }
-        logger.warn("No entity with InventoryComponent found while adding leaderboard round");
-        return false;
-    }
 
     /**
      * if loadedLeaderboard != null --> leaderboard = loadedLeaderboard
