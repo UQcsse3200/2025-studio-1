@@ -63,10 +63,9 @@ public class MainMenuDisplay extends UIComponent {
         TextButton startBtn = new TextButton("Start", skin);
         TextButton loadBtn = new TextButton("Load", skin);
         TextButton settingsBtn = new TextButton("Settings", skin);
-        TextButton exitBtn = new TextButton("Exit", skin);
         TextButton tutorialBtn = new TextButton("Tutorial", skin);
         TextButton difficultyBtn = new TextButton("Difficulty", skin);
-
+        TextButton exitBtn = new TextButton("Exit", skin);
 
         // Label text size
         startBtn.getLabel().setFontScale(2.0f);
@@ -146,11 +145,11 @@ public class MainMenuDisplay extends UIComponent {
         table.row();
         table.add(settingsBtn).padTop(15f).left();
         table.row();
-        table.add(exitBtn).padTop(15f).left();
-        table.row();
         table.add(tutorialBtn).padTop(15f).left();
         table.row();
         table.add(difficultyBtn).padTop(15f).left();
+        table.row();
+        table.add(exitBtn).padTop(15f).left();
         stage.addActor(table);
     }
 
