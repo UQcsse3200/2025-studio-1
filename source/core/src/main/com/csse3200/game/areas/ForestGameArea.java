@@ -142,7 +142,12 @@ public class ForestGameArea extends GameArea {
             "backgrounds/Reception.png",
             "backgrounds/Shipping.png",
             "backgrounds/SpawnResize.png",
-            "backgrounds/Storage.png"
+            "backgrounds/Storage.png",
+            "backgrounds/MainHall.png",
+            "backgrounds/Office.png",
+            "backgrounds/Research.png",
+            "backgrounds/Security.png",
+            "backgrounds/Server.png"
     };
 
     /**
