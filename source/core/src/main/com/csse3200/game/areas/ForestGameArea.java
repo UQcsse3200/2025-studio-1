@@ -64,7 +64,6 @@ public class ForestGameArea extends GameArea {
     /**
      * Files or pictures used by the game (enemy/props,etc.).
      */
-    private static final String HEART = "images/heart.png";
     private static final String[] forestTextures = {
             "images/box_boy_leaf.png",
             "images/tree.png",
@@ -115,7 +114,6 @@ public class ForestGameArea extends GameArea {
             "images/speedBench.png",
             "images/waterBullet.png",
             "images/VendingMachine.png",
-            HEART,
             "images/laserball.png",
             "images/MarblePlatform.png",
             "images/computerBench.png",
@@ -325,8 +323,6 @@ public class ForestGameArea extends GameArea {
         Entity keycard = KeycardFactory.createKeycard(1);
         keycard.setPosition(new Vector2(keycardX, keycardY));
         spawnEntity(keycard);
-
-        spawnItems();
     }
 
     private void spawnRobots() {
@@ -531,15 +527,7 @@ public class ForestGameArea extends GameArea {
      * The number of items is set by NUM_ITEMS.
      * Each item is created and placed at a random spot on the terrain.
      */
-    private void spawnItems() {
-        GridPoint2 firstPos = new GridPoint2(5, 25);
-        GridPoint2 secondPos = new GridPoint2(10, 25);
-        GridPoint2 thirdPos = new GridPoint2(15, 25);
 
-        spawnEntityAt(ItemFactory.createItem(HEART), firstPos, true, false);
-        spawnEntityAt(ItemFactory.createItem(HEART), secondPos, true, false);
-        spawnEntityAt(ItemFactory.createItem(HEART), thirdPos, true, false);
-    }
 
     private Entity spawnPlayer() {
         Entity newPlayer = PlayerFactory.createPlayer();
