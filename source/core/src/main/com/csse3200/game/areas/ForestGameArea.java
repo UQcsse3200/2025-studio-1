@@ -613,7 +613,6 @@ public class ForestGameArea extends GameArea {
 //        if(weapons == Weapons.PISTOL) {player.getComponent(PlayerEquipComponent.class).setItem(item, offset_pistol);}
 //        if (weapons == Weapons.DAGGER) {player.getComponent(PlayerEquipComponent.class).setItem(item, offset_dagger);}
 //        if (weapons == Weapons.LIGHTSABER) {player.getComponent(PlayerEquipComponent.class).setItem(item, offset_lightsaber);}
-
     }
     /**
      * Sets the equipped item in the PlayerEquipComponent to be null, along with the offset

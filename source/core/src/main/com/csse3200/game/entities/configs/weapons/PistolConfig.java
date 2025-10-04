@@ -7,5 +7,6 @@ public class PistolConfig extends RangedWeaponConfig {
         shootTimer = 0.5;
         damage = 10;
         texturePath = "images/pistol.png";
+        this.setName("pistol");
     }
 }

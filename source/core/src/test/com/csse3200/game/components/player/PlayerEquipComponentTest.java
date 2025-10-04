@@ -2,24 +2,20 @@ package com.csse3200.game.components.player;
 
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.entities.Entity;
-import com.csse3200.game.components.player.PlayerEquipComponent;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
 import java.lang.reflect.Field;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.*;
 
 /**
  * <p>
- *  These tests validate the behavior of the component when equipping,
- *  replacing, and updating item entities relative to a player entity.
- *  A {@link FakeEntity} test double is used in place of the real {@link Entity}
- *  to avoid framework dependencies and to simplify position/dispose checks.
- *  </p>
+ * These tests validate the behavior of the component when equipping,
+ * replacing, and updating item entities relative to a player entity.
+ * A {@link FakeEntity} test double is used in place of the real {@link Entity}
+ * to avoid framework dependencies and to simplify position/dispose checks.
+ * </p>
  */
 public class PlayerEquipComponentTest {
     PlayerEquipComponent component;
@@ -52,7 +48,7 @@ public class PlayerEquipComponentTest {
      * Ensures the old item reference is cleared from PlayerEquipComponent.
      * Verifies the internal item field becomes null after unequip.
      *
-     * @throws NoSuchFieldException if reflection cannot access the private field
+     * @throws NoSuchFieldException   if reflection cannot access the private field
      * @throws IllegalAccessException if field access is not allowed
      */
     @Test
@@ -81,7 +77,7 @@ public class PlayerEquipComponentTest {
      * @throws IllegalAccessException If the field attempting to retrieve is static
      */
     private Object getPrivateMember(PlayerEquipComponent component, String name)
-            throws NoSuchFieldException,  IllegalAccessException {
+            throws NoSuchFieldException, IllegalAccessException {
         Field field = PlayerEquipComponent.class.getDeclaredField(name);
         field.setAccessible(true);
         return field.get(component);
@@ -97,6 +93,7 @@ public class PlayerEquipComponentTest {
 
         /**
          * Constructs a fake entity with an initial position
+         *
          * @param initialPosition the starting position of this entity
          */
         FakeEntity(Vector2 initialPosition) {
