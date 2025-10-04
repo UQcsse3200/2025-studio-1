@@ -24,7 +24,7 @@ public class PlayerStatsDisplay extends BaseScreenDisplay {
     // UI constants
     private static final float BAR_WIDTH = 200f;
     private static final float BAR_HEIGHT = 30f;
-    private static final float PAD = 5f;
+    private static final float PAD = 10f;
     private static final int PCT_MAX = 100;
 
     // Constants
@@ -97,10 +97,10 @@ public class PlayerStatsDisplay extends BaseScreenDisplay {
         ammoLabel = new Label(formatAmmoLabel(), skin, "white");
 
         // Layout top-left
-        root.top().left().padTop(45f);
-        root.add(healthBar).width(BAR_WIDTH).height(BAR_HEIGHT).padLeft(PAD);
+        root.top().left().padTop(50f);
+        root.add(healthBar).width(BAR_WIDTH).height(BAR_HEIGHT).left().padLeft(PAD);
         root.row();
-        root.add(staminaBar).width(BAR_WIDTH).height(BAR_HEIGHT).padLeft(PAD);
+        root.add(staminaBar).width(BAR_WIDTH).height(BAR_HEIGHT).left().padLeft(PAD);
         root.row();
         root.add(processorLabel).left().padLeft(PAD);
         root.row();
