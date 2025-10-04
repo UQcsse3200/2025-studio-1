@@ -121,6 +121,7 @@ public class FileLoader {
                 playerInventory.addItem(placehold);
             }
         }
+
         return playerInventory;
     }
 
