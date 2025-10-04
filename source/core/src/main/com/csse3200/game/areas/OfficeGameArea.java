@@ -1,11 +1,13 @@
 package com.csse3200.game.areas;
 
 import com.badlogic.gdx.math.GridPoint2;
+import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.factories.characters.PlayerFactory;
+import com.csse3200.game.entities.factories.system.TeleporterFactory;
 
 /**
  * Office room: minimal walls and two doors (left--Security, right--Elevator).
@@ -38,6 +40,7 @@ public class OfficeGameArea extends GameArea {
         spawnObjectDoors(new GridPoint2(0, 14), new GridPoint2(28, 20));
         spawnPlatforms();
         spawnOfficeProps();
+        spawnTeleporter();
     }
 
     // Assets ensured via GenericLayout
@@ -87,6 +90,12 @@ public class OfficeGameArea extends GameArea {
         ceoChair.scaleHeight(3.0f);
         ceoChair.setPosition(2f, 3.0f);
         spawnEntity(ceoChair);
+    }
+
+    /** Teleporter bottom-left */
+    private void spawnTeleporter() {
+        Entity tp = TeleporterFactory.createTeleporter(new Vector2(2f, 3.2f));
+        spawnEntity(tp);
     }
 
     /**
@@ -151,5 +160,3 @@ public class OfficeGameArea extends GameArea {
         return (new OfficeGameArea(terrainFactory, camera));
     }
 }
-
-

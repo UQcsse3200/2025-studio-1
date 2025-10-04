@@ -13,6 +13,7 @@ import com.csse3200.game.entities.configs.ItemSpawnConfig;
 import com.csse3200.game.entities.factories.characters.NPCFactory;
 import com.csse3200.game.entities.factories.characters.PlayerFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
+import com.csse3200.game.entities.factories.system.TeleporterFactory;
 import com.csse3200.game.entities.spawner.ItemSpawner;
 import com.csse3200.game.services.ServiceLocator;
 import org.slf4j.Logger;
@@ -64,6 +65,7 @@ public class ServerGameArea extends GameArea {
         spawnSpawnPads();
         spawnBordersAndDoors();
         spawnObjectDoors(new GridPoint2(0, 6), new GridPoint2(28, 21));
+        spawnTeleporter();
 
         spawnFloor();
 
@@ -282,6 +284,12 @@ public class ServerGameArea extends GameArea {
         clearAndLoad(() -> new StorageGameArea(terrainFactory, cameraComponent));
     }
 
+    /** Teleporter bottom-left */
+    private void spawnTeleporter() {
+        Entity tp = TeleporterFactory.createTeleporter(new Vector2(0.5f, 3f));
+        spawnEntity(tp);
+    }
+
 
     @Override
     public String toString() {
@@ -292,3 +300,4 @@ public class ServerGameArea extends GameArea {
         return (new ServerGameArea(terrainFactory, camera));
     }
 }
+

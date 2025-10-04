@@ -27,6 +27,7 @@ import com.csse3200.game.entities.factories.characters.PlayerFactory;
 import com.csse3200.game.entities.factories.items.ItemFactory;
 import com.csse3200.game.entities.factories.items.WeaponsFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
+import com.csse3200.game.entities.factories.system.TeleporterFactory;
 import com.csse3200.game.entities.spawner.ItemSpawner;
 import com.csse3200.game.rendering.AnimationRenderComponent;
 import com.csse3200.game.rendering.TextureRenderComponent;
@@ -327,6 +328,7 @@ public class ForestGameArea extends GameArea {
         spawnEntity(keycard);
 
         spawnItems();
+        spawnTeleporter();
     }
 
     private void spawnRobots() {
@@ -539,6 +541,12 @@ public class ForestGameArea extends GameArea {
         spawnEntityAt(ItemFactory.createItem(HEART), firstPos, true, false);
         spawnEntityAt(ItemFactory.createItem(HEART), secondPos, true, false);
         spawnEntityAt(ItemFactory.createItem(HEART), thirdPos, true, false);
+    }
+
+    /** Bottom-left teleporter for discovered-room travel */
+    private void spawnTeleporter() {
+        Entity tp = TeleporterFactory.createTeleporter(new Vector2(0.5f, 3f));
+        spawnEntity(tp);
     }
 
     private Entity spawnPlayer() {
