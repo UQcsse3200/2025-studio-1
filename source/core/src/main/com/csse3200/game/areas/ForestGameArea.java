@@ -250,7 +250,9 @@ public class ForestGameArea extends GameArea {
             "sounds/deepspinDamage.mp3",
             "sounds/deepspinDeath.mp3",
             "sounds/vroombaDamage.mp3",
-            "sounds/vroombaDeath.mp3"
+            "sounds/vroombaDeath.mp3",
+            "sounds/GPTDamage.mp3",
+            "sounds/GPTDeath.mp3"
     };
     private static final String BACKGROUND_MUSIC = "sounds/BGM_03.mp3";
 

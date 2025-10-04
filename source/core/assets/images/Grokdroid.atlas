@@ -5,43 +5,43 @@ filter: Nearest,Nearest
 repeat: none
 damage_taken
   rotate: false
-  xy: 10, 79
-  size: 53, 38
+  xy: 11, 69
+  size: 49, 31
   orig: 265, 175
   offset: 0, 0
   index: 0
 damage_taken
   rotate: false
-  xy: 64, 79
-  size: 53, 38
+  xy: 65, 70
+  size: 49, 31
   orig: 265, 175
   offset: 0, 0
   index: 1
 damage_taken
   rotate: false
-  xy: 116, 79
-  size: 53, 38
+  xy: 117, 70
+  size: 49, 31
   orig: 265, 175
   offset: 0, 0
   index: 2
 angry_float
   rotate: false
-  xy: 10, 42
-  size: 53, 38
+  xy: 11, 38
+  size: 49, 31
   orig: 265, 175
   offset: 0, 0
   index: 0
 angry_float
   rotate: false
-  xy: 64, 42
-  size: 53, 38
+  xy: 65, 39
+  size: 49, 31
   orig: 265, 175
   offset: 0, 0
   index: 1
 angry_float
   rotate: false
-  xy: 116, 42
-  size: 53, 38
+  xy: 117, 40
+  size: 49, 31
   orig: 265, 175
   offset: 0, 0
   index: 2
@@ -54,22 +54,22 @@ default
   index: 0
 float
   rotate: false
-  xy: 10, 5
-  size: 53, 38
+  xy: 11, 7
+  size: 49, 31
   orig: 265, 175
   offset: 0, 0
   index: 0
 float
   rotate: false
-  xy: 64, 5
-  size: 53, 38
+  xy: 65, 8
+  size: 49, 31
   orig: 265, 175
   offset: 0, 0
   index: 1
 float
   rotate: false
-  xy: 116, 29
-  size: 53, 38
+  xy: 117, 9
+  size: 49, 31
   orig: 265, 175
   offset: 0, 0
   index: 2
