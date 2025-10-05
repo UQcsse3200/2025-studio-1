@@ -14,18 +14,13 @@ import com.csse3200.game.entities.factories.characters.PlayerFactory;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.components.gamearea.GameAreaDisplay;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
  * This is the room that holds the Ground Moving Boss Boss.
  * This boss is a small robot that moves towards the player and attacks
- * 
+ *
  * Room is empty except for boss and player
  */
 public class MovingBossRoom extends GameArea {
-    private static final Logger logger = LoggerFactory.getLogger(MovingBossRoom.class);
-
     private static final GridPoint2 PLAYER_SPAWN = new GridPoint2(3, 10);
 
     private static final float WALL_WIDTH = 0.1f;
@@ -80,8 +75,7 @@ public class MovingBossRoom extends GameArea {
 
     private void displayUI() {
         Entity ui = new Entity();
-        ui.addComponent(new GameAreaDisplay("Moving Boss Room"))
-                .addComponent(new com.csse3200.game.components.gamearea.FloorLabelDisplay("Moving Boss Room"));
+        ui.addComponent(new GameAreaDisplay("Moving Boss Room"));
         spawnEntity(ui);
     }
 
