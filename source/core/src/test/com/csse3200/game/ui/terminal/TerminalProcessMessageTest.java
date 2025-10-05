@@ -14,7 +14,7 @@ public class TerminalProcessMessageTest {
 
     @BeforeEach
     void setUp() {
-        terminal = new Terminal();
+        terminal = new Terminal(null, null, null);
         teleport = new FakeCommand();
         god = new FakeCommand();
         give = new FakeCommand();
