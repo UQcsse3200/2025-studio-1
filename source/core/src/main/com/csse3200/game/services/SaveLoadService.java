@@ -62,12 +62,13 @@ public class SaveLoadService {
 //                        gs.inventory.add(inv.getTex(i));
 //                    }
 //                }
-//                gs.Health = stat.getHealth();
-//                gs.position.set(player.getPosition());
-//                gs.ProcessNumber = inv.getProcessor();
-//                // future solution
-//                gs.RoundNumber = 2;
+//
 //        }
+        gs.Health = player.getComponent(CombatStatsComponent.class).getHealth();
+        gs.position.set(player.getPosition());
+        gs.ProcessNumber = player.getComponent(InventoryComponent.class).getProcessor();
+        // future solution
+        gs.RoundNumber = 2;
 
         SaveGame.GameState gamestate = new SaveGame.GameState();
         gamestate.setPlayer(player);
