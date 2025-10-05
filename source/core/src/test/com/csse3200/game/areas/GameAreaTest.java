@@ -47,11 +47,11 @@ class GameAreaTest {
         TerrainFactory terrainFactory = mock(TerrainFactory.class);
         CameraComponent cameraComponent = mock(CameraComponent.class);
 
-        Field f1 = ForestGameArea.class.getDeclaredField("PLAYER_SPAWN");
-        Field f2 = ResearchGameArea.class.getDeclaredField("PLAYER_SPAWN");
-        Field f3 = ShippingGameArea.class.getDeclaredField("PLAYER_SPAWN");
-        Field f4 = SecurityGameArea.class.getDeclaredField("PLAYER_SPAWN");
-        Field f5 = ServerGameArea.class.getDeclaredField("PLAYER_SPAWN");
+        Field f1 = ForestGameArea.class.getDeclaredField("playerSpawn");
+        Field f2 = ResearchGameArea.class.getDeclaredField("playerSpawn");
+        Field f3 = ShippingGameArea.class.getDeclaredField("playerSpawn");
+        Field f4 = SecurityGameArea.class.getDeclaredField("playerSpawn");
+        Field f5 = ServerGameArea.class.getDeclaredField("playerSpawn");
 
         f1.setAccessible(true);
         f2.setAccessible(true);

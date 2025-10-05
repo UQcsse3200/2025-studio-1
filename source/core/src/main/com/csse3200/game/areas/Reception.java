@@ -16,7 +16,7 @@ import org.slf4j.LoggerFactory;
  */
 public class Reception extends GameArea {
     private static final Logger logger = LoggerFactory.getLogger(Reception.class);
-    private static GridPoint2 PLAYER_SPAWN = new GridPoint2(8, 10);
+    private static GridPoint2 playerSpawn = new GridPoint2(8, 10);
     private static final float WALL_WIDTH = 0.1f;
     private static final int NUM_TREES = 8; // Number of trees to spawn
     private int roomDiffNumber = 2;
@@ -115,7 +115,7 @@ public class Reception extends GameArea {
 
     private void spawnPlayer() {
         Entity player = PlayerFactory.createPlayer();
-        spawnEntityAt(player, PLAYER_SPAWN, true, true);
+        spawnEntityAt(player, playerSpawn, true, true);
     }
 
     private void spawnplatform2() {
@@ -185,7 +185,7 @@ public class Reception extends GameArea {
         if (newSpawn == null) {
             return;
         }
-        Reception.PLAYER_SPAWN = newSpawn;
+        Reception.playerSpawn = newSpawn;
     }
 
     @Override

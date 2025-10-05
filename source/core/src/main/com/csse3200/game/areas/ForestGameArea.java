@@ -54,7 +54,7 @@ import java.security.SecureRandom;
  */
 public class ForestGameArea extends GameArea {
     private static final Logger logger = LoggerFactory.getLogger(ForestGameArea.class);
-    private static GridPoint2 PLAYER_SPAWN = new GridPoint2(3, 20);
+    private static GridPoint2 playerSpawn = new GridPoint2(3, 20);
     private static final int NUM_ITEMS = 5;//this is for ItemFactory
     // private static final int NUM_TURRETS = 1;
     private static final float WALL_WIDTH = 0.1f;
@@ -554,7 +554,7 @@ public class ForestGameArea extends GameArea {
 
     private Entity spawnPlayer() {
         Entity newPlayer = PlayerFactory.createPlayer();
-        spawnEntityAt(newPlayer, PLAYER_SPAWN, true, true);
+        spawnEntityAt(newPlayer, playerSpawn, true, true);
 
         newPlayer.getEvents().addListener("equip", this::equipItem);
         newPlayer.getEvents().addListener("unequip", this::unequipItem);
@@ -743,7 +743,7 @@ public class ForestGameArea extends GameArea {
         if (newSpawn == null) {
             return;
         }
-        ForestGameArea.PLAYER_SPAWN = newSpawn;
+        ForestGameArea.playerSpawn = newSpawn;
     }
 
     @Override
