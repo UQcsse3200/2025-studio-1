@@ -203,11 +203,15 @@ public class MainGameScreen extends ScreenAdapter {
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.TAB)) {
             if (!isMinimapVisible) {
-                showMinimapOverlay();
-                countdownTimer.pause();
+                if (!isPauseVisible) {
+                    showMinimapOverlay();
+                    countdownTimer.pause();
+                }
             } else {
                 hideMinimapOverlay();
-                countdownTimer.resume();
+                if (!isPauseVisible) {
+                    countdownTimer.resume();
+                }
             }
         }
 
@@ -339,7 +343,9 @@ public class MainGameScreen extends ScreenAdapter {
         if (minimap != null) {
             minimap.dispose();
             ServiceLocator.getEntityService().unregister(minimap);
-            ServiceLocator.getTimeSource().setPaused(false);
+            if (!isPauseVisible) {
+                ServiceLocator.getTimeSource().setPaused(false);
+            }
             minimap = null;
         }
         isMinimapVisible = false;
