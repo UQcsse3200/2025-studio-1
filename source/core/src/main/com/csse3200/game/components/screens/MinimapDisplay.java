@@ -34,6 +34,10 @@ public class MinimapDisplay extends BaseScreenDisplay {
     private Image minimapImage;
     private boolean zoomedIn = false;
     private ScrollPane scrollPane;
+    private final float origWidth = 800f;
+    private final float origHeight = 800f;
+    private final float zoomedWidth = 1600f;
+    private final float zoomedHeight = 1600f;
 
     /**
      * Constructs a screen display bound to a game instance.
@@ -85,7 +89,7 @@ public class MinimapDisplay extends BaseScreenDisplay {
 
         Table minimapTable = new Table();
         minimapTable.setFillParent(true);
-        minimapTable.add(scrollPane).center().width(800).height(800);
+        minimapTable.add(scrollPane).center().width(origWidth).height(origHeight);
 
         root.addActor(minimapTable);
         logger.debug("Created minimap actor");
@@ -95,32 +99,10 @@ public class MinimapDisplay extends BaseScreenDisplay {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 if (!zoomedIn) {
-                    // Calculate click position as a percentage of the minimap
-                    float percentX = x / minimapImage.getWidth();
-                    float percentY = y / minimapImage.getHeight();
-
-                    // Zoom in the entire minimap image
-                    float zoomedWidth = 1600f;
-                    float zoomedHeight = 1600f;
-                    minimapImage.setSize(zoomedWidth, zoomedHeight);
-                    scrollPane.setScrollingDisabled(false, false);
-                    logger.info("Minimap is now scrollable");
-                    zoomedIn = true;
-
-                    // Scroll so the clicked spot is centered
-                    // Calculate scroll position (scrollX/Y are 0-1)
-                    float scrollX = percentX - (scrollPane.getWidth() / 2f) / zoomedWidth;
-                    float scrollY = percentY - (scrollPane.getHeight() / 2f) / zoomedHeight;
-
-                    // Clamp between 0 and 1
-                    scrollX = Math.max(0f, Math.min(1f, scrollX));
-                    scrollY = Math.max(0f, Math.min(1f, scrollY));
-
-                    // Set scroll position
-                    scrollPane.setScrollPercentX(scrollX);
-                    scrollPane.setScrollPercentY(scrollY);
+                    zoomIn(x, y);
+                } else {
+                    zoomOut();
                 }
-                logger.info("Minimap zoomed in to point {} x, {} y", x, y);
                 return true;
             }
         });
@@ -141,6 +123,43 @@ public class MinimapDisplay extends BaseScreenDisplay {
                 return false;
             }
         });
+    }
+
+    private void zoomIn(float x, float y) {
+        // Calculate click position as a percentage of the minimap
+        float percentX = x / minimapImage.getWidth();
+        float percentY = y / minimapImage.getHeight();
+
+        // Zoom in the entire minimap image
+        minimapImage.setSize(zoomedWidth, zoomedHeight);
+        scrollPane.setScrollingDisabled(false, false);
+        logger.info("Minimap is now scrollable");
+        zoomedIn = true;
+
+        // Scroll so the clicked spot is centered
+        // Calculate scroll position (scrollX/Y are 0-1)
+        float scrollX = percentX - (scrollPane.getWidth() / 2f) / zoomedWidth;
+        float scrollY = percentY - (scrollPane.getHeight() / 2f) / zoomedHeight;
+
+        // Clamp between 0 and 1
+        scrollX = Math.max(0f, Math.min(1f, scrollX));
+        scrollY = Math.max(0f, Math.min(1f, scrollY));
+
+        // Set scroll position
+        scrollPane.setScrollPercentX(scrollX);
+        scrollPane.setScrollPercentY(scrollY);
+
+        logger.info("Minimap zoomed in to point {} x, {} y", x, y);
+    }
+
+    private void zoomOut() {
+        // Zoom out to show the entire minimap image
+        minimapImage.setSize(origWidth, origHeight);
+        scrollPane.setScrollingDisabled(true, true);
+        logger.info("Scrolling has been disabled for minimap");
+        zoomedIn = false;
+
+        logger.info("Minimap zoomed out");
     }
 
     /**
