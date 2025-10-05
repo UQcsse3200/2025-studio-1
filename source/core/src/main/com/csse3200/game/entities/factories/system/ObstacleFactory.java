@@ -725,9 +725,9 @@ public class ObstacleFactory {
      */
     public static Entity createDoorTrigger(float width, float height) {
         Entity trigger = new Entity()
+
                 .addComponent(new PhysicsComponent().setBodyType(BodyType.StaticBody))
-                .addComponent(new ColliderComponent().setLayer(PhysicsLayer.DEFAULT))
-                .addComponent(new SolidColorRenderComponent(Color.BLACK));
+                .addComponent(new ColliderComponent().setLayer(PhysicsLayer.DEFAULT));
         trigger.getComponent(ColliderComponent.class).setSensor(true);
         trigger.setScale(width, height);
         return trigger;

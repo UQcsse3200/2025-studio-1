@@ -80,11 +80,11 @@ public class Reception extends GameArea {
         float leftTopSegHeight = Math.max(0f, b.topY() - (leftDoorY + leftDoorHeight));
         if (leftTopSegHeight > 0f) {
             Entity leftTop = ObstacleFactory.createWall(WALL_WIDTH, leftTopSegHeight);
-            leftTop.setPosition(b.leftX(), leftDoorY + leftDoorHeight);
+            leftTop.setPosition(b.leftX()-1f, leftDoorY + leftDoorHeight+2f);
             spawnEntity(leftTop);
         }
         Entity leftDoor = ObstacleFactory.createDoorTrigger(WALL_WIDTH, leftDoorHeight);
-        leftDoor.setPosition(b.leftX() + 0.001f, leftDoorY);
+        leftDoor.setPosition(b.leftX() + 0.001f, 1f);
         leftDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadForest));
         spawnEntity(leftDoor);
 
@@ -125,8 +125,8 @@ public class Reception extends GameArea {
         float PlatformY2 = 6f;
         float PlatformX3 = 7f;
         float PlatformY3 = 7f;
-        float PlatformX4 = 11f;
-        float PlatformY4 = 9f;
+        float PlatformX4 = 12.5f;
+        float PlatformY4 = 8.5f;
         Entity Platform1 = ObstacleFactory.createplatform2();
         Platform1.setPosition(PlatformX, PlatformY);
         spawnEntity(Platform1);
