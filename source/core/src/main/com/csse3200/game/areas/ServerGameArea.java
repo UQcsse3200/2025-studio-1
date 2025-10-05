@@ -28,7 +28,7 @@ public class ServerGameArea extends GameArea {
     private static final Logger logger = LoggerFactory.getLogger(ServerGameArea.class);
 
     private static final float WALL_WIDTH = 0.1f;
-    private static GridPoint2 PLAYER_SPAWN = new GridPoint2(10, 10);
+    private static GridPoint2 playerSpawn = new GridPoint2(10, 10);
     private static final float ROOM_DIFF_NUMBER = 9;
 
     private Entity player;
@@ -96,7 +96,7 @@ public class ServerGameArea extends GameArea {
      */
     private Entity spawnPlayer() {
         Entity newPlayer = PlayerFactory.createPlayer();
-        spawnEntityAt(newPlayer, PLAYER_SPAWN, true, true);
+        spawnEntityAt(newPlayer, playerSpawn, true, true);
         return newPlayer;
     }
 
@@ -268,7 +268,7 @@ public class ServerGameArea extends GameArea {
         if (newSpawn == null) {
             return;
         }
-        ServerGameArea.PLAYER_SPAWN = newSpawn;
+        ServerGameArea.playerSpawn = newSpawn;
     }
 
     /**

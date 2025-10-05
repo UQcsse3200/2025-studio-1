@@ -15,7 +15,7 @@ import com.csse3200.game.rendering.SolidColorRenderComponent;
  */
 public class MainHall extends GameArea {
     private static final float WALL_WIDTH = 0.1f;
-    private static GridPoint2 PLAYER_SPAWN = new GridPoint2(10, 10);
+    private static GridPoint2 playerSpawn = new GridPoint2(10, 10);
 
     public MainHall(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
         super(terrainFactory, cameraComponent);
@@ -104,7 +104,7 @@ public class MainHall extends GameArea {
 
     private void spawnPlayer() {
         Entity player = PlayerFactory.createPlayer();
-        spawnEntityAt(player, PLAYER_SPAWN, true, true);
+        spawnEntityAt(player, playerSpawn, true, true);
     }
 
     /**
@@ -181,7 +181,7 @@ public class MainHall extends GameArea {
         if (newSpawn == null) {
             return;
         }
-        MainHall.PLAYER_SPAWN = newSpawn;
+        MainHall.playerSpawn = newSpawn;
     }
 
     @Override

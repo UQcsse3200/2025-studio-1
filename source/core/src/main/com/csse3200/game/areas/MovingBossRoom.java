@@ -26,7 +26,7 @@ import org.slf4j.LoggerFactory;
 public class MovingBossRoom extends GameArea {
     private static final Logger logger = LoggerFactory.getLogger(MovingBossRoom.class);
 
-    private static GridPoint2 PLAYER_SPAWN = new GridPoint2(3, 10);
+    private static GridPoint2 playerSpawn = new GridPoint2(3, 10);
 
     private static final float WALL_WIDTH = 0.1f;
 
@@ -87,7 +87,7 @@ public class MovingBossRoom extends GameArea {
 
     private Entity spawnPlayer() {
         Entity newPlayer = PlayerFactory.createPlayer();
-        spawnEntityAt(newPlayer, PLAYER_SPAWN, true, true);
+        spawnEntityAt(newPlayer, playerSpawn, true, true);
         return newPlayer;
     }
 
@@ -144,7 +144,7 @@ public class MovingBossRoom extends GameArea {
         if (newSpawn == null) {
             return;
         }
-        MovingBossRoom.PLAYER_SPAWN = newSpawn;
+        MovingBossRoom.playerSpawn = newSpawn;
     }
 
     public Entity getPlayer() {

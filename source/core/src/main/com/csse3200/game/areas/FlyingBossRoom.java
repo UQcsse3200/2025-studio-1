@@ -29,7 +29,7 @@ import org.slf4j.LoggerFactory;
 public class FlyingBossRoom extends GameArea {
     private static final Logger logger = LoggerFactory.getLogger(FlyingBossRoom.class);
 
-    private static GridPoint2 PLAYER_SPAWN = new GridPoint2(3, 10);
+    private static GridPoint2 playerSpawn = new GridPoint2(3, 10);
 
     private static final float WALL_WIDTH = 0.1f;
 
@@ -102,7 +102,7 @@ public class FlyingBossRoom extends GameArea {
 
     private Entity spawnPlayer() {
         Entity newPlayer = PlayerFactory.createPlayer();
-        spawnEntityAt(newPlayer, PLAYER_SPAWN, true, true);
+        spawnEntityAt(newPlayer, playerSpawn, true, true);
         return newPlayer;
     }
 
@@ -159,7 +159,7 @@ public class FlyingBossRoom extends GameArea {
         if (newSpawn == null) {
             return;
         }
-        FlyingBossRoom.PLAYER_SPAWN = newSpawn;
+        FlyingBossRoom.playerSpawn = newSpawn;
     }
 
     public Entity getPlayer() {
