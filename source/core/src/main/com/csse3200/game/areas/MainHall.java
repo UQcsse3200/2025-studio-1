@@ -6,9 +6,9 @@ import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.entities.Entity;
-import com.csse3200.game.entities.factories.characters.PlayerFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.rendering.SolidColorRenderComponent;
+import com.csse3200.game.services.ServiceLocator;
 
 /**
  * Room 5 with its own background styling.
@@ -103,8 +103,7 @@ public class MainHall extends GameArea {
     }
 
     private void spawnPlayer() {
-        Entity player = PlayerFactory.createPlayer();
-        spawnEntityAt(player, PLAYER_SPAWN, true, true);
+        spawnOrRepositionPlayer(PLAYER_SPAWN);
     }
 
     /**
@@ -167,8 +166,7 @@ public class MainHall extends GameArea {
     }
 
     public Entity getPlayer() {
-        //tempoary placeholder return null to stop errors
-        return null;
+        return ServiceLocator.getPlayer();
     }
 
     @Override
@@ -180,5 +178,7 @@ public class MainHall extends GameArea {
         return (new MainHall(terrainFactory, camera));
     }
 }
+
+
 
 

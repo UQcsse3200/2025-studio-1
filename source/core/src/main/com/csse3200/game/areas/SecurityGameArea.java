@@ -65,9 +65,7 @@ public class SecurityGameArea extends GameArea {
     }
 
     private Entity spawnPlayer() {
-        Entity player = PlayerFactory.createPlayer();
-        spawnEntityAt(player, PLAYER_SPAWN, true, true);
-        return player;
+        return spawnOrRepositionPlayer(PLAYER_SPAWN);
     }
 
     /**
@@ -158,8 +156,7 @@ public class SecurityGameArea extends GameArea {
 
     @Override
     public Entity getPlayer() {
-        // placeholder
-        return null;
+        return ServiceLocator.getPlayer();
     }
 
     public static SecurityGameArea load(TerrainFactory terrainFactory, CameraComponent camera) {

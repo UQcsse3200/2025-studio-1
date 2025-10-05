@@ -531,13 +531,15 @@ public class ForestGameArea extends GameArea {
     }
 
     private Entity spawnPlayer() {
-        Entity newPlayer = PlayerFactory.createPlayer();
-        spawnEntityAt(newPlayer, PLAYER_SPAWN, true, true);
+        Entity player = spawnOrRepositionPlayer(PLAYER_SPAWN);
+        
+        // Only add event listeners if this is a new player
+        if (ServiceLocator.getPlayer() == player) {
+            player.getEvents().addListener("equip", this::equipItem);
+            player.getEvents().addListener("unequip", this::unequipItem);
+        }
 
-        newPlayer.getEvents().addListener("equip", this::equipItem);
-        newPlayer.getEvents().addListener("unequip", this::unequipItem);
-
-        return newPlayer;
+        return player;
     }
 
     private Entity spawnDagger() {
@@ -687,7 +689,7 @@ public class ForestGameArea extends GameArea {
 
 
     public Entity getPlayer() {
-        return player;
+        return ServiceLocator.getPlayer();
     }
 
     @Override
