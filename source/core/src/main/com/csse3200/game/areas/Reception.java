@@ -104,12 +104,10 @@ public class Reception extends GameArea {
     }
 
     private void loadForest() {
-        roomNumber--;
         clearAndLoad(() -> new ForestGameArea(terrainFactory, cameraComponent));
     }
 
     private void loadBackToFloor5() {
-        roomNumber++;
         clearAndLoad(() -> new MainHall(terrainFactory, cameraComponent));
     }
 
