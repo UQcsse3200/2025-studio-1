@@ -47,7 +47,7 @@ public class OfficeGameArea extends GameArea {
 
         addVerticalDoorLeft(b, WALL_WIDTH, this::loadMovingBossRoom);
         // Raise the right door higher than center
-        addSolidWallTop(b, WALL_WIDTH);
+
         addSolidWallBottom(b, WALL_WIDTH);
 
 
