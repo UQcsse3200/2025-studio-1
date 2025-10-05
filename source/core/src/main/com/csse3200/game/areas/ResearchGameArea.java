@@ -53,9 +53,6 @@ public class ResearchGameArea extends GameArea {
         leftDoor.setPosition(b.leftX() + 0.001f, leftDoorY);
         leftDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadElevator));
         spawnEntity(leftDoor);
-
-        addSolidWallRight(b, WALL_WIDTH);
-
         float rightDoorHeight = Math.max(1f, b.viewHeight() * 0.2f);
         float rightDoorY = b.topY() - rightDoorHeight;
         Entity rightDoor = ObstacleFactory.createDoorTrigger(WALL_WIDTH, rightDoorHeight);
