@@ -45,6 +45,7 @@ public class FriendlyNPCFactory {
                 }
                 ))
                 .addComponent(new DialogueDisplay())
+                .addComponent(new NpcHealingComponent(player, 50))
                 .addComponent(new AssistorTaskComponent(player));
         var data = test.getComponent(NpcDialogueDataComponent.class);
         var ui   = test.getComponent(DialogueDisplay.class);
@@ -123,9 +124,20 @@ public class FriendlyNPCFactory {
      *
      * @return A new Entity representing the Nurse NPC with a scaled texture.
      */
-    public static Entity createNurseNpc() {
+    public static Entity createNurseNpc(Entity player) {
         Entity npc = new Entity()
-                .addComponent(new TextureRenderComponent("images/nurse_npc.png"));
+                .addComponent(new TextureRenderComponent("images/nurse_npc.png"))
+                .addComponent(new NpcDialogueDataComponent(
+                        "Nurse", "", new String[]{
+                        "Hello! I'm here to help.",
+                        "Let me check your vitals...",
+                        "You're all patched up now!"
+                }))
+                .addComponent(new DialogueDisplay())
+                .addComponent(new NpcHealingComponent(player, 25))
+                .addComponent(new TipComponent(null, player, 3f))
+                .addComponent(new NpcInterationComponent(player, 3f));
+
         npc.getComponent(TextureRenderComponent.class).scaleEntity();
         return npc;
     }
