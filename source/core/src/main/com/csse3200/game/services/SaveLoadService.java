@@ -52,29 +52,29 @@ public class SaveLoadService {
 //        SaveGame save = new SaveGame();
 //        SaveGame.GameState gameState = new SaveGame.GameState();
 //        gameState.setInventory(ServiceLocator.getGameArea().getPlayer().getComponent(InventoryComponent.class));
-        if (player.getComponent(InventoryComponent.class) != null) {
-                logger.info("Inventory component found: Player found.");
-                CombatStatsComponent stat = player.getComponent(CombatStatsComponent.class);
-                InventoryComponent inv = player.getComponent(InventoryComponent.class);
-                gs.inventory = new ArrayList<>();
-                for (int i = 0; i < inv.getSize(); i++) {
-                    if (inv.get(i).getComponent(ItemComponent.class) != null) {
-                        gs.inventory.add(inv.getTex(i));
-                    }
-                }
-                gs.Health = stat.getHealth();
-                gs.position.set(player.getPosition());
-                gs.ProcessNumber = inv.getProcessor();
-                // future solution
-                gs.RoundNumber = 2;
-            }
+//        if (player.getComponent(InventoryComponent.class) != null) {
+//                logger.info("Inventory component found: Player found.");
+//                CombatStatsComponent stat = player.getComponent(CombatStatsComponent.class);
+//                InventoryComponent inv = player.getComponent(InventoryComponent.class);
+//                gs.inventory = new ArrayList<>();
+//                for (int i = 0; i < inv.getSize(); i++) {
+//                    if (inv.get(i).getComponent(ItemComponent.class) != null) {
+//                        gs.inventory.add(inv.getTex(i));
+//                    }
+//                }
+//                gs.Health = stat.getHealth();
+//                gs.position.set(player.getPosition());
+//                gs.ProcessNumber = inv.getProcessor();
+//                // future solution
+//                gs.RoundNumber = 2;
+//        }
 
         SaveGame.GameState gamestate = new SaveGame.GameState();
         gamestate.setPlayer(player);
         gamestate.setInventory(player.getComponent(InventoryComponent.class));
         // test for writing
         gamestate.getPlayerInventory();
-        gs.inventory = gamestate.loadedInventory;
+        gs.inventory = (gamestate.loadedInventory);
 
         path = "saves" + File.separator + slot + ".json";
 
@@ -109,7 +109,7 @@ public class SaveLoadService {
      */
     public static class PlayerInfo {
         public String areaId;
-        public ArrayList<String> inventory;
+        public ArrayList<Object> inventory;
         public int Health;
         public int ProcessNumber;
         public Vector2 position = new Vector2();

@@ -76,6 +76,7 @@ public class SaveGame {
 
         public void getPlayerInventory() {
             ArrayList inventoryitem = new ArrayList();
+
             Json json = new Json(JsonWriter.OutputType.minimal);
             StringWriter output = new StringWriter();
             JsonWriter writer = new JsonWriter(output);
@@ -99,6 +100,7 @@ public class SaveGame {
                                 inventoryItem.getTexture(),
                                 inventoryItem.getCount(),
                                 weapon.getUpgradeStage());
+                        json.writeValue(itemiser);
                         inventoryitem.add(item.getComponent(MagazineComponent.class).getCurrentAmmo());
                         inventoryitem.add(inventoryItem.getTexture());
 
@@ -113,13 +115,12 @@ public class SaveGame {
                     }
                 }
                 json.writeArrayEnd();
-                loadedInventory.add(itemiser.items());
-                inventoryitem.clear();
+                loadedInventory.add(itemiser);
             }
-            json.writeArrayEnd();
-
-            json.writeObjectEnd();
-
+//            json.writeArrayEnd();
+//
+//            json.writeObjectEnd();
+//
 //            try {
 //                writer.flush();
 //                writer.close();
@@ -127,7 +128,6 @@ public class SaveGame {
 //                logger.error("Error while flushing inventory", e);
 //                e.printStackTrace();
 //            }
-
         }
     }
 
@@ -157,7 +157,5 @@ public class SaveGame {
             items.add(upgradeStage);
             return items;
         }
-
-
     }
 }

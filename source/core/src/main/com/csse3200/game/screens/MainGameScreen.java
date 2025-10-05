@@ -314,8 +314,8 @@ public class MainGameScreen extends ScreenAdapter {
         gameArea.create();
         gameArea.getPlayer().getComponent(InventoryComponent.class).setProcessor(load.ProcessNumber);
         gameArea.getPlayer().getComponent(CombatStatsComponent.class).setHealth(load.Health);
-        FileLoader.readInventory(load.inventory,
-                gameArea.getPlayer().getComponent(InventoryComponent.class));
+//        FileLoader.readInventory(load.inventory,
+//                gameArea.getPlayer().getComponent(InventoryComponent.class));
 
     }
 
