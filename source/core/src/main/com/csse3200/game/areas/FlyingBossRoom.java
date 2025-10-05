@@ -15,9 +15,6 @@ import com.csse3200.game.entities.factories.characters.PlayerFactory;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.components.gamearea.GameAreaDisplay;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
  * This is the room that holds the Flying Boss.
  * The boss is a flying enemy that spawns at the top of the map and
@@ -27,8 +24,6 @@ import org.slf4j.LoggerFactory;
  * at the bottom
  */
 public class FlyingBossRoom extends GameArea {
-    private static final Logger logger = LoggerFactory.getLogger(FlyingBossRoom.class);
-
     private static final GridPoint2 PLAYER_SPAWN = new GridPoint2(3, 10);
 
     private static final float WALL_WIDTH = 0.1f;
@@ -85,8 +80,7 @@ public class FlyingBossRoom extends GameArea {
 
     private void displayUI() {
         Entity ui = new Entity();
-        ui.addComponent(new GameAreaDisplay("Flying Boss Room"))
-                .addComponent(new com.csse3200.game.components.gamearea.FloorLabelDisplay("Flying Boss Room"));
+        ui.addComponent(new GameAreaDisplay("Flying Boss Room"));
         spawnEntity(ui);
     }
 
