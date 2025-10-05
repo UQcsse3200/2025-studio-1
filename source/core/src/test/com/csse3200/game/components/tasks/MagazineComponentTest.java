@@ -2,7 +2,7 @@ package com.csse3200.game.components.tasks;
 
 
 import com.csse3200.game.components.AmmoStatsComponent;
-import com.csse3200.game.components.InventoryComponent;
+import com.csse3200.game.components.player.InventoryComponent;
 import com.csse3200.game.components.MagazineComponent;
 import com.csse3200.game.components.WeaponsStatsComponent;
 import com.csse3200.game.entities.Entity;
@@ -48,7 +48,7 @@ class MagazineComponentTest {
         player = new Entity();
 
         magazine = new MagazineComponent(12);
-        inventory = new InventoryComponent();
+        inventory = new InventoryComponent(10);
         ammo = new AmmoStatsComponent(1000);
 
         player.addComponent(inventory);
