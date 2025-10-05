@@ -82,7 +82,7 @@ public class ProjectileFactoryTest {
         Entity pistol = WeaponsFactory.createWeapon(Weapons.PISTOL);
         when(player.getComponent(InventoryComponent.class).getCurrSlot()).thenReturn(pistol);
         pistolBullet = ProjectileFactory.createPistolBullet(
-                pistol.getComponent(WeaponsStatsComponent.class)
+                pistol.getComponent(WeaponsStatsComponent.class), false
         );
 
     }
@@ -103,7 +103,7 @@ public class ProjectileFactoryTest {
     void rocketBulletIsCorrect() {
         WeaponsStatsComponent wsc = mock(WeaponsStatsComponent.class);
         when(wsc.getRocket()).thenReturn(true);
-        Entity projectile = ProjectileFactory.createPistolBullet(wsc);
+        Entity projectile = ProjectileFactory.createPistolBullet(wsc, false);
         assertEquals(projectile.getComponent(TextureRenderWithRotationComponent.class).getTexturePath(),
                 "images/rocket.png");
     }
@@ -115,7 +115,7 @@ public class ProjectileFactoryTest {
         Entity waterGun = new Entity().addComponent(new BulletEnhancerComponent());
         when(ServiceLocator.getPlayer().getComponent(InventoryComponent.class).getCurrSlot()).thenReturn(waterGun);
 
-        Entity projectile = ProjectileFactory.createPistolBullet(wsc);
+        Entity projectile = ProjectileFactory.createPistolBullet(wsc, false);
         assertEquals(projectile.getComponent(TextureRenderWithRotationComponent.class).getTexturePath(),
                 "images/waterBullet.png");
     }

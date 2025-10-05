@@ -40,8 +40,6 @@ import com.csse3200.game.services.ServiceLocator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.security.SecureRandom;
-
 /**
  * A playable “Forest” style room. This class:
  * - Loads assets for this scene
@@ -96,6 +94,9 @@ public class ForestGameArea extends GameArea {
             "images/pistol.png",
             "images/rifle.png",
             "images/dagger.png",
+            "images/rapidfirepowerup.png",
+            "images/aimbot_powerup.png",
+            "images/doubleprocessorspowerup.png",
             "images/laser_shot.png",
             "images/Spawn.png",
             "images/LobbyWIP.png",
@@ -260,6 +261,14 @@ public class ForestGameArea extends GameArea {
     private static final String[] forestMusic = {BACKGROUND_MUSIC};
 
     private Entity player;
+    private Entity dagger;
+    private Entity lightsaber;
+    private Entity bullet;
+    private Entity pistol;
+    private Entity rifle;
+    private Entity rapidFirePowerup;
+    private Entity unlimitedAmmoPowerup;
+
 
     /**
      * Initialise this ForestGameArea to use the provided TerrainFactory and camera helper.
@@ -291,6 +300,15 @@ public class ForestGameArea extends GameArea {
         spawnTerrain();
         player = spawnPlayer();
         ServiceLocator.registerPlayer(player);
+
+//        spawnRapidFirePowerup();
+        spawnAimbotPowerup();
+//        spawnUnlimitedAmmoPowerup();
+        spawnDoubleProcessorsPowerup();
+
+        spawnBoss2();
+
+
 
         spawnComputerBench();
         spawnHealthBench();
@@ -546,7 +564,8 @@ public class ForestGameArea extends GameArea {
         return newDagger;
     }
 
-    /** FIXME Layer is behind player, does that matter???
+    /**
+     * FIXME Layer is behind player, does that matter???
      * FIXME Also need to fix positioning so that it actually looks like the player is holding the weapon
      * Sets the equipped item in the PlayerEquipComponent to be the given item
      *
@@ -601,10 +620,24 @@ public class ForestGameArea extends GameArea {
         return newRifle;
     }
 
-    private Entity spawnRapidFirePowerup() {
+    private void spawnRapidFirePowerup() {
         Entity newRapidFirePowerup = PowerupsFactory.createRapidFire();
-        spawnEntityAt(newRapidFirePowerup, new GridPoint2(2, 40), true, true);
-        return newRapidFirePowerup;
+        spawnEntityAt(newRapidFirePowerup, new GridPoint2(2, 30), true, true);
+    }
+
+    private void spawnUnlimitedAmmoPowerup() {
+        Entity newUnlimitedAmmoPowerup = PowerupsFactory.createUnlimitedAmmo();
+        spawnEntityAt(newUnlimitedAmmoPowerup, new GridPoint2(2, 30), true, true);
+    }
+
+    private void spawnAimbotPowerup() {
+        Entity newAimbot = PowerupsFactory.createAimBot();
+        spawnEntityAt(newAimbot, new GridPoint2(2, 30), true, true);
+    }
+
+    private void spawnDoubleProcessorsPowerup() {
+        Entity newUnlimitedAmmoPowerup = PowerupsFactory.createDoubleProcessors();
+        spawnEntityAt(newUnlimitedAmmoPowerup, new GridPoint2(2, 30), true, true);
     }
 
     private void spawnBoss2() {
