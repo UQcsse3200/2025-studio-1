@@ -26,7 +26,7 @@ import org.slf4j.LoggerFactory;
 public class MovingBossRoom extends GameArea {
     private static final Logger logger = LoggerFactory.getLogger(MovingBossRoom.class);
 
-    private static final GridPoint2 PLAYER_SPAWN = new GridPoint2(3, 10);
+    private static GridPoint2 playerSpawn = new GridPoint2(3, 10);
 
     private static final float WALL_WIDTH = 0.1f;
 
@@ -70,12 +70,12 @@ public class MovingBossRoom extends GameArea {
         spawnBigWall();
 
         spawnBoss();
-        spawnObjectDoors(new GridPoint2(0, 6), new GridPoint2(28, 6));
+        spawnObjectDoors(new GridPoint2(0, 7), new GridPoint2(28, 7));
 
         ItemSpawner itemSpawner = new ItemSpawner(this);
         itemSpawner.spawnItems(ItemSpawnConfig.bossmap());
 
-        spawnFloor();
+        spawnVisibleFloor();
     }
 
     private void displayUI() {
@@ -87,7 +87,7 @@ public class MovingBossRoom extends GameArea {
 
     private Entity spawnPlayer() {
         Entity newPlayer = PlayerFactory.createPlayer();
-        spawnEntityAt(newPlayer, PLAYER_SPAWN, true, true);
+        spawnEntityAt(newPlayer, playerSpawn, true, true);
         return newPlayer;
     }
 
@@ -134,15 +134,30 @@ public class MovingBossRoom extends GameArea {
         spawnEntity(rightDoor);
     }
 
+    /**
+     * Setter method for the player spawn point
+     * should be used when the player is traversing through the rooms
+     * 
+     * @param newSpawn the new spawn point
+     */
+    public static void setRoomSpawn(GridPoint2 newSpawn) {
+        if (newSpawn == null) {
+            return;
+        }
+        MovingBossRoom.playerSpawn = newSpawn;
+    }
+
     public Entity getPlayer() {
         return player;
     }
 
     public void loadSecurity() {
+        SecurityGameArea.setRoomSpawn(new GridPoint2(24, 22));
         clearAndLoad(() -> new SecurityGameArea(terrainFactory, cameraComponent));
     }
 
     public void loadOffice() {
+        OfficeGameArea.setRoomSpawn(new GridPoint2(2, 14));
         clearAndLoad(() -> new OfficeGameArea(terrainFactory, cameraComponent));
     }
 }

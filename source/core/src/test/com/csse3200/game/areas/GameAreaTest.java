@@ -1,5 +1,7 @@
 package com.csse3200.game.areas;
 
+import com.csse3200.game.areas.terrain.TerrainFactory;
+import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
 import com.csse3200.game.extensions.GameExtension;
@@ -9,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.util.ArrayList;
+import java.lang.reflect.Field;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -36,6 +39,30 @@ class GameAreaTest {
 
         gameArea.dispose();
         verify(mockEntity).dispose();
+    }
 
+    @Test
+    void settingInitialSpawns() throws Exception {
+        ServiceLocator.registerEntityService(new EntityService());
+        TerrainFactory terrainFactory = mock(TerrainFactory.class);
+        CameraComponent cameraComponent = mock(CameraComponent.class);
+
+        Field f1 = ForestGameArea.class.getDeclaredField("playerSpawn");
+        Field f2 = ResearchGameArea.class.getDeclaredField("playerSpawn");
+        Field f3 = ShippingGameArea.class.getDeclaredField("playerSpawn");
+        Field f4 = SecurityGameArea.class.getDeclaredField("playerSpawn");
+        Field f5 = ServerGameArea.class.getDeclaredField("playerSpawn");
+
+        f1.setAccessible(true);
+        f2.setAccessible(true);
+        f3.setAccessible(true);
+        f4.setAccessible(true);
+        f5.setAccessible(true);
+
+        assert (f1.get(null) != null);
+        assert (f2.get(null) != null);
+        assert (f3.get(null) != null);
+        assert (f4.get(null) != null);
+        assert (f5.get(null) != null);
     }
 }
