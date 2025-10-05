@@ -34,6 +34,8 @@ public class LeaderBoardManager {
     public void addRound(int currency, float time){
         logger.info("LeaderBoardManager.addRound currency={} time={}", currency, time);
         leaderBoard.add(new RoundData(currency, time));
+        //sort leaderboard from highest to lowest score
+        leaderBoard.sort((round1,round2)-> Integer.compare(round2.getScore(), round1.getScore()));
     }
 
     /**
@@ -50,6 +52,8 @@ public class LeaderBoardManager {
      */
     public void setLeaderboard(List<RoundData> loadedLeaderboard) {
         leaderBoard = loadedLeaderboard != null ? loadedLeaderboard : new ArrayList<>();
+        // Ensure sorting after loading
+        leaderBoard.sort((round1, round2) -> Integer.compare(round2.getScore(), round1.getScore()));
     }
 
     /**

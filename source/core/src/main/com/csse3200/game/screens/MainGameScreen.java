@@ -292,6 +292,12 @@ public class MainGameScreen extends ScreenAdapter {
         ServiceLocator.getEntityService().register(ui);
     }
 
+    /**
+     * = Records player's current round performance and updates the leaderboard.
+     * = This method is called automatically when a round ends.
+     * = The leaderboard only persists for the duration of the current game session
+     * and is cleared when the session ends.
+     */
     private void recordRoundForLeaderboard() {
         if (session == null) return;
 
