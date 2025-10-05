@@ -3,10 +3,12 @@ package com.csse3200.game.components.minigames.robotFighting;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
@@ -34,12 +36,17 @@ public class RobotFightingDisplay extends UIComponent {
     private static final Color GOLD = Color.valueOf("FFD54F");
 
     // --- UI Elements ---
-    private Table root, welcomeRoot, betRoot;
+    private Table root, welcomeRoot, betRoot, footer;
     private Image frame, dimmer, background;
     private Texture pixelTex;
-    private Label currencyLabel, narratorLabel;
+    private Label currencyLabel, narratorLabel, dialogueLabel;
     private TextField betInput;
     private ItemScreenDisplay itemPopup;
+    private AnimatedImage competitor1;
+    private AnimatedImage competitor2;
+
+    // --- Game Elements ---
+    private Robot selectedFighter;
 
     // --- References ---
     private final GameArea game = ServiceLocator.getGameArea();
@@ -141,17 +148,14 @@ public class RobotFightingDisplay extends UIComponent {
         grid.defaults().pad(12).size(CELL_W, CELL_H).uniform(true);
         root.add(grid).row();
 
-        narratorLabel = makeLabel("", Color.BLUE, 1.6f);
+        narratorLabel = makeLabel("", Color.CYAN, 1.6f);
         narratorLabel.setAlignment(Align.center);
-        TextureRegionDrawable bg = new  TextureRegionDrawable(pixelTex);
 
-        Stack footer = new Stack();
-        Table centerRow = new Table();
-        centerRow.setBackground(bg);
-        centerRow.center();
-        centerRow.add(narratorLabel).expandX().center();
-        footer.add(centerRow);
-        footer.setColor(Color.valueOf("1A237E"));
+        footer = new Table();
+        TextureRegionDrawable bg = new TextureRegionDrawable(makeSolidTexture(Color.BLACK));
+        footer.setBackground(bg);
+        footer.center();
+        footer.add(narratorLabel).expandX().center();
 
         root.add().expandY().row();
         root.add(footer).growX().padTop(8f).padBottom(10f).bottom().row();
@@ -178,6 +182,10 @@ public class RobotFightingDisplay extends UIComponent {
         narrateMain();
     }
 
+    private void onFighterSelect() {
+
+    }
+
     private void adjustBet(int delta) {
         int currentBet = parseIntOrZero(betInput.getText());
         int newBet = Math.max(0, currentBet + delta);
@@ -186,15 +194,46 @@ public class RobotFightingDisplay extends UIComponent {
         int balance = getBalance();
         currencyLabel.setText("Balance Remaining: $" + Math.max(0, balance - newBet));
     }
-
     private void narrateMain() {
-        showTypewriterText(narratorLabel, "Welcome to Clanker Royale!", 0.05f);
-        Timer.schedule(new Timer.Task() {
-            @Override
-            public void run() {
-                showTypewriterText(narratorLabel, "Please pick your Clanker.", 0.05f);
-            }
-        }, 2f);
+        narratorLabel.addAction(Actions.sequence(
+                Actions.run(() -> showTypewriterText(narratorLabel, "Welcome to Clanker Royale!", 0.05f)),
+                Actions.delay(2f),
+                Actions.run(() -> showTypewriterText(narratorLabel, "Please pick your Clanker.", 0.05f)),
+                Actions.delay(1f),
+                Actions.run(this::spawnFighters)
+        ));
+    }
+
+    private void spawnFighters() {
+        float arenaX = background.getX();
+        float arenaY = background.getY();
+        float arenaWidth = background.getWidth();
+        float arenaHeight = background.getHeight();
+
+        // Vertically center the fighters relative to the background
+        float fighterHeight = 300f;
+        float arenaCenterY = arenaY + (arenaHeight - fighterHeight) / 2f;
+
+        competitor1 = createFighter(
+                Robot.DEEP_SPIN,
+                "float",
+                arenaX + arenaWidth - 350f,  // near the right edge
+                arenaCenterY,
+                300,
+                300
+        );
+
+        competitor2 = createFighter(
+                Robot.GHOST_GPT,
+                "float",
+                arenaX + 50f,                // near the left edge
+                arenaCenterY,
+                300,
+                300
+        );
+
+        stage.addActor(competitor1);
+        stage.addActor(competitor2);
     }
 
     // ------------------------------------------------------------------------
@@ -274,12 +313,64 @@ public class RobotFightingDisplay extends UIComponent {
         return t;
     }
 
+    /**
+     * Creates an AnimatedImage fighter from a texture atlas and animation name.
+     *
+     * @param robot         enum of robot type
+     * @param animName      name of the animation region inside the atlas
+     * @param x             X position on stage
+     * @param y             Y position on stage
+     * @param width         desired display width
+     * @param height        desired display height
+     * @return an AnimatedImage ready to be added to the stage
+     */
+    private AnimatedImage createFighter(Robot robot, String animName,
+                                        float x, float y, float width, float height) {
+        String atlasPath = robot.getAtlas();
+        // Load atlas from the resource service
+        TextureAtlas atlas = ServiceLocator.getResourceService().getAsset(atlasPath, TextureAtlas.class);
+        if (atlas == null) {
+            throw new IllegalStateException("Atlas not loaded: " + atlasPath);
+        }
+
+        // Build looping animation
+        Animation<TextureRegion> animation =
+                new Animation<>(0.1f, atlas.findRegions(animName), Animation.PlayMode.LOOP);
+
+        // Create the animated actor
+        AnimatedImage fighter = new AnimatedImage(animation);
+        fighter.setSize(width, height);
+        fighter.setPosition(x, y);
+
+        // Add a simple fade-in effect
+        fighter.addAction(Actions.sequence(
+                Actions.alpha(0f),
+                Actions.fadeIn(1f)
+        ));
+
+        fighter.addListener(new ChangeListener() {
+            @Override public void changed(ChangeEvent event, Actor actor) {
+                switch (robot) {
+                    case DEEP_SPIN:
+                        selectedFighter = Robot.DEEP_SPIN;
+                        break;
+                    case GHOST_GPT:
+                        selectedFighter = Robot.GHOST_GPT;
+                        break;
+                }
+                onFighterSelect();
+            }
+        });
+
+        return fighter;
+    }
+
+
     // ------------------------------------------------------------------------
     // Lifecycle
     // ------------------------------------------------------------------------
 
     public void show() {
-        ServiceLocator.getTimeSource().setPaused(true);
         updateBalanceLabel(currencyLabel);
         betInput.setText("0");
 
@@ -288,8 +379,7 @@ public class RobotFightingDisplay extends UIComponent {
     }
 
     public void hide() {
-        ServiceLocator.getTimeSource().setPaused(false);
-        for (Actor actor : new Actor[]{frame, background, dimmer, root, welcomeRoot, betRoot})
+        for (Actor actor : new Actor[]{frame, background, dimmer, root, welcomeRoot, betRoot, competitor1, competitor2})
             setScreenVisible(actor, false);
     }
 
