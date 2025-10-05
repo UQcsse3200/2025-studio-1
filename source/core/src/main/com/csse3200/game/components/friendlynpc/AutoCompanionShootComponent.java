@@ -25,7 +25,7 @@ public class AutoCompanionShootComponent extends Component {
     private static final float range         = 7.0f;  // seek radius (m)
     private static final float scan_interval = 0.12f; // scan period (s)
     private static final float speed         = 5f;    // bullet speed
-
+    private boolean attack = true;
     private float cd = 0f;
     private float scanTimer = 0f;
     private Entity boundPlayer;
@@ -38,7 +38,7 @@ public class AutoCompanionShootComponent extends Component {
     @Override
     public void update() {
         if (boundPlayer == null) return;
-
+        if (!attack) return;
         float dt = ServiceLocator.getTimeSource().getDeltaTime();
         cd -= dt;
         scanTimer -= dt;
@@ -88,5 +88,11 @@ public class AutoCompanionShootComponent extends Component {
             if (d2 <= r2 && d2 < best) { best = d2; ans = e; }
         }
         return ans;
+    }
+    public boolean isAttack() {
+        return attack;
+    }
+    public void setAttack(boolean attack) {
+        this.attack = attack;
     }
 }

@@ -13,7 +13,7 @@ import com.csse3200.game.services.ServiceLocator;
 public class CompanionFollowShootComponent extends Component {
     private float cooldown = 0.25f;
     private float cd = 0f;
-
+    private boolean attack = false;
     private Entity boundPlayer;
 
     @Override
@@ -42,7 +42,7 @@ public class CompanionFollowShootComponent extends Component {
 
     private void onShootOrder(Vector2 world, Vector2 playerDir) {
         if (cd > 0f) return;
-
+        if (!attack) return;
         PlayerActions pa = (boundPlayer != null) ? boundPlayer.getComponent(PlayerActions.class) : null;
         WeaponsStatsComponent stats = (pa != null) ? pa.getCurrentWeaponStats() : null;
         if (stats == null) return;
@@ -69,7 +69,12 @@ public class CompanionFollowShootComponent extends Component {
         cd = cooldown;
         entity.getEvents().trigger("fired");
     }
-
+    public boolean isAttack() {
+        return attack;
+    }
+    public void setAttack(boolean attack) {
+        this.attack = attack;
+    }
     public CompanionFollowShootComponent cooldown(float seconds) {
         this.cooldown = seconds;
         return this;
