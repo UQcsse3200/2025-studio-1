@@ -96,8 +96,6 @@ public class PauseMenuDisplay extends BaseScreenDisplay {
             backMainMenu();
         })).row();
 
-        panel.add(button("Leaderboard", 1.8f, () -> game.setScreen(GdxGame.ScreenType.LEADERBOARD))).row();
-
         panel.add(button("Save", 1.8f, () -> {
             ServiceLocator.getButtonSoundService().playClick();
             entity.getEvents().trigger("save");
