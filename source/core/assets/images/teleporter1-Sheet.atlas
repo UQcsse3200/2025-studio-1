@@ -1,0 +1,125 @@
+teleporter1-Sheet.png
+size: 576, 576
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+teleporter1
+  rotate: false
+  xy: 9, 45
+  size: 125, 102
+  orig: 125, 102
+  offset: 0, 0
+  index: 0
+teleporter1
+  rotate: false
+  xy: 153, 45
+  size: 125, 102
+  orig: 125, 102
+  offset: 0, 0
+  index: 1
+teleporter1
+  rotate: false
+  xy: 297, 45
+  size: 125, 102
+  orig: 125, 102
+  offset: 0, 0
+  index: 2
+teleporter1
+  rotate: false
+  xy: 441, 45
+  size: 125, 102
+  orig: 125, 102
+  offset: 0, 0
+  index: 3
+teleporter1
+  rotate: false
+  xy: 9, 189
+  size: 125, 102
+  orig: 125, 102
+  offset: 0, 0
+  index: 4
+teleporter1
+  rotate: false
+  xy: 153, 189
+  size: 125, 102
+  orig: 125, 102
+  offset: 0, 0
+  index: 5
+teleporter1
+  rotate: false
+  xy: 297, 189
+  size: 125, 102
+  orig: 125, 102
+  offset: 0, 0
+  index: 6
+teleporter1
+  rotate: false
+  xy: 441, 189
+  size: 125, 102
+  orig: 125, 102
+  offset: 0, 0
+  index: 7
+teleporter1
+  rotate: false
+  xy: 9, 333
+  size: 125, 102
+  orig: 125, 102
+  offset: 0, 0
+  index: 8
+teleporter1
+  rotate: false
+  xy: 153, 333
+  size: 125, 102
+  orig: 125, 102
+  offset: 0, 0
+  index: 9
+teleporter1
+  rotate: false
+  xy: 297, 333
+  size: 125, 102
+  orig: 125, 102
+  offset: 0, 0
+  index: 10
+teleporter1
+  rotate: false
+  xy: 441, 333
+  size: 125, 102
+  orig: 125, 102
+  offset: 0, 0
+  index: 11
+teleporter1
+  rotate: false
+  xy: 9, 477
+  size: 125, 102
+  orig: 125, 102
+  offset: 0, 0
+  index: 12
+teleporter1
+  rotate: false
+  xy: 153, 477
+  size: 125, 102
+  orig: 125, 102
+  offset: 0, 0
+  index: 13
+teleporter1
+  rotate: false
+  xy: 297, 477
+  size: 125, 102
+  orig: 125, 102
+  offset: 0, 0
+  index: 14
+teleporter1
+  rotate: false
+  xy: 441, 477
+  size: 125, 102
+  orig: 125, 102
+  offset: 0, 0
+  index: 15
+ default
+  rotate: false
+  xy: 9, 45
+  size: 125, 102
+  orig: 125, 102
+  offset: 0, 0
+  index: 0
+
