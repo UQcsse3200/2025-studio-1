@@ -54,11 +54,17 @@ class LeaderBoardManagerTest {
 
         assertSame(external, manager.getLeaderBoard(), "Manager should use the provided list reference");
 
-        assertEquals(2, manager.getLeaderBoard().size());
-        assertEquals(5, manager.getLeaderBoard().get(0).getCurrency());
-        assertEquals(3.0f, manager.getLeaderBoard().get(0).getTime(), 1e-6);
-        assertEquals(7, manager.getLeaderBoard().get(1).getCurrency());
-        assertEquals(4.5f, manager.getLeaderBoard().get(1).getTime(), 1e-6);
+        // Assert: leaderboard is sorted by score (highest first)
+        List<RoundData> lb = manager.getLeaderBoard();
+        assertEquals(2, lb.size());
+
+        // After sorting, the round with score 11 comes first
+        assertEquals(7, lb.get(0).getCurrency());
+        assertEquals(4.5f, lb.get(0).getTime(), 1e-6);
+
+        // Then the round with score 8
+        assertEquals(5, lb.get(1).getCurrency());
+        assertEquals(3.0f, lb.get(1).getTime(), 1e-6);
     }
 
     @Test
