@@ -67,7 +67,6 @@ public class TeleporterMenuUI extends UIComponent {
     public void refresh() {
         listTable.clearChildren();
         DiscoveryService ds = ServiceLocator.getDiscoveryService();
-        GameArea current = ServiceLocator.getGameArea();
         if (ds == null) return;
         Set<String> discovered = ds.getDiscovered();
 
@@ -85,10 +84,9 @@ public class TeleporterMenuUI extends UIComponent {
             btn.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
-                    if (current != null) {
-                        boolean ok = current.transitionToArea(display);
-                        Gdx.app.log("TeleporterMenu", ok ? "Travelling to " + display : "Failed to travel to " + display);
-                        if (ok) setVisible(false);
+                    TeleporterComponent teleporter = entity.getComponent(TeleporterComponent.class);
+                    if (teleporter != null) {
+                        teleporter.startTeleport(display);
                     }
                 }
             });
