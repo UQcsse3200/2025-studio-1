@@ -37,10 +37,10 @@ public class SaveLoadService {
         if (ServiceLocator.getGameArea() != null) {
             gs.areaId =
                     ServiceLocator.getGameArea().toString();
-            player = gameArea.getPlayer();
+            player = ServiceLocator.getPlayer();
         } else {
             gs.areaId = gameArea.toString();
-            logger.error("failed to load Game area creating new instance");
+            logger.error("failed to save Game area creating new instance");
             // if can't find through service locator will attempt hard check
             for (Entity entity : gameArea.getEntities()) {
                 if (entity.getComponent(InventoryComponent.class) != null) {
@@ -69,9 +69,17 @@ public class SaveLoadService {
                 gs.RoundNumber = 2;
             }
 
+        SaveGame.GameState gamestate = new SaveGame.GameState();
+        gamestate.setPlayer(player);
+        gamestate.setInventory(player.getComponent(InventoryComponent.class));
+        // test for writing
+        gamestate.getPlayerInventory();
+        gs.inventory = gamestate.loadedInventory;
+
         path = "saves" + File.separator + slot + ".json";
-//        save.saveGame(gameState, path );
+
         FileLoader.writeClass(gs, path, FileLoader.Location.LOCAL);
+//        FileLoader.writeClass(gamestate.loadedInventory, path, FileLoader.Location.LOCAL);
         return true;
     }
 
@@ -107,4 +115,8 @@ public class SaveLoadService {
         public Vector2 position = new Vector2();
         public int RoundNumber;
     }
+//
+//    public static class inventoryinfo {
+//        public ArrayList ll;
+//    }
 }

@@ -3,6 +3,8 @@ package com.csse3200.game.entities;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.IntMap;
+import com.badlogic.gdx.utils.Json;
+import com.badlogic.gdx.utils.JsonValue;
 import com.csse3200.game.components.Component;
 import com.csse3200.game.components.ComponentType;
 import com.csse3200.game.events.EventHandler;
@@ -26,7 +28,9 @@ import java.util.Comparator;
  * ServiceLocator.getEntityService().register(player);
  * </pre>
  */
-public class Entity {
+public class Entity
+//        implements Json.Serializable -- placeholder for loading may not be needed
+{
     private static final Logger logger = LoggerFactory.getLogger(Entity.class);
     private static int nextId = 0;
     private static final String EVT_NAME_POS = "setPosition";
@@ -323,4 +327,18 @@ public class Entity {
     public String toString() {
         return String.format("Entity{id=%d}", id);
     }
+
+
+//    /**
+//     * overide to prevent a recursion issue to settle errors
+//     * @param json
+//     */
+//    @Override
+//    public void write(Json json) {
+//    }
+//
+//    @Override
+//    public void read(Json json, JsonValue jsonValue) {
+//
+//    }
 }
