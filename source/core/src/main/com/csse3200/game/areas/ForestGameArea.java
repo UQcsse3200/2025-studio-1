@@ -136,6 +136,7 @@ public class ForestGameArea extends GameArea {
             "images/NpcDialogue.png",
             "images/nurse_npc.png",
             "images/partner.png",
+            "images/remote.png",
             "images/laserbullet.png"
     };
 
@@ -314,7 +315,6 @@ public class ForestGameArea extends GameArea {
         ItemSpawner itemSpawner = new ItemSpawner(this);
         itemSpawner.spawnItems(ItemSpawnConfig.forestmap());
         spawnnpctest();
-        spawnPartnerNearPlayer();
         // Place a keycard on the floor so the player can unlock the door
         float keycardX = 3f;
         float keycardY = 7f;

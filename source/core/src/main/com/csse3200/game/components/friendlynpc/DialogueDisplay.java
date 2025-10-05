@@ -251,12 +251,14 @@ public class DialogueDisplay extends Component {
             if (dialogueTable != null && dialogueTable.isVisible()) {
                 if (lines.length == 0) {
                     hide();
+                    entity.getEvents().trigger("npcDialogueEnd");
                 } else {
                     if (index + 1 < lines.length) {
                         index = index + 1;
                         setLine(index);
                     } else {
                         hide();
+                        entity.getEvents().trigger("npcDialogueEnd");
                     }
                 }
             }

@@ -44,7 +44,8 @@ public class FriendlyNPCFactory {
                         "At the end, this sentence will automatically close."
                 }
                 ))
-                .addComponent(new DialogueDisplay());
+                .addComponent(new DialogueDisplay())
+                .addComponent(new AssistorTaskComponent(player));
         var data = test.getComponent(NpcDialogueDataComponent.class);
         var ui   = test.getComponent(DialogueDisplay.class);
         test.getComponent(TextureRenderComponent.class).scaleEntity();
@@ -133,7 +134,9 @@ public class FriendlyNPCFactory {
         Entity partner = new Entity()
                 .addComponent(new TextureRenderComponent("images/partner.png"))
                 .addComponent(new PartnerFollowComponent(player))
-                .addComponent(new AutoCompanionShootComponent());
+                .addComponent(new CompanionFollowShootComponent())
+                .addComponent(new AutoCompanionShootComponent())
+                .addComponent(new RemoteOpenComponent());
 
         partner.getComponent(TextureRenderComponent.class).scaleEntity();
         partner.setScale(0.7f, 0.7f);

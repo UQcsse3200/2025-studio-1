@@ -17,7 +17,7 @@ public class PartnerFollowComponent extends Component {
     private static final float TELEPORT_R  = 5.0f;
     private static final float SPEED       = 8.0f;
     private static final Vector2 TELEPORT_OFFSET = new Vector2(0.8f, 0f);
-
+    private boolean move = true;
     public PartnerFollowComponent(Entity player) {
         this.player = player;
     }
@@ -25,7 +25,7 @@ public class PartnerFollowComponent extends Component {
     @Override
     public void update() {
         if (player == null) return;
-
+        if (!move) return;
         float dt = 0.016f;
         try {
             dt = ServiceLocator.getTimeSource().getDeltaTime();
@@ -53,5 +53,11 @@ public class PartnerFollowComponent extends Component {
             toPlayer.nor().scl(SPEED * dt);
             entity.setPosition(myPos.x + toPlayer.x, myPos.y + toPlayer.y);
         }
+    }
+    public void setMove(boolean move) {
+        this.move = move;
+    }
+    public boolean isMove() {
+        return move;
     }
 }
