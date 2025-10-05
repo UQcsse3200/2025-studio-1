@@ -4,10 +4,13 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.csse3200.game.components.BreakablePlatformComponent;
+import com.csse3200.game.components.TouchAttackComponent;
+import com.csse3200.game.components.WeaponsStatsComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.physics.PhysicsLayer;
 import com.csse3200.game.physics.PhysicsUtils;
 import com.csse3200.game.physics.components.ColliderComponent;
+import com.csse3200.game.physics.components.HitboxComponent;
 import com.csse3200.game.physics.components.PhysicsComponent;
 import com.csse3200.game.rendering.SolidColorRenderComponent;
 import com.csse3200.game.rendering.TextureRenderComponent;
@@ -108,6 +111,25 @@ public class ObstacleFactory {
         longFloor.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
         longFloor.getComponent(TextureRenderComponent.class).scaleEntity();
         longFloor.scaleHeight(0.6f);
+        PhysicsUtils.setScaledCollider(longFloor, 1f, 1f);
+        return longFloor;
+    }
+
+    /**
+     * Create visible floor
+     * 
+     * @return a visible static floor Entity
+     */
+    public static Entity createVisibleLongFloor() {
+        Entity longFloor =
+                new Entity()
+                        .addComponent(new TextureRenderComponent("foreg_sprites/general/LongFloor.png"))
+                        .addComponent(new PhysicsComponent())
+                        .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
+
+        longFloor.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
+        longFloor.getComponent(TextureRenderComponent.class).scaleEntity();
+        longFloor.scaleHeight(2f);
         PhysicsUtils.setScaledCollider(longFloor, 1f, 1f);
         return longFloor;
     }
@@ -692,6 +714,27 @@ public class ObstacleFactory {
         serverRack.scaleHeight(1f);
         PhysicsUtils.setScaledCollider(serverRack, 1f, 1f);
         return serverRack;
+    }
+
+    /**
+     * Spikes. Takes health from player upon contact
+     * 
+     * @return Entity spike entity
+     */
+    public static Entity createSpikes() {
+        Entity spikes = new Entity()
+                .addComponent(new TextureRenderComponent("foreg_sprites/extras/Spikes.png"))
+                .addComponent(new PhysicsComponent())
+                .addComponent(new ColliderComponent())
+                .addComponent(new HitboxComponent().setLayer(PhysicsLayer.OBSTACLE))
+                .addComponent(new TouchAttackComponent(PhysicsLayer.PLAYER, 25f))
+                .addComponent(new WeaponsStatsComponent(30));
+
+        spikes.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
+        spikes.getComponent(TextureRenderComponent.class).scaleEntity();
+        spikes.scaleHeight(1f);
+        PhysicsUtils.setScaledCollider(spikes, 1f, 1f);
+        return spikes;
     }
 
     /**
