@@ -31,7 +31,7 @@ public class ItemSpawnConfig {
                 new ItemSpawner.ItemSpawnInfo(new GridPoint2(5, 15), 1)
         ));
         config.put(Weapons.PISTOL.name(), Arrays.asList(
-                new ItemSpawner.ItemSpawnInfo(new GridPoint2(11, 7), 1),
+                new ItemSpawner.ItemSpawnInfo(new GridPoint2(2, 8), 1),
                 new ItemSpawner.ItemSpawnInfo(new GridPoint2(11, 12), 1)
         ));
         config.put(Weapons.RIFLE.name(), List.of(
@@ -43,7 +43,7 @@ public class ItemSpawnConfig {
         config.put(Weapons.LAUNCHER.name(), List.of(
                 new ItemSpawner.ItemSpawnInfo(new GridPoint2(14, 14), 1)
         ));
-        
+
         return config;
     }
 

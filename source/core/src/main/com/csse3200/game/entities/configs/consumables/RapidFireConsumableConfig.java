@@ -9,7 +9,7 @@ public class RapidFireConsumableConfig extends ConsumableConfig {
     public RapidFireConsumableConfig() {
         this.effects = new ArrayList<>();
         this.effects.add(new RapidFireEffect(2f));
-        this.texturePath = "images/pistol.png";
+        this.texturePath = "images/rapidfirepowerup.png";
         this.isProjectile = false;
     }
 }
