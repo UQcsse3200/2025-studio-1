@@ -164,14 +164,17 @@ public class ForestGameArea extends GameArea {
             "foreg_sprites/general/ThinFloor.png",
             "foreg_sprites/general/ThinFloor2.png",
             "foreg_sprites/general/ThinFloor3.png",
-            "foreg_sprites/general/Test.png"
+            "foreg_sprites/general/Test.png",
+            "foreg_sprites/furniture/LabPlant1.png",
+            "foreg_sprites/furniture/LabPlant2.png",
+            "foreg_sprites/furniture/PurpleWindow.png",
     };
     private static final String[] researchTextures = {
             "images/ResearchBackground.png",
             "foreg_sprites/Research/Laboratory.png",
             "foreg_sprites/Research/Microscope.png",
             "foreg_sprites/Research/ResearchDesk.png",
-            "foreg_sprites/Research/ResearchPod.png"
+            "foreg_sprites/Research/ResearchPod.png",
     };
     private static final String[] securityTextures = {
             "images/SecurityBackground.png",
