@@ -6,7 +6,9 @@ import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.entities.Entity;
+import com.csse3200.game.entities.configs.Benches;
 import com.csse3200.game.entities.configs.ItemSpawnConfig;
+import com.csse3200.game.entities.factories.InteractableStationFactory;
 import com.csse3200.game.entities.factories.characters.NPCFactory;
 import com.csse3200.game.entities.factories.characters.PlayerFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
@@ -61,6 +63,7 @@ public class StorageGameArea extends GameArea {
         spawnShipmentBoxLid();
         spawnConveyor();
         spawnGrokDroids();
+        spawnComputerBench();
 
         ItemSpawner itemSpawner = new ItemSpawner(this);
         itemSpawner.spawnItems(ItemSpawnConfig.storage1map());
@@ -68,6 +71,14 @@ public class StorageGameArea extends GameArea {
         Entity ui = new Entity();
         ui.addComponent(new com.csse3200.game.components.gamearea.FloorLabelDisplay("Storage"));
         spawnEntity(ui);
+    }
+
+    /**
+     * Creates a weapon upgrade table in the bottom left of the room
+     */
+    private void spawnComputerBench() {
+        Entity bench = InteractableStationFactory.createStation(Benches.COMPUTER_BENCH);
+        spawnEntityAt(bench, new GridPoint2(4, 8), true, true);
     }
 
     /**
