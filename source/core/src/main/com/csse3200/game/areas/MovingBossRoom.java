@@ -95,15 +95,6 @@ public class MovingBossRoom extends GameArea {
     }
 
     /**
-     * Adds a very tall thick-floor as a background wall/divider.
-     */
-    private void spawnBigWall() {
-        GridPoint2 wallSpawn = new GridPoint2(-14, 0);
-        Entity bigWall = ObstacleFactory.createBigThickFloor();
-        spawnEntityAt(bigWall, wallSpawn, true, false);
-    }
-
-    /**
      * Spawns the borders and doors of the room.
      * Different to genericLayout as the right door is up high
      * at the third platform level.
