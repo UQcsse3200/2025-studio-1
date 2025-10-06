@@ -8,28 +8,57 @@
     "baseAttack": 25,
     "spookyFactor": 7
   },
-
   "boss3": {
     "health": 100,
     "baseAttack": 50
   },
-
   "ghostGPT": {
     "health": 100,
+    "baseAttack": 10
+  },
+  "ghostGPTBlue": {
+    "health": 200,
+    "baseAttack": 10
+  },
+  "ghostGPTRed": {
+    "health": 100,
     "baseAttack": 20
-
   },
   "deepSpin": {
     "health": 50,
-    "baseAttack": 20
+    "baseAttack": 15
+  },
+  "deepSpinBlue": {
+    "health": 100,
+    "baseAttack": 15
+  },
+  "deepSpinRed": {
+    "health": 50,
+    "baseAttack": 25
   },
   "grokDroid": {
-    "health": 100,
+    "health": 150,
+    "baseAttack": 5
+  },
+  "grokDroidBlue": {
+    "health": 300,
+    "baseAttack": 5
+  },
+  "grokDroidRed": {
+    "health": 150,
     "baseAttack": 10
   },
   "vroomba": {
     "health": 50,
     "baseAttack": 10
+  },
+  "vroombaBlue": {
+    "health": 100,
+    "baseAttack": 10
+  },
+  "vroombaRed": {
+    "health": 50,
+    "baseAttack": 20
   },
   "turret": {
     "health": 150,
