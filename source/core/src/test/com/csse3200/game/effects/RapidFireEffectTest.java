@@ -36,6 +36,20 @@ public class RapidFireEffectTest {
     }
 
     @Test
+    void shouldFailIfAppliedTwice() {
+        Entity weapon = new Entity().addComponent(weaponsStatsComponent);
+        assertTrue(rapidFireEffect.apply(weapon));
+        assertFalse(rapidFireEffect.apply(weapon));
+    }
+
+    @Test
+    void shouldNotUpdateSuccessfully() {
+        rapidFireEffect.update(1f);
+        assertFalse(rapidFireEffect.isActive());
+        verify(weaponsStatsComponent, never()).setCoolDown(anyFloat());
+    }
+
+    @Test
     void shouldNotFinishDuration() {
         Entity weapon = mock(Entity.class);
         when(weapon.getComponent(WeaponsStatsComponent.class)).thenReturn(weaponsStatsComponent);
