@@ -27,7 +27,6 @@ public class InventoryComponent extends Component {
     private final ArrayList<String> itemTexs = new ArrayList<>(maxCapacity);
     private int processor;
     private Entity currItem;
-    private int selectedSlot = -1; // -1 = no selectedSlot
     private int equippedSlot = -1; // no slot is equipped initially
     private int keycardLevel = 0;
 
@@ -44,7 +43,6 @@ public class InventoryComponent extends Component {
             this.itemTexs.add(idx, null);
         }
     }
-
 
     /**
      * setter method for the keycard level
@@ -119,6 +117,15 @@ public class InventoryComponent extends Component {
             return null;
         }
         return this.itemTexs.get(index);
+    }
+
+    /**
+     * Returns the current item that is being selected
+     *
+     * @return The item that is currently being selected
+     */
+    public Entity getCurrSlot() {
+        return this.currItem;
     }
 
     /**
@@ -277,61 +284,6 @@ public class InventoryComponent extends Component {
     }
 
     /**
-     * Get the current item
-     *
-     * @return the current item
-     */
-    public Entity getCurrSlot() {
-        if (selectedSlot >= 0 && selectedSlot < items.size()) {
-            return items.get(selectedSlot);
-        }
-        return null;
-    }
-
-
-    /**
-     *
-     * @param slotIndex takes the index of the slot selected
-     */
-    public void setSelectSlot(int slotIndex) {
-        if (slotIndex >= 0 && slotIndex < this.items.size()) {
-            this.selectedSlot = slotIndex;
-        }
-    }
-
-    /**
-     * Returns the item that is currently selected in the inventory.
-     *
-     * @return the selected item, or null if no slot is selected
-     */
-    public int getSelectedSlot() {
-        if (selectedSlot >= 0 && selectedSlot < items.size()) {
-            return selectedSlot;
-        }
-        return -1; // no item selected
-    }
-
-
-    @Override
-    /**
-     * to setup the component to respond whenever player focuses on an
-     * inventory item
-     */
-    public void create() {
-        super.create();
-        entity.getEvents().addListener("focus item", this::onFocusItem);
-    }
-
-    /**
-     *
-     * @param slotIndex puts focus on the item at that slot
-     */
-    private void onFocusItem(int slotIndex) {
-        setSelectSlot(slotIndex);
-        entity.getEvents().trigger("inventoryItemSelected", slotIndex);
-    }
-
-    /**
      * setEquippedSlot(int slotIndex) equips the player with the weapon at slotIndex
      *
      * @param slotIndex is the index of the slot from which the player wants to equip the weapon from
@@ -342,7 +294,7 @@ public class InventoryComponent extends Component {
 
         //set the selected slot
         //inventory.setSelectSlot(slotIndex-1);
-        this.equippedSlot = slotIndex - 1;
+        this.equippedSlot = slotIndex;
 
         //trigger the UI update and internal logic
         entity.getEvents().trigger("focus item", slotIndex);
@@ -350,10 +302,22 @@ public class InventoryComponent extends Component {
 
 
     /**
+     * Gets the currently equipped slot
      *
-     * @return the slot that is currently equipped
+     * @return the slot index that is currently equipped
      */
     public int getEquippedSlot() {
         return this.equippedSlot;
+    }
+
+    /**
+     * Removes the current item if there is one selected
+     */
+    public void removeCurrItem() {
+        if (this.equippedSlot != -1) {
+            items.set(equippedSlot, null);
+            itemTexs.set(equippedSlot, null);
+            inventoryCount--;
+        }
     }
 }

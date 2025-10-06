@@ -52,7 +52,6 @@ public class ProjectileFactory {
                 .addComponent(new ColliderComponent())
                 .addComponent(new HitboxComponent().setLayer(config.projectileType))
                 .addComponent(new TouchAttackComponent(config.target, 1f));
-
         projectile.getComponent(PhysicsComponent.class).setBodyType(BodyDef.BodyType.DynamicBody);
 
         // Ensure the collision is only checked between the projectile and the target
@@ -124,14 +123,12 @@ public class ProjectileFactory {
                 .addComponent(new ColliderComponent())
                 .addComponent(new HitboxComponent().setLayer(config.projectileType))
                 .addComponent(new TouchAttackComponent(config.target, 1f));
-
         projectile.getComponent(PhysicsComponent.class).setBodyType(BodyDef.BodyType.DynamicBody);
 
         // Ensure the collision is only checked between the projectile and the target
         ColliderComponent collider = projectile.getComponent(ColliderComponent.class);
         collider.setLayer(config.projectileType)
                 .setFilter(config.projectileType, config.target);
-
         projectile.setTarget(targetEntity);
         projectile.setProjectileSpeed(speed);
         projectile.setActiveProjectileType(ActiveProjectileTypes.FOLLOW_TARGET);
@@ -149,7 +146,6 @@ public class ProjectileFactory {
                 .addComponent(new PhysicsProjectileComponent())
                 .addComponent(new WeaponsStatsComponent(source.getBaseAttack()))
                 .addComponent(new TextureRenderWithRotationComponent(config.texturePath));
-
         projectile.getComponent(PhysicsComponent.class).setBodyType(BodyDef.BodyType.DynamicBody);
 
         return projectile;
@@ -162,7 +158,7 @@ public class ProjectileFactory {
      */
     public static Entity createPistolBullet(WeaponsStatsComponent source) {
         ProjectileTarget target = ProjectileTarget.ENEMY;
-        Entity item = ServiceLocator.getPlayer().getComponent(InventoryComponent.class).getCurrItem();
+        Entity item = ServiceLocator.getPlayer().getComponent(InventoryComponent.class).getCurrSlot();
         //Player's weapon has the water bullet upgrade
         if (item.hasComponent(BulletEnhancerComponent.class)) {
             Entity projectile = createProjectile(target, source, "images/waterBullet.png");

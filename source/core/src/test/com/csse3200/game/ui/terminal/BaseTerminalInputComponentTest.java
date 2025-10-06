@@ -13,7 +13,7 @@ import static org.mockito.Mockito.*;
 class BaseTerminalInputComponentTest {
     @Test
     void shouldToggleTerminalOpenClose() {
-        Terminal terminal = spy(Terminal.class);
+        Terminal terminal = spy(new Terminal(null, null, null));
         BaseTerminalInputComponent terminalInput = new KeyboardTerminalInputComponent(terminal);
 
         terminal.setClosed();
@@ -31,7 +31,7 @@ class BaseTerminalInputComponentTest {
 
     @Test
     void shouldCheckPausable() {
-        Terminal terminal = spy(Terminal.class);
+        Terminal terminal = spy(new Terminal(null, null, null));
         BaseTerminalInputComponent terminalInput = new KeyboardTerminalInputComponent(terminal);
 
         assertFalse(terminalInput.isPauseable());

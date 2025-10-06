@@ -97,6 +97,12 @@ public class ItemSpawner {
             shippingGameArea.spawnItem(item, position);
         } else if (gameArea instanceof StorageGameArea storageGameArea) {
             storageGameArea.spawnItem(item, position);
+        } else if (gameArea instanceof StaticBossRoom staticBossRoom) {
+            staticBossRoom.spawnItem(item, position);
+        } else if (gameArea instanceof MovingBossRoom movingBossRoom) {
+            movingBossRoom.spawnItem(item, position);
+        } else if (gameArea instanceof FlyingBossRoom flyingBossRoom) {
+            flyingBossRoom.spawnItem(item, position);
         }
     }
 

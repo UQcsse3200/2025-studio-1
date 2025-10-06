@@ -71,6 +71,7 @@ public class MainMenuDisplay extends UIComponent {
         TextButton settingsBtn = new TextButton("Settings", style);
         TextButton exitBtn = new TextButton("Exit", style);
         TextButton tutorialBtn = new TextButton("Tutorial", style);
+        TextButton difficultyBtn = new TextButton("Difficulty", style);
 
         // Label text size
         startBtn.getLabel().setFontScale(2.0f);
@@ -78,12 +79,14 @@ public class MainMenuDisplay extends UIComponent {
         settingsBtn.getLabel().setFontScale(2.0f);
         exitBtn.getLabel().setFontScale(2.0f);
         tutorialBtn.getLabel().setFontScale(2.0f);
+        difficultyBtn.getLabel().setFontScale(2.0f);
 
         // Button actions
         startBtn.addListener(
                 new ChangeListener() {
                     @Override
                     public void changed(ChangeEvent changeEvent, Actor actor) {
+                        ServiceLocator.getButtonSoundService().playClick();
                         logger.debug("Start button clicked");
                         entity.getEvents().trigger("start");
                     }
@@ -93,6 +96,7 @@ public class MainMenuDisplay extends UIComponent {
                 new ChangeListener() {
                     @Override
                     public void changed(ChangeEvent changeEvent, Actor actor) {
+                        ServiceLocator.getButtonSoundService().playClick();
                         logger.debug("Load button clicked");
                         entity.getEvents().trigger("load");
                     }
@@ -102,6 +106,7 @@ public class MainMenuDisplay extends UIComponent {
                 new ChangeListener() {
                     @Override
                     public void changed(ChangeEvent changeEvent, Actor actor) {
+                        ServiceLocator.getButtonSoundService().playClick();
                         logger.debug("Settings button clicked");
                         entity.getEvents().trigger("settings");
                     }
@@ -111,18 +116,31 @@ public class MainMenuDisplay extends UIComponent {
                 new ChangeListener() {
                     @Override
                     public void changed(ChangeEvent changeEvent, Actor actor) {
+                        ServiceLocator.getButtonSoundService().playClick();
                         logger.debug("Exit button clicked");
                         entity.getEvents().trigger("exit");
                     }
                 });
 
-        tutorialBtn.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                logger.debug("Tutorial button clicked");
-                entity.getEvents().trigger("tutorial");
-            }
-        });
+        tutorialBtn.addListener(
+                new ChangeListener() {
+                    @Override
+                    public void changed(ChangeEvent event, Actor actor) {
+                        ServiceLocator.getButtonSoundService().playClick();
+                        logger.debug("Tutorial button clicked");
+                        entity.getEvents().trigger("tutorial");
+                    }
+                });
+
+        difficultyBtn.addListener(
+                new ChangeListener() {
+                    @Override
+                    public void changed(ChangeEvent event, Actor actor) {
+                        ServiceLocator.getButtonSoundService().playClick();
+                        logger.debug("Difficulty button clicked");
+                        entity.getEvents().trigger("difficulty");
+                    }
+                });
 
         // Column layout
         table.add(title).left().padBottom(40f).padLeft(-10f);
@@ -136,6 +154,8 @@ public class MainMenuDisplay extends UIComponent {
         table.add(exitBtn).padTop(15f).left();
         table.row();
         table.add(tutorialBtn).padTop(15f).left();
+        table.row();
+        table.add(difficultyBtn).padTop(15f).left();
         stage.addActor(table);
     }
 

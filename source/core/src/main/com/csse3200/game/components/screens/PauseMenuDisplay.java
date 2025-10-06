@@ -7,6 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.GdxGame;
 
 /**
@@ -80,10 +81,23 @@ public class PauseMenuDisplay extends BaseScreenDisplay {
 
         Table panel = new Table();
         panel.defaults().pad(10f);
-        panel.add(button("Resume", 1.8f, () -> entity.getEvents().trigger("resume"))).row();
-        panel.add(button("Restart", 1.8f, () -> game.setScreen(GdxGame.ScreenType.MAIN_GAME))).row();
-        panel.add(button("Main Menu", 1.8f, this::backMainMenu)).row();
-        panel.add(button("save", 1.8f, () -> {
+        panel.add(button("Resume", 1.8f, () -> {
+            ServiceLocator.getButtonSoundService().playClick();
+            entity.getEvents().trigger("resume");
+        })).row();
+
+        panel.add(button("Restart", 1.8f, () -> {
+            ServiceLocator.getButtonSoundService().playClick();
+            game.setScreen(GdxGame.ScreenType.MAIN_GAME);
+        })).row();
+
+        panel.add(button("Main Menu", 1.8f, () -> {
+            ServiceLocator.getButtonSoundService().playClick();
+            backMainMenu();
+        })).row();
+
+        panel.add(button("Save", 1.8f, () -> {
+            ServiceLocator.getButtonSoundService().playClick();
             entity.getEvents().trigger("save");
             backMainMenu();
         })).row();
