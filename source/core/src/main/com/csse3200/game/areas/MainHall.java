@@ -17,7 +17,7 @@ import com.csse3200.game.services.ServiceLocator;
 public class MainHall extends GameArea {
     private static final float WALL_WIDTH = 0.1f;
     private static GridPoint2 playerSpawn = new GridPoint2(10, 10);
-    private static final GridPoint2 PLAYER_SPAWN = new GridPoint2(10, 10);
+    private static GridPoint2 PLAYER_SPAWN = new GridPoint2(10, 10);
 
     public MainHall(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
         super(terrainFactory, cameraComponent);
@@ -181,7 +181,7 @@ public class MainHall extends GameArea {
         if (newSpawn == null) {
             return;
         }
-        MainHall.playerSpawn = newSpawn;
+        MainHall.PLAYER_SPAWN = newSpawn;
     }
 
     @Override
