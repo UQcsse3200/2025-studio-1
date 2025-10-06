@@ -42,6 +42,8 @@ public class ActiveProjectileTest {
         assertEquals(10f, getPrivateMember(activeProjectile, "projectileSpeed"));
     }
 
+
+
     /**
      * Gets the private member with the given name
      * The name must be one of
