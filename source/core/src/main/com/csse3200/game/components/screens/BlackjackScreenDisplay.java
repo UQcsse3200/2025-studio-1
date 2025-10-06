@@ -56,11 +56,11 @@ public class BlackjackScreenDisplay extends UIComponent {
         // Listen for game events
         entity.getEvents().addListener("playerbust", () -> showRestart("Player Busts! Dealer Wins"));
         entity.getEvents().addListener("dealerbust", () -> showRestart("Dealer Busts! Player Wins"));
-        entity.getEvents().addListener("playerwin", () -> showRestart("Player Wins!"));
+        entity.getEvents().addListener("win", () -> showRestart("Player Wins!"));
         entity.getEvents().addListener("dealerwin", () -> showRestart("Dealer Wins!"));
         entity.getEvents().addListener("tie", () -> showRestart("It's a Tie!"));
-        entity.getEvents().addListener("interact", this::show);
         entity.getEvents().addListener("hide", this::hide);
+        entity.getEvents().addListener("betPlaced", this::show);
     }
 
     @Override
@@ -88,17 +88,6 @@ public class BlackjackScreenDisplay extends UIComponent {
         }
         super.dispose();
     }
-/*
-    private void buildBackground() {
-        background = new Image(new TextureRegionDrawable(new TextureRegion(pixelTex)));
-        background.setSize(PANEL_W, PANEL_H);
-        background.setPosition(
-                (stage.getWidth() - PANEL_W) / 2f,
-                (stage.getHeight() - PANEL_H) / 2f
-        );
-        background.setColor(Color.GREEN);
-        stage.addActor(background);
-    } */
 
     private void buildRootTable() {
         root = new Table();
@@ -210,8 +199,8 @@ public class BlackjackScreenDisplay extends UIComponent {
                 dealerTurn = false;
                 restartBtn.setVisible(false);  // hide button again
                 resultLabel.setText("");        // clear previous result
-                entity.getEvents().trigger("start"); // start new game
-                updateHands();
+                entity.getEvents().trigger("interact"); // start new game
+                hide();
             }
         });
 
