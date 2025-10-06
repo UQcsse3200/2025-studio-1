@@ -96,7 +96,7 @@ public class MainHall extends GameArea {
             spawnEntity(rightTop);
         }
         Entity rightDoor = ObstacleFactory.createDoorTrigger(WALL_WIDTH, rightDoorHeight);
-        rightDoor.setPosition(b.rightX() - WALL_WIDTH - 0.001f, rightDoorY + 7f);
+        rightDoor.setPosition(b.rightX() - WALL_WIDTH - 0.001f, rightDoorY + 6f);
         rightDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadSecurity));
         spawnEntity(rightDoor);
     }
