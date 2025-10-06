@@ -1,15 +1,10 @@
 package com.csse3200.game.components;
 
-import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.ItemTypes;
 import com.csse3200.game.entities.configs.armour.ArmourConfig;
 
-import java.util.HashMap;
-import java.util.Map;
-
 /**
- * This component is used to attach armour to the player, and update the armour's position,
- * so it follows the player.
+ * This component stores information about the armour.
  */
 public class ArmourComponent extends Component{
     public ItemTypes armourType;
@@ -21,16 +16,4 @@ public class ArmourComponent extends Component{
         this.protection = config.protection;
         this.texturePath = config.texturePath;
     }
-
-    /**
-     * Equips the armour onto the entity.
-     * @param player
-     */
-    public void equip(Entity player, Entity armour) {
-        if (player == null || armour == null) {
-            return;
-        }
-    }
-
-
 }

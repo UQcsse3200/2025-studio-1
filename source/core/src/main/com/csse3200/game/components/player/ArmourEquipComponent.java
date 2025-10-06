@@ -16,8 +16,8 @@ public class ArmourEquipComponent extends PlayerEquipComponent {
 
     /**
      *
-     * @param item   The entity created of the item that needs to be equipped
-     * @param offset Where from the players current position to draw the weapon
+     * @param item   The entity created of the item that needs to be equipped.
+     * @param offset Where from the players current position to draw the armour.
      */
     @Override
     public void setItem(Entity item, Vector2 offset) {
