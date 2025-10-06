@@ -16,16 +16,21 @@ import java.util.Map;
  */
 public class ArmourEquipComponent extends Component {
     // hashmap storing armour and corresponding offsets
-    Map<Entity, Vector2[]> currentlyEquippedArmour = new HashMap<>();
+    public Map<Entity, Vector2[]> currentlyEquippedArmour = new HashMap<>();
 
     /**
-     *
-     * @param item   The entity created of the item that needs to be equipped.
+     * Equips item and adds it to set of currently equipped armour.
+     * @param item The entity created of the item that needs to be equipped.
      */
     public void setItem(Entity item) {
         if (item == null) {
-            System.out.println("Trying to equip null armour");
+            throw new IllegalArgumentException("Trying to equip null armour");
         }
+
+        if (item.getComponent(ArmourComponent.class) == null) {
+            throw new IllegalArgumentException("Item is not an armour entity.");
+        }
+
         item.getComponent(TextureRenderComponent.class).setZIndex(-entity.getPosition().y + 5);
         currentlyEquippedArmour.put(item, new Vector2[]
                         {
