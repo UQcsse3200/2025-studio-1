@@ -8,6 +8,7 @@ import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.components.KeycardGateComponent;
+import com.csse3200.game.components.cards.BettingComponent;
 import com.csse3200.game.components.cards.BlackJackGame;
 import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import com.csse3200.game.components.items.ItemHoldComponent;
@@ -436,6 +437,7 @@ public class ForestGameArea extends GameArea {
     private void spawnBlackjack() {
         Entity blackjack = InteractableStationFactory.createBaseStation();
         blackjack.addComponent(new TextureRenderComponent("images/box_boy_leaf.png"));
+        blackjack.addComponent(new BettingComponent(2));
         blackjack.addComponent(new BlackJackGame());
         blackjack.addComponent(new BlackjackScreenDisplay());
         spawnEntityAt(blackjack, new GridPoint2(20, 7), true, true);
