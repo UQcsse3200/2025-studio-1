@@ -15,9 +15,12 @@ import com.csse3200.game.components.maingame.MainGameActions;
 import com.csse3200.game.components.maingame.MainGameDisplay;
 import com.csse3200.game.components.player.InventoryComponent;
 import com.csse3200.game.components.player.ItemPickUpComponent;
+import com.csse3200.game.components.screens.Minimap;
+import com.csse3200.game.components.screens.MinimapDisplay;
 import com.csse3200.game.components.screens.PauseMenuDisplay;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
+import com.csse3200.game.entities.factories.characters.PlayerFactory;
 import com.csse3200.game.entities.factories.system.RenderFactory;
 import com.csse3200.game.input.InputComponent;
 import com.csse3200.game.input.InputDecorator;
@@ -27,6 +30,8 @@ import com.csse3200.game.physics.PhysicsService;
 import com.csse3200.game.rendering.RenderService;
 import com.csse3200.game.rendering.Renderer;
 import com.csse3200.game.services.*;
+import com.csse3200.game.session.GameSession;
+import com.csse3200.game.session.SessionManager;
 import com.csse3200.game.ui.terminal.Terminal;
 import com.csse3200.game.ui.terminal.TerminalDisplay;
 import org.slf4j.Logger;
@@ -51,13 +56,32 @@ public class MainGameScreen extends ScreenAdapter {
     private CountdownTimerService countdownTimer;
 
 
+    //Leaderboard & Session fields
+    private GameSession session;
+    private float roundTime = 0f;
+
+
     private Entity pauseOverlay;
+    private Entity minimap;
     private boolean isPauseVisible = false;
+    private boolean isMinimapVisible = false;
 
     public MainGameScreen(GdxGame game) {
         this.game = game;
 
         logger.debug("Initialising main game screen services");
+
+        //Initialize session for this playthrough
+        SessionManager sessionManager = new SessionManager();
+        session = sessionManager.startNewSession();
+
+        var prev = game.getCarryOverLeaderBoard();
+        if (prev != null && !prev.getLeaderBoard().isEmpty()) {
+            session.getLeaderBoardManager()
+                    .setLeaderboard(new java.util.ArrayList<>(prev.getLeaderBoard()));
+        }
+        ServiceLocator.registerLeaderBoardManager(session.getLeaderBoardManager());
+
         ServiceLocator.registerTimeSource(new GameTime());
 
         PhysicsService physicsService = new PhysicsService();
@@ -73,12 +97,14 @@ public class MainGameScreen extends ScreenAdapter {
         ServiceLocator.registerEntityService(new EntityService());
         ServiceLocator.registerRenderService(new RenderService());
 
+        ServiceLocator.clearPlayer();
+
         renderer = RenderFactory.createRenderer();
         renderer.getCamera().getEntity().setPosition(CAMERA_POSITION);
         renderer.getDebug().renderPhysicsWorld(physicsEngine.getWorld());
 
         loadAssets();
-        countdownTimer = new CountdownTimerService(ServiceLocator.getTimeSource(), 60000);
+        countdownTimer = new CountdownTimerService(ServiceLocator.getTimeSource(), 240000);
         createUI();
 
         logger.debug("Initialising main game screen entities");
@@ -175,6 +201,9 @@ public class MainGameScreen extends ScreenAdapter {
 
     @Override
     public void render(float delta) {
+        //accumulates elapsed time
+        this.roundTime += delta;
+
         if (!isPauseVisible && !(ServiceLocator.getTimeSource().isPaused())
                 && !ServiceLocator.isTransitioning()) {
             physicsEngine.update();
@@ -197,8 +226,30 @@ public class MainGameScreen extends ScreenAdapter {
                 countdownTimer.pause();
             } else {
                 hidePauseOverlay();
-                countdownTimer.resume();
+                if (!isMinimapVisible) {
+                    countdownTimer.resume();
+                }
             }
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.TAB)) {
+            if (!isMinimapVisible) {
+                if (!isPauseVisible) {
+                    showMinimapOverlay();
+                    countdownTimer.pause();
+                }
+            } else {
+                hideMinimapOverlay();
+                if (!isPauseVisible) {
+                    countdownTimer.resume();
+                }
+            }
+        }
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.EQUALS) && isMinimapVisible) {
+            minimap.getComponent(MinimapDisplay.class).zoomIn();
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.MINUS) && isMinimapVisible) {
+            minimap.getComponent(MinimapDisplay.class).zoomOut();
         }
 
         //switch to death screen when countdown timer is up
@@ -230,10 +281,12 @@ public class MainGameScreen extends ScreenAdapter {
         renderer.dispose();
         unloadAssets();
 
-        ServiceLocator.getEntityService().dispose();
+        // Preserve player entity during disposal
+        Entity player = ServiceLocator.getPlayer();
+        ServiceLocator.getEntityService().disposeExceptPlayer();
         ServiceLocator.getRenderService().dispose();
         ServiceLocator.getResourceService().dispose();
-        ServiceLocator.clear();
+        ServiceLocator.clearExceptPlayer();
     }
 
     private void loadAssets() {
@@ -272,6 +325,32 @@ public class MainGameScreen extends ScreenAdapter {
     }
 
     /**
+     * = Records player's current round performance and updates the leaderboard.
+     * = This method is called automatically when a round ends.
+     * = The leaderboard only persists for the duration of the current game session
+     * and is cleared when the session ends.
+     */
+    private void recordRoundForLeaderboard() {
+        if (session == null) return;
+
+        // Currency = processors from the player's InventoryComponent
+        int processors = 0;
+        Entity player = (gameArea != null) ? gameArea.getPlayer() : null;
+        if (player != null) {
+            InventoryComponent inv = player.getComponent(InventoryComponent.class);
+            if (inv != null) {
+                processors = inv.getProcessor();
+            }
+        }
+
+        // Time = from your countdown service (seconds)
+        float timeSeconds = getCompleteTime();
+
+        session.getLeaderBoardManager().addRound(processors, timeSeconds);
+        session.getLeaderBoardManager().getLeaderBoard().forEach(entry -> logger.info(entry.toString()));
+    }
+
+    /**
      * Creates and displays the pause menu overlay on top of the game.
      * Registers the overlay entity so it can capture input and show the UI,
      * and listens for the "resume" event to remove itself when requested.
@@ -286,6 +365,9 @@ public class MainGameScreen extends ScreenAdapter {
         pauseOverlay.getEvents().addListener("resume", this::hidePauseOverlay);
         ServiceLocator.getEntityService().register(pauseOverlay);
         ServiceLocator.getTimeSource().setPaused(true);
+        if (!countdownTimer.isPaused()) {
+            countdownTimer.pause();
+        }
         isPauseVisible = true;
     }
 
@@ -297,9 +379,17 @@ public class MainGameScreen extends ScreenAdapter {
         if (pauseOverlay != null) {
             pauseOverlay.dispose();
             ServiceLocator.getEntityService().unregister(pauseOverlay);
-            ServiceLocator.getTimeSource().setPaused(false);
+            if (!isMinimapVisible) {
+                ServiceLocator.getTimeSource().setPaused(false);
+            }
             pauseOverlay = null;
         }
+
+        ServiceLocator.getTimeSource().setPaused(false);
+        if (countdownTimer.isPaused()) {
+            countdownTimer.resume();
+        }
+
         isPauseVisible = false;
     }
 
@@ -311,6 +401,34 @@ public class MainGameScreen extends ScreenAdapter {
             logger.info("Save data failed");
         }
     }
+
+    private void showMinimapOverlay() {
+        logger.info("Showing minimap overlay");
+        Stage stage = ServiceLocator.getRenderService().getStage();
+        minimap = new Entity()
+                .addComponent(new MinimapDisplay(game,
+                        new Minimap(Gdx.graphics.getHeight(), Gdx.graphics.getWidth(),
+                                "configs/room_layout.txt")))
+                .addComponent(new InputDecorator(stage, 100));
+        minimap.getEvents().addListener("resume", this::hideMinimapOverlay);
+        ServiceLocator.getEntityService().register(minimap);
+        ServiceLocator.getTimeSource().setPaused(true);
+        isMinimapVisible = true;
+    }
+
+    private void hideMinimapOverlay() {
+        logger.info("Hiding minimap overlay");
+        if (minimap != null) {
+            minimap.dispose();
+            ServiceLocator.getEntityService().unregister(minimap);
+            if (!isPauseVisible) {
+                ServiceLocator.getTimeSource().setPaused(false);
+            }
+            minimap = null;
+        }
+        isMinimapVisible = false;
+    }
+
 
     /**
      * Calculates the total elapsed time of the countdown timer in second
@@ -329,6 +447,8 @@ public class MainGameScreen extends ScreenAdapter {
      * </p>
      */
     private void setDeathScreen() {
+        recordRoundForLeaderboard();
+        game.setCarryOverLeaderBoard(session.getLeaderBoardManager());
         DeathScreen deathScreen = new DeathScreen(game);
         deathScreen.updateTime(getCompleteTime());
         game.setScreen(deathScreen);
