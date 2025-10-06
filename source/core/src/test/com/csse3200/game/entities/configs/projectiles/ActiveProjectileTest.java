@@ -9,11 +9,11 @@ import java.lang.reflect.Field;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class ActiveProjectileTest {
+class ActiveProjectileTest {
     ActiveProjectile activeProjectile;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         activeProjectile = new ActiveProjectile();
     }
 

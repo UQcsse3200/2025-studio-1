@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class HealthEffectTest {
+class HealthEffectTest {
     HealthEffect healthEffect;
 
     @BeforeEach

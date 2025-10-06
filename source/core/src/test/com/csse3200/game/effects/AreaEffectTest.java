@@ -9,7 +9,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class AreaEffectTest {
+class AreaEffectTest {
     AreaEffect areaEffect;
 
     @Test
@@ -23,9 +23,13 @@ public class AreaEffectTest {
     @Test
     @Description("Tests to see if an appropriate IllegalArgumentException is thrown")
     void testAreaEffectIsEmpty() {
-        assertThrows(IllegalArgumentException.class, () -> {
-            areaEffect = new AreaEffect(new ArrayList<>(), 1);
-        });
+        try {
+            assertThrows(IllegalArgumentException.class, () -> {
+                areaEffect = new AreaEffect(new ArrayList<>(), 1);
+            });
+        } catch (RuntimeException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Test
@@ -86,6 +90,4 @@ public class AreaEffectTest {
 
     @Test //TODO should apply the effect to entities
     void shouldApplyEffects() { }
-
-
 }
