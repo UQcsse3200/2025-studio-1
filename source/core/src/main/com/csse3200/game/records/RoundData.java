@@ -35,19 +35,19 @@ public class RoundData {
      *
      * @return the currency earned during the round
      */
-    public int getCurrency() {return currency;}
+    public int getCurrency() {return this.currency;}
 
     /**
      *
      * @return the time taken to complete the round
      */
-    public float getTime() {return time;}
+    public float getTime() {return this.time;}
 
     /**
      *
      * @return the score for the round played
      */
-    public int getScore() {return score;}
+    public int getScore() {return this.score;}
 
     @Override
     /**
