@@ -129,10 +129,26 @@ public class ItemSpawnConfig {
                 new ItemSpawner.ItemSpawnInfo(new GridPoint2(7, 7), 1)
         ));
         config.put(Weapons.RIFLE.name(), List.of(
-                new ItemSpawner.ItemSpawnInfo(new GridPoint2(7, 7), 1)
+                new ItemSpawner.ItemSpawnInfo(new GridPoint2(5, 15), 1)
         ));
         config.put(Weapons.LIGHTSABER.name(), List.of(
+                new ItemSpawner.ItemSpawnInfo(new GridPoint2(12, 9), 1)
+        ));
+
+
+        return config;
+    }
+    public static Map<String, List<ItemSpawner.ItemSpawnInfo>> mainHallmap() {
+        Map<String, List<ItemSpawner.ItemSpawnInfo>> config = new HashMap<>();
+
+        config.put(Weapons.PISTOL.name(), List.of(
                 new ItemSpawner.ItemSpawnInfo(new GridPoint2(7, 7), 1)
+        ));
+        config.put(Weapons.RIFLE.name(), List.of(
+                new ItemSpawner.ItemSpawnInfo(new GridPoint2(4, 17), 1)
+        ));
+        config.put(Weapons.LIGHTSABER.name(), List.of(
+                new ItemSpawner.ItemSpawnInfo(new GridPoint2(13, 20), 1)
         ));
 
 
