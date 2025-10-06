@@ -9,6 +9,7 @@ import com.csse3200.game.GdxGame;
 import com.csse3200.game.records.RoundData;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.session.LeaderBoardManager;
+import com.csse3200.game.utils.TimefromSeconds;
 
 import java.util.List;
 
@@ -74,7 +75,7 @@ public class LeaderboardScreenDisplay extends BaseScreenDisplay {
         } else {
             for (int i = 0; i < rounds.size(); i++) {
                 RoundData rd = rounds.get(i);
-                String mmss = toMMSS((int) rd.getTime());
+                String mmss = TimefromSeconds.toMMSS((int) rd.getTime());
 
                 Table row = new Table();
                 row.defaults().pad(5f).expandX();
@@ -102,16 +103,6 @@ public class LeaderboardScreenDisplay extends BaseScreenDisplay {
         root.add(panel).center().expand().pad(100f);
     }
 
-    /**
-     * Converts total seconds into MM:SS format.
-     * @param totalSeconds the total seconds to convert
-     * @return a string in MM:SS format
-     */
-    private static String toMMSS(int totalSeconds) {
-        int m = Math.max(0, totalSeconds) / 60;
-        int s = Math.max(0, totalSeconds) % 60;
-        return String.format("%02d:%02d", m, s);
-    }
 
     /**
      * Gets the highest score from the leaderboard.
