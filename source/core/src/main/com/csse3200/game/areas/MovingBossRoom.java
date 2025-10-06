@@ -13,6 +13,8 @@ import com.csse3200.game.entities.spawner.ItemSpawner;
 import com.csse3200.game.entities.factories.characters.PlayerFactory;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.components.gamearea.GameAreaDisplay;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This is the room that holds the Ground Moving Boss Boss.
