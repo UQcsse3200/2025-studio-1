@@ -115,6 +115,7 @@ class BaseEndScreenDisplaysTest {
         try {
             Timer.instance().clear();
         } catch (Throwable ignored) {
+            throw new AssertionError("Timer cleanup failed", ignored);
         }
         try {
             ServiceLocator.clear();

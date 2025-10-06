@@ -177,10 +177,6 @@ class BlockAnimSpinnersTest {
         return Class.forName("com.csse3200.game.ui.effects.TextEffects$CrazyOpts");
     }
 
-    private static Class<?> FROM() throws Exception {
-        return Class.forName("com.csse3200.game.ui.effects.TextEffects$CrazyOpts$From");
-    }
-
     @SuppressWarnings({"rawtypes", "unchecked"})
     private static Object newOpts(String from) throws Exception {
         Class<?> co = Class.forName("com.csse3200.game.ui.effects.TextEffects$CrazyOpts");
@@ -575,8 +571,7 @@ class BlockAnimSpinnersTest {
         // guard/no-op on non-letter
         setCurrAt(ba, 2, 'Q');
         Character non = invokeSpinnerAndReadCurr(ba, m, 2, '_'); // non-letter input
-        assertNull(non); // If you didn't add guards, replace with:
-        // if (non != null) assertTrue(Character.isLetter(non));
+        assertNull(non);
         assertEquals('Q', getCurrAt(ba, 2));
     }
 
@@ -594,7 +589,7 @@ class BlockAnimSpinnersTest {
         // guard/no-op on non-digit
         setCurrAt(ba, 4, '5');
         Character non = invokeSpinnerAndReadCurr(ba, m, 4, 'x'); // non-digit input
-        assertNull(non); // If no guards in impl: if (non != null) assertTrue(Character.isDigit(non));
+        assertNull(non);
         assertEquals('5', getCurrAt(ba, 4));
     }
 
@@ -613,7 +608,7 @@ class BlockAnimSpinnersTest {
         // guard/no-op on non-punct input
         setCurrAt(ba, 6, '.');
         Character non = invokeSpinnerAndReadCurr(ba, m, 6, 'A'); // non-punct input
-        assertNull(non); // If no guards in impl: if (non != null) assertTrue(PUNCT_SET.contains(non));
+        assertNull(non);
         assertEquals('.', getCurrAt(ba, 6));
     }
 

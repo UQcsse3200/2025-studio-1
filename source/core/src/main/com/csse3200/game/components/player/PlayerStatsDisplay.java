@@ -26,9 +26,6 @@ public class PlayerStatsDisplay extends BaseScreenDisplay {
     private static final int PCT_MAX = 100;
     private static final String WHITE = "white";
 
-    // Constants
-    private static final String ammoAmount = "Ammo :%d";
-
     // Ammo formats (dedupe string literals)
     private static final String AMMO_SINGLE_FMT = "Ammo: %d";
     private static final String AMMO_DUAL_FMT = "Ammo: %d/%d";
@@ -71,25 +68,25 @@ public class PlayerStatsDisplay extends BaseScreenDisplay {
     /* Build & draw */
     @Override
     protected void buildUI(Table root) {
-        Color HEALTH_TINT  = new Color(1f, 0.25f, 0.25f, 1f);
-        Color STAMINA_TINT = new Color(0.35f, 1f, 0.45f, 1f);
-        Color PANEL_BG     = new Color(0f, 0f, 0f, 0.3f);
+        Color healthTint = new Color(1f, 0.25f, 0.25f, 1f);
+        Color staminaTint = new Color(0.35f, 1f, 0.45f, 1f);
+        Color panelBg = new Color(0f, 0f, 0f, 0.3f);
 
-        final float GAP_X     = 8f;
+        final float GAP_X = 8f;
         final float PANEL_PAD = 4f;
 
         // Health bar: use real max if available, otherwise [0..100]
         int healthVal = (combat != null) ? combat.getHealth() : 0;
         int maxHealth = (combat != null) ? combat.getMaxHealth() : PCT_MAX;
 
-        healthBar  = new ProgressBar(0, maxHealth, 1, false,
-                makeBarStyle(HEALTH_TINT,  "progress-bar-horizontal", "progress-bar-horizontal-c"));
+        healthBar = new ProgressBar(0, maxHealth, 1, false,
+                makeBarStyle(healthTint, "progress-bar-horizontal", "progress-bar-horizontal-c"));
         healthBar.setAnimateDuration(0f);
         healthBar.setValue(clamp(healthVal, 0, maxHealth));
 
         // Stamina bar as percentage [0..100]
-        staminaBar = new ProgressBar(0, 100,      1, false,
-                makeBarStyle(STAMINA_TINT, "progress-bar-horizontal", "progress-bar-horizontal-c"));
+        staminaBar = new ProgressBar(0, 100, 1, false,
+                makeBarStyle(staminaTint, "progress-bar-horizontal", "progress-bar-horizontal-c"));
         staminaBar.setAnimateDuration(0f);
         staminaBar.setValue(PCT_MAX);
 
@@ -100,14 +97,14 @@ public class PlayerStatsDisplay extends BaseScreenDisplay {
         // Ammo label
         ammoLabel = new Label(formatAmmoLabel(), skin, WHITE);
 
-        Label healthTxt  = new Label("Health",  skin, WHITE);
+        Label healthTxt = new Label("Health", skin, WHITE);
         Label staminaTxt = new Label("Stamina", skin, WHITE);
 
         float labelW = Math.max(healthTxt.getPrefWidth(), staminaTxt.getPrefWidth());
 
         // Create panel
         Table panel = new Table();
-        panel.setBackground(skin.newDrawable(WHITE, PANEL_BG));
+        panel.setBackground(skin.newDrawable(WHITE, panelBg));
         panel.pad(PANEL_PAD);
         panel.defaults().left();
         panel.columnDefaults(0).width(labelW).padRight(GAP_X);
