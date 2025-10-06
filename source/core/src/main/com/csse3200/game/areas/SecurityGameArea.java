@@ -17,7 +17,7 @@ import com.csse3200.game.services.ServiceLocator;
  */
 public class SecurityGameArea extends GameArea {
     private static final float WALL_WIDTH = 0.1f;
-    private static final GridPoint2 PLAYER_SPAWN = new GridPoint2(10, 10);
+    private static GridPoint2 playerSpawn = new GridPoint2(10, 10);
     private int roomDiffNumber = 2;
     private Entity player;
 
@@ -69,7 +69,7 @@ public class SecurityGameArea extends GameArea {
 
     private Entity spawnPlayer() {
         Entity player = PlayerFactory.createPlayer();
-        spawnEntityAt(player, PLAYER_SPAWN, true, true);
+        spawnEntityAt(player, playerSpawn, true, true);
         return player;
     }
 
@@ -145,11 +145,26 @@ public class SecurityGameArea extends GameArea {
     }
 
     private void loadBackToFloor5() {
+        MainHall.setRoomSpawn(new GridPoint2(24, 20));
         clearAndLoad(() -> new MainHall(terrainFactory, cameraComponent));
     }
 
     private void loadMovingBossRoom() {
+        MovingBossRoom.setRoomSpawn(new GridPoint2(6, 8));
         clearAndLoad(() -> new MovingBossRoom(terrainFactory, cameraComponent));
+    }
+
+    /**
+     * Setter method for the player spawn point
+     * should be used when the player is traversing through the rooms
+     * 
+     * @param newSpawn the new spawn point
+     */
+    public static void setRoomSpawn(GridPoint2 newSpawn) {
+        if (newSpawn == null) {
+            return;
+        }
+        SecurityGameArea.playerSpawn = newSpawn;
     }
 
     @Override

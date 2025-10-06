@@ -21,7 +21,7 @@ import com.csse3200.game.services.ServiceLocator;
  */
 public class ShippingGameArea extends GameArea {
     private static final float WALL_WIDTH = 0.1f;
-    private static final GridPoint2 PLAYER_SPAWN = new GridPoint2(10, 10);
+    private static GridPoint2 playerSpawn = new GridPoint2(10, 10);
     private static final float ROOM_DIFF_NUMBER = 7;
     private Entity player;
 
@@ -135,7 +135,7 @@ public class ShippingGameArea extends GameArea {
 
     private Entity spawnPlayer() {
         Entity player = PlayerFactory.createPlayer();
-        spawnEntityAt(player, PLAYER_SPAWN, true, true);
+        spawnEntityAt(player, playerSpawn, true, true);
         return player;
     }
 
@@ -174,6 +174,7 @@ public class ShippingGameArea extends GameArea {
      * Clears the game area and loads the previous section (Research).
      */
     private void loadFlyingBossRoom() {
+        FlyingBossRoom.setRoomSpawn(new GridPoint2(24, 8));
         clearAndLoad(() -> new FlyingBossRoom(terrainFactory, cameraComponent));
     }
 
@@ -181,7 +182,21 @@ public class ShippingGameArea extends GameArea {
      * Clears the game area and loads the next section (Storage).
      */
     private void loadStorage() {
+        StorageGameArea.setRoomSpawn(new GridPoint2(4, 20));
         clearAndLoad(() -> new StorageGameArea(terrainFactory, cameraComponent));
+    }
+
+    /**
+     * Setter method for the player spawn point
+     * should be used when the player is traversing through the rooms
+     * 
+     * @param newSpawn the new spawn point
+     */
+    public static void setRoomSpawn(GridPoint2 newSpawn) {
+        if (newSpawn == null) {
+            return;
+        }
+        ShippingGameArea.playerSpawn = newSpawn;
     }
 
     @Override
