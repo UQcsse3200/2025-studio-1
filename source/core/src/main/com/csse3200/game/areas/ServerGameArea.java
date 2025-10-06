@@ -60,7 +60,6 @@ public class ServerGameArea extends GameArea {
 
         displayUI();
         spawnTerrain();
-        spawnBigWall();
         spawnPlatforms();
         spawnRoomObjects();
         spawnCratesAndRailing();
@@ -192,15 +191,6 @@ public class ServerGameArea extends GameArea {
         Entity ghost2 = NPCFactory.createGhostGPT(player, this, ServiceLocator.getDifficulty().getRoomDifficulty(ServerGameArea.ROOM_DIFF_NUMBER));
         GridPoint2 ghost2Pos = new GridPoint2(25, 20);
         spawnEntityAt(ghost2, ghost2Pos, true, false);
-    }
-
-    /**
-     * Adds a very tall thick-floor as a background wall/divider.
-     */
-    private void spawnBigWall() {
-        GridPoint2 wallSpawn = new GridPoint2(-14, 0);
-        Entity bigWall = ObstacleFactory.createBigThickFloor();
-        spawnEntityAt(bigWall, wallSpawn, true, false);
     }
 
     /**
