@@ -9,7 +9,7 @@ import java.lang.reflect.Modifier;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Verifies that setRoomSpawn(...) updates the static PLAYER_SPAWN used by areas
+ * Verifies that setRoomSpawn(...) updates the static playerSpawn used by areas
  * so doorway-dependent spawns take effect.
  */
 class PlayerSpawnConfigTest {
@@ -18,15 +18,15 @@ class PlayerSpawnConfigTest {
         // Call the public static setRoomSpawn on the area class
         areaClass.getMethod("setRoomSpawn", GridPoint2.class).invoke(null, newSpawn);
 
-        // Read the static PLAYER_SPAWN field via reflection
-        Field f = areaClass.getDeclaredField("PLAYER_SPAWN");
+        // Read the static playerSpawn field via reflection
+        Field f = areaClass.getDeclaredField("playerSpawn");
         f.setAccessible(true);
 
         // Ensure it's not final so updates can take effect
-        assertFalse(Modifier.isFinal(f.getModifiers()), areaClass.getSimpleName() + ": PLAYER_SPAWN should be mutable");
+        assertFalse(Modifier.isFinal(f.getModifiers()), areaClass.getSimpleName() + ": playerSpawn should be mutable");
 
         GridPoint2 actual = (GridPoint2) f.get(null);
-        assertNotNull(actual, areaClass.getSimpleName() + ": PLAYER_SPAWN should not be null");
+        assertNotNull(actual, areaClass.getSimpleName() + ": playerSpawn should not be null");
         assertEquals(newSpawn.x, actual.x, areaClass.getSimpleName() + ": x mismatch");
         assertEquals(newSpawn.y, actual.y, areaClass.getSimpleName() + ": y mismatch");
     }
