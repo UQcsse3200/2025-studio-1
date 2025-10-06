@@ -6,7 +6,6 @@ import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.entities.Entity;
-import com.csse3200.game.entities.configs.ItemSpawnConfig;
 import com.csse3200.game.entities.factories.characters.PlayerFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.entities.spawner.ItemSpawner;
@@ -14,6 +13,8 @@ import com.csse3200.game.components.minigames.whackamole.WhackAMoleGame;
 
 /**
  * Minimal generic Casino room: walls, a single right-side door, and a subtle background overlay.
+ *
+ * Right door -> Spawn Room
  */
 public class CasinoGameArea extends GameArea {
     private static final float WALL_WIDTH = 0.1f;
@@ -24,6 +25,12 @@ public class CasinoGameArea extends GameArea {
         super(terrainFactory, cameraComponent);
     }
 
+    /**
+     * Entry point for this room. This:
+     * - Loads overlay
+     * - Creates Walls, Doors and Floor
+     * - Spawns player
+     */
     @Override
     public void create() {
         GenericLayout.ensureGenericAssets(this);
@@ -39,6 +46,11 @@ public class CasinoGameArea extends GameArea {
         itemSpawner.spawnItems(ItemSpawnConfig.securitymap());
     }
 
+    /**
+     * Spawns the borders and right door inside the room.
+     * Right door -> Spawn Room
+     * Uses a larger door to fit the casino png.
+     */
     private void ensureAssets() {
         String[] needed = new String[]{
                 "images/mole.png",
@@ -69,10 +81,13 @@ public class CasinoGameArea extends GameArea {
         spawnEntity(rightDoor);
     }
 
+    /**
+     * Spawns the player at PLAYER_SPAWN and returns the entity.
+     */
     private Entity spawnPlayer() {
-        Entity player = PlayerFactory.createPlayer();
-        spawnEntityAt(player, PLAYER_SPAWN, true, true);
-        return player;
+        Entity newPlayer = PlayerFactory.createPlayer();
+        spawnEntityAt(newPlayer, PLAYER_SPAWN, true, true);
+        return newPlayer;
     }
 
     private void spawnWhackAMoleGame() {
@@ -80,7 +95,11 @@ public class CasinoGameArea extends GameArea {
         spawnEntityAt(new WhackAMoleGame().getGameEntity(), pos, true, true);
     }
 
+    /**
+     * Disposes current entities and switches to ForestGameArea.
+     */
     private void loadSpawnFromCasino() {
+
         clearAndLoad(() -> new ForestGameArea(terrainFactory, cameraComponent));
     }
 
