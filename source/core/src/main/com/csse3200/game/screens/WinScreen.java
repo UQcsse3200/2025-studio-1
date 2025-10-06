@@ -2,10 +2,8 @@ package com.csse3200.game.screens;
 
 
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.csse3200.game.GdxGame;
 import com.csse3200.game.components.screens.BaseEndScreenDisplays;
-import com.csse3200.game.components.screens.LeaderboardScreenDisplay;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.input.InputDecorator;
 import com.csse3200.game.services.ServiceLocator;
