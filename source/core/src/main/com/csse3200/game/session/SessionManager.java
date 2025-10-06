@@ -16,8 +16,8 @@ public class SessionManager {
      * @return the newly created session
      */
     public GameSession startNewSession() {
-        currentSession = new GameSession(previousSessionId++);
-        return currentSession;
+        this.currentSession = new GameSession(previousSessionId++);
+        return this.currentSession;
     }
 
     /**
@@ -25,7 +25,7 @@ public class SessionManager {
      * @return current active session
      */
     public GameSession getCurrentSession() {
-        return currentSession;
+        return this.currentSession;
     }
 
     /**
@@ -33,9 +33,9 @@ public class SessionManager {
      * else : set currentSession as null
      */
     public void endSession() {
-        if (currentSession != null) {
-            currentSession.getLeaderBoardManager().reset(); // reset leaderboard
+        if (this.currentSession != null) {
+            this.currentSession.getLeaderBoardManager().reset(); // reset leaderboard
         }
-        currentSession = null;
+        this.currentSession = null;
     }
 }
