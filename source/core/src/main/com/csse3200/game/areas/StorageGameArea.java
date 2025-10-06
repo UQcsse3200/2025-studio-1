@@ -22,7 +22,6 @@ import com.csse3200.game.services.ServiceLocator;
 public class StorageGameArea extends GameArea {
     private static final float WALL_WIDTH = 0.1f;
     private static GridPoint2 playerSpawn = new GridPoint2(4, 20);
-    private static GridPoint2 PLAYER_SPAWN = new GridPoint2(4, 20);
     private static final float ROOM_DIFF_NUMBER = 8;
     private Entity player;
 
@@ -120,7 +119,7 @@ public class StorageGameArea extends GameArea {
     }
 
     private Entity spawnPlayer() {
-        return spawnOrRepositionPlayer(PLAYER_SPAWN);
+        return spawnOrRepositionPlayer(playerSpawn);
     }
 
     /**
@@ -163,7 +162,7 @@ public class StorageGameArea extends GameArea {
         if (newSpawn == null) {
             return;
         }
-        StorageGameArea.PLAYER_SPAWN = newSpawn;
+        StorageGameArea.playerSpawn = newSpawn;
     }
 
     @Override

@@ -13,7 +13,6 @@ import com.csse3200.game.entities.factories.characters.PlayerFactory;
 public class OfficeGameArea extends GameArea {
     private static final float WALL_WIDTH = 0.1f;
     private static GridPoint2 playerSpawn = new GridPoint2(10, 10);
-    private static GridPoint2 PLAYER_SPAWN = new GridPoint2(10, 10);
 
     public OfficeGameArea(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
         super(terrainFactory, cameraComponent);
@@ -73,7 +72,7 @@ public class OfficeGameArea extends GameArea {
     }
 
     private Entity spawnPlayer() {
-        return spawnOrRepositionPlayer(PLAYER_SPAWN);
+        return spawnOrRepositionPlayer(playerSpawn);
     }
 
     private void spawnOfficeProps() {
@@ -152,7 +151,7 @@ public class OfficeGameArea extends GameArea {
         if (newSpawn == null) {
             return;
         }
-        OfficeGameArea.PLAYER_SPAWN = newSpawn;
+        OfficeGameArea.playerSpawn = newSpawn;
     }
 
     @Override

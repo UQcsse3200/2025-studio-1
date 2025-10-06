@@ -10,12 +10,8 @@ import com.csse3200.game.entities.configs.ItemSpawnConfig;
 import com.csse3200.game.entities.factories.characters.BossFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.entities.spawner.ItemSpawner;
-import com.csse3200.game.entities.factories.characters.PlayerFactory;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.components.gamearea.GameAreaDisplay;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * This is the room that holds the static Boss.
@@ -26,9 +22,6 @@ import org.slf4j.LoggerFactory;
  * Room is empty except for boss and player
  */
 public class StaticBossRoom extends GameArea {
-    private static final Logger logger = LoggerFactory.getLogger(StaticBossRoom.class);
-    private static GridPoint2 PLAYER_SPAWN = new GridPoint2(3, 10);
-
     private static GridPoint2 playerSpawn = new GridPoint2(3, 10);
 
     private static final float WALL_WIDTH = 0.1f;
@@ -87,7 +80,7 @@ public class StaticBossRoom extends GameArea {
     }
 
     private Entity spawnPlayer() {
-        return spawnOrRepositionPlayer(PLAYER_SPAWN);
+        return spawnOrRepositionPlayer(playerSpawn);
     }
 
     private void spawnBoss() {
@@ -125,7 +118,7 @@ public class StaticBossRoom extends GameArea {
         if (newSpawn == null) {
             return;
         }
-        StaticBossRoom.PLAYER_SPAWN = newSpawn;
+        StaticBossRoom.playerSpawn = newSpawn;
     }
 
     public Entity getPlayer() {
