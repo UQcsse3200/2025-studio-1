@@ -8,7 +8,6 @@ import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.ItemSpawnConfig;
 import com.csse3200.game.entities.factories.characters.NPCFactory;
-import com.csse3200.game.entities.factories.characters.PlayerFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.entities.spawner.ItemSpawner;
 import com.csse3200.game.services.ServiceLocator;
@@ -93,9 +92,7 @@ public class TunnelGameArea extends GameArea {
      * @return the player entity
      */
     private Entity spawnPlayer() {
-        Entity player = PlayerFactory.createPlayer();
-        spawnEntityAt(player, playerSpawn, true, true);
-        return player;
+        return spawnOrRepositionPlayer(playerSpawn);
     }
 
     /**
@@ -187,8 +184,7 @@ public class TunnelGameArea extends GameArea {
 
     @Override
     public Entity getPlayer() {
-        // placeholder
-        return null;
+        return ServiceLocator.getPlayer();
     }
 
     public static TunnelGameArea load(TerrainFactory terrainFactory, CameraComponent camera) {
@@ -196,3 +192,5 @@ public class TunnelGameArea extends GameArea {
     }
 
 }
+
+

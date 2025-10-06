@@ -134,9 +134,7 @@ public class ShippingGameArea extends GameArea {
     }
 
     private Entity spawnPlayer() {
-        Entity player = PlayerFactory.createPlayer();
-        spawnEntityAt(player, playerSpawn, true, true);
-        return player;
+        return spawnOrRepositionPlayer(playerSpawn);
     }
 
     /**
@@ -205,8 +203,7 @@ public class ShippingGameArea extends GameArea {
     }
 
     public Entity getPlayer() {
-        // placeholder
-        return null;
+        return ServiceLocator.getPlayer();
     }
 
     public static ShippingGameArea load(TerrainFactory terrainFactory, CameraComponent camera) {

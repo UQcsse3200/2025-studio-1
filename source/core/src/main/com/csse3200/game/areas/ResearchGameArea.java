@@ -65,9 +65,7 @@ public class ResearchGameArea extends GameArea {
     }
 
     private Entity spawnPlayer() {
-        Entity player = PlayerFactory.createPlayer();
-        spawnEntityAt(player, playerSpawn, true, true);
-        return player;
+        return spawnOrRepositionPlayer(playerSpawn);
     }
 
     private void spawnPlatforms() {
@@ -171,8 +169,7 @@ public class ResearchGameArea extends GameArea {
 
     @Override
     public Entity getPlayer() {
-        // placeholder
-        return null;
+        return ServiceLocator.getPlayer();
     }
 
     public static ResearchGameArea load(TerrainFactory terrainFactory, CameraComponent camera) {

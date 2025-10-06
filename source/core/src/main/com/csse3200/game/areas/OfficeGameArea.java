@@ -6,6 +6,7 @@ import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.factories.characters.PlayerFactory;
+import com.csse3200.game.services.ServiceLocator;
 
 /**
  * Office room: minimal walls and two doors (left--Security, right--Elevator).
@@ -72,8 +73,7 @@ public class OfficeGameArea extends GameArea {
     }
 
     private void spawnPlayer() {
-        Entity player = PlayerFactory.createPlayer();
-        spawnEntityAt(player, playerSpawn, true, true);
+        spawnOrRepositionPlayer(playerSpawn);
     }
 
     private void spawnOfficeProps() {
@@ -100,7 +100,7 @@ public class OfficeGameArea extends GameArea {
         float p1x = 5f, p1y = 4f;
         float p2x = -1f, p2y = 4f;
         float p3x = 8f, p3y = 6f;
-        float p4x = 13f, p4y = 8f;
+        float p4x = 10f, p4y = 8f;
 
         Entity platform1 = com.csse3200.game.entities.factories.system.ObstacleFactory.createOfficeElevatorPlatform();
         platform1.setPosition(p1x, p1y);
@@ -162,8 +162,7 @@ public class OfficeGameArea extends GameArea {
 
     @Override
     public Entity getPlayer() {
-        //placeholder see previous
-        return null;
+        return ServiceLocator.getPlayer();
     }
 }
 
