@@ -11,6 +11,7 @@ import com.csse3200.game.entities.factories.characters.PlayerFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.entities.spawner.ItemSpawner;
 import com.csse3200.game.components.minigames.whackamole.WhackAMoleGame;
+import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
 
 /**
@@ -22,6 +23,13 @@ public class CasinoGameArea extends GameArea {
     private static final float WALL_WIDTH = 0.1f;
     private static final GridPoint2 PLAYER_SPAWN = new GridPoint2(25, 10);
     private Entity player;
+    private static final String[] CASINO_TEXTURES = {
+            "images/mole.png",
+            "images/hole.png"
+    };
+    private static final String[] CASINO_SOUNDS = {
+            "sounds/whack.mp3"
+    };
 
     public CasinoGameArea(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
         super(terrainFactory, cameraComponent);
@@ -39,9 +47,24 @@ public class CasinoGameArea extends GameArea {
         GenericLayout.setupTerrainWithOverlay(this, terrainFactory, TerrainType.CASINO,
                 new Color(0.08f, 0.08f, 0.1f, 0.30f));
 
+        ensureAssets();
         spawnBordersAndDoors();
         spawnFloor();
         player = spawnPlayer();
+        spawnWhackAMoleGame();
+    }
+
+    private void ensureAssets() {
+        ResourceService rs = ServiceLocator.getResourceService();
+        rs.loadTextures(CASINO_TEXTURES);
+        rs.loadSounds(CASINO_SOUNDS);
+        rs.loadAll();
+    }
+
+    private void unloadAssets() {
+        ResourceService rs = ServiceLocator.getResourceService();
+        rs.unloadAssets(CASINO_TEXTURES);
+        rs.unloadAssets(CASINO_SOUNDS);
     }
 
     /**
@@ -80,11 +103,16 @@ public class CasinoGameArea extends GameArea {
         return newPlayer;
     }
 
+    private void spawnWhackAMoleGame() {
+        GridPoint2 pos = new GridPoint2(5, 7);
+        spawnEntityAt(new WhackAMoleGame().getGameEntity(), pos, true, true);
+    }
+
     /**
      * Disposes current entities and switches to ForestGameArea.
      */
     private void loadSpawnFromCasino() {
-
+        unloadAssets();
         clearAndLoad(() -> new ForestGameArea(terrainFactory, cameraComponent));
     }
 

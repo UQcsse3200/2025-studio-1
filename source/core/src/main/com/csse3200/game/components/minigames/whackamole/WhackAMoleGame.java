@@ -22,7 +22,6 @@ public class WhackAMoleGame {
     private Timer.Task loopTask;
     private Timer.Task hideTask;
 
-    // Track whether the current mole was hit before it despawns
     private int currentIdx = -1;
     private boolean currentHit = false;
     private int misses = 0;
@@ -68,7 +67,7 @@ public class WhackAMoleGame {
         if (running) return;
         running = true;
         resetRuntime();
-        display.resetScore(); // ← add this so a fresh round starts at 0
+        display.resetScore();
         loopTask = com.badlogic.gdx.utils.Timer.schedule(new com.badlogic.gdx.utils.Timer.Task() {
             @Override public void run() { startRound(); }
         }, 0f, 0.8f);

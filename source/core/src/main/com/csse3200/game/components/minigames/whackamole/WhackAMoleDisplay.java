@@ -11,8 +11,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.UIComponent;
+import com.badlogic.gdx.audio.Sound;
 
 public class WhackAMoleDisplay extends UIComponent {
     private static final float PANEL_W = 720f, PANEL_H = 520f;
@@ -28,11 +32,13 @@ public class WhackAMoleDisplay extends UIComponent {
     private Image[] moleImgs;
     private int score = 0;
     private TextureRegionDrawable moleDr, holeDr;
+    private Sound hitSfx;
 
     @Override
     public void create() {
         super.create();
         entity.getEvents().addListener("interact", this::show); // open on interact
+        hitSfx = ServiceLocator.getResourceService().getAsset("sounds/whack.mp3", Sound.class);
 
         Texture moleTex = ServiceLocator.getResourceService().getAsset("images/mole.png", Texture.class);
         Texture holeTex = ServiceLocator.getResourceService().getAsset("images/hole.png", Texture.class);
@@ -127,6 +133,7 @@ public class WhackAMoleDisplay extends UIComponent {
                             @Override public void run() { mole.setColor(1f, 1f, 1f, 1f); }
                         }, 0.10f);
 
+                        playHitFeedback(cell);
                         setScore(score + 1);
                         entity.getEvents().trigger("wm:hit");
                         mole.setVisible(false);
@@ -201,6 +208,41 @@ public class WhackAMoleDisplay extends UIComponent {
 
     public int getScore() {
         return score;
+    }
+
+    private void spawnPlusOne(Actor target) {
+        Label.LabelStyle st = new Label.LabelStyle(skin.get(Label.LabelStyle.class));
+        st.fontColor = GOLD;
+        Label plus = new Label("+1", st);
+        plus.setFontScale(0.9f);
+        plus.setTouchable(Touchable.disabled);
+
+        Vector2 p = new Vector2(target.getWidth() / 2f, target.getHeight() * 0.65f);
+        target.localToActorCoordinates(root, p);
+
+        root.addActor(plus);
+        float w = plus.getPrefWidth();
+        plus.setPosition(p.x - w / 2f, p.y);
+        plus.toFront(); // make sure it's on top
+
+        // Rise & fade, then remove
+        plus.getColor().a = 1f;
+        plus.addAction(Actions.sequence(
+                Actions.parallel(
+                        Actions.moveBy(0f, 22f, 0.35f),
+                        Actions.fadeOut(0.35f)
+                ),
+                Actions.removeActor()
+        ));
+    }
+
+    private void playHitSound() {
+        if (hitSfx != null) hitSfx.play(0.6f);
+    }
+
+    private void playHitFeedback(Actor target) {
+        spawnPlusOne(target);
+        playHitSound();
     }
 
     public void setRunning(boolean running) {
