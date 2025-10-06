@@ -8,8 +8,11 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.components.MagazineComponent;
+import com.csse3200.game.components.TouchAttackComponent;
 import com.csse3200.game.components.WeaponsStatsComponent;
 import com.csse3200.game.entities.Entity;
+import com.csse3200.game.physics.PhysicsLayer;
+import com.csse3200.game.physics.components.HitboxComponent;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.utils.math.Vector2Utils;
 
@@ -96,6 +99,28 @@ public class TextureRenderWithRotationComponent extends TextureRenderComponent {
                 mouseWorldPos.set(mouseScreenPos.x, mouseScreenPos.y);
                 rotation = (float) Vector2Utils.angleFromTo(entity.getPosition(), mouseWorldPos);
                 rotated = true;
+            }
+
+            if (entity.getComponent(WeaponsStatsComponent.class).getRocket()) {
+                //Rotate the rocket towards the nearest enemy
+                Entity nearestEnemy = null;
+                float minDistance = Float.MAX_VALUE;
+                for (Entity entity : ServiceLocator.getEntityService().getEntities()) {
+                    if (entity.hasComponent(HitboxComponent.class) &&
+                            entity.getComponent(HitboxComponent.class).getLayer() == PhysicsLayer.NPC) {
+                        float currDistance = ServiceLocator.getPlayer().getCenterPosition().len()
+                                - entity.getCenterPosition().len();
+                        if (currDistance < minDistance) {
+                            nearestEnemy = entity;
+                            minDistance = currDistance;
+                        }
+                    }
+
+                }
+                if (nearestEnemy != null) {
+                    rotation = (float) Vector2Utils.angleFromTo(entity.getPosition(), nearestEnemy.getPosition());
+                }
+
             }
         }
 

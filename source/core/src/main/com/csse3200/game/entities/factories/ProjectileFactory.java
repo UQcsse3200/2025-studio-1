@@ -161,6 +161,7 @@ public class ProjectileFactory {
         //Player's weapon has the water bullet upgrade
         if (source.getRocket()) {
             Entity projectile = createProjectile(target, source, "images/rocket.png");
+            projectile.addComponent(new HomingPhysicsComponent());
             projectile.scaleHeight(0.85f);
             return projectile;
         }
