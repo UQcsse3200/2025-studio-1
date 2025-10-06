@@ -138,7 +138,8 @@ public class ForestGameArea extends GameArea {
             "images/NpcDialogue.png",
             "images/nurse_npc.png",
             "images/partner.png",
-            "images/armour-assets/chestplate.png"
+            "images/armour-assets/chestplate.png",
+            "images/armour-assets/hood.png"
     };
 
     private static final String[] backgroundTextures = {

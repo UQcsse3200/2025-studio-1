@@ -37,7 +37,6 @@ public class WorldPickUpFactory {
         Entity pickup = new Entity()
                 .addComponent(new TextureRenderComponent(tex))
                 .addComponent(new PhysicsComponent())
-                //.addComponent(new ColliderComponent())
                 .addComponent(new HitboxComponent())
                 .addComponent(new ItemComponent());
 
@@ -57,6 +56,12 @@ public class WorldPickUpFactory {
         for (Weapons w : Weapons.values()) {
             if (texture.equals(w.getConfig().texturePath)) {
                 return createWeaponPickup(w);
+            }
+        }
+
+        for (Armour a: Armour.values()) {
+            if (texture.equals(a.getConfig().texturePath)) {
+                return createArmourPickup(a);
             }
         }
         return null;
