@@ -70,8 +70,6 @@ public class StaticBossRoom extends GameArea {
 
         player = spawnPlayer();
 
-        spawnBigWall();
-
         spawnBoss();
         spawnObjectDoors(new GridPoint2(0, 7), new GridPoint2(28, 7));
 
@@ -97,15 +95,6 @@ public class StaticBossRoom extends GameArea {
 
         Entity boss = BossFactory.createBoss3(player);
         spawnEntityAt(boss, pos, true, true);
-    }
-
-    /**
-     * Adds a very tall thick-floor as a background wall/divider.
-     */
-    private void spawnBigWall() {
-        GridPoint2 wallSpawn = new GridPoint2(-14, 0);
-        Entity bigWall = ObstacleFactory.createBigThickFloor();
-        spawnEntityAt(bigWall, wallSpawn, true, false);
     }
 
     /**

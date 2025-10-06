@@ -73,7 +73,6 @@ public class FlyingBossRoom extends GameArea {
         player = spawnPlayer();
 
         spawnPlatforms();
-        spawnBigWall();
 
         spawnFlyingBoss();
         spawnObjectDoors(new GridPoint2(0, 7), new GridPoint2(28, 7));
@@ -110,15 +109,6 @@ public class FlyingBossRoom extends GameArea {
 
         Entity flyingBoss = BossFactory.createBoss2(player);
         spawnEntityAt(flyingBoss, pos, true, true);
-    }
-
-    /**
-     * Adds a very tall thick-floor as a background wall/divider.
-     */
-    private void spawnBigWall() {
-        GridPoint2 wallSpawn = new GridPoint2(-14, 0);
-        Entity bigWall = ObstacleFactory.createBigThickFloor();
-        spawnEntityAt(bigWall, wallSpawn, true, false);
     }
 
     /**
