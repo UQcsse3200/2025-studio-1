@@ -2,6 +2,7 @@ package com.csse3200.game.components.player;
 
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.entities.Entity;
+import com.csse3200.game.rendering.TextureRenderComponent;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -24,6 +25,7 @@ public class ArmourEquipComponent extends PlayerEquipComponent {
         if (item == null) {
             System.out.println("Trying to equip null armour");
         }
+        item.getComponent(TextureRenderComponent.class).setZIndex(-entity.getPosition().y + 1);
         currentlyEquippedArmour.put(item, offset);
     }
 
@@ -32,7 +34,8 @@ public class ArmourEquipComponent extends PlayerEquipComponent {
      */
     @Override
     public void update() {
-        for (Entity item: currentlyEquippedArmour.keySet())
+        for (Entity item: currentlyEquippedArmour.keySet()) {
             item.setPosition(entity.getPosition().cpy().add(currentlyEquippedArmour.get(item)));
+        }
     }
 }
