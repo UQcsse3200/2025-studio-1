@@ -148,7 +148,7 @@ public class ItemSpawnConfig {
                 new ItemSpawner.ItemSpawnInfo(new GridPoint2(4, 17), 1)
         ));
         config.put(Weapons.LIGHTSABER.name(), List.of(
-                new ItemSpawner.ItemSpawnInfo(new GridPoint2(13, 20), 1)
+                new ItemSpawner.ItemSpawnInfo(new GridPoint2(13, 22), 1)
         ));
 
 
