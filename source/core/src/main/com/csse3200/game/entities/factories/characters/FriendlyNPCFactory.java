@@ -22,6 +22,9 @@ import com.csse3200.game.physics.components.HitboxComponent;
 import com.csse3200.game.physics.components.PhysicsComponent;
 import com.csse3200.game.physics.components.PhysicsMovementComponent;
 
+import java.util.List;
+import java.util.Collections;
+
 public class FriendlyNPCFactory {
     public static Entity createTip() {
         TextureAtlas atlas = ServiceLocator.getResourceService()
@@ -66,7 +69,7 @@ public class FriendlyNPCFactory {
      * @param player The player Entity, used to attach dialogue and interaction logic.
      * @return A new Entity representing the Guidance NPC with dialogue, tips, and animation.
      */
-    public static Entity createGuidanceNpc(Entity player) {
+    public static Entity createGuidanceNpc(Entity player, List<Vector2> waypoints) {
         TextureAtlas atlas = ServiceLocator.getResourceService()
                 .getAsset("images/guidance_npc.atlas", TextureAtlas.class);
 
@@ -75,18 +78,24 @@ public class FriendlyNPCFactory {
 
         Entity npc = new Entity()
                 .addComponent(arc)
+//                .addComponent(new HoverBobComponent(0.08f, 2.0f))
+//                .addComponent(new GuidanceContextComponent(player))
+//                .addComponent(new GuidanceBrainComponent(waypoints, 1.3f))
+//                .addComponent(new GuidancePointerUiComponent())
+//                .addComponent(new BeaconMarkerComponent())
                 .addComponent(new NpcDialogueDataComponent(
                         "Guide", "", new String[]{
                         "Welcome, pilot.",
                         "Follow the beacons to reach the safe zone.",
                         "Ping me if you need directions again."
                 }))
-                .addComponent(new DialogueDisplay())
-                .addComponent(new TipComponent(null, player, 3f))
-                .addComponent(new NpcInterationComponent(player, 3f));
+                .addComponent(new DialogueDisplay());
 
-        arc.scaleEntity();
-        arc.startAnimation("robot_fire");
+        npc.addComponent(new TipComponent(npc, player, 3f));
+        npc.addComponent(new NpcInterationComponent(player, 3f));
+
+//        arc.startAnimation("robot_fire");
+//        arc.scaleEntity();
         return npc;
     }
 
