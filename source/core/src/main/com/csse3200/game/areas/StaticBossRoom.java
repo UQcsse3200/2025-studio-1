@@ -27,7 +27,7 @@ import org.slf4j.LoggerFactory;
  */
 public class StaticBossRoom extends GameArea {
     private static final Logger logger = LoggerFactory.getLogger(StaticBossRoom.class);
-    private static final GridPoint2 PLAYER_SPAWN = new GridPoint2(3, 10);
+    private static GridPoint2 PLAYER_SPAWN = new GridPoint2(3, 10);
 
     private static GridPoint2 playerSpawn = new GridPoint2(3, 10);
 
@@ -136,7 +136,7 @@ public class StaticBossRoom extends GameArea {
         if (newSpawn == null) {
             return;
         }
-        StaticBossRoom.playerSpawn = newSpawn;
+        StaticBossRoom.PLAYER_SPAWN = newSpawn;
     }
 
     public Entity getPlayer() {

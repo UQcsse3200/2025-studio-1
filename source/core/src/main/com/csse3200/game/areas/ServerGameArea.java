@@ -29,7 +29,7 @@ public class ServerGameArea extends GameArea {
 
     private static final float WALL_WIDTH = 0.1f;
     private static GridPoint2 playerSpawn = new GridPoint2(10, 10);
-    private static final GridPoint2 PLAYER_SPAWN = new GridPoint2(10, 10);
+    private static GridPoint2 PLAYER_SPAWN = new GridPoint2(10, 10);
     private static final float ROOM_DIFF_NUMBER = 9;
 
     private Entity player;
@@ -267,7 +267,7 @@ public class ServerGameArea extends GameArea {
         if (newSpawn == null) {
             return;
         }
-        ServerGameArea.playerSpawn = newSpawn;
+        ServerGameArea.PLAYER_SPAWN = newSpawn;
     }
 
     /**
