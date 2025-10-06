@@ -88,9 +88,8 @@ public class ElevatorGameArea extends GameArea {
 
     }
 
-    private void spawnPlayer() {
-        Entity player = com.csse3200.game.entities.factories.characters.PlayerFactory.createPlayer();
-        spawnEntityAt(player, PLAYER_SPAWN, true, true);
+    private Entity spawnPlayer() {
+        return spawnOrRepositionPlayer(PLAYER_SPAWN);
     }
 
     /**
