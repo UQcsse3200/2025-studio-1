@@ -16,48 +16,39 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * The {@code Minimap} class represents a 2D overview of the game world, showing discovered
+ * The Minimap class represents a 2D overview of the game world, showing discovered
  * rooms as images arranged in a grid layout. Each room corresponds to a position in the
  * minimap grid and can be dynamically updated depending on whether the player has discovered it.
- * <p>
  * The minimap supports scaling (zoom in/out), panning centered on the player's current position,
  * and rendering only the visible rooms within the current viewport. Each minimap image is
- * represented as a {@link com.badlogic.gdx.scenes.scene2d.ui.Image}.
- * </p>
+ * represented as a com.badlogic.gdx.scenes.scene2d.ui.Image}.
+ *
  */
 public class Minimap {
     /** Path to the texture used for undiscovered or locked rooms. */
     private static final String UNDISCOVERED = "images/minimap-images/Locked.png";
-
     /** Logger instance for error and debugging output. */
     private static final Logger logger = LoggerFactory.getLogger(Minimap.class);
-
     /** Default image height for a room in pixels. */
     private static final int IMAGE_HEIGHT = 720;
-
     /** Default image width for a room in pixels. */
     private static final int IMAGE_WIDTH = 1280;
 
     /** Maps grid coordinates to corresponding minimap images. */
     private Map<Vector2, Image> grid;
-
     /** Maps room names to their positions in the minimap grid. */
     private Map<String, Vector2> roomPositions;
-
     /** Current zoom scale of the minimap (1 = default, >1 = zoomed in). */
     private float scale;
-
     /** The current center of the minimap in terms of map coordinates. */
     private Vector2 centre;
-
     /** The height of the screen (in pixels). */
     private int screenHeight;
-
     /** The width of the screen (in pixels). */
     private int screenWidth;
 
     /**
-     * Creates a new {@code Minimap} with the given screen dimensions.
+     * Creates a new Minimap with the given screen dimensions.
      *
      * @param screenHeight the height of the screen in pixels
      * @param screenWidth the width of the screen in pixels
@@ -87,14 +78,12 @@ public class Minimap {
 
     /**
      * Adds a room to the minimap at the specified grid coordinates.
-     * <p>
      * Each grid coordinate can only hold one room, and each room name
      * must be unique across the minimap.
-     * </p>
      *
      * @param coordinates the grid coordinates (integer x, y) of the room
      * @param roomName the name of the room
-     * @return {@code true} if the room was successfully added, {@code false} otherwise
+     * @return true if the room was successfully added, false otherwise
      */
     public boolean addRoom(Vector2 coordinates, String roomName) {
         // Prevent overlapping rooms
@@ -112,12 +101,11 @@ public class Minimap {
         // Create a locked image for undiscovered rooms
         Image image = new Image(
                 new TextureRegionDrawable(
-                        new Texture("images/minimap-images/Locked.png")
+                        new Texture(UNDISCOVERED)
                 )
         );
         image.setSize(IMAGE_WIDTH, IMAGE_HEIGHT);
 
-        // Store the image and coordinates
         grid.put(coordinates, image);
         roomPositions.put(roomName, coordinates);
         return true;
@@ -131,6 +119,11 @@ public class Minimap {
      * @return a mapping of images to their on-screen positions in pixels
      */
     public Map<Image, Vector2> render() {
+        if (centre == null) {
+            logger.error("Attempted to render the map before opening it");
+            return null;
+        }
+
         Map<Image, Vector2> output = new HashMap<>();
 
         // Determine how much of the minimap is visible horizontally and vertically
@@ -157,7 +150,6 @@ public class Minimap {
                 float screenX = (roomCoordinates.x - minX) * (screenWidth / (maxX - minX));
                 float screenY = (roomCoordinates.y - minY) * (screenHeight / (maxY - minY));
                 Vector2 screenCoords = new Vector2(screenX, screenY);
-
                 output.put(grid.get(roomCoordinates), screenCoords);
             }
         }
@@ -201,7 +193,7 @@ public class Minimap {
      * and revealing all discovered rooms using the {@link DiscoveryService}.
      */
     public void open() {
-        // Normalize the player's position to fit within minimap coordinates
+        // Normalize the player's position
         Vector2 normalisedPlayerPosition = normalisePosition(ServiceLocator.getPlayer().getPosition());
         DiscoveryService discoveryService = ServiceLocator.getDiscoveryService();
 
@@ -210,7 +202,7 @@ public class Minimap {
         centre = calculateCentre(currentRoom, normalisedPlayerPosition);
         scale = 1;
 
-        // Replace locked images with discovered room textures
+        // Replace unlocked rooms' images with their actual images
         for (String name : roomPositions.keySet()) {
             Vector2 coordinates = roomPositions.get(name);
 
@@ -246,7 +238,7 @@ public class Minimap {
      * relative to the screen dimensions.
      *
      * @param position the player's position in screen pixels
-     * @return the normalized position as a {@link Vector2}
+     * @return the normalized position as a Vector2
      */
     private Vector2 normalisePosition(Vector2 position) {
         float x = position.x;
