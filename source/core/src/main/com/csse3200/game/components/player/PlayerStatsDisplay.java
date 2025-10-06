@@ -24,6 +24,7 @@ public class PlayerStatsDisplay extends BaseScreenDisplay {
     private static final float BAR_HEIGHT = 30f;
     private static final float PAD = 10f;
     private static final int PCT_MAX = 100;
+    private static final String WHITE = "white";
 
     // Constants
     private static final String ammoAmount = "Ammo :%d";
@@ -70,8 +71,9 @@ public class PlayerStatsDisplay extends BaseScreenDisplay {
     /* Build & draw */
     @Override
     protected void buildUI(Table root) {
-        Color HEALTH_TINT  = new Color(1f, 0.25f, 0.25f, 1f); // soft red
-        Color STAMINA_TINT = new Color(0.35f, 1f, 0.45f, 1f); // neon-ish green
+        Color HEALTH_TINT  = new Color(1f, 0.25f, 0.25f, 1f);
+        Color STAMINA_TINT = new Color(0.35f, 1f, 0.45f, 1f);
+        Color PANEL_BG     = new Color(0f, 0f, 0f, 0.3f);
 
         // Health bar: use real max if available, otherwise [0..100]
         int healthVal = (combat != null) ? combat.getHealth() : 0;
@@ -90,20 +92,28 @@ public class PlayerStatsDisplay extends BaseScreenDisplay {
 
         // Processor label
         int processor = (inventory != null) ? inventory.getProcessor() : 0;
-        processorLabel = new Label(formatProcessor(processor), skin, "white");
+        processorLabel = new Label(formatProcessor(processor), skin, WHITE);
 
         // Ammo label
-        ammoLabel = new Label(formatAmmoLabel(), skin, "white");
+        ammoLabel = new Label(formatAmmoLabel(), skin, WHITE);
 
-        // Layout top-left
+        // Create panel
+        Table panel = new Table();
+        panel.setBackground(skin.newDrawable(WHITE, PANEL_BG));
+        panel.pad(8f).defaults().left();
+
+        // Add rows into the ONE panel
+        panel.add(healthBar).width(BAR_WIDTH).height(BAR_HEIGHT);
+        panel.row().padTop(6f);
+        panel.add(staminaBar).width(BAR_WIDTH).height(BAR_HEIGHT);
+        panel.row().padTop(6f);
+        panel.add(processorLabel);
+        panel.row().padTop(4f);
+        panel.add(ammoLabel);
+
+        // Place the panel on screen
         root.top().left().padTop(50f);
-        root.add(healthBar).width(BAR_WIDTH).height(BAR_HEIGHT).left().padLeft(PAD);
-        root.row();
-        root.add(staminaBar).width(BAR_WIDTH).height(BAR_HEIGHT).left().padLeft(PAD);
-        root.row();
-        root.add(processorLabel).left().padLeft(PAD);
-        root.row();
-        root.add(ammoLabel).left().padLeft(PAD);
+        root.add(panel).left().padLeft(PAD);
         root.row();
     }
 
