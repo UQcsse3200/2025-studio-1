@@ -95,7 +95,7 @@ public class BaseEndScreenDisplays extends BaseScreenDisplay {
     private static void neutralizeTint(Actor label, Actor wrapper, Table root) {
         if (root != null) root.setColor(Color.WHITE);
         if (wrapper != null) wrapper.setColor(Color.WHITE);
-        if (label != null) ((Label) label).setColor(Color.WHITE);
+        if (label != null) label.setColor(Color.WHITE);
     }
 
     private static void at(float delay, Runnable r) {

@@ -89,8 +89,8 @@ class TypingInitTest {
     @Test
     void equals_false_against_other_type_and_null() throws Exception {
         Object a = newTI("t", 1.0f, new StringBuilder("x"), new int[]{1, 2});
-        assertNotEquals(a, "not a TypingInit");
-        assertNotEquals(a, null);
+        assertNotEquals("not a TypingInit", a);
+        assertNotEquals(null, a);
     }
 
     @Test
@@ -111,14 +111,14 @@ class TypingInitTest {
     void equals_reflexive_true() throws Exception {
         StringBuilder buf = new StringBuilder("x");
         Object a = newTI("t", 1.0f, buf, new int[]{1, 2});
-        assertTrue(a.equals(a)); // o == this fast-path
+        assertEquals(a, a); // o == this fast-path
     }
 
     @Test
     void equals_false_otherType_and_null() throws Exception {
         Object a = newTI("t", 1.0f, new StringBuilder("x"), new int[]{1, 2});
-        assertFalse(a.equals("not-typinginit"));
-        assertFalse(a.equals(null));
+        assertNotEquals("not-typinginit", a);
+        assertNotEquals(null, a);
     }
 
     @Test
@@ -126,7 +126,7 @@ class TypingInitTest {
         StringBuilder buf = new StringBuilder("x");
         Object a = newTI("t", 1.0f, buf, new int[]{1, 2});
         Object b = newTI("t", 1.0001f, buf, new int[]{1, 2}); // Float.compare != 0
-        assertFalse(a.equals(b));
+        assertNotEquals(a, b);
     }
 
     @Test
@@ -134,12 +134,12 @@ class TypingInitTest {
         StringBuilder buf = new StringBuilder("x");
         Object base = newTI("t", 2.0f, buf, new int[]{1, 2});
         Object diff = newTI("T", 2.0f, buf, new int[]{1, 2});
-        assertFalse(base.equals(diff));
+        assertNotEquals(base, diff);
 
         // both null text -> equal (Objects.equals handles this)
         Object n1 = newTI(null, 3.0f, buf, new int[]{1, 2});
         Object n2 = newTI(null, 3.0f, buf, new int[]{1, 2});
-        assertTrue(n1.equals(n2));
+        assertEquals(n1, n2);
     }
 
     @Test
@@ -147,7 +147,7 @@ class TypingInitTest {
         int[] idx = new int[]{1, 2};
         Object a = newTI("t", 4.0f, new StringBuilder("same"), idx);
         Object b = newTI("t", 4.0f, new StringBuilder("same"), new int[]{1, 2});
-        assertFalse(a.equals(b)); // buf compared by identity
+        assertNotEquals(a, b); // buf compared by identity
     }
 
     @Test
@@ -155,7 +155,7 @@ class TypingInitTest {
         StringBuilder buf = new StringBuilder("y");
         Object a = newTI("t", 5.0f, buf, new int[]{1, 2});
         Object b = newTI("t", 5.0f, buf, new int[]{1, 2}); // different array, same contents
-        assertTrue(a.equals(b)); // Arrays.equals -> true
+        assertEquals(a, b); // Arrays.equals -> true
     }
 
     @Test
@@ -163,7 +163,7 @@ class TypingInitTest {
         StringBuilder buf = new StringBuilder("z");
         Object a = newTI("t", 6.0f, buf, new int[]{1, 2});
         Object b = newTI("t", 6.0f, buf, new int[]{1, 3});
-        assertFalse(a.equals(b));
+        assertNotEquals(a, b);
     }
 
     @Test
@@ -171,9 +171,9 @@ class TypingInitTest {
         StringBuilder buf = new StringBuilder("w");
         Object bothNull1 = newTI("t", 7.0f, buf, null);
         Object bothNull2 = newTI("t", 7.0f, buf, null);
-        assertTrue(bothNull1.equals(bothNull2)); // Arrays.equals(null, null) == true
+        assertEquals(bothNull1, bothNull2); // Arrays.equals(null, null) == true
 
         Object oneNull = newTI("t", 7.0f, buf, new int[]{});
-        assertFalse(bothNull1.equals(oneNull));  // null vs empty -> false
+        assertNotEquals(bothNull1, oneNull);  // null vs empty -> false
     }
 }
