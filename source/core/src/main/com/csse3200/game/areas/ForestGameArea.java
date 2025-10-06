@@ -58,12 +58,13 @@ import java.security.SecureRandom;
  */
 public class ForestGameArea extends GameArea {
     private static final Logger logger = LoggerFactory.getLogger(ForestGameArea.class);
-    private static final GridPoint2 PLAYER_SPAWN = new GridPoint2(3, 20);
+    private static GridPoint2 playerSpawn = new GridPoint2(3, 20);
     private static final int NUM_ITEMS = 5;//this is for ItemFactory
     // private static final int NUM_TURRETS = 1;
     private static final float WALL_WIDTH = 0.1f;
 
     private final float VERTICAL_HEIGHT_OFFSET = 9.375f;
+
     /**
      * Files or pictures used by the game (enemy/props,etc.).
      */
@@ -148,7 +149,13 @@ public class ForestGameArea extends GameArea {
             "backgrounds/SpawnResize.png",
             "backgrounds/Storage.png",
             "images/Storage.png",
-            "images/cards.png"
+            "images/cards.png",
+            "backgrounds/Storage.png",
+            "backgrounds/MainHall.png",
+            "backgrounds/Office.png",
+            "backgrounds/Research.png",
+            "backgrounds/Security.png",
+            "backgrounds/Server.png"
     };
 
     /**
@@ -259,6 +266,11 @@ public class ForestGameArea extends GameArea {
             "images/boss3_phase2.atlas",
             "images/cards.atlas"
     };
+
+    private static final String[] extraTextures = {
+            "foreg_sprites/extras/Spikes.png",
+    };
+
     private static final String[] forestSounds = {"sounds/Impact4.ogg",
             "sounds/shot_failed.mp3",
             "sounds/reload.mp3",
@@ -318,21 +330,10 @@ public class ForestGameArea extends GameArea {
         spawnComputerBench();
         spawnHealthBench();
         spawnSpeedBench();
-
-        player = spawnPlayer();
-        ServiceLocator.registerPlayer(player);
         spawnFloor();
         spawnBottomRightDoor();
         spawnMarblePlatforms();
         spawnShopKiosk();
-        SecureRandom random = new SecureRandom();
-        int choice = random.nextInt(3);
-        switch (choice) {
-            case 0 -> spawnBoss2();
-            case 1 -> spawnRobots();
-            default -> spawnBoss3();
-        }
-        //playMusic();
         playMusic();
         ItemSpawner itemSpawner = new ItemSpawner(this);
         itemSpawner.spawnItems(ItemSpawnConfig.forestmap());
@@ -437,6 +438,7 @@ public class ForestGameArea extends GameArea {
      */
     private void loadNextLevel() {
         // Use the safe, render-thread transition helper
+        Reception.setRoomSpawn(new GridPoint2(6, 10));
         clearAndLoad(() -> new Reception(terrainFactory, cameraComponent));
     }
 
@@ -473,8 +475,6 @@ public class ForestGameArea extends GameArea {
         spawnEntityAt(bench, new GridPoint2(2, 7), true, true);
 
     }
-
-
 
     private void spawnHealthBench() {
         Entity bench = InteractableStationFactory.createStation(Benches.HEALTH_BENCH);
@@ -574,7 +574,7 @@ public class ForestGameArea extends GameArea {
 
     private Entity spawnPlayer() {
         Entity newPlayer = PlayerFactory.createPlayer();
-        spawnEntityAt(newPlayer, PLAYER_SPAWN, true, true);
+        spawnEntityAt(newPlayer, playerSpawn, true, true);
 
         newPlayer.getEvents().addListener("equip", this::equipItem);
         newPlayer.getEvents().addListener("unequip", this::unequipItem);
@@ -711,6 +711,7 @@ public class ForestGameArea extends GameArea {
         resourceService.loadTextures(officeTextures);
         resourceService.loadTextures(securityTextures);
         resourceService.loadTextures(researchTextures);
+        resourceService.loadTextures(extraTextures);
         resourceService.loadTextureAtlases(forestTextureAtlases);
         resourceService.loadSounds(playerSound1);
         resourceService.loadSounds(forestSounds);
@@ -742,6 +743,7 @@ public class ForestGameArea extends GameArea {
         resourceService.unloadAssets(spawnPadTextures);
         resourceService.unloadAssets(officeTextures);
         resourceService.unloadAssets(securityTextures);
+        resourceService.unloadAssets(extraTextures);
     }
 
     // Removed area-specific dispose to avoid double disposal during transitions
@@ -749,6 +751,19 @@ public class ForestGameArea extends GameArea {
 
     public Entity getPlayer() {
         return player;
+    }
+
+    /**
+     * Setter method for the player spawn point
+     * should be used when the player is traversing through the rooms
+     *
+     * @param newSpawn the new spawn point
+     */
+    public static void setRoomSpawn(GridPoint2 newSpawn) {
+        if (newSpawn == null) {
+            return;
+        }
+        ForestGameArea.playerSpawn = newSpawn;
     }
 
     @Override
