@@ -738,6 +738,57 @@ public class ObstacleFactory {
     }
 
     /**
+     * Purple window object, non-collidable.
+     * 
+     * @return Entity window
+     */
+    public static Entity createWindow() {
+        Entity purpleWindow =
+                new Entity()
+                        .addComponent(new TextureRenderComponent("foreg_sprites/furniture/PurpleWindow.png"));
+
+        purpleWindow.getComponent(TextureRenderComponent.class).scaleEntity();
+        purpleWindow.scaleHeight(1.2f);
+        return purpleWindow;
+    }
+
+    /**
+     * Lab plant 1 object, collidable decoration object
+     * @return plant object
+     */
+    public static Entity createLabPlant1() {
+        Entity labPlant =
+                new Entity()
+                        .addComponent(new TextureRenderComponent("foreg_sprites/furniture/LabPlant1.png"))
+                        .addComponent(new PhysicsComponent())
+                        .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
+
+        labPlant.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
+        labPlant.getComponent(TextureRenderComponent.class).scaleEntity();
+        labPlant.scaleHeight(1.5f);
+        PhysicsUtils.setScaledCollider(labPlant, 1f, 1f);
+        return labPlant;
+    }
+
+    /**
+     * Lab plant 1 object, collidable decoration object
+     * @return plant object
+     */
+    public static Entity createLabPlant2() {
+        Entity labPlant =
+                new Entity()
+                        .addComponent(new TextureRenderComponent("foreg_sprites/furniture/LabPlant2.png"))
+                        .addComponent(new PhysicsComponent())
+                        .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
+
+        labPlant.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
+        labPlant.getComponent(TextureRenderComponent.class).scaleEntity();
+        labPlant.scaleHeight(1.5f);
+        PhysicsUtils.setScaledCollider(labPlant, 1f, 1f);
+        return labPlant;
+    }
+
+    /**
      * Makes a static door, no collision so that the player can pass through.
      */
     public static Entity createDoor() {
