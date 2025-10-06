@@ -6,9 +6,12 @@ import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.entities.Entity;
+import com.csse3200.game.entities.factories.characters.NPCFactory;
 import com.csse3200.game.entities.factories.characters.PlayerFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.rendering.SolidColorRenderComponent;
+import com.csse3200.game.services.ServiceLocator;
+
 
 /**
  * Room 5 with its own background styling.
@@ -16,7 +19,8 @@ import com.csse3200.game.rendering.SolidColorRenderComponent;
 public class MainHall extends GameArea {
     private static final float WALL_WIDTH = 0.1f;
     private static GridPoint2 playerSpawn = new GridPoint2(10, 10);
-
+    private Entity player;
+    private int roomDiffNumber = 3;
     public MainHall(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
         super(terrainFactory, cameraComponent);
     }
@@ -32,13 +36,15 @@ public class MainHall extends GameArea {
         overlay.addComponent(new SolidColorRenderComponent(new Color(0.1f, 0.1f, 0.2f, 0.35f)));
         spawnEntity(overlay);
         spawnplatform3();
-        spawnsofa();
         spawnscreen();
         spawnholo();
         spawnObjectDoors(new GridPoint2(0, 6), new GridPoint2(28, 17));
         spawnWallsAndDoor();
-        spawnPlayer();
+        player = spawnPlayer();
         spawnFloor();
+        spawnEnemies();
+        spawnGrokDroids();
+        spawnGPTs();
     }
 
     private void ensureAssets() {
@@ -102,11 +108,36 @@ public class MainHall extends GameArea {
         clearAndLoad(() -> new SecurityGameArea(terrainFactory, cameraComponent));
     }
 
-    private void spawnPlayer() {
+    private Entity spawnPlayer() {
         Entity player = PlayerFactory.createPlayer();
         spawnEntityAt(player, playerSpawn, true, true);
+        return player;
+    }
+    private void spawnEnemies() {
+        if (player == null)
+            return;
+
+        Entity vroomba = com.csse3200.game.entities.factories.characters.NPCFactory.createVroomba(player,
+                ServiceLocator.getDifficulty().getRoomDifficulty(this.roomDiffNumber));
+        spawnEntityAt(vroomba, new GridPoint2(14, 7), true, false);
+
+        Entity deepspin = com.csse3200.game.entities.factories.characters.NPCFactory.createDeepspin(player, this,
+                ServiceLocator.getDifficulty().getRoomDifficulty(this.roomDiffNumber));
+        spawnEntityAt(deepspin, new GridPoint2(12, 10), true, false);
     }
 
+    private void spawnGPTs() {
+        Entity ghost1 = NPCFactory.createGhostGPT(player, this, ServiceLocator.getDifficulty().getRoomDifficulty(this.roomDiffNumber));
+        GridPoint2 ghost1Pos = new GridPoint2(25, 7);
+        spawnEntityAt(ghost1, ghost1Pos, true, false);
+
+    }
+    private void spawnGrokDroids() {
+        Entity grok1 = NPCFactory.createGrokDroid(player, this,
+                ServiceLocator.getDifficulty().getRoomDifficulty(this.roomDiffNumber));
+        GridPoint2 grok1Pos = new GridPoint2(10, 20);
+        spawnEntityAt(grok1, grok1Pos, true, false);
+    }
     /**
      * Spawns 4 platforms for parkour
      **/
@@ -168,7 +199,7 @@ public class MainHall extends GameArea {
 
     public Entity getPlayer() {
         //tempoary placeholder return null to stop errors
-        return null;
+        return player;
     }
 
     /**

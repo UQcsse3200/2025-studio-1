@@ -3,6 +3,7 @@ package com.csse3200.game.entities.factories;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.csse3200.game.areas.ForestGameArea;
+import com.csse3200.game.areas.Reception;
 import com.csse3200.game.components.screens.ShopScreenDisplay;
 import com.csse3200.game.components.shop.ShopManager;
 import com.csse3200.game.entities.Entity;
@@ -15,7 +16,7 @@ public final class ShopFactory {
         throw new IllegalStateException("Instantiating static util class");
     }
 
-    public static Entity createShop(ForestGameArea area,
+    public static Entity createShop(Reception area,
                                     ShopManager manager,
                                     String kioskTexture) {
 

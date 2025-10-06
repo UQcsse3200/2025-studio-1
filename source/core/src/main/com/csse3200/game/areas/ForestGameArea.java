@@ -323,7 +323,6 @@ public class ForestGameArea extends GameArea {
         spawnFloor();
         spawnBottomRightDoor();
         spawnMarblePlatforms();
-        spawnShopKiosk();
         playMusic();
         ItemSpawner itemSpawner = new ItemSpawner(this);
         itemSpawner.spawnItems(ItemSpawnConfig.forestmap());
@@ -440,14 +439,6 @@ public class ForestGameArea extends GameArea {
         }
         Entity officeDesk = ObstacleFactory.createOfficeDesk();
         spawnEntityAt(officeDesk, new GridPoint2(5, 11), true, false);
-    }
-
-    private void spawnShopKiosk() {
-        CatalogService catalog = ShopDemo.makeDemoCatalog();
-        ShopManager manager = new ShopManager(catalog);
-
-        Entity shop = ShopFactory.createShop(this, manager, "images/VendingMachine.png"); // have as tree now as placeholder, later need to change to actual shop icon
-        spawnEntityAt(shop, new GridPoint2(18, 6), true, false);
     }
 
     private void spawnComputerBench() {

@@ -122,6 +122,22 @@ public class ItemSpawnConfig {
 
         return config;
     }
+    public static Map<String, List<ItemSpawner.ItemSpawnInfo>> receptionmap() {
+        Map<String, List<ItemSpawner.ItemSpawnInfo>> config = new HashMap<>();
+
+        config.put(Weapons.PISTOL.name(), List.of(
+                new ItemSpawner.ItemSpawnInfo(new GridPoint2(7, 7), 1)
+        ));
+        config.put(Weapons.RIFLE.name(), List.of(
+                new ItemSpawner.ItemSpawnInfo(new GridPoint2(7, 7), 1)
+        ));
+        config.put(Weapons.LIGHTSABER.name(), List.of(
+                new ItemSpawner.ItemSpawnInfo(new GridPoint2(7, 7), 1)
+        ));
+
+
+        return config;
+    }
 
     /**
      * Security Room spawning. Spawns a pistol, lightsaber, rifle in the map on various location
