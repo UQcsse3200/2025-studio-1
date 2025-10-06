@@ -1,6 +1,5 @@
 package com.csse3200.game.components.player;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputProcessor;
@@ -24,8 +23,8 @@ public class KeyboardPlayerInputComponent extends InputComponent {
 
     private final Vector2 walkDirection = Vector2.Zero.cpy();
 
-    private int focusedItem = -1;
-    private boolean equipped = false;
+    int focusedItem = -1;
+    boolean equipped = false;
     private boolean holding = false;
 
     public KeyboardPlayerInputComponent() {
