@@ -1,5 +1,8 @@
-package com.csse3200.game.components.cards;
+package com.csse3200.game.components.minigames;
 import com.csse3200.game.components.Component;
+import com.csse3200.game.components.cards.Card;
+import com.csse3200.game.components.cards.Deck;
+import com.csse3200.game.components.cards.Rank;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -35,7 +38,7 @@ public class BlackJackGame extends Component {
         return dealerHand;
     }
 
-    private void dealerTurn() {
+    void dealerTurn() {
         if (!winner) {
             while (getHandValue(dealerHand) < 17) {
                 dealerHand.add(deck.drawCard());
@@ -70,7 +73,7 @@ public class BlackJackGame extends Component {
         dealerHand.add(deck.drawCard());
     }
 
-    private void drawCard() {
+    void drawCard() {
         if(!winner) {
             playerHand.add(deck.drawCard());
             if (getHandValue(playerHand) > 21) {

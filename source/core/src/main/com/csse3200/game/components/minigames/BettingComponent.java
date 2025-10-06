@@ -1,4 +1,4 @@
-package com.csse3200.game.components.cards;
+package com.csse3200.game.components.minigames;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
@@ -8,7 +8,6 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
-import com.csse3200.game.areas.GameArea;
 import com.csse3200.game.components.player.InventoryComponent;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.UIComponent;
@@ -18,11 +17,10 @@ public class BettingComponent extends UIComponent {
     private static final float PANEL_W = 600f;
     private static final float PANEL_H = 400f;
 
-    // 🎨 Match BlackjackScreenDisplay colors
     private static final Color PANEL_COLOR = Color.OLIVE;
     private static final Color TEXT_COLOR = Color.WHITE;
 
-    private final int multiplier;
+    private int multiplier;
     private int balance;
 
     private Table root;
@@ -30,7 +28,7 @@ public class BettingComponent extends UIComponent {
     private Texture pixelTex;
     private Label balanceLabel, resultLabel;
     private TextField betInput;
-    private InventoryComponent inventory;
+    InventoryComponent inventory;
     private int bet;
 
     public BettingComponent(int multiplier, InventoryComponent inventory) {
@@ -144,7 +142,7 @@ public class BettingComponent extends UIComponent {
         hide();
     }
 
-    private void onTie() {
+    void onTie() {
         inventory.addProcessor(bet);
         Dialog dialog = new Dialog("Tie!", skin);
         dialog.text("Tie! You get your money back!");
@@ -153,20 +151,20 @@ public class BettingComponent extends UIComponent {
         dialog.show(ServiceLocator.getRenderService().getStage());
     }
 
-    private void onWin() {
-        int winnings = bet * 2;
+    void onWin() {
+        int winnings = bet * multiplier;
         inventory.addProcessor(winnings);
         updateBalance();
 
         Dialog dialog = new Dialog("Winner!", skin);
-        dialog.text("Congratulations you won $" + bet);
+        dialog.text("Congratulations you won $" + (winnings - bet));
         dialog.button("OK");
         ServiceLocator.getRenderService().getStage().addActor(dialog);
         dialog.show(ServiceLocator.getRenderService().getStage());
         //dialog.show(stage);
     }
 
-    private void onLose() {
+    void onLose() {
         System.out.println("LOST!");
         Dialog dialog = new Dialog("Loser!", skin);
         dialog.text("You lost $" + bet);
