@@ -257,7 +257,7 @@ public class ForestGameArea extends GameArea {
     };
 
     private static final String[] extraTextures = {
-            "foreg_sprites/extras/Spikes.png",
+            "foreg_sprites/extras/Spikes.png","foreg_sprites/extras/Spikes2.png"
     };
 
     private static final String[] forestSounds = {"sounds/Impact4.ogg",

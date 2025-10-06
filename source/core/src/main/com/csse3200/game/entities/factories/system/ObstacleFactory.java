@@ -736,6 +736,21 @@ public class ObstacleFactory {
         PhysicsUtils.setScaledCollider(spikes, 1f, 1f);
         return spikes;
     }
+    public static Entity createSpikes2() {
+        Entity spikes = new Entity()
+                .addComponent(new TextureRenderComponent("foreg_sprites/extras/Spikes2.png"))
+                .addComponent(new PhysicsComponent())
+                .addComponent(new ColliderComponent())
+                .addComponent(new HitboxComponent().setLayer(PhysicsLayer.OBSTACLE))
+                .addComponent(new TouchAttackComponent(PhysicsLayer.PLAYER, 10f))
+                .addComponent(new WeaponsStatsComponent(30));
+
+        spikes.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
+        spikes.getComponent(TextureRenderComponent.class).scaleEntity();
+        spikes.scaleHeight(2f);
+        PhysicsUtils.setScaledCollider(spikes, 0.4f, 0.1f);
+        return spikes;
+    }
 
     /**
      * Makes a static door, no collision so that the player can pass through.
