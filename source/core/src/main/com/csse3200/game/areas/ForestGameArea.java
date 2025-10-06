@@ -301,19 +301,9 @@ public class ForestGameArea extends GameArea {
         player = spawnPlayer();
         ServiceLocator.registerPlayer(player);
 
-//        spawnRapidFirePowerup();
-        spawnAimbotPowerup();
-//        spawnUnlimitedAmmoPowerup();
-        spawnDoubleProcessorsPowerup();
-
-        spawnBoss2();
-
-
-
         spawnComputerBench();
         spawnHealthBench();
         spawnSpeedBench();
-        spawnRobots();
 
         spawnFloor();
         spawnBottomRightDoor();
