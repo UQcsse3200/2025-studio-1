@@ -12,39 +12,53 @@ import com.csse3200.game.components.player.InventoryComponent;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.UIComponent;
 
+/**
+ * A LibGDX UI component that allows the player to place, confirm, and adjust bets
+ * in a mini-game. Handles user interactions, displays balance and bet information,
+ * and reacts to game events such as win, lose, or tie.
+ *
+ * <p>The component pauses the game when shown and resumes it when closed.</p>
+ */
 public class BettingComponent extends UIComponent {
 
     private static final float PANEL_W = 600f;
     private static final float PANEL_H = 400f;
-
     private static final Color PANEL_COLOR = Color.OLIVE;
     private static final Color TEXT_COLOR = Color.WHITE;
 
     private BettingLogic logic;
-
     private Table root;
     private Image background;
     private Texture pixelTex;
     private Label balanceLabel, resultLabel;
     private TextField betInput;
 
+    /**
+     * Creates a new {@code BettingComponent}.
+     *
+     * @param multiplier the payout multiplier (e.g., 2 for double winnings)
+     * @param inventory  the player's {@link InventoryComponent}, used for managing balance
+     */
     public BettingComponent(int multiplier, InventoryComponent inventory) {
         this.logic = new BettingLogic(multiplier, inventory);
     }
 
+    /**
+     * Initializes the betting UI, sets up the layout, event listeners, and game event bindings.
+     */
     @Override
     public void create() {
         super.create();
         pixelTex = makeSolidTexture(Color.WHITE);
 
-        // Background
+        // Background setup
         background = new Image(pixelTex);
         background.setSize(PANEL_W, PANEL_H);
         background.setColor(PANEL_COLOR);
         background.setPosition((stage.getWidth() - PANEL_W) / 2f, (stage.getHeight() - PANEL_H) / 2f);
         stage.addActor(background);
 
-        // Root table
+        // Root layout table
         root = new Table();
         root.setFillParent(true);
         root.center();
@@ -57,12 +71,12 @@ public class BettingComponent extends UIComponent {
         title.setFontScale(1.4f);
         root.add(title).padBottom(10f).row();
 
-        // Balance
+        // Balance display
         balanceLabel = new Label("Balance: $" + logic.getBalance(), skin);
         balanceLabel.setColor(TEXT_COLOR);
         root.add(balanceLabel).padBottom(10f).row();
 
-        // Bet row
+        // Bet input and adjust buttons
         Table betRow = new Table();
         Label betLabel = new Label("Bet:", skin);
         betLabel.setColor(TEXT_COLOR);
@@ -73,13 +87,18 @@ public class BettingComponent extends UIComponent {
 
         TextButton minusBtn = new TextButton("-10", skin);
         TextButton plusBtn = new TextButton("+10", skin);
+
         minusBtn.addListener(new ChangeListener() {
             @Override
-            public void changed(ChangeEvent e, Actor a){ adjustBet(-10); }
+            public void changed(ChangeEvent e, Actor a) {
+                adjustBet(-10);
+            }
         });
         plusBtn.addListener(new ChangeListener() {
             @Override
-            public void changed(ChangeEvent e, Actor a){ adjustBet(10); }
+            public void changed(ChangeEvent e, Actor a) {
+                adjustBet(10);
+            }
         });
 
         betRow.add(betLabel).padRight(6f);
@@ -126,7 +145,7 @@ public class BettingComponent extends UIComponent {
         resultLabel.setColor(TEXT_COLOR);
         root.add(resultLabel).padTop(10f).row();
 
-        // Win/Lose/Tie listeners
+        // Event listeners
         entity.getEvents().addListener("interact", this::show);
         entity.getEvents().addListener("win", this::onWin);
         entity.getEvents().addListener("tie", this::onTie);
@@ -135,6 +154,9 @@ public class BettingComponent extends UIComponent {
         hide();
     }
 
+    /**
+     * Called when the player wins. Updates balance and displays a dialog with the winnings.
+     */
     void onWin() {
         logic.onWin();
         updateBalance();
@@ -146,6 +168,9 @@ public class BettingComponent extends UIComponent {
         dialog.show(ServiceLocator.getRenderService().getStage());
     }
 
+    /**
+     * Called when the game results in a tie. Updates balance and shows a tie dialog.
+     */
     void onTie() {
         logic.onTie();
         updateBalance();
@@ -157,6 +182,9 @@ public class BettingComponent extends UIComponent {
         dialog.show(ServiceLocator.getRenderService().getStage());
     }
 
+    /**
+     * Called when the player loses. Updates balance and shows a loss dialog.
+     */
     void onLose() {
         logic.onLose();
         updateBalance();
@@ -168,18 +196,32 @@ public class BettingComponent extends UIComponent {
         dialog.show(ServiceLocator.getRenderService().getStage());
     }
 
+    /**
+     * Adjusts the bet amount by the given delta and updates the input field.
+     *
+     * @param delta the amount to add or subtract from the current bet
+     */
     private void adjustBet(int delta) {
         logic.adjustBet(delta);
         betInput.setText(String.valueOf(logic.getBet()));
     }
 
+    /**
+     * Updates the balance label with the player's current balance.
+     */
     private void updateBalance() {
         balanceLabel.setText("Balance: $" + logic.getBalance());
     }
 
+    /**
+     * The stage handles rendering for this component, so no manual drawing is needed.
+     */
     @Override
     public void draw(SpriteBatch batch) { /* Stage handles rendering */ }
 
+    /**
+     * Cleans up textures and removes UI elements from the stage.
+     */
     @Override
     public void dispose() {
         if (root != null) root.remove();
@@ -188,6 +230,12 @@ public class BettingComponent extends UIComponent {
         super.dispose();
     }
 
+    /**
+     * Creates a 1x1 solid color texture used for panel backgrounds.
+     *
+     * @param color the color of the texture
+     * @return a new {@link Texture} object
+     */
     private static Texture makeSolidTexture(Color color) {
         Pixmap pm = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
         pm.setColor(color);
@@ -197,12 +245,18 @@ public class BettingComponent extends UIComponent {
         return t;
     }
 
+    /**
+     * Shows the betting panel and pauses the game.
+     */
     public void show() {
         ServiceLocator.getTimeSource().setPaused(true);
         if (root != null) root.setVisible(true);
         if (background != null) background.setVisible(true);
     }
 
+    /**
+     * Hides the betting panel and background.
+     */
     public void hide() {
         if (root != null) root.setVisible(false);
         if (background != null) background.setVisible(false);

@@ -1,0 +1,15 @@
+rocketExplosion.png
+size:1024,512
+repeat:none
+rocketExplosion
+bounds:193,2,189,220
+rocketExplosion
+bounds:2,2,189,220
+rocketExplosion
+bounds:384,2,189,220
+rocketExplosion
+bounds:193,224,189,220
+rocketExplosion
+bounds:2,224,189,220
+rocketExplosion
+bounds:384,224,189,220

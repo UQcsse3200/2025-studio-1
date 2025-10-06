@@ -108,7 +108,7 @@ public class CasinoGameArea extends GameArea {
 
     private void spawnBlackjack() {
         Entity blackjack = InteractableStationFactory.createBaseStation();
-        blackjack.addComponent(new TextureRenderComponent("images/box_boy_leaf.png"));
+        blackjack.addComponent(new TextureRenderComponent("images/blackjack_table.png"));
         blackjack.addComponent(new BettingComponent(2, player.getComponent(InventoryComponent.class)));
         blackjack.addComponent(new BlackJackGame());
         blackjack.addComponent(new BlackjackScreenDisplay());
