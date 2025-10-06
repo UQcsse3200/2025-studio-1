@@ -54,7 +54,7 @@ public class Reception extends GameArea {
         ui.addComponent(new com.csse3200.game.components.gamearea.FloorLabelDisplay("Reception"));
         spawnEntity(ui);
         ItemSpawner itemSpawner = new ItemSpawner(this);
-        itemSpawner.spawnItems(ItemSpawnConfig.securitymap());
+        itemSpawner.spawnItems(ItemSpawnConfig.receptionmap());
 
     }
 
@@ -142,11 +142,11 @@ public class Reception extends GameArea {
 
         Entity vroomba = com.csse3200.game.entities.factories.characters.NPCFactory.createVroomba(player,
                 ServiceLocator.getDifficulty().getRoomDifficulty(this.roomDiffNumber));
-        spawnEntityAt(vroomba, new GridPoint2(14, 7), true, false);
+        spawnEntityAt(vroomba, new GridPoint2(5, 17), true, false);
 
         Entity deepspin = com.csse3200.game.entities.factories.characters.NPCFactory.createDeepspin(player, this,
                 ServiceLocator.getDifficulty().getRoomDifficulty(this.roomDiffNumber));
-        spawnEntityAt(deepspin, new GridPoint2(12, 10), true, false);
+        spawnEntityAt(deepspin, new GridPoint2(17, 10), true, false);
     }
 
         private void spawnGPTs() {
@@ -157,7 +157,7 @@ public class Reception extends GameArea {
     private void spawnGrokDroids() {
         Entity grok1 = NPCFactory.createGrokDroid(player, this,
                 ServiceLocator.getDifficulty().getRoomDifficulty(this.roomDiffNumber));
-        GridPoint2 grok1Pos = new GridPoint2(10, 20);
+        GridPoint2 grok1Pos = new GridPoint2(20, 20);
         spawnEntityAt(grok1, grok1Pos, true, false);
     }
 

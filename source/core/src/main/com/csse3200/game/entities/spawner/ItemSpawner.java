@@ -89,6 +89,12 @@ public class ItemSpawner {
             tunnelArea.spawnItem(item, position);
         } else if (gameArea instanceof ResearchGameArea researchArea) {
             researchArea.spawnItem(item, position);
+        } else if (gameArea instanceof Reception receptionArea) {
+            receptionArea.spawnItem(item, position);
+        } else if (gameArea instanceof MainHall mainHallArea) {
+                mainHallArea.spawnItem(item, position);
+        } else if (gameArea instanceof ResearchGameArea researchArea) {
+            researchArea.spawnItem(item, position);
         } else if (gameArea instanceof SecurityGameArea securityArea) {
             securityArea.spawnItem(item, position);
         } else if (gameArea instanceof ServerGameArea serverArea) {

@@ -6,9 +6,11 @@ import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.entities.Entity;
+import com.csse3200.game.entities.configs.ItemSpawnConfig;
 import com.csse3200.game.entities.factories.characters.NPCFactory;
 import com.csse3200.game.entities.factories.characters.PlayerFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
+import com.csse3200.game.entities.spawner.ItemSpawner;
 import com.csse3200.game.rendering.SolidColorRenderComponent;
 import com.csse3200.game.services.ServiceLocator;
 
@@ -45,6 +47,8 @@ public class MainHall extends GameArea {
         spawnEnemies();
         spawnGrokDroids();
         spawnGPTs();
+        ItemSpawner itemSpawner = new ItemSpawner(this);
+        itemSpawner.spawnItems(ItemSpawnConfig.mainHallmap());
     }
 
     private void ensureAssets() {
@@ -119,11 +123,11 @@ public class MainHall extends GameArea {
 
         Entity vroomba = com.csse3200.game.entities.factories.characters.NPCFactory.createVroomba(player,
                 ServiceLocator.getDifficulty().getRoomDifficulty(this.roomDiffNumber));
-        spawnEntityAt(vroomba, new GridPoint2(14, 7), true, false);
+        spawnEntityAt(vroomba, new GridPoint2(14, 16), true, false);
 
         Entity deepspin = com.csse3200.game.entities.factories.characters.NPCFactory.createDeepspin(player, this,
                 ServiceLocator.getDifficulty().getRoomDifficulty(this.roomDiffNumber));
-        spawnEntityAt(deepspin, new GridPoint2(12, 10), true, false);
+        spawnEntityAt(deepspin, new GridPoint2(22, 10), true, false);
     }
 
     private void spawnGPTs() {
