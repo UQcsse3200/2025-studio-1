@@ -26,7 +26,11 @@ public class ItemSpawnConfig {
         Map<String, List<ItemSpawner.ItemSpawnInfo>> config = new HashMap<>();
         //Armour
         config.put(Armour.CHESTPLATE.name(), List.of(
-                new ItemSpawner.ItemSpawnInfo(new GridPoint2(9, 7), 1)
+                new ItemSpawner.ItemSpawnInfo(new GridPoint2(4, 7), 1)
+        ));
+
+        config.put(Armour.HOOD.name(), List.of(
+                new ItemSpawner.ItemSpawnInfo(new GridPoint2(10, 10), 1)
         ));
 
         // Weapons
