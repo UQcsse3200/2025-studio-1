@@ -56,6 +56,7 @@ public class WinScreen extends BaseScreen {
     protected Entity createUIScreen(Stage stage) {
         uiDisplay = BaseEndScreenDisplays.victory(game);
         return new Entity()
+                .addComponent(BaseEndScreenDisplays.victory(game).withLeaderboard(() -> game.setScreen(GdxGame.ScreenType.LEADERBOARD)))
                 .addComponent(uiDisplay)
                 .addComponent(new InputDecorator(stage, 10));
     }

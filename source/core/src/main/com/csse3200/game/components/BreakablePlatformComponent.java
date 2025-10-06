@@ -28,7 +28,7 @@ public class BreakablePlatformComponent extends Component {
     private final float fadeDuration;
 
     private boolean triggered = false;
-     /* Reference to the texture render component used for fading effect. */
+    /* Reference to the texture render component used for fading effect. */
     private TextureRenderComponent render;
 
     public BreakablePlatformComponent() {
@@ -59,7 +59,6 @@ public class BreakablePlatformComponent extends Component {
         if (!triggered && other != null && other.getComponent(InventoryComponent.class) != null) {
             float playerY = other.getPosition().y;
             float platformY = entity.getPosition().y;
-            /* Only trigger break if player is standing above with some tolerance */
             if (playerY > platformY + 0.2f) {
                 triggered = true;
                 Timer.schedule(new Timer.Task() {
@@ -89,8 +88,8 @@ public class BreakablePlatformComponent extends Component {
             public void run() {
                 if (body != null && render != null) {
                     float factor = 1f - (time / shakeDuration);
-                    float x = startPos.x + (float)Math.sin(time * 40) * shakeAmount * factor;
-                    float y = startPos.y + (float)Math.cos(time * 40) * shakeAmount * factor;
+                    float x = startPos.x + (float) Math.sin(time * 40) * shakeAmount * factor;
+                    float y = startPos.y + (float) Math.cos(time * 40) * shakeAmount * factor;
                     body.setTransform(x, y, 0);
                     entity.setPosition(body.getPosition(), false);
                 }
@@ -105,10 +104,11 @@ public class BreakablePlatformComponent extends Component {
             }
         }, 0f, 0.05f);
     }
+
     /**
      * Starts the fading effect by gradually reducing the alpha of the platform's texture.
      * Disables the physics body to allow the player to fall through.
-     * Once fading completes, marks the entity for removal.
+     * Once fading completes, removes the platform and makes it reappear after 5 seconds.
      */
     private void fade() {
         PhysicsComponent physics = entity.getComponent(PhysicsComponent.class);
@@ -129,9 +129,32 @@ public class BreakablePlatformComponent extends Component {
                 time += 0.05f;
                 if (time >= fadeDuration) {
                     this.cancel();
-                    entity.setToRemove();
+
+                    // Hide completely
+                    if (render != null) render.setAlpha(0f);
+
+                    // Respawn after 5 seconds
+                    Timer.schedule(new Timer.Task() {
+                        @Override
+                        public void run() {
+                            respawnPlatform();
+                        }
+                    }, 5f);
                 }
             }
         }, fadeDelay, 0.05f);
+    }
+
+    /**
+     * Restores the platform's visibility and re-enables its physics body.
+     */
+    private void respawnPlatform() {
+        PhysicsComponent physics = entity.getComponent(PhysicsComponent.class);
+        Body body = physics != null ? physics.getBody() : null;
+
+        if (body != null) body.setActive(true);
+        if (render != null) render.setAlpha(1f);
+
+        triggered = false; // reset so it can break again
     }
 }

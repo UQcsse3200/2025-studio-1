@@ -29,7 +29,7 @@ import java.util.ArrayList;
  * </ul>
  * Subclasses implement {@link #buildUI(Table)} to construct their specific UI.
  */
-public abstract class BaseScreenDisplay extends UIComponent {
+public abstract class  BaseScreenDisplay extends UIComponent {
     /**
      * Class-scoped logger for subclasses.
      */

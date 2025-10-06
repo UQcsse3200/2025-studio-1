@@ -36,7 +36,6 @@ public class PlayerInventoryDisplay extends UIComponent {
     private final InventoryComponent inventory;
 
     /**
-     * TODO what happens if this is gone, along with the
      * Constructs the PlayerInventory display, takes in an InventoryComponent
      * so that it can handle displaying the item textures etc.
      *

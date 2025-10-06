@@ -32,6 +32,13 @@ public class BaseEndScreenDisplays extends BaseScreenDisplay {
     private Label roundLabelRef;
     private Label timeLabelRef;
     private Runnable leaderboardAction;
+    private Runnable leaderboardAction;
+
+    /** Allow chaining a Leaderboard button */
+    public BaseEndScreenDisplays withLeaderboard(Runnable leaderboardAction) {
+        this.leaderboardAction = leaderboardAction;
+        return this;
+    }
 
     protected BaseEndScreenDisplays(
             GdxGame game,
@@ -95,15 +102,7 @@ public class BaseEndScreenDisplays extends BaseScreenDisplay {
     private static void neutralizeTint(Actor label, Actor wrapper, Table root) {
         if (root != null) root.setColor(Color.WHITE);
         if (wrapper != null) wrapper.setColor(Color.WHITE);
-        if (label != null) (label).setColor(Color.WHITE);
-    }
-
-    /**
-     * Allow chaining a Leaderboard button
-     */
-    public BaseEndScreenDisplays withLeaderboard(Runnable leaderboardAction) {
-        this.leaderboardAction = leaderboardAction;
-        return this;
+        if (label != null) ((Label) label).setColor(Color.WHITE);
     }
 
     @Override
