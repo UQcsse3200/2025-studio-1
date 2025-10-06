@@ -14,7 +14,6 @@ import static org.junit.jupiter.api.Assertions.*;
  * equipping items, and unequipping items. No mocking is used; only simple
  * components are attached to the entity for testing purposes.
  */
-
 public class KeyboardPlayerInputComponentTest {
     private Entity player;
     private KeyboardPlayerInputComponent inputComponent;
