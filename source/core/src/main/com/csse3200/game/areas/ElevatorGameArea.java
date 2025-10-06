@@ -126,7 +126,7 @@ public class ElevatorGameArea extends GameArea {
     }
 
     private void loadOffice() {
-        OfficeGameArea.setRoomSpawn(new GridPoint2(27, 22));
+        OfficeGameArea.setRoomSpawn(new GridPoint2(24, 22));
         clearAndLoad(() -> new OfficeGameArea(terrainFactory, cameraComponent));
     }
 
