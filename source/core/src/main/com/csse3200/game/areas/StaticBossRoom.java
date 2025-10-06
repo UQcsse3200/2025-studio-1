@@ -69,8 +69,6 @@ public class StaticBossRoom extends GameArea {
 
         player = spawnPlayer();
 
-        spawnBigWall();
-
         spawnBoss();
         spawnObjectDoors(new GridPoint2(0, 7), new GridPoint2(28, 7));
 

@@ -72,7 +72,6 @@ public class FlyingBossRoom extends GameArea {
         player = spawnPlayer();
 
         spawnPlatforms();
-        spawnBigWall();
 
         spawnFlyingBoss();
         spawnObjectDoors(new GridPoint2(0, 7), new GridPoint2(28, 7));
