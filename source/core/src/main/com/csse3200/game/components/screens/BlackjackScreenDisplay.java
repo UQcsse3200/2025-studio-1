@@ -25,6 +25,8 @@ public class BlackjackScreenDisplay extends UIComponent {
     private Table root;
     private Label resultLabel;
     private TextButton exitBtn;
+    private TextButton hitBtn;
+    private TextButton standBtn;
     private Table dealerCardsTable;
     private Table playerCardsTable;
     private Label dealerValueLabel;
@@ -161,8 +163,8 @@ public class BlackjackScreenDisplay extends UIComponent {
 
 
     private void addButtons() {
-        TextButton hitBtn = new TextButton("Hit", skin);
-        TextButton standBtn = new TextButton("Stand", skin);
+        hitBtn = new TextButton("Hit", skin);
+        standBtn = new TextButton("Stand", skin);
 
         hitBtn.addListener(new ChangeListener() {
             @Override
@@ -183,7 +185,7 @@ public class BlackjackScreenDisplay extends UIComponent {
 
 
         // Restart button (hidden initially)
-        exitBtn = new TextButton("Exit", skin);
+        exitBtn = new TextButton("Continue", skin);
         exitBtn.setVisible(false);
         exitBtn.addListener(new ChangeListener() {
             @Override
@@ -220,6 +222,8 @@ public class BlackjackScreenDisplay extends UIComponent {
         //entity.getEvents().trigger("start");
         gameLogic.startGame();
         updateHands();
+        hitBtn.setVisible(true);
+        standBtn.setVisible(true);
     }
 
 
@@ -293,6 +297,8 @@ public class BlackjackScreenDisplay extends UIComponent {
         updateHands();
         setResult(msg);         // show result
         exitBtn.setVisible(true); // show restart button
+        hitBtn.setVisible(false);
+        standBtn.setVisible(false);
     }
 
 
