@@ -170,8 +170,8 @@ public class Minimap {
     }
 
     /**
-     * Opens (initializes) the minimap by centering on the player's position
-     * and revealing all discovered rooms using the {@link DiscoveryService}.
+     * Opens (initializes) the minimap by centering on the player's position.
+     * All discovered rooms have their image changed from the locked image to their respective images.
      */
     public void open() {
         // Normalize the player's position
@@ -223,7 +223,7 @@ public class Minimap {
     }
 
     /**
-     * Closes the minimap by clearing the current center point.
+     * Handles closing of the minimap.
      */
     public void close() {
         centre = null;
