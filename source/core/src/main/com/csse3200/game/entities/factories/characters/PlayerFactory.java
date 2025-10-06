@@ -57,8 +57,7 @@ public class PlayerFactory {
         Entity player =
                 new Entity()
                         .addComponent(new PhysicsComponent())
-                        .addComponent(new ColliderComponent())
-                        .addComponent(new HitboxComponent().setLayer(PhysicsLayer.PLAYER))
+                        .addComponent(new ColliderComponent().setLayer(PhysicsLayer.PLAYER))
                         .addComponent(new PlayerActions())
                         .addComponent(new CombatStatsComponent(stats.health))
                         .addComponent(new WeaponsStatsComponent(stats.baseAttack))
@@ -74,16 +73,16 @@ public class PlayerFactory {
                         .addComponent(new PowerupComponent())
                         .addComponent(new PlayerAnimationController())
                         .addComponent(new PlayerEquipComponent())
-                        .addComponent(new ShopInteractComponent(2.0f))
-                        .addComponent(new ArmourEquipComponent());
+                        .addComponent(new ArmourEquipComponent())
+                        .addComponent(new InteractComponent().setLayer(PhysicsLayer.DEFAULT));
         // Ensure global player reference is up-to-date for transitions
         ServiceLocator.registerPlayer(player);
 
         player.getComponent(AnimationRenderComponent.class).scaleEntity(2f);
-        PhysicsUtils.setScaledCollider(player, 0.6f, 0.3f);
         player.getComponent(ColliderComponent.class).setDensity(1.5f);
         PhysicsUtils.setScaledCollider(player, 0.3f, 0.5f);
         player.getComponent(WeaponsStatsComponent.class).setCoolDown(0.2f);
+
 
         //Unequip player at spawn
         PlayerActions actions = player.getComponent(PlayerActions.class);
