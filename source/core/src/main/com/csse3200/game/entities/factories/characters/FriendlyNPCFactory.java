@@ -22,6 +22,7 @@ import com.csse3200.game.physics.components.HitboxComponent;
 import com.csse3200.game.physics.components.PhysicsComponent;
 import com.csse3200.game.physics.components.PhysicsMovementComponent;
 
+import com.csse3200.game.components.friendlynpc.*;
 import java.util.List;
 import java.util.Collections;
 
@@ -78,13 +79,13 @@ public class FriendlyNPCFactory {
 
         Entity npc = new Entity()
                 .addComponent(arc)
-//                .addComponent(new HoverBobComponent(0.08f, 2.0f))
+                .addComponent(new HoverBobComponent(0.08f, 2.0f))
 //                .addComponent(new GuidanceContextComponent(player))
 //                .addComponent(new GuidanceBrainComponent(waypoints, 1.3f))
 //                .addComponent(new GuidancePointerUiComponent())
 //                .addComponent(new BeaconMarkerComponent())
                 .addComponent(new NpcDialogueDataComponent(
-                        "Guide", "", new String[]{
+                        "Guide!", "", new String[]{
                         "Welcome, pilot.",
                         "Follow the beacons to reach the safe zone.",
                         "Ping me if you need directions again."
@@ -94,8 +95,6 @@ public class FriendlyNPCFactory {
         npc.addComponent(new TipComponent(npc, player, 3f));
         npc.addComponent(new NpcInterationComponent(player, 3f));
 
-//        arc.startAnimation("robot_fire");
-//        arc.scaleEntity();
         return npc;
     }
 

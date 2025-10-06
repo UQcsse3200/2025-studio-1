@@ -644,7 +644,7 @@ public class ForestGameArea extends GameArea {
         var waypoints = List.of(new Vector2(12f, 7f), new Vector2(18f, 7f), new Vector2(25f, 12f));
         Entity guide = FriendlyNPCFactory.createGuidanceNpc(player, waypoints);
 
-        spawnEntityAt(guide, new GridPoint2((int) player.getPosition().x + 1, (int) player.getPosition().y), true, true);
+        spawnEntityAt(guide, new GridPoint2((int) player.getPosition().x + 2, (int) player.getPosition().y), true, true);
 
         AnimationRenderComponent arc = guide.getComponent(AnimationRenderComponent.class);
         arc.startAnimation("robot_fire");   // start anim
