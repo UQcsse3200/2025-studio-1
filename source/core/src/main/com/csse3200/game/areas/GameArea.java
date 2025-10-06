@@ -215,6 +215,13 @@ import java.util.function.Supplier;
     }
 
     /**
+     * Retrieves current wave count for services
+     */
+    public int currentWave() {
+        return wavesManager.getWaveNumber();
+    }
+
+    /**
      * Adds GhostGPT enemies onto the map.
      *
      * @param total       The total number of GhostGPT to be spawned.

@@ -10,7 +10,9 @@ import com.csse3200.game.services.SaveLoadService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Wrapper for reading Java objects from JSON files.
@@ -146,6 +148,8 @@ public class FileLoader {
      */
     public static void writeClass(Object object, String filename, Location location) {
         logger.debug("Reading class {} from {}", object.getClass().getSimpleName(), filename);
+        json.setElementType(SaveGame.GameState.class, "loadedInventory", SaveGame.itemRetrieve.class);
+//        json.setElementType(SaveGame.GameState.class, "player", Objects.class);
         FileHandle file = getFileHandle(filename, location);
         assert file != null;
         file.writeString(json.prettyPrint(object), false);
