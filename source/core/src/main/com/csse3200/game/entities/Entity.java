@@ -3,6 +3,7 @@ package com.csse3200.game.entities;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.IntMap;
+import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.components.Component;
 import com.csse3200.game.components.ComponentType;
 import com.csse3200.game.events.EventHandler;
@@ -223,7 +224,7 @@ public class Entity {
         return this;
     }
 
-    public IntMap<Component> getComponents() {
+    public IntMap<Component> getComponents(Class<CombatStatsComponent> combatStatsComponentClass) {
         return components;
     }
 
