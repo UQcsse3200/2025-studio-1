@@ -22,7 +22,7 @@ import com.csse3200.game.services.ServiceLocator;
 public class StorageGameArea extends GameArea {
     private static final float WALL_WIDTH = 0.1f;
     private static GridPoint2 playerSpawn = new GridPoint2(4, 20);
-    private static final GridPoint2 PLAYER_SPAWN = new GridPoint2(4, 20);
+    private static GridPoint2 PLAYER_SPAWN = new GridPoint2(4, 20);
     private static final float ROOM_DIFF_NUMBER = 8;
     private Entity player;
 
@@ -163,7 +163,7 @@ public class StorageGameArea extends GameArea {
         if (newSpawn == null) {
             return;
         }
-        StorageGameArea.playerSpawn = newSpawn;
+        StorageGameArea.PLAYER_SPAWN = newSpawn;
     }
 
     @Override
