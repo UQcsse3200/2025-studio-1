@@ -35,8 +35,7 @@ public class SaveLoadService {
         PlayerInfo gs = new PlayerInfo();
         Entity player = new Entity();
         if (ServiceLocator.getGameArea() != null) {
-            gs.areaId =
-                    ServiceLocator.getGameArea().toString();
+            gs.areaId = ServiceLocator.getGameArea().toString();
             player = ServiceLocator.getPlayer();
         } else {
             gs.areaId = gameArea.toString();
@@ -48,6 +47,8 @@ public class SaveLoadService {
                 }
             }
         }
+
+
         // current placeholder for new class to improve cohesion between file savign and loading
 //        SaveGame save = new SaveGame();
 //        SaveGame.GameState gameState = new SaveGame.GameState();
@@ -73,13 +74,14 @@ public class SaveLoadService {
         SaveGame.GameState gamestate = new SaveGame.GameState();
         gamestate.setPlayer(player);
         gamestate.setInventory(player.getComponent(InventoryComponent.class));
+        gamestate.setArea(gameArea);
+        gamestate.setWave(2);
         // test for writing
-        gamestate.getPlayerInventory();
-        gs.inventory = (gamestate.loadedInventory);
+//        gs.inventory = (gamestate.loadedInventory);
 
         path = "saves" + File.separator + slot + ".json";
 
-        FileLoader.writeClass(gs, path, FileLoader.Location.LOCAL);
+        FileLoader.writeClass(gamestate, path, FileLoader.Location.LOCAL);
 //        FileLoader.writeClass(gamestate.loadedInventory, path, FileLoader.Location.LOCAL);
         return true;
     }

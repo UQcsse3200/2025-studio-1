@@ -7,14 +7,17 @@ import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.JsonWriter;
 import com.csse3200.game.areas.GameArea;
 import com.csse3200.game.components.AmmoStatsComponent;
+import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.components.MagazineComponent;
 import com.csse3200.game.components.WeaponsStatsComponent;
 import com.csse3200.game.components.items.ConsumableComponent;
 import com.csse3200.game.components.items.ItemComponent;
 import com.csse3200.game.components.player.InventoryComponent;
+import com.csse3200.game.components.player.StaminaComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.ItemTypes;
 import com.csse3200.game.entities.configs.weapons.WeaponConfig;
+import com.csse3200.game.services.ServiceLocator;
 import jdk.jshell.execution.LoaderDelegate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,107 +43,113 @@ public class SaveGame {
         FileLoader.writeClass(gameState, fileName, FileLoader.Location.LOCAL);
     }
 
-
-
     public static class GameState {
-        private Entity player;
-        private InventoryComponent inventory;
-        private GameArea savedArea;
-        Json json = new Json();
-        public ArrayList loadedInventory = new ArrayList();
+        private information player;
 
-
-
-
-        public void setInventory(InventoryComponent inventory) {
-//                if (items.getId())
-            this.inventory = inventory;
-        }
+//        private InventoryComponent inventory;
+//        private GameArea savedArea;
+        private String gameArea;
+        private int wave;
+        private ArrayList loadedInventory;
 
         public void setPlayer(Entity player) {
-            this.player = player;
+            this.player = new information(
+                    "placeholder",
+                    player.getComponent(InventoryComponent.class).getProcessor(),
+                    player.getComponent(CombatStatsComponent.class).getHealth(),
+                    player.getComponent(StaminaComponent.class).getStamina(),
+                    player.getComponent(StaminaComponent.class).getStamina(), // fix to get maximum later
+                    player.getComponent(CombatStatsComponent.class).getMaxHealth(),
+                    player.getComponent(CombatStatsComponent.class).getHealth()
+            );
         }
-
-//        public void saveEntities(List<Entity> entities) {
-//            for (Entity entity : entities) {
-//                if (entity != null) {
-//                    logger.info("Saving entity: {}", entity);
-//                    this.entities.add(entity);
-//                }
-//            }
-//        }
 
         public void setArea(GameArea area) {
-            this.savedArea = area;
+//            this.savedArea = area;
+            this.gameArea = area.toString();
         }
 
-        public void getPlayerInventory() {
-            ArrayList inventoryitem = new ArrayList();
-
-            Json json = new Json(JsonWriter.OutputType.minimal);
-            StringWriter output = new StringWriter();
-            JsonWriter writer = new JsonWriter(output);
-            json.setWriter(writer);
-
-            json.writeObjectStart();
-            json.writeArrayStart("inventory");
+        public void setWave(int wave) {
+            this.wave = wave;
+        }
+        /**
+         * retrieves player inventory to be stored into json file
+         */
+        public void setInventory(InventoryComponent inventory) {
+            loadedInventory = new ArrayList();
             itemRetrieve itemiser = null;
             for (int i = 0; i < inventory.getSize(); i++) {
-                if (inventory.get(i).getComponent(ItemComponent.class) != null) {
+                if (inventory.get(i).hasComponent(ItemComponent.class)) {
                     Entity item = inventory.get(i);
                     ItemComponent inventoryItem = item.getComponent(ItemComponent.class);
 
                     if (item.hasComponent(WeaponsStatsComponent.class)) {
-                        json.writeArrayStart();
+
                         WeaponsStatsComponent weapon = item.getComponent(WeaponsStatsComponent.class);
-
-                        itemiser = new itemRetrieve(
-                                inventoryItem.getType(),
-                                item.getComponent(MagazineComponent.class).getCurrentAmmo(),
-                                inventoryItem.getTexture(),
-                                inventoryItem.getCount(),
-                                weapon.getUpgradeStage());
-                        json.writeValue(itemiser);
-                        inventoryitem.add(item.getComponent(MagazineComponent.class).getCurrentAmmo());
-                        inventoryitem.add(inventoryItem.getTexture());
-
-                        json.writeValue(weapon.getUpgradeStage());
-                        json.writeValue(item.getComponent(MagazineComponent.class).getCurrentAmmo());
-                        json.writeValue(inventoryItem.getTexture());
+                        if (item.hasComponent(MagazineComponent.class)) {
+                            itemiser = new itemRetrieve(
+                                    inventoryItem.getType(),
+                                    item.getComponent(MagazineComponent.class).getCurrentAmmo(),
+                                    inventoryItem.getTexture(),
+                                    inventoryItem.getCount(),
+                                    weapon.getUpgradeStage());
+                        } else {
+                            itemiser = new itemRetrieve(
+                                    inventoryItem.getType(),
+                                    null,
+                                    inventoryItem.getTexture(),
+                                    inventoryItem.getCount(),
+                                    weapon.getUpgradeStage());
+                        }
 
                     } else if (item.hasComponent(ConsumableComponent.class)) {
-                        inventoryitem.add(inventoryItem.getCount());
-                        inventoryitem.add(inventoryItem.getTexture());
-                        inventoryitem.add(inventoryItem.getType());
+                        itemiser = new itemRetrieve(
+                                inventoryItem.getType(),
+                                null,
+                                inventoryItem.getTexture(),
+                                inventoryItem.getCount(),
+                                1);
+
                     }
                 }
-                json.writeArrayEnd();
                 loadedInventory.add(itemiser);
             }
-//            json.writeArrayEnd();
-//
-//            json.writeObjectEnd();
-//
-//            try {
-//                writer.flush();
-//                writer.close();
-//            } catch (IOException e) {
-//                logger.error("Error while flushing inventory", e);
-//                e.printStackTrace();
-//            }
         }
     }
 
+    private static class information {
+        private String avatar;
+        private int ammoReserve;
+        private float stamina;
+        private float MaxStamina;
+        private int maxHealth;
+        private int currentHealth;
+        private int processor;
+
+        private information(String avatar, int processors, int ammoReserve,
+                            float stamina, float maxStamina,
+                            int maxHealth, int currentHealth) {
+            this.processor = processors;
+            this.avatar = avatar;
+            this.ammoReserve = ammoReserve;
+            this.maxHealth = maxHealth;
+            this.currentHealth = currentHealth;
+            this.stamina = stamina;
+            this.MaxStamina = MaxStamina;
+        }
+    }
+    /**
+     * helper class that cleans up json file for ease of readibility
+     */
     public static class itemRetrieve {
-//        public String name;
-        public ItemTypes type;
-        public int ammo;
-        public String texture;
-        public int count;
-        public int upgradeStage;
+        private ItemTypes type;
+        private Integer ammo;
+        private String texture;
+        private int count;
+        private int upgradeStage;
 
 
-        public itemRetrieve(ItemTypes type, int ammo, String texture, int count, int upgradeStage) {
+        public itemRetrieve(ItemTypes type, Integer ammo, String texture, int count, int upgradeStage) {
             this.type = type;
             this.ammo = ammo;
             this.texture = texture;
