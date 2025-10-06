@@ -86,7 +86,7 @@ public class TextEffects {
         if (s == null || s.isEmpty()) return "";
         final String ESC = "\u0001";         // sentinel to preserve "[["
         s = s.replace("[[", ESC);
-        s = s.replaceAll("\\[#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})\\]", ""); // open tags
+        s = s.replaceAll("\\[#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})]", ""); // open tags
         s = s.replace("[]", "");                                        // close tags
         return s.replace(ESC, "[");
     }
@@ -138,13 +138,13 @@ public class TextEffects {
             String v = kv[1].toLowerCase(Locale.ROOT).trim();
             try {
                 switch (k) {
-                    case "fps" -> o.fps = clampInt(Integer.parseInt(v), 1, 240);
-                    case "jitter" -> o.jitter = clampInt(Integer.parseInt(v), 0, 60);
-                    case "cycles" -> o.cycles = clampInt(Integer.parseInt(v), 0, 10);
+                    case "fps" -> o.fps = Math.clamp(Integer.parseInt(v), 1, 240);
+                    case "jitter" -> o.jitter = Math.clamp(Integer.parseInt(v), 0, 60);
+                    case "cycles" -> o.cycles = Math.clamp(Integer.parseInt(v), 0, 10);
                     case "from" -> o.from = ("rand".equals(v) ? CrazyOpts.From.RAND : CrazyOpts.From.A);
                     case "rainbow" -> o.rainbow = ("true".equals(v) || "1".equals(v));
-                    case "rhz" -> o.rhz = clampFloat(Float.parseFloat(v), 0.01f, 5f);
-                    case "rshift" -> o.rshift = clampFloat(Float.parseFloat(v), 0f, 360f);
+                    case "rhz" -> o.rhz = Math.clamp(Float.parseFloat(v), 0.01f, 5f);
+                    case "rshift" -> o.rshift = Math.clamp(Float.parseFloat(v), 0f, 360f);
 
                     case "style" -> o.style = switch (v) {
                         case "explode" -> CrazyOpts.Style.EXPLODE;
@@ -159,7 +159,7 @@ public class TextEffects {
                     case "spread" -> o.spread = Math.max(0, Integer.parseInt(v));
                     case "flash" -> o.flashFrames = Math.max(0, Integer.parseInt(v));
                     case "overshoot" -> o.overshoot = Math.max(0, Integer.parseInt(v));
-                    case "edgeboost" -> o.edgeBoost = clampFloat(Float.parseFloat(v), 0f, 1f);
+                    case "edgeboost" -> o.edgeBoost = Math.clamp(Float.parseFloat(v), 0f, 1f);
                     case "flashhexa" -> o.flashHexA = v.replace("#", "");
                     case "flashhexb" -> o.flashHexB = v.replace("#", "");
                 }
@@ -167,16 +167,6 @@ public class TextEffects {
             }
         }
         return o;
-    }
-
-    // ---------- CRAZY parsing ----------
-
-    private static int clampInt(int x, int lo, int hi) {
-        return Math.max(lo, Math.min(hi, x));
-    }
-
-    private static float clampFloat(float x, float lo, float hi) {
-        return Math.max(lo, Math.min(hi, x));
     }
 
     private static String joinPiecesStatic(List<Piece> pieces) {
@@ -253,10 +243,7 @@ public class TextEffects {
         String s = Integer.toHexString(rgb).toLowerCase(Locale.ROOT);
         int pad = 6 - s.length();
         if (pad <= 0) return s.substring(s.length() - 6);
-        StringBuilder sb = new StringBuilder(6);
-        for (int i = 0; i < pad; i++) sb.append('0');
-        sb.append(s);
-        return sb.toString();
+        return "0".repeat(pad) + s;
     }
 
     // ---------- Color helpers ----------
@@ -569,11 +556,21 @@ public class TextEffects {
         final int fps = 60;
         final int totalFrames = Math.max(1, Math.round(durationSec * fps));
         final int[] frame = {0};
+
         task = Timer.schedule(new Timer.Task() {
             @Override
             public void run() {
+                // EARLY EXIT so extra runs from tests don't overrun arrays
+                if (frame[0] >= totalFrames) {
+                    label.setText(tgt);
+                    cancel();
+                    return;
+                }
+
                 float progress = (float) frame[0] / totalFrames;
                 int lockCount = Math.round(progress * target.length);
+                // CLAMP to avoid AIOOBE if extra runs happen
+                lockCount = Math.min(lockCount, target.length);
 
                 for (int k = 0; k < lockCount; k++) {
                     if (!locked[k] && target[k] != ' ') {
@@ -589,13 +586,10 @@ public class TextEffects {
 
                 label.setText(new String(curr));
                 frame[0]++;
-                if (frame[0] > totalFrames) {
-                    label.setText(tgt);
-                    cancel();
-                }
             }
         }, 0f, 1f / fps);
     }
+
 
     // ---------- CRAZY orchestration ----------
 
@@ -853,8 +847,7 @@ public class TextEffects {
             @Override
             public void run() {
                 StringBuilder sb = new StringBuilder(n * 12);
-                for (int i = 0; i < n; i++) {
-                    char ch = chars[i];
+                for (char ch : chars) {
                     boolean twinkle = rng.nextFloat() < density && ch != ' ';
                     if (twinkle) {
                         boolean phaseA = ((frame[0] / Math.max(1, (fps / (int) Math.max(1, hz)))) % 2) == 0;
@@ -941,16 +934,7 @@ public class TextEffects {
         }, 0f, interval);
     }
 
-    private static class Piece {
-        final Kind kind;
-        final String text;
-        final CrazyOpts opts;
-
-        private Piece(Kind kind, String text, CrazyOpts opts) {
-            this.kind = kind;
-            this.text = text;
-            this.opts = opts;
-        }
+    private record Piece(Kind kind, String text, CrazyOpts opts) {
 
         static Piece plain(String s) {
             return new Piece(Kind.PLAIN, s, null);
@@ -1138,10 +1122,10 @@ public class TextEffects {
                     continue;
                 }
 
-                if (!rainbow) {
-                    sb.append(ch == '[' ? "[[" : ch);
-                    continue;
+                if (!rainbow && allZero(flashLeft)) {
+                    return new String(curr);   // <-- allZero(true) branch leads here
                 }
+
 
                 float hue = (phase + i * rshift) % 360f;
                 String hex = toHex6(hsvToRgb(hue, 1f, 1f));
