@@ -90,7 +90,10 @@ public class HomingPhysicsComponent extends PhysicsProjectileComponent {
             Vector2 newDirection = currentDirection.lerp(desiredDirection,
                     turnRate * dt).nor();
 
-            float speed = initialVelocity.len();
+            float speed = 10f;
+            if (initialVelocity != null) {
+                speed = initialVelocity.len();
+            }
             body.setLinearVelocity(newDirection.scl(speed));
 
         }
