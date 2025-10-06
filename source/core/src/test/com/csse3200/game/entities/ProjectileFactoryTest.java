@@ -80,7 +80,7 @@ public class ProjectileFactoryTest {
         ServiceLocator.registerRenderService(renderService);
 
         Entity pistol = WeaponsFactory.createWeapon(Weapons.PISTOL);
-        when(player.getComponent(InventoryComponent.class).getCurrItem()).thenReturn(pistol);
+        when(player.getComponent(InventoryComponent.class).getCurrSlot()).thenReturn(pistol);
         pistolBullet = ProjectileFactory.createPistolBullet(
                 pistol.getComponent(WeaponsStatsComponent.class)
         );

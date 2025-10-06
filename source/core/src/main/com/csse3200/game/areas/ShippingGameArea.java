@@ -11,6 +11,7 @@ import com.csse3200.game.entities.factories.characters.NPCFactory;
 import com.csse3200.game.entities.factories.characters.PlayerFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.entities.spawner.ItemSpawner;
+import com.csse3200.game.services.ServiceLocator;
 
 /**
  * The "Shipping" area of the game map. This class:
@@ -21,14 +22,19 @@ import com.csse3200.game.entities.spawner.ItemSpawner;
 public class ShippingGameArea extends GameArea {
     private static final float WALL_WIDTH = 0.1f;
     private static final GridPoint2 PLAYER_SPAWN = new GridPoint2(10, 10);
+    private static final float ROOM_DIFF_NUMBER = 7;
     private Entity player;
 
     /**
-     * Initialise this ShippingGameArea to use the provided TerrainFactory and camera helper.
-     * The camera is used to size the screen-edge walls and place the right-side door trigger.
+     * Initialise this ShippingGameArea to use the provided TerrainFactory and
+     * camera helper.
+     * The camera is used to size the screen-edge walls and place the right-side
+     * door trigger.
      *
-     * @param terrainFactory  TerrainFactory used to create the terrain for the GameArea (required).
-     * @param cameraComponent Camera helper supplying an OrthographicCamera (optional but used here).
+     * @param terrainFactory  TerrainFactory used to create the terrain for the
+     *                        GameArea (required).
+     * @param cameraComponent Camera helper supplying an OrthographicCamera
+     *                        (optional but used here).
      * @requires terrainFactory != null
      */
     public ShippingGameArea(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
@@ -36,7 +42,8 @@ public class ShippingGameArea extends GameArea {
     }
 
     /**
-     * Create the game area, including terrain, static entities (trees), dynamic entities (player)
+     * Create the game area, including terrain, static entities (trees), dynamic
+     * entities (player)
      * Entry point for this room. This:
      * - Loads textures
      * - Creates the terrain, walls, and UI label
@@ -105,14 +112,15 @@ public class ShippingGameArea extends GameArea {
     }
 
     private void spawnBordersAndDoors() {
-        if (cameraComponent == null) return;
+        if (cameraComponent == null)
+            return;
         Bounds b = getCameraBounds(cameraComponent);
         addSolidWallLeft(b, WALL_WIDTH);
         float leftDoorHeight = Math.max(1f, b.viewHeight() * 0.2f);
         float leftDoorY = b.bottomY();
         Entity leftDoor = ObstacleFactory.createDoorTrigger(WALL_WIDTH, leftDoorHeight);
         leftDoor.setPosition(b.leftX() + 0.001f, leftDoorY);
-        leftDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadResearch));
+        leftDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadFlyingBossRoom));
         spawnEntity(leftDoor);
 
         addSolidWallRight(b, WALL_WIDTH);
@@ -135,10 +143,12 @@ public class ShippingGameArea extends GameArea {
      * Spawn 2 high-level grok droids in the room as enemies.
      */
     private void spawnGrokDroids() {
-        Entity grok1 = NPCFactory.createGrokDroid(player, this, 3f);
+        Entity grok1 = NPCFactory.createGrokDroid(player, this,
+                ServiceLocator.getDifficulty().getRoomDifficulty(ShippingGameArea.ROOM_DIFF_NUMBER));
         GridPoint2 grok1Pos = new GridPoint2(25, 7);
         spawnEntityAt(grok1, grok1Pos, true, false);
-        Entity grok2 = NPCFactory.createGrokDroid(player, this, 3f);
+        Entity grok2 = NPCFactory.createGrokDroid(player, this,
+                ServiceLocator.getDifficulty().getRoomDifficulty(ShippingGameArea.ROOM_DIFF_NUMBER));
         GridPoint2 grok2Pos = new GridPoint2(25, 7);
         spawnEntityAt(grok2, grok2Pos, true, false);
     }
@@ -148,12 +158,14 @@ public class ShippingGameArea extends GameArea {
      */
     private void spawnVroombaAndDeepspin() {
         // Vroomba on the left side floor
-        Entity vroomba = NPCFactory.createVroomba(player, 1.5f);
+        Entity vroomba = NPCFactory.createVroomba(player,
+                ServiceLocator.getDifficulty().getRoomDifficulty(ShippingGameArea.ROOM_DIFF_NUMBER));
         GridPoint2 vPos = new GridPoint2(6, 7);
         spawnEntityAt(vroomba, vPos, true, false);
 
         // Deepspin on the right side near crates
-        Entity deepspin = NPCFactory.createDeepspin(player, this, 1.5f);
+        Entity deepspin = NPCFactory.createDeepspin(player, this,
+                ServiceLocator.getDifficulty().getRoomDifficulty(ShippingGameArea.ROOM_DIFF_NUMBER));
         GridPoint2 dPos = new GridPoint2(22, 8);
         spawnEntityAt(deepspin, dPos, true, false);
     }
@@ -161,8 +173,8 @@ public class ShippingGameArea extends GameArea {
     /**
      * Clears the game area and loads the previous section (Research).
      */
-    private void loadResearch() {
-        clearAndLoad(() -> new ResearchGameArea(terrainFactory, cameraComponent));
+    private void loadFlyingBossRoom() {
+        clearAndLoad(() -> new FlyingBossRoom(terrainFactory, cameraComponent));
     }
 
     /**
@@ -178,7 +190,7 @@ public class ShippingGameArea extends GameArea {
     }
 
     public Entity getPlayer() {
-        //placeholder
+        // placeholder
         return null;
     }
 

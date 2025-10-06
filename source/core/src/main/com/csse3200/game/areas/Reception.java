@@ -19,6 +19,7 @@ public class Reception extends GameArea {
     private static final GridPoint2 PLAYER_SPAWN = new GridPoint2(8, 10);
     private static final float WALL_WIDTH = 0.1f;
     private static final int NUM_TREES = 8; // Number of trees to spawn
+    private int roomDiffNumber = 2;
 
     public Reception(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
         super(terrainFactory, cameraComponent);
@@ -103,12 +104,10 @@ public class Reception extends GameArea {
     }
 
     private void loadForest() {
-        roomNumber--;
         clearAndLoad(() -> new ForestGameArea(terrainFactory, cameraComponent));
     }
 
     private void loadBackToFloor5() {
-        roomNumber++;
         clearAndLoad(() -> new MainHall(terrainFactory, cameraComponent));
     }
 
