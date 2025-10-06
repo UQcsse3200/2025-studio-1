@@ -1,5 +1,6 @@
 package com.csse3200.game.entities.configs.armour;
 
+import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.entities.configs.ItemTypes;
 
 public class HoodConfig extends ArmourConfig {
@@ -7,5 +8,7 @@ public class HoodConfig extends ArmourConfig {
         armourType = ItemTypes.HOOD_ARMOUR;
         protection = 5;
         texturePath = "images/armour-assets/hood.png";
+        offset = new Vector2(0.75f, 0.5f);
+        heightScale = 0.5f;
     }
 }

@@ -11,6 +11,7 @@ import com.csse3200.game.services.ServiceLocator;
 public class TextureRenderComponent extends RenderComponent {
     private final Texture texture;
     private float alpha = 1f; // Added for fade/opacity
+    private float zIndex;
 
     /**
      * @param texturePath Internal path of static texture to render.
@@ -18,6 +19,7 @@ public class TextureRenderComponent extends RenderComponent {
      */
     public TextureRenderComponent(String texturePath) {
         this(ServiceLocator.getResourceService().getAsset(texturePath, Texture.class));
+        this.zIndex = Float.MIN_VALUE;
     }
 
     /**
@@ -62,5 +64,26 @@ public class TextureRenderComponent extends RenderComponent {
             batch.draw(texture, position.x, position.y, scale.x, scale.y);
             batch.setColor(1f, 1f, 1f, 1f); // Reset color for other renders
         }
+    }
+
+    /**
+     * Gets the zIndex of the entity to determine rendering order.
+     * @return If zIndex hasn't been set, return negative entity's y position, else return the set value.
+     */
+    @Override
+    public float getZIndex() {
+        if (this.zIndex != Float.MIN_VALUE) {
+            return this.zIndex;
+        } else {
+            return -entity.getPosition().y;
+        }
+    }
+
+    /**
+     * Set the zIndex.
+     * @param zIndex zIndex to be set.
+     */
+    public void setZIndex(float zIndex) {
+        this.zIndex = zIndex;
     }
 }

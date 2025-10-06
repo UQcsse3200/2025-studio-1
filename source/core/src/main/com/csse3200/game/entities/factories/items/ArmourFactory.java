@@ -23,6 +23,7 @@ public class ArmourFactory {
         ArmourConfig config = armourType.getConfig();
         Entity armour = ItemFactory.createItem(config.texturePath);
         armour.addComponent(new ArmourComponent(config));
+        armour.scaleHeight(armour.getComponent(ArmourComponent.class).heightScale);
         return armour;
     }
 

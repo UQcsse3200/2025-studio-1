@@ -1,5 +1,6 @@
 package com.csse3200.game.components;
 
+import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.entities.configs.ItemTypes;
 import com.csse3200.game.entities.configs.armour.ArmourConfig;
 
@@ -10,10 +11,14 @@ public class ArmourComponent extends Component{
     public ItemTypes armourType;
     public int protection;
     public String texturePath;
+    public Vector2 offset;
+    public float heightScale;
 
     public ArmourComponent(ArmourConfig config) {
         this.armourType = config.armourType;
         this.protection = config.protection;
         this.texturePath = config.texturePath;
+        this.offset = config.offset;
+        this.heightScale = config.heightScale;
     }
 }

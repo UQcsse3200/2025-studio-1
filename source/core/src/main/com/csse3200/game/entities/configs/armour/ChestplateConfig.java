@@ -1,5 +1,6 @@
 package com.csse3200.game.entities.configs.armour;
 
+import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.entities.configs.ItemTypes;
 
 public class ChestplateConfig extends ArmourConfig {
@@ -7,6 +8,8 @@ public class ChestplateConfig extends ArmourConfig {
         armourType = ItemTypes.CHESTPLATE_ARMOUR;
         protection = 15;
         texturePath = "images/armour-assets/chestplate.png";
+        offset = new Vector2(0.75f, -0.01f);
+        heightScale = 0.5f;
     }
 }
 
