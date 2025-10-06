@@ -41,6 +41,7 @@ public class SecurityGameArea extends GameArea {
         spawnObjectDoors(new GridPoint2(0, 6), new GridPoint2(28, 19));
         spawnSecurityProps();
         spawnEnemies();
+        spawnSpikes2();
         ItemSpawner itemSpawner = new ItemSpawner(this);
         itemSpawner.spawnItems(ItemSpawnConfig.securitymap());
     }
@@ -83,7 +84,11 @@ public class SecurityGameArea extends GameArea {
             Entity platform = ObstacleFactory.createThinFloor();
             spawnEntityAt(platform, platformPos, true, false);
         }
-
+        for (int i = 0; i < 2; i++) {
+            GridPoint2 topRightPlatformPos = new GridPoint2(1 + i * 6, 11);
+            Entity topRightPlatform = ObstacleFactory.createThinFloor();
+            spawnEntityAt(topRightPlatform, topRightPlatformPos, true, false);
+        }
         /** Extra platform just below the top-right door **/
         GridPoint2 topRightPlatformPos = new GridPoint2(26, 18);
         Entity topRightPlatform = ObstacleFactory.createThinFloor();
@@ -111,7 +116,7 @@ public class SecurityGameArea extends GameArea {
         spawnEntityAt(redLight, redLightPos, false, false);
 
         /** Monitor (decorative) **/
-        GridPoint2 monitorPos = new GridPoint2(12, 6);
+        GridPoint2 monitorPos = new GridPoint2(6, 12);
         Entity monitor = ObstacleFactory.createSecurityMonitor();
         spawnEntityAt(monitor, monitorPos, false, false);
 
@@ -128,6 +133,11 @@ public class SecurityGameArea extends GameArea {
         }
     }
 
+    private void spawnSpikes2() {
+        Entity spikes = ObstacleFactory.createSpikes2();
+        GridPoint2 spikesSpawn = new GridPoint2(4, 11);
+        spawnEntityAt(spikes, spikesSpawn, true, false);
+    }
     /**
      * Spawn a Vroomba and Deepspin in Security room.
      */
