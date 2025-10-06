@@ -4,6 +4,7 @@ import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.csse3200.game.areas.*;
 import com.csse3200.game.entities.Entity;
+import com.csse3200.game.entities.configs.Armour;
 import com.csse3200.game.entities.configs.Weapons;
 import com.csse3200.game.entities.factories.items.WorldPickUpFactory;
 import com.csse3200.game.physics.components.PhysicsComponent;
@@ -120,11 +121,16 @@ public class ItemSpawner {
         try {
             Weapons weapon = Weapons.valueOf(type.toUpperCase());
             return WorldPickUpFactory.createWeaponPickup(weapon);
-        } catch (IllegalArgumentException e) {
-            switch (type.toLowerCase()) {
-                default:
-                    logger.warn("Unknown item type: {}", type);
-                    return null;
+        } catch (IllegalArgumentException e1) {
+            try {
+                Armour armour = Armour.valueOf(type.toUpperCase());
+                return WorldPickUpFactory.createArmourPickup(armour);
+            } catch (IllegalArgumentException e2) {
+                switch (type.toLowerCase()) {
+                    default:
+                        logger.warn("Unknown item type: {}", type);
+                        return null;
+                }
             }
         }
     }

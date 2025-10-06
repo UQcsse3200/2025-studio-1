@@ -325,9 +325,6 @@ public class ForestGameArea extends GameArea {
         spawnEntity(keycard);
 
         spawnItems();
-
-        //for testing purposes
-        spawnChestplate();
     }
 
     private void spawnRobots() {
@@ -561,11 +558,11 @@ public class ForestGameArea extends GameArea {
         return newDagger;
     }
 
-    // TODO - CHESTPLATE NOT RENDERING ON PLAYER YET
+
     private Entity spawnChestplate() {
         Entity newChestplate = ArmourFactory.createArmour(Armour.CHESTPLATE);
-        Vector2 chestplateOffset = new Vector2(0.5f, 0.5f);
-//        spawnEntityAt(newChestplate, new GridPoint2(10, 10), true, true));
+        newChestplate.scaleHeight(0.5f);
+        Vector2 chestplateOffset = new Vector2(0.8f, -0.05f);
         ServiceLocator.getGameArea().spawnEntity(newChestplate);
         player.getComponent(PlayerEquipComponent.class).setItem(newChestplate, chestplateOffset);
         return newChestplate;
