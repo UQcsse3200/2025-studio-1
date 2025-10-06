@@ -7,7 +7,6 @@ import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.components.minigames.pool.PoolGame;
 import com.csse3200.game.entities.Entity;
-import com.csse3200.game.entities.configs.ItemSpawnConfig;
 import com.csse3200.game.entities.factories.characters.PlayerFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.entities.spawner.ItemSpawner;
@@ -16,6 +15,8 @@ import com.csse3200.game.services.ServiceLocator;
 
 /**
  * Minimal generic Casino room: walls, a single right-side door, and a subtle background overlay.
+ *
+ * Right door -> Spawn Room
  */
 public class CasinoGameArea extends GameArea {
     private static final float WALL_WIDTH = 0.1f;
@@ -26,33 +27,28 @@ public class CasinoGameArea extends GameArea {
         super(terrainFactory, cameraComponent);
     }
 
+    /**
+     * Entry point for this room. This:
+     * - Loads overlay
+     * - Creates Walls, Doors and Floor
+     * - Spawns player
+     */
     @Override
     public void create() {
         GenericLayout.ensureGenericAssets(this);
         GenericLayout.setupTerrainWithOverlay(this, terrainFactory, TerrainType.CASINO,
                 new Color(0.08f, 0.08f, 0.1f, 0.30f));
 
-        ensureAssets();
         spawnBordersAndDoors();
         spawnFloor();
         player = spawnPlayer();
-        spawnWhackAMoleGame();
-        spawnPoolGame();
-        ItemSpawner itemSpawner = new ItemSpawner(this);
-        itemSpawner.spawnItems(ItemSpawnConfig.securitymap());
     }
 
-    private void ensureAssets() {
-        String[] needed = new String[]{
-                "images/mole.png",
-                "images/hole.png",
-                "images/pool/table.png",
-                "images/pool/cueball.png",
-                "images/pool/cue.png"
-        };
-        ensureTextures(needed);
-    }
-
+    /**
+     * Spawns the borders and right door inside the room.
+     * Right door -> Spawn Room
+     * Uses a larger door to fit the casino png.
+     */
     private void spawnBordersAndDoors() {
         if (cameraComponent == null) return;
         Bounds b = getCameraBounds(cameraComponent);
@@ -75,22 +71,20 @@ public class CasinoGameArea extends GameArea {
         spawnEntity(rightDoor);
     }
 
+    /**
+     * Spawns the player at PLAYER_SPAWN and returns the entity.
+     */
     private Entity spawnPlayer() {
-        Entity player = PlayerFactory.createPlayer();
-        spawnEntityAt(player, PLAYER_SPAWN, true, true);
-        return player;
+        Entity newPlayer = PlayerFactory.createPlayer();
+        spawnEntityAt(newPlayer, PLAYER_SPAWN, true, true);
+        return newPlayer;
     }
 
-    private void spawnWhackAMoleGame() {
-        GridPoint2 pos = new GridPoint2(5, 7);
-        spawnEntityAt(new WhackAMoleGame().getGameEntity(), pos, true, true);
-    }
-
-    private void spawnPoolGame() {
-        GridPoint2 pos = new GridPoint2(10, 7);
-        spawnEntityAt(new PoolGame(ServiceLocator.getPhysicsService().getPhysics()).getGameEntity(), pos, true, true);    }
-
+    /**
+     * Disposes current entities and switches to ForestGameArea.
+     */
     private void loadSpawnFromCasino() {
+
         clearAndLoad(() -> new ForestGameArea(terrainFactory, cameraComponent));
     }
 
