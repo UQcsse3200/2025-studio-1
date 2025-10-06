@@ -431,6 +431,10 @@ public class PlayerActions extends Component {
         PhysicsProjectileComponent projectilePhysics = bullet.getComponent(PhysicsProjectileComponent.class);
 
         Vector3 destination = camera.unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
+        Vector2 world = new Vector2(destination.x, destination.y);
+        Vector2 dir = new Vector2(destination.x - origin.x, destination.y - origin.y);
+        if (dir.len2() != 0f) dir.nor();
+        entity.getEvents().trigger("player_shoot_order", world, dir);
         projectilePhysics.fire(new Vector2(destination.x - origin.x, destination.y - origin.y), 5);
 
 
@@ -641,13 +645,19 @@ public class PlayerActions extends Component {
         }
     }
 
-    /**
-     * Setter method used for testing
-     *
-     * @param timeSinceLastAttack time since last attack
-     */
-    void setTimeSinceLastAttack(float timeSinceLastAttack) {
-        this.timeSinceLastAttack = timeSinceLastAttack;
-    }
+  /**
+   * Sets time since last attack, used for testing
+   * @param timeSinceLastAttack time since last attack
+   */
+  public void setTimeSinceLastAttack(float timeSinceLastAttack) {
+    this.timeSinceLastAttack = timeSinceLastAttack;
+  }
 
+  /**
+   * Sets the camera, used for testing
+   * @param camera camera
+   */
+  public void setCamera(Camera camera) {
+    this.camera = camera;
+  }
 }

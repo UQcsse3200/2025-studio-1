@@ -16,6 +16,9 @@ import org.mockito.MockedStatic;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+
 @ExtendWith(GameExtension.class)
 class SecurityAreaTest {
 
@@ -64,12 +67,12 @@ class SecurityAreaTest {
             return supplier.get() instanceof MainHall;
         }));
 
-        var method2 = SecurityGameArea.class.getDeclaredMethod("loadOffice");
+        var method2 = SecurityGameArea.class.getDeclaredMethod("loadMovingBossRoom");
         method2.setAccessible(true);
         method2.invoke(securityGameArea);
 
         verify(securityGameArea).clearAndLoad(argThat(supplier -> {
-            return supplier.get() instanceof OfficeGameArea;
+            return supplier.get() instanceof MovingBossRoom;
         }));
     }
 }

@@ -19,7 +19,7 @@ import com.csse3200.game.services.ServiceLocator;
  */
 public class ResearchGameArea extends GameArea {
     private static final float WALL_WIDTH = 0.1f;
-    private static final GridPoint2 PLAYER_SPAWN = new GridPoint2(10, 10);
+    private static GridPoint2 playerSpawn = new GridPoint2(10, 10);
     private int roomDiffNumber = 6;
     private Entity player;
 
@@ -60,13 +60,13 @@ public class ResearchGameArea extends GameArea {
         float rightDoorY = b.topY() - rightDoorHeight;
         Entity rightDoor = ObstacleFactory.createDoorTrigger(WALL_WIDTH, rightDoorHeight);
         rightDoor.setPosition(b.rightX() - WALL_WIDTH - 0.001f, rightDoorY);
-        rightDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadShipping));
+        rightDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadFlyingBossRoom));
         spawnEntity(rightDoor);
     }
 
     private Entity spawnPlayer() {
         Entity player = PlayerFactory.createPlayer();
-        spawnEntityAt(player, PLAYER_SPAWN, true, true);
+        spawnEntityAt(player, playerSpawn, true, true);
         return player;
     }
 
@@ -142,12 +142,26 @@ public class ResearchGameArea extends GameArea {
     }
 
     private void loadElevator() {
-        roomNumber--;
+        ElevatorGameArea.setRoomSpawn(new GridPoint2(21, 20));
         clearAndLoad(() -> new ElevatorGameArea(terrainFactory, cameraComponent));
     }
 
-    private void loadShipping() {
-        clearAndLoad(() -> new ShippingGameArea(terrainFactory, cameraComponent));
+    private void loadFlyingBossRoom() {
+        FlyingBossRoom.setRoomSpawn(new GridPoint2(6, 8));
+        clearAndLoad(() -> new FlyingBossRoom(terrainFactory, cameraComponent));
+    }
+
+    /**
+     * Setter method for the player spawn point
+     * should be used when the player is traversing through the rooms
+     * 
+     * @param newSpawn the new spawn point
+     */
+    public static void setRoomSpawn(GridPoint2 newSpawn) {
+        if (newSpawn == null) {
+            return;
+        }
+        ResearchGameArea.playerSpawn = newSpawn;
     }
 
     @Override
