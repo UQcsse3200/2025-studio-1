@@ -136,6 +136,7 @@ public class Reception extends GameArea {
         spawnEntityAt(player, playerSpawn, true, true);
         return player;
     }
+
     private void spawnEnemies() {
         if (player == null)
             return;
