@@ -39,15 +39,13 @@ public class ActiveProjectileTest {
     @Test
     void shouldSetProjectileSpeed() throws NoSuchFieldException, IllegalAccessException {
         activeProjectile.setProjectileSpeed(10f);
-        assertEquals(10f, getPrivateMember(activeProjectile, "projectileSpeed"));
+        assertEquals(10f, getPrivateMember(activeProjectile, "speed"));
     }
-
-
 
     /**
      * Gets the private member with the given name
      * The name must be one of
-     * ["gravityStrength", "target", "activeProjectileType", "projectileSpeed"]
+     * ["gravityStrength", "target", "activeProjectileType", "speed"]
      *
      * @param component An initialised PlayerEquipComponent
      * @param name      The string of the name of the member that is wanted
