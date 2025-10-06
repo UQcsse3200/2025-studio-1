@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * equipping items, and unequipping items. No mocking is used; only simple
  * components are attached to the entity for testing purposes.
  */
-public class KeyboardPlayerInputComponentTest {
+class KeyboardPlayerInputComponentTest {
     private Entity player;
     private KeyboardPlayerInputComponent inputComponent;
 
@@ -23,7 +23,7 @@ public class KeyboardPlayerInputComponentTest {
      * InventoryComponent, and PlayerActions component before each test.
      */
     @BeforeEach
-    public void setup() {
+    void setup() {
         player = new Entity();
         inputComponent = new KeyboardPlayerInputComponent();
         player.addComponent(inputComponent);
@@ -49,7 +49,7 @@ public class KeyboardPlayerInputComponentTest {
      */
     @Test
     @DisplayName("Test selecting an inventory slot equips the item")
-    public void checkSlotTest() {
+    void checkSlotTest() {
         inputComponent.equipped = false;  // no item equipped initially
         inputComponent.checkSlot(0);       // select slot 0
 
@@ -63,7 +63,7 @@ public class KeyboardPlayerInputComponentTest {
      */
     @Test
     @DisplayName("Test equipping current item sets equipped to true")
-    public void equipCurrentItemTest() {
+    void equipCurrentItemTest() {
         inputComponent.focusedItem = 0;
         inputComponent.equipped = false;
 

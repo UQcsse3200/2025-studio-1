@@ -43,8 +43,6 @@ import com.csse3200.game.services.ServiceLocator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.security.SecureRandom;
-
 import static com.csse3200.game.entities.configs.Weapons.*;
 
 /**
@@ -64,8 +62,6 @@ public class ForestGameArea extends GameArea {
     private static final float WALL_WIDTH = 0.1f;
 
     private final float VERTICAL_HEIGHT_OFFSET = 9.375f;
-    private Weapons weapons;
-    private ItemComponent item;
 
     /**
      * Files or pictures used by the game (enemy/props,etc.).
@@ -602,7 +598,7 @@ public class ForestGameArea extends GameArea {
         // Get the relevant components from the item
         TextureRenderComponent texComp = item.getComponent(TextureRenderComponent.class);
         TextureRenderWithRotationComponent texRotComp = item.getComponent(
-            TextureRenderWithRotationComponent.class);
+                TextureRenderWithRotationComponent.class);
 
         // Update the Z index for the item
         if (texRotComp != null) {
@@ -626,6 +622,7 @@ public class ForestGameArea extends GameArea {
         Vector2 offset = item.getComponent(ItemComponent.class).getEquipOffset();
         player.getComponent(PlayerEquipComponent.class).setItem(item, offset);
     }
+
     /**
      * Sets the equipped item in the PlayerEquipComponent to be null, along with the offset
      */
@@ -769,7 +766,7 @@ public class ForestGameArea extends GameArea {
     /**
      * Setter method for the player spawn point
      * should be used when the player is traversing through the rooms
-     * 
+     *
      * @param newSpawn the new spawn point
      */
     public static void setRoomSpawn(GridPoint2 newSpawn) {
