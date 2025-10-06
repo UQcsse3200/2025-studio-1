@@ -14,6 +14,9 @@ import com.csse3200.game.components.cards.BlackJackGame;
 import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import com.csse3200.game.components.items.ItemHoldComponent;
 import com.csse3200.game.components.player.InventoryComponent;
+import com.csse3200.game.components.player.ItemPickUpComponent;
+import com.csse3200.game.components.player.PlayerEquipComponent;
+import com.csse3200.game.components.screens.BlackjackScreenDisplay;
 import com.csse3200.game.components.shop.CatalogService;
 import com.csse3200.game.components.shop.ShopDemo;
 import com.csse3200.game.components.shop.ShopManager;
@@ -143,7 +146,7 @@ public class ForestGameArea extends GameArea {
             "backgrounds/Reception.png",
             "backgrounds/Shipping.png",
             "backgrounds/SpawnResize.png",
-            "backgrounds/Storage.png"
+            "backgrounds/Storage.png",
             "images/Storage.png",
             "images/cards.png"
     };
@@ -315,7 +318,6 @@ public class ForestGameArea extends GameArea {
         spawnComputerBench();
         spawnHealthBench();
         spawnSpeedBench();
-        spawnBlackjack();
 
         player = spawnPlayer();
         ServiceLocator.registerPlayer(player);
@@ -472,16 +474,7 @@ public class ForestGameArea extends GameArea {
 
     }
 
-    private void spawnBlackjack() {
-        Entity blackjack = InteractableStationFactory.createBaseStation();
-        blackjack.addComponent(new TextureRenderComponent("images/box_boy_leaf.png"));
-        blackjack.addComponent(new BettingComponent(2));
-        blackjack.addComponent(new BlackJackGame());
-        blackjack.addComponent(new BlackjackScreenDisplay());
-        spawnEntityAt(blackjack, new GridPoint2(20, 7), true, true);
-        blackjack.getEvents().trigger("hide");
 
-    }
 
     private void spawnHealthBench() {
         Entity bench = InteractableStationFactory.createStation(Benches.HEALTH_BENCH);

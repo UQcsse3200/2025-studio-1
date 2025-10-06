@@ -8,6 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
+import com.csse3200.game.areas.GameArea;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.UIComponent;
 
@@ -29,7 +30,7 @@ public class BettingComponent extends UIComponent {
     private Label balanceLabel, resultLabel;
     private TextField betInput;
 
-    public BettingComponent(int multiplier) {
+    public BettingComponent(int multiplier, GameArea area) {
         this.multiplier = multiplier;
     }
 
