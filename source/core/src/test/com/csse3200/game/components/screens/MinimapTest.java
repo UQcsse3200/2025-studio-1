@@ -127,8 +127,7 @@ class MinimapTest {
         assertNotNull(rendered, "Render output should not be null after opening.");
         // Check that the discovered room's image path is updated
         assertTrue(rendered.containsKey("images/minimap-images/StartRoom.png"), "Discovered room should have its specific image.");
-        // Check that the undiscovered room is not present (as it's locked and not the current room)
-        // or ensure it would render as locked if it were visible.
+        // Check that the undiscovered room is not present
         assertFalse(rendered.containsKey("images/minimap-images/NorthRoom.png"), "Undiscovered room should not have its specific image.");
     }
 
@@ -176,8 +175,6 @@ class MinimapTest {
 
         // Act
         Minimap fileMinimap = new Minimap(720, 1280, tempFile.getAbsolutePath());
-        // To test if rooms were added, we need a way to inspect internal state.
-        // We'll test it indirectly via the open() and render() methods.
         when(player.getPosition()).thenReturn(new Vector2(0, 0));
         when(gameArea.toString()).thenReturn("RoomA");
         when(discoveryService.isDiscovered("RoomA")).thenReturn(true);
@@ -195,10 +192,6 @@ class MinimapTest {
         // Act and Assert
         // This constructor catches the IOException and logs it. We can verify that no rooms are added.
         Minimap fileMinimap = new Minimap(720, 1280, "non/existent/path.cfg");
-        // Indirectly check that no rooms were loaded. open() would throw an exception if a room doesn't exist.
-        // when(player.getPosition()).thenReturn(new Vector2(0, 0));
-        // when(gameArea.toString()).thenReturn("SomeRoom");
-        // No exception should be thrown by the constructor, but open() will fail because roomPositions is empty.
         assertThrows(NullPointerException.class, fileMinimap::open);
     }
 }
