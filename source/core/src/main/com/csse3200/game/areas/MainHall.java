@@ -9,6 +9,7 @@ import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.factories.characters.PlayerFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.rendering.SolidColorRenderComponent;
+import com.csse3200.game.services.ServiceLocator;
 
 /**
  * Room 5 with its own background styling.
@@ -16,6 +17,7 @@ import com.csse3200.game.rendering.SolidColorRenderComponent;
 public class MainHall extends GameArea {
     private static final float WALL_WIDTH = 0.1f;
     private static GridPoint2 playerSpawn = new GridPoint2(10, 10);
+    private static final GridPoint2 PLAYER_SPAWN = new GridPoint2(10, 10);
 
     public MainHall(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
         super(terrainFactory, cameraComponent);
@@ -102,9 +104,8 @@ public class MainHall extends GameArea {
         clearAndLoad(() -> new SecurityGameArea(terrainFactory, cameraComponent));
     }
 
-    private void spawnPlayer() {
-        Entity player = PlayerFactory.createPlayer();
-        spawnEntityAt(player, playerSpawn, true, true);
+    private Entity spawnPlayer() {
+        return spawnOrRepositionPlayer(PLAYER_SPAWN);
     }
 
     /**
@@ -167,8 +168,7 @@ public class MainHall extends GameArea {
     }
 
     public Entity getPlayer() {
-        //tempoary placeholder return null to stop errors
-        return null;
+        return ServiceLocator.getPlayer();
     }
 
     /**

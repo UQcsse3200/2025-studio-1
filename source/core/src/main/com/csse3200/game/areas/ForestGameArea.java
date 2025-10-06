@@ -55,6 +55,7 @@ import java.security.SecureRandom;
 public class ForestGameArea extends GameArea {
     private static final Logger logger = LoggerFactory.getLogger(ForestGameArea.class);
     private static GridPoint2 playerSpawn = new GridPoint2(3, 20);
+    private static final GridPoint2 PLAYER_SPAWN = new GridPoint2(3, 20);
     private static final int NUM_ITEMS = 5;//this is for ItemFactory
     // private static final int NUM_TURRETS = 1;
     private static final float WALL_WIDTH = 0.1f;
@@ -328,7 +329,7 @@ public class ForestGameArea extends GameArea {
         ItemSpawner itemSpawner = new ItemSpawner(this);
         itemSpawner.spawnItems(ItemSpawnConfig.forestmap());
         spawnnpctest();
-        spawnPartnerNearPlayer();
+        spawnPartnerNearPlayerIfNeeded();
         // Place a keycard on the floor so the player can unlock the door
         float keycardX = 3f;
         float keycardY = 7f;
@@ -553,13 +554,15 @@ public class ForestGameArea extends GameArea {
     }
 
     private Entity spawnPlayer() {
-        Entity newPlayer = PlayerFactory.createPlayer();
-        spawnEntityAt(newPlayer, playerSpawn, true, true);
+        Entity player = spawnOrRepositionPlayer(PLAYER_SPAWN);
 
-        newPlayer.getEvents().addListener("equip", this::equipItem);
-        newPlayer.getEvents().addListener("unequip", this::unequipItem);
+        // Only add event listeners if this is a new player
+        if (ServiceLocator.getPlayer() == player) {
+            player.getEvents().addListener("equip", this::equipItem);
+            player.getEvents().addListener("unequip", this::unequipItem);
+        }
 
-        return newPlayer;
+        return player;
     }
 
     private Entity spawnDagger() {
@@ -637,8 +640,16 @@ public class ForestGameArea extends GameArea {
         spawnEntityAt(test, pos, true, true);
     }
 
-    private void spawnPartnerNearPlayer() {
-        // 如果你有 grid 地图，用 spawnEntityAt；否则直接按坐标
+    private void spawnPartnerNearPlayerIfNeeded() {
+        // Check if a partner already exists in the area
+        for (Entity entity : areaEntities) {
+            if (isPartnerNPC(entity)) {
+                // Partner already exists, don't spawn a new one
+                return;
+            }
+        }
+        
+        // No partner found, spawn a new one
         Entity partner = FriendlyNPCFactory.createPartner(player);
 
         // 方案 A：按瓦片生成（要确保相机看得到该瓦片）

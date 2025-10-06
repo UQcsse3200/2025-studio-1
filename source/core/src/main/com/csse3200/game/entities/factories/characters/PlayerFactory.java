@@ -88,32 +88,6 @@ public class PlayerFactory {
         PlayerActions actions = player.getComponent(PlayerActions.class);
         actions.create();
 
-        // Restore stamina from previous area if cached
-        try {
-            Float cached = ServiceLocator.getCachedPlayerStamina();
-            if (cached != null) {
-                StaminaComponent stamina = player.getComponent(StaminaComponent.class);
-                if (stamina != null) {
-                    stamina.setStamina(cached);
-                }
-                // Clear cache after applying to avoid reusing stale values
-                ServiceLocator.setCachedPlayerStamina(null);
-            }
-        } catch (Exception ignored) {
-        }
-
-        // Restore health from previous area if cached
-        try {
-            Integer cachedHealth = ServiceLocator.getCachedPlayerHealth();
-            if (cachedHealth != null) {
-                CombatStatsComponent stats = player.getComponent(CombatStatsComponent.class);
-                if (stats != null) {
-                    stats.setHealth(cachedHealth);
-                }
-                ServiceLocator.setCachedPlayerHealth(null);
-            }
-        } catch (Exception ignored) {
-        }
 
         // pick up rapid fire powerup
         // remove this if we have item pickup available

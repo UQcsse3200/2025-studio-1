@@ -33,8 +33,6 @@ public class ServiceLocator {
     private static Difficulty difficulty;
     private static DiscoveryService discoveryService; // track discovered rooms
     private static ButtonSoundService buttonSoundService;
-    private static Float cachedPlayerStamina; // preserved across area transitions
-    private static Integer cachedPlayerHealth; // preserved across area transitions
 
     public static Entity getPlayer() {
         return player;
@@ -107,33 +105,6 @@ public class ServiceLocator {
     public static void registerPlayer(Entity person) {
         player = person;
     }
-    /**
-     * Returns cached player stamina to restore after area transitions.
-     */
-    public static Float getCachedPlayerStamina() {
-        return cachedPlayerStamina;
-    }
-
-    /**
-     * Caches player stamina to be restored when the next player entity is created.
-     */
-    public static void setCachedPlayerStamina(Float value) {
-        cachedPlayerStamina = value;
-    }
-
-    /**
-     * Returns cached player health to restore after area transitions.
-     */
-    public static Integer getCachedPlayerHealth() {
-        return cachedPlayerHealth;
-    }
-
-    /**
-     * Caches player health to be restored when the next player entity is created.
-     */
-    public static void setCachedPlayerHealth(Integer value) {
-        cachedPlayerHealth = value;
-    }
 
     public static void registerEntityService(EntityService service) {
         logger.debug("Registering entity service {}", service);
@@ -199,8 +170,23 @@ public class ServiceLocator {
         resourceService = null;
         gameArea = null;
         saveLoadService = null;
-        cachedPlayerStamina = null;
-        cachedPlayerHealth = null;
+        player = null;
+        discoveryService = null;
+    }
+
+    /**
+     * Clear all services except the player entity.
+     */
+    public static void clearExceptPlayer() {
+        entityService = null;
+        renderService = null;
+        physicsService = null;
+        timeSource = null;
+        inputService = null;
+        resourceService = null;
+        gameArea = null;
+        saveLoadService = null;
+        // Keep player entity: player = null; (commented out)
         discoveryService = null;
     }
 
