@@ -17,7 +17,6 @@ import com.csse3200.game.services.ServiceLocator;
  */
 public class Reception extends GameArea {
     private static GridPoint2 playerSpawn = new GridPoint2(10, 10);
-    private static GridPoint2 PLAYER_SPAWN = new GridPoint2(10, 10);
     private static final float WALL_WIDTH = 0.1f;
 
     public Reception(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
@@ -113,7 +112,7 @@ public class Reception extends GameArea {
     }
 
     private Entity spawnPlayer() {
-        return spawnOrRepositionPlayer(PLAYER_SPAWN);
+        return spawnOrRepositionPlayer(playerSpawn);
     }
 
     private void spawnplatform2() {
@@ -183,7 +182,7 @@ public class Reception extends GameArea {
         if (newSpawn == null) {
             return;
         }
-        Reception.PLAYER_SPAWN = newSpawn;
+        Reception.playerSpawn = newSpawn;
     }
 
     @Override

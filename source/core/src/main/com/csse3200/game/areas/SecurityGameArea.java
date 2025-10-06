@@ -172,7 +172,7 @@ public class SecurityGameArea extends GameArea {
         if (newSpawn == null) {
             return;
         }
-        SecurityGameArea.PLAYER_SPAWN = newSpawn;
+        SecurityGameArea.playerSpawn = newSpawn;
     }
 
     @Override

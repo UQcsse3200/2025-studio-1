@@ -55,7 +55,6 @@ import java.security.SecureRandom;
 public class ForestGameArea extends GameArea {
     private static final Logger logger = LoggerFactory.getLogger(ForestGameArea.class);
     private static GridPoint2 playerSpawn = new GridPoint2(3, 20);
-    private static GridPoint2 PLAYER_SPAWN = new GridPoint2(3, 20);
     private static final int NUM_ITEMS = 5;//this is for ItemFactory
     // private static final int NUM_TURRETS = 1;
     private static final float WALL_WIDTH = 0.1f;
@@ -557,7 +556,7 @@ public class ForestGameArea extends GameArea {
 
 
     private Entity spawnPlayer() {
-        Entity player = spawnOrRepositionPlayer(PLAYER_SPAWN);
+        Entity player = spawnOrRepositionPlayer(playerSpawn);
 
         // Only add event listeners if this is a new player
         if (ServiceLocator.getPlayer() == player) {
@@ -757,7 +756,7 @@ public class ForestGameArea extends GameArea {
         if (newSpawn == null) {
             return;
         }
-        ForestGameArea.PLAYER_SPAWN = newSpawn;
+        ForestGameArea.playerSpawn = newSpawn;
     }
 
     @Override

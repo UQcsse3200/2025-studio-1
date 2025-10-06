@@ -19,7 +19,7 @@ import com.csse3200.game.rendering.TextureRenderComponent;
  **/
 public class ElevatorGameArea extends GameArea {
     private static final float WALL_WIDTH = 0.1f;
-    private static GridPoint2 PLAYER_SPAWN = new GridPoint2(10, 10);
+    private static GridPoint2 playerSpawn = new GridPoint2(10, 10);
 
     public ElevatorGameArea(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
         super(terrainFactory, cameraComponent);
@@ -89,7 +89,7 @@ public class ElevatorGameArea extends GameArea {
     }
 
     private Entity spawnPlayer() {
-        return spawnOrRepositionPlayer(PLAYER_SPAWN);
+        return spawnOrRepositionPlayer(playerSpawn);
     }
 
     /**
@@ -158,7 +158,7 @@ public class ElevatorGameArea extends GameArea {
         if (newSpawn == null) {
             return;
         }
-        ElevatorGameArea.PLAYER_SPAWN = newSpawn;
+        ElevatorGameArea.playerSpawn = newSpawn;
     }
 
     @Override
