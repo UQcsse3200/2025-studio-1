@@ -25,7 +25,10 @@ public class CasinoGameArea extends GameArea {
     private Entity player;
     private static final String[] CASINO_TEXTURES = {
             "images/mole.png",
-            "images/hole.png"
+            "images/hole.png",
+            "images/pool/cue.png",
+            "images/pool/cueball.png",
+            "images/pool/table.png",
     };
     private static final String[] CASINO_SOUNDS = {
             "sounds/whack.mp3"
@@ -52,6 +55,7 @@ public class CasinoGameArea extends GameArea {
         spawnFloor();
         player = spawnPlayer();
         spawnWhackAMoleGame();
+        spawnPoolGame();
     }
 
     private void ensureAssets() {
@@ -106,6 +110,11 @@ public class CasinoGameArea extends GameArea {
     private void spawnWhackAMoleGame() {
         GridPoint2 pos = new GridPoint2(5, 7);
         spawnEntityAt(new WhackAMoleGame().getGameEntity(), pos, true, true);
+    }
+
+    private void spawnPoolGame() {
+        GridPoint2 pos = new GridPoint2(11, 7);
+        spawnEntityAt(new PoolGame().getGameEntity(), pos, true, true);
     }
 
     /**
