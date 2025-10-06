@@ -175,7 +175,7 @@ public class ItemPickUpComponent extends Component {
         armour.create();
         ArmourEquipComponent armourEquipper = entity.getComponent(ArmourEquipComponent.class);
         item.dispose();
-        armourEquipper.setItem(armour, armour.getComponent(ArmourComponent.class).offset);
+        armourEquipper.setItem(armour);
     }
 
     /**

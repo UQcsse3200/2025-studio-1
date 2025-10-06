@@ -10,6 +10,7 @@ public abstract class ArmourConfig {
     public ItemTypes armourType = ItemTypes.ARMOUR;
     public int protection = 0;
     public String texturePath = "";
-    public Vector2 offset;
+    public Vector2 rightOffset;
+    public Vector2 leftOffset;
     public float heightScale;
 }
