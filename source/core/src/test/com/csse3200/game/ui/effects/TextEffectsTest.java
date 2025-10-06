@@ -87,7 +87,7 @@ class TextEffectsTest {
     }
 
     // NPE-proof Label factory for headless tests.
-    private static Label newLabel(String initialText) {
+    private static Label newLabel() {
         // Minimal font data
         BitmapFont.BitmapFontData data = new BitmapFont.BitmapFontData();
         data.markupEnabled = false;
@@ -115,7 +115,7 @@ class TextEffectsTest {
         // Use convenience ctor so Label copies a non-null color during super()
         Label.LabelStyle style = new Label.LabelStyle(font, Color.WHITE);
 
-        Label lbl = new Label(initialText, style);
+        Label lbl = new Label("", style);
 
         // Belt & braces: ensure instance color is non-null even if style mutates later
         lbl.setColor(Color.WHITE);
@@ -149,7 +149,7 @@ class TextEffectsTest {
         // present file with one good line -> deterministic
         memFiles.put("ok.txt", """
                   # comment
-                  \t  
+                  \t
                   hello
                 """);
         assertEquals("hello", TextEffects.readRandomLine("ok.txt", "fb"));
@@ -179,7 +179,7 @@ class TextEffectsTest {
             TextEffects fx = new TextEffects();
 
             // typewriter -> full text emitted under repeated runs
-            Label lbl = newLabel("");
+            Label lbl = newLabel();
             fx.typewriter(lbl, "abc", 60f);
             assertEquals("abc", lbl.getText().toString());
 
@@ -188,12 +188,12 @@ class TextEffectsTest {
             assertEquals("ab".length(), lbl.getText().length());
 
             // wordReveal keeps spacing and completes
-            Label lbl2 = newLabel("");
+            Label lbl2 = newLabel();
             fx.wordReveal(lbl2, "Hi  there!", 30f);
             assertEquals("Hi  there!", lbl2.getText().toString());
 
             // marquee shows exactly window width
-            Label lbl3 = newLabel("");
+            Label lbl3 = newLabel();
             fx.marquee(lbl3, "HELLO", 3, 20f);
             assertEquals(3, lbl3.getText().length());
         }
@@ -203,7 +203,7 @@ class TextEffectsTest {
     void typewriterSmart_ticks_and_finishes() {
         try (MockedStatic<Timer> ignored = mockTimersImmediate()) {
             TextEffects fx = new TextEffects();
-            Label lbl = newLabel("");
+            Label lbl = newLabel();
 
             AtomicInteger ticks = new AtomicInteger(0);
             fx.typewriterSmart(lbl, "A,B.", 30f, 0.05f, 0.1f, ticks::incrementAndGet);
@@ -219,12 +219,12 @@ class TextEffectsTest {
             TextEffects fx = new TextEffects();
 
             // No CRAZY -> plain typewriter (no markup in final)
-            Label p = newLabel("");
+            Label p = newLabel();
             fx.crazyOrType(p, "Hello", 60f);
             assertEquals("Hello", p.getText().toString());
 
             // With CRAZY -> runs block animation (text will be markup-wrapped / animated)
-            Label c = newLabel("");
+            Label c = newLabel();
             String crazy = "{CRAZY style=blast origin=middle spread=2 fps=60 cycles=1 rainbow=true rshift=20}OK{/CRAZY}";
             fx.crazyOrType(c, crazy, 40f);
             // Bounded run may still be mid-animation; ensure non-empty and has some chars
@@ -234,6 +234,25 @@ class TextEffectsTest {
         }
     }
 
+
+    @Test
+    void blinkCaret_toggles_with_custom_and_default_caret() {
+        try (MockedStatic<Timer> ignored = mockTimersImmediate()) {
+            TextEffects fx = new TextEffects();
+
+            // Custom caret
+            Label lbl = newLabel();
+            lbl.setText("BASE");
+            fx.blinkCaret(lbl, 0.01f, "|");   // interval below clamp; mocked timer runs 32 toggles
+            assertEquals("BASE|", lbl.getText().toString());
+
+            // Default caret (▌)
+            Label lbl2 = newLabel();
+            lbl2.setText("ABC");
+            fx.blinkCaret(lbl2, 0f, null);    // null -> default "▌"
+            assertEquals("ABC▌", lbl2.getText().toString());
+        }
+    }
 
     /**
      * Minimal Files stub with in-memory "internal" contents.
