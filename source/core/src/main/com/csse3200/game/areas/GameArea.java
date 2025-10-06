@@ -37,17 +37,9 @@ import java.util.function.Supplier;
  */
 public abstract class GameArea implements Disposable {
     private static final String DEEP_SPIN = "DeepSpin";
-    private static final String DEEP_SPIN_RED = "DeepSpinRed";
-    private static final String DEEP_SPIN_BLUE = "DeepSpinBlue";
     private static final String GHOST_GPT = "GhostGPT";
-    private static final String GHOST_GPT_RED = "GhostGPTRed";
-    private static final String GHOST_GPT_BLUE = "GhostGPTBlue";
     private static final String VROOMBA = "Vroomba";
-    private static final String VROOMBA_RED = "VroombaRed";
-    private static final String VROOMBA_BLUE = "VroombaBlue";
     private static final String GROK_DROID = "GrokDroid";
-    private static final String GROK_DROID_RED = "GrokDroidRed";
-    private static final String GROK_DROID_BLUE = "GrokDroidBlue";
     private static final String TURRET = "Turret";
     protected TerrainComponent terrain;
     protected List<Entity> areaEntities;
@@ -288,45 +280,14 @@ public abstract class GameArea implements Disposable {
                 positions.put(GHOST_GPT, respectiveSpawns);
                 spawnGhostGPT(total, scaleFactor, player, positions);
                 break;
-
-            case (GHOST_GPT_RED):
-                positions.put(GHOST_GPT_RED, respectiveSpawns);
-                spawnGhostGPTRed(total, scaleFactor, player, positions);
-                break;
-
-            case (GHOST_GPT_BLUE):
-                positions.put(GHOST_GPT_BLUE, respectiveSpawns);
-                spawnGhostGPTBlue(total, scaleFactor, player, positions);
-                break;
-
             case (GROK_DROID):
                 positions.put(GROK_DROID, respectiveSpawns);
                 spawnGrokDroid(total, scaleFactor, player, positions);
                 break;
 
-            case (GROK_DROID_RED):
-                positions.put(GROK_DROID_RED, respectiveSpawns);
-                spawnGrokDroidRed(total, scaleFactor, player, positions);
-                break;
-
-            case (GROK_DROID_BLUE):
-                positions.put(GROK_DROID_BLUE, respectiveSpawns);
-                spawnGrokDroidBlue(total, scaleFactor, player, positions);
-                break;
-
             case (DEEP_SPIN):
                 positions.put(DEEP_SPIN, respectiveSpawns);
                 spawnDeepspin(total, scaleFactor, player, positions);
-                break;
-
-            case (DEEP_SPIN_RED):
-                positions.put(DEEP_SPIN_RED, respectiveSpawns);
-                spawnDeepspinRed(total, scaleFactor, player, positions);
-                break;
-
-            case (DEEP_SPIN_BLUE):
-                positions.put(DEEP_SPIN_BLUE, respectiveSpawns);
-                spawnDeepspinBlue(total, scaleFactor, player, positions);
                 break;
 
             case (TURRET):
@@ -337,16 +298,6 @@ public abstract class GameArea implements Disposable {
             case (VROOMBA):
                 positions.put(VROOMBA, respectiveSpawns);
                 spawnVroomba(total, scaleFactor, player, positions);
-                break;
-
-            case (VROOMBA_RED):
-                positions.put(VROOMBA_RED, respectiveSpawns);
-                spawnVroombaRed(total, scaleFactor, player, positions);
-                break;
-
-            case (VROOMBA_BLUE):
-                positions.put(VROOMBA_BLUE, respectiveSpawns);
-                spawnVroombaBlue(total, scaleFactor, player, positions);
                 break;
         }
     }
@@ -366,36 +317,6 @@ public abstract class GameArea implements Disposable {
             spawnEntity(ghostGpt);
         }
     }
-    /**
-     * Adds GhostGPTRed enemies onto the map.
-     *
-     * @param total       The total number of GhostGPT to be spawned.
-     * @param scaleFactor The scale of increase in difficulty of the GhostGPT
-     */
-    public void spawnGhostGPTRed(
-            int total, float scaleFactor, Entity player, Map<String, ArrayList<Vector2>> positions) {
-        ArrayList<Vector2> spawnPositions = positions.get(GHOST_GPT_RED);
-        for (Vector2 pos : spawnPositions) {
-            Entity ghostGptRed = NPCFactory.createGhostGPTRed(player, this, scaleFactor);
-            ghostGptRed.setPosition(pos);
-            spawnEntity(ghostGptRed);
-        }
-    }
-    /**
-     * Adds GhostGPTBlue enemies onto the map.
-     *
-     * @param total       The total number of GhostGPT to be spawned.
-     * @param scaleFactor The scale of increase in difficulty of the GhostGPT
-     */
-    public void spawnGhostGPTBlue(
-            int total, float scaleFactor, Entity player, Map<String, ArrayList<Vector2>> positions) {
-        ArrayList<Vector2> spawnPositions = positions.get(GHOST_GPT_BLUE);
-        for (Vector2 pos : spawnPositions) {
-            Entity ghostGptBlue = NPCFactory.createGhostGPTBlue(player, this, scaleFactor);
-            ghostGptBlue.setPosition(pos);
-            spawnEntity(ghostGptBlue);
-        }
-    }
 
     /**
      * Adds DeepSpin enemies onto the map.
@@ -413,39 +334,6 @@ public abstract class GameArea implements Disposable {
             spawnEntity(deepSpin);
         }
     }
-    /**
-     * Adds DeepSpinRed enemies onto the map.
-     *
-     * @param total       The total number of DeepSpins to be spawned.
-     * @param scaleFactor The scale of increase in difficulty of the DeepSpin
-     */
-    public void spawnDeepspinRed(
-            int total, float scaleFactor, Entity player, Map<String, ArrayList<Vector2>> positions) {
-        ArrayList<Vector2> spawnPositions = positions.get(DEEP_SPIN_RED);
-
-        for (Vector2 pos : spawnPositions) {
-            Entity deepSpinRed = NPCFactory.createDeepspinRed(player, this, scaleFactor);
-            deepSpinRed.setPosition(pos);
-            spawnEntity(deepSpinRed);
-        }
-    }
-    /**
-     * Adds DeepSpinBlue enemies onto the map.
-     *
-     * @param total       The total number of DeepSpins to be spawned.
-     * @param scaleFactor The scale of increase in difficulty of the DeepSpin
-     */
-    public void spawnDeepspinBlue(
-            int total, float scaleFactor, Entity player, Map<String, ArrayList<Vector2>> positions) {
-        ArrayList<Vector2> spawnPositions = positions.get(DEEP_SPIN_BLUE);
-
-        for (Vector2 pos : spawnPositions) {
-            Entity deepSpinBlue = NPCFactory.createDeepspinBlue(player, this, scaleFactor);
-            deepSpinBlue.setPosition(pos);
-            spawnEntity(deepSpinBlue);
-        }
-    }
-
 
     /**
      * Adds GrokDroid enemies onto the map.
@@ -462,36 +350,6 @@ public abstract class GameArea implements Disposable {
             spawnEntity(grokDroid);
         }
     }
-    /**
-     * Adds GrokDroidRed enemies onto the map.
-     *
-     * @param total       The total number of GrokDroid to be spawned.
-     * @param scaleFactor The scale of increase in difficulty of the GrokDroid
-     */
-    public void spawnGrokDroidRed(
-            int total, float scaleFactor, Entity player, Map<String, ArrayList<Vector2>> positions) {
-        ArrayList<Vector2> spawnPositions = positions.get(GROK_DROID_RED);
-        for (Vector2 pos : spawnPositions) {
-            Entity grokDroidRed = NPCFactory.createGrokDroidRed(player, this, scaleFactor);
-            grokDroidRed.setPosition(pos);
-            spawnEntity(grokDroidRed);
-        }
-    }
-    /**
-     * Adds GrokDroidBlue enemies onto the map.
-     *
-     * @param total       The total number of GrokDroid to be spawned.
-     * @param scaleFactor The scale of increase in difficulty of the GrokDroid
-     */
-    public void spawnGrokDroidBlue(
-            int total, float scaleFactor, Entity player, Map<String, ArrayList<Vector2>> positions) {
-        ArrayList<Vector2> spawnPositions = positions.get(GROK_DROID_BLUE);
-        for (Vector2 pos : spawnPositions) {
-            Entity grokDroidBlue = NPCFactory.createGrokDroidBlue(player, this, scaleFactor);
-            grokDroidBlue.setPosition(pos);
-            spawnEntity(grokDroidBlue);
-        }
-    }
 
     /**
      * Adds Vroomba enemies onto the map.
@@ -506,36 +364,6 @@ public abstract class GameArea implements Disposable {
             Entity vroomba = NPCFactory.createVroomba(player, scaleFactor);
             vroomba.setPosition(pos);
             spawnEntity(vroomba);
-        }
-    }
-    /**
-     * Adds VroombaRed enemies onto the map.
-     *
-     * @param total       The total number of Vroomba to be spawned.
-     * @param scaleFactor The scale of increase in difficulty of the Vroomba
-     */
-    public void spawnVroombaRed(
-            int total, float scaleFactor, Entity player, Map<String, ArrayList<Vector2>> positions) {
-        ArrayList<Vector2> spawnPositions = positions.get(VROOMBA_RED);
-        for (Vector2 pos : spawnPositions) {
-            Entity vroombaRed = NPCFactory.createVroombaRed(player, scaleFactor);
-            vroombaRed.setPosition(pos);
-            spawnEntity(vroombaRed);
-        }
-    }
-    /**
-     * Adds VroombaBlue enemies onto the map.
-     *
-     * @param total       The total number of Vroomba to be spawned.
-     * @param scaleFactor The scale of increase in difficulty of the Vroomba
-     */
-    public void spawnVroombaBlue(
-            int total, float scaleFactor, Entity player, Map<String, ArrayList<Vector2>> positions) {
-        ArrayList<Vector2> spawnPositions = positions.get(VROOMBA_BLUE);
-        for (Vector2 pos : spawnPositions) {
-            Entity vroombaBlue = NPCFactory.createVroombaBlue(player, scaleFactor);
-            vroombaBlue.setPosition(pos);
-            spawnEntity(vroombaBlue);
         }
     }
 
