@@ -7,6 +7,7 @@ import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.components.cards.BettingComponent;
 import com.csse3200.game.components.cards.BlackJackGame;
+import com.csse3200.game.components.player.InventoryComponent;
 import com.csse3200.game.components.screens.BlackjackScreenDisplay;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.factories.InteractableStationFactory;
@@ -42,7 +43,9 @@ public class CasinoGameArea extends GameArea {
 
         spawnBordersAndDoors();
         spawnFloor();
+
         player = spawnPlayer();
+        spawnBlackjack();
     }
 
     /**
@@ -106,11 +109,11 @@ public class CasinoGameArea extends GameArea {
     private void spawnBlackjack() {
         Entity blackjack = InteractableStationFactory.createBaseStation();
         blackjack.addComponent(new TextureRenderComponent("images/box_boy_leaf.png"));
-        blackjack.addComponent(new BettingComponent(2, this));
+        blackjack.addComponent(new BettingComponent(2, player.getComponent(InventoryComponent.class)));
         blackjack.addComponent(new BlackJackGame());
         blackjack.addComponent(new BlackjackScreenDisplay());
         spawnEntityAt(blackjack, new GridPoint2(20, 7), true, true);
-        blackjack.getEvents().trigger("hide");
+        //blackjack.getEvents().trigger("hide");
 
     }
 }

@@ -14,7 +14,7 @@ public class BlackJackGame extends Component {
         deck = new Deck();
         dealerHand = new ArrayList<>();
         playerHand = new ArrayList<>();
-        entity.getEvents().addListener("betPlaced", this::startGame);
+        //entity.getEvents().addListener("betPlaced", this::startGame);
         entity.getEvents().addListener("drawCard", this::drawCard);
         entity.getEvents().addListener("stand", this::dealerTurn);
     }
@@ -42,10 +42,14 @@ public class BlackJackGame extends Component {
             }
             if (getHandValue(dealerHand) > 21) {
                 entity.getEvents().trigger("dealerbust");
+                entity.getEvents().trigger("win");
             } else if (getHandValue(playerHand) > getHandValue(dealerHand)) {
+                entity.getEvents().trigger("playerWin");
                 entity.getEvents().trigger("win");
             } else if (getHandValue(playerHand) < getHandValue(dealerHand)) {
-                entity.getEvents().trigger("dealerwin");
+                entity.getEvents().trigger("dealerWin");
+               // entity.getEvents().trigger("lose");
+                entity.getEvents().trigger("lose");
             } else {
                 entity.getEvents().trigger("tie");
             }
@@ -72,6 +76,7 @@ public class BlackJackGame extends Component {
             if (getHandValue(playerHand) > 21) {
                 winner = true;
                 entity.getEvents().trigger("playerbust");
+                entity.getEvents().trigger("lose");
             }
         }
     }
