@@ -6,12 +6,10 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Align;
 import com.csse3200.game.GdxGame;
 import com.csse3200.game.GdxGame.ScreenType;
 import com.csse3200.game.ui.UIComponent;
@@ -40,16 +38,14 @@ public abstract class BaseScreenDisplay extends UIComponent {
      * Game reference used for screen navigation helpers.
      */
     protected final GdxGame game;
-
-    /**
-     * Root table added to the stage; fill-parent and centered.
-     */
-    protected Table root;
-
     /**
      * Textures created via helpers and disposed automatically.
      */
     private final ArrayList<Texture> managedTextures = new ArrayList<>();
+    /**
+     * Root table added to the stage; fill-parent and centered.
+     */
+    protected Table root;
 
     /**
      * Constructs a screen display bound to a game instance.
@@ -90,22 +86,16 @@ public abstract class BaseScreenDisplay extends UIComponent {
      * @param to        table to add the title to
      * @param text      title text
      * @param fontScale scale for the title font
-     * @param color     optional tint colour for the title (may be {@code null})
+     * @param color     optional tint colour for the title (perhaps {@code null})
      * @param padBottom bottom padding applied after the title row
      * @return the created {@link Label}
      */
     protected Label addTitle(Table to, String text, float fontScale, Color color, float padBottom) {
-        // Clone the style so we don't mutate the shared skin style
         Label.LabelStyle base = skin.get("title", Label.LabelStyle.class);
         Label.LabelStyle style = new Label.LabelStyle(base);
         if (color != null) style.fontColor = color;
 
-        Label title = new Label(text, style);
-        title.setFontScale(fontScale);
-
-        to.add(title).colspan(2).center().padBottom(padBottom);
-        to.row();
-        return title;
+        return getLabel(to, text, fontScale, padBottom, style);
     }
 
     /**
@@ -118,12 +108,24 @@ public abstract class BaseScreenDisplay extends UIComponent {
      * @return the created {@link Label}
      */
     protected Label addBody(Table to, String text, float fontScale, float padBottom) {
-        Label.LabelStyle baseSmall = skin.get( Label.LabelStyle.class);
+        Label.LabelStyle baseSmall = skin.get(Label.LabelStyle.class); // or skin.get("small", Label.LabelStyle.class)
         Label.LabelStyle small = new Label.LabelStyle(baseSmall);
         small.fontColor = skin.getColor("white");
+
+        return getLabel(to, text, fontScale, padBottom, small);
+    }
+
+    private Label getLabel(Table to, String text, float fontScale, float padBottom, Label.LabelStyle small) {
         Label lbl = new Label(text, small);
         lbl.setFontScale(fontScale);
-        to.add(lbl).colspan(2).center().padBottom(padBottom);
+        lbl.setWrap(true);                       // enable wrapping
+        lbl.setAlignment(Align.center);          // center text
+
+        to.add(lbl)
+                .colspan(2)
+                .center()
+                .width(Value.percentWidth(0.9f, to))  // wrap at ~screen width
+                .padBottom(padBottom);
         to.row();
         return lbl;
     }
@@ -133,7 +135,7 @@ public abstract class BaseScreenDisplay extends UIComponent {
      *
      * @param text       button label
      * @param labelScale font scale applied to the label
-     * @param onClick    action executed on {@link ChangeListener} event (may be {@code null})
+     * @param onClick    action executed on {@link ChangeListener} event (perhaps {@code null})
      * @return the configured {@link TextButton}
      */
     protected TextButton button(String text, float labelScale, Runnable onClick) {
