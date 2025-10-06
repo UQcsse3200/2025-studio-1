@@ -8,7 +8,8 @@ public class ChestplateConfig extends ArmourConfig {
         armourType = ItemTypes.CHESTPLATE_ARMOUR;
         protection = 15;
         texturePath = "images/armour-assets/chestplate.png";
-        offset = new Vector2(0.9f, 0.3f);
+        rightOffset = new Vector2(0.9f, 0.3f);
+        leftOffset = new Vector2(1.1f, 0.3f);
         heightScale = 0.3f;
     }
 }

@@ -8,7 +8,8 @@ public class HoodConfig extends ArmourConfig {
         armourType = ItemTypes.HOOD_ARMOUR;
         protection = 5;
         texturePath = "images/armour-assets/hood.png";
-        offset = new Vector2(0.7f, 0.5f);
+        rightOffset = new Vector2(0.7f, 0.5f);
+        leftOffset = new Vector2(1.3f, 0.5f);
         heightScale = 0.6f;
     }
 }

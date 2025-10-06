@@ -660,4 +660,8 @@ public class PlayerActions extends Component {
   public void setCamera(Camera camera) {
     this.camera = camera;
   }
+
+  public boolean isFacingRight() {
+      return this.facingRight;
+  }
 }
