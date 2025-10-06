@@ -34,7 +34,7 @@ public class PoolGame {
     // Table geometry (world units, meters)
     private static final float TABLE_W = 2.24f;
     private static final float TABLE_H = 1.12f;
-    private static final float RAIL_THICK = 0.05f;
+    private static final float RAIL_THICK = 0.08f;
 
     // Ball physical properties
     private static final float BALL_R = 0.0285f;
@@ -49,7 +49,7 @@ public class PoolGame {
     private static final float POCKET_INSET = RAIL_THICK * 0.7f;
 
     // Shooting and UI sync
-    private static final float MAX_IMPULSE = 2.8f;
+    private static final float MAX_IMPULSE = 8f;
     private static final float SYNC_PERIOD = 0.033f;          // ~30 Hz
 
     // Collision layers (adapt to project layers as needed)
