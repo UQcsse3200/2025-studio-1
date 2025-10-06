@@ -7,6 +7,7 @@ import com.csse3200.game.components.Component;
 import com.csse3200.game.components.npc.GhostAnimationController;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
+import com.csse3200.game.events.EventHandler;
 import com.csse3200.game.services.ServiceLocator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,10 +32,13 @@ public class EnemyWaves extends Component {
     private Timer.Task task;
     private long waveEndTime = 0; // timestamp when last enemy of a wave died
 
+    private final EventHandler eventHandler;
+
     public EnemyWaves(int maxWaves, GameArea area, Entity player) {
         this.maxWaves = Math.max(1, maxWaves);
         this.gameArea = area;
         this.player = player;
+        eventHandler = new EventHandler();
     }
 
     public EnemyWaves(GameArea area, Entity player) {
@@ -61,6 +65,7 @@ public class EnemyWaves extends Component {
         // If no waves spawned yet, spawn first immediately
         if (waveNumber == 0) {
             spawnWave();
+            this.eventHandler.trigger("spawnWave");
         }
     }
 
@@ -91,9 +96,10 @@ public class EnemyWaves extends Component {
         logger.info("EnemyWaves: spawning wave {} of {} (waveScale={}, baseScale={}, effective={})", waveNumber + 1, maxWaves, scalingFactor, baseScale, effectiveScale);
 
         // Change gameArea.getRoomNumber() to any number between 2 and 7 to get different enemies.
-        gameArea.spawnEnemies(gameArea.getRoomNumber(), baseEnemies, effectiveScale, player);
+        gameArea.spawnEnemies(gameArea.toString(), baseEnemies, effectiveScale, player);
 
         waveNumber++;
+        this.eventHandler.trigger("updateWaveNumber");
         scalingFactor += 0.25f; // incremental per-wave multiplier
     }
 
@@ -130,6 +136,9 @@ public class EnemyWaves extends Component {
                     task.cancel();
                     task = null; // stop ticking until restart
                     logger.info("EnemyWaves: session complete ({} waves)", maxWaves);
+                }
+                if (allWavesFinished()) {
+                    eventHandler.trigger("allWavesFinished");
                 }
             }
         } else {
@@ -236,5 +245,11 @@ public class EnemyWaves extends Component {
      */
     public void setWaveEndTime(long waveEndTime) {
         this.waveEndTime = waveEndTime;
+    }
+
+    public int getWaveDelayInSeconds() { return (int)WAVE_DELAY_MS / 1000; }
+
+    public EventHandler getEvents() {
+        return eventHandler;
     }
 }
