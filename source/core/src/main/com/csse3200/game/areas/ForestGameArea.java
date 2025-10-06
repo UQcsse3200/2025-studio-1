@@ -132,6 +132,7 @@ public class ForestGameArea extends GameArea {
             "foreg_sprites/furniture/ServerRack2.png",
             "foreg_sprites/furniture/Vent.png",
             "images/Storage.png",
+            "images/casino.png",
             "images/!.png",
             "images/NpcDialogue.png",
             "images/nurse_npc.png",
@@ -415,7 +416,10 @@ public class ForestGameArea extends GameArea {
             Entity rightDoor = ObstacleFactory.createDoorTrigger(WALL_WIDTH, rightDoorHeight);
             rightDoor.setPosition(rightX - WALL_WIDTH - 0.001f, rightDoorY);
             rightDoor.addComponent(new com.csse3200.game.components.DoorComponent(() -> this.loadNextLevel()));
-            // spawnEntity(rightDoor);
+
+            // Left edge wall with door (used helper instead of manual split)
+            Bounds b = getCameraBounds(cameraComponent);
+            addVerticalDoorLeft(b, WALL_WIDTH, this::loadCasino);
         }
     }
 
@@ -427,6 +431,13 @@ public class ForestGameArea extends GameArea {
         // Use the safe, render-thread transition helper
         Reception.setRoomSpawn(new GridPoint2(6, 10));
         clearAndLoad(() -> new Reception(terrainFactory, cameraComponent));
+    }
+
+    /**
+     * Disposes current entities and switches to CasinoGameArea
+     */
+    private void loadCasino() {
+        clearAndLoad(() -> new CasinoGameArea(terrainFactory, cameraComponent));
     }
 
     /**
@@ -446,8 +457,8 @@ public class ForestGameArea extends GameArea {
         CatalogService catalog = ShopDemo.makeDemoCatalog();
         ShopManager manager = new ShopManager(catalog);
 
-        Entity shop = ShopFactory.createShop(this, manager, "images/VendingMachine.png"); // have as tree now as placeholder, later need to change to actual shop icon
-        spawnEntityAt(shop, new GridPoint2(18, 6), true, false);
+        Entity shop = ShopFactory.createShop(this, manager, "images/VendingMachine.png");
+        spawnEntityAt(shop, new GridPoint2(18, 7), true, false);
     }
 
     private void spawnComputerBench() {
