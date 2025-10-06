@@ -1,7 +1,12 @@
 package com.csse3200.game.areas;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.GridPoint2;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.physics.box2d.World;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.CameraComponent;
@@ -14,6 +19,8 @@ import com.csse3200.game.entities.factories.characters.PlayerFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.entities.spawner.ItemSpawner;
 import com.csse3200.game.services.ServiceLocator;
+import box2dLight.RayHandler;
+import box2dLight.ConeLight;
 
 /**
  * The "Storage" area of the game map. This class:
@@ -26,6 +33,11 @@ public class StorageGameArea extends GameArea {
     private static final GridPoint2 PLAYER_SPAWN = new GridPoint2(4, 20);
     private static final float ROOM_DIFF_NUMBER = 8;
     private Entity player;
+
+    private RayHandler rayHandler;
+    private World world;
+    private OrthographicCamera camera;
+    private ConeLight coneLight;
 
     /**
      * Initialise this StorageGameArea to use the provided TerrainFactory and camera
@@ -71,7 +83,38 @@ public class StorageGameArea extends GameArea {
         Entity ui = new Entity();
         ui.addComponent(new com.csse3200.game.components.gamearea.FloorLabelDisplay("Storage"));
         spawnEntity(ui);
+
+        world = new World(new Vector2(0,0), true);
+        camera = new OrthographicCamera(Gdx.graphics.getWidth()/32f,Gdx.graphics.getHeight()/32f);
+        camera.position.set(0,0,0);
+        camera.update();
+        RayHandler.setGammaCorrection(true);
+        RayHandler.useDiffuseLight(true);
+        rayHandler = new RayHandler(world);
+        rayHandler.setAmbientLight(0.1f);
+        coneLight = new ConeLight(
+                rayHandler,
+                128,
+                new Color(0, 0, 1f, 1f),
+                10f,
+                0f,
+                0f,
+                -90f,
+                30f
+        );
+
+        coneLight.setStaticLight(true);
     }
+
+    public void render() {
+        world.step(1/60f, 6, 2);
+        Gdx.gl.glClearColor(0,0,0,1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        rayHandler.setCombinedMatrix(camera);
+        rayHandler.updateAndRender();
+    }
+
 
     /**
      * Creates a weapon upgrade table in the bottom left of the room
