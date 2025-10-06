@@ -12,7 +12,7 @@ import static org.mockito.Mockito.*;
 class TouchTerminalInputComponentTest {
     @Test
     void shouldSetTerminalOpenClose() {
-        Terminal terminal = spy(Terminal.class);
+        Terminal terminal = spy(new Terminal(null, null, null));
         TouchTerminalInputComponent terminalInput = new TouchTerminalInputComponent(terminal);
 
         terminal.setClosed();
