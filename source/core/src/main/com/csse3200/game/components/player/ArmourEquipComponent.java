@@ -27,7 +27,7 @@ public class ArmourEquipComponent extends Component {
         if (item == null) {
             System.out.println("Trying to equip null armour");
         }
-        item.getComponent(TextureRenderComponent.class).setZIndex(-entity.getPosition().y + 1);
+        item.getComponent(TextureRenderComponent.class).setZIndex(-entity.getPosition().y + 5);
         currentlyEquippedArmour.put(item, new Vector2[]
                         {
                                 item.getComponent(ArmourComponent.class).rightOffset,
