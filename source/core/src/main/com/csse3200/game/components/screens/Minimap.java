@@ -2,8 +2,14 @@ package com.csse3200.game.components.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
+
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+
 import com.csse3200.game.services.DiscoveryService;
 import com.csse3200.game.services.ServiceLocator;
 import org.slf4j.Logger;
@@ -68,6 +74,33 @@ public class Minimap {
         for (Vector2 coordinates : grid.keySet()) {
             addRoom(coordinates, grid.get(coordinates));
         }
+    }
+
+    /**
+     * Creates a new {@code Minimap} using predefined config file.
+     *
+     * @param screenHeight the height of the screen in pixels
+     * @param screenWidth the width of the screen in pixels
+     * @param filepath a path to the config file
+     */
+    public Minimap(int screenHeight, int screenWidth, String filepath) {
+        this(screenHeight, screenWidth);
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(filepath))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] tokens = line.split(", ");
+                String roomName = tokens[0];
+                int x = Integer.parseInt(tokens[1]);
+                int y = Integer.parseInt(tokens[2]);
+                Vector2 coordinates = new Vector2(x, y);
+
+                addRoom(coordinates, roomName);
+            }
+        } catch (IOException e) {
+            logger.error("IO Exception occurred");
+        }
+
     }
 
     /**
@@ -162,6 +195,16 @@ public class Minimap {
     }
 
     /**
+     * Pans the images across by moving the centre of the minimap area.
+     * It will shift the images across by the number of screen pixels specified in vector.
+     * @param vector magnitude and direction of pixel shift when panning.
+     */
+    public void pan(Vector2 vector) {
+        centre.x -= vector.x * (1 / scale);
+        centre.y -= vector.y * (1 / scale);
+    }
+
+    /**
      * Resets the minimap zoom back to its default (scale = 1).
      */
     public void reset() {
@@ -180,6 +223,7 @@ public class Minimap {
 
         // Get the current room and set the center to the player's location
         String currentRoom = ServiceLocator.getGameArea().toString();
+        logger.debug(currentRoom);
         centre = calculateCentre(currentRoom, normalisedPlayerPosition);
         scale = 1;
 

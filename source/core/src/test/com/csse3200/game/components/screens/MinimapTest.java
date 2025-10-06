@@ -1,113 +1,205 @@
 package com.csse3200.game.components.screens;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import org.junit.jupiter.api.*;
+import com.csse3200.game.areas.GameArea;
+import com.csse3200.game.components.screens.Minimap;
+import com.csse3200.game.entities.Entity;
+import com.csse3200.game.services.DiscoveryService;
+import com.csse3200.game.services.ServiceLocator;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.io.TempDir;
+import org.mockito.Mock;
 import org.mockito.MockedStatic;
-import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.security.Provider;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
+/**
+ * Unit tests for the Minimap class.
+ * This class uses Mockito to isolate the Minimap from its dependencies on LibGDX and the game's ServiceLocator.
+ */
+@ExtendWith(MockitoExtension.class)
 class MinimapTest {
 
+    // A temporary directory for file-based tests, managed by JUnit.
+    @TempDir
+    static Path tempDir;
+
     private Minimap minimap;
-    private static MockedStatic<Gdx> gdxMock;
+
+    // Mocks for external dependencies.
+    @Mock
+    private DiscoveryService discoveryService;
+    @Mock
+    private GameArea gameArea;
+    @Mock
+    private Entity player;
+    @Mock
+    private Graphics graphics;
+
+    private MockedStatic<ServiceLocator> serviceLocator;
+    private MockedStatic<Gdx> gdxMock;
 
     @BeforeEach
     void setUp() {
+        // Mock the static Gdx class to control graphics dimensions.
+        graphics = mock(Graphics.class);
+        gdxMock = mockStatic(Gdx.class);
+        Gdx.graphics = graphics;
+
+        discoveryService = mock(DiscoveryService.class);
+        player = mock(Entity.class);
+        gameArea = mock(GameArea.class);
+
+        // Mock the static ServiceLocator to provide mocked services.
+        serviceLocator = mockStatic(ServiceLocator.class);
+        serviceLocator.when(ServiceLocator::getPlayer).thenReturn(player);
+        serviceLocator.when(ServiceLocator::getDiscoveryService).thenReturn(discoveryService);
+        serviceLocator.when(ServiceLocator::getGameArea).thenReturn(gameArea);
+
+        // Initialize the minimap for testing. Screen dimensions are arbitrary for most tests.
         minimap = new Minimap(720, 1280);
     }
 
-    @Test
-    @DisplayName("Constructor should initialize with correct defaults")
-    void testConstructorDefaults() {
-        assertEquals(1, minimap.getScale(), "Scale should start at 1");
-        assertNull(getPrivateField(minimap, "centre"), "Centre should be null initially");
+    @AfterEach
+    void tearDown() {
+        // Close the static mocks to avoid test interference.
+        serviceLocator.close();
+        gdxMock.close();
     }
 
     @Test
-    @DisplayName("addRoom should successfully add a unique room")
-    void testAddRoomSuccess() {
-        Vector2 coord = new Vector2(0, 0);
-        boolean added = true; //minimap.addRoom(coord, "TestRoom");
-        assertTrue(added, "Should successfully add room");
+    void testAddRoom_Success() {
+        assertTrue(minimap.addRoom(new Vector2(0, 0), "Room1"), "Should successfully add a new room.");
     }
 
     @Test
-    @DisplayName("addRoom should fail when coordinates already used")
-    void testAddRoomDuplicateCoordinates() {
-        Vector2 coord = new Vector2(0, 0);
-        //minimap.addRoom(coord, "Room1");
-        boolean added = false; //minimap.addRoom(coord, "Room2");
-        assertFalse(added, "Should not add room with duplicate coordinates");
+    void testAddRoom_FailsOnDuplicateCoordinates() {
+        minimap.addRoom(new Vector2(1, 1), "Room1");
+        assertFalse(minimap.addRoom(new Vector2(1, 1), "Room2"), "Should fail to add room at occupied coordinates.");
     }
 
     @Test
-    @DisplayName("addRoom should fail when room name already exists")
-    void testAddRoomDuplicateName() {
-        Vector2 coord1 = new Vector2(0, 0);
-        Vector2 coord2 = new Vector2(1, 0);
-        //minimap.addRoom(coord1, "SameRoom");
-        boolean added = false; //minimap.addRoom(coord2, "SameRoom");
-        assertFalse(added, "Should not add duplicate room names");
+    void testAddRoom_FailsOnDuplicateName() {
+        minimap.addRoom(new Vector2(0, 0), "Room1");
+        assertFalse(minimap.addRoom(new Vector2(1, 1), "Room1"), "Should fail to add room with a duplicate name.");
     }
 
     @Test
-    @DisplayName("zoom should increase scale correctly")
-    void testZoomIncreasesScale() {
-        float initial = minimap.getScale();
-        minimap.zoom(50); // +50%
-        assertEquals(initial * 1.5f, minimap.getScale(), 0.001);
+    void testOpen_SetsCentreAndUpdatesDiscoveredRooms() {
+        when(graphics.getWidth()).thenReturn(1280);
+        when(graphics.getHeight()).thenReturn(720);
+
+        // Arrange
+        minimap.addRoom(new Vector2(0, 0), "StartRoom");
+        minimap.addRoom(new Vector2(0, 1), "NorthRoom");
+
+        // Mock player position and current room
+        when(player.getPosition()).thenReturn(new Vector2(640, 360)); // Center of the screen
+        when(gameArea.toString()).thenReturn("StartRoom");
+
+        // Mock discovery status
+        when(discoveryService.isDiscovered("StartRoom")).thenReturn(true);
+        when(discoveryService.isDiscovered("NorthRoom")).thenReturn(false);
+        discoveryService.isDiscovered("StartRoom");
+        discoveryService.isDiscovered("NorthRoom");
+        player.getPosition();
+
+        minimap.open();
+        Map<String, Vector2> rendered = minimap.render();
+
+        // Assert
+        assertNotNull(rendered, "Render output should not be null after opening.");
+        // Check that the discovered room's image path is updated
+        assertTrue(rendered.containsKey("images/minimap-images/StartRoom.png"), "Discovered room should have its specific image.");
+        // Check that the undiscovered room is not present (as it's locked and not the current room)
+        // or ensure it would render as locked if it were visible.
+        assertFalse(rendered.containsKey("images/minimap-images/NorthRoom.png"), "Undiscovered room should not have its specific image.");
     }
 
     @Test
-    @DisplayName("zoom should decrease scale correctly")
-    void testZoomDecreasesScale() {
-        float initial = minimap.getScale();
-        minimap.zoom(-50); // -50%
-        assertEquals(initial * 0.5f, minimap.getScale(), 0.001);
-    }
+    void testClose_SetsCentreToNull() {
+        // Arrange: open the map first
+        minimap.addRoom(new Vector2(0, 0), "Room1");
+        when(player.getPosition()).thenReturn(new Vector2(0, 0));
+        when(gameArea.toString()).thenReturn("Room1");
+        minimap.open();
+        assertNotNull(minimap.render(), "Map should be renderable after open().");
 
-    @Test
-    @DisplayName("reset should restore scale to 1")
-    void testReset() {
-        minimap.zoom(50);
-        minimap.reset();
-        assertEquals(1, minimap.getScale(), 0.001, "Scale should reset to 1");
-    }
-
-    @Test
-    @DisplayName("close should set centre to null")
-    void testClose() throws Exception {
-        // Use reflection to set centre field before calling close()
-        Vector2 centre = new Vector2(10, 10);
-        setPrivateField(minimap, "centre", centre);
+        // Act
         minimap.close();
-        assertNull(getPrivateField(minimap, "centre"), "Centre should be null after close()");
+
+        // Assert
+        assertNull(minimap.render(), "Render should return null after the map is closed.");
     }
 
-    // Utility reflection helpers for private fields
-    private Object getPrivateField(Object obj, String fieldName) {
-        try {
-            var field = obj.getClass().getDeclaredField(fieldName);
-            field.setAccessible(true);
-            return field.get(obj);
-        } catch (Exception e) {
-            fail("Reflection error: " + e.getMessage());
-            return null;
-        }
+    @Test
+    void testZoom() {
+        assertEquals(1, minimap.getScale(), "Initial scale should be 1.");
+        minimap.zoom(50); // Zoom in by 50%
+        assertEquals(1.5f, minimap.getScale(), "Scale should increase after zooming in.");
+        minimap.zoom(-20); // Zoom out by 20%
+        assertEquals(1.2f, minimap.getScale(), 0.001, "Scale should decrease after zooming out.");
     }
 
-    private void setPrivateField(Object obj, String fieldName, Object value) {
-        try {
-            var field = obj.getClass().getDeclaredField(fieldName);
-            field.setAccessible(true);
-            field.set(obj, value);
-        } catch (Exception e) {
-            fail("Reflection error: " + e.getMessage());
+    @Test
+    void testReset() {
+        minimap.zoom(100); // Scale is now 2.0
+        minimap.reset();
+        assertEquals(1, minimap.getScale(), "Scale should be 1 after reset.");
+    }
+
+    @Test
+    void testConstructor_WithFile() throws IOException {
+        // Arrange: Create a temporary config file.
+        File tempFile = new File(tempDir.toFile(), "minimap.cfg");
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile))) {
+            writer.write("RoomA, 0, 0");
+            writer.newLine();
+            writer.write("RoomB, 1, 0");
         }
+
+        // Act
+        Minimap fileMinimap = new Minimap(720, 1280, tempFile.getAbsolutePath());
+        // To test if rooms were added, we need a way to inspect internal state.
+        // We'll test it indirectly via the open() and render() methods.
+        when(player.getPosition()).thenReturn(new Vector2(0, 0));
+        when(gameArea.toString()).thenReturn("RoomA");
+        when(discoveryService.isDiscovered("RoomA")).thenReturn(true);
+        when(discoveryService.isDiscovered("RoomB")).thenReturn(false); // Added missing stub for RoomB
+
+        // Assert
+        fileMinimap.open();
+        Map<String, Vector2> rendered = fileMinimap.render();
+        assertNotNull(rendered);
+        assertTrue(rendered.containsKey("images/minimap-images/RoomA.png"));
+    }
+
+    @Test
+    void testConstructor_WithInvalidFilePath() {
+        // Act and Assert
+        // This constructor catches the IOException and logs it. We can verify that no rooms are added.
+        Minimap fileMinimap = new Minimap(720, 1280, "non/existent/path.cfg");
+        // Indirectly check that no rooms were loaded. open() would throw an exception if a room doesn't exist.
+        // when(player.getPosition()).thenReturn(new Vector2(0, 0));
+        // when(gameArea.toString()).thenReturn("SomeRoom");
+        // No exception should be thrown by the constructor, but open() will fail because roomPositions is empty.
+        assertThrows(NullPointerException.class, fileMinimap::open);
     }
 }
+
