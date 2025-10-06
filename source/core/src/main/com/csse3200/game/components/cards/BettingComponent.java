@@ -9,33 +9,38 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
 import com.csse3200.game.areas.GameArea;
+import com.csse3200.game.components.player.InventoryComponent;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.UIComponent;
 
 public class BettingComponent extends UIComponent {
 
     private static final float PANEL_W = 600f;
-    private static final float PANEL_H = 250f;
+    private static final float PANEL_H = 400f;
 
     // 🎨 Match BlackjackScreenDisplay colors
     private static final Color PANEL_COLOR = Color.OLIVE;
     private static final Color TEXT_COLOR = Color.WHITE;
 
     private final int multiplier;
-    private int balance = 100;
+    private int balance;
 
     private Table root;
     private Image background;
     private Texture pixelTex;
     private Label balanceLabel, resultLabel;
     private TextField betInput;
+    private InventoryComponent inventory;
+    private int bet;
 
-    public BettingComponent(int multiplier, GameArea area) {
+    public BettingComponent(int multiplier, InventoryComponent inventory) {
         this.multiplier = multiplier;
+        this.inventory = inventory;
     }
 
     @Override
     public void create() {
+        balance = inventory.getProcessor();
         super.create();
         pixelTex = makeSolidTexture(Color.WHITE);
 
@@ -93,7 +98,7 @@ public class BettingComponent extends UIComponent {
         betBtn.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                int bet = parseBet();
+                bet = parseBet();
                 if (bet <= 0) {
                     resultLabel.setColor(Color.RED);
                     resultLabel.setText("Invalid bet!");
@@ -104,7 +109,7 @@ public class BettingComponent extends UIComponent {
                     resultLabel.setText("Not enough funds!");
                     return;
                 }
-                balance -= bet;
+                inventory.addProcessor(-1 * bet);
                 updateBalance();
                 resultLabel.setColor(TEXT_COLOR);
                 resultLabel.setText("Bet placed: $" + bet);
@@ -115,6 +120,16 @@ public class BettingComponent extends UIComponent {
             }
         });
         root.add(betBtn).width(160).height(50).padBottom(10f).row();
+        TextButton closeBtn = new TextButton("Close", skin);
+        closeBtn.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                hide();
+                resultLabel.setText("Bet cancelled.");
+                ServiceLocator.getTimeSource().setPaused(false); // resume game if paused
+            }
+        });
+        root.add(closeBtn).width(160).height(50).padBottom(10f).row();
 
         // Result label
         resultLabel = new Label("Waiting for result...", skin);
@@ -123,25 +138,45 @@ public class BettingComponent extends UIComponent {
 
         // Win/Lose listeners
         entity.getEvents().addListener("interact", this::show);
-        entity.getEvents().addListener("betWin", this::onWin);
-        entity.getEvents().addListener("betLose", this::onLose);
+        entity.getEvents().addListener("win", this::onWin);
+        entity.getEvents().addListener("tie", this::onTie);
+        entity.getEvents().addListener("lose", this::onLose);
         hide();
     }
 
-    private void onWin(int amount) {
-        int winnings = amount * multiplier;
-        balance += winnings;
-        updateBalance();
-        resultLabel.setColor(Color.GREEN);
-        resultLabel.setText("You won $" + winnings + "!");
+    private void onTie() {
+        inventory.addProcessor(bet);
+        Dialog dialog = new Dialog("Tie!", skin);
+        dialog.text("Tie! You get your money back!");
+        dialog.button("OK");
+        ServiceLocator.getRenderService().getStage().addActor(dialog);
+        dialog.show(ServiceLocator.getRenderService().getStage());
     }
 
-    private void onLose(int amount) {
-        resultLabel.setColor(Color.RED);
-        resultLabel.setText("You lost $" + amount);
+    private void onWin() {
+        int winnings = bet * 2;
+        inventory.addProcessor(winnings);
+        updateBalance();
+
+        Dialog dialog = new Dialog("Winner!", skin);
+        dialog.text("Congratulations you won $" + bet);
+        dialog.button("OK");
+        ServiceLocator.getRenderService().getStage().addActor(dialog);
+        dialog.show(ServiceLocator.getRenderService().getStage());
+        //dialog.show(stage);
+    }
+
+    private void onLose() {
+        System.out.println("LOST!");
+        Dialog dialog = new Dialog("Loser!", skin);
+        dialog.text("You lost $" + bet);
+        dialog.button("OK");
+        ServiceLocator.getRenderService().getStage().addActor(dialog);
+        dialog.show(ServiceLocator.getRenderService().getStage());
     }
 
     private void updateBalance() {
+        balance = inventory.getProcessor();
         balanceLabel.setText("Balance: $" + balance);
     }
 
@@ -183,6 +218,7 @@ public class BettingComponent extends UIComponent {
 
     public void show() {
         ServiceLocator.getTimeSource().setPaused(true);
+        balance = inventory.getProcessor();
         if (root != null) root.setVisible(true);
         if (background != null) background.setVisible(true);
     }

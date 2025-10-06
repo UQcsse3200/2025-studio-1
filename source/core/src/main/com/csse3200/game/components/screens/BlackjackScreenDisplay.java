@@ -24,7 +24,7 @@ public class BlackjackScreenDisplay extends UIComponent {
     private Image dimmer;
     private Table root;
     private Label resultLabel;
-    private TextButton restartBtn;
+    private TextButton exitBtn;
     private Table dealerCardsTable;
     private Table playerCardsTable;
     private Label dealerValueLabel;
@@ -56,11 +56,12 @@ public class BlackjackScreenDisplay extends UIComponent {
         // Listen for game events
         entity.getEvents().addListener("playerbust", () -> showRestart("Player Busts! Dealer Wins"));
         entity.getEvents().addListener("dealerbust", () -> showRestart("Dealer Busts! Player Wins"));
-        entity.getEvents().addListener("win", () -> showRestart("Player Wins!"));
-        entity.getEvents().addListener("dealerwin", () -> showRestart("Dealer Wins!"));
+        entity.getEvents().addListener("playerWin", () -> showRestart("Player Wins!"));
+        entity.getEvents().addListener("dealerWin", () -> showRestart("Dealer Wins!"));
         entity.getEvents().addListener("tie", () -> showRestart("It's a Tie!"));
         entity.getEvents().addListener("hide", this::hide);
         entity.getEvents().addListener("betPlaced", this::show);
+        hide();
     }
 
     @Override
@@ -162,7 +163,6 @@ public class BlackjackScreenDisplay extends UIComponent {
     private void addButtons() {
         TextButton hitBtn = new TextButton("Hit", skin);
         TextButton standBtn = new TextButton("Stand", skin);
-        TextButton closeBtn = new TextButton("Close", skin);
 
         hitBtn.addListener(new ChangeListener() {
             @Override
@@ -181,23 +181,15 @@ public class BlackjackScreenDisplay extends UIComponent {
             }
         });
 
-        closeBtn.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                hide();
-                // Reset game when closing
-                entity.getEvents().trigger("start");
-            }
-        });
 
         // Restart button (hidden initially)
-        restartBtn = new TextButton("Restart", skin);
-        restartBtn.setVisible(false);
-        restartBtn.addListener(new ChangeListener() {
+        exitBtn = new TextButton("Exit", skin);
+        exitBtn.setVisible(false);
+        exitBtn.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 dealerTurn = false;
-                restartBtn.setVisible(false);  // hide button again
+                exitBtn.setVisible(false);  // hide button again
                 resultLabel.setText("");        // clear previous result
                 entity.getEvents().trigger("interact"); // start new game
                 hide();
@@ -205,7 +197,7 @@ public class BlackjackScreenDisplay extends UIComponent {
         });
 
 // Add restart button below the result label
-        root.add(restartBtn).padTop(10f).center().row();
+        root.add(exitBtn).padTop(10f).center().row();
 
 
         // Put Hit + Stand side by side
@@ -216,7 +208,6 @@ public class BlackjackScreenDisplay extends UIComponent {
         root.add(buttonRow).padTop(15f).row();
 
         // Close button centered below
-        root.add(closeBtn).padTop(10f).center().row();
     }
 
     public void show() {
@@ -226,7 +217,8 @@ public class BlackjackScreenDisplay extends UIComponent {
         if (dimmer != null) dimmer.setVisible(true);
 
         // Start new round
-        entity.getEvents().trigger("start");
+        //entity.getEvents().trigger("start");
+        gameLogic.startGame();
         updateHands();
     }
 
@@ -300,7 +292,7 @@ public class BlackjackScreenDisplay extends UIComponent {
         dealerTurn = true;
         updateHands();
         setResult(msg);         // show result
-        restartBtn.setVisible(true); // show restart button
+        exitBtn.setVisible(true); // show restart button
     }
 
 
