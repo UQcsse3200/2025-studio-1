@@ -1,5 +1,9 @@
 package com.csse3200.game.entities;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.utils.JsonReader;
+import com.badlogic.gdx.utils.JsonValue;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,13 +14,21 @@ import java.util.List;
  */
 public class AvatarRegistry {
     private static Avatar current; //storage system for the avatar to be able to be extracted later
-
+    private static final String CONFIG_PATH = "configs/avatars.json";
     public static List<Avatar> getAll() {
-        List<Avatar> list = new ArrayList<>();
-        list.add(new Avatar("scout", "Scout", "images/avatars/burger.png", 80, 10, 5.0f));
-        list.add(new Avatar("soldier", "Soldier", "images/avatars/fighter.png", 120, 15, 3.8f));
-        list.add(new Avatar("engineer", "Engineer", "images/avatars/firecommander.png", 100, 8, 4.2f));
-        return list;
+        List<Avatar> avatars = new ArrayList<>();
+        JsonValue root = new JsonReader().parse(Gdx.files.internal(CONFIG_PATH));
+        for (JsonValue avatar : root) {
+            avatars.add(new Avatar(
+                    avatar.getString("id"),
+                    avatar.getString("displayName"),
+                    avatar.getString("texturePath"),
+                    avatar.getInt("baseHealth"),
+                    avatar.getInt("baseDamage"),
+                    avatar.getFloat("moveSpeed")
+            ));
+        }
+        return avatars;
     }
 
     public static void set(Avatar avatar) {
