@@ -339,6 +339,7 @@ public class SettingsMenuDisplay extends UIComponent {
                 new ChangeListener() {
                     @Override
                     public void changed(ChangeEvent changeEvent, Actor actor) {
+                        ServiceLocator.getButtonSoundService().playClick();
                         logger.debug("Exit button clicked");
                         exitMenu();
                     }
@@ -348,6 +349,7 @@ public class SettingsMenuDisplay extends UIComponent {
                 new ChangeListener() {
                     @Override
                     public void changed(ChangeEvent changeEvent, Actor actor) {
+                        ServiceLocator.getButtonSoundService().playClick();
                         logger.debug("Apply button clicked");
                         applyChanges();
                     }
