@@ -75,6 +75,9 @@ public class PlayerStatsDisplay extends BaseScreenDisplay {
         Color STAMINA_TINT = new Color(0.35f, 1f, 0.45f, 1f);
         Color PANEL_BG     = new Color(0f, 0f, 0f, 0.3f);
 
+        final float GAP_X     = 8f;
+        final float PANEL_PAD = 4f;
+
         // Health bar: use real max if available, otherwise [0..100]
         int healthVal = (combat != null) ? combat.getHealth() : 0;
         int maxHealth = (combat != null) ? combat.getMaxHealth() : PCT_MAX;
@@ -97,23 +100,40 @@ public class PlayerStatsDisplay extends BaseScreenDisplay {
         // Ammo label
         ammoLabel = new Label(formatAmmoLabel(), skin, WHITE);
 
+        Label healthTxt  = new Label("Health",  skin, WHITE);
+        Label staminaTxt = new Label("Stamina", skin, WHITE);
+
+        float labelW = Math.max(healthTxt.getPrefWidth(), staminaTxt.getPrefWidth());
+
         // Create panel
         Table panel = new Table();
         panel.setBackground(skin.newDrawable(WHITE, PANEL_BG));
-        panel.pad(8f).defaults().left();
+        panel.pad(PANEL_PAD);
+        panel.defaults().left();
+        panel.columnDefaults(0).width(labelW).padRight(GAP_X);
+        panel.columnDefaults(1).width(BAR_WIDTH);
 
-        // Add rows into the ONE panel
-        panel.add(healthBar).width(BAR_WIDTH).height(BAR_HEIGHT);
-        panel.row().padTop(6f);
-        panel.add(staminaBar).width(BAR_WIDTH).height(BAR_HEIGHT);
-        panel.row().padTop(6f);
-        panel.add(processorLabel);
-        panel.row().padTop(4f);
-        panel.add(ammoLabel);
+        // Row 1
+        panel.add(healthTxt);
+        panel.add(healthBar).height(BAR_HEIGHT);
+        panel.row();
 
-        // Place the panel on screen
+        // Row 2
+        panel.add(staminaTxt).left();
+        panel.add(staminaBar).height(BAR_HEIGHT).left();
+        panel.row();
+
+        // Row 3
+        panel.add(processorLabel).left();
+        panel.row().padTop(PANEL_PAD);
+
+        //Row 4
+        panel.add(ammoLabel).left();
+
+        float finalPanelW = labelW + GAP_X + BAR_WIDTH + (PANEL_PAD * 2f);
+
         root.top().left().padTop(50f);
-        root.add(panel).left().padLeft(PAD);
+        root.add(panel).left().padLeft(PAD).width(finalPanelW);
         root.row();
     }
 

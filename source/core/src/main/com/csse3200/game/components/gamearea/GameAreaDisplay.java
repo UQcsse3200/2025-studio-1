@@ -37,10 +37,10 @@ public class GameAreaDisplay extends UIComponent {
         Table panel = new Table();
         panel.left();
         panel.setBackground(makeSolidBg(new Color(0f, 0f, 0f, 0.3f)));
-        panel.pad(4f, 8f, 0f, 8f);
+        panel.pad(4f, 4f, 0f, 8f);
         panel.add(title).left();
 
-        overlay.add(panel).left().width(235f);
+        overlay.add(panel).left().width(320f);
         stage.addActor(overlay);
     }
 
