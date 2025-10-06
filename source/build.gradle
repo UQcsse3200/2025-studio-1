@@ -53,7 +53,7 @@ project(":desktop") {
     apply plugin: "java-library"
 
     // Enforce use of JDK 21. Will download if it isn't in default OS location.
-	// Check why it isn't downloading JDK.
+    // Check why it isn't downloading JDK.
     java {
         toolchain {
             languageVersion.set(JavaLanguageVersion.of(21))
@@ -78,7 +78,7 @@ project(":core") {
     apply plugin: "java-library"
 
     // Enforce use of JDK 21. Will download if it isn't in default OS location.
-	// Check why it isn't downloading JDK.
+    // Check why it isn't downloading JDK.
     java {
         toolchain {
             languageVersion.set(JavaLanguageVersion.of(21))
@@ -101,7 +101,10 @@ project(":core") {
 
         // Unit Testing
         testImplementation "org.junit.jupiter:junit-jupiter-api:$junit5Version"
-        testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:$junit5Version'
+        testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$junit5Version"
+        testImplementation "org.junit.jupiter:junit-jupiter-params:$junit5Version"
+        testImplementation "org.awaitility:awaitility:4.2.0"
+
         testImplementation("org.junit.vintage:junit-vintage-engine:$junit5Version") {
             because 'Allows JUnit 3 and JUnit 4 tests to run'
         }
