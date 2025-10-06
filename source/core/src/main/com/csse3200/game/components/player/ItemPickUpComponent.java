@@ -5,7 +5,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.csse3200.game.areas.GameArea;
-import com.csse3200.game.components.ArmourComponent;
 import com.csse3200.game.components.Component;
 import com.csse3200.game.components.MagazineComponent;
 import com.csse3200.game.components.items.ItemComponent;
