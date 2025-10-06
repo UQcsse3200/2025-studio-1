@@ -1,17 +1,17 @@
 package com.csse3200.game.components.screens;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Vector;
 
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.csse3200.game.components.enemy.EnemyHealthDisplay;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+
+import com.badlogic.gdx.graphics.*;
 import com.csse3200.game.services.DiscoveryService;
 import com.csse3200.game.services.ServiceLocator;
-import com.badlogic.gdx.Gdx;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -130,7 +130,7 @@ public class Minimap {
      *
      * @return
      */
-    public float getZoom() {
+    public float getScale() {
         return scale;
     }
 
