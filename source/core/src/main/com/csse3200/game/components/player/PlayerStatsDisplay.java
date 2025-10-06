@@ -73,35 +73,14 @@ public class PlayerStatsDisplay extends BaseScreenDisplay {
         entity.getEvents().addListener("focus item", this::updateAmmoUIAfterSwitch);
     }
 
-    /**
-     * Creates a simple horizontal bar style with a colored fill and dark background.
-     */
-    private ProgressBar.ProgressBarStyle makeBarStyle(Color fill, float barHeight) {
-        ProgressBar.ProgressBarStyle style = new ProgressBar.ProgressBarStyle();
-        style.background = makeColorDrawable(COLOR_BG);
-        style.background.setMinHeight(barHeight);
-        style.knobBefore = makeColorDrawable(fill);
-        style.knobBefore.setMinHeight(barHeight);
-        style.knob = null;
-        return style;
-    }
+    /* Build & draw */
+    @Override
+    protected void buildUI(Table root) {
+        // Health bar: use real max if available, otherwise [0..100]
+        int healthVal = (combat != null) ? combat.getHealth() : 0;
+        int maxHealth = (combat != null) ? combat.getMaxHealth() : PCT_MAX;
 
-    /**
-     * Creates actors and positions them on the stage using a table.
-     *
-     * @see Table for positioning options
-     */
-    private void addActors() {
-        table = new Table();
-        table.top().left();
-        table.setFillParent(true);
-        table.padTop(45f).padLeft(5f);
-
-        // Health bar
-        ProgressBar.ProgressBarStyle healthBarStyle = makeBarStyle(COLOR_HEALTH, BAR_HEIGHT);
-        int health = entity.getComponent(CombatStatsComponent.class).getHealth();
-        healthBar = new ProgressBar(0, 100, 1, false, healthBarStyle);
-        healthBar.setValue(health);
+        healthBar = new ProgressBar(0, maxHealth, 1, false, makeBarStyle(COLOR_HEALTH));
         healthBar.setAnimateDuration(0f);
         healthBar.setValue(clamp(healthVal, 0, maxHealth));
 
