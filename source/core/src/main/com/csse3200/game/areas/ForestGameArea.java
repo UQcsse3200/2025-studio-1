@@ -561,12 +561,13 @@ public class ForestGameArea extends GameArea {
         return newDagger;
     }
 
+    // TODO - CHESTPLATE NOT RENDERING ON PLAYER YET
     private Entity spawnChestplate() {
         Entity newChestplate = ArmourFactory.createArmour(Armour.CHESTPLATE);
-        Vector2 chestplateOffset = new Vector2(5f, 5f);
-        spawnEntityAt(newChestplate, new GridPoint2(10, 10), true, true);
-//        Vector2 chestplateOffset = new Vector2(0.5f, 0.5f);
-        newChestplate.addComponent(new ItemHoldComponent(this.player, chestplateOffset));
+        Vector2 chestplateOffset = new Vector2(0.5f, 0.5f);
+//        spawnEntityAt(newChestplate, new GridPoint2(10, 10), true, true));
+        ServiceLocator.getGameArea().spawnEntity(newChestplate);
+        player.getComponent(PlayerEquipComponent.class).setItem(newChestplate, chestplateOffset);
         return newChestplate;
     }
 
