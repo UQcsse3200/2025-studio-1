@@ -1,6 +1,7 @@
 package com.csse3200.game.entities.factories.items;
 
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+import com.csse3200.game.components.ArmourComponent;
 import com.csse3200.game.components.WeaponsStatsComponent;
 import com.csse3200.game.components.items.ItemComponent;
 import com.csse3200.game.entities.Entity;
@@ -29,7 +30,7 @@ public class ArmourFactory {
     public static Entity createArmour(Armour armourType) {
         ArmourConfig config = armourType.getConfig();
         Entity armour = ItemFactory.createItem(config.texturePath);
-
+        armour.addComponent(new ArmourComponent(config));
         return armour;
     }
 
