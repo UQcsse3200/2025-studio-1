@@ -24,6 +24,10 @@ public class ItemSpawnConfig {
     // Forest Map
     public static Map<String, List<ItemSpawner.ItemSpawnInfo>> forestmap() {
         Map<String, List<ItemSpawner.ItemSpawnInfo>> config = new HashMap<>();
+        //Armour
+        config.put(Armour.CHESTPLATE.name(), List.of(
+                new ItemSpawner.ItemSpawnInfo(new GridPoint2(9, 7), 1)
+        ));
 
         // Weapons
         config.put(Weapons.DAGGER.name(), Arrays.asList(
@@ -40,7 +44,6 @@ public class ItemSpawnConfig {
         config.put(Weapons.LIGHTSABER.name(), List.of(
                 new ItemSpawner.ItemSpawnInfo(new GridPoint2(14, 7), 1)
         ));
-
 
         return config;
     }
