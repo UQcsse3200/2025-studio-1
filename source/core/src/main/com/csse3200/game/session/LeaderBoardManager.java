@@ -1,9 +1,7 @@
 package com.csse3200.game.session;
 
-import com.csse3200.game.areas.GameArea;
-import com.csse3200.game.entities.Entity;
+
 import com.csse3200.game.records.RoundData;
-import com.csse3200.game.components.player.InventoryComponent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
