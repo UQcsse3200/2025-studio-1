@@ -1,0 +1,11 @@
+Spawn, 0, 0
+Reception, 1, 0
+Mainhall, 2, 0
+Security, 3, 0
+Office, 4, 0
+Elevator, 5, 0
+Research, 6, 0
+Shipping, 7, 0
+Storage, 8, 0
+Server, 9, 0
+Tunnel, 10, 0

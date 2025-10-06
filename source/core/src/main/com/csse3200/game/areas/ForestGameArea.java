@@ -721,7 +721,7 @@ public class ForestGameArea extends GameArea {
 
     @Override
     public String toString() {
-        return "Forest";
+        return "Spawn";
     }
 
     public static ForestGameArea load(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
