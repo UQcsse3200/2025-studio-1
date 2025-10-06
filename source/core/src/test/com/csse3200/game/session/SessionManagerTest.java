@@ -55,7 +55,9 @@ class SessionManagerTest {
         Method getId = null;
         try {
             getId = GameSession.class.getMethod("getSessionId");
-        } catch (NoSuchMethodException ignored) {}
+        } catch (NoSuchMethodException ignored) {
+            //can add getSessionId later
+        }
         assumeTrue(getId != null, "GameSession doesn't expose getSessionId(); skipping ID assertions");
         int id1 = (int) getId.invoke(s1);
         int id2 = (int) getId.invoke(s2);
