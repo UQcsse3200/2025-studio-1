@@ -457,57 +457,21 @@ public class ObstacleFactory {
      *
      * @return a static energy pod entity
      */
-    public static Entity createLargeEnergyPod() {
-        Entity energyPod =
-                new Entity()
-                        .addComponent(new TextureRenderComponent("foreg_sprites/futuristic/EnergyPod.png"))
-                        .addComponent(new PhysicsComponent())
-                        .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
 
-        energyPod.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
-        energyPod.getComponent(TextureRenderComponent.class).scaleEntity();
-        energyPod.scaleHeight(1.5f);
-        PhysicsUtils.setScaledCollider(energyPod, 1f, 0.9f);
-        return energyPod;
-    }
 
     /**
      * Green futuristic storage crate.
      *
      * @return a static crate entity (green)
      */
-    public static Entity createStorageCrateGreen() {
-        Entity crate =
-                new Entity()
-                        .addComponent(new TextureRenderComponent("foreg_sprites/futuristic/storage_crate_green2.png"))
-                        .addComponent(new PhysicsComponent())
-                        .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
 
-        crate.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
-        crate.getComponent(TextureRenderComponent.class).scaleEntity();
-        crate.scaleHeight(1.5f);
-        PhysicsUtils.setScaledCollider(crate, 1f, 1f);
-        return crate;
-    }
 
     /**
      * Dark futuristic storage crate.
      *
      * @return a static crate entity (dark)
      */
-    public static Entity createStorageCrateDark() {
-        Entity crate =
-                new Entity()
-                        .addComponent(new TextureRenderComponent("foreg_sprites/futuristic/storage_crate_dark2.png"))
-                        .addComponent(new PhysicsComponent())
-                        .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
 
-        crate.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
-        crate.getComponent(TextureRenderComponent.class).scaleEntity();
-        crate.scaleHeight(1.5f);
-        PhysicsUtils.setScaledCollider(crate, 1f, 1f);
-        return crate;
-    }
 
     /**
      * Creates a large security camera entity.
@@ -539,7 +503,7 @@ public class ObstacleFactory {
         monitor.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
         monitor.getComponent(TextureRenderComponent.class).scaleEntity();
         monitor.scaleHeight(2f);
-        PhysicsUtils.setScaledCollider(monitor, 0.7f, 0.7f);
+        PhysicsUtils.setScaledCollider(monitor, 0.7f, 0.8f);
         return monitor;
     }
 
@@ -560,7 +524,7 @@ public class ObstacleFactory {
         platform.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
         platform.getComponent(TextureRenderComponent.class).scaleEntity();
         platform.scaleHeight(1.0f);
-        PhysicsUtils.setScaledCollider(platform, 0.3f, 0.6f);
+        PhysicsUtils.setScaledCollider(platform, 1f, 0.5f);
         return platform;
     }
 
@@ -597,7 +561,7 @@ public class ObstacleFactory {
         console.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
         console.getComponent(TextureRenderComponent.class).scaleEntity();
         console.scaleHeight(2.0f);
-        PhysicsUtils.setScaledCollider(console, 0.7f, 0.7f);
+        PhysicsUtils.setScaledCollider(console, 0.7f, 0.8f);
         return console;
     }
 
@@ -616,7 +580,7 @@ public class ObstacleFactory {
         lab.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
         lab.getComponent(TextureRenderComponent.class).scaleEntity();
         lab.scaleHeight(3.0f);
-        PhysicsUtils.setScaledCollider(lab, 0.8f, 0.8f);
+        PhysicsUtils.setScaledCollider(lab, 0.8f, 0.9f);
         return lab;
     }
 
@@ -654,7 +618,7 @@ public class ObstacleFactory {
         desk.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
         desk.getComponent(TextureRenderComponent.class).scaleEntity();
         desk.scaleHeight(2.8f);
-        PhysicsUtils.setScaledCollider(desk, 0.8f, 0.7f);
+        PhysicsUtils.setScaledCollider(desk, 0.8f, 0.8f);
         return desk;
     }
 
@@ -747,8 +711,8 @@ public class ObstacleFactory {
 
         spikes.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
         spikes.getComponent(TextureRenderComponent.class).scaleEntity();
-        spikes.scaleHeight(2f);
-        PhysicsUtils.setScaledCollider(spikes, 0.4f, 0.1f);
+        spikes.scaleHeight(0.9f);
+        PhysicsUtils.setScaledCollider(spikes, 1f, 1f);
         return spikes;
     }
 
