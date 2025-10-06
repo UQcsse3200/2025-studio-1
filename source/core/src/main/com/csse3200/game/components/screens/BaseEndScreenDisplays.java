@@ -98,6 +98,40 @@ public class BaseEndScreenDisplays extends BaseScreenDisplay {
         if (label != null) ((Label) label).setColor(Color.WHITE);
     }
 
+    private static void at(float delay, Runnable r) {
+        Timer.schedule(new Timer.Task() {
+            @Override
+            public void run() {
+                r.run();
+            }
+        }, delay);
+    }
+
+    private static void neutralizeTintDeep(Label lbl, Actor... ancestors) {
+        // Wipe actor tint
+        lbl.setColor(1f, 1f, 1f, 1f);
+
+        // Copy style so we don't globally change the Skin
+        Label.LabelStyle s = lbl.getStyle();
+        if (s != null) {
+            Label.LabelStyle copy = new Label.LabelStyle(s);
+            if (copy.fontColor == null) copy.fontColor = new Color(Color.WHITE);
+            else copy.fontColor.set(Color.WHITE);
+            if (copy.fontColor != null) copy.fontColor.set(Color.WHITE);
+            lbl.setStyle(copy);
+            if (copy.font != null && copy.font.getData() != null) {
+                copy.font.getData().markupEnabled = true;
+            }
+        }
+
+        // Parent tint multiplies too; make sure they're white
+        if (ancestors != null) {
+            for (Actor a : ancestors) {
+                if (a != null) a.setColor(1f, 1f, 1f, 1f);
+            }
+        }
+    }
+
     /**
      * Allow chaining a Leaderboard button
      */
@@ -198,12 +232,16 @@ public class BaseEndScreenDisplays extends BaseScreenDisplay {
 
         } else if ("Victory".equalsIgnoreCase(titleText)) {
             titleWrap.setScale(0.70f);
-            titleLbl.setColor(Color.WHITE);
+
+            // Start from a fully neutral color pipeline
+            neutralizeTintDeep(titleLbl, titleWrap, root); // see helper below
+
             titleWrap.addAction(Actions.sequence(
                     Actions.scaleTo(1.38f, 1.38f, 0.18f, Interpolation.swingOut),
                     Actions.scaleTo(1.08f, 1.08f, 0.10f, Interpolation.sine)
             ));
 
+            // Phase A: blast intro (can use rainbow, jitter, etc.)
             titleFxPhase.crazyOrType(
                     titleLbl,
                     "{CRAZY style=blast origin=middle spread=3 fps=130 cycles=2 jitter=3 " +
@@ -212,59 +250,57 @@ public class BaseEndScreenDisplays extends BaseScreenDisplay {
                     30f
             );
 
+            // Single timeline instead of nesting; we re-neutralize before each FX
             final float phaseAEnd = 1.10f;
-            Timer.schedule(new Timer.Task() {
-                @Override
-                public void run() {
-                    titleFxPhase.cancel();
+            float t = phaseAEnd;
 
-                    // Make absolutely sure nothing multiplies the color
-                    neutralizeTint(titleLbl, titleWrap, root);
-                    titleLbl.setText("VICTORY");
-                    TextEffects.enableMarkup(titleLbl);
+            Runnable resetForFx = () -> {
+                neutralizeTintDeep(titleLbl, titleWrap, root);
+                titleLbl.setText("VICTORY");
+                TextEffects.enableMarkup(titleLbl); // ensures font markup is on
+            };
 
-                    // GREEN ↔ WHITE thunderclap *after* cancel
-                    titleFxLoop.strobeDirect(titleLbl, Color.valueOf("00ff00"), Color.WHITE, 12f, 0.28f);
-                    Timer.schedule(new Timer.Task() {
-                        @Override
-                        public void run() {
-                            neutralizeTint(titleLbl, titleWrap, root);
-                            titleFxLoop.sparkle(titleLbl, 0.65f, 14f, 1.30f);
+            at(t, () -> {
+                titleFxPhase.cancel();   // stop intro anim cleanly
+                resetForFx.run();
+                // GREEN ↔ WHITE thunderclap
+                titleFxLoop.strobeDirect(titleLbl, Color.valueOf("00ff00"), Color.WHITE, 12f, 0.28f);
+            });
 
-                            Timer.schedule(new Timer.Task() {
-                                @Override
-                                public void run() {
-                                    neutralizeTint(titleLbl, titleWrap, root);
-                                    titleFxLoop.pulseBetween(titleLbl, "ffd54f", "fff6cc", 1.1f);
+            t += 0.06f;
+            at(t, () -> {
+                resetForFx.run();
+                titleFxLoop.sparkle(titleLbl, 0.65f, 14f, 1.30f);
+            });
 
-                                    Timer.schedule(new Timer.Task() {
-                                        @Override
-                                        public void run() {
-                                            neutralizeTint(titleLbl, titleWrap, root);
-                                            titleFxLoop.sweepRainbow(titleLbl, 0.70f, 22f, 0.26f);
+            t += 0.70f;
+            at(t, () -> {
+                resetForFx.run();
+                titleFxLoop.pulseBetween(titleLbl, "ffd54f", "fff6cc", 1.1f);
+            });
 
-                                            titleWrap.addAction(Actions.forever(Actions.sequence(
-                                                    Actions.parallel(
-                                                            Actions.scaleTo(1.12f, 1.12f, 0.40f, Interpolation.sine),
-                                                            Actions.rotateTo(2.0f, 0.40f, Interpolation.sine)
-                                                    ),
-                                                    Actions.parallel(
-                                                            Actions.scaleTo(1.04f, 1.04f, 0.40f, Interpolation.sine),
-                                                            Actions.rotateTo(-1.5f, 0.40f, Interpolation.sine)
-                                                    ),
-                                                    Actions.parallel(
-                                                            Actions.scaleTo(1.08f, 1.08f, 0.32f, Interpolation.sine),
-                                                            Actions.rotateTo(0.0f, 0.32f, Interpolation.sine)
-                                                    )
-                                            )));
-                                        }
-                                    }, 0.85f);
-                                }
-                            }, 0.70f);
-                        }
-                    }, 0.06f);
-                }
-            }, phaseAEnd);
+            t += 0.85f;
+            at(t, () -> {
+                resetForFx.run();
+                titleFxLoop.sweepRainbow(titleLbl, 0.70f, 22f, 0.26f);
+
+                // Gentle idle motion
+                titleWrap.clearActions();
+                titleWrap.addAction(Actions.forever(Actions.sequence(
+                        Actions.parallel(
+                                Actions.scaleTo(1.12f, 1.12f, 0.40f, Interpolation.sine),
+                                Actions.rotateTo(2.0f, 0.40f, Interpolation.sine)
+                        ),
+                        Actions.parallel(
+                                Actions.scaleTo(1.04f, 1.04f, 0.40f, Interpolation.sine),
+                                Actions.rotateTo(-1.5f, 0.40f, Interpolation.sine)
+                        ),
+                        Actions.parallel(
+                                Actions.scaleTo(1.08f, 1.08f, 0.32f, Interpolation.sine),
+                                Actions.rotateTo(0.0f, 0.32f, Interpolation.sine)
+                        )
+                )));
+            });
         }
 
         // Subtitle
@@ -284,16 +320,34 @@ public class BaseEndScreenDisplays extends BaseScreenDisplay {
 
         // Buttons
         Table row = new Table();
-        TextButton primary = button(primaryText, buttonLabelScale(), primaryAction);
-        TextButton secondary = button(secondaryText, buttonLabelScale(), secondaryAction);
+        TextButton primary = button(primaryText, buttonLabelScale(), primaryAction);   // Continue
+        TextButton secondary = button(secondaryText, buttonLabelScale(), secondaryAction); // Main Menu
         row.add(primary).left().padRight(buttonsGap());
         row.add(secondary).left();
 
-        if (leaderboardAction != null) {
-            root.add(button("Leaderboard", buttonLabelScale(), leaderboardAction))
-                    .pad(blockPad())
-                    .row();
-        }
+        root.add(row)
+                .colspan(2)
+                .center()
+                .padTop(blockPad())
+                .row();
+
+        pinLeaderboardTopRight(root);
+    }
+
+    private void pinLeaderboardTopRight(Table root) {
+        if (leaderboardAction == null) return;
+
+        TextButton leaderboardTop = button("Leaderboard", buttonLabelScale(), leaderboardAction);
+
+        // Overlay anchored to screen via fillParent
+        Table overlay = new Table();
+        overlay.setFillParent(true);
+        overlay.top().right();
+        overlay.add(leaderboardTop).padTop(16f).padRight(16f);
+
+        // Add as an actor so it doesn't participate in root's grid layout
+        root.addActor(overlay);
+        overlay.toFront();
     }
 
     public void setRound(int round) {
