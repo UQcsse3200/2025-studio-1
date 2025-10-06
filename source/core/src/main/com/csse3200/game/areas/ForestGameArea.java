@@ -131,7 +131,6 @@ public class ForestGameArea extends GameArea {
             "foreg_sprites/furniture/ServerRack.png",
             "foreg_sprites/furniture/ServerRack2.png",
             "foreg_sprites/furniture/Vent.png",
-            "images/Storage.png",
             "images/!.png",
             "images/NpcDialogue.png",
             "images/nurse_npc.png",
