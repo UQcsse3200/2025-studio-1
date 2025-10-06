@@ -20,7 +20,7 @@ import com.csse3200.game.services.ServiceLocator;
 public class ResearchGameArea extends GameArea {
     private static final float WALL_WIDTH = 0.1f;
     private static GridPoint2 playerSpawn = new GridPoint2(10, 10);
-    private static final GridPoint2 PLAYER_SPAWN = new GridPoint2(10, 10);
+    private static GridPoint2 PLAYER_SPAWN = new GridPoint2(10, 10);
     private int roomDiffNumber = 6;
     private Entity player;
 
@@ -160,7 +160,7 @@ public class ResearchGameArea extends GameArea {
         if (newSpawn == null) {
             return;
         }
-        ResearchGameArea.playerSpawn = newSpawn;
+        ResearchGameArea.PLAYER_SPAWN = newSpawn;
     }
 
     @Override
