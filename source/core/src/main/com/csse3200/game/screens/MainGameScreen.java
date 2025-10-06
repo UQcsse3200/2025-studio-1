@@ -194,7 +194,7 @@ public class MainGameScreen extends ScreenAdapter {
     @Override
     public void render(float delta) {
         //accumulates elapsed time
-        roundTime += delta;
+        this.roundTime += delta;
 
         if (!isPauseVisible && !(ServiceLocator.getTimeSource().isPaused())
                 && !ServiceLocator.isTransitioning()) {
