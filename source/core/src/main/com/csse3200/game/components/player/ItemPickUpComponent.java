@@ -11,11 +11,11 @@ import com.csse3200.game.components.items.ItemComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.Weapons;
 import com.csse3200.game.entities.factories.items.WeaponsFactory;
+import com.csse3200.game.entities.factories.items.WorldPickUpFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.physics.BodyUserData;
 import com.csse3200.game.physics.components.PhysicsComponent;
 import com.csse3200.game.services.ServiceLocator;
-import com.csse3200.game.entities.factories.items.WorldPickUpFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -75,7 +75,8 @@ public class ItemPickUpComponent extends Component {
         }
 
         Entity otherEntity = userData.entity;
-        if (otherEntity.getComponent(ItemComponent.class) != null) {
+        if (otherEntity.getComponent(ItemComponent.class) != null
+                && otherEntity.getComponent(ItemComponent.class).isPickupable()) {
             targetItem = otherEntity;
             logger.trace("collisionStart: collided with item {}", targetItem);
         }
@@ -166,6 +167,7 @@ public class ItemPickUpComponent extends Component {
      * This method compares the given texture path against the Weapons
      * enum configuration and, if matched, creates the appropriate weapon
      * using the {@link WeaponsFactory}.
+     *
      * @param texture The texture file path associated with the world item.
      * @return A new {@link Entity} representing the weapon, or null if the
      * texture does not correspond to any known weapon type.

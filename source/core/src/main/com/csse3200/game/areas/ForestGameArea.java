@@ -558,12 +558,6 @@ public class ForestGameArea extends GameArea {
         return newDagger;
     }
 
-    /* FIXME: TODO list (DO TESTING)
-  = can pick up item that the player has equipped
-  = when equipping different items, the image is not
-   in the same place/it appears in a slightly different place
-    */
-
     /**
      * Sets the equipped item in the PlayerEquipComponent to be the given item
      *
@@ -589,6 +583,9 @@ public class ForestGameArea extends GameArea {
 
         item.getComponent(HitboxComponent.class).setLayer(PhysicsLayer.OBSTACLE);
 
+        // Make it so that the player cannot pick up the item
+        item.getComponent(ItemComponent.class).setPickupable(false);
+
         // Make dropped items static so they behave like map-placed items
         PhysicsComponent phys = item.getComponent(PhysicsComponent.class);
         if (phys != null) phys.setBodyType(BodyDef.BodyType.StaticBody);
@@ -597,22 +594,8 @@ public class ForestGameArea extends GameArea {
         ServiceLocator.getGameArea().spawnEntity(item);
 
         // update offset from the players position
-//        Vector2 offset = new Vector2(0.7f, 0.3f);
-//        player.getComponent(PlayerEquipComponent.class).setItem(item, offset);
-
         Vector2 offset = item.getComponent(ItemComponent.class).getEquipOffset();
         player.getComponent(PlayerEquipComponent.class).setItem(item, offset);
-
-//        FIXME : Tried a fix to set the offset
-//        Vector2 offset_rifle = new Vector2(0.8f, 0.15f);
-//        Vector2 offset_pistol = new Vector2(0.75f, -0.1f);
-//        Vector2 offset_dagger = new Vector2(1.0f, 0.3f);
-//        Vector2 offset_lightsaber = new Vector2(0.7f, -0.2f);
-//
-//        if(weapons == Weapons.RIFLE) {player.getComponent(PlayerEquipComponent.class).setItem(item, offset_rifle);}
-//        if(weapons == Weapons.PISTOL) {player.getComponent(PlayerEquipComponent.class).setItem(item, offset_pistol);}
-//        if (weapons == Weapons.DAGGER) {player.getComponent(PlayerEquipComponent.class).setItem(item, offset_dagger);}
-//        if (weapons == Weapons.LIGHTSABER) {player.getComponent(PlayerEquipComponent.class).setItem(item, offset_lightsaber);}
     }
     /**
      * Sets the equipped item in the PlayerEquipComponent to be null, along with the offset
