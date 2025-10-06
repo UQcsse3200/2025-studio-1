@@ -45,7 +45,7 @@ public abstract class RenderComponent extends Component implements Renderable, D
     public float getZIndex() {
         // The smaller the Y value, the higher the Z index, so that closer entities are drawn in front
         if (customZIndex != null)
-            return customZIndex;
+            return this.customZIndex;
         return -entity.getPosition().y;
     }
 
@@ -56,7 +56,7 @@ public abstract class RenderComponent extends Component implements Renderable, D
      * @param value
      */
     public void setZIndex(Float value) {
-        customZIndex = value;
+        this.customZIndex = value;
     }
 
     /**
