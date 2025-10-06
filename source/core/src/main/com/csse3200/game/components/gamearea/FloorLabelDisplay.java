@@ -31,10 +31,10 @@ public class FloorLabelDisplay extends UIComponent {
         Table panel = new Table();
         panel.left();
         panel.setBackground(skin.newDrawable("white", new Color(0f,0f,0f,0.3f)));
-        panel.pad(4f, 8f, 0f, 8f);
+        panel.pad(4f, 4f, 0f, 8f);
         panel.add(label).left();
 
-        table.add(panel).width(235f);
+        table.add(panel).width(320f);
         stage.addActor(table);
     }
 
