@@ -4,12 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Vector;
-
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
-
 import com.csse3200.game.services.DiscoveryService;
 import com.csse3200.game.services.ServiceLocator;
 import org.slf4j.Logger;
@@ -26,7 +20,7 @@ import org.slf4j.LoggerFactory;
  */
 public class Minimap {
     /** Path to the texture used for undiscovered or locked rooms. */
-    private static final String UNDISCOVERED = "images/minimap-images/Locked.png";
+    private static final String LOCKED = "images/minimap-images/Locked.png";
     /** Logger instance for error and debugging output. */
     private static final Logger logger = LoggerFactory.getLogger(Minimap.class);
     /** Default image height for a room in pixels. */
@@ -34,8 +28,8 @@ public class Minimap {
     /** Default image width for a room in pixels. */
     private static final int IMAGE_WIDTH = 1280;
 
-    /** Maps grid coordinates to corresponding minimap images. */
-    private Map<Vector2, Image> grid;
+    /** Maps grid coordinates to corresponding minimap image paths. */
+    private Map<Vector2, String> grid;
     /** Maps room names to their positions in the minimap grid. */
     private Map<String, Vector2> roomPositions;
     /** Current zoom scale of the minimap (1 = default, >1 = zoomed in). */
@@ -98,15 +92,7 @@ public class Minimap {
             return false;
         }
 
-        // Create a locked image for undiscovered rooms
-        Image image = new Image(
-                new TextureRegionDrawable(
-                        new Texture(UNDISCOVERED)
-                )
-        );
-        image.setSize(IMAGE_WIDTH, IMAGE_HEIGHT);
-
-        grid.put(coordinates, image);
+        grid.put(coordinates, LOCKED);
         roomPositions.put(roomName, coordinates);
         return true;
     }
@@ -118,13 +104,13 @@ public class Minimap {
      *
      * @return a mapping of images to their on-screen positions in pixels
      */
-    public Map<Image, Vector2> render() {
+    public Map<String, Vector2> render() {
         if (centre == null) {
             logger.error("Attempted to render the map before opening it");
             return null;
         }
 
-        Map<Image, Vector2> output = new HashMap<>();
+        Map<String, Vector2> output = new HashMap<>();
 
         // Determine how much of the minimap is visible horizontally and vertically
         float horizontalReach = screenWidth * (1 / scale) / 2;
@@ -164,11 +150,6 @@ public class Minimap {
      */
     public void zoom(float percentage) {
         scale *= (100 + percentage) / 100;
-
-        // Update the visual scale of all minimap images
-        for (Image image : grid.values()) {
-            image.setScale(scale, scale);
-        }
     }
 
     /**
@@ -207,12 +188,7 @@ public class Minimap {
             Vector2 coordinates = roomPositions.get(name);
 
             if (discoveryService.isDiscovered(name)) {
-                Image image = new Image(
-                        new TextureRegionDrawable(
-                                new Texture("images/minimap-images/" + name + ".png")
-                        )
-                );
-                grid.put(coordinates, image);
+                grid.put(coordinates, "images/minimap-images/" + name + ".png");
             }
         }
     }
