@@ -113,6 +113,14 @@ public class ServerGameArea extends GameArea {
                 spawnEntityAt(platform, platformSpawn, false, false);
             }
         }
+
+        for (int j = 10; j < 15; j += 4) {
+            for (int i = 0; i < 8; i += 5) {
+                GridPoint2 platformSpawn = new GridPoint2((i - j / 3), j);
+                Entity platform = ObstacleFactory.createThinFloor();
+                spawnEntityAt(platform, platformSpawn, false, false);
+            }
+        }
     }
 
     /**
@@ -125,6 +133,9 @@ public class ServerGameArea extends GameArea {
             GridPoint2 rackSpawn = new GridPoint2(i, 7);
             spawnEntityAt(rack, rackSpawn, false, false);
         }
+
+        spawnEntityAt(ObstacleFactory.createLabPlant1(), new GridPoint2(4, 15), true, false);
+        spawnEntityAt(ObstacleFactory.createLabPlant1(), new GridPoint2(2, 15), true, false);
     }
 
     /**
