@@ -25,10 +25,9 @@ import static com.badlogic.gdx.Gdx.input;
 public class TextureRenderWithRotationComponent extends TextureRenderComponent {
     private final TextureRegion region;
     private float rotation = 0;
-    private boolean hasSetRotation = false;
     private Camera camera;
     private boolean rotated = false;
-    private String texturePath; //For testing
+    private final String texturePath; //For testing
     public TextureRenderWithRotationComponent(String texturePath) {
         super(texturePath); // still loads the Texture
         this.texturePath = texturePath;
@@ -44,11 +43,10 @@ public class TextureRenderWithRotationComponent extends TextureRenderComponent {
         rotation = value;
     }
 
-    public void setRotationWithRepeat(float value) {
-        rotation = value;
-        hasSetRotation = true;
-    }
-
+    /**
+     *
+     * @return The rotation value
+     */
     public float getRotation() {
         return rotation;
     }
@@ -106,11 +104,14 @@ public class TextureRenderWithRotationComponent extends TextureRenderComponent {
                 Entity nearestEnemy = null;
                 float minDistance = Float.MAX_VALUE;
                 for (Entity entity : ServiceLocator.getEntityService().getEntities()) {
+                    //Find npcs with hitboxes
                     if (entity.hasComponent(HitboxComponent.class) &&
                             entity.getComponent(HitboxComponent.class).getLayer() == PhysicsLayer.NPC) {
-                        float currDistance = ServiceLocator.getPlayer().getCenterPosition().len()
-                                - entity.getCenterPosition().len();
+                        float currDistance = Math.abs(ServiceLocator.getPlayer().getCenterPosition().len()
+                                - entity.getCenterPosition().len());
+
                         if (currDistance < minDistance) {
+                            //Update nearest enemy
                             nearestEnemy = entity;
                             minDistance = currDistance;
                         }
@@ -118,9 +119,9 @@ public class TextureRenderWithRotationComponent extends TextureRenderComponent {
 
                 }
                 if (nearestEnemy != null) {
+                    //Rotate
                     rotation = (float) Vector2Utils.angleFromTo(entity.getPosition(), nearestEnemy.getPosition());
                 }
-
             }
         }
 
