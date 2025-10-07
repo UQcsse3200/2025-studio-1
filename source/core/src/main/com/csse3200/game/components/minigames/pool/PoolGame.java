@@ -2,6 +2,7 @@
 package com.csse3200.game.components.minigames.pool;
 
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.RayCastCallback;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Timer;
 import com.csse3200.game.entities.Entity;
@@ -57,7 +58,6 @@ public class PoolGame {
         this.ballFactory = new BallFactory(world, config);
         this.pockets = new PocketContactSystem(world, config);
 
-        // Choose ruleset; swap with EightBallRules, NineBallRules, etc.
         this.rules = new BasicTwoPlayerRules(config);
 
         this.rules.setListener(new RulesEvents() {
@@ -100,6 +100,27 @@ public class PoolGame {
             @Override public void onShoot(float dx, float dy, float p) { rules.onShoot(ballFactory.getCueBody(), dx, dy, p); }
             @Override public void onReset() { PoolGame.this.onStart(); }
             @Override public void onStop()  { PoolGame.this.onStop(); }
+            @Override public float capGuideLenPx(Vector2 cuePosNorm, Vector2 dirNorm, float desiredLenPx, float ballPx) {
+                // px↔meters conversion using config + the UI’s current ball pixel radius
+                float pxPerMeter = ballPx / config.ballR();
+                float desiredLenMeters = desiredLenPx / pxPerMeter;
+
+                Vector2 cuePosWorld = TableSpace.toNorm(cuePosNorm, config);
+                Vector2 dirWorld = new Vector2(dirNorm).nor();
+
+                final float[] frac = {1f};
+                RayCastCallback cb = (fixture, point, normal, f) -> {
+                    if (fixture.getBody() == ballFactory.getCueBody()) return -1f; // ignore self
+                    if (f < frac[0]) frac[0] = f;
+                    return f;
+                };
+
+                Vector2 end = new Vector2(cuePosWorld).mulAdd(dirWorld, desiredLenMeters);
+                world.raw().rayCast(cb, cuePosWorld, end);
+
+                float clampedMeters = desiredLenMeters * frac[0];
+                return clampedMeters * pxPerMeter; // back to pixels for the UI
+            }
         });
 
         return game;

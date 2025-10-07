@@ -35,6 +35,10 @@ public class PoolGameDisplay extends UIComponent {
     private static final Color PANEL_COLOR = Color.valueOf("0B132B");
     private static final Color TITLE_COLOR = Color.valueOf("00E5FF");
     private static final Color GOLD = Color.valueOf("FFD54F");
+    private static final float MAX_DRAG_PIXELS = 8f;
+    private float cuePowerNorm = 0f; // 0..1
+    private Vector2 aimDir = new Vector2();
+
     private Controller controller;
     private Texture pixel;
     private Image dimmer, frame, background;
@@ -371,6 +375,11 @@ public class PoolGameDisplay extends UIComponent {
         }
     }
 
+    private void onDrag(float dx, float dy, float dragLenPixels) {
+        aimDir.set(dx, dy).nor();
+        cuePowerNorm = MathUtils.clamp(dragLenPixels / MAX_DRAG_PIXELS, 0f, 1f);
+    }
+
     @Override
     public void draw(SpriteBatch batch) { /* Stage draws the UI. */ }
 
@@ -391,6 +400,9 @@ public class PoolGameDisplay extends UIComponent {
         void onReset();
 
         void onStop();
+
+        float capGuideLenPx(Vector2 cuePosNorm, Vector2 dirNorm, float desiredLenPx, float ballPx);
+
     }
 
     /**
@@ -518,30 +530,44 @@ public class PoolGameDisplay extends UIComponent {
 
             // Guide and cue
             if (!aimDir.isZero(1e-4f)) {
-                if (showGuide) {
-                    batch.setColor(1, 1, 1, 0.25f);
-                    float step = ballPx * 0.9f;
-                    for (int i = 1; i <= 10; i++) {
-                        float d = step * i;
-                        float gx = cbx + aimDir.x * d;
-                        float gy = cby + aimDir.y * d;
-                        batch.draw(whitePx.getRegion().getTexture(), gx - 2, gy - 2, 4, 4);
-                    }
-                    batch.setColor(1, 1, 1, 1);
+                // live power from slider
+                float cuePowerNorm = powerSlider.getValue();
+
+                // Pixels and styles
+                float minGuideLenPx = ballPx * 3.0f;
+                float maxGuideLenPx = ballPx * 12.0f;
+                float desiredLenPx  = MathUtils.lerp(minGuideLenPx, maxGuideLenPx, cuePowerNorm);
+
+                // call controller to cap in pixels
+                Vector2 cuePosNorm = new Vector2(cueBall);     // you already track cue in [0,1]
+                Vector2 dirNorm    = new Vector2(aimDir).nor();
+                float clampedLenPx = controller.capGuideLenPx(cuePosNorm, dirNorm, desiredLenPx, ballPx);
+
+                float alpha   = MathUtils.lerp(0.25f, 0.9f, cuePowerNorm);
+                float dotSize = MathUtils.lerp(3f, 6f, cuePowerNorm);
+                float step    = ballPx * 0.9f;
+                int dots = Math.max(1, Math.round(clampedLenPx / step));
+
+                batch.setColor(1, 1, 1, alpha);
+                for (int i = 1; i <= dots; i++) {
+                    float d = step * i;
+                    float gx = cbx + aimDir.x * d;
+                    float gy = cby + aimDir.y * d;
+                    batch.draw(whitePx.getRegion().getTexture(),
+                            gx - dotSize * 0.5f,
+                            gy - dotSize * 0.5f,
+                            dotSize, dotSize);
                 }
+                batch.setColor(1, 1, 1, 1);
 
+                // cue stick (unchanged)
                 float cueLen = ballPx * 7f;
-                float kick = (float) Math.pow(cueKickT, 2) * ballPx * 0.7f;
-                float off = ballPx * 0.55f + kick;
-                float cx = cbx - aimDir.x * (off + cueLen / 2f);
-                float cy = cby - aimDir.y * (off + cueLen / 2f);
+                float kick = (float)Math.pow(cueKickT, 2) * ballPx * 0.7f;
+                float off  = ballPx * 0.55f + kick;
+                float cx   = cbx - aimDir.x * (off + cueLen / 2f);
+                float cy   = cby - aimDir.y * (off + cueLen / 2f);
 
-                batch.draw(cueTex,
-                        cx, cy,
-                        cueLen / 2f, ballPx * 0.25f,   // origin
-                        cueLen, ballPx * 0.5f,        // size
-                        1f, 1f
-                );
+                batch.draw(cueTex, cx, cy, cueLen / 2f, ballPx * 0.25f, cueLen, ballPx * 0.5f, 1f, 1f);
             }
         }
 
