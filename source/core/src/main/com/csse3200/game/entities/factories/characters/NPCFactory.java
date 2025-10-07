@@ -333,7 +333,8 @@ public class NPCFactory {
         AITaskComponent aiComponent =
                 new AITaskComponent()
                         .addTask(new TurretIdleTask(target, 10))
-                        .addTask(new TurretFiringTask(target, 10, projComp, turret, 3f, 3f));
+                        .addTask(new TurretFiringTask(target, 10, projComp, turret,
+                                3f, 3f, 5, 0.15f));
 
         // Get player's inventory for reward system
         InventoryComponent playerInventory = null;
