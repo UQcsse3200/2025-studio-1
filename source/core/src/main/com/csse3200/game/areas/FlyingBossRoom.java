@@ -14,7 +14,6 @@ import com.csse3200.game.entities.spawner.ItemSpawner;
 import com.csse3200.game.entities.factories.characters.PlayerFactory;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.components.gamearea.GameAreaDisplay;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,7 +27,6 @@ import org.slf4j.LoggerFactory;
  */
 public class FlyingBossRoom extends GameArea {
     private static final Logger logger = LoggerFactory.getLogger(FlyingBossRoom.class);
-
     private static GridPoint2 playerSpawn = new GridPoint2(3, 10);
 
     private static final float WALL_WIDTH = 0.1f;
@@ -72,7 +70,6 @@ public class FlyingBossRoom extends GameArea {
         player = spawnPlayer();
 
         spawnPlatforms();
-        spawnBigWall();
 
         spawnFlyingBoss();
         spawnObjectDoors(new GridPoint2(0, 7), new GridPoint2(28, 7));
@@ -85,8 +82,7 @@ public class FlyingBossRoom extends GameArea {
 
     private void displayUI() {
         Entity ui = new Entity();
-        ui.addComponent(new GameAreaDisplay("Flying Boss Room"))
-                .addComponent(new com.csse3200.game.components.gamearea.FloorLabelDisplay("Flying Boss Room"));
+        ui.addComponent(new GameAreaDisplay("Flying Boss Room"));
         spawnEntity(ui);
     }
 
@@ -101,9 +97,7 @@ public class FlyingBossRoom extends GameArea {
     }
 
     private Entity spawnPlayer() {
-        Entity newPlayer = PlayerFactory.createPlayer();
-        spawnEntityAt(newPlayer, playerSpawn, true, true);
-        return newPlayer;
+        return spawnOrRepositionPlayer(playerSpawn);
     }
 
     private void spawnFlyingBoss() {
@@ -111,15 +105,6 @@ public class FlyingBossRoom extends GameArea {
 
         Entity flyingBoss = BossFactory.createBoss2(player);
         spawnEntityAt(flyingBoss, pos, true, true);
-    }
-
-    /**
-     * Adds a very tall thick-floor as a background wall/divider.
-     */
-    private void spawnBigWall() {
-        GridPoint2 wallSpawn = new GridPoint2(-14, 0);
-        Entity bigWall = ObstacleFactory.createBigThickFloor();
-        spawnEntityAt(bigWall, wallSpawn, true, false);
     }
 
     /**
@@ -174,5 +159,10 @@ public class FlyingBossRoom extends GameArea {
     public void loadResearch() {
         ResearchGameArea.setRoomSpawn(new GridPoint2(25, 24));
         clearAndLoad(() -> new ResearchGameArea(terrainFactory, cameraComponent));
+    }
+
+    @Override
+    public String toString() {
+        return "FlyingBoss";
     }
 }
