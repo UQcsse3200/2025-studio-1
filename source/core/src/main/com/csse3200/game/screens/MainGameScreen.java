@@ -21,6 +21,7 @@ import com.csse3200.game.entities.EntityService;
 import com.csse3200.game.entities.configs.Consumables;
 import com.csse3200.game.entities.factories.system.RenderFactory;
 import com.csse3200.game.files.FileLoader;
+import com.csse3200.game.files.SaveGame;
 import com.csse3200.game.input.InputComponent;
 import com.csse3200.game.input.InputDecorator;
 import com.csse3200.game.input.InputService;
@@ -37,6 +38,8 @@ import com.csse3200.game.ui.terminal.Terminal;
 import com.csse3200.game.ui.terminal.TerminalDisplay;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.HashMap;
 
 
 /**
@@ -266,7 +269,8 @@ public class MainGameScreen extends ScreenAdapter {
 
 
         this.game = game;
-        SaveLoadService.PlayerInfo load = SaveLoadService.load();
+
+
         logger.debug("Initialising main game screen services from file load");
         ServiceLocator.registerTimeSource(new GameTime());
 
@@ -278,6 +282,8 @@ public class MainGameScreen extends ScreenAdapter {
         ServiceLocator.registerResourceService(new ResourceService());
         ServiceLocator.registerSaveLoadService(new SaveLoadService());
 
+        SaveGame.GameState load = SaveLoadService.load();
+//        HashMap<String, Object> playerStats = load.getPlayer();
 
         ServiceLocator.registerEntityService(new EntityService());
         ServiceLocator.registerRenderService(new RenderService());
@@ -289,14 +295,14 @@ public class MainGameScreen extends ScreenAdapter {
         loadAssets();
         countdownTimer = new CountdownTimerService(ServiceLocator.getTimeSource(), 60000);
         createUI();
-        // null so default can return error
 
         logger.debug("Initialising main game screen entities");
         TerrainFactory terrainFactory = new TerrainFactory(renderer.getCamera());
-        GameArea areaLoad = ForestGameArea.load(terrainFactory, renderer.getCamera());
+        GameArea areaLoad = null;
         //cases for all current areas
 
-        switch (load.areaId) {
+        switch (load.getGameArea()) {
+            case "Forest" -> areaLoad = ForestGameArea.load(terrainFactory, renderer.getCamera());
             case "Elevator" -> areaLoad = ElevatorGameArea.load(terrainFactory, renderer.getCamera());
             case "Office" -> areaLoad = OfficeGameArea.load(terrainFactory, renderer.getCamera());
             case "Mainhall" -> areaLoad = MainHall.load(terrainFactory, renderer.getCamera());
@@ -312,10 +318,9 @@ public class MainGameScreen extends ScreenAdapter {
         gameArea = areaLoad;
         ServiceLocator.registerGameArea(gameArea);
         gameArea.create();
-        gameArea.getPlayer().getComponent(InventoryComponent.class).setProcessor(load.ProcessNumber);
-        gameArea.getPlayer().getComponent(CombatStatsComponent.class).setHealth(load.Health);
-//        FileLoader.readInventory(load.inventory,
-//                gameArea.getPlayer().getComponent(InventoryComponent.class));
+        //need to cast to values for playerstats
+//        ServiceLocator.getPlayer().getComponent(InventoryComponent.class).setProcessor((Integer) playerStats.get("processors"));
+//        ServiceLocator.getPlayer().getComponent(CombatStatsComponent.class).setHealth((Integer) playerStats.get("health"));
 
     }
 
