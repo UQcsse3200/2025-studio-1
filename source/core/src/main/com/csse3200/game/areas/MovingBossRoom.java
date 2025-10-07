@@ -20,7 +20,6 @@ import org.slf4j.LoggerFactory;
 /**
  * This is the room that holds the Ground Moving Boss Boss.
  * This boss is a small robot that moves towards the player and attacks
- * 
  * Room is empty except for boss and player
  */
 public class MovingBossRoom extends GameArea {
@@ -117,6 +116,7 @@ public class MovingBossRoom extends GameArea {
             return;
         Bounds b = getCameraBounds(cameraComponent);
         addSolidWallLeft(b, WALL_WIDTH);
+        addSolidWallTop(b, WALL_WIDTH);
         float leftDoorHeight = Math.max(1f, b.viewHeight() * 0.2f);
         float leftDoorY = b.bottomY();
         Entity leftDoor = ObstacleFactory.createDoorTrigger(WALL_WIDTH, leftDoorHeight);

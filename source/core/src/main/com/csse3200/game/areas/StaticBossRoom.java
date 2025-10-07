@@ -22,7 +22,6 @@ import org.slf4j.LoggerFactory;
  * The boss is a static enemy that spawns on the floor and
  * shoots projectiles outwards from itself. Most
  * challenging boss.
- * 
  * Room is empty except for boss and player
  */
 public class StaticBossRoom extends GameArea {
@@ -117,6 +116,7 @@ public class StaticBossRoom extends GameArea {
             return;
         Bounds b = getCameraBounds(cameraComponent);
         addSolidWallLeft(b, WALL_WIDTH);
+        addSolidWallTop(b, WALL_WIDTH);
         float leftDoorHeight = Math.max(1f, b.viewHeight() * 0.2f);
         float leftDoorY = b.bottomY();
         Entity leftDoor = ObstacleFactory.createDoorTrigger(WALL_WIDTH, leftDoorHeight);
