@@ -4,7 +4,6 @@ import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.factories.InteractableStationFactory;
 import com.csse3200.game.files.FileLoader;
 import com.csse3200.game.rendering.TextureRenderComponent;
-import com.csse3200.game.services.ServiceLocator;
 
 import java.awt.*;
 
@@ -22,17 +21,14 @@ public class RobotFightingGame {
         gameDisplay = gameEntity.getComponent(RobotFightingDisplay.class);
 
         gameEntity.getEvents().addListener("interact", this::handleInteract);
-        gameEntity.getEvents().addListener("robotFighting:choose", this::selectFighter);
     }
 
     private void handleInteract() {
         if (gameDisplayed) {
             gameDisplay.hide();
-            ServiceLocator.getTimeSource().setPaused(false);
             gameDisplayed = false;
         } else {
             gameDisplay.show();
-            ServiceLocator.getTimeSource().setPaused(true);
             gameDisplayed = true;
         }
 
@@ -46,14 +42,6 @@ public class RobotFightingGame {
         game.setInteractable(true);
 
         return game;
-    }
-
-    private void selectFighter(Robot fighter) {
-//        switch (fighter) {
-//            case GHOST_GPT:
-//
-//            case DEEP_SPIN:
-//        }
     }
 
     public Entity getGameEntity() {
