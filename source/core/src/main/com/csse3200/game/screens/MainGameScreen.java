@@ -338,7 +338,7 @@ public class MainGameScreen extends ScreenAdapter {
         Stage stage = ServiceLocator.getRenderService().getStage();
         minimap = new Entity()
                 .addComponent(new MinimapDisplay(game,
-                        new Minimap(720, 1280,
+                        new Minimap(Gdx.graphics.getHeight(), Gdx.graphics.getWidth(),
                                 "configs/room_layout.txt")))
                 .addComponent(new InputDecorator(stage, 100));
         minimap.getEvents().addListener("resume", this::hideMinimapOverlay);
