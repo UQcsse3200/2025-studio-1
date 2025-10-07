@@ -8,7 +8,9 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
@@ -19,6 +21,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.csse3200.game.components.minigames.pool.displayhelpers.PoolTable;
 import com.csse3200.game.components.minigames.pool.logic.GameEvents;
+import com.csse3200.game.components.minigames.pool.physics.TableConfig;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.UIComponent;
 import org.slf4j.Logger;
@@ -57,11 +60,12 @@ public class PoolGameDisplay extends UIComponent {
     private Image dimmer, frame, background;
     private Table root;
 
-    // HUD
-    private Label titleLbl, p1Lbl, p2Lbl, turnLbl, foulLbl;
+    private Label p1Lbl;
+    private Label p2Lbl;
+    private Label turnLbl;
+    private Label foulLbl;
 
-    // Controls
-    private TextButton startBtn, shootBtn, resetBtn, closeBtn;
+    private TextButton shootBtn;
     private Slider powerSlider;
     private CheckBox guideToggle;
 
@@ -70,12 +74,10 @@ public class PoolGameDisplay extends UIComponent {
     private Texture tableTex;
     private Texture cueTex;
     private TextureRegion cueBallTex;
-    private TextureAtlas ballAtlas;
     private TextureRegion[] ballTextures;
 
     // Simple runtime state
     private boolean running;
-    private int p1Score, p2Score, turnIdx;
     private boolean shotTakenThisTurn = false;
 
     /** Utility: create a 1x1 solid texture of color c. */
@@ -135,14 +137,14 @@ public class PoolGameDisplay extends UIComponent {
     }
 
     public void setScores(int p1, int p2) {
-        p1Score = Math.max(0, p1);
-        p2Score = Math.max(0, p2);
+        int p1Score = Math.max(0, p1);
+        int p2Score = Math.max(0, p2);
         if (p1Lbl != null) p1Lbl.setText("P1: " + p1Score);
         if (p2Lbl != null) p2Lbl.setText("P2: " + p2Score);
     }
 
     public void setTurn(int playerIdx) {
-        turnIdx = MathUtils.clamp(playerIdx, 0, 1);
+        int turnIdx = MathUtils.clamp(playerIdx, 0, 1);
         if (turnLbl != null) turnLbl.setText("Turn: " + (turnIdx == 0 ? "P1" : "P2"));
     }
 
@@ -191,7 +193,7 @@ public class PoolGameDisplay extends UIComponent {
     // ---------------------------------------------------------------------------
     private void loadAssets() {
         tableTex = ServiceLocator.getResourceService().getAsset("images/pool/table.png", Texture.class);
-        ballAtlas = ServiceLocator.getResourceService().getAsset("images/pool/balls.atlas", TextureAtlas.class);
+        TextureAtlas ballAtlas = ServiceLocator.getResourceService().getAsset("images/pool/balls.atlas", TextureAtlas.class);
         cueTex = ServiceLocator.getResourceService().getAsset("images/pool/cue.png", Texture.class);
 
         ballTextures = new TextureRegion[16];
@@ -232,7 +234,8 @@ public class PoolGameDisplay extends UIComponent {
     }
 
     private void buildHeader() {
-        titleLbl = label("8-Ball Pool", TITLE_COLOR, 1.5f);
+        // HUD
+        Label titleLbl = label("8-Ball Pool", TITLE_COLOR, 1.5f);
         p1Lbl = label("P1: 0", GOLD);
         p2Lbl = label("P2: 0", GOLD);
         turnLbl = label("Turn: P1", TURN_COLOR);
@@ -314,10 +317,11 @@ public class PoolGameDisplay extends UIComponent {
             }
         });
 
-        startBtn = new TextButton("Rack / Break", skin);
+        // Controls
+        TextButton startBtn = new TextButton("Rack", skin);
         shootBtn = new TextButton("Shoot", skin);
-        resetBtn = new TextButton("Reset", skin);
-        closeBtn = new TextButton("Close", skin);
+        TextButton resetBtn = new TextButton("Reset", skin);
+        TextButton closeBtn = new TextButton("Close", skin);
 
         startBtn.addListener(new ChangeListener() {
             @Override

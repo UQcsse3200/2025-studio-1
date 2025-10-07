@@ -18,7 +18,8 @@ public class TableBuilder {
     private final PoolWorld world;
     private final TableConfig cfg;
     private final Body[] pocketSensors = new Body[6];
-    private Entity railsEntity;
+    private Body railsBody;
+
 
     public TableBuilder(PoolWorld world, TableConfig cfg) {
         this.world = world;
@@ -26,32 +27,50 @@ public class TableBuilder {
     }
 
     public boolean isBuilt() {
-        return railsEntity != null;
+        return railsBody != null;
     }
 
     public void buildRails() {
-        PhysicsComponent phys = new PhysicsComponent().setBodyType(BodyDef.BodyType.StaticBody);
+        if (railsBody != null) return;
 
+        // Geometry: inner rectangle where balls can move, inset by rail thickness
         float halfW = cfg.tableW() / 2f, halfH = cfg.tableH() / 2f;
-        float insetX = cfg.railX(), insetY = cfg.railY();
-        Vector2[] verts = new Vector2[]{
+        float insetX = cfg.railX(),     insetY = cfg.railY();
+
+        Vector2[] verts = new Vector2[] {
                 new Vector2(-halfW + insetX, -halfH + insetY),
-                new Vector2(halfW - insetX, -halfH + insetY),
-                new Vector2(halfW - insetX, halfH - insetY),
-                new Vector2(-halfW + insetX, halfH - insetY)
+                new Vector2( halfW - insetX, -halfH + insetY),
+                new Vector2( halfW - insetX,  halfH - insetY),
+                new Vector2(-halfW + insetX,  halfH - insetY)
         };
+
+        BodyDef bd = new BodyDef();
+        bd.type = BodyDef.BodyType.StaticBody;
+        railsBody = world.raw().createBody(bd);
+
         ChainShape loop = new ChainShape();
         loop.createLoop(verts);
 
-        ColliderComponent col = new ColliderComponent()
-                .setShape(loop)
-                .setFriction(0.05f)
-                .setRestitution(0.98f)
-                .setFilter(LAYER_RAIL, MASK_RAIL);
+        try {
+            FixtureDef fd = new FixtureDef();
+            fd.shape = loop;
+            fd.friction = 0.05f;
+            fd.restitution = 0.98f;
 
-        railsEntity = new Entity().addComponent(phys).addComponent(col);
-        railsEntity.create();
+            // Collision filtering: rails collide with balls
+            Filter filter = new Filter();
+            filter.categoryBits = LAYER_RAIL;
+            filter.maskBits = MASK_RAIL;
+
+            Fixture fx = railsBody.createFixture(fd);
+            fx.setFilterData(filter);
+        } finally {
+            loop.dispose();
+        }
+
+        log.debug("Rails built in pool world at inset X={}, Y={}", insetX, insetY);
     }
+
 
     public void buildPocketSensors() {
         float hx = cfg.tableW() / 2f, hy = cfg.tableH() / 2f;
