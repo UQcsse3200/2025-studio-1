@@ -13,8 +13,6 @@ import com.csse3200.game.entities.factories.characters.PlayerFactory;
 public class OfficeGameArea extends GameArea {
     private static final float WALL_WIDTH = 0.1f;
     private static GridPoint2 playerSpawn = new GridPoint2(10, 10);
-	private Entity player;
-	private int roomDiffNumber = 5;
 
     public OfficeGameArea(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
         super(terrainFactory, cameraComponent);
@@ -34,10 +32,7 @@ public class OfficeGameArea extends GameArea {
                 "images/Office and elevator/Office stuff.png",
                 "images/Office and elevator/table chair ceo.png",
                 "foreg_sprites/general/ThinFloor3.png",
-				"images/Office and elevator/Platform for elevator.png",
-				"images/pistol.png",
-				"images/rifle.png",
-				"images/lightsaberSingle.png"
+                "images/Office and elevator/Platform for elevator.png"
         });
         // Use dedicated office background
         terrain = terrainFactory.createTerrain(TerrainType.OFFICE);
@@ -48,9 +43,7 @@ public class OfficeGameArea extends GameArea {
         spawnFloor();
         spawnObjectDoors(new GridPoint2(0, 14), new GridPoint2(28, 20));
         spawnPlatforms();
-		spawnOfficeProps();
-		spawnEnemies();
-		spawnItems();
+        spawnOfficeProps();
     }
 
     private void spawnBordersAndDoors() {
@@ -66,17 +59,10 @@ public class OfficeGameArea extends GameArea {
         float rightDoorY = b.bottomY() + 7.0f; // higher placement
         float rightTopSegHeight = Math.max(0f, b.topY() - (rightDoorY + rightDoorHeight));
         if (rightTopSegHeight > 0f) {
-			Entity rightTop = com.csse3200.game.entities.factories.system.ObstacleFactory.createWall(WALL_WIDTH, rightTopSegHeight);
+            Entity rightTop = com.csse3200.game.entities.factories.system.ObstacleFactory.createWall(WALL_WIDTH, rightTopSegHeight);
             rightTop.setPosition(b.rightX() - WALL_WIDTH, rightDoorY + rightDoorHeight);
             spawnEntity(rightTop);
         }
-		// Add a bottom wall segment below the elevated right door
-		float rightBottomSegHeight = Math.max(0f, rightDoorY - b.bottomY());
-		if (rightBottomSegHeight > 0f) {
-			Entity rightBottom = com.csse3200.game.entities.factories.system.ObstacleFactory.createWall(WALL_WIDTH, rightBottomSegHeight);
-			rightBottom.setPosition(b.rightX() - WALL_WIDTH, b.bottomY());
-			spawnEntity(rightBottom);
-		}
         Entity rightDoor = com.csse3200.game.entities.factories.system.ObstacleFactory.createDoorTrigger(WALL_WIDTH, rightDoorHeight);
         rightDoor.setPosition(b.rightX() - WALL_WIDTH - 0.001f, rightDoorY);
         rightDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadElevator));
@@ -85,10 +71,8 @@ public class OfficeGameArea extends GameArea {
 
     }
 
-    private void spawnPlayer() {
-		Entity player = PlayerFactory.createPlayer();
-		this.player = player;
-		spawnEntityAt(player, playerSpawn, true, true);
+    private Entity spawnPlayer() {
+        return spawnOrRepositionPlayer(playerSpawn);
     }
 
     private void spawnOfficeProps() {
@@ -157,21 +141,6 @@ public class OfficeGameArea extends GameArea {
         clearAndLoad(() -> new ElevatorGameArea(terrainFactory, cameraComponent));
     }
 
-	private void spawnEnemies() {
-		if (player == null) return;
-		Entity deepspin1 = com.csse3200.game.entities.factories.characters.NPCFactory.createDeepspin(player, this,
-				com.csse3200.game.services.ServiceLocator.getDifficulty().getRoomDifficulty(this.roomDiffNumber));
-		spawnEntityAt(deepspin1, new GridPoint2(5, 8), true, false);
-		Entity deepspin = com.csse3200.game.entities.factories.characters.NPCFactory.createDeepspin(player, this,
-				com.csse3200.game.services.ServiceLocator.getDifficulty().getRoomDifficulty(this.roomDiffNumber));
-		spawnEntityAt(deepspin, new GridPoint2(18, 17), true, false);
-	}
-
-	private void spawnItems() {
-		com.csse3200.game.entities.spawner.ItemSpawner itemSpawner = new com.csse3200.game.entities.spawner.ItemSpawner(this);
-		itemSpawner.spawnItems(com.csse3200.game.entities.configs.ItemSpawnConfig.officemap());
-	}
-
     /**
      * Setter method for the player spawn point
      * should be used when the player is traversing through the rooms
@@ -192,7 +161,8 @@ public class OfficeGameArea extends GameArea {
 
     @Override
     public Entity getPlayer() {
-		return player;
+        //placeholder see previous
+        return null;
     }
 }
 
