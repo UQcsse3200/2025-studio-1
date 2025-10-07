@@ -8,10 +8,12 @@ import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.components.KeycardGateComponent;
+import com.csse3200.game.components.cards.BlackJackGame;
 import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import com.csse3200.game.components.items.ItemHoldComponent;
 import com.csse3200.game.components.minigames.robotFighting.RobotFightingGame;
 import com.csse3200.game.components.player.InventoryComponent;
+import com.csse3200.game.components.screens.BlackjackScreenDisplay;
 import com.csse3200.game.components.shop.CatalogService;
 import com.csse3200.game.components.shop.ShopDemo;
 import com.csse3200.game.components.shop.ShopManager;
@@ -56,7 +58,6 @@ public class ForestGameArea extends GameArea {
     private static final float WALL_WIDTH = 0.1f;
 
     private final float VERTICAL_HEIGHT_OFFSET = 9.375f;
-
     /**
      * Files or pictures used by the game (enemy/props,etc.).
      */
@@ -131,7 +132,8 @@ public class ForestGameArea extends GameArea {
             "foreg_sprites/furniture/ServerRack.png",
             "foreg_sprites/furniture/ServerRack2.png",
             "foreg_sprites/furniture/Vent.png",
-            "images/Storage.png"
+            "images/Storage.png",
+            "images/cards.png"
     };
 
     /**
@@ -241,7 +243,8 @@ public class ForestGameArea extends GameArea {
             "images/boss_explosion.atlas",
             "images/boss2_combined.atlas",
             "images/Boss3_Attacks.atlas",
-            "images/boss3_phase2.atlas"
+            "images/boss3_phase2.atlas",
+            "images/cards.atlas"
     };
     private static final String[] forestSounds = {"sounds/Impact4.ogg",
             "sounds/shot_failed.mp3",
@@ -292,6 +295,7 @@ public class ForestGameArea extends GameArea {
         spawnComputerBench();
         spawnHealthBench();
         spawnSpeedBench();
+        spawnBlackjack();
 
         player = spawnPlayer();
         ServiceLocator.registerPlayer(player);
@@ -306,7 +310,7 @@ public class ForestGameArea extends GameArea {
             case 1 -> spawnRobots();
             default -> spawnBoss3();
         }
-        playMusic();
+        //playMusic();
         ItemSpawner itemSpawner = new ItemSpawner(this);
         itemSpawner.spawnItems(ItemSpawnConfig.forestmap());
 
@@ -439,6 +443,16 @@ public class ForestGameArea extends GameArea {
     private void spawnComputerBench() {
         Entity bench = InteractableStationFactory.createStation(Benches.COMPUTER_BENCH);
         spawnEntityAt(bench, new GridPoint2(2, 7), true, true);
+
+    }
+
+    private void spawnBlackjack() {
+        Entity blackjack = InteractableStationFactory.createBaseStation();
+        blackjack.addComponent(new TextureRenderComponent("images/box_boy_leaf.png"));
+        blackjack.addComponent(new BlackJackGame());
+        blackjack.addComponent(new BlackjackScreenDisplay());
+        spawnEntityAt(blackjack, new GridPoint2(20, 7), true, true);
+        blackjack.getEvents().trigger("hide");
 
     }
 
