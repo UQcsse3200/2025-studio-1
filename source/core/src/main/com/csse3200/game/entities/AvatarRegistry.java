@@ -15,6 +15,12 @@ public class AvatarRegistry {
     private static Avatar current; //storage system for the avatar to be able to be extracted later
     private static final String CONFIG_PATH = "configs/avatars.json";
 
+    /**
+     * finds the file with all the information about the avatars and constructs a list with all the avatars and their
+     * information
+     *
+     * @return the list with all the information about the avatar currently in the game to be displayed
+     */
     public static List<Avatar> getAll() {
         List<Avatar> avatars = new ArrayList<>();
         JsonValue root = new JsonReader().parse(Gdx.files.internal(CONFIG_PATH));
@@ -31,10 +37,20 @@ public class AvatarRegistry {
         return avatars;
     }
 
+    /**
+     * Store the chosen avatar by the player
+     *
+     * @param avatar the avatar chosen by the player
+     */
     public static void set(Avatar avatar) {
         current = avatar;
     }
 
+    /**
+     * grabs the selected avatar
+     *
+     * @return the avatar chosen by the player
+     */
     public static Avatar get() {
         return current;
     }
