@@ -92,6 +92,7 @@ public class Reception extends GameArea {
         Bounds b = getCameraBounds(cameraComponent);
         addSolidWallLeft(b, WALL_WIDTH);
         addSolidWallRight(b, WALL_WIDTH);
+        addSolidWallTop(b, WALL_WIDTH);
         float leftDoorHeight = Math.max(1f, b.viewHeight() * 0.2f);
         float leftDoorY = b.bottomY();
         float leftTopSegHeight = Math.max(0f, b.topY() - (leftDoorY + leftDoorHeight));
@@ -157,7 +158,7 @@ public class Reception extends GameArea {
         CatalogService catalog = ShopDemo.makeDemoCatalog();
         ShopManager manager = new ShopManager(catalog);
         Entity shop = ShopFactory.createShop(this, manager, "images/VendingMachine.png"); // have as tree now as placeholder, later need to change to actual shop icon
-        spawnEntityAt(shop, new GridPoint2(24, (int)7), true, false);
+        spawnEntityAt(shop, new GridPoint2(24, 7), true, false);
     }
 
     private void spawnplatform2() {

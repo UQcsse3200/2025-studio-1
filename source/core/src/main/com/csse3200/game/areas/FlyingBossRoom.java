@@ -22,7 +22,6 @@ import org.slf4j.LoggerFactory;
  * This is the room that holds the Flying Boss.
  * The boss is a flying enemy that spawns at the top of the map and
  * shoots projectiles at the player.
- * 
  * There are two platforms that can possibly server as cover as well as a floor
  * at the bottom
  */
@@ -138,7 +137,7 @@ public class FlyingBossRoom extends GameArea {
         leftDoor.setPosition(b.leftX() + 0.001f, leftDoorY);
         leftDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadResearch));
         spawnEntity(leftDoor);
-
+        addSolidWallTop(b, WALL_WIDTH);
         addSolidWallRight(b, WALL_WIDTH);
 
         float rightDoorHeight = Math.max(1f, b.viewHeight() * 0.2f);
