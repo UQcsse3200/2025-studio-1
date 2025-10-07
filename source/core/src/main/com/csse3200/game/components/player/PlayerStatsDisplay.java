@@ -132,7 +132,9 @@ public class PlayerStatsDisplay extends BaseScreenDisplay {
         int max = (int) healthBar.getMaxValue();
         int clamped = clamp(health, 0, max);
         healthBar.setValue(clamped);
-        healthTextLabel.setText(formatHealthText(clamped, max));
+        if (healthTextLabel != null) {
+            healthTextLabel.setText(formatHealthText(clamped, max));
+        }
     }
 
     public void updatePlayerStaminaUI(int current, int max) {
