@@ -12,6 +12,8 @@ import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.entities.spawner.ItemSpawner;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.components.gamearea.GameAreaDisplay;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This is the room that holds the static Boss.
@@ -74,8 +76,7 @@ public class StaticBossRoom extends GameArea {
 
     private void displayUI() {
         Entity ui = new Entity();
-        ui.addComponent(new GameAreaDisplay("Static Boss Room"))
-                .addComponent(new com.csse3200.game.components.gamearea.FloorLabelDisplay("Static Boss Room"));
+        ui.addComponent(new GameAreaDisplay("Static Boss Room"));
         spawnEntity(ui);
     }
 
@@ -128,5 +129,10 @@ public class StaticBossRoom extends GameArea {
     public void loadTunnel() {
         TunnelGameArea.setRoomSpawn(new GridPoint2(26, 8));
         clearAndLoad(() -> new TunnelGameArea(terrainFactory, cameraComponent));
+    }
+
+    @Override
+    public String toString() {
+        return "StaticBoss";
     }
 }

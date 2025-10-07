@@ -14,7 +14,6 @@ import com.csse3200.game.entities.spawner.ItemSpawner;
 import com.csse3200.game.entities.factories.characters.PlayerFactory;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.components.gamearea.GameAreaDisplay;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -83,8 +82,7 @@ public class FlyingBossRoom extends GameArea {
 
     private void displayUI() {
         Entity ui = new Entity();
-        ui.addComponent(new GameAreaDisplay("Flying Boss Room"))
-                .addComponent(new com.csse3200.game.components.gamearea.FloorLabelDisplay("Flying Boss Room"));
+        ui.addComponent(new GameAreaDisplay("Flying Boss Room"));
         spawnEntity(ui);
     }
 
@@ -161,5 +159,10 @@ public class FlyingBossRoom extends GameArea {
     public void loadResearch() {
         ResearchGameArea.setRoomSpawn(new GridPoint2(25, 24));
         clearAndLoad(() -> new ResearchGameArea(terrainFactory, cameraComponent));
+    }
+
+    @Override
+    public String toString() {
+        return "FlyingBoss";
     }
 }

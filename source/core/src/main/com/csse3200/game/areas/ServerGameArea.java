@@ -73,7 +73,8 @@ public class ServerGameArea extends GameArea {
         itemSpawner.spawnItems(ItemSpawnConfig.servermap());
 
         Entity ui = new Entity();
-        ui.addComponent(new com.csse3200.game.components.gamearea.FloorLabelDisplay("Server Room"));
+        ui.addComponent(new GameAreaDisplay("Server"))
+                .addComponent(new com.csse3200.game.components.gamearea.FloorLabelDisplay("Floor 10"));
         spawnEntity(ui);
     }
 
