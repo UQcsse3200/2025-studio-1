@@ -69,7 +69,6 @@ public class PlayerFactory {
                         .addComponent(new PlayerInventoryDisplay(playerInventory))
                         .addComponent(new StaminaComponent())
                         .addComponent(animator)
-                        .addComponent(new PlayerAnimationController())
                         .addComponent(new PowerupComponent())
                         .addComponent(new PlayerAnimationController())
                         .addComponent(new InteractComponent().setLayer(PhysicsLayer.DEFAULT))
