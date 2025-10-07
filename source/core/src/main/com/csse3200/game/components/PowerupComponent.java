@@ -1,7 +1,6 @@
 package com.csse3200.game.components;
 
-import com.csse3200.game.effects.Effect;
-import com.csse3200.game.effects.RapidFireEffect;
+import com.csse3200.game.effects.*;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.services.ServiceLocator;
 
@@ -25,6 +24,18 @@ public class PowerupComponent extends Component {
             if (rapidfire.apply(equippedWeapon)) {
                 activeEffects.add(rapidfire);
             }
+        } else if (effect instanceof UnlimitedAmmoEffect unlimitedammo && equippedWeapon != null) {
+            if (unlimitedammo.apply(equippedWeapon)) {
+                activeEffects.add(unlimitedammo);
+            }
+        } else if (effect instanceof AimbotEffect aimbot && equippedWeapon != null) {
+            if (aimbot.apply(equippedWeapon)) {
+                activeEffects.add(aimbot);
+            }
+        } else if (effect instanceof DoubleProcessorsEffect doubleProcessors) {
+            if (doubleProcessors.apply(entity)) {
+                activeEffects.add(doubleProcessors);
+            }
         }
     }
 
@@ -38,6 +49,27 @@ public class PowerupComponent extends Component {
             if (effect instanceof RapidFireEffect rapidFireEffect) {
                 rapidFireEffect.update(dt);
                 if (!rapidFireEffect.isActive()) {
+                    activeEffects.remove(i);
+                }
+            }
+
+            else if (effect instanceof UnlimitedAmmoEffect unlimitedAmmoEffect) {
+                unlimitedAmmoEffect.update(dt);
+                if (!unlimitedAmmoEffect.isActive()) {
+                    activeEffects.remove(i);
+                }
+            }
+
+            else if (effect instanceof AimbotEffect aimbotEffect) {
+                aimbotEffect.update(dt);
+                if (!aimbotEffect.isActive()) {
+                    activeEffects.remove(i);
+                }
+            }
+
+            else if (effect instanceof DoubleProcessorsEffect doubleProcessorsEffect) {
+                doubleProcessorsEffect.update(dt);
+                if (!doubleProcessorsEffect.isActive()) {
                     activeEffects.remove(i);
                 }
             }

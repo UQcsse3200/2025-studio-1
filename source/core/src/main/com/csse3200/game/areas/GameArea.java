@@ -122,6 +122,15 @@ public abstract class GameArea implements Disposable {
         }
     }
 
+    protected void spawnVisibleFloor() {
+        for (int i = 0; i < 25; i += 4) {
+            GridPoint2 floorspawn = new GridPoint2(i, 3);
+
+            Entity floor = ObstacleFactory.createVisibleLongFloor();
+            spawnEntityAt(floor, floorspawn, false, false);
+        }
+    }
+
     /**
      * Start enemy waves from terminal command by typing "waves".
      */
@@ -1020,7 +1029,15 @@ public abstract class GameArea implements Disposable {
     }
 
     /**
-     * Camera bounds helper.
+     * A helper record to store the calculated boundaries of the camera's viewport.
+     *
+     * @param leftX      The leftmost x-coordinate of the camera's viewport.
+     * @param rightX     The rightmost x-coordinate of the camera's viewport.
+     * @param bottomY    The bottommost y-coordinate of the camera's viewport.
+     * @param topY       The topmost y-coordinate of the camera's viewport.
+     * @param viewWidth  The full width of the camera's viewport.
+     * @param viewHeight The full height of the camera's viewport.
+     * @param camPos     The center position of the camera.
      */
     protected record Bounds(float leftX, float rightX, float bottomY, float topY, float viewWidth, float viewHeight,
                             Vector2 camPos) {
