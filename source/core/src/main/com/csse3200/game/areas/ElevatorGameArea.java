@@ -6,6 +6,7 @@ import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.components.KeycardGateComponent;
+import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.factories.KeycardFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
@@ -44,6 +45,11 @@ public class ElevatorGameArea extends GameArea {
         spawnFloor();
         spawnPlatforms();
         spawnDesk();
+
+        Entity ui = new Entity();
+        ui.addComponent(new GameAreaDisplay("Elevator"))
+                .addComponent(new com.csse3200.game.components.gamearea.FloorLabelDisplay("Floor 6"));
+        spawnEntity(ui);
     }
 
     private void spawnBordersAndDoors() {

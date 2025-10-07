@@ -97,7 +97,7 @@ public class MainGameScreen extends ScreenAdapter {
         renderer.getDebug().renderPhysicsWorld(physicsEngine.getWorld());
 
         loadAssets();
-        countdownTimer = new CountdownTimerService(ServiceLocator.getTimeSource(), 60000);
+        countdownTimer = new CountdownTimerService(ServiceLocator.getTimeSource(), 240000);
         createUI();
 
         logger.debug("Initialising main game screen entities");

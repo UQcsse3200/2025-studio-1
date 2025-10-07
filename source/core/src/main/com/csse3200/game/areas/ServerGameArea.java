@@ -17,16 +17,12 @@ import com.csse3200.game.entities.factories.characters.PlayerFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.entities.spawner.ItemSpawner;
 import com.csse3200.game.services.ServiceLocator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Server Room. Has several platforms as well as server racks sprites.
  * Is attached to Tunnel Room.
  */
 public class ServerGameArea extends GameArea {
-    private static final Logger logger = LoggerFactory.getLogger(ServerGameArea.class);
-
     private static final float WALL_WIDTH = 0.1f;
     private static GridPoint2 playerSpawn = new GridPoint2(10, 10);
     private static final float ROOM_DIFF_NUMBER = 9;
@@ -78,7 +74,8 @@ public class ServerGameArea extends GameArea {
         itemSpawner.spawnItems(ItemSpawnConfig.servermap());
 
         Entity ui = new Entity();
-        ui.addComponent(new com.csse3200.game.components.gamearea.FloorLabelDisplay("Server Room"));
+        ui.addComponent(new GameAreaDisplay("Server"))
+                .addComponent(new com.csse3200.game.components.gamearea.FloorLabelDisplay("Floor 10"));
         spawnEntity(ui);
     }
 
