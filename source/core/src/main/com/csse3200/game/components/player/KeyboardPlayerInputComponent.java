@@ -129,6 +129,16 @@ public class KeyboardPlayerInputComponent extends InputComponent {
     @Override
     public boolean keyReleased(int keycode) {
         final int OFFSET = 8;
+        // Unaffected by pausing meaning checking for paused needs to be handled by "interact" event users
+        if (keycode == Keys.E) {
+            holding = false;
+            triggerAddItem();
+            return true;
+        }
+
+        if (this.isPauseable() && ServiceLocator.getTimeSource().isPaused()) {
+            return false;
+        }
         switch (keycode) {
             case Keys.A:
                 walkDirection.sub(Vector2Utils.LEFT);

@@ -26,6 +26,9 @@ import org.slf4j.LoggerFactory;
  */
 public class StaticBossRoom extends GameArea {
     private static final Logger logger = LoggerFactory.getLogger(StaticBossRoom.class);
+
+    private static GridPoint2 playerSpawn = new GridPoint2(3, 10);
+
     private static final float WALL_WIDTH = 0.1f;
     private static GridPoint2 playerSpawn = new GridPoint2(3, 10);
     private Entity player;
@@ -134,6 +137,19 @@ public class StaticBossRoom extends GameArea {
         spawnEntity(leftDoor);
 
         addSolidWallRight(b, WALL_WIDTH);
+    }
+
+    /**
+     * Setter method for the player spawn point
+     * should be used when the player is traversing through the rooms
+     * 
+     * @param newSpawn the new spawn point
+     */
+    public static void setRoomSpawn(GridPoint2 newSpawn) {
+        if (newSpawn == null) {
+            return;
+        }
+        StaticBossRoom.playerSpawn = newSpawn;
     }
 
     public Entity getPlayer() {
