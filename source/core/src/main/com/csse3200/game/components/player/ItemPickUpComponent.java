@@ -10,6 +10,7 @@ import com.csse3200.game.components.MagazineComponent;
 import com.csse3200.game.components.items.ItemComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.Weapons;
+import com.csse3200.game.entities.factories.PowerupsFactory;
 import com.csse3200.game.entities.factories.items.WeaponsFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.physics.BodyUserData;
@@ -226,6 +227,10 @@ public class ItemPickUpComponent extends Component {
             logger.warn("Drop failed: could not remove item at index {}", focusedIndex);
             return;
         }
+
+        // remove the item from being equipped
+        entity.getComponent(PlayerEquipComponent.class).setItem(null, null);
+
         focusedIndex = -1;
         // If no texture info was stored, skip respawning to the world
         if (tex == null) {
@@ -276,6 +281,7 @@ public class ItemPickUpComponent extends Component {
         if (texture.endsWith("pistol.png")) return WeaponsFactory.createWeapon(Weapons.PISTOL);
         if (texture.endsWith("rifle.png")) return WeaponsFactory.createWeapon(Weapons.RIFLE);
         if (texture.endsWith("lightsaberSingle.png")) return WeaponsFactory.createWeapon(Weapons.LIGHTSABER);
+        if (texture.endsWith("rapidfirepowerup.png")) return PowerupsFactory.createRapidFire();
         if (texture.endsWith("tree.png")) return ObstacleFactory.createTree();
         return null;
     }

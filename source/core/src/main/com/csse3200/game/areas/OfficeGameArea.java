@@ -12,11 +12,17 @@ import com.csse3200.game.entities.factories.characters.PlayerFactory;
  */
 public class OfficeGameArea extends GameArea {
     private static final float WALL_WIDTH = 0.1f;
-    private static final GridPoint2 PLAYER_SPAWN = new GridPoint2(10, 10);
+    private static GridPoint2 playerSpawn = new GridPoint2(10, 10);
 
     public OfficeGameArea(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
         super(terrainFactory, cameraComponent);
     }
+
+    public static OfficeGameArea load(TerrainFactory terrainFactory, CameraComponent camera) {
+        return (new OfficeGameArea(terrainFactory, camera));
+    }
+
+    // Assets ensured via GenericLayout
 
     @Override
     public void create() {
@@ -40,12 +46,10 @@ public class OfficeGameArea extends GameArea {
         spawnOfficeProps();
     }
 
-    // Assets ensured via GenericLayout
-
     private void spawnBordersAndDoors() {
         Bounds b = getCameraBounds(cameraComponent);
 
-        addVerticalDoorLeft(b, WALL_WIDTH, this::loadSecurity);
+        addVerticalDoorLeft(b, WALL_WIDTH, this::loadMovingBossRoom);
         // Raise the right door higher than center
         addSolidWallTop(b, WALL_WIDTH);
         addSolidWallBottom(b, WALL_WIDTH);
@@ -69,7 +73,7 @@ public class OfficeGameArea extends GameArea {
 
     private void spawnPlayer() {
         Entity player = PlayerFactory.createPlayer();
-        spawnEntityAt(player, PLAYER_SPAWN, true, true);
+        spawnEntityAt(player, playerSpawn, true, true);
     }
 
     private void spawnOfficeProps() {
@@ -128,14 +132,27 @@ public class OfficeGameArea extends GameArea {
         }
     }
 
-    private void loadSecurity() {
-        roomNumber--;
-        clearAndLoad(() -> new SecurityGameArea(terrainFactory, cameraComponent));
+    private void loadMovingBossRoom() {
+        MovingBossRoom.setRoomSpawn(new GridPoint2(24, 8));
+        clearAndLoad(() -> new MovingBossRoom(terrainFactory, cameraComponent));
     }
 
     private void loadElevator() {
-        roomNumber++;
+        ElevatorGameArea.setRoomSpawn(new GridPoint2(6, 8));
         clearAndLoad(() -> new ElevatorGameArea(terrainFactory, cameraComponent));
+    }
+
+    /**
+     * Setter method for the player spawn point
+     * should be used when the player is traversing through the rooms
+     * 
+     * @param newSpawn the new spawn point
+     */
+    public static void setRoomSpawn(GridPoint2 newSpawn) {
+        if (newSpawn == null) {
+            return;
+        }
+        OfficeGameArea.playerSpawn = newSpawn;
     }
 
     @Override
@@ -147,10 +164,6 @@ public class OfficeGameArea extends GameArea {
     public Entity getPlayer() {
         //placeholder see previous
         return null;
-    }
-
-    public static OfficeGameArea load(TerrainFactory terrainFactory, CameraComponent camera) {
-        return (new OfficeGameArea(terrainFactory, camera));
     }
 }
 

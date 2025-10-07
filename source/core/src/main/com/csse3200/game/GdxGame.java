@@ -5,6 +5,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.csse3200.game.files.UserSettings;
 import com.csse3200.game.screens.*;
+import com.csse3200.game.services.ResourceService;
+import com.csse3200.game.services.ServiceLocator;
+import com.csse3200.game.services.MusicService;
+import com.csse3200.game.services.ButtonSoundService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,6 +30,19 @@ public class GdxGame extends Game {
         // Sets background to light yellow
         Gdx.gl.glClearColor(248f / 255f, 249 / 255f, 178 / 255f, 1);
 
+        ResourceService resourceService = new ResourceService();
+        ServiceLocator.registerResourceService(resourceService);
+
+        MusicService musicService = new MusicService();
+        ServiceLocator.registerMusicService(musicService);
+
+        ButtonSoundService buttonSoundService = new ButtonSoundService();
+        ServiceLocator.registerButtonSoundService(buttonSoundService);
+
+        ServiceLocator.getGlobalEvents().addListener("screenChanged", musicService::updateForScreen);
+
+        musicService.load(resourceService);
+        buttonSoundService.load(resourceService);
         setScreen(ScreenType.MAIN_MENU);
     }
 
@@ -45,6 +62,7 @@ public class GdxGame extends Game {
      */
     public void setScreen(ScreenType screenType) {
         logger.info("Setting game screen to {}", screenType);
+        ServiceLocator.getGlobalEvents().trigger("screenChanged", screenType.name());
         Screen currentScreen = getScreen();
         if (currentScreen != null) {
             currentScreen.dispose();
@@ -74,12 +92,13 @@ public class GdxGame extends Game {
             case LOAD_GAME -> new MainGameScreen(this, "placeholder");
             case TUTORIAL_SCREEN -> new TutorialScreen(this);
             case STORY -> new StoryScreen(this);
+            case DIFFICULTY_SCREEN -> new DifficultyScreen(this);
         };
     }
 
     public enum ScreenType {
         MAIN_MENU, MAIN_GAME, SETTINGS, DEATH_SCREEN, WIN_SCREEN, TUTORIAL_SCREEN,
-        STORY, LOAD_GAME
+        STORY, LOAD_GAME, DIFFICULTY_SCREEN,
     }
 
     /**

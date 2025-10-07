@@ -26,15 +26,15 @@ import java.util.List;
  */
 public class AttackProtectionDisplay extends Component {
     // ui (match BossStatusDisplay length = 800f)
-    private static final float width = 800f; // same as BossStatusDisplay.BAR_WIDTH
-    private static final float height = 16f;
-    private static final float gap = 6f;   // vertical space below the boss bar
+    private static final float WIDTH = 800f; // same as BossStatusDisplay.BAR_WIDTH
+    private static final float HEIGHT = 16f;
+    private static final float GAP = 6f;   // vertical space below the boss bar
     private static final Color bg = Color.DARK_GRAY;
     private static final Color fill = Color.GRAY;
 
     // behavior
-    private static final float step = 1f / 6f;
-    private static final float delay = 2f;
+    private static final float STEP = 1f / 6f;
+    private static final float DELAY = 2f;
 
     private final List<Texture> textures = new ArrayList<>();
     private Table table;
@@ -59,14 +59,14 @@ public class AttackProtectionDisplay extends Component {
         }
 
         table = new Table();
-        table.setSize(width, height);
+        table.setSize(WIDTH, HEIGHT);
 
         // BossStatusDisplay uses:
         // x = (stageWidth - 800) / 2
         // y = stageHeight - 40 - 270
         float bossbar_y = stage.getHeight() - 40f - 270f;
-        float x = (stage.getWidth() - width) / 2f;
-        float y = bossbar_y - gap - height; // place directly below
+        float x = (stage.getWidth() - WIDTH) / 2f;
+        float y = bossbar_y - GAP - HEIGHT; // place directly below
 
         table.setPosition(x, y);
 
@@ -75,7 +75,7 @@ public class AttackProtectionDisplay extends Component {
         bar.setValue(1f);
         bar.setAnimateDuration(0f);
 
-        table.add(bar).width(width).height(height).pad(5);
+        table.add(bar).width(WIDTH).height(HEIGHT).pad(5);
         stage.addActor(table);
     }
 
@@ -87,13 +87,13 @@ public class AttackProtectionDisplay extends Component {
 
         if (cur < lasthealth) {
             if (timer <= 0f) {
-                float next = (bar != null ? bar.getValue() : 1f) - step;
+                float next = (bar != null ? bar.getValue() : 1f) - STEP;
                 if (next < 0f) next = 0f;
                 setvalue(next);
 
                 hits++;
                 if (hits >= 6) {
-                    timer = delay;
+                    timer = DELAY;
                 }
             }
         }
@@ -116,10 +116,10 @@ public class AttackProtectionDisplay extends Component {
         ProgressBar.ProgressBarStyle style = new ProgressBar.ProgressBarStyle();
 
         style.background = makedrawable(bg);
-        style.background.setMinHeight(height);
+        style.background.setMinHeight(HEIGHT);
 
         style.knobBefore = makedrawable(fill);
-        style.knobBefore.setMinHeight(height);
+        style.knobBefore.setMinHeight(HEIGHT);
 
         style.knob = null;
         return style;

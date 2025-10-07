@@ -13,6 +13,7 @@ import com.csse3200.game.physics.components.ColliderComponent;
  * has the required keycard level in their InventoryComponent.
  */
 public class KeycardGateComponent extends Component {
+
     /**
      * Global cheat: when true, all keycard checks are bypassed.
      */
@@ -58,10 +59,11 @@ public class KeycardGateComponent extends Component {
         if (meEntity != this.entity) return;
 
         // === cheat bypass ===
+        String keycardGate = "KeycardGate";
         if (GLOBAL_OVERRIDE) {
             if (!unlocked) {
                 unlock();
-                Gdx.app.log("KeycardGate", "Override enabled: gate unlocked (bypassing level " + requiredLevel + ")");
+                Gdx.app.log(keycardGate, "Override enabled: gate unlocked (bypassing level " + requiredLevel + ")");
                 if (onUnlock != null) {
                     Gdx.app.postRunnable(onUnlock);
                 }
@@ -73,17 +75,17 @@ public class KeycardGateComponent extends Component {
         InventoryComponent inventory = otherEntity.getComponent(InventoryComponent.class);
         if (inventory != null) {
             int level = inventory.getKeycardLevel();
-            Gdx.app.log("KeycardGate", "Gate sees keycard level: " + level);
+            Gdx.app.log(keycardGate, "Gate sees keycard level: " + level);
             if (level >= requiredLevel) {
                 if (!unlocked) {
                     unlock();
-                    Gdx.app.log("KeycardGate", "Gate unlocked. Allowing passage.");
+                    Gdx.app.log(keycardGate, "Gate unlocked. Allowing passage.");
                     if (onUnlock != null) {
                         Gdx.app.postRunnable(onUnlock);
                     }
                 }
             } else {
-                Gdx.app.log("KeycardGate", "Gate locked. Requires keycard level " + requiredLevel);
+                Gdx.app.log(keycardGate, "Gate locked. Requires keycard level " + requiredLevel);
             }
         }
     }

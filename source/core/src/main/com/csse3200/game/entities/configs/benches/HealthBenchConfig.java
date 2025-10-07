@@ -31,6 +31,7 @@ public class HealthBenchConfig extends BenchConfig {
             upgradeUsed = true;
 
             buyPrompt.setText("Upgrade Successful!");
+            playUpgradeSound();
 
         } else if (upgradeUsed) { //If upgrade has been used, tell player
             buyPrompt.setText("Upgrade Already Used!");
