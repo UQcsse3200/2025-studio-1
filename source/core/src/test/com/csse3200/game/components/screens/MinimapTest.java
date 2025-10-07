@@ -153,13 +153,6 @@ class MinimapTest {
     }
 
     @Test
-    void testReset() {
-        minimap.zoom(100); // Scale is now 2.0
-        minimap.reset();
-        assertEquals(1, minimap.getScale(), "Scale should be 1 after reset.");
-    }
-
-    @Test
     void testPanAndZoom() {
         when(graphics.getWidth()).thenReturn(1280);
         when(graphics.getHeight()).thenReturn(720);
@@ -232,13 +225,47 @@ class MinimapTest {
 
         // Mock discovery status
         when(discoveryService.isDiscovered("StartRoom")).thenReturn(true);
-        when(discoveryService.isDiscovered("NorthRoom")).thenReturn(false);
+        when(discoveryService.isDiscovered("NorthRoom")).thenReturn(true);
         when(discoveryService.isDiscovered("EastRoom")).thenReturn(true);
 
         minimap.open();
+        minimap.zoom(-50);
         Map<Vector2, String> rendered = minimap.render();
 
         // Assert
+        assertEquals(0.5, minimap.getScale());
+        // All three rooms should be visible on 0.5x scale
+        assertTrue(rendered.containsValue("images/minimap-images/StartRoom.png"));
+        assertTrue(rendered.containsValue("images/minimap-images/NorthRoom.png"));
+        assertTrue(rendered.containsValue("images/minimap-images/EastRoom.png"));
+
+        minimap.zoom(100);
+        minimap.pan(new Vector2(10, 10));
+        rendered = minimap.render();
+        // Assert
+        assertEquals(1, minimap.getScale());
+        // All three rooms should be visible when panned diagonally towards both rooms
+        assertTrue(rendered.containsValue("images/minimap-images/StartRoom.png"));
+        assertTrue(rendered.containsValue("images/minimap-images/NorthRoom.png"));
+        assertTrue(rendered.containsValue("images/minimap-images/EastRoom.png"));
+
+        minimap.pan(new Vector2(-10000, 0));
+        rendered = minimap.render();
+        // no rooms should be visible when panned away from all of them
+        assertTrue(rendered.isEmpty());
+
+        minimap.reset();
+        rendered = minimap.render();
+        // Should return to default minimap state, where zoom is 1 and is centred on player
+        assertEquals(1, minimap.getScale());
+        assertTrue(rendered.containsValue("images/minimap-images/StartRoom.png"));
+        assertTrue(rendered.containsKey(new Vector2(640, 360)));
+
+
+
+        // The rendered result should be null
+        minimap.close();
+        assertNull(minimap.render());
     }
 }
 
