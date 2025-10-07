@@ -1,17 +1,22 @@
 package com.csse3200.game.areas;
 
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.GridPoint2;
+import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.CameraComponent;
+import com.csse3200.game.components.KeycardGateComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.ItemSpawnConfig;
+import com.csse3200.game.entities.factories.KeycardFactory;
 import com.csse3200.game.entities.factories.characters.BossFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.entities.spawner.ItemSpawner;
 import com.csse3200.game.entities.factories.characters.PlayerFactory;
+import com.csse3200.game.physics.components.ColliderComponent;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.components.gamearea.GameAreaDisplay;
 
@@ -109,6 +114,15 @@ public class FlyingBossRoom extends GameArea {
         GridPoint2 pos = new GridPoint2(15, 20);
 
         Entity flyingBoss = BossFactory.createBoss2(player);
+
+        flyingBoss.getEvents().addListener("death", () -> {
+            ServiceLocator.getTimeSource().delayKeycardSpawn(0.05f, () -> {
+                Entity keycard = KeycardFactory.createKeycard(3);
+                keycard.setPosition(new Vector2(3f, 10f));
+                spawnEntity(keycard);
+            });
+        });
+
         spawnEntityAt(flyingBoss, pos, true, true);
     }
 
@@ -139,12 +153,15 @@ public class FlyingBossRoom extends GameArea {
         spawnEntity(leftDoor);
         addSolidWallTop(b, WALL_WIDTH);
         addSolidWallRight(b, WALL_WIDTH);
-
         float rightDoorHeight = Math.max(1f, b.viewHeight() * 0.2f);
         float rightDoorY = b.bottomY();
         Entity rightDoor = ObstacleFactory.createDoorTrigger(WALL_WIDTH, rightDoorHeight);
         rightDoor.setPosition(b.rightX() - WALL_WIDTH - 0.001f, rightDoorY);
-        rightDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadShipping));
+        rightDoor.addComponent(new KeycardGateComponent(3, () -> {
+            ColliderComponent collider = rightDoor.getComponent(ColliderComponent.class);
+            if (collider != null) collider.setEnabled(false);
+            loadShipping();
+        }));
         spawnEntity(rightDoor);
     }
 

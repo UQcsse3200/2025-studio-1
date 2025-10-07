@@ -46,7 +46,6 @@ public class MainHall extends GameArea {
         spawnFloor();
         spawnEnemies();
         spawnGrokDroids();
-        spawnGPTs();
         ItemSpawner itemSpawner = new ItemSpawner(this);
         itemSpawner.spawnItems(ItemSpawnConfig.mainHallmap());
     }
@@ -122,20 +121,9 @@ public class MainHall extends GameArea {
         if (player == null)
             return;
 
-        Entity vroomba = com.csse3200.game.entities.factories.characters.NPCFactory.createVroomba(player,
-                ServiceLocator.getDifficulty().getRoomDifficulty(this.roomDiffNumber));
-        spawnEntityAt(vroomba, new GridPoint2(14, 16), true, false);
-
         Entity deepspin = com.csse3200.game.entities.factories.characters.NPCFactory.createDeepspin(player, this,
                 ServiceLocator.getDifficulty().getRoomDifficulty(this.roomDiffNumber));
         spawnEntityAt(deepspin, new GridPoint2(22, 10), true, false);
-    }
-
-    private void spawnGPTs() {
-        Entity ghost1 = NPCFactory.createGhostGPT(player, this, ServiceLocator.getDifficulty().getRoomDifficulty(this.roomDiffNumber));
-        GridPoint2 ghost1Pos = new GridPoint2(25, 7);
-        spawnEntityAt(ghost1, ghost1Pos, true, false);
-
     }
     private void spawnGrokDroids() {
         Entity grok1 = NPCFactory.createGrokDroid(player, this,
