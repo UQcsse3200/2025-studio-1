@@ -1,4 +1,4 @@
-package com.csse3200.game.components.minigames.pool.display;
+package com.csse3200.game.components.minigames.pool.displayhelpers;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;

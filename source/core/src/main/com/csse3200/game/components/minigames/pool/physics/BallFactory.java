@@ -123,10 +123,13 @@ public class BallFactory {
         fd.density = BALL_DENSITY;
         fd.friction = BALL_FRICTION;
         fd.restitution = BALL_RESTITUTION;
-        // category/mask set by your ColliderComponent normally; here we set straight on fixture
         Filter filter = new Filter();
         filter.categoryBits = TableBuilder.LAYER_BALL;
-        filter.maskBits = (short) (TableBuilder.LAYER_BALL | TableBuilder.LAYER_RAIL);
+        filter.maskBits = (short)(
+                TableBuilder.LAYER_BALL   |  // ball–ball
+                        TableBuilder.LAYER_RAIL   |  // rails
+                        TableBuilder.LAYER_POCKET    // pockets (sensors)
+        );
         body.createFixture(fd).setFilterData(filter);
         circle.dispose();
         body.setLinearDamping(LIN_DAMP);

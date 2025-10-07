@@ -9,8 +9,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class TableBuilder {
-    public static final short LAYER_RAIL = com.csse3200.game.physics.PhysicsLayer.OBSTACLE;
-    public static final short LAYER_POCKET = LAYER_RAIL;
+    public static final short LAYER_RAIL = 0x0002;
+    public static final short LAYER_POCKET = 0x0004;
     public static final short LAYER_BALL = com.csse3200.game.physics.PhysicsLayer.NPC;
     public static final short MASK_RAIL = LAYER_BALL;
     public static final short MASK_POCKET = LAYER_BALL;
@@ -57,13 +57,13 @@ public class TableBuilder {
         float hx = cfg.tableW() / 2f, hy = cfg.tableH() / 2f;
         float ix = hx - cfg.pocketInsetX(), iy = hy - cfg.pocketInsetY();
         float f = cfg.pocketFunnel();
-        Vector2[] centers = new Vector2[]{
-                new Vector2(-ix - f, iy + f),
-                new Vector2(0f, iy + f),
-                new Vector2(ix + f, iy + f),
-                new Vector2(ix + f, -iy - f),
-                new Vector2(0f, -iy - f),
-                new Vector2(-ix - f, -iy - f)
+        Vector2[] centers = new Vector2[] {
+                new Vector2(-ix + f,  iy - f), // top-left    (IN from left, IN from top)
+                new Vector2( 0f,      iy - f), // top-center  (IN from top)
+                new Vector2( ix - f,  iy - f), // top-right   (IN from right, IN from top)
+                new Vector2( ix - f, -iy + f), // bottom-right(IN from right, IN from bottom)
+                new Vector2( 0f,     -iy + f), // bottom-center(IN from bottom)
+                new Vector2(-ix + f, -iy + f)  // bottom-left (IN from left, IN from bottom)
         };
 
         for (int i = 0; i < 6; i++) {
