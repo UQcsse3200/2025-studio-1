@@ -47,8 +47,6 @@ class MinimapTest {
     @Mock
     private GameArea gameArea;
     @Mock
-    private Entity player;
-    @Mock
     private Graphics graphics;
 
     private MockedStatic<ServiceLocator> serviceLocator;
@@ -62,12 +60,10 @@ class MinimapTest {
         Gdx.graphics = graphics;
 
         discoveryService = mock(DiscoveryService.class);
-        player = mock(Entity.class);
         gameArea = mock(GameArea.class);
 
         // Mock the static ServiceLocator to provide mocked services.
         serviceLocator = mockStatic(ServiceLocator.class);
-        serviceLocator.when(ServiceLocator::getPlayer).thenReturn(player);
         serviceLocator.when(ServiceLocator::getDiscoveryService).thenReturn(discoveryService);
         serviceLocator.when(ServiceLocator::getGameArea).thenReturn(gameArea);
 
@@ -101,15 +97,10 @@ class MinimapTest {
 
     @Test
     void testOpen_SetsCentreAndUpdatesDiscoveredRooms() {
-        when(graphics.getWidth()).thenReturn(1280);
-        when(graphics.getHeight()).thenReturn(720);
-
         // Arrange
         minimap.addRoom(new Vector2(0, 0), "StartRoom");
         minimap.addRoom(new Vector2(0, 1), "NorthRoom");
 
-        // Mock player position and current room
-        when(player.getPosition()).thenReturn(new Vector2(640, 360)); // Center of the screen
         when(gameArea.toString()).thenReturn("StartRoom");
 
         // Mock discovery status
@@ -131,7 +122,6 @@ class MinimapTest {
     void testClose_SetsCentreToNull() {
         // Arrange: open the map first
         minimap.addRoom(new Vector2(0, 0), "Room1");
-        when(player.getPosition()).thenReturn(new Vector2(0, 0));
         when(gameArea.toString()).thenReturn("Room1");
         minimap.open();
         assertNotNull(minimap.render(), "Map should be renderable after open().");
@@ -154,9 +144,6 @@ class MinimapTest {
 
     @Test
     void testPanAndZoom() {
-        when(graphics.getWidth()).thenReturn(1280);
-        when(graphics.getHeight()).thenReturn(720);
-        when(player.getPosition()).thenReturn(new Vector2(640, 360));
         when(gameArea.toString()).thenReturn("Room1");
         when(discoveryService.isDiscovered("Room1")).thenReturn(true);
 
@@ -166,14 +153,14 @@ class MinimapTest {
         Map<Vector2, String> render = minimap.render();
 
         assertEquals(1, minimap.getScale());
-        Vector2 correctPosition = new Vector2(-10, 0);
+        Vector2 correctPosition = new Vector2(630, 360);
         assertTrue(render.containsKey(correctPosition), "Map should pan 10 pixels left.");
 
         minimap.zoom(100);
         render = minimap.render();
 
         assertEquals(2, minimap.getScale());
-        correctPosition = new Vector2(-20, 0);
+        correctPosition = new Vector2(620, 360);
         assertTrue(render.containsKey(correctPosition), "Map should zoom in by 2x.");
     }
 
@@ -189,7 +176,6 @@ class MinimapTest {
 
         // Act
         Minimap fileMinimap = new Minimap(720, 1280, tempFile.getAbsolutePath());
-        when(player.getPosition()).thenReturn(new Vector2(0, 0));
         when(gameArea.toString()).thenReturn("RoomA");
         when(discoveryService.isDiscovered("RoomA")).thenReturn(true);
         when(discoveryService.isDiscovered("RoomB")).thenReturn(false); // Added missing stub for RoomB
@@ -211,16 +197,12 @@ class MinimapTest {
 
     @Test
     void testEverything() {
-        when(graphics.getWidth()).thenReturn(1280);
-        when(graphics.getHeight()).thenReturn(720);
-
         // Arrange
         minimap.addRoom(new Vector2(0, 0), "StartRoom");
         minimap.addRoom(new Vector2(0, 1), "NorthRoom");
         minimap.addRoom(new Vector2(1, 0), "EastRoom");
 
         // Mock player position and current room
-        when(player.getPosition()).thenReturn(new Vector2(640, 360)); // Center of the screen
         when(gameArea.toString()).thenReturn("StartRoom");
 
         // Mock discovery status
@@ -259,7 +241,7 @@ class MinimapTest {
         // Should return to default minimap state, where zoom is 1 and is centred on player
         assertEquals(1, minimap.getScale());
         assertTrue(rendered.containsValue("images/minimap-images/StartRoom.png"));
-        assertTrue(rendered.containsKey(new Vector2(0, 0)));
+        assertTrue(rendered.containsKey(new Vector2(640, 360)));
 
 
 

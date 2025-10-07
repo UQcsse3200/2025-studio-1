@@ -179,7 +179,6 @@ public class MinimapDisplay extends BaseScreenDisplay {
             roomImage.setPosition(screenPos.x - imageWidth / 2, screenPos.y - imageHeight / 2);
             //roomImage.setSize(128, 72);
             minimapTable.addActor(roomImage);
-            break;
         }
     }
 

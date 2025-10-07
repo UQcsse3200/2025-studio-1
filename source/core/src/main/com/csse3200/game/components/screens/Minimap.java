@@ -167,18 +167,12 @@ public class Minimap {
                 }
 
                 // Compute the room's position on the screen
-                float screenX = (IMAGE_WIDTH * roomCoordinates.x + (float) IMAGE_WIDTH / 2 - centre.x) * scale;
-                float screenY = (IMAGE_HEIGHT * roomCoordinates.y + (float) IMAGE_HEIGHT / 2 - centre.y) * scale;
+                float screenX = (IMAGE_WIDTH * roomCoordinates.x + (float) IMAGE_WIDTH / 2 - minX) * scale;
+                float screenY = (IMAGE_HEIGHT * roomCoordinates.y + (float) IMAGE_HEIGHT / 2 - minY) * scale;
                 Vector2 screenCoords = new Vector2(screenX, screenY);
                 output.put(screenCoords, grid.get(roomCoordinates));
             }
         }
-
-        logger.info("ROOM POSITIONS");
-        for (Vector2 pos : output.keySet()) {
-            logger.info(pos.x + ", " + pos.y + " - " + output.get(pos));
-        }
-        logger.info("END ROOM POSITIONS");
 
         return output;
     }
@@ -221,23 +215,20 @@ public class Minimap {
         scale = 1;
         zoom(0);
 
-        Vector2 normalisedPlayerPosition = normalisePosition(ServiceLocator.getPlayer().getPosition());
         String currentRoom = ServiceLocator.getGameArea().toString();
-        centre = calculateCentre(currentRoom, normalisedPlayerPosition);
+        centre = calculateCentre(currentRoom);
     }
 
     /**
-     * Opens (initializes) the minimap by centering on the player's position.
+     * Opens (initializes) the minimap by centering on the middle of the current room.
      * All discovered rooms have their image changed from the locked image to their respective images.
      */
     public void open() {
-        // Normalize the player's position
-        Vector2 normalisedPlayerPosition = normalisePosition(ServiceLocator.getPlayer().getPosition());
         DiscoveryService discoveryService = ServiceLocator.getDiscoveryService();
 
         // Get the current room and set the center to the player's location
         String currentRoom = ServiceLocator.getGameArea().toString();
-        centre = calculateCentre(currentRoom, normalisedPlayerPosition);
+        centre = calculateCentre(currentRoom);
         scale = 1;
 
         // Replace unlocked rooms' images with their actual images
@@ -263,28 +254,14 @@ public class Minimap {
      * and player's normalized position within that room.
      *
      * @param currentRoom the current room name
-     * @param normalisedPlayerPosition the normalized position of the player
      * @return the minimap center coordinates in map space
      */
-    private Vector2 calculateCentre(String currentRoom, Vector2 normalisedPlayerPosition) {
+    private Vector2 calculateCentre(String currentRoom) {
         Vector2 roomPosition = roomPositions.get(currentRoom);
-        float x = (roomPosition.x + normalisedPlayerPosition.x) * IMAGE_WIDTH;
-        float y = (roomPosition.y + normalisedPlayerPosition.y) * IMAGE_HEIGHT;
+        float x = (roomPosition.x + 0.5f) * IMAGE_WIDTH;
+        float y = (roomPosition.y + 0.5f) * IMAGE_HEIGHT;
 
         return new Vector2(x, y);
-    }
-
-    /**
-     * Converts a player's screen position to a normalized coordinate (0.0–1.0)
-     * relative to the screen dimensions.
-     *
-     * @param position the player's position in screen pixels
-     * @return the normalized position as a Vector2
-     */
-    private Vector2 normalisePosition(Vector2 position) {
-        float x = position.x;
-        float y = position.y;
-        return new Vector2(x / Gdx.graphics.getWidth(), y / Gdx.graphics.getHeight());
     }
 
     /**
