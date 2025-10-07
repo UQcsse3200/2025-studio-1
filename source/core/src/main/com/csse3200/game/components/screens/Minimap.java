@@ -169,8 +169,6 @@ public class Minimap {
                 float screenY = (IMAGE_HEIGHT * roomCoordinates.y + (float) IMAGE_HEIGHT / 2 - minY) * scale;
                 Vector2 screenCoords = new Vector2(screenX, screenY);
                 output.put(screenCoords, grid.get(roomCoordinates));
-
-                logger.info(String.valueOf(screenX) + ", " + String.valueOf(screenY) + grid.get(roomCoordinates));
             }
         }
 
