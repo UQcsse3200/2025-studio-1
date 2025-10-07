@@ -622,7 +622,7 @@ public class ForestGameArea extends GameArea {
     }
 
     private void spawnnpctest() {
-        GridPoint2 pos = new GridPoint2(8, 9);
+        GridPoint2 pos = new GridPoint2(16, 9);
         Entity test = FriendlyNPCFactory.createTest(player);
         spawnEntityAt(test, pos, true, true);
     }
