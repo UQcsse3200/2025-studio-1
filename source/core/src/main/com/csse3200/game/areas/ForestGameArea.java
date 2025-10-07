@@ -69,7 +69,6 @@ public class ForestGameArea extends GameArea {
     /**
      * Files or pictures used by the game (enemy/props,etc.).
      */
-    private static final String HEART = "images/heart.png";
     private static final String[] forestTextures = {
             "images/box_boy_leaf.png",
             "images/tree.png",
@@ -123,7 +122,6 @@ public class ForestGameArea extends GameArea {
             "images/speedBench.png",
             "images/waterBullet.png",
             "images/VendingMachine.png",
-            HEART,
             "images/laserball.png",
             "images/MarblePlatform.png",
             "images/computerBench.png",
@@ -181,7 +179,11 @@ public class ForestGameArea extends GameArea {
             "foreg_sprites/general/ThinFloor.png",
             "foreg_sprites/general/ThinFloor2.png",
             "foreg_sprites/general/ThinFloor3.png",
-            "foreg_sprites/general/Test.png"
+            "foreg_sprites/general/Test.png",
+            "foreg_sprites/general/Test.png",
+            "foreg_sprites/furniture/LabPlant1.png",
+            "foreg_sprites/furniture/LabPlant2.png",
+            "foreg_sprites/furniture/PurpleWindow.png",
     };
     private static final String[] researchTextures = {
             "images/ResearchBackground.png",
@@ -286,7 +288,7 @@ public class ForestGameArea extends GameArea {
     };
 
     private static final String[] extraTextures = {
-            "foreg_sprites/extras/Spikes.png",
+            "foreg_sprites/extras/Spikes.png","foreg_sprites/extras/Spikes2.png"
     };
 
     private static final String[] forestSounds = {"sounds/Impact4.ogg",
@@ -357,15 +359,13 @@ public class ForestGameArea extends GameArea {
         ItemSpawner itemSpawner = new ItemSpawner(this);
         itemSpawner.spawnItems(ItemSpawnConfig.forestmap());
         spawnnpctest();
-        spawnPartnerNearPlayer();
+        spawnPartnerNearPlayerIfNeeded();
         // Place a keycard on the floor so the player can unlock the door
         float keycardX = 3f;
         float keycardY = 7f;
         Entity keycard = KeycardFactory.createKeycard(1);
         keycard.setPosition(new Vector2(keycardX, keycardY));
         spawnEntity(keycard);
-
-        spawnItems();
     }
 
     private void spawnRobots() {
@@ -573,24 +573,18 @@ public class ForestGameArea extends GameArea {
      * The number of items is set by NUM_ITEMS.
      * Each item is created and placed at a random spot on the terrain.
      */
-    private void spawnItems() {
-        GridPoint2 firstPos = new GridPoint2(5, 25);
-        GridPoint2 secondPos = new GridPoint2(10, 25);
-        GridPoint2 thirdPos = new GridPoint2(15, 25);
 
-        spawnEntityAt(ItemFactory.createItem(HEART), firstPos, true, false);
-        spawnEntityAt(ItemFactory.createItem(HEART), secondPos, true, false);
-        spawnEntityAt(ItemFactory.createItem(HEART), thirdPos, true, false);
-    }
 
     private Entity spawnPlayer() {
-        Entity newPlayer = PlayerFactory.createPlayer();
-        spawnEntityAt(newPlayer, playerSpawn, true, true);
+        Entity player = spawnOrRepositionPlayer(playerSpawn);
 
-        newPlayer.getEvents().addListener("equip", this::equipItem);
-        newPlayer.getEvents().addListener("unequip", this::unequipItem);
+        // Only add event listeners if this is a new player
+        if (ServiceLocator.getPlayer() == player) {
+            player.getEvents().addListener("equip", this::equipItem);
+            player.getEvents().addListener("unequip", this::unequipItem);
+        }
 
-        return newPlayer;
+        return player;
     }
 
     private Entity spawnDagger() {
@@ -701,8 +695,16 @@ public class ForestGameArea extends GameArea {
         spawnEntityAt(test, pos, true, true);
     }
 
-    private void spawnPartnerNearPlayer() {
-        // 如果你有 grid 地图，用 spawnEntityAt；否则直接按坐标
+    private void spawnPartnerNearPlayerIfNeeded() {
+        // Check if a partner already exists in the area
+        for (Entity entity : areaEntities) {
+            if (isPartnerNPC(entity)) {
+                // Partner already exists, don't spawn a new one
+                return;
+            }
+        }
+        
+        // No partner found, spawn a new one
         Entity partner = FriendlyNPCFactory.createPartner(player);
 
         // 方案 A：按瓦片生成（要确保相机看得到该瓦片）
