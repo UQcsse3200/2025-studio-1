@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.areas.GameArea;
-import com.csse3200.game.components.screens.Minimap;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.services.DiscoveryService;
 import com.csse3200.game.services.ServiceLocator;
@@ -22,9 +21,9 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.security.Provider;
-import java.util.HashMap;
+
 import java.util.Map;
+import java.util.Vector;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -116,9 +115,6 @@ class MinimapTest {
         // Mock discovery status
         when(discoveryService.isDiscovered("StartRoom")).thenReturn(true);
         when(discoveryService.isDiscovered("NorthRoom")).thenReturn(false);
-        discoveryService.isDiscovered("StartRoom");
-        discoveryService.isDiscovered("NorthRoom");
-        player.getPosition();
 
         minimap.open();
         Map<String, Vector2> rendered = minimap.render();
@@ -164,6 +160,33 @@ class MinimapTest {
     }
 
     @Test
+    void testPanAndZoom() {
+        when(graphics.getWidth()).thenReturn(1280);
+        when(graphics.getHeight()).thenReturn(720);
+        when(player.getPosition()).thenReturn(new Vector2(640, 360));
+        when(gameArea.toString()).thenReturn("Room1");
+        when(discoveryService.isDiscovered("Room1")).thenReturn(true);
+
+        minimap.addRoom(new Vector2(0, 0), "Room1");
+        minimap.open();
+        minimap.pan(new Vector2(10, 0));
+        Map<String, Vector2> render = minimap.render();
+
+        assertEquals(1, minimap.getScale());
+        Vector2 correctPosition = new Vector2(630, 360);
+        Vector2 actualPosition = render.get("images/minimap-images/Room1.png");
+        assertEquals(correctPosition, actualPosition, "Map should pan 10 pixels right.");
+
+        minimap.zoom(100);
+        render = minimap.render();
+
+        assertEquals(2, minimap.getScale());
+        correctPosition = new Vector2(620, 360);
+        actualPosition = render.get("images/minimap-images/Room1.png");
+        assertEquals(correctPosition, actualPosition, "Map should pan 10 pixels right.");
+    }
+
+    @Test
     void testConstructor_WithFile() throws IOException {
         // Arrange: Create a temporary config file.
         File tempFile = new File(tempDir.toFile(), "minimap.cfg");
@@ -193,6 +216,11 @@ class MinimapTest {
         // This constructor catches the IOException and logs it. We can verify that no rooms are added.
         Minimap fileMinimap = new Minimap(720, 1280, "non/existent/path.cfg");
         assertThrows(NullPointerException.class, fileMinimap::open);
+    }
+
+    @Test
+    void testEverything() {
+        -
     }
 }
 
