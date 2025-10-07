@@ -20,7 +20,8 @@ import java.util.ArrayList;
 
 /**
  * class for saving all necassary components of a game so
- * that it can be retrieved by the save load service
+ * that it can be retrieved by the save load service and then injected
+ * into the Maingame
  */
 public class SaveGame {
     private static final Logger logger = LoggerFactory.getLogger(SaveGame.class);
@@ -50,6 +51,12 @@ public class SaveGame {
             return player;
         }
 
+        /**
+         * Gather Important details for creating a player entity that needs to be set or adjusted
+         * upon character creation
+         *
+         * @param playerInfo
+         */
         public void setPlayer(Entity playerInfo) {
             this.player = new information();
             this.player.playerPos = playerInfo.getPosition();
@@ -57,6 +64,7 @@ public class SaveGame {
             this.player.processor = playerInfo.getComponent(InventoryComponent.class).getProcessor();
             this.player.ammoReserve = playerInfo.getComponent(AmmoStatsComponent.class).getAmmo();
             this.player.stamina = playerInfo.getComponent(StaminaComponent.class).getStamina();
+            // when/if maximum stamina can be increased put in here otherwise remove
             this.player.maxStamina = playerInfo.getComponent(StaminaComponent.class).getStamina(); // ->Max stamina variable
             this.player.maxHealth = playerInfo.getComponent(CombatStatsComponent.class).getMaxHealth();
             this.player.currentHealth = playerInfo.getComponent(CombatStatsComponent.class).getHealth();
@@ -64,6 +72,7 @@ public class SaveGame {
             logger.info("player set successfully {}", this.player);
         }
 
+        // saves any necessary information to do with gameArea (currently only needs to be string)
         public void setArea(GameArea area) {
             this.gameArea = area.toString();
         }
@@ -72,6 +81,7 @@ public class SaveGame {
             return this.gameArea;
         }
 
+        //Once the waves have full Functionality this will be accessible and set the Enemy units
         public int getWave() {
             return this.wave;
         }
@@ -80,6 +90,8 @@ public class SaveGame {
             this.wave = wave;
         }
 
+        //due to nature of json files or that im just silly this was a better implementation then making setInventory
+        //a public variable
         public void setLoadedInventory(InventoryComponent inventory) {
             loadedInventory = setInventory(inventory);
         }
@@ -94,18 +106,22 @@ public class SaveGame {
 
         /**
          * retrieves player inventory to be stored into json file
+         * @param inventory The players inventory component
          */
         private ArrayList<itemRetrieve> setInventory(InventoryComponent inventory) {
             ArrayList<itemRetrieve> inventoryFilter = new ArrayList<>();
             itemRetrieve itemiser = null;
+            //goes through players inventory and stores all items with a itemcomponent
             for (int i = 0; i < inventory.getSize(); i++) {
                 if (inventory.get(i).hasComponent(ItemComponent.class)) {
                     Entity item = inventory.get(i);
                     ItemComponent inventoryItem = item.getComponent(ItemComponent.class);
 
+                    // further sorts into weapons or consumables
                     if (item.hasComponent(WeaponsStatsComponent.class)) {
 
                         WeaponsStatsComponent weapon = item.getComponent(WeaponsStatsComponent.class);
+                        //last sorting will split between melee weapons and ranged weapons
                         if (item.hasComponent(MagazineComponent.class)) {
 
                             itemiser = new itemRetrieve();
@@ -143,7 +159,8 @@ public class SaveGame {
     }
 
     /**
-     * helper class to improve the readibility of the output json file and
+     * helper class to improve the readibility of the output json file
+     * If new components that the Player needs to have saved insert here
      */
     public static class information {
         public Vector2 playerPos;
@@ -156,6 +173,7 @@ public class SaveGame {
         public int processor;
         public int keyCardLevel;
 
+        //needs a noargs constructor
         public information() {
         }
 

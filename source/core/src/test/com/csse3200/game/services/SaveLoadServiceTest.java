@@ -2,12 +2,15 @@ package com.csse3200.game.services;
 
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.areas.GameArea;
+import com.csse3200.game.components.AmmoStatsComponent;
 import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.components.Component;
 import com.csse3200.game.components.player.InventoryComponent;
+import com.csse3200.game.components.player.StaminaComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.extensions.GameExtension;
 import com.csse3200.game.files.FileLoader;
+import com.csse3200.game.files.SaveGame;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -73,10 +76,14 @@ class SaveLoadServiceTest {
         stats.setHealth(INITIAL_HEALTH);
 
         InventoryComponent inv = new InventoryComponent(INVENTORY_PROCESSES);
+        AmmoStatsComponent ammTest = new AmmoStatsComponent(INVENTORY_PROCESSES);
+        StaminaComponent stamTest = new StaminaComponent();
 
         FakeEntity player = new FakeEntity();
         player.addComponent(stats);
         player.addComponent(inv);
+        player.addComponent(ammTest);
+        player.addComponent(stamTest);
         player.setPosition(new Vector2(POS_X, POS_Y));
 
         GameArea area = mock(GameArea.class);
@@ -85,10 +92,10 @@ class SaveLoadServiceTest {
 
         SaveLoadService service = new SaveLoadService();
 
-        final SaveLoadService.PlayerInfo[] captured = new SaveLoadService.PlayerInfo[1];
+        final SaveGame.GameState[] captured = new SaveGame.GameState[1];
         try (MockedStatic<FileLoader> mocked = mockStatic(FileLoader.class)) {
             mocked.when(() ->
-                            FileLoader.writeClass(any(SaveLoadService.PlayerInfo.class),
+                            FileLoader.writeClass(any(SaveGame.GameState.class),
                                     anyString(),
                                     any(FileLoader.Location.class)))
                     .thenAnswer(invocation -> {
@@ -101,15 +108,15 @@ class SaveLoadServiceTest {
             Assertions.assertTrue(ok, "save() should return true");
             Assertions.assertNotNull(captured[0], "Expected a single writeClass() call");
 
-            SaveLoadService.PlayerInfo out = captured[0];
+            SaveGame.GameState out = captured[0];
 
             // Assert snapshot fields
-            Assertions.assertEquals(AREA_ID, out.areaId);
-            Assertions.assertEquals(INITIAL_HEALTH, out.Health, "Health should originate from CombatStatsComponent");
-            Assertions.assertEquals(POS_X, out.position.x, FLOAT_EPS);
-            Assertions.assertEquals(POS_Y, out.position.y, FLOAT_EPS);
-            Assertions.assertEquals(EXPECTED_ROUND_NUMBER, out.RoundNumber);
-            Assertions.assertNotNull(out.inventory, "inventory list should be initialized (may be empty)");
+            Assertions.assertEquals(AREA_ID, out.getGameArea());
+            Assertions.assertEquals(INITIAL_HEALTH, out.getPlayer().currentHealth, "Health should originate from CombatStatsComponent");
+            Assertions.assertEquals(POS_X, out.getPlayer().playerPos.x, FLOAT_EPS);
+            Assertions.assertEquals(POS_Y, out.getPlayer().playerPos.y, FLOAT_EPS);
+            Assertions.assertEquals(EXPECTED_ROUND_NUMBER, out.getWave());
+            Assertions.assertNotNull(out.getInventory(), "inventory list should be initialized (may be empty)");
         }
     }
 }
