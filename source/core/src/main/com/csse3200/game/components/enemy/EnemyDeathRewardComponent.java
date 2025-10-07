@@ -16,7 +16,7 @@ import java.util.Random;
 public class EnemyDeathRewardComponent extends Component {
     //1/4 chance of enemy adding ammo to the player
     private final Random random = new SecureRandom();
-    private int rewardProcessor;
+    private final int rewardProcessor;
     private final InventoryComponent playerInventory;
 
     public EnemyDeathRewardComponent(int rewardProcessor, InventoryComponent playerInventory) {
@@ -36,11 +36,6 @@ public class EnemyDeathRewardComponent extends Component {
         if (playerInventory == null) {
             return;
         }
-
-        if (playerInventory.hasDoubleProcessors()) {
-            rewardProcessor *= 2;
-        }
-
         playerInventory.addProcessor(rewardProcessor);
 
         int chance = random.nextInt(4);
@@ -65,11 +60,6 @@ public class EnemyDeathRewardComponent extends Component {
         if (playerInventory == null) {
             return;
         }
-
-        if (playerInventory.hasDoubleProcessors()) {
-            rewardProcessor *= 2;
-        }
-
         playerInventory.addProcessor(rewardProcessor);
 
 
@@ -83,5 +73,6 @@ public class EnemyDeathRewardComponent extends Component {
         attackSound.play();
         player.getEvents().trigger("ammo replenished");
     }
+
 
 }

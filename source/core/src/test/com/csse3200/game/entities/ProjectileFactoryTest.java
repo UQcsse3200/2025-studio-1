@@ -5,12 +5,12 @@ import com.badlogic.gdx.Files;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.headless.HeadlessApplication;
 import com.badlogic.gdx.backends.headless.HeadlessApplicationConfiguration;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Box2D;
 import com.csse3200.game.components.TouchAttackComponent;
 import com.csse3200.game.components.WeaponsStatsComponent;
-import com.csse3200.game.components.attachments.BulletEnhancerComponent;
 import com.csse3200.game.components.player.InventoryComponent;
 import com.csse3200.game.entities.configs.Weapons;
 import com.csse3200.game.entities.factories.ProjectileFactory;
@@ -26,13 +26,12 @@ import com.csse3200.game.rendering.RenderService;
 import com.csse3200.game.rendering.TextureRenderWithRotationComponent;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
@@ -50,8 +49,8 @@ public class ProjectileFactoryTest {
     static HeadlessApplication app;
 
 
-    @BeforeEach
-    void setUp() {
+    @BeforeAll
+    static void setUp() throws NoSuchFieldException, IllegalAccessException {
         app = new HeadlessApplication(new ApplicationAdapter() {
         }, new HeadlessApplicationConfiguration());
 
@@ -59,11 +58,16 @@ public class ProjectileFactoryTest {
         Box2D.init();
 
         Gdx.files = mock(Files.class);
+        when(Gdx.files.internal(anyString())).thenReturn(mock(FileHandle.class));
         Entity player = new Entity();
         ServiceLocator.registerPlayer(player);
         player.addComponent(mock(InventoryComponent.class));
+        com.csse3200.game.components.player.InventoryComponent inventoryComponent
+                = mock(com.csse3200.game.components.player.InventoryComponent.class);
 
         PhysicsEngine physicsEngine = mock(PhysicsEngine.class);
+        Body physicsBody = mock(Body.class);
+        when(physicsEngine.createBody(any())).thenReturn(physicsBody);
         PhysicsService physicsService = new PhysicsService(physicsEngine);
         ServiceLocator.registerPhysicsService(physicsService);
 
@@ -78,7 +82,7 @@ public class ProjectileFactoryTest {
         Entity pistol = WeaponsFactory.createWeapon(Weapons.PISTOL);
         when(player.getComponent(InventoryComponent.class).getCurrSlot()).thenReturn(pistol);
         pistolBullet = ProjectileFactory.createPistolBullet(
-                pistol.getComponent(WeaponsStatsComponent.class), false
+                pistol.getComponent(WeaponsStatsComponent.class)
         );
 
     }
@@ -94,27 +98,4 @@ public class ProjectileFactoryTest {
         assertTrue(pistolBullet.hasComponent(HitboxComponent.class));
         assertTrue(pistolBullet.hasComponent(TouchAttackComponent.class));
     }
-
-    @Test
-    void rocketBulletIsCorrect() {
-        WeaponsStatsComponent wsc = mock(WeaponsStatsComponent.class);
-        when(wsc.getRocket()).thenReturn(true);
-        Entity projectile = ProjectileFactory.createPistolBullet(wsc, false);
-        assertEquals(projectile.getComponent(TextureRenderWithRotationComponent.class).getTexturePath(),
-                "images/rocket.png");
-    }
-
-    @Test
-    void waterBulletIsCorrect() {
-        WeaponsStatsComponent wsc = mock(WeaponsStatsComponent.class);
-        when(wsc.getRocket()).thenReturn(false);
-        Entity waterGun = new Entity().addComponent(new BulletEnhancerComponent());
-        when(ServiceLocator.getPlayer().getComponent(InventoryComponent.class).getCurrSlot()).thenReturn(waterGun);
-
-        Entity projectile = ProjectileFactory.createPistolBullet(wsc, false);
-        assertEquals(projectile.getComponent(TextureRenderWithRotationComponent.class).getTexturePath(),
-                "images/waterBullet.png");
-    }
-
-
 }

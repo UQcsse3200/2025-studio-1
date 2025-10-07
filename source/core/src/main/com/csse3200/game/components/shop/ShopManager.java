@@ -2,7 +2,6 @@ package com.csse3200.game.components.shop;
 
 import com.csse3200.game.components.Component;
 import com.csse3200.game.components.MagazineComponent;
-import com.csse3200.game.components.WeaponsStatsComponent;
 import com.csse3200.game.components.attachments.BulletEnhancerComponent;
 import com.csse3200.game.components.attachments.LaserComponent;
 import com.csse3200.game.components.items.ItemComponent;
@@ -95,10 +94,6 @@ public class ShopManager extends Component {
                 return fail(item, PurchaseError.INVALID_WEAPON);
             }
             Entity weapon = inventory.get(inventory.getEquippedSlot());
-            //Check if this is a rocket launcher
-            if (weapon.getComponent(WeaponsStatsComponent.class).getRocket()) {
-                return fail(item, PurchaseError.INVALID_WEAPON);
-            }
 
             //Check if this upgrade has already been done
             if (weapon.hasComponent(LaserComponent.class)
