@@ -9,5 +9,6 @@ public class LightsaberConfig extends MeleeWeaponConfig {
         hitTimer = 0.8;
         range = 3f;
         texturePath = "images/lightsaberSingle.png";
+        this.setName("lightsaber");
     }
 }

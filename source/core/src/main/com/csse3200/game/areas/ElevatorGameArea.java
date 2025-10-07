@@ -9,7 +9,6 @@ import com.csse3200.game.components.KeycardGateComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.factories.KeycardFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
-import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.physics.PhysicsLayer;
 import com.csse3200.game.physics.components.ColliderComponent;
 import com.csse3200.game.physics.components.HitboxComponent;
@@ -20,7 +19,7 @@ import com.csse3200.game.rendering.TextureRenderComponent;
  **/
 public class ElevatorGameArea extends GameArea {
     private static final float WALL_WIDTH = 0.1f;
-    private static final GridPoint2 PLAYER_SPAWN = new GridPoint2(10, 10);
+    private static GridPoint2 PLAYER_SPAWN = new GridPoint2(10, 10);
 
     public ElevatorGameArea(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
         super(terrainFactory, cameraComponent);
@@ -90,7 +89,8 @@ public class ElevatorGameArea extends GameArea {
     }
 
     private void spawnPlayer() {
-        spawnOrRepositionPlayer(PLAYER_SPAWN);
+        Entity player = com.csse3200.game.entities.factories.characters.PlayerFactory.createPlayer();
+        spawnEntityAt(player, PLAYER_SPAWN, true, true);
     }
 
     /**
@@ -127,12 +127,12 @@ public class ElevatorGameArea extends GameArea {
     }
 
     private void loadOffice() {
-        roomNumber--;
+        OfficeGameArea.setRoomSpawn(new GridPoint2(27, 22));
         clearAndLoad(() -> new OfficeGameArea(terrainFactory, cameraComponent));
     }
 
     private void loadResearch() {
-        roomNumber++;
+        ResearchGameArea.setRoomSpawn(new GridPoint2(6, 8));
         clearAndLoad(() -> new ResearchGameArea(terrainFactory, cameraComponent));
     }
 
@@ -149,6 +149,19 @@ public class ElevatorGameArea extends GameArea {
         }
     }
 
+    /**
+     * Setter method for the player spawn point
+     * should be used when the player is traversing through the rooms
+     * 
+     * @param newSpawn the new spawn point
+     */
+    public static void setRoomSpawn(GridPoint2 newSpawn) {
+        if (newSpawn == null) {
+            return;
+        }
+        ElevatorGameArea.PLAYER_SPAWN = newSpawn;
+    }
+
     @Override
     public String toString() {
         return "Elevator";
@@ -156,7 +169,8 @@ public class ElevatorGameArea extends GameArea {
 
     @Override
     public Entity getPlayer() {
-        return ServiceLocator.getPlayer();
+        // placeholder for errors
+        return null;
     }
 
     public static ElevatorGameArea load(TerrainFactory terrainFactory, CameraComponent camera) {

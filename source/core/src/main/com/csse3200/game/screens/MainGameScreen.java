@@ -3,18 +3,19 @@ package com.csse3200.game.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.csse3200.game.GdxGame;
 import com.csse3200.game.areas.*;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.components.CombatStatsComponent;
-import com.csse3200.game.components.InventoryComponent;
 import com.csse3200.game.components.gamearea.PerformanceDisplay;
 import com.csse3200.game.components.maingame.MainGameActions;
 import com.csse3200.game.components.maingame.MainGameDisplay;
-import com.csse3200.game.components.player.StaminaComponent;
 import com.csse3200.game.components.screens.PauseMenuDisplay;
+import com.csse3200.game.components.player.InventoryComponent;
+
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
 import com.csse3200.game.entities.factories.system.RenderFactory;
@@ -26,11 +27,9 @@ import com.csse3200.game.physics.PhysicsEngine;
 import com.csse3200.game.physics.PhysicsService;
 import com.csse3200.game.rendering.RenderService;
 import com.csse3200.game.rendering.Renderer;
-import com.csse3200.game.services.GameTime;
-import com.csse3200.game.services.ResourceService;
-import com.csse3200.game.services.SaveLoadService;
-import com.csse3200.game.services.ServiceLocator;
-import com.csse3200.game.services.CountdownTimerService;
+import com.csse3200.game.services.*;
+import com.csse3200.game.session.GameSession;
+import com.csse3200.game.session.SessionManager;
 import com.csse3200.game.ui.terminal.Terminal;
 import com.csse3200.game.ui.terminal.TerminalDisplay;
 import org.slf4j.Logger;
@@ -56,6 +55,11 @@ public class MainGameScreen extends ScreenAdapter {
     private CountdownTimerService countdownTimer;
 
 
+    //Leaderboard & Session fields
+    private GameSession session;
+    private float roundTime = 0f;
+
+
     private Entity pauseOverlay;
     private boolean isPauseVisible = false;
 
@@ -63,6 +67,18 @@ public class MainGameScreen extends ScreenAdapter {
         this.game = game;
 
         logger.debug("Initialising main game screen services");
+
+        //Initialize session for this playthrough
+        SessionManager sessionManager = new SessionManager();
+        session = sessionManager.startNewSession();
+
+        var prev = game.getCarryOverLeaderBoard();
+        if (prev != null && !prev.getLeaderBoard().isEmpty()) {
+            session.getLeaderBoardManager()
+                    .setLeaderboard(new java.util.ArrayList<>(prev.getLeaderBoard()));
+        }
+        ServiceLocator.registerLeaderBoardManager(session.getLeaderBoardManager());
+
         ServiceLocator.registerTimeSource(new GameTime());
 
         PhysicsService physicsService = new PhysicsService();
@@ -72,6 +88,7 @@ public class MainGameScreen extends ScreenAdapter {
         ServiceLocator.registerInputService(new InputService());
         ServiceLocator.registerResourceService(new ResourceService());
         ServiceLocator.registerSaveLoadService(new SaveLoadService());
+        ServiceLocator.registerDiscoveryService(new DiscoveryService()); // NEW: track discovered rooms
 
 
         ServiceLocator.registerEntityService(new EntityService());
@@ -89,12 +106,21 @@ public class MainGameScreen extends ScreenAdapter {
         TerrainFactory terrainFactory = new TerrainFactory(renderer.getCamera());
         gameArea = new ForestGameArea(terrainFactory, renderer.getCamera());
         com.csse3200.game.services.ServiceLocator.registerGameArea(gameArea);
+        ForestGameArea.setRoomSpawn(new GridPoint2(3, 20));
         gameArea.create();
-
+        // mark initial area as discovered
+        DiscoveryService dsInit = ServiceLocator.getDiscoveryService();
+        if (dsInit != null) {
+            dsInit.discover(gameArea.toString());
+        }
     }
+
 
     @Override
     public void render(float delta) {
+        //accumulates elapsed time
+        this.roundTime += delta;
+
         if (!isPauseVisible && !(ServiceLocator.getTimeSource().isPaused())
                 && !ServiceLocator.isTransitioning()) {
             physicsEngine.update();
@@ -184,11 +210,37 @@ public class MainGameScreen extends ScreenAdapter {
                 .addComponent(new PerformanceDisplay())
                 .addComponent(new MainGameActions(this.game))
                 .addComponent(new MainGameDisplay(countdownTimer))
-                .addComponent(new Terminal(this.game, countdownTimer))
+                .addComponent(new Terminal(null, this.game, countdownTimer))
                 .addComponent(inputComponent)
                 .addComponent(new TerminalDisplay(this.game));
 
         ServiceLocator.getEntityService().register(ui);
+    }
+
+    /**
+     * = Records player's current round performance and updates the leaderboard.
+     * = This method is called automatically when a round ends.
+     * = The leaderboard only persists for the duration of the current game session
+     * and is cleared when the session ends.
+     */
+    private void recordRoundForLeaderboard() {
+        if (session == null) return;
+
+        // Currency = processors from the player's InventoryComponent
+        int processors = 0;
+        Entity player = (gameArea != null) ? gameArea.getPlayer() : null;
+        if (player != null) {
+            InventoryComponent inv = player.getComponent(InventoryComponent.class);
+            if (inv != null) {
+                processors = inv.getProcessor();
+            }
+        }
+
+        // Time = from your countdown service (seconds)
+        float timeSeconds = getCompleteTime();
+
+        session.getLeaderBoardManager().addRound(processors, timeSeconds);
+        session.getLeaderBoardManager().getLeaderBoard().forEach(entry -> logger.info(entry.toString()));
     }
 
     /**
@@ -206,6 +258,9 @@ public class MainGameScreen extends ScreenAdapter {
         pauseOverlay.getEvents().addListener("resume", this::hidePauseOverlay);
         ServiceLocator.getEntityService().register(pauseOverlay);
         ServiceLocator.getTimeSource().setPaused(true);
+        if (!countdownTimer.isPaused()) {
+            countdownTimer.pause();
+        }
         isPauseVisible = true;
     }
 
@@ -220,6 +275,12 @@ public class MainGameScreen extends ScreenAdapter {
             ServiceLocator.getTimeSource().setPaused(false);
             pauseOverlay = null;
         }
+
+        ServiceLocator.getTimeSource().setPaused(false);
+        if (countdownTimer.isPaused()) {
+            countdownTimer.resume();
+        }
+
         isPauseVisible = false;
     }
 
@@ -237,7 +298,7 @@ public class MainGameScreen extends ScreenAdapter {
      *
      * @return the elapsed time in seconds
      */
-    private long getCompleteTime(){
+    private long getCompleteTime() {
         return (countdownTimer.getDuration() - countdownTimer.getRemainingMs()) / 1000;
     }
 
@@ -245,10 +306,12 @@ public class MainGameScreen extends ScreenAdapter {
      * Sets the game's screen to death screen
      *
      * <p>
-     *     Updates the death screen with the elapsed time before switching.
+     * Updates the death screen with the elapsed time before switching.
      * </p>
      */
-    private void setDeathScreen(){
+    private void setDeathScreen() {
+        recordRoundForLeaderboard();
+        game.setCarryOverLeaderBoard(session.getLeaderBoardManager());
         DeathScreen deathScreen = new DeathScreen(game);
         deathScreen.updateTime(getCompleteTime());
         game.setScreen(deathScreen);
@@ -279,7 +342,6 @@ public class MainGameScreen extends ScreenAdapter {
         ServiceLocator.registerSaveLoadService(new SaveLoadService());
 
         SaveGame.GameState load = SaveLoadService.load();
-        SaveGame.information playerStats = load.getPlayer();
 
         ServiceLocator.registerEntityService(new EntityService());
         ServiceLocator.registerRenderService(new RenderService());
@@ -313,6 +375,10 @@ public class MainGameScreen extends ScreenAdapter {
         ServiceLocator.getResourceService().loadAll(); // test for loading into new areas
 
         gameArea = areaLoad;
+        DiscoveryService ds = ServiceLocator.getDiscoveryService();
+        if (ds != null && gameArea != null) {
+            ds.discover(gameArea.toString());
+        }
         ServiceLocator.registerGameArea(gameArea);
         gameArea.create();
 

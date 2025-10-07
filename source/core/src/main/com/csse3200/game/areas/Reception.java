@@ -6,15 +6,20 @@ import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.entities.Entity;
+import com.csse3200.game.entities.factories.characters.PlayerFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
-import com.csse3200.game.services.ServiceLocator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Second floor with different background and arrow-key controls.
  */
 public class Reception extends GameArea {
-    private static final GridPoint2 PLAYER_SPAWN = new GridPoint2(10, 10);
+    private static final Logger logger = LoggerFactory.getLogger(Reception.class);
+    private static GridPoint2 playerSpawn = new GridPoint2(8, 10);
     private static final float WALL_WIDTH = 0.1f;
+    private static final int NUM_TREES = 8; // Number of trees to spawn
+    private int roomDiffNumber = 2;
 
     public Reception(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
         super(terrainFactory, cameraComponent);
@@ -99,17 +104,18 @@ public class Reception extends GameArea {
     }
 
     private void loadForest() {
-        roomNumber--;
+        ForestGameArea.setRoomSpawn(new GridPoint2(24, 8));
         clearAndLoad(() -> new ForestGameArea(terrainFactory, cameraComponent));
     }
 
     private void loadBackToFloor5() {
-        roomNumber++;
+        MainHall.setRoomSpawn(new GridPoint2(8, 8));
         clearAndLoad(() -> new MainHall(terrainFactory, cameraComponent));
     }
 
     private void spawnPlayer() {
-        spawnOrRepositionPlayer(PLAYER_SPAWN);
+        Entity player = PlayerFactory.createPlayer();
+        spawnEntityAt(player, playerSpawn, true, true);
     }
 
     private void spawnplatform2() {
@@ -169,6 +175,19 @@ public class Reception extends GameArea {
         spawnEntity(stand1);
     }
 
+    /**
+     * Setter method for the player spawn point
+     * should be used when the player is traversing through the rooms
+     *
+     * @param newSpawn the new spawn point
+     */
+    public static void setRoomSpawn(GridPoint2 newSpawn) {
+        if (newSpawn == null) {
+            return;
+        }
+        Reception.playerSpawn = newSpawn;
+    }
+
     @Override
     public String toString() {
         return "Reception";
@@ -179,11 +198,6 @@ public class Reception extends GameArea {
     }
 
     public Entity getPlayer() {
-        return ServiceLocator.getPlayer();
+        return null;
     }
-
 }
-
-
-
-
