@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.areas.GameArea;
-import com.csse3200.game.components.screens.Minimap;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.services.DiscoveryService;
 import com.csse3200.game.services.ServiceLocator;
@@ -22,9 +21,9 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.security.Provider;
-import java.util.HashMap;
+
 import java.util.Map;
+import java.util.Vector;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -116,19 +115,16 @@ class MinimapTest {
         // Mock discovery status
         when(discoveryService.isDiscovered("StartRoom")).thenReturn(true);
         when(discoveryService.isDiscovered("NorthRoom")).thenReturn(false);
-        discoveryService.isDiscovered("StartRoom");
-        discoveryService.isDiscovered("NorthRoom");
-        player.getPosition();
 
         minimap.open();
-        Map<String, Vector2> rendered = minimap.render();
+        Map<Vector2, String> rendered = minimap.render();
 
         // Assert
         assertNotNull(rendered, "Render output should not be null after opening.");
         // Check that the discovered room's image path is updated
-        assertTrue(rendered.containsKey("images/minimap-images/StartRoom.png"), "Discovered room should have its specific image.");
+        assertTrue(rendered.containsValue("images/minimap-images/StartRoom.png"), "Discovered room should have its specific image.");
         // Check that the undiscovered room is not present
-        assertFalse(rendered.containsKey("images/minimap-images/NorthRoom.png"), "Undiscovered room should not have its specific image.");
+        assertFalse(rendered.containsValue("images/minimap-images/NorthRoom.png"), "Undiscovered room should not have its specific image.");
     }
 
     @Test
@@ -164,6 +160,31 @@ class MinimapTest {
     }
 
     @Test
+    void testPanAndZoom() {
+        when(graphics.getWidth()).thenReturn(1280);
+        when(graphics.getHeight()).thenReturn(720);
+        when(player.getPosition()).thenReturn(new Vector2(640, 360));
+        when(gameArea.toString()).thenReturn("Room1");
+        when(discoveryService.isDiscovered("Room1")).thenReturn(true);
+
+        minimap.addRoom(new Vector2(0, 0), "Room1");
+        minimap.open();
+        minimap.pan(new Vector2(10, 0));
+        Map<Vector2, String> render = minimap.render();
+
+        assertEquals(1, minimap.getScale());
+        Vector2 correctPosition = new Vector2(630, 360);
+        assertTrue(render.containsKey(correctPosition), "Map should pan 10 pixels right.");
+
+        minimap.zoom(100);
+        render = minimap.render();
+
+        assertEquals(2, minimap.getScale());
+        correctPosition = new Vector2(620, 360);
+        assertTrue(render.containsKey(correctPosition), "Map should pan 10 pixels right.");
+    }
+
+    @Test
     void testConstructor_WithFile() throws IOException {
         // Arrange: Create a temporary config file.
         File tempFile = new File(tempDir.toFile(), "minimap.cfg");
@@ -182,9 +203,9 @@ class MinimapTest {
 
         // Assert
         fileMinimap.open();
-        Map<String, Vector2> rendered = fileMinimap.render();
+        Map<Vector2, String> rendered = fileMinimap.render();
         assertNotNull(rendered);
-        assertTrue(rendered.containsKey("images/minimap-images/RoomA.png"));
+        assertTrue(rendered.containsValue("images/minimap-images/RoomA.png"));
     }
 
     @Test
@@ -193,6 +214,31 @@ class MinimapTest {
         // This constructor catches the IOException and logs it. We can verify that no rooms are added.
         Minimap fileMinimap = new Minimap(720, 1280, "non/existent/path.cfg");
         assertThrows(NullPointerException.class, fileMinimap::open);
+    }
+
+    @Test
+    void testEverything() {
+        when(graphics.getWidth()).thenReturn(1280);
+        when(graphics.getHeight()).thenReturn(720);
+
+        // Arrange
+        minimap.addRoom(new Vector2(0, 0), "StartRoom");
+        minimap.addRoom(new Vector2(0, 1), "NorthRoom");
+        minimap.addRoom(new Vector2(1, 0), "EastRoom");
+
+        // Mock player position and current room
+        when(player.getPosition()).thenReturn(new Vector2(640, 360)); // Center of the screen
+        when(gameArea.toString()).thenReturn("StartRoom");
+
+        // Mock discovery status
+        when(discoveryService.isDiscovered("StartRoom")).thenReturn(true);
+        when(discoveryService.isDiscovered("NorthRoom")).thenReturn(false);
+        when(discoveryService.isDiscovered("EastRoom")).thenReturn(true);
+
+        minimap.open();
+        Map<Vector2, String> rendered = minimap.render();
+
+        // Assert
     }
 }
 

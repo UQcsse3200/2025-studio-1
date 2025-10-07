@@ -136,27 +136,28 @@ public class Minimap {
      *
      * @return a mapping of images to their on-screen positions in pixels
      */
-    public Map<String, Vector2> render() {
+    public Map<Vector2, String> render() {
         if (centre == null) {
             logger.error("Attempted to render the map before opening it");
             return null;
         }
 
-        Map<String, Vector2> output = new HashMap<>();
+        Map<Vector2, String> output = new HashMap<>();
 
         // Determine how much of the minimap is visible horizontally and vertically
         float horizontalReach = screenWidth * (1 / scale) / 2;
         float verticalReach = screenHeight * (1 / scale) / 2;
 
-        // Calculate visible region bounds in map coordinates
-        float minX = (centre.x - horizontalReach) / IMAGE_WIDTH;
-        float maxX = (centre.x + horizontalReach) / IMAGE_WIDTH;
-        float minY = (centre.y - verticalReach) / IMAGE_HEIGHT;
-        float maxY = (centre.y + verticalReach) / IMAGE_HEIGHT;
+        // Calculate visible region bounds in map image coordinates
+        float minX = (centre.x - horizontalReach);
+        float maxX = (centre.x + horizontalReach);
+        float minY = (centre.y - verticalReach);
+        float maxY = (centre.y + verticalReach);
 
         // Include all visible rooms within the computed bounds
-        for (int i = (int) Math.floor(minX); i <= (int) Math.ceil(maxX); i++) {
-            for (int j = (int) Math.floor(minY); j <= (int) Math.ceil(maxY); j++) {
+        // Convert the map image coordinates to grid room coordinates
+        for (int i = (int) Math.floor(minX / IMAGE_WIDTH); i <= (int) Math.ceil(maxX / IMAGE_WIDTH); i++) {
+            for (int j = (int) Math.floor(minY / IMAGE_HEIGHT); j <= (int) Math.ceil(maxY / IMAGE_HEIGHT); j++) {
                 Vector2 roomCoordinates = new Vector2(i, j);
 
                 // Skip coordinates that don't contain a room
@@ -165,10 +166,10 @@ public class Minimap {
                 }
 
                 // Compute the room's position on the screen
-                float screenX = (roomCoordinates.x - minX) * (screenWidth / (maxX - minX));
-                float screenY = (roomCoordinates.y - minY) * (screenHeight / (maxY - minY));
+                float screenX = (roomCoordinates.x + (float) IMAGE_WIDTH / 2 - minX) * (screenWidth / (maxX - minX));
+                float screenY = (roomCoordinates.y + (float) IMAGE_HEIGHT / 2 - minY) * (screenHeight / (maxY - minY));
                 Vector2 screenCoords = new Vector2(screenX, screenY);
-                output.put(grid.get(roomCoordinates), screenCoords);
+                output.put(screenCoords, grid.get(roomCoordinates));
             }
         }
 
@@ -177,10 +178,13 @@ public class Minimap {
 
     /**
      * Zooms the minimap in or out by a specified percentage.
-     *
+     * Requires: percentage is in the range (-100, infinity)
      * @param percentage the percentage to zoom (positive = zoom in, negative = zoom out)
      */
     public void zoom(float percentage) {
+        if (percentage <= -100) {
+            logger.error("Attempted to decrease zoom by more than or equal to 100%");
+        }
         scale *= (100 + percentage) / 100;
     }
 
@@ -199,8 +203,8 @@ public class Minimap {
      * @param vector magnitude and direction of pixel shift when panning.
      */
     public void pan(Vector2 vector) {
-        centre.x -= vector.x * (1 / scale);
-        centre.y -= vector.y * (1 / scale);
+        centre.x += vector.x * (1 / scale);
+        centre.y += vector.y * (1 / scale);
     }
 
     /**
