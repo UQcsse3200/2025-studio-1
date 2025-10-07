@@ -10,11 +10,11 @@ import java.util.List;
 
 /**
  * simple class to create avatars stats.
- * TODO: This will be replaced by a jason file to extract information but this suffices for a prototype
  */
 public class AvatarRegistry {
     private static Avatar current; //storage system for the avatar to be able to be extracted later
     private static final String CONFIG_PATH = "configs/avatars.json";
+
     public static List<Avatar> getAll() {
         List<Avatar> avatars = new ArrayList<>();
         JsonValue root = new JsonReader().parse(Gdx.files.internal(CONFIG_PATH));
