@@ -73,7 +73,7 @@ class KeyboardPlayerInputComponentTest {
      */
     @Test
     @DisplayName("Test unequipping current item sets equipped to false")
-    public void unequipCurrentItemTest() {
+    void unequipCurrentItemTest() {
         inputComponent.focusedItem = 0;
         inputComponent.equipped = true;
 
@@ -82,5 +82,4 @@ class KeyboardPlayerInputComponentTest {
         assertFalse(inputComponent.equipped);
         assertEquals(-1, inputComponent.focusedItem);
     }
-
 }
