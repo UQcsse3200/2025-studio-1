@@ -912,9 +912,7 @@ public abstract class GameArea implements Disposable {
         return true;
     }
 
-    /**
-     * Camera bounds helper.
-     */
+    // Camera bounds Helper?
     protected record Bounds(float leftX, float rightX, float bottomY, float topY, float viewWidth, float viewHeight,
                             Vector2 camPos) {
     }
