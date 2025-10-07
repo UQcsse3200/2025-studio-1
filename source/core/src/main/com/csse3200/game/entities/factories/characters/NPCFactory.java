@@ -346,7 +346,7 @@ public class NPCFactory {
 
         turret
                 .addComponent(turretStats)
-                .addComponent(new CombatStatsComponent((int) (config.health * scalingFactor)))
+                .addComponent(new CombatStatsComponent((int) (config.health * scalingFactor), 1f))
                 .addComponent(animator)
                 .addComponent(new GhostAnimationController())
                 .addComponent(new LowHealthAttackBuffComponent(10, turretStats))

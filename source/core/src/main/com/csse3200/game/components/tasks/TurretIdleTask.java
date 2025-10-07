@@ -13,6 +13,9 @@ import com.csse3200.game.rendering.DebugRenderer;
 import com.csse3200.game.services.GameTime;
 import com.csse3200.game.services.ServiceLocator;
 
+/**
+ * Stationary entity with firing capabilities when it sees enemy on sight. Pair it with TurretFiringTask.
+ */
 public class TurretIdleTask extends DefaultTask implements PriorityTask {
     private final Entity target;
     private final int priority;
