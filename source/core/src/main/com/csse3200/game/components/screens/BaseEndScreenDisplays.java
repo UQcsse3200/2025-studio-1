@@ -12,10 +12,10 @@ import com.csse3200.game.GdxGame;
 import com.csse3200.game.ui.effects.TextEffects;
 
 import java.util.Locale;
-import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Supplier;
 
 public class BaseEndScreenDisplays extends BaseScreenDisplay {
+    public static final String DEFEATED_STR = "DEFEATED";
     private final String titleText;
     private final Color titleColor;
     private final String primaryText;
@@ -31,6 +31,7 @@ public class BaseEndScreenDisplays extends BaseScreenDisplay {
 
     private Label roundLabelRef;
     private Label timeLabelRef;
+    private Runnable leaderboardAction;
 
     protected BaseEndScreenDisplays(
             GdxGame game,
@@ -73,7 +74,7 @@ public class BaseEndScreenDisplays extends BaseScreenDisplay {
 
     public static BaseEndScreenDisplays defeated(GdxGame game) {
         return new BaseEndScreenDisplays(
-                game, "DEFEATED", new Color(1f, 0f, 0f, 1f), "Try Again",
+                game, DEFEATED_STR, new Color(1f, 0f, 0f, 1f), "Try Again",
                 () -> game.setScreen(GdxGame.ScreenType.MAIN_GAME),
                 null,
                 () -> TextEffects.readRandomLine("text/deathprompt.txt", "Death is only the beginning.")
@@ -94,7 +95,15 @@ public class BaseEndScreenDisplays extends BaseScreenDisplay {
     private static void neutralizeTint(Actor label, Actor wrapper, Table root) {
         if (root != null) root.setColor(Color.WHITE);
         if (wrapper != null) wrapper.setColor(Color.WHITE);
-        if (label != null) ((Label) label).setColor(Color.WHITE);
+        if (label != null) (label).setColor(Color.WHITE);
+    }
+
+    /**
+     * Allow chaining a Leaderboard button
+     */
+    public BaseEndScreenDisplays withLeaderboard(Runnable leaderboardAction) {
+        this.leaderboardAction = leaderboardAction;
+        return this;
     }
 
     @Override
@@ -121,7 +130,7 @@ public class BaseEndScreenDisplays extends BaseScreenDisplay {
         neutralizeTint(titleLbl, titleWrap, root);
 
         // === Title FX ===
-        if ("DEFEATED".equalsIgnoreCase(titleText)) {
+        if (DEFEATED_STR.equalsIgnoreCase(titleText)) {
             titleWrap.setScale(0.85f);
             titleLbl.setColor(new Color(0.9f, 0.2f, 0.2f, 1f));
             titleWrap.addAction(Actions.sequence(
@@ -137,15 +146,18 @@ public class BaseEndScreenDisplays extends BaseScreenDisplay {
                     28f
             );
 
-            final float glitchDelay = 0.22f, glitchDur = 0.55f;
+            final float glitchDelay = 0.22f;
+            final float glitchDur = 0.55f;
             titleFollowupTask = Timer.schedule(new Timer.Task() {
                 @Override
                 public void run() {
-                    titleFxPhase.glitchReveal(titleLbl, "DEFEATED", glitchDur);
+                    titleFxPhase.glitchReveal(titleLbl, DEFEATED_STR, glitchDur);
                 }
             }, glitchDelay);
 
-            final float totalShake = 0.9f, step = 0.045f, amp = 7f;
+            final float totalShake = 0.9f;
+            final float step = 0.045f;
+            final float amp = 7f;
             Timer.schedule(new Timer.Task() {
                 @Override
                 public void run() {
@@ -155,9 +167,9 @@ public class BaseEndScreenDisplays extends BaseScreenDisplay {
                     int steps = Math.max(1, (int) (totalShake / step));
                     Action seq = Actions.sequence();
                     for (int i = 0; i < steps; i++) {
-                        float dx = (ThreadLocalRandom.current().nextFloat() * 2f - 1f) * amp;
-                        float dy = (ThreadLocalRandom.current().nextFloat() * 2f - 1f) * amp;
-                        float rot = (ThreadLocalRandom.current().nextFloat() * 2f - 1f) * 1.2f;
+                        float dx = (new java.security.SecureRandom().nextFloat() * 2f - 1f) * amp;
+                        float dy = (new java.security.SecureRandom().nextFloat() * 2f - 1f) * amp;
+                        float rot = (new java.security.SecureRandom().nextFloat() * 2f - 1f) * 1.2f;
                         seq = Actions.sequence(seq,
                                 Actions.parallel(
                                         Actions.moveBy(dx, dy, step, Interpolation.sine),
@@ -276,7 +288,12 @@ public class BaseEndScreenDisplays extends BaseScreenDisplay {
         TextButton secondary = button(secondaryText, buttonLabelScale(), secondaryAction);
         row.add(primary).left().padRight(buttonsGap());
         row.add(secondary).left();
-        root.add(row).colspan(2).center();
+
+        if (leaderboardAction != null) {
+            root.add(button("Leaderboard", buttonLabelScale(), leaderboardAction))
+                    .pad(blockPad())
+                    .row();
+        }
     }
 
     public void setRound(int round) {

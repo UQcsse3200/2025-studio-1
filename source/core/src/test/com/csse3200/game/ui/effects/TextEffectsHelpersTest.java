@@ -77,14 +77,14 @@ class TextEffectsHelpersTest {
     void enableMarkup_sets_fontData_flag_and_ensureOwnStyle_clones_style() {
         BitmapFont.BitmapFontData data = new BitmapFont.BitmapFontData();
         data.markupEnabled = false;
-        BitmapFont font = mock(BitmapFont.class, withSettings().lenient());
+        BitmapFont font = mock(BitmapFont.class, withSettings());
         when(font.getData()).thenReturn(data);
 
         Label.LabelStyle style = new Label.LabelStyle();
         style.font = font;
         style.fontColor = Color.WHITE;
 
-        Label lbl = mock(Label.class, withSettings().lenient());
+        Label lbl = mock(Label.class, withSettings());
 
         // Style store for getStyle/setStyle
         final Label.LabelStyle[] store = {style};
@@ -412,10 +412,6 @@ class TextEffectsHelpersTest {
             Object origin2 = get(o2, "origin");
             assertEquals(style1, style2);
             assertEquals(origin1, origin2);
-
-            // Optional: also verify explicit defaults if you want (adjust names if different)
-            // assertEquals(enumConst(style1,  "NORMAL"), style1);
-            // assertEquals(enumConst(origin1, "MIDDLE"), origin1);
         }
 
 

@@ -7,10 +7,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.Timer;
 
 import java.nio.charset.StandardCharsets;
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.concurrent.ThreadLocalRandom;
+import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -22,7 +23,7 @@ import java.util.regex.Pattern;
  * - CRAZY block animation: {CRAZY [key=value ...]}text{/CRAZY}
  * Supported opts: fps, jitter, cycles, from=rand|A, rainbow, rhz, rshift,
  * style=normal|explode|blast, origin=left|middle|right,
- * spread=<int>, flash=<frames>, overshoot=<hops>,
+ * spread=[int], flash=[frames], overshoot=[hops],
  * edgeboost=0..1, flashhexa, flashhexb
  * - Rainbow per-char effects (sweep), full-label pulse, strobe, sparkle
  * - Random-line reader from internal files
@@ -62,7 +63,7 @@ public class TextEffects {
                 if (!t.isEmpty() && !t.startsWith("#")) pool.add(t);
             }
             if (pool.isEmpty()) return fallback;
-            int idx = ThreadLocalRandom.current().nextInt(pool.size());
+            int idx = new SecureRandom().nextInt(pool.size());
             return pool.get(idx);
         } catch (Exception e) {
             return fallback;
@@ -262,7 +263,8 @@ public class TextEffects {
         int[] overshootLeft = null;
         int[] postLockHold = null;
 
-        ThreadLocalRandom r = ThreadLocalRandom.current();
+        SecureRandom r = new SecureRandom();
+        ;
         int n = target.length;
 
         // origin index
@@ -544,7 +546,7 @@ public class TextEffects {
         final char[] target = tgt.toCharArray();
         final char[] curr = new char[target.length];
         final boolean[] locked = new boolean[target.length];
-        final ThreadLocalRandom r = ThreadLocalRandom.current();
+        final SecureRandom r = new SecureRandom();
         final String charset = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#%$*+-_=<>/?";
 
         for (int i = 0; i < target.length; i++) {
@@ -758,7 +760,7 @@ public class TextEffects {
     }
 
     /**
-     * Rapid color strobe A<->B for duration; restores plain text after.
+     * Rapid color strobe A==B for duration; restores plain text after.
      */
     public void strobe(Label label, String hexA, String hexB, float hz, float durationSec) {
         cancel();
@@ -841,7 +843,7 @@ public class TextEffects {
         final int fps = Math.max(10, Math.round(hz * 2f * 10)); // enough frame rate for twinkle
         final int totalFrames = Math.max(1, Math.round(durationSec * fps));
         final int[] frame = {0};
-        final java.util.Random rng = new java.util.Random();
+        final Random rng = new SecureRandom();
 
         task = Timer.schedule(new Timer.Task() {
             @Override
