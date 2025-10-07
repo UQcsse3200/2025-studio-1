@@ -21,6 +21,24 @@ public class PowerupsFactory {
 
         return powerup;
     }
+    public static Entity createDamageBoost() {
+        Entity powerup = createBasePowerup();
+
+        powerup.addComponent(new TextureRenderComponent("images/DamageBoostPowerup.png"));
+        powerup.getComponent(TextureRenderComponent.class).scaleEntity();
+        powerup.addComponent(new TagComponent("damageboost"));
+
+        return powerup;
+    }
+    public static Entity createUnlimitedHealth() {
+        Entity powerup = createBasePowerup();
+
+        powerup.addComponent(new TextureRenderComponent("images/heart.png")); // Use existing image
+        powerup.getComponent(TextureRenderComponent.class).scaleEntity();
+        powerup.addComponent(new TagComponent("unlimitedhealth"));
+
+        return powerup;
+    }
 
     public static Entity createUnlimitedAmmo() {
         Entity powerup = createBasePowerup();

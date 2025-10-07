@@ -17,6 +17,10 @@ import com.csse3200.game.components.shop.CatalogService;
 import com.csse3200.game.components.shop.ShopDemo;
 import com.csse3200.game.components.shop.ShopManager;
 import com.csse3200.game.entities.Entity;
+import com.csse3200.game.components.player.InventoryComponent;
+import com.csse3200.game.components.WeaponsStatsComponent;
+import com.csse3200.game.effects.DamageBoostEffect;
+import com.csse3200.game.entities.configs.consumables.DamageBoostConsumableConfig;
 import com.csse3200.game.entities.configs.Benches;
 import com.csse3200.game.entities.configs.ItemSpawnConfig;
 import com.csse3200.game.entities.configs.Weapons;
@@ -97,6 +101,8 @@ public class ForestGameArea extends GameArea {
             "images/rapidfirepowerup.png",
             "images/aimbot_powerup.png",
             "images/doubleprocessorspowerup.png",
+            "images/UnlimitedHealthPowerup.png",
+            "images/DamageBoostPowerup.png",
             "images/laser_shot.png",
             "images/Spawn.png",
             "images/LobbyWIP.png",
@@ -297,10 +303,12 @@ public class ForestGameArea extends GameArea {
         player = spawnPlayer();
         ServiceLocator.registerPlayer(player);
 
-//        spawnRapidFirePowerup();
-//        spawnAimbotPowerup();
-//        spawnUnlimitedAmmoPowerup();
+        spawnRapidFirePowerup();
+        spawnAimbotPowerup();
+        spawnUnlimitedAmmoPowerup();
         spawnDoubleProcessorsPowerup();
+        spawnDamageBoostPowerup();
+        spawnUnlimitedHealthPowerup();
 
         spawnBoss2();
 
@@ -326,6 +334,7 @@ public class ForestGameArea extends GameArea {
         spawnEntity(keycard);
 
         spawnItems();
+        testDamageBoost();
     }
 
     private void spawnRobots() {
@@ -620,6 +629,11 @@ public class ForestGameArea extends GameArea {
         spawnEntityAt(newRapidFirePowerup, new GridPoint2(2, 30), true, true);
     }
 
+    private void spawnDamageBoostPowerup() {
+        Entity newDamageBoostPowerup = PowerupsFactory.createDamageBoost();
+        spawnEntityAt(newDamageBoostPowerup, new GridPoint2(1, 30), true, true);
+    }
+
     private void spawnUnlimitedAmmoPowerup() {
         Entity newUnlimitedAmmoPowerup = PowerupsFactory.createUnlimitedAmmo();
         spawnEntityAt(newUnlimitedAmmoPowerup, new GridPoint2(2, 30), true, true);
@@ -628,6 +642,11 @@ public class ForestGameArea extends GameArea {
     private void spawnAimbotPowerup() {
         Entity newAimbot = PowerupsFactory.createAimBot();
         spawnEntityAt(newAimbot, new GridPoint2(2, 30), true, true);
+    }
+
+    private void spawnUnlimitedHealthPowerup() {
+        Entity newUnlimitedHealthPowerup = PowerupsFactory.createUnlimitedHealth();
+        spawnEntityAt(newUnlimitedHealthPowerup, new GridPoint2(5, 30), true, true);
     }
 
     private void spawnDoubleProcessorsPowerup() {
@@ -711,6 +730,33 @@ public class ForestGameArea extends GameArea {
 
     // Removed area-specific dispose to avoid double disposal during transitions
 
+
+    private void testDamageBoost() {
+        // Get the player's current weapon
+        InventoryComponent inventory = player.getComponent(InventoryComponent.class);
+        Entity equippedWeapon = inventory.getCurrItem();
+
+        if (equippedWeapon != null) {
+            WeaponsStatsComponent weaponStats = equippedWeapon.getComponent(WeaponsStatsComponent.class);
+            if (weaponStats != null) {
+                System.out.println("BEFORE DAMAGE BOOST:");
+                System.out.println("  Base Attack: " + weaponStats.getBaseAttack());
+                System.out.println("  Damage Multiplier: " + weaponStats.getDamageMultiplier());
+
+                // Apply damage boost manually for testing
+                float originalMultiplier = weaponStats.getDamageMultiplier();
+                weaponStats.setDamageMultiplier(originalMultiplier * 2.0f);
+
+                System.out.println("AFTER DAMAGE BOOST:");
+                System.out.println("  Base Attack: " + weaponStats.getBaseAttack());
+                System.out.println("  Damage Multiplier: " + weaponStats.getDamageMultiplier());
+            } else {
+                System.out.println("No weapon stats component found!");
+            }
+        } else {
+            System.out.println("No weapon equipped!");
+        }
+    }
 
     public Entity getPlayer() {
         return player;

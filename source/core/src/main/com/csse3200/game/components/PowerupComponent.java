@@ -28,9 +28,17 @@ public class PowerupComponent extends Component {
             if (unlimitedammo.apply(equippedWeapon)) {
                 activeEffects.add(unlimitedammo);
             }
+        } else if (effect instanceof DamageBoostEffect damageBoost && equippedWeapon != null) {
+            if (damageBoost.apply(equippedWeapon)) {
+                activeEffects.add(damageBoost);
+            }
         } else if (effect instanceof AimbotEffect aimbot && equippedWeapon != null) {
             if (aimbot.apply(equippedWeapon)) {
                 activeEffects.add(aimbot);
+            }
+        } else if (effect instanceof UnlimitedHealthEffect unlimitedHealth) {
+            if (unlimitedHealth.apply(entity)) {
+                activeEffects.add(unlimitedHealth);
             }
         } else if (effect instanceof DoubleProcessorsEffect doubleProcessors) {
             if (doubleProcessors.apply(entity)) {
@@ -63,6 +71,18 @@ public class PowerupComponent extends Component {
             else if (effect instanceof AimbotEffect aimbotEffect) {
                 aimbotEffect.update(dt);
                 if (!aimbotEffect.isActive()) {
+                    activeEffects.remove(i);
+                }
+            }
+            else if (effect instanceof UnlimitedHealthEffect unlimitedHealthEffect) {
+                unlimitedHealthEffect.update(dt);
+                if (!unlimitedHealthEffect.isActive()) {
+                    activeEffects.remove(i);
+                }
+            }
+            else if (effect instanceof DamageBoostEffect damageBoostEffect) {
+                damageBoostEffect.update(dt);
+                if (!damageBoostEffect.isActive()) {
                     activeEffects.remove(i);
                 }
             }

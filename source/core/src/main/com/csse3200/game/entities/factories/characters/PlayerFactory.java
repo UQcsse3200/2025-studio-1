@@ -7,8 +7,12 @@ import com.csse3200.game.components.player.*;
 import com.csse3200.game.components.player.InventoryComponent;
 import com.csse3200.game.effects.DoubleProcessorsEffect;
 import com.csse3200.game.effects.Effect;
+import com.csse3200.game.effects.DamageBoostEffect;
+import com.csse3200.game.entities.configs.consumables.DamageBoostConsumableConfig;
 import com.csse3200.game.effects.RapidFireEffect;
 import com.csse3200.game.effects.UnlimitedAmmoEffect;
+import com.csse3200.game.effects.UnlimitedHealthEffect;
+import com.csse3200.game.entities.configs.consumables.UnlimitedHealthConsumableConfig;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.characters.PlayerConfig;
 import com.csse3200.game.entities.configs.consumables.RapidFireConsumableConfig;
@@ -147,6 +151,44 @@ public class PlayerFactory {
                                 entityPowerup.dispose();
                             }
                         }
+                        if (tag.getTag().equals("damageboost")) {
+                            if (entityPowerup.getCenterPosition().dst(player.getCenterPosition()) < 1f) {
+                                System.out.println("DEBUG: Damage boost powerup collision detected!"); // Add this line
+
+                                InventoryComponent inventory = player.getComponent(InventoryComponent.class);
+                                Entity equippedWeapon = inventory.getCurrItem();
+
+                                if (equippedWeapon != null) {
+                                    System.out.println("DEBUG: Player has equipped weapon: " + equippedWeapon); // Add this line
+                                    DamageBoostConsumableConfig config = new DamageBoostConsumableConfig();
+                                    for (Effect e : config.effects) {
+                                        if (e instanceof DamageBoostEffect damageBoostEffect) {
+                                            System.out.println("DEBUG: Applying damage boost effect!"); // Add this line
+                                            player.getComponent(PowerupComponent.class).setEquippedWeapon(equippedWeapon);
+                                            player.getComponent(PowerupComponent.class).addEffect(damageBoostEffect);
+                                        }
+                                    }
+                                } else {
+                                    System.out.println("DEBUG: Player has no equipped weapon!"); // Add this line
+                                }
+                                entityPowerup.dispose();
+                            }
+                        }
+                        if (tag.getTag().equals("unlimitedhealth")) {
+                            if (entityPowerup.getCenterPosition().dst(player.getCenterPosition()) < 1f) {
+                                System.out.println("DEBUG: Unlimited health powerup collision detected!");
+
+                                UnlimitedHealthConsumableConfig config = new UnlimitedHealthConsumableConfig();
+                                for (Effect e : config.effects) {
+                                    if (e instanceof UnlimitedHealthEffect unlimitedHealthEffect) {
+                                        System.out.println("DEBUG: Applying unlimited health effect!");
+                                        player.getComponent(PowerupComponent.class).addEffect(unlimitedHealthEffect);
+                                    }
+                                }
+                                entityPowerup.dispose();
+                            }
+                        }
+
 
                         if (tag.getTag().equals("unlimitedammo")) {
                             if (entityPowerup.getCenterPosition().dst(player.getCenterPosition()) < 1f) {
