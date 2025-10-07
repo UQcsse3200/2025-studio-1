@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.GridPoint2;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.CameraComponent;
+import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.factories.characters.PlayerFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
@@ -18,6 +19,7 @@ import com.csse3200.game.services.ServiceLocator;
 public class Reception extends GameArea {
     private static GridPoint2 playerSpawn = new GridPoint2(10, 10);
     private static final float WALL_WIDTH = 0.1f;
+    private int roomDiffNumber = 2;
 
     public Reception(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
         super(terrainFactory, cameraComponent);
@@ -36,9 +38,9 @@ public class Reception extends GameArea {
         spawndesk_reception();
         spawncomic_stand();
 
-
         Entity ui = new Entity();
-        ui.addComponent(new com.csse3200.game.components.gamearea.FloorLabelDisplay("Reception"));
+        ui.addComponent(new GameAreaDisplay("Reception"))
+                .addComponent(new com.csse3200.game.components.gamearea.FloorLabelDisplay("Floor 2"));
         spawnEntity(ui);
     }
 
