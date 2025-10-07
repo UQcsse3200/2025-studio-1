@@ -12,21 +12,54 @@ import com.csse3200.game.rendering.TextureRenderComponent;
 public class PowerupsFactory {
 
     public static Entity createRapidFire() {
-        Entity powerup = createBasePowerup("rapidfire");
+        Entity powerup = createBasePowerup();
 
-        powerup.addComponent(new TextureRenderComponent("images/pistol.png"));
+        powerup.addComponent(new TextureRenderComponent("images/rapidfirepowerup.png"));
         powerup.getComponent(TextureRenderComponent.class).scaleEntity();
-        powerup.getComponent(PhysicsComponent.class).getBody().setUserData(powerup);
+        powerup.addComponent(new TagComponent("rapidfire"));
+
 
         return powerup;
     }
 
-    public static Entity createBasePowerup(String type) {
+    public static Entity createUnlimitedAmmo() {
+        Entity powerup = createBasePowerup();
+
+        powerup.addComponent(new TextureRenderComponent("images/ammo.png"));
+        powerup.getComponent(TextureRenderComponent.class).scaleEntity();
+        powerup.addComponent(new TagComponent("unlimitedammo"));
+
+
+        return powerup;
+    }
+
+    public static Entity createAimBot() {
+        Entity powerup = createBasePowerup();
+
+        powerup.addComponent(new TextureRenderComponent("images/aimbot_powerup.png"));
+        powerup.getComponent(TextureRenderComponent.class).scaleEntity();
+        powerup.addComponent(new TagComponent("aimbot"));
+
+
+        return powerup;
+    }
+
+    public static Entity createDoubleProcessors() {
+        Entity powerup = createBasePowerup();
+
+        powerup.addComponent(new TextureRenderComponent("images/doubleprocessorspowerup.png"));
+        powerup.getComponent(TextureRenderComponent.class).scaleEntity();
+        powerup.addComponent(new TagComponent("doubleprocessors"));
+
+
+        return powerup;
+    }
+
+    public static Entity createBasePowerup() {
         Entity powerup = new Entity()
                 .addComponent(new PhysicsComponent())
                 .addComponent(new ColliderComponent().setLayer(PhysicsLayer.NONE))
-                .addComponent(new HitboxComponent())
-                .addComponent(new TagComponent(type));
+                .addComponent(new HitboxComponent());
 
         PhysicsUtils.setScaledCollider(powerup, 0.5f, 0.5f);
         return powerup;
