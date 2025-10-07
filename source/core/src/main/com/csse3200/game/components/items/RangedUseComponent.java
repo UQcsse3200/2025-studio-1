@@ -165,7 +165,7 @@ public class RangedUseComponent extends ItemActionsComponent {
                 }
 
                 TextureRenderWithRotationComponent render = bullet.getComponent(TextureRenderWithRotationComponent.class);
-                render.setRotationWithRepeat(render.getRotation() + (float) 10.0);
+                render.setRotation(render.getRotation() + (float) 10.0);
             }
         }, 0f, 1 / 60f);
     }
