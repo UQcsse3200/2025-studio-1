@@ -118,12 +118,10 @@ public class MinimapDisplay extends BaseScreenDisplay {
 
         scrollPane.addListener(new InputListener() {
             @Override
-            public boolean scrolled(int amount) {
-                if (zoomedIn) {
-                    minimap.zoom(-amountY * 10); // Zoom out/in by scroll
-                    minimapTable.clearChildren();
-                    renderMinimapImages();
-                }
+            public boolean scrolled(InputEvent event, float x, float y, float amountX, float amountY) {
+                minimap.zoom(amountY * 10); // Zoom out/in by scroll
+                minimapTable.clearChildren();
+                renderMinimapImages();
                 return true;
             }
         });
