@@ -6,6 +6,13 @@ import com.csse3200.game.rendering.TextureRenderComponent;
 import com.badlogic.gdx.utils.Timer;
 import java.util.Random;
 
+/**
+ * Whack-A-Mole game logic:
+ * - Owns run state (running, misses, current mole)
+ * - Shows random moles on a timer, records hits/misses
+ * - Triggers win (20 points) or lose (2 misses) via the display
+ * - UI is handled by {@link WhackAMoleDisplay}
+ */
 public class WhackAMoleGame {
     private static final int TARGET_SCORE = 20;
     private static final int MAX_MISSES = 2;
@@ -40,6 +47,12 @@ public class WhackAMoleGame {
         gameEntity.getEvents().addListener("wm:hit", this::onHit);
     }
 
+    /**
+     * Build the in-world station:
+     * - Base interactable
+     * - Display for the UI
+     * - Simple texture so it's visible in the room
+     */
     private Entity initGameEntity() {
         Entity game = InteractableStationFactory.createBaseStation();
         game.addComponent(new WhackAMoleDisplay());
@@ -48,7 +61,11 @@ public class WhackAMoleGame {
         return game;
     }
 
-    // UI toggle
+    /**
+     * Toggle the modal UI:
+     * - If open: hide + stop loop
+     * - If closed: reset + prepare UI + show
+     */
     private void onInteract() {
         if (uiShown) {
             display.hide();
@@ -62,7 +79,11 @@ public class WhackAMoleGame {
         }
     }
 
-    // Game start/stop
+    /**
+     * Start the loop if not already running:
+     * - Reset state + score
+     * - Schedule periodic rounds
+     */
     private void onStart() {
         if (running) return;
         running = true;
@@ -73,6 +94,12 @@ public class WhackAMoleGame {
         }, 0f, 0.8f);
     }
 
+    /**
+     * Stop the loop and clean up:
+     * - Cancel tasks
+     * - Update button label
+     * - Hide any visible mole
+     */
     private void onStop() {
         running = false;
         if (loopTask != null) { loopTask.cancel(); loopTask = null; }
@@ -82,6 +109,9 @@ public class WhackAMoleGame {
         currentIdx = -1;
     }
 
+    /**
+     * Reset per-run state and invalidate late tasks.
+     */
     private void resetRuntime() {
         misses = 0;
         currentIdx = -1;
@@ -90,6 +120,12 @@ public class WhackAMoleGame {
         if (hideTask != null) { hideTask.cancel(); hideTask = null; }
     }
 
+    /**
+     * One round:
+     * - Hide all moles
+     * - Pick a random hole and show mole
+     * - Schedule hide; if not hit by then, count a miss
+     */
     private void startRound() {
         if (!running) return;
 
@@ -112,6 +148,9 @@ public class WhackAMoleGame {
         }, UP_DURATION);
     }
 
+    /**
+     * Record a miss; on 2nd miss show lose dialog and stop.
+     */
     private void handleMiss() {
         misses++;
         if (misses >= MAX_MISSES) {
@@ -121,6 +160,9 @@ public class WhackAMoleGame {
         }
     }
 
+    /**
+     * Mole was hit this round; if score >= 20 show win dialog and stop.
+     */
     private void onHit() {
         if (!running) return;
         currentHit = true;
@@ -131,6 +173,7 @@ public class WhackAMoleGame {
         }
     }
 
+    /** Expose the in-world station entity so areas can place it. */
     public Entity getGameEntity() {
         return gameEntity;
     }
