@@ -113,7 +113,5 @@ public class CasinoGameArea extends GameArea {
         blackjack.addComponent(new BlackJackGame());
         blackjack.addComponent(new BlackjackScreenDisplay());
         spawnEntityAt(blackjack, new GridPoint2(20, 7), true, true);
-        //blackjack.getEvents().trigger("hide");
-
     }
 }
