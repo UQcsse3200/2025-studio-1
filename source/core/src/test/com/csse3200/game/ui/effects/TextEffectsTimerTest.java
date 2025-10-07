@@ -89,8 +89,6 @@ class TextEffectsTimerTest {
         data.capHeight = 10f;
         data.ascent = -8f;
         data.lineHeight = 12f;
-        // (optional) not needed when region is provided, but harmless:
-        // data.imagePaths = new String[] {"dummy.png"};
 
         // 2) Dummy region (no Texture/GL required)
         TextureRegion region = new TextureRegion(); // empty region is fine for layout paths
@@ -109,11 +107,34 @@ class TextEffectsTimerTest {
         return lbl;
     }
 
+    private static String stripLibgdxMarkup(CharSequence cs) {
+        if (cs == null) return "";
+        // Remove [#RRGGBB] or [#RRGGBBAA] and the closing [] tokens
+        return cs.toString().replaceAll("\\[#(?:[0-9a-fA-F]{6}|[0-9a-fA-F]{8})\\]|\\[]", "");
+    }
+
+    // ---------------------- sparkle ----------------------
+    @Test
+    void sparkle_restoresBaseAfterBurst() {
+        try (MockedStatic<Timer> ignored = mockTimersImmediate()) {
+            TextEffects fx = new TextEffects();
+            Label lbl = newLabel("SPARK");
+
+            fx.sparkle(lbl, 0.6f, 12f, 0.6f);
+
+            // If sparkle is async and your mock triggers all scheduled runs immediately,
+            // this assertion happens after the restore step.
+            assertEquals("SPARK", stripLibgdxMarkup(lbl.getText()),
+                    "sparkle should restore base text (ignoring markup)");
+        }
+    }
+
     @AfterEach
     void clearTimers() {
         try {
             Timer.instance().clear();
-        } catch (Throwable ignored) {
+        } catch (Throwable t) {
+            throw new AssertionError("Timer cleanup failed", t);
         }
     }
 
@@ -224,16 +245,6 @@ class TextEffectsTimerTest {
         }
     }
 
-    // ---------------------- sparkle ----------------------
-//    @Test
-//    void sparkle_restoresBaseAfterBurst() {
-//        try (MockedStatic<Timer> ignored = mockTimersImmediate()) {
-//            TextEffects fx = new TextEffects();
-//            Label lbl = newLabel("SPARK");
-//            fx.sparkle(lbl, 0.6f, 12f, 0.6f);
-//            assertEquals("SPARK", lbl.getText().toString(), "sparkle should restore base text");
-//        }
-//    }
 
     // ---------------------- sweepRainbow ----------------------
     @Test
@@ -281,22 +292,6 @@ class TextEffectsTimerTest {
         }
     }
 
-    // --- Minimal headless Label factory (safe style/font) ---
-// --- Test-only Label that never touches GlyphLayout ---
-    static class TestLabel extends Label {
-        private float prefWidth;
-        private float prefHeight;
-
-        TestLabel(CharSequence text, LabelStyle style) {
-            super(text, style);
-        }
-
-        protected void computePrefSize() {
-            // Skip GlyphLayout: provide stable, fake pref sizes
-            this.prefWidth = getText() == null ? 0f : getText().length();
-            this.prefHeight = 12f;
-        }
-    }
 
     // ---------------------- Gdx.files stub ----------------------
     static class MemFiles implements Files {

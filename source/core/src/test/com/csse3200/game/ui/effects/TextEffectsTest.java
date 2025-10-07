@@ -96,7 +96,7 @@ class TextEffectsTest {
         data.lineHeight = 12f;
 
         // Mock font + cache (lenient)
-        BitmapFont font = org.mockito.Mockito.mock(BitmapFont.class, org.mockito.Mockito.withSettings().lenient());
+        BitmapFont font = org.mockito.Mockito.mock(BitmapFont.class, org.mockito.Mockito.withSettings());
         org.mockito.Mockito.when(font.getData()).thenReturn(data);
         org.mockito.Mockito.when(font.getCapHeight()).thenReturn(data.capHeight);
         org.mockito.Mockito.when(font.getAscent()).thenReturn(data.ascent);
@@ -105,7 +105,7 @@ class TextEffectsTest {
 
         com.badlogic.gdx.graphics.g2d.BitmapFontCache cache =
                 org.mockito.Mockito.mock(com.badlogic.gdx.graphics.g2d.BitmapFontCache.class,
-                        org.mockito.Mockito.withSettings().lenient());
+                        org.mockito.Mockito.withSettings());
         org.mockito.Mockito.when(cache.getFont()).thenReturn(font);
         org.mockito.Mockito.when(font.newFontCache()).thenReturn(cache);
 
@@ -138,6 +138,7 @@ class TextEffectsTest {
         try {
             Timer.instance().clear();
         } catch (Throwable ignored) {
+            // We don't need to check it's output
         }
     }
 
