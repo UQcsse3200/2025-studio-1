@@ -21,7 +21,6 @@ public class AvatarRegistryTest {
     private Files filesMock;
     private FileHandle avatarsHandleMock;
 
-    // Minimal JSON the registry expects (array of avatar objects)
     private static final String AVATARS_JSON = "[\n" +
             "  {\"id\":\"scout\",\"displayName\":\"Scout\",\"texturePath\":\"images/a.png\",\"baseHealth\":80,\"baseDamage\":10,\"moveSpeed\":5.0,\"atlas\":\"images/a.atlas\"},\n" +
             "  {\"id\":\"soldier\",\"displayName\":\"Soldier\",\"texturePath\":\"images/b.png\",\"baseHealth\":120,\"baseDamage\":15,\"moveSpeed\":3.8,\"atlas\":\"images/b.atlas\"}\n" +
@@ -42,7 +41,6 @@ public class AvatarRegistryTest {
         // Attach the mock to Gdx
         Gdx.files = filesMock;
 
-        // Clear any previously selected avatar
         AvatarRegistry.set(null);
     }
 
