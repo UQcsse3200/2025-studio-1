@@ -1,17 +1,20 @@
-
 package com.csse3200.game.components.minigames.pool;
 
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.RayCastCallback;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Timer;
+import com.csse3200.game.components.minigames.pool.logic.BasicTwoPlayerRules;
+import com.csse3200.game.components.minigames.pool.logic.GameEvents;
+import com.csse3200.game.components.minigames.pool.logic.RuleSet;
+import com.csse3200.game.components.minigames.pool.logic.RulesEvents;
+import com.csse3200.game.components.minigames.pool.physics.*;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.factories.InteractableStationFactory;
 import com.csse3200.game.physics.PhysicsEngine;
 import com.csse3200.game.rendering.TextureRenderComponent;
 import com.csse3200.game.services.ServiceLocator;
-import com.csse3200.game.components.minigames.pool.physics.*;
-import com.csse3200.game.components.minigames.pool.logic.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -61,13 +64,18 @@ public class PoolGame {
         this.rules = new BasicTwoPlayerRules(config);
 
         this.rules.setListener(new RulesEvents() {
-            @Override public void onTurnChanged(int current, int p1, int p2) {
+            @Override
+            public void onTurnChanged(int current, int p1, int p2) {
                 gameEntity.getEvents().trigger("pool:turn", current, p1, p2);
             }
-            @Override public void onScoreUpdated(int current, int p1, int p2) {
+
+            @Override
+            public void onScoreUpdated(int current, int p1, int p2) {
                 gameEntity.getEvents().trigger("pool:score", current, p1, p2);
             }
-            @Override public void onFoul(int foulingPlayer, String reason) {
+
+            @Override
+            public void onFoul(int foulingPlayer, String reason) {
                 gameEntity.getEvents().trigger("pool:foul", foulingPlayer, reason);
             }
         });
@@ -96,16 +104,33 @@ public class PoolGame {
         game.setInteractable(true);
 
         disp.setController(new PoolGameDisplay.Controller() {
-            @Override public void onStart() { PoolGame.this.onStart(); }
-            @Override public void onShoot(float dx, float dy, float p) { rules.onShoot(ballFactory.getCueBody(), dx, dy, p); }
-            @Override public void onReset() { PoolGame.this.onStart(); }
-            @Override public void onStop()  { PoolGame.this.onStop(); }
-            @Override public float capGuideLenPx(Vector2 cuePosNorm, Vector2 dirNorm, float desiredLenPx, float ballPx) {
+            @Override
+            public void onStart() {
+                PoolGame.this.onStart();
+            }
+
+            @Override
+            public void onShoot(float dx, float dy, float p) {
+                rules.onShoot(ballFactory.getCueBody(), dx, dy, p);
+            }
+
+            @Override
+            public void onReset() {
+                PoolGame.this.onStart();
+            }
+
+            @Override
+            public void onStop() {
+                PoolGame.this.onStop();
+            }
+
+            @Override
+            public float capGuideLenPx(Vector2 cuePosNorm, Vector2 dirNorm, float desiredLenPx, float ballPx) {
                 // px↔meters conversion using config + the UI’s current ball pixel radius
                 float pxPerMeter = ballPx / config.ballR();
                 float desiredLenMeters = desiredLenPx / pxPerMeter;
 
-                Vector2 cuePosWorld = TableSpace.toNorm(cuePosNorm, config);
+                Vector2 cuePosWorld = TableSpace.fromNorm(cuePosNorm, config);
                 Vector2 dirWorld = new Vector2(dirNorm).nor();
 
                 final float[] frac = {1f};
@@ -121,6 +146,12 @@ public class PoolGame {
                 float clampedMeters = desiredLenMeters * frac[0];
                 return clampedMeters * pxPerMeter; // back to pixels for the UI
             }
+
+            @Override
+            public boolean isShotActive() {
+                return rules.isShotActive();
+            }
+
         });
 
         return game;
@@ -130,15 +161,18 @@ public class PoolGame {
         gameEntity.getEvents().addListener("interact", this::onInteract);
         gameEntity.getEvents().addListener(GameEvents.START, this::onStart);
         gameEntity.getEvents().addListener(GameEvents.RESET, this::onStart);
-        gameEntity.getEvents().addListener(GameEvents.STOP,  this::onStop);
+        gameEntity.getEvents().addListener(GameEvents.STOP, this::onStop);
 
         // bridge physics → rules → UI
         pockets.setListener(new PocketContactSystem.Listener() {
-            @Override public void onScratch(int pocketIndex) {
+            @Override
+            public void onScratch(int pocketIndex) {
                 rules.onScratch(pocketIndex);
                 pushPositionsToUI();
             }
-            @Override public void onPotted(int ballId, int pocketIndex) {
+
+            @Override
+            public void onPotted(int ballId, int pocketIndex) {
                 rules.onBallPotted(ballId, pocketIndex);
                 pushPositionsToUI();
             }
@@ -169,7 +203,9 @@ public class PoolGame {
         pushPositionsToUI();
     }
 
-    private void onStop() { stopSync(); }
+    private void onStop() {
+        stopSync();
+    }
 
     private void buildIfNeeded() {
         if (!tableBuilder.isBuilt()) {
@@ -199,16 +235,20 @@ public class PoolGame {
     private void startSync() {
         stopSync();
         syncTask = Timer.schedule(new Timer.Task() {
-            @Override public void run() {
-                pockets.processDeferred();   // safe world mutations
+            @Override
+            public void run() {
+                pockets.processDeferred();
                 pushPositionsToUI();
-                rules.updateTurn();          // e.g., detect end-of-motion & advance turn
+                rules.updateTurn();
             }
         }, 0f, GameTuning.SYNC_PERIOD);
     }
 
     private void stopSync() {
-        if (syncTask != null) { syncTask.cancel(); syncTask = null; }
+        if (syncTask != null) {
+            syncTask.cancel();
+            syncTask = null;
+        }
     }
 
     private void pushPositionsToUI() {
@@ -220,5 +260,7 @@ public class PoolGame {
         display.setBalls(arr.toArray(Vector2.class));
     }
 
-    public Entity getGameEntity() { return gameEntity; }
+    public Entity getGameEntity() {
+        return gameEntity;
+    }
 }

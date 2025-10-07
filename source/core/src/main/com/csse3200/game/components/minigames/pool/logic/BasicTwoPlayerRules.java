@@ -82,7 +82,6 @@ public class BasicTwoPlayerRules implements RuleSet {
     @Override
     public void onScratch(int pocketIndex) {
         foulThisTurn = true;
-        // ball-in-hand will be applied when turn switches in updateTurn()
     }
 
     @Override
@@ -109,6 +108,11 @@ public class BasicTwoPlayerRules implements RuleSet {
         }
         pottedThisTurn = false;
         shotActive = false;
+    }
+
+    @Override
+    public boolean isShotActive() {
+        return shotActive;
     }
 
     private void switchTurn() {
