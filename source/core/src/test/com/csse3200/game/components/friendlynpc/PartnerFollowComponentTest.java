@@ -1,8 +1,6 @@
-// src/test/java/com/csse3200/game/components/friendlynpc/PartnerFollowComponentTest.java
 package com.csse3200.game.components.friendlynpc;
 
 import com.badlogic.gdx.math.Vector2;
-import com.csse3200.game.components.friendlynpc.PartnerFollowComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.services.GameTime;
 import com.csse3200.game.services.ServiceLocator;
@@ -12,9 +10,18 @@ import org.mockito.MockedStatic;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+/**
+ * Unit tests for PartnerFollowComponent:
+ * - Early returns when player is null or movement disabled
+ * - Teleport when distance > 5
+ * - Stop when distance <= 1
+ * - Move toward player when distance in (1, 5]
+ * - Uses ServiceLocator time dt, and falls back to default dt on exception
+ * - Accessor methods for move flag
+ */
 class PartnerFollowComponentTest {
 
-    /** 辅助：mock 出一个固定 dt 的 GameTime */
+    /** Helper: mock a GameTime with fixed dt and wire it via ServiceLocator */
     private static MockedStatic<ServiceLocator> mockDt(float dt) {
         GameTime time = mock(GameTime.class);
         when(time.getDeltaTime()).thenReturn(dt);
@@ -34,7 +41,7 @@ class PartnerFollowComponentTest {
             c.update();
         }
 
-        // 不应去 setPosition
+        // No movement when player is null
         verify(self, never()).setPosition(anyFloat(), anyFloat());
     }
 
@@ -44,11 +51,11 @@ class PartnerFollowComponentTest {
         Entity player = mock(Entity.class);
 
         when(self.getPosition()).thenReturn(new Vector2(0f, 0f));
-        when(player.getPosition()).thenReturn(new Vector2(3f, 0f)); // 距离 3，在移动区间
+        when(player.getPosition()).thenReturn(new Vector2(3f, 0f)); // distance 3 (inside movement band)
 
         PartnerFollowComponent c = new PartnerFollowComponent(player);
         c.setEntity(self);
-        c.setMove(false); // 关闭移动
+        c.setMove(false); // disable movement
 
         try (MockedStatic<ServiceLocator> ignored = mockDt(0.1f)) {
             c.update();
@@ -57,14 +64,13 @@ class PartnerFollowComponentTest {
         verify(self, never()).setPosition(anyFloat(), anyFloat());
     }
 
-
     @Test
     void update_teleports_whenDistanceGreaterThan5() {
         Entity self = mock(Entity.class);
         Entity player = mock(Entity.class);
 
         when(self.getPosition()).thenReturn(new Vector2(0f, 0f));
-        when(player.getPosition()).thenReturn(new Vector2(6f, 0f)); // 距离 6 > 5
+        when(player.getPosition()).thenReturn(new Vector2(6f, 0f)); // distance 6 > 5
 
         PartnerFollowComponent c = new PartnerFollowComponent(player);
         c.setEntity(self);
@@ -73,11 +79,11 @@ class PartnerFollowComponentTest {
             c.update();
         }
 
-        // 断言：只瞬移一次到 (player + 0.8, 0)
+        // Teleport exactly once to (player + 0.8, 0)
         verify(self, times(1)).setPosition(6f + 0.8f, 0f);
 
-        // ✅ 不要再调用 verifyNoMoreInteractions(self)，
-        // 因为 getPosition() 等合法交互也会被记录，导致失败。
+        // Do NOT call verifyNoMoreInteractions(self) here — legitimate calls like getPosition()
+        // would also be counted and cause a failure.
     }
 
     @Test
@@ -86,7 +92,7 @@ class PartnerFollowComponentTest {
         Entity player = mock(Entity.class);
 
         when(self.getPosition()).thenReturn(new Vector2(0f, 0f));
-        when(player.getPosition()).thenReturn(new Vector2(0.6f, 0.8f)); // 距离 = 1.0
+        when(player.getPosition()).thenReturn(new Vector2(0.6f, 0.8f)); // distance = 1.0
 
         PartnerFollowComponent c = new PartnerFollowComponent(player);
         c.setEntity(self);
@@ -95,7 +101,7 @@ class PartnerFollowComponentTest {
             c.update();
         }
 
-        // 在停止半径内不移动
+        // Inside stop radius: no movement
         verify(self, never()).setPosition(anyFloat(), anyFloat());
     }
 
@@ -105,12 +111,12 @@ class PartnerFollowComponentTest {
         Entity player = mock(Entity.class);
 
         when(self.getPosition()).thenReturn(new Vector2(0f, 0f));
-        when(player.getPosition()).thenReturn(new Vector2(3f, 0f)); // 距离 3 ∈ (1,5]
+        when(player.getPosition()).thenReturn(new Vector2(3f, 0f)); // distance 3 ∈ (1,5]
 
         PartnerFollowComponent c = new PartnerFollowComponent(player);
         c.setEntity(self);
 
-        // dt = 0.1 → SPEED(8) * dt = 0.8，方向 (1,0)，新位置应为 (0.8, 0)
+        // dt = 0.1 -> SPEED(8) * dt = 0.8; direction (1,0) -> new position should be (0.8, 0)
         try (MockedStatic<ServiceLocator> ignored = mockDt(0.1f)) {
             c.update();
         }
@@ -124,18 +130,18 @@ class PartnerFollowComponentTest {
         Entity player = mock(Entity.class);
 
         when(self.getPosition()).thenReturn(new Vector2(0f, 0f));
-        when(player.getPosition()).thenReturn(new Vector2(3f, 0f)); // 距离 3
+        when(player.getPosition()).thenReturn(new Vector2(3f, 0f)); // distance 3
 
         PartnerFollowComponent c = new PartnerFollowComponent(player);
         c.setEntity(self);
 
-        // 让 ServiceLocator.getTimeSource() 抛异常 → 应使用默认 dt = 0.016
+        // Force ServiceLocator.getTimeSource() to throw -> component should use default dt = 0.016
         try (MockedStatic<ServiceLocator> sl = mockStatic(ServiceLocator.class)) {
             sl.when(ServiceLocator::getTimeSource).thenThrow(new RuntimeException("no time"));
             c.update();
         }
 
-        // 期望位移 = 8 * 0.016 = 0.128，方向 (1,0)
+        // Expected displacement = 8 * 0.016 = 0.128, direction (1,0)
         verify(self, times(1)).setPosition(0.128f, 0f);
     }
 
