@@ -9,7 +9,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class TableBuilder {
-    // collision layers (use your project's constants)
     public static final short LAYER_RAIL = com.csse3200.game.physics.PhysicsLayer.OBSTACLE;
     public static final short LAYER_POCKET = LAYER_RAIL;
     public static final short LAYER_BALL = com.csse3200.game.physics.PhysicsLayer.NPC;
@@ -46,7 +45,7 @@ public class TableBuilder {
 
         ColliderComponent col = new ColliderComponent()
                 .setShape(loop)
-                .setFriction(0f)
+                .setFriction(0.05f)
                 .setRestitution(0.98f)
                 .setFilter(LAYER_RAIL, MASK_RAIL);
 
