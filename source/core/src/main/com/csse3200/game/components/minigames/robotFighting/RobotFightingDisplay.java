@@ -19,6 +19,11 @@ import com.csse3200.game.components.player.InventoryComponent;
 import com.csse3200.game.components.screens.ItemScreenDisplay;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.UIComponent;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.math.MathUtils;
 
 /**
  * Display class for the "Clanker Royale" minigame.
@@ -41,12 +46,23 @@ public class RobotFightingDisplay extends UIComponent {
     private Texture pixelTex;
     private Label currencyLabel, narratorLabel, dialogueLabel;
     private TextField betInput;
-    private ItemScreenDisplay itemPopup;
+    private ProgressBar healthBar1;
+    private ProgressBar healthBar2;
     private AnimatedImage competitor1;
     private AnimatedImage competitor2;
 
     // --- Game Elements ---
     private Robot selectedFighter;
+    private boolean active = false;
+    private Timer.Task typewriterTask;
+
+    // --- Motion fields ---
+    private Timer.Task motionTask;
+    private float motionTime = 0f;
+    private boolean motionPaused = false;
+    private static final float MOTION_AMPLITUDE = 30f; // side-to-side pixel shift
+    private static final float MOTION_SPEED = 2f;      // oscillation speed
+
 
     // --- References ---
     private final GameArea game = ServiceLocator.getGameArea();
@@ -54,13 +70,12 @@ public class RobotFightingDisplay extends UIComponent {
     @Override
     public void create() {
         super.create();
-        itemPopup = new ItemScreenDisplay();
-        entity.addComponent(itemPopup);
 
         buildBackdrop();
         buildWelcomeScreen();
         buildBetScreen();
         buildMainUI();
+        buildCompetitors();
 
         subscribeCurrencyUpdates();
         hide();
@@ -138,10 +153,19 @@ public class RobotFightingDisplay extends UIComponent {
         root.defaults().pad(10);
 
         Label title = makeLabel("Clanker Royale", TITLE_COLOR, 1.8f);
+
+        buildHealthBars();
+
+        // Create a header row table
+        Table headerRow = new Table();
+        headerRow.add(healthBar1).width(300).height(20).padRight(150);
+        headerRow.add(title).expandX().center();
+        headerRow.add(healthBar2).width(300).height(20).padLeft(150);
+
+        root.add(headerRow).colspan(2).padBottom(10).row();
+
         Image divider = makeImage(pixelTex, new Color(1f, 1f, 1f, 0.08f),
                 PANEL_W - 40f, 2f, 0, 0);
-
-        root.add(title).padBottom(10).row();
         root.add(divider).padBottom(8).row();
 
         Table grid = new Table();
@@ -152,16 +176,68 @@ public class RobotFightingDisplay extends UIComponent {
         narratorLabel.setAlignment(Align.center);
 
         footer = new Table();
-        TextureRegionDrawable bg = new TextureRegionDrawable(makeSolidTexture(Color.BLACK));
+        Drawable bg = makeSolidDrawable(Color.BLACK, (int) PANEL_W, 40);
         footer.setBackground(bg);
         footer.center();
         footer.add(narratorLabel).expandX().center();
 
         root.add().expandY().row();
         root.add(footer).growX().padTop(8f).padBottom(10f).bottom().row();
+
         stage.addActor(root);
         root.setVisible(false);
     }
+
+
+    private void buildCompetitors() {
+        float arenaX = background.getX();
+        float arenaY = background.getY();
+        float arenaWidth = background.getWidth();
+        float arenaHeight = background.getHeight();
+
+        // Vertically center the fighters relative to the background
+        float fighterHeight = 300f;
+        float arenaCenterY = arenaY + (arenaHeight - fighterHeight) / 2f;
+
+        competitor1 = createFighter(
+                Robot.DEEP_SPIN,
+                "float",
+                arenaX + arenaWidth - 250f,
+                arenaCenterY,
+                250,
+                250
+        );
+
+        competitor2 = createFighter(
+                Robot.GHOST_GPT,
+                "float",
+                arenaX + 50f,
+                arenaCenterY,
+                250,
+                250
+        );
+
+        stage.addActor(competitor1);
+        stage.addActor(competitor2);
+        setScreenVisible(competitor1, false);
+        setScreenVisible(competitor2, false);
+    }
+
+    private void buildHealthBars() {
+        ProgressBar.ProgressBarStyle healthBarStyle = new ProgressBar.ProgressBarStyle();
+        healthBarStyle.background = makeSolidDrawable(Color.DARK_GRAY, 300, 20);
+        healthBarStyle.knobBefore = makeSolidDrawable(Color.RED, 300, 20);
+
+        healthBar1 = new ProgressBar(0f, 100f, 1f, false, healthBarStyle);
+        healthBar2 = new ProgressBar(0f, 100f, 1f, false, healthBarStyle);
+
+        healthBar1.setValue(100f);
+        healthBar2.setValue(100f);
+
+        setScreenVisible(healthBar1, false);
+        setScreenVisible(healthBar2, false);
+    }
+
 
     // ------------------------------------------------------------------------
     // Event Handlers
@@ -183,7 +259,20 @@ public class RobotFightingDisplay extends UIComponent {
     }
 
     private void onFighterSelect() {
+        for (Actor f : new Actor[]{competitor1, competitor2}) {
+            final Actor fighter = f;
+            if (fighter == null) return;
 
+            fighter.addAction(Actions.scaleTo(0.8f, 0.8f, 0.5f));
+
+            startFighterMotion();
+
+            fighter.clearListeners();
+
+            narrateFightStart();
+        }
+        setScreenVisible(healthBar1, true);
+        setScreenVisible(healthBar2, true);
     }
 
     private void adjustBet(int delta) {
@@ -204,37 +293,108 @@ public class RobotFightingDisplay extends UIComponent {
         ));
     }
 
-    private void spawnFighters() {
-        float arenaX = background.getX();
-        float arenaY = background.getY();
-        float arenaWidth = background.getWidth();
-        float arenaHeight = background.getHeight();
-
-        // Vertically center the fighters relative to the background
-        float fighterHeight = 300f;
-        float arenaCenterY = arenaY + (arenaHeight - fighterHeight) / 2f;
-
-        competitor1 = createFighter(
-                Robot.DEEP_SPIN,
-                "float",
-                arenaX + arenaWidth - 350f,  // near the right edge
-                arenaCenterY,
-                300,
-                300
-        );
-
-        competitor2 = createFighter(
-                Robot.GHOST_GPT,
-                "float",
-                arenaX + 50f,                // near the left edge
-                arenaCenterY,
-                300,
-                300
-        );
-
-        stage.addActor(competitor1);
-        stage.addActor(competitor2);
+    private void narrateFightStart() {
+        showTypewriterTextChain(new String[]{
+                "Clankers to your corners.",
+                "3..",
+                "2.",
+                "1",
+                "CLANK!"
+        }, 0.05f, () -> entity.getEvents().trigger("robotFighting:startFight"));
     }
+
+    private void spawnFighters() {
+        if (!active) {
+            return;
+        }
+        for (Actor f : new Actor[]{competitor1, competitor2}) {
+            final Actor fighter = f;
+
+            setScreenVisible(fighter, true);
+            fighter.addAction(Actions.sequence(
+                    Actions.alpha(0f),
+                    Actions.fadeIn(1f)
+            ));
+        }
+    }
+
+    private void startFighterMotion() {
+        if (motionTask != null) motionTask.cancel();
+        motionTime = 0f;
+
+        float baseX1 = competitor1.getX();
+        float baseX2 = competitor2.getX();
+
+        motionTask = new Timer.Task() {
+            @Override
+            public void run() {
+                if (!active) {
+                    cancel();
+                    return;
+                }
+                if (motionPaused) {
+                    return;
+                }
+
+                motionTime += 0.05f; // time increment (update every 50 ms)
+                float offset = (float) Math.sin(motionTime * MOTION_SPEED) * MOTION_AMPLITUDE;
+
+                competitor1.setX(baseX1 + offset);
+                competitor2.setX(baseX2 - offset);
+            }
+        };
+
+        Timer.schedule(motionTask, 0f, 0.05f);
+    }
+
+    private void stopFighterMotion() {
+        if (motionTask != null) {
+            motionTask.cancel();
+            motionTask = null;
+        }
+    }
+
+    public void playAttackAnimation(Actor fighter) {
+        motionPaused = true;
+
+        float punchDistance = (fighter == competitor2) ? 150f : -150f;  // move 30px toward opponent
+        float punchSpeed = 0.14f;   // quick jab
+
+        fighter.addAction(Actions.sequence(
+                Actions.moveBy(punchDistance, 0f, punchSpeed),
+                Actions.run(() -> playHitAnimation(getOtherActor(fighter))),
+                Actions.moveBy(-punchDistance, 0f, punchSpeed),
+                Actions.run(() -> motionPaused = false)
+        ));
+    }
+
+    private void playHitAnimation(Actor fighter) {
+
+        float shake = (fighter == competitor2) ? 15f : -15f;
+        float speed = 0.03f;
+
+        fighter.addAction(Actions.sequence(
+                Actions.moveBy(shake, 0f, speed),
+                Actions.moveBy(-shake, 0f, speed),
+                Actions.moveBy(shake, 0f, speed),
+                Actions.moveBy(-shake, 0f, speed)
+        ));
+
+        fighter.addAction(Actions.sequence(
+                Actions.color(Color.RED, 0.05f),
+                Actions.delay(0.15f),
+                Actions.color(Color.WHITE, 0.1f)
+        ));
+    }
+
+    public void setHealthFighter(Actor fighter, float healthPercent) {
+        if (healthBar1 != null && fighter == competitor1) {
+            healthBar1.setValue(MathUtils.clamp(healthPercent, 0f, 100f));
+        } else if (healthBar2 != null && fighter == competitor2) {
+            healthBar2.setValue(MathUtils.clamp(healthPercent, 0f, 100f));
+        }
+    }
+
 
     // ------------------------------------------------------------------------
     // Helpers
@@ -258,18 +418,51 @@ public class RobotFightingDisplay extends UIComponent {
     }
 
     private void showTypewriterText(Label label, String fullText, float interval) {
-        label.setText("");
-        char[] chars = fullText.toCharArray();
+        if (typewriterTask != null) {
+            typewriterTask.cancel(); // stop any previous typewriter effect
+        }
+
         final int[] i = {0};
 
+        label.setText("");
+        final String full = fullText;
+        typewriterTask = new Timer.Task() {
+            @Override
+            public void run() {
+                if (i[0] < full.length()) {
+                    label.setText(full.substring(0, i[0] + 1)); // append only up to current index
+                    i[0]++;
+                } else {
+                    cancel();
+                    typewriterTask = null;
+                }
+            }
+        };
+
+
+        Timer.schedule(typewriterTask, 0, interval);
+    }
+
+
+    private void showTypewriterTextChain(String[] lines, float interval, Runnable onComplete) {
+        if (lines.length == 0) {
+            onComplete.run();
+            return;
+        }
+
+        showTypewriterText(narratorLabel, lines[0], interval);
+
+        float delay = lines[0].length() * interval + 0.5f; // extra pause
         Timer.schedule(new Timer.Task() {
             @Override
             public void run() {
-                if (i[0] < chars.length) {
-                    label.setText(label.getText() + String.valueOf(chars[i[0]++]));
-                } else cancel();
+                showTypewriterTextChain(
+                        java.util.Arrays.copyOfRange(lines, 1, lines.length),
+                        interval,
+                        onComplete
+                );
             }
-        }, 0, interval);
+        }, delay);
     }
 
     private void setScreenVisible(Actor actor, boolean visible) {
@@ -313,6 +506,16 @@ public class RobotFightingDisplay extends UIComponent {
         return t;
     }
 
+    private Drawable makeSolidDrawable(Color color, int width, int height) {
+        Pixmap pixmap = new Pixmap(width, height, Pixmap.Format.RGBA8888);
+        pixmap.setColor(color);
+        pixmap.fill();
+        Texture texture = new Texture(pixmap);
+        pixmap.dispose();
+        return new TextureRegionDrawable(new TextureRegion(texture));
+    }
+
+
     /**
      * Creates an AnimatedImage fighter from a texture atlas and animation name.
      *
@@ -343,26 +546,37 @@ public class RobotFightingDisplay extends UIComponent {
         fighter.setPosition(x, y);
 
         // Add a simple fade-in effect
-        fighter.addAction(Actions.sequence(
-                Actions.alpha(0f),
-                Actions.fadeIn(1f)
-        ));
 
-        fighter.addListener(new ChangeListener() {
-            @Override public void changed(ChangeEvent event, Actor actor) {
+        fighter.addListener(new ClickListener() {
+            @Override public void clicked(InputEvent event, float x, float y) {
                 switch (robot) {
-                    case DEEP_SPIN:
-                        selectedFighter = Robot.DEEP_SPIN;
-                        break;
-                    case GHOST_GPT:
-                        selectedFighter = Robot.GHOST_GPT;
-                        break;
+                    case DEEP_SPIN -> selectedFighter = Robot.DEEP_SPIN;
+                    case GHOST_GPT -> selectedFighter = Robot.GHOST_GPT;
                 }
                 onFighterSelect();
+                entity.getEvents().trigger("robotFighting:choose", robot);
             }
         });
-
+        fighter.setTouchable(Touchable.enabled);
         return fighter;
+    }
+
+    public Actor getChosenActor() {
+        if (selectedFighter == Robot.GHOST_GPT) {
+            return competitor1;
+        } else if (selectedFighter == Robot.DEEP_SPIN) {
+            return competitor2;
+        }
+        return null;
+    }
+
+    public Actor getOtherActor(Actor fighter) {
+        if (fighter == competitor2) {
+            return competitor1;
+        } else if (fighter == competitor1) {
+            return competitor2;
+        }
+        return null;
     }
 
 
@@ -371,6 +585,7 @@ public class RobotFightingDisplay extends UIComponent {
     // ------------------------------------------------------------------------
 
     public void show() {
+        active = true;
         updateBalanceLabel(currencyLabel);
         betInput.setText("0");
 
@@ -379,6 +594,7 @@ public class RobotFightingDisplay extends UIComponent {
     }
 
     public void hide() {
+        active = false;
         for (Actor actor : new Actor[]{frame, background, dimmer, root, welcomeRoot, betRoot, competitor1, competitor2})
             setScreenVisible(actor, false);
     }
@@ -393,7 +609,6 @@ public class RobotFightingDisplay extends UIComponent {
         for (Actor actor : new Actor[]{root, dimmer, frame, background, welcomeRoot, betRoot})
             if (actor != null) actor.remove();
         if (pixelTex != null) pixelTex.dispose();
-        if (itemPopup != null) itemPopup.dispose();
         super.dispose();
     }
 
