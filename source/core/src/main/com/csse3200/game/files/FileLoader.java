@@ -81,23 +81,15 @@ public class FileLoader {
      */
     public static <T> T readPlayer(Class<SaveGame.GameState> player, String filename, Location location) {
         logger.debug("Reading class {} from {}", player.getSimpleName(), filename);
-        json.addClassTag("loadedInventory", SaveGame.itemRetrieve.class);
-        json.addClassTag("player", SaveGame.information.class);
         FileHandle file = getFileHandle(filename, location);
-        SaveGame.GameState test = json.fromJson(SaveGame.GameState.class, file);
-        try {
-            JsonValue root = new JsonReader().parse(filename);
-            System.out.println(root.prettyPrint(JsonWriter.OutputType.json, 1));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+
         if (file == null) {
             logger.error("Failed to create file handle for {}", filename);
             return null;
         }
         Object object;
         try {
-            object = json.fromJson(Object.class, file);
+            object = json.fromJson(player, file);
         } catch (Exception e) {
             logger.error(e.getMessage());
             return null;
@@ -111,28 +103,6 @@ public class FileLoader {
 
         return (T) object;
     }
-
-
-    /**
-     * Reads Inventory component of a save file json
-     * - currently a placeholder for refacotring end sprint 2 / into sprint 3
-     *
-     * @param inventory string representation of the items
-     * @param playerInventory Inventory that will be populated
-     */
-    public static InventoryComponent readInventory(List<String> inventory, InventoryComponent playerInventory) {
-        ItemPickUpComponent testLoading = new ItemPickUpComponent(playerInventory);
-        //repopulates the inventory
-        if (inventory != null) {
-            for (int i = 0; i < inventory.size(); i++) {
-                Entity placehold = testLoading.createItemFromTexture(inventory.get(i));
-                playerInventory.addItem(placehold);
-            }
-        }
-
-        return playerInventory;
-    }
-
 
     /**
      * Write generic Java classes to a JSON file.

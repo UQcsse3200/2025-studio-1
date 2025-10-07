@@ -1,6 +1,5 @@
 package com.csse3200.game.components.player;
 
-import com.badlogic.gdx.utils.Json;
 import com.csse3200.game.components.Component;
 import com.csse3200.game.components.WeaponsStatsComponent;
 import com.csse3200.game.components.items.ItemComponent;
@@ -321,9 +320,4 @@ public class InventoryComponent extends Component {
             inventoryCount--;
         }
     }
-
-//    @Override
-//    public void write(Json json) {
-//
-//    }
 }
