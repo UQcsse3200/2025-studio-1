@@ -214,6 +214,23 @@ class InventoryComponentTest {
         }
 
         @Test
+        void shouldFailToSetWhenOccipied() {
+            Entity item1 = ItemFactory.createItem(texture);
+            Entity item2 = ItemFactory.createItem(texture);
+            inventory.setItem(0, item1);
+            assertFalse(inventory.setItem(0, item2), "Should fail to set item");
+        }
+
+        @Test
+        void shouldFailToSetWhenFull() {
+            for (int idx = 0; idx < 5; idx++) {
+                inventory.setItem(idx, ItemFactory.createItem(texture));
+            }
+            Entity item = ItemFactory.createItem(texture);
+            assertFalse(inventory.setItem(0, item));
+        }
+
+        @Test
         void shouldAddItem() {
             Entity item1 = ItemFactory.createItem(texture);
             assertTrue(inventory.addItem(item1), "Should successfully add first item");
@@ -238,6 +255,15 @@ class InventoryComponentTest {
         }
 
         @Test
+        void shouldFailWhenOccupied() {
+            for (int idx = 0; idx < 5; idx++) {
+                inventory.setItem(idx, ItemFactory.createItem(texture));
+            }
+            Entity item = ItemFactory.createItem(texture);
+            assertFalse(inventory.addItem(item), "Should fail to add item");
+        }
+
+        @Test
         void shouldSetGetCurrItem() {
             //Test for a weapon
             Entity thing = new Entity();
@@ -256,9 +282,18 @@ class InventoryComponentTest {
     }
 
     @Test
+    void shouldSetKeycardLevel() {
+        InventoryComponent inventory = new InventoryComponent(processor);
+        assertEquals(0,  inventory.getKeycardLevel(), "Keycard level should initialise to 0");
+
+        inventory.setKeycardLevel(1);
+        assertEquals(1, inventory.getKeycardLevel(), "Keycard level should be 1");
+    }
+
+    @Test
     void shouldSetGetProcessor() {
-        InventoryComponent inventory = new InventoryComponent(100);
-        assertEquals(100, inventory.getProcessor());
+        InventoryComponent inventory = new InventoryComponent(processor);
+        assertEquals(processor, inventory.getProcessor());
         inventory.setProcessor(150);
         assertEquals(150, inventory.getProcessor());
 
@@ -272,17 +307,17 @@ class InventoryComponentTest {
     @Test
     void shouldCheckHasProcessor() {
         InventoryComponent inventory = new InventoryComponent(150);
-        assertTrue(inventory.hasProcessor(100));
+        assertTrue(inventory.hasProcessor(processor));
         assertFalse(inventory.hasProcessor(200));
     }
 
     @Test
     void shouldAddProcessor() {
-        InventoryComponent inventory = new InventoryComponent(100);
+        InventoryComponent inventory = new InventoryComponent(processor);
         inventory.addProcessor(-500);
         assertEquals(0, inventory.getProcessor());
 
-        inventory.addProcessor(100);
+        inventory.addProcessor(processor);
         inventory.addProcessor(-20);
         assertEquals(80, inventory.getProcessor());
     }

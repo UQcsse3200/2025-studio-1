@@ -31,6 +31,13 @@ public class BaseEndScreenDisplays extends BaseScreenDisplay {
 
     private Label roundLabelRef;
     private Label timeLabelRef;
+    private Runnable leaderboardAction;
+
+    /** Allow chaining a Leaderboard button */
+    public BaseEndScreenDisplays withLeaderboard(Runnable leaderboardAction) {
+        this.leaderboardAction = leaderboardAction;
+        return this;
+    }
 
     protected BaseEndScreenDisplays(
             GdxGame game,
@@ -276,7 +283,12 @@ public class BaseEndScreenDisplays extends BaseScreenDisplay {
         TextButton secondary = button(secondaryText, buttonLabelScale(), secondaryAction);
         row.add(primary).left().padRight(buttonsGap());
         row.add(secondary).left();
-        root.add(row).colspan(2).center();
+
+        if (leaderboardAction != null) {
+            root.add(button("Leaderboard", buttonLabelScale(), leaderboardAction))
+                    .pad(blockPad())
+                    .row();
+        }
     }
 
     public void setRound(int round) {

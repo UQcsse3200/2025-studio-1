@@ -5,9 +5,16 @@ import com.badlogic.gdx.math.GridPoint2;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.CameraComponent;
+import com.csse3200.game.components.minigames.BettingComponent;
+import com.csse3200.game.components.minigames.BlackJackGame;
+import com.csse3200.game.components.player.InventoryComponent;
+import com.csse3200.game.components.screens.BlackjackScreenDisplay;
 import com.csse3200.game.entities.Entity;
+import com.csse3200.game.entities.factories.InteractableStationFactory;
 import com.csse3200.game.entities.factories.characters.PlayerFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
+import com.csse3200.game.rendering.TextureRenderComponent;
+import com.csse3200.game.components.minigames.slots.SlotsGame;
 
 /**
  * Minimal generic Casino room: walls, a single right-side door, and a subtle background overlay.
@@ -37,7 +44,11 @@ public class CasinoGameArea extends GameArea {
 
         spawnBordersAndDoors();
         spawnFloor();
+
         player = spawnPlayer();
+        spawnBlackjack();
+
+        spawnSlotsGame();
     }
 
     /**
@@ -71,9 +82,7 @@ public class CasinoGameArea extends GameArea {
      * Spawns the player at PLAYER_SPAWN and returns the entity.
      */
     private Entity spawnPlayer() {
-        Entity newPlayer = PlayerFactory.createPlayer();
-        spawnEntityAt(newPlayer, PLAYER_SPAWN, true, true);
-        return newPlayer;
+        return spawnOrRepositionPlayer(PLAYER_SPAWN);
     }
 
     /**
@@ -96,5 +105,19 @@ public class CasinoGameArea extends GameArea {
 
     public static CasinoGameArea load(TerrainFactory terrainFactory, CameraComponent camera) {
         return (new CasinoGameArea(terrainFactory, camera));
+    }
+
+    private void spawnBlackjack() {
+        Entity blackjack = InteractableStationFactory.createBaseStation();
+        blackjack.addComponent(new TextureRenderComponent("images/blackjack_table.png"));
+        blackjack.addComponent(new BettingComponent(2, player.getComponent(InventoryComponent.class)));
+        blackjack.addComponent(new BlackJackGame());
+        blackjack.addComponent(new BlackjackScreenDisplay());
+        spawnEntityAt(blackjack, new GridPoint2(20, 7), true, true);
+    }
+    private void spawnSlotsGame() {
+        GridPoint2 pos = new GridPoint2(23, 7);
+        InventoryComponent inv = player.getComponent(InventoryComponent.class);
+        spawnEntityAt(new SlotsGame(inv).getGameEntity(), pos, true, true);
     }
 }

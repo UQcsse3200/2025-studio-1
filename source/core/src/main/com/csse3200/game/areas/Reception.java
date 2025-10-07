@@ -11,13 +11,13 @@ import com.csse3200.game.entities.factories.characters.PlayerFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import com.csse3200.game.services.ServiceLocator;
 
 /**
  * Second floor with different background and arrow-key controls.
  */
 public class Reception extends GameArea {
-    private static final Logger logger = LoggerFactory.getLogger(Reception.class);
-    private static GridPoint2 playerSpawn = new GridPoint2(8, 10);
+    private static GridPoint2 playerSpawn = new GridPoint2(10, 10);
     private static final float WALL_WIDTH = 0.1f;
     private int roomDiffNumber = 2;
 
@@ -113,9 +113,8 @@ public class Reception extends GameArea {
         clearAndLoad(() -> new MainHall(terrainFactory, cameraComponent));
     }
 
-    private void spawnPlayer() {
-        Entity player = PlayerFactory.createPlayer();
-        spawnEntityAt(player, playerSpawn, true, true);
+    private Entity spawnPlayer() {
+        return spawnOrRepositionPlayer(playerSpawn);
     }
 
     private void spawnplatform2() {
@@ -198,6 +197,6 @@ public class Reception extends GameArea {
     }
 
     public Entity getPlayer() {
-        return null;
+        return ServiceLocator.getPlayer();
     }
 }

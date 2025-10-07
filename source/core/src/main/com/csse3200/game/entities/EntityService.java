@@ -1,6 +1,7 @@
 package com.csse3200.game.entities;
 
 import com.badlogic.gdx.utils.Array;
+import com.csse3200.game.services.ServiceLocator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -66,8 +67,12 @@ public class EntityService {
             }
         }
         for (Entity entity : toRemove) {
-            entity.dispose();
-            unregister(entity);
+            // Don't dispose the player entity even if marked for removal
+            Entity player = ServiceLocator.getPlayer();
+            if (entity != player) {
+                entity.dispose();
+                unregister(entity);
+            }
         }
     }
 
@@ -77,6 +82,18 @@ public class EntityService {
     public void dispose() {
         for (Entity entity : entities) {
             entity.dispose();
+        }
+    }
+
+    /**
+     * Dispose all entities except the player.
+     */
+    public void disposeExceptPlayer() {
+        Entity player = ServiceLocator.getPlayer();
+        for (Entity entity : entities) {
+            if (entity != player) {
+                entity.dispose();
+            }
         }
     }
 
