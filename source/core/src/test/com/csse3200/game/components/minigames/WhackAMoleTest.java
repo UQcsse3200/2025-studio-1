@@ -21,6 +21,7 @@ import static org.mockito.Mockito.*;
 
 class WhackAMoleGameTest {
 
+    /** Lightweight test double of the display that avoids Stage/Skin. */
     static class TestDisplay extends WhackAMoleDisplay {
         int score = 0;
         boolean running = false;
@@ -69,6 +70,7 @@ class WhackAMoleGameTest {
         game = new WhackAMoleGame();
         gameEntity = game.getGameEntity();
 
+        // Swap the real display for a test double to avoid Stage/Skin
         testDisplay = new TestDisplay();
         swapDisplay(game, testDisplay);
     }
@@ -78,7 +80,7 @@ class WhackAMoleGameTest {
         ServiceLocator.clear();
     }
 
-    // Helpers
+    // ---------- Helpers ----------
 
     private boolean isRunning() {
         try {
@@ -110,20 +112,19 @@ class WhackAMoleGameTest {
         }
     }
 
-    // Tests
+    // ---------- Tests ----------
 
     @Test
     @DisplayName("Interact toggles UI: first opens+prepares, second hides and stops")
     void interactTogglesUI() {
-        // First interact -> open & prepare
         gameEntity.getEvents().trigger("interact");
         assertEquals(0, testDisplay.getScore(), "Score should reset on open");
 
+        gameEntity.getEvents().trigger("betPlaced");
         gameEntity.getEvents().trigger("wm:start");
         assertTrue(isRunning(), "Should be running after start");
 
         gameEntity.getEvents().trigger("interact");
-
         assertTrue(testDisplay.hideCalled, "Display.hide() should be called");
         assertFalse(isRunning(), "Game should be stopped after second interact");
     }
@@ -131,6 +132,7 @@ class WhackAMoleGameTest {
     @Test
     @DisplayName("Start then Stop: onStop cleans state; hits while stopped ignored")
     void startThenStop() {
+        gameEntity.getEvents().trigger("betPlaced");
         gameEntity.getEvents().trigger("wm:start");
         assertTrue(isRunning(), "Should be running after start");
 
@@ -146,6 +148,7 @@ class WhackAMoleGameTest {
     @Test
     @DisplayName("Hit during running but below target does not end the game")
     void hitBelowTargetKeepsRunning() {
+        gameEntity.getEvents().trigger("betPlaced");
         gameEntity.getEvents().trigger("wm:start");
         assertTrue(isRunning(), "Should be running");
 
@@ -158,6 +161,7 @@ class WhackAMoleGameTest {
     @Test
     @DisplayName("Win: score >= 20 then hit -> stops and resets with 'You Win!'")
     void winAtTwenty() {
+        gameEntity.getEvents().trigger("betPlaced");
         gameEntity.getEvents().trigger("wm:start");
         assertTrue(isRunning(), "Should be running");
 
@@ -173,6 +177,7 @@ class WhackAMoleGameTest {
     @Test
     @DisplayName("Lose: two misses -> stops and resets with 'You Lose'")
     void loseAfterTwoMisses() {
+        gameEntity.getEvents().trigger("betPlaced");
         gameEntity.getEvents().trigger("wm:start");
         assertTrue(isRunning(), "Should be running");
 
