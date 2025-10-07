@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.MathUtils;
@@ -63,6 +64,7 @@ public final class PoolTable extends Widget {
     private boolean showCue = true;
     // Cue kickback anim (0..1)
     private float cueKickT = 0f;
+
     // ------------------------------------------------------------
     // Construction
     // ------------------------------------------------------------
@@ -281,20 +283,30 @@ public final class PoolTable extends Widget {
 
         // Cue stick
         if (showCue) {
-            float cueLen = ballPx * CUE_LEN_BALLS;
-            float kick = (float) Math.pow(cueKickT, 2) * ballPx * CUE_KICK_SCALE_BALLS;
-            float off = ballPx * CUE_OFFSET_BALLS + kick;
-            float cx = cbx - aimDir.x * (off + cueLen / 2f);
-            float cy = cby - aimDir.y * (off + cueLen / 2f);
+            float cueLen = ballPx * 7f;
+            float cueH = ballPx * 0.5f;
+            float kick = (float) Math.pow(cueKickT, 2) * ballPx * 0.7f;
 
-            batch.draw(cueTex, cx, cy, cueLen / 2f, ballPx * 0.25f, cueLen, ballPx * 0.5f, 1f, 1f);
+            float offCenter = ballPx * 0.55f + kick + cueLen * 0.5f;
+
+            // the cue center position
+            float cx = cbx - aimDir.x * offCenter;
+            float cy = cby - aimDir.y * offCenter;
+
+            float angleDeg = MathUtils.atan2(aimDir.y, aimDir.x) * MathUtils.radiansToDegrees;
+
+            Sprite cueSprite = new Sprite(cueTex);
+            cueSprite.setSize(cueLen, cueH);
+            cueSprite.setOriginCenter();
+            cueSprite.setRotation(angleDeg);
+            cueSprite.setCenter(cx, cy);
+            cueSprite.draw(batch);
         }
     }
 
     /**
      * Supplies current cue power in [0..1].
      */
-    @FunctionalInterface
     public interface PowerProvider {
         float get();
     }
@@ -306,7 +318,6 @@ public final class PoolTable extends Widget {
      * - desiredLenPx: requested guide length in pixels,
      * - ballPx: cue ball radius in pixels (for stable px↔m conversion).
      */
-    @FunctionalInterface
     public interface GuideCapper {
         float capGuideLenPx(Vector2 cuePosNorm, Vector2 dirNorm, float desiredLenPx, float ballPx);
     }

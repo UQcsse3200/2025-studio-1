@@ -17,8 +17,8 @@ public class TableBuilder {
     private static final Logger log = LoggerFactory.getLogger(TableBuilder.class);
     private final PoolWorld world;
     private final TableConfig cfg;
-    private Entity railsEntity;
     private final Body[] pocketSensors = new Body[6];
+    private Entity railsEntity;
 
     public TableBuilder(PoolWorld world, TableConfig cfg) {
         this.world = world;
