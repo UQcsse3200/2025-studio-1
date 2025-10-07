@@ -131,6 +131,12 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Creates a weapon with attachments on it</div>
 </div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#setItemNameFromConfig(com.csse3200.game.entities.configs.weapons.WeaponConfig,com.csse3200.game.components.items.ItemComponent)" class="member-name-link">setItemNameFromConfig</a><wbr>(<a href="../../configs/weapons/WeaponConfig.html" title="class in com.csse3200.game.entities.configs.weapons">WeaponConfig</a>&nbsp;config,
+ <a href="../../../components/items/ItemComponent.html" title="class in com.csse3200.game.components.items">ItemComponent</a>&nbsp;item)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Copies the name from the specified <a href="../../configs/weapons/WeaponConfig.html" title="class in com.csse3200.game.entities.configs.weapons"><code>WeaponConfig</code></a> into the given <a href="../../../components/items/ItemComponent.html" title="class in com.csse3200.game.components.items"><code>ItemComponent</code></a>.</div>
+</div>
 </div>
 </div>
 </div>
@@ -195,6 +201,20 @@ loadScripts(document, 'script');</script>
 <dd><code>player</code> - Current player.</dd>
 <dt>Returns:</dt>
 <dd>An AnimationRenderComponent that can be attached to a weapon.</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="setItemNameFromConfig(com.csse3200.game.entities.configs.weapons.WeaponConfig,com.csse3200.game.components.items.ItemComponent)">
+<h3>setItemNameFromConfig</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setItemNameFromConfig</span><wbr><span class="parameters">(<a href="../../configs/weapons/WeaponConfig.html" title="class in com.csse3200.game.entities.configs.weapons">WeaponConfig</a>&nbsp;config,
+ <a href="../../../components/items/ItemComponent.html" title="class in com.csse3200.game.components.items">ItemComponent</a>&nbsp;item)</span></div>
+<div class="block">Copies the name from the specified <a href="../../configs/weapons/WeaponConfig.html" title="class in com.csse3200.game.entities.configs.weapons"><code>WeaponConfig</code></a> into the given <a href="../../../components/items/ItemComponent.html" title="class in com.csse3200.game.components.items"><code>ItemComponent</code></a>.
+ If the config's name is not null or empty, this sets the item's name to match the config.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>config</code> - is the weapon configuration containing the name to assign</dd>
+<dd><code>item</code> - is the ItemComponent whose name will be assigned</dd>
 </dl>
 </section>
 </li>

@@ -91,13 +91,18 @@ loadScripts(document, 'script');</script>
 </div>
 <section class="class-description" id="class-description">
 <dl class="notes">
+<dt>Record Components:</dt>
+<dd><code><span id="param-position">position</span></code> - The grid coordinates where the item(s) should be spawned.</dd>
+<dd><code><span id="param-quantity">quantity</span></code> - The number of items to spawn at the specified position.</dd>
+</dl>
+<dl class="notes">
 <dt>Enclosing class:</dt>
 <dd><code><a href="ItemSpawner.html" title="class in com.csse3200.game.entities.spawner">ItemSpawner</a></code></dd>
 </dl>
 <hr>
 <div class="type-signature"><span class="modifiers">public static record </span><span class="element-name type-name-label">ItemSpawner.ItemSpawnInfo</span>(com.badlogic.gdx.math.GridPoint2&nbsp;position, int&nbsp;quantity)
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Record.html" title="class or interface in java.lang" class="external-link">Record</a></span></div>
-<div class="block">It holds the information needed to spawn an item</div>
+<div class="block">A record to store the position and quantity for a specific item spawn event.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -141,12 +146,12 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.badlogic.gdx.math.GridPoint2</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#position()" class="member-name-link">position</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Returns the value of the <code>position</code> record component.</div>
+<div class="block">Returns the value of the <a href="#param-position"><code>position</code></a> record component.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#quantity()" class="member-name-link">quantity</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Returns the value of the <code>quantity</code> record component.</div>
+<div class="block">Returns the value of the <a href="#param-quantity"><code>quantity</code></a> record component.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#toString()" class="member-name-link">toString</a>()</code></div>
@@ -178,8 +183,8 @@ loadScripts(document, 'script');</script>
 <div class="block">Creates an instance of a <code>ItemSpawnInfo</code> record class.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>position</code> - the value for the <code>position</code> record component</dd>
-<dd><code>quantity</code> - the value for the <code>quantity</code> record component</dd>
+<dd><code>position</code> - the value for the <a href="#param-position"><code>position</code></a> record component</dd>
+<dd><code>quantity</code> - the value for the <a href="#param-quantity"><code>quantity</code></a> record component</dd>
 </dl>
 </section>
 </li>
@@ -236,10 +241,10 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="position()">
 <h3>position</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">com.badlogic.gdx.math.GridPoint2</span>&nbsp;<span class="element-name">position</span>()</div>
-<div class="block">Returns the value of the <code>position</code> record component.</div>
+<div class="block">Returns the value of the <a href="#param-position"><code>position</code></a> record component.</div>
 <dl class="notes">
 <dt>Returns:</dt>
-<dd>the value of the <code>position</code> record component</dd>
+<dd>the value of the <a href="#param-position"><code>position</code></a> record component</dd>
 </dl>
 </section>
 </li>
@@ -247,10 +252,10 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="quantity()">
 <h3>quantity</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">quantity</span>()</div>
-<div class="block">Returns the value of the <code>quantity</code> record component.</div>
+<div class="block">Returns the value of the <a href="#param-quantity"><code>quantity</code></a> record component.</div>
 <dl class="notes">
 <dt>Returns:</dt>
-<dd>the value of the <code>quantity</code> record component</dd>
+<dd>the value of the <a href="#param-quantity"><code>quantity</code></a> record component</dd>
 </dl>
 </section>
 </li>

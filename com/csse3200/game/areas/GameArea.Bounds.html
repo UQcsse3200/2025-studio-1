@@ -91,13 +91,23 @@ loadScripts(document, 'script');</script>
 </div>
 <section class="class-description" id="class-description">
 <dl class="notes">
+<dt>Record Components:</dt>
+<dd><code><span id="param-leftX">leftX</span></code> - The leftmost x-coordinate of the camera's viewport.</dd>
+<dd><code><span id="param-rightX">rightX</span></code> - The rightmost x-coordinate of the camera's viewport.</dd>
+<dd><code><span id="param-bottomY">bottomY</span></code> - The bottommost y-coordinate of the camera's viewport.</dd>
+<dd><code><span id="param-topY">topY</span></code> - The topmost y-coordinate of the camera's viewport.</dd>
+<dd><code><span id="param-viewWidth">viewWidth</span></code> - The full width of the camera's viewport.</dd>
+<dd><code><span id="param-viewHeight">viewHeight</span></code> - The full height of the camera's viewport.</dd>
+<dd><code><span id="param-camPos">camPos</span></code> - The center position of the camera.</dd>
+</dl>
+<dl class="notes">
 <dt>Enclosing class:</dt>
 <dd><code><a href="GameArea.html" title="class in com.csse3200.game.areas">GameArea</a></code></dd>
 </dl>
 <hr>
 <div class="type-signature"><span class="modifiers">protected static record </span><span class="element-name type-name-label">GameArea.Bounds</span>(float&nbsp;leftX, float&nbsp;rightX, float&nbsp;bottomY, float&nbsp;topY, float&nbsp;viewWidth, float&nbsp;viewHeight, com.badlogic.gdx.math.Vector2&nbsp;camPos)
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Record.html" title="class or interface in java.lang" class="external-link">Record</a></span></div>
-<div class="block">Camera bounds helper.</div>
+<div class="block">A helper record to store the calculated boundaries of the camera's viewport.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -138,12 +148,12 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>float</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#bottomY()" class="member-name-link">bottomY</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Returns the value of the <code>bottomY</code> record component.</div>
+<div class="block">Returns the value of the <a href="#param-bottomY"><code>bottomY</code></a> record component.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.badlogic.gdx.math.Vector2</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#camPos()" class="member-name-link">camPos</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Returns the value of the <code>camPos</code> record component.</div>
+<div class="block">Returns the value of the <a href="#param-camPos"><code>camPos</code></a> record component.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final boolean</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#equals(java.lang.Object)" class="member-name-link">equals</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;o)</code></div>
@@ -158,17 +168,17 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>float</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#leftX()" class="member-name-link">leftX</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Returns the value of the <code>leftX</code> record component.</div>
+<div class="block">Returns the value of the <a href="#param-leftX"><code>leftX</code></a> record component.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>float</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#rightX()" class="member-name-link">rightX</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Returns the value of the <code>rightX</code> record component.</div>
+<div class="block">Returns the value of the <a href="#param-rightX"><code>rightX</code></a> record component.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>float</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#topY()" class="member-name-link">topY</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Returns the value of the <code>topY</code> record component.</div>
+<div class="block">Returns the value of the <a href="#param-topY"><code>topY</code></a> record component.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#toString()" class="member-name-link">toString</a>()</code></div>
@@ -178,12 +188,12 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>float</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#viewHeight()" class="member-name-link">viewHeight</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Returns the value of the <code>viewHeight</code> record component.</div>
+<div class="block">Returns the value of the <a href="#param-viewHeight"><code>viewHeight</code></a> record component.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>float</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#viewWidth()" class="member-name-link">viewWidth</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Returns the value of the <code>viewWidth</code> record component.</div>
+<div class="block">Returns the value of the <a href="#param-viewWidth"><code>viewWidth</code></a> record component.</div>
 </div>
 </div>
 </div>
@@ -215,13 +225,13 @@ loadScripts(document, 'script');</script>
 <div class="block">Creates an instance of a <code>Bounds</code> record class.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>leftX</code> - the value for the <code>leftX</code> record component</dd>
-<dd><code>rightX</code> - the value for the <code>rightX</code> record component</dd>
-<dd><code>bottomY</code> - the value for the <code>bottomY</code> record component</dd>
-<dd><code>topY</code> - the value for the <code>topY</code> record component</dd>
-<dd><code>viewWidth</code> - the value for the <code>viewWidth</code> record component</dd>
-<dd><code>viewHeight</code> - the value for the <code>viewHeight</code> record component</dd>
-<dd><code>camPos</code> - the value for the <code>camPos</code> record component</dd>
+<dd><code>leftX</code> - the value for the <a href="#param-leftX"><code>leftX</code></a> record component</dd>
+<dd><code>rightX</code> - the value for the <a href="#param-rightX"><code>rightX</code></a> record component</dd>
+<dd><code>bottomY</code> - the value for the <a href="#param-bottomY"><code>bottomY</code></a> record component</dd>
+<dd><code>topY</code> - the value for the <a href="#param-topY"><code>topY</code></a> record component</dd>
+<dd><code>viewWidth</code> - the value for the <a href="#param-viewWidth"><code>viewWidth</code></a> record component</dd>
+<dd><code>viewHeight</code> - the value for the <a href="#param-viewHeight"><code>viewHeight</code></a> record component</dd>
+<dd><code>camPos</code> - the value for the <a href="#param-camPos"><code>camPos</code></a> record component</dd>
 </dl>
 </section>
 </li>
@@ -278,10 +288,10 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="leftX()">
 <h3>leftX</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">leftX</span>()</div>
-<div class="block">Returns the value of the <code>leftX</code> record component.</div>
+<div class="block">Returns the value of the <a href="#param-leftX"><code>leftX</code></a> record component.</div>
 <dl class="notes">
 <dt>Returns:</dt>
-<dd>the value of the <code>leftX</code> record component</dd>
+<dd>the value of the <a href="#param-leftX"><code>leftX</code></a> record component</dd>
 </dl>
 </section>
 </li>
@@ -289,10 +299,10 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="rightX()">
 <h3>rightX</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">rightX</span>()</div>
-<div class="block">Returns the value of the <code>rightX</code> record component.</div>
+<div class="block">Returns the value of the <a href="#param-rightX"><code>rightX</code></a> record component.</div>
 <dl class="notes">
 <dt>Returns:</dt>
-<dd>the value of the <code>rightX</code> record component</dd>
+<dd>the value of the <a href="#param-rightX"><code>rightX</code></a> record component</dd>
 </dl>
 </section>
 </li>
@@ -300,10 +310,10 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="bottomY()">
 <h3>bottomY</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">bottomY</span>()</div>
-<div class="block">Returns the value of the <code>bottomY</code> record component.</div>
+<div class="block">Returns the value of the <a href="#param-bottomY"><code>bottomY</code></a> record component.</div>
 <dl class="notes">
 <dt>Returns:</dt>
-<dd>the value of the <code>bottomY</code> record component</dd>
+<dd>the value of the <a href="#param-bottomY"><code>bottomY</code></a> record component</dd>
 </dl>
 </section>
 </li>
@@ -311,10 +321,10 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="topY()">
 <h3>topY</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">topY</span>()</div>
-<div class="block">Returns the value of the <code>topY</code> record component.</div>
+<div class="block">Returns the value of the <a href="#param-topY"><code>topY</code></a> record component.</div>
 <dl class="notes">
 <dt>Returns:</dt>
-<dd>the value of the <code>topY</code> record component</dd>
+<dd>the value of the <a href="#param-topY"><code>topY</code></a> record component</dd>
 </dl>
 </section>
 </li>
@@ -322,10 +332,10 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="viewWidth()">
 <h3>viewWidth</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">viewWidth</span>()</div>
-<div class="block">Returns the value of the <code>viewWidth</code> record component.</div>
+<div class="block">Returns the value of the <a href="#param-viewWidth"><code>viewWidth</code></a> record component.</div>
 <dl class="notes">
 <dt>Returns:</dt>
-<dd>the value of the <code>viewWidth</code> record component</dd>
+<dd>the value of the <a href="#param-viewWidth"><code>viewWidth</code></a> record component</dd>
 </dl>
 </section>
 </li>
@@ -333,10 +343,10 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="viewHeight()">
 <h3>viewHeight</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">viewHeight</span>()</div>
-<div class="block">Returns the value of the <code>viewHeight</code> record component.</div>
+<div class="block">Returns the value of the <a href="#param-viewHeight"><code>viewHeight</code></a> record component.</div>
 <dl class="notes">
 <dt>Returns:</dt>
-<dd>the value of the <code>viewHeight</code> record component</dd>
+<dd>the value of the <a href="#param-viewHeight"><code>viewHeight</code></a> record component</dd>
 </dl>
 </section>
 </li>
@@ -344,10 +354,10 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="camPos()">
 <h3>camPos</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">com.badlogic.gdx.math.Vector2</span>&nbsp;<span class="element-name">camPos</span>()</div>
-<div class="block">Returns the value of the <code>camPos</code> record component.</div>
+<div class="block">Returns the value of the <a href="#param-camPos"><code>camPos</code></a> record component.</div>
 <dl class="notes">
 <dt>Returns:</dt>
-<dd>the value of the <code>camPos</code> record component</dd>
+<dd>the value of the <a href="#param-camPos"><code>camPos</code></a> record component</dd>
 </dl>
 </section>
 </li>

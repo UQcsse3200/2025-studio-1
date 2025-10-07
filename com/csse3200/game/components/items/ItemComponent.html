@@ -140,20 +140,31 @@ loadScripts(document, 'script');</script>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Gets the description for the item</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getName()" class="member-name-link">getName</a>()</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.badlogic.gdx.math.Vector2</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getEquipOffset()" class="member-name-link">getEquipOffset</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Returns the name of this item.</div>
+<div class="block">Returns the offset of where the item should be displayed from the player
+ for it to look normal</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getTexture()" class="member-name-link">getTexture</a>()</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getName()" class="member-name-link">getName</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Returns the name of this item.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getTexture()" class="member-name-link">getTexture</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns the texture path of the current item</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../../entities/configs/ItemTypes.html" title="enum class in com.csse3200.game.entities.configs">ItemTypes</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getType()" class="member-name-link">getType</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../../entities/configs/ItemTypes.html" title="enum class in com.csse3200.game.entities.configs">ItemTypes</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getType()" class="member-name-link">getType</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns the type of this item.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isPickupable()" class="member-name-link">isPickupable</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">This checks if the item can be picked up</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setCount(int)" class="member-name-link">setCount</a><wbr>(int&nbsp;count)</code></div>
@@ -166,13 +177,18 @@ loadScripts(document, 'script');</script>
 <div class="block">Sets the name of this item.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setTexture(java.lang.String)" class="member-name-link">setTexture</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;texture)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setPickupable(boolean)" class="member-name-link">setPickupable</a><wbr>(boolean&nbsp;status)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Sets the texture path of the current item</div>
+<div class="block">This changes whether the Item can be picked up by the player</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setType(com.csse3200.game.entities.configs.ItemTypes)" class="member-name-link">setType</a><wbr>(<a href="../../entities/configs/ItemTypes.html" title="enum class in com.csse3200.game.entities.configs">ItemTypes</a>&nbsp;type)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setTexture(java.lang.String)" class="member-name-link">setTexture</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;texture)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Sets the texture path of the current item</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setType(com.csse3200.game.entities.configs.ItemTypes)" class="member-name-link">setType</a><wbr>(<a href="../../entities/configs/ItemTypes.html" title="enum class in com.csse3200.game.entities.configs">ItemTypes</a>&nbsp;type)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Sets the type of this item.</div>
 </div>
 </div>
@@ -254,6 +270,28 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
+<section class="detail" id="setPickupable(boolean)">
+<h3>setPickupable</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setPickupable</span><wbr><span class="parameters">(boolean&nbsp;status)</span></div>
+<div class="block">This changes whether the Item can be picked up by the player</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>status</code> - True if the item can be picked up, False otherwise</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="isPickupable()">
+<h3>isPickupable</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isPickupable</span>()</div>
+<div class="block">This checks if the item can be picked up</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>True if pickupable is true, false otherwise</dd>
+</dl>
+</section>
+</li>
+<li>
 <section class="detail" id="getCount()">
 <h3>getCount</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">getCount</span>()</div>
@@ -303,6 +341,18 @@ loadScripts(document, 'script');</script>
 <dt>Returns:</dt>
 <dd>A formatted description of the item
  with its; name, id, type, and current count.</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getEquipOffset()">
+<h3>getEquipOffset</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">com.badlogic.gdx.math.Vector2</span>&nbsp;<span class="element-name">getEquipOffset</span>()</div>
+<div class="block">Returns the offset of where the item should be displayed from the player
+ for it to look normal</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>A new Vector2 containing the offset as x and y displacement.</dd>
 </dl>
 </section>
 </li>

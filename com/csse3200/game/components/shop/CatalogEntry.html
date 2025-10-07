@@ -90,6 +90,14 @@ loadScripts(document, 'script');</script>
 </div>
 </div>
 <section class="class-description" id="class-description">
+<dl class="notes">
+<dt>Record Components:</dt>
+<dd><code><span id="param-item">item</span></code> - The <a href="../../entities/Entity.html" title="class in com.csse3200.game.entities"><code>Entity</code></a> representing the item for sale.</dd>
+<dd><code><span id="param-price">price</span></code> - The purchase price of a single unit of the item.</dd>
+<dd><code><span id="param-enabled">enabled</span></code> - Whether the item is currently available for purchase.</dd>
+<dd><code><span id="param-maxStack">maxStack</span></code> - The maximum number of this item that can be held in a single inventory slot.</dd>
+<dd><code><span id="param-bundleQuantity">bundleQuantity</span></code> - The number of units sold in a single purchase transaction.</dd>
+</dl>
 <hr>
 <div class="type-signature"><span class="modifiers">public record </span><span class="element-name type-name-label">CatalogEntry</span>(<a href="../../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a>&nbsp;item, int&nbsp;price, boolean&nbsp;enabled, int&nbsp;maxStack, int&nbsp;bundleQuantity)
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Record.html" title="class or interface in java.lang" class="external-link">Record</a></span></div>
@@ -98,8 +106,7 @@ loadScripts(document, 'script');</script>
  A catalog entry stores metadata about a specific <a href="../../entities/Entity.html" title="class in com.csse3200.game.entities"><code>Entity</code></a> item,
  including its price, whether it is currently enabled for purchase,
  the maximum stack size in the player's inventory, and how many units
- of the item are sold in one bundle.
- </p></div>
+ of the item are sold in one bundle.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -137,12 +144,12 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#bundleQuantity()" class="member-name-link">bundleQuantity</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Returns the value of the <code>bundleQuantity</code> record component.</div>
+<div class="block">Returns the value of the <a href="#param-bundleQuantity"><code>bundleQuantity</code></a> record component.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#enabled()" class="member-name-link">enabled</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Returns the value of the <code>enabled</code> record component.</div>
+<div class="block">Returns the value of the <a href="#param-enabled"><code>enabled</code></a> record component.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final boolean</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#equals(java.lang.Object)" class="member-name-link">equals</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;o)</code></div>
@@ -172,17 +179,17 @@ loadScripts(document, 'script');</script>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#item()" class="member-name-link">item</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Returns the value of the <code>item</code> record component.</div>
+<div class="block">Returns the value of the <a href="#param-item"><code>item</code></a> record component.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#maxStack()" class="member-name-link">maxStack</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Returns the value of the <code>maxStack</code> record component.</div>
+<div class="block">Returns the value of the <a href="#param-maxStack"><code>maxStack</code></a> record component.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#price()" class="member-name-link">price</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Returns the value of the <code>price</code> record component.</div>
+<div class="block">Returns the value of the <a href="#param-price"><code>price</code></a> record component.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#toString()" class="member-name-link">toString</a>()</code></div>
@@ -322,10 +329,10 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="item()">
 <h3>item</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a></span>&nbsp;<span class="element-name">item</span>()</div>
-<div class="block">Returns the value of the <code>item</code> record component.</div>
+<div class="block">Returns the value of the <a href="#param-item"><code>item</code></a> record component.</div>
 <dl class="notes">
 <dt>Returns:</dt>
-<dd>the value of the <code>item</code> record component</dd>
+<dd>the value of the <a href="#param-item"><code>item</code></a> record component</dd>
 </dl>
 </section>
 </li>
@@ -333,10 +340,10 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="price()">
 <h3>price</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">price</span>()</div>
-<div class="block">Returns the value of the <code>price</code> record component.</div>
+<div class="block">Returns the value of the <a href="#param-price"><code>price</code></a> record component.</div>
 <dl class="notes">
 <dt>Returns:</dt>
-<dd>the value of the <code>price</code> record component</dd>
+<dd>the value of the <a href="#param-price"><code>price</code></a> record component</dd>
 </dl>
 </section>
 </li>
@@ -344,10 +351,10 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="enabled()">
 <h3>enabled</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">enabled</span>()</div>
-<div class="block">Returns the value of the <code>enabled</code> record component.</div>
+<div class="block">Returns the value of the <a href="#param-enabled"><code>enabled</code></a> record component.</div>
 <dl class="notes">
 <dt>Returns:</dt>
-<dd>the value of the <code>enabled</code> record component</dd>
+<dd>the value of the <a href="#param-enabled"><code>enabled</code></a> record component</dd>
 </dl>
 </section>
 </li>
@@ -355,10 +362,10 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="maxStack()">
 <h3>maxStack</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">maxStack</span>()</div>
-<div class="block">Returns the value of the <code>maxStack</code> record component.</div>
+<div class="block">Returns the value of the <a href="#param-maxStack"><code>maxStack</code></a> record component.</div>
 <dl class="notes">
 <dt>Returns:</dt>
-<dd>the value of the <code>maxStack</code> record component</dd>
+<dd>the value of the <a href="#param-maxStack"><code>maxStack</code></a> record component</dd>
 </dl>
 </section>
 </li>
@@ -366,10 +373,10 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="bundleQuantity()">
 <h3>bundleQuantity</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">bundleQuantity</span>()</div>
-<div class="block">Returns the value of the <code>bundleQuantity</code> record component.</div>
+<div class="block">Returns the value of the <a href="#param-bundleQuantity"><code>bundleQuantity</code></a> record component.</div>
 <dl class="notes">
 <dt>Returns:</dt>
-<dd>the value of the <code>bundleQuantity</code> record component</dd>
+<dd>the value of the <a href="#param-bundleQuantity"><code>bundleQuantity</code></a> record component</dd>
 </dl>
 </section>
 </li>

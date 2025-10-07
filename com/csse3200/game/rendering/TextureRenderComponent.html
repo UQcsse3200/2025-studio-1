@@ -155,22 +155,32 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected com.badlogic.gdx.graphics.Texture</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getTexture()" class="member-name-link">getTexture</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#scaleEntity()" class="member-name-link">scaleEntity</a>()</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>float</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getZIndex()" class="member-name-link">getZIndex</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Scale the entity to a width of 1 and a height matching the texture's ratio</div>
+<div class="block">Gets the zIndex of the entity to determine rendering order.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setAlpha(float)" class="member-name-link">setAlpha</a><wbr>(float&nbsp;alpha)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#scaleEntity()" class="member-name-link">scaleEntity</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Scale the entity to a width of 1 and a height matching the texture's ratio</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setAlpha(float)" class="member-name-link">setAlpha</a><wbr>(float&nbsp;alpha)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Sets the opacity (alpha multiplier 0-1) for fade effects.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setZIndex(float)" class="member-name-link">setZIndex</a><wbr>(float&nbsp;zIndex)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Set the zIndex.</div>
 </div>
 </div>
 </div>
 </div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-com.csse3200.game.rendering.RenderComponent">Methods inherited from class&nbsp;com.csse3200.game.rendering.<a href="RenderComponent.html" title="class in com.csse3200.game.rendering">RenderComponent</a></h3>
-<code><a href="RenderComponent.html#compareTo(com.csse3200.game.rendering.Renderable)">compareTo</a>, <a href="RenderComponent.html#create()">create</a>, <a href="RenderComponent.html#disableComponent()">disableComponent</a>, <a href="RenderComponent.html#dispose()">dispose</a>, <a href="RenderComponent.html#enableComponent()">enableComponent</a>, <a href="RenderComponent.html#getLayer()">getLayer</a>, <a href="RenderComponent.html#getZIndex()">getZIndex</a>, <a href="RenderComponent.html#isDisabled()">isDisabled</a>, <a href="RenderComponent.html#render(com.badlogic.gdx.graphics.g2d.SpriteBatch)">render</a></code></div>
+<code><a href="RenderComponent.html#compareTo(com.csse3200.game.rendering.Renderable)">compareTo</a>, <a href="RenderComponent.html#create()">create</a>, <a href="RenderComponent.html#disableComponent()">disableComponent</a>, <a href="RenderComponent.html#dispose()">dispose</a>, <a href="RenderComponent.html#enableComponent()">enableComponent</a>, <a href="RenderComponent.html#getLayer()">getLayer</a>, <a href="RenderComponent.html#isDisabled()">isDisabled</a>, <a href="RenderComponent.html#render(com.badlogic.gdx.graphics.g2d.SpriteBatch)">render</a>, <a href="RenderComponent.html#setZIndex(java.lang.Float)">setZIndex</a></code></div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-com.csse3200.game.components.Component">Methods inherited from class&nbsp;com.csse3200.game.components.<a href="../components/Component.html" title="class in com.csse3200.game.components">Component</a></h3>
 <code><a href="../components/Component.html#earlyUpdate()">earlyUpdate</a>, <a href="../components/Component.html#getEntity()">getEntity</a>, <a href="../components/Component.html#getPrio()">getPrio</a>, <a href="../components/Component.html#setEnabled(boolean)">setEnabled</a>, <a href="../components/Component.html#setEntity(com.csse3200.game.entities.Entity)">setEntity</a>, <a href="../components/Component.html#toString()">toString</a>, <a href="../components/Component.html#triggerEarlyUpdate()">triggerEarlyUpdate</a>, <a href="../components/Component.html#triggerUpdate()">triggerUpdate</a>, <a href="../components/Component.html#update()">update</a></code></div>
@@ -259,6 +269,32 @@ loadScripts(document, 'script');</script>
 <dd><code><a href="RenderComponent.html#draw(com.badlogic.gdx.graphics.g2d.SpriteBatch)">draw</a></code>&nbsp;in class&nbsp;<code><a href="RenderComponent.html" title="class in com.csse3200.game.rendering">RenderComponent</a></code></dd>
 <dt>Parameters:</dt>
 <dd><code>batch</code> - Batch to render to.</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getZIndex()">
+<h3>getZIndex</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">getZIndex</span>()</div>
+<div class="block">Gets the zIndex of the entity to determine rendering order.</div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code><a href="Renderable.html#getZIndex()">getZIndex</a></code>&nbsp;in interface&nbsp;<code><a href="Renderable.html" title="interface in com.csse3200.game.rendering">Renderable</a></code></dd>
+<dt>Overrides:</dt>
+<dd><code><a href="RenderComponent.html#getZIndex()">getZIndex</a></code>&nbsp;in class&nbsp;<code><a href="RenderComponent.html" title="class in com.csse3200.game.rendering">RenderComponent</a></code></dd>
+<dt>Returns:</dt>
+<dd>If zIndex hasn't been set, return negative entity's y position, else return the set value.</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="setZIndex(float)">
+<h3>setZIndex</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setZIndex</span><wbr><span class="parameters">(float&nbsp;zIndex)</span></div>
+<div class="block">Set the zIndex.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>zIndex</code> - zIndex to be set.</dd>
 </dl>
 </section>
 </li>

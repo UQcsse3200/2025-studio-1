@@ -117,7 +117,11 @@ loadScripts(document, 'script');</script>
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Enum Constant</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color"><code><a href="#BENCH" class="member-name-link">BENCH</a></code></div>
+<div class="col-first even-row-color"><code><a href="#ARMOUR" class="member-name-link">ARMOUR</a></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code><a href="#BENCH" class="member-name-link">BENCH</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code><a href="#CHESTPLATE_ARMOUR" class="member-name-link">CHESTPLATE_ARMOUR</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 <div class="col-first odd-row-color"><code><a href="#COMPUTER_BENCH" class="member-name-link">COMPUTER_BENCH</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
@@ -125,16 +129,18 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color">&nbsp;</div>
 <div class="col-first odd-row-color"><code><a href="#HEALTH_BENCH" class="member-name-link">HEALTH_BENCH</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code><a href="#MELEE" class="member-name-link">MELEE</a></code></div>
+<div class="col-first even-row-color"><code><a href="#HOOD_ARMOUR" class="member-name-link">HOOD_ARMOUR</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code><a href="#NONE" class="member-name-link">NONE</a></code></div>
+<div class="col-first odd-row-color"><code><a href="#MELEE" class="member-name-link">MELEE</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code><a href="#PROJECTILE" class="member-name-link">PROJECTILE</a></code></div>
+<div class="col-first even-row-color"><code><a href="#NONE" class="member-name-link">NONE</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code><a href="#RANGED" class="member-name-link">RANGED</a></code></div>
+<div class="col-first odd-row-color"><code><a href="#PROJECTILE" class="member-name-link">PROJECTILE</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code><a href="#SPEED_BENCH" class="member-name-link">SPEED_BENCH</a></code></div>
+<div class="col-first even-row-color"><code><a href="#RANGED" class="member-name-link">RANGED</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code><a href="#SPEED_BENCH" class="member-name-link">SPEED_BENCH</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
 </div>
 </section>
 </li>
@@ -150,7 +156,7 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getString()" class="member-name-link">getString</a>()</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getTypeName()" class="member-name-link">getTypeName</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns the string representation of this item type.</div>
 </div>
@@ -239,6 +245,24 @@ the order they are declared.</div>
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="ItemTypes.html" title="enum class in com.csse3200.game.entities.configs">ItemTypes</a></span>&nbsp;<span class="element-name">SPEED_BENCH</span></div>
 </section>
 </li>
+<li>
+<section class="detail" id="ARMOUR">
+<h3>ARMOUR</h3>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="ItemTypes.html" title="enum class in com.csse3200.game.entities.configs">ItemTypes</a></span>&nbsp;<span class="element-name">ARMOUR</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="HOOD_ARMOUR">
+<h3>HOOD_ARMOUR</h3>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="ItemTypes.html" title="enum class in com.csse3200.game.entities.configs">ItemTypes</a></span>&nbsp;<span class="element-name">HOOD_ARMOUR</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="CHESTPLATE_ARMOUR">
+<h3>CHESTPLATE_ARMOUR</h3>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="ItemTypes.html" title="enum class in com.csse3200.game.entities.configs">ItemTypes</a></span>&nbsp;<span class="element-name">CHESTPLATE_ARMOUR</span></div>
+</section>
+</li>
 </ul>
 </section>
 </li>
@@ -279,9 +303,9 @@ not permitted.)</div>
 </section>
 </li>
 <li>
-<section class="detail" id="getString()">
-<h3>getString</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">getString</span>()</div>
+<section class="detail" id="getTypeName()">
+<h3>getTypeName</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">getTypeName</span>()</div>
 <div class="block">Returns the string representation of this item type.</div>
 <dl class="notes">
 <dt>Returns:</dt>

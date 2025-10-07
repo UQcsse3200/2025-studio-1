@@ -114,19 +114,19 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#clear()" class="member-name-link">clear</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#clearExceptPlayer()" class="member-name-link">clearExceptPlayer</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Clear all services except the player entity.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#clearPlayer()" class="member-name-link">clearPlayer</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Clears ONLY the player entity</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="ButtonSoundService.html" title="class in com.csse3200.game.services">ButtonSoundService</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getButtonSoundService()" class="member-name-link">getButtonSoundService</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getCachedPlayerHealth()" class="member-name-link">getCachedPlayerHealth</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Returns cached player health to restore after area transitions.</div>
-</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Float.html" title="class or interface in java.lang" class="external-link">Float</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getCachedPlayerStamina()" class="member-name-link">getCachedPlayerStamina</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Returns cached player stamina to restore after area transitions.</div>
-</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../areas/difficulty/Difficulty.html" title="class in com.csse3200.game.areas.difficulty">Difficulty</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getDifficulty()" class="member-name-link">getDifficulty</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
@@ -145,47 +145,53 @@ loadScripts(document, 'script');</script>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../input/InputService.html" title="class in com.csse3200.game.input">InputService</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getInputService()" class="member-name-link">getInputService</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="MusicService.html" title="class in com.csse3200.game.services">MusicService</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getMusicService()" class="member-name-link">getMusicService</a>()</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../session/LeaderBoardManager.html" title="class in com.csse3200.game.session">LeaderBoardManager</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getLeaderBoardManager()" class="member-name-link">getLeaderBoardManager</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../physics/PhysicsService.html" title="class in com.csse3200.game.physics">PhysicsService</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getPhysicsService()" class="member-name-link">getPhysicsService</a>()</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="MusicService.html" title="class in com.csse3200.game.services">MusicService</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getMusicService()" class="member-name-link">getMusicService</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getPlayer()" class="member-name-link">getPlayer</a>()</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../physics/PhysicsService.html" title="class in com.csse3200.game.physics">PhysicsService</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getPhysicsService()" class="member-name-link">getPhysicsService</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../rendering/RenderService.html" title="class in com.csse3200.game.rendering">RenderService</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getRenderService()" class="member-name-link">getRenderService</a>()</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getPlayer()" class="member-name-link">getPlayer</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="ResourceService.html" title="class in com.csse3200.game.services">ResourceService</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getResourceService()" class="member-name-link">getResourceService</a>()</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../rendering/RenderService.html" title="class in com.csse3200.game.rendering">RenderService</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getRenderService()" class="member-name-link">getRenderService</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="SaveLoadService.html" title="class in com.csse3200.game.services">SaveLoadService</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getSaveLoadService()" class="member-name-link">getSaveLoadService</a>()</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="ResourceService.html" title="class in com.csse3200.game.services">ResourceService</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getResourceService()" class="member-name-link">getResourceService</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="GameTime.html" title="class in com.csse3200.game.services">GameTime</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getTimeSource()" class="member-name-link">getTimeSource</a>()</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="SaveLoadService.html" title="class in com.csse3200.game.services">SaveLoadService</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getSaveLoadService()" class="member-name-link">getSaveLoadService</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#isTransitioning()" class="member-name-link">isTransitioning</a>()</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="GameTime.html" title="class in com.csse3200.game.services">GameTime</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getTimeSource()" class="member-name-link">getTimeSource</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#registerButtonSoundService(com.csse3200.game.services.ButtonSoundService)" class="member-name-link">registerButtonSoundService</a><wbr>(<a href="ButtonSoundService.html" title="class in com.csse3200.game.services">ButtonSoundService</a>&nbsp;source)</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#isTransitioning()" class="member-name-link">isTransitioning</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#registerDifficulty(com.csse3200.game.areas.difficulty.Difficulty)" class="member-name-link">registerDifficulty</a><wbr>(<a href="../areas/difficulty/Difficulty.html" title="class in com.csse3200.game.areas.difficulty">Difficulty</a>&nbsp;source)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#registerButtonSoundService(com.csse3200.game.services.ButtonSoundService)" class="member-name-link">registerButtonSoundService</a><wbr>(<a href="ButtonSoundService.html" title="class in com.csse3200.game.services">ButtonSoundService</a>&nbsp;source)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#registerDiscoveryService(com.csse3200.game.services.DiscoveryService)" class="member-name-link">registerDiscoveryService</a><wbr>(<a href="DiscoveryService.html" title="class in com.csse3200.game.services">DiscoveryService</a>&nbsp;service)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#registerDifficulty(com.csse3200.game.areas.difficulty.Difficulty)" class="member-name-link">registerDifficulty</a><wbr>(<a href="../areas/difficulty/Difficulty.html" title="class in com.csse3200.game.areas.difficulty">Difficulty</a>&nbsp;source)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#registerEntityService(com.csse3200.game.entities.EntityService)" class="member-name-link">registerEntityService</a><wbr>(<a href="../entities/EntityService.html" title="class in com.csse3200.game.entities">EntityService</a>&nbsp;service)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#registerDiscoveryService(com.csse3200.game.services.DiscoveryService)" class="member-name-link">registerDiscoveryService</a><wbr>(<a href="DiscoveryService.html" title="class in com.csse3200.game.services">DiscoveryService</a>&nbsp;service)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#registerGameArea(com.csse3200.game.areas.GameArea)" class="member-name-link">registerGameArea</a><wbr>(<a href="../areas/GameArea.html" title="class in com.csse3200.game.areas">GameArea</a>&nbsp;theArea)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#registerEntityService(com.csse3200.game.entities.EntityService)" class="member-name-link">registerEntityService</a><wbr>(<a href="../entities/EntityService.html" title="class in com.csse3200.game.entities">EntityService</a>&nbsp;service)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#registerInputService(com.csse3200.game.input.InputService)" class="member-name-link">registerInputService</a><wbr>(<a href="../input/InputService.html" title="class in com.csse3200.game.input">InputService</a>&nbsp;source)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#registerGameArea(com.csse3200.game.areas.GameArea)" class="member-name-link">registerGameArea</a><wbr>(<a href="../areas/GameArea.html" title="class in com.csse3200.game.areas">GameArea</a>&nbsp;theArea)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#registerInputService(com.csse3200.game.input.InputService)" class="member-name-link">registerInputService</a><wbr>(<a href="../input/InputService.html" title="class in com.csse3200.game.input">InputService</a>&nbsp;source)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#registerLeaderBoardManager(com.csse3200.game.session.LeaderBoardManager)" class="member-name-link">registerLeaderBoardManager</a><wbr>(<a href="../session/LeaderBoardManager.html" title="class in com.csse3200.game.session">LeaderBoardManager</a>&nbsp;lbm)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#registerMusicService(com.csse3200.game.services.MusicService)" class="member-name-link">registerMusicService</a><wbr>(<a href="MusicService.html" title="class in com.csse3200.game.services">MusicService</a>&nbsp;source)</code></div>
@@ -208,16 +214,6 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#registerTimeSource(com.csse3200.game.services.GameTime)" class="member-name-link">registerTimeSource</a><wbr>(<a href="GameTime.html" title="class in com.csse3200.game.services">GameTime</a>&nbsp;source)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#setCachedPlayerHealth(java.lang.Integer)" class="member-name-link">setCachedPlayerHealth</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>&nbsp;value)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Caches player health to be restored when the next player entity is created.</div>
-</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#setCachedPlayerStamina(java.lang.Float)" class="member-name-link">setCachedPlayerStamina</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Float.html" title="class or interface in java.lang" class="external-link">Float</a>&nbsp;value)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Caches player stamina to be restored when the next player entity is created.</div>
-</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#setTransitioning(boolean)" class="member-name-link">setTransitioning</a><wbr>(boolean&nbsp;value)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
@@ -341,34 +337,6 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="getCachedPlayerStamina()">
-<h3>getCachedPlayerStamina</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Float.html" title="class or interface in java.lang" class="external-link">Float</a></span>&nbsp;<span class="element-name">getCachedPlayerStamina</span>()</div>
-<div class="block">Returns cached player stamina to restore after area transitions.</div>
-</section>
-</li>
-<li>
-<section class="detail" id="setCachedPlayerStamina(java.lang.Float)">
-<h3>setCachedPlayerStamina</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setCachedPlayerStamina</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Float.html" title="class or interface in java.lang" class="external-link">Float</a>&nbsp;value)</span></div>
-<div class="block">Caches player stamina to be restored when the next player entity is created.</div>
-</section>
-</li>
-<li>
-<section class="detail" id="getCachedPlayerHealth()">
-<h3>getCachedPlayerHealth</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a></span>&nbsp;<span class="element-name">getCachedPlayerHealth</span>()</div>
-<div class="block">Returns cached player health to restore after area transitions.</div>
-</section>
-</li>
-<li>
-<section class="detail" id="setCachedPlayerHealth(java.lang.Integer)">
-<h3>setCachedPlayerHealth</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setCachedPlayerHealth</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>&nbsp;value)</span></div>
-<div class="block">Caches player health to be restored when the next player entity is created.</div>
-</section>
-</li>
-<li>
 <section class="detail" id="registerEntityService(com.csse3200.game.entities.EntityService)">
 <h3>registerEntityService</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">registerEntityService</span><wbr><span class="parameters">(<a href="../entities/EntityService.html" title="class in com.csse3200.game.entities">EntityService</a>&nbsp;service)</span></div>
@@ -435,9 +403,35 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
+<section class="detail" id="registerLeaderBoardManager(com.csse3200.game.session.LeaderBoardManager)">
+<h3>registerLeaderBoardManager</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">registerLeaderBoardManager</span><wbr><span class="parameters">(<a href="../session/LeaderBoardManager.html" title="class in com.csse3200.game.session">LeaderBoardManager</a>&nbsp;lbm)</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="getLeaderBoardManager()">
+<h3>getLeaderBoardManager</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../session/LeaderBoardManager.html" title="class in com.csse3200.game.session">LeaderBoardManager</a></span>&nbsp;<span class="element-name">getLeaderBoardManager</span>()</div>
+</section>
+</li>
+<li>
 <section class="detail" id="clear()">
 <h3>clear</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">clear</span>()</div>
+</section>
+</li>
+<li>
+<section class="detail" id="clearExceptPlayer()">
+<h3>clearExceptPlayer</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">clearExceptPlayer</span>()</div>
+<div class="block">Clear all services except the player entity.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="clearPlayer()">
+<h3>clearPlayer</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">clearPlayer</span>()</div>
+<div class="block">Clears ONLY the player entity</div>
 </section>
 </li>
 <li>

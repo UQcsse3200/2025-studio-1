@@ -46,7 +46,7 @@ loadScripts(document, 'script');</script>
 <li>
 <p>Detail:</p>
 <ul>
-<li>Field</li>
+<li><a href="#field-detail">Field</a></li>
 <li><a href="#constructor-detail">Constr</a></li>
 <li><a href="#method-detail">Method</a></li>
 </ul>
@@ -64,7 +64,7 @@ loadScripts(document, 'script');</script>
 </ul>
 <ul class="sub-nav-list">
 <li>Detail:&nbsp;</li>
-<li>Field&nbsp;|&nbsp;</li>
+<li><a href="#field-detail">Field</a>&nbsp;|&nbsp;</li>
 <li><a href="#constructor-detail">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method-detail">Method</a></li>
 </ul>
@@ -90,6 +90,10 @@ loadScripts(document, 'script');</script>
 </div>
 </div>
 <section class="class-description" id="class-description">
+<dl class="notes">
+<dt>Direct Known Subclasses:</dt>
+<dd><code><a href="HomingPhysicsComponent.html" title="class in com.csse3200.game.physics.components">HomingPhysicsComponent</a></code></dd>
+</dl>
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">PhysicsProjectileComponent</span>
 <span class="extends-implements">extends <a href="../../components/Component.html" title="class in com.csse3200.game.components">Component</a></span></div>
@@ -101,6 +105,24 @@ loadScripts(document, 'script');</script>
 <li>
 <section class="field-summary" id="field-summary">
 <h2>Field Summary</h2>
+<div class="caption"><span>Fields</span></div>
+<div class="summary-table three-column-summary">
+<div class="table-header col-first">Modifier and Type</div>
+<div class="table-header col-second">Field</div>
+<div class="table-header col-last">Description</div>
+<div class="col-first even-row-color"><code>protected com.badlogic.gdx.math.Vector2</code></div>
+<div class="col-second even-row-color"><code><a href="#initialVelocity" class="member-name-link">initialVelocity</a></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code>protected final float</code></div>
+<div class="col-second odd-row-color"><code><a href="#lifetime" class="member-name-link">lifetime</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code>protected float</code></div>
+<div class="col-second even-row-color"><code><a href="#lived" class="member-name-link">lived</a></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code>protected <a href="PhysicsComponent.html" title="class in com.csse3200.game.physics.components">PhysicsComponent</a></code></div>
+<div class="col-second odd-row-color"><code><a href="#physicsComponent" class="member-name-link">physicsComponent</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+</div>
 <div class="inherited-list">
 <h3 id="fields-inherited-from-class-com.csse3200.game.components.Component">Fields inherited from class&nbsp;com.csse3200.game.components.<a href="../../components/Component.html" title="class in com.csse3200.game.components">Component</a></h3>
 <code><a href="../../components/Component.html#enabled">enabled</a>, <a href="../../components/Component.html#entity">entity</a>, <a href="../../components/Component.html#prio">prio</a></code></div>
@@ -167,6 +189,46 @@ loadScripts(document, 'script');</script>
 </section>
 <section class="details">
 <ul class="details-list">
+<!-- ============ FIELD DETAIL =========== -->
+<li>
+<section class="field-details" id="field-detail">
+<h2>Field Details</h2>
+<ul class="member-list">
+<li>
+<section class="detail" id="physicsComponent">
+<h3>physicsComponent</h3>
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type"><a href="PhysicsComponent.html" title="class in com.csse3200.game.physics.components">PhysicsComponent</a></span>&nbsp;<span class="element-name">physicsComponent</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="initialVelocity">
+<h3>initialVelocity</h3>
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">com.badlogic.gdx.math.Vector2</span>&nbsp;<span class="element-name">initialVelocity</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="lifetime">
+<h3>lifetime</h3>
+<div class="member-signature"><span class="modifiers">protected final</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">lifetime</span></div>
+<dl class="notes">
+<dt>See Also:</dt>
+<dd>
+<ul class="tag-list">
+<li><a href="../../../../../constant-values.html#com.csse3200.game.physics.components.PhysicsProjectileComponent.lifetime">Constant Field Values</a></li>
+</ul>
+</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="lived">
+<h3>lived</h3>
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">lived</span></div>
+</section>
+</li>
+</ul>
+</section>
+</li>
 <!-- ========= CONSTRUCTOR DETAIL ======== -->
 <li>
 <section class="constructor-details" id="constructor-detail">

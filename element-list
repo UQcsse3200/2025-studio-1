@@ -7,6 +7,7 @@ com.csse3200.game.areas.terrain
 com.csse3200.game.components
 com.csse3200.game.components.attachments
 com.csse3200.game.components.boss
+com.csse3200.game.components.cards
 com.csse3200.game.components.difficultymenu
 com.csse3200.game.components.enemy
 com.csse3200.game.components.friendlynpc
@@ -14,6 +15,8 @@ com.csse3200.game.components.gamearea
 com.csse3200.game.components.items
 com.csse3200.game.components.maingame
 com.csse3200.game.components.mainmenu
+com.csse3200.game.components.minigames
+com.csse3200.game.components.minigames.slots
 com.csse3200.game.components.npc
 com.csse3200.game.components.player
 com.csse3200.game.components.screens
@@ -25,6 +28,7 @@ com.csse3200.game.concurrency
 com.csse3200.game.effects
 com.csse3200.game.entities
 com.csse3200.game.entities.configs
+com.csse3200.game.entities.configs.armour
 com.csse3200.game.entities.configs.benches
 com.csse3200.game.entities.configs.characters
 com.csse3200.game.entities.configs.consumables
@@ -42,9 +46,11 @@ com.csse3200.game.input
 com.csse3200.game.physics
 com.csse3200.game.physics.components
 com.csse3200.game.physics.raycast
+com.csse3200.game.records
 com.csse3200.game.rendering
 com.csse3200.game.screens
 com.csse3200.game.services
+com.csse3200.game.session
 com.csse3200.game.ui
 com.csse3200.game.ui.terminal
 com.csse3200.game.ui.terminal.autocomplete

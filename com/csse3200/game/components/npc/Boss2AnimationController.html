@@ -93,6 +93,9 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">Boss2AnimationController</span>
 <span class="extends-implements">extends <a href="../Component.html" title="class in com.csse3200.game.components">Component</a></span></div>
+<div class="block">Controls animations for the boss2, including idle, patrol, prep, charge, return (back-to-line), cooldown, death, and hurt.
+ Animations are registered based on a naming convention and can be triggered via events.
+ This controller requires an AnimationRenderComponent to function.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -107,10 +110,14 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color"><code>static class&nbsp;</code></div>
 <div class="col-second even-row-color"><code><a href="Boss2AnimationController.Names.html" class="type-name-link" title="class in com.csse3200.game.components.npc">Boss2AnimationController.Names</a></code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">Names for each animation.</div>
+</div>
 <div class="col-first odd-row-color"><code>static class&nbsp;</code></div>
 <div class="col-second odd-row-color"><code><a href="Boss2AnimationController.Speeds.html" class="type-name-link" title="class in com.csse3200.game.components.npc">Boss2AnimationController.Speeds</a></code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-last odd-row-color">
+<div class="block">Animation speeds (frame durations) for each animation.</div>
+</div>
 </div>
 </section>
 </li>
@@ -144,7 +151,9 @@ loadScripts(document, 'script');</script>
 <div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(java.lang.String,float,com.badlogic.gdx.graphics.g2d.Animation.PlayMode)" class="member-name-link">Boss2AnimationController</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;baseName,
  float&nbsp;frameDur,
  com.badlogic.gdx.graphics.g2d.Animation.PlayMode&nbsp;mode)</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">Use the same base name for all animations, with a uniform speed and loop mode.</div>
+</div>
 </div>
 </section>
 </li>
@@ -162,7 +171,7 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#create()" class="member-name-link">create</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Called when the entity is created and registered.</div>
+<div class="block">Initializes the controller, registering animations and event listeners.</div>
 </div>
 </div>
 </div>
@@ -206,6 +215,13 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">Boss2AnimationController</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;baseName,
  float&nbsp;frameDur,
  com.badlogic.gdx.graphics.g2d.Animation.PlayMode&nbsp;mode)</span></div>
+<div class="block">Use the same base name for all animations, with a uniform speed and loop mode.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>baseName</code> - Base name for all animations (e.g. "boss2" to use "boss2_idle", "boss2_prep", etc)</dd>
+<dd><code>frameDur</code> - Frame duration for all animations</dd>
+<dd><code>mode</code> - Loop mode for prep/charge/return/cooldown animations (idle/patrol always loop; hurt/death never loop)</dd>
+</dl>
 </section>
 </li>
 </ul>
@@ -220,9 +236,8 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="create()">
 <h3>create</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">create</span>()</div>
-<div class="block"><span class="description-from-type-label">Description copied from class:&nbsp;<code><a href="../Component.html#create()">Component</a></code></span></div>
-<div class="block">Called when the entity is created and registered. Initial logic such as calls to GetComponent
- should be made here, not in the constructor which is called before an entity is finished.</div>
+<div class="block">Initializes the controller, registering animations and event listeners.
+ Requires the entity to have an AnimationRenderComponent.</div>
 <dl class="notes">
 <dt>Overrides:</dt>
 <dd><code><a href="../Component.html#create()">create</a></code>&nbsp;in class&nbsp;<code><a href="../Component.html" title="class in com.csse3200.game.components">Component</a></code></dd>
