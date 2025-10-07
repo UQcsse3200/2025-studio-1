@@ -58,6 +58,11 @@ public class MainGameScreen extends ScreenAdapter {
     private float roundTime = 0f;
 
 
+    //Leaderboard & Session fields
+    private GameSession session;
+    private float roundTime = 0f;
+
+
     private Entity pauseOverlay;
     private boolean isPauseVisible = false;
 
@@ -177,6 +182,89 @@ public class MainGameScreen extends ScreenAdapter {
         }
         ServiceLocator.registerGameArea(gameArea);
         gameArea.create();
+        // mark initial area as discovered
+        DiscoveryService dsInit = ServiceLocator.getDiscoveryService();
+        if (dsInit != null) {
+            dsInit.discover(gameArea.toString());
+        }
+    }
+
+    /**
+     * Overloaded constructor for loading the game from save file
+     *
+     * @param game     game
+     * @param Filename loaded file
+     */
+    public MainGameScreen(GdxGame game, String Filename) {
+
+
+        this.game = game;
+        SaveLoadService.PlayerInfo load = SaveLoadService.load();
+        logger.debug("Initialising main game screen services from file load");
+        ServiceLocator.registerTimeSource(new GameTime());
+
+        PhysicsService physicsService = new PhysicsService();
+        ServiceLocator.registerPhysicsService(physicsService);
+        physicsEngine = physicsService.getPhysics();
+
+        ServiceLocator.registerInputService(new InputService());
+        ServiceLocator.registerResourceService(new ResourceService());
+        ServiceLocator.registerSaveLoadService(new SaveLoadService());
+        ServiceLocator.registerDiscoveryService(new DiscoveryService());
+
+
+        ServiceLocator.registerEntityService(new EntityService());
+        ServiceLocator.registerRenderService(new RenderService());
+
+        renderer = RenderFactory.createRenderer();
+        renderer.getCamera().getEntity().setPosition(CAMERA_POSITION);
+        renderer.getDebug().renderPhysicsWorld(physicsEngine.getWorld());
+
+        loadAssets();
+        createUI();
+        // null so default can return error
+        GameArea areaLoad = null;
+        logger.debug("Initialising main game screen entities");
+        TerrainFactory terrainFactory = new TerrainFactory(renderer.getCamera());
+
+        //cases for all current areas
+        switch (load.areaId) {
+            case "Forest" -> areaLoad = ForestGameArea.load(terrainFactory, renderer.getCamera());
+            case "Elevator" -> areaLoad = ElevatorGameArea.load(terrainFactory, renderer.getCamera());
+            case "Office" -> areaLoad = OfficeGameArea.load(terrainFactory, renderer.getCamera());
+            case "Mainhall" -> areaLoad = MainHall.load(terrainFactory, renderer.getCamera());
+            case "Reception" -> areaLoad = Reception.load(terrainFactory, renderer.getCamera());
+            case "Tunnel" -> areaLoad = TunnelGameArea.load(terrainFactory, renderer.getCamera());
+            case "Security" -> areaLoad = SecurityGameArea.load(terrainFactory, renderer.getCamera());
+            case "Storage" -> areaLoad = StorageGameArea.load(terrainFactory, renderer.getCamera());
+            case "Shipping" -> areaLoad = ShippingGameArea.load(terrainFactory, renderer.getCamera());
+            case "Server" -> areaLoad = ServerGameArea.load(terrainFactory, renderer.getCamera());
+            default -> logger.error("couldnt create Game area from file");
+        }
+
+        gameArea = areaLoad;
+        com.csse3200.game.services.ServiceLocator.registerGameArea(gameArea);
+        gameArea.create();
+        // Mark initial area as discovered
+        DiscoveryService ds = ServiceLocator.getDiscoveryService();
+        if (ds != null && gameArea != null) {
+            ds.discover(gameArea.toString());
+        }
+        InventoryComponent help = gameArea.getPlayer().getComponent(InventoryComponent.class);
+        ItemPickUpComponent testLoading = new ItemPickUpComponent(help);
+        //repopulates the inventory
+        if (load.inventory != null) {
+            for (int i = 0; i < load.inventory.size(); i++) {
+                Entity placehold = testLoading.createItemFromTexture(load.inventory.get(i));
+                help.addItem(placehold);
+            }
+        }
+
+
+        // currently not needed: sprint 3 refactor to fix everything
+        // gameArea.getPlayer().getEvents().trigger("load player", load.inventory, load.ProcessNumber);
+        // functionally bad but if it works
+        // gameArea.loadIn(load.inventory, load.Health,load.ProcessNumber, load.position.x, load.position.y);
 
         SaveLoadService.loadPlayer(load.getPlayer());
         SaveLoadService.loadPlayerInventory(load.getInventory());
@@ -384,6 +472,4 @@ public class MainGameScreen extends ScreenAdapter {
         deathScreen.updateTime(getCompleteTime());
         game.setScreen(deathScreen);
     }
-
-
 }
