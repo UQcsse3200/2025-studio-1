@@ -151,8 +151,8 @@ public class NPCFactory {
         SoundComponent soundComponent = new SoundComponent();
         deepspin.addComponent(soundComponent);
 
-        soundComponent.registerSound("damageTaken", "sounds/enemyDamage.mp3");
-        soundComponent.registerSound("death", "sounds/enemyDeath.mp3");
+        soundComponent.registerSound("damageTaken", "sounds/deepspinDamage.mp3");
+        soundComponent.registerSound("death", "sounds/deepspinDeath.mp3");
 
         AITaskComponent aiComponent =
                 new AITaskComponent()
@@ -268,6 +268,12 @@ public class NPCFactory {
                         .addTask(new GPTGroundFastChaseTask(target, 10, 1.2f));
 
 
+        SoundComponent soundComponent = new SoundComponent();
+        vroomba.addComponent(soundComponent);
+
+        soundComponent.registerSound("damageTaken", "sounds/vroombaDamage.mp3");
+        soundComponent.registerSound("death", "sounds/vroombaDeath.mp3");
+
         // Get player's inventory for reward system
         InventoryComponent playerInventory = null;
         if (target != null) {
@@ -301,7 +307,7 @@ public class NPCFactory {
      *
      * @param target        entity to chase
      * @param area          the area/space it is living in
-     * @param scalingFactor The scale of increase in health and attack of the GhostGPT
+     * @param scalingFactor The scale of increase in health and attack of the Turret
      * @return entity
      */
     public static Entity createTurret(Entity target, GameArea area, float scalingFactor) {

@@ -7,6 +7,7 @@ import com.csse3200.game.entities.EntityService;
 import com.csse3200.game.input.InputService;
 import com.csse3200.game.physics.PhysicsService;
 import com.csse3200.game.rendering.RenderService;
+import com.csse3200.game.session.LeaderBoardManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,10 +32,12 @@ public class ServiceLocator {
     private static Entity player;
     private static MusicService musicService;
     private static Difficulty difficulty;
+    private static DiscoveryService discoveryService; // track discovered rooms
     private static ButtonSoundService buttonSoundService;
-
     private static Float cachedPlayerStamina; // preserved across area transitions
     private static Integer cachedPlayerHealth; // preserved across area transitions
+    private static LeaderBoardManager leaderBoardManager;
+
     public static Entity getPlayer() {
         return player;
     }
@@ -89,6 +92,11 @@ public class ServiceLocator {
         return difficulty;
     }
 
+
+    public static DiscoveryService getDiscoveryService() {
+        return discoveryService;
+    }
+  
     public static ButtonSoundService getButtonSoundService() {
         return buttonSoundService;
     }
@@ -174,9 +182,22 @@ public class ServiceLocator {
         difficulty = source;
     }
 
+    public static void registerDiscoveryService(DiscoveryService service) {
+        logger.debug("Registering discovery service {}", service);
+        discoveryService = service;
+    }
+  
     public static void registerButtonSoundService(ButtonSoundService source) {
         logger.debug("Registering button sound service {}", source);
         buttonSoundService = source;
+    }
+
+    public static void registerLeaderBoardManager(LeaderBoardManager lbm) {
+        leaderBoardManager = lbm;
+    }
+
+    public static LeaderBoardManager getLeaderBoardManager() {
+        return leaderBoardManager;
     }
 
     public static void clear() {
@@ -190,6 +211,7 @@ public class ServiceLocator {
         saveLoadService = null;
         cachedPlayerStamina = null;
         cachedPlayerHealth = null;
+        discoveryService = null;
     }
 
     private static final com.csse3200.game.events.EventHandler globalEvents = new com.csse3200.game.events.EventHandler();

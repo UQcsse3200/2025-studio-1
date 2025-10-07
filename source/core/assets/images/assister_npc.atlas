@@ -1,0 +1,61 @@
+assister_npc.png
+size: 1536, 1024
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+walk_right
+  rotate: false
+  xy: 0, 512
+  size: 384, 512
+  orig: 384, 512
+  offset: 0, 0
+  index: 0
+walk_right
+  rotate: false
+  xy: 384, 512
+  size: 384, 512
+  orig: 384, 512
+  offset: 0, 0
+  index: 1
+walk_right
+  rotate: false
+  xy: 768, 512
+  size: 384, 512
+  orig: 384, 512
+  offset: 0, 0
+  index: 2
+walk_right
+  rotate: false
+  xy: 1152, 512
+  size: 384, 512
+  orig: 384, 512
+  offset: 0, 0
+  index: 3
+walk_left
+  rotate: false
+  xy: 0, 0
+  size: 384, 512
+  orig: 384, 512
+  offset: 0, 0
+  index: 0
+walk_left
+  rotate: false
+  xy: 384, 0
+  size: 384, 512
+  orig: 384, 512
+  offset: 0, 0
+  index: 1
+walk_left
+  rotate: false
+  xy: 768, 0
+  size: 384, 512
+  orig: 384, 512
+  offset: 0, 0
+  index: 2
+walk_left
+  rotate: false
+  xy: 1152, 0
+  size: 384, 512
+  orig: 384, 512
+  offset: 0, 0
+  index: 3
