@@ -69,8 +69,8 @@ public class Minimap {
      */
     public Minimap(int screenHeight, int screenWidth, Map<Vector2, String> grid) {
         this(screenHeight, screenWidth);
-        for (Vector2 coordinates : grid.keySet()) {
-            addRoom(coordinates, grid.get(coordinates));
+        for (Map.Entry<Vector2, String> room : grid.entrySet()) {
+            addRoom(room.getKey(), room.getValue());
         }
     }
 
@@ -230,11 +230,11 @@ public class Minimap {
         scale = 1;
 
         // Replace unlocked rooms' images with their actual images
-        for (String name : roomPositions.keySet()) {
-            Vector2 coordinates = roomPositions.get(name);
+        for (Map.Entry<String, Vector2> room : roomPositions.entrySet()) {
+            Vector2 coordinates = room.getValue();
 
-            if (discoveryService.isDiscovered(name)) {
-                grid.put(coordinates, "images/minimap-images/" + name + ".png");
+            if (discoveryService.isDiscovered(room.getKey())) {
+                grid.put(coordinates, "images/minimap-images/" + room.getKey() + ".png");
             }
         }
     }
