@@ -166,6 +166,19 @@ public class ElevatorGameArea extends GameArea {
         }
     }
 
+    /**
+     * Setter method for the player spawn point
+     * should be used when the player is traversing through the rooms
+     * 
+     * @param newSpawn the new spawn point
+     */
+    public static void setRoomSpawn(GridPoint2 newSpawn) {
+        if (newSpawn == null) {
+            return;
+        }
+        ElevatorGameArea.PLAYER_SPAWN = newSpawn;
+    }
+
     @Override
     public String toString() {
         return "Elevator";

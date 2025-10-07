@@ -140,6 +140,7 @@ public abstract class GameArea implements Disposable {
      * Returns the room name corresponding to the current floor.
      *
      * @return the name of the current room
+     *
      */
     public String getRoomName() {
         return this.toString();
