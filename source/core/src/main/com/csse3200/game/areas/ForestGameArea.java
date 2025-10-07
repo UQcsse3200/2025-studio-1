@@ -18,6 +18,8 @@ import com.csse3200.game.components.shop.CatalogService;
 import com.csse3200.game.components.shop.ShopDemo;
 import com.csse3200.game.components.shop.ShopManager;
 import com.csse3200.game.entities.Entity;
+import com.csse3200.game.entities.configs.Armour;
+import com.csse3200.game.entities.factories.items.ArmourFactory;
 import com.csse3200.game.entities.configs.Benches;
 import com.csse3200.game.entities.configs.ItemSpawnConfig;
 import com.csse3200.game.entities.configs.Weapons;
@@ -145,6 +147,8 @@ public class ForestGameArea extends GameArea {
             "images/NpcDialogue.png",
             "images/nurse_npc.png",
             "images/partner.png",
+            "images/armour-assets/chestplate.png",
+            "images/armour-assets/hood.png",
             "images/blackjack_table.png"
     };
 
