@@ -18,8 +18,6 @@ import com.csse3200.game.components.shop.CatalogService;
 import com.csse3200.game.components.shop.ShopDemo;
 import com.csse3200.game.components.shop.ShopManager;
 import com.csse3200.game.entities.Entity;
-import com.csse3200.game.entities.configs.Armour;
-import com.csse3200.game.entities.factories.items.ArmourFactory;
 import com.csse3200.game.entities.configs.Benches;
 import com.csse3200.game.entities.configs.ItemSpawnConfig;
 import com.csse3200.game.entities.configs.Weapons;
@@ -58,13 +56,9 @@ import static com.csse3200.game.entities.configs.Weapons.*;
  */
 public class ForestGameArea extends GameArea {
     private static final Logger logger = LoggerFactory.getLogger(ForestGameArea.class);
-    private static GridPoint2 playerSpawn = new GridPoint2(3, 20);
     private static final int NUM_ITEMS = 5;//this is for ItemFactory
     // private static final int NUM_TURRETS = 1;
     private static final float WALL_WIDTH = 0.1f;
-
-    private final float VERTICAL_HEIGHT_OFFSET = 9.375f;
-
     /**
      * Files or pictures used by the game (enemy/props,etc.).
      */
@@ -151,7 +145,6 @@ public class ForestGameArea extends GameArea {
             "images/armour-assets/hood.png",
             "images/blackjack_table.png"
     };
-
     private static final String[] backgroundTextures = {
             "backgrounds/Reception.png",
             "backgrounds/Shipping.png",
@@ -166,7 +159,6 @@ public class ForestGameArea extends GameArea {
             "backgrounds/Security.png",
             "backgrounds/Server.png"
     };
-
     /**
      * General prop textures (floors, tiles, etc.).
      */
@@ -200,7 +192,6 @@ public class ForestGameArea extends GameArea {
             "foreg_sprites/futuristic/storage_crate_dark2.png",
             "foreg_sprites/futuristic/SecurityCamera3.png"
     };
-
     /**
      * Spawn pad textures.
      */
@@ -208,7 +199,6 @@ public class ForestGameArea extends GameArea {
             "foreg_sprites/spawn_pads/SpawnPadPurple.png",
             "foreg_sprites/spawn_pads/SpawnPadRed.png",
     };
-
     /**
      * Office furniture textures used on the upper platform.
      */
@@ -221,7 +211,6 @@ public class ForestGameArea extends GameArea {
             "foreg_sprites/office/OfficeChair.png",
             "foreg_sprites/office/officeDesk4.png",
     };
-
     /**
      * Futuristic props used in this room (camera, energy pod, crates).
      */
@@ -231,7 +220,6 @@ public class ForestGameArea extends GameArea {
             "foreg_sprites/futuristic/storage_crate_green2.png",
             "foreg_sprites/futuristic/storage_crate_dark2.png",
     };
-
     /**
      * keycard textures
      */
@@ -241,7 +229,6 @@ public class ForestGameArea extends GameArea {
             "images/keycard_lvl3.png",
             "images/keycard_lvl4.png",
     };
-
     private static final String[] forestTextureAtlases = {
             "images/robot-2.atlas", "images/fireball.atlas", "images/blackhole.atlas", "images/Robot_1.atlas",
             "images/boss_idle.atlas",
@@ -277,18 +264,15 @@ public class ForestGameArea extends GameArea {
             "images/boss3_phase2.atlas",
             "images/cards.atlas"
     };
-
     private static final String[] extraTextures = {
             "foreg_sprites/extras/Spikes.png",
     };
-
     private static final String[] forestSounds = {"sounds/Impact4.ogg",
             "sounds/shot_failed.mp3",
             "sounds/reload.mp3",
             "sounds/laser_blast.mp3",
             "sounds/ammo_replenished.mp3",
             "sounds/upgradeSound.mp3"};
-
     private static final String[] playerSound1 = {"sounds/jump.mp3"};
     private static final String[] enemySounds = {
             "sounds/deepspinDamage.mp3",
@@ -297,9 +281,9 @@ public class ForestGameArea extends GameArea {
             "sounds/vroombaDeath.mp3"
     };
     private static final String BACKGROUND_MUSIC = "sounds/BGM_03.mp3";
-
     private static final String[] forestMusic = {BACKGROUND_MUSIC};
-
+    private static GridPoint2 playerSpawn = new GridPoint2(3, 20);
+    private final float VERTICAL_HEIGHT_OFFSET = 9.375f;
     private Entity player;
     private Entity dagger;
     private Entity lightsaber;
@@ -320,6 +304,23 @@ public class ForestGameArea extends GameArea {
      */
     public ForestGameArea(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
         super(terrainFactory, cameraComponent);
+    }
+
+    /**
+     * Setter method for the player spawn point
+     * should be used when the player is traversing through the rooms
+     *
+     * @param newSpawn the new spawn point
+     */
+    public static void setRoomSpawn(GridPoint2 newSpawn) {
+        if (newSpawn == null) {
+            return;
+        }
+        ForestGameArea.playerSpawn = newSpawn;
+    }
+
+    public static ForestGameArea load(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
+        return (new ForestGameArea(terrainFactory, cameraComponent));
     }
 
     /**
@@ -498,7 +499,6 @@ public class ForestGameArea extends GameArea {
         Entity bench = InteractableStationFactory.createStation(Benches.SPEED_BENCH);
         spawnEntityAt(bench, new GridPoint2(25, 7), true, true);
     }
-
 
     /**
      * Places a large door sprite at the bottom-right platform. The door uses a keycard gate:
@@ -735,6 +735,8 @@ public class ForestGameArea extends GameArea {
         music.play();
     }
 
+    // Removed area-specific dispose to avoid double disposal during transitions
+
     /**
      * Loads all textures, atlases, sounds and music needed by this room.
      * Blocks briefly until loading is complete. If you add new art, put it here.
@@ -786,32 +788,12 @@ public class ForestGameArea extends GameArea {
         resourceService.unloadAssets(extraTextures);
     }
 
-    // Removed area-specific dispose to avoid double disposal during transitions
-
-
     public Entity getPlayer() {
         return player;
-    }
-
-    /**
-     * Setter method for the player spawn point
-     * should be used when the player is traversing through the rooms
-     *
-     * @param newSpawn the new spawn point
-     */
-    public static void setRoomSpawn(GridPoint2 newSpawn) {
-        if (newSpawn == null) {
-            return;
-        }
-        ForestGameArea.playerSpawn = newSpawn;
     }
 
     @Override
     public String toString() {
         return "Forest";
-    }
-
-    public static ForestGameArea load(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
-        return (new ForestGameArea(terrainFactory, cameraComponent));
     }
 }

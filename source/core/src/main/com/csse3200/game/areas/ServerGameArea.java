@@ -28,9 +28,8 @@ public class ServerGameArea extends GameArea {
     private static final Logger logger = LoggerFactory.getLogger(ServerGameArea.class);
 
     private static final float WALL_WIDTH = 0.1f;
-    private static GridPoint2 playerSpawn = new GridPoint2(10, 10);
     private static final float ROOM_DIFF_NUMBER = 9;
-
+    private static GridPoint2 playerSpawn = new GridPoint2(10, 10);
     private Entity player;
 
     /**
@@ -41,6 +40,23 @@ public class ServerGameArea extends GameArea {
      */
     public ServerGameArea(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
         super(terrainFactory, cameraComponent);
+    }
+
+    /**
+     * Setter method for the player spawn point
+     * should be used when the player is traversing through the rooms
+     *
+     * @param newSpawn the new spawn point
+     */
+    public static void setRoomSpawn(GridPoint2 newSpawn) {
+        if (newSpawn == null) {
+            return;
+        }
+        ServerGameArea.playerSpawn = newSpawn;
+    }
+
+    public static ServerGameArea load(TerrainFactory terrainFactory, CameraComponent camera) {
+        return (new ServerGameArea(terrainFactory, camera));
     }
 
     /**
@@ -260,18 +276,6 @@ public class ServerGameArea extends GameArea {
     }
 
     /**
-     * Setter method for the player spawn point
-     * should be used when the player is traversing through the rooms
-     * @param newSpawn the new spawn point
-     */
-    public static void setRoomSpawn(GridPoint2 newSpawn) {
-        if (newSpawn == null) {
-            return;
-        }
-        ServerGameArea.playerSpawn = newSpawn;
-    }
-
-    /**
      * Spawns the borders and doors of the room.
      * Left door -> Storage, Right door -> Tunnel
      * Different to genericLayout as the right door is up high
@@ -308,13 +312,8 @@ public class ServerGameArea extends GameArea {
         clearAndLoad(() -> new StorageGameArea(terrainFactory, cameraComponent));
     }
 
-
     @Override
     public String toString() {
         return "Server";
-    }
-
-    public static ServerGameArea load(TerrainFactory terrainFactory, CameraComponent camera) {
-        return (new ServerGameArea(terrainFactory, camera));
     }
 }

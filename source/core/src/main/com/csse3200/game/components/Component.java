@@ -48,6 +48,15 @@ public class Component {
     }
 
     /**
+     * Get the entity to which this component belongs.
+     *
+     * @return entity
+     */
+    public Entity getEntity() {
+        return entity;
+    }
+
+    /**
      * Set the entity to which this component belongs. This is called by the Entity, and should not be
      * set manually.
      *
@@ -56,15 +65,6 @@ public class Component {
     public void setEntity(Entity entity) {
         logger.debug("Attaching {} to {}", this, entity);
         this.entity = entity;
-    }
-
-    /**
-     * Get the entity to which this component belongs.
-     *
-     * @return entity
-     */
-    public Entity getEntity() {
-        return entity;
     }
 
     /**
