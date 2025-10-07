@@ -49,7 +49,6 @@ public class Reception extends GameArea {
         spawncomic_stand();
         spawnGPTs();
         spawnShopKiosk();
-        spawnGrokDroids();
         Entity ui = new Entity();
         ui.addComponent(new com.csse3200.game.components.gamearea.FloorLabelDisplay("Reception"));
         spawnEntity(ui);
@@ -145,9 +144,6 @@ public class Reception extends GameArea {
                 ServiceLocator.getDifficulty().getRoomDifficulty(this.roomDiffNumber));
         spawnEntityAt(vroomba, new GridPoint2(5, 17), true, false);
 
-        Entity deepspin = com.csse3200.game.entities.factories.characters.NPCFactory.createDeepspin(player, this,
-                ServiceLocator.getDifficulty().getRoomDifficulty(this.roomDiffNumber));
-        spawnEntityAt(deepspin, new GridPoint2(17, 10), true, false);
     }
 
         private void spawnGPTs() {
@@ -155,12 +151,7 @@ public class Reception extends GameArea {
             GridPoint2 ghost1Pos = new GridPoint2(25, 7);
             spawnEntityAt(ghost1, ghost1Pos, true, false);
         }
-    private void spawnGrokDroids() {
-        Entity grok1 = NPCFactory.createGrokDroid(player, this,
-                ServiceLocator.getDifficulty().getRoomDifficulty(this.roomDiffNumber));
-        GridPoint2 grok1Pos = new GridPoint2(20, 20);
-        spawnEntityAt(grok1, grok1Pos, true, false);
-    }
+
 
     private void spawnShopKiosk() {
         CatalogService catalog = ShopDemo.makeDemoCatalog();

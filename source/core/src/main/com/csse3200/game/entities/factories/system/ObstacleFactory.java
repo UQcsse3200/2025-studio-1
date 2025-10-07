@@ -230,7 +230,8 @@ public class ObstacleFactory {
                 new Entity()
                         .addComponent(new TextureRenderComponent("images/platform-2.png"))
                         .addComponent(new PhysicsComponent())
-                        .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
+                        .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE))
+                        .addComponent(new HitboxComponent().setLayer(PhysicsLayer.OBSTACLE));
 
         platform2.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
         platform2.getComponent(TextureRenderComponent.class).scaleEntity();
@@ -245,9 +246,13 @@ public class ObstacleFactory {
     public static Entity createholoclock() {
         Entity clockSpawn =
                 new Entity()
-                        .addComponent(new TextureRenderComponent("images/holo-clock.png"));
+                        .addComponent(new TextureRenderComponent("images/holo-clock.png"))
+                        .addComponent(new PhysicsComponent())
+                        .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
+        clockSpawn.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
         clockSpawn.getComponent(TextureRenderComponent.class).scaleEntity();
-        clockSpawn.scaleHeight(2f);
+        clockSpawn.scaleHeight(1f);
+        PhysicsUtils.setScaledCollider(clockSpawn, 0.7f, 0.75f);
         return clockSpawn;
     }
 
@@ -303,9 +308,13 @@ public class ObstacleFactory {
     public static Entity createdesk_reception() {
         Entity desk_receptionSpawn =
                 new Entity()
-                        .addComponent(new TextureRenderComponent("images/desk_reception.png"));
+                        .addComponent(new TextureRenderComponent("images/desk_reception.png"))
+                .addComponent(new PhysicsComponent())
+                .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
+        desk_receptionSpawn.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
         desk_receptionSpawn.getComponent(TextureRenderComponent.class).scaleEntity();
         desk_receptionSpawn.scaleHeight(3f);
+        PhysicsUtils.setScaledCollider(desk_receptionSpawn, 0.7f, 0.75f);
         return desk_receptionSpawn;
     }
 
@@ -315,9 +324,13 @@ public class ObstacleFactory {
     public static Entity createcomic_stand() {
         Entity comic_standSpawn =
                 new Entity()
-                        .addComponent(new TextureRenderComponent("images/comics.png"));
+                        .addComponent(new TextureRenderComponent("images/comics.png"))
+                .addComponent(new PhysicsComponent())
+                .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
+        comic_standSpawn.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
         comic_standSpawn.getComponent(TextureRenderComponent.class).scaleEntity();
-        comic_standSpawn.scaleHeight(1.5f);
+        comic_standSpawn.scaleHeight(1f);
+        PhysicsUtils.setScaledCollider(comic_standSpawn, 0.7f, 0.75f);
         return comic_standSpawn;
     }
 
@@ -329,6 +342,8 @@ public class ObstacleFactory {
                 new Entity()
                         .addComponent(new TextureRenderComponent("images/platform-3.png"))
                         .addComponent(new PhysicsComponent())
+                        .addComponent(new ColliderComponent())
+                        .addComponent(new HitboxComponent().setLayer(PhysicsLayer.OBSTACLE))
                         .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
 
         platform3.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
@@ -344,7 +359,9 @@ public class ObstacleFactory {
     public static Entity createMhall_sofa() {
         Entity Mhall_sofaSpawn =
                 new Entity()
-                        .addComponent(new TextureRenderComponent("images/Mhall-sofa.png"));
+                        .addComponent(new TextureRenderComponent("images/Mhall-sofa.png"))
+                        .addComponent(new ColliderComponent())
+                        .addComponent(new HitboxComponent().setLayer(PhysicsLayer.OBSTACLE));
         Mhall_sofaSpawn.getComponent(TextureRenderComponent.class).scaleEntity();
         Mhall_sofaSpawn.scaleHeight(3f);
         return Mhall_sofaSpawn;
@@ -356,7 +373,9 @@ public class ObstacleFactory {
     public static Entity createMhall_screen() {
         Entity Mhall_screenSpawn =
                 new Entity()
-                        .addComponent(new TextureRenderComponent("images/Mhall-screen.png"));
+                        .addComponent(new TextureRenderComponent("images/Mhall-screen.png"))
+                        .addComponent(new ColliderComponent())
+                        .addComponent(new HitboxComponent().setLayer(PhysicsLayer.OBSTACLE));
         Mhall_screenSpawn.getComponent(TextureRenderComponent.class).scaleEntity();
         Mhall_screenSpawn.scaleHeight(1.5f);
         return Mhall_screenSpawn;
@@ -368,7 +387,9 @@ public class ObstacleFactory {
     public static Entity createMhall_holo() {
         Entity Mhall_holoSpawn =
                 new Entity()
-                        .addComponent(new TextureRenderComponent("images/Mhall-holo.png"));
+                        .addComponent(new TextureRenderComponent("images/Mhall-holo.png"))
+                        .addComponent(new ColliderComponent())
+                        .addComponent(new HitboxComponent().setLayer(PhysicsLayer.OBSTACLE));
         Mhall_holoSpawn.getComponent(TextureRenderComponent.class).scaleEntity();
         Mhall_holoSpawn.scaleHeight(1.5f);
         return Mhall_holoSpawn;
