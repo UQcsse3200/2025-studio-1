@@ -8,6 +8,7 @@ import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.ItemSpawnConfig;
 import com.csse3200.game.entities.factories.characters.BossFactory;
+import com.csse3200.game.entities.factories.characters.FriendlyNPCFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.entities.spawner.ItemSpawner;
 import com.csse3200.game.entities.factories.characters.PlayerFactory;
@@ -71,7 +72,7 @@ public class MovingBossRoom extends GameArea {
 
         spawnBoss();
         spawnObjectDoors(new GridPoint2(0, 6), new GridPoint2(28, 6));
-
+        spawnAssistor();
         ItemSpawner itemSpawner = new ItemSpawner(this);
         itemSpawner.spawnItems(ItemSpawnConfig.bossmap());
 
@@ -97,7 +98,12 @@ public class MovingBossRoom extends GameArea {
         Entity boss = BossFactory.createRobot(player);
         spawnEntityAt(boss, pos, true, true);
     }
+    private void spawnAssistor() {
+        GridPoint2 pos = new GridPoint2(7, 8);
 
+        Entity assistor = FriendlyNPCFactory.createAssisterNpc(player);
+        spawnEntityAt(assistor, pos, true, true);
+    }
     /**
      * Adds a very tall thick-floor as a background wall/divider.
      */
