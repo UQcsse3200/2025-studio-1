@@ -43,7 +43,6 @@ public class PoolGame {
         this.engine = engine;
         this.world = new PoolWorld(engine.getWorld());
 
-        // ---- Configurable geometry (can be loaded from JSON later) ----
         this.config = TableConfig.builder()
                 .tableSize(2.24f, 1.12f)
                 .railThickness(0.105f, 0.085f)                 // X (left/right), Y (top/bottom)
@@ -59,13 +58,34 @@ public class PoolGame {
         this.pockets = new PocketContactSystem(world, config);
 
         // Choose ruleset; swap with EightBallRules, NineBallRules, etc.
-        this.rules = new FreePlayRules(world, config);
+        this.rules = new BasicTwoPlayerRules(config);
+
+        this.rules.setListener(new RulesEvents() {
+            @Override public void onTurnChanged(int current, int p1, int p2) {
+                gameEntity.getEvents().trigger("pool:turn", current, p1, p2);
+            }
+            @Override public void onScoreUpdated(int current, int p1, int p2) {
+                gameEntity.getEvents().trigger("pool:score", current, p1, p2);
+            }
+            @Override public void onFoul(int foulingPlayer, String reason) {
+                gameEntity.getEvents().trigger("pool:foul", foulingPlayer, reason);
+            }
+        });
 
         // Root UI/interaction entity
         this.gameEntity = initGameEntity();
         this.display = gameEntity.getComponent(PoolGameDisplay.class);
 
         wireUiEvents();
+        gameEntity.getEvents().addListener("pool:turn",
+                (Integer current, Integer p1, Integer p2) ->
+                        logger.info("EVENT pool:turn -> P{}  score {}-{}", current, p1, p2));
+        gameEntity.getEvents().addListener("pool:score",
+                (Integer current, Integer p1, Integer p2) ->
+                        logger.info("EVENT pool:score -> P{}  score {}-{}", current, p1, p2));
+        gameEntity.getEvents().addListener("pool:foul",
+                (Integer player, String reason) ->
+                        logger.info("EVENT pool:foul -> P{}  {}", player, reason));
     }
 
     private Entity initGameEntity() {
@@ -93,8 +113,14 @@ public class PoolGame {
 
         // bridge physics → rules → UI
         pockets.setListener(new PocketContactSystem.Listener() {
-            @Override public void onScratch(int pocketIndex) { rules.onScratch(pocketIndex); pushPositionsToUI(); }
-            @Override public void onPotted(int ballId, int pocketIndex) { rules.onBallPotted(ballId, pocketIndex); pushPositionsToUI(); }
+            @Override public void onScratch(int pocketIndex) {
+                rules.onScratch(pocketIndex);
+                pushPositionsToUI();
+            }
+            @Override public void onPotted(int ballId, int pocketIndex) {
+                rules.onBallPotted(ballId, pocketIndex);
+                pushPositionsToUI();
+            }
         });
     }
 
