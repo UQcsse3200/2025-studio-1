@@ -211,8 +211,14 @@ class MinimapTest {
         when(discoveryService.isDiscovered("EastRoom")).thenReturn(true);
 
         minimap.open();
-        minimap.zoom(-50);
+        minimap.zoom(-98);
         Map<Vector2, String> rendered = minimap.render();
+        minimap.pan(new Vector2(10, 10));
+        rendered = minimap.render();
+        minimap.pan(new Vector2(-10, -10));
+        rendered = minimap.render();
+        minimap.reset();
+        minimap.zoom(-50);
 
         // Assert
         assertEquals(0.5, minimap.getScale());
