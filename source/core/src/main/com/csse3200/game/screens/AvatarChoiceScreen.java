@@ -37,28 +37,28 @@ public class AvatarChoiceScreen extends BaseScreen {
     private Table cardRow;
     private List<Avatar> avatars;
     private int selectedIndex = 0;
-    static final String BgImage  = "images/menu_background.png";
+    static final String BgImage = "images/menu_background.png";
     static final String SkinPath = "uiskin.json";
 
 
-    static final float RootPadding            = 30f;
-    static final float DefaultGap        = 20f;
-    static final float SmallGap           = 10f;
+    static final float RootPadding = 30f;
+    static final float DefaultGap = 20f;
+    static final float SmallGap = 10f;
 
-    static final float TitleFontScale    = 3f;
-    static final float NameFontScale     = 2f;
-    static final int RootColumnSpan     = 2;
+    static final float TitleFontScale = 3f;
+    static final float NameFontScale = 2f;
+    static final int RootColumnSpan = 2;
 
-    static final float CardRowCellPad   = 10f;
-    static final float CardInternalPad   = 5f;
+    static final float CardRowCellPad = 10f;
+    static final float CardInternalPad = 5f;
 
-    static final float CardImageSize     = 180f;
-    static final float CardWidth          = 200f;
-    static final float CardHeight         = 240f;
+    static final float CardImageSize = 180f;
+    static final float CardWidth = 200f;
+    static final float CardHeight = 240f;
 
-    static final float ScrollHeight       = 300f;
-    static final float InfoPanelWidth    = 420f;
-    static final float StatsLabelLWidth   = 380f;
+    static final float ScrollHeight = 300f;
+    static final float InfoPanelWidth = 420f;
+    static final float StatsLabelLWidth = 380f;
 
     private Array<Texture> loadedTextures = new Array<>();
 
@@ -161,6 +161,7 @@ public class AvatarChoiceScreen extends BaseScreen {
 
     /**
      * switch focus of the avatar based on player's choice
+     *
      * @param newIndex the position of the avatar that the player has selected
      */
     private void updateSelection(int newIndex) {
