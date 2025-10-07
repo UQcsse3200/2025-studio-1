@@ -12,12 +12,18 @@ import com.csse3200.game.entities.Entity;
  */
 public class NpcTwoOptionMenuComponent extends Component {
     private String instruction =
-            "Collect weapons by pressing E!\nPress F to summon your partner to fight along side you";
+            "Press E to collect weapons.\nPress F to summon your partner.\nPress Y to talk to me.\nStay near me to interact.";
 
     public void open() {
         DialogueDisplay ui = entity.getComponent(DialogueDisplay.class);
         if (ui != null) {
-            ui.setText("1) Instructions\n2) Lead me there");
+            ui.setText(
+                    "[Guide Menu]\n" +
+                    "1) Instructions - controls & tips\n" +
+                    "2) Lead me there - escort to next objective\n" +
+                    "Stay near me to interact.\n" +
+                    "(Shortcut: 6 for quick tips)"
+            );
             ui.show();
         } else {
             System.out.println("[GuideNPC] Open menu: (no DialogueDisplay attached)");
