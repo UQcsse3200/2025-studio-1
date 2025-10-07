@@ -5,10 +5,12 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.csse3200.game.files.UserSettings;
 import com.csse3200.game.screens.*;
+import com.csse3200.game.screens.LeaderboardScreen;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.services.MusicService;
 import com.csse3200.game.services.ButtonSoundService;
+import com.csse3200.game.session.LeaderBoardManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,6 +23,16 @@ import static com.badlogic.gdx.Gdx.app;
  */
 public class GdxGame extends Game {
     private static final Logger logger = LoggerFactory.getLogger(GdxGame.class);
+
+    private LeaderBoardManager carryOverLeaderBoard;
+
+    public void setCarryOverLeaderBoard(LeaderBoardManager lbm) {
+        this.carryOverLeaderBoard = lbm;
+    }
+
+    public LeaderBoardManager getCarryOverLeaderBoard() {
+        return carryOverLeaderBoard;
+    }
 
     @Override
     public void create() {
@@ -93,12 +105,14 @@ public class GdxGame extends Game {
             case TUTORIAL_SCREEN -> new TutorialScreen(this);
             case STORY -> new StoryScreen(this);
             case DIFFICULTY_SCREEN -> new DifficultyScreen(this);
+            case LEADERBOARD -> new LeaderboardScreen(this);
+
         };
     }
 
     public enum ScreenType {
         MAIN_MENU, MAIN_GAME, SETTINGS, DEATH_SCREEN, WIN_SCREEN, TUTORIAL_SCREEN,
-        STORY, LOAD_GAME, DIFFICULTY_SCREEN,
+        STORY, LOAD_GAME, DIFFICULTY_SCREEN,LEADERBOARD,
     }
 
     /**
