@@ -25,7 +25,6 @@ import com.csse3200.game.entities.factories.KeycardFactory;
 import com.csse3200.game.entities.factories.PowerupsFactory;
 import com.csse3200.game.entities.factories.ShopFactory;
 import com.csse3200.game.entities.factories.characters.BossFactory;
-import com.csse3200.game.entities.factories.characters.PlayerFactory;
 import com.csse3200.game.entities.factories.items.ItemFactory;
 import com.csse3200.game.entities.factories.items.WeaponsFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
@@ -39,8 +38,6 @@ import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.security.SecureRandom;
 
 /**
  * A playable “Forest” style room. This class:

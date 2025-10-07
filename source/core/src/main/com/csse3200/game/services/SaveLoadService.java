@@ -1,23 +1,22 @@
 package com.csse3200.game.services;
 
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.Json;
-import com.badlogic.gdx.utils.JsonValue;
+
 import com.csse3200.game.areas.*;
 import com.csse3200.game.components.CombatStatsComponent;
+import com.csse3200.game.components.MagazineComponent;
+import com.csse3200.game.components.WeaponsStatsComponent;
+import com.csse3200.game.components.items.ConsumableComponent;
 import com.csse3200.game.components.items.ItemComponent;
 import com.csse3200.game.components.player.InventoryComponent;
 import com.csse3200.game.entities.Entity;
-import com.csse3200.game.files.FileLoader;
+import com.csse3200.game.entities.configs.ItemTypes;
 import com.csse3200.game.files.SaveGame;
-import com.csse3200.game.ui.terminal.commands.WavesCommand;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
 
 
 /**
@@ -48,11 +47,6 @@ public class SaveLoadService {
             }
         }
 
-
-        // current placeholder for new class to improve cohesion between file savign and loading
-//        SaveGame save = new SaveGame();
-//        SaveGame.GameState gameState = new SaveGame.GameState();
-//        gameState.setInventory(ServiceLocator.getGameArea().getPlayer().getComponent(InventoryComponent.class));
 //        if (player.getComponent(InventoryComponent.class) != null) {
 //                logger.info("Inventory component found: Player found.");
 //                CombatStatsComponent stat = player.getComponent(CombatStatsComponent.class);
@@ -73,38 +67,32 @@ public class SaveLoadService {
 
         SaveGame.GameState gamestate = new SaveGame.GameState();
         gamestate.setPlayer(player);
-        gamestate.setInventory(player.getComponent(InventoryComponent.class));
+        gamestate.setLoadedInventory(player.getComponent(InventoryComponent.class));
+//                setInventory();
+
+
+//        gamestate.setInventory(player.getComponent(InventoryComponent.class));
         gamestate.setArea(gameArea);
         gamestate.setWave(2);
-        // test for writing
-//        gs.inventory = (gamestate.loadedInventory);
 
         path = "saves" + File.separator + slot + ".json";
 
-        FileLoader.writeClass(gamestate, path, FileLoader.Location.LOCAL);
+        SaveGame.saveGame(gamestate, path);
+//        FileLoader.writeClass(gamestate, path, FileLoader.Location.LOCAL);
 //        FileLoader.writeClass(gamestate.loadedInventory, path, FileLoader.Location.LOCAL);
         return true;
     }
 
 
     /**
-     * Load a save file from local storage and rebuild the area + entities.
+     * Load a save file from local storage and rebuild the area and the current
+     * players stats.
      */
-    public static PlayerInfo load() {
-        //tags to link areas - this will be commented out as they are not needed at this time
-        FileLoader.jsonSave.addClassTag("Forest", ForestGameArea.class);
-        FileLoader.jsonSave.addClassTag("Elevator", ElevatorGameArea.class);
-        FileLoader.jsonSave.addClassTag("Office", OfficeGameArea.class);
-        FileLoader.jsonSave.addClassTag("Mainhall", MainHall.class);
-        FileLoader.jsonSave.addClassTag("Reception", Reception.class);
-        FileLoader.jsonSave.addClassTag("Tunnel", TunnelGameArea.class);
+    public static SaveGame.GameState load() {
         String filePath = "saves" + File.separator + "slides.json";
+        SaveGame.GameState savedGame = SaveGame.loadGame(filePath);
 
-        PlayerInfo loadStats =
-                FileLoader.readPlayer(PlayerInfo.class, filePath,
-                        FileLoader.Location.LOCAL);
-
-        return loadStats;
+        return savedGame;
     }
 
     /**
@@ -118,8 +106,32 @@ public class SaveLoadService {
         public Vector2 position = new Vector2();
         public int RoundNumber;
     }
+
+    public static class itemRetrieve {
+        public ItemTypes type;
+        public Integer ammo;
+        public String texture;
+        public int count;
+        public int upgradeStage;
+
+        public itemRetrieve() {}
+
+//        public itemRetrieve(ItemTypes type, Integer ammo, String texture, int count, int upgradeStage) {
+//            this.type = type;
+//            this.ammo = ammo;
+//            this.texture = texture;
+//            this.count = count;
+//            this.upgradeStage = upgradeStage;
+//        }
 //
-//    public static class inventoryinfo {
-//        public ArrayList ll;
-//    }
+//        public List items() {
+//            List<Object> items = new ArrayList<>();
+//            items.add(type);
+//            items.add(ammo);
+//            items.add(texture);
+//            items.add(count);
+//            items.add(upgradeStage);
+//            return items;
+//        }
+    }
 }
