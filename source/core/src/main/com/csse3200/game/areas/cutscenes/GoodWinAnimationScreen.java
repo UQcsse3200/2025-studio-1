@@ -4,16 +4,20 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.GridPoint2;
 import com.csse3200.game.areas.GameArea;
+import com.csse3200.game.areas.MainHall;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.rendering.AnimationRenderComponent;
+import com.csse3200.game.rendering.TextureRenderComponent;
 import com.csse3200.game.services.ServiceLocator;
 
 public class GoodWinAnimationScreen extends GameArea {
-    private static final GridPoint2 PLAYER_COORDS = new GridPoint2(10,10);
+    private static final GridPoint2 PLAYER_COORDS = new GridPoint2(2,10);
     private static final GridPoint2[] EXPLOSION_COORDS = new GridPoint2[]{
-            new GridPoint2(20,10)
+            new GridPoint2(10,10),
+            new GridPoint2(1,1),
+            new GridPoint2(2,2)
     };
 
     final static float EXPLOSION_FRAME_DURATION = 0.1f;
@@ -25,13 +29,16 @@ public class GoodWinAnimationScreen extends GameArea {
 
     public void create() {
         ensureAssets();
+        terrain = terrainFactory.createTerrain(TerrainFactory.TerrainType.WIN_SCREEN);
+        spawnEntity(new Entity().addComponent(terrain));
+
         spawnPlayer();
         spawnExplosions();
     }
 
     @Override
     public String toString() {
-        return "WinAnimation";
+        return "GoodWinAnimation";
     }
 
     /**
@@ -77,13 +84,17 @@ public class GoodWinAnimationScreen extends GameArea {
         Entity player = new Entity()
                 .addComponent(playerAnimation());
         player.setPosition(PLAYER_COORDS.x, PLAYER_COORDS.y);
+        //player.getComponent(TextureRenderComponent.class).scaleEntity();
+        //player.scaleHeight(0.05f);
         spawnEntity(player);
     }
 
     private void spawnExplosions() {
-            Entity explosion = new Entity()
-                    .addComponent(explosionAnimation());
         for (GridPoint2 explosionCoord : EXPLOSION_COORDS) {
+            Entity explosion = new Entity()
+                        .addComponent(explosionAnimation());
+            //explosion.getComponent(TextureRenderComponent.class).scaleEntity();
+            //explosion.scaleHeight(0.05f);
             explosion.setPosition(explosionCoord.x, explosionCoord.y);
             spawnEntity(explosion);
         }
@@ -94,8 +105,12 @@ public class GoodWinAnimationScreen extends GameArea {
                 ServiceLocator.getResourceService()
                         .getAsset(atlasPath, TextureAtlas.class));
         animator.addAnimation(animationName, frameDuration, playMode);
-        animator.scaleEntity(width);
+        //animator.scaleEntity(width);
         animator.startAnimation(animationName);
         return animator;
+    }
+
+    public static GoodWinAnimationScreen load(TerrainFactory terrainFactory, CameraComponent camera) {
+        return (new GoodWinAnimationScreen(terrainFactory, camera));
     }
 }

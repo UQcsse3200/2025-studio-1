@@ -605,7 +605,7 @@ public abstract class GameArea implements Disposable {
     }
 
     /**
-     * Convenience to load textures if not already loaded.
+     * Convenience to load atlases if not already loaded.
      */
     protected void ensureAtlases(String[] atlasPaths) {
         ResourceService rs = ServiceLocator.getResourceService();
