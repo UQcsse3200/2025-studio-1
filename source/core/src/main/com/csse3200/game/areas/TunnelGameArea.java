@@ -18,7 +18,7 @@ import com.csse3200.game.services.ServiceLocator;
  */
 public class TunnelGameArea extends GameArea {
     private static final float WALL_WIDTH = 0.1f;
-    private static final GridPoint2 PLAYER_SPAWN = new GridPoint2(10, 10);
+    private static GridPoint2 playerSpawn = new GridPoint2(5, 7);
     private static final float ROOM_DIFF_NUMBER = 10;
 
     private Entity player;
@@ -49,8 +49,9 @@ public class TunnelGameArea extends GameArea {
         spawnSpawnPads();
         spawnGrokDroids();
         spawnObjectDoors(new GridPoint2(0, 7), new GridPoint2(28, 7));
+        spawnSpikes();
 
-        spawnFloor();
+        spawnVisibleFloor();
 
         ItemSpawner itemSpawner = new ItemSpawner(this);
         itemSpawner.spawnItems(ItemSpawnConfig.tunnelmap());
@@ -86,14 +87,14 @@ public class TunnelGameArea extends GameArea {
     }
 
     /**
-     * Spawns the player at the designated spawn point PLAYER_SPAWN and then
+     * Spawns the player at the designated spawn point playerSpawn and then
      * returns the player entity.
      *
      * @return the player entity
      */
     private Entity spawnPlayer() {
         Entity player = PlayerFactory.createPlayer();
-        spawnEntityAt(player, PLAYER_SPAWN, true, true);
+        spawnEntityAt(player, playerSpawn, true, true);
         return player;
     }
 
@@ -147,12 +148,36 @@ public class TunnelGameArea extends GameArea {
         spawnEntityAt(grok2, grok2Pos, true, false);
     }
 
+    /**
+     * Spawn the spikes
+     */
+    private void spawnSpikes() {
+        Entity spikes = ObstacleFactory.createSpikes();
+        GridPoint2 spikesSpawn = new GridPoint2(15, 6);
+        spawnEntityAt(spikes, spikesSpawn, true, false);
+    }
+
     private void loadServer() {
+        ServerGameArea.setRoomSpawn(new GridPoint2(25, 24));
         clearAndLoad(() -> new ServerGameArea(terrainFactory, cameraComponent));
     }
 
     private void loadBossRoom() {
+        StaticBossRoom.setRoomSpawn(new GridPoint2(4, 8));
         clearAndLoad(() -> new StaticBossRoom(terrainFactory, cameraComponent));
+    }
+
+    /**
+     * Setter method for the player spawn point
+     * should be used when the player is traversing through the rooms
+     * 
+     * @param newSpawn the new spawn point
+     */
+    public static void setRoomSpawn(GridPoint2 newSpawn) {
+        if (newSpawn == null) {
+            return;
+        }
+        TunnelGameArea.playerSpawn = newSpawn;
     }
 
     @Override

@@ -15,7 +15,7 @@ import com.csse3200.game.rendering.SolidColorRenderComponent;
  */
 public class MainHall extends GameArea {
     private static final float WALL_WIDTH = 0.1f;
-    private static final GridPoint2 PLAYER_SPAWN = new GridPoint2(10, 10);
+    private static GridPoint2 playerSpawn = new GridPoint2(10, 10);
 
     public MainHall(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
         super(terrainFactory, cameraComponent);
@@ -93,18 +93,18 @@ public class MainHall extends GameArea {
 
 
     private void loadBackToFloor2() {
-        roomNumber--;
+        Reception.setRoomSpawn(new GridPoint2(24, 24));
         clearAndLoad(() -> new Reception(terrainFactory, cameraComponent));
     }
 
     private void loadSecurity() {
-        roomNumber++;
+        SecurityGameArea.setRoomSpawn(new GridPoint2(6, 8));
         clearAndLoad(() -> new SecurityGameArea(terrainFactory, cameraComponent));
     }
 
     private void spawnPlayer() {
         Entity player = PlayerFactory.createPlayer();
-        spawnEntityAt(player, PLAYER_SPAWN, true, true);
+        spawnEntityAt(player, playerSpawn, true, true);
     }
 
     /**
@@ -169,6 +169,19 @@ public class MainHall extends GameArea {
     public Entity getPlayer() {
         //tempoary placeholder return null to stop errors
         return null;
+    }
+
+    /**
+     * Setter method for the player spawn point
+     * should be used when the player is traversing through the rooms
+     * 
+     * @param newSpawn the new spawn point
+     */
+    public static void setRoomSpawn(GridPoint2 newSpawn) {
+        if (newSpawn == null) {
+            return;
+        }
+        MainHall.playerSpawn = newSpawn;
     }
 
     @Override
