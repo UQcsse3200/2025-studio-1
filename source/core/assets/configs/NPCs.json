@@ -15,12 +15,12 @@
   },
 
   "ghostGPT": {
-    "health": 100,
+    "health": 250,
     "baseAttack": 20
 
   },
   "deepSpin": {
-    "health": 50,
+    "health": 150,
     "baseAttack": 20
   },
   "grokDroid": {
@@ -28,11 +28,11 @@
     "baseAttack": 10
   },
   "vroomba": {
-    "health": 50,
+    "health": 75,
     "baseAttack": 10
   },
   "turret": {
-    "health": 150,
+    "health": 500,
     "baseAttack": 5
   }
 }
