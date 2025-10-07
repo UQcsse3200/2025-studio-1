@@ -585,16 +585,6 @@ public class ForestGameArea extends GameArea {
         return newDagger;
     }
 
-
-    private Entity spawnChestplate() {
-        Entity newChestplate = ArmourFactory.createArmour(Armour.CHESTPLATE);
-        newChestplate.scaleHeight(0.5f);
-        Vector2 chestplateOffset = new Vector2(0.8f, -0.05f);
-        ServiceLocator.getGameArea().spawnEntity(newChestplate);
-        player.getComponent(PlayerEquipComponent.class).setItem(newChestplate, chestplateOffset);
-        return newChestplate;
-    }
-
     /** FIXME Layer is behind player, does that matter???
      * FIXME Also need to fix positioning so that it actually looks like the player is holding the weapon
      * Sets the equipped item in the PlayerEquipComponent to be the given item
