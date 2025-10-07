@@ -9,19 +9,26 @@ import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import com.csse3200.game.entities.Entity;
+import com.csse3200.game.entities.configs.Benches;
 import com.csse3200.game.entities.configs.ItemSpawnConfig;
+import com.csse3200.game.entities.factories.InteractableStationFactory;
 import com.csse3200.game.entities.factories.characters.NPCFactory;
+import com.csse3200.game.entities.factories.characters.PlayerFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.entities.spawner.ItemSpawner;
 import com.csse3200.game.services.ServiceLocator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Server Room. Has several platforms as well as server racks sprites.
  * Is attached to Tunnel Room.
  */
 public class ServerGameArea extends GameArea {
+    private static final Logger logger = LoggerFactory.getLogger(ServerGameArea.class);
+
     private static final float WALL_WIDTH = 0.1f;
-    private static final GridPoint2 PLAYER_SPAWN = new GridPoint2(10, 10);
+    private static GridPoint2 playerSpawn = new GridPoint2(10, 10);
     private static final float ROOM_DIFF_NUMBER = 9;
 
     private Entity player;
@@ -58,9 +65,11 @@ public class ServerGameArea extends GameArea {
         spawnCratesAndRailing();
         spawnSpawnPads();
         spawnBordersAndDoors();
-        spawnObjectDoors(new GridPoint2(0, 7), new GridPoint2(28, 21));
+        spawnObjectDoors(new GridPoint2(0, 7), new GridPoint2(28, 19));
 
-        spawnFloor();
+        spawnHealthBench();
+
+        spawnVisibleFloor();
 
         player = spawnPlayer();
         spawnGPTs();
@@ -86,7 +95,9 @@ public class ServerGameArea extends GameArea {
      * @return Entity player
      */
     private Entity spawnPlayer() {
-        return spawnOrRepositionPlayer(PLAYER_SPAWN);
+        Entity newPlayer = PlayerFactory.createPlayer();
+        spawnEntityAt(newPlayer, playerSpawn, true, true);
+        return newPlayer;
     }
 
     /**
@@ -137,6 +148,14 @@ public class ServerGameArea extends GameArea {
             GridPoint2 railingSpawn = new GridPoint2(i, 7);
             spawnEntityAt(railing, railingSpawn, false, false);
         }
+    }
+
+    /**
+     * Spawns a health bench on the second platfrom
+     */
+    private void spawnHealthBench() {
+        Entity bench = InteractableStationFactory.createStation(Benches.HEALTH_BENCH);
+        spawnEntityAt(bench, new GridPoint2(25, 12), true, true);
     }
 
     /**
@@ -237,7 +256,19 @@ public class ServerGameArea extends GameArea {
      * @return Entity player
      */
     public Entity getPlayer() {
-        return ServiceLocator.getPlayer();
+        return player;
+    }
+
+    /**
+     * Setter method for the player spawn point
+     * should be used when the player is traversing through the rooms
+     * @param newSpawn the new spawn point
+     */
+    public static void setRoomSpawn(GridPoint2 newSpawn) {
+        if (newSpawn == null) {
+            return;
+        }
+        ServerGameArea.playerSpawn = newSpawn;
     }
 
     /**
@@ -268,12 +299,12 @@ public class ServerGameArea extends GameArea {
     }
 
     private void loadTunnel() {
-        roomNumber--;
+        TunnelGameArea.setRoomSpawn(new GridPoint2(4, 8));
         clearAndLoad(() -> new TunnelGameArea(terrainFactory, cameraComponent));
     }
 
     private void loadStorage() {
-        roomNumber++;
+        StorageGameArea.setRoomSpawn(new GridPoint2(26, 8));
         clearAndLoad(() -> new StorageGameArea(terrainFactory, cameraComponent));
     }
 
@@ -287,4 +318,3 @@ public class ServerGameArea extends GameArea {
         return (new ServerGameArea(terrainFactory, camera));
     }
 }
-

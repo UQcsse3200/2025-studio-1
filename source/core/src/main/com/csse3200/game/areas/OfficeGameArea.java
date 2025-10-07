@@ -6,18 +6,23 @@ import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.factories.characters.PlayerFactory;
-import com.csse3200.game.services.ServiceLocator;
 
 /**
  * Office room: minimal walls and two doors (left--Security, right--Elevator).
  */
 public class OfficeGameArea extends GameArea {
     private static final float WALL_WIDTH = 0.1f;
-    private static final GridPoint2 PLAYER_SPAWN = new GridPoint2(10, 10);
+    private static GridPoint2 playerSpawn = new GridPoint2(10, 10);
 
     public OfficeGameArea(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
         super(terrainFactory, cameraComponent);
     }
+
+    public static OfficeGameArea load(TerrainFactory terrainFactory, CameraComponent camera) {
+        return (new OfficeGameArea(terrainFactory, camera));
+    }
+
+    // Assets ensured via GenericLayout
 
     @Override
     public void create() {
@@ -40,8 +45,6 @@ public class OfficeGameArea extends GameArea {
         spawnPlatforms();
         spawnOfficeProps();
     }
-
-    // Assets ensured via GenericLayout
 
     private void spawnBordersAndDoors() {
         Bounds b = getCameraBounds(cameraComponent);
@@ -69,7 +72,8 @@ public class OfficeGameArea extends GameArea {
     }
 
     private void spawnPlayer() {
-        spawnOrRepositionPlayer(PLAYER_SPAWN);
+        Entity player = PlayerFactory.createPlayer();
+        spawnEntityAt(player, playerSpawn, true, true);
     }
 
     private void spawnOfficeProps() {
@@ -96,7 +100,7 @@ public class OfficeGameArea extends GameArea {
         float p1x = 5f, p1y = 4f;
         float p2x = -1f, p2y = 4f;
         float p3x = 8f, p3y = 6f;
-        float p4x = 10f, p4y = 8f;
+        float p4x = 13f, p4y = 8f;
 
         Entity platform1 = com.csse3200.game.entities.factories.system.ObstacleFactory.createOfficeElevatorPlatform();
         platform1.setPosition(p1x, p1y);
@@ -129,13 +133,26 @@ public class OfficeGameArea extends GameArea {
     }
 
     private void loadMovingBossRoom() {
-        roomNumber--;
+        MovingBossRoom.setRoomSpawn(new GridPoint2(24, 8));
         clearAndLoad(() -> new MovingBossRoom(terrainFactory, cameraComponent));
     }
 
     private void loadElevator() {
-        roomNumber++;
+        ElevatorGameArea.setRoomSpawn(new GridPoint2(6, 8));
         clearAndLoad(() -> new ElevatorGameArea(terrainFactory, cameraComponent));
+    }
+
+    /**
+     * Setter method for the player spawn point
+     * should be used when the player is traversing through the rooms
+     *
+     * @param newSpawn the new spawn point
+     */
+    public static void setRoomSpawn(GridPoint2 newSpawn) {
+        if (newSpawn == null) {
+            return;
+        }
+        OfficeGameArea.playerSpawn = newSpawn;
     }
 
     @Override
@@ -145,11 +162,8 @@ public class OfficeGameArea extends GameArea {
 
     @Override
     public Entity getPlayer() {
-        return ServiceLocator.getPlayer();
-    }
-
-    public static OfficeGameArea load(TerrainFactory terrainFactory, CameraComponent camera) {
-        return (new OfficeGameArea(terrainFactory, camera));
+        //placeholder see previous
+        return null;
     }
 }
 
