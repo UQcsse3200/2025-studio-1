@@ -1,6 +1,5 @@
 package com.csse3200.game.components.screens;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 
 import java.io.BufferedReader;
@@ -8,7 +7,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Vector;
 
 import com.csse3200.game.services.DiscoveryService;
 import com.csse3200.game.services.ServiceLocator;
@@ -30,9 +28,9 @@ public class Minimap {
     /** Logger instance for error and debugging output. */
     private static final Logger logger = LoggerFactory.getLogger(Minimap.class);
     /** Default image height for a room in pixels. */
-    private static final int IMAGE_HEIGHT = 720;
+    public static final int IMAGE_HEIGHT = 720;
     /** Default image width for a room in pixels. */
-    private static final int IMAGE_WIDTH = 1280;
+    public static final int IMAGE_WIDTH = 1280;
 
     /** Maps grid coordinates to corresponding minimap image paths. */
     private final Map<Vector2, String> grid;
@@ -171,6 +169,8 @@ public class Minimap {
                 float screenY = (IMAGE_HEIGHT * roomCoordinates.y + (float) IMAGE_HEIGHT / 2 - minY) * scale;
                 Vector2 screenCoords = new Vector2(screenX, screenY);
                 output.put(screenCoords, grid.get(roomCoordinates));
+
+                logger.info(String.valueOf(screenX) + ", " + String.valueOf(screenY) + grid.get(roomCoordinates));
             }
         }
 
