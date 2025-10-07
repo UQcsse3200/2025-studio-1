@@ -56,8 +56,9 @@ public class CasinoGameArea extends GameArea {
         spawnBordersAndDoors();
         spawnFloor();
 
-        spawnBlackjack();
         player = spawnPlayer();
+
+        spawnBlackjack();
         spawnWhackAMoleGame();
     }
 
