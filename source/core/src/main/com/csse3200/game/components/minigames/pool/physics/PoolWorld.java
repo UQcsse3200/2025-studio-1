@@ -9,6 +9,7 @@ public class PoolWorld {
     public PoolWorld(World world) {
         this.world = world;
         this.world.setGravity(new Vector2(0, 0));
+        World.setVelocityThreshold(0f);
     }
 
     public World raw() {

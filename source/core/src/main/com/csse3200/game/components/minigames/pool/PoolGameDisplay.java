@@ -498,16 +498,18 @@ public class PoolGameDisplay extends UIComponent {
             float cbx = getX() + cueBall.x * getWidth();
             float cby = getY() + cueBall.y * getHeight();
             float ballPx = Math.min(getWidth(), getHeight()) * 0.035f;
+            float scale = 1.2f;
+            float drawSize = ballPx * scale;
 
             if (balls != null) {
                 for (int i = 0; i < balls.length; i++) {
                     Vector2 b = balls[i];
                     if (b == null) continue;
-                    float bx = getX() + b.x * getWidth() - ballPx / 2f;
-                    float by = getY() + b.y * getHeight() - ballPx / 2f;
+                    float bx = getX() + b.x * getWidth() - drawSize / 2f;
+                    float by = getY() + b.y * getHeight() - drawSize / 2f;
                     int id = i + 1;
                     TextureRegion tex = (id < ballTextures.length) ? ballTextures[id] : cueBallTex;
-                    batch.draw(tex, bx, by, ballPx, ballPx);
+                    batch.draw(tex, bx, by, drawSize, drawSize);
                 }
             }
 
