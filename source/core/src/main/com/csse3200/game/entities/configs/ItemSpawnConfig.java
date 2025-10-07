@@ -132,7 +132,7 @@ public class ItemSpawnConfig {
         Map<String, List<ItemSpawner.ItemSpawnInfo>> config = new HashMap<>();
 
         config.put(Weapons.PISTOL.name(), List.of(
-                new ItemSpawner.ItemSpawnInfo(new GridPoint2(24, 11), 1)
+                new ItemSpawner.ItemSpawnInfo(new GridPoint2(0, 12), 1)
         ));
         config.put(Weapons.LIGHTSABER.name(), List.of(
                 new ItemSpawner.ItemSpawnInfo(new GridPoint2(22, 6), 1)
