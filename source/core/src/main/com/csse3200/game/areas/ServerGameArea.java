@@ -59,7 +59,6 @@ public class ServerGameArea extends GameArea {
 
         displayUI();
         spawnTerrain();
-        spawnBigWall();
         spawnPlatforms();
         spawnRoomObjects();
         spawnCratesAndRailing();
@@ -95,9 +94,7 @@ public class ServerGameArea extends GameArea {
      * @return Entity player
      */
     private Entity spawnPlayer() {
-        Entity newPlayer = PlayerFactory.createPlayer();
-        spawnEntityAt(newPlayer, playerSpawn, true, true);
-        return newPlayer;
+        return spawnOrRepositionPlayer(playerSpawn);
     }
 
     /**
@@ -114,6 +111,14 @@ public class ServerGameArea extends GameArea {
                 spawnEntityAt(platform, platformSpawn, false, false);
             }
         }
+
+        for (int j = 10; j < 15; j += 4) {
+            for (int i = 0; i < 8; i += 5) {
+                GridPoint2 platformSpawn = new GridPoint2((i - j / 3), j);
+                Entity platform = ObstacleFactory.createThinFloor();
+                spawnEntityAt(platform, platformSpawn, false, false);
+            }
+        }
     }
 
     /**
@@ -126,6 +131,9 @@ public class ServerGameArea extends GameArea {
             GridPoint2 rackSpawn = new GridPoint2(i, 7);
             spawnEntityAt(rack, rackSpawn, false, false);
         }
+
+        spawnEntityAt(ObstacleFactory.createLabPlant1(), new GridPoint2(4, 15), true, false);
+        spawnEntityAt(ObstacleFactory.createLabPlant1(), new GridPoint2(2, 15), true, false);
     }
 
     /**
@@ -182,15 +190,6 @@ public class ServerGameArea extends GameArea {
         Entity ghost2 = NPCFactory.createGhostGPT(player, this, ServiceLocator.getDifficulty().getRoomDifficulty(ServerGameArea.ROOM_DIFF_NUMBER));
         GridPoint2 ghost2Pos = new GridPoint2(25, 20);
         spawnEntityAt(ghost2, ghost2Pos, true, false);
-    }
-
-    /**
-     * Adds a very tall thick-floor as a background wall/divider.
-     */
-    private void spawnBigWall() {
-        GridPoint2 wallSpawn = new GridPoint2(-14, 0);
-        Entity bigWall = ObstacleFactory.createBigThickFloor();
-        spawnEntityAt(bigWall, wallSpawn, true, false);
     }
 
     /**
