@@ -112,19 +112,26 @@ public class FriendlyNPCFactory {
      *
      * @return A new Entity representing the Assister NPC with walking animations.
      */
-    public static Entity createAssisterNpc() {
-        TextureAtlas atlas = ServiceLocator.getResourceService()
-                .getAsset("images/assister_npc.atlas", TextureAtlas.class);
-
-        AnimationRenderComponent arc = new AnimationRenderComponent(atlas);
-
-        arc.addAnimation("walk_right", 0.10f, Animation.PlayMode.LOOP);
-        arc.addAnimation("walk_left",  0.10f, Animation.PlayMode.LOOP);
-
-        Entity npc = new Entity().addComponent(arc);
-        arc.scaleEntity();
-        arc.startAnimation("walk_right"); // default facing
-        return npc;
+    public static Entity createAssisterNpc(Entity player) {
+        Entity assistor = new Entity()
+                .addComponent(new TextureRenderComponent("images/Assistor.png"))
+                .addComponent(new NpcDialogueDataComponent(
+                        "Friendly NPC", "", new String[]{
+                        "Hello",
+                        "Click the dialog box to continue to the next sentence.",
+                        "At the end, this sentence will automatically close."
+                }
+                ))
+                .addComponent(new DialogueDisplay())
+                .addComponent(new AssistorTaskComponent(player));
+        var data = assistor.getComponent(NpcDialogueDataComponent.class);
+        var ui   = assistor.getComponent(DialogueDisplay.class);
+        assistor.getComponent(TextureRenderComponent.class).scaleEntity();
+        assistor.addComponent(new TipComponent(assistor, player, 3f));
+        assistor.addComponent(new NpcInterationComponent(player, 3f));
+        assistor.getComponent(TextureRenderComponent.class).scaleEntity();
+        assistor.setScale(1.1f, 1.1f);
+        return assistor;
     }
 
     /**
