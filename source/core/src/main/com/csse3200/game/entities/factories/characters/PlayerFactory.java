@@ -75,8 +75,9 @@ public class PlayerFactory {
                         .addComponent(new PlayerAnimationController())
                         .addComponent(new PowerupComponent())
                         .addComponent(new PlayerAnimationController())
-                        .addComponent(new InteractComponent().setLayer(PhysicsLayer.DEFAULT))
-                        .addComponent(new PlayerEquipComponent());
+                        .addComponent(new PlayerEquipComponent())
+                        .addComponent(new ArmourEquipComponent())
+                        .addComponent(new InteractComponent().setLayer(PhysicsLayer.DEFAULT));
         // Ensure global player reference is up-to-date for transitions
         ServiceLocator.registerPlayer(player);
 

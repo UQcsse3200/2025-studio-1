@@ -10,16 +10,16 @@ import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.components.KeycardGateComponent;
 import com.csse3200.game.components.gamearea.GameAreaDisplay;
+import com.csse3200.game.components.items.ItemComponent;
 import com.csse3200.game.components.items.ItemHoldComponent;
-import com.csse3200.game.components.minigames.robotFighting.RobotFightingGame;
-import com.csse3200.game.components.player.InventoryComponent;
-import com.csse3200.game.components.screens.BlackjackScreenDisplay;
 import com.csse3200.game.components.player.ItemPickUpComponent;
 import com.csse3200.game.components.player.PlayerEquipComponent;
 import com.csse3200.game.components.shop.CatalogService;
 import com.csse3200.game.components.shop.ShopDemo;
 import com.csse3200.game.components.shop.ShopManager;
 import com.csse3200.game.entities.Entity;
+import com.csse3200.game.entities.configs.Armour;
+import com.csse3200.game.entities.factories.items.ArmourFactory;
 import com.csse3200.game.entities.configs.Benches;
 import com.csse3200.game.entities.configs.ItemSpawnConfig;
 import com.csse3200.game.entities.configs.Weapons;
@@ -39,10 +39,13 @@ import com.csse3200.game.physics.components.HitboxComponent;
 import com.csse3200.game.physics.components.PhysicsComponent;
 import com.csse3200.game.rendering.AnimationRenderComponent;
 import com.csse3200.game.rendering.TextureRenderComponent;
+import com.csse3200.game.rendering.TextureRenderWithRotationComponent;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import static com.csse3200.game.entities.configs.Weapons.*;
 
 /**
  * A playable “Forest” style room. This class:
@@ -144,6 +147,8 @@ public class ForestGameArea extends GameArea {
             "images/NpcDialogue.png",
             "images/nurse_npc.png",
             "images/partner.png",
+            "images/armour-assets/chestplate.png",
+            "images/armour-assets/hood.png",
             "images/blackjack_table.png"
     };
 
@@ -193,13 +198,7 @@ public class ForestGameArea extends GameArea {
             "foreg_sprites/Security/SecuritySystem.png",
             "foreg_sprites/futuristic/storage_crate_green2.png",
             "foreg_sprites/futuristic/storage_crate_dark2.png",
-            "foreg_sprites/futuristic/SecurityCamera3.png",
-            "images/slots_kiosk.png",
-            "images/bell.png",
-            "images/cherry.png",
-            "images/diamond.png",
-            "images/lemon.png",
-            "images/watermelon.png"
+            "foreg_sprites/futuristic/SecurityCamera3.png"
     };
 
     /**
@@ -344,10 +343,6 @@ public class ForestGameArea extends GameArea {
         spawnComputerBench();
         spawnHealthBench();
         spawnSpeedBench();
-        spawnBlackjack();
-
-        player = spawnPlayer();
-        ServiceLocator.registerPlayer(player);
         spawnFloor();
         spawnBottomRightDoor();
         spawnMarblePlatforms();
@@ -365,11 +360,6 @@ public class ForestGameArea extends GameArea {
         spawnEntity(keycard);
 
         spawnItems();
-
-        spawnRobotFightingGame();
-
-        spawnSlotsGame();
-
     }
 
     private void spawnRobots() {
@@ -460,7 +450,6 @@ public class ForestGameArea extends GameArea {
      * This is called by the door/keycard logic when the player exits.
      */
     private void loadNextLevel() {
-        roomNumber++;
         // Use the safe, render-thread transition helper
         Reception.setRoomSpawn(new GridPoint2(6, 10));
         clearAndLoad(() -> new Reception(terrainFactory, cameraComponent));
@@ -497,16 +486,6 @@ public class ForestGameArea extends GameArea {
     private void spawnComputerBench() {
         Entity bench = InteractableStationFactory.createStation(Benches.COMPUTER_BENCH);
         spawnEntityAt(bench, new GridPoint2(2, 7), true, true);
-
-    }
-
-    private void spawnBlackjack() {
-        Entity blackjack = InteractableStationFactory.createBaseStation();
-        blackjack.addComponent(new TextureRenderComponent("images/box_boy_leaf.png"));
-        blackjack.addComponent(new BlackJackGame());
-        blackjack.addComponent(new BlackjackScreenDisplay());
-        spawnEntityAt(blackjack, new GridPoint2(20, 7), true, true);
-        blackjack.getEvents().trigger("hide");
 
     }
 
@@ -617,7 +596,7 @@ public class ForestGameArea extends GameArea {
     }
 
     private Entity spawnDagger() {
-        Entity newDagger = WeaponsFactory.createWeapon(Weapons.DAGGER);
+        Entity newDagger = WeaponsFactory.createWeapon(DAGGER);
         Vector2 newDaggerOffset = new Vector2(0.7f, 0.3f);
         newDagger.addComponent(new ItemHoldComponent(this.player, newDaggerOffset));
 
@@ -625,8 +604,6 @@ public class ForestGameArea extends GameArea {
     }
 
     /**
-     * FIXME Layer is behind player, does that matter???
-     * FIXME Also need to fix positioning so that it actually looks like the player is holding the weapon
      * Sets the equipped item in the PlayerEquipComponent to be the given item
      *
      * @param tex Is an existing Item texture path, within the players inventory
@@ -635,7 +612,24 @@ public class ForestGameArea extends GameArea {
         Entity item = player.getComponent(ItemPickUpComponent.class).createItemFromTexture(tex);
         if (item == null) return;
 
+        // Get the players Z index
+        float playerZ = player.getComponent(AnimationRenderComponent.class).getZIndex();
+
+        // Get the relevant components from the item
+        TextureRenderComponent texComp = item.getComponent(TextureRenderComponent.class);
+        TextureRenderWithRotationComponent texRotComp = item.getComponent(
+                TextureRenderWithRotationComponent.class);
+
+        // Update the Z index for the item
+        if (texRotComp != null) {
+            texRotComp.setZIndex(playerZ + 0.01f);
+        } else if (texComp != null)
+            texComp.setZIndex(playerZ + 0.01f);
+
         item.getComponent(HitboxComponent.class).setLayer(PhysicsLayer.OBSTACLE);
+
+        // Make it so that the player cannot pick up the item
+        item.getComponent(ItemComponent.class).setPickupable(false);
 
         // Make dropped items static so they behave like map-placed items
         PhysicsComponent phys = item.getComponent(PhysicsComponent.class);
@@ -644,7 +638,8 @@ public class ForestGameArea extends GameArea {
         // get the game area and spawn the item
         ServiceLocator.getGameArea().spawnEntity(item);
 
-        Vector2 offset = new Vector2(0.7f, 0.3f);
+        // update offset from the players position
+        Vector2 offset = item.getComponent(ItemComponent.class).getEquipOffset();
         player.getComponent(PlayerEquipComponent.class).setItem(item, offset);
     }
 
@@ -656,7 +651,7 @@ public class ForestGameArea extends GameArea {
     }
 
     private Entity spawnLightsaber() {
-        Entity newLightsaber = WeaponsFactory.createWeapon(Weapons.LIGHTSABER);
+        Entity newLightsaber = WeaponsFactory.createWeapon(LIGHTSABER);
         Vector2 newLightsaberOffset = new Vector2(0.9f, -0.2f);
         newLightsaber.addComponent(new ItemHoldComponent(this.player, newLightsaberOffset));
         AnimationRenderComponent lightSaberAnimator = WeaponsFactory.createAnimation("images/lightSaber.atlas", this.player);
@@ -674,7 +669,7 @@ public class ForestGameArea extends GameArea {
     }
 
     private Entity spawnRifle() {
-        Entity newRifle = WeaponsFactory.createWeapon(Weapons.RIFLE);
+        Entity newRifle = WeaponsFactory.createWeapon(RIFLE);
         Vector2 newRifleOffset = new Vector2(0.8f, 0.15f);
         newRifle.addComponent(new ItemHoldComponent(this.player, newRifleOffset));
         return newRifle;
@@ -731,19 +726,6 @@ public class ForestGameArea extends GameArea {
 
         Entity boss3 = BossFactory.createBoss3(player);
         spawnEntityAt(boss3, pos, true, true);
-    }
-
-    private void spawnRobotFightingGame() {
-        GridPoint2 pos = new GridPoint2(3, 20);
-        spawnEntityAt(new RobotFightingGame().getGameEntity(), pos, true, true);
-    }
-    private void spawnSlotsGame() {
-        GridPoint2 pos = new GridPoint2(21, 7);
-        spawnEntityAt(new SlotsGame().getGameEntity(), pos, true, true);
-    }
-
-    public void spawnItem(Entity item, GridPoint2 position) {
-        spawnEntityAt(item, position, false, false);
     }
 
     private void playMusic() {

@@ -8,6 +8,7 @@ public class LauncherConfig extends RangedWeaponConfig {
         shootTimer = 2;
         texturePath = "images/rocketlauncher.png";
         projectileTexturePath = "images/rocket.png";
+        this.setName("launcher");
     }
 
 }
