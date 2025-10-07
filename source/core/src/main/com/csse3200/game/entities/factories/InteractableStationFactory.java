@@ -26,6 +26,7 @@ public class InteractableStationFactory {
                 .addComponent(new ColliderComponent().setLayer(PhysicsLayer.STATION));
         base.getComponent(PhysicsComponent.class).setBodyType(BodyDef.BodyType.StaticBody);
         base.getComponent(ColliderComponent.class).setSensor(true);
+        base.setInteractable(true);
         return base;
 
     }
