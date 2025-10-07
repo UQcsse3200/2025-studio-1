@@ -49,6 +49,10 @@ public class TeleporterComponent extends Component {
 
     @Override
     public void update() {
+        // Sync internal state with UI component (user may press the UI Close button)
+        if (menuUI != null && menuVisible && !menuUI.isVisible()) {
+            menuVisible = false;
+        }
         if (teleporting) {
             updateActivation();
             return;
