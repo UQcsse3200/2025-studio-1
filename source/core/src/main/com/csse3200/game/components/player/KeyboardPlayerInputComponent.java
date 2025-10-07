@@ -23,8 +23,8 @@ public class KeyboardPlayerInputComponent extends InputComponent {
 
     private final Vector2 walkDirection = Vector2.Zero.cpy();
 
-    private int focusedItem = -1;
-    private boolean equipped = false;
+    int focusedItem = -1;
+    boolean equipped = false;
     private boolean holding = false;
 
     public KeyboardPlayerInputComponent() {
