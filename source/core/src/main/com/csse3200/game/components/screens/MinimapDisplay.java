@@ -91,7 +91,6 @@ public class MinimapDisplay extends BaseScreenDisplay {
 
         // Minimap rendering
         minimap.open();
-        minimap.zoom(-98);
 
         minimapTable = new Table();
         minimapTable.setFillParent(true);
