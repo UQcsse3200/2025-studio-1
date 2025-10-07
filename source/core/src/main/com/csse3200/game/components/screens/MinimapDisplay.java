@@ -11,6 +11,9 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.math.Vector2;
+
+import java.util.Map;
 
 /**
  * Minimap overlay shown above the main game and HUD.
@@ -31,13 +34,10 @@ public class MinimapDisplay extends BaseScreenDisplay {
      * when the minimap overlay is opened multiple times and to remove it in {@link #dispose()}.
      */
     private Image dimmer;
-    private Image minimapImage;
-    private boolean zoomedIn = false;
     private ScrollPane scrollPane;
-    private final float origWidth = 800f;
-    private final float origHeight = 800f;
-    private final float zoomedWidth = 1600f;
-    private final float zoomedHeight = 1600f;
+    private Table minimapTable;
+    private Minimap minimap;
+    private boolean zoomedIn = false;
 
     /**
      * Constructs a screen display bound to a game instance.
@@ -46,6 +46,17 @@ public class MinimapDisplay extends BaseScreenDisplay {
      */
     public MinimapDisplay(GdxGame game) {
         super(game);
+    }
+
+    /**
+     * Constructs a screen display bound to a game instance and minimap.
+     *
+     * @param game game instance for navigation (e.g., {@link #backMainMenu()})
+     * @param minimap The minimap object made by {@link Minimap}
+     */
+    public MinimapDisplay(GdxGame game, Minimap minimap) {
+        super(game);
+        this.minimap = minimap;
     }
 
     /**
@@ -79,29 +90,39 @@ public class MinimapDisplay extends BaseScreenDisplay {
 
         addTitle(root, "Minimap", 2.0f, Color.WHITE, 24f);
 
-        Texture minimapTexture = new Texture("images/minimap.png");
-        minimapImage = new Image(new TextureRegionDrawable(minimapTexture));
-        minimapImage.setSize(800, 800); // Adjust as needed
+        // Minimap rendering
+        minimap.open();
+
+        minimapTable = new Table();
+        minimapTable.setFillParent(true);
 
         // Wrap in a scroll pane for panning when zoomed in
-        scrollPane = new ScrollPane(minimapImage, skin);
+        scrollPane = new ScrollPane(minimapTable, skin);
         scrollPane.setScrollingDisabled(true, true); // Disable by default
 
-        Table minimapTable = new Table();
-        minimapTable.setFillParent(true);
-        minimapTable.add(scrollPane).center().width(origWidth).height(origHeight);
-
-        root.addActor(minimapTable);
+        root.add(scrollPane).center().width(minimapTable.getWidth()).height(minimapTable.getHeight());
         logger.debug("Created minimap actor");
 
         // Click to zoom in
-        minimapImage.addListener(new InputListener() {
+        minimapTable.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 if (!zoomedIn) {
-                    zoomIn(x, y);
+                    zoomInTouch(x, y);
                 } else {
-                    zoomOut();
+                    zoomOutTouch();
+                }
+                return true;
+            }
+        });
+
+        scrollPane.addListener(new InputListener() {
+            @Override
+            public boolean scrolled(int amount) {
+                if (zoomedIn) {
+                    minimap.zoom(-amountY * 10); // Zoom out/in by scroll
+                    minimapTable.clearChildren();
+                    renderMinimapImages();
                 }
                 return true;
             }
@@ -125,39 +146,53 @@ public class MinimapDisplay extends BaseScreenDisplay {
         });
     }
 
-    private void zoomIn(float x, float y) {
-        // Calculate click position as a percentage of the minimap
-        float percentX = x / minimapImage.getWidth();
-        float percentY = y / minimapImage.getHeight();
+    private void renderMinimapImages() {
+        // Render all visible rooms as images
+        Map<String, Vector2> visibleRooms = minimap.render();
+        for (Map.Entry<String, Vector2> entry : visibleRooms.entrySet()) {
+            String imagePath = entry.getKey();
+            Vector2 screenPos = entry.getValue();
+            Texture texture = new Texture(imagePath);
+            Image roomImage = new Image(new TextureRegionDrawable(texture));
+            roomImage.setSize(128, 72); // Thumbnail size, adjust as needed
+            roomImage.setPosition(screenPos.x, screenPos.y);
+            minimapTable.addActor(roomImage);
+        }
+    }
 
-        // Zoom in the entire minimap image
-        minimapImage.setSize(zoomedWidth, zoomedHeight);
-        scrollPane.setScrollingDisabled(false, false);
-        logger.info("Minimap is now scrollable");
+    private void zoomInTouch(float x, float y) {
         zoomedIn = true;
+        // Calculate percent position
+        float percentX = x / minimapTable.getWidth();
+        float percentY = y / minimapTable.getHeight();
+        // Zoom in backend
+        minimap.zoom(100);
+        scrollPane.setScrollingDisabled(false, false);
 
-        // Scroll so the clicked spot is centered
-        // Calculate scroll position (scrollX/Y are 0-1)
-        float scrollX = percentX - (scrollPane.getWidth() / 2f) / zoomedWidth;
-        float scrollY = percentY - (scrollPane.getHeight() / 2f) / zoomedHeight;
+        // Pan so clicked spot is centered
+        Vector2 panVector = new Vector2(
+                (percentX - 0.5f) * minimapTable.getWidth(),
+                (percentY - 0.5f) * minimapTable.getHeight()
+        );
+        minimap.pan(panVector);
 
-        // Clamp between 0 and 1
-        scrollX = Math.max(0f, Math.min(1f, scrollX));
-        scrollY = Math.max(0f, Math.min(1f, scrollY));
-
-        // Set scroll position
-        scrollPane.setScrollPercentX(scrollX);
-        scrollPane.setScrollPercentY(scrollY);
+        // Re-render minimap
+        minimapTable.clearChildren();
+        renderMinimapImages();
 
         logger.info("Minimap zoomed in to point {} x, {} y", x, y);
     }
 
-    private void zoomOut() {
+    private void zoomOutTouch() {
         // Zoom out to show the entire minimap image
-        minimapImage.setSize(origWidth, origHeight);
+        minimap.reset();
         scrollPane.setScrollingDisabled(true, true);
         logger.info("Scrolling has been disabled for minimap");
         zoomedIn = false;
+
+        // Re-render minimap
+        minimapTable.clearChildren();
+        renderMinimapImages();
 
         logger.info("Minimap zoomed out");
     }
@@ -179,13 +214,14 @@ public class MinimapDisplay extends BaseScreenDisplay {
      */
     @Override
     public void dispose() {
+        minimap.close();
         if (dimmer != null && dimmer.getStage() != null) {
             dimmer.remove();
             dimmer = null;
         }
-        if (minimapImage != null) {
-            minimapImage.remove();
-            minimapImage = null;
+        if (minimapTable != null) {
+            minimapTable.clear();
+            minimapTable = null;
         }
         if (scrollPane != null) {
             scrollPane.remove();
