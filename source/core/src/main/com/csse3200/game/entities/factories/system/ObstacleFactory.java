@@ -236,7 +236,10 @@ public class ObstacleFactory {
         platform2.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
         platform2.getComponent(TextureRenderComponent.class).scaleEntity();
         platform2.scaleHeight(3f);
-        PhysicsUtils.setScaledCollider(platform2, 0.7f, 0.55f);
+        Vector2 colliderSize = new Vector2(platform2.getScale().x * 0.5f, platform2.getScale().y * 0.1f);
+        Vector2 offset = new Vector2(0f, platform2.getScale().y * 0.001f);
+        platform2.getComponent(ColliderComponent.class)
+                .setAsBox(colliderSize, platform2.getCenterPosition().add(offset));
         return platform2;
     }
 
@@ -251,11 +254,10 @@ public class ObstacleFactory {
                         .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
         clockSpawn.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
         clockSpawn.getComponent(TextureRenderComponent.class).scaleEntity();
-        clockSpawn.scaleHeight(1f);
-        PhysicsUtils.setScaledCollider(clockSpawn, 0.7f, 0.75f);
+        clockSpawn.scaleHeight(2f);
+        PhysicsUtils.setScaledCollider(clockSpawn, 0.2f, 1f);
         return clockSpawn;
     }
-
     /**
      * creating the platform for Office area
      **/
@@ -342,17 +344,21 @@ public class ObstacleFactory {
                 new Entity()
                         .addComponent(new TextureRenderComponent("images/platform-3.png"))
                         .addComponent(new PhysicsComponent())
-                        .addComponent(new ColliderComponent())
-                        .addComponent(new HitboxComponent().setLayer(PhysicsLayer.OBSTACLE))
-                        .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
+                        .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE))
+                        .addComponent(new HitboxComponent().setLayer(PhysicsLayer.OBSTACLE));
 
         platform3.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
         platform3.getComponent(TextureRenderComponent.class).scaleEntity();
         platform3.scaleHeight(3f);
-        PhysicsUtils.setScaledCollider(platform3, 0.7f, 0.5f);
+
+        Vector2 colliderSize = new Vector2(platform3.getScale().x * 0.6f, platform3.getScale().y * 0.1f);
+        Vector2 offset = new Vector2(-platform3.getScale().x * 0.09f, platform3.getScale().y * 0.005f);
+
+        platform3.getComponent(ColliderComponent.class)
+                .setAsBox(colliderSize, platform3.getCenterPosition().add(offset));
+
         return platform3;
     }
-
     /**
      * creates Sofa in bottom left in main hall
      **/
@@ -374,10 +380,13 @@ public class ObstacleFactory {
         Entity Mhall_screenSpawn =
                 new Entity()
                         .addComponent(new TextureRenderComponent("images/Mhall-screen.png"))
-                        .addComponent(new ColliderComponent())
-                        .addComponent(new HitboxComponent().setLayer(PhysicsLayer.OBSTACLE));
+                        .addComponent(new PhysicsComponent())
+                        .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
+
+        Mhall_screenSpawn.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
         Mhall_screenSpawn.getComponent(TextureRenderComponent.class).scaleEntity();
         Mhall_screenSpawn.scaleHeight(1.5f);
+        PhysicsUtils.setScaledCollider(Mhall_screenSpawn, 0.7f, 0.75f);
         return Mhall_screenSpawn;
     }
 
@@ -388,13 +397,14 @@ public class ObstacleFactory {
         Entity Mhall_holoSpawn =
                 new Entity()
                         .addComponent(new TextureRenderComponent("images/Mhall-holo.png"))
-                        .addComponent(new ColliderComponent())
-                        .addComponent(new HitboxComponent().setLayer(PhysicsLayer.OBSTACLE));
+                        .addComponent(new PhysicsComponent())
+                        .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
+        Mhall_holoSpawn.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
         Mhall_holoSpawn.getComponent(TextureRenderComponent.class).scaleEntity();
         Mhall_holoSpawn.scaleHeight(1.5f);
+        PhysicsUtils.setScaledCollider(Mhall_holoSpawn, 0.7f, 0.75f);
         return Mhall_holoSpawn;
     }
-
     /**
      * Purple spawn pad prop. Solid so it rests on the ground like other props.
      *
