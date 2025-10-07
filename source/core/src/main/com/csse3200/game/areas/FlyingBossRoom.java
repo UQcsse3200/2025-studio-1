@@ -175,4 +175,9 @@ public class FlyingBossRoom extends GameArea {
         ResearchGameArea.setRoomSpawn(new GridPoint2(25, 24));
         clearAndLoad(() -> new ResearchGameArea(terrainFactory, cameraComponent));
     }
+
+    @Override
+    public String toString() {
+        return "FlyingBoss";
+    }
 }
