@@ -332,8 +332,8 @@ public class NPCFactory {
         // Has 0 speed due to stationary ememy
         AITaskComponent aiComponent =
                 new AITaskComponent()
-                        .addTask(new GPTGroundSlowChaseTask(target, 10, 0.3f, 0f))
-                        .addTask(new GPTGroundFastChaseTask(target, 10, 0f, projComp, turret, 3f, 3f));
+                        .addTask(new TurretIdleTask(target, 10))
+                        .addTask(new TurretFiringTask(target, 10, projComp, turret, 3f, 3f));
 
         // Get player's inventory for reward system
         InventoryComponent playerInventory = null;
