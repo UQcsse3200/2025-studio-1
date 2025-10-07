@@ -13,7 +13,6 @@ import com.csse3200.game.entities.configs.Benches;
 import com.csse3200.game.entities.configs.ItemSpawnConfig;
 import com.csse3200.game.entities.factories.InteractableStationFactory;
 import com.csse3200.game.entities.factories.characters.NPCFactory;
-import com.csse3200.game.entities.factories.characters.PlayerFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.entities.spawner.ItemSpawner;
 import com.csse3200.game.services.ServiceLocator;
@@ -25,8 +24,6 @@ import org.slf4j.LoggerFactory;
  * Is attached to Tunnel Room.
  */
 public class ServerGameArea extends GameArea {
-    private static final Logger logger = LoggerFactory.getLogger(ServerGameArea.class);
-
     private static final float WALL_WIDTH = 0.1f;
     private static GridPoint2 playerSpawn = new GridPoint2(10, 10);
     private static final float ROOM_DIFF_NUMBER = 9;
