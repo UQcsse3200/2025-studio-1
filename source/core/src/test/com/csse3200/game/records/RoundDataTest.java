@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.*;
  *   - Handling of edge and boundary values
  *
  */
-public class RoundDataTest {
+class RoundDataTest {
     /**
      * Ensures that the constructor initializes all fields correctly
      * and calculates score as currency + (int) time.
