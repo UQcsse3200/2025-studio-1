@@ -39,14 +39,15 @@ public class PocketContactSystem {
             @Override
             public void beginContact(Contact c) {
                 Fixture fa = c.getFixtureA(), fb = c.getFixtureB();
-                boolean aPocket = fa.isSensor() && fa.getFilterData().categoryBits == TableBuilder.LAYER_POCKET;
-                boolean bPocket = fb.isSensor() && fb.getFilterData().categoryBits == TableBuilder.LAYER_POCKET;
+                boolean aPocket = fa.isSensor() && (fa.getFilterData().categoryBits & TableBuilder.LAYER_POCKET) != 0;
+                boolean bPocket = fb.isSensor() && (fb.getFilterData().categoryBits & TableBuilder.LAYER_POCKET) != 0;
                 if (aPocket == bPocket) return;
                 Fixture pocketFx = aPocket ? fa : fb;
                 Fixture ballFx = aPocket ? fb : fa;
                 if ((ballFx.getFilterData().categoryBits & TableBuilder.LAYER_BALL) == 0) return;
                 int pocketIndex = pocketFx.getUserData() instanceof Integer ? (Integer) pocketFx.getUserData() : -1;
                 Body ballBody = ballFx.getBody();
+                log.debug("Pocket contact: pocket={}, ballBody={}", pocketIndex, ballBody);
                 if (ballBody == cueRef) {
                     queue.addLast(new PotEvent(ballBody, pocketIndex));
                     return;
