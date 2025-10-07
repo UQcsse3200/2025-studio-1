@@ -18,6 +18,7 @@ import com.csse3200.game.components.player.ItemPickUpComponent;
 import com.csse3200.game.components.screens.PauseMenuDisplay;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
+import com.csse3200.game.entities.factories.characters.PlayerFactory;
 import com.csse3200.game.entities.factories.system.RenderFactory;
 import com.csse3200.game.input.InputComponent;
 import com.csse3200.game.input.InputDecorator;
@@ -91,6 +92,8 @@ public class MainGameScreen extends ScreenAdapter {
 
         ServiceLocator.registerEntityService(new EntityService());
         ServiceLocator.registerRenderService(new RenderService());
+
+        ServiceLocator.clearPlayer();
 
         renderer = RenderFactory.createRenderer();
         renderer.getCamera().getEntity().setPosition(CAMERA_POSITION);
@@ -252,10 +255,12 @@ public class MainGameScreen extends ScreenAdapter {
         renderer.dispose();
         unloadAssets();
 
-        ServiceLocator.getEntityService().dispose();
+        // Preserve player entity during disposal
+        Entity player = ServiceLocator.getPlayer();
+        ServiceLocator.getEntityService().disposeExceptPlayer();
         ServiceLocator.getRenderService().dispose();
         ServiceLocator.getResourceService().dispose();
-        ServiceLocator.clear();
+        ServiceLocator.clearExceptPlayer();
     }
 
     private void loadAssets() {
