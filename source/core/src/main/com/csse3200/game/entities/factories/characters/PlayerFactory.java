@@ -73,6 +73,7 @@ public class PlayerFactory {
                         .addComponent(new PlayerAnimationController())
                         .addComponent(new PowerupComponent())
                         .addComponent(new PlayerAnimationController())
+                        .addComponent(new PlayerEquipComponent())
                         .addComponent(new ShopInteractComponent(2.0f));
         // Ensure global player reference is up-to-date for transitions
         ServiceLocator.registerPlayer(player);
@@ -86,7 +87,6 @@ public class PlayerFactory {
         //Unequip player at spawn
         PlayerActions actions = player.getComponent(PlayerActions.class);
         actions.create();
-        actions.unequipPlayer();  //start without a weapon equipped
 
         // Restore stamina from previous area if cached
         try {

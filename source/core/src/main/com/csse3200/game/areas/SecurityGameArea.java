@@ -5,7 +5,6 @@ import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
-import com.csse3200.game.areas.difficulty.Difficulty;
 import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.ItemSpawnConfig;
@@ -26,6 +25,10 @@ public class SecurityGameArea extends GameArea {
 
     public SecurityGameArea(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
         super(terrainFactory, cameraComponent);
+    }
+
+    public static SecurityGameArea load(TerrainFactory terrainFactory, CameraComponent camera) {
+        return (new SecurityGameArea(terrainFactory, camera));
     }
 
     @Override
@@ -63,7 +66,7 @@ public class SecurityGameArea extends GameArea {
         float rightDoorY = b.topY() - rightDoorHeight;
         Entity rightDoor = ObstacleFactory.createDoorTrigger(WALL_WIDTH, rightDoorHeight);
         rightDoor.setPosition(b.rightX() - WALL_WIDTH - 0.001f, rightDoorY);
-        rightDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadOffice));
+        rightDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadMovingBossRoom));
         spawnEntity(rightDoor);
     }
 
@@ -154,8 +157,8 @@ public class SecurityGameArea extends GameArea {
         clearAndLoad(() -> new MainHall(terrainFactory, cameraComponent));
     }
 
-    private void loadOffice() {
-        clearAndLoad(() -> new OfficeGameArea(terrainFactory, cameraComponent));
+    private void loadMovingBossRoom() {
+        clearAndLoad(() -> new MovingBossRoom(terrainFactory, cameraComponent));
     }
 
     @Override
@@ -167,9 +170,5 @@ public class SecurityGameArea extends GameArea {
     public Entity getPlayer() {
         // placeholder
         return null;
-    }
-
-    public static SecurityGameArea load(TerrainFactory terrainFactory, CameraComponent camera) {
-        return (new SecurityGameArea(terrainFactory, camera));
     }
 }

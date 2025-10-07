@@ -66,6 +66,7 @@ public class ServerGameArea extends GameArea {
         spawnBordersAndDoors();
         spawnObjectDoors(new GridPoint2(0, 6), new GridPoint2(28, 21));
         spawnTeleporter();
+        spawnObjectDoors(new GridPoint2(0, 7), new GridPoint2(28, 21));
 
         spawnFloor();
 

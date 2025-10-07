@@ -22,13 +22,11 @@ import com.csse3200.game.entities.factories.characters.NPCFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.physics.components.PhysicsProjectileComponent;
 import com.csse3200.game.rendering.SolidColorRenderComponent;
+import com.csse3200.game.services.DiscoveryService;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Supplier;
 
 /**
@@ -42,7 +40,6 @@ public abstract class GameArea implements Disposable {
     protected List<Entity> areaEntities;
     protected TerrainFactory terrainFactory;
     protected CameraComponent cameraComponent;
-
     protected float baseScaling = 0f;
     /**
      * Prevents re-entrant room transitions across areas
@@ -66,6 +63,7 @@ public abstract class GameArea implements Disposable {
     private static final String GROK_DROID_BLUE = "GrokDroidBlue";
     private static final String turret = "Turret";
 
+    protected boolean isTransitioning = false;
     protected EnemyWaves wavesManager; // manage waves via terminal command
 
     protected GameArea(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
@@ -149,7 +147,7 @@ public abstract class GameArea implements Disposable {
      * @return the name of the current room
      *
      */
-    public String getRoomName () {
+    public String getRoomName() {
         return this.toString();
     }
 
@@ -208,7 +206,7 @@ public abstract class GameArea implements Disposable {
      * @param roomName    The name of the current floor/room.
      * @param total       The total number of enemies to be spawned.
      * @param scaleFactor The scaling factor of the difficulty of the enemies to be spawned.
-     * @param player      The player {@link Entity} that is to be target by the enemies.
+     * @param player      The player {@link Entity} that is to be targeted by the enemies.
      */
     public void spawnEnemies(String roomName, int total, float scaleFactor, Entity player) {
         Map<String, ArrayList<Vector2>> positions = getEnemySpawnPosition(roomName);
@@ -269,12 +267,14 @@ public abstract class GameArea implements Disposable {
                 break;
         }
     }
+
     /**
      * Spawns the enemies based on the enemy name
-     * @param roomName The number of the current floor/room.
-     * @param total The total number of enemies to be spawned.
+     *
+     * @param roomName    The number of the current floor/room.
+     * @param total       The total number of enemies to be spawned.
      * @param scaleFactor The scaling factor of the difficulty of the enemies to be spawned.
-     * @param player The player {@link Entity} that is to be target by the enemies.
+     * @param player      The player {@link Entity} that is to be targeted by the enemies.
      */
     public void spawn(String name, String roomName, int total, float scaleFactor, Entity player) {
         HashMap<String, ArrayList<Vector2>> positions = new HashMap<>();
@@ -356,7 +356,7 @@ public abstract class GameArea implements Disposable {
      */
     public void spawnGhostGPT(
             int total, float scaleFactor, Entity player, Map<String, ArrayList<Vector2>> positions) {
-        ArrayList<Vector2> spawnPositions = positions.get(ghostGpt);
+        ArrayList<Vector2> spawnPositions = positions.get(GHOST_GPT);
         for (Vector2 pos : spawnPositions) {
             Entity ghostGpt = NPCFactory.createGhostGPT(player, this, scaleFactor);
             ghostGpt.setPosition(pos);
@@ -401,7 +401,7 @@ public abstract class GameArea implements Disposable {
      */
     public void spawnDeepspin(
             int total, float scaleFactor, Entity player, Map<String, ArrayList<Vector2>> positions) {
-        ArrayList<Vector2> spawnPositions = positions.get(deepSpin);
+        ArrayList<Vector2> spawnPositions = positions.get(DEEP_SPIN);
 
         for (Vector2 pos : spawnPositions) {
             Entity deepSpin = NPCFactory.createDeepspin(player, this, scaleFactor);
@@ -449,7 +449,7 @@ public abstract class GameArea implements Disposable {
      */
     public void spawnGrokDroid(
             int total, float scaleFactor, Entity player, Map<String, ArrayList<Vector2>> positions) {
-        ArrayList<Vector2> spawnPositions = positions.get(grokDroid);
+        ArrayList<Vector2> spawnPositions = positions.get(GROK_DROID);
         for (Vector2 pos : spawnPositions) {
             Entity grokDroid = NPCFactory.createGrokDroid(player, this, scaleFactor);
             grokDroid.setPosition(pos);
@@ -495,7 +495,7 @@ public abstract class GameArea implements Disposable {
      */
     public void spawnVroomba(
             int total, float scaleFactor, Entity player, Map<String, ArrayList<Vector2>> positions) {
-        ArrayList<Vector2> spawnPositions = positions.get(vroomba);
+        ArrayList<Vector2> spawnPositions = positions.get(VROOMBA);
         for (Vector2 pos : spawnPositions) {
             Entity vroomba = NPCFactory.createVroomba(player, scaleFactor);
             vroomba.setPosition(pos);
@@ -539,8 +539,10 @@ public abstract class GameArea implements Disposable {
      * @param scaleFactor The scale of increase in difficulty of the GhostGPT
      */
     public void spawnTurret(
-            int total, float scaleFactor, Entity player, Map<String, ArrayList<Vector2>> positions) {
-        ArrayList<Vector2> spawnPositions = positions.get(turret);
+            int total, float scaleFactor, Entity player,
+            Map<String, ArrayList<Vector2>> positions
+    ) {
+        ArrayList<Vector2> spawnPositions = positions.get(TURRET);
         for (Vector2 pos : spawnPositions) {
             Entity turret = NPCFactory.createTurret(player, this, scaleFactor);
             turret.setPosition(pos);
@@ -809,13 +811,6 @@ public abstract class GameArea implements Disposable {
         }
     }
 
-    /**
-         * Camera bounds helper.
-         */
-        protected record Bounds(float leftX, float rightX, float bottomY, float topY, float viewWidth, float viewHeight,
-                                Vector2 camPos) {
-    }
-
     protected Bounds getCameraBounds(CameraComponent cameraComponent) {
         OrthographicCamera cam = (OrthographicCamera) cameraComponent.getCamera();
         Vector2 camPos = cameraComponent.getEntity().getPosition();
@@ -823,8 +818,9 @@ public abstract class GameArea implements Disposable {
         float viewHeight = cam.viewportHeight;
         float leftX = camPos.x - viewWidth / 2f;
         float rightX = camPos.x + viewWidth / 2f;
-        float bottomY = camPos.y - VERTICAL_HEIGHT_OFFSET / 2f;
-        float topY = camPos.y + VERTICAL_HEIGHT_OFFSET / 2f;
+        float verticalHeightOffset = 9.375f;
+        float bottomY = camPos.y - verticalHeightOffset / 2f;
+        float topY = camPos.y + verticalHeightOffset / 2f;
         return new Bounds(leftX, rightX, bottomY, topY, viewWidth, viewHeight, camPos);
     }
 
@@ -910,9 +906,10 @@ public abstract class GameArea implements Disposable {
                 return areaClass
                         .getConstructor(TerrainFactory.class, CameraComponent.class)
                         .newInstance(this.terrainFactory, this.cameraComponent);
-            } catch (Exception e) {
-                throw new RuntimeException("Failed to create " + areaClass.getSimpleName(), e);
+            } catch (ReflectiveOperationException e) {
+                throw new IllegalStateException("Failed to create " + areaClass.getSimpleName(), e);
             }
+
         });
     }
 
@@ -945,21 +942,21 @@ public abstract class GameArea implements Disposable {
                 }
             } catch (Exception ignored) {
             }
-            /** Phase 1: disable and dispose current area's entities **/
+            /* Phase 1: disable and dispose current area's entities */
             for (Entity entity : areaEntities) {
                 entity.dispose();
             }
             areaEntities.clear();
 
-            /** Phase 2: on the next frame, build the next area to avoid Box2D world-locked/native races **/
+            /* Phase 2: on the next frame, build the next area to avoid Box2D world-locked/native races */
             Gdx.app.postRunnable(() -> {
                 try {
                     GameArea next = nextAreaSupplier.get();
                     ServiceLocator.registerGameArea(next);
                     next.create();
                     // mark next area as discovered when entered
-                    com.csse3200.game.services.DiscoveryService ds = ServiceLocator.getDiscoveryService();
-                    if (ds != null && next != null) {
+                    DiscoveryService ds = ServiceLocator.getDiscoveryService();
+                    if (ds != null) {
                         ds.discover(next.toString());
                     }
                 } finally {
@@ -996,8 +993,6 @@ public abstract class GameArea implements Disposable {
         return "GameArea";
     }
 
-//  public abstract Entity spawnPlayer(List<String> inventory, int CPU, int health);
-
     /**
      * allows manipulation of player character by loading function
      *
@@ -1005,36 +1000,46 @@ public abstract class GameArea implements Disposable {
      */
     public abstract Entity getPlayer();
 
+//  public abstract Entity spawnPlayer(List<String> inventory, int CPU, int health);
+
     /**
      * Transition to another area by its name (case-insensitive), if known.
      * Returns true if a transition was initiated.
      */
     public boolean transitionToArea(String areaName) {
-        if (areaName == null || areaName.isEmpty()) return false;
-        String key = areaName.trim();
-        // normalise common variants
-        key = key.replace(" ", ""); // allow "Main Hall" -> "MainHall"
-        String lower = key.toLowerCase();
+        if (areaName == null || areaName.isBlank()) return false;
 
-        Class<? extends GameArea> target = null;
-        // Map of recognised rooms (keep in sync with MainGameScreen and toString() names)
-        if (lower.equals("forest")) target = com.csse3200.game.areas.ForestGameArea.class;
-        else if (lower.equals("elevator")) target = com.csse3200.game.areas.ElevatorGameArea.class;
-        else if (lower.equals("office")) target = com.csse3200.game.areas.OfficeGameArea.class;
-        else if (lower.equals("mainhall") || lower.equals("mainhallway") || lower.equals("hall")) target = com.csse3200.game.areas.MainHall.class;
-        else if (lower.equals("reception")) target = com.csse3200.game.areas.Reception.class;
-        else if (lower.equals("tunnel")) target = com.csse3200.game.areas.TunnelGameArea.class;
-        else if (lower.equals("security")) target = com.csse3200.game.areas.SecurityGameArea.class;
-        else if (lower.equals("storage")) target = com.csse3200.game.areas.StorageGameArea.class;
-        else if (lower.equals("shipping")) target = com.csse3200.game.areas.ShippingGameArea.class;
-        else if (lower.equals("server")) target = com.csse3200.game.areas.ServerGameArea.class;
-        else if (lower.equals("research")) target = com.csse3200.game.areas.ResearchGameArea.class;
+        String lower = areaName.strip()
+                .replaceAll("[\\s_-]+", "")   // normalize "Main Hall", "main-hall", etc.
+                .toLowerCase(Locale.ROOT);
 
-        if (target == null) {
-            Gdx.app.log("GameArea", "transitionToArea: unknown area name '" + areaName + "'");
-            return false;
-        }
+        Class<? extends GameArea> target = switch (lower) {
+            case "forest" -> ForestGameArea.class;
+            case "elevator" -> ElevatorGameArea.class;
+            case "office" -> OfficeGameArea.class;
+            case "mainhall", "mainhallway", "hall" -> MainHall.class;
+            case "reception" -> Reception.class;
+            case "tunnel" -> TunnelGameArea.class;
+            case "security" -> SecurityGameArea.class;
+            case "storage" -> StorageGameArea.class;
+            case "shipping" -> ShippingGameArea.class;
+            case "server" -> ServerGameArea.class;
+            case "research" -> ResearchGameArea.class;
+            default -> {
+                Gdx.app.log("GameArea", "transitionToArea: unknown area name '" + areaName + "'");
+                yield null;
+            }
+        };
+
+        if (target == null) return false;
         loadArea(target);
         return true;
+    }
+
+    /**
+     * Camera bounds helper.
+     */
+    protected record Bounds(float leftX, float rightX, float bottomY, float topY, float viewWidth, float viewHeight,
+                            Vector2 camPos) {
     }
 }
