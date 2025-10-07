@@ -11,11 +11,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.Scaling;
+import com.csse3200.game.components.player.InventoryComponent; // <-- NEW
 import com.csse3200.game.components.screens.ItemScreenDisplay;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.UIComponent;
-import com.badlogic.gdx.utils.Scaling;
-
 
 import java.util.Random;
 
@@ -35,26 +35,59 @@ public class SlotsDisplay extends UIComponent {
 
     private Label currencyLabel;
     private TextField betInput;
-    private Label rowLabel;
     private Label resultLabel;
     private Label.LabelStyle whiteLabelStyle, winLabelStyle, loseLabelStyle;
-    private final java.util.Random rng = new java.util.Random();
-    private com.badlogic.gdx.scenes.scene2d.ui.Image[] reelImgs = new com.badlogic.gdx.scenes.scene2d.ui.Image[3];
+    private final Random rng = new Random();
+    private Image[] reelImgs = new Image[3];
 
-    private int balance = 100;
-
+    // --- NEW: wallet powered by InventoryComponent ---
+    private Wallet wallet;
 
     private ItemScreenDisplay itemPopup;
 
+    /** Plug a player's inventory into the slots UI. Call this once before showing UI. */
+    public void setInventory(InventoryComponent inventory) {
+        this.wallet = new DefaultInventoryWallet(inventory);
+        updateBalanceLabel();
+    }
+
+    /** Abstraction over where the money lives (Inventory, separate economy system, etc.) */
+    private interface Wallet {
+        int get();
+        boolean canSubtract(int amount);
+        void add(int amount);
+        void subtract(int amount);
+    }
+
+    /** Adapter to your InventoryComponent. Adjust method names here if needed. */
+    private static class DefaultInventoryWallet implements Wallet {
+        private final InventoryComponent inv;
+        DefaultInventoryWallet(InventoryComponent inv) { this.inv = inv; }
+
+        @Override public boolean canSubtract(int amount) {
+            return amount >= 0 && get() >= amount;
+        }
+        @Override public int get() {
+            return inv.getProcessor();            // <-- matches BettingLogic
+        }
+
+        @Override public void add(int amount) {
+            if (amount > 0) inv.addProcessor(amount);   // <-- add winnings
+        }
+
+        @Override public void subtract(int amount) {
+            if (amount > 0) inv.addProcessor(-amount);  // <-- deduct bet
+        }
+    }
+
     private enum SlotSymbol {
-        CHERRY("images/cherry.png",    3,  2),
+        CHERRY("images/cherry.png", 3, 2),
         WATERMELON("images/watermelon.png", 4, 3),
-        LEMON("images/lemon.png",      5,  4),
-        BELL("images/bell.png",       10,  5),
+        LEMON("images/lemon.png", 5, 4),
+        BELL("images/bell.png", 10, 5),
         DIAMOND("images/diamond.png", 20, 10);
 
-        final String texturePath;
-        final int tripleMult, pairMult;
+        final String texturePath; final int tripleMult, pairMult;
         SlotSymbol(String path, int triple, int pair) {
             this.texturePath = path; this.tripleMult = triple; this.pairMult = pair;
         }
@@ -124,18 +157,16 @@ public class SlotsDisplay extends UIComponent {
         Label.LabelStyle whiteStyle = new Label.LabelStyle(skin.get(Label.LabelStyle.class));
         whiteStyle.fontColor = Color.WHITE;
 
-        Label.LabelStyle winStyle = new Label.LabelStyle(whiteStyle);
-        winStyle.fontColor = Color.GREEN;
-
-        Label.LabelStyle loseStyle = new Label.LabelStyle(whiteStyle);
-        loseStyle.fontColor = Color.RED;
+        Label.LabelStyle winStyle = new Label.LabelStyle(whiteStyle); winStyle.fontColor = Color.GREEN;
+        Label.LabelStyle loseStyle = new Label.LabelStyle(whiteStyle); loseStyle.fontColor = Color.RED;
 
         Table reels = new Table();
         for (int i = 0; i < 3; i++) {
             Texture tex = ServiceLocator.getResourceService().getAsset("images/cherry.png", Texture.class);
-            reelImgs[i] = new Image(new TextureRegionDrawable(new TextureRegion(tex)));
-            reelImgs[i].setScaling(Scaling.fit);
-            reels.add(reelImgs[i]).size(128, 128).pad(8);
+            Image img = new Image(new TextureRegionDrawable(new TextureRegion(tex)));
+            img.setScaling(Scaling.fit);
+            reelImgs[i] = img;
+            reels.add(img).size(128, 128).pad(8);
         }
         root.add(reels).padTop(12f).row();
 
@@ -168,7 +199,6 @@ public class SlotsDisplay extends UIComponent {
         root.add(resultLabel).padTop(10f).row();
     }
 
-
     private SlotSymbol[] spinRow() {
         SlotSymbol[] vals = SlotSymbol.values(), row = new SlotSymbol[3];
         for (int i = 0; i < 3; i++) row[i] = vals[rng.nextInt(vals.length)];
@@ -190,18 +220,26 @@ public class SlotsDisplay extends UIComponent {
     }
 
     private void onSpin() {
+        if (wallet == null) {
+            // Safety: if no wallet set, do nothing but inform player
+            resultLabel.setStyle(loseLabelStyle);
+            resultLabel.setText("No wallet connected.");
+            return;
+        }
+
         int bet = parseBet();
         if (bet <= 0) { resultLabel.setStyle(loseLabelStyle); resultLabel.setText("Bet must be greater than 0."); return; }
-        if (bet > balance) { resultLabel.setStyle(loseLabelStyle); resultLabel.setText("Insufficient funds."); return; }
+        if (!wallet.canSubtract(bet)) { resultLabel.setStyle(loseLabelStyle); resultLabel.setText("Insufficient funds."); return; }
 
-        balance -= bet; updateBalanceLabel();
+        wallet.subtract(bet); // deduct from real balance
+        updateBalanceLabel();
 
         SlotSymbol[] row = spinRow();
         showRow(row);
 
         int payout = getPayout(row, bet);
         if (payout > 0) {
-            balance += payout;
+            wallet.add(payout);
             resultLabel.setStyle(winLabelStyle);
             resultLabel.setText("You won $" + payout + "!");
         } else {
@@ -210,7 +248,6 @@ public class SlotsDisplay extends UIComponent {
         }
         updateBalanceLabel();
     }
-
 
     private void addFooter() {
         Label.LabelStyle balStyle = new Label.LabelStyle(skin.get(Label.LabelStyle.class));
@@ -242,11 +279,7 @@ public class SlotsDisplay extends UIComponent {
 
     private int parseBet() {
         String s = betInput.getText().trim();
-        try {
-            return Integer.parseInt(s);
-        } catch (NumberFormatException e) {
-            return 0;
-        }
+        try { return Integer.parseInt(s); } catch (NumberFormatException e) { return 0; }
     }
 
     private void adjustBet(int delta) {
@@ -256,19 +289,15 @@ public class SlotsDisplay extends UIComponent {
     }
 
     private void updateBalanceLabel() {
-        currencyLabel.setText("Balance: $" + balance);
+        if (currencyLabel == null) return;
+        int value = (wallet != null) ? wallet.get() : 0;
+        currencyLabel.setText("Balance: $" + value);
     }
-
 
     @Override
-    public void draw(SpriteBatch batch) {
-        // Stage draws everything
-    }
+    public void draw(SpriteBatch batch) { /* Stage draws everything */ }
 
-
-    public Stage getStage() {
-        return stage;
-    }
+    public Stage getStage() { return stage; }
 
     public void show() {
         ServiceLocator.getTimeSource().setPaused(true);
@@ -278,6 +307,7 @@ public class SlotsDisplay extends UIComponent {
         if (dimmer != null) dimmer.setVisible(true);
 
         betInput.setText("10");
+        updateBalanceLabel();
     }
 
     public void hide() {
