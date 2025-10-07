@@ -2,6 +2,7 @@ package com.csse3200.game.components.tasks;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.utils.Timer;
 import com.csse3200.game.ai.tasks.DefaultTask;
 import com.csse3200.game.ai.tasks.PriorityTask;
 import com.csse3200.game.ai.tasks.Task;
@@ -31,10 +32,13 @@ public class TurretFiringTask extends DefaultTask implements PriorityTask {
     private final float firingCooldown; // seconds
     private float currentCooldown; // starts ready to fire
     private final GameTime timeSource;
+    private int burstAmount;
+    private float burstCooldown;
 
     public TurretFiringTask(Entity target, int priority,
                                   ProjectileLauncherComponent projectileLauncher, Entity shooter,
-                                  float firingCooldown, float currentCooldown) {
+                                  float firingCooldown, float currentCooldown, int burstAmount,
+                                  float burstCooldown) {
         this.target = target;
         this.priority = priority;
         this.speedX = 0f;
@@ -42,6 +46,8 @@ public class TurretFiringTask extends DefaultTask implements PriorityTask {
         this.shooter = shooter;
         this.firingCooldown = firingCooldown;
         this.currentCooldown = currentCooldown;
+        this.burstAmount = burstAmount;
+        this.burstCooldown = burstCooldown;
         this.physics = ServiceLocator.getPhysicsService().getPhysics();
         this.debugRenderer = ServiceLocator.getRenderService().getDebug();
         this.timeSource = ServiceLocator.getTimeSource();
@@ -69,10 +75,32 @@ public class TurretFiringTask extends DefaultTask implements PriorityTask {
         currentCooldown += timeSource.getDeltaTime();
         if (currentCooldown >= firingCooldown) {
             currentCooldown %= firingCooldown;
-            Vector2 dirToFire = new Vector2(target.getPosition().x - shooter.getPosition().x,
-                    target.getPosition().y - shooter.getPosition().y);
-            projectileLauncher.fireProjectile(dirToFire,
-                    new Vector2(0.2f, 0.8f), new Vector2(0.5f, 0.5f));
+
+            // Burst fire logic
+            Timer.Task burstFireTask = new Timer.Task() {
+                int currentCount = 0;
+
+                @Override
+                public void run() {
+                    // An error would keep occurring with the physics server upon cleanup. Have to check that it no longer
+                    // exists.
+                    if (ServiceLocator.getPhysicsService() == null) {
+                        cancel(); // stop task if physics no longer exists
+                        return;
+                    }
+
+                    Vector2 dirToFire = new Vector2(target.getPosition().x - shooter.getPosition().x,
+                            target.getPosition().y - shooter.getPosition().y);
+
+                    projectileLauncher.fireProjectile(dirToFire, new Vector2(0.2f, 0.9f), new Vector2(0.5f, 0.5f));
+                    currentCount++;
+                    if (currentCount >= burstAmount) {
+                        cancel();
+                    }
+                }
+            };
+
+            Timer.schedule(burstFireTask, 0f, burstCooldown);
         }
     }
 
