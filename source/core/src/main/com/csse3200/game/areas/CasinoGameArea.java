@@ -14,7 +14,6 @@ import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.factories.InteractableStationFactory;
 import com.csse3200.game.entities.factories.characters.PlayerFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
-import com.csse3200.game.entities.spawner.ItemSpawner;
 import com.csse3200.game.components.minigames.whackamole.WhackAMoleGame;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;

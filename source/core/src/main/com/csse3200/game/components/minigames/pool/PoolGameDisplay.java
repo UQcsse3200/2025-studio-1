@@ -18,6 +18,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.csse3200.game.components.minigames.pool.displayhelpers.PoolTable;
+import com.csse3200.game.components.minigames.pool.logic.GameEvents;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.UIComponent;
 import org.slf4j.Logger;
@@ -33,6 +34,7 @@ import static com.badlogic.gdx.scenes.scene2d.actions.Actions.run;
  */
 public class PoolGameDisplay extends UIComponent {
     private static final Logger logger = LoggerFactory.getLogger(PoolGameDisplay.class);
+
 
     // Layout
     private static final float PANEL_W = 1100f;
@@ -76,6 +78,7 @@ public class PoolGameDisplay extends UIComponent {
     private int p1Score, p2Score, turnIdx;
     private boolean shotTakenThisTurn = false;
 
+    /** Utility: create a 1x1 solid texture of color c. */
     public static Texture makeSolid(Color c) {
         Pixmap pm = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
         pm.setColor(c);
@@ -99,7 +102,7 @@ public class PoolGameDisplay extends UIComponent {
     @Override
     public void create() {
         super.create();
-        entity.getEvents().addListener("interact", this::show);
+        entity.getEvents().addListener(GameEvents.INTERACT, this::show);
 
         loadAssets();
         buildBackdrop();
@@ -109,6 +112,7 @@ public class PoolGameDisplay extends UIComponent {
         buildFooter();
         wireHudEvents();
 
+        // Keep UI reactive without per-frame manual tick code sprinkled around.
         root.addAction(forever(run(this::updateUiState)));
 
         hide();
@@ -150,32 +154,26 @@ public class PoolGameDisplay extends UIComponent {
         setFoul("");
     }
 
-    // --- Visibility ---
-
-    /**
-     * Cue ball in normalised [0..1] table coords.
-     */
+    // --- Table state (normalised coords) ---
+    /** Cue ball in normalised [0..1] table coords. */
     public void setCueBall(Vector2 pos) {
         if (poolTable != null) poolTable.setCueBall(pos);
     }
 
-    /**
-     * Object balls in normalised [0..1] table coords.
-     */
+    /** Object balls in normalised [0..1] table coords. */
     public void setBalls(Vector2[] positions) {
         if (poolTable != null) poolTable.setObjectBalls(positions);
     }
 
+    // --- Visibility ---
     public void show() {
         running = true;
         setVisible(true);
     }
 
-    // --- Build UI ---
-
     public void hide() {
         setVisible(false);
-        entity.getEvents().trigger("pool:stop");
+        entity.getEvents().trigger(GameEvents.STOP);
     }
 
     private void setVisible(boolean v) {
@@ -188,6 +186,9 @@ public class PoolGameDisplay extends UIComponent {
         }
     }
 
+    // ---------------------------------------------------------------------------
+    // Build UI
+    // ---------------------------------------------------------------------------
     private void loadAssets() {
         tableTex = ServiceLocator.getResourceService().getAsset("images/pool/table.png", Texture.class);
         ballAtlas = ServiceLocator.getResourceService().getAsset("images/pool/balls.atlas", TextureAtlas.class);
@@ -300,33 +301,6 @@ public class PoolGameDisplay extends UIComponent {
         root.add(poolTable).size(targetW, targetH).padTop(6).row();
     }
 
-    private void updateUiState() {
-        if (controller == null || poolTable == null) return;
-
-        boolean shotActive = controller.isShotActive();
-        boolean guideAllowed = !shotActive;
-
-        boolean guideCheckbox = (guideToggle == null) || guideToggle.isChecked();
-        poolTable.setGuideVisible(guideCheckbox && guideAllowed);
-
-        if (powerSlider != null) {
-            powerSlider.setVisible(guideAllowed);
-            powerSlider.setDisabled(!guideAllowed);
-        }
-
-        poolTable.setCueVisible(!shotActive);
-
-        if (shootBtn != null) {
-            boolean hasAim = !poolTable.getAimDir().isZero(1e-4f);
-            shootBtn.setDisabled(!hasAim);
-            shootBtn.setTouchable(hasAim ? Touchable.enabled : Touchable.disabled);
-        }
-    }
-
-    // ---------------------------------------------------------------------------
-    // Helpers
-    // ---------------------------------------------------------------------------
-
     private void buildFooter() {
         powerSlider = new Slider(0f, 1f, 0.01f, false, skin);
         powerSlider.setValue(0.5f);
@@ -350,7 +324,7 @@ public class PoolGameDisplay extends UIComponent {
             public void changed(ChangeEvent event, Actor actor) {
                 running = true;
                 if (controller != null) controller.onStart();
-                entity.getEvents().trigger("pool:start");
+                entity.getEvents().trigger(GameEvents.START);
                 clearFoul();
             }
         });
@@ -364,7 +338,7 @@ public class PoolGameDisplay extends UIComponent {
 
                 float power = powerSlider.getValue();
                 if (controller != null) controller.onShoot(dir.x, dir.y, power);
-                entity.getEvents().trigger("pool:shoot", dir.x, dir.y, power);
+                entity.getEvents().trigger(GameEvents.SHOOT, dir.x, dir.y, power);
                 poolTable.kickbackCue(Interpolation.sine);
             }
         });
@@ -373,7 +347,7 @@ public class PoolGameDisplay extends UIComponent {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 if (controller != null) controller.onReset();
-                entity.getEvents().trigger("pool:reset");
+                entity.getEvents().trigger(GameEvents.RESET);
                 clearFoul();
             }
         });
@@ -382,7 +356,7 @@ public class PoolGameDisplay extends UIComponent {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 if (controller != null) controller.onStop();
-                entity.getEvents().trigger("pool:stop");
+                entity.getEvents().trigger(GameEvents.STOP);
                 hide();
             }
         });
@@ -398,39 +372,66 @@ public class PoolGameDisplay extends UIComponent {
         root.add(controls).growX().padTop(8).row();
     }
 
+    // ---------------------------------------------------------------------------
+    // Reactive UI state
+    // ---------------------------------------------------------------------------
+    private void updateUiState() {
+        if (controller == null || poolTable == null) return;
+
+        boolean shotActive = controller.isShotActive();
+        boolean guideAllowed = !shotActive;
+
+        boolean guideCheckbox = (guideToggle == null) || guideToggle.isChecked();
+        poolTable.setGuideVisible(guideCheckbox && guideAllowed);
+
+        if (powerSlider != null) {
+            powerSlider.setVisible(guideAllowed);
+            powerSlider.setDisabled(!guideAllowed);
+        }
+
+        poolTable.setCueVisible(!shotActive);
+
+        if (shootBtn != null) {
+            boolean hasAim = !poolTable.getAimDir().isZero(1e-4f);
+            shootBtn.setDisabled(!hasAim);
+            shootBtn.setTouchable(hasAim ? Touchable.enabled : Touchable.disabled);
+        }
+    }
+
     private void wireHudEvents() {
-        entity.getEvents().addListener("pool:turn", (Integer current, Integer p1, Integer p2) -> {
+        entity.getEvents().addListener(GameEvents.TURN, (Integer current, Integer p1, Integer p2) -> {
             setScores(p1, p2);
             setTurn((current != null ? current : 1) - 1);
             clearFoul();
+            shotTakenThisTurn = false;
+            updateUiState();
         });
 
-        entity.getEvents().addListener("pool:score", (Integer current, Integer p1, Integer p2) -> {
+        entity.getEvents().addListener(GameEvents.SCORE, (Integer current, Integer p1, Integer p2) -> {
             setScores(p1, p2);
         });
 
-        entity.getEvents().addListener("pool:foul", (Integer player, String reason) -> {
+        entity.getEvents().addListener(GameEvents.FOUL, (Integer player, String reason) -> {
             setFoul("Foul on P" + (player == null ? "?" : player)
                     + ((reason == null || reason.isEmpty()) ? "" : " (" + reason + ")"));
         });
 
-        entity.getEvents().addListener("pool:shoot", (Float dx, Float dy, Float power) -> {
+        entity.getEvents().addListener(GameEvents.SHOOT, (Float dx, Float dy, Float power) -> {
             shotTakenThisTurn = true;
-            updateUiState();
-        });
-
-        entity.getEvents().addListener("pool:turn", (Integer current, Integer p1, Integer p2) -> {
-            shotTakenThisTurn = false;
             updateUiState();
         });
     }
 
+    // ---------------------------------------------------------------------------
+    // Label helpers
+    // ---------------------------------------------------------------------------
     private Label label(String text, Color color) {
         return label(text, color, 1f);
     }
 
     private Label label(String text, Color color, float scale) {
-        Label.LabelStyle style = new Label.LabelStyle(skin.get(Label.LabelStyle.class));
+        Label.LabelStyle base = skin.get(Label.LabelStyle.class);
+        Label.LabelStyle style = new Label.LabelStyle(base);
         style.fontColor = color;
         Label lbl = new Label(text, style);
         lbl.setFontScale(scale);
