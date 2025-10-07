@@ -5,9 +5,17 @@ import com.badlogic.gdx.math.GridPoint2;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.CameraComponent;
+import com.csse3200.game.components.shop.CatalogService;
+import com.csse3200.game.components.shop.ShopDemo;
+import com.csse3200.game.components.shop.ShopManager;
 import com.csse3200.game.entities.Entity;
+import com.csse3200.game.entities.configs.ItemSpawnConfig;
+import com.csse3200.game.entities.factories.ShopFactory;
+import com.csse3200.game.entities.factories.characters.NPCFactory;
 import com.csse3200.game.entities.factories.characters.PlayerFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
+import com.csse3200.game.entities.spawner.ItemSpawner;
+import com.csse3200.game.services.ServiceLocator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,6 +28,7 @@ public class Reception extends GameArea {
     private static final float WALL_WIDTH = 0.1f;
     private static final int NUM_TREES = 8; // Number of trees to spawn
     private int roomDiffNumber = 2;
+    private Entity player;
 
     public Reception(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
         super(terrainFactory, cameraComponent);
@@ -30,18 +39,23 @@ public class Reception extends GameArea {
         ensureAssets();
         spawnTerrain();
         spawnWallsAndDoor();
-        spawnPlayer();
+        player = spawnPlayer();
         spawnFloor();
         spawnholoclock();
+        spawnEnemies();
         spawnplatform2();
         spawnObjectDoors(new GridPoint2(0, 6), new GridPoint2(28, 20));
         spawndesk_reception();
         spawncomic_stand();
-
-
+        spawnGPTs();
+        spawnShopKiosk();
+        spawnGrokDroids();
         Entity ui = new Entity();
         ui.addComponent(new com.csse3200.game.components.gamearea.FloorLabelDisplay("Reception"));
         spawnEntity(ui);
+        ItemSpawner itemSpawner = new ItemSpawner(this);
+        itemSpawner.spawnItems(ItemSpawnConfig.receptionmap());
+
     }
 
     /**
@@ -60,7 +74,11 @@ public class Reception extends GameArea {
                 "images/platform-2.png",
                 "images/holo-clock.png",
                 "images/desk_reception.png",
-                "images/comics.png"
+                "images/comics.png",
+                "images/VendingMachine.png",
+                "images/pistol.png",
+                "images/rifle.png",
+                "images/lightsaber.png"
         };
         ensureTextures(needed);
         ensurePlayerAtlas();
@@ -80,11 +98,11 @@ public class Reception extends GameArea {
         float leftTopSegHeight = Math.max(0f, b.topY() - (leftDoorY + leftDoorHeight));
         if (leftTopSegHeight > 0f) {
             Entity leftTop = ObstacleFactory.createWall(WALL_WIDTH, leftTopSegHeight);
-            leftTop.setPosition(b.leftX(), leftDoorY + leftDoorHeight);
+            leftTop.setPosition(b.leftX(), leftDoorY + leftDoorHeight+2f);
             spawnEntity(leftTop);
         }
         Entity leftDoor = ObstacleFactory.createDoorTrigger(WALL_WIDTH, leftDoorHeight);
-        leftDoor.setPosition(b.leftX() + 0.001f, leftDoorY);
+        leftDoor.setPosition(b.leftX() + 0.001f, leftDoorY + leftDoorHeight);
         leftDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadForest));
         spawnEntity(leftDoor);
 
@@ -113,9 +131,42 @@ public class Reception extends GameArea {
         clearAndLoad(() -> new MainHall(terrainFactory, cameraComponent));
     }
 
-    private void spawnPlayer() {
+    private Entity spawnPlayer() {
         Entity player = PlayerFactory.createPlayer();
         spawnEntityAt(player, playerSpawn, true, true);
+        return player;
+    }
+
+    private void spawnEnemies() {
+        if (player == null)
+            return;
+
+        Entity vroomba = com.csse3200.game.entities.factories.characters.NPCFactory.createVroomba(player,
+                ServiceLocator.getDifficulty().getRoomDifficulty(this.roomDiffNumber));
+        spawnEntityAt(vroomba, new GridPoint2(5, 17), true, false);
+
+        Entity deepspin = com.csse3200.game.entities.factories.characters.NPCFactory.createDeepspin(player, this,
+                ServiceLocator.getDifficulty().getRoomDifficulty(this.roomDiffNumber));
+        spawnEntityAt(deepspin, new GridPoint2(17, 10), true, false);
+    }
+
+        private void spawnGPTs() {
+            Entity ghost1 = NPCFactory.createGhostGPT(player, this, ServiceLocator.getDifficulty().getRoomDifficulty(this.roomDiffNumber));
+            GridPoint2 ghost1Pos = new GridPoint2(25, 7);
+            spawnEntityAt(ghost1, ghost1Pos, true, false);
+        }
+    private void spawnGrokDroids() {
+        Entity grok1 = NPCFactory.createGrokDroid(player, this,
+                ServiceLocator.getDifficulty().getRoomDifficulty(this.roomDiffNumber));
+        GridPoint2 grok1Pos = new GridPoint2(20, 20);
+        spawnEntityAt(grok1, grok1Pos, true, false);
+    }
+
+    private void spawnShopKiosk() {
+        CatalogService catalog = ShopDemo.makeDemoCatalog();
+        ShopManager manager = new ShopManager(catalog);
+        Entity shop = ShopFactory.createShop(this, manager, "images/VendingMachine.png"); // have as tree now as placeholder, later need to change to actual shop icon
+        spawnEntityAt(shop, new GridPoint2(24, (int)7), true, false);
     }
 
     private void spawnplatform2() {
@@ -125,8 +176,8 @@ public class Reception extends GameArea {
         float PlatformY2 = 6f;
         float PlatformX3 = 7f;
         float PlatformY3 = 7f;
-        float PlatformX4 = 11f;
-        float PlatformY4 = 9f;
+        float PlatformX4 = 12.5f;
+        float PlatformY4 = 8.5f;
         Entity Platform1 = ObstacleFactory.createplatform2();
         Platform1.setPosition(PlatformX, PlatformY);
         spawnEntity(Platform1);
@@ -168,8 +219,8 @@ public class Reception extends GameArea {
      * spawning a comic stand near the reception desk
      **/
     private void spawncomic_stand() {
-        float PlatformX = 11f;
-        float PlatformY = 3.5f;
+        float PlatformX = 6f;
+        float PlatformY = 4.5f;
         Entity stand1 = ObstacleFactory.createcomic_stand();
         stand1.setPosition(PlatformX, PlatformY);
         spawnEntity(stand1);
@@ -198,6 +249,6 @@ public class Reception extends GameArea {
     }
 
     public Entity getPlayer() {
-        return null;
+        return player;
     }
 }
