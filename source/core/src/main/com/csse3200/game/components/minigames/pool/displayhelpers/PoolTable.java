@@ -23,10 +23,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Widget;
  */
 public final class PoolTable extends Widget {
     // ------------------------------------------------------------
-    // Public functional bridges
-    // ------------------------------------------------------------
-
-    // ------------------------------------------------------------
     // Tuning constants (all visual)
     // ------------------------------------------------------------
     private static final float BALL_RADIUS_FRACTION = 0.035f; // ball radius (px) = min(w,h) * this
@@ -37,13 +33,7 @@ public final class PoolTable extends Widget {
     private static final float DOT_SIZE_MAX_PX = 6f;
     private static final float GUIDE_ALPHA_MIN = 0.25f;
     private static final float GUIDE_ALPHA_MAX = 0.9f;
-    private static final float CUE_LEN_BALLS = 7f;
-    private static final float CUE_OFFSET_BALLS = 0.55f;
-    private static final float CUE_KICK_SCALE_BALLS = 0.7f;
     private static final float CUE_KICK_DECAY = 3f;
-    // ------------------------------------------------------------
-    // Assets (owned by caller except whitePx which we create & own)
-    // ------------------------------------------------------------
     private final Texture tableTex;
     private final TextureRegion[] ballTextures; // index 1..15 expected
     private final Texture cueTex;               // texture for cue stick
@@ -283,25 +273,30 @@ public final class PoolTable extends Widget {
 
         // Cue stick
         if (showCue) {
-            float cueLen = ballPx * 7f;
-            float cueH = ballPx * 0.5f;
-            float kick = (float) Math.pow(cueKickT, 2) * ballPx * 0.7f;
-
-            float offCenter = ballPx * 0.55f + kick + cueLen * 0.5f;
-
-            // the cue center position
-            float cx = cbx - aimDir.x * offCenter;
-            float cy = cby - aimDir.y * offCenter;
-
-            float angleDeg = MathUtils.atan2(aimDir.y, aimDir.x) * MathUtils.radiansToDegrees;
-
-            Sprite cueSprite = new Sprite(cueTex);
-            cueSprite.setSize(cueLen, cueH);
-            cueSprite.setOriginCenter();
-            cueSprite.setRotation(angleDeg);
-            cueSprite.setCenter(cx, cy);
+            Sprite cueSprite = getCueSprite(ballPx, cbx, cby);
             cueSprite.draw(batch);
         }
+    }
+
+    private Sprite getCueSprite(float ballPx, float cbx, float cby) {
+        float cueLen = ballPx * 7f;
+        float cueH = ballPx * 0.5f;
+        float kick = (float) Math.pow(cueKickT, 2) * ballPx * 0.7f;
+
+        float offCenter = ballPx * 0.55f + kick + cueLen * 0.5f;
+
+        // the cue center position
+        float cx = cbx - aimDir.x * offCenter;
+        float cy = cby - aimDir.y * offCenter;
+
+        float angleDeg = MathUtils.atan2(aimDir.y, aimDir.x) * MathUtils.radiansToDegrees;
+
+        Sprite cueSprite = new Sprite(cueTex);
+        cueSprite.setSize(cueLen, cueH);
+        cueSprite.setOriginCenter();
+        cueSprite.setRotation(angleDeg);
+        cueSprite.setCenter(cx, cy);
+        return cueSprite;
     }
 
     /**

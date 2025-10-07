@@ -67,38 +67,25 @@ public class PoolGame {
         this.display = gameEntity.getComponent(PoolGameDisplay.class);
 
         wireUiEvents();
-        wireLogging();
     }
 
     private void wireRuleEvents() {
         this.rules.setListener(new RulesEvents() {
             @Override
             public void onTurnChanged(int current, int p1, int p2) {
-                gameEntity.getEvents().trigger(PoolEvents.TURN, current, p1, p2);
+                gameEntity.getEvents().trigger(GameEvents.TURN, current, p1, p2);
             }
 
             @Override
             public void onScoreUpdated(int current, int p1, int p2) {
-                gameEntity.getEvents().trigger(PoolEvents.SCORE, current, p1, p2);
+                gameEntity.getEvents().trigger(GameEvents.SCORE, current, p1, p2);
             }
 
             @Override
             public void onFoul(int foulingPlayer, String reason) {
-                gameEntity.getEvents().trigger(PoolEvents.FOUL, foulingPlayer, reason);
+                gameEntity.getEvents().trigger(GameEvents.FOUL, foulingPlayer, reason);
             }
         });
-    }
-
-    private void wireLogging() {
-        gameEntity.getEvents().addListener(PoolEvents.TURN,
-                (Integer current, Integer p1, Integer p2) ->
-                        logger.info("EVENT pool:turn -> P{}  score {}-{}", current, p1, p2));
-        gameEntity.getEvents().addListener(PoolEvents.SCORE,
-                (Integer current, Integer p1, Integer p2) ->
-                        logger.info("EVENT pool:score -> P{}  score {}-{}", current, p1, p2));
-        gameEntity.getEvents().addListener(PoolEvents.FOUL,
-                (Integer player, String reason) ->
-                        logger.info("EVENT pool:foul -> P{}  {}", player, reason));
     }
 
     private Entity initGameEntity() {
@@ -168,10 +155,10 @@ public class PoolGame {
     }
 
     private void wireUiEvents() {
-        gameEntity.getEvents().addListener(PoolEvents.INTERACT, this::onInteract);
-        gameEntity.getEvents().addListener(PoolEvents.START, this::onStart);
-        gameEntity.getEvents().addListener(PoolEvents.RESET, this::onStart);
-        gameEntity.getEvents().addListener(PoolEvents.STOP, this::onStop);
+        gameEntity.getEvents().addListener(GameEvents.INTERACT, this::onInteract);
+        gameEntity.getEvents().addListener(GameEvents.START, this::onStart);
+        gameEntity.getEvents().addListener(GameEvents.RESET, this::onStart);
+        gameEntity.getEvents().addListener(GameEvents.STOP, this::onStop);
 
         // bridge physics → rules → UI
         pockets.setListener(new PocketContactSystem.Listener() {
@@ -282,17 +269,5 @@ public class PoolGame {
 
     public Entity getGameEntity() {
         return gameEntity;
-    }
-
-    private static final class PoolEvents {
-        static final String INTERACT = "interact";
-        static final String TURN = "pool:turn";
-        static final String SCORE = "pool:score";
-        static final String FOUL = "pool:foul";
-        static final String START = GameEvents.START;
-        static final String RESET = GameEvents.RESET;
-        static final String STOP = GameEvents.STOP;
-        private PoolEvents() {
-        }
     }
 }
