@@ -18,6 +18,8 @@ import com.csse3200.game.components.shop.CatalogService;
 import com.csse3200.game.components.shop.ShopDemo;
 import com.csse3200.game.components.shop.ShopManager;
 import com.csse3200.game.entities.Entity;
+import com.csse3200.game.entities.configs.Armour;
+import com.csse3200.game.entities.factories.items.ArmourFactory;
 import com.csse3200.game.entities.configs.Benches;
 import com.csse3200.game.entities.configs.ItemSpawnConfig;
 import com.csse3200.game.entities.configs.Weapons;
@@ -43,8 +45,6 @@ import com.csse3200.game.services.ServiceLocator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.security.SecureRandom;
-
 import static com.csse3200.game.entities.configs.Weapons.*;
 
 /**
@@ -64,8 +64,6 @@ public class ForestGameArea extends GameArea {
     private static final float WALL_WIDTH = 0.1f;
 
     private final float VERTICAL_HEIGHT_OFFSET = 9.375f;
-    private Weapons weapons;
-    private ItemComponent item;
 
     /**
      * Files or pictures used by the game (enemy/props,etc.).
@@ -149,6 +147,8 @@ public class ForestGameArea extends GameArea {
             "images/NpcDialogue.png",
             "images/nurse_npc.png",
             "images/partner.png",
+            "images/armour-assets/chestplate.png",
+            "images/armour-assets/hood.png",
             "images/blackjack_table.png"
     };
 
@@ -618,7 +618,7 @@ public class ForestGameArea extends GameArea {
         // Get the relevant components from the item
         TextureRenderComponent texComp = item.getComponent(TextureRenderComponent.class);
         TextureRenderWithRotationComponent texRotComp = item.getComponent(
-            TextureRenderWithRotationComponent.class);
+                TextureRenderWithRotationComponent.class);
 
         // Update the Z index for the item
         if (texRotComp != null) {
@@ -628,6 +628,9 @@ public class ForestGameArea extends GameArea {
 
         item.getComponent(HitboxComponent.class).setLayer(PhysicsLayer.OBSTACLE);
 
+        // Make it so that the player cannot pick up the item
+        item.getComponent(ItemComponent.class).setPickupable(false);
+
         // Make dropped items static so they behave like map-placed items
         PhysicsComponent phys = item.getComponent(PhysicsComponent.class);
         if (phys != null) phys.setBodyType(BodyDef.BodyType.StaticBody);
@@ -636,25 +639,10 @@ public class ForestGameArea extends GameArea {
         ServiceLocator.getGameArea().spawnEntity(item);
 
         // update offset from the players position
-//        Vector2 offset = new Vector2(0.7f, 0.3f);
-//        player.getComponent(PlayerEquipComponent.class).setItem(item, offset);
-
         Vector2 offset = item.getComponent(ItemComponent.class).getEquipOffset();
         player.getComponent(PlayerEquipComponent.class).setItem(item, offset);
-
-//        FIXME : Tried a fix to set the offset
-//        Vector2 offset_rifle = new Vector2(0.8f, 0.15f);
-//        Vector2 offset_pistol = new Vector2(0.75f, -0.1f);
-//        Vector2 offset_dagger = new Vector2(1.0f, 0.3f);
-//        Vector2 offset_lightsaber = new Vector2(0.7f, -0.2f);
-//
-//
-//        if(weapons == Weapons.RIFLE) {player.getComponent(PlayerEquipComponent.class).setItem(item, offset_rifle);}
-//        if(weapons == Weapons.PISTOL) {player.getComponent(PlayerEquipComponent.class).setItem(item, offset_pistol);}
-//        if (weapons == Weapons.DAGGER) {player.getComponent(PlayerEquipComponent.class).setItem(item, offset_dagger);}
-//        if (weapons == Weapons.LIGHTSABER) {player.getComponent(PlayerEquipComponent.class).setItem(item, offset_lightsaber);}
-
     }
+
     /**
      * Sets the equipped item in the PlayerEquipComponent to be null, along with the offset
      */
@@ -738,10 +726,6 @@ public class ForestGameArea extends GameArea {
 
         Entity boss3 = BossFactory.createBoss3(player);
         spawnEntityAt(boss3, pos, true, true);
-    }
-
-    public void spawnItem(Entity item, GridPoint2 position) {
-        spawnEntityAt(item, position, false, false);
     }
 
     private void playMusic() {

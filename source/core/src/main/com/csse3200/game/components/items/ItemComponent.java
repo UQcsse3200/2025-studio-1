@@ -4,13 +4,12 @@ import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.components.Component;
 import com.csse3200.game.entities.configs.ItemTypes;
 
-
 public class ItemComponent extends Component {
     private String name;
     private ItemTypes type;
     private int count = 1;
     private String texture;
-//    private ItemTypes weapons;
+    private boolean pickupable = true;
 
     public ItemComponent() {
         this.type = ItemTypes.NONE;
@@ -50,6 +49,24 @@ public class ItemComponent extends Component {
      */
     public void setType(ItemTypes type) {
         this.type = type;
+    }
+
+    /**
+     * This changes whether the Item can be picked up by the player
+     *
+     * @param status True if the item can be picked up, False otherwise
+     */
+    public void setPickupable(boolean status) {
+        this.pickupable = status;
+    }
+
+    /**
+     * This checks if the item can be picked up
+     *
+     * @return True if pickupable is true, false otherwise
+     */
+    public boolean isPickupable() {
+        return pickupable;
     }
 
     /**
@@ -100,27 +117,19 @@ public class ItemComponent extends Component {
                 + "\nCount : " + this.getCount());
     }
 
+    /**
+     * Returns the offset of where the item should be displayed from the player
+     * for it to look normal
+     *
+     * @return A new Vector2 containing the offset as x and y displacement.
+     */
     public Vector2 getEquipOffset() {
-        if ("rifle" == type.getTypeName()) return new Vector2(0.8f, 0.15f);
-        if ("lightsaber" == type.getTypeName()) return new Vector2(0.7f, -0.2f);
-        if ("dagger" == type.getTypeName()) return new Vector2(1.0f, 0.3f);
-        if ("pistol" == type.getTypeName()) return new Vector2(0.75f, -0.1f);
+        if ("rifle".equals(this.getName())) return new Vector2(0.8f, 0.15f);
+        if ("lightsaber".equals(this.getName())) return new Vector2(0.7f, -0.2f); // works while facing left
+        if ("dagger".equals(this.getName())) return new Vector2(1.0f, 0.3f);
+        if ("pistol".equals(this.getName())) return new Vector2(0.75f, -0.1f);
         return new Vector2(0.7f, 0.3f);
-
-//        switch (weapons) {
-//            case LIGHTSABER:
-//                return new Vector2(0.7f, -0.2f);  //works while facing left
-//            case RIFLE:
-//                return new Vector2(0.8f, 0.15f);
-//            case DAGGER:
-//                return new Vector2(1.0f, 0.3f);
-//            case PISTOL:
-//                return new Vector2(0.75f, -0.1f);
-//            default:
-//                return new Vector2(0.7f, 0.3f);
-//        }
     }
-
 }
 
 
