@@ -1,5 +1,6 @@
 package com.csse3200.game.components.minigames.pool.physics;
 
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,6 +50,7 @@ public class PocketContactSystem {
                 Body ballBody = ballFx.getBody();
                 log.debug("Pocket contact: pocket={}, ballBody={}", pocketIndex, ballBody);
                 if (ballBody == cueRef) {
+                    System.out.println("Cue entered pocket sensor " + pocketIndex);
                     queue.addLast(new PotEvent(ballBody, pocketIndex));
                     return;
                 }
@@ -79,7 +81,12 @@ public class PocketContactSystem {
         while (!queue.isEmpty()) {
             PotEvent ev = queue.pollFirst();
             if (ev.body == cueRef) {
+                cueRef.setLinearVelocity(Vector2.Zero);
+                cueRef.setAngularVelocity(0f);
+                cueRef.setActive(false);
                 if (listener != null) listener.onScratch(ev.pocket);
+                continue;
+
             } else if (idMapRef != null && objRef != null) {
                 Integer ballId = null;
                 for (Map.Entry<Integer, Body> e : idMapRef.entrySet()) {

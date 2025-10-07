@@ -84,6 +84,7 @@ public class BallFactory {
 
     public void resetCue(Vector2 pos) {
         if (cue != null) {
+            cue.setActive(true);
             cue.setTransform(pos, 0f);
             cue.setLinearVelocity(Vector2.Zero);
             cue.setAngularVelocity(0f);

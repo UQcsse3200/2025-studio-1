@@ -2,8 +2,6 @@ package com.csse3200.game.components.minigames.pool;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.RayCastCallback;
-import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.Timer;
 import com.csse3200.game.components.minigames.pool.logic.BasicTwoPlayerRules;
 import com.csse3200.game.components.minigames.pool.logic.GameEvents;
 import com.csse3200.game.components.minigames.pool.logic.RuleSet;
@@ -21,7 +19,11 @@ import java.util.List;
 
 public class PoolGame {
     private static final Logger logger = LoggerFactory.getLogger(PoolGame.class);
-
+    /**
+     * Spawn offsets expressed as fractions of table width for readability.
+     */
+    private static final float CUE_X_OFFSET_FRACTION = 0.30f; // left of center
+    private static final float RACK_X_OFFSET_FRACTION = 0.25f; // right of center
     // Core systems
     private final PhysicsEngine engine;
     private final PoolWorld world;
@@ -30,14 +32,11 @@ public class PoolGame {
     private final BallFactory ballFactory;
     private final PocketContactSystem pockets;
     private final RuleSet rules;
-
     // UI
     private final Entity gameEntity;
     private final PoolGameDisplay display;
-
-    private Timer.Task syncTask;
-    private boolean uiShown = false;
-
+    private com.badlogic.gdx.utils.Timer.Task syncTask;
+    private boolean uiVisible = false;
     public PoolGame() {
         this(ServiceLocator.getPhysicsService().getPhysics());
     }
@@ -59,38 +58,45 @@ public class PoolGame {
         this.tableBuilder = new TableBuilder(world, config);
         this.ballFactory = new BallFactory(world, config);
         this.pockets = new PocketContactSystem(world, config);
-
         this.rules = new BasicTwoPlayerRules(config);
 
-        this.rules.setListener(new RulesEvents() {
-            @Override
-            public void onTurnChanged(int current, int p1, int p2) {
-                gameEntity.getEvents().trigger("pool:turn", current, p1, p2);
-            }
-
-            @Override
-            public void onScoreUpdated(int current, int p1, int p2) {
-                gameEntity.getEvents().trigger("pool:score", current, p1, p2);
-            }
-
-            @Override
-            public void onFoul(int foulingPlayer, String reason) {
-                gameEntity.getEvents().trigger("pool:foul", foulingPlayer, reason);
-            }
-        });
+        wireRuleEvents();
 
         // Root UI/interaction entity
         this.gameEntity = initGameEntity();
         this.display = gameEntity.getComponent(PoolGameDisplay.class);
 
         wireUiEvents();
-        gameEntity.getEvents().addListener("pool:turn",
+        wireLogging();
+    }
+
+    private void wireRuleEvents() {
+        this.rules.setListener(new RulesEvents() {
+            @Override
+            public void onTurnChanged(int current, int p1, int p2) {
+                gameEntity.getEvents().trigger(PoolEvents.TURN, current, p1, p2);
+            }
+
+            @Override
+            public void onScoreUpdated(int current, int p1, int p2) {
+                gameEntity.getEvents().trigger(PoolEvents.SCORE, current, p1, p2);
+            }
+
+            @Override
+            public void onFoul(int foulingPlayer, String reason) {
+                gameEntity.getEvents().trigger(PoolEvents.FOUL, foulingPlayer, reason);
+            }
+        });
+    }
+
+    private void wireLogging() {
+        gameEntity.getEvents().addListener(PoolEvents.TURN,
                 (Integer current, Integer p1, Integer p2) ->
                         logger.info("EVENT pool:turn -> P{}  score {}-{}", current, p1, p2));
-        gameEntity.getEvents().addListener("pool:score",
+        gameEntity.getEvents().addListener(PoolEvents.SCORE,
                 (Integer current, Integer p1, Integer p2) ->
                         logger.info("EVENT pool:score -> P{}  score {}-{}", current, p1, p2));
-        gameEntity.getEvents().addListener("pool:foul",
+        gameEntity.getEvents().addListener(PoolEvents.FOUL,
                 (Integer player, String reason) ->
                         logger.info("EVENT pool:foul -> P{}  {}", player, reason));
     }
@@ -123,6 +129,11 @@ public class PoolGame {
                 PoolGame.this.onStop();
             }
 
+            /**
+             * Clamp the guide length (in pixels) based on world raycast against table/balls.
+             * Converts px → meters using config & UI ball px radius, does a world-space ray,
+             * then converts the clamped length back to pixels.
+             */
             @Override
             public float capGuideLenPx(Vector2 cuePosNorm, Vector2 dirNorm, float desiredLenPx, float ballPx) {
                 // px↔meters conversion using config + the UI’s current ball pixel radius
@@ -132,17 +143,17 @@ public class PoolGame {
                 Vector2 cuePosWorld = TableSpace.fromNorm(cuePosNorm, config);
                 Vector2 dirWorld = new Vector2(dirNorm).nor();
 
-                final float[] frac = {1f};
-                RayCastCallback cb = (fixture, point, normal, f) -> {
+                final float[] minHitFraction = {1f};
+                RayCastCallback cb = (fixture, point, normal, fraction) -> {
                     if (fixture.getBody() == ballFactory.getCueBody()) return -1f; // ignore self
-                    if (f < frac[0]) frac[0] = f;
-                    return f;
+                    if (fraction < minHitFraction[0]) minHitFraction[0] = fraction;
+                    return fraction;
                 };
 
                 Vector2 end = new Vector2(cuePosWorld).mulAdd(dirWorld, desiredLenMeters);
                 world.raw().rayCast(cb, cuePosWorld, end);
 
-                float clampedMeters = desiredLenMeters * frac[0];
+                float clampedMeters = desiredLenMeters * minHitFraction[0];
                 return clampedMeters * pxPerMeter; // back to pixels for the UI
             }
 
@@ -157,10 +168,10 @@ public class PoolGame {
     }
 
     private void wireUiEvents() {
-        gameEntity.getEvents().addListener("interact", this::onInteract);
-        gameEntity.getEvents().addListener(GameEvents.START, this::onStart);
-        gameEntity.getEvents().addListener(GameEvents.RESET, this::onStart);
-        gameEntity.getEvents().addListener(GameEvents.STOP, this::onStop);
+        gameEntity.getEvents().addListener(PoolEvents.INTERACT, this::onInteract);
+        gameEntity.getEvents().addListener(PoolEvents.START, this::onStart);
+        gameEntity.getEvents().addListener(PoolEvents.RESET, this::onStart);
+        gameEntity.getEvents().addListener(PoolEvents.STOP, this::onStop);
 
         // bridge physics → rules → UI
         pockets.setListener(new PocketContactSystem.Listener() {
@@ -182,39 +193,46 @@ public class PoolGame {
     // Lifecycle
     // ------------------------------------------------------------------
     private void onInteract() {
-        if (uiShown) {
+        if (uiVisible) {
             onStop();
             display.hide();
-            uiShown = false;
+            uiVisible = false;
             return;
         }
-        buildIfNeeded();
-        setupNewRack();
-        startSync();
-        display.show();
-        uiShown = true;
+        beginSession(true);
     }
 
     private void onStart() {
-        buildIfNeeded();
-        setupNewRack();
-        startSync();
-        pushPositionsToUI();
+        beginSession(false);
     }
 
     private void onStop() {
         stopSync();
     }
 
-    private void buildIfNeeded() {
+    /**
+     * Common flow for both interact (show UI) and start/reset (optionally show UI).
+     */
+    private void beginSession(boolean showUi) {
+        ensureBuilt();
+        resetRack();
+        startSync();
+        pushPositionsToUI();
+        if (showUi) {
+            display.show();
+            uiVisible = true;
+        }
+    }
+
+    private void ensureBuilt() {
         if (!tableBuilder.isBuilt()) {
             tableBuilder.buildRails();
             tableBuilder.buildPocketSensors();
             pockets.install();
         }
         if (!ballFactory.isBuilt()) {
-            ballFactory.spawnCue(new Vector2(-config.tableW() * 0.30f, 0f));
-            ballFactory.spawnRackTriangle(new Vector2(config.tableW() * 0.25f, 0f));
+            ballFactory.spawnCue(new Vector2(-config.tableW() * CUE_X_OFFSET_FRACTION, 0f));
+            ballFactory.spawnRackTriangle(new Vector2(config.tableW() * RACK_X_OFFSET_FRACTION, 0f));
             pockets.bindBallRefs(
                     ballFactory.getCueBody(),
                     ballFactory.getIdMap(),
@@ -223,7 +241,7 @@ public class PoolGame {
         }
     }
 
-    private void setupNewRack() {
+    private void resetRack() {
         rules.onNewRack(ballFactory);
         pushPositionsToUI();
     }
@@ -233,11 +251,12 @@ public class PoolGame {
     // ------------------------------------------------------------------
     private void startSync() {
         stopSync();
-        syncTask = Timer.schedule(new Timer.Task() {
+        syncTask = com.badlogic.gdx.utils.Timer.schedule(new com.badlogic.gdx.utils.Timer.Task() {
             @Override
             public void run() {
                 pockets.processDeferred();
                 pushPositionsToUI();
+                // Tick-based turn update; rules decide when balls are settled.
                 rules.updateTurn();
             }
         }, 0f, GameTuning.SYNC_PERIOD);
@@ -251,15 +270,29 @@ public class PoolGame {
     }
 
     private void pushPositionsToUI() {
-        if (!uiShown || display == null || ballFactory.getCueBody() == null) return;
+        if (!uiVisible || display == null || ballFactory.getCueBody() == null) return;
+
         Vector2 cue = TableSpace.toNorm(ballFactory.getCueBody().getPosition(), config);
         List<Vector2> objs = TableSpace.toNorm(ballFactory.getObjectBallPositions(), config);
+
         display.setCueBall(cue);
-        Array<Vector2> arr = new Array<>(objs.toArray(new Vector2[0]));
-        display.setBalls(arr.toArray(Vector2.class));
+        // Avoid extra libGDX Array allocation: convert List -> array directly
+        display.setBalls(objs.toArray(new Vector2[0]));
     }
 
     public Entity getGameEntity() {
         return gameEntity;
+    }
+
+    private static final class PoolEvents {
+        static final String INTERACT = "interact";
+        static final String TURN = "pool:turn";
+        static final String SCORE = "pool:score";
+        static final String FOUL = "pool:foul";
+        static final String START = GameEvents.START;
+        static final String RESET = GameEvents.RESET;
+        static final String STOP = GameEvents.STOP;
+        private PoolEvents() {
+        }
     }
 }
