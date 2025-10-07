@@ -207,6 +207,7 @@ public class MinimapDisplay extends BaseScreenDisplay {
     @Override
     public void dispose() {
         minimap.close();
+        minimap = null;
         if (dimmer != null && dimmer.getStage() != null) {
             dimmer.remove();
             dimmer = null;
