@@ -46,7 +46,7 @@ public class CompanionFollowShootComponent extends Component {
         WeaponsStatsComponent stats = (pa != null) ? pa.getCurrentWeaponStats() : null;
         if (stats == null) return;
 
-        Entity bullet = ProjectileFactory.createPistolBullet(stats, false);
+        Entity bullet = ProjectileFactory.createPistolBullet(stats);
 
         Vector2 from = entity.getCenterPosition();
         bullet.setPosition(from.x - bullet.getScale().x / 2f, from.y - bullet.getScale().y / 2f);

@@ -10,13 +10,10 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Timer;
 import com.csse3200.game.components.*;
-import com.csse3200.game.effects.AimbotEffect;
-import com.csse3200.game.effects.UnlimitedAmmoEffect;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.factories.ProjectileFactory;
 import com.csse3200.game.physics.PhysicsLayer;
 import com.csse3200.game.physics.components.HitboxComponent;
-import com.csse3200.game.physics.components.HomingPhysicsComponent;
 import com.csse3200.game.physics.components.PhysicsComponent;
 import com.csse3200.game.physics.components.PhysicsProjectileComponent;
 import com.csse3200.game.rendering.AnimationRenderComponent;
@@ -62,10 +59,6 @@ public class PlayerActions extends Component {
     private boolean crouching = false;
     private boolean grounded = true;
 
-    // Effects
-    private UnlimitedAmmoEffect unlimitedAmmoEffect = new UnlimitedAmmoEffect(10f, this);
-    private AimbotEffect aimbotEffect = new AimbotEffect(10f, this);
-
     // Ability cooldowns / counters
     private int dashCooldown = 0;
     private int jumpsLeft = MAX_JUMPS;
@@ -108,7 +101,6 @@ public class PlayerActions extends Component {
 
             }
         }
-
     }
 
     /**
@@ -424,13 +416,8 @@ public class PlayerActions extends Component {
 
         Sound attackSound = ServiceLocator.getResourceService().getAsset("sounds/laser_blast.mp3", Sound.class);
         attackSound.play();
-        Entity bullet;
-        if (aimbotEffect != null && aimbotEffect.isActive()) {
-            bullet = ProjectileFactory.createPistolBullet(gunStats, true);
-        }
-        else {
-            bullet = ProjectileFactory.createPistolBullet(gunStats, false);
-        }
+
+        Entity bullet = ProjectileFactory.createPistolBullet(gunStats);
         Vector2 origin = new Vector2(entity.getCenterPosition());
         bullet.setPosition(new Vector2(origin.x - bullet.getScale().x / 2f,
                 origin.y - bullet.getScale().y / 2f));
@@ -440,13 +427,9 @@ public class PlayerActions extends Component {
         } else {
             ServiceLocator.getEntityService().register(bullet);
         }
-        PhysicsProjectileComponent projectilePhysics;
-        if (bullet.hasComponent(HomingPhysicsComponent.class)){
-            projectilePhysics = bullet.getComponent(HomingPhysicsComponent.class);
-        }
-        else {
-            projectilePhysics = bullet.getComponent(PhysicsProjectileComponent.class);
-        }
+
+        PhysicsProjectileComponent projectilePhysics = bullet.getComponent(PhysicsProjectileComponent.class);
+
         Vector3 destination = camera.unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
         Vector2 world = new Vector2(destination.x, destination.y);
         Vector2 dir = new Vector2(destination.x - origin.x, destination.y - origin.y);
@@ -454,22 +437,10 @@ public class PlayerActions extends Component {
         entity.getEvents().trigger("player_shoot_order", world, dir);
         projectilePhysics.fire(new Vector2(destination.x - origin.x, destination.y - origin.y), 5);
 
-        if (unlimitedAmmoEffect != null && unlimitedAmmoEffect.isActive()) {
-//            unlimitedAmmoEffect.apply(gun);  // dont call every shot
-        } else {
-            mag.setCurrentAmmo(mag.getCurrentAmmo() - 1);
-        }
-//        mag.setCurrentAmmo(mag.getCurrentAmmo() - 1);
+
+        mag.setCurrentAmmo(mag.getCurrentAmmo() - 1);
 
         timeSinceLastAttack = 0;
-    }
-
-    public UnlimitedAmmoEffect getUnlimitedAmmoEffect() {
-        return unlimitedAmmoEffect;
-    }
-
-    public AimbotEffect getAimbotEffect() {
-        return aimbotEffect;
     }
 
     /**
