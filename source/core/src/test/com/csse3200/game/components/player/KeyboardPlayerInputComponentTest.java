@@ -37,12 +37,6 @@ class KeyboardPlayerInputComponentTest {
         inputComponent.setEntity(player);
     }
 
-
-//    @Test
-//    public void testTriggersWalkEvent() {
-//        verify(events).trigger("walk", Vector2Utils.LEFT);
-//    }
-
     /**
      * Tests that selecting an inventory slot equips the item if nothing
      * is currently equipped.
