@@ -12,6 +12,10 @@ import java.util.ArrayList;
 
 /**
  * A command for switching to the Win Screen or other end screens.
+ *
+ * @param game       The main game instance, used to change screens.
+ * @param screenType The type of screen to transition to.
+ * @param timer      The countdown timer service, used to calculate and display the final elapsed time.
  */
 public record EndScreenCommand(
         GdxGame game,

@@ -9,12 +9,15 @@ public enum ItemTypes {
     BENCH("bench"),
     HEALTH_BENCH("healthbench"),
     COMPUTER_BENCH("computerbench"),
-    SPEED_BENCH("speedbench");
+    SPEED_BENCH("speedbench"),
+    ARMOUR("armour"),
+    HOOD_ARMOUR("hoodarmour"),
+    CHESTPLATE_ARMOUR("chestplatearmour");
 
-    private final String string;
+    private final String typeName;
 
-    ItemTypes(String string) {
-        this.string = string;
+    ItemTypes(String typeName) {
+        this.typeName = typeName;
     }
 
     /**
@@ -22,7 +25,7 @@ public enum ItemTypes {
      *
      * @return the string value associated with this {@link ItemTypes} constant
      */
-    public String getString() {
-        return string;
+    public String getTypeName() {
+        return typeName;
     }
 }
