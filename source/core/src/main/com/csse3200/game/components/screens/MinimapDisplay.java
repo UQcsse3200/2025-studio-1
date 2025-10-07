@@ -185,7 +185,7 @@ public class MinimapDisplay extends BaseScreenDisplay {
         minimap.zoom(percentChange);
         float newScale = minimap.getScale();
 
-        // --- Cursor-anchored zoom correction ---
+        // Zoom in on cursor
         Vector2 mousePos = new Vector2(x, y);
         Vector2 centre = minimap.getCentre();
 
