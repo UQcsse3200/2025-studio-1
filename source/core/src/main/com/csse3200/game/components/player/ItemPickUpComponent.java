@@ -9,14 +9,16 @@ import com.csse3200.game.components.Component;
 import com.csse3200.game.components.MagazineComponent;
 import com.csse3200.game.components.items.ItemComponent;
 import com.csse3200.game.entities.Entity;
+import com.csse3200.game.entities.configs.Armour;
 import com.csse3200.game.entities.configs.Weapons;
+import com.csse3200.game.entities.factories.items.ArmourFactory;
 import com.csse3200.game.entities.factories.PowerupsFactory;
 import com.csse3200.game.entities.factories.items.WeaponsFactory;
+import com.csse3200.game.entities.factories.items.WorldPickUpFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.physics.BodyUserData;
 import com.csse3200.game.physics.components.PhysicsComponent;
 import com.csse3200.game.services.ServiceLocator;
-import com.csse3200.game.entities.factories.items.WorldPickUpFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -76,7 +78,8 @@ public class ItemPickUpComponent extends Component {
         }
 
         Entity otherEntity = userData.entity;
-        if (otherEntity.getComponent(ItemComponent.class) != null) {
+        if (otherEntity.getComponent(ItemComponent.class) != null
+                && otherEntity.getComponent(ItemComponent.class).isPickupable()) {
             targetItem = otherEntity;
             logger.trace("collisionStart: collided with item {}", targetItem);
         }
@@ -141,25 +144,39 @@ public class ItemPickUpComponent extends Component {
         }
 
         Entity weapon = weaponFromTexture(tex);
+        Entity armour = null;
         if (weapon == null) {
-            logger.warn("Unknown pickup texture {}, ignoring", ic.getTexture());
+            armour = armourFromTexture(tex);
+            if (armour == null) {
+                logger.warn("Unknown pickup texture {}, ignoring", ic.getTexture());
+                return;
+            }
+        }
+
+        if (weapon != null) {
+            weapon.create();
+            // The two following lines of code were generate by ChatGPT
+            MagazineComponent mag = weapon.getComponent(MagazineComponent.class);
+            if (mag != null) mag.setTimeSinceLastReload(999f);
+
+            boolean added = inventory.addItem(weapon);
+            if (added) {
+                item.dispose();
+                targetItem = null;
+                logger.info("Picked up item and added to inventory");
+            } else {
+                weapon.dispose();
+                logger.info("Inventory full. Cannot pick up item");
+            }
             return;
         }
 
-        weapon.create();
-        // The two following lines of code were generate by ChatGPT
-        MagazineComponent mag = weapon.getComponent(MagazineComponent.class);
-        if (mag != null) mag.setTimeSinceLastReload(999f);
-
-        boolean added = inventory.addItem(weapon);
-        if (added) {
-            item.dispose();
-            targetItem = null;
-            logger.info("Picked up item and added to inventory");
-        } else {
-            weapon.dispose();
-            logger.info("Inventory full. Cannot pick up item");
-        }
+        // if we are here, that means item is armour
+        // armour is not going to part of the inventory, gets immediately equipped
+        armour.create();
+        ArmourEquipComponent armourEquipper = entity.getComponent(ArmourEquipComponent.class);
+        item.dispose();
+        armourEquipper.setItem(armour);
     }
 
     /**
@@ -167,6 +184,7 @@ public class ItemPickUpComponent extends Component {
      * This method compares the given texture path against the Weapons
      * enum configuration and, if matched, creates the appropriate weapon
      * using the {@link WeaponsFactory}.
+     *
      * @param texture The texture file path associated with the world item.
      * @return A new {@link Entity} representing the weapon, or null if the
      * texture does not correspond to any known weapon type.
@@ -175,6 +193,24 @@ public class ItemPickUpComponent extends Component {
         for (Weapons w : Weapons.values()) {
             if (texture.equals(w.getConfig().texturePath)) {
                 return WeaponsFactory.createWeapon(w);
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Resolves a texture path string into a corresponding armour entity.
+     * This method compares the given texture path against the Armour
+     * enum configuration and, if matched, creates the appropriate armour
+     * using the {@link ArmourFactory}.
+     * @param texture The texture file path associated with the world item.
+     * @return A new {@link Entity} representing the weapon, or null if the
+     * texture does not correspond to any known weapon type.
+     */
+    private Entity armourFromTexture(String texture) {
+        for (Armour a : Armour.values()) {
+            if (texture.equals(a.getConfig().texturePath)) {
+                return ArmourFactory.createArmour(a);
             }
         }
         return null;
