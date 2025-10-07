@@ -54,7 +54,6 @@ public class MainGameScreen extends ScreenAdapter {
 
     //Leaderboard & Session fields
     private GameSession session;
-    private int playerCurrency = 0;
     private float roundTime = 0f;
 
 
@@ -312,7 +311,7 @@ public class MainGameScreen extends ScreenAdapter {
         }
 
         // Time = from your countdown service (seconds)
-        float timeSeconds = (float) getCompleteTime();
+        float timeSeconds = getCompleteTime();
 
         session.getLeaderBoardManager().addRound(processors, timeSeconds);
         session.getLeaderBoardManager().getLeaderBoard().forEach(System.out::println);
