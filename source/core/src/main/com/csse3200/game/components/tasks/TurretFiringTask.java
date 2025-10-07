@@ -16,6 +16,9 @@ import com.csse3200.game.rendering.DebugRenderer;
 import com.csse3200.game.services.GameTime;
 import com.csse3200.game.services.ServiceLocator;
 
+/**
+ * Stationary entity with firing capabilities when it sees enemy on sight.  Does burst firing.
+ */
 public class TurretFiringTask extends DefaultTask implements PriorityTask {
     private final Entity target;
     private final int priority;
@@ -35,6 +38,17 @@ public class TurretFiringTask extends DefaultTask implements PriorityTask {
     private int burstAmount;
     private float burstCooldown;
 
+    /**
+     * Constructs the task
+     * @param target The target to fire at
+     * @param priority The priority
+     * @param projectileLauncher The projectile launcher component used to fire the projectiles
+     * @param shooter The entity firing the projectiles
+     * @param firingCooldown The firing cooldown between each burst.
+     * @param currentCooldown The current cooldown
+     * @param burstAmount The amount of projectiles to fire in one burst
+     * @param burstCooldown The cooldown between each fired projectile in a burst
+     */
     public TurretFiringTask(Entity target, int priority,
                                   ProjectileLauncherComponent projectileLauncher, Entity shooter,
                                   float firingCooldown, float currentCooldown, int burstAmount,

@@ -29,6 +29,8 @@ public class CombatStatsComponent extends Component {
 
     private boolean healthUpgraded;
 
+    private float knockbackResistance = 0;
+
     /**
      * Used to decrease damage taken if player has armour equipped.
      */
@@ -44,6 +46,19 @@ public class CombatStatsComponent extends Component {
         setMaxHealth(health);
         setHealth(health);
         healthUpgraded = false;
+        this.knockbackResistance = 0;
+    }
+
+    /**
+     * Construct a combat Stats Component (Health + Attack System)
+     *
+     * @param health initial health (values {@code < 0} are clamped to {@code 0})
+     */
+    public CombatStatsComponent(int health, float knockbackResistance) {
+        setMaxHealth(health);
+        setHealth(health);
+        healthUpgraded = false;
+        this.knockbackResistance = knockbackResistance;
     }
 
     /**
@@ -178,6 +193,10 @@ public class CombatStatsComponent extends Component {
             damage = dr.apply(damage);
         }
         return damage;
+    }
+
+    public float getKnockbackResistance() {
+        return knockbackResistance;
     }
 
     /**
