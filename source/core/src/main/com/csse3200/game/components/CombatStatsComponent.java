@@ -29,6 +29,11 @@ public class CombatStatsComponent extends Component {
 
     private boolean healthUpgraded;
 
+    /**
+     * Used to decrease damage taken if player has armour equipped.
+     */
+    private int currProtection = 0;
+
 
     /**
      * Construct a combat Stats Component (Health + Attack System)
@@ -149,7 +154,7 @@ public class CombatStatsComponent extends Component {
         if (damage <= 0 || Boolean.TRUE.equals(isDead())) {
             return;
         }
-        setHealth(this.health - damage);
+        setHealth(this.health - damage + currProtection);
     }
 
     /**
@@ -173,5 +178,13 @@ public class CombatStatsComponent extends Component {
             damage = dr.apply(damage);
         }
         return damage;
+    }
+
+    /**
+     * Increases player protection - used for armour protection.
+     * @param protection Increase in protection for the entity.
+     */
+    public void addProtection(int protection) {
+        currProtection += protection;
     }
 }
