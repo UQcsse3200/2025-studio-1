@@ -26,7 +26,7 @@ public class BettingComponent extends UIComponent {
     private static final Color PANEL_COLOR = Color.OLIVE;
     private static final Color TEXT_COLOR = Color.WHITE;
 
-    private BettingLogic logic;
+    private final BettingLogic logic;
     private Table root;
     private Image background;
     private Texture pixelTex;
@@ -51,33 +51,53 @@ public class BettingComponent extends UIComponent {
         super.create();
         pixelTex = makeSolidTexture(Color.WHITE);
 
-        // Background setup
+        setupBackground();
+        setupRootTable();
+        addTitle();
+        addBalanceDisplay();
+        addBetRow();
+        addConfirmButton();
+        addCloseButton();
+        addResultLabel();
+        setupEventListeners();
+
+        hide();
+    }
+
+// === Helper methods ===
+
+    private void setupBackground() {
         background = new Image(pixelTex);
         background.setSize(PANEL_W, PANEL_H);
         background.setColor(PANEL_COLOR);
         background.setPosition((stage.getWidth() - PANEL_W) / 2f, (stage.getHeight() - PANEL_H) / 2f);
         stage.addActor(background);
+    }
 
-        // Root layout table
+    private void setupRootTable() {
         root = new Table();
         root.setFillParent(true);
         root.center();
         stage.addActor(root);
+    }
 
-        // Title
+    private void addTitle() {
         Label.LabelStyle titleStyle = new Label.LabelStyle(skin.get(Label.LabelStyle.class));
         titleStyle.fontColor = TEXT_COLOR;
         Label title = new Label("Place Your Bet", titleStyle);
         title.setFontScale(1.4f);
         root.add(title).padBottom(10f).row();
+    }
 
-        // Balance display
+    private void addBalanceDisplay() {
         balanceLabel = new Label("Balance: $" + logic.getBalance(), skin);
         balanceLabel.setColor(TEXT_COLOR);
         root.add(balanceLabel).padBottom(10f).row();
+    }
 
-        // Bet input and adjust buttons
+    private void addBetRow() {
         Table betRow = new Table();
+
         Label betLabel = new Label("Bet:", skin);
         betLabel.setColor(TEXT_COLOR);
 
@@ -94,6 +114,7 @@ public class BettingComponent extends UIComponent {
                 adjustBet(-10);
             }
         });
+
         plusBtn.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent e, Actor a) {
@@ -105,30 +126,37 @@ public class BettingComponent extends UIComponent {
         betRow.add(minusBtn).width(60).padRight(6f);
         betRow.add(betInput).width(100).padRight(6f);
         betRow.add(plusBtn).width(60);
-        root.add(betRow).padBottom(10f).row();
 
-        // Confirm bet button
+        root.add(betRow).padBottom(10f).row();
+    }
+
+    private void addConfirmButton() {
         TextButton betBtn = new TextButton("Confirm Bet", skin);
         betBtn.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                try {
-                    int betAmount = Integer.parseInt(betInput.getText().trim());
-                    logic.placeBet(betAmount);
-                    updateBalance();
-                    resultLabel.setColor(TEXT_COLOR);
-                    resultLabel.setText("Bet placed: $" + logic.getBet());
-                    hide();
-                    entity.getEvents().trigger("betPlaced");
-                } catch (IllegalArgumentException e) {
-                    resultLabel.setColor(Color.RED);
-                    resultLabel.setText(e.getMessage());
-                }
+                handleConfirmBet();
             }
         });
         root.add(betBtn).width(160).height(50).padBottom(10f).row();
+    }
 
-        // Close button
+    private void handleConfirmBet() {
+        try {
+            int betAmount = Integer.parseInt(betInput.getText().trim());
+            logic.placeBet(betAmount);
+            updateBalance();
+            resultLabel.setColor(TEXT_COLOR);
+            resultLabel.setText("Bet placed: $" + logic.getBet());
+            hide();
+            entity.getEvents().trigger("betPlaced");
+        } catch (IllegalArgumentException e) {
+            resultLabel.setColor(Color.RED);
+            resultLabel.setText(e.getMessage());
+        }
+    }
+
+    private void addCloseButton() {
         TextButton closeBtn = new TextButton("Close", skin);
         closeBtn.addListener(new ChangeListener() {
             @Override
@@ -139,20 +167,21 @@ public class BettingComponent extends UIComponent {
             }
         });
         root.add(closeBtn).width(160).height(50).padBottom(10f).row();
+    }
 
-        // Result label
+    private void addResultLabel() {
         resultLabel = new Label("Waiting for result...", skin);
         resultLabel.setColor(TEXT_COLOR);
         root.add(resultLabel).padTop(10f).row();
+    }
 
-        // Event listeners
+    private void setupEventListeners() {
         entity.getEvents().addListener("interact", this::show);
         entity.getEvents().addListener("win", this::onWin);
         entity.getEvents().addListener("tie", this::onTie);
         entity.getEvents().addListener("lose", this::onLose);
-
-        hide();
     }
+
 
     /**
      * Called when the player wins. Updates balance and displays a dialog with the winnings.
