@@ -12,6 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.math.Vector2;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -35,6 +36,7 @@ public class MinimapDisplay extends BaseScreenDisplay {
     private Image dimmer;
     private Table minimapTable;
     private Minimap minimap;
+    private final Map<String, Texture> textures = new HashMap<>();
 
     /**
      * Constructs a screen display bound to a game instance.
@@ -149,12 +151,26 @@ public class MinimapDisplay extends BaseScreenDisplay {
     }
 
     private void renderMinimapImages() {
+        // Clear old images
+        minimapTable.clearChildren();
+
         // Render all visible rooms as images
         Map<Vector2, String> visibleRooms = minimap.render();
+        if (visibleRooms == null) {
+            return;
+        }
+
         for (Map.Entry<Vector2, String> entry : visibleRooms.entrySet()) {
             String imagePath = entry.getValue();
             Vector2 screenPos = entry.getKey();
-            Texture texture = new Texture(imagePath);
+
+            // Reuse texture if already loaded
+            Texture texture = textures.get(imagePath);
+            if (texture == null) {
+                texture = new Texture(imagePath);
+                textures.put(imagePath, texture);
+            }
+
             Image roomImage = new Image(new TextureRegionDrawable(texture));
             //roomImage.setSize(128, 72);
             roomImage.setPosition(screenPos.x, screenPos.y);
@@ -219,6 +235,13 @@ public class MinimapDisplay extends BaseScreenDisplay {
             minimapTable.clear();
             minimapTable = null;
         }
+        // Dispose cached textures
+        for (Texture tex : textures.values()) {
+            if (tex != null) {
+                tex.dispose();
+            }
+        }
+        textures.clear();
         super.dispose();
     }
 }
