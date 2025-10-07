@@ -118,11 +118,10 @@ public class WeaponsFactory {
      * @param item   is the ItemComponent whose name will be assigned
      */
     public static void setItemNameFromConfig(WeaponConfig config, ItemComponent item) {
-        if (config.getName() != null && !config.getName().isEmpty()) {
+        if (!config.getName().isEmpty()) {
             item.setName(config.getName());
         }
     }
-
 
     private WeaponsFactory() {
         throw new IllegalStateException("Instantiating static util class");
