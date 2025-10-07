@@ -34,17 +34,17 @@ public class Minimap {
     private static final int IMAGE_WIDTH = 1280;
 
     /** Maps grid coordinates to corresponding minimap image paths. */
-    private Map<Vector2, String> grid;
+    private final Map<Vector2, String> grid;
     /** Maps room names to their positions in the minimap grid. */
-    private Map<String, Vector2> roomPositions;
+    private final Map<String, Vector2> roomPositions;
     /** Current zoom scale of the minimap (1 = default, >1 = zoomed in). */
     private float scale;
     /** The current center of the minimap in terms of map coordinates. */
     private Vector2 centre;
     /** The height of the screen (in pixels). */
-    private int screenHeight;
+    private final int screenHeight;
     /** The width of the screen (in pixels). */
-    private int screenWidth;
+    private final int screenWidth;
 
     /**
      * Creates a new Minimap with the given screen dimensions.
@@ -166,8 +166,8 @@ public class Minimap {
                 }
 
                 // Compute the room's position on the screen
-                float screenX = (roomCoordinates.x + (float) IMAGE_WIDTH / 2 - minX) * (screenWidth / (maxX - minX));
-                float screenY = (roomCoordinates.y + (float) IMAGE_HEIGHT / 2 - minY) * (screenHeight / (maxY - minY));
+                float screenX = (roomCoordinates.x + (float) IMAGE_WIDTH / 2 - minX) * scale;
+                float screenY = (roomCoordinates.y + (float) IMAGE_HEIGHT / 2 - minY) * scale;
                 Vector2 screenCoords = new Vector2(screenX, screenY);
                 output.put(screenCoords, grid.get(roomCoordinates));
             }
@@ -208,11 +208,15 @@ public class Minimap {
     }
 
     /**
-     * Resets the minimap zoom back to its default (scale = 1).
+     * Resets the minimap zoom back to its default (scale = 1) and centres on the player again.
      */
     public void reset() {
         scale = 1;
         zoom(0);
+
+        Vector2 normalisedPlayerPosition = normalisePosition(ServiceLocator.getPlayer().getPosition());
+        String currentRoom = ServiceLocator.getGameArea().toString();
+        centre = calculateCentre(currentRoom, normalisedPlayerPosition);
     }
 
     /**
@@ -226,7 +230,6 @@ public class Minimap {
 
         // Get the current room and set the center to the player's location
         String currentRoom = ServiceLocator.getGameArea().toString();
-        logger.debug(currentRoom);
         centre = calculateCentre(currentRoom, normalisedPlayerPosition);
         scale = 1;
 
