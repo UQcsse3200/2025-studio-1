@@ -200,6 +200,16 @@ public class ServiceLocator {
         discoveryService = null;
     }
 
+    /**
+     * Clears ONLY the player entity
+     */
+    public static void clearPlayer() {
+        if (player != null) {
+            player.dispose();
+        }
+        player = null;
+    }
+
     private static final com.csse3200.game.events.EventHandler globalEvents = new com.csse3200.game.events.EventHandler();
 
     public static com.csse3200.game.events.EventHandler getGlobalEvents() {
