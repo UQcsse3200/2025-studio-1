@@ -77,9 +77,8 @@ public class OfficeGameArea extends GameArea {
 
     }
 
-    private void spawnPlayer() {
-        Entity player = PlayerFactory.createPlayer();
-        spawnEntityAt(player, playerSpawn, true, true);
+    private Entity spawnPlayer() {
+        return spawnOrRepositionPlayer(playerSpawn);
     }
 
     private void spawnOfficeProps() {

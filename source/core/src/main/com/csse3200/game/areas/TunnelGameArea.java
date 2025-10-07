@@ -95,9 +95,7 @@ public class TunnelGameArea extends GameArea {
      * @return the player entity
      */
     private Entity spawnPlayer() {
-        Entity player = PlayerFactory.createPlayer();
-        spawnEntityAt(player, playerSpawn, true, true);
-        return player;
+        return spawnOrRepositionPlayer(playerSpawn);
     }
 
     /**
