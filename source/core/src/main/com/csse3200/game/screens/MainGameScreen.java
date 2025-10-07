@@ -9,18 +9,15 @@ import com.csse3200.game.GdxGame;
 import com.csse3200.game.areas.*;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.components.CombatStatsComponent;
+import com.csse3200.game.components.InventoryComponent;
 import com.csse3200.game.components.gamearea.PerformanceDisplay;
-import com.csse3200.game.components.items.ConsumableComponent;
 import com.csse3200.game.components.maingame.MainGameActions;
 import com.csse3200.game.components.maingame.MainGameDisplay;
-import com.csse3200.game.components.player.InventoryComponent;
-import com.csse3200.game.components.player.ItemPickUpComponent;
+import com.csse3200.game.components.player.StaminaComponent;
 import com.csse3200.game.components.screens.PauseMenuDisplay;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
-import com.csse3200.game.entities.configs.Consumables;
 import com.csse3200.game.entities.factories.system.RenderFactory;
-import com.csse3200.game.files.FileLoader;
 import com.csse3200.game.files.SaveGame;
 import com.csse3200.game.input.InputComponent;
 import com.csse3200.game.input.InputDecorator;
@@ -39,7 +36,6 @@ import com.csse3200.game.ui.terminal.TerminalDisplay;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.HashMap;
 
 
 /**
@@ -283,7 +279,7 @@ public class MainGameScreen extends ScreenAdapter {
         ServiceLocator.registerSaveLoadService(new SaveLoadService());
 
         SaveGame.GameState load = SaveLoadService.load();
-//        HashMap<String, Object> playerStats = load.getPlayer();
+        SaveGame.information playerStats = load.getPlayer();
 
         ServiceLocator.registerEntityService(new EntityService());
         ServiceLocator.registerRenderService(new RenderService());
@@ -314,14 +310,16 @@ public class MainGameScreen extends ScreenAdapter {
             case "Server" -> areaLoad = ServerGameArea.load(terrainFactory, renderer.getCamera());
             default -> logger.error("couldn't create Game area from file");
         }
+        ServiceLocator.getResourceService().loadAll(); // test for loading into new areas
 
         gameArea = areaLoad;
         ServiceLocator.registerGameArea(gameArea);
         gameArea.create();
-        //need to cast to values for playerstats
-//        ServiceLocator.getPlayer().getComponent(InventoryComponent.class).setProcessor((Integer) playerStats.get("processors"));
-//        ServiceLocator.getPlayer().getComponent(CombatStatsComponent.class).setHealth((Integer) playerStats.get("health"));
 
+        SaveLoadService.loadPlayer(load.getPlayer());
+        SaveLoadService.loadPlayerInventory(load.getInventory());
+
+//        SaveLoadService.loadPlayerInventory(load.getInventory());
     }
 
 
