@@ -80,10 +80,14 @@ public class FriendlyNPCFactory {
         Entity npc = new Entity()
                 .addComponent(arc)
                 .addComponent(new HoverBobComponent(0.08f, 2.0f))
-//                .addComponent(new GuidanceContextComponent(player))
-//                .addComponent(new GuidanceBrainComponent(waypoints, 1.3f))
-//                .addComponent(new GuidancePointerUiComponent())
-//                .addComponent(new BeaconMarkerComponent())
+                .addComponent(new NpcTwoOptionMenuComponent())
+                .addComponent(new NpcLeadComponent(List.of(
+                        new Vector2(12f, 7f),
+                        new Vector2(18f, 7f),
+                        new Vector2(25f, 12f)
+                ), 2.2f, 0.6f))
+                .addComponent(new NpcProximityGateComponent(player, 3f))
+                .addComponent(new NpcDebugKeyInteractionComponent())
                 .addComponent(new NpcDialogueDataComponent(
                         "Guide!", "", new String[]{
                         "Welcome, pilot.",
