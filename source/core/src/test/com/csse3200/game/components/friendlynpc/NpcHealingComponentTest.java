@@ -4,76 +4,117 @@ import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.entities.Entity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.mockito.Mockito.*;
 
-public class NpcHealingComponentTest {
+/**
+ * These tests verify that the NPC healing system correctly restores player health
+ * when the "npcDialogueEnd" event is triggered, and properly handles edge cases
+ * such as cooldowns, null players, missing components, and dead players.
+ */
+@ExtendWith(MockitoExtension.class)
+class NpcHealingComponentTest {
+
     private Entity npc;
     private Entity player;
     private CombatStatsComponent combatStats;
-    private NpcHealingComponent healingComponent;
 
     @BeforeEach
-    void setup() {
+    void setUp() {
         npc = new Entity();
         player = new Entity();
         combatStats = mock(CombatStatsComponent.class);
+    }
+
+    /**
+     * Test that the component heals the player when the dialogue ends.
+     * Verifies that the correct amount of health is added.
+     */
+    @Test
+    void healsPlayer_onDialogueEnd() {
+        int healAmount = 25;
         player.addComponent(combatStats);
-    }
+        when(combatStats.isDead()).thenReturn(false);
 
-    @Test
-    void healsPlayer_whenDialogueEnds() {
-        when(combatStats.getHealth()).thenReturn(50);
-
-        healingComponent = new NpcHealingComponent(player, 25);
-        npc.addComponent(healingComponent);
+        NpcHealingComponent healing = new NpcHealingComponent(player, healAmount);
+        npc.addComponent(healing);
         npc.create();
 
         npc.getEvents().trigger("npcDialogueEnd");
 
-        verify(combatStats).getHealth();
-        verify(combatStats).setHealth(75);
+        // The player's health should increase by the heal amount
+        verify(combatStats, times(1)).addHealth(healAmount);
     }
 
+    /**
+     * Test that cooldown prevents repeated healing within the cooldown period.
+     */
     @Test
-    void healsCorrectAmount() {
-        when(combatStats.getHealth()).thenReturn(30);
+    void respectsCooldown_onlyHealsOnceWithinCooldown() {
+        int healAmount = 10;
+        player.addComponent(combatStats);
+        when(combatStats.isDead()).thenReturn(false);
 
-        healingComponent = new NpcHealingComponent(player, 50);
-        npc.addComponent(healingComponent);
+        // Set a 1-second cooldown
+        NpcHealingComponent healing = new NpcHealingComponent(player, healAmount)
+                .setCooldownMillis(1000);
+        npc.addComponent(healing);
+        npc.create();
+
+        // Trigger the event twice in quick succession
+        npc.getEvents().trigger("npcDialogueEnd");
+        npc.getEvents().trigger("npcDialogueEnd");
+
+        // Should only heal once because cooldown not expired
+        verify(combatStats, times(1)).addHealth(healAmount);
+    }
+
+    /**
+     * Test that no healing occurs when the player entity is null.
+     * Ensures the component handles null safely without throwing exceptions.
+     */
+    @Test
+    void doesNothing_whenPlayerIsNull() {
+        NpcHealingComponent healing = new NpcHealingComponent(null, 20);
+        npc.addComponent(healing);
+        npc.create();
+
+        // Should not crash or attempt healing
+        npc.getEvents().trigger("npcDialogueEnd");
+    }
+
+    /**
+     * Test that no healing occurs if the player does not have a CombatStatsComponent.
+     */
+    @Test
+    void doesNothing_whenPlayerHasNoCombatStats() {
+        NpcHealingComponent healing = new NpcHealingComponent(player, 15);
+        npc.addComponent(healing);
         npc.create();
 
         npc.getEvents().trigger("npcDialogueEnd");
 
-        verify(combatStats).setHealth(80);
+        // Since player has no combat stats, no health changes should occur
+        verifyNoInteractions(combatStats);
     }
 
+    /**
+     * Test that no healing happens if the player is dead.
+     */
     @Test
-    void multipleHeals_work() {
-        when(combatStats.getHealth()).thenReturn(20, 45);
+    void doesNothing_whenPlayerIsDead() {
+        player.addComponent(combatStats);
+        when(combatStats.isDead()).thenReturn(true);
 
-        healingComponent = new NpcHealingComponent(player, 25);
-        npc.addComponent(healingComponent);
-        npc.create();
-
-        npc.getEvents().trigger("npcDialogueEnd");
-        npc.getEvents().trigger("npcDialogueEnd");
-
-        verify(combatStats, times(2)).getHealth();
-        verify(combatStats).setHealth(45);
-        verify(combatStats).setHealth(70);
-    }
-
-    @Test
-    void differentHealAmounts_work() {
-        when(combatStats.getHealth()).thenReturn(10);
-
-        healingComponent = new NpcHealingComponent(player, 100);
-        npc.addComponent(healingComponent);
+        NpcHealingComponent healing = new NpcHealingComponent(player, 30);
+        npc.addComponent(healing);
         npc.create();
 
         npc.getEvents().trigger("npcDialogueEnd");
 
-        verify(combatStats).setHealth(110);
+        // Dead players should not receive healing
+        verify(combatStats, never()).addHealth(anyInt());
     }
 }

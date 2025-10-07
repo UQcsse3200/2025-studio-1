@@ -4,6 +4,7 @@ import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.components.Component;
 import com.csse3200.game.entities.Entity;
 
+
 /**
  * NPC Healing Component
  * Restores player health when dialogue ends
@@ -11,6 +12,9 @@ import com.csse3200.game.entities.Entity;
 public class NpcHealingComponent extends Component {
     private final Entity player;
     private final int healAmount;
+    // Frequency / cooldown
+    private long cooldownMillis = 0; // 0 = no cooldown
+    private long lastTriggerTime = 0L;
 
     /**
      * Creates an NPC healing component
@@ -20,7 +24,18 @@ public class NpcHealingComponent extends Component {
      */
     public NpcHealingComponent(Entity player, int healAmount) {
         this.player = player;
-        this.healAmount = healAmount;
+        this.healAmount = Math.max(0, healAmount);
+    }
+
+    /**
+     * Sets a cooldown between consecutive heals.
+     *
+     * @param ms cooldown in milliseconds (0 = disabled)
+     * @return this component for chaining
+     */
+    public NpcHealingComponent setCooldownMillis(long ms) {
+        this.cooldownMillis = Math.max(0, ms);
+        return this;
     }
 
     @Override
@@ -33,8 +48,20 @@ public class NpcHealingComponent extends Component {
      * Heals the player when dialogue ends
      */
     private void onDialogueEnd() {
+        if (player == null) return;
+
         CombatStatsComponent combatStats = player.getComponent(CombatStatsComponent.class);
-        int currentHealth = combatStats.getHealth();
-        combatStats.setHealth(currentHealth + healAmount);
+        if (combatStats == null) return;
+
+        long now = System.currentTimeMillis();
+        if (cooldownMillis > 0 && (now - lastTriggerTime) < cooldownMillis) {
+            return;
+        }
+
+        if (combatStats.isDead()) {
+            return;
+        }
+        combatStats.addHealth(healAmount);
+        lastTriggerTime = now;
     }
 }

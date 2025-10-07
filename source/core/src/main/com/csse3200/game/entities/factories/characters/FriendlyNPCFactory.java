@@ -142,7 +142,8 @@ public class FriendlyNPCFactory {
                         "You're all patched up now!"
                 }))
                 .addComponent(new DialogueDisplay())
-                .addComponent(new NpcHealingComponent(player, 25))
+                .addComponent(new NpcHealingComponent(player, 25)
+                        .setCooldownMillis(30_000))
                 .addComponent(new TipComponent(null, player, 3f))
                 .addComponent(new NpcInterationComponent(player, 3f));
 
