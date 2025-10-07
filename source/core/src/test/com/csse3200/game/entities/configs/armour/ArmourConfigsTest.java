@@ -14,7 +14,6 @@ public class ArmourConfigsTest {
         assertNotNull(chestplateConfig.texturePath);
         assertNotNull(chestplateConfig.rightOffset);
         assertNotNull(chestplateConfig.leftOffset);
-        assertNotNull(chestplateConfig.heightScale);
     }
 
     @Test
@@ -25,6 +24,5 @@ public class ArmourConfigsTest {
         assertNotNull(hoodConfig.texturePath);
         assertNotNull(hoodConfig.rightOffset);
         assertNotNull(hoodConfig.leftOffset);
-        assertNotNull(hoodConfig.heightScale);
     }
 }

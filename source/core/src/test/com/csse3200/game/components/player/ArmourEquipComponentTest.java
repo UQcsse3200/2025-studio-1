@@ -14,11 +14,10 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ArmourEquipComponentTest {
-    private ArmourEquipComponent armourEquipComponent;
     Entity player;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         this.player = new Entity();
 
         player.addComponent(new ArmourEquipComponent());
@@ -35,7 +34,7 @@ public class ArmourEquipComponentTest {
 
     @Test
     @DisplayName("Testing chestplate equipping.")
-    public void equipChestplate() {
+    void equipChestplate() {
         Entity chestplate = new Entity();
         chestplate.addComponent(new ArmourComponent(Armour.CHESTPLATE.getConfig()));
         TextureRenderComponent tex = Mockito.mock(TextureRenderComponent.class);
@@ -49,7 +48,7 @@ public class ArmourEquipComponentTest {
 
     @Test
     @DisplayName("Testing hood equipping.")
-    public void equipHood() {
+    void equipHood() {
         Entity hood = new Entity();
         hood.addComponent(new ArmourComponent(Armour.HOOD.getConfig()));
         TextureRenderComponent tex = Mockito.mock(TextureRenderComponent.class);
@@ -63,13 +62,13 @@ public class ArmourEquipComponentTest {
 
     @Test
     @DisplayName("Testing equipping a null entity.")
-    public void equipNullArmour() {
+    void equipNullArmour() {
         assertThrows(IllegalArgumentException.class, () -> player.getComponent(ArmourEquipComponent.class).setItem(null));
     }
 
     @Test
     @DisplayName("Testing equipping a non-armour entity.")
-    public void equipArmourWithoutArmourComponent() {
+    void equipArmourWithoutArmourComponent() {
         assertThrows(IllegalArgumentException.class, () -> player.getComponent(ArmourEquipComponent.class).setItem(new Entity()));
     }
 }
