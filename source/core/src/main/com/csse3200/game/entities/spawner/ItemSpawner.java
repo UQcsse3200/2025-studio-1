@@ -94,6 +94,10 @@ public class ItemSpawner {
             receptionArea.spawnItem(item, position);
         } else if (gameArea instanceof MainHall mainHallArea) {
                 mainHallArea.spawnItem(item, position);
+        } else if (gameArea instanceof OfficeGameArea officeArea) {
+            officeArea.spawnItem(item, position);
+        } else if (gameArea instanceof ElevatorGameArea elevatorArea) {
+            elevatorArea.spawnItem(item, position);
         } else if (gameArea instanceof ResearchGameArea researchArea) {
             researchArea.spawnItem(item, position);
         } else if (gameArea instanceof SecurityGameArea securityArea) {

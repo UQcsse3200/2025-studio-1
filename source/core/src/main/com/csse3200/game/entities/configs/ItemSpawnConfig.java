@@ -148,6 +148,30 @@ public class ItemSpawnConfig {
 
         return config;
     }
+    /**
+     * Office Room spawning. Spawns a weapon in the office
+     */
+    public static Map<String, List<ItemSpawner.ItemSpawnInfo>> officemap() {
+        Map<String, List<ItemSpawner.ItemSpawnInfo>> config = new HashMap<>();
+
+        config.put(Weapons.RIFLE.name(), List.of(
+                new ItemSpawner.ItemSpawnInfo(new GridPoint2(13,12), 1)
+        ));
+
+        return config;
+    }
+    /**
+     * Elevator Room spawning. Spawns a weapon in the elevator
+     */
+    public static Map<String, List<ItemSpawner.ItemSpawnInfo>> elevatormap() {
+        Map<String, List<ItemSpawner.ItemSpawnInfo>> config = new HashMap<>();
+
+        config.put(Weapons.PISTOL.name(), List.of(
+                new ItemSpawner.ItemSpawnInfo(new GridPoint2(10, 7), 1)
+        ));
+
+        return config;
+    }
     public static Map<String, List<ItemSpawner.ItemSpawnInfo>> mainHallmap() {
         Map<String, List<ItemSpawner.ItemSpawnInfo>> config = new HashMap<>();
 
