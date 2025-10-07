@@ -50,6 +50,11 @@ public class ActiveProjectile extends Entity {
         this.activeProjectileType = type;
     }
 
+    /**
+     * Sets the speed of the projectile
+     *
+     * @param speed The speed of the projectile
+     */
     public void setProjectileSpeed(float speed) {
         this.speed = speed;
     }
