@@ -1,5 +1,6 @@
 package com.csse3200.game.components.screens;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
@@ -100,6 +101,8 @@ public class MinimapDisplay extends BaseScreenDisplay {
         logger.debug("Created minimap actor");
 
         renderMinimapImages();
+        minimapTable.setTouchable(Touchable.enabled);
+        stage.setScrollFocus(minimapTable);
 
         minimapTable.addListener(new InputListener() {
             private float lastX, lastY;
@@ -152,6 +155,9 @@ public class MinimapDisplay extends BaseScreenDisplay {
         });
     }
 
+    /**
+     * Zooms in on the minimap by 25% and renders the zoomed in map
+     */
     public void zoomIn() {
         float currentScale = minimap.getScale();
         if (currentScale < 5.0f) {
@@ -160,6 +166,9 @@ public class MinimapDisplay extends BaseScreenDisplay {
         renderMinimapImages();
     }
 
+    /**
+     * Zooms out the minimap by 25% and renders the zoomed out map
+     */
     public void zoomOut() {
         float currentScale = minimap.getScale();
         if (currentScale > 0.2f) {
@@ -168,6 +177,9 @@ public class MinimapDisplay extends BaseScreenDisplay {
         renderMinimapImages();
     }
 
+    /**
+     * Renders each of the rooms that need to be displayed in the minimap
+     */
     private void renderMinimapImages() {
         // Clear old images
         minimapTable.clearChildren();
@@ -201,11 +213,20 @@ public class MinimapDisplay extends BaseScreenDisplay {
         }
     }
 
+    /**
+     * Zooms in or out on the minimap by 25% depending on the scroll direction
+     * and renders the zoomed in map at the position of the cursor
+     *
+     * @param x x coordinate of the mouse cursor
+     * @param y y coordinate of the mouse cursor
+     * @param amountY The scroll direction, negative is scroll down i.e., zoom out and
+     *                positive is scroll up i.e., zoom in
+     */
     private void zoom(float x, float y, float amountY) {
         float oldScale = minimap.getScale();
 
         // Scroll up = zoom in; Scroll down = zoom out
-        float percentChange = (amountY > 0) ? 10f : (amountY < 0) ? -10f : 0;
+        float percentChange = (amountY > 0) ? 25f : (amountY < 0) ? -25f : 0;
         minimap.zoom(percentChange);
         float newScale = minimap.getScale();
 
@@ -226,7 +247,6 @@ public class MinimapDisplay extends BaseScreenDisplay {
         Vector2 panOffset = beforeZoomWorld.cpy().sub(afterZoomWorld);
         minimap.pan(panOffset.scl(newScale));
 
-        minimapTable.clearChildren();
         renderMinimapImages();
 
         logger.info("Minimap zoomed in to point {} x, {} y", x, y);
