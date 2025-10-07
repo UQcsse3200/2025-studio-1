@@ -130,9 +130,12 @@ public class ItemSpawner {
     }
 
     /**
-         * It holds the information needed to spawn an item
-         */
-        public record ItemSpawnInfo(GridPoint2 position, int quantity) {
+     * A record to store the position and quantity for a specific item spawn event.
+     *
+     * @param position The grid coordinates where the item(s) should be spawned.
+     * @param quantity The number of items to spawn at the specified position.
+     */
+    public record ItemSpawnInfo(GridPoint2 position, int quantity) {
     }
 }
 
