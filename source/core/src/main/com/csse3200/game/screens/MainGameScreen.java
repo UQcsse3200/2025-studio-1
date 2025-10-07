@@ -314,7 +314,7 @@ public class MainGameScreen extends ScreenAdapter {
         float timeSeconds = getCompleteTime();
 
         session.getLeaderBoardManager().addRound(processors, timeSeconds);
-        session.getLeaderBoardManager().getLeaderBoard().forEach(System.out::println);
+        session.getLeaderBoardManager().getLeaderBoard().forEach(entry -> logger.info(entry.toString()));
     }
 
     /**

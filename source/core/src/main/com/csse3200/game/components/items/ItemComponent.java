@@ -3,14 +3,7 @@ package com.csse3200.game.components.items;
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.components.Component;
 import com.csse3200.game.entities.configs.ItemTypes;
-import com.csse3200.game.entities.configs.Weapons;
-import com.csse3200.game.entities.configs.weapons.DaggerConfig;
-import com.csse3200.game.entities.configs.weapons.LightsaberConfig;
-import com.csse3200.game.entities.configs.weapons.PistolConfig;
-import com.csse3200.game.entities.configs.weapons.RifleConfig;
 
-import static com.csse3200.game.entities.configs.Weapons.*;
-import static com.csse3200.game.entities.configs.projectiles.ProjectileConfig.itemType;
 
 public class ItemComponent extends Component {
     private String name;
