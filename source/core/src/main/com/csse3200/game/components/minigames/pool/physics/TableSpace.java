@@ -27,4 +27,8 @@ public final class TableSpace {
         float y = MathUtils.clamp(ny, 0f, 1f) * cfg.tableH() - cfg.tableH() / 2f;
         return new Vector2(x, y);
     }
+
+    public static Vector2 fromNorm(Vector2 n, TableConfig cfg) {
+        return fromNorm(n.x, n.y, cfg);
+    }
 }

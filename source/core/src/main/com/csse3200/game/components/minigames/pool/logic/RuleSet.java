@@ -15,4 +15,6 @@ public interface RuleSet {
     void updateTurn();                            // detect end-of-turn and advance state
 
     void setListener(RulesEvents listener);       // notify UI/host about turn/score/fouls
+
+    boolean isShotActive();
 }
