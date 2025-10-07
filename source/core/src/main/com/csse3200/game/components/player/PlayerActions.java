@@ -252,7 +252,7 @@ public class PlayerActions extends Component {
             // Check cooldown for ground jumps
             if (isGroundJump) {
                 if (!touchingGround()) canJump = false;
-                if (currentTime - lastJumpTime < JUMP_COOLDOWN_MS) canJump = false;
+                if (physicsComponent.getBody().getLinearVelocity().y > 0f) canJump = false;
             } else {
                 if (!stamina.trySpend(DOUBLE_JUMP_COST)) return;
             }

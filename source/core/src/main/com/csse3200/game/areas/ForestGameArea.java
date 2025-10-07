@@ -140,13 +140,17 @@ public class ForestGameArea extends GameArea {
             "images/!.png",
             "images/NpcDialogue.png",
             "images/nurse_npc.png",
-            "images/partner.png"
+            "images/partner.png",
+            "images/blackjack_table.png"
     };
 
     private static final String[] backgroundTextures = {
             "backgrounds/Reception.png",
             "backgrounds/Shipping.png",
             "backgrounds/SpawnResize.png",
+            "backgrounds/Storage.png",
+            "images/Storage.png",
+            "images/cards.png",
             "backgrounds/Storage.png",
             "backgrounds/MainHall.png",
             "backgrounds/Office.png",
@@ -261,7 +265,9 @@ public class ForestGameArea extends GameArea {
             "images/boss3_phase2.atlas",
             "images/!animation.atlas",
             "images/guidance_npc.atlas",
-            "images/assister_npc.atlas"
+            "images/assister_npc.atlas",
+            "images/boss3_phase2.atlas",
+            "images/cards.atlas"
     };
 
     private static final String[] extraTextures = {
