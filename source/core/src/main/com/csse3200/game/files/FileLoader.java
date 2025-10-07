@@ -3,16 +3,9 @@ package com.csse3200.game.files;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Json;
-import com.badlogic.gdx.utils.JsonReader;
-import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.JsonWriter;
-import com.csse3200.game.components.player.InventoryComponent;
-import com.csse3200.game.components.player.ItemPickUpComponent;
-import com.csse3200.game.entities.Entity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.List;
 
 /**
  * Wrapper for reading Java objects from JSON files.
@@ -21,8 +14,8 @@ import java.util.List;
  * for more control.
  */
 public class FileLoader {
-    private static final Logger logger = LoggerFactory.getLogger(FileLoader.class);
     static final Json json = new Json();
+    private static final Logger logger = LoggerFactory.getLogger(FileLoader.class);
 
     /**
      * Read generic Java classes from a JSON file. Properties in the JSON file will override class

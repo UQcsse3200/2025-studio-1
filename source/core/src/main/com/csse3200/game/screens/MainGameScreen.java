@@ -13,9 +13,8 @@ import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.components.gamearea.PerformanceDisplay;
 import com.csse3200.game.components.maingame.MainGameActions;
 import com.csse3200.game.components.maingame.MainGameDisplay;
-import com.csse3200.game.components.screens.PauseMenuDisplay;
 import com.csse3200.game.components.player.InventoryComponent;
-
+import com.csse3200.game.components.screens.PauseMenuDisplay;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
 import com.csse3200.game.entities.factories.system.RenderFactory;
@@ -36,7 +35,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
-
 /**
  * The game screen containing the main game.
  *
@@ -52,7 +50,7 @@ public class MainGameScreen extends ScreenAdapter {
     private final PhysicsEngine physicsEngine;
     private final GameArea gameArea;
 
-    private CountdownTimerService countdownTimer;
+    private final CountdownTimerService countdownTimer;
 
 
     //Leaderboard & Session fields
@@ -115,6 +113,76 @@ public class MainGameScreen extends ScreenAdapter {
         }
     }
 
+
+    /**
+     * Overloaded constructor for loading the game from save file
+     *
+     * @param game     game
+     * @param Filename loaded file
+     */
+    public MainGameScreen(GdxGame game, String Filename) {
+
+
+        this.game = game;
+
+
+        logger.debug("Initialising main game screen services from file load");
+        ServiceLocator.registerTimeSource(new GameTime());
+
+        PhysicsService physicsService = new PhysicsService();
+        ServiceLocator.registerPhysicsService(physicsService);
+        physicsEngine = physicsService.getPhysics();
+
+        ServiceLocator.registerInputService(new InputService());
+        ServiceLocator.registerResourceService(new ResourceService());
+        ServiceLocator.registerSaveLoadService(new SaveLoadService());
+
+        SaveGame.GameState load = SaveLoadService.load();
+
+        ServiceLocator.registerEntityService(new EntityService());
+        ServiceLocator.registerRenderService(new RenderService());
+
+        renderer = RenderFactory.createRenderer();
+        renderer.getCamera().getEntity().setPosition(CAMERA_POSITION);
+        renderer.getDebug().renderPhysicsWorld(physicsEngine.getWorld());
+
+        loadAssets();
+        countdownTimer = new CountdownTimerService(ServiceLocator.getTimeSource(), 60000);
+        createUI();
+
+        logger.debug("Initialising main game screen entities");
+        TerrainFactory terrainFactory = new TerrainFactory(renderer.getCamera());
+        GameArea areaLoad = null;
+        //cases for all current areas
+
+        switch (load.getGameArea()) {
+            case "Forest" -> areaLoad = ForestGameArea.load(terrainFactory, renderer.getCamera());
+            case "Elevator" -> areaLoad = ElevatorGameArea.load(terrainFactory, renderer.getCamera());
+            case "Office" -> areaLoad = OfficeGameArea.load(terrainFactory, renderer.getCamera());
+            case "Mainhall" -> areaLoad = MainHall.load(terrainFactory, renderer.getCamera());
+            case "Reception" -> areaLoad = Reception.load(terrainFactory, renderer.getCamera());
+            case "Tunnel" -> areaLoad = TunnelGameArea.load(terrainFactory, renderer.getCamera());
+            case "Security" -> areaLoad = SecurityGameArea.load(terrainFactory, renderer.getCamera());
+            case "Storage" -> areaLoad = StorageGameArea.load(terrainFactory, renderer.getCamera());
+            case "Shipping" -> areaLoad = ShippingGameArea.load(terrainFactory, renderer.getCamera());
+            case "Server" -> areaLoad = ServerGameArea.load(terrainFactory, renderer.getCamera());
+            default -> logger.error("couldn't create Game area from file");
+        }
+        ServiceLocator.getResourceService().loadAll(); // test for loading into new areas
+
+        gameArea = areaLoad;
+        DiscoveryService ds = ServiceLocator.getDiscoveryService();
+        if (ds != null && gameArea != null) {
+            ds.discover(gameArea.toString());
+        }
+        ServiceLocator.registerGameArea(gameArea);
+        gameArea.create();
+
+        SaveLoadService.loadPlayer(load.getPlayer());
+        SaveLoadService.loadPlayerInventory(load.getInventory());
+
+//        SaveLoadService.loadPlayerInventory(load.getInventory());
+    }
 
     @Override
     public void render(float delta) {
@@ -315,77 +383,6 @@ public class MainGameScreen extends ScreenAdapter {
         DeathScreen deathScreen = new DeathScreen(game);
         deathScreen.updateTime(getCompleteTime());
         game.setScreen(deathScreen);
-    }
-
-
-    /**
-     * Overloaded constructor for loading the game from save file
-     *
-     * @param game     game
-     * @param Filename loaded file
-     */
-    public MainGameScreen(GdxGame game, String Filename) {
-
-
-        this.game = game;
-
-
-        logger.debug("Initialising main game screen services from file load");
-        ServiceLocator.registerTimeSource(new GameTime());
-
-        PhysicsService physicsService = new PhysicsService();
-        ServiceLocator.registerPhysicsService(physicsService);
-        physicsEngine = physicsService.getPhysics();
-
-        ServiceLocator.registerInputService(new InputService());
-        ServiceLocator.registerResourceService(new ResourceService());
-        ServiceLocator.registerSaveLoadService(new SaveLoadService());
-
-        SaveGame.GameState load = SaveLoadService.load();
-
-        ServiceLocator.registerEntityService(new EntityService());
-        ServiceLocator.registerRenderService(new RenderService());
-
-        renderer = RenderFactory.createRenderer();
-        renderer.getCamera().getEntity().setPosition(CAMERA_POSITION);
-        renderer.getDebug().renderPhysicsWorld(physicsEngine.getWorld());
-
-        loadAssets();
-        countdownTimer = new CountdownTimerService(ServiceLocator.getTimeSource(), 60000);
-        createUI();
-
-        logger.debug("Initialising main game screen entities");
-        TerrainFactory terrainFactory = new TerrainFactory(renderer.getCamera());
-        GameArea areaLoad = null;
-        //cases for all current areas
-
-        switch (load.getGameArea()) {
-            case "Forest" -> areaLoad = ForestGameArea.load(terrainFactory, renderer.getCamera());
-            case "Elevator" -> areaLoad = ElevatorGameArea.load(terrainFactory, renderer.getCamera());
-            case "Office" -> areaLoad = OfficeGameArea.load(terrainFactory, renderer.getCamera());
-            case "Mainhall" -> areaLoad = MainHall.load(terrainFactory, renderer.getCamera());
-            case "Reception" -> areaLoad = Reception.load(terrainFactory, renderer.getCamera());
-            case "Tunnel" -> areaLoad = TunnelGameArea.load(terrainFactory, renderer.getCamera());
-            case "Security" -> areaLoad = SecurityGameArea.load(terrainFactory, renderer.getCamera());
-            case "Storage" -> areaLoad = StorageGameArea.load(terrainFactory, renderer.getCamera());
-            case "Shipping" -> areaLoad = ShippingGameArea.load(terrainFactory, renderer.getCamera());
-            case "Server" -> areaLoad = ServerGameArea.load(terrainFactory, renderer.getCamera());
-            default -> logger.error("couldn't create Game area from file");
-        }
-        ServiceLocator.getResourceService().loadAll(); // test for loading into new areas
-
-        gameArea = areaLoad;
-        DiscoveryService ds = ServiceLocator.getDiscoveryService();
-        if (ds != null && gameArea != null) {
-            ds.discover(gameArea.toString());
-        }
-        ServiceLocator.registerGameArea(gameArea);
-        gameArea.create();
-
-        SaveLoadService.loadPlayer(load.getPlayer());
-        SaveLoadService.loadPlayerInventory(load.getInventory());
-
-//        SaveLoadService.loadPlayerInventory(load.getInventory());
     }
 
 

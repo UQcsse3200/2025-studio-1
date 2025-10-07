@@ -21,6 +21,7 @@ import org.slf4j.LoggerFactory;
  */
 public class ServiceLocator {
     private static final Logger logger = LoggerFactory.getLogger(ServiceLocator.class);
+    private static final com.csse3200.game.events.EventHandler globalEvents = new com.csse3200.game.events.EventHandler();
     private static EntityService entityService;
     private static RenderService renderService;
     private static PhysicsService physicsService;
@@ -37,12 +38,15 @@ public class ServiceLocator {
     private static Float cachedPlayerStamina; // preserved across area transitions
     private static Integer cachedPlayerHealth; // preserved across area transitions
     private static LeaderBoardManager leaderBoardManager;
+    private static volatile boolean transitioning = false;
+
+    private ServiceLocator() {
+        throw new IllegalStateException("Instantiating static util class");
+    }
 
     public static Entity getPlayer() {
         return player;
     }
-
-    private static volatile boolean transitioning = false;
 
     public static EntityService getEntityService() {
         return entityService;
@@ -92,7 +96,6 @@ public class ServiceLocator {
         return difficulty;
     }
 
-
     public static DiscoveryService getDiscoveryService() {
         return discoveryService;
     }
@@ -109,6 +112,7 @@ public class ServiceLocator {
     public static void registerPlayer(Entity person) {
         player = person;
     }
+
     /**
      * Returns cached player stamina to restore after area transitions.
      */
@@ -215,13 +219,7 @@ public class ServiceLocator {
         player = null;
     }
 
-    private static final com.csse3200.game.events.EventHandler globalEvents = new com.csse3200.game.events.EventHandler();
-
     public static com.csse3200.game.events.EventHandler getGlobalEvents() {
         return globalEvents;
-    }
-
-    private ServiceLocator() {
-        throw new IllegalStateException("Instantiating static util class");
     }
 }

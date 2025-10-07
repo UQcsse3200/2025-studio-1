@@ -25,6 +25,23 @@ public class ElevatorGameArea extends GameArea {
         super(terrainFactory, cameraComponent);
     }
 
+    /**
+     * Setter method for the player spawn point
+     * should be used when the player is traversing through the rooms
+     *
+     * @param newSpawn the new spawn point
+     */
+    public static void setRoomSpawn(GridPoint2 newSpawn) {
+        if (newSpawn == null) {
+            return;
+        }
+        ElevatorGameArea.PLAYER_SPAWN = newSpawn;
+    }
+
+    public static ElevatorGameArea load(TerrainFactory terrainFactory, CameraComponent camera) {
+        return (new ElevatorGameArea(terrainFactory, camera));
+    }
+
     @Override
     public void create() {
         GenericLayout.ensureGenericAssets(this);
@@ -149,19 +166,6 @@ public class ElevatorGameArea extends GameArea {
         }
     }
 
-    /**
-     * Setter method for the player spawn point
-     * should be used when the player is traversing through the rooms
-     * 
-     * @param newSpawn the new spawn point
-     */
-    public static void setRoomSpawn(GridPoint2 newSpawn) {
-        if (newSpawn == null) {
-            return;
-        }
-        ElevatorGameArea.PLAYER_SPAWN = newSpawn;
-    }
-
     @Override
     public String toString() {
         return "Elevator";
@@ -171,10 +175,6 @@ public class ElevatorGameArea extends GameArea {
     public Entity getPlayer() {
         // placeholder for errors
         return null;
-    }
-
-    public static ElevatorGameArea load(TerrainFactory terrainFactory, CameraComponent camera) {
-        return (new ElevatorGameArea(terrainFactory, camera));
     }
 
 }

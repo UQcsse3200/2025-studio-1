@@ -5,36 +5,32 @@ import com.badlogic.gdx.math.GridPoint2;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.CameraComponent;
+import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.ItemSpawnConfig;
 import com.csse3200.game.entities.factories.characters.BossFactory;
+import com.csse3200.game.entities.factories.characters.PlayerFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.entities.spawner.ItemSpawner;
-import com.csse3200.game.entities.factories.characters.PlayerFactory;
 import com.csse3200.game.services.ServiceLocator;
-import com.csse3200.game.components.gamearea.GameAreaDisplay;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  * This is the room that holds the Ground Moving Boss Boss.
  * This boss is a small robot that moves towards the player and attacks
- * 
+ * <p>
  * Room is empty except for boss and player
  */
 public class MovingBossRoom extends GameArea {
     private static final Logger logger = LoggerFactory.getLogger(MovingBossRoom.class);
-
-    private static GridPoint2 playerSpawn = new GridPoint2(3, 10);
-
     private static final float WALL_WIDTH = 0.1f;
-
+    private static GridPoint2 playerSpawn = new GridPoint2(3, 10);
     private Entity player;
 
     /**
      * Creates a new MovingBossRoom for the room where the flying boss spawns.
-     * 
+     *
      * @param terrainFactory  TerrainFactory used to create the terrain for the
      *                        GameArea (required).
      * @param cameraComponent Camera helper supplying an OrthographicCamera
@@ -43,6 +39,19 @@ public class MovingBossRoom extends GameArea {
      */
     public MovingBossRoom(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
         super(terrainFactory, cameraComponent);
+    }
+
+    /**
+     * Setter method for the player spawn point
+     * should be used when the player is traversing through the rooms
+     *
+     * @param newSpawn the new spawn point
+     */
+    public static void setRoomSpawn(GridPoint2 newSpawn) {
+        if (newSpawn == null) {
+            return;
+        }
+        MovingBossRoom.playerSpawn = newSpawn;
     }
 
     /**
@@ -132,19 +141,6 @@ public class MovingBossRoom extends GameArea {
         rightDoor.setPosition(b.rightX() - WALL_WIDTH - 0.001f, rightDoorY);
         rightDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadOffice));
         spawnEntity(rightDoor);
-    }
-
-    /**
-     * Setter method for the player spawn point
-     * should be used when the player is traversing through the rooms
-     *
-     * @param newSpawn the new spawn point
-     */
-    public static void setRoomSpawn(GridPoint2 newSpawn) {
-        if (newSpawn == null) {
-            return;
-        }
-        MovingBossRoom.playerSpawn = newSpawn;
     }
 
     public Entity getPlayer() {

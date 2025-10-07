@@ -5,8 +5,6 @@ import com.csse3200.game.components.Component;
 
 public class StaminaComponent extends Component {
 
-    private Timer.Task task;
-
     // Stamina Constants
     private static final int MAX_STAMINA = 100;
     private static final int INITIAL_STAMINA = 100;
@@ -14,7 +12,7 @@ public class StaminaComponent extends Component {
     private static final float REGEN_PER_SEC = 10f; // stamina/sec when not spending
     private static final float TICK_SEC = 0.1f;
     private static final long REGEN_DELAY_MS = 800; // time between last spend to regen
-
+    private Timer.Task task;
     // Stamina management
     private float stamina = INITIAL_STAMINA;
     private boolean infiniteStamina = false;
@@ -75,6 +73,7 @@ public class StaminaComponent extends Component {
         emitChanged();
         return true;
     }
+
     /**
      * Returns the current stamina value.
      *
@@ -99,6 +98,7 @@ public class StaminaComponent extends Component {
             stamina = clamped;
         }
     }
+
     /**
      * Updates the infiniteStamina parameter
      *

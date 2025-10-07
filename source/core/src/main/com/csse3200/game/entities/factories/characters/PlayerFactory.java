@@ -4,15 +4,12 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.csse3200.game.components.*;
 import com.csse3200.game.components.player.*;
-import com.csse3200.game.components.player.InventoryComponent;
 import com.csse3200.game.effects.DoubleProcessorsEffect;
 import com.csse3200.game.effects.Effect;
 import com.csse3200.game.effects.RapidFireEffect;
-import com.csse3200.game.effects.UnlimitedAmmoEffect;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.characters.PlayerConfig;
 import com.csse3200.game.entities.configs.consumables.RapidFireConsumableConfig;
-import com.csse3200.game.entities.configs.consumables.UnlimitedAmmoConsumableConfig;
 import com.csse3200.game.files.FileLoader;
 import com.csse3200.game.input.InputComponent;
 import com.csse3200.game.physics.PhysicsLayer;
@@ -31,6 +28,10 @@ import com.csse3200.game.services.ServiceLocator;
  */
 public class PlayerFactory {
     private static final PlayerConfig stats = safeLoadPlayerConfig();
+
+    private PlayerFactory() {
+        throw new IllegalStateException("Instantiating static util class");
+    }
 
     private static PlayerConfig safeLoadPlayerConfig() {
         PlayerConfig cfg = FileLoader.readClass(PlayerConfig.class, "configs/player.json");
@@ -232,10 +233,6 @@ public class PlayerFactory {
         PhysicsUtils.setScaledCollider(player, 0.3f, 0.5f);
         player.getComponent(WeaponsStatsComponent.class).setCoolDown(0.2f);
         return player;
-    }
-
-    private PlayerFactory() {
-        throw new IllegalStateException("Instantiating static util class");
     }
 
 }

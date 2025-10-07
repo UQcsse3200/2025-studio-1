@@ -21,6 +21,23 @@ public class MainHall extends GameArea {
         super(terrainFactory, cameraComponent);
     }
 
+    /**
+     * Setter method for the player spawn point
+     * should be used when the player is traversing through the rooms
+     *
+     * @param newSpawn the new spawn point
+     */
+    public static void setRoomSpawn(GridPoint2 newSpawn) {
+        if (newSpawn == null) {
+            return;
+        }
+        MainHall.playerSpawn = newSpawn;
+    }
+
+    public static MainHall load(TerrainFactory terrainFactory, CameraComponent camera) {
+        return (new MainHall(terrainFactory, camera));
+    }
+
     @Override
     public void create() {
         ensureAssets();
@@ -90,7 +107,6 @@ public class MainHall extends GameArea {
         rightDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadSecurity));
         spawnEntity(rightDoor);
     }
-
 
     private void loadBackToFloor2() {
         Reception.setRoomSpawn(new GridPoint2(24, 24));
@@ -171,26 +187,9 @@ public class MainHall extends GameArea {
         return null;
     }
 
-    /**
-     * Setter method for the player spawn point
-     * should be used when the player is traversing through the rooms
-     *
-     * @param newSpawn the new spawn point
-     */
-    public static void setRoomSpawn(GridPoint2 newSpawn) {
-        if (newSpawn == null) {
-            return;
-        }
-        MainHall.playerSpawn = newSpawn;
-    }
-
     @Override
     public String toString() {
         return "Mainhall";
-    }
-
-    public static MainHall load(TerrainFactory terrainFactory, CameraComponent camera) {
-        return (new MainHall(terrainFactory, camera));
     }
 }
 

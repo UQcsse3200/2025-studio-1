@@ -16,13 +16,30 @@ import org.slf4j.LoggerFactory;
  */
 public class Reception extends GameArea {
     private static final Logger logger = LoggerFactory.getLogger(Reception.class);
-    private static GridPoint2 playerSpawn = new GridPoint2(8, 10);
     private static final float WALL_WIDTH = 0.1f;
     private static final int NUM_TREES = 8; // Number of trees to spawn
-    private int roomDiffNumber = 2;
+    private static GridPoint2 playerSpawn = new GridPoint2(8, 10);
+    private final int roomDiffNumber = 2;
 
     public Reception(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
         super(terrainFactory, cameraComponent);
+    }
+
+    /**
+     * Setter method for the player spawn point
+     * should be used when the player is traversing through the rooms
+     *
+     * @param newSpawn the new spawn point
+     */
+    public static void setRoomSpawn(GridPoint2 newSpawn) {
+        if (newSpawn == null) {
+            return;
+        }
+        Reception.playerSpawn = newSpawn;
+    }
+
+    public static Reception load(TerrainFactory terrainFactory, CameraComponent camera) {
+        return (new Reception(terrainFactory, camera));
     }
 
     @Override
@@ -175,26 +192,9 @@ public class Reception extends GameArea {
         spawnEntity(stand1);
     }
 
-    /**
-     * Setter method for the player spawn point
-     * should be used when the player is traversing through the rooms
-     *
-     * @param newSpawn the new spawn point
-     */
-    public static void setRoomSpawn(GridPoint2 newSpawn) {
-        if (newSpawn == null) {
-            return;
-        }
-        Reception.playerSpawn = newSpawn;
-    }
-
     @Override
     public String toString() {
         return "Reception";
-    }
-
-    public static Reception load(TerrainFactory terrainFactory, CameraComponent camera) {
-        return (new Reception(terrainFactory, camera));
     }
 
     public Entity getPlayer() {
