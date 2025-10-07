@@ -3,6 +3,7 @@ package com.csse3200.game.components.screens;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Scaling;
 import com.csse3200.game.GdxGame;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
@@ -91,6 +92,7 @@ public class MinimapDisplay extends BaseScreenDisplay {
 
         // Minimap rendering
         minimap.open();
+        minimap.zoom(-85);
 
         minimapTable = new Table();
         minimapTable.setFillParent(true);
@@ -174,6 +176,7 @@ public class MinimapDisplay extends BaseScreenDisplay {
             Image roomImage = new Image(new TextureRegionDrawable(texture));
             float imageWidth = roomImage.getWidth();
             float imageHeight = roomImage.getHeight();
+            roomImage.setScale(minimap.getScale());
 
             // Set position so the center is at (screenPos.x, screenPos.y)
             roomImage.setPosition(screenPos.x - imageWidth / 2, screenPos.y - imageHeight / 2);
@@ -184,7 +187,9 @@ public class MinimapDisplay extends BaseScreenDisplay {
 
     private void zoom(float x, float y, float amountY) {
         float oldScale = minimap.getScale();
-        float percentChange = -amountY * 10f; // scroll up = zoom in
+
+        // Scroll up = zoom in; Scroll down = zoom out
+        float percentChange = (amountY > 0) ? 10f : (amountY < 0) ? -10f : 0;
         minimap.zoom(percentChange);
         float newScale = minimap.getScale();
 
