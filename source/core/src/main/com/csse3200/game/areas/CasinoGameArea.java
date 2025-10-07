@@ -5,9 +5,15 @@ import com.badlogic.gdx.math.GridPoint2;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.CameraComponent;
+import com.csse3200.game.components.minigames.BettingComponent;
+import com.csse3200.game.components.minigames.BlackJackGame;
+import com.csse3200.game.components.player.InventoryComponent;
+import com.csse3200.game.components.screens.BlackjackScreenDisplay;
 import com.csse3200.game.entities.Entity;
+import com.csse3200.game.entities.factories.InteractableStationFactory;
 import com.csse3200.game.entities.factories.characters.PlayerFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
+import com.csse3200.game.rendering.TextureRenderComponent;
 import com.csse3200.game.entities.spawner.ItemSpawner;
 import com.csse3200.game.components.minigames.whackamole.WhackAMoleGame;
 import com.csse3200.game.services.ResourceService;
@@ -49,6 +55,8 @@ public class CasinoGameArea extends GameArea {
         ensureAssets();
         spawnBordersAndDoors();
         spawnFloor();
+
+        spawnBlackjack();
         player = spawnPlayer();
         spawnWhackAMoleGame();
     }
@@ -127,5 +135,14 @@ public class CasinoGameArea extends GameArea {
 
     public static CasinoGameArea load(TerrainFactory terrainFactory, CameraComponent camera) {
         return (new CasinoGameArea(terrainFactory, camera));
+    }
+
+    private void spawnBlackjack() {
+        Entity blackjack = InteractableStationFactory.createBaseStation();
+        blackjack.addComponent(new TextureRenderComponent("images/blackjack_table.png"));
+        blackjack.addComponent(new BettingComponent(2, player.getComponent(InventoryComponent.class)));
+        blackjack.addComponent(new BlackJackGame());
+        blackjack.addComponent(new BlackjackScreenDisplay());
+        spawnEntityAt(blackjack, new GridPoint2(20, 7), true, true);
     }
 }

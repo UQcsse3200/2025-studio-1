@@ -9,8 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(GameExtension.class)
 class GameTimeTest {
@@ -62,6 +61,13 @@ class GameTimeTest {
     @Test
     void shouldScaleToZero() {
         shouldScale(0f, 0f, 10f);
+    }
+
+    @Test
+    void shouldGetTimeSince() {
+        GameTime test = spy(GameTime.class);
+        when(test.getTime()).thenReturn(100L);
+        assertEquals(50L, test.getTimeSince(50L));
     }
 
     private void shouldScale(float scale, float delta, float rawDelta) {
