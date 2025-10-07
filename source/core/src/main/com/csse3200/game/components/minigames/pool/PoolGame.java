@@ -1,7 +1,10 @@
 package com.csse3200.game.components.minigames.pool;
 
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.RayCastCallback;
+import com.badlogic.gdx.physics.box2d.World;
 import com.csse3200.game.components.minigames.pool.logic.BasicTwoPlayerRules;
 import com.csse3200.game.components.minigames.pool.logic.GameEvents;
 import com.csse3200.game.components.minigames.pool.logic.RuleSet;
@@ -37,17 +40,14 @@ public class PoolGame {
     private final PoolGameDisplay display;
     private com.badlogic.gdx.utils.Timer.Task syncTask;
     private boolean uiVisible = false;
+
     public PoolGame() {
-        this(ServiceLocator.getPhysicsService().getPhysics());
-    }
-
-    public PoolGame(PhysicsEngine engine) {
-        this.engine = engine;
-        this.world = new PoolWorld(engine.getWorld());
-
+        World poolBox2d = new World(new Vector2(0, 0), true);
+        this.engine = new PhysicsEngine(poolBox2d, ServiceLocator.getTimeSource());
+        this.world = new PoolWorld(poolBox2d);
         this.config = TableConfig.builder()
                 .tableSize(2.24f, 1.12f)
-                .railThickness(0.105f, 0.085f)                 // X (left/right), Y (top/bottom)
+                .railThickness(0.105f, 0.085f)
                 .ballRadius(0.0285f)
                 .pocketRadiusScale(2.5f)
                 .pocketInsetScaleX(1.0f)
@@ -68,6 +68,7 @@ public class PoolGame {
 
         wireUiEvents();
     }
+
 
     private void wireRuleEvents() {
         this.rules.setListener(new RulesEvents() {
@@ -226,6 +227,7 @@ public class PoolGame {
                     ballFactory.getObjectBodies()
             );
         }
+        ServiceLocator.getRenderService().getDebug().renderPhysicsWorld(world.raw());
     }
 
     private void resetRack() {
@@ -241,6 +243,8 @@ public class PoolGame {
         syncTask = com.badlogic.gdx.utils.Timer.schedule(new com.badlogic.gdx.utils.Timer.Task() {
             @Override
             public void run() {
+                world.raw().step(GameTuning.SYNC_PERIOD, 6, 2);
+
                 pockets.processDeferred();
                 pushPositionsToUI();
                 // Tick-based turn update; rules decide when balls are settled.

@@ -1,6 +1,5 @@
 package com.csse3200.game.components.minigames.pool.physics;
 
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
 
 public class PoolWorld {
@@ -8,8 +7,6 @@ public class PoolWorld {
 
     public PoolWorld(World world) {
         this.world = world;
-        this.world.setGravity(new Vector2(0, 0));
-        World.setVelocityThreshold(0f);
     }
 
     public World raw() {
