@@ -718,10 +718,6 @@ public class ForestGameArea extends GameArea {
         spawnEntityAt(boss3, pos, true, true);
     }
 
-    public void spawnItem(Entity item, GridPoint2 position) {
-        spawnEntityAt(item, position, false, false);
-    }
-
     private void playMusic() {
         Music music = ServiceLocator.getResourceService().getAsset(BACKGROUND_MUSIC, Music.class);
         music.setLooping(true);
