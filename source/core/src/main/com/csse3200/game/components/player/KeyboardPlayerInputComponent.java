@@ -39,18 +39,6 @@ public class KeyboardPlayerInputComponent extends InputComponent {
      */
     @Override
     public boolean keyPressed(int keycode) {
-        // Unaffected by pausing meaning checking for paused needs to be handled by "interact" event users
-        if (keycode == Keys.E) {
-            if (!holding) {
-                triggerInteract();
-                holding = true;
-            }
-            return true;
-        }
-
-        if (this.isPauseable() && ServiceLocator.getTimeSource().isPaused()) {
-            return false;
-        }
         switch (keycode) {
             case Keys.A:
                 walkDirection.add(Vector2Utils.LEFT);
@@ -83,6 +71,13 @@ public class KeyboardPlayerInputComponent extends InputComponent {
                 Sound jump = ServiceLocator.getResourceService().getAsset("sounds/jump.mp3", Sound.class);
                 jump.play();
                 entity.getEvents().trigger("anim");
+                return true;
+
+            case Keys.E:
+                if (!holding) {
+                    triggerInteract();
+                    holding = true;
+                }
                 return true;
 
             default:
@@ -178,6 +173,10 @@ public class KeyboardPlayerInputComponent extends InputComponent {
                 checkSlot(Keys.NUM_5 - OFFSET);
                 return true;
             case Keys.P:
+            case Keys.E:
+                holding = false;
+                triggerAddItem();
+                return true;
             case Keys.R:
                 triggerDropFocused();
                 return true;
