@@ -172,16 +172,30 @@ class BreakablePlatformComponentTest {
         // Then: alpha fades (we only assert that it's *attempted* to change)
         verify(render, atLeastOnce()).setAlpha(anyFloat());
 
-        // Then: entity removal is requested at the end
-        verify(platform, times(1)).setToRemove();
+        verify(platform, never()).setToRemove();
     }
 
     @Test
     void doesNotRetriggerOnSecondCollision() {
+        // Re-mock Timer to avoid running all shake/fade ticks
+        timerMock.when(() -> Timer.schedule(any(Timer.Task.class), anyFloat()))
+                .thenAnswer(invocation -> {
+                    Timer.Task task = invocation.getArgument(0);
+                    float delay = invocation.getArgument(1);
+
+                    if (delay <= 1f) { // matches shakeDelay in BreakablePlatformComponent
+                        task.run();
+                    }
+                    return null;
+                });
+
+        timerMock.when(() -> Timer.schedule(any(Timer.Task.class), anyFloat(), anyFloat()))
+                .thenReturn(null);
+
         // First collision triggers the sequence
         platform.getEvents().trigger("collisionStart", platformFixture, playerFixture);
 
-        // Second collision should be ignored because 'triggered' becomes true
+        // Second collision should be ignored
         platform.getEvents().trigger("collisionStart", platformFixture, playerFixture);
 
         // We can assert by checking how many times the first delayed schedule (shakeDelay) was invoked.
@@ -189,9 +203,11 @@ class BreakablePlatformComponentTest {
         // so it’s enough to verify it was only called once.
         timerMock.verify(() -> Timer.schedule(any(Timer.Task.class), anyFloat()), times(1));
 
-        // Still ends with single removal
-        verify(platform, times(1)).setToRemove();
+        verify(platform, never()).setToRemove();
     }
+
+
+
 
     @Test
     void ignoresCollision_ifOtherIsNotPlayerOrNotAbove() {

@@ -38,7 +38,7 @@ public class WinScreen extends BaseScreen {
      * @param game the {@link GdxGame} instance, used for screen navigation
      */
     public WinScreen(GdxGame game) {
-        super(game, "images/menu_background.png");
+        super(game, "images/win_screen_background.png");
     }
 
     /**

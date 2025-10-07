@@ -5,20 +5,20 @@ import com.badlogic.gdx.math.GridPoint2;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.CameraComponent;
+import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.factories.characters.PlayerFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import com.csse3200.game.services.ServiceLocator;
 
 /**
  * Second floor with different background and arrow-key controls.
  */
 public class Reception extends GameArea {
-    private static final Logger logger = LoggerFactory.getLogger(Reception.class);
-    private static GridPoint2 playerSpawn = new GridPoint2(8, 10);
+    private static GridPoint2 playerSpawn = new GridPoint2(10, 10);
     private static final float WALL_WIDTH = 0.1f;
-    private static final int NUM_TREES = 8; // Number of trees to spawn
     private int roomDiffNumber = 2;
 
     public Reception(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
@@ -38,9 +38,9 @@ public class Reception extends GameArea {
         spawndesk_reception();
         spawncomic_stand();
 
-
         Entity ui = new Entity();
-        ui.addComponent(new com.csse3200.game.components.gamearea.FloorLabelDisplay("Reception"));
+        ui.addComponent(new GameAreaDisplay("Reception"))
+                .addComponent(new com.csse3200.game.components.gamearea.FloorLabelDisplay("Floor 2"));
         spawnEntity(ui);
     }
 
@@ -113,9 +113,8 @@ public class Reception extends GameArea {
         clearAndLoad(() -> new MainHall(terrainFactory, cameraComponent));
     }
 
-    private void spawnPlayer() {
-        Entity player = PlayerFactory.createPlayer();
-        spawnEntityAt(player, playerSpawn, true, true);
+    private Entity spawnPlayer() {
+        return spawnOrRepositionPlayer(playerSpawn);
     }
 
     private void spawnplatform2() {
@@ -198,6 +197,6 @@ public class Reception extends GameArea {
     }
 
     public Entity getPlayer() {
-        return null;
+        return ServiceLocator.getPlayer();
     }
 }

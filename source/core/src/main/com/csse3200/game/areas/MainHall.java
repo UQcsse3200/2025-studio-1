@@ -5,10 +5,12 @@ import com.badlogic.gdx.math.GridPoint2;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.CameraComponent;
+import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.factories.characters.PlayerFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.rendering.SolidColorRenderComponent;
+import com.csse3200.game.services.ServiceLocator;
 
 /**
  * Room 5 with its own background styling.
@@ -39,6 +41,11 @@ public class MainHall extends GameArea {
         spawnWallsAndDoor();
         spawnPlayer();
         spawnFloor();
+
+        Entity ui = new Entity();
+        ui.addComponent(new GameAreaDisplay("Main Hall"))
+                .addComponent(new com.csse3200.game.components.gamearea.FloorLabelDisplay("Floor 3"));
+        spawnEntity(ui);
     }
 
     private void ensureAssets() {
@@ -102,9 +109,8 @@ public class MainHall extends GameArea {
         clearAndLoad(() -> new SecurityGameArea(terrainFactory, cameraComponent));
     }
 
-    private void spawnPlayer() {
-        Entity player = PlayerFactory.createPlayer();
-        spawnEntityAt(player, playerSpawn, true, true);
+    private Entity spawnPlayer() {
+        return spawnOrRepositionPlayer(playerSpawn);
     }
 
     /**
@@ -167,8 +173,7 @@ public class MainHall extends GameArea {
     }
 
     public Entity getPlayer() {
-        //tempoary placeholder return null to stop errors
-        return null;
+        return ServiceLocator.getPlayer();
     }
 
     /**

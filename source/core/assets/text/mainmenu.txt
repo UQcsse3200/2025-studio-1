@@ -1,0 +1,142 @@
+# ===============================
+# mainmenu.txt — splashes (AI + editor lore + Arch/Nix + games + pop culture)
+# uses LibGDX markup [#rrggbb]...[] and optional CRAZY blocks
+# ===============================
+
+[#ffe066]Hello, Pilot![]
+[#9be564]Beep boop, aligned soon™[]
+[#66ffff]RLHF inside (some assembly required)[]
+[#ffae42]Now with 0.0001% fewer hallucinations[]
+[#ff6b6b]Safety shim engaged, vibes immaculate[]
+[#64b5f6]Refactor first, fun later[]
+
+[#ffd166]Vim users: hjkl forever[]
+[#4dd0e1]Helix mains: selections for days[]
+[#ffcc80]Escape is a lifestyle[]
+[#ff66cc]:help is endgame tech[]
+[#9be564]NeoVim with lua sprinkles[]
+[#b39ddb]Helix stole my caret (send help)[]
+[#8bc34a]Tabs vs spaces: FINAL MIX[]
+[#66a3ff]Vim vs Helix: choose your fighter[]
+
+[#90caf9]btw Jackson, I use Arch[]
+[#90caf9]Install Arch, Jackson[]
+[#90caf9]Jackson, r/unixporn is waiting[]
+[#90caf9]Arch btw (again, obviously)[]
+[#ff80ab]NixOS is uwu[]
+[#ff80ab]declarative configs, adorable defaults[]
+[#ff80ab]nixos-rebuild switch my beloved[]
+[#ff80ab]flakes for breakfast[]
+[#ffa07a]Gentoo moment (compiling… forever)[]
+
+[#ffd166]You discovered a secret splash![]
+[#66a3ff]Achievement unlocked: Opening the game[]
+[#ab47bc]Speedrun any% menu nav[]
+[#9e9e9e]404: bugs not found (probably)[]
+[#c0ca33]Procedurally generated coffee[]
+[#7cb342]Loot box? It’s called a toolbox[]
+
+[#ffd166]NPCs think you’re main-character coded[]
+[#00e5ff]AI alignment tax paid[]
+[#f48fb1]Undefined behavior, but make it fashion[]
+[#7e57c2]Quantum bug fixed by observing it[]
+[#81c784]Heisenbug: disappears when you look[]
+[#ef9a9a]Rubber duck approved[]
+
+[#ff9f1c]Would you kindly press Start?[]
+[#ff6b6b]Finish Him![]
+[#ffd166]It’s dangerous to go alone! Take this.[]
+[#b266ff]Fus Ro Dah![]
+[#ffd166]Praise the Sun \o/[]
+[#66a3ff]Up, Up, Down, Down, Left, Right, Left, Right, B, A, Start[]
+[#00d1b2]Blue shell immunity not included[]
+[#9e9e9e]Press F to pay respects[]
+
+[#64b5f6]“Hello World!” but make it neon[]
+[#26c6da]Hot reloading your enthusiasm[]
+[#a5d6a7]This splash was linted[]
+[#90caf9]Now with 60 stable FPS of swagger[]
+[#81c784]Garbage collected bad vibes[]
+[#aed581]Loot tables updated: you rolled a 20[]
+
+[#90a4ae]Low-poly, high fun[]
+[#42a5f5]Retro pixels, modern feels[]
+[#ff7043]Crabs are memory safe (hi Rustaceans)[]
+[#4db6ac]Type-safety is my love language[]
+[#ffca28]Objects oriented, players chaotic[]
+
+[#f06292]Bards buffed, rogues nerfed (sorry)[]
+[#ffeb3b]Roll for charisma (you got +2)[]
+[#ff6b6b]Critical hit on boredom[]
+[#ce93d8]Dialogue options unlocked[]
+[#26c6da]Side quests are main quests now[]
+[#90caf9]Checkpoint reached: Main Menu[]
+[#a5d6a7]Autosave your memories[]
+[#ffd166]New Game+ energy[]
+[#81c784]You smell XP[]
+
+[#9be564]Powered by optimism[]
+[#80cbc4]Compiled with kindness[]
+[#ffd166]Now with 20% more whimsy[]
+[#64b5f6]Your party needs you[]
+[#7cb342]May your logs be green[]
+[#81c784]May your builds be clean[]
+[#ffd166]May your commits be poetic[]
+[#66a3ff]Ship it![]
+
+# ---- AI-flavoured multis (gentle color mix) ----
+[#ffe066]Prompt[#66ffff] engineer[#ff66cc] your[#9be564] destiny[]
+[#ff6b6b]Chain-of-thought?[#66a3ff] In my splash? [#ffd166]It’s more likely than you think[]
+[#66ffff]Gradient[#ffd166] boosted[#ff66cc] enthusiasm[]
+[#81c784]Loss went down, morale went up[]
+
+# ---- Editor lore multis ----
+[#00e676]hjkl[#ffd166] > arrows (cope) []
+[#c084fc]Helix[#66a3ff] multicursor magic[]
+[#ffd166]:[#ff66cc]wq[#ffd166] or [:]quit reality[]
+[#9be564]:%s/bug/feature/g[]
+
+# ---- Jackson + Nix uwu multis ----
+[#90caf9]Arch[#ffd166] btw, Jackson[]
+[#ff80ab]NixOS[#66ffff] is uwu (and reproducible)[]
+[#ff80ab]flakes[#ffd166] make it snow in devops land[]
+
+# ---- Pop culture easter eggs ----
+[#9e9e9e]There is no spoon[]
+[#ffd166]The cake is a lie (still)[]
+[#66a3ff]This is the way[]
+[#ff6b6b]Never gonna give you up (probably)[]
+[#b39ddb]One does not simply skip the tutorial[]
+[#81c784]I am once again asking you to press Start[]
+[#ab47bc]Winter is coming… to your GPU fans[]
+[#26c6da]Choose wisely, Grail Knight[]
+
+# ---- Games nods ----
+[#b0bec5]You Died (only in QA) []
+[#8bc34a]Hades called; he wants his boons back[]
+[#9fa8da]Celeste mindset: climb anyway[]
+[#90a4ae]Hollow Knight: no map, no problem[]
+[#ffab91]DOOMguy approves of this menu[]
+
+# ---- Rainbow (CRAZY) — slow, non-stressful ----
+{CRAZY rainbow=true rhz=0.35 rshift=20}Taste the rainbow (non-blocking) {/CRAZY}
+{CRAZY rainbow=true rhz=0.25 rshift=24}Smooth gradients, smoother gameplay{/CRAZY}
+
+# ---- Mixed / playful ----
+[#ffe066]All[#66a3ff] your[#ff6b6b] base[#81c784] are belong to us[]
+[#ffd166]Konami [#66a3ff]Code[#ffd166]: trust the muscle memory[]
+[#64b5f6]More polish than a Git rebase[]
+
+# ---- Cookies (explicit request) ----
+[#ffd166]Do it for the cookies[]
+
+# ---- Gentle variants of rainbow text ----
+{CRAZY rainbow=true rhz=0.2 rshift=16}Be kind to future you{/CRAZY}
+{CRAZY rainbow=true rhz=0.3 rshift=18}Low latency, high empathy{/CRAZY}
+
+# ---- Light trolling (nice) ----
+[#ff6b6b]Works on my machine (Nix btw)[]
+[#9e9e9e]TODO: remove this splash in prod[]
+[#90caf9]Feature freeze… after one more tweak[]
+[#ff66cc]It compiled, ship it (jk tests passed)[]
+[#9be564]“temporary” fix, permanent smile[]
