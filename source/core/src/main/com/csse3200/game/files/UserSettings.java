@@ -93,6 +93,16 @@ public class UserSettings {
          */
         public float uiScale = 1f;
         public DisplaySettings displayMode = null;
+
+        private boolean musicEnabled = true;
+
+        public boolean isMusicEnabled() {
+            return musicEnabled;
+        }
+
+        public void setMusicEnabled(boolean enabled) {
+            this.musicEnabled = enabled;
+        }
     }
 
     /**

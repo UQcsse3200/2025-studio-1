@@ -78,6 +78,7 @@ public class DifficultyMenuDisplay extends UIComponent {
                 new ChangeListener() {
                     @Override
                     public void changed(ChangeEvent changeEvent, Actor actor) {
+                        ServiceLocator.getButtonSoundService().playClick();
                         diffEasy();
                     }
                 });
@@ -86,6 +87,7 @@ public class DifficultyMenuDisplay extends UIComponent {
                 new ChangeListener() {
                     @Override
                     public void changed(ChangeEvent changeEvent, Actor actor) {
+                        ServiceLocator.getButtonSoundService().playClick();
                         diffNormal();
                     }
                 });
@@ -94,6 +96,7 @@ public class DifficultyMenuDisplay extends UIComponent {
                 new ChangeListener() {
                     @Override
                     public void changed(ChangeEvent changeEvent, Actor actor) {
+                        ServiceLocator.getButtonSoundService().playClick();
                         diffHard();
                     }
                 });
@@ -102,6 +105,7 @@ public class DifficultyMenuDisplay extends UIComponent {
                 new ChangeListener() {
                     @Override
                     public void changed(ChangeEvent changeEvent, Actor actor) {
+                        ServiceLocator.getButtonSoundService().playClick();
                         diffInsane();
                     }
                 });
@@ -110,6 +114,7 @@ public class DifficultyMenuDisplay extends UIComponent {
                 new ChangeListener() {
                     @Override
                     public void changed(ChangeEvent changeEvent, Actor actor) {
+                        ServiceLocator.getButtonSoundService().playClick();
                         applyDiff();
                     }
                 });

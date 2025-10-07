@@ -56,12 +56,12 @@ class ShippingAreaTest {
     void testTraversals() throws Exception {
         doNothing().when(shippingGameArea).clearAndLoad(any());
 
-        var method = ShippingGameArea.class.getDeclaredMethod("loadResearch");
+        var method = ShippingGameArea.class.getDeclaredMethod("loadFlyingBossRoom");
         method.setAccessible(true);
         method.invoke(shippingGameArea);
 
         verify(shippingGameArea).clearAndLoad(argThat(supplier -> {
-            return supplier.get() instanceof ResearchGameArea;
+            return supplier.get() instanceof FlyingBossRoom;
         }));
 
         var method2 = ShippingGameArea.class.getDeclaredMethod("loadStorage");
