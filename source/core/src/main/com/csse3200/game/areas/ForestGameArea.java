@@ -42,6 +42,7 @@ import com.csse3200.game.rendering.TextureRenderComponent;
 import com.csse3200.game.rendering.TextureRenderWithRotationComponent;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
+import com.csse3200.game.components.minigames.BlackJackGame;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -198,7 +199,13 @@ public class ForestGameArea extends GameArea {
             "foreg_sprites/Security/SecuritySystem.png",
             "foreg_sprites/futuristic/storage_crate_green2.png",
             "foreg_sprites/futuristic/storage_crate_dark2.png",
-            "foreg_sprites/futuristic/SecurityCamera3.png"
+            "foreg_sprites/futuristic/SecurityCamera3.png",
+            "images/slots_kiosk.png",
+            "images/bell.png",
+            "images/cherry.png",
+            "images/diamond.png",
+            "images/lemon.png",
+            "images/watermelon.png"
     };
 
     /**
@@ -604,6 +611,8 @@ public class ForestGameArea extends GameArea {
     }
 
     /**
+     * FIXME Layer is behind player, does that matter???
+     * FIXME Also need to fix positioning so that it actually looks like the player is holding the weapon
      * Sets the equipped item in the PlayerEquipComponent to be the given item
      *
      * @param tex Is an existing Item texture path, within the players inventory
@@ -726,6 +735,11 @@ public class ForestGameArea extends GameArea {
 
         Entity boss3 = BossFactory.createBoss3(player);
         spawnEntityAt(boss3, pos, true, true);
+    }
+
+
+    public void spawnItem(Entity item, GridPoint2 position) {
+        spawnEntityAt(item, position, false, false);
     }
 
     private void playMusic() {

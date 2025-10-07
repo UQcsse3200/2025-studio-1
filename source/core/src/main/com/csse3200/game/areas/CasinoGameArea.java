@@ -14,6 +14,7 @@ import com.csse3200.game.entities.factories.InteractableStationFactory;
 import com.csse3200.game.entities.factories.characters.PlayerFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.rendering.TextureRenderComponent;
+import com.csse3200.game.components.minigames.slots.SlotsGame;
 
 /**
  * Minimal generic Casino room: walls, a single right-side door, and a subtle background overlay.
@@ -46,6 +47,8 @@ public class CasinoGameArea extends GameArea {
 
         player = spawnPlayer();
         spawnBlackjack();
+
+        spawnSlotsGame();
     }
 
     /**
@@ -113,5 +116,9 @@ public class CasinoGameArea extends GameArea {
         blackjack.addComponent(new BlackJackGame());
         blackjack.addComponent(new BlackjackScreenDisplay());
         spawnEntityAt(blackjack, new GridPoint2(20, 7), true, true);
+    }
+    private void spawnSlotsGame() {
+        GridPoint2 pos = new GridPoint2(23, 7);
+        spawnEntityAt(new SlotsGame().getGameEntity(), pos, true, true);
     }
 }
