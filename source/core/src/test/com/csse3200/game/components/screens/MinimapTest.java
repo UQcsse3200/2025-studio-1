@@ -166,15 +166,15 @@ class MinimapTest {
         Map<Vector2, String> render = minimap.render();
 
         assertEquals(1, minimap.getScale());
-        Vector2 correctPosition = new Vector2(630, 360);
-        assertTrue(render.containsKey(correctPosition), "Map should pan 10 pixels right.");
+        Vector2 correctPosition = new Vector2(-10, 0);
+        assertTrue(render.containsKey(correctPosition), "Map should pan 10 pixels left.");
 
         minimap.zoom(100);
         render = minimap.render();
 
         assertEquals(2, minimap.getScale());
-        correctPosition = new Vector2(620, 360);
-        assertTrue(render.containsKey(correctPosition), "Map should pan 10 pixels right.");
+        correctPosition = new Vector2(-20, 0);
+        assertTrue(render.containsKey(correctPosition), "Map should zoom in by 2x.");
     }
 
     @Test
@@ -259,7 +259,7 @@ class MinimapTest {
         // Should return to default minimap state, where zoom is 1 and is centred on player
         assertEquals(1, minimap.getScale());
         assertTrue(rendered.containsValue("images/minimap-images/StartRoom.png"));
-        assertTrue(rendered.containsKey(new Vector2(640, 360)));
+        assertTrue(rendered.containsKey(new Vector2(0, 0)));
 
 
 
