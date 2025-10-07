@@ -119,6 +119,7 @@ public class CasinoGameArea extends GameArea {
     }
     private void spawnSlotsGame() {
         GridPoint2 pos = new GridPoint2(23, 7);
-        spawnEntityAt(new SlotsGame().getGameEntity(), pos, true, true);
+        InventoryComponent inv = player.getComponent(InventoryComponent.class);
+        spawnEntityAt(new SlotsGame(inv).getGameEntity(), pos, true, true);
     }
 }
