@@ -236,7 +236,7 @@ public class ObstacleFactory {
         platform2.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
         platform2.getComponent(TextureRenderComponent.class).scaleEntity();
         platform2.scaleHeight(3f);
-        Vector2 colliderSize = new Vector2(platform2.getScale().x * 0.5f, platform2.getScale().y * 0.1f);
+        Vector2 colliderSize = new Vector2(platform2.getScale().x * 0.7f, platform2.getScale().y * 0.1f);
         Vector2 offset = new Vector2(0f, platform2.getScale().y * 0.001f);
         platform2.getComponent(ColliderComponent.class)
                 .setAsBox(colliderSize, platform2.getCenterPosition().add(offset));
