@@ -23,13 +23,10 @@ class AreaEffectTest {
     @Test
     @Description("Tests to see if an appropriate IllegalArgumentException is thrown")
     void testAreaEffectIsEmpty() {
-        try {
-            assertThrows(IllegalArgumentException.class, () -> {
-                areaEffect = new AreaEffect(new ArrayList<>(), 1);
-            });
-        } catch (RuntimeException e) {
-            throw new RuntimeException(e);
-        }
+        ArrayList<Effect> effects = new ArrayList<>();
+        assertThrows(IllegalArgumentException.class, () -> {
+            areaEffect = new AreaEffect(effects, 1);
+        });
     }
 
     @Test
@@ -87,7 +84,4 @@ class AreaEffectTest {
 
         assertEquals(1, areaEffect.getRadius());
     }
-
-    @Test //TODO should apply the effect to entities
-    void shouldApplyEffects() { }
 }
