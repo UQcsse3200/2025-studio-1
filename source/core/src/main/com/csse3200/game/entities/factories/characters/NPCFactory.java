@@ -107,6 +107,122 @@ public class NPCFactory {
 
         return ghostGPT;
     }
+    /**
+     * Creates GhostGPTRed enemy type
+     *
+     * @param target        entity to chase
+     * @param area          the area/space it is living in
+     * @param scalingFactor The scale of increase in health and attack of the GhostGPT
+     * @return entity
+     */
+    public static Entity createGhostGPTRed(Entity target, GameArea area, float scalingFactor) {
+        Entity ghostGPTRed = new Entity()
+                .addComponent(new PhysicsComponent())
+                .addComponent(new ColliderComponent())
+                .addComponent(new HitboxComponent().setLayer(PhysicsLayer.NPC))
+                .addComponent(new TouchAttackComponent(PhysicsLayer.PLAYER, 1.5f));
+        PhysicsUtils.setScaledCollider(ghostGPTRed, 0.9f, 0.4f);
+
+        GhostGPTRedConfig config = configs.ghostGPTRed;
+
+        AnimationRenderComponent animator =
+                new AnimationRenderComponent(
+                        ServiceLocator.getResourceService()
+                                .getAsset("images/ghostGPTRed.atlas", TextureAtlas.class));
+        animator.setDisposeAtlas(false);
+        animator.addAnimation("angry_float", 0.1f, Animation.PlayMode.LOOP);
+        animator.addAnimation("float", 0.1f, Animation.PlayMode.LOOP);
+
+
+        ProjectileLauncherComponent projComp = new ProjectileLauncherComponent(area, target, Projectiles.GHOSTGPT_LASER);
+        // Use ground chase tasks for gravity-based movement
+        AITaskComponent aiComponent =
+                new AITaskComponent()
+                        .addTask(new GPTGroundSlowChaseTask(target, 10, 0.3f, 15f))
+                        .addTask(new GPTGroundFastChaseTask(target, 10, 1.2f, projComp, ghostGPTRed, 3f, 3f));
+
+        // Get player's inventory for reward system
+        InventoryComponent playerInventory = null;
+        if (target != null) {
+            playerInventory = target.getComponent(InventoryComponent.class);
+        }
+
+        WeaponsStatsComponent ghostGPTRedStats = new WeaponsStatsComponent((int) (config.baseAttack * scalingFactor));
+
+        ghostGPTRed
+                .addComponent(ghostGPTRedStats)
+                .addComponent(new CombatStatsComponent((int) (config.health * scalingFactor)))
+                .addComponent(animator)
+                .addComponent(new GhostAnimationController())
+                .addComponent(new LowHealthAttackBuffComponent(10, ghostGPTRedStats))
+                .addComponent(new EnemyDeathRewardComponent(30, playerInventory)) // Add reward + particles
+                .addComponent(new DeathParticleSpawnerComponent("explosion_2"))
+                .addComponent(aiComponent)
+                .addComponent(projComp) // Add the ability to fire projectiles
+                .addComponent(new EnemyHealthDisplay(1.3f));
+
+        ghostGPTRed.getComponent(AnimationRenderComponent.class).scaleEntity();
+
+        return ghostGPTRed;
+    }
+    /**
+     * Creates GhostGPTBlue enemy type
+     *
+     * @param target        entity to chase
+     * @param area          the area/space it is living in
+     * @param scalingFactor The scale of increase in health and attack of the GhostGPT
+     * @return entity
+     */
+    public static Entity createGhostGPTBlue(Entity target, GameArea area, float scalingFactor) {
+        Entity ghostGPTBlue = new Entity()
+                .addComponent(new PhysicsComponent())
+                .addComponent(new ColliderComponent())
+                .addComponent(new HitboxComponent().setLayer(PhysicsLayer.NPC))
+                .addComponent(new TouchAttackComponent(PhysicsLayer.PLAYER, 1.5f));
+        PhysicsUtils.setScaledCollider(ghostGPTBlue, 0.9f, 0.4f);
+
+        GhostGPTBlueConfig config = configs.ghostGPTBlue;
+
+        AnimationRenderComponent animator =
+                new AnimationRenderComponent(
+                        ServiceLocator.getResourceService()
+                                .getAsset("images/ghostGPTBlue.atlas", TextureAtlas.class));
+        animator.setDisposeAtlas(false);
+        animator.addAnimation("angry_float", 0.1f, Animation.PlayMode.LOOP);
+        animator.addAnimation("float", 0.1f, Animation.PlayMode.LOOP);
+
+
+        ProjectileLauncherComponent projComp = new ProjectileLauncherComponent(area, target, Projectiles.GHOSTGPT_LASER);
+        // Use ground chase tasks for gravity-based movement
+        AITaskComponent aiComponent =
+                new AITaskComponent()
+                        .addTask(new GPTGroundSlowChaseTask(target, 10, 0.3f, 15f))
+                        .addTask(new GPTGroundFastChaseTask(target, 10, 1.2f, projComp, ghostGPTBlue, 2f, 3f));
+
+        // Get player's inventory for reward system
+        InventoryComponent playerInventory = null;
+        if (target != null) {
+            playerInventory = target.getComponent(InventoryComponent.class);
+        }
+
+        WeaponsStatsComponent ghostGPTBlueStats = new WeaponsStatsComponent((int) (config.baseAttack * scalingFactor));
+
+        ghostGPTBlue
+                .addComponent(ghostGPTBlueStats)
+                .addComponent(new CombatStatsComponent((int) (config.health * scalingFactor)))
+                .addComponent(animator)
+                .addComponent(new GhostAnimationController())
+                .addComponent(new LowHealthAttackBuffComponent(10, ghostGPTBlueStats))
+                .addComponent(new EnemyDeathRewardComponent(30, playerInventory)) // Add reward + particles
+                .addComponent(new DeathParticleSpawnerComponent("explosion_2"))
+                .addComponent(aiComponent)
+                .addComponent(projComp) // Add the ability to fire projectiles
+                .addComponent(new EnemyHealthDisplay(1.3f));
+
+        ghostGPTBlue.getComponent(AnimationRenderComponent.class).scaleEntity();
+
+        return ghostGPTBlue;
+    }
 
     /**
      * Creates a robot entity.
@@ -191,7 +307,120 @@ public class NPCFactory {
 
         return deepspin;
     }
+    /**
+     * Creates DeepspinRed enemy type
+     *
+     * @param target        entity to chase
+     * @param area          the area/space it is living in
+     * @param scalingFactor The scale of increase in health and attack of the DeepSpin
+     * @return entity
+     */
+    public static Entity createDeepspinRed(Entity target, GameArea area, float scalingFactor) {
+        Entity deepspinRed = createBaseNPC(target);
+        DeepspinRedConfig config = configs.deepSpinRed;
 
+        AnimationRenderComponent animator =
+                new AnimationRenderComponent(
+                        ServiceLocator.getResourceService()
+                                .getAsset("images/DeepspinRed.atlas", TextureAtlas.class));
+        animator.setDisposeAtlas(false);
+        animator.addAnimation("angry_float", 0.1f, Animation.PlayMode.LOOP);
+        animator.addAnimation("float", 0.1f, Animation.PlayMode.LOOP);
+        animator.addAnimation("damage_taken", 0.1f, Animation.PlayMode.NORMAL);
+
+        SoundComponent soundComponent = new SoundComponent();
+        deepspinRed.addComponent(soundComponent);
+
+        soundComponent.registerSound("damageTaken", "sounds/deepspinDamage.mp3");
+        soundComponent.registerSound("death", "sounds/deepspinDeath.mp3");
+
+        AITaskComponent aiComponent =
+                new AITaskComponent()
+                        .addTask(new GPTSlowChaseTask(target, 10, new Vector2(0.3f, 0.3f)))
+                        .addTask(new GPTFastChaseTask(target, 10, new Vector2(1.2f, 1.2f)));
+
+        // Get player's inventory for reward system
+        InventoryComponent playerInventory = null;
+        if (target != null) {
+            playerInventory = target.getComponent(InventoryComponent.class);
+        }
+
+        CombatStatsComponent deepspinRedStats = new CombatStatsComponent((int) (config.health * scalingFactor));
+        WeaponsStatsComponent deepspinRedAttack = new WeaponsStatsComponent((int) (config.baseAttack * scalingFactor));
+
+        deepspinRed
+                .addComponent(deepspinRedStats)
+                .addComponent(deepspinRedAttack)
+                .addComponent(animator)
+                .addComponent(new GhostAnimationController())
+                .addComponent(new LowHealthAttackBuffComponent(10, deepspinRedAttack))
+                .addComponent(new EnemyDeathRewardComponent(30, playerInventory)) // Add reward + particles
+                .addComponent(new DeathParticleSpawnerComponent("explosion_2"))
+                .addComponent(aiComponent)
+                .addComponent(new EnemyHealthDisplay())
+                .addComponent(new ProjectileLauncherComponent(area, target, Projectiles.GHOSTGPT_LASER)); // Add the ability to fire projectiles
+
+        deepspinRed.getComponent(AnimationRenderComponent.class).scaleEntity();
+
+        return deepspinRed;
+    }
+    /**
+     * Creates DeepspinBlue enemy type
+     *
+     * @param target        entity to chase
+     * @param area          the area/space it is living in
+     * @param scalingFactor The scale of increase in health and attack of the DeepSpin
+     * @return entity
+     */
+    public static Entity createDeepspinBlue(Entity target, GameArea area, float scalingFactor) {
+        Entity deepspinBlue = createBaseNPC(target);
+        DeepspinBlueConfig config = configs.deepSpinBlue;
+
+        AnimationRenderComponent animator =
+                new AnimationRenderComponent(
+                        ServiceLocator.getResourceService()
+                                .getAsset("images/DeepspinBlue.atlas", TextureAtlas.class));
+        animator.setDisposeAtlas(false);
+        animator.addAnimation("angry_float", 0.1f, Animation.PlayMode.LOOP);
+        animator.addAnimation("float", 0.1f, Animation.PlayMode.LOOP);
+        animator.addAnimation("damage_taken", 0.1f, Animation.PlayMode.NORMAL);
+
+        SoundComponent soundComponent = new SoundComponent();
+        deepspinBlue.addComponent(soundComponent);
+
+        soundComponent.registerSound("damageTaken", "sounds/deepspinDamage.mp3");
+        soundComponent.registerSound("death", "sounds/deepspinDeath.mp3");
+
+        AITaskComponent aiComponent =
+                new AITaskComponent()
+                        .addTask(new GPTSlowChaseTask(target, 10, new Vector2(0.3f, 0.3f)))
+                        .addTask(new GPTFastChaseTask(target, 10, new Vector2(1.2f, 1.2f)));
+
+        // Get player's inventory for reward system
+        InventoryComponent playerInventory = null;
+        if (target != null) {
+            playerInventory = target.getComponent(InventoryComponent.class);
+        }
+
+        CombatStatsComponent deepspinBlueStats = new CombatStatsComponent((int) (config.health * scalingFactor));
+        WeaponsStatsComponent deepspinBlueAttack = new WeaponsStatsComponent((int) (config.baseAttack * scalingFactor));
+
+        deepspinBlue
+                .addComponent(deepspinBlueStats)
+                .addComponent(deepspinBlueAttack)
+                .addComponent(animator)
+                .addComponent(new GhostAnimationController())
+                .addComponent(new LowHealthAttackBuffComponent(10, deepspinBlueAttack))
+                .addComponent(new EnemyDeathRewardComponent(30, playerInventory)) // Add reward + particles
+                .addComponent(new DeathParticleSpawnerComponent("explosion_2"))
+                .addComponent(aiComponent)
+                .addComponent(new EnemyHealthDisplay())
+                .addComponent(new ProjectileLauncherComponent(area, target, Projectiles.GHOSTGPT_LASER)); // Add the ability to fire projectiles
+
+        deepspinBlue.getComponent(AnimationRenderComponent.class).scaleEntity();
+
+        return deepspinBlue;
+    }
     /**
      * Creates GrokDroid enemy type
      *
@@ -249,7 +478,106 @@ public class NPCFactory {
 
         return grokDroid;
     }
+    /**
+     * Creates GrokDroidRed enemy type
+     *
+     * @param target        entity to chase
+     * @param area          the area/space it is living in
+     * @param scalingFactor The scale of increase in health and attack of the GrokDroid
+     * @return entity
+     */
+    public static Entity createGrokDroidRed(Entity target, GameArea area, float scalingFactor) {
+        Entity grokDroidRed = createBaseNPC(target);
+        GrokDroidRedConfig config = configs.grokDroidRed;
 
+        AnimationRenderComponent animator =
+                new AnimationRenderComponent(
+                        ServiceLocator.getResourceService()
+                                .getAsset("images/GrokdroidRed.atlas", TextureAtlas.class));
+        animator.setDisposeAtlas(false);
+        animator.addAnimation("angry_float", 0.1f, Animation.PlayMode.LOOP);
+        animator.addAnimation("float", 0.1f, Animation.PlayMode.LOOP);
+
+        AITaskComponent aiComponent =
+                new AITaskComponent()
+                        .addTask(new GPTSlowChaseTask(target, 10, new Vector2(0.3f, 0.3f)))
+                        .addTask(new GPTFastChaseTask(target, 10, new Vector2(1.2f, 1.2f)));
+
+        // Get player's inventory for reward system
+        InventoryComponent playerInventory = null;
+        if (target != null) {
+            playerInventory = target.getComponent(InventoryComponent.class);
+        }
+
+        CombatStatsComponent grokDroidRedStats = new CombatStatsComponent((int) (config.health * scalingFactor));
+        WeaponsStatsComponent grokDroidRedWeapon = new WeaponsStatsComponent((int) (config.baseAttack * scalingFactor));
+
+        grokDroidRed
+                .addComponent(grokDroidRedStats)
+                .addComponent(grokDroidRedWeapon)
+                .addComponent(animator)
+                .addComponent(new GhostAnimationController())
+                .addComponent(new LowHealthAttackBuffComponent(10, grokDroidRedWeapon))
+                .addComponent(new EnemyDeathRewardComponent(30, playerInventory)) // Add reward + particles
+                .addComponent(new DeathParticleSpawnerComponent("explosion_2"))
+                .addComponent(aiComponent)
+                .addComponent(new EnemyHealthDisplay(0.3f))
+                .addComponent(new ProjectileLauncherComponent(area, target, Projectiles.GHOSTGPT_LASER)); // Add the ability to fire projectiles
+
+        grokDroidRed.getComponent(AnimationRenderComponent.class).scaleEntity();
+
+        return grokDroidRed;
+    }
+    /**
+     * Creates GrokDroidBlue enemy type
+     *
+     * @param target        entity to chase
+     * @param area          the area/space it is living in
+     * @param scalingFactor The scale of increase in health and attack of the GrokDroid
+     * @return entity
+     */
+    public static Entity createGrokDroidBlue(Entity target, GameArea area, float scalingFactor) {
+        Entity grokDroidBlue = createBaseNPC(target);
+        GrokDroidBlueConfig config = configs.grokDroidBlue;
+
+        AnimationRenderComponent animator =
+                new AnimationRenderComponent(
+                        ServiceLocator.getResourceService()
+                                .getAsset("images/GrokdroidBlue.atlas", TextureAtlas.class));
+        animator.setDisposeAtlas(false);
+        animator.addAnimation("angry_float", 0.1f, Animation.PlayMode.LOOP);
+        animator.addAnimation("float", 0.1f, Animation.PlayMode.LOOP);
+
+        AITaskComponent aiComponent =
+                new AITaskComponent()
+                        .addTask(new GPTSlowChaseTask(target, 10, new Vector2(0.3f, 0.3f)))
+                        .addTask(new GPTFastChaseTask(target, 10, new Vector2(1.2f, 1.2f)));
+
+        // Get player's inventory for reward system
+        InventoryComponent playerInventory = null;
+        if (target != null) {
+            playerInventory = target.getComponent(InventoryComponent.class);
+        }
+
+        CombatStatsComponent grokDroidBlueStats = new CombatStatsComponent((int) (config.health * scalingFactor));
+        WeaponsStatsComponent grokDroidBlueWeapon = new WeaponsStatsComponent((int) (config.baseAttack * scalingFactor));
+
+        grokDroidBlue
+                .addComponent(grokDroidBlueStats)
+                .addComponent(grokDroidBlueWeapon)
+                .addComponent(animator)
+                .addComponent(new GhostAnimationController())
+                .addComponent(new LowHealthAttackBuffComponent(10, grokDroidBlueWeapon))
+                .addComponent(new EnemyDeathRewardComponent(30, playerInventory)) // Add reward + particles
+                .addComponent(new DeathParticleSpawnerComponent("explosion_2"))
+                .addComponent(aiComponent)
+                .addComponent(new EnemyHealthDisplay(0.3f))
+                .addComponent(new ProjectileLauncherComponent(area, target, Projectiles.GHOSTGPT_LASER)); // Add the ability to fire projectiles
+
+        grokDroidBlue.getComponent(AnimationRenderComponent.class).scaleEntity();
+
+        return grokDroidBlue;
+    }
     /**
      * Creates a Vroomba entity.
      *
@@ -315,7 +643,136 @@ public class NPCFactory {
 
         return vroomba;
     }
+    /**
+     * Creates a VroombaRed entity.
+     *
+     * @param target        entity to chase
+     * @param scalingFactor The scale of increase in health and attack of the Vroomba
+     * @return entity
+     */
+    public static Entity createVroombaRed(Entity target, float scalingFactor) {
+        // Ground enemy build: dynamic body with collider/hitbox; no PhysicsMovementComponent
+        Entity vroombaRed = new Entity()
+                .addComponent(new PhysicsComponent())
+                .addComponent(new ColliderComponent())
+                .addComponent(new HitboxComponent().setLayer(PhysicsLayer.NPC))
+                .addComponent(new TouchAttackComponent(PhysicsLayer.PLAYER, 1.5f));
+        PhysicsUtils.setScaledCollider(vroombaRed, 0.9f, 0.4f);
 
+        VroombaRedConfig config = configs.vroombaRed;
+
+        AnimationRenderComponent animator =
+                new AnimationRenderComponent(
+                        ServiceLocator.getResourceService().getAsset("images/VroombaRed.atlas", TextureAtlas.class));
+        animator.addAnimation("angry_float", 0.1f, Animation.PlayMode.LOOP);
+        animator.addAnimation("float", 0.1f, Animation.PlayMode.LOOP);
+        animator.addAnimation("damage_taken", 0.1f, Animation.PlayMode.NORMAL);
+
+        // Ground chase: set X only; gravity handles Y (Box2D). See Box2D Manual (Forces/Impulses).
+        AITaskComponent aiComponent =
+                new AITaskComponent()
+                        .addTask(new GPTGroundSlowChaseTask(target, 10, 0.3f, 15f))
+                        .addTask(new GPTGroundFastChaseTask(target, 10, 1.2f));
+
+
+        SoundComponent soundComponent = new SoundComponent();
+        vroombaRed.addComponent(soundComponent);
+
+        soundComponent.registerSound("damageTaken", "sounds/vroombaDamage.mp3");
+        soundComponent.registerSound("death", "sounds/vroombaDeath.mp3");
+
+        // Get player's inventory for reward system
+        InventoryComponent playerInventory = null;
+        if (target != null) {
+            playerInventory = target.getComponent(InventoryComponent.class);
+        }
+
+        // Explosion: arm when close; damage if within radius; then die (spawn particles)
+        float triggerRadius = 1.2f;
+        float damageRadius = 1.6f;
+        int boomDamage = Math.max(1, (int) (config.baseAttack * scalingFactor * 2));
+        float fuseSeconds = 1.5f;     // fuse time after triggered, before boom
+
+        vroombaRed
+                .addComponent(new CombatStatsComponent((int) (config.health * scalingFactor)))
+                .addComponent(new WeaponsStatsComponent((int) (config.baseAttack * scalingFactor)))
+                .addComponent(animator)
+                .addComponent(new GhostAnimationController())
+                .addComponent(new EnemyDeathRewardComponent(30, playerInventory))
+                .addComponent(new DeathParticleSpawnerComponent("explosion_2"))
+                .addComponent(new VroombaSuicideComponent(target, triggerRadius, damageRadius, boomDamage, fuseSeconds))
+                .addComponent(aiComponent)
+                .addComponent(new EnemyHealthDisplay());
+
+        vroombaRed.getComponent(AnimationRenderComponent.class).scaleEntity();
+
+        return vroombaRed;
+    }
+    /**
+     * Creates a VroombaBlue entity.
+     *
+     * @param target        entity to chase
+     * @param scalingFactor The scale of increase in health and attack of the Vroomba
+     * @return entity
+     */
+    public static Entity createVroombaBlue(Entity target, float scalingFactor) {
+        // Ground enemy build: dynamic body with collider/hitbox; no PhysicsMovementComponent
+        Entity vroombaBlue = new Entity()
+                .addComponent(new PhysicsComponent())
+                .addComponent(new ColliderComponent())
+                .addComponent(new HitboxComponent().setLayer(PhysicsLayer.NPC))
+                .addComponent(new TouchAttackComponent(PhysicsLayer.PLAYER, 1.5f));
+        PhysicsUtils.setScaledCollider(vroombaBlue, 0.9f, 0.4f);
+
+        VroombaBlueConfig config = configs.vroombaBlue;
+
+        AnimationRenderComponent animator =
+                new AnimationRenderComponent(
+                        ServiceLocator.getResourceService().getAsset("images/VroombaBlue.atlas", TextureAtlas.class));
+        animator.addAnimation("angry_float", 0.1f, Animation.PlayMode.LOOP);
+        animator.addAnimation("float", 0.1f, Animation.PlayMode.LOOP);
+        animator.addAnimation("damage_taken", 0.1f, Animation.PlayMode.NORMAL);
+
+        // Ground chase: set X only; gravity handles Y (Box2D). See Box2D Manual (Forces/Impulses).
+        AITaskComponent aiComponent =
+                new AITaskComponent()
+                        .addTask(new GPTGroundSlowChaseTask(target, 10, 0.3f, 15f))
+                        .addTask(new GPTGroundFastChaseTask(target, 10, 1.2f));
+
+
+        SoundComponent soundComponent = new SoundComponent();
+        vroombaBlue.addComponent(soundComponent);
+
+        soundComponent.registerSound("damageTaken", "sounds/vroombaDamage.mp3");
+        soundComponent.registerSound("death", "sounds/vroombaDeath.mp3");
+
+        // Get player's inventory for reward system
+        InventoryComponent playerInventory = null;
+        if (target != null) {
+            playerInventory = target.getComponent(InventoryComponent.class);
+        }
+
+        // Explosion: arm when close; damage if within radius; then die (spawn particles)
+        float triggerRadius = 1.2f;
+        float damageRadius = 1.6f;
+        int boomDamage = Math.max(1, (int) (config.baseAttack * scalingFactor * 2));
+        float fuseSeconds = 1.5f;     // fuse time after triggered, before boom
+
+        vroombaBlue
+                .addComponent(new CombatStatsComponent((int) (config.health * scalingFactor)))
+                .addComponent(new WeaponsStatsComponent((int) (config.baseAttack * scalingFactor)))
+                .addComponent(animator)
+                .addComponent(new GhostAnimationController())
+                .addComponent(new EnemyDeathRewardComponent(30, playerInventory))
+                .addComponent(new DeathParticleSpawnerComponent("explosion_2"))
+                .addComponent(new VroombaSuicideComponent(target, triggerRadius, damageRadius, boomDamage, fuseSeconds))
+                .addComponent(aiComponent)
+                .addComponent(new EnemyHealthDisplay());
+
+        vroombaBlue.getComponent(AnimationRenderComponent.class).scaleEntity();
+
+        return vroombaBlue;
+    }
     /**
      * Creates Turret enemy type
      *
