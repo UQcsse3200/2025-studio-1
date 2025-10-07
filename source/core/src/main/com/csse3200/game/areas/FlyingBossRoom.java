@@ -1,7 +1,7 @@
+
 package com.csse3200.game.areas;
 
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Vector2;
@@ -27,12 +27,12 @@ import org.slf4j.LoggerFactory;
  * This is the room that holds the Flying Boss.
  * The boss is a flying enemy that spawns at the top of the map and
  * shoots projectiles at the player.
+ *
  * There are two platforms that can possibly server as cover as well as a floor
  * at the bottom
  */
 public class FlyingBossRoom extends GameArea {
     private static final Logger logger = LoggerFactory.getLogger(FlyingBossRoom.class);
-
     private static GridPoint2 playerSpawn = new GridPoint2(3, 10);
 
     private static final float WALL_WIDTH = 0.1f;
@@ -41,7 +41,7 @@ public class FlyingBossRoom extends GameArea {
 
     /**
      * Creates a new FlyingBossRoom for the room where the flying boss spawns.
-     * 
+     *
      * @param terrainFactory  TerrainFactory used to create the terrain for the
      *                        GameArea (required).
      * @param cameraComponent Camera helper supplying an OrthographicCamera
@@ -76,7 +76,6 @@ public class FlyingBossRoom extends GameArea {
         player = spawnPlayer();
 
         spawnPlatforms();
-        spawnBigWall();
 
         spawnFlyingBoss();
         spawnObjectDoors(new GridPoint2(0, 7), new GridPoint2(28, 7));
@@ -118,23 +117,13 @@ public class FlyingBossRoom extends GameArea {
         flyingBoss.getEvents().addListener("death", () -> {
             ServiceLocator.getTimeSource().delayKeycardSpawn(0.05f, () -> {
                 Entity keycard = KeycardFactory.createKeycard(3);
-                keycard.setPosition(new Vector2(3f, 10f));
+                keycard.setPosition(new Vector2(3f, 5f));
                 spawnEntity(keycard);
             });
         });
 
         spawnEntityAt(flyingBoss, pos, true, true);
     }
-
-    /**
-     * Adds a very tall thick-floor as a background wall/divider.
-     */
-    private void spawnBigWall() {
-        GridPoint2 wallSpawn = new GridPoint2(-14, 0);
-        Entity bigWall = ObstacleFactory.createBigThickFloor();
-        spawnEntityAt(bigWall, wallSpawn, true, false);
-    }
-
     /**
      * Spawns the borders and doors of the room.
      * Different to genericLayout as the right door is up high
@@ -151,8 +140,9 @@ public class FlyingBossRoom extends GameArea {
         leftDoor.setPosition(b.leftX() + 0.001f, leftDoorY);
         leftDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadResearch));
         spawnEntity(leftDoor);
-        addSolidWallTop(b, WALL_WIDTH);
+
         addSolidWallRight(b, WALL_WIDTH);
+
         float rightDoorHeight = Math.max(1f, b.viewHeight() * 0.2f);
         float rightDoorY = b.bottomY();
         Entity rightDoor = ObstacleFactory.createDoorTrigger(WALL_WIDTH, rightDoorHeight);
@@ -163,12 +153,13 @@ public class FlyingBossRoom extends GameArea {
             loadShipping();
         }));
         spawnEntity(rightDoor);
+
     }
 
     /**
      * Setter method for the player spawn point
      * should be used when the player is traversing through the rooms
-     * 
+     *
      * @param newSpawn the new spawn point
      */
     public static void setRoomSpawn(GridPoint2 newSpawn) {
@@ -191,4 +182,10 @@ public class FlyingBossRoom extends GameArea {
         ResearchGameArea.setRoomSpawn(new GridPoint2(25, 24));
         clearAndLoad(() -> new ResearchGameArea(terrainFactory, cameraComponent));
     }
+
+    @Override
+    public String toString() {
+        return "FlyingBoss";
+    }
 }
+
