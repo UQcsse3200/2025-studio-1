@@ -9,7 +9,10 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.*;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
@@ -26,43 +29,43 @@ import org.slf4j.LoggerFactory;
  */
 public class PoolGameDisplay extends UIComponent {
 
-    /** External callbacks for game logic. */
-    public interface Controller {
-        void onStart();
-        void onShoot(float dirX, float dirY, float power);
-        void onReset();
-        void onStop();
-    }
-
-    private Controller controller;
-    public void setController(Controller controller) { this.controller = controller; }
-
     private static final Logger logger = LoggerFactory.getLogger(PoolGameDisplay.class);
-
     private static final float PANEL_W = 1100f, PANEL_H = 800f;
     private static final Color PANEL_COLOR = Color.valueOf("0B132B");
     private static final Color TITLE_COLOR = Color.valueOf("00E5FF");
     private static final Color GOLD = Color.valueOf("FFD54F");
-
+    private Controller controller;
     private Texture pixel;
     private Image dimmer, frame, background;
     private Table root;
-
     // HUD
     private Label titleLbl, p1Lbl, p2Lbl, turnLbl, foulLbl;
-
     // Controls
     private TextButton startBtn, shootBtn, resetBtn, closeBtn;
     private Slider powerSlider;
     private CheckBox guideToggle;
-
     // Table + assets
     private PoolTable poolTable;
     private Texture tableTex, cueBallTex, cueTex;
-
     // State
     private boolean running = false;
     private int p1Score = 0, p2Score = 0, turnIdx = 0; // 0=P1, 1=P2
+
+    /**
+     * Creates a 1x1 solid-colour texture.
+     */
+    private static Texture solid(Color c) {
+        Pixmap pm = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
+        pm.setColor(c);
+        pm.fill();
+        Texture t = new Texture(pm);
+        pm.dispose();
+        return t;
+    }
+
+    public void setController(Controller controller) {
+        this.controller = controller;
+    }
 
     @Override
     public void create() {
@@ -70,19 +73,45 @@ public class PoolGameDisplay extends UIComponent {
         entity.getEvents().addListener("interact", this::show);
 
         // Asset load
-        tableTex   = ServiceLocator.getResourceService().getAsset("images/pool/table.png", Texture.class);
+        tableTex = ServiceLocator.getResourceService().getAsset("images/pool/table.png", Texture.class);
         cueBallTex = ServiceLocator.getResourceService().getAsset("images/pool/cueball.png", Texture.class);
-        cueTex     = ServiceLocator.getResourceService().getAsset("images/pool/cue.png", Texture.class);
+        cueTex = ServiceLocator.getResourceService().getAsset("images/pool/cue.png", Texture.class);
 
         buildBackdrop();
         buildRoot();
         buildHeader();
         buildTableArea();
         buildFooter();
+
+        entity.getEvents().addListener("pool:turn",
+                (Integer current, Integer p1, Integer p2) -> {
+                    // rules use 1/2, HUD uses 0/1
+                    setScores(p1, p2);
+                    setTurn((current != null ? current : 1) - 1);
+                    clearFoul();
+                    logger.debug("HUD turn -> P{}, score {}-{}", current, p1, p2);
+                });
+
+        entity.getEvents().addListener("pool:score",
+                (Integer current, Integer p1, Integer p2) -> {
+                    setScores(p1, p2);
+                    logger.debug("HUD score update by P{} -> {}-{}", current, p1, p2);
+                });
+
+        entity.getEvents().addListener("pool:foul",
+                (Integer foulingPlayer, String reason) -> {
+                    // keep current turn label in sync if your rules switch turn on foul
+                    setFoul("Foul on P" + (foulingPlayer == null ? "?" : foulingPlayer) +
+                            (reason == null || reason.isEmpty() ? "" : " (" + reason + ")"));
+                    logger.debug("HUD foul by P{}: {}", foulingPlayer, reason);
+                });
+
         hide();
     }
 
-    /** Builds the dim background and panel chrome behind the UI. */
+    /**
+     * Builds the dim background and panel chrome behind the UI.
+     */
     private void buildBackdrop() {
         pixel = solid(Color.WHITE);
 
@@ -109,7 +138,9 @@ public class PoolGameDisplay extends UIComponent {
         stage.addActor(background);
     }
 
-    /** Root table layout for all child UI. */
+    /**
+     * Root table layout for all child UI.
+     */
     private void buildRoot() {
         root = new Table();
         root.setSize(PANEL_W, PANEL_H);
@@ -120,7 +151,9 @@ public class PoolGameDisplay extends UIComponent {
         stage.addActor(root);
     }
 
-    /** Header with title, scores, current turn, and foul message area. */
+    /**
+     * Header with title, scores, current turn, and foul message area.
+     */
     private void buildHeader() {
         Label.LabelStyle titleStyle = new Label.LabelStyle(skin.get(Label.LabelStyle.class));
         titleStyle.fontColor = TITLE_COLOR;
@@ -156,7 +189,9 @@ public class PoolGameDisplay extends UIComponent {
         root.add(foulRow).growX().padTop(2).row();
     }
 
-    /** Interactive table widget with aim handling. */
+    /**
+     * Interactive table widget with aim handling.
+     */
     private void buildTableArea() {
         float aspect = (float) tableTex.getWidth() / tableTex.getHeight();
         float targetW = PANEL_W - 40f;
@@ -174,15 +209,18 @@ public class PoolGameDisplay extends UIComponent {
                 poolTable.beginAim(x, y);
                 return true;
             }
+
             @Override
             public void touchDragged(InputEvent event, float x, float y, int pointer) {
                 poolTable.updateAim(x, y);
             }
+
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 poolTable.updateAim(x, y);
                 poolTable.finishAim();
             }
+
             @Override
             public boolean mouseMoved(InputEvent event, float x, float y) {
                 poolTable.updateAim(x, y);
@@ -193,7 +231,9 @@ public class PoolGameDisplay extends UIComponent {
         root.add(poolTable).size(targetW, targetH).padTop(6).row();
     }
 
-    /** Footer controls: power, guide toggle, and actions. */
+    /**
+     * Footer controls: power, guide toggle, and actions.
+     */
     private void buildFooter() {
         powerSlider = new Slider(0f, 1f, 0.01f, false, skin);
         powerSlider.setValue(0.5f);
@@ -201,7 +241,8 @@ public class PoolGameDisplay extends UIComponent {
         guideToggle = new CheckBox(" Guide", skin);
         guideToggle.setChecked(true);
         guideToggle.addListener(new ChangeListener() {
-            @Override public void changed(ChangeEvent event, Actor actor) {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
                 poolTable.setGuideVisible(guideToggle.isChecked());
             }
         });
@@ -212,7 +253,8 @@ public class PoolGameDisplay extends UIComponent {
         closeBtn = new TextButton("Close", skin);
 
         startBtn.addListener(new ChangeListener() {
-            @Override public void changed(ChangeEvent event, Actor actor) {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
                 running = true;
                 if (controller != null) controller.onStart();
                 entity.getEvents().trigger("pool:start");
@@ -221,7 +263,8 @@ public class PoolGameDisplay extends UIComponent {
         });
 
         shootBtn.addListener(new ChangeListener() {
-            @Override public void changed(ChangeEvent event, Actor actor) {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
                 if (!running) return;
 
                 Vector2 dir = poolTable.getAimDir();
@@ -235,7 +278,8 @@ public class PoolGameDisplay extends UIComponent {
         });
 
         resetBtn.addListener(new ChangeListener() {
-            @Override public void changed(ChangeEvent event, Actor actor) {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
                 if (controller != null) controller.onReset();
                 entity.getEvents().trigger("pool:reset");
                 clearFoul();
@@ -243,7 +287,8 @@ public class PoolGameDisplay extends UIComponent {
         });
 
         closeBtn.addListener(new ChangeListener() {
-            @Override public void changed(ChangeEvent event, Actor actor) {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
                 if (controller != null) controller.onStop();
                 entity.getEvents().trigger("pool:stop");
                 hide();
@@ -274,11 +319,21 @@ public class PoolGameDisplay extends UIComponent {
         if (turnLbl != null) turnLbl.setText("Turn: " + (turnIdx == 0 ? "P1" : "P2"));
     }
 
-    public void setFoul(String msg) { foulLbl.setText(msg == null ? "" : msg); }
-    public void clearFoul() { foulLbl.setText(""); }
+    public void setFoul(String msg) {
+        foulLbl.setText(msg == null ? "" : msg);
+    }
 
-    public void setCueBall(Vector2 pos) { poolTable.setCueBall(pos); }
-    public void setBalls(Vector2[] positions) { poolTable.setObjectBalls(positions); }
+    public void clearFoul() {
+        foulLbl.setText("");
+    }
+
+    public void setCueBall(Vector2 pos) {
+        poolTable.setCueBall(pos);
+    }
+
+    public void setBalls(Vector2[] positions) {
+        poolTable.setObjectBalls(positions);
+    }
 
     // ----- Visibility -----
     public void show() {
@@ -301,21 +356,26 @@ public class PoolGameDisplay extends UIComponent {
         }
     }
 
-    @Override public void draw(SpriteBatch batch) { /* Stage draws the UI. */ }
+    @Override
+    public void draw(SpriteBatch batch) { /* Stage draws the UI. */ }
 
-    @Override public void dispose() {
+    @Override
+    public void dispose() {
         if (pixel != null) pixel.dispose();
         super.dispose();
     }
 
-    /** Creates a 1x1 solid-colour texture. */
-    private static Texture solid(Color c) {
-        Pixmap pm = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
-        pm.setColor(c);
-        pm.fill();
-        Texture t = new Texture(pm);
-        pm.dispose();
-        return t;
+    /**
+     * External callbacks for game logic.
+     */
+    public interface Controller {
+        void onStart();
+
+        void onShoot(float dirX, float dirY, float power);
+
+        void onReset();
+
+        void onStop();
     }
 
     /**
@@ -326,11 +386,10 @@ public class PoolGameDisplay extends UIComponent {
         private final Texture tableTex, cueBallTex, cueTex;
         private final TextureRegionDrawable whitePx; // 1x1 for guide dots
         private final Vector2 cueBall = new Vector2();
-        private Vector2[] balls = new Vector2[0];
-
         private final Vector2 aimStart = new Vector2();
         private final Vector2 aimEnd = new Vector2();
         private final Vector2 aimDir = new Vector2();
+        private Vector2[] balls = new Vector2[0];
         private boolean aiming = false;
         private boolean showGuide = true;
         private float cueKickT = 0f;
@@ -347,20 +406,28 @@ public class PoolGameDisplay extends UIComponent {
             setCueBall(new Vector2(0.5f, 0.5f));
         }
 
-        void setGuideVisible(boolean v) { this.showGuide = v; }
+        void setGuideVisible(boolean v) {
+            this.showGuide = v;
+        }
 
-        /** Set cue ball using normalised [0,1] coordinates. */
+        /**
+         * Set cue ball using normalised [0,1] coordinates.
+         */
         void setCueBall(Vector2 normPos) {
             cueBall.set(MathUtils.clamp(normPos.x, 0f, 1f),
                     MathUtils.clamp(normPos.y, 0f, 1f));
         }
 
-        /** Set object balls using normalised [0,1] coordinates. */
+        /**
+         * Set object balls using normalised [0,1] coordinates.
+         */
         void setObjectBalls(Vector2[] normPositions) {
             this.balls = normPositions != null ? normPositions : new Vector2[0];
         }
 
-        /** Begin aiming from the pointer location. */
+        /**
+         * Begin aiming from the pointer location.
+         */
         void beginAim(float x, float y) {
             aiming = true;
             aimStart.set(localToNorm(x, y));
@@ -368,21 +435,35 @@ public class PoolGameDisplay extends UIComponent {
             computeDir();
         }
 
-        /** Update the current aim with the pointer location. */
+        /**
+         * Update the current aim with the pointer location.
+         */
         void updateAim(float x, float y) {
             if (!aiming) return;
             aimEnd.set(localToNorm(x, y));
             computeDir();
         }
 
-        /** Finish aiming; direction remains available via {@link #getAimDir()}. */
-        void finishAim() { aiming = false; }
+        /**
+         * Finish aiming; direction remains available via {@link #getAimDir()}.
+         */
+        void finishAim() {
+            aiming = false;
+        }
 
-        /** Copy of the current normalised aim direction. */
-        Vector2 getAimDir() { return aimDir.cpy(); }
+        /**
+         * Copy of the current normalised aim direction.
+         */
+        Vector2 getAimDir() {
+            return aimDir.cpy();
+        }
 
-        /** Trigger a brief cue kickback animation. */
-        void kickbackCue(Interpolation interp) { cueKickT = 1f; }
+        /**
+         * Trigger a brief cue kickback animation.
+         */
+        void kickbackCue(Interpolation interp) {
+            cueKickT = 1f;
+        }
 
         @Override
         public void act(float delta) {
@@ -426,7 +507,7 @@ public class PoolGameDisplay extends UIComponent {
                         float d = step * i;
                         float gx = cbx + aimDir.x * d;
                         float gy = cby + aimDir.y * d;
-                        batch.draw(((TextureRegionDrawable) whitePx).getRegion().getTexture(), gx - 2, gy - 2, 4, 4);
+                        batch.draw(whitePx.getRegion().getTexture(), gx - 2, gy - 2, 4, 4);
                     }
                     batch.setColor(1, 1, 1, 1);
                 }
@@ -446,14 +527,18 @@ public class PoolGameDisplay extends UIComponent {
             }
         }
 
-        /** Recompute normalised aim direction from cue ball to aim target. */
+        /**
+         * Recompute normalised aim direction from cue ball to aim target.
+         */
         private void computeDir() {
             Vector2 target = aiming ? aimEnd : aimStart;
             aimDir.set(target).sub(cueBall).nor();
             if (Float.isNaN(aimDir.x) || Float.isNaN(aimDir.y)) aimDir.setZero();
         }
 
-        /** Convert local widget coordinates to normalised [0,1] space. */
+        /**
+         * Convert local widget coordinates to normalised [0,1] space.
+         */
         private Vector2 localToNorm(float x, float y) {
             float nx = MathUtils.clamp(x / getWidth(), 0f, 1f);
             float ny = MathUtils.clamp(y / getHeight(), 0f, 1f);
