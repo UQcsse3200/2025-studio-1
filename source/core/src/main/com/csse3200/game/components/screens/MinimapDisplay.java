@@ -91,6 +91,7 @@ public class MinimapDisplay extends BaseScreenDisplay {
 
         // Minimap rendering
         minimap.open();
+        minimap.zoom(-98);
 
         minimapTable = new Table();
         minimapTable.setFillParent(true);
@@ -172,11 +173,13 @@ public class MinimapDisplay extends BaseScreenDisplay {
             }
 
             Image roomImage = new Image(new TextureRegionDrawable(texture));
-            float imageWidth = roomImage.getWidth();
-            float imageHeight = roomImage.getHeight();
+            roomImage.setScale(minimap.getScale(), minimap.getScale());
 
             // Set position so the center is at (screenPos.x, screenPos.y)
-            roomImage.setPosition(screenPos.x - imageWidth / 2, screenPos.y - imageHeight / 2);
+            roomImage.setPosition(
+                    screenPos.x - (float) Minimap.IMAGE_WIDTH * minimap.getScale() / 2,
+                    screenPos.y - (float) Minimap.IMAGE_HEIGHT * minimap.getScale() / 2
+            );
             //roomImage.setSize(128, 72);
             minimapTable.addActor(roomImage);
         }
