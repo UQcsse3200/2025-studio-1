@@ -34,6 +34,8 @@ public class TerminalDisplay extends BaseScreenDisplay {
     private static final int SUGGESTION_MAX = 5;
     private final Vector2 tmp = new Vector2();
 
+    private static final String WHITE = "white";
+
     private Table container;
     private Table promptBox;
     private Label label;
@@ -77,7 +79,7 @@ public class TerminalDisplay extends BaseScreenDisplay {
         if (skin.has("textfield", Drawable.class)) bg = skin.getDrawable("textfield");
         else if (skin.has("rounded", Drawable.class)) bg = skin.getDrawable("rounded");
         else if (skin.has("button", Drawable.class)) bg = skin.getDrawable("button");
-        if (bg == null) bg = skin.newDrawable("white", new Color(0f, 0f, 0f, 0.6f));
+        if (bg == null) bg = skin.newDrawable(WHITE, new Color(0f, 0f, 0f, 0.6f));
         promptBox.setBackground(bg);
 
         Label.LabelStyle promptLabelStyle = new Label.LabelStyle(skin.get(Label.LabelStyle.class));
@@ -113,8 +115,8 @@ public class TerminalDisplay extends BaseScreenDisplay {
         suggestionsBox = new Table();
         suggestionsBox.align(Align.bottomLeft);
         suggestionsBox.setTouchable(Touchable.enabled);
-        Drawable suggestionsBg = skin.newDrawable("white", new Color(0f, 0f, 0f, 0.75f));
-        suggestionHoverBg = skin.newDrawable("white", new Color(1f, 1f, 1f, 0.10f));
+        Drawable suggestionsBg = skin.newDrawable(WHITE, new Color(0f, 0f, 0f, 0.75f));
+        suggestionHoverBg = skin.newDrawable(WHITE, new Color(1f, 1f, 1f, 0.10f));
         suggestionsBox.setBackground(suggestionsBg);
         suggestionsBox.setVisible(false);
 
@@ -259,10 +261,6 @@ public class TerminalDisplay extends BaseScreenDisplay {
             if (!Objects.equals(a.get(i), b.get(i))) return false;
         }
         return true;
-    }
-
-    private static String safeString(String s) {
-        return (s == null) ? "" : s;
     }
 
     private static int skipFirstToken(String s, boolean returnStart) {
