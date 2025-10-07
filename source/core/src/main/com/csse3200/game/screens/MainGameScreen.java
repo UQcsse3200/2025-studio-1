@@ -27,6 +27,8 @@ import com.csse3200.game.physics.PhysicsService;
 import com.csse3200.game.rendering.RenderService;
 import com.csse3200.game.rendering.Renderer;
 import com.csse3200.game.services.*;
+import com.csse3200.game.session.GameSession;
+import com.csse3200.game.session.SessionManager;
 import com.csse3200.game.ui.terminal.Terminal;
 import com.csse3200.game.ui.terminal.TerminalDisplay;
 import org.slf4j.Logger;
@@ -51,6 +53,11 @@ public class MainGameScreen extends ScreenAdapter {
     private CountdownTimerService countdownTimer;
 
 
+    //Leaderboard & Session fields
+    private GameSession session;
+    private float roundTime = 0f;
+
+
     private Entity pauseOverlay;
     private boolean isPauseVisible = false;
 
@@ -58,8 +65,18 @@ public class MainGameScreen extends ScreenAdapter {
         this.game = game;
 
         logger.debug("Initialising main game screen services");
-        // Clear any existing state when starting a new game
-        ServiceLocator.clear();
+
+        //Initialize session for this playthrough
+        SessionManager sessionManager = new SessionManager();
+        session = sessionManager.startNewSession();
+
+        var prev = game.getCarryOverLeaderBoard();
+        if (prev != null && !prev.getLeaderBoard().isEmpty()) {
+            session.getLeaderBoardManager()
+                    .setLeaderboard(new java.util.ArrayList<>(prev.getLeaderBoard()));
+        }
+        ServiceLocator.registerLeaderBoardManager(session.getLeaderBoardManager());
+
         ServiceLocator.registerTimeSource(new GameTime());
 
         PhysicsService physicsService = new PhysicsService();
@@ -177,6 +194,9 @@ public class MainGameScreen extends ScreenAdapter {
 
     @Override
     public void render(float delta) {
+        //accumulates elapsed time
+        this.roundTime += delta;
+
         if (!isPauseVisible && !(ServiceLocator.getTimeSource().isPaused())
                 && !ServiceLocator.isTransitioning()) {
             physicsEngine.update();
@@ -276,6 +296,32 @@ public class MainGameScreen extends ScreenAdapter {
     }
 
     /**
+     * = Records player's current round performance and updates the leaderboard.
+     * = This method is called automatically when a round ends.
+     * = The leaderboard only persists for the duration of the current game session
+     * and is cleared when the session ends.
+     */
+    private void recordRoundForLeaderboard() {
+        if (session == null) return;
+
+        // Currency = processors from the player's InventoryComponent
+        int processors = 0;
+        Entity player = (gameArea != null) ? gameArea.getPlayer() : null;
+        if (player != null) {
+            InventoryComponent inv = player.getComponent(InventoryComponent.class);
+            if (inv != null) {
+                processors = inv.getProcessor();
+            }
+        }
+
+        // Time = from your countdown service (seconds)
+        float timeSeconds = getCompleteTime();
+
+        session.getLeaderBoardManager().addRound(processors, timeSeconds);
+        session.getLeaderBoardManager().getLeaderBoard().forEach(entry -> logger.info(entry.toString()));
+    }
+
+    /**
      * Creates and displays the pause menu overlay on top of the game.
      * Registers the overlay entity so it can capture input and show the UI,
      * and listens for the "resume" event to remove itself when requested.
@@ -290,6 +336,9 @@ public class MainGameScreen extends ScreenAdapter {
         pauseOverlay.getEvents().addListener("resume", this::hidePauseOverlay);
         ServiceLocator.getEntityService().register(pauseOverlay);
         ServiceLocator.getTimeSource().setPaused(true);
+        if (!countdownTimer.isPaused()) {
+            countdownTimer.pause();
+        }
         isPauseVisible = true;
     }
 
@@ -304,6 +353,12 @@ public class MainGameScreen extends ScreenAdapter {
             ServiceLocator.getTimeSource().setPaused(false);
             pauseOverlay = null;
         }
+
+        ServiceLocator.getTimeSource().setPaused(false);
+        if (countdownTimer.isPaused()) {
+            countdownTimer.resume();
+        }
+
         isPauseVisible = false;
     }
 
@@ -333,6 +388,8 @@ public class MainGameScreen extends ScreenAdapter {
      * </p>
      */
     private void setDeathScreen() {
+        recordRoundForLeaderboard();
+        game.setCarryOverLeaderBoard(session.getLeaderBoardManager());
         DeathScreen deathScreen = new DeathScreen(game);
         deathScreen.updateTime(getCompleteTime());
         game.setScreen(deathScreen);
