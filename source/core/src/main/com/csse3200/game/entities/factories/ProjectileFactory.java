@@ -28,6 +28,10 @@ import com.csse3200.game.services.ServiceLocator;
 
 public class ProjectileFactory {
 
+    private ProjectileFactory() {
+        throw new IllegalStateException("Instantiating static util class");
+    }
+
     /**
      * Base class to create a projectile.
      *
@@ -198,11 +202,6 @@ public class ProjectileFactory {
         projectile.getComponent(TextureRenderWithRotationComponent.class).scaleEntity();
 
         return projectile;
-    }
-
-
-    private ProjectileFactory() {
-        throw new IllegalStateException("Instantiating static util class");
     }
 
 }

@@ -5,8 +5,8 @@ import com.csse3200.game.components.cards.Card;
 import com.csse3200.game.components.cards.Deck;
 import com.csse3200.game.components.cards.Rank;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The {@code BlackJackGame} component implements the core logic for a Blackjack mini-game.

@@ -24,6 +24,7 @@ public abstract class BaseTerminalInputComponent extends InputComponent {
     /**
      * Returns false because this component is not one intended to
      * be paused
+     *
      * @return False, as this is a component not affected by pause
      * functionality
      */

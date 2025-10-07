@@ -20,9 +20,9 @@ import org.slf4j.LoggerFactory;
 public class MainMenuDisplay extends UIComponent {
     private static final Logger logger = LoggerFactory.getLogger(MainMenuDisplay.class);
     private static final float Z_INDEX = 2f;
+    private final GdxGame game;
     private Table table;
     private NeonStyles neon;
-    private final GdxGame game;
 
     public MainMenuDisplay(GdxGame game) {
         this.game = game;

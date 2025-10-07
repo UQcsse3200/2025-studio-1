@@ -28,7 +28,7 @@ public class BreakablePlatformComponent extends Component {
     private final float fadeDuration;
 
     private boolean triggered = false;
-     /* Reference to the texture render component used for fading effect. */
+    /* Reference to the texture render component used for fading effect. */
     private TextureRenderComponent render;
 
     public BreakablePlatformComponent() {
@@ -44,6 +44,7 @@ public class BreakablePlatformComponent extends Component {
         render = entity.getComponent(TextureRenderComponent.class);
         entity.getEvents().addListener("collisionStart", this::onCollision);
     }
+
     /**
      * Handles collision events from physics engine.
      * Checks if the colliding entity is the player standing on top,
@@ -71,6 +72,7 @@ public class BreakablePlatformComponent extends Component {
             }
         }
     }
+
     /**
      * Starts the shaking animation by moving the platform back and forth randomly for the configured duration.
      * Once shaking completes, initiates the fade out.
@@ -89,8 +91,8 @@ public class BreakablePlatformComponent extends Component {
             public void run() {
                 if (body != null && render != null) {
                     float factor = 1f - (time / shakeDuration);
-                    float x = startPos.x + (float)Math.sin(time * 40) * shakeAmount * factor;
-                    float y = startPos.y + (float)Math.cos(time * 40) * shakeAmount * factor;
+                    float x = startPos.x + (float) Math.sin(time * 40) * shakeAmount * factor;
+                    float y = startPos.y + (float) Math.cos(time * 40) * shakeAmount * factor;
                     body.setTransform(x, y, 0);
                     entity.setPosition(body.getPosition(), false);
                 }
@@ -105,6 +107,7 @@ public class BreakablePlatformComponent extends Component {
             }
         }, 0f, 0.05f);
     }
+
     /**
      * Starts the fading effect by gradually reducing the alpha of the platform's texture.
      * Disables the physics body to allow the player to fall through.

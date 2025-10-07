@@ -2,7 +2,7 @@ package com.csse3200.game.entities.factories.items;
 
 import com.csse3200.game.components.ArmourComponent;
 import com.csse3200.game.entities.Entity;
-import com.csse3200.game.entities.configs.*;
+import com.csse3200.game.entities.configs.Armour;
 import com.csse3200.game.entities.configs.armour.ArmourConfig;
 
 /**
@@ -10,6 +10,14 @@ import com.csse3200.game.entities.configs.armour.ArmourConfig;
  * <p>
  */
 public class ArmourFactory {
+
+    /**
+     * Stops you from making an ItemFactory object.
+     * If you try, it throws an error.
+     */
+    private ArmourFactory() {
+        throw new IllegalStateException("Instantiating static util class");
+    }
 
     /**
      * Creates and configures a new armour entity.
@@ -25,13 +33,5 @@ public class ArmourFactory {
         armour.addComponent(new ArmourComponent(config));
         armour.scaleHeight(armour.getComponent(ArmourComponent.class).heightScale);
         return armour;
-    }
-
-    /**
-     * Stops you from making an ItemFactory object.
-     * If you try, it throws an error.
-     */
-    private ArmourFactory() {
-        throw new IllegalStateException("Instantiating static util class");
     }
 }

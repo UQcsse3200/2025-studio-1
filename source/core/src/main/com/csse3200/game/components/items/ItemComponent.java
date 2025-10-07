@@ -52,21 +52,21 @@ public class ItemComponent extends Component {
     }
 
     /**
-     * This changes whether the Item can be picked up by the player
-     *
-     * @param status True if the item can be picked up, False otherwise
-     */
-    public void setPickupable(boolean status) {
-        this.pickupable = status;
-    }
-
-    /**
      * This checks if the item can be picked up
      *
      * @return True if pickupable is true, false otherwise
      */
     public boolean isPickupable() {
         return pickupable;
+    }
+
+    /**
+     * This changes whether the Item can be picked up by the player
+     *
+     * @param status True if the item can be picked up, False otherwise
+     */
+    public void setPickupable(boolean status) {
+        this.pickupable = status;
     }
 
     /**
@@ -89,19 +89,19 @@ public class ItemComponent extends Component {
     }
 
     /**
+     * Returns the texture path of the current item
+     */
+    public String getTexture() {
+        return this.texture;
+    }
+
+    /**
      * Sets the texture path of the current item
      *
      * @param texture sets the texture path of the current item
      */
     public void setTexture(String texture) {
         this.texture = texture;
-    }
-
-    /**
-     * Returns the texture path of the current item
-     */
-    public String getTexture() {
-        return this.texture;
     }
 
     /**

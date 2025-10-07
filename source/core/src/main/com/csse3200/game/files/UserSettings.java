@@ -16,6 +16,10 @@ public class UserSettings {
     private static final int WINDOW_WIDTH = 1280;
     private static final int WINDOW_HEIGHT = 800;
 
+    private UserSettings() {
+        throw new IllegalStateException("Instantiating static util class");
+    }
+
     /**
      * Get the stored user settings
      *
@@ -121,9 +125,5 @@ public class UserSettings {
             this.height = displayMode.height;
             this.refreshRate = displayMode.refreshRate;
         }
-    }
-
-    private UserSettings() {
-        throw new IllegalStateException("Instantiating static util class");
     }
 }

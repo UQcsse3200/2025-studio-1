@@ -6,11 +6,12 @@ package com.csse3200.game.session;
  * for that particular session, identified by sessionID.
  */
 public class GameSession {
-    private LeaderBoardManager leaderBoardManager; //to keep track of all rounds during the session
-    private int sessionId; //unique id to distinguish each session
+    private final LeaderBoardManager leaderBoardManager; //to keep track of all rounds during the session
+    private final int sessionId; //unique id to distinguish each session
 
     /**
      * To create a fresh leaderboard for each session
+     *
      * @param sessionId is the unique id assigned to that session.
      */
     public GameSession(int sessionId) {
@@ -19,14 +20,16 @@ public class GameSession {
     }
 
     /**
-     *
      * @return returns the leaderboard data for the session.
      */
-    public LeaderBoardManager getLeaderBoardManager() {return leaderBoardManager;}
+    public LeaderBoardManager getLeaderBoardManager() {
+        return leaderBoardManager;
+    }
 
     /**
-     *
      * @return sessionID to uniquely identify it from others.
      */
-    public int getSessionId() {return sessionId;}
+    public int getSessionId() {
+        return sessionId;
+    }
 }

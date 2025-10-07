@@ -17,10 +17,9 @@ import org.slf4j.LoggerFactory;
 public class MainGameDisplay extends UIComponent {
     private static final Logger logger = LoggerFactory.getLogger(MainGameDisplay.class);
     private static final float Z_INDEX = 2f;
-    private Table table;
-
-    private Label timerLabel;
     private final CountdownTimerService timerService;
+    private Table table;
+    private Label timerLabel;
 
     public MainGameDisplay(CountdownTimerService timerService) {
         this.timerService = timerService;

@@ -27,25 +27,14 @@ public class MissueAttackComponent extends Component {
     private static final float SKY_HEIGHT = 7f;    // missile spawn height above ground warning
     private static final float MIN_X = 0f;
     private static final float MAX_X = 30f; // horizontal range for warnings
-
-    /**
-     * Whether the system is active (true = spawning warnings/missiles).
-     */
-    private boolean attack = false;
-
-    /**
-     * One active warning's state.
-     */
-    private static class WarningEntry {
-        Vector2 pos;     // ground position of the warning
-        float t;         // elapsed time since warning was spawned
-        Entity visual;   // the spawned warning entity (for cleanup)
-    }
-
     /**
      * Currently active warnings.
      */
     private final java.util.ArrayList<WarningEntry> actives = new java.util.ArrayList<>();
+    /**
+     * Whether the system is active (true = spawning warnings/missiles).
+     */
+    private boolean attack = false;
     /**
      * Timer tracking time since last spawn wave.
      */
@@ -127,5 +116,14 @@ public class MissueAttackComponent extends Component {
      */
     public void setAttack(boolean attack) {
         this.attack = attack;
+    }
+
+    /**
+     * One active warning's state.
+     */
+    private static class WarningEntry {
+        Vector2 pos;     // ground position of the warning
+        float t;         // elapsed time since warning was spawned
+        Entity visual;   // the spawned warning entity (for cleanup)
     }
 }

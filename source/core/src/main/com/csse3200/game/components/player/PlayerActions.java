@@ -31,10 +31,6 @@ import com.csse3200.game.services.ServiceLocator;
  * and corresponding actions are triggered when these events occur.</p>
  */
 public class PlayerActions extends Component {
-    // Components
-    private StaminaComponent stamina;
-    private PhysicsComponent physicsComponent;
-
     // Movement Constants
     private static final Vector2 MAX_SPEED = new Vector2(3f, 3f);
     private static final Vector2 CROUCH_SPEED = new Vector2(1.5f, 3f);
@@ -42,17 +38,27 @@ public class PlayerActions extends Component {
     private static final Vector2 JUMP_VELOCITY = new Vector2(0f, 15f);
     private static final Vector2 DASH_SPEED = new Vector2(20f, 9.8f);
     private static final float DASH_DURATION = 0.1f;
-    private int DASH_COOLDOWN = 15;
-
     // Stamina Costs
     private static final int DASH_COST = 30;
     private static final int DOUBLE_JUMP_COST = 10;
     private static final int SPRINT_COST = 1;
-
     // Jumping Limits
     private static final int MAX_JUMPS = 2;
     private static final long JUMP_COOLDOWN_MS = 300;
-
+    /**
+     * if player already has a weapon --> unequip first
+     * sets new weapon as equipped
+     * repositions the weapon to appear in player's hand
+     */
+    Entity currentWeapon = null;
+    //to represent relative difference between the
+    //player's body position and player's hand.
+    float handOffsetX = 5f;
+    float handOffsetY = 10f;
+    // Components
+    private StaminaComponent stamina;
+    private PhysicsComponent physicsComponent;
+    private int DASH_COOLDOWN = 15;
     // Internal movement state
     private Vector2 walkDirection = Vector2.Zero.cpy();
     private boolean moving = false;
@@ -61,20 +67,16 @@ public class PlayerActions extends Component {
     private boolean dashing = false;
     private boolean crouching = false;
     private boolean grounded = true;
-
     // Effects
-    private UnlimitedAmmoEffect unlimitedAmmoEffect = new UnlimitedAmmoEffect(10f, this);
-    private AimbotEffect aimbotEffect = new AimbotEffect(10f, this);
-
+    private final UnlimitedAmmoEffect unlimitedAmmoEffect = new UnlimitedAmmoEffect(10f, this);
+    private final AimbotEffect aimbotEffect = new AimbotEffect(10f, this);
     // Ability cooldowns / counters
     private int dashCooldown = 0;
     private int jumpsLeft = MAX_JUMPS;
     private long lastJumpTime = 0; // timestamp of last ground jump
-
     // Tracks time since last attack for cooldown purposes
     private float timeSinceLastAttack = 0;
     private float timesinceLastReload = 0;
-
     private Camera camera;
 
     /**
@@ -427,8 +429,7 @@ public class PlayerActions extends Component {
         Entity bullet;
         if (aimbotEffect != null && aimbotEffect.isActive()) {
             bullet = ProjectileFactory.createPistolBullet(gunStats, true);
-        }
-        else {
+        } else {
             bullet = ProjectileFactory.createPistolBullet(gunStats, false);
         }
         Vector2 origin = new Vector2(entity.getCenterPosition());
@@ -441,10 +442,9 @@ public class PlayerActions extends Component {
             ServiceLocator.getEntityService().register(bullet);
         }
         PhysicsProjectileComponent projectilePhysics;
-        if (bullet.hasComponent(HomingPhysicsComponent.class)){
+        if (bullet.hasComponent(HomingPhysicsComponent.class)) {
             projectilePhysics = bullet.getComponent(HomingPhysicsComponent.class);
-        }
-        else {
+        } else {
             projectilePhysics = bullet.getComponent(PhysicsProjectileComponent.class);
         }
         Vector3 destination = camera.unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
@@ -558,7 +558,6 @@ public class PlayerActions extends Component {
         return SPRINT_SPEED;
     }
 
-
     /**
      * Makes player reload their equipped weapon
      */
@@ -597,13 +596,6 @@ public class PlayerActions extends Component {
         }
     }
 
-    /**
-     * if player already has a weapon --> unequip first
-     * sets new weapon as equipped
-     * repositions the weapon to appear in player's hand
-     */
-    Entity currentWeapon = null;
-
     public void equipWeapon(Entity weapon) {
         if (currentWeapon != null) {
             unequipWeapon();
@@ -632,11 +624,6 @@ public class PlayerActions extends Component {
 
         currentWeapon = null;
     }
-
-    //to represent relative difference between the
-    //player's body position and player's hand.
-    float handOffsetX = 5f;
-    float handOffsetY = 10f;
 
     /**
      * this function sets the coordinates for the weapon in player's hand
@@ -674,23 +661,25 @@ public class PlayerActions extends Component {
         }
     }
 
-  /**
-   * Sets time since last attack, used for testing
-   * @param timeSinceLastAttack time since last attack
-   */
-  public void setTimeSinceLastAttack(float timeSinceLastAttack) {
-    this.timeSinceLastAttack = timeSinceLastAttack;
-  }
+    /**
+     * Sets time since last attack, used for testing
+     *
+     * @param timeSinceLastAttack time since last attack
+     */
+    public void setTimeSinceLastAttack(float timeSinceLastAttack) {
+        this.timeSinceLastAttack = timeSinceLastAttack;
+    }
 
-  /**
-   * Sets the camera, used for testing
-   * @param camera camera
-   */
-  public void setCamera(Camera camera) {
-    this.camera = camera;
-  }
+    /**
+     * Sets the camera, used for testing
+     *
+     * @param camera camera
+     */
+    public void setCamera(Camera camera) {
+        this.camera = camera;
+    }
 
-  public boolean isFacingRight() {
-      return this.facingRight;
-  }
+    public boolean isFacingRight() {
+        return this.facingRight;
+    }
 }

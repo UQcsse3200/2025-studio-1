@@ -8,7 +8,6 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
@@ -171,7 +170,8 @@ public class DialogueDisplay extends Component {
     }
 
     /**
-     *Sets the dialogue text on the label (without changing visibility).
+     * Sets the dialogue text on the label (without changing visibility).
+     *
      * @param text the content to display; {@code null} is treated as empty
      */
     public void setText(String text) {
@@ -203,6 +203,7 @@ public class DialogueDisplay extends Component {
 
     /**
      * Binds the dialogue data to the internal cache of this component; does not display it immediately.
+     *
      * @param data the {@link NpcDialogueDataComponent} to read lines from
      */
     public void bindData(NpcDialogueDataComponent data) {
@@ -234,7 +235,8 @@ public class DialogueDisplay extends Component {
     }
 
     /**
-     *Shows the first line from the provided dialogue data.
+     * Shows the first line from the provided dialogue data.
+     *
      * @param data the {@link NpcDialogueDataComponent} to read lines from
      */
     public void showFirst(NpcDialogueDataComponent data) {
@@ -291,6 +293,7 @@ public class DialogueDisplay extends Component {
 
     /**
      * Renders the i-th dialogue line using the current speaker prefix.
+     *
      * @param i zero-based index of the line to render
      */
     private void setLine(int i) {

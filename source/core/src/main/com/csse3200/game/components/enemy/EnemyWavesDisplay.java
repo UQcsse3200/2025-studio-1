@@ -18,12 +18,12 @@ import org.slf4j.LoggerFactory;
  */
 public class EnemyWavesDisplay extends UIComponent {
     private static final Logger logger = LoggerFactory.getLogger(EnemyWavesDisplay.class);
+    private static final float screenHeight = (float) Gdx.graphics.getHeight();
     private final EnemyWaves wavesManager;
+    protected Stage stage;
     private Table table;
     private Label waveNumberLabel;
     private Label waveDelayLabel;
-    protected Stage stage;
-    private static final float screenHeight = (float) Gdx.graphics.getHeight();
 
     /**
      * Constructs the EnemyWavesDisplay for the given EnemyWaves manager.
@@ -48,7 +48,7 @@ public class EnemyWavesDisplay extends UIComponent {
     private void addActors() {
         table = new Table();
         table.setSize(300f, 150f);
-        table.setPosition(30f, screenHeight * 3/5);
+        table.setPosition(30f, screenHeight * 3 / 5);
 
         // Current wave number
         int waveNumber = wavesManager.getWaveNumber();

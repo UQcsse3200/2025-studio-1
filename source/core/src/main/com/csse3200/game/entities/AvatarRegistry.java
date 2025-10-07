@@ -12,8 +12,8 @@ import java.util.List;
  * simple class to create avatars stats.
  */
 public class AvatarRegistry {
-    private static Avatar current; //storage system for the avatar to be able to be extracted later
     private static final String CONFIG_PATH = "configs/avatars.json";
+    private static Avatar current; //storage system for the avatar to be able to be extracted later
 
     /**
      * finds the file with all the information about the avatars and constructs a list with all the avatars and their

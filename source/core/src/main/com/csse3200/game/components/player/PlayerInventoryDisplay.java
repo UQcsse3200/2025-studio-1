@@ -23,17 +23,13 @@ import org.slf4j.LoggerFactory;
  */
 public class PlayerInventoryDisplay extends UIComponent {
     private static final Logger log = LoggerFactory.getLogger(PlayerInventoryDisplay.class);
-
-    private Table table;
-    private final Array<Slot> slots = new Array<>();
-
     private static final int NUM_SLOTS = 5;
     private static final float SLOT_SIZE = 96f;
     private static final float SLOT_PAD = 10f;
-
-    private int focusedIndex = -1;
-
+    private final Array<Slot> slots = new Array<>();
     private final InventoryComponent inventory;
+    private Table table;
+    private int focusedIndex = -1;
 
     /**
      * Constructs the PlayerInventory display, takes in an InventoryComponent

@@ -12,8 +12,6 @@ import com.csse3200.game.physics.components.HitboxComponent;
 import com.csse3200.game.physics.components.PhysicsComponent;
 import com.csse3200.game.physics.components.PhysicsProjectileComponent;
 import com.csse3200.game.rendering.AnimationRenderComponent;
-import com.csse3200.game.rendering.TextureRenderComponent;
-import com.csse3200.game.rendering.TextureRenderWithRotationComponent;
 import com.csse3200.game.services.ServiceLocator;
 
 /**
@@ -110,10 +108,10 @@ public class TouchAttackComponent extends Component {
 
         // Add a self-removing component
         explosion.addComponent(new Component() {
-            private float elapsedTime = 0f;
             private final int frameCount = atlas.findRegions("rocketExplosion").size;
             private final float frameDuration = 0.05f;
             private final float animationDuration = frameCount * frameDuration;
+            private float elapsedTime = 0f;
 
             @Override
             public void update() {
@@ -131,10 +129,6 @@ public class TouchAttackComponent extends Component {
 
         animator.startAnimation("rocketExplosion");
     }
-
-
-
-
 
 
 }

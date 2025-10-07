@@ -19,10 +19,10 @@ public class DashAttackTask extends DefaultTask implements PriorityTask {
     private final Vector2 speed;
     private final long cooldown;
     private final long dashTime;
-    private long lastDashTime;
     private final PhysicsEngine physics;
     private final DebugRenderer debugRenderer;
     private final RaycastHit hit = new RaycastHit();
+    private long lastDashTime;
     private MovementTask movementTask;
 
     /**

@@ -58,7 +58,7 @@ public class ShopScreenDisplay extends UIComponent {
     private final ForestGameArea game;
     private final CatalogService catalog;
     private final ShopManager manager;
-
+    Image background;
     // Scene2D Widgets
     private Table root;
     private Table grid;
@@ -67,7 +67,6 @@ public class ShopScreenDisplay extends UIComponent {
     private Texture pixelTex;
     private Label currencyLabel;
     private ItemScreenDisplay itemPopup;
-    Image background;
 
     /**
      * UI component that displays the shop screen
@@ -80,6 +79,15 @@ public class ShopScreenDisplay extends UIComponent {
         this.game = area;
         this.catalog = manager.getCatalog();
         this.manager = manager;
+    }
+
+    private static Texture makeSolidTexture(Color color) {
+        Pixmap pm = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
+        pm.setColor(color);
+        pm.fill();
+        Texture t = new Texture(pm);
+        pm.dispose();
+        return t;
     }
 
     /**
@@ -386,15 +394,6 @@ public class ShopScreenDisplay extends UIComponent {
                 com.csse3200.game.components.player.InventoryComponent.class);
         int amount = (inv != null) ? inv.getProcessor() : 0;
         currencyLabel.setText("Balance: $" + amount);
-    }
-
-    private static Texture makeSolidTexture(Color color) {
-        Pixmap pm = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
-        pm.setColor(color);
-        pm.fill();
-        Texture t = new Texture(pm);
-        pm.dispose();
-        return t;
     }
 
     // Errors

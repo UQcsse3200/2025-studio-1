@@ -1,7 +1,6 @@
 package com.csse3200.game.components.cards;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import org.w3c.dom.Text;
 
 public class Card {
     Suit suit;

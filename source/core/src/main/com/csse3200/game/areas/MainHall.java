@@ -187,19 +187,6 @@ public class MainHall extends GameArea {
         return null;
     }
 
-    /**
-     * Setter method for the player spawn point
-     * should be used when the player is traversing through the rooms
-     * 
-     * @param newSpawn the new spawn point
-     */
-    public static void setRoomSpawn(GridPoint2 newSpawn) {
-        if (newSpawn == null) {
-            return;
-        }
-        MainHall.playerSpawn = newSpawn;
-    }
-
     @Override
     public String toString() {
         return "Mainhall";

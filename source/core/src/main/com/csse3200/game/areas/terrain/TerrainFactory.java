@@ -48,6 +48,34 @@ public class TerrainFactory {
         this.orientation = orientation;
     }
 
+    private static void fillTilesAtRandom(
+            TiledMapTileLayer layer, GridPoint2 mapSize, TerrainTile tile, int amount) {
+        GridPoint2 min = new GridPoint2(0, 0);
+        GridPoint2 max = new GridPoint2(mapSize.x - 1, mapSize.y - 1);
+
+        for (int i = 0; i < amount; i++) {
+            GridPoint2 tilePos = RandomUtils.random(min, max);
+            Cell cell = layer.getCell(tilePos.x, tilePos.y);
+            cell.setTile(tile);
+        }
+    }
+
+    private static void fillTiles(TiledMapTileLayer layer, GridPoint2 mapSize, TerrainTile tile) {
+        for (int x = 0; x < mapSize.x; x++) {
+            for (int y = 0; y < mapSize.y; y++) {
+                Cell cell = new Cell();
+                cell.setTile(tile);
+                layer.setCell(x, y, cell);
+            }
+        }
+    }
+
+    private static void fillBackground(TiledMapTileLayer layer, GridPoint2 mapSize, TerrainTile tile) {
+        Cell cell = new Cell();
+        cell.setTile(tile);
+        layer.setCell(0, 0, cell);
+    }
+
     /**
      * Create a terrain of the given type, using the orientation of the factory. This can be extended
      * to add additional game terrains.
@@ -194,34 +222,6 @@ public class TerrainFactory {
 
         tiledMap.getLayers().add(layer);
         return tiledMap;
-    }
-
-    private static void fillTilesAtRandom(
-            TiledMapTileLayer layer, GridPoint2 mapSize, TerrainTile tile, int amount) {
-        GridPoint2 min = new GridPoint2(0, 0);
-        GridPoint2 max = new GridPoint2(mapSize.x - 1, mapSize.y - 1);
-
-        for (int i = 0; i < amount; i++) {
-            GridPoint2 tilePos = RandomUtils.random(min, max);
-            Cell cell = layer.getCell(tilePos.x, tilePos.y);
-            cell.setTile(tile);
-        }
-    }
-
-    private static void fillTiles(TiledMapTileLayer layer, GridPoint2 mapSize, TerrainTile tile) {
-        for (int x = 0; x < mapSize.x; x++) {
-            for (int y = 0; y < mapSize.y; y++) {
-                Cell cell = new Cell();
-                cell.setTile(tile);
-                layer.setCell(x, y, cell);
-            }
-        }
-    }
-
-    private static void fillBackground(TiledMapTileLayer layer, GridPoint2 mapSize, TerrainTile tile) {
-        Cell cell = new Cell();
-        cell.setTile(tile);
-        layer.setCell(0, 0, cell);
     }
 
     /**
