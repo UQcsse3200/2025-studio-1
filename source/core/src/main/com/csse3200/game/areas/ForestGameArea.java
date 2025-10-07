@@ -95,6 +95,9 @@ public class ForestGameArea extends GameArea {
             "images/pistol.png",
             "images/rifle.png",
             "images/dagger.png",
+            "images/rapidfirepowerup.png",
+            "images/aimbot_powerup.png",
+            "images/doubleprocessorspowerup.png",
             "images/laser_shot.png",
             "images/Spawn.png",
             "images/LobbyWIP.png",
@@ -129,6 +132,9 @@ public class ForestGameArea extends GameArea {
             "foreg_sprites/furniture/ServerRack.png",
             "foreg_sprites/furniture/ServerRack2.png",
             "foreg_sprites/furniture/Vent.png",
+            "images/rocketlauncher.png",
+            "images/rocket.png",
+            "images/rocketExplosion.png",
             "images/Storage.png",
             "images/casino.png",
             "images/!.png",
@@ -255,6 +261,8 @@ public class ForestGameArea extends GameArea {
             "images/boss2_combined.atlas",
             "images/Boss3_Attacks.atlas",
             "images/boss3_phase2.atlas",
+            "images/rocketExplosion.atlas",
+            "images/boss3_phase2.atlas",
             "images/!animation.atlas",
             "images/guidance_npc.atlas",
             "images/assister_npc.atlas",
@@ -290,6 +298,8 @@ public class ForestGameArea extends GameArea {
     private Entity bullet;
     private Entity pistol;
     private Entity rifle;
+    private Entity rapidFirePowerup;
+    private Entity unlimitedAmmoPowerup;
 
 
     /**
@@ -585,7 +595,8 @@ public class ForestGameArea extends GameArea {
         return newDagger;
     }
 
-    /** FIXME Layer is behind player, does that matter???
+    /**
+     * FIXME Layer is behind player, does that matter???
      * FIXME Also need to fix positioning so that it actually looks like the player is holding the weapon
      * Sets the equipped item in the PlayerEquipComponent to be the given item
      *
@@ -640,10 +651,24 @@ public class ForestGameArea extends GameArea {
         return newRifle;
     }
 
-    private Entity spawnRapidFirePowerup() {
+    private void spawnRapidFirePowerup() {
         Entity newRapidFirePowerup = PowerupsFactory.createRapidFire();
-        spawnEntityAt(newRapidFirePowerup, new GridPoint2(2, 40), true, true);
-        return newRapidFirePowerup;
+        spawnEntityAt(newRapidFirePowerup, new GridPoint2(2, 30), true, true);
+    }
+
+    private void spawnUnlimitedAmmoPowerup() {
+        Entity newUnlimitedAmmoPowerup = PowerupsFactory.createUnlimitedAmmo();
+        spawnEntityAt(newUnlimitedAmmoPowerup, new GridPoint2(2, 30), true, true);
+    }
+
+    private void spawnAimbotPowerup() {
+        Entity newAimbot = PowerupsFactory.createAimBot();
+        spawnEntityAt(newAimbot, new GridPoint2(2, 30), true, true);
+    }
+
+    private void spawnDoubleProcessorsPowerup() {
+        Entity newUnlimitedAmmoPowerup = PowerupsFactory.createDoubleProcessors();
+        spawnEntityAt(newUnlimitedAmmoPowerup, new GridPoint2(2, 30), true, true);
     }
 
     private void spawnnpctest() {
