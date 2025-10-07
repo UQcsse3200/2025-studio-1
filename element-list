@@ -52,6 +52,7 @@ com.csse3200.game.screens
 com.csse3200.game.services
 com.csse3200.game.session
 com.csse3200.game.ui
+com.csse3200.game.ui.effects
 com.csse3200.game.ui.terminal
 com.csse3200.game.ui.terminal.autocomplete
 com.csse3200.game.ui.terminal.commands

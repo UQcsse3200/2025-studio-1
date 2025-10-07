@@ -110,7 +110,6 @@ loadScripts(document, 'script');</script>
  Centralises common wiring for Scene2D-based screens:
  <ul>
    <li>Creates and adds a fill-parent <code>Table</code> root to the stage</li>
-   <li>Initialises shared <a href="../../ui/NeonStyles.html" title="class in com.csse3200.game.ui"><code>NeonStyles</code></a> for buttons</li>
    <li>Provides helpers for adding titles, body text, and buttons</li>
    <li>Manages auto-disposal of helper-created <code>Texture</code> assets</li>
  </ul>
@@ -137,14 +136,9 @@ loadScripts(document, 'script');</script>
 <div class="col-last odd-row-color">
 <div class="block">Class-scoped logger for subclasses.</div>
 </div>
-<div class="col-first even-row-color"><code>protected <a href="../../ui/NeonStyles.html" title="class in com.csse3200.game.ui">NeonStyles</a></code></div>
-<div class="col-second even-row-color"><code><a href="#neon" class="member-name-link">neon</a></code></div>
+<div class="col-first even-row-color"><code>protected com.badlogic.gdx.scenes.scene2d.ui.Table</code></div>
+<div class="col-second even-row-color"><code><a href="#root" class="member-name-link">root</a></code></div>
 <div class="col-last even-row-color">
-<div class="block">Shared style builder for rounded neon buttons.</div>
-</div>
-<div class="col-first odd-row-color"><code>protected com.badlogic.gdx.scenes.scene2d.ui.Table</code></div>
-<div class="col-second odd-row-color"><code><a href="#root" class="member-name-link">root</a></code></div>
-<div class="col-last odd-row-color">
 <div class="block">Root table added to the stage; fill-parent and centered.</div>
 </div>
 </div>
@@ -301,13 +295,6 @@ loadScripts(document, 'script');</script>
 <div class="block">Root table added to the stage; fill-parent and centered.</div>
 </section>
 </li>
-<li>
-<section class="detail" id="neon">
-<h3>neon</h3>
-<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type"><a href="../../ui/NeonStyles.html" title="class in com.csse3200.game.ui">NeonStyles</a></span>&nbsp;<span class="element-name">neon</span></div>
-<div class="block">Shared style builder for rounded neon buttons.</div>
-</section>
-</li>
 </ul>
 </section>
 </li>
@@ -341,7 +328,6 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">create</span>()</div>
 <div class="block">Initialises common UI infrastructure and delegates to <a href="#buildUI(com.badlogic.gdx.scenes.scene2d.ui.Table)"><code>buildUI(Table)</code></a>.
  <p>
- Creates <a href="#root"><code>root</code></a>, adds it to the stage, initialises <a href="#neon"><code>neon</code></a>,
  and then calls <a href="#buildUI(com.badlogic.gdx.scenes.scene2d.ui.Table)"><code>buildUI(Table)</code></a> for subclass-specific layout.</div>
 <dl class="notes">
 <dt>Overrides:</dt>
@@ -374,7 +360,7 @@ loadScripts(document, 'script');</script>
 <dd><code>to</code> - table to add the title to</dd>
 <dd><code>text</code> - title text</dd>
 <dd><code>fontScale</code> - scale for the title font</dd>
-<dd><code>color</code> - optional tint colour for the title (may be <code>null</code>)</dd>
+<dd><code>color</code> - optional tint colour for the title (perhaps <code>null</code>)</dd>
 <dd><code>padBottom</code> - bottom padding applied after the title row</dd>
 <dt>Returns:</dt>
 <dd>the created <code>Label</code></dd>
@@ -411,7 +397,7 @@ loadScripts(document, 'script');</script>
 <dt>Parameters:</dt>
 <dd><code>text</code> - button label</dd>
 <dd><code>labelScale</code> - font scale applied to the label</dd>
-<dd><code>onClick</code> - action executed on <code>ChangeListener</code> event (may be <code>null</code>)</dd>
+<dd><code>onClick</code> - action executed on <code>ChangeListener</code> event (perhaps <code>null</code>)</dd>
 <dt>Returns:</dt>
 <dd>the configured <code>TextButton</code></dd>
 </dl>
