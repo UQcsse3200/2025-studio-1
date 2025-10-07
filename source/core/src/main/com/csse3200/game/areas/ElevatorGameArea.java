@@ -20,6 +20,8 @@ import com.csse3200.game.rendering.TextureRenderComponent;
 public class ElevatorGameArea extends GameArea {
     private static final float WALL_WIDTH = 0.1f;
     private static GridPoint2 PLAYER_SPAWN = new GridPoint2(10, 10);
+    private Entity player;
+    private int roomDiffNumber = 5;
 
     public ElevatorGameArea(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
         super(terrainFactory, cameraComponent);
@@ -29,7 +31,7 @@ public class ElevatorGameArea extends GameArea {
     public void create() {
         GenericLayout.ensureGenericAssets(this);
         /** Ensure the thin floor texture is available for the elevator room **/
-        ensureTextures(new String[]{"foreg_sprites/general/ThinFloor3.png", "images/Elevator background.png", "images/keycard_lvl2.png", "images/KeycardDoor.png", "images/Office and elevator/Office platform.png", "images/Office and elevator/Office desk.png"});
+        ensureTextures(new String[]{"foreg_sprites/general/ThinFloor3.png", "images/Elevator background.png", "images/keycard_lvl2.png", "images/KeycardDoor.png", "images/Office and elevator/Office platform.png", "images/Office and elevator/Office desk.png", "images/pistol.png", "images/rifle.png", "images/lightsaberSingle.png"});
         /** Use the dedicated elevator background **/
         terrain = terrainFactory.createTerrain(TerrainType.ELEVATOR);
         spawnEntity(new Entity().addComponent(terrain));
@@ -44,6 +46,8 @@ public class ElevatorGameArea extends GameArea {
         spawnFloor();
         spawnPlatforms();
         spawnDesk();
+        spawnEnemies();
+        spawnItems();
     }
 
     private void spawnBordersAndDoors() {
@@ -66,14 +70,17 @@ public class ElevatorGameArea extends GameArea {
         spawnEntity(leftDoor);
 
 
-        float rightDoorHeight = Math.max(1f, b.viewHeight() * 0.2f);
-        float rightDoorY = b.bottomY() + 7.0f; // slightly above ground
-        float rightTopSegHeight = Math.max(0f, b.topY() - (rightDoorY + rightDoorHeight));
-        if (rightTopSegHeight > 0f) {
-            Entity rightTop = ObstacleFactory.createWall(WALL_WIDTH, rightTopSegHeight);
-            rightTop.setPosition(b.rightX() - WALL_WIDTH, rightDoorY + rightDoorHeight);
-            spawnEntity(rightTop);
-        }
+		// Create a right wall 
+		float rightWallHeight = Math.max(0f, b.topY() - b.bottomY());
+		if (rightWallHeight > 0f) {
+			Entity rightWall = ObstacleFactory.createWall(WALL_WIDTH, rightWallHeight);
+			rightWall.setPosition(b.rightX() - WALL_WIDTH, b.bottomY());
+			spawnEntity(rightWall);
+		}
+
+		// Place the right-side door on top of the wall
+		float rightDoorHeight = Math.max(1f, b.viewHeight() * 0.2f);
+		float rightDoorY = b.bottomY() + 7.0f; // slightly above ground
         Entity rightDoor = ObstacleFactory.createDoorTrigger(WALL_WIDTH, rightDoorHeight);
         rightDoor.setPosition(b.rightX() - WALL_WIDTH - 0.001f, rightDoorY);
         rightDoor.addComponent(new ColliderComponent());
@@ -89,8 +96,10 @@ public class ElevatorGameArea extends GameArea {
     }
 
     private void spawnPlayer() {
-        Entity player = com.csse3200.game.entities.factories.characters.PlayerFactory.createPlayer();
-        spawnEntityAt(player, PLAYER_SPAWN, true, true);
+        Entity p = com.csse3200.game.entities.factories.characters.PlayerFactory.createPlayer();
+        this.player = p;
+        spawnEntityAt(p, PLAYER_SPAWN, true, true);
+        com.csse3200.game.services.ServiceLocator.registerPlayer(p);
     }
 
     /**
@@ -169,14 +178,31 @@ public class ElevatorGameArea extends GameArea {
 
     @Override
     public Entity getPlayer() {
-        // placeholder for errors
-        return null;
+        return player;
     }
 
     public static ElevatorGameArea load(TerrainFactory terrainFactory, CameraComponent camera) {
         return (new ElevatorGameArea(terrainFactory, camera));
     }
 
+    private void spawnEnemies() {
+        if (player == null) return;
+        Entity grok1 = com.csse3200.game.entities.factories.characters.NPCFactory.createGrokDroid(player, this,
+                com.csse3200.game.services.ServiceLocator.getDifficulty().getRoomDifficulty(this.roomDiffNumber));
+        spawnEntityAt(grok1, new GridPoint2(15, 6), true, false);
+
+        Entity grok2 = com.csse3200.game.entities.factories.characters.NPCFactory.createGrokDroid(player, this,
+                com.csse3200.game.services.ServiceLocator.getDifficulty().getRoomDifficulty(this.roomDiffNumber));
+        spawnEntityAt(grok2, new GridPoint2(13, 9), true, false);
+
+        Entity grok3 = com.csse3200.game.entities.factories.characters.NPCFactory.createGrokDroid(player, this,
+                com.csse3200.game.services.ServiceLocator.getDifficulty().getRoomDifficulty(this.roomDiffNumber));
+        spawnEntityAt(grok3, new GridPoint2(17, 7), true, false);
+    }
+
+    private void spawnItems() {
+        com.csse3200.game.entities.spawner.ItemSpawner itemSpawner = new com.csse3200.game.entities.spawner.ItemSpawner(this);
+        itemSpawner.spawnItems(com.csse3200.game.entities.configs.ItemSpawnConfig.elevatormap());
+    }
+
 }
-
-
