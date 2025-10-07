@@ -5,8 +5,10 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
+import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Align;
 import com.csse3200.game.components.AmmoStatsComponent;
 import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.components.MagazineComponent;
@@ -45,6 +47,7 @@ public class PlayerStatsDisplay extends BaseScreenDisplay {
     private ProgressBar healthBar;
     private ProgressBar staminaBar;
     private Label processorLabel;
+    private Label healthTextLabel;
     private Label ammoLabel;
 
     public PlayerStatsDisplay() {
@@ -84,6 +87,13 @@ public class PlayerStatsDisplay extends BaseScreenDisplay {
         healthBar.setAnimateDuration(0f);
         healthBar.setValue(clamp(healthVal, 0, maxHealth));
 
+        healthTextLabel = new Label(formatHealthText(healthVal, maxHealth), skin, "large");
+        healthTextLabel.setAlignment(Align.center);
+
+        Stack healthStack = new Stack();
+        healthStack.add(healthBar);       // bar at the back
+        healthStack.add(healthTextLabel); // text on top
+
         // Stamina bar as percentage [0..100]
         staminaBar = new ProgressBar(0, PCT_MAX, 1, false, makeBarStyle(COLOR_STAMINA));
         staminaBar.setAnimateDuration(0f);
@@ -98,7 +108,7 @@ public class PlayerStatsDisplay extends BaseScreenDisplay {
 
         // Layout top-left
         root.top().left().padTop(45f).padLeft(5f);
-        root.add(healthBar).width(BAR_WIDTH).height(BAR_HEIGHT).pad(PAD);
+        root.add(healthStack).width(BAR_WIDTH).height(BAR_HEIGHT).pad(PAD);
         root.row();
         root.add(staminaBar).width(BAR_WIDTH).height(BAR_HEIGHT).pad(PAD);
         root.row();
@@ -108,6 +118,10 @@ public class PlayerStatsDisplay extends BaseScreenDisplay {
         root.row();
     }
 
+    private String formatHealthText(int current, int max) {
+        return current + " / " + max;
+    }
+
     @Override
     public void draw(SpriteBatch batch) { /* Stage handles rendering */ }
 
@@ -115,8 +129,10 @@ public class PlayerStatsDisplay extends BaseScreenDisplay {
 
     public void updatePlayerHealthUI(int health) {
         if (healthBar == null) return;
-        float max = healthBar.getMaxValue();
-        healthBar.setValue(clamp(health, 0, (int) max));
+        int max = (int) healthBar.getMaxValue();
+        int clamped = clamp(health, 0, max);
+        healthBar.setValue(clamped);
+        healthTextLabel.setText(formatHealthText(clamped, max));
     }
 
     public void updatePlayerStaminaUI(int current, int max) {
