@@ -95,8 +95,6 @@ public class MinimapDisplay extends BaseScreenDisplay {
 
         minimapTable = new Table();
         minimapTable.setFillParent(true);
-        minimapTable.setTouchable(Touchable.enabled);
-        stage.setKeyboardFocus(root);
 
         root.add(minimapTable).center().expand().fill();
         logger.debug("Created minimap actor");
@@ -143,27 +141,18 @@ public class MinimapDisplay extends BaseScreenDisplay {
 
             @Override
             public boolean keyDown(InputEvent event, int keycode) {
-                logger.info("Pressed key code: {}", keycode);
                 if (keycode == Input.Keys.TAB && !handled) {
                     handled = true;
                     entity.getEvents().trigger("resume");
                     root.removeListener(this);
                     return true;
                 }
-//                if (keycode == Input.Keys.PLUS) {
-//                    zoomIn();
-//                    return true;
-//                }
-//                if (keycode == Input.Keys.MINUS) {
-//                    zoomOut();
-//                    return true;
-//                }
                 return false;
             }
         });
     }
 
-    private void zoomIn() {
+    public void zoomIn() {
         float currentScale = minimap.getScale();
         if (currentScale < 5.0f) {
             minimap.zoom(25f);
@@ -171,9 +160,9 @@ public class MinimapDisplay extends BaseScreenDisplay {
         renderMinimapImages();
     }
 
-    private void zoomOut() {
+    public void zoomOut() {
         float currentScale = minimap.getScale();
-        if (currentScale > 1.05f) {
+        if (currentScale > 0.2f) {
             minimap.zoom(-25f);
         }
         renderMinimapImages();
