@@ -11,7 +11,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.csse3200.game.GdxGame;
 import com.csse3200.game.entities.Avatar;
 import com.csse3200.game.entities.AvatarRegistry;
@@ -63,6 +62,11 @@ public class AvatarChoiceScreen extends BaseScreen {
     private Array<Texture> loadedTextures = new Array<>();
 
 
+    /**
+     * initiate the screen
+     *
+     * @param game the game currently running
+     */
     public AvatarChoiceScreen(GdxGame game) {
         super(game, BgImage);
     }
@@ -77,6 +81,7 @@ public class AvatarChoiceScreen extends BaseScreen {
 
         avatars = AvatarRegistry.getAll();
 
+
         Table root = new Table();
         root.setFillParent(true);
         root.pad(RootPadding);
@@ -86,6 +91,11 @@ public class AvatarChoiceScreen extends BaseScreen {
         Label titleLabel = new Label("Choose Your Avatar", skin, "default");
         titleLabel.setAlignment(Align.center);
         titleLabel.setFontScale(TitleFontScale);
+
+        Label controlsHint = new Label("Use left/right arrows to browse, ENTER to select, ESC to go back",
+                skin, "default");
+        controlsHint.setAlignment(Align.center);
+        controlsHint.setFontScale(NameFontScale);
 
         // Cards row inside a scroll pane
         cardRow = new Table();
@@ -109,6 +119,7 @@ public class AvatarChoiceScreen extends BaseScreen {
 
         root.add(titleLabel).colspan(RootColumnSpan).center().padBottom(DefaultGap).row();
         root.add(scrollPane).growX().height(ScrollHeight).colspan(RootColumnSpan).padBottom(DefaultGap).row();
+        root.add(controlsHint).colspan(RootColumnSpan).center().padBottom(DefaultGap).row();
         root.add(new Label("", skin)).growX(); // spacer
         root.add(infoCol).width(InfoPanelWidth).top();
 
