@@ -167,17 +167,18 @@ public class Minimap {
                 }
 
                 // Compute the room's position on the screen
-                float screenX = (roomCoordinates.x + (float) IMAGE_WIDTH / 2 - centre.x) * scale;
-                float screenY = (roomCoordinates.y + (float) IMAGE_HEIGHT / 2 - centre.y) * scale;
+                float screenX = (IMAGE_WIDTH * roomCoordinates.x + (float) IMAGE_WIDTH / 2 - centre.x) * scale;
+                float screenY = (IMAGE_HEIGHT * roomCoordinates.y + (float) IMAGE_HEIGHT / 2 - centre.y) * scale;
                 Vector2 screenCoords = new Vector2(screenX, screenY);
                 output.put(screenCoords, grid.get(roomCoordinates));
             }
         }
 
+        logger.info("ROOM POSITIONS");
         for (Vector2 pos : output.keySet()) {
             logger.info(pos.x + ", " + pos.y + " - " + output.get(pos));
         }
-
+        logger.info("END ROOM POSITIONS");
 
         return output;
     }
