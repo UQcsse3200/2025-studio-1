@@ -130,7 +130,6 @@ public class MinimapDisplay extends BaseScreenDisplay {
 
             @Override
             public boolean scrolled(InputEvent event, float x, float y, float amountX, float amountY) {
-                logger.info("Scrolled at {}, {}", x, y);
                 zoom(x, y, amountY);
                 return true;
             }
@@ -271,6 +270,14 @@ public class MinimapDisplay extends BaseScreenDisplay {
     public void dispose() {
         minimap.close();
         minimap = null;
+        if (stage != null) {
+            if (stage.getScrollFocus() == minimapTable) {
+                stage.setScrollFocus(null);
+            }
+            if (stage.getKeyboardFocus() == minimapTable) {
+                stage.setKeyboardFocus(null);
+            }
+        }
         if (dimmer != null && dimmer.getStage() != null) {
             dimmer.remove();
             dimmer = null;
