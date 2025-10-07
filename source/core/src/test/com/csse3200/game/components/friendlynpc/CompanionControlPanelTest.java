@@ -1,4 +1,3 @@
-// src/test/java/com/csse3200/game/components/friendlynpc/CompanionControlPanel_NullArgsTest.java
 package com.csse3200.game.components.friendlynpc;
 
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -7,12 +6,12 @@ import com.csse3200.game.services.ServiceLocator;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.*;
 
 /**
- * 极简测试：只验证 attach(...) 的空参早返回分支。
- * 不创建任何 UI/Skin/Texture，保证测试稳过。
+ * Minimal test: only verifies the early-return branches of attach(...) when given null arguments.
+ * It avoids creating any UI/Skin/Texture so the test is stable and headless-friendly.
  */
 public class CompanionControlPanelTest {
 
@@ -20,11 +19,11 @@ public class CompanionControlPanelTest {
     void attach_returnsNull_whenStageIsNull() {
         Entity comp = mock(Entity.class);
 
-        // 静态 mock 只是为了确保不会不小心调用 ServiceLocator（可选）
+        // Optional: static mock to ensure ServiceLocator is not accidentally used
         try (MockedStatic<ServiceLocator> sl = mockStatic(ServiceLocator.class)) {
             assertNull(CompanionControlPanel.attach(null, comp));
             assertNull(CompanionControlPanel.attach(null, comp, 0.44f));
-            sl.verifyNoInteractions(); // attach 提前返回，不应访问 ServiceLocator
+            sl.verifyNoInteractions(); // attach returns early; ServiceLocator must not be touched
         }
     }
 
