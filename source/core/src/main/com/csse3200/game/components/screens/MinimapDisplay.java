@@ -94,7 +94,9 @@ public class MinimapDisplay extends BaseScreenDisplay {
         minimapTable.setFillParent(true);
 
         root.add(minimapTable).center().expand().fill();
-        logger.debug("Created minimap actor");
+        logger.info("Created minimap actor");
+
+        renderMinimapImages();
 
         minimapTable.addListener(new InputListener() {
             private float lastX, lastY;
@@ -111,7 +113,7 @@ public class MinimapDisplay extends BaseScreenDisplay {
                 float deltaX = x - lastX;
                 float deltaY = y - lastY;
 
-                minimap.pan(new Vector2(-deltaX, deltaY)); // drag = pan
+                minimap.pan(new Vector2(-deltaX, -deltaY)); // drag = pan
 
                 minimapTable.clearChildren();
                 renderMinimapImages();
@@ -154,9 +156,10 @@ public class MinimapDisplay extends BaseScreenDisplay {
             Vector2 screenPos = entry.getKey();
             Texture texture = new Texture(imagePath);
             Image roomImage = new Image(new TextureRegionDrawable(texture));
-            roomImage.setSize(128, 72);
+            //roomImage.setSize(128, 72);
             roomImage.setPosition(screenPos.x, screenPos.y);
             minimapTable.addActor(roomImage);
+            break;
         }
     }
 

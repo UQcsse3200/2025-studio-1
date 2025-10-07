@@ -199,7 +199,9 @@ public class MainGameScreen extends ScreenAdapter {
                 countdownTimer.pause();
             } else {
                 hidePauseOverlay();
-                countdownTimer.resume();
+                if (!isMinimapVisible) {
+                    countdownTimer.resume();
+                }
             }
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.TAB)) {
@@ -312,7 +314,9 @@ public class MainGameScreen extends ScreenAdapter {
         if (pauseOverlay != null) {
             pauseOverlay.dispose();
             ServiceLocator.getEntityService().unregister(pauseOverlay);
-            ServiceLocator.getTimeSource().setPaused(false);
+            if (!isMinimapVisible) {
+                ServiceLocator.getTimeSource().setPaused(false);
+            }
             pauseOverlay = null;
         }
         isPauseVisible = false;
@@ -332,7 +336,7 @@ public class MainGameScreen extends ScreenAdapter {
         Stage stage = ServiceLocator.getRenderService().getStage();
         minimap = new Entity()
                 .addComponent(new MinimapDisplay(game,
-                        new Minimap(Gdx.graphics.getHeight(), Gdx.graphics.getWidth(),
+                        new Minimap(720, 1280,
                                 "configs/room_layout.txt")))
                 .addComponent(new InputDecorator(stage, 100));
         minimap.getEvents().addListener("resume", this::hideMinimapOverlay);
