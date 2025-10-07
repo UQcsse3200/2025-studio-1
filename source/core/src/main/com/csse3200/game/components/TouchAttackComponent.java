@@ -82,7 +82,7 @@ public class TouchAttackComponent extends Component {
         if (targetStats.getKnockbackResistance() != 1f && physicsComponent != null && knockbackForce > 0f) {
             Body targetBody = physicsComponent.getBody();
             Vector2 direction = target.getCenterPosition().sub(entity.getCenterPosition());
-            Vector2 impulse = direction.setLength(knockbackForce);
+            Vector2 impulse = direction.setLength(knockbackForce * (1 - targetStats.getKnockbackResistance()));
             targetBody.applyLinearImpulse(impulse, targetBody.getWorldCenter(), true);
         }
 

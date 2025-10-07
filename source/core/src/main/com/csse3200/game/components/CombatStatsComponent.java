@@ -29,6 +29,10 @@ public class CombatStatsComponent extends Component {
 
     private boolean healthUpgraded;
 
+    /**
+     * Knockback resistance of the entity, 0 meaning it's affected fully by knockback, and 1 means it's not affected by
+     * knockback at all.
+     */
     private float knockbackResistance = 0;
 
     /**
@@ -53,6 +57,9 @@ public class CombatStatsComponent extends Component {
      * Construct a combat Stats Component (Health + Attack System)
      *
      * @param health initial health (values {@code < 0} are clamped to {@code 0})
+     * @param knockbackResistance The knockback resistance of this entity. Value range is [0, 1], where 0 means
+     *                            0% knockback resistance, and 1 means 100% knockback resistance (not affected by
+     *                            knockback at all)
      */
     public CombatStatsComponent(int health, float knockbackResistance) {
         setMaxHealth(health);
@@ -195,6 +202,12 @@ public class CombatStatsComponent extends Component {
         return damage;
     }
 
+    /**
+     * Gets the knockback resistance of this entity
+     * @return The knockback resistance of this entity. Value range is [0, 1], where 0 means
+     *                           0% knockback resistance, and 1 means 100% knockback resistance (not affected by
+     *                           knockback at all)
+     */
     public float getKnockbackResistance() {
         return knockbackResistance;
     }
