@@ -104,7 +104,8 @@ public class MinimapDisplay extends BaseScreenDisplay {
         stage.setScrollFocus(minimapTable);
 
         minimapTable.addListener(new InputListener() {
-            private float lastX, lastY;
+            private float lastX;
+            private float lastY;
 
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
@@ -193,19 +194,15 @@ public class MinimapDisplay extends BaseScreenDisplay {
             Vector2 screenPos = entry.getKey();
 
             // Reuse texture if already loaded
-            Texture texture = textures.get(imagePath);
-            if (texture == null) {
-                texture = new Texture(imagePath);
-                textures.put(imagePath, texture);
-            }
+            Texture texture = textures.computeIfAbsent(imagePath, Texture::new);
 
             Image roomImage = new Image(new TextureRegionDrawable(texture));
             roomImage.setScale(minimap.getScale(), minimap.getScale());
 
             // Set position so the center is at (screenPos.x, screenPos.y)
             roomImage.setPosition(
-                    screenPos.x - (float) Minimap.IMAGE_WIDTH * minimap.getScale() / 2,
-                    screenPos.y - (float) Minimap.IMAGE_HEIGHT * minimap.getScale() / 2
+                    screenPos.x - Minimap.IMAGE_WIDTH * minimap.getScale() / 2,
+                    screenPos.y - Minimap.IMAGE_HEIGHT * minimap.getScale() / 2
             );
             minimapTable.addActor(roomImage);
         }
@@ -224,7 +221,15 @@ public class MinimapDisplay extends BaseScreenDisplay {
         float oldScale = minimap.getScale();
 
         // Scroll up = zoom in; Scroll down = zoom out
-        float percentChange = (amountY > 0) ? 25f : (amountY < 0) ? -25f : 0;
+        float percentChange;
+        if (amountY > 0) {
+            percentChange = 25f;
+        } else if (amountY < 0) {
+            percentChange = -25f;
+        } else {
+            percentChange = 0;
+        }
+
         minimap.zoom(percentChange);
         float newScale = minimap.getScale();
 
