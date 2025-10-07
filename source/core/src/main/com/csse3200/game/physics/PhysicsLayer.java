@@ -18,11 +18,11 @@ public class PhysicsLayer {
     public static final short WALL = 0x2;
     public static final short GATE = 0x8; // ← Add this
 
-    public static boolean contains(short filterBits, short layer) {
-        return (filterBits & layer) != 0;
-    }
-
     private PhysicsLayer() {
         throw new IllegalStateException("Instantiating static util class");
+    }
+
+    public static boolean contains(short filterBits, short layer) {
+        return (filterBits & layer) != 0;
     }
 }

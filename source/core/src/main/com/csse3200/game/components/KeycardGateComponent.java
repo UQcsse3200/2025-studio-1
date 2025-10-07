@@ -18,12 +18,13 @@ public class KeycardGateComponent extends Component {
      * Global cheat: when true, all keycard checks are bypassed.
      */
     private static volatile boolean GLOBAL_OVERRIDE = false;
-
-    /**
-     * Enable/disable the global keycard-gate override.
-     */
-    public static void setGlobalOverride(boolean enabled) {
-        GLOBAL_OVERRIDE = enabled;
+    // --- existing fields ---
+    private final int requiredLevel;
+    private final Runnable onUnlock;
+    private boolean unlocked = false;
+    public KeycardGateComponent(int requiredLevel, Runnable onUnlock) {
+        this.requiredLevel = requiredLevel;
+        this.onUnlock = onUnlock;
     }
 
     /**
@@ -33,14 +34,11 @@ public class KeycardGateComponent extends Component {
         return GLOBAL_OVERRIDE;
     }
 
-    // --- existing fields ---
-    private final int requiredLevel;
-    private final Runnable onUnlock;
-    private boolean unlocked = false;
-
-    public KeycardGateComponent(int requiredLevel, Runnable onUnlock) {
-        this.requiredLevel = requiredLevel;
-        this.onUnlock = onUnlock;
+    /**
+     * Enable/disable the global keycard-gate override.
+     */
+    public static void setGlobalOverride(boolean enabled) {
+        GLOBAL_OVERRIDE = enabled;
     }
 
     @Override

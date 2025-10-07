@@ -45,6 +45,18 @@ public class SettingsMenuDisplay extends UIComponent {
     }
 
     /**
+     * Sets the provided labels' font colour to white by cloning their styles.
+     */
+    private static void makeWhite(Label... labels) {
+        for (Label l : labels) {
+            Label.LabelStyle st = new Label.LabelStyle(l.getStyle());
+            st.fontColor = Color.WHITE;
+            l.setStyle(st);
+            logger.debug("Label styled to white");
+        }
+    }
+
+    /**
      * Initialises styles and builds the actors.
      */
     @Override
@@ -418,17 +430,5 @@ public class SettingsMenuDisplay extends UIComponent {
     public void dispose() {
         rootTable.clear();
         super.dispose();
-    }
-
-    /**
-     * Sets the provided labels' font colour to white by cloning their styles.
-     */
-    private static void makeWhite(Label... labels) {
-        for (Label l : labels) {
-            Label.LabelStyle st = new Label.LabelStyle(l.getStyle());
-            st.fontColor = Color.WHITE;
-            l.setStyle(st);
-            logger.debug("Label styled to white");
-        }
     }
 }

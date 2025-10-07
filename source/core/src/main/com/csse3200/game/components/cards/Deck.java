@@ -16,7 +16,7 @@ public class Deck {
         TextureAtlas atlas = ServiceLocator.getResourceService().getAsset("images/cards.atlas", TextureAtlas.class);
         deck = new ArrayList<>();
         for (Suit suit : Suit.values()) {
-            for(Rank rank : Rank.values()) {
+            for (Rank rank : Rank.values()) {
                 TextureRegion texture = atlas.findRegion(rank.getSymbol() + suit.getSymbol());
                 deck.add(new Card(suit, rank, texture));
             }

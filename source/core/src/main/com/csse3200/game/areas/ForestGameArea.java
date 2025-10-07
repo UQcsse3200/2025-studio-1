@@ -18,8 +18,6 @@ import com.csse3200.game.components.shop.CatalogService;
 import com.csse3200.game.components.shop.ShopDemo;
 import com.csse3200.game.components.shop.ShopManager;
 import com.csse3200.game.entities.Entity;
-import com.csse3200.game.entities.configs.Armour;
-import com.csse3200.game.entities.factories.items.ArmourFactory;
 import com.csse3200.game.entities.configs.Benches;
 import com.csse3200.game.entities.configs.ItemSpawnConfig;
 import com.csse3200.game.entities.configs.Weapons;
@@ -42,7 +40,6 @@ import com.csse3200.game.rendering.TextureRenderComponent;
 import com.csse3200.game.rendering.TextureRenderWithRotationComponent;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
-import com.csse3200.game.components.minigames.BlackJackGame;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -59,7 +56,6 @@ import static com.csse3200.game.entities.configs.Weapons.*;
  */
 public class ForestGameArea extends GameArea {
     private static final Logger logger = LoggerFactory.getLogger(ForestGameArea.class);
-    private static GridPoint2 playerSpawn = new GridPoint2(3, 20);
     private static final int NUM_ITEMS = 5;//this is for ItemFactory
     // private static final int NUM_TURRETS = 1;
     private static final float WALL_WIDTH = 0.1f;
@@ -274,11 +270,9 @@ public class ForestGameArea extends GameArea {
             "images/boss3_phase2.atlas",
             "images/cards.atlas"
     };
-
     private static final String[] extraTextures = {
             "foreg_sprites/extras/Spikes.png",
     };
-
     private static final String[] forestSounds = {"sounds/Impact4.ogg",
             "sounds/shot_failed.mp3",
             "sounds/reload.mp3",
@@ -811,18 +805,6 @@ public class ForestGameArea extends GameArea {
         return player;
     }
 
-    /**
-     * Setter method for the player spawn point
-     * should be used when the player is traversing through the rooms
-     *
-     * @param newSpawn the new spawn point
-     */
-    public static void setRoomSpawn(GridPoint2 newSpawn) {
-        if (newSpawn == null) {
-            return;
-        }
-        ForestGameArea.playerSpawn = newSpawn;
-    }
 
     @Override
     public String toString() {

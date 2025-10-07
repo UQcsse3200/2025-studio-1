@@ -7,6 +7,7 @@ import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.components.minigames.BettingComponent;
 import com.csse3200.game.components.minigames.BlackJackGame;
+import com.csse3200.game.components.minigames.slots.SlotsGame;
 import com.csse3200.game.components.player.InventoryComponent;
 import com.csse3200.game.components.screens.BlackjackScreenDisplay;
 import com.csse3200.game.entities.Entity;
@@ -14,11 +15,10 @@ import com.csse3200.game.entities.factories.InteractableStationFactory;
 import com.csse3200.game.entities.factories.characters.PlayerFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.rendering.TextureRenderComponent;
-import com.csse3200.game.components.minigames.slots.SlotsGame;
 
 /**
  * Minimal generic Casino room: walls, a single right-side door, and a subtle background overlay.
- *
+ * <p>
  * Right door -> Spawn Room
  */
 public class CasinoGameArea extends GameArea {
@@ -28,6 +28,10 @@ public class CasinoGameArea extends GameArea {
 
     public CasinoGameArea(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
         super(terrainFactory, cameraComponent);
+    }
+
+    public static CasinoGameArea load(TerrainFactory terrainFactory, CameraComponent camera) {
+        return (new CasinoGameArea(terrainFactory, camera));
     }
 
     /**
@@ -105,10 +109,6 @@ public class CasinoGameArea extends GameArea {
         return player;
     }
 
-    public static CasinoGameArea load(TerrainFactory terrainFactory, CameraComponent camera) {
-        return (new CasinoGameArea(terrainFactory, camera));
-    }
-
     private void spawnBlackjack() {
         Entity blackjack = InteractableStationFactory.createBaseStation();
         blackjack.addComponent(new TextureRenderComponent("images/blackjack_table.png"));
@@ -117,6 +117,7 @@ public class CasinoGameArea extends GameArea {
         blackjack.addComponent(new BlackjackScreenDisplay());
         spawnEntityAt(blackjack, new GridPoint2(20, 7), true, true);
     }
+
     private void spawnSlotsGame() {
         GridPoint2 pos = new GridPoint2(23, 7);
         InventoryComponent inv = player.getComponent(InventoryComponent.class);

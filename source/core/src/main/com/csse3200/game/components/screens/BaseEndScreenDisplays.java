@@ -57,12 +57,6 @@ public class BaseEndScreenDisplays extends BaseScreenDisplay {
     private Label timeLabelRef;
     private Runnable leaderboardAction;
 
-    /** Allow chaining a Leaderboard button */
-    public BaseEndScreenDisplays withLeaderboard(Runnable leaderboardAction) {
-        this.leaderboardAction = leaderboardAction;
-        return this;
-    }
-
     /**
      * Constructs a new end-of-run display with the given configuration.
      *
@@ -89,6 +83,52 @@ public class BaseEndScreenDisplays extends BaseScreenDisplay {
         this.primaryAction = primaryAction;
         this.secondaryText = "Main Menu";
         this.secondaryAction = (secondaryAction != null) ? secondaryAction : this::backMainMenu;
+    }
+
+    /**
+     * Formats seconds into {@code mm:ss}.
+     *
+     * @param totalSeconds total seconds to format
+     * @return a string formatted as {@code mm:ss}
+     */
+    private static String toMMSS(long totalSeconds) {
+        long m = totalSeconds / 60;
+        long s = totalSeconds % 60;
+        return String.format("%02d:%02d", m, s);
+    }
+
+    /**
+     * Convenience factory for a Victory end screen.
+     *
+     * @param game game instance for navigation
+     * @return a configured {@code BaseEndScreenDisplays} showing "Victory" with a "Continue" action
+     */
+    public static BaseEndScreenDisplays victory(GdxGame game) {
+        return new BaseEndScreenDisplays(
+                game, "Victory", new Color(0f, 1f, 0f, 1f), "Continue",
+                () -> game.setScreen(GdxGame.ScreenType.MAIN_GAME), null);
+    }
+
+    // --- Runtime updates ---
+
+    /**
+     * Convenience factory for a Defeated end screen.
+     *
+     * @param game game instance for navigation
+     * @return a configured {@code BaseEndScreenDisplays} showing "DEFEATED" with a "Try Again" action
+     */
+    public static BaseEndScreenDisplays defeated(GdxGame game) {
+        return new BaseEndScreenDisplays(
+                game, "DEFEATED", new Color(1f, 0f, 0f, 1f), "Try Again",
+                () -> game.setScreen(GdxGame.ScreenType.MAIN_GAME), null);
+    }
+
+    /**
+     * Allow chaining a Leaderboard button
+     */
+    public BaseEndScreenDisplays withLeaderboard(Runnable leaderboardAction) {
+        this.leaderboardAction = leaderboardAction;
+        return this;
     }
 
     /**
@@ -125,7 +165,7 @@ public class BaseEndScreenDisplays extends BaseScreenDisplay {
         }
     }
 
-    // --- Runtime updates ---
+    // --- Styling hooks (override as needed) ---
 
     /**
      * Updates the displayed round number.
@@ -154,8 +194,6 @@ public class BaseEndScreenDisplays extends BaseScreenDisplay {
         if (timeLabelRef != null) timeLabelRef.setText("Time: " + mmss);
     }
 
-    // --- Styling hooks (override as needed) ---
-
     /**
      * Font scale for the title label.
      *
@@ -183,6 +221,8 @@ public class BaseEndScreenDisplays extends BaseScreenDisplay {
         return 2.0f;
     }
 
+    // --- Factories ---
+
     /**
      * Horizontal gap between the primary and secondary buttons.
      *
@@ -199,43 +239,5 @@ public class BaseEndScreenDisplays extends BaseScreenDisplay {
      */
     protected float blockPad() {
         return 50f;
-    }
-
-    /**
-     * Formats seconds into {@code mm:ss}.
-     *
-     * @param totalSeconds total seconds to format
-     * @return a string formatted as {@code mm:ss}
-     */
-    private static String toMMSS(long totalSeconds) {
-        long m = totalSeconds / 60;
-        long s = totalSeconds % 60;
-        return String.format("%02d:%02d", m, s);
-    }
-
-    // --- Factories ---
-
-    /**
-     * Convenience factory for a Victory end screen.
-     *
-     * @param game game instance for navigation
-     * @return a configured {@code BaseEndScreenDisplays} showing "Victory" with a "Continue" action
-     */
-    public static BaseEndScreenDisplays victory(GdxGame game) {
-        return new BaseEndScreenDisplays(
-                game, "Victory", new Color(0f, 1f, 0f, 1f), "Continue",
-                () -> game.setScreen(GdxGame.ScreenType.MAIN_GAME), null);
-    }
-
-    /**
-     * Convenience factory for a Defeated end screen.
-     *
-     * @param game game instance for navigation
-     * @return a configured {@code BaseEndScreenDisplays} showing "DEFEATED" with a "Try Again" action
-     */
-    public static BaseEndScreenDisplays defeated(GdxGame game) {
-        return new BaseEndScreenDisplays(
-                game, "DEFEATED", new Color(1f, 0f, 0f, 1f), "Try Again",
-                () -> game.setScreen(GdxGame.ScreenType.MAIN_GAME), null);
     }
 }

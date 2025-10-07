@@ -29,18 +29,18 @@ public class DoorComponent extends Component {
     }
 
     /**
+     * @return true if the unlock override is enabled for this door.
+     */
+    public boolean isOverrideUnlocked() {
+        return overrideUnlocked;
+    }
+
+    /**
      * Enable/disable the unlock override for this door.
      * When enabled, other systems (e.g., KeycardGateComponent) should allow this door to open.
      */
     public void setOverrideUnlocked(boolean enabled) {
         this.overrideUnlocked = enabled;
-    }
-
-    /**
-     * @return true if the unlock override is enabled for this door.
-     */
-    public boolean isOverrideUnlocked() {
-        return overrideUnlocked;
     }
 
     private void onCollisionStart(Fixture ownFixture, Fixture otherFixture) {

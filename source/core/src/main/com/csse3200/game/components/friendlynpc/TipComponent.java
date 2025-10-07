@@ -3,7 +3,6 @@ package com.csse3200.game.components.friendlynpc;
 import com.csse3200.game.components.Component;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.factories.characters.FriendlyNPCFactory;
-import com.csse3200.game.rendering.TextureRenderComponent;
 import com.csse3200.game.services.ServiceLocator;
 
 public class TipComponent extends Component {
@@ -18,6 +17,7 @@ public class TipComponent extends Component {
         this.player = player;
         this.triggerDist = triggerDist;
     }
+
     @Override
     public void update() {
         float d = npc.getPosition().dst(player.getPosition());

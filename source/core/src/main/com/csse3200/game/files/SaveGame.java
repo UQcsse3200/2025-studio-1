@@ -106,6 +106,7 @@ public class SaveGame {
 
         /**
          * retrieves player inventory to be stored into json file
+         *
          * @param inventory The players inventory component
          */
         private ArrayList<itemRetrieve> setInventory(InventoryComponent inventory) {

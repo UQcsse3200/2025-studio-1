@@ -27,9 +27,9 @@ public class BossStatusDisplay extends Component {
     private static final Color COLOR_HEALTH = Color.ORANGE;
 
     private final List<Texture> disposableTextures = new ArrayList<>();
+    private final String bossName;
     private Table table;
     private ProgressBar healthBar;
-    private final String bossName;
     private int maxHealth = 100;
     private String phase = "NORMAL";
 

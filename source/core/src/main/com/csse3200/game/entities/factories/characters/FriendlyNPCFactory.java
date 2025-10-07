@@ -1,33 +1,21 @@
 package com.csse3200.game.entities.factories.characters;
 
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.csse3200.game.components.friendlynpc.NpcDialogueDataComponent;
-import com.csse3200.game.components.friendlynpc.TipComponent;
-import com.csse3200.game.entities.Entity;
-import com.csse3200.game.rendering.TextureRenderComponent;
-import com.csse3200.game.components.friendlynpc.*;
-import com.csse3200.game.rendering.AnimationRenderComponent;
-import com.csse3200.game.services.ServiceLocator;
 import com.badlogic.gdx.math.Vector2;
-import com.csse3200.game.ai.tasks.AITaskComponent;
-import com.csse3200.game.components.*;
-import com.csse3200.game.components.tasks.ChaseTask;
-import com.csse3200.game.components.tasks.WanderTask;
-import com.csse3200.game.physics.PhysicsLayer;
-import com.csse3200.game.physics.PhysicsUtils;
-import com.csse3200.game.physics.components.ColliderComponent;
-import com.csse3200.game.physics.components.HitboxComponent;
-import com.csse3200.game.physics.components.PhysicsComponent;
-import com.csse3200.game.physics.components.PhysicsMovementComponent;
+import com.csse3200.game.components.Component;
+import com.csse3200.game.components.friendlynpc.*;
+import com.csse3200.game.entities.Entity;
+import com.csse3200.game.rendering.AnimationRenderComponent;
+import com.csse3200.game.rendering.TextureRenderComponent;
+import com.csse3200.game.services.ServiceLocator;
 
 public class FriendlyNPCFactory {
     public static Entity createTip() {
         TextureAtlas atlas = ServiceLocator.getResourceService()
                 .getAsset("images/!animation.atlas", TextureAtlas.class);
         AnimationRenderComponent arc = new AnimationRenderComponent(atlas);
-        arc.addAnimation("float",       0.12f, Animation.PlayMode.LOOP);
+        arc.addAnimation("float", 0.12f, Animation.PlayMode.LOOP);
         Entity tip = new Entity().addComponent(arc);
         arc.scaleEntity();
         arc.startAnimation("float");
@@ -46,7 +34,7 @@ public class FriendlyNPCFactory {
                 ))
                 .addComponent(new DialogueDisplay());
         var data = test.getComponent(NpcDialogueDataComponent.class);
-        var ui   = test.getComponent(DialogueDisplay.class);
+        var ui = test.getComponent(DialogueDisplay.class);
         test.getComponent(TextureRenderComponent.class).scaleEntity();
         test.addComponent(new TipComponent(test, player, 3f));
         test.addComponent(new NpcInterationComponent(player, 3f));
@@ -105,7 +93,7 @@ public class FriendlyNPCFactory {
         AnimationRenderComponent arc = new AnimationRenderComponent(atlas);
 
         arc.addAnimation("walk_right", 0.10f, Animation.PlayMode.LOOP);
-        arc.addAnimation("walk_left",  0.10f, Animation.PlayMode.LOOP);
+        arc.addAnimation("walk_left", 0.10f, Animation.PlayMode.LOOP);
 
         Entity npc = new Entity().addComponent(arc);
         arc.scaleEntity();
@@ -141,8 +129,8 @@ public class FriendlyNPCFactory {
         partner.addComponent(new Component() {
 
             private final float STOP_RADIUS = 1.0f;
-            private final float TELEPORT_R  = 5.0f;
-            private final float SPEED       = 8.0f;
+            private final float TELEPORT_R = 5.0f;
+            private final float SPEED = 8.0f;
             private final Vector2 TELEPORT_OFFSET = new Vector2(0.8f, 0f);
 
             @Override
@@ -151,7 +139,8 @@ public class FriendlyNPCFactory {
                 float dt = 0.016f;
                 try {
                     dt = com.csse3200.game.services.ServiceLocator.getTimeSource().getDeltaTime();
-                } catch (Exception ignored) {}
+                } catch (Exception ignored) {
+                }
 
                 Vector2 myPos = entity.getPosition();
                 Vector2 plPos = player.getPosition();

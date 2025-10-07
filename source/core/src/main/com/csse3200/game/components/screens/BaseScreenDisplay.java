@@ -42,7 +42,10 @@ public abstract class BaseScreenDisplay extends UIComponent {
      * Game reference used for screen navigation helpers.
      */
     protected final GdxGame game;
-
+    /**
+     * Textures created via helpers and disposed automatically.
+     */
+    private final ArrayList<Texture> managedTextures = new ArrayList<>();
     /**
      * Root table added to the stage; fill-parent and centered.
      */
@@ -51,10 +54,6 @@ public abstract class BaseScreenDisplay extends UIComponent {
      * Shared style builder for rounded neon buttons.
      */
     protected NeonStyles neon;
-    /**
-     * Textures created via helpers and disposed automatically.
-     */
-    private final ArrayList<Texture> managedTextures = new ArrayList<>();
 
     /**
      * Constructs a screen display bound to a game instance.

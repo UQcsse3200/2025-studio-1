@@ -24,6 +24,19 @@ public class OfficeGameArea extends GameArea {
 
     // Assets ensured via GenericLayout
 
+    /**
+     * Setter method for the player spawn point
+     * should be used when the player is traversing through the rooms
+     *
+     * @param newSpawn the new spawn point
+     */
+    public static void setRoomSpawn(GridPoint2 newSpawn) {
+        if (newSpawn == null) {
+            return;
+        }
+        OfficeGameArea.playerSpawn = newSpawn;
+    }
+
     @Override
     public void create() {
         GenericLayout.ensureGenericAssets(this);
@@ -140,19 +153,6 @@ public class OfficeGameArea extends GameArea {
     private void loadElevator() {
         ElevatorGameArea.setRoomSpawn(new GridPoint2(6, 8));
         clearAndLoad(() -> new ElevatorGameArea(terrainFactory, cameraComponent));
-    }
-
-    /**
-     * Setter method for the player spawn point
-     * should be used when the player is traversing through the rooms
-     * 
-     * @param newSpawn the new spawn point
-     */
-    public static void setRoomSpawn(GridPoint2 newSpawn) {
-        if (newSpawn == null) {
-            return;
-        }
-        OfficeGameArea.playerSpawn = newSpawn;
     }
 
     @Override

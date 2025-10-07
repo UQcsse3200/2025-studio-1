@@ -7,6 +7,10 @@ import com.csse3200.game.services.ServiceLocator;
 
 public class RenderFactory {
 
+    private RenderFactory() {
+        throw new IllegalStateException("Instantiating static util class");
+    }
+
     public static Entity createCamera() {
         return new Entity().addComponent(new CameraComponent());
     }
@@ -17,9 +21,5 @@ public class RenderFactory {
         CameraComponent camComponent = camera.getComponent(CameraComponent.class);
 
         return new Renderer(camComponent);
-    }
-
-    private RenderFactory() {
-        throw new IllegalStateException("Instantiating static util class");
     }
 }

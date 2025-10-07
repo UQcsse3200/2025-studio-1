@@ -29,6 +29,10 @@ public class EventHandler {
         listeners = new HashMap<>(0);
     }
 
+    private static void logTrigger(String eventName) {
+        logger.debug("Triggering event {}", eventName);
+    }
+
     public void removeListener(String eventName, EventListener0 listener) {
         var eventListeners = listeners.get(eventName);
         if (eventListeners != null) {
@@ -158,10 +162,6 @@ public class EventHandler {
         if (eventListeners != null) {
             eventListeners.forEach(func);
         }
-    }
-
-    private static void logTrigger(String eventName) {
-        logger.debug("Triggering event {}", eventName);
     }
 
     public Map<String, Array<EventListener>> getListeners() {
