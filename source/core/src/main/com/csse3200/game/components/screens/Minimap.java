@@ -136,13 +136,13 @@ public class Minimap {
      *
      * @return a mapping of images to their on-screen positions in pixels
      */
-    public Map<String, Vector2> render() {
+    public Map<Vector2, String> render() {
         if (centre == null) {
             logger.error("Attempted to render the map before opening it");
             return null;
         }
 
-        Map<String, Vector2> output = new HashMap<>();
+        Map<Vector2, String> output = new HashMap<>();
 
         // Determine how much of the minimap is visible horizontally and vertically
         float horizontalReach = screenWidth * (1 / scale) / 2;
@@ -169,7 +169,7 @@ public class Minimap {
                 float screenX = (roomCoordinates.x + (float) IMAGE_WIDTH / 2 - minX) * (screenWidth / (maxX - minX));
                 float screenY = (roomCoordinates.y + (float) IMAGE_HEIGHT / 2 - minY) * (screenHeight / (maxY - minY));
                 Vector2 screenCoords = new Vector2(screenX, screenY);
-                output.put(grid.get(roomCoordinates), screenCoords);
+                output.put(screenCoords, grid.get(roomCoordinates));
             }
         }
 
