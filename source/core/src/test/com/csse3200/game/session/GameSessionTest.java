@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * its {@link LeaderBoardManager} and retains the correct session ID.
  */
 
-public class GameSessionTest {
+class GameSessionTest {
     private GameSession session1;
     private GameSession session2;
 
