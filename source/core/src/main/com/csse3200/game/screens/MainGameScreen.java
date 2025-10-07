@@ -14,6 +14,7 @@ import com.csse3200.game.components.maingame.MainGameActions;
 import com.csse3200.game.components.maingame.MainGameDisplay;
 import com.csse3200.game.components.player.InventoryComponent;
 import com.csse3200.game.components.player.ItemPickUpComponent;
+import com.csse3200.game.components.screens.Minimap;
 import com.csse3200.game.components.screens.MinimapDisplay;
 import com.csse3200.game.components.screens.PauseMenuDisplay;
 import com.csse3200.game.entities.Entity;
@@ -330,7 +331,9 @@ public class MainGameScreen extends ScreenAdapter {
         logger.info("Showing minimap overlay");
         Stage stage = ServiceLocator.getRenderService().getStage();
         minimap = new Entity()
-                .addComponent(new MinimapDisplay(game))
+                .addComponent(new MinimapDisplay(game,
+                        new Minimap(Gdx.graphics.getHeight(), Gdx.graphics.getWidth(),
+                                "configs/room_layout.txt")))
                 .addComponent(new InputDecorator(stage, 100));
         minimap.getEvents().addListener("resume", this::hideMinimapOverlay);
         ServiceLocator.getEntityService().register(minimap);

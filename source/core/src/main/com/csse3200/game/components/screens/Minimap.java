@@ -241,6 +241,14 @@ public class Minimap {
     }
 
     /**
+     * Returns the centre of the minimap.
+     * @return The centre of the minimap as a {@link Vector2}
+     */
+    public Vector2 getCentre() {
+        return centre.cpy();
+    }
+
+    /**
      * Calculates the minimap center position based on the current room
      * and player's normalized position within that room.
      *
