@@ -20,7 +20,7 @@ import com.csse3200.game.services.ServiceLocator;
 public class ResearchGameArea extends GameArea {
     private static final float WALL_WIDTH = 0.1f;
     private static GridPoint2 playerSpawn = new GridPoint2(10, 10);
-    private final int roomDiffNumber = 6;
+    private int roomDiffNumber = 6;
     private Entity player;
 
     public ResearchGameArea(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
@@ -166,6 +166,19 @@ public class ResearchGameArea extends GameArea {
     private void loadFlyingBossRoom() {
         FlyingBossRoom.setRoomSpawn(new GridPoint2(6, 8));
         clearAndLoad(() -> new FlyingBossRoom(terrainFactory, cameraComponent));
+    }
+
+    /**
+     * Setter method for the player spawn point
+     * should be used when the player is traversing through the rooms
+     * 
+     * @param newSpawn the new spawn point
+     */
+    public static void setRoomSpawn(GridPoint2 newSpawn) {
+        if (newSpawn == null) {
+            return;
+        }
+        ResearchGameArea.playerSpawn = newSpawn;
     }
 
     @Override

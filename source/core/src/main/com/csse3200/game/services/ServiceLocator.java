@@ -190,7 +190,7 @@ public class ServiceLocator {
         logger.debug("Registering discovery service {}", service);
         discoveryService = service;
     }
-
+  
     public static void registerButtonSoundService(ButtonSoundService source) {
         logger.debug("Registering button sound service {}", source);
         buttonSoundService = source;
