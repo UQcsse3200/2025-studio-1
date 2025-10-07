@@ -22,6 +22,7 @@ public class EnemyWavesDisplay extends UIComponent {
     private Table table;
     private Label waveNumberLabel;
     private Label waveDelayLabel;
+    private Label maxWavesLabel;
     protected Stage stage;
     private static final float screenHeight = (float) Gdx.graphics.getHeight();
 
@@ -37,6 +38,7 @@ public class EnemyWavesDisplay extends UIComponent {
         addActors();
 
         wavesManager.getEvents().addListener("updateWaveNumber", this::updateWaveNumber);
+        wavesManager.getEvents().addListener("updateMaxWave", this::updateMaxWave);
         wavesManager.getEvents().addListener("spawnWave", this::setTableVisible);
         wavesManager.getEvents().addListener("allWavesFinished", this::setTableInvisible);
     }
@@ -58,7 +60,7 @@ public class EnemyWavesDisplay extends UIComponent {
         // Max waves
         int maxWaves = wavesManager.getMaxWaves();
         CharSequence maxWavesText = String.format("Max waves: %d", maxWaves);
-        Label maxWavesLabel = new Label(maxWavesText, skin, "large");
+        maxWavesLabel = new Label(maxWavesText, skin, "large");
 
         // Wave delay
         int waveDelay = wavesManager.getWaveDelayInSeconds();
@@ -99,6 +101,16 @@ public class EnemyWavesDisplay extends UIComponent {
     }
 
     /**
+     * Updates max wave label to reflect the current number of waves spawned.
+     * Triggered by the "updateMaxWave" event from the waves manager.
+     */
+    public void updateMaxWave() {
+        int maxWaves = wavesManager.getMaxWaves();
+        CharSequence maxWavesText = String.format("Max waves: %d", maxWaves);
+        maxWavesLabel.setText(maxWavesText);
+    }
+
+    /**
      * Makes the wave info table visible. Triggered when a new set of waves is spawned.
      */
     public void setTableVisible() {
@@ -110,5 +122,38 @@ public class EnemyWavesDisplay extends UIComponent {
      */
     public void setTableInvisible() {
         table.setVisible(false);
+    }
+
+    /**
+     * Returns the Table containing the wave information UI (wave number, max waves, delay).
+     * Used by tests or external UI code to inspect visibility, layout, or contained labels.
+     * @return the Table used by this component to present wave information
+     */
+    public Table getTable() {
+        return table;
+    }
+
+    /**
+     * Returns the Label displaying the current number of waves spawned.
+     * @return the Label showing the current wave number
+     */
+    public Label getWaveNumberLabel() {
+        return waveNumberLabel;
+    }
+
+    /**
+     * Returns the Label displaying the configured maximum number of waves.
+     * @return the Label showing the maximum waves value
+     */
+    public Label getMaxWavesLabel() {
+        return maxWavesLabel;
+    }
+
+    /**
+     * Returns the Label displaying the inter-wave delay in seconds.
+     * @return the Label showing the wave delay in seconds
+     */
+    public Label getWaveDelayLabel() {
+        return waveDelayLabel;
     }
 }
