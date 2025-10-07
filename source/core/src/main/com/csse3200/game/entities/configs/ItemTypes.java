@@ -11,10 +11,10 @@ public enum ItemTypes {
     COMPUTER_BENCH("computerbench"),
     SPEED_BENCH("speedbench");
 
-    private final String string;
+    private final String typeName;
 
-    ItemTypes(String string) {
-        this.string = string;
+    ItemTypes(String typeName) {
+        this.typeName = typeName;
     }
 
     /**
@@ -22,7 +22,7 @@ public enum ItemTypes {
      *
      * @return the string value associated with this {@link ItemTypes} constant
      */
-    public String getString() {
-        return string;
+    public String getTypeName() {
+        return typeName;
     }
 }
