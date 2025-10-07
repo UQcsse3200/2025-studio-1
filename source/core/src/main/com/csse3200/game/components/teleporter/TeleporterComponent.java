@@ -34,6 +34,14 @@ public class TeleporterComponent extends Component {
 
     private GameTime time;
 
+    private static boolean escConsumedThisFrame = false; // track ESC consumption to suppress pause
+
+    public static boolean wasEscConsumedThisFrame() {
+        return escConsumedThisFrame;
+    }
+    public static void markEscConsumed() { escConsumedThisFrame = true; }
+    public static void resetEscConsumed() { escConsumedThisFrame = false; }
+
     @Override
     public void create() {
         time = ServiceLocator.getTimeSource();
@@ -61,8 +69,13 @@ public class TeleporterComponent extends Component {
         Entity player = ServiceLocator.getPlayer();
         if (player == null) return;
 
+        boolean esc = Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE);
+
         if (menuVisible) {
-            if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE) || !isPlayerClose(player)) {
+            if (esc) { // only mark consumed when ESC actually closes teleporter menu
+                hideMenu();
+                markEscConsumed();
+            } else if (!isPlayerClose(player)) {
                 hideMenu();
             }
             return;
