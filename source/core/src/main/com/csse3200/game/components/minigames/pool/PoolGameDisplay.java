@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.MathUtils;
@@ -46,7 +47,12 @@ public class PoolGameDisplay extends UIComponent {
     private CheckBox guideToggle;
     // Table + assets
     private PoolTable poolTable;
-    private Texture tableTex, cueBallTex, cueTex;
+    private Texture tableTex;
+    private Texture cueTex;
+    private TextureRegion cueBallTex;
+
+    private TextureAtlas ballAtlas;
+    private TextureRegion[] ballTextures;
     // State
     private boolean running = false;
     private int p1Score = 0, p2Score = 0, turnIdx = 0; // 0=P1, 1=P2
@@ -74,8 +80,17 @@ public class PoolGameDisplay extends UIComponent {
 
         // Asset load
         tableTex = ServiceLocator.getResourceService().getAsset("images/pool/table.png", Texture.class);
-        cueBallTex = ServiceLocator.getResourceService().getAsset("images/pool/cueball.png", Texture.class);
-        cueTex = ServiceLocator.getResourceService().getAsset("images/pool/cue.png", Texture.class);
+        ballAtlas = ServiceLocator.getResourceService()
+                .getAsset("images/pool/balls.atlas", TextureAtlas.class);
+        ballTextures = new TextureRegion[16];
+        for (int i = 1; i <= 15; i++) {
+            ballTextures[i] = ballAtlas.findRegion("ball_" + i);
+        }
+        Texture cueBallTextureRaw = ServiceLocator.getResourceService()
+                .getAsset("images/pool/cue_ball.png", Texture.class);
+        cueBallTex = new TextureRegion(cueBallTextureRaw);
+        cueTex = ServiceLocator.getResourceService()
+                .getAsset("images/pool/cue.png", Texture.class);
 
         buildBackdrop();
         buildRoot();
@@ -197,7 +212,7 @@ public class PoolGameDisplay extends UIComponent {
         float targetW = PANEL_W - 40f;
         float targetH = targetW / aspect;
 
-        poolTable = new PoolTable(tableTex, cueBallTex, cueTex);
+        poolTable = new PoolTable(tableTex, ballTextures, cueTex);
         poolTable.setSize(targetW, targetH);
         poolTable.setOrigin(Align.center);
         poolTable.setTouchable(Touchable.enabled);
@@ -382,9 +397,9 @@ public class PoolGameDisplay extends UIComponent {
      * Widget for rendering the table, cue ball, guide, and cue.
      * Handles user input to compute the aim direction.
      */
-    private static class PoolTable extends Widget {
-        private final Texture tableTex, cueBallTex, cueTex;
-        private final TextureRegionDrawable whitePx; // 1x1 for guide dots
+    private class PoolTable extends Widget {
+        private final Texture tableTex, cueTex;
+        private final TextureRegion[] ballTextures;
         private final Vector2 cueBall = new Vector2();
         private final Vector2 aimStart = new Vector2();
         private final Vector2 aimEnd = new Vector2();
@@ -393,17 +408,15 @@ public class PoolGameDisplay extends UIComponent {
         private boolean aiming = false;
         private boolean showGuide = true;
         private float cueKickT = 0f;
+        private final TextureRegionDrawable whitePx;
 
-        PoolTable(Texture tableTex, Texture cueBallTex, Texture cueTex) {
+        PoolTable(Texture tableTex, TextureRegion[] ballTextures, Texture cueTex) {
             this.tableTex = tableTex;
-            this.cueBallTex = cueBallTex;
+            this.ballTextures = ballTextures;
             this.cueTex = cueTex;
 
             Texture px = solid(Color.WHITE);
             this.whitePx = new TextureRegionDrawable(new TextureRegion(px));
-
-            // Center cue ball by default
-            setCueBall(new Vector2(0.5f, 0.5f));
         }
 
         void setGuideVisible(boolean v) {
@@ -486,12 +499,15 @@ public class PoolGameDisplay extends UIComponent {
             float cby = getY() + cueBall.y * getHeight();
             float ballPx = Math.min(getWidth(), getHeight()) * 0.035f;
 
-            // Object balls (placeholder: using cueBallTex)
             if (balls != null) {
-                for (Vector2 b : balls) {
+                for (int i = 0; i < balls.length; i++) {
+                    Vector2 b = balls[i];
+                    if (b == null) continue;
                     float bx = getX() + b.x * getWidth() - ballPx / 2f;
                     float by = getY() + b.y * getHeight() - ballPx / 2f;
-                    batch.draw(cueBallTex, bx, by, ballPx, ballPx);
+                    int id = i + 1;
+                    TextureRegion tex = (id < ballTextures.length) ? ballTextures[id] : cueBallTex;
+                    batch.draw(tex, bx, by, ballPx, ballPx);
                 }
             }
 

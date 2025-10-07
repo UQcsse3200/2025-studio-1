@@ -27,8 +27,11 @@ public class CasinoGameArea extends GameArea {
             "images/mole.png",
             "images/hole.png",
             "images/pool/cue.png",
-            "images/pool/cueball.png",
+            "images/pool/cue_ball.png",
             "images/pool/table.png",
+    };
+    private static final String[] CASINO_ATLAS = {
+        "images/pool/balls.atlas"
     };
     private static final String[] CASINO_SOUNDS = {
             "sounds/whack.mp3"
@@ -61,6 +64,7 @@ public class CasinoGameArea extends GameArea {
     private void ensureAssets() {
         ResourceService rs = ServiceLocator.getResourceService();
         rs.loadTextures(CASINO_TEXTURES);
+        rs.loadTextureAtlases(CASINO_ATLAS);
         rs.loadSounds(CASINO_SOUNDS);
         rs.loadAll();
     }
@@ -68,6 +72,7 @@ public class CasinoGameArea extends GameArea {
     private void unloadAssets() {
         ResourceService rs = ServiceLocator.getResourceService();
         rs.unloadAssets(CASINO_TEXTURES);
+        rs.unloadAssets(CASINO_ATLAS);
         rs.unloadAssets(CASINO_SOUNDS);
     }
 
