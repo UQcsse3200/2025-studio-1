@@ -9,7 +9,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.csse3200.game.components.items.ItemComponent;
 import com.csse3200.game.entities.Entity;
 
-
 /**
  * Represents a purchasable catalog entry in the in-game shop.
  * <p>
@@ -17,7 +16,12 @@ import com.csse3200.game.entities.Entity;
  * including its price, whether it is currently enabled for purchase,
  * the maximum stack size in the player's inventory, and how many units
  * of the item are sold in one bundle.
- * </p>
+ *
+ * @param item           The {@link Entity} representing the item for sale.
+ * @param price          The purchase price of a single unit of the item.
+ * @param enabled        Whether the item is currently available for purchase.
+ * @param maxStack       The maximum number of this item that can be held in a single inventory slot.
+ * @param bundleQuantity The number of units sold in a single purchase transaction.
  */
 public record CatalogEntry(
         Entity item,

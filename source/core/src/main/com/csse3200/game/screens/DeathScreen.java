@@ -54,7 +54,7 @@ public class DeathScreen extends BaseScreen {
      */
     @Override
     protected Entity createUIScreen(Stage stage) {
-        uiDisplay = BaseEndScreenDisplays.defeated(game);
+        uiDisplay = BaseEndScreenDisplays.defeated(game).withLeaderboard(() -> game.setScreen(GdxGame.ScreenType.LEADERBOARD));
         return new Entity()
                 .addComponent(uiDisplay)
                 .addComponent(new InputDecorator(stage, 10));
