@@ -26,22 +26,22 @@ class TerminalIntegrationTest {
 
     @Test
     void typing_suggests_then_accepts_top() {
-        Terminal t = new Terminal();
+        Terminal t = new Terminal(null, null, null);
         FakeCommand debug = new FakeCommand();
         FakeCommand death = new FakeCommand();
         t.addCommand("debug", debug);
-        t.addCommand("deathscreen", death);
+        t.addCommand("deathScreen", death);
 
         t.setEnteredMessage("de");
         bypassDebounce(t);
         List<String> s = t.getAutocompleteSuggestions();
-        assertEquals(List.of("deathscreen", "debug"), s.subList(0, Math.min(2, s.size())));
+        assertEquals(List.of("deathScreen", "debug"), s.subList(0, Math.min(2, s.size())));
 
-        // Accept top suggestion "deathscreen", args preserved
+        // Accept top suggestion "deathScreen", args preserved
         t.setEnteredMessage("de 42 hard");
         bypassDebounce(t);
         t.acceptTopSuggestion();
-        assertEquals("deathscreen 42 hard", t.getEnteredMessage().trim());
+        assertEquals("deathScreen 42 hard", t.getEnteredMessage().trim());
 
         // Execute
         assertTrue(t.processMessage());
