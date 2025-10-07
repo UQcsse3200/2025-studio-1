@@ -154,11 +154,11 @@ public class FriendlyNPCFactory {
                 }))
                 .addComponent(new DialogueDisplay())
                 .addComponent(new NpcHealingComponent(player, 25)
-                        .setCooldownMillis(30_000))
-                .addComponent(new TipComponent(null, player, 3f))
-                .addComponent(new NpcInterationComponent(player, 3f));
-
+                        .setCooldownMillis(30_000));
         npc.getComponent(TextureRenderComponent.class).scaleEntity();
+        npc.addComponent(new TipComponent(npc, player, 3f));
+        npc.addComponent(new NpcInterationComponent(player, 3f));
+
         return npc;
     }
 
