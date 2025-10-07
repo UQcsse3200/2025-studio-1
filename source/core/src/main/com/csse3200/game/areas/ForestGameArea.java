@@ -44,6 +44,7 @@ import com.csse3200.game.rendering.TextureRenderComponent;
 import com.csse3200.game.rendering.TextureRenderWithRotationComponent;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
+import com.csse3200.game.components.minigames.BlackJackGame;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -200,7 +201,13 @@ public class ForestGameArea extends GameArea {
             "foreg_sprites/Security/SecuritySystem.png",
             "foreg_sprites/futuristic/storage_crate_green2.png",
             "foreg_sprites/futuristic/storage_crate_dark2.png",
-            "foreg_sprites/futuristic/SecurityCamera3.png"
+            "foreg_sprites/futuristic/SecurityCamera3.png",
+            "images/slots_kiosk.png",
+            "images/bell.png",
+            "images/cherry.png",
+            "images/diamond.png",
+            "images/lemon.png",
+            "images/watermelon.png"
     };
 
     /**
@@ -362,7 +369,6 @@ public class ForestGameArea extends GameArea {
         spawnEntity(keycard);
 
         spawnItems();
-
         spawnRobotFightingGame();
     }
 
