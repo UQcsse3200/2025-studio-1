@@ -95,6 +95,8 @@ public class MinimapDisplay extends BaseScreenDisplay {
 
         minimapTable = new Table();
         minimapTable.setFillParent(true);
+        minimapTable.setTouchable(Touchable.enabled);
+        stage.setKeyboardFocus(root);
 
         root.add(minimapTable).center().expand().fill();
         logger.debug("Created minimap actor");
@@ -127,6 +129,7 @@ public class MinimapDisplay extends BaseScreenDisplay {
 
             @Override
             public boolean scrolled(InputEvent event, float x, float y, float amountX, float amountY) {
+                logger.info("Scrolled at {}, {}", x, y);
                 zoom(x, y, amountY);
                 return true;
             }
@@ -140,15 +143,40 @@ public class MinimapDisplay extends BaseScreenDisplay {
 
             @Override
             public boolean keyDown(InputEvent event, int keycode) {
+                logger.info("Pressed key code: {}", keycode);
                 if (keycode == Input.Keys.TAB && !handled) {
                     handled = true;
                     entity.getEvents().trigger("resume");
                     root.removeListener(this);
                     return true;
                 }
+//                if (keycode == Input.Keys.PLUS) {
+//                    zoomIn();
+//                    return true;
+//                }
+//                if (keycode == Input.Keys.MINUS) {
+//                    zoomOut();
+//                    return true;
+//                }
                 return false;
             }
         });
+    }
+
+    private void zoomIn() {
+        float currentScale = minimap.getScale();
+        if (currentScale < 5.0f) {
+            minimap.zoom(25f);
+        }
+        renderMinimapImages();
+    }
+
+    private void zoomOut() {
+        float currentScale = minimap.getScale();
+        if (currentScale > 1.05f) {
+            minimap.zoom(-25f);
+        }
+        renderMinimapImages();
     }
 
     private void renderMinimapImages() {
@@ -180,7 +208,6 @@ public class MinimapDisplay extends BaseScreenDisplay {
                     screenPos.x - (float) Minimap.IMAGE_WIDTH * minimap.getScale() / 2,
                     screenPos.y - (float) Minimap.IMAGE_HEIGHT * minimap.getScale() / 2
             );
-            //roomImage.setSize(128, 72);
             minimapTable.addActor(roomImage);
         }
     }
