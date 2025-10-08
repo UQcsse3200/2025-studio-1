@@ -9,12 +9,12 @@ public class StaminaComponent extends Component {
     private Timer.Task task;
 
     // Stamina Constants
-    private static int MAX_STAMINA = 100;
-    private static int INITIAL_STAMINA = 100;
-    private static float DRAIN_PER_SEC = 30f;
-    private static float REGEN_PER_SEC = 10f; // stamina/sec when not spending
+    private int MAX_STAMINA = 100;
+    private int INITIAL_STAMINA = 100;
+    private float DRAIN_PER_SEC = 30f;
+    private float REGEN_PER_SEC = 10f; // stamina/sec when not spending
     private final static float TICK_SEC = 0.1f;
-    private static long REGEN_DELAY_MS = 800; // time between last spend to regen
+    private long REGEN_DELAY_MS = 800; // time between last spend to regen
 
     // Stamina management
     private float stamina = INITIAL_STAMINA;
