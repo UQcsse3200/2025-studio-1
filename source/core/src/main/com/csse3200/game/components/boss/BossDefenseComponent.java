@@ -19,9 +19,8 @@ public class BossDefenseComponent extends Component {
     private final float reduction;
     private final int triggerHp;
     private final boolean closeAttackWhileDefending;
-    private boolean used = false;
-
     private final GameTime time = ServiceLocator.getTimeSource();
+    private boolean used = false;
 
     /**
      * @param durationSec               Defense duration (seconds)

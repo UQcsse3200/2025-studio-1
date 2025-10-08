@@ -11,6 +11,10 @@ import com.csse3200.game.rendering.TextureRenderComponent;
 
 public class PowerupsFactory {
 
+    private PowerupsFactory() {
+        throw new IllegalArgumentException("Instantiating static util class");
+    }
+
     public static Entity createRapidFire() {
         Entity powerup = createBasePowerup();
 
@@ -63,9 +67,5 @@ public class PowerupsFactory {
 
         PhysicsUtils.setScaledCollider(powerup, 0.5f, 0.5f);
         return powerup;
-    }
-
-    private PowerupsFactory() {
-        throw new IllegalArgumentException("Instantiating static util class");
     }
 }

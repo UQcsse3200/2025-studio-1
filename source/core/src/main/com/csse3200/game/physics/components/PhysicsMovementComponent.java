@@ -51,6 +51,11 @@ public class PhysicsMovementComponent extends Component implements MovementContr
         }
     }
 
+    @Override
+    public boolean getMoving() {
+        return movementEnabled;
+    }
+
     /**
      * Enable/disable movement for the controller. Disabling will immediately set velocity to 0.
      *
@@ -72,11 +77,6 @@ public class PhysicsMovementComponent extends Component implements MovementContr
             }
             setToVelocity(body, Vector2.Zero);
         }
-    }
-
-    @Override
-    public boolean getMoving() {
-        return movementEnabled;
     }
 
     /**

@@ -8,10 +8,10 @@ import com.csse3200.game.components.enemy.FireballAttackComponent;
 import com.csse3200.game.entities.Entity;
 
 public class BossStageComponent extends Component {
-    private int currentStage = 1;
     private final Entity boss;
     private final float stage2 = 0.5f;
     private final float stage3 = 0.3f;// 50%
+    private int currentStage = 1;
 
     public BossStageComponent(Entity boss) {
         this.boss = boss;

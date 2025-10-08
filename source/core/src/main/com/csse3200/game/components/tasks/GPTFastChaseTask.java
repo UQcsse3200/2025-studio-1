@@ -27,12 +27,11 @@ public class GPTFastChaseTask extends DefaultTask implements PriorityTask {
     private final PhysicsEngine physics;
     private final DebugRenderer debugRenderer;
     private final RaycastHit hit = new RaycastHit();
+    private final float firingCooldown = 3f;
     private MovementTask movementTask;
-
     // Projectile configurations
     private ProjectileLauncherComponent projectileLauncher = null;
     private GameTime timeSource = null;
-    private final float firingCooldown = 3f;
     private float currentCooldown = 3f;
     private Entity shooter = null;
 

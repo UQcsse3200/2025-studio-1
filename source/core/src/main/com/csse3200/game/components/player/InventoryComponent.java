@@ -19,12 +19,11 @@ import java.util.ArrayList;
 public class InventoryComponent extends Component {
 
     private static final Logger logger = LoggerFactory.getLogger(InventoryComponent.class);
-
-    private int inventoryCount = 0;
     private final int maxCapacity = 5;
     private final int minCapacity = 0;
     private final ArrayList<Entity> items = new ArrayList<>(maxCapacity);
     private final ArrayList<String> itemTexs = new ArrayList<>(maxCapacity);
+    private int inventoryCount = 0;
     private int processor;
     private Entity currItem;
     private int equippedSlot = -1; // no slot is equipped initially
@@ -46,21 +45,21 @@ public class InventoryComponent extends Component {
     }
 
     /**
-     * setter method for the keycard level
-     *
-     * @param level level to set the keycard to
-     */
-    public void setKeycardLevel(int level) {
-        this.keycardLevel = level;
-    }
-
-    /**
      * getter method for the keycard level
      *
      * @return the current keycard level
      */
     public int getKeycardLevel() {
         return this.keycardLevel;
+    }
+
+    /**
+     * setter method for the keycard level
+     *
+     * @param level level to set the keycard to
+     */
+    public void setKeycardLevel(int level) {
+        this.keycardLevel = level;
     }
 
     /**
@@ -225,17 +224,6 @@ public class InventoryComponent extends Component {
     }
 
     /**
-     * Returns if the player has a certain amount of processor's.
-     *
-     * @param processor required amount of processor's
-     * @return player has greater than or equal to the required amount of
-     * processor's
-     */
-    public Boolean hasProcessor(int processor) {
-        return this.processor >= processor;
-    }
-
-    /**
      * Sets the player's processor's. Processor's has a minimum bound of 0.
      *
      * @param processor processor
@@ -248,6 +236,17 @@ public class InventoryComponent extends Component {
         if (entity != null && prev != this.processor) {
             entity.getEvents().trigger("updateProcessor", this.processor);
         }
+    }
+
+    /**
+     * Returns if the player has a certain amount of processor's.
+     *
+     * @param processor required amount of processor's
+     * @return player has greater than or equal to the required amount of
+     * processor's
+     */
+    public Boolean hasProcessor(int processor) {
+        return this.processor >= processor;
     }
 
     /**
@@ -269,6 +268,15 @@ public class InventoryComponent extends Component {
     }
 
     /**
+     * Get the current item
+     *
+     * @return the current item
+     */
+    public Entity getCurrItem() {
+        return this.currItem;
+    }
+
+    /**
      * Set the current item
      */
     public void setCurrItem(Entity item) {
@@ -276,12 +284,12 @@ public class InventoryComponent extends Component {
     }
 
     /**
-     * Get the current item
+     * Gets the currently equipped slot
      *
-     * @return the current item
+     * @return the slot index that is currently equipped
      */
-    public Entity getCurrItem() {
-        return this.currItem;
+    public int getEquippedSlot() {
+        return this.equippedSlot;
     }
 
     /**
@@ -300,17 +308,6 @@ public class InventoryComponent extends Component {
         //trigger the UI update and internal logic
         entity.getEvents().trigger("focus item", slotIndex);
     }
-
-
-    /**
-     * Gets the currently equipped slot
-     *
-     * @return the slot index that is currently equipped
-     */
-    public int getEquippedSlot() {
-        return this.equippedSlot;
-    }
-
 
     public void setDoubleProcessors(boolean active) {
         this.doubleProcessors = active;

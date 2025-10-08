@@ -6,30 +6,27 @@ import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.CameraComponent;
+import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import com.csse3200.game.components.shop.CatalogService;
 import com.csse3200.game.components.shop.ShopDemo;
 import com.csse3200.game.components.shop.ShopManager;
-import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.ItemSpawnConfig;
 import com.csse3200.game.entities.factories.ShopFactory;
 import com.csse3200.game.entities.factories.characters.NPCFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
+import com.csse3200.game.entities.factories.system.TeleporterFactory;
 import com.csse3200.game.entities.spawner.ItemSpawner;
 import com.csse3200.game.services.ServiceLocator;
-import com.csse3200.game.entities.factories.system.TeleporterFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Second floor with different background and arrow-key controls.
  */
 public class Reception extends GameArea {
-    private static final Logger logger = LoggerFactory.getLogger(Reception.class);
-    private static GridPoint2 playerSpawn = new GridPoint2(8, 10);
     private static final float WALL_WIDTH = 0.1f;
     private int roomDiffNumber = 2;
     private Entity player;
+    private static GridPoint2 playerSpawn = new GridPoint2(8, 10);
 
     public Reception(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
         super(terrainFactory, cameraComponent);
@@ -57,6 +54,10 @@ public class Reception extends GameArea {
         ItemSpawner itemSpawner = new ItemSpawner(this);
         itemSpawner.spawnItems(ItemSpawnConfig.receptionmap());
 
+    }
+
+    public static Reception load(TerrainFactory terrainFactory, CameraComponent camera) {
+        return (new Reception(terrainFactory, camera));
     }
 
     /**
@@ -99,7 +100,7 @@ public class Reception extends GameArea {
         float leftTopSegHeight = Math.max(0f, b.topY() - (leftDoorY + leftDoorHeight));
         if (leftTopSegHeight > 0f) {
             Entity leftTop = ObstacleFactory.createWall(WALL_WIDTH, leftTopSegHeight);
-            leftTop.setPosition(b.leftX(), leftDoorY + leftDoorHeight+2f);
+            leftTop.setPosition(b.leftX(), leftDoorY + leftDoorHeight + 2f);
             spawnEntity(leftTop);
         }
         Entity leftDoor = ObstacleFactory.createDoorTrigger(WALL_WIDTH, leftDoorHeight);
@@ -146,12 +147,11 @@ public class Reception extends GameArea {
 
     }
 
-        private void spawnGPTs() {
-            Entity ghost1 = NPCFactory.createGhostGPT(player, this, ServiceLocator.getDifficulty().getRoomDifficulty(this.roomDiffNumber));
-            GridPoint2 ghost1Pos = new GridPoint2(25, 7);
-            spawnEntityAt(ghost1, ghost1Pos, true, false);
-        }
-
+    private void spawnGPTs() {
+        Entity ghost1 = NPCFactory.createGhostGPT(player, this, ServiceLocator.getDifficulty().getRoomDifficulty(this.roomDiffNumber));
+        GridPoint2 ghost1Pos = new GridPoint2(25, 7);
+        spawnEntityAt(ghost1, ghost1Pos, true, false);
+    }
 
     private void spawnShopKiosk() {
         CatalogService catalog = ShopDemo.makeDemoCatalog();
@@ -217,7 +217,9 @@ public class Reception extends GameArea {
         spawnEntity(stand1);
     }
 
-    /** Spawn teleporter bottom-left avoiding desk (slightly offset). */
+    /**
+     * Spawn teleporter bottom-left avoiding desk (slightly offset).
+     */
     private void spawnTeleporter() {
         Entity tp = TeleporterFactory.createTeleporter(new Vector2(2.5f, 2.8f));
         spawnEntity(tp);
@@ -239,10 +241,6 @@ public class Reception extends GameArea {
     @Override
     public String toString() {
         return "Reception";
-    }
-
-    public static Reception load(TerrainFactory terrainFactory, CameraComponent camera) {
-        return (new Reception(terrainFactory, camera));
     }
 
     public Entity getPlayer() {

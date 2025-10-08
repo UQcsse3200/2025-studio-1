@@ -1,15 +1,14 @@
 package com.csse3200.game.entities.factories.items;
 
+import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.csse3200.game.components.items.ItemComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.Armour;
-import com.csse3200.game.entities.configs.Weapons;
-import com.csse3200.game.components.items.ItemComponent;
 import com.csse3200.game.entities.configs.ItemTypes;
-import com.csse3200.game.physics.components.PhysicsComponent;
-import com.csse3200.game.physics.components.ColliderComponent;
+import com.csse3200.game.entities.configs.Weapons;
 import com.csse3200.game.physics.components.HitboxComponent;
+import com.csse3200.game.physics.components.PhysicsComponent;
 import com.csse3200.game.rendering.TextureRenderComponent;
-import com.badlogic.gdx.physics.box2d.BodyDef;
 
 public class WorldPickUpFactory {
     public static Entity createWeaponPickup(Weapons type) {
@@ -59,7 +58,7 @@ public class WorldPickUpFactory {
             }
         }
 
-        for (Armour a: Armour.values()) {
+        for (Armour a : Armour.values()) {
             if (texture.equals(a.getConfig().texturePath)) {
                 return createArmourPickup(a);
             }

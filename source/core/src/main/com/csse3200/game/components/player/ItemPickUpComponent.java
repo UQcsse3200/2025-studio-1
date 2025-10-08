@@ -11,8 +11,8 @@ import com.csse3200.game.components.items.ItemComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.Armour;
 import com.csse3200.game.entities.configs.Weapons;
-import com.csse3200.game.entities.factories.items.ArmourFactory;
 import com.csse3200.game.entities.factories.PowerupsFactory;
+import com.csse3200.game.entities.factories.items.ArmourFactory;
 import com.csse3200.game.entities.factories.items.WeaponsFactory;
 import com.csse3200.game.entities.factories.items.WorldPickUpFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
@@ -29,6 +29,8 @@ import org.slf4j.LoggerFactory;
  */
 
 public class ItemPickUpComponent extends Component {
+    // Constructs a private Logger for this class.
+    private static final Logger logger = LoggerFactory.getLogger(ItemPickUpComponent.class);
     // Reference to the player's inventory used to store picked up items.
     private final InventoryComponent inventory;
     // The item entity currently in collision range and eligible to be picked up.
@@ -40,9 +42,6 @@ public class ItemPickUpComponent extends Component {
     public ItemPickUpComponent(InventoryComponent inventory) {
         this.inventory = inventory;
     }
-
-    // Constructs a private Logger for this class.
-    private static final Logger logger = LoggerFactory.getLogger(ItemPickUpComponent.class);
 
     /**
      * Called when the component is created. Registers listeners for relevant player events:
@@ -203,6 +202,7 @@ public class ItemPickUpComponent extends Component {
      * This method compares the given texture path against the Armour
      * enum configuration and, if matched, creates the appropriate armour
      * using the {@link ArmourFactory}.
+     *
      * @param texture The texture file path associated with the world item.
      * @return A new {@link Entity} representing the weapon, or null if the
      * texture does not correspond to any known weapon type.
@@ -241,7 +241,6 @@ public class ItemPickUpComponent extends Component {
      * - Clears the focused index so another accidental drop does not occur.
      * - Attempts to respawn the dropped item back into the game world near the player,
      * using the texture to reconstruct the item entity.
-     *
      */
     private void onDropFocused() {
         // do nothing if no valid slot is currently focused

@@ -3,13 +3,9 @@ package com.csse3200.game.files;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Json;
-import com.csse3200.game.components.player.InventoryComponent;
-import com.csse3200.game.components.player.ItemPickUpComponent;
-import com.csse3200.game.services.SaveLoadService;
+import com.badlogic.gdx.utils.JsonWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.List;
 
 /**
  * Wrapper for reading Java objects from JSON files.
@@ -18,9 +14,8 @@ import java.util.List;
  * for more control.
  */
 public class FileLoader {
-    private static final Logger logger = LoggerFactory.getLogger(FileLoader.class);
     static final Json json = new Json();
-    public static Json jsonSave = new Json();
+    private static final Logger logger = LoggerFactory.getLogger(FileLoader.class);
 
     /**
      * Read generic Java classes from a JSON file. Properties in the JSON file will override class
@@ -77,7 +72,7 @@ public class FileLoader {
      * @param <T>      Class type to read JSON into
      * @return instance of class, may be null
      */
-    public static <T> T readPlayer(Class<SaveLoadService.PlayerInfo> player, String filename, Location location) {
+    public static <T> T readPlayer(Class<SaveGame.GameState> player, String filename, Location location) {
         logger.debug("Reading class {} from {}", player.getSimpleName(), filename);
         FileHandle file = getFileHandle(filename, location);
 
@@ -93,7 +88,6 @@ public class FileLoader {
             return null;
         }
 
-
         if (object == null) {
             String path = file.path();
             logger.error("Error creating {} class instance from {}", player.getSimpleName(), path);
@@ -102,31 +96,6 @@ public class FileLoader {
 
         return (T) object;
     }
-
-
-    /**
-     * Reads Inventory component of a save file json
-     * - currently a placeholder for refacotring end sprint 2 / into sprint 3
-     *
-     * @param inventory string representation of the items
-     * @param CPU       processor count to be loaded in
-     */
-    public static InventoryComponent readInventory(List<String> inventory, int CPU) {
-        InventoryComponent loadInventory = new InventoryComponent(CPU);
-        ItemPickUpComponent loadIn = new ItemPickUpComponent(loadInventory);
-        logger.info("item pick up");
-
-        if (!inventory.isEmpty()) {
-            for (int i = 0; i < inventory.size(); i++) {
-                loadIn.createItemFromTexture(inventory.get(i));
-                loadInventory.addItem(
-                        loadIn.createItemFromTexture(inventory.get(i)));
-                logger.info("Item {} added to inventory", inventory.get(i));
-            }
-        }
-        return loadInventory;
-    }
-
 
     /**
      * Write generic Java classes to a JSON file.
@@ -148,27 +117,13 @@ public class FileLoader {
      */
     public static void writeClass(Object object, String filename, Location location) {
         logger.debug("Reading class {} from {}", object.getClass().getSimpleName(), filename);
+        json.setElementType(SaveGame.GameState.class, "loadedInventory", SaveGame.itemRetrieve.class);
         FileHandle file = getFileHandle(filename, location);
+        Json json = new Json(JsonWriter.OutputType.json);
+        json.setTypeName(null);
         assert file != null;
         file.writeString(json.prettyPrint(object), false);
     }
-
-    /**
-     * Write specific player instance to a JSON file.
-     *
-     * @param playerInfo information required to load the player back in
-     * @param filename   File to write to.
-     * @param location   File storage type. See
-     *                   https://github.com/libgdx/libgdx/wiki/File-handling#file-storage-types
-     */
-    public static void writeClass(SaveLoadService.PlayerInfo playerInfo, String filename, Location location) {
-
-        logger.debug("Reading class {} from {}", playerInfo.getClass().getSimpleName(), filename);
-        FileHandle file = getFileHandle(filename, location);
-        assert file != null;
-        file.writeString(json.prettyPrint(playerInfo), false);
-    }
-
 
     private static FileHandle getFileHandle(String filename, Location location) {
         switch (location) {

@@ -11,12 +11,12 @@ public class PowerupComponent extends Component {
     private final List<Effect> activeEffects = new ArrayList<>();
     private Entity equippedWeapon;
 
-    public void setEquippedWeapon(Entity weapon) {
-        this.equippedWeapon = weapon;
-    }
-
     public Entity getEquippedWeapon() {
         return equippedWeapon;
+    }
+
+    public void setEquippedWeapon(Entity weapon) {
+        this.equippedWeapon = weapon;
     }
 
     public void addEffect(Effect effect) {
@@ -51,23 +51,17 @@ public class PowerupComponent extends Component {
                 if (!rapidFireEffect.isActive()) {
                     activeEffects.remove(i);
                 }
-            }
-
-            else if (effect instanceof UnlimitedAmmoEffect unlimitedAmmoEffect) {
+            } else if (effect instanceof UnlimitedAmmoEffect unlimitedAmmoEffect) {
                 unlimitedAmmoEffect.update(dt);
                 if (!unlimitedAmmoEffect.isActive()) {
                     activeEffects.remove(i);
                 }
-            }
-
-            else if (effect instanceof AimbotEffect aimbotEffect) {
+            } else if (effect instanceof AimbotEffect aimbotEffect) {
                 aimbotEffect.update(dt);
                 if (!aimbotEffect.isActive()) {
                     activeEffects.remove(i);
                 }
-            }
-
-            else if (effect instanceof DoubleProcessorsEffect doubleProcessorsEffect) {
+            } else if (effect instanceof DoubleProcessorsEffect doubleProcessorsEffect) {
                 doubleProcessorsEffect.update(dt);
                 if (!doubleProcessorsEffect.isActive()) {
                     activeEffects.remove(i);

@@ -25,27 +25,28 @@ public class LeaderBoardManager {
     }
 
     /**
-     *
      * @param currency earned in the round
-     * @param time taken to complete the round
+     * @param time     taken to complete the round
      */
-    public void addRound(int currency, float time){
+    public void addRound(int currency, float time) {
         logger.info("LeaderBoardManager.addRound currency={} time={}", currency, time);
         leaderBoard.add(new RoundData(currency, time));
         //sort leaderboard from highest to lowest score
-        leaderBoard.sort((round1,round2)-> Integer.compare(round2.getScore(), round1.getScore()));
+        leaderBoard.sort((round1, round2) -> Integer.compare(round2.getScore(), round1.getScore()));
     }
 
     /**
-     *
      * @return the leaderboard as a list with each round's
      * data until then since the beginning of the session
      */
-    public List<RoundData> getLeaderBoard() {return this.leaderBoard;}
+    public List<RoundData> getLeaderBoard() {
+        return this.leaderBoard;
+    }
 
     /**
      * if loadedLeaderboard != null --> leaderboard = loadedLeaderboard
      * else create a new list to avoid NullPointException
+     *
      * @param loadedLeaderboard is a list of leaderboard data that is to be loaded
      */
     public void setLeaderboard(List<RoundData> loadedLeaderboard) {
@@ -57,5 +58,7 @@ public class LeaderBoardManager {
     /**
      * clears the leaderboard at the end of each session
      */
-    public void reset(){this.leaderBoard.clear();}
+    public void reset() {
+        this.leaderBoard.clear();
+    }
 }

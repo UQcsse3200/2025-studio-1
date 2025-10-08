@@ -10,8 +10,6 @@ import com.csse3200.game.components.TouchAttackComponent;
 import com.csse3200.game.components.WeaponsStatsComponent;
 import com.csse3200.game.components.boss.*;
 import com.csse3200.game.components.enemy.*;
-import com.csse3200.game.components.friendlynpc.DialogueDisplay;
-import com.csse3200.game.components.friendlynpc.NpcDialogueDataComponent;
 import com.csse3200.game.components.npc.BossAnimationController;
 import com.csse3200.game.components.player.InventoryComponent;
 import com.csse3200.game.components.tasks.BossChaseTask;
@@ -328,28 +326,6 @@ public class BossFactory {
         return npc;
     }
 
-    public static class ApplyInitialBoss2Setup extends Component {
-        private final float scaleK;
-        private final String startAnim;
-
-        public ApplyInitialBoss2Setup(float scaleK, String startAnim) {
-            this.scaleK = scaleK;
-            this.startAnim = startAnim;
-        }
-
-        @Override
-        public void create() {
-            AnimationRenderComponent arc = entity.getComponent(AnimationRenderComponent.class);
-            if (arc != null) {
-                arc.scaleEntity();
-                Vector2 s = entity.getScale();
-                entity.setScale(s.x * scaleK, s.y * scaleK);
-                if (arc.hasAnimation(startAnim)) arc.startAnimation(startAnim);
-            }
-        }
-    }
-
-
     public static Entity createBaseBoss2(Entity target) {
         Entity boss = new Entity()
                 .addComponent(new PhysicsComponent())
@@ -415,6 +391,27 @@ public class BossFactory {
         });
 
         return robot;
+    }
+
+    public static class ApplyInitialBoss2Setup extends Component {
+        private final float scaleK;
+        private final String startAnim;
+
+        public ApplyInitialBoss2Setup(float scaleK, String startAnim) {
+            this.scaleK = scaleK;
+            this.startAnim = startAnim;
+        }
+
+        @Override
+        public void create() {
+            AnimationRenderComponent arc = entity.getComponent(AnimationRenderComponent.class);
+            if (arc != null) {
+                arc.scaleEntity();
+                Vector2 s = entity.getScale();
+                entity.setScale(s.x * scaleK, s.y * scaleK);
+                if (arc.hasAnimation(startAnim)) arc.startAnimation(startAnim);
+            }
+        }
     }
 
 }

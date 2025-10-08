@@ -11,7 +11,6 @@ public class SessionManager {
     private int previousSessionId = 0; //session id of the last session
 
     /**
-     *
      * @return the newly created session
      */
     public GameSession startNewSession() {
@@ -20,7 +19,6 @@ public class SessionManager {
     }
 
     /**
-     *
      * @return current active session
      */
     public GameSession getCurrentSession() {

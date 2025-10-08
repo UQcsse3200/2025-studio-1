@@ -26,20 +26,18 @@ public class GPTGroundFastChaseTask extends DefaultTask implements PriorityTask 
     private final DebugRenderer debugRenderer;
     private final RaycastHit hit = new RaycastHit();
     private final RaycastHit jumpHit = new RaycastHit();
-    private PhysicsComponent physicsComponent;
-
     // Projectile firing
     private final ProjectileLauncherComponent projectileLauncher;
     private final Entity shooter;
     private final float firingCooldown; // seconds
-    private float currentCooldown; // starts ready to fire
     private final GameTime timeSource;
-
-    // Jump mechanics (slightly faster cadence than slow chase)
-    private float timeSinceLastJump = 0f;
     private final float jumpCooldown = 0.9f; // faster enemies jump a bit more often
     private final float obstacleCheckDistance = 0.7f; // look a tad further ahead
     private final float jumpImpulse = 15f; // slightly stronger jump
+    private PhysicsComponent physicsComponent;
+    private float currentCooldown; // starts ready to fire
+    // Jump mechanics (slightly faster cadence than slow chase)
+    private float timeSinceLastJump = 0f;
 
     /**
      * Fast chase without projectiles

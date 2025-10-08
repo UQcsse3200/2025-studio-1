@@ -7,6 +7,7 @@ import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.components.KeycardGateComponent;
+import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.ItemSpawnConfig;
 import com.csse3200.game.entities.factories.KeycardFactory;
@@ -16,18 +17,20 @@ import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.entities.spawner.ItemSpawner;
 import com.csse3200.game.physics.components.ColliderComponent;
 import com.csse3200.game.services.ServiceLocator;
-import com.csse3200.game.components.gamearea.GameAreaDisplay;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This is the room that holds the Ground Moving Boss Boss.
  * This boss is a small robot that moves towards the player and attacks
+ * <p>
  * Room is empty except for boss and player
  */
 public class MovingBossRoom extends GameArea {
     private static GridPoint2 playerSpawn = new GridPoint2(3, 10);
 
+    private static final Logger logger = LoggerFactory.getLogger(MovingBossRoom.class);
     private static final float WALL_WIDTH = 0.1f;
-
     private Entity player;
 
     /**
@@ -99,12 +102,14 @@ public class MovingBossRoom extends GameArea {
 
         spawnEntityAt(boss, pos, true, true);
     }
+
     private void spawnAssistor() {
         GridPoint2 pos = new GridPoint2(7, 8);
 
         Entity assistor = FriendlyNPCFactory.createAssisterNpc(player);
         spawnEntityAt(assistor, pos, true, true);
     }
+
     /**
      * Spawns the borders and doors of the room.
      * Different to genericLayout as the right door is up high
@@ -174,6 +179,5 @@ public class MovingBossRoom extends GameArea {
     @Override
     public String toString() {
         return "MovingBoss";
-
     }
 }

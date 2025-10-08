@@ -66,3 +66,31 @@ float
   orig: 210, 190
   offset: 0, 0
   index: 3
+damage_taken
+  rotate: false
+  xy: 13, 49
+  size: 21, 19
+  orig: 210, 190
+  offset: 0, 0
+  index: 0
+damage_taken
+  rotate: false
+  xy: 34, 49
+  size: 21, 19
+  orig: 210, 190
+  offset: 0,0
+  index: 1
+damage_taken
+  rotate: false
+  xy: 57, 49
+  size: 21, 19
+  orig: 210, 190
+  offset: 0, 0
+  index: 2
+damage_taken
+  rotate: false
+  xy: 79, 49
+  size: 21, 19
+  orig: 210, 190
+  offset: 0, 0
+  index: 3

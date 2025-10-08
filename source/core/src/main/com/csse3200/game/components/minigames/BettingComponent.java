@@ -44,6 +44,23 @@ public class BettingComponent extends UIComponent {
     }
 
     /**
+     * Creates a 1x1 solid color texture used for panel backgrounds.
+     *
+     * @param color the color of the texture
+     * @return a new {@link Texture} object
+     */
+    private static Texture makeSolidTexture(Color color) {
+        Pixmap pm = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
+        pm.setColor(color);
+        pm.fill();
+        Texture t = new Texture(pm);
+        pm.dispose();
+        return t;
+    }
+
+// === Helper methods ===
+
+    /**
      * Initializes the betting UI, sets up the layout, event listeners, and game event bindings.
      */
     @Override
@@ -63,8 +80,6 @@ public class BettingComponent extends UIComponent {
 
         hide();
     }
-
-// === Helper methods ===
 
     private void setupBackground() {
         background = new Image(pixelTex);
@@ -182,7 +197,6 @@ public class BettingComponent extends UIComponent {
         entity.getEvents().addListener("lose", this::onLose);
     }
 
-
     /**
      * Called when the player wins. Updates balance and displays a dialog with the winnings.
      */
@@ -257,21 +271,6 @@ public class BettingComponent extends UIComponent {
         if (background != null) background.remove();
         if (pixelTex != null) pixelTex.dispose();
         super.dispose();
-    }
-
-    /**
-     * Creates a 1x1 solid color texture used for panel backgrounds.
-     *
-     * @param color the color of the texture
-     * @return a new {@link Texture} object
-     */
-    private static Texture makeSolidTexture(Color color) {
-        Pixmap pm = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
-        pm.setColor(color);
-        pm.fill();
-        Texture t = new Texture(pm);
-        pm.dispose();
-        return t;
     }
 
     /**

@@ -29,6 +29,23 @@ public class ResearchGameArea extends GameArea {
         super(terrainFactory, cameraComponent);
     }
 
+    public static ResearchGameArea load(TerrainFactory terrainFactory, CameraComponent camera) {
+        return (new ResearchGameArea(terrainFactory, camera));
+    }
+
+    /**
+     * Setter method for the player spawn point
+     * should be used when the player is traversing through the rooms
+     *
+     * @param newSpawn the new spawn point
+     */
+    public static void setRoomSpawn(GridPoint2 newSpawn) {
+        if (newSpawn == null) {
+            return;
+        }
+        ResearchGameArea.playerSpawn = newSpawn;
+    }
+
     @Override
     public void create() {
         GenericLayout.ensureGenericAssets(this);
@@ -145,7 +162,9 @@ public class ResearchGameArea extends GameArea {
         spawnEntityAt(deepspin, new GridPoint2(24, 15), true, false);
     }
 
-    /** Teleporter bottom-left */
+    /**
+     * Teleporter bottom-left
+     */
     private void spawnTeleporter() {
         Entity tp = TeleporterFactory.createTeleporter(new Vector2(2f, 2.8f));
         spawnEntity(tp);
@@ -161,19 +180,6 @@ public class ResearchGameArea extends GameArea {
         clearAndLoad(() -> new FlyingBossRoom(terrainFactory, cameraComponent));
     }
 
-    /**
-     * Setter method for the player spawn point
-     * should be used when the player is traversing through the rooms
-     * 
-     * @param newSpawn the new spawn point
-     */
-    public static void setRoomSpawn(GridPoint2 newSpawn) {
-        if (newSpawn == null) {
-            return;
-        }
-        ResearchGameArea.playerSpawn = newSpawn;
-    }
-
     @Override
     public String toString() {
         return "Research";
@@ -183,9 +189,5 @@ public class ResearchGameArea extends GameArea {
     public Entity getPlayer() {
         // placeholder
         return null;
-    }
-
-    public static ResearchGameArea load(TerrainFactory terrainFactory, CameraComponent camera) {
-        return (new ResearchGameArea(terrainFactory, camera));
     }
 }

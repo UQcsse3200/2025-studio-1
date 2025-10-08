@@ -23,8 +23,8 @@ import com.csse3200.game.services.ServiceLocator;
  */
 public class StorageGameArea extends GameArea {
     private static final float WALL_WIDTH = 0.1f;
-    private static GridPoint2 playerSpawn = new GridPoint2(4, 20);
     private static final float ROOM_DIFF_NUMBER = 8;
+    private static GridPoint2 playerSpawn = new GridPoint2(4, 20);
     private Entity player;
 
     /**
@@ -41,6 +41,24 @@ public class StorageGameArea extends GameArea {
      */
     public StorageGameArea(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
         super(terrainFactory, cameraComponent);
+    }
+
+    /**
+     * Setter method for the player spawn point
+     * should be used when the player is traversing through the rooms
+     *
+     * @param newSpawn the new spawn point
+     */
+    public static void setRoomSpawn(GridPoint2 newSpawn) {
+        if (newSpawn == null) {
+            return;
+        }
+        StorageGameArea.playerSpawn = newSpawn;
+    }
+
+    public static StorageGameArea load(TerrainFactory terrainFactory, CameraComponent camera) {
+
+        return (new StorageGameArea(terrainFactory, camera));
     }
 
     /**
@@ -163,19 +181,6 @@ public class StorageGameArea extends GameArea {
         clearAndLoad(() -> new ShippingGameArea(terrainFactory, cameraComponent));
     }
 
-    /**
-     * Setter method for the player spawn point
-     * should be used when the player is traversing through the rooms
-     * 
-     * @param newSpawn the new spawn point
-     */
-    public static void setRoomSpawn(GridPoint2 newSpawn) {
-        if (newSpawn == null) {
-            return;
-        }
-        StorageGameArea.playerSpawn = newSpawn;
-    }
-
     @Override
     public String toString() {
         return "Storage";
@@ -185,10 +190,5 @@ public class StorageGameArea extends GameArea {
     public Entity getPlayer() {
         // placeholder
         return null;
-    }
-
-    public static StorageGameArea load(TerrainFactory terrainFactory, CameraComponent camera) {
-
-        return (new StorageGameArea(terrainFactory, camera));
     }
 }

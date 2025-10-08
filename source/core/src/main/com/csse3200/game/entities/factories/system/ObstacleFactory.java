@@ -24,6 +24,10 @@ import com.csse3200.game.rendering.TextureRenderComponent;
  */
 public class ObstacleFactory {
 
+    private ObstacleFactory() {
+        throw new IllegalStateException("Instantiating static util class");
+    }
+
     /**
      * Creates a tree entity.
      *
@@ -117,7 +121,7 @@ public class ObstacleFactory {
 
     /**
      * Create visible floor
-     * 
+     *
      * @return a visible static floor Entity
      */
     public static Entity createVisibleLongFloor() {
@@ -481,7 +485,6 @@ public class ObstacleFactory {
         return officeDesk;
     }
 
-
     /**
      * Glowing energy pod that acts as a solid prop on the floor.
      * Collider is slightly shorter (0.9) so it seats nicely on tiles when scaled.
@@ -558,7 +561,6 @@ public class ObstacleFactory {
         PhysicsUtils.setScaledCollider(platform, 1f, 0.5f);
         return platform;
     }
-
 
     /**
      * Creates a red security light entity.
@@ -672,7 +674,6 @@ public class ObstacleFactory {
         return pod;
     }
 
-
     /**
      * Server rack (first variant, lighter colour).
      *
@@ -713,7 +714,7 @@ public class ObstacleFactory {
 
     /**
      * Spikes. Takes health from player upon contact
-     * 
+     *
      * @return Entity spike entity
      */
     public static Entity createSpikes() {
@@ -835,9 +836,5 @@ public class ObstacleFactory {
         trigger.getComponent(ColliderComponent.class).setSensor(true);
         trigger.setScale(width, height);
         return trigger;
-    }
-
-    private ObstacleFactory() {
-        throw new IllegalStateException("Instantiating static util class");
     }
 }
