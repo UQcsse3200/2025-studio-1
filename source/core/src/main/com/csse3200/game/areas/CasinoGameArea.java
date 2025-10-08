@@ -60,6 +60,7 @@ public class CasinoGameArea extends GameArea {
         spawnBlackjack();
         spawnSlotsGame();
         spawnWhackAMoleGame();
+        spawnRobotFightingGame();
     }
 
     private void ensureAssets() {
