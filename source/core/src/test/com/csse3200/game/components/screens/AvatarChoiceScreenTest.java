@@ -124,8 +124,8 @@ public class AvatarChoiceScreenTest {
 
         // Provide avatars list
         mockAvatars = new ArrayList<>();
-        mockAvatars.add(new Avatar("scout", "Scout", "images/a.png", 80, 10, 5f));
-        mockAvatars.add(new Avatar("soldier", "Soldier", "images/b.png", 100, 15, 3f));
+        mockAvatars.add(new Avatar("scout", "Scout", "images/a.png", 80, 10, 5f, "player.atlas"));
+        mockAvatars.add(new Avatar("soldier", "Soldier", "images/b.png", 100, 15, 3f, "player.atlas"));
         Field avatarsField = AvatarChoiceScreen.class.getDeclaredField("avatars");
         avatarsField.setAccessible(true);
         avatarsField.set(screen, mockAvatars);

@@ -105,9 +105,7 @@ public class CasinoGameArea extends GameArea {
      * Spawns the player at PLAYER_SPAWN and returns the entity.
      */
     private Entity spawnPlayer() {
-        Entity newPlayer = PlayerFactory.createPlayer();
-        spawnEntityAt(newPlayer, PLAYER_SPAWN, true, true);
-        return newPlayer;
+        return spawnOrRepositionPlayer(PLAYER_SPAWN);
     }
 
     private void spawnWhackAMoleGame() {
