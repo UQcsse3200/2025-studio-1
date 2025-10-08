@@ -6,6 +6,7 @@ import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.components.KeycardGateComponent;
+import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.factories.KeycardFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
@@ -20,7 +21,7 @@ import com.csse3200.game.rendering.TextureRenderComponent;
  **/
 public class ElevatorGameArea extends GameArea {
     private static final float WALL_WIDTH = 0.1f;
-    private static GridPoint2 PLAYER_SPAWN = new GridPoint2(10, 10);
+    private static GridPoint2 playerSpawn = new GridPoint2(10, 10);
 
     public ElevatorGameArea(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
         super(terrainFactory, cameraComponent);
@@ -46,6 +47,11 @@ public class ElevatorGameArea extends GameArea {
         spawnPlatforms();
         spawnDesk();
         spawnTeleporter();
+
+        Entity ui = new Entity();
+        ui.addComponent(new GameAreaDisplay("Elevator"))
+                .addComponent(new com.csse3200.game.components.gamearea.FloorLabelDisplay("Floor 6"));
+        spawnEntity(ui);
     }
 
     private void spawnBordersAndDoors() {
@@ -90,9 +96,8 @@ public class ElevatorGameArea extends GameArea {
 
     }
 
-    private void spawnPlayer() {
-        Entity player = com.csse3200.game.entities.factories.characters.PlayerFactory.createPlayer();
-        spawnEntityAt(player, PLAYER_SPAWN, true, true);
+    private Entity spawnPlayer() {
+        return spawnOrRepositionPlayer(playerSpawn);
     }
 
     /**
@@ -136,7 +141,7 @@ public class ElevatorGameArea extends GameArea {
     }
 
     private void loadOffice() {
-        OfficeGameArea.setRoomSpawn(new GridPoint2(27, 22));
+        OfficeGameArea.setRoomSpawn(new GridPoint2(24, 22));
         clearAndLoad(() -> new OfficeGameArea(terrainFactory, cameraComponent));
     }
 
@@ -168,7 +173,7 @@ public class ElevatorGameArea extends GameArea {
         if (newSpawn == null) {
             return;
         }
-        ElevatorGameArea.PLAYER_SPAWN = newSpawn;
+        ElevatorGameArea.playerSpawn = newSpawn;
     }
 
     @Override

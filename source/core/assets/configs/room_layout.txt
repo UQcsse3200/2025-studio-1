@@ -1,0 +1,15 @@
+Casino, -1, 0
+Forest, 0, 0
+Reception, 1, 0
+Mainhall, 2, 0
+Security, 3, 0
+MovingBoss, 4, 0
+Office, 5, 0
+Elevator, 6, 0
+Research, 7, 0
+FlyingBoss, 8, 0
+Shipping, 9, 0
+Storage, 10, 0
+Server, 11, 0
+Tunnel, 12, 0
+StaticBoss, 13, 0
