@@ -2,6 +2,7 @@ package com.csse3200.game.areas;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.GridPoint2;
+import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.CameraComponent;
@@ -10,6 +11,7 @@ import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.ItemSpawnConfig;
 import com.csse3200.game.entities.factories.characters.PlayerFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
+import com.csse3200.game.entities.factories.system.TeleporterFactory;
 import com.csse3200.game.entities.spawner.ItemSpawner;
 import com.csse3200.game.services.ServiceLocator;
 
@@ -39,6 +41,7 @@ public class ResearchGameArea extends GameArea {
         spawnPlatforms();
         spawnResearchProps();
         spawnEnemies();
+        spawnTeleporter();
         ItemSpawner itemSpawner = new ItemSpawner(this);
         itemSpawner.spawnItems(ItemSpawnConfig.researchmap());
 
@@ -141,6 +144,12 @@ public class ResearchGameArea extends GameArea {
         Entity deepspin = com.csse3200.game.entities.factories.characters.NPCFactory.createDeepspin(player, this,
                 ServiceLocator.getDifficulty().getRoomDifficulty(ResearchGameArea.ROOM_DIFF_NUMBER));
         spawnEntityAt(deepspin, new GridPoint2(24, 15), true, false);
+    }
+
+    /** Teleporter bottom-left */
+    private void spawnTeleporter() {
+        Entity tp = TeleporterFactory.createTeleporter(new Vector2(2f, 2.8f));
+        spawnEntity(tp);
     }
 
     private void loadElevator() {
