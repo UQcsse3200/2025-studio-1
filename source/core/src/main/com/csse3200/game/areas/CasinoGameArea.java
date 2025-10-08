@@ -13,7 +13,6 @@ import com.csse3200.game.components.player.InventoryComponent;
 import com.csse3200.game.components.screens.BlackjackScreenDisplay;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.factories.InteractableStationFactory;
-import com.csse3200.game.entities.factories.characters.PlayerFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.components.minigames.whackamole.WhackAMoleGame;
 import com.csse3200.game.services.ResourceService;
@@ -23,7 +22,6 @@ import com.csse3200.game.components.minigames.slots.SlotsGame;
 
 /**
  * Minimal generic Casino room: walls, a single right-side door, and a subtle background overlay.
- *
  * Right door -> Spawn Room
  */
 public class CasinoGameArea extends GameArea {
@@ -96,7 +94,7 @@ public class CasinoGameArea extends GameArea {
         if (cameraComponent == null) return;
         Bounds b = getCameraBounds(cameraComponent);
         addSolidWallLeft(b, WALL_WIDTH);
-
+        addSolidWallTop(b, WALL_WIDTH);
         float rightDoorHeight = Math.max(1f, b.viewHeight() * 0.4f);
         float rightDoorY = b.bottomY();
 

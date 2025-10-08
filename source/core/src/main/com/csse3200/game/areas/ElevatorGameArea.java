@@ -8,7 +8,6 @@ import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.components.KeycardGateComponent;
 import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import com.csse3200.game.entities.Entity;
-import com.csse3200.game.entities.factories.KeycardFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.entities.factories.system.TeleporterFactory;
 import com.csse3200.game.physics.PhysicsLayer;
@@ -35,11 +34,6 @@ public class ElevatorGameArea extends GameArea {
         /** Use the dedicated elevator background **/
         terrain = terrainFactory.createTerrain(TerrainType.ELEVATOR);
         spawnEntity(new Entity().addComponent(terrain));
-        float keycardX = 3f;
-        float keycardY = 10f;
-        Entity keycard = KeycardFactory.createKeycard(2);
-        keycard.setPosition(new Vector2(keycardX, keycardY));
-        spawnEntity(keycard);
         spawnBordersAndDoors();
         spawnPlayer();
         spawnObjectDoors(new GridPoint2(0, 6), new GridPoint2(28, 19));
@@ -87,7 +81,7 @@ public class ElevatorGameArea extends GameArea {
         rightDoor.addComponent(new ColliderComponent());
         rightDoor.addComponent(new HitboxComponent().setLayer(PhysicsLayer.GATE));
         /**Add keycard logic **/
-        rightDoor.addComponent(new KeycardGateComponent(2, () -> {
+        rightDoor.addComponent(new KeycardGateComponent(0, () -> {
             ColliderComponent collider = rightDoor.getComponent(ColliderComponent.class);
             if (collider != null) collider.setEnabled(false);
             loadResearch();
@@ -166,7 +160,7 @@ public class ElevatorGameArea extends GameArea {
     /**
      * Setter method for the player spawn point
      * should be used when the player is traversing through the rooms
-     * 
+     *
      * @param newSpawn the new spawn point
      */
     public static void setRoomSpawn(GridPoint2 newSpawn) {

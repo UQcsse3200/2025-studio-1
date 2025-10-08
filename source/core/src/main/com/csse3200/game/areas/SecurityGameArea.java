@@ -9,7 +9,6 @@ import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.ItemSpawnConfig;
-import com.csse3200.game.entities.factories.characters.PlayerFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.entities.factories.system.TeleporterFactory;
 import com.csse3200.game.entities.spawner.ItemSpawner;
@@ -66,7 +65,7 @@ public class SecurityGameArea extends GameArea {
         leftDoor.setPosition(b.leftX() + 0.001f, leftDoorY);
         leftDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadBackToFloor5));
         spawnEntity(leftDoor);
-
+        addSolidWallTop(b, WALL_WIDTH);
         addSolidWallRight(b, WALL_WIDTH);
 
         float rightDoorHeight = Math.max(1f, b.viewHeight() * 0.2f);
