@@ -2,14 +2,16 @@ package com.csse3200.game.areas;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.GridPoint2;
+import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.CameraComponent;
+import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.ItemSpawnConfig;
 import com.csse3200.game.entities.factories.characters.NPCFactory;
-import com.csse3200.game.entities.factories.characters.PlayerFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
+import com.csse3200.game.entities.factories.system.TeleporterFactory;
 import com.csse3200.game.entities.spawner.ItemSpawner;
 import com.csse3200.game.services.ServiceLocator;
 
@@ -28,7 +30,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
  */
 public class TunnelGameArea extends GameArea {
     private static final float WALL_WIDTH = 0.1f;
-    private static final GridPoint2 PLAYER_SPAWN = new GridPoint2(10, 10);
+    private static GridPoint2 playerSpawn = new GridPoint2(5, 7);
     private static final float ROOM_DIFF_NUMBER = 10;
 
     private Entity player;
@@ -61,16 +63,19 @@ public class TunnelGameArea extends GameArea {
         spawnPlatforms();
         spawnSpawnPads();
         spawnGrokDroids();
+        spawnTeleporter();
         spawnObjectDoors(new GridPoint2(0, 7), new GridPoint2(28, 7));
-
         spawnFloor();
         spawnPasswordTerminal(new GridPoint2(22, 17));
+        spawnSpikes();
+        spawnVisibleFloor();
 
         ItemSpawner itemSpawner = new ItemSpawner(this);
         itemSpawner.spawnItems(ItemSpawnConfig.tunnelmap());
 
         Entity ui = new Entity();
-        ui.addComponent(new com.csse3200.game.components.gamearea.FloorLabelDisplay("Tunnel"));
+        ui.addComponent(new GameAreaDisplay("Tunnel"))
+                .addComponent(new com.csse3200.game.components.gamearea.FloorLabelDisplay("Floor 11"));
         spawnEntity(ui);
     }
 
@@ -82,6 +87,7 @@ public class TunnelGameArea extends GameArea {
             return;
         Bounds b = getCameraBounds(cameraComponent);
         addSolidWallLeft(b, WALL_WIDTH);
+        addSolidWallTop(b, WALL_WIDTH);
         float leftDoorHeight = Math.max(1f, b.viewHeight() * 0.2f);
         float leftDoorY = b.bottomY();
         Entity leftDoor = ObstacleFactory.createDoorTrigger(WALL_WIDTH, leftDoorHeight);
@@ -104,15 +110,13 @@ public class TunnelGameArea extends GameArea {
     }
 
     /**
-     * Spawns the player at the designated spawn point PLAYER_SPAWN and then
+     * Spawns the player at the designated spawn point playerSpawn and then
      * returns the player entity.
      *
      * @return the player entity
      */
     private Entity spawnPlayer() {
-        Entity player = PlayerFactory.createPlayer();
-        spawnEntityAt(player, PLAYER_SPAWN, true, true);
-        return player;
+        return spawnOrRepositionPlayer(playerSpawn);
     }
 
     /**
@@ -165,12 +169,53 @@ public class TunnelGameArea extends GameArea {
         spawnEntityAt(grok2, grok2Pos, true, false);
     }
 
+    /**
+     * Spawn the spikes
+     */
+    private void spawnSpikes() {
+        Entity spikes = ObstacleFactory.createSpikes();
+        GridPoint2 spikesSpawn = new GridPoint2(15, 6);
+        spawnEntityAt(spikes, spikesSpawn, true, false);
+    }
+
+    /** Teleporter bottom-left */
+    private void spawnTeleporter() {
+        Entity tp = TeleporterFactory.createTeleporter(new Vector2(2f, 3f));
+        spawnEntity(tp);
+    }
+
+    /**
+     * Spawn entity door at the bottom left, and no door to the right
+     * as this is the last room (currently).
+     */
+    private void spawnObjectDoors() {
+        Entity leftDoor = ObstacleFactory.createDoor();
+        GridPoint2 leftDoorSpawn = new GridPoint2(0, 7);
+        spawnEntityAt(leftDoor, leftDoorSpawn, false, false);
+    }
+
     private void loadServer() {
+        ServerGameArea.setRoomSpawn(new GridPoint2(25, 24));
         clearAndLoad(() -> new ServerGameArea(terrainFactory, cameraComponent));
     }
 
     private void loadBossRoom() {
         clearAndLoad(() -> new SecretRoomGameArea(terrainFactory, cameraComponent));
+        StaticBossRoom.setRoomSpawn(new GridPoint2(4, 8));
+        clearAndLoad(() -> new StaticBossRoom(terrainFactory, cameraComponent));
+    }
+
+    /**
+     * Setter method for the player spawn point
+     * should be used when the player is traversing through the rooms
+     *
+     * @param newSpawn the new spawn point
+     */
+    public static void setRoomSpawn(GridPoint2 newSpawn) {
+        if (newSpawn == null) {
+            return;
+        }
+        TunnelGameArea.playerSpawn = newSpawn;
     }
 
     @Override

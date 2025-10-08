@@ -2,6 +2,7 @@ package com.csse3200.game.components.player;
 
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.components.Component;
+import com.csse3200.game.entities.Entity;
 import com.csse3200.game.rendering.AnimationRenderComponent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,6 +47,11 @@ public class PlayerAnimationController extends Component {
      * True if the player is falling.
      */
     private boolean falling = true;
+
+    /**
+     * True if the armour is facing right.
+     */
+    boolean armourFacingRight = true;
 
     /**
      * Creates a new animation controller, retrieves the animator component,
@@ -99,6 +105,7 @@ public class PlayerAnimationController extends Component {
      * Plays the walking animation for the current facing direction.
      */
     void animateWalk() {
+        this.flipArmour();
         if (facingRight) {
             logger.debug("Animating right walk");
             animator.startAnimation("right_walk");
@@ -271,6 +278,24 @@ public class PlayerAnimationController extends Component {
             animateIdle();
         } else {
             animateMove();
+        }
+    }
+
+
+    /**
+     * Used to flip armour direction, so it coincides with player movement direction.
+     */
+    public void flipArmour() {
+        ArmourEquipComponent armourEquipComponent = entity.getComponent(ArmourEquipComponent.class);
+        if (armourEquipComponent == null) {
+            return;
+        }
+        if (facingRight != armourFacingRight) {
+            for (Entity a : armourEquipComponent.currentlyEquippedArmour.keySet()) {
+                Vector2 scale = a.getScale();
+                a.setScale(-scale.x, scale.y);
+            }
+            armourFacingRight = facingRight;
         }
     }
 }

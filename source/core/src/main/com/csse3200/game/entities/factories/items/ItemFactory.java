@@ -9,8 +9,7 @@ import com.csse3200.game.rendering.TextureRenderComponent;
 
 /**
  * Utility factory class for creating item entities in the game.
- * <p>
- * <p>Each item entity type should have a creation method that returns a corresponding entity.
+ * Each item entity type should have a creation method that returns a corresponding entity.
  */
 public class ItemFactory {
 

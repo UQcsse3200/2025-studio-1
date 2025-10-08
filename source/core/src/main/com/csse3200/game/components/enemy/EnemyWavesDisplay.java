@@ -22,8 +22,8 @@ public class EnemyWavesDisplay extends UIComponent {
     private Table table;
     private Label waveNumberLabel;
     private Label waveDelayLabel;
+    private Label maxWavesLabel;
     protected Stage stage;
-    private static final float screenHeight = (float) Gdx.graphics.getHeight();
 
     /**
      * Constructs the EnemyWavesDisplay for the given EnemyWaves manager.
@@ -37,8 +37,27 @@ public class EnemyWavesDisplay extends UIComponent {
         addActors();
 
         wavesManager.getEvents().addListener("updateWaveNumber", this::updateWaveNumber);
+        wavesManager.getEvents().addListener("updateMaxWave", this::updateMaxWave);
         wavesManager.getEvents().addListener("spawnWave", this::setTableVisible);
         wavesManager.getEvents().addListener("allWavesFinished", this::setTableInvisible);
+    }
+
+    private float safeScreenHeight() {
+        try {
+            return (Gdx.graphics != null) ? (float) Gdx.graphics.getHeight() : 720f;
+        } catch (Exception e) {
+            return 720f; // fallback for headless/unit tests
+        }
+    }
+
+    private Label makeLabel(CharSequence text) {
+        // Some tests may not have the "large" style loaded; fall back gracefully
+        try {
+            return new Label(text, skin, "large");
+        } catch (Exception e) {
+            logger.debug("Falling back to default label style for text '{}': {}", text, e.getMessage());
+            return new Label(text, skin);
+        }
     }
 
     /**
@@ -48,22 +67,22 @@ public class EnemyWavesDisplay extends UIComponent {
     private void addActors() {
         table = new Table();
         table.setSize(300f, 150f);
-        table.setPosition(30f, screenHeight * 3/5);
+        table.setPosition(30f, safeScreenHeight() * 3/5f);
 
         // Current wave number
         int waveNumber = wavesManager.getWaveNumber();
         CharSequence waveNumberText = String.format("Waves spawned: %d", waveNumber);
-        waveNumberLabel = new Label(waveNumberText, skin, "large");
+        waveNumberLabel = makeLabel(waveNumberText);
 
         // Max waves
         int maxWaves = wavesManager.getMaxWaves();
         CharSequence maxWavesText = String.format("Max waves: %d", maxWaves);
-        Label maxWavesLabel = new Label(maxWavesText, skin, "large");
+        maxWavesLabel = makeLabel(maxWavesText);
 
         // Wave delay
         int waveDelay = wavesManager.getWaveDelayInSeconds();
-        CharSequence waveDelayText = String.format("Wave delay: " + waveDelay + "s");
-        waveDelayLabel = new Label(waveDelayText, skin, "large");
+        CharSequence waveDelayText = String.format("Wave delay: %ds", waveDelay);
+        waveDelayLabel = makeLabel(waveDelayText);
 
         // Layout:
         // Row 1: Waves spawned/current wave
@@ -76,16 +95,23 @@ public class EnemyWavesDisplay extends UIComponent {
         table.add(waveDelayLabel).left().padLeft(10f);
         table.row();
 
-        Drawable bg = skin.newDrawable("white", new Color(255f, 255f, 255f, 0.6f));
-        table.setBackground(bg);
-        table.setVisible(false);  // hide it first, only visible when the wave is spawned
+        Drawable bg;
+        try {
+            bg = skin.newDrawable("white", new Color(1f, 1f, 1f, 0.6f)); // use 0-1f color range
+        } catch (Exception e) {
+            bg = null; // In tests skin may not have drawable; not critical
+        }
+        if (bg != null) {
+            table.setBackground(bg);
+        }
+        table.setVisible(false);  // hide it first, only visible when a wave spawns
 
         stage.addActor(table);
     }
 
     @Override
     public void draw(SpriteBatch batch) {
-        // draw is handled by the stage
+        // draw handled by stage
     }
 
     /**
@@ -99,16 +125,23 @@ public class EnemyWavesDisplay extends UIComponent {
     }
 
     /**
-     * Makes the wave info table visible. Triggered when a new set of waves is spawned.
+     * Updates max wave label to reflect the current number of waves spawned.
+     * Triggered by the "updateMaxWave" event from the waves manager.
      */
-    public void setTableVisible() {
-        table.setVisible(true);
+    public void updateMaxWave() {
+        int maxWaves = wavesManager.getMaxWaves();
+        CharSequence maxWavesText = String.format("Max waves: %d", maxWaves);
+        maxWavesLabel.setText(maxWavesText);
     }
 
-    /**
-     * Hides the wave info table. Triggered when all waves have finished.
-     */
-    public void setTableInvisible() {
-        table.setVisible(false);
-    }
+    /** Makes the wave info table visible. */
+    public void setTableVisible() { table.setVisible(true); }
+
+    /** Hides the wave info table. */
+    public void setTableInvisible() { table.setVisible(false); }
+
+    public Table getTable() { return table; }
+    public Label getWaveNumberLabel() { return waveNumberLabel; }
+    public Label getMaxWavesLabel() { return maxWavesLabel; }
+    public Label getWaveDelayLabel() { return waveDelayLabel; }
 }

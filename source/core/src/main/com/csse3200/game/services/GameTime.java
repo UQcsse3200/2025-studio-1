@@ -13,7 +13,8 @@ public class GameTime {
     private final long startTime;
     private float timeScale = 1f;
     private boolean paused = false;
-
+    private long delayedKeycardTime = -1;
+    private Runnable delayedKeycardAction;
     public GameTime() {
         startTime = TimeUtils.millis();
         logger.debug("Setting game start time to {}", startTime);
@@ -53,6 +54,11 @@ public class GameTime {
     public float getDeltaTime() {
         if (paused)
             return 0;
+        if (delayedKeycardAction != null && getTime() >= delayedKeycardTime) {
+            delayedKeycardAction.run();
+            delayedKeycardAction = null;
+            delayedKeycardTime = -1;
+        }
         return Gdx.graphics.getDeltaTime() * timeScale;
     }
 
@@ -68,6 +74,11 @@ public class GameTime {
      */
     public long getTime() {
         return TimeUtils.timeSinceMillis(startTime);
+    }
+
+    public void delayKeycardSpawn(float delaySeconds, Runnable action) {
+        delayedKeycardTime = getTime() + (long)(delaySeconds * 1000);
+        delayedKeycardAction = action;
     }
 
     public long getTimeSince(long lastTime) {
