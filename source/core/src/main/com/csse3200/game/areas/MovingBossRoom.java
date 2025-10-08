@@ -10,22 +10,18 @@ import com.csse3200.game.entities.configs.ItemSpawnConfig;
 import com.csse3200.game.entities.factories.characters.BossFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.entities.spawner.ItemSpawner;
-import com.csse3200.game.entities.factories.characters.PlayerFactory;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.components.gamearea.GameAreaDisplay;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  * This is the room that holds the Ground Moving Boss Boss.
  * This boss is a small robot that moves towards the player and attacks
- * 
+ *
  * Room is empty except for boss and player
  */
 public class MovingBossRoom extends GameArea {
-    private static final Logger logger = LoggerFactory.getLogger(MovingBossRoom.class);
-
     private static GridPoint2 playerSpawn = new GridPoint2(3, 10);
 
     private static final float WALL_WIDTH = 0.1f;
@@ -67,8 +63,6 @@ public class MovingBossRoom extends GameArea {
 
         player = spawnPlayer();
 
-        spawnBigWall();
-
         spawnBoss();
         spawnObjectDoors(new GridPoint2(0, 7), new GridPoint2(28, 7));
 
@@ -80,15 +74,12 @@ public class MovingBossRoom extends GameArea {
 
     private void displayUI() {
         Entity ui = new Entity();
-        ui.addComponent(new GameAreaDisplay("Moving Boss Room"))
-                .addComponent(new com.csse3200.game.components.gamearea.FloorLabelDisplay("Moving Boss Room"));
+        ui.addComponent(new GameAreaDisplay("Moving Boss Room"));
         spawnEntity(ui);
     }
 
     private Entity spawnPlayer() {
-        Entity newPlayer = PlayerFactory.createPlayer();
-        spawnEntityAt(newPlayer, playerSpawn, true, true);
-        return newPlayer;
+        return spawnOrRepositionPlayer(playerSpawn);
     }
 
     private void spawnBoss() {
@@ -96,15 +87,6 @@ public class MovingBossRoom extends GameArea {
 
         Entity boss = BossFactory.createRobot(player);
         spawnEntityAt(boss, pos, true, true);
-    }
-
-    /**
-     * Adds a very tall thick-floor as a background wall/divider.
-     */
-    private void spawnBigWall() {
-        GridPoint2 wallSpawn = new GridPoint2(-14, 0);
-        Entity bigWall = ObstacleFactory.createBigThickFloor();
-        spawnEntityAt(bigWall, wallSpawn, true, false);
     }
 
     /**
@@ -159,5 +141,10 @@ public class MovingBossRoom extends GameArea {
     public void loadOffice() {
         OfficeGameArea.setRoomSpawn(new GridPoint2(2, 14));
         clearAndLoad(() -> new OfficeGameArea(terrainFactory, cameraComponent));
+    }
+
+    @Override
+    public String toString() {
+        return "MovingBoss";
     }
 }
