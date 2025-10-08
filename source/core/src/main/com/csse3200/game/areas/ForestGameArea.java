@@ -113,6 +113,8 @@ public class ForestGameArea extends GameArea {
             "images/door.png",
             "images/KeycardDoor.png",
             "images/player.png",
+            "images/engineer.png",
+            "images/soldier.png",
             "images/mud.png",
             "images/healthBench.png",
             "images/laserball.png",
@@ -270,7 +272,9 @@ public class ForestGameArea extends GameArea {
             "images/Turret.atlas",
             "images/explosion_1.atlas",
             "images/explosion_2.atlas",
+            "images/engineer.atlas",
             "images/player.atlas",
+            "images/soldier.atlas",
             "images/boss_explosion.atlas",
             "images/Boss3_Attacks.atlas",
             "images/player.atlas",
@@ -365,11 +369,9 @@ public class ForestGameArea extends GameArea {
         playMusic();
         ItemSpawner itemSpawner = new ItemSpawner(this);
         itemSpawner.spawnItems(ItemSpawnConfig.forestmap());
-        spawnnpctest();
 
         spawnGuidanceNpc();
 
-        spawnPartnerNearPlayerIfNeeded();
 
         // Place a keycard on the floor so the player can unlock the door
         float keycardX = 3f;
@@ -722,17 +724,11 @@ public class ForestGameArea extends GameArea {
                 return;
             }
         }
-        
-        // No partner found, spawn a new one
+
         Entity partner = FriendlyNPCFactory.createPartner(player);
 
-        // 方案 A：按瓦片生成（要确保相机看得到该瓦片）
         GridPoint2 pos = new GridPoint2(8, 9);
         spawnEntityAt(partner, pos, true, true);
-
-        // 方案 B：直接生成到玩家旁边（更容易看见）
-        // spawnEntity(partner);
-        // partner.setPosition(player.getPosition().cpy().add(1f, 0f));
     }
 
     private void spawnGuidanceNpc() {
