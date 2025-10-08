@@ -40,7 +40,6 @@ public class PlayerStatsDisplay extends BaseScreenDisplay {
     private ProgressBar healthBar;
     private ProgressBar staminaBar;
     private Label processorLabel;
-    private Label healthTextLabel;
     private Label ammoLabel;
 
     public PlayerStatsDisplay() {
@@ -88,12 +87,9 @@ public class PlayerStatsDisplay extends BaseScreenDisplay {
         healthBar.setAnimateDuration(0f);
         healthBar.setValue(clamp(healthVal, 0, maxHealth));
 
-        healthTextLabel = new Label(formatHealthText(healthVal, maxHealth), skin, "large");
-        healthTextLabel.setAlignment(Align.center);
 
         Stack healthStack = new Stack();
         healthStack.add(healthBar);       // bar at the back
-        healthStack.add(healthTextLabel); // text on top
 
         // Stamina bar as percentage [0..100]
         staminaBar = new ProgressBar(0, 100, 1, false,
@@ -159,9 +155,6 @@ public class PlayerStatsDisplay extends BaseScreenDisplay {
         int max = (int) healthBar.getMaxValue();
         int clamped = clamp(health, 0, max);
         healthBar.setValue(clamped);
-        if (healthTextLabel != null) {
-            healthTextLabel.setText(formatHealthText(clamped, max));
-        }
     }
 
     public void updatePlayerStaminaUI(int current, int max) {
