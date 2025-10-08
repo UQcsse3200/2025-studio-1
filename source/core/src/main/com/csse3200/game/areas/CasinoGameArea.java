@@ -120,6 +120,11 @@ public class CasinoGameArea extends GameArea {
         spawnEntityAt(new WhackAMoleGame().getGameEntity(), pos, true, true);
     }
 
+    private void spawnRobotFightingGame() {
+        GridPoint2 pos = new GridPoint2(3, 10);
+        spawnEntityAt(new RobotFightingGame().getGameEntity(), pos, true, true);
+    }
+
     /**
      * Disposes current entities and switches to ForestGameArea.
      */
