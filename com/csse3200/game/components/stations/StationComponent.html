@@ -251,6 +251,16 @@ loadScripts(document, 'script');</script>
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
+<section class="detail" id="isPlayerNear()">
+<h3>isPlayerNear</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isPlayerNear</span>()</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>is the player near</dd>
+</dl>
+</section>
+</li>
+<li>
 <section class="detail" id="setPlayerNear(boolean)">
 <h3>setPlayerNear</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setPlayerNear</span><wbr><span class="parameters">(boolean&nbsp;near)</span></div>
@@ -262,24 +272,12 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="setConfig(com.csse3200.game.entities.configs.benches.BenchConfig)">
-<h3>setConfig</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setConfig</span><wbr><span class="parameters">(<a href="../../entities/configs/benches/BenchConfig.html" title="class in com.csse3200.game.entities.configs.benches">BenchConfig</a>&nbsp;config)</span></div>
-<div class="block">Sets the config</div>
+<section class="detail" id="getPlayer()">
+<h3>getPlayer</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a></span>&nbsp;<span class="element-name">getPlayer</span>()</div>
 <dl class="notes">
-<dt>Parameters:</dt>
-<dd><code>config</code> - the config</dd>
-</dl>
-</section>
-</li>
-<li>
-<section class="detail" id="setBuyPrompt(com.badlogic.gdx.scenes.scene2d.ui.Label)">
-<h3>setBuyPrompt</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setBuyPrompt</span><wbr><span class="parameters">(com.badlogic.gdx.scenes.scene2d.ui.Label&nbsp;prompt)</span></div>
-<div class="block">Sets buy prompt</div>
-<dl class="notes">
-<dt>Parameters:</dt>
-<dd><code>prompt</code> - the buyPrompt</dd>
+<dt>Returns:</dt>
+<dd>the player interacting</dd>
 </dl>
 </section>
 </li>
@@ -295,26 +293,6 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="isPlayerNear()">
-<h3>isPlayerNear</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isPlayerNear</span>()</div>
-<dl class="notes">
-<dt>Returns:</dt>
-<dd>is the player near</dd>
-</dl>
-</section>
-</li>
-<li>
-<section class="detail" id="getPlayer()">
-<h3>getPlayer</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a></span>&nbsp;<span class="element-name">getPlayer</span>()</div>
-<dl class="notes">
-<dt>Returns:</dt>
-<dd>the player interacting</dd>
-</dl>
-</section>
-</li>
-<li>
 <section class="detail" id="getBuyPrompt()">
 <h3>getBuyPrompt</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">com.badlogic.gdx.scenes.scene2d.ui.Label</span>&nbsp;<span class="element-name">getBuyPrompt</span>()</div>
@@ -325,12 +303,34 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
+<section class="detail" id="setBuyPrompt(com.badlogic.gdx.scenes.scene2d.ui.Label)">
+<h3>setBuyPrompt</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setBuyPrompt</span><wbr><span class="parameters">(com.badlogic.gdx.scenes.scene2d.ui.Label&nbsp;prompt)</span></div>
+<div class="block">Sets buy prompt</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>prompt</code> - the buyPrompt</dd>
+</dl>
+</section>
+</li>
+<li>
 <section class="detail" id="getConfig()">
 <h3>getConfig</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../../entities/configs/benches/BenchConfig.html" title="class in com.csse3200.game.entities.configs.benches">BenchConfig</a></span>&nbsp;<span class="element-name">getConfig</span>()</div>
 <dl class="notes">
 <dt>Returns:</dt>
 <dd>the config for the bench</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="setConfig(com.csse3200.game.entities.configs.benches.BenchConfig)">
+<h3>setConfig</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setConfig</span><wbr><span class="parameters">(<a href="../../entities/configs/benches/BenchConfig.html" title="class in com.csse3200.game.entities.configs.benches">BenchConfig</a>&nbsp;config)</span></div>
+<div class="block">Sets the config</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>config</code> - the config</dd>
 </dl>
 </section>
 </li>

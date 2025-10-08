@@ -303,17 +303,6 @@ loadScripts(document, 'script');</script>
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="setKeycardLevel(int)">
-<h3>setKeycardLevel</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setKeycardLevel</span><wbr><span class="parameters">(int&nbsp;level)</span></div>
-<div class="block">setter method for the keycard level</div>
-<dl class="notes">
-<dt>Parameters:</dt>
-<dd><code>level</code> - level to set the keycard to</dd>
-</dl>
-</section>
-</li>
-<li>
 <section class="detail" id="getKeycardLevel()">
 <h3>getKeycardLevel</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">getKeycardLevel</span>()</div>
@@ -321,6 +310,17 @@ loadScripts(document, 'script');</script>
 <dl class="notes">
 <dt>Returns:</dt>
 <dd>the current keycard level</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="setKeycardLevel(int)">
+<h3>setKeycardLevel</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setKeycardLevel</span><wbr><span class="parameters">(int&nbsp;level)</span></div>
+<div class="block">setter method for the keycard level</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>level</code> - level to set the keycard to</dd>
 </dl>
 </section>
 </li>
@@ -477,6 +477,17 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
+<section class="detail" id="setProcessor(int)">
+<h3>setProcessor</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setProcessor</span><wbr><span class="parameters">(int&nbsp;processor)</span></div>
+<div class="block">Sets the player's processor's. Processor's has a minimum bound of 0.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>processor</code> - processor</dd>
+</dl>
+</section>
+</li>
+<li>
 <section class="detail" id="hasProcessor(int)">
 <h3>hasProcessor</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Boolean.html" title="class or interface in java.lang" class="external-link">Boolean</a></span>&nbsp;<span class="element-name">hasProcessor</span><wbr><span class="parameters">(int&nbsp;processor)</span></div>
@@ -487,17 +498,6 @@ loadScripts(document, 'script');</script>
 <dt>Returns:</dt>
 <dd>player has greater than or equal to the required amount of
  processor's</dd>
-</dl>
-</section>
-</li>
-<li>
-<section class="detail" id="setProcessor(int)">
-<h3>setProcessor</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setProcessor</span><wbr><span class="parameters">(int&nbsp;processor)</span></div>
-<div class="block">Sets the player's processor's. Processor's has a minimum bound of 0.</div>
-<dl class="notes">
-<dt>Parameters:</dt>
-<dd><code>processor</code> - processor</dd>
 </dl>
 </section>
 </li>
@@ -524,13 +524,6 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="setCurrItem(com.csse3200.game.entities.Entity)">
-<h3>setCurrItem</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setCurrItem</span><wbr><span class="parameters">(<a href="../../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a>&nbsp;item)</span></div>
-<div class="block">Set the current item</div>
-</section>
-</li>
-<li>
 <section class="detail" id="getCurrItem()">
 <h3>getCurrItem</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a></span>&nbsp;<span class="element-name">getCurrItem</span>()</div>
@@ -542,14 +535,10 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="setEquippedSlot(int)">
-<h3>setEquippedSlot</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setEquippedSlot</span><wbr><span class="parameters">(int&nbsp;slotIndex)</span></div>
-<div class="block">setEquippedSlot(int slotIndex) equips the player with the weapon at slotIndex</div>
-<dl class="notes">
-<dt>Parameters:</dt>
-<dd><code>slotIndex</code> - is the index of the slot from which the player wants to equip the weapon from</dd>
-</dl>
+<section class="detail" id="setCurrItem(com.csse3200.game.entities.Entity)">
+<h3>setCurrItem</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setCurrItem</span><wbr><span class="parameters">(<a href="../../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a>&nbsp;item)</span></div>
+<div class="block">Set the current item</div>
 </section>
 </li>
 <li>
@@ -560,6 +549,17 @@ loadScripts(document, 'script');</script>
 <dl class="notes">
 <dt>Returns:</dt>
 <dd>the slot index that is currently equipped</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="setEquippedSlot(int)">
+<h3>setEquippedSlot</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setEquippedSlot</span><wbr><span class="parameters">(int&nbsp;slotIndex)</span></div>
+<div class="block">setEquippedSlot(int slotIndex) equips the player with the weapon at slotIndex</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>slotIndex</code> - is the index of the slot from which the player wants to equip the weapon from</dd>
 </dl>
 </section>
 </li>

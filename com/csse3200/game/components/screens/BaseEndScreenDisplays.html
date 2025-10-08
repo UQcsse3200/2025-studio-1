@@ -146,7 +146,9 @@ loadScripts(document, 'script');</script>
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;primaryText,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Runnable.html" title="class or interface in java.lang" class="external-link">Runnable</a>&nbsp;primaryAction,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Runnable.html" title="class or interface in java.lang" class="external-link">Runnable</a>&nbsp;secondaryAction)</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">Constructs a new end-of-run display with the given configuration.</div>
+</div>
 <div class="col-first odd-row-color"><code>protected </code></div>
 <div class="col-constructor-name odd-row-color"><code><a href="#%3Cinit%3E(com.csse3200.game.GdxGame,java.lang.String,com.badlogic.gdx.graphics.Color,java.lang.String,java.lang.Runnable,java.lang.Runnable,java.util.function.Supplier)" class="member-name-link">BaseEndScreenDisplays</a><wbr>(<a href="../../GdxGame.html" title="class in com.csse3200.game">GdxGame</a>&nbsp;game,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;titleText,
@@ -176,17 +178,21 @@ loadScripts(document, 'script');</script>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#buildUI(com.badlogic.gdx.scenes.scene2d.ui.Table)" class="member-name-link">buildUI</a><wbr>(com.badlogic.gdx.scenes.scene2d.ui.Table&nbsp;root)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Subclasses implement their UI here using the provided <code>root</code> table.</div>
+<div class="block">Builds the end-screen UI: title, round/time labels, and the action buttons.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected float</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#buttonLabelScale()" class="member-name-link">buttonLabelScale</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected float</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#buttonsGap()" class="member-name-link">buttonsGap</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Horizontal gap between the primary and secondary buttons.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="BaseEndScreenDisplays.html" title="class in com.csse3200.game.components.screens">BaseEndScreenDisplays</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#defeated(com.csse3200.game.GdxGame)" class="member-name-link">defeated</a><wbr>(<a href="../../GdxGame.html" title="class in com.csse3200.game">GdxGame</a>&nbsp;game)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Convenience factory for a Defeated end screen.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#dispose()" class="member-name-link">dispose</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
@@ -206,10 +212,14 @@ loadScripts(document, 'script');</script>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected float</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#titleFontScale()" class="member-name-link">titleFontScale</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Font scale for the title label.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="BaseEndScreenDisplays.html" title="class in com.csse3200.game.components.screens">BaseEndScreenDisplays</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#victory(com.csse3200.game.GdxGame)" class="member-name-link">victory</a><wbr>(<a href="../../GdxGame.html" title="class in com.csse3200.game">GdxGame</a>&nbsp;game)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Convenience factory for a Victory end screen.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="BaseEndScreenDisplays.html" title="class in com.csse3200.game.components.screens">BaseEndScreenDisplays</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#withLeaderboard(java.lang.Runnable)" class="member-name-link">withLeaderboard</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Runnable.html" title="class or interface in java.lang" class="external-link">Runnable</a>&nbsp;leaderboardAction)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
@@ -281,6 +291,17 @@ loadScripts(document, 'script');</script>
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;primaryText,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Runnable.html" title="class or interface in java.lang" class="external-link">Runnable</a>&nbsp;primaryAction,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Runnable.html" title="class or interface in java.lang" class="external-link">Runnable</a>&nbsp;secondaryAction)</span></div>
+<div class="block">Constructs a new end-of-run display with the given configuration.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>game</code> - game instance used for screen navigation</dd>
+<dd><code>titleText</code> - title text (e.g., "Victory", "DEFEATED")</dd>
+<dd><code>titleColor</code> - colour to apply to the title</dd>
+<dd><code>primaryText</code> - label for the primary button</dd>
+<dd><code>primaryAction</code> - action executed on primary button press</dd>
+<dd><code>secondaryAction</code> - action executed on secondary button press; if <code>null</code>,
+                        defaults to <a href="BaseScreenDisplay.html#backMainMenu()"><code>BaseScreenDisplay.backMainMenu()</code></a></dd>
+</dl>
 </section>
 </li>
 <li>
@@ -307,12 +328,26 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="victory(com.csse3200.game.GdxGame)">
 <h3>victory</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="BaseEndScreenDisplays.html" title="class in com.csse3200.game.components.screens">BaseEndScreenDisplays</a></span>&nbsp;<span class="element-name">victory</span><wbr><span class="parameters">(<a href="../../GdxGame.html" title="class in com.csse3200.game">GdxGame</a>&nbsp;game)</span></div>
+<div class="block">Convenience factory for a Victory end screen.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>game</code> - game instance for navigation</dd>
+<dt>Returns:</dt>
+<dd>a configured <code>BaseEndScreenDisplays</code> showing "Victory" with a "Continue" action</dd>
+</dl>
 </section>
 </li>
 <li>
 <section class="detail" id="defeated(com.csse3200.game.GdxGame)">
 <h3>defeated</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="BaseEndScreenDisplays.html" title="class in com.csse3200.game.components.screens">BaseEndScreenDisplays</a></span>&nbsp;<span class="element-name">defeated</span><wbr><span class="parameters">(<a href="../../GdxGame.html" title="class in com.csse3200.game">GdxGame</a>&nbsp;game)</span></div>
+<div class="block">Convenience factory for a Defeated end screen.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>game</code> - game instance for navigation</dd>
+<dt>Returns:</dt>
+<dd>a configured <code>BaseEndScreenDisplays</code> showing "DEFEATED" with a "Try Again" action</dd>
+</dl>
 </section>
 </li>
 <li>
@@ -326,13 +361,16 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="buildUI(com.badlogic.gdx.scenes.scene2d.ui.Table)">
 <h3>buildUI</h3>
 <div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">buildUI</span><wbr><span class="parameters">(com.badlogic.gdx.scenes.scene2d.ui.Table&nbsp;root)</span></div>
-<div class="block"><span class="description-from-type-label">Description copied from class:&nbsp;<code><a href="BaseScreenDisplay.html#buildUI(com.badlogic.gdx.scenes.scene2d.ui.Table)">BaseScreenDisplay</a></code></span></div>
-<div class="block">Subclasses implement their UI here using the provided <code>root</code> table.</div>
+<div class="block">Builds the end-screen UI: title, round/time labels, and the action buttons.
+ <p>
+ Appearance can be tuned by overriding the styling hooks:
+ <a href="#titleFontScale()"><code>titleFontScale()</code></a>, <a href="#infoFontScale()"><code>infoFontScale()</code></a>,
+ <a href="#buttonLabelScale()"><code>buttonLabelScale()</code></a>, <a href="#buttonsGap()"><code>buttonsGap()</code></a>, <a href="#blockPad()"><code>blockPad()</code></a>.</div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="BaseScreenDisplay.html#buildUI(com.badlogic.gdx.scenes.scene2d.ui.Table)">buildUI</a></code>&nbsp;in class&nbsp;<code><a href="BaseScreenDisplay.html" title="class in com.csse3200.game.components.screens">BaseScreenDisplay</a></code></dd>
 <dt>Parameters:</dt>
-<dd><code>root</code> - a fill-parent, centered <code>Table</code> already added to the stage</dd>
+<dd><code>root</code> - the root table (already added to the Stage by <a href="BaseScreenDisplay.html" title="class in com.csse3200.game.components.screens"><code>BaseScreenDisplay</code></a>)</dd>
 </dl>
 </section>
 </li>
@@ -374,6 +412,11 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="titleFontScale()">
 <h3>titleFontScale</h3>
 <div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">titleFontScale</span>()</div>
+<div class="block">Font scale for the title label.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>title font scale (default <code>3.0f</code>)</dd>
+</dl>
 </section>
 </li>
 <li>
@@ -392,6 +435,11 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="buttonsGap()">
 <h3>buttonsGap</h3>
 <div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">buttonsGap</span>()</div>
+<div class="block">Horizontal gap between the primary and secondary buttons.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>gap in pixels (default <code>30f</code>)</dd>
+</dl>
 </section>
 </li>
 <li>

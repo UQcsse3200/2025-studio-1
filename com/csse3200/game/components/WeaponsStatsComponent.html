@@ -285,17 +285,6 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="setCoolDown(float)">
-<h3>setCoolDown</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setCoolDown</span><wbr><span class="parameters">(float&nbsp;coolDown)</span></div>
-<div class="block">Sets the cooldown time between attacks.</div>
-<dl class="notes">
-<dt>Parameters:</dt>
-<dd><code>coolDown</code> - cooldown in seconds (clamped to minimum 0)</dd>
-</dl>
-</section>
-</li>
-<li>
 <section class="detail" id="getCoolDown()">
 <h3>getCoolDown</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">getCoolDown</span>()</div>
@@ -303,6 +292,17 @@ loadScripts(document, 'script');</script>
 <dl class="notes">
 <dt>Returns:</dt>
 <dd>cooldown in seconds</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="setCoolDown(float)">
+<h3>setCoolDown</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setCoolDown</span><wbr><span class="parameters">(float&nbsp;coolDown)</span></div>
+<div class="block">Sets the cooldown time between attacks.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>coolDown</code> - cooldown in seconds (clamped to minimum 0)</dd>
 </dl>
 </section>
 </li>
@@ -334,17 +334,6 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="setProjectileTexturePath(java.lang.String)">
-<h3>setProjectileTexturePath</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setProjectileTexturePath</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;projectileTexturePath)</span></div>
-<div class="block">Sets the texture path for this weapon's projectile, if applicable.</div>
-<dl class="notes">
-<dt>Parameters:</dt>
-<dd><code>projectileTexturePath</code> - path to the projectile texture</dd>
-</dl>
-</section>
-</li>
-<li>
 <section class="detail" id="getProjectileTexturePath()">
 <h3>getProjectileTexturePath</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">getProjectileTexturePath</span>()</div>
@@ -352,6 +341,17 @@ loadScripts(document, 'script');</script>
 <dl class="notes">
 <dt>Returns:</dt>
 <dd>projectile texture path, or <code>null</code> if none</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="setProjectileTexturePath(java.lang.String)">
+<h3>setProjectileTexturePath</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setProjectileTexturePath</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;projectileTexturePath)</span></div>
+<div class="block">Sets the texture path for this weapon's projectile, if applicable.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>projectileTexturePath</code> - path to the projectile texture</dd>
 </dl>
 </section>
 </li>
@@ -410,6 +410,17 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
+<section class="detail" id="getDamageMultiplier()">
+<h3>getDamageMultiplier</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">getDamageMultiplier</span>()</div>
+<div class="block">Gets the current damage multiplier applied to this weapon.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>current damage multiplier (default <code>1.0</code>)</dd>
+</dl>
+</section>
+</li>
+<li>
 <section class="detail" id="setDamageMultiplier(float)">
 <h3>setDamageMultiplier</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setDamageMultiplier</span><wbr><span class="parameters">(float&nbsp;multiplier)</span></div>
@@ -424,17 +435,6 @@ loadScripts(document, 'script');</script>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>multiplier</code> - the new damage multiplier</dd>
-</dl>
-</section>
-</li>
-<li>
-<section class="detail" id="getDamageMultiplier()">
-<h3>getDamageMultiplier</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">getDamageMultiplier</span>()</div>
-<div class="block">Gets the current damage multiplier applied to this weapon.</div>
-<dl class="notes">
-<dt>Returns:</dt>
-<dd>current damage multiplier (default <code>1.0</code>)</dd>
 </dl>
 </section>
 </li>
