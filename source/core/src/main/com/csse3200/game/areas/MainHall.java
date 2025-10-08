@@ -2,6 +2,7 @@ package com.csse3200.game.areas;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.GridPoint2;
+import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.CameraComponent;
@@ -9,6 +10,7 @@ import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.factories.characters.PlayerFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
+import com.csse3200.game.entities.factories.system.TeleporterFactory;
 import com.csse3200.game.rendering.SolidColorRenderComponent;
 import com.csse3200.game.services.ServiceLocator;
 
@@ -41,6 +43,7 @@ public class MainHall extends GameArea {
         spawnWallsAndDoor();
         spawnPlayer();
         spawnFloor();
+        spawnTeleporter();
 
         Entity ui = new Entity();
         ui.addComponent(new GameAreaDisplay("Main Hall"))
@@ -172,6 +175,12 @@ public class MainHall extends GameArea {
         spawnEntity(holo1);
     }
 
+    /** Bottom-left teleporter for discovered-room travel */
+    private void spawnTeleporter() {
+        Entity tp = TeleporterFactory.createTeleporter(new Vector2(4f, 3f));
+        spawnEntity(tp);
+    }
+
     public Entity getPlayer() {
         return ServiceLocator.getPlayer();
     }
@@ -198,5 +207,3 @@ public class MainHall extends GameArea {
         return (new MainHall(terrainFactory, camera));
     }
 }
-
-

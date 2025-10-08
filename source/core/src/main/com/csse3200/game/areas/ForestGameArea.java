@@ -35,6 +35,7 @@ import com.csse3200.game.entities.factories.characters.PlayerFactory;
 import com.csse3200.game.entities.factories.items.ItemFactory;
 import com.csse3200.game.entities.factories.items.WeaponsFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
+import com.csse3200.game.entities.factories.system.TeleporterFactory;
 import com.csse3200.game.entities.spawner.ItemSpawner;
 import com.csse3200.game.physics.PhysicsLayer;
 import com.csse3200.game.physics.components.HitboxComponent;
@@ -268,9 +269,17 @@ public class ForestGameArea extends GameArea {
             "images/ghost.atlas",
             "images/ghostKing.atlas",
             "images/ghostGPT.atlas",
+            "images/ghostGPTRed.atlas",
+            "images/ghostGPTBlue.atlas",
             "images/Deepspin.atlas",
+            "images/DeepspinRed.atlas",
+            "images/DeepspinBlue.atlas",
             "images/Grokdroid.atlas",
+            "images/GrokdroidRed.atlas",
+            "images/GrokdroidBlue.atlas",
             "images/Vroomba.atlas",
+            "images/VroombaRed.atlas",
+            "images/VroombaBlue.atlas",
             "images/Turret.atlas",
             "images/explosion_1.atlas",
             "images/explosion_2.atlas",
@@ -281,21 +290,14 @@ public class ForestGameArea extends GameArea {
             "images/Boss3_Attacks.atlas",
             "images/player.atlas",
             "images/terrain_iso_grass.atlas",
-            "images/ghost.atlas",
-            "images/ghostKing.atlas",
-            "images/ghostGPT.atlas",
-            "images/explosion_1.atlas",
-            "images/explosion_2.atlas",
             "images/boss_explosion.atlas",
             "images/boss2_combined.atlas",
             "images/Boss3_Attacks.atlas",
             "images/boss3_phase2.atlas",
             "images/rocketExplosion.atlas",
-            "images/boss3_phase2.atlas",
             "images/!animation.atlas",
             "images/guidance_npc.atlas",
             "images/assister_npc.atlas",
-            "images/boss3_phase2.atlas",
             "images/cards.atlas"
     };
 
@@ -315,7 +317,13 @@ public class ForestGameArea extends GameArea {
             "sounds/deepspinDamage.mp3",
             "sounds/deepspinDeath.mp3",
             "sounds/vroombaDamage.mp3",
-            "sounds/vroombaDeath.mp3"
+            "sounds/vroombaDeath.mp3",
+            "sounds/GPTDamage.mp3",
+            "sounds/GPTDeath.mp3",
+            "sounds/grokDamage.mp3",
+            "sounds/grokDeath.mp3",
+            "sounds/turretDamage.mp3",
+            "sounds/turretDeath.mp3"
     };
     private static final String BACKGROUND_MUSIC = "sounds/BGM_03.mp3";
 
@@ -381,6 +389,8 @@ public class ForestGameArea extends GameArea {
         Entity keycard = KeycardFactory.createKeycard(1);
         keycard.setPosition(new Vector2(keycardX, keycardY));
         spawnEntity(keycard);
+
+        spawnTeleporter();
     }
 
     private void spawnRobots() {
@@ -597,6 +607,12 @@ public class ForestGameArea extends GameArea {
      * Each item is created and placed at a random spot on the terrain.
      */
 
+
+    /** Bottom-left teleporter for discovered-room travel */
+    private void spawnTeleporter() {
+        Entity tp = TeleporterFactory.createTeleporter(new Vector2(2f, 3f));
+        spawnEntity(tp);
+    }
 
     private Entity spawnPlayer() {
         Entity player = spawnOrRepositionPlayer(playerSpawn);
