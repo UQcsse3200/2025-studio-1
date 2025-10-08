@@ -51,6 +51,15 @@ public class TextureRenderWithRotationComponent extends TextureRenderComponent {
     }
 
     /**
+     * Set the boolean "rotated"
+     *
+     * @param value The boolean value to set to "rotated"
+     */
+    public void setHasRotated(boolean value) {
+        rotated = value;
+    }
+
+    /**
      * @return the texture path
      */
     public String getTexturePath() {

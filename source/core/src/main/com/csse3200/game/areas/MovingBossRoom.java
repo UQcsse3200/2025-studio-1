@@ -2,16 +2,20 @@ package com.csse3200.game.areas;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.GridPoint2;
+import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.CameraComponent;
+import com.csse3200.game.components.KeycardGateComponent;
 import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.ItemSpawnConfig;
+import com.csse3200.game.entities.factories.KeycardFactory;
 import com.csse3200.game.entities.factories.characters.BossFactory;
-import com.csse3200.game.entities.factories.characters.PlayerFactory;
+import com.csse3200.game.entities.factories.characters.FriendlyNPCFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.entities.spawner.ItemSpawner;
+import com.csse3200.game.physics.components.ColliderComponent;
 import com.csse3200.game.services.ServiceLocator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,9 +27,10 @@ import org.slf4j.LoggerFactory;
  * Room is empty except for boss and player
  */
 public class MovingBossRoom extends GameArea {
+    private static GridPoint2 playerSpawn = new GridPoint2(3, 10);
+
     private static final Logger logger = LoggerFactory.getLogger(MovingBossRoom.class);
     private static final float WALL_WIDTH = 0.1f;
-    private static GridPoint2 playerSpawn = new GridPoint2(3, 10);
     private Entity player;
 
     /**
@@ -39,19 +44,6 @@ public class MovingBossRoom extends GameArea {
      */
     public MovingBossRoom(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
         super(terrainFactory, cameraComponent);
-    }
-
-    /**
-     * Setter method for the player spawn point
-     * should be used when the player is traversing through the rooms
-     *
-     * @param newSpawn the new spawn point
-     */
-    public static void setRoomSpawn(GridPoint2 newSpawn) {
-        if (newSpawn == null) {
-            return;
-        }
-        MovingBossRoom.playerSpawn = newSpawn;
     }
 
     /**
@@ -76,10 +68,10 @@ public class MovingBossRoom extends GameArea {
 
         player = spawnPlayer();
 
-        spawnBigWall();
-
         spawnBoss();
-        spawnObjectDoors(new GridPoint2(0, 7), new GridPoint2(28, 7));
+        spawnObjectDoors(new GridPoint2(0, 6), new GridPoint2(28, 6));
+        spawnAssistor();
+        spawnNurse();
 
         ItemSpawner itemSpawner = new ItemSpawner(this);
         itemSpawner.spawnItems(ItemSpawnConfig.bossmap());
@@ -89,31 +81,33 @@ public class MovingBossRoom extends GameArea {
 
     private void displayUI() {
         Entity ui = new Entity();
-        ui.addComponent(new GameAreaDisplay("Moving Boss Room"))
-                .addComponent(new com.csse3200.game.components.gamearea.FloorLabelDisplay("Moving Boss Room"));
+        ui.addComponent(new GameAreaDisplay("Moving Boss Room"));
         spawnEntity(ui);
     }
 
     private Entity spawnPlayer() {
-        Entity newPlayer = PlayerFactory.createPlayer();
-        spawnEntityAt(newPlayer, playerSpawn, true, true);
-        return newPlayer;
+        return spawnOrRepositionPlayer(playerSpawn);
     }
 
     private void spawnBoss() {
         GridPoint2 pos = new GridPoint2(15, 20);
 
         Entity boss = BossFactory.createRobot(player);
+
+        boss.getEvents().addListener("death", () -> ServiceLocator.getTimeSource().delayKeycardSpawn(0.05f, () -> {
+            Entity keycard = KeycardFactory.createKeycard(2);
+            keycard.setPosition(new Vector2(3f, 7f));
+            spawnEntity(keycard);
+        }));
+
         spawnEntityAt(boss, pos, true, true);
     }
 
-    /**
-     * Adds a very tall thick-floor as a background wall/divider.
-     */
-    private void spawnBigWall() {
-        GridPoint2 wallSpawn = new GridPoint2(-14, 0);
-        Entity bigWall = ObstacleFactory.createBigThickFloor();
-        spawnEntityAt(bigWall, wallSpawn, true, false);
+    private void spawnAssistor() {
+        GridPoint2 pos = new GridPoint2(7, 8);
+
+        Entity assistor = FriendlyNPCFactory.createAssisterNpc(player);
+        spawnEntityAt(assistor, pos, true, true);
     }
 
     /**
@@ -139,8 +133,25 @@ public class MovingBossRoom extends GameArea {
         float rightDoorY = b.bottomY();
         Entity rightDoor = ObstacleFactory.createDoorTrigger(WALL_WIDTH, rightDoorHeight);
         rightDoor.setPosition(b.rightX() - WALL_WIDTH - 0.001f, rightDoorY);
-        rightDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadOffice));
+        rightDoor.addComponent(new KeycardGateComponent(2, () -> {
+            ColliderComponent collider = rightDoor.getComponent(ColliderComponent.class);
+            if (collider != null) collider.setEnabled(false);
+            loadOffice();
+        }));
         spawnEntity(rightDoor);
+    }
+
+    /**
+     * Setter method for the player spawn point
+     * should be used when the player is traversing through the rooms
+     *
+     * @param newSpawn the new spawn point
+     */
+    public static void setRoomSpawn(GridPoint2 newSpawn) {
+        if (newSpawn == null) {
+            return;
+        }
+        MovingBossRoom.playerSpawn = newSpawn;
     }
 
     public Entity getPlayer() {
@@ -155,5 +166,18 @@ public class MovingBossRoom extends GameArea {
     public void loadOffice() {
         OfficeGameArea.setRoomSpawn(new GridPoint2(2, 14));
         clearAndLoad(() -> new OfficeGameArea(terrainFactory, cameraComponent));
+    }
+
+
+    private void spawnNurse() {
+        GridPoint2 pos = new GridPoint2(20, 8); // 在地图右侧,与Assistor对称
+
+        Entity nurse = FriendlyNPCFactory.createNurseNpc(player);
+        spawnEntityAt(nurse, pos, true, true);
+    }
+
+    @Override
+    public String toString() {
+        return "MovingBoss";
     }
 }

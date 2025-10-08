@@ -16,23 +16,54 @@
 
   "ghostGPT": {
     "health": 100,
+    "baseAttack": 10
+  },
+  "ghostGPTRed": {
+    "health": 100,
     "baseAttack": 20
-
+  },
+  "ghostGPTBlue": {
+    "health": 200,
+    "baseAttack": 10
   },
   "deepSpin": {
     "health": 50,
+    "baseAttack": 10
+  },
+  "deepSpinRed": {
+    "health": 50,
     "baseAttack": 20
+  },
+  "deepSpinBlue": {
+    "health": 100,
+    "baseAttack": 10
   },
   "grokDroid": {
     "health": 100,
     "baseAttack": 10
   },
+  "grokDroidRed": {
+    "health": 100,
+    "baseAttack": 20
+  },
+  "grokDroidBlue": {
+    "health": 200,
+    "baseAttack": 10
+  },
   "vroomba": {
+    "health": 75,
+    "baseAttack": 10
+  },
+  "vroombaRed": {
     "health": 50,
+    "baseAttack": 20
+  },
+  "vroombaBlue": {
+    "health": 100,
     "baseAttack": 10
   },
   "turret": {
-    "health": 150,
+    "health": 500,
     "baseAttack": 5
   }
 }

@@ -17,17 +17,22 @@ import org.slf4j.LoggerFactory;
  */
 public class EnemyWaves extends Component {
     private static final Logger logger = LoggerFactory.getLogger(EnemyWaves.class);
-    private static final long WAVE_DELAY_MS = 5000; // delay between waves after all enemies dead
-    private static final float TICK_SEC = 0.1f;     // poll cadence
+
     private final Entity player;
     private final GameArea gameArea;
-    private final int baseEnemies = 3;
-    private final EventHandler eventHandler;
+
     private int maxWaves;      // total waves per session
     private int waveNumber = 0;      // waves spawned so far
     private float scalingFactor = 1f; // difficulty scaling
+    private final int baseEnemies = 3;
+
+    private static final long WAVE_DELAY_MS = 5000; // delay between waves after all enemies dead
+    private static final float TICK_SEC = 0.1f;     // poll cadence
+
     private Timer.Task task;
     private long waveEndTime = 0; // timestamp when last enemy of a wave died
+
+    private final EventHandler eventHandler;
 
     public EnemyWaves(int maxWaves, GameArea area, Entity player) {
         this.maxWaves = Math.max(1, maxWaves);
@@ -179,30 +184,12 @@ public class EnemyWaves extends Component {
     }
 
     /**
-     * Sets the maximum number of waves in the current room.
-     *
-     * @param maxWaves The maximum number of waves as an int.
-     */
-    public void setMaxWaves(int maxWaves) {
-        this.maxWaves = maxWaves;
-    }
-
-    /**
      * Returns the scaling factor of the enemies in the next wave.
      *
      * @return The scaling factor as a float.
      */
     public float getScalingFactor() {
         return scalingFactor;
-    }
-
-    /**
-     * Sets the scaling factor of the enemies in the next wave.
-     *
-     * @param scalingFactor The scaling factor as a float.
-     */
-    public void setScalingFactor(float scalingFactor) {
-        this.scalingFactor = scalingFactor;
     }
 
     /**
@@ -215,15 +202,6 @@ public class EnemyWaves extends Component {
     }
 
     /**
-     * Sets the wave number of the next wave in the current room.
-     *
-     * @param waveNumber The wave number as an int.
-     */
-    public void setWaveNumber(int waveNumber) {
-        this.waveNumber = waveNumber;
-    }
-
-    /**
      * Returns the time stamp of when the previous wave ended in the current room if no enemies are alive
      * otherwise returns 0.
      *
@@ -231,6 +209,35 @@ public class EnemyWaves extends Component {
      */
     public long getWaveEndTime() {
         return waveEndTime;
+    }
+
+    /**
+     * Sets the maximum number of waves in the current room.
+     *
+     * @param maxWaves The maximum number of waves as an int.
+     */
+    public void setMaxWaves(int maxWaves) {
+        this.maxWaves = maxWaves;
+        this.eventHandler.trigger("updateMaxWave");
+    }
+
+    /**
+     * Sets the scaling factor of the enemies in the next wave.
+     *
+     * @param scalingFactor The scaling factor as a float.
+     */
+    public void setScalingFactor(float scalingFactor) {
+        this.scalingFactor = scalingFactor;
+    }
+
+    /**
+     * Sets the wave number of the next wave in the current room.
+     *
+     * @param waveNumber The wave number as an int.
+     */
+    public void setWaveNumber(int waveNumber) {
+        this.waveNumber = waveNumber;
+        this.eventHandler.trigger("updateWaveNumber");
     }
 
     /**

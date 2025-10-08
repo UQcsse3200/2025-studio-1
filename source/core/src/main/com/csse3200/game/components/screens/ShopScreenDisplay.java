@@ -12,6 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Scaling;
 import com.csse3200.game.areas.ForestGameArea;
+import com.csse3200.game.areas.Reception;
 import com.csse3200.game.components.shop.CatalogEntry;
 import com.csse3200.game.components.shop.CatalogService;
 import com.csse3200.game.components.shop.PurchaseError;
@@ -55,7 +56,7 @@ public class ShopScreenDisplay extends UIComponent {
     private static final Color GOLD = Color.valueOf("FFD54F");
 
     // Dependencies
-    private final ForestGameArea game;
+    private final Reception game;
     private final CatalogService catalog;
     private final ShopManager manager;
     Image background;
@@ -75,7 +76,7 @@ public class ShopScreenDisplay extends UIComponent {
      * @param area    Game area containing player
      * @param manager Shop manager to handle purchases
      */
-    public ShopScreenDisplay(ForestGameArea area, ShopManager manager) {
+    public ShopScreenDisplay(Reception area, ShopManager manager) {
         this.game = area;
         this.catalog = manager.getCatalog();
         this.manager = manager;

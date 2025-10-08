@@ -10,7 +10,6 @@ import com.csse3200.game.GdxGame.ScreenType;
 import com.csse3200.game.areas.difficulty.Difficulty;
 import com.csse3200.game.areas.difficulty.DifficultyType;
 import com.csse3200.game.services.ServiceLocator;
-import com.csse3200.game.ui.NeonStyles;
 import com.csse3200.game.ui.UIComponent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +22,6 @@ public class DifficultyMenuDisplay extends UIComponent {
     private static final float Z_INDEX = 2f;
     private final GdxGame game;
     private Table table;
-    private NeonStyles neon;
     private DifficultyType diffType;
 
     public DifficultyMenuDisplay(GdxGame game) {
@@ -36,7 +34,6 @@ public class DifficultyMenuDisplay extends UIComponent {
     @Override
     public void create() {
         super.create();
-        neon = new NeonStyles(0.70f);
         addActors();
     }
 
@@ -57,14 +54,12 @@ public class DifficultyMenuDisplay extends UIComponent {
         float btnH = Math.max(64f, stage.getHeight() * 0.08f);
         table.defaults().width(btnW).height(btnH);
 
-        TextButton.TextButtonStyle style = neon.buttonRounded();
-
         // Create buttons
-        TextButton easyBtn = new TextButton("Easy", style);
-        TextButton normalBtn = new TextButton("Normal", style);
-        TextButton hardBtn = new TextButton("Hard", style);
-        TextButton insaneBtn = new TextButton("Insane", style);
-        TextButton applyBtn = new TextButton("Apply", style);
+        TextButton easyBtn = new TextButton("Easy", skin);
+        TextButton normalBtn = new TextButton("Normal", skin);
+        TextButton hardBtn = new TextButton("Hard", skin);
+        TextButton insaneBtn = new TextButton("Insane", skin);
+        TextButton applyBtn = new TextButton("Apply", skin);
 
         // Label text size
         easyBtn.getLabel().setFontScale(2.0f);

@@ -7,6 +7,7 @@ import com.csse3200.game.components.player.*;
 import com.csse3200.game.effects.DoubleProcessorsEffect;
 import com.csse3200.game.effects.Effect;
 import com.csse3200.game.effects.RapidFireEffect;
+import com.csse3200.game.entities.AvatarRegistry;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.characters.PlayerConfig;
 import com.csse3200.game.entities.configs.consumables.RapidFireConsumableConfig;
@@ -56,15 +57,15 @@ public class PlayerFactory {
 
         AnimationRenderComponent animator = new AnimationRenderComponent(
                 ServiceLocator.getResourceService()
-                        .getAsset("images/player.atlas", TextureAtlas.class));
+                        .getAsset(AvatarRegistry.get().atlas(), TextureAtlas.class));
         add_animations(animator);
         Entity player =
                 new Entity()
                         .addComponent(new PhysicsComponent())
                         .addComponent(new ColliderComponent().setLayer(PhysicsLayer.PLAYER))
                         .addComponent(new PlayerActions())
-                        .addComponent(new CombatStatsComponent(stats.health))
-                        .addComponent(new WeaponsStatsComponent(stats.baseAttack))
+                        .addComponent(new CombatStatsComponent(AvatarRegistry.get().baseHealth()))
+                        .addComponent(new WeaponsStatsComponent(AvatarRegistry.get().baseDamage()))
                         .addComponent(new AmmoStatsComponent(1000))
                         .addComponent(playerInventory)
                         .addComponent(new ItemPickUpComponent(playerInventory))
@@ -73,7 +74,6 @@ public class PlayerFactory {
                         .addComponent(new PlayerInventoryDisplay(playerInventory))
                         .addComponent(new StaminaComponent())
                         .addComponent(animator)
-                        .addComponent(new PlayerAnimationController())
                         .addComponent(new PowerupComponent())
                         .addComponent(new PlayerAnimationController())
                         .addComponent(new PlayerEquipComponent())

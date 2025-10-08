@@ -14,7 +14,10 @@ import com.csse3200.game.components.gamearea.PerformanceDisplay;
 import com.csse3200.game.components.maingame.MainGameActions;
 import com.csse3200.game.components.maingame.MainGameDisplay;
 import com.csse3200.game.components.player.InventoryComponent;
+import com.csse3200.game.components.screens.Minimap;
+import com.csse3200.game.components.screens.MinimapDisplay;
 import com.csse3200.game.components.screens.PauseMenuDisplay;
+import com.csse3200.game.components.teleporter.TeleporterComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
 import com.csse3200.game.entities.factories.system.RenderFactory;
@@ -50,7 +53,7 @@ public class MainGameScreen extends ScreenAdapter {
     private final PhysicsEngine physicsEngine;
     private final GameArea gameArea;
 
-    private final CountdownTimerService countdownTimer;
+    private CountdownTimerService countdownTimer;
 
 
     //Leaderboard & Session fields
@@ -58,7 +61,9 @@ public class MainGameScreen extends ScreenAdapter {
     private float roundTime = 0f;
 
     private Entity pauseOverlay;
+    private Entity minimap;
     private boolean isPauseVisible = false;
+    private boolean isMinimapVisible = false;
 
     public MainGameScreen(GdxGame game) {
         this.game = game;
@@ -91,12 +96,14 @@ public class MainGameScreen extends ScreenAdapter {
         ServiceLocator.registerEntityService(new EntityService());
         ServiceLocator.registerRenderService(new RenderService());
 
+        ServiceLocator.clearPlayer();
+
         renderer = RenderFactory.createRenderer();
         renderer.getCamera().getEntity().setPosition(CAMERA_POSITION);
         renderer.getDebug().renderPhysicsWorld(physicsEngine.getWorld());
 
         loadAssets();
-        countdownTimer = new CountdownTimerService(ServiceLocator.getTimeSource(), 60000);
+        countdownTimer = new CountdownTimerService(ServiceLocator.getTimeSource(), 240000);
         createUI();
 
         logger.debug("Initialising main game screen entities");
@@ -188,6 +195,8 @@ public class MainGameScreen extends ScreenAdapter {
         //accumulates elapsed time
         this.roundTime += delta;
 
+        // Reset teleporter ESC consumption at start of frame
+        TeleporterComponent.resetEscConsumed();
         if (!isPauseVisible && !(ServiceLocator.getTimeSource().isPaused())
                 && !ServiceLocator.isTransitioning()) {
             physicsEngine.update();
@@ -205,13 +214,37 @@ public class MainGameScreen extends ScreenAdapter {
         }
         renderer.render();
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
-            if (!isPauseVisible) {
+            if (TeleporterComponent.wasEscConsumedThisFrame()) {
+                // ESC was used to close teleporter menu this frame; suppress pause toggle
+            } else if (!isPauseVisible) {
                 showPauseOverlay();
                 countdownTimer.pause();
             } else {
                 hidePauseOverlay();
-                countdownTimer.resume();
+                if (!isMinimapVisible) {
+                    countdownTimer.resume();
+                }
             }
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.TAB)) {
+            if (!isMinimapVisible) {
+                if (!isPauseVisible) {
+                    showMinimapOverlay();
+                    countdownTimer.pause();
+                }
+            } else {
+                hideMinimapOverlay();
+                if (!isPauseVisible) {
+                    countdownTimer.resume();
+                }
+            }
+        }
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.EQUALS) && isMinimapVisible) {
+            minimap.getComponent(MinimapDisplay.class).zoomIn();
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.MINUS) && isMinimapVisible) {
+            minimap.getComponent(MinimapDisplay.class).zoomOut();
         }
 
         //switch to death screen when countdown timer is up
@@ -243,10 +276,12 @@ public class MainGameScreen extends ScreenAdapter {
         renderer.dispose();
         unloadAssets();
 
-        ServiceLocator.getEntityService().dispose();
+        // Preserve player entity during disposal
+        Entity player = ServiceLocator.getPlayer();
+        ServiceLocator.getEntityService().disposeExceptPlayer();
         ServiceLocator.getRenderService().dispose();
         ServiceLocator.getResourceService().dispose();
-        ServiceLocator.clear();
+        ServiceLocator.clearExceptPlayer();
     }
 
     private void loadAssets() {
@@ -339,7 +374,9 @@ public class MainGameScreen extends ScreenAdapter {
         if (pauseOverlay != null) {
             pauseOverlay.dispose();
             ServiceLocator.getEntityService().unregister(pauseOverlay);
-            ServiceLocator.getTimeSource().setPaused(false);
+            if (!isMinimapVisible) {
+                ServiceLocator.getTimeSource().setPaused(false);
+            }
             pauseOverlay = null;
         }
 
@@ -359,6 +396,34 @@ public class MainGameScreen extends ScreenAdapter {
             logger.info("Save data failed");
         }
     }
+
+    private void showMinimapOverlay() {
+        logger.info("Showing minimap overlay");
+        Stage stage = ServiceLocator.getRenderService().getStage();
+        minimap = new Entity()
+                .addComponent(new MinimapDisplay(game,
+                        new Minimap(Gdx.graphics.getHeight(), Gdx.graphics.getWidth(),
+                                "configs/room_layout.txt")))
+                .addComponent(new InputDecorator(stage, 100));
+        minimap.getEvents().addListener("resume", this::hideMinimapOverlay);
+        ServiceLocator.getEntityService().register(minimap);
+        ServiceLocator.getTimeSource().setPaused(true);
+        isMinimapVisible = true;
+    }
+
+    private void hideMinimapOverlay() {
+        logger.info("Hiding minimap overlay");
+        if (minimap != null) {
+            minimap.dispose();
+            ServiceLocator.getEntityService().unregister(minimap);
+            if (!isPauseVisible) {
+                ServiceLocator.getTimeSource().setPaused(false);
+            }
+            minimap = null;
+        }
+        isMinimapVisible = false;
+    }
+
 
     /**
      * Calculates the total elapsed time of the countdown timer in second
