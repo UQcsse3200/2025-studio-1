@@ -2,6 +2,7 @@ package com.csse3200.game.areas;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.GridPoint2;
+import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.CameraComponent;
@@ -16,6 +17,7 @@ import com.csse3200.game.entities.factories.characters.NPCFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.entities.spawner.ItemSpawner;
 import com.csse3200.game.services.ServiceLocator;
+import com.csse3200.game.entities.factories.system.TeleporterFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,6 +48,8 @@ public class Reception extends GameArea {
         spawnObjectDoors(new GridPoint2(0, 6), new GridPoint2(28, 20));
         spawndesk_reception();
         spawncomic_stand();
+        spawnTeleporter();
+
         Entity ui = new Entity();
         ui.addComponent(new GameAreaDisplay("Reception"))
                 .addComponent(new com.csse3200.game.components.gamearea.FloorLabelDisplay("Floor 2"));
@@ -214,10 +218,16 @@ public class Reception extends GameArea {
         spawnEntity(stand1);
     }
 
+    /** Spawn teleporter bottom-left avoiding desk (slightly offset). */
+    private void spawnTeleporter() {
+        Entity tp = TeleporterFactory.createTeleporter(new Vector2(2.5f, 2.8f));
+        spawnEntity(tp);
+    }
+
     /**
      * Setter method for the player spawn point
      * should be used when the player is traversing through the rooms
-     * 
+     *
      * @param newSpawn the new spawn point
      */
     public static void setRoomSpawn(GridPoint2 newSpawn) {

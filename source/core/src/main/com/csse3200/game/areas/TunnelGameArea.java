@@ -2,6 +2,7 @@ package com.csse3200.game.areas;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.GridPoint2;
+import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.CameraComponent;
@@ -11,6 +12,7 @@ import com.csse3200.game.entities.configs.ItemSpawnConfig;
 import com.csse3200.game.entities.factories.characters.NPCFactory;
 import com.csse3200.game.entities.factories.characters.PlayerFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
+import com.csse3200.game.entities.factories.system.TeleporterFactory;
 import com.csse3200.game.entities.spawner.ItemSpawner;
 import com.csse3200.game.services.ServiceLocator;
 
@@ -49,9 +51,9 @@ public class TunnelGameArea extends GameArea {
         spawnPlatforms();
         spawnSpawnPads();
         spawnGrokDroids();
+        spawnTeleporter();
         spawnObjectDoors(new GridPoint2(0, 7), new GridPoint2(28, 7));
         spawnSpikes();
-
         spawnVisibleFloor();
 
         ItemSpawner itemSpawner = new ItemSpawner(this);
@@ -158,6 +160,22 @@ public class TunnelGameArea extends GameArea {
         spawnEntityAt(spikes, spikesSpawn, true, false);
     }
 
+    /** Teleporter bottom-left */
+    private void spawnTeleporter() {
+        Entity tp = TeleporterFactory.createTeleporter(new Vector2(2f, 3f));
+        spawnEntity(tp);
+    }
+
+    /**
+     * Spawn entity door at the bottom left, and no door to the right
+     * as this is the last room (currently).
+     */
+    private void spawnObjectDoors() {
+        Entity leftDoor = ObstacleFactory.createDoor();
+        GridPoint2 leftDoorSpawn = new GridPoint2(0, 7);
+        spawnEntityAt(leftDoor, leftDoorSpawn, false, false);
+    }
+
     private void loadServer() {
         ServerGameArea.setRoomSpawn(new GridPoint2(25, 24));
         clearAndLoad(() -> new ServerGameArea(terrainFactory, cameraComponent));
@@ -171,7 +189,7 @@ public class TunnelGameArea extends GameArea {
     /**
      * Setter method for the player spawn point
      * should be used when the player is traversing through the rooms
-     * 
+     *
      * @param newSpawn the new spawn point
      */
     public static void setRoomSpawn(GridPoint2 newSpawn) {
