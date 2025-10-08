@@ -1,0 +1,67 @@
+# ===============================
+# victoryprompt.txt — Clash of Clankers (Win / Joy / Momentum)
+# ===============================
+# Notes:
+#  - Plain lines => typewriter
+#  - CRAZY blocks => {CRAZY [key=value ...]}text{/CRAZY}
+#  - LibGDX colour markup [#RRGGBB]...[] allowed outside CRAZY
+#  - Lines starting with # are ignored
+# ===============================
+
+The Clankers blinked first. You didn’t.
+{CRAZY fps=60 cycles=1 jitter=4}SECTOR CLEARED{/CRAZY}
+{CRAZY rainbow=true rhz=1.0 rshift=18}HUMAN: 1  |  CLANKERS: 0{/CRAZY}
+[#a7ff83]Beautiful execution. Timing, tactics, tenacity.[]
+
+{CRAZY fps=55}CORE UPLINK SECURED{/CRAZY}
+{CRAZY cycles=1 jitter=6 from=rand}CHECKPOINT UNLOCKED{/CRAZY}
+[#ffd54f]Loot tip: Upgrade bay unlocked—check new cores before next run.[]
+
+{CRAZY fps=48 cycles=2 from=rand}VICTORY ACHIEVED{/CRAZY}
+Joy detected. Bottling it for the next mission.
+{CRAZY rainbow=true rhz=0.9 rshift=16}YOU OUT-THOUGHT THE SWARM{/CRAZY}
+
+{CRAZY fps=36 jitter=2}CLEAN. CLINICAL. CLUTCH.{/CRAZY}
+[#9af7ff]Hint: Perfect parries add bonus damage on Captains—keep the rhythm.[]
+
+{CRAZY fps=60 cycles=1}RUN SAVED{/CRAZY}
+{CRAZY rainbow=true rhz=1.2 rshift=22}THE GRID CHANTS YOUR NAME{/CRAZY}
+[#c3ff6b]Lock it in—make it repeatable. Small habits, big wins.[]
+
+{CRAZY fps=55}INTEL RELAY CAPTURED{/CRAZY}
+{CRAZY cycles=1 jitter=5}SYNC NODE RESTORED{/CRAZY}
+Happiness uploaded to squad morale servers.
+
+{CRAZY rainbow=true rhz=0.8 rshift=14}YOU TURNED CODE INTO CONFETTI{/CRAZY}
+[#ffef99]Style tip: Slide-cancel into overcharge—double the flair.[]
+
+{CRAZY fps=48 cycles=2 from=rand}ECHOES OF TRIUMPH{/CRAZY}
+{CRAZY fps=40}NEW PERSONAL BEST{/CRAZY}
+{CRAZY rainbow=true rhz=1.0 rshift=20}YOUR ARC IS ASCENDING{/CRAZY}
+
+The swarm learned something today: joy is OP.
+{CRAZY fps=52 jitter=6}LOCKED IN. DIALED UP. NEXT.{/CRAZY}
+
+[#66ffcc]Momentum: Chain two wins to unlock bonus drops.[]
+
+{CRAZY fps=45 cycles=1}EXCELLENT SIGNAL DISCIPLINE{/CRAZY}
+{CRAZY rainbow=true rhz=1.1 rshift=24}PUSH THE ADVANTAGE{/CRAZY}
+
+{CRAZY fps=50 jitter=8}REDEPLOY WHEN READY{/CRAZY}
+[#b0ff7a]Pro tip: Burst fire on Suppressors after they pivot—free stagger.[]
+
+{CRAZY cycles=1 jitter=7}YOU BENT THEIR PREDICTIONS{/CRAZY}
+{CRAZY rainbow=true rhz=0.95 rshift=18}KEEP MAKING NEW DATA{/CRAZY}
+
+{CRAZY fps=44}YOU’RE NOT LUCKY—YOU’RE SKILLED{/CRAZY}
+{CRAZY cycles=3 from=rand}CLANKER BIAS UPDATED: FEAR{/CRAZY}
+{CRAZY rainbow=true rhz=0.9 rshift=16}JOY = FUEL; GO AGAIN{/CRAZY}
+
+{CRAZY fps=32}HUMAN GRIT > MACHINE SPAM{/CRAZY}
+They can copy tactics. They can’t copy heart.
+
+{CRAZY fps=50 jitter=10}CONTINUE? THE GRID IS SMILING{/CRAZY}
+[#6bffb3]Every win is a message to your future self: “Build on this.”[]
+
+{CRAZY cycles=1}YOU ARE THE PATCH THEY DIDN’T PLAN FOR{/CRAZY}
+{CRAZY rainbow=true rhz=1.0 rshift=20}ONE MORE RUN.{/CRAZY}

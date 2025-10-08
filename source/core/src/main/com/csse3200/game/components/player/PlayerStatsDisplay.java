@@ -1,12 +1,10 @@
 package com.csse3200.game.components.player;
 
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.csse3200.game.components.AmmoStatsComponent;
 import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.components.MagazineComponent;
@@ -24,16 +22,10 @@ public class PlayerStatsDisplay extends BaseScreenDisplay {
     // UI constants
     private static final float BAR_WIDTH = 200f;
     private static final float BAR_HEIGHT = 30f;
-    private static final float PAD = 5f;
+    private static final float PAD = 10f;
     private static final int PCT_MAX = 100;
+    private static final String WHITE = "white";
 
-    // Constants
-    private static final String ammoAmount = "Ammo :%d";
-
-    // Colours
-    private static final Color COLOR_BG = Color.DARK_GRAY;
-    private static final Color COLOR_HEALTH = Color.RED;
-    private static final Color COLOR_STAMINA = Color.GREEN;
     // Ammo formats (dedupe string literals)
     private static final String AMMO_SINGLE_FMT = "Ammo: %d";
     private static final String AMMO_DUAL_FMT = "Ammo: %d/%d";
@@ -76,35 +68,69 @@ public class PlayerStatsDisplay extends BaseScreenDisplay {
     /* Build & draw */
     @Override
     protected void buildUI(Table root) {
+        Color healthTint = new Color(1f, 0.25f, 0.25f, 1f);
+        Color staminaTint = new Color(0.35f, 1f, 0.45f, 1f);
+        Color panelBg = new Color(0f, 0f, 0f, 0.3f);
+
+        final float GAP_X = 8f;
+        final float PANEL_PAD = 4f;
+
         // Health bar: use real max if available, otherwise [0..100]
         int healthVal = (combat != null) ? combat.getHealth() : 0;
         int maxHealth = (combat != null) ? combat.getMaxHealth() : PCT_MAX;
 
-        healthBar = new ProgressBar(0, maxHealth, 1, false, makeBarStyle(COLOR_HEALTH));
+        healthBar = new ProgressBar(0, maxHealth, 1, false,
+                makeBarStyle(healthTint, "progress-bar-horizontal", "progress-bar-horizontal-c"));
         healthBar.setAnimateDuration(0f);
         healthBar.setValue(clamp(healthVal, 0, maxHealth));
 
         // Stamina bar as percentage [0..100]
-        staminaBar = new ProgressBar(0, PCT_MAX, 1, false, makeBarStyle(COLOR_STAMINA));
+        staminaBar = new ProgressBar(0, 100, 1, false,
+                makeBarStyle(staminaTint, "progress-bar-horizontal", "progress-bar-horizontal-c"));
         staminaBar.setAnimateDuration(0f);
         staminaBar.setValue(PCT_MAX);
 
         // Processor label
         int processor = (inventory != null) ? inventory.getProcessor() : 0;
-        processorLabel = new Label(formatProcessor(processor), skin, "large");
+        processorLabel = new Label(formatProcessor(processor), skin, WHITE);
 
         // Ammo label
-        ammoLabel = new Label(formatAmmoLabel(), skin, "large");
+        ammoLabel = new Label(formatAmmoLabel(), skin, WHITE);
 
-        // Layout top-left
-        root.top().left().padTop(45f).padLeft(5f);
-        root.add(healthBar).width(BAR_WIDTH).height(BAR_HEIGHT).pad(PAD);
-        root.row();
-        root.add(staminaBar).width(BAR_WIDTH).height(BAR_HEIGHT).pad(PAD);
-        root.row();
-        root.add(processorLabel).left().padLeft(10f);
-        root.row();
-        root.add(ammoLabel).left().padLeft(10f);
+        Label healthTxt = new Label("Health", skin, WHITE);
+        Label staminaTxt = new Label("Stamina", skin, WHITE);
+
+        float labelW = Math.max(healthTxt.getPrefWidth(), staminaTxt.getPrefWidth());
+
+        // Create panel
+        Table panel = new Table();
+        panel.setBackground(skin.newDrawable(WHITE, panelBg));
+        panel.pad(PANEL_PAD);
+        panel.defaults().left();
+        panel.columnDefaults(0).width(labelW).padRight(GAP_X);
+        panel.columnDefaults(1).width(BAR_WIDTH);
+
+        // Row 1
+        panel.add(healthTxt);
+        panel.add(healthBar).height(BAR_HEIGHT);
+        panel.row();
+
+        // Row 2
+        panel.add(staminaTxt).left();
+        panel.add(staminaBar).height(BAR_HEIGHT).left();
+        panel.row();
+
+        // Row 3
+        panel.add(processorLabel).left();
+        panel.row().padTop(PANEL_PAD);
+
+        //Row 4
+        panel.add(ammoLabel).left();
+
+        float finalPanelW = labelW + GAP_X + BAR_WIDTH + (PANEL_PAD * 2f);
+
+        root.top().left().padTop(50f);
+        root.add(panel).left().padLeft(PAD).width(finalPanelW);
         root.row();
     }
 
@@ -141,19 +167,15 @@ public class PlayerStatsDisplay extends BaseScreenDisplay {
     }
 
     /* Internals */
-    private ProgressBar.ProgressBarStyle makeBarStyle(Color fill) {
-        TextureRegionDrawable bg = new TextureRegionDrawable(new com.badlogic.gdx.graphics.g2d.TextureRegion(makeSolidTexture(COLOR_BG)));
-        TextureRegionDrawable before = new TextureRegionDrawable(new TextureRegion(makeSolidTexture(fill)));
+    private ProgressBar.ProgressBarStyle makeBarStyle(Color fillTint, String bgKey, String fillKey) {
+        ProgressBar.ProgressBarStyle s = new ProgressBar.ProgressBarStyle();
 
-
-        bg.setMinHeight(PlayerStatsDisplay.BAR_HEIGHT);
-        before.setMinHeight(PlayerStatsDisplay.BAR_HEIGHT);
-
-        ProgressBar.ProgressBarStyle style = new ProgressBar.ProgressBarStyle();
-        style.background = bg;
-        style.knobBefore = before;
-        style.knob = null; // continuous fill
-        return style;
+        // Textured background/frame from skin (nine-patch; scales cleanly)
+        s.background = skin.getDrawable(bgKey);               // e.g. "progress-bar-horizontal"
+        // Textured fill; tint to your color (health/stamina)
+        s.knobBefore = skin.newDrawable(fillKey, fillTint);   // e.g. "progress-bar-horizontal-c"
+        s.knob = null; // continuous fill (no knob blob)
+        return s;
     }
 
     private String formatProcessor(int p) {
