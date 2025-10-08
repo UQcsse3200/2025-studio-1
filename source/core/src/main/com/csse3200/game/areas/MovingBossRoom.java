@@ -83,9 +83,7 @@ public class MovingBossRoom extends GameArea {
     }
 
     private Entity spawnPlayer() {
-        Entity newPlayer = PlayerFactory.createPlayer();
-        spawnEntityAt(newPlayer, playerSpawn, true, true);
-        return newPlayer;
+        return spawnOrRepositionPlayer(playerSpawn);
     }
 
     private void spawnBoss() {

@@ -113,9 +113,7 @@ public class MainHall extends GameArea {
     }
 
     private Entity spawnPlayer() {
-        Entity player = PlayerFactory.createPlayer();
-        spawnEntityAt(player, playerSpawn, true, true);
-        return player;
+        return spawnOrRepositionPlayer(playerSpawn);
     }
     private void spawnEnemies() {
         if (player == null)
