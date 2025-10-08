@@ -16,6 +16,10 @@ com.csse3200.game.components.items
 com.csse3200.game.components.maingame
 com.csse3200.game.components.mainmenu
 com.csse3200.game.components.minigames
+com.csse3200.game.components.minigames.pool
+com.csse3200.game.components.minigames.pool.displayhelpers
+com.csse3200.game.components.minigames.pool.logic
+com.csse3200.game.components.minigames.pool.physics
 com.csse3200.game.components.minigames.robotFighting
 com.csse3200.game.components.minigames.slots
 com.csse3200.game.components.minigames.whackamole
