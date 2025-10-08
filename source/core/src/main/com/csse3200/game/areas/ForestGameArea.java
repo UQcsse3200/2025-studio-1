@@ -48,6 +48,9 @@ import org.slf4j.LoggerFactory;
 
 import static com.csse3200.game.entities.configs.Weapons.*;
 
+import java.util.List;
+import java.util.Collections;
+
 /**
  * A playable “Forest” style room. This class:
  * - Loads assets for this scene
@@ -148,6 +151,9 @@ public class ForestGameArea extends GameArea {
             "images/NpcDialogue.png",
             "images/nurse_npc.png",
             "images/partner.png",
+            "images/remote.png",
+            "images/Assistor.png",
+            "images/laserbullet.png",
             "images/armour-assets/chestplate.png",
             "images/armour-assets/hood.png",
             "images/blackjack_table.png"
@@ -363,8 +369,10 @@ public class ForestGameArea extends GameArea {
         playMusic();
         ItemSpawner itemSpawner = new ItemSpawner(this);
         itemSpawner.spawnItems(ItemSpawnConfig.forestmap());
-        spawnnpctest();
-        spawnPartnerNearPlayerIfNeeded();
+
+        spawnGuidanceNpc();
+
+
         // Place a keycard on the floor so the player can unlock the door
         float keycardX = 3f;
         float keycardY = 7f;
@@ -703,7 +711,7 @@ public class ForestGameArea extends GameArea {
     }
 
     private void spawnnpctest() {
-        GridPoint2 pos = new GridPoint2(8, 9);
+        GridPoint2 pos = new GridPoint2(16, 9);
         Entity test = FriendlyNPCFactory.createTest(player);
         spawnEntityAt(test, pos, true, true);
     }
@@ -716,17 +724,22 @@ public class ForestGameArea extends GameArea {
                 return;
             }
         }
-        
-        // No partner found, spawn a new one
+
         Entity partner = FriendlyNPCFactory.createPartner(player);
 
-        // 方案 A：按瓦片生成（要确保相机看得到该瓦片）
         GridPoint2 pos = new GridPoint2(8, 9);
         spawnEntityAt(partner, pos, true, true);
+    }
 
-        // 方案 B：直接生成到玩家旁边（更容易看见）
-        // spawnEntity(partner);
-        // partner.setPosition(player.getPosition().cpy().add(1f, 0f));
+    private void spawnGuidanceNpc() {
+        var waypoints = List.of(new Vector2(12f, 7f), new Vector2(18f, 7f), new Vector2(25f, 12f));
+        Entity guide = FriendlyNPCFactory.createGuidanceNpc(player, waypoints);
+
+        spawnEntityAt(guide, new GridPoint2((int) player.getPosition().x + 2, (int) player.getPosition().y), true, true);
+
+        AnimationRenderComponent arc = guide.getComponent(AnimationRenderComponent.class);
+        arc.startAnimation("robot_fire");   // start anim
+        guide.setScale(1.2f, 1.2f);       // pick a size you like
     }
 
     private void spawnBoss2() {
