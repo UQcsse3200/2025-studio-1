@@ -87,11 +87,6 @@ public class PlayerFactory {
         player.getComponent(WeaponsStatsComponent.class).setCoolDown(0.2f);
 
 
-        //Unequip player at spawn
-        PlayerActions actions = player.getComponent(PlayerActions.class);
-        actions.create();
-
-
         // pick up rapid fire powerup
         // remove this if we have item pickup available
         // (disposes entity when player go near it)
