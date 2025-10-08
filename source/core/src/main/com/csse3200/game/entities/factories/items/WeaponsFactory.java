@@ -28,6 +28,10 @@ import com.csse3200.game.rendering.TextureRenderWithRotationComponent;
  */
 public class WeaponsFactory {
 
+    private WeaponsFactory() {
+        throw new IllegalStateException("Instantiating static util class");
+    }
+
     /**
      * Creates a new weapon entity based on the given weapon type.
      * <p>
@@ -73,9 +77,10 @@ public class WeaponsFactory {
 
     /**
      * Creates a weapon with attachments on it
+     *
      * @param weaponType the type of weapon
-     * @param laser true if laser attachment is wanted
-     * @param bullet true if bullet attachment is wanted
+     * @param laser      true if laser attachment is wanted
+     * @param bullet     true if bullet attachment is wanted
      * @return the new weapon with attachments
      */
     public static Entity createWeaponWithAttachment(Weapons weaponType, boolean laser, boolean bullet) {
@@ -121,9 +126,5 @@ public class WeaponsFactory {
         if (!config.getName().isEmpty()) {
             item.setName(config.getName());
         }
-    }
-
-    private WeaponsFactory() {
-        throw new IllegalStateException("Instantiating static util class");
     }
 }

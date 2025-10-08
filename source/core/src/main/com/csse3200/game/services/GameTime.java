@@ -21,21 +21,21 @@ public class GameTime {
     }
 
     /**
-     * Sets the status of the game to be paused (true) or not (false).
-     *
-     * @param paused True if the game is currently paused, False otherwise
-     */
-    public void setPaused(boolean paused) {
-        this.paused = paused;
-    }
-
-    /**
      * Gets the current pause state of the game
      *
      * @return True if the game is paused, false if not
      */
     public boolean isPaused() {
         return this.paused;
+    }
+
+    /**
+     * Sets the status of the game to be paused (true) or not (false).
+     *
+     * @param paused True if the game is currently paused, False otherwise
+     */
+    public void setPaused(boolean paused) {
+        this.paused = paused;
     }
 
     /**

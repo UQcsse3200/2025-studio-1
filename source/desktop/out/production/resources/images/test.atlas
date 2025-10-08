@@ -137,3 +137,38 @@ chase_down
   orig: 48, 48
   offset: 0, 0
   index: 2
+damage_taken
+  rotate: false
+  xy: 624, 0
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: 0
+damage_taken
+  rotate: false
+  xy: 720, 0
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: 1
+damage_taken
+  rotate: false
+  xy: 864, 0
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: 2
+damage_taken
+  rotate: false
+  xy: 336, 0
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: 3
+damage_taken
+  rotate: false
+  xy: 480, 0
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: 4

@@ -8,11 +8,13 @@ import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.CameraComponent;
+import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import com.csse3200.game.components.KeycardGateComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.ItemSpawnConfig;
 import com.csse3200.game.entities.factories.KeycardFactory;
 import com.csse3200.game.entities.factories.characters.BossFactory;
+import com.csse3200.game.entities.factories.characters.PlayerFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.entities.spawner.ItemSpawner;
 import com.csse3200.game.physics.components.ColliderComponent;
@@ -31,10 +33,9 @@ import org.slf4j.LoggerFactory;
  */
 public class FlyingBossRoom extends GameArea {
     private static final Logger logger = LoggerFactory.getLogger(FlyingBossRoom.class);
-    private static GridPoint2 playerSpawn = new GridPoint2(3, 10);
 
     private static final float WALL_WIDTH = 0.1f;
-
+    private static GridPoint2 playerSpawn = new GridPoint2(3, 10);
     private Entity player;
 
     /**

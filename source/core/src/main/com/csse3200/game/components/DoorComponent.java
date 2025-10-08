@@ -48,6 +48,7 @@ public class DoorComponent extends Component {
     public void setLocked(boolean locked) {
         this.locked = locked;
     }
+
     public boolean isLocked() {
         return locked;
     }

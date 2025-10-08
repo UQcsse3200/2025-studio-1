@@ -1,5 +1,6 @@
 package com.csse3200.game.components;
 
+
 import com.csse3200.game.entities.Entity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,6 +48,15 @@ public class Component {
     }
 
     /**
+     * Get the entity to which this component belongs.
+     *
+     * @return entity
+     */
+    public Entity getEntity() {
+        return entity;
+    }
+
+    /**
      * Set the entity to which this component belongs. This is called by the Entity, and should not be
      * set manually.
      *
@@ -55,15 +65,6 @@ public class Component {
     public void setEntity(Entity entity) {
         logger.debug("Attaching {} to {}", this, entity);
         this.entity = entity;
-    }
-
-    /**
-     * Get the entity to which this component belongs.
-     *
-     * @return entity
-     */
-    public Entity getEntity() {
-        return entity;
     }
 
     /**
@@ -114,4 +115,16 @@ public class Component {
         }
         return entity + "." + className;
     }
+
+    // at the moment both these arer placeholders
+    // to allow direct manipulation of inventory within a json file
+//    @Override
+//    public void write(Json json) {
+//
+//    }
+//
+//    @Override
+//    public void read(Json json, JsonValue jsonValue) {
+//
+//    }
 }

@@ -7,7 +7,7 @@ import com.csse3200.game.entities.configs.armour.ArmourConfig;
 /**
  * This component stores information about the armour.
  */
-public class ArmourComponent extends Component{
+public class ArmourComponent extends Component {
     public ItemTypes armourType;
     public int protection;
     public String texturePath;

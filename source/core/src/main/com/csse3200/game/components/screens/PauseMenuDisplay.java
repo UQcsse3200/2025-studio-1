@@ -7,8 +7,8 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.GdxGame;
+import com.csse3200.game.services.ServiceLocator;
 
 /**
  * Pause menu overlay shown above the main game and HUD.

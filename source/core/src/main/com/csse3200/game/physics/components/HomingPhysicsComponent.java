@@ -53,8 +53,7 @@ public class HomingPhysicsComponent extends PhysicsProjectileComponent {
 
             //checks for combat entities, not including the current entity
             if (e.hasComponent(CombatStatsComponent.class) && e != ServiceLocator.getPlayer() &&
-                    !e.getComponent(CombatStatsComponent.class).isDead())
-             {
+                    !e.getComponent(CombatStatsComponent.class).isDead()) {
 
                 Vector2 position = e.getCenterPosition();
                 Vector2 displacement = new Vector2(position.x - origin.x,
@@ -92,7 +91,7 @@ public class HomingPhysicsComponent extends PhysicsProjectileComponent {
 
             float speed = 10f;
             if (initialVelocity != null) {
-                 speed = initialVelocity.len();
+                speed = initialVelocity.len();
             }
 
             body.setLinearVelocity(newDirection.scl(speed));
@@ -108,7 +107,17 @@ public class HomingPhysicsComponent extends PhysicsProjectileComponent {
     }
 
     /**
+     * gets the rate at which the projectile turns
+     *
+     * @return turn rate
+     */
+    public float getTurnRate() {
+        return turnRate;
+    }
+
+    /**
      * Sets the turn rate of the projectile
+     *
      * @param turnRate the rate at which the projectile turns to the target
      */
     public void setTurnRate(float turnRate) {
@@ -117,28 +126,22 @@ public class HomingPhysicsComponent extends PhysicsProjectileComponent {
     }
 
     /**
-     * gets the rate at which the projectile turns
-     * @return turn rate
-     */
-    public float getTurnRate() {
-        return turnRate;
-    }
-
-    /**
-     * sets the target entity, used for testing
-     * @param target entity to be targeted
-     */
-    public void setTargetEntity(Entity target) {
-        this.target = target;
-    }
-
-    /**
      * Gets the targeted entity
+     *
      * @return the target entity for the projectile
      */
     public Entity getTargetEntity() {
 
         return this.target;
+    }
+
+    /**
+     * sets the target entity, used for testing
+     *
+     * @param target entity to be targeted
+     */
+    public void setTargetEntity(Entity target) {
+        this.target = target;
     }
 
 }

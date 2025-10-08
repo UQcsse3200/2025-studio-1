@@ -8,11 +8,14 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.csse3200.game.components.minigames.BlackJackGame;
 import com.csse3200.game.components.cards.Card;
+import com.csse3200.game.components.minigames.BlackJackGame;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.UIComponent;
 
@@ -46,6 +49,21 @@ public class BlackjackScreenDisplay extends UIComponent {
     private BlackJackGame gameLogic;
     private Texture pixelTex;
     private boolean dealerTurn;
+
+    /**
+     * Utility to create a 1x1 solid color texture.
+     *
+     * @param color the color to fill the texture with
+     * @return a new {@link Texture} of the given color
+     */
+    private static Texture makeSolidTexture(Color color) {
+        Pixmap pm = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
+        pm.setColor(color);
+        pm.fill();
+        Texture t = new Texture(pm);
+        pm.dispose();
+        return t;
+    }
 
     /**
      * Creates and initializes all visual elements of the Blackjack screen.
@@ -296,21 +314,6 @@ public class BlackjackScreenDisplay extends UIComponent {
         exitBtn.setVisible(true);
         hitBtn.setVisible(false);
         standBtn.setVisible(false);
-    }
-
-    /**
-     * Utility to create a 1x1 solid color texture.
-     *
-     * @param color the color to fill the texture with
-     * @return a new {@link Texture} of the given color
-     */
-    private static Texture makeSolidTexture(Color color) {
-        Pixmap pm = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
-        pm.setColor(color);
-        pm.fill();
-        Texture t = new Texture(pm);
-        pm.dispose();
-        return t;
     }
 
     /**

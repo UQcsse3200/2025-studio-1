@@ -49,6 +49,10 @@ public class MusicService {
         }
     }
 
+    public boolean isMenuMusicPlaying() {
+        return menuMusic != null && menuMusic.isPlaying();
+    }
+
     public void setMenuMusicPlaying(boolean play) {
         if (menuMusic != null) {
             if (play && !menuMusic.isPlaying()) {
@@ -57,10 +61,6 @@ public class MusicService {
                 menuMusic.stop();
             }
         }
-    }
-
-    public boolean isMenuMusicPlaying() {
-        return menuMusic != null && menuMusic.isPlaying();
     }
 
     public void dispose(ResourceService resourceService) {

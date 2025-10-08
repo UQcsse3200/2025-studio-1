@@ -31,6 +31,19 @@ public class SecurityGameArea extends GameArea {
         return (new SecurityGameArea(terrainFactory, camera));
     }
 
+    /**
+     * Setter method for the player spawn point
+     * should be used when the player is traversing through the rooms
+     *
+     * @param newSpawn the new spawn point
+     */
+    public static void setRoomSpawn(GridPoint2 newSpawn) {
+        if (newSpawn == null) {
+            return;
+        }
+        SecurityGameArea.playerSpawn = newSpawn;
+    }
+
     @Override
     public void create() {
         GenericLayout.ensureGenericAssets(this);
@@ -141,9 +154,10 @@ public class SecurityGameArea extends GameArea {
 
     private void spawnSpikes2() {
         Entity spikes = ObstacleFactory.createSpikes2();
-        GridPoint2 spikesSpawn = new GridPoint2(4,  12);
+        GridPoint2 spikesSpawn = new GridPoint2(4, 12);
         spawnEntityAt(spikes, spikesSpawn, true, false);
     }
+
     /**
      * Spawn a Vroomba and Deepspin in Security room.
      */
@@ -160,7 +174,9 @@ public class SecurityGameArea extends GameArea {
         spawnEntityAt(deepspin, new GridPoint2(22, 12), true, false);
     }
 
-    /** Teleporter entity bottom-left */
+    /**
+     * Teleporter entity bottom-left
+     */
     private void spawnTeleporter() {
         Entity tp = TeleporterFactory.createTeleporter(new Vector2(2f, 2.8f));
         spawnEntity(tp);
@@ -174,19 +190,6 @@ public class SecurityGameArea extends GameArea {
     private void loadMovingBossRoom() {
         MovingBossRoom.setRoomSpawn(new GridPoint2(6, 8));
         clearAndLoad(() -> new MovingBossRoom(terrainFactory, cameraComponent));
-    }
-
-    /**
-     * Setter method for the player spawn point
-     * should be used when the player is traversing through the rooms
-     * 
-     * @param newSpawn the new spawn point
-     */
-    public static void setRoomSpawn(GridPoint2 newSpawn) {
-        if (newSpawn == null) {
-            return;
-        }
-        SecurityGameArea.playerSpawn = newSpawn;
     }
 
     @Override

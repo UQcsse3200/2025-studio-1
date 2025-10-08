@@ -8,6 +8,7 @@ import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.components.DoorComponent;
 import com.csse3200.game.components.KeycardGateComponent;
+import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.ItemSpawnConfig;
 import com.csse3200.game.entities.factories.KeycardFactory;
@@ -18,7 +19,6 @@ import com.csse3200.game.physics.PhysicsLayer;
 import com.csse3200.game.physics.components.ColliderComponent;
 import com.csse3200.game.physics.components.HitboxComponent;
 import com.csse3200.game.services.ServiceLocator;
-import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,20 +27,18 @@ import org.slf4j.LoggerFactory;
  * The boss is a static enemy that spawns on the floor and
  * shoots projectiles outwards from itself. Most
  * challenging boss.
+ * <p>
  * Room is empty except for boss and player
  */
 public class StaticBossRoom extends GameArea {
     private static final Logger logger = LoggerFactory.getLogger(StaticBossRoom.class);
-
-    private static GridPoint2 playerSpawn = new GridPoint2(3, 10);
-
     private static final float WALL_WIDTH = 0.1f;
-
+    private static GridPoint2 playerSpawn = new GridPoint2(3, 10);
     private Entity player;
 
     /**
      * Creates a new StaticBossRoom for the room where the static boss spawns.
-     * 
+     *
      * @param terrainFactory  TerrainFactory used to create the terrain for the
      *                        GameArea (required).
      * @param cameraComponent Camera helper supplying an OrthographicCamera
@@ -49,6 +47,20 @@ public class StaticBossRoom extends GameArea {
      */
     public StaticBossRoom(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
         super(terrainFactory, cameraComponent);
+    }
+
+
+    /**
+     * Setter method for the player spawn point
+     * should be used when the player is traversing through the rooms
+     *
+     * @param newSpawn the new spawn point
+     */
+    public static void setRoomSpawn(GridPoint2 newSpawn) {
+        if (newSpawn == null) {
+            return;
+        }
+        StaticBossRoom.playerSpawn = newSpawn;
     }
 
     /**
@@ -116,7 +128,7 @@ public class StaticBossRoom extends GameArea {
         if (cameraComponent == null) return;
 
         Bounds b = getCameraBounds(cameraComponent);
-      //  addSolidWallLeft(b, WALL_WIDTH);
+        //  addSolidWallLeft(b, WALL_WIDTH);
         addSolidWallTop(b, WALL_WIDTH);
         addSolidWallRight(b, WALL_WIDTH);
 
@@ -150,24 +162,11 @@ public class StaticBossRoom extends GameArea {
         spawnEntity(rightDoor);
     }
 
-        public void loadSecurity() {
-            SecurityGameArea.setRoomSpawn(new GridPoint2(26, 8));
-            clearAndLoad(() -> new SecurityGameArea(terrainFactory, cameraComponent));
-        }
-
-
-    /**
-     * Setter method for the player spawn point
-     * should be used when the player is traversing through the rooms
-     * 
-     * @param newSpawn the new spawn point
-     */
-    public static void setRoomSpawn(GridPoint2 newSpawn) {
-        if (newSpawn == null) {
-            return;
-        }
-        StaticBossRoom.playerSpawn = newSpawn;
+    public void loadSecurity() {
+        SecurityGameArea.setRoomSpawn(new GridPoint2(26, 8));
+        clearAndLoad(() -> new SecurityGameArea(terrainFactory, cameraComponent));
     }
+
 
     public Entity getPlayer() {
         return player;

@@ -14,6 +14,7 @@ import com.csse3200.game.services.ServiceLocator;
  * Chases a target entity until they get too far away or go above
  */
 public class BossChaseTask extends DefaultTask implements PriorityTask {
+    private static final float ABOVE_EPS = 1f;
     private final Entity target;
     private final int priority;
     private final float viewDistance;
@@ -22,8 +23,6 @@ public class BossChaseTask extends DefaultTask implements PriorityTask {
     private final DebugRenderer debugRenderer;
     private final RaycastHit hit = new RaycastHit();
     private MovementTask movementTask;
-
-    private static final float ABOVE_EPS = 1f;
 
     /**
      * @param target           The entity to chase.

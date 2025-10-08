@@ -21,10 +21,10 @@ import com.csse3200.game.services.ServiceLocator;
 
 
 public class StationComponent extends Component {
+    public BenchConfig config;
     private boolean playerNear = false;
     private Entity player = null;
     private Label buyPrompt;
-    public BenchConfig config;
     private Image logo;   // floating logo
 
 
@@ -38,6 +38,13 @@ public class StationComponent extends Component {
     }
 
     /**
+     * @return is the player near
+     */
+    public boolean isPlayerNear() {
+        return this.playerNear;
+    }
+
+    /**
      * Sets if the player is near
      *
      * @param near is the player near
@@ -47,21 +54,10 @@ public class StationComponent extends Component {
     }
 
     /**
-     * Sets the config
-     *
-     * @param config the config
+     * @return the player interacting
      */
-    public void setConfig(BenchConfig config) {
-        this.config = config;
-    }
-
-    /**
-     * Sets buy prompt
-     *
-     * @param prompt the buyPrompt
-     */
-    public void setBuyPrompt(Label prompt) {
-        this.buyPrompt = prompt;
+    public Entity getPlayer() {
+        return this.player;
     }
 
     /**
@@ -74,23 +70,6 @@ public class StationComponent extends Component {
     }
 
     /**
-     *
-     * @return is the player near
-     */
-    public boolean isPlayerNear() {
-        return this.playerNear;
-    }
-
-    /**
-     *
-     * @return the player interacting
-     */
-    public Entity getPlayer() {
-        return this.player;
-    }
-
-    /**
-     *
      * @return the buyPrompt
      */
     public Label getBuyPrompt() {
@@ -98,7 +77,15 @@ public class StationComponent extends Component {
     }
 
     /**
+     * Sets buy prompt
      *
+     * @param prompt the buyPrompt
+     */
+    public void setBuyPrompt(Label prompt) {
+        this.buyPrompt = prompt;
+    }
+
+    /**
      * @return the config for the bench
      */
     public BenchConfig getConfig() {
@@ -106,7 +93,15 @@ public class StationComponent extends Component {
     }
 
     /**
+     * Sets the config
      *
+     * @param config the config
+     */
+    public void setConfig(BenchConfig config) {
+        this.config = config;
+    }
+
+    /**
      * @return the bench price
      */
     public int getPrice() {

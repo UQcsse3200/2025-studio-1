@@ -15,6 +15,10 @@ public class Vector2Utils {
     public static final Vector2 MAX = new Vector2(Float.MAX_VALUE, Float.MAX_VALUE);
     public static final Vector2 MIN = new Vector2(Float.MIN_VALUE, Float.MIN_VALUE);
 
+    private Vector2Utils() {
+        throw new IllegalStateException("Instantiating static util class");
+    }
+
     /**
      * Calculate the angle in degrees of a vector.
      *
@@ -34,9 +38,5 @@ public class Vector2Utils {
      */
     public static double angleFromTo(Vector2 from, Vector2 to) {
         return Math.toDegrees(Math.atan2(to.y - from.y, to.x - from.x));
-    }
-
-    private Vector2Utils() {
-        throw new IllegalStateException("Instantiating static util class");
     }
 }

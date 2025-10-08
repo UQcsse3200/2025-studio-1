@@ -26,6 +26,10 @@ public class ElevatorGameArea extends GameArea {
         super(terrainFactory, cameraComponent);
     }
 
+    public static ElevatorGameArea load(TerrainFactory terrainFactory, CameraComponent camera) {
+        return (new ElevatorGameArea(terrainFactory, camera));
+    }
+
     @Override
     public void create() {
         GenericLayout.ensureGenericAssets(this);
@@ -180,9 +184,4 @@ public class ElevatorGameArea extends GameArea {
         // placeholder for errors
         return null;
     }
-
-    public static ElevatorGameArea load(TerrainFactory terrainFactory, CameraComponent camera) {
-        return (new ElevatorGameArea(terrainFactory, camera));
-    }
-
 }

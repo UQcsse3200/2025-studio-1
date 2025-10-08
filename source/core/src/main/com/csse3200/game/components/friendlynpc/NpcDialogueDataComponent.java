@@ -1,6 +1,7 @@
 package com.csse3200.game.components.friendlynpc;
 
 import com.csse3200.game.components.Component;
+
 import java.util.Objects;
 
 /**
@@ -14,9 +15,9 @@ public class NpcDialogueDataComponent extends Component {
     private final String[] lines;       // words
 
     /**
-     * @param name  NPC name
+     * @param name         NPC name
      * @param portraitPath Image resource path (Can be "" to indicate no avatar)
-     * @param lines words
+     * @param lines        words
      */
     public NpcDialogueDataComponent(String name, String portraitPath, String[] lines) {
         this.name = Objects.requireNonNullElse(name, "");

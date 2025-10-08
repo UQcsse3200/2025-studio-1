@@ -43,6 +43,10 @@ public class NPCFactory {
     private static final NPCConfigs configs =
             FileLoader.readClass(NPCConfigs.class, "configs/NPCs.json");
 
+    private NPCFactory() {
+        throw new IllegalStateException("Instantiating static util class");
+    }
+
     /**
      * Creates GhostGPT enemy type
      *
@@ -865,9 +869,5 @@ public class NPCFactory {
 
         PhysicsUtils.setScaledCollider(npc, 0.9f, 0.4f);
         return npc;
-    }
-
-    private NPCFactory() {
-        throw new IllegalStateException("Instantiating static util class");
     }
 }
