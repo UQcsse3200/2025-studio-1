@@ -14,6 +14,8 @@ import com.csse3200.game.components.items.ItemComponent;
 import com.csse3200.game.components.items.ItemHoldComponent;
 import com.csse3200.game.components.player.ItemPickUpComponent;
 import com.csse3200.game.components.player.PlayerEquipComponent;
+import com.csse3200.game.components.minigames.robotFighting.RobotFightingGame;
+import com.csse3200.game.components.player.InventoryComponent;
 import com.csse3200.game.components.shop.CatalogService;
 import com.csse3200.game.components.shop.ShopDemo;
 import com.csse3200.game.components.shop.ShopManager;
@@ -617,8 +619,6 @@ public class ForestGameArea extends GameArea {
     }
 
     /**
-     * FIXME Layer is behind player, does that matter???
-     * FIXME Also need to fix positioning so that it actually looks like the player is holding the weapon
      * Sets the equipped item in the PlayerEquipComponent to be the given item
      *
      * @param tex Is an existing Item texture path, within the players inventory
@@ -755,6 +755,7 @@ public class ForestGameArea extends GameArea {
         Entity boss3 = BossFactory.createBoss3(player);
         spawnEntityAt(boss3, pos, true, true);
     }
+
 
 
     public void spawnItem(Entity item, GridPoint2 position) {
