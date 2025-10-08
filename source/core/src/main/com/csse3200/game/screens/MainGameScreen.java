@@ -18,6 +18,7 @@ import com.csse3200.game.components.player.ItemPickUpComponent;
 import com.csse3200.game.components.screens.Minimap;
 import com.csse3200.game.components.screens.MinimapDisplay;
 import com.csse3200.game.components.screens.PauseMenuDisplay;
+import com.csse3200.game.components.teleporter.TeleporterComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
 import com.csse3200.game.entities.factories.characters.PlayerFactory;
@@ -204,6 +205,8 @@ public class MainGameScreen extends ScreenAdapter {
         //accumulates elapsed time
         this.roundTime += delta;
 
+        // Reset teleporter ESC consumption at start of frame
+        TeleporterComponent.resetEscConsumed();
         if (!isPauseVisible && !(ServiceLocator.getTimeSource().isPaused())
                 && !ServiceLocator.isTransitioning()) {
             physicsEngine.update();
@@ -221,7 +224,9 @@ public class MainGameScreen extends ScreenAdapter {
         }
         renderer.render();
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
-            if (!isPauseVisible) {
+            if (TeleporterComponent.wasEscConsumedThisFrame()) {
+                // ESC was used to close teleporter menu this frame; suppress pause toggle
+            } else if (!isPauseVisible) {
                 showPauseOverlay();
                 countdownTimer.pause();
             } else {
