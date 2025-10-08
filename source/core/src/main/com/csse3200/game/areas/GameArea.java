@@ -9,6 +9,7 @@ import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Disposable;
+import com.csse3200.game.areas.cutscenes.BadWinAnimationScreen;
 import com.csse3200.game.areas.cutscenes.GoodWinAnimationScreen;
 import com.csse3200.game.areas.terrain.TerrainComponent;
 import com.csse3200.game.areas.terrain.TerrainFactory;
@@ -872,6 +873,7 @@ public abstract class GameArea implements Disposable {
             case "server" -> ServerGameArea.class;
             case "research" -> ResearchGameArea.class;
             case "goodwinanimation" -> GoodWinAnimationScreen.class;
+            case "badwinanimation" -> BadWinAnimationScreen.class;
             default -> {
                 Gdx.app.log("GameArea", "transitionToArea: unknown area name '" + areaName + "'");
                 yield null;
