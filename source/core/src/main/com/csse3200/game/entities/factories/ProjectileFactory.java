@@ -196,6 +196,7 @@ public class ProjectileFactory {
 
         projectile.getComponent(TextureRenderWithRotationComponent.class).setRotation(angleToFire);
         projectile.getComponent(TextureRenderWithRotationComponent.class).scaleEntity();
+        projectile.getComponent(TextureRenderWithRotationComponent.class).setHasRotated(true);
 
         return projectile;
     }
