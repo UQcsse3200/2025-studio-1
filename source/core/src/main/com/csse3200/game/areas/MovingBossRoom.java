@@ -21,7 +21,6 @@ import com.csse3200.game.components.gamearea.GameAreaDisplay;
 /**
  * This is the room that holds the Ground Moving Boss Boss.
  * This boss is a small robot that moves towards the player and attacks
- *
  * Room is empty except for boss and player
  */
 public class MovingBossRoom extends GameArea {
@@ -70,7 +69,6 @@ public class MovingBossRoom extends GameArea {
         spawnObjectDoors(new GridPoint2(0, 6), new GridPoint2(28, 6));
         spawnAssistor();
         spawnNurse();
-        spawnObjectDoors(new GridPoint2(0, 7), new GridPoint2(28, 7));
 
         ItemSpawner itemSpawner = new ItemSpawner(this);
         itemSpawner.spawnItems(ItemSpawnConfig.bossmap());
@@ -93,13 +91,11 @@ public class MovingBossRoom extends GameArea {
 
         Entity boss = BossFactory.createRobot(player);
 
-        boss.getEvents().addListener("death", () -> {
-            ServiceLocator.getTimeSource().delayKeycardSpawn(0.05f, () -> {
-                Entity keycard = KeycardFactory.createKeycard(2);
-                keycard.setPosition(new Vector2(3f, 7f));
-                spawnEntity(keycard);
-            });
-        });
+        boss.getEvents().addListener("death", () -> ServiceLocator.getTimeSource().delayKeycardSpawn(0.05f, () -> {
+            Entity keycard = KeycardFactory.createKeycard(2);
+            keycard.setPosition(new Vector2(3f, 7f));
+            spawnEntity(keycard);
+        }));
 
         spawnEntityAt(boss, pos, true, true);
     }
