@@ -4,7 +4,10 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
+import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Align;
 import com.csse3200.game.components.AmmoStatsComponent;
 import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.components.MagazineComponent;
@@ -84,6 +87,10 @@ public class PlayerStatsDisplay extends BaseScreenDisplay {
         healthBar.setAnimateDuration(0f);
         healthBar.setValue(clamp(healthVal, 0, maxHealth));
 
+
+        Stack healthStack = new Stack();
+        healthStack.add(healthBar);       // bar at the back
+
         // Stamina bar as percentage [0..100]
         staminaBar = new ProgressBar(0, 100, 1, false,
                 makeBarStyle(staminaTint, "progress-bar-horizontal", "progress-bar-horizontal-c"));
@@ -134,6 +141,10 @@ public class PlayerStatsDisplay extends BaseScreenDisplay {
         root.row();
     }
 
+    private String formatHealthText(int current, int max) {
+        return current + " / " + max;
+    }
+
     @Override
     public void draw(SpriteBatch batch) { /* Stage handles rendering */ }
 
@@ -141,8 +152,9 @@ public class PlayerStatsDisplay extends BaseScreenDisplay {
 
     public void updatePlayerHealthUI(int health) {
         if (healthBar == null) return;
-        float max = healthBar.getMaxValue();
-        healthBar.setValue(clamp(health, 0, (int) max));
+        int max = (int) healthBar.getMaxValue();
+        int clamped = clamp(health, 0, max);
+        healthBar.setValue(clamped);
     }
 
     public void updatePlayerStaminaUI(int current, int max) {
