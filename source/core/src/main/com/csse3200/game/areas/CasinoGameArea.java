@@ -7,6 +7,7 @@ import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.components.minigames.BettingComponent;
 import com.csse3200.game.components.minigames.BlackJackGame;
+import com.csse3200.game.components.minigames.robotFighting.*;
 import com.csse3200.game.components.player.InventoryComponent;
 import com.csse3200.game.components.screens.BlackjackScreenDisplay;
 import com.csse3200.game.entities.Entity;
@@ -119,7 +120,7 @@ public class CasinoGameArea extends GameArea {
     }
 
     private void spawnRobotFightingGame() {
-        GridPoint2 pos = new GridPoint2(3, 10);
+        GridPoint2 pos = new GridPoint2(10, 7);
         spawnEntityAt(new RobotFightingGame().getGameEntity(), pos, true, true);
     }
 
