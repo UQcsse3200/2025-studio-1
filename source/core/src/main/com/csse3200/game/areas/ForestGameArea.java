@@ -387,7 +387,6 @@ public class ForestGameArea extends GameArea {
         keycard.setPosition(new Vector2(keycardX, keycardY));
         spawnEntity(keycard);
 
-        spawnItems();
         spawnTeleporter();
     }
 
