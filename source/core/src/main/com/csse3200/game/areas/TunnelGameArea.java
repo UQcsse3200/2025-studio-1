@@ -15,6 +15,16 @@ import com.csse3200.game.entities.factories.system.TeleporterFactory;
 import com.csse3200.game.entities.spawner.ItemSpawner;
 import com.csse3200.game.services.ServiceLocator;
 
+import com.badlogic.gdx.math.Vector2;
+import com.csse3200.game.entities.configs.benches.BenchConfig;
+import com.csse3200.game.entities.factories.InteractableStationFactory;
+import com.csse3200.game.components.stations.StationComponent;
+import com.csse3200.game.physics.components.ColliderComponent;
+import com.csse3200.game.physics.components.PhysicsComponent;
+import com.csse3200.game.components.DoorComponent;
+import com.csse3200.game.physics.PhysicsUtils;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+
 /**
  * Tunnel room: minimal walls with left door back to Server Room.
  */
@@ -24,6 +34,9 @@ public class TunnelGameArea extends GameArea {
     private static final float ROOM_DIFF_NUMBER = 10;
 
     private Entity player;
+
+    private DoorComponent rightDoorComp;
+    public static volatile DoorComponent exposedRightDoor;
 
     public TunnelGameArea(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
         super(terrainFactory, cameraComponent);
@@ -52,6 +65,8 @@ public class TunnelGameArea extends GameArea {
         spawnGrokDroids();
         spawnTeleporter();
         spawnObjectDoors(new GridPoint2(0, 7), new GridPoint2(28, 7));
+        spawnFloor();
+        spawnPasswordTerminal(new GridPoint2(22, 17));
         spawnSpikes();
         spawnVisibleFloor();
 
@@ -88,6 +103,10 @@ public class TunnelGameArea extends GameArea {
         rightDoor.setPosition(b.rightX() - WALL_WIDTH - 0.001f, rightDoorY);
         rightDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadBossRoom));
         spawnEntity(rightDoor);
+
+        rightDoorComp = rightDoor.getComponent(DoorComponent.class);
+        rightDoorComp.setLocked(true);
+        TunnelGameArea.exposedRightDoor = rightDoorComp;
     }
 
     /**
@@ -181,6 +200,7 @@ public class TunnelGameArea extends GameArea {
     }
 
     private void loadBossRoom() {
+        clearAndLoad(() -> new SecretRoomGameArea(terrainFactory, cameraComponent));
         StaticBossRoom.setRoomSpawn(new GridPoint2(4, 8));
         clearAndLoad(() -> new StaticBossRoom(terrainFactory, cameraComponent));
     }
@@ -213,4 +233,41 @@ public class TunnelGameArea extends GameArea {
         return (new TunnelGameArea(terrainFactory, camera));
     }
 
+    /**
+     * Spawns a password terminal and a nearby hint station in the given position.
+     */
+     private void spawnPasswordTerminal(GridPoint2 pos) {
+            Entity terminal = ObstacleFactory.createSecuritySystem();
+            spawnEntityAt(terminal, pos, true, false);
+
+            Entity hintStation = InteractableStationFactory.createBaseStation();
+            hintStation.addComponent(new StationComponent(makeTerminalHintConfig()));
+
+            PhysicsUtils.setScaledCollider(hintStation, 2.5f, 1.5f);
+            hintStation.getComponent(ColliderComponent.class)
+                    .setAsBoxAligned(new Vector2(2.5f, 1.5f),
+                            PhysicsComponent.AlignX.CENTER, PhysicsComponent.AlignY.CENTER);
+
+            GridPoint2 hintPos = new GridPoint2(pos.x, pos.y + 2);
+            spawnEntityAt(hintStation, hintPos, true, false);
+        }
+
+     /**
+     * Creates a {@link BenchConfig} used for the password terminal's hint station.
+      */
+     private BenchConfig makeTerminalHintConfig() {
+            return new BenchConfig() {
+                {
+                    this.texturePath = null;
+                    this.promptText = "Press F1 to access terminal";
+                }
+                @Override
+                public int getPrice() {
+                    return 0;
+                }
+                @Override
+                public void upgrade(boolean playerNear, com.csse3200.game.entities.Entity player, Label prompt) {
+                }
+            };
+        }
 }
