@@ -1,5 +1,6 @@
 package com.csse3200.game.components.maingame;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -38,7 +39,11 @@ public class MainGameDisplay extends UIComponent {
 
         TextButton mainMenuBtn = new TextButton("Exit", skin);
 
-        timerLabel = new Label("", skin, "large");
+        Label.LabelStyle style = new Label.LabelStyle(skin.get("title", Label.LabelStyle.class));
+        style.fontColor = Color.YELLOW;
+        timerLabel = new Label("", style);
+        timerLabel.setFontScale(1.5f);
+
         table.add().expandX();
         table.add(timerLabel).center().padTop(10f);
         table.add().expandX();
@@ -67,6 +72,7 @@ public class MainGameDisplay extends UIComponent {
         int sec = (int) ((remainingMs / 1000) % 60);
         String timeText = String.format("%02d:%02d", min, sec);
         timerLabel.setText(timeText);
+        timerLabel.setColor(remainingMs < 10000 ? Color.RED : Color.YELLOW);
     }
 
     @Override

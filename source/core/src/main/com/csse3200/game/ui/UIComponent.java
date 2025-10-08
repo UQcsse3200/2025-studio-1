@@ -11,9 +11,9 @@ import com.csse3200.game.services.ServiceLocator;
  * A generic component for rendering onto the ui.
  */
 public abstract class UIComponent extends RenderComponent implements Renderable {
-    protected static final Skin skin =
-            new Skin(Gdx.files.internal("flat-earth/skin/flat-earth-ui.json"));
     private static final int UI_LAYER = 2;
+    protected static final Skin skin =
+            new Skin(Gdx.files.internal("quantum-horizon/skin/quantum-horizon-ui.json"));
     protected Stage stage;
 
     @Override

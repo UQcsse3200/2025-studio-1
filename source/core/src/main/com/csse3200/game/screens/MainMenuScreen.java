@@ -41,6 +41,8 @@ public class MainMenuScreen extends ScreenAdapter {
         this.game = game;
 
         logger.debug("Initialising main menu screen services");
+        // Clear any existing player reference when starting fresh
+        ServiceLocator.clear();
         ServiceLocator.registerInputService(new InputService());
         ServiceLocator.registerResourceService(new ResourceService());
         ServiceLocator.registerEntityService(new EntityService());

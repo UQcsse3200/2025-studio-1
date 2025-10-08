@@ -2,14 +2,16 @@ package com.csse3200.game.areas;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.GridPoint2;
+import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.CameraComponent;
+import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.ItemSpawnConfig;
 import com.csse3200.game.entities.factories.characters.NPCFactory;
-import com.csse3200.game.entities.factories.characters.PlayerFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
+import com.csse3200.game.entities.factories.system.TeleporterFactory;
 import com.csse3200.game.entities.spawner.ItemSpawner;
 import com.csse3200.game.services.ServiceLocator;
 
@@ -81,12 +83,14 @@ public class ShippingGameArea extends GameArea {
         spawnShipmentBoxLid();
         spawnShipmentCrane();
         spawnConveyor();
+        spawnTeleporter();
 
         ItemSpawner itemSpawner = new ItemSpawner(this);
         itemSpawner.spawnItems(ItemSpawnConfig.shippingmap());
 
         Entity ui = new Entity();
-        ui.addComponent(new com.csse3200.game.components.gamearea.FloorLabelDisplay("Shipping"));
+        ui.addComponent(new GameAreaDisplay("Shipping"))
+                .addComponent(new com.csse3200.game.components.gamearea.FloorLabelDisplay("Floor 8"));
         spawnEntity(ui);
     }
 
@@ -129,11 +133,20 @@ public class ShippingGameArea extends GameArea {
         spawnEntity(Conveyor);
     }
 
+    /**
+     * Bottom-left teleporter
+     */
+    private void spawnTeleporter() {
+        Entity tp = TeleporterFactory.createTeleporter(new Vector2(0.5f, 3f));
+        spawnEntity(tp);
+    }
+
     private void spawnBordersAndDoors() {
         if (cameraComponent == null)
             return;
         Bounds b = getCameraBounds(cameraComponent);
         addSolidWallLeft(b, WALL_WIDTH);
+        addSolidWallTop(b, WALL_WIDTH);
         float leftDoorHeight = Math.max(1f, b.viewHeight() * 0.2f);
         float leftDoorY = b.bottomY();
         Entity leftDoor = ObstacleFactory.createDoorTrigger(WALL_WIDTH, leftDoorHeight);
@@ -152,9 +165,7 @@ public class ShippingGameArea extends GameArea {
     }
 
     private Entity spawnPlayer() {
-        Entity player = PlayerFactory.createPlayer();
-        spawnEntityAt(player, playerSpawn, true, true);
-        return player;
+        return spawnOrRepositionPlayer(playerSpawn);
     }
 
     /**

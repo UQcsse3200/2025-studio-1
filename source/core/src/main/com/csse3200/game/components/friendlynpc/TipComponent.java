@@ -9,8 +9,8 @@ public class TipComponent extends Component {
     private final Entity npc;
     private final Entity player;
     private final float triggerDist;
-
     private Entity tip;
+    private boolean dialogueEnded = false;
 
     public TipComponent(Entity npc, Entity player, float triggerDist) {
         this.npc = npc;
@@ -19,7 +19,26 @@ public class TipComponent extends Component {
     }
 
     @Override
+    public void create() {
+        super.create();
+        npc.getEvents().addListener("npcDialogueEnd", this::onDialogueEnd);
+    }
+
+    private void onDialogueEnd() {
+        dialogueEnded = true;
+        if (tip != null) {
+            ServiceLocator.getEntityService().unregister(tip);
+            tip.dispose();
+            tip = null;
+        }
+    }
+
+    @Override
     public void update() {
+        if (dialogueEnded) {
+            return;
+        }
+
         float d = npc.getPosition().dst(player.getPosition());
         if (d <= triggerDist && tip == null) {
             tip = FriendlyNPCFactory.createTip();

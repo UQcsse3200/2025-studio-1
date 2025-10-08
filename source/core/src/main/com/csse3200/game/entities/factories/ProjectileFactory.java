@@ -200,8 +200,14 @@ public class ProjectileFactory {
 
         projectile.getComponent(TextureRenderWithRotationComponent.class).setRotation(angleToFire);
         projectile.getComponent(TextureRenderWithRotationComponent.class).scaleEntity();
+        projectile.getComponent(TextureRenderWithRotationComponent.class).setHasRotated(true);
 
         return projectile;
     }
 
+    public static Entity createFireballBullet(WeaponsStatsComponent baseStats) {
+        Entity projectile = createProjectile(ProjectileTarget.ENEMY, baseStats, "images/laserbullet.png");
+        projectile.scaleHeight(0.3f);
+        return projectile;
+    }
 }

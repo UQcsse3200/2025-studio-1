@@ -1,11 +1,13 @@
 package com.csse3200.game.areas;
 
 import com.badlogic.gdx.math.GridPoint2;
+import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.CameraComponent;
+import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import com.csse3200.game.entities.Entity;
-import com.csse3200.game.entities.factories.characters.PlayerFactory;
+import com.csse3200.game.entities.factories.system.TeleporterFactory;
 
 /**
  * Office room: minimal walls and two doors (left--Security, right--Elevator).
@@ -57,6 +59,12 @@ public class OfficeGameArea extends GameArea {
         spawnObjectDoors(new GridPoint2(0, 14), new GridPoint2(28, 20));
         spawnPlatforms();
         spawnOfficeProps();
+        spawnTeleporter();
+
+        Entity ui = new Entity();
+        ui.addComponent(new GameAreaDisplay("Office"))
+                .addComponent(new com.csse3200.game.components.gamearea.FloorLabelDisplay("Floor 5"));
+        spawnEntity(ui);
     }
 
     private void spawnBordersAndDoors() {
@@ -84,9 +92,8 @@ public class OfficeGameArea extends GameArea {
 
     }
 
-    private void spawnPlayer() {
-        Entity player = PlayerFactory.createPlayer();
-        spawnEntityAt(player, playerSpawn, true, true);
+    private Entity spawnPlayer() {
+        return spawnOrRepositionPlayer(playerSpawn);
     }
 
     private void spawnOfficeProps() {
@@ -104,6 +111,12 @@ public class OfficeGameArea extends GameArea {
         ceoChair.scaleHeight(3.0f);
         ceoChair.setPosition(2f, 3.0f);
         spawnEntity(ceoChair);
+    }
+
+    /** Teleporter bottom-left */
+    private void spawnTeleporter() {
+        Entity tp = TeleporterFactory.createTeleporter(new Vector2(5f, 3f));
+        spawnEntity(tp);
     }
 
     /**
@@ -166,5 +179,3 @@ public class OfficeGameArea extends GameArea {
         return null;
     }
 }
-
-

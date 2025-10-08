@@ -31,7 +31,8 @@ public class AvatarRegistry {
                     avatar.getString("texturePath"),
                     avatar.getInt("baseHealth"),
                     avatar.getInt("baseDamage"),
-                    avatar.getFloat("moveSpeed")
+                    avatar.getFloat("moveSpeed"),
+                    avatar.getString("atlas")
             ));
         }
         return avatars;

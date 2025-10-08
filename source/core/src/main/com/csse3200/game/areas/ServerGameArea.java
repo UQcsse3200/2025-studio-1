@@ -13,21 +13,18 @@ import com.csse3200.game.entities.configs.Benches;
 import com.csse3200.game.entities.configs.ItemSpawnConfig;
 import com.csse3200.game.entities.factories.InteractableStationFactory;
 import com.csse3200.game.entities.factories.characters.NPCFactory;
-import com.csse3200.game.entities.factories.characters.PlayerFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
+import com.csse3200.game.entities.factories.system.TeleporterFactory;
 import com.csse3200.game.entities.spawner.ItemSpawner;
 import com.csse3200.game.services.ServiceLocator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Server Room. Has several platforms as well as server racks sprites.
  * Is attached to Tunnel Room.
  */
 public class ServerGameArea extends GameArea {
-    private static final Logger logger = LoggerFactory.getLogger(ServerGameArea.class);
-
     private static final float WALL_WIDTH = 0.1f;
+    private static final float WALL_HEIGHT = 0.1f;
     private static final float ROOM_DIFF_NUMBER = 9;
     private static GridPoint2 playerSpawn = new GridPoint2(10, 10);
     private Entity player;
@@ -76,16 +73,14 @@ public class ServerGameArea extends GameArea {
 
         displayUI();
         spawnTerrain();
-        spawnBigWall();
         spawnPlatforms();
         spawnRoomObjects();
         spawnCratesAndRailing();
         spawnSpawnPads();
         spawnBordersAndDoors();
         spawnObjectDoors(new GridPoint2(0, 7), new GridPoint2(28, 19));
-
+        spawnTeleporter();
         spawnHealthBench();
-
         spawnVisibleFloor();
 
         player = spawnPlayer();
@@ -95,7 +90,8 @@ public class ServerGameArea extends GameArea {
         itemSpawner.spawnItems(ItemSpawnConfig.servermap());
 
         Entity ui = new Entity();
-        ui.addComponent(new com.csse3200.game.components.gamearea.FloorLabelDisplay("Server Room"));
+        ui.addComponent(new GameAreaDisplay("Server"))
+                .addComponent(new com.csse3200.game.components.gamearea.FloorLabelDisplay("Floor 10"));
         spawnEntity(ui);
     }
 
@@ -112,9 +108,7 @@ public class ServerGameArea extends GameArea {
      * @return Entity player
      */
     private Entity spawnPlayer() {
-        Entity newPlayer = PlayerFactory.createPlayer();
-        spawnEntityAt(newPlayer, playerSpawn, true, true);
-        return newPlayer;
+        return spawnOrRepositionPlayer(playerSpawn);
     }
 
     /**
@@ -131,6 +125,14 @@ public class ServerGameArea extends GameArea {
                 spawnEntityAt(platform, platformSpawn, false, false);
             }
         }
+
+        for (int j = 10; j < 15; j += 4) {
+            for (int i = 0; i < 8; i += 5) {
+                GridPoint2 platformSpawn = new GridPoint2((i - j / 3), j);
+                Entity platform = ObstacleFactory.createThinFloor();
+                spawnEntityAt(platform, platformSpawn, false, false);
+            }
+        }
     }
 
     /**
@@ -143,6 +145,9 @@ public class ServerGameArea extends GameArea {
             GridPoint2 rackSpawn = new GridPoint2(i, 7);
             spawnEntityAt(rack, rackSpawn, false, false);
         }
+
+        spawnEntityAt(ObstacleFactory.createLabPlant1(), new GridPoint2(4, 15), true, false);
+        spawnEntityAt(ObstacleFactory.createLabPlant1(), new GridPoint2(2, 15), true, false);
     }
 
     /**
@@ -202,15 +207,6 @@ public class ServerGameArea extends GameArea {
     }
 
     /**
-     * Adds a very tall thick-floor as a background wall/divider.
-     */
-    private void spawnBigWall() {
-        GridPoint2 wallSpawn = new GridPoint2(-14, 0);
-        Entity bigWall = ObstacleFactory.createBigThickFloor();
-        spawnEntityAt(bigWall, wallSpawn, true, false);
-    }
-
-    /**
      * Builds terrain for SPAWN_ROOM and wraps the visible screen with thin physics walls
      * based on the camera viewport. Also adds a right-side door trigger that loads next level.
      */
@@ -242,7 +238,7 @@ public class ServerGameArea extends GameArea {
             spawnEntity(right);
 
             // Top screen border
-            Entity top = ObstacleFactory.createWall(viewWidth, WALL_WIDTH);
+            Entity top = ObstacleFactory.createWall(viewWidth, WALL_HEIGHT);
             top.setPosition(leftX, topY - WALL_WIDTH);
             spawnEntity(top);
 
@@ -253,14 +249,14 @@ public class ServerGameArea extends GameArea {
             // Bottom screen border split into two segments leaving a gap for the door
             float leftSegmentWidth = Math.max(0f, doorX - leftX);
             if (leftSegmentWidth > 0f) {
-                Entity bottomLeft = ObstacleFactory.createWall(leftSegmentWidth, WALL_WIDTH);
+                Entity bottomLeft = ObstacleFactory.createWall(leftSegmentWidth, WALL_HEIGHT);
                 bottomLeft.setPosition(leftX, bottomY);
                 spawnEntity(bottomLeft);
             }
             float rightSegmentStart = doorX + doorWidth;
             float rightSegmentWidth = Math.max(0f, (leftX + viewWidth) - rightSegmentStart);
             if (rightSegmentWidth > 0f) {
-                Entity bottomRight = ObstacleFactory.createWall(rightSegmentWidth, WALL_WIDTH);
+                Entity bottomRight = ObstacleFactory.createWall(rightSegmentWidth, WALL_HEIGHT);
                 bottomRight.setPosition(rightSegmentStart, bottomY);
                 spawnEntity(bottomRight);
             }
@@ -286,6 +282,7 @@ public class ServerGameArea extends GameArea {
         if (cameraComponent == null) return;
         Bounds b = getCameraBounds(cameraComponent);
         addSolidWallLeft(b, WALL_WIDTH);
+        addSolidWallTop(b, WALL_WIDTH);
         float leftDoorHeight = Math.max(1f, b.viewHeight() * 0.2f);
         float leftDoorY = b.bottomY();
         Entity leftDoor = ObstacleFactory.createDoorTrigger(WALL_WIDTH, leftDoorHeight);
@@ -311,6 +308,14 @@ public class ServerGameArea extends GameArea {
     private void loadStorage() {
         StorageGameArea.setRoomSpawn(new GridPoint2(26, 8));
         clearAndLoad(() -> new StorageGameArea(terrainFactory, cameraComponent));
+    }
+
+    /**
+     * Teleporter bottom-left
+     */
+    private void spawnTeleporter() {
+        Entity tp = TeleporterFactory.createTeleporter(new Vector2(2f, 2.5f));
+        spawnEntity(tp);
     }
 
     @Override

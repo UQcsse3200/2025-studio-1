@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
@@ -85,10 +86,10 @@ public class PlayerInventoryDisplay extends UIComponent {
         table = new Table();
         table.setFillParent(true);
         table.center().bottom();
-        table.padBottom(20f);
+        table.padBottom(05f);
 
-        Drawable normalBg = createSlotBg(0.2f, 0.2f, 0.2f, 0.6f, 2, 1f, 1f, 1f, 1f);
-        Drawable focusBg = createSlotBg(1f, 1f, 0f, 0.6f, 2, 1f, 1f, 0f, 1f);
+        Drawable normalBg = createSlotBg(0f, 0.1f, 0.2f, 0.4f, 3, 0f, 0.8f, 1f, 0.8f); // cyan glow
+        Drawable focusBg = createSlotBg(0f, 0f, 0f, 0.6f, 3, 1f, 0.2f, 0.8f, 1f); // magenta glow
 
         Drawable badgeBg = createBadgeBg(0f, 0f, 0f, 0.65f);
         BitmapFont font = new BitmapFont();
@@ -102,6 +103,9 @@ public class PlayerInventoryDisplay extends UIComponent {
 
         stage.addActor(table);
 
+        setFocusedIndex(focusedIndex);
+        stage.addActor(table);
+        table.setVisible(false);
         setFocusedIndex(focusedIndex);
     }
 
@@ -288,5 +292,39 @@ public class PlayerInventoryDisplay extends UIComponent {
                 badgeContainer.setVisible(false);
             }
         }
+    }
+    private boolean visible = false;
+    public void toggleVisibility() {
+        if (!visible) {
+            // Animate in
+            table.setVisible(true);
+            table.setColor(1, 1, 1, 0); // Start transparent
+            table.setPosition(table.getX(), table.getY()); // Slightly below
+            table.addAction(Actions.sequence(
+                    Actions.parallel(
+                            Actions.fadeIn(0.3f),
+                            Actions.moveBy(0f, 50f, 0.3f)
+                    )
+            ));
+        } else {
+            // Animate out
+            table.addAction(Actions.sequence(
+                    Actions.parallel(
+                            Actions.fadeOut(0.3f),
+                            Actions.moveBy(0f, -50f, 0.3f)
+                    ),
+                    Actions.run(() -> table.setVisible(false))
+            ));
+        }
+        visible = !visible;
+    }
+    public void show() {
+        visible = true;
+        table.setVisible(true);
+    }
+
+    public void hide() {
+        visible = false;
+        table.setVisible(false);
     }
 }
