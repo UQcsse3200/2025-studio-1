@@ -35,7 +35,6 @@ import java.awt.*;
  *   <li>{@code robotFighting:startFight} — begins the combat sequence.</li>
  *   <li>{@code robotFighting:encourage} — applies an encouragement effect.</li>
  * </ul>
- * </p>
  */
 public class RobotFightingGame {
     /** Preloaded text data containing random encouragement messages. */

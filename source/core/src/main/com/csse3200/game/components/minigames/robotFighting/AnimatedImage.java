@@ -16,7 +16,7 @@ public class AnimatedImage extends Image {
     /**
      * Creates an AnimatedImage using the given animation.
      *
-     * @param animation the Animation<TextureRegion> to play
+     * @param animation the Animation to play
      */
     public AnimatedImage(Animation<TextureRegion> animation) {
         super(new TextureRegionDrawable(animation.getKeyFrame(0))); // set initial frame
