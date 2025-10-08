@@ -8,6 +8,7 @@ import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.components.minigames.pool.PoolGame;
 import com.csse3200.game.components.minigames.BettingComponent;
 import com.csse3200.game.components.minigames.BlackJackGame;
+import com.csse3200.game.components.minigames.robotFighting.*;
 import com.csse3200.game.components.player.InventoryComponent;
 import com.csse3200.game.components.screens.BlackjackScreenDisplay;
 import com.csse3200.game.entities.Entity;
@@ -62,11 +63,11 @@ public class CasinoGameArea extends GameArea {
         ensureAssets();
         spawnBordersAndDoors();
         spawnFloor();
-
         player = spawnPlayer();
         spawnBlackjack();
         spawnSlotsGame();
         spawnWhackAMoleGame();
+        spawnRobotFightingGame();
         spawnPoolGame();
     }
 
@@ -122,13 +123,25 @@ public class CasinoGameArea extends GameArea {
 
     private void spawnWhackAMoleGame() {
         GridPoint2 pos = new GridPoint2(5, 7);
+        WhackAMoleGame game = new WhackAMoleGame();
+        Entity station = game.getGameEntity();
+        InventoryComponent inv = player.getComponent(InventoryComponent.class);
+        station.addComponent(new BettingComponent(2, inv));
+        spawnEntityAt(station, pos, true, true);
         spawnEntityAt(new WhackAMoleGame().getGameEntity(), pos, true, true);
+    }
+
+    private void spawnRobotFightingGame() {
+        GridPoint2 pos = new GridPoint2(16, 7);
+        spawnEntityAt(new RobotFightingGame().getGameEntity(), pos, true, true);
     }
 
     private void spawnPoolGame() {
         GridPoint2 pos = new GridPoint2(11, 7);
         spawnEntityAt(new PoolGame().getGameEntity(), pos, true, true);
     }
+
+
 
     /**
      * Disposes current entities and switches to ForestGameArea.

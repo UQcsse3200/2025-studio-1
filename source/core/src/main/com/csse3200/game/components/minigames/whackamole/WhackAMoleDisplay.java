@@ -18,6 +18,13 @@ import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.UIComponent;
 import com.badlogic.gdx.audio.Sound;
 
+/**
+ * Whack-A-Mole UI overlay:
+ * - Modal panel with title, score, 3×3 grid and controls
+ * - Handles click-to-hit logic and visual/audio feedback
+ * - Emits wm:start / wm:stop / wm:hit events back to the game
+ * - Pauses game time while visible
+ */
 public class WhackAMoleDisplay extends UIComponent {
     private static final float PANEL_W = 720f, PANEL_H = 520f;
     private static final Color PANEL_COLOR = Color.valueOf("0B132B");
@@ -34,6 +41,13 @@ public class WhackAMoleDisplay extends UIComponent {
     private TextureRegionDrawable moleDr, holeDr;
     private Sound hitSfx;
 
+    /**
+     * Build the overlay:
+     * - Register 'interact' to open
+     * - Load textures + sfx
+     * - Build backdrop, header, grid, footer
+     * - Start hidden
+     */
     @Override
     public void create() {
         super.create();
@@ -53,7 +67,7 @@ public class WhackAMoleDisplay extends UIComponent {
         hide(); // start hidden
     }
 
-    // Build UI
+    /** Backdrop: screen dimmer, frame, main panel. */
     private void buildBackdrop() {
         pixel = solid(Color.WHITE);
 
@@ -75,6 +89,7 @@ public class WhackAMoleDisplay extends UIComponent {
         stage.addActor(background);
     }
 
+    /** Root layout table inside the panel. */
     private void buildRoot() {
         root = new Table();
         root.setSize(PANEL_W, PANEL_H);
@@ -84,6 +99,7 @@ public class WhackAMoleDisplay extends UIComponent {
         stage.addActor(root);
     }
 
+    /** Header: title on left, live score on right, divider line. */
     private void buildHeader() {
         Label.LabelStyle titleStyle = new Label.LabelStyle(skin.get(Label.LabelStyle.class));
         titleStyle.fontColor = TITLE_COLOR;
@@ -105,6 +121,12 @@ public class WhackAMoleDisplay extends UIComponent {
         root.add(divider).width(PANEL_W - 40f).height(2f).row();
     }
 
+    /**
+     * 3×3 grid:
+     * - Each cell is a hole + mole
+     * - Click counts only if mole is visible:
+     *   flash, +1, play sfx, increment score, fire wm:hit, hide mole
+     */
     private void buildGrid() {
         Table grid = new Table();
         grid.defaults().pad(12).size(92f, 92f).uniform(true);
@@ -149,6 +171,11 @@ public class WhackAMoleDisplay extends UIComponent {
         root.add(grid).padTop(6).row();
     }
 
+    /**
+     * Footer controls:
+     * - Start toggles to Stop and fires wm:start / wm:stop
+     * - Close stops, resets, hides UI
+     */
     private void buildFooter() {
         startBtn = new TextButton("Start", skin);
         startBtn.addListener(new ChangeListener() {
@@ -179,37 +206,47 @@ public class WhackAMoleDisplay extends UIComponent {
         root.add(footer).padTop(4).row();
     }
 
+    /** Show a mole by index (safe bounds check). */
     public void showMoleAt(int idx) {
         if (idx >= 0 && idx < moleImgs.length) moleImgs[idx].setVisible(true);
     }
+
+    /** Hide a mole by index (safe bounds check). */
     public void hideMoleAt(int idx) {
         if (idx >= 0 && idx < moleImgs.length) moleImgs[idx].setVisible(false);
     }
+
+    /** Hide all moles. */
     public void hideAllMoles() {
         if (moleImgs == null) return;
         for (Image m : moleImgs) m.setVisible(false);
     }
 
+    /** Reset UI for a fresh run (score=0, no moles, Start label). */
     public void prepareToPlay() {
         setScore(0);
         hideAllMoles();
         setRunning(false);
     }
 
+    /** Score label -> 0. */
     public void resetScore() {
         score = 0;
         if (scoreLabel != null) scoreLabel.setText("Score: 0");
     }
 
+    /** Update score label (clamped to >= 0). */
     public void setScore(int value) {
         score = Math.max(0, value);
         if (scoreLabel != null) scoreLabel.setText("Score: " + score);
     }
 
+    /** Get current score value. */
     public int getScore() {
         return score;
     }
 
+    /** Spawn the “+1” label and animate it up+fade. */
     private void spawnPlusOne(Actor target) {
         Label.LabelStyle st = new Label.LabelStyle(skin.get(Label.LabelStyle.class));
         st.fontColor = GOLD;
@@ -236,30 +273,36 @@ public class WhackAMoleDisplay extends UIComponent {
         ));
     }
 
+    /** Play hitsound (whack.mp3) */
     private void playHitSound() {
         if (hitSfx != null) hitSfx.play(0.6f);
     }
 
+    /** Spawn the “+1” label and animate it up+fade. */
     private void playHitFeedback(Actor target) {
         spawnPlusOne(target);
         playHitSound();
     }
 
+    /** Set Start/Stop button label. */
     public void setRunning(boolean running) {
         if (startBtn != null) startBtn.setText(running ? "Stop" : "Start");
     }
 
+    /** Show modal + pause game time. */
     public void show() {
         ServiceLocator.getTimeSource().setPaused(true);
         setVisible(true);
     }
 
+    /** Hide modal + resume time + ensure loop stops. */
     public void hide() {
         ServiceLocator.getTimeSource().setPaused(false);
         setVisible(false);
         entity.getEvents().trigger("wm:stop");
     }
 
+    /** Toggle visibility for backdrop and root. */
     private void setVisible(boolean v) {
         if (dimmer != null) dimmer.setVisible(v);
         if (frame != null) frame.setVisible(v);
@@ -267,6 +310,7 @@ public class WhackAMoleDisplay extends UIComponent {
         if (root != null) root.setVisible(v);
     }
 
+    /** Build a 1×1 solid texture (remember to dispose). */
     private static Texture solid(Color c) {
         Pixmap pm = new Pixmap(1,1, Pixmap.Format.RGBA8888);
         pm.setColor(c); pm.fill();
@@ -275,6 +319,7 @@ public class WhackAMoleDisplay extends UIComponent {
         return t;
     }
 
+    /** Simple end dialog (used for Win/Lose). */
     public void showEnd(String title, String message) {
         Dialog d = new Dialog(title, skin);
         d.text(message);
