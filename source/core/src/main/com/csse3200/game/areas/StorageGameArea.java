@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.GridPoint2;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.CameraComponent;
+import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.ItemSpawnConfig;
 import com.csse3200.game.entities.factories.characters.NPCFactory;
@@ -66,7 +67,8 @@ public class StorageGameArea extends GameArea {
         itemSpawner.spawnItems(ItemSpawnConfig.storage1map());
 
         Entity ui = new Entity();
-        ui.addComponent(new com.csse3200.game.components.gamearea.FloorLabelDisplay("Storage"));
+        ui.addComponent(new GameAreaDisplay("Storage"))
+                .addComponent(new com.csse3200.game.components.gamearea.FloorLabelDisplay("Floor 9"));
         spawnEntity(ui);
     }
 
@@ -119,9 +121,7 @@ public class StorageGameArea extends GameArea {
     }
 
     private Entity spawnPlayer() {
-        Entity player = PlayerFactory.createPlayer();
-        spawnEntityAt(player, playerSpawn, true, true);
-        return player;
+        return spawnOrRepositionPlayer(playerSpawn);
     }
 
     /**

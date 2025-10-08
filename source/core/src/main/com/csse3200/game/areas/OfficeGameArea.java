@@ -4,6 +4,7 @@ import com.badlogic.gdx.math.GridPoint2;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.CameraComponent;
+import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.factories.characters.PlayerFactory;
 
@@ -44,6 +45,11 @@ public class OfficeGameArea extends GameArea {
         spawnObjectDoors(new GridPoint2(0, 14), new GridPoint2(28, 20));
         spawnPlatforms();
         spawnOfficeProps();
+
+        Entity ui = new Entity();
+        ui.addComponent(new GameAreaDisplay("Office"))
+                .addComponent(new com.csse3200.game.components.gamearea.FloorLabelDisplay("Floor 5"));
+        spawnEntity(ui);
     }
 
     private void spawnBordersAndDoors() {
@@ -71,9 +77,8 @@ public class OfficeGameArea extends GameArea {
 
     }
 
-    private void spawnPlayer() {
-        Entity player = PlayerFactory.createPlayer();
-        spawnEntityAt(player, playerSpawn, true, true);
+    private Entity spawnPlayer() {
+        return spawnOrRepositionPlayer(playerSpawn);
     }
 
     private void spawnOfficeProps() {
