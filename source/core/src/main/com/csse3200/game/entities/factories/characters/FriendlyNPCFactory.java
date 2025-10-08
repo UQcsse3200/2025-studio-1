@@ -117,9 +117,9 @@ public class FriendlyNPCFactory {
                 .addComponent(new TextureRenderComponent("images/Assistor.png"))
                 .addComponent(new NpcDialogueDataComponent(
                         "Friendly NPC", "", new String[]{
-                        "Hello",
-                        "Click the dialog box to continue to the next sentence.",
-                        "At the end, this sentence will automatically close."
+                        "Hello, my friend",
+                        "Do you need some help?",
+                        "I have a gift for you!"
                 }
                 ))
                 .addComponent(new DialogueDisplay())
