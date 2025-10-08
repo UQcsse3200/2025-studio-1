@@ -51,7 +51,7 @@
     "baseAttack": 10
   },
   "vroomba": {
-    "health": 50,
+    "health": 75,
     "baseAttack": 10
   },
   "vroombaRed": {
@@ -63,7 +63,7 @@
     "baseAttack": 10
   },
   "turret": {
-    "health": 150,
+    "health": 500,
     "baseAttack": 5
   }
 }

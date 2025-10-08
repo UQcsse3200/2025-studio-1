@@ -144,7 +144,7 @@ public class SlotsDisplay extends UIComponent {
         Label.LabelStyle titleStyle = new Label.LabelStyle(skin.get(Label.LabelStyle.class));
         titleStyle.fontColor = TITLE_COLOR;
 
-        Label title = new Label("Java Slots", titleStyle);
+        Label title = new Label("Slots", titleStyle);
         title.setFontScale(1.8f);
         root.add(title).padBottom(8f).row();
 
