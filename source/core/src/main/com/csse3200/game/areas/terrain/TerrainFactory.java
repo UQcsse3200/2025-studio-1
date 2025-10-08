@@ -154,6 +154,11 @@ public class TerrainFactory {
                 TextureRegion hexRocks =
                         new TextureRegion(resourceService.getAsset("images/hex_grass_3.png", Texture.class));
                 return createForestDemoTerrain(1f, hexGrass, hexTuft, hexRocks);
+            case WIN_SCREEN:
+                TextureRegion factoryBackground =
+                        new TextureRegion(resourceService.getAsset("images/WinscreenAnimationBackground.png",
+                                Texture.class));
+                return createGameRooms(0.5f, factoryBackground);
             case CASINO:
                 TextureRegion casinoBackground =
                         new TextureRegion(resourceService.getAsset("images/casino.png", Texture.class));
@@ -244,6 +249,7 @@ public class TerrainFactory {
         STORAGE,
         RESEARCH_ROOM,
         OFFICE,
+        WIN_SCREEN,
         CASINO
     }
 }
