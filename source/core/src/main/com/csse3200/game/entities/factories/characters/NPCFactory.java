@@ -28,7 +28,6 @@ import com.csse3200.game.rendering.AnimationRenderComponent;
 import com.csse3200.game.services.ServiceLocator;
 
 import java.io.IOException;
-import java.nio.file.*;
 
 /**
  * Factory to create non-playable character (NPC) entities with predefined components.
@@ -54,14 +53,6 @@ public class NPCFactory {
      */
     public static Entity createGhostGPT(Entity target, GameArea area, float scalingFactor) {
         // Build GhostGPT as a ground enemy (do not use createBaseNPC to avoid floating movement)
-        try {
-            String content = Files.readString(Paths.get("configs/NPCs.json"));
-            System.out.println(content);
-        } catch (Exception e) {
-            System.out.println("hi");
-        }
-
-
         Entity ghostGPT = new Entity()
                 .addComponent(new PhysicsComponent())
                 .addComponent(new ColliderComponent())
