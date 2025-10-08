@@ -10,6 +10,7 @@ import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.components.MagazineComponent;
 import com.csse3200.game.components.TouchAttackComponent;
 import com.csse3200.game.components.WeaponsStatsComponent;
+import com.csse3200.game.components.enemy.ProjectileLauncherComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.physics.PhysicsLayer;
 import com.csse3200.game.physics.components.HitboxComponent;
@@ -42,6 +43,13 @@ public class TextureRenderWithRotationComponent extends TextureRenderComponent {
     public void setRotation(float value) {
         rotation = value;
     }
+
+    /**
+     * Set the boolean "rotated"
+     *
+     * @param value The boolean value to set to "rotated"
+     */
+    public void setHasRotated(boolean value) {rotated = value; }
 
     /**
      *
