@@ -2,18 +2,19 @@ package com.csse3200.game.components.player;
 
 import com.badlogic.gdx.utils.Timer;
 import com.csse3200.game.components.Component;
+import com.csse3200.game.entities.AvatarRegistry;
 
 public class StaminaComponent extends Component {
 
     private Timer.Task task;
 
     // Stamina Constants
-    private static final int MAX_STAMINA = 100;
-    private static final int INITIAL_STAMINA = 100;
-    private static final float DRAIN_PER_SEC = 30f;
-    private static final float REGEN_PER_SEC = 10f; // stamina/sec when not spending
-    private static final float TICK_SEC = 0.1f;
-    private static final long REGEN_DELAY_MS = 800; // time between last spend to regen
+    private int MAX_STAMINA = 100;
+    private int INITIAL_STAMINA = 100;
+    private float DRAIN_PER_SEC = 30f;
+    private float REGEN_PER_SEC = 10f; // stamina/sec when not spending
+    private final static float TICK_SEC = 0.1f;
+    private long REGEN_DELAY_MS = 800; // time between last spend to regen
 
     // Stamina management
     private float stamina = INITIAL_STAMINA;
@@ -31,6 +32,15 @@ public class StaminaComponent extends Component {
     public void create() {
         startTask();
         emitChanged();
+        if (AvatarRegistry.get() != null) {
+            float playerSpeed = AvatarRegistry.get().moveSpeed();
+            MAX_STAMINA     = 100 + Math.round(10f * (playerSpeed - 1f));
+            INITIAL_STAMINA = MAX_STAMINA;
+            DRAIN_PER_SEC   = 18f + 3f * (playerSpeed - 3f);
+            REGEN_PER_SEC   = 10f - (playerSpeed - 3f);
+            REGEN_DELAY_MS  = (long)(700 + 100 * (playerSpeed - 3f));
+
+        }
     }
 
     /**

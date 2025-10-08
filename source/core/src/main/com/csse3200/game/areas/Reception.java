@@ -8,11 +8,11 @@ import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.components.shop.CatalogService;
 import com.csse3200.game.components.shop.ShopDemo;
 import com.csse3200.game.components.shop.ShopManager;
+import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.ItemSpawnConfig;
 import com.csse3200.game.entities.factories.ShopFactory;
 import com.csse3200.game.entities.factories.characters.NPCFactory;
-import com.csse3200.game.entities.factories.characters.PlayerFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.entities.spawner.ItemSpawner;
 import com.csse3200.game.services.ServiceLocator;
@@ -26,7 +26,6 @@ public class Reception extends GameArea {
     private static final Logger logger = LoggerFactory.getLogger(Reception.class);
     private static GridPoint2 playerSpawn = new GridPoint2(8, 10);
     private static final float WALL_WIDTH = 0.1f;
-    private static final int NUM_TREES = 8; // Number of trees to spawn
     private int roomDiffNumber = 2;
     private Entity player;
 
@@ -47,10 +46,9 @@ public class Reception extends GameArea {
         spawnObjectDoors(new GridPoint2(0, 6), new GridPoint2(28, 20));
         spawndesk_reception();
         spawncomic_stand();
-        spawnGPTs();
-        spawnShopKiosk();
         Entity ui = new Entity();
-        ui.addComponent(new com.csse3200.game.components.gamearea.FloorLabelDisplay("Reception"));
+        ui.addComponent(new GameAreaDisplay("Reception"))
+                .addComponent(new com.csse3200.game.components.gamearea.FloorLabelDisplay("Floor 2"));
         spawnEntity(ui);
         ItemSpawner itemSpawner = new ItemSpawner(this);
         itemSpawner.spawnItems(ItemSpawnConfig.receptionmap());
