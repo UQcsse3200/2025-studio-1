@@ -4,6 +4,7 @@ import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.csse3200.game.areas.*;
 import com.csse3200.game.entities.Entity;
+import com.csse3200.game.entities.configs.Armour;
 import com.csse3200.game.entities.configs.Weapons;
 import com.csse3200.game.entities.factories.items.WorldPickUpFactory;
 import com.csse3200.game.physics.components.PhysicsComponent;
@@ -89,6 +90,16 @@ public class ItemSpawner {
             tunnelArea.spawnItem(item, position);
         } else if (gameArea instanceof ResearchGameArea researchArea) {
             researchArea.spawnItem(item, position);
+        } else if (gameArea instanceof Reception receptionArea) {
+            receptionArea.spawnItem(item, position);
+        } else if (gameArea instanceof MainHall mainHallArea) {
+                mainHallArea.spawnItem(item, position);
+        } else if (gameArea instanceof OfficeGameArea officeArea) {
+            officeArea.spawnItem(item, position);
+        } else if (gameArea instanceof ElevatorGameArea elevatorArea) {
+            elevatorArea.spawnItem(item, position);
+        } else if (gameArea instanceof ResearchGameArea researchArea) {
+            researchArea.spawnItem(item, position);
         } else if (gameArea instanceof SecurityGameArea securityArea) {
             securityArea.spawnItem(item, position);
         } else if (gameArea instanceof ServerGameArea serverArea) {
@@ -120,19 +131,27 @@ public class ItemSpawner {
         try {
             Weapons weapon = Weapons.valueOf(type.toUpperCase());
             return WorldPickUpFactory.createWeaponPickup(weapon);
-        } catch (IllegalArgumentException e) {
-            switch (type.toLowerCase()) {
-                default:
-                    logger.warn("Unknown item type: {}", type);
-                    return null;
+        } catch (IllegalArgumentException e1) {
+            try {
+                Armour armour = Armour.valueOf(type.toUpperCase());
+                return WorldPickUpFactory.createArmourPickup(armour);
+            } catch (IllegalArgumentException e2) {
+                switch (type.toLowerCase()) {
+                    default:
+                        logger.warn("Unknown item type: {}", type);
+                        return null;
+                }
             }
         }
     }
 
     /**
-         * It holds the information needed to spawn an item
-         */
-        public record ItemSpawnInfo(GridPoint2 position, int quantity) {
+     * A record to store the position and quantity for a specific item spawn event.
+     *
+     * @param position The grid coordinates where the item(s) should be spawned.
+     * @param quantity The number of items to spawn at the specified position.
+     */
+    public record ItemSpawnInfo(GridPoint2 position, int quantity) {
     }
 }
 

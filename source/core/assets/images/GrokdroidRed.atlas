@@ -1,0 +1,55 @@
+GrokdroidRed.png
+size: 1000, 1000
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+angry_float
+  rotate: false
+  xy: 10, 42
+  size: 53, 38
+  orig: 265, 175
+  offset: 0, 0
+  index: 0
+angry_float
+  rotate: false
+  xy: 64, 42
+  size: 53, 38
+  orig: 265, 175
+  offset: 0, 0
+  index: 1
+angry_float
+  rotate: false
+  xy: 116, 42
+  size: 53, 38
+  orig: 265, 175
+  offset: 0, 0
+  index: 2
+default
+  rotate: false
+  xy: 10, 5
+  size: 53, 38
+  orig: 265, 175
+  offset: 0, 0
+  index: 0
+float
+  rotate: false
+  xy: 10, 5
+  size: 53, 38
+  orig: 265, 175
+  offset: 0, 0
+  index: 0
+float
+  rotate: false
+  xy: 64, 5
+  size: 53, 38
+  orig: 265, 175
+  offset: 0, 0
+  index: 1
+float
+  rotate: false
+  xy: 116, 29
+  size: 53, 38
+  orig: 265, 175
+  offset: 0, 0
+  index: 2
+

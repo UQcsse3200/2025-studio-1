@@ -6,5 +6,6 @@ public class DaggerConfig extends MeleeWeaponConfig {
         hitTimer = 0.8;
         range = 2f;
         texturePath = "images/dagger.png";
+        this.setName("dagger");
     }
 }

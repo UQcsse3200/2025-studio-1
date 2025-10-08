@@ -1,0 +1,29 @@
+[
+  {
+    "id": "scout",
+    "displayName": "Scout",
+    "texturePath": "images/avatars/burger.png",
+    "baseHealth": 80,
+    "baseDamage": 10,
+    "moveSpeed": 5.0,
+    "atlas": "images/player.atlas"
+  },
+  {
+    "id": "soldier",
+    "displayName": "Soldier",
+    "texturePath": "images/avatars/fighter.png",
+    "baseHealth": 120,
+    "baseDamage": 15,
+    "moveSpeed": 3.8,
+    "atlas": "images/soldier.atlas"
+  },
+  {
+    "id": "engineer",
+    "displayName": "Engineer",
+    "texturePath": "images/avatars/firecommander.png",
+    "baseHealth": 100,
+    "baseDamage": 8,
+    "moveSpeed": 4.2,
+    "atlas": "images/engineer.atlas"
+  }
+]

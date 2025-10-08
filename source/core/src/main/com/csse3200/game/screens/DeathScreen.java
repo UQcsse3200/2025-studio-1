@@ -38,7 +38,7 @@ public class DeathScreen extends BaseScreen {
      * @param game the {@link GdxGame} instance, used for screen navigation
      */
     public DeathScreen(GdxGame game) {
-        super(game, "images/menu_background.png");
+        super(game, "images/death_screen_background.png");
     }
 
     /**
@@ -54,7 +54,7 @@ public class DeathScreen extends BaseScreen {
      */
     @Override
     protected Entity createUIScreen(Stage stage) {
-        uiDisplay = BaseEndScreenDisplays.defeated(game);
+        uiDisplay = BaseEndScreenDisplays.defeated(game).withLeaderboard(() -> game.setScreen(GdxGame.ScreenType.LEADERBOARD));
         return new Entity()
                 .addComponent(uiDisplay)
                 .addComponent(new InputDecorator(stage, 10));
