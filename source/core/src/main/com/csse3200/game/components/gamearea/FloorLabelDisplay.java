@@ -1,5 +1,6 @@
 package com.csse3200.game.components.gamearea;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -22,12 +23,18 @@ public class FloorLabelDisplay extends UIComponent {
         table = new Table();
         table.top().left();
         table.setFillParent(true);
-        // Position below game area display with clear spacing
-        table.padTop(120f).padLeft(5f);
+        table.padTop(30f).padLeft(10f);
 
-        Label label = new Label(floorName, skin);
-        table.add(label).pad(8f);
+        Label label = new Label(floorName, skin, "white");
 
+        // Create panel
+        Table panel = new Table();
+        panel.left();
+        panel.setBackground(skin.newDrawable("white", new Color(0f,0f,0f,0.3f)));
+        panel.pad(4f, 4f, 0f, 8f);
+        panel.add(label).left();
+
+        table.add(panel).width(320f);
         stage.addActor(table);
     }
 

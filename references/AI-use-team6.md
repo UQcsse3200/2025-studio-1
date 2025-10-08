@@ -326,3 +326,10 @@ use code from the other team member ; the reduce damage conponment in other map
 
 Talk with chat gpt with the test codes
 talk alao with them about the  spawn logic but failed.
+
+
+
+Ling Fang, The partner component control logic is written by myself
+the remote picture is always big by fixed with talking with ai to fix it
+
+LingFang talking with ai the laser "NPC" how can I use to talk with ai.

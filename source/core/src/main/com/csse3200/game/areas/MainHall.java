@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.GridPoint2;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.CameraComponent;
+import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.ItemSpawnConfig;
 import com.csse3200.game.entities.factories.characters.NPCFactory;
@@ -48,6 +49,11 @@ public class MainHall extends GameArea {
         spawnGrokDroids();
         ItemSpawner itemSpawner = new ItemSpawner(this);
         itemSpawner.spawnItems(ItemSpawnConfig.mainHallmap());
+
+        Entity ui = new Entity();
+        ui.addComponent(new GameAreaDisplay("Main Hall"))
+                .addComponent(new com.csse3200.game.components.gamearea.FloorLabelDisplay("Floor 3"));
+        spawnEntity(ui);
     }
 
     private void ensureAssets() {

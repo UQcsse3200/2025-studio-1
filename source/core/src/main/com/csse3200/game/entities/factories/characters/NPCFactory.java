@@ -27,6 +27,8 @@ import com.csse3200.game.physics.components.PhysicsMovementComponent;
 import com.csse3200.game.rendering.AnimationRenderComponent;
 import com.csse3200.game.services.ServiceLocator;
 
+import java.io.IOException;
+
 /**
  * Factory to create non-playable character (NPC) entities with predefined components.
  *
@@ -83,6 +85,9 @@ public class NPCFactory {
         }
 
         WeaponsStatsComponent ghostGPTStats = new WeaponsStatsComponent((int) (config.baseAttack * scalingFactor));
+        System.out.println(config.health * scalingFactor);
+        System.out.println(scalingFactor);
+        System.out.println(config.health);
 
         ghostGPT
                 .addComponent(ghostGPTStats)
@@ -332,8 +337,9 @@ public class NPCFactory {
         // Has 0 speed due to stationary ememy
         AITaskComponent aiComponent =
                 new AITaskComponent()
-                        .addTask(new GPTGroundSlowChaseTask(target, 10, 0.3f, 0f))
-                        .addTask(new GPTGroundFastChaseTask(target, 10, 0f, projComp, turret, 3f, 3f));
+                        .addTask(new TurretIdleTask(target, 10))
+                        .addTask(new TurretFiringTask(target, 10, projComp, turret,
+                                3f, 3f, 5, 0.15f));
 
         // Get player's inventory for reward system
         InventoryComponent playerInventory = null;
@@ -345,7 +351,7 @@ public class NPCFactory {
 
         turret
                 .addComponent(turretStats)
-                .addComponent(new CombatStatsComponent((int) (config.health * scalingFactor)))
+                .addComponent(new CombatStatsComponent((int) (config.health * scalingFactor), 1f))
                 .addComponent(animator)
                 .addComponent(new GhostAnimationController())
                 .addComponent(new LowHealthAttackBuffComponent(10, turretStats))
