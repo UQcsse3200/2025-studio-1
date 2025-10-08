@@ -121,7 +121,7 @@ public class CasinoGameArea extends GameArea {
     }
 
     private void spawnRobotFightingGame() {
-        GridPoint2 pos = new GridPoint2(10, 7);
+        GridPoint2 pos = new GridPoint2(16, 7);
         spawnEntityAt(new RobotFightingGame().getGameEntity(), pos, true, true);
     }
 
