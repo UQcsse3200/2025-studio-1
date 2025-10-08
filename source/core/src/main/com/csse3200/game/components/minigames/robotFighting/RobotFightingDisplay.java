@@ -275,6 +275,84 @@ public class RobotFightingDisplay extends UIComponent {
         setScreenVisible(healthBar2, true);
     }
 
+    private void onFightStart() {
+        entity.getEvents().trigger("robotFighting:startFight");
+        enableDialogueMode();
+        narratorLabel.setText("");
+
+        footer.clear();
+
+        // Create the center "ENCOURAGE!" button
+        TextButton encourageBtn = makeButton("ENCOURAGE!", () -> {
+            entity.getEvents().trigger("robotFighting:encourage");
+        });
+        encourageBtn.getLabel().setFontScale(1.2f);
+
+        Table centerContainer = new Table();
+        centerContainer.add(encourageBtn)
+                .center()
+                .width(200)
+                .height(60)
+                .pad(10);
+
+        float labelWidth = PANEL_W * 0.35f;
+        Table narratorContainer = new Table();
+        narratorContainer.add(narratorLabel)
+                .width(labelWidth)
+                .center();
+
+
+        if (getChosenActor() == competitor1) {
+            footer.add(narratorContainer).left().padLeft(20);
+            footer.add(centerContainer).center().expandX();
+            footer.add().width(labelWidth).right().padRight(20);
+        } else {
+            footer.add().width(labelWidth).left().padLeft(20);
+            footer.add(centerContainer).center().expandX();
+            footer.add(narratorContainer).right().padRight(20);
+        }
+
+        footer.invalidateHierarchy();
+    }
+
+    /**
+     * Handles end-of-fight logic and displays the final outcome.
+     *
+     * @param status fight result ("won", "lost", or "drew")
+     */
+    public void fightOver(String status) {
+        resetPostFightUI();
+        if (typewriterTask != null) {
+            typewriterTask.cancel();
+            typewriterTask = null;
+        }
+        Timer.instance().clear();
+
+        switch (status) {
+            case "won":
+                showTypewriterText(narratorLabel, "YOU WON!!!", 0.05f);
+                break;
+            case "lost":
+                showTypewriterText(narratorLabel, "YOU SUCK!!!", 0.05f);
+                break;
+            case "drew":
+                showTypewriterText(narratorLabel, "how did you draw", 0.05f);
+                break;
+        }
+
+        Timer.schedule(new Timer.Task() {
+            @Override
+            public void run() {
+                setScreenVisible(root, false);
+                setScreenVisible(betRoot, true);
+                setScreenVisible(competitor1, false);
+                setScreenVisible(competitor2, false);
+                healthBar1.setValue(100f);
+                healthBar2.setValue(100f);
+            }
+        }, 3f);
+    }
+
     private void adjustBet(int delta) {
         int currentBet = parseIntOrZero(betInput.getText());
         int newBet = Math.max(0, currentBet + delta);
@@ -283,6 +361,7 @@ public class RobotFightingDisplay extends UIComponent {
         int balance = getBalance();
         currencyLabel.setText("Balance Remaining: $" + Math.max(0, balance - newBet));
     }
+
     private void narrateMain() {
         narratorLabel.addAction(Actions.sequence(
                 Actions.run(() -> showTypewriterText(narratorLabel, "Welcome to Clanker Royale!", 0.05f)),
@@ -300,7 +379,7 @@ public class RobotFightingDisplay extends UIComponent {
                 "2.",
                 "1",
                 "CLANK!"
-        }, 0.05f, () -> entity.getEvents().trigger("robotFighting:startFight"));
+        }, 0.05f, () -> onFightStart());
     }
 
     private void spawnFighters() {
@@ -354,6 +433,11 @@ public class RobotFightingDisplay extends UIComponent {
         }
     }
 
+    /**
+     * Plays the fighter's attack animation and triggers a hit effect.
+     *
+     * @param fighter the attacking actor
+     */
     public void playAttackAnimation(Actor fighter) {
         motionPaused = true;
 
@@ -395,10 +479,73 @@ public class RobotFightingDisplay extends UIComponent {
         }
     }
 
+    /**
+     * Displays an encouragement message in the narrator label.
+     *
+     * @param encouragingMessage text to show on screen
+     */
+    public void encourageFighter(String encouragingMessage) {
+        narratorLabel.setText("");
+        String quoted = "\"" + encouragingMessage + "\"";
+        showTypewriterText(narratorLabel, quoted, 0.05f);
+    }
+
 
     // ------------------------------------------------------------------------
     // Helpers
     // ------------------------------------------------------------------------
+
+    /**
+     * Switches the narrator label to a dialogue-style appearance:
+     * white background, black text, and a slight padding.
+     * Ensures the dialogue text is displayed horizontally (no line wrap).
+     */
+    private void enableDialogueMode() {
+        if (narratorLabel == null) return;
+
+        narratorLabel.getStyle().fontColor = Color.BLACK;
+
+        Drawable whiteBg = makeSolidDrawable(Color.WHITE,
+                (int) (PANEL_W - 40),
+                60);
+
+        footer.setBackground(whiteBg);
+
+        narratorLabel.setAlignment(Align.center);
+        narratorLabel.setWrap(false);
+        narratorLabel.setEllipsis(true);
+        narratorLabel.setFontScale(1.1f);
+
+        narratorLabel.setWidth(500f);
+
+        narratorLabel.invalidateHierarchy();
+
+    }
+
+    /**
+     * Restores the footer and narrator label to their normal pre-fight state.
+     * Removes the "ENCOURAGE!" button and resets styles and layout.
+     */
+    private void resetPostFightUI() {
+        if (footer == null || narratorLabel == null) return;
+
+        footer.clear();
+
+        Drawable defaultBg = makeSolidDrawable(Color.BLACK, (int) PANEL_W, 40);
+        footer.setBackground(defaultBg);
+
+        narratorLabel.getStyle().fontColor = Color.CYAN;
+        narratorLabel.setFontScale(1.6f);
+        narratorLabel.setAlignment(Align.center);
+        narratorLabel.setWrap(true);
+        narratorLabel.setText("");
+
+        footer.center();
+        footer.add(narratorLabel).expandX().center();
+
+        footer.invalidateHierarchy();
+    }
+
 
     private int getBalance() {
         var inv = game.getPlayer().getComponent(InventoryComponent.class);
@@ -561,6 +708,11 @@ public class RobotFightingDisplay extends UIComponent {
         return fighter;
     }
 
+    /**
+     * Returns the actor representing the currently selected fighter.
+     *
+     * @return the selected fighter actor, or null if none selected
+     */
     public Actor getChosenActor() {
         if (selectedFighter == Robot.GHOST_GPT) {
             return competitor1;
@@ -570,6 +722,12 @@ public class RobotFightingDisplay extends UIComponent {
         return null;
     }
 
+    /**
+     * Returns the opponent actor opposite of the provided fighter.
+     *
+     * @param fighter the current fighter
+     * @return the opposing fighter actor
+     */
     public Actor getOtherActor(Actor fighter) {
         if (fighter == competitor2) {
             return competitor1;
@@ -584,6 +742,9 @@ public class RobotFightingDisplay extends UIComponent {
     // Lifecycle
     // ------------------------------------------------------------------------
 
+    /**
+     * Shows all minigame UI panels and activates interactions.
+     */
     public void show() {
         active = true;
         updateBalanceLabel(currencyLabel);
@@ -593,17 +754,28 @@ public class RobotFightingDisplay extends UIComponent {
             setScreenVisible(actor, true);
     }
 
+    /**
+     * Hides all panels and disables the UI.
+     */
     public void hide() {
         active = false;
         for (Actor actor : new Actor[]{frame, background, dimmer, root, welcomeRoot, betRoot, competitor1, competitor2})
             setScreenVisible(actor, false);
     }
 
+    /**
+     * Draws the stage and all visible UI elements.
+     *
+     * @param batch the sprite batch used to draw
+     */
     @Override
     public void draw(SpriteBatch batch) {
         // Stage draws everything
     }
 
+    /**
+     * Disposes of textures and UI actors to free memory.
+     */
     @Override
     public void dispose() {
         for (Actor actor : new Actor[]{root, dimmer, frame, background, welcomeRoot, betRoot})
