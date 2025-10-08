@@ -8,10 +8,12 @@ import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.ItemSpawnConfig;
 import com.csse3200.game.entities.factories.characters.BossFactory;
+import com.csse3200.game.entities.factories.characters.FriendlyNPCFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.entities.spawner.ItemSpawner;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.components.gamearea.GameAreaDisplay;
+import com.csse3200.game.entities.factories.characters.FriendlyNPCFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -64,6 +66,9 @@ public class MovingBossRoom extends GameArea {
         player = spawnPlayer();
 
         spawnBoss();
+        spawnObjectDoors(new GridPoint2(0, 6), new GridPoint2(28, 6));
+        spawnAssistor();
+        spawnNurse();
         spawnObjectDoors(new GridPoint2(0, 7), new GridPoint2(28, 7));
 
         ItemSpawner itemSpawner = new ItemSpawner(this);
@@ -88,7 +93,12 @@ public class MovingBossRoom extends GameArea {
         Entity boss = BossFactory.createRobot(player);
         spawnEntityAt(boss, pos, true, true);
     }
+    private void spawnAssistor() {
+        GridPoint2 pos = new GridPoint2(7, 8);
 
+        Entity assistor = FriendlyNPCFactory.createAssisterNpc(player);
+        spawnEntityAt(assistor, pos, true, true);
+    }
     /**
      * Spawns the borders and doors of the room.
      * Different to genericLayout as the right door is up high
@@ -143,8 +153,17 @@ public class MovingBossRoom extends GameArea {
         clearAndLoad(() -> new OfficeGameArea(terrainFactory, cameraComponent));
     }
 
+
+    private void spawnNurse() {
+        GridPoint2 pos = new GridPoint2(20, 8); // 在地图右侧,与Assistor对称
+
+        Entity nurse = FriendlyNPCFactory.createNurseNpc(player);
+        spawnEntityAt(nurse, pos, true, true);
+    }
+
     @Override
     public String toString() {
         return "MovingBoss";
+
     }
 }
