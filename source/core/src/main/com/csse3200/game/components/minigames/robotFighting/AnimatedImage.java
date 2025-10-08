@@ -6,7 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
 /**
- * A Scene2D Image that plays an Animation<TextureRegion>.
+ * A Scene2D Image that plays an Animation.
  * Used to display animated atlas sprites in UI stages.
  */
 public class AnimatedImage extends Image {
