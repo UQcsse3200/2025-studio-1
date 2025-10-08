@@ -772,8 +772,6 @@ public class ForestGameArea extends GameArea {
         spawnEntityAt(boss3, pos, true, true);
     }
 
-
-
     public void spawnItem(Entity item, GridPoint2 position) {
         spawnEntityAt(item, position, false, false);
     }
