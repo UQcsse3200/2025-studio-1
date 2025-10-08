@@ -369,7 +369,6 @@ public class ForestGameArea extends GameArea {
         spawnEntity(keycard);
 
         spawnItems();
-        spawnRobotFightingGame();
     }
 
     private void spawnRobots() {
@@ -738,10 +737,7 @@ public class ForestGameArea extends GameArea {
         spawnEntityAt(boss3, pos, true, true);
     }
 
-    private void spawnRobotFightingGame() {
-        GridPoint2 pos = new GridPoint2(3, 20);
-        spawnEntityAt(new RobotFightingGame().getGameEntity(), pos, true, true);
-    }
+
 
     public void spawnItem(Entity item, GridPoint2 position) {
         spawnEntityAt(item, position, false, false);
