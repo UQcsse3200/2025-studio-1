@@ -14,15 +14,11 @@ import com.csse3200.game.entities.factories.KeycardFactory;
 import com.csse3200.game.entities.factories.characters.BossFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.entities.spawner.ItemSpawner;
-import com.csse3200.game.entities.factories.characters.PlayerFactory;
 import com.csse3200.game.physics.PhysicsLayer;
 import com.csse3200.game.physics.components.ColliderComponent;
 import com.csse3200.game.physics.components.HitboxComponent;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.components.gamearea.GameAreaDisplay;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
