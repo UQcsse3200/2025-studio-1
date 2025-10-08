@@ -14,36 +14,65 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Widget;
 
 /**
- * Renders the pool table surface, balls, aim guide and cue,
- * and handles pointer-based aiming. Pure UI: no physics types leak in.
+ * Renders the pool table surface, balls, cue, and guide.
+ * Handles pointer-based aiming for the cue ball.
  * <p>
  * Inputs:
- * - {@link PowerProvider} supplies current cue power (0..1).
- * - {@link GuideCapper} clamps the guide length in pixels based on physics raycasts.
+ * <ul>
+ *   <li>{@link PowerProvider} supplies current cue power (0..1)</li>
+ *   <li>{@link GuideCapper} clamps the guide length in pixels based on physics raycasts</li>
+ * </ul>
  */
 public final class PoolTable extends Widget {
-    // ------------------------------------------------------------
-    // Tuning constants (all visual)
-    // ------------------------------------------------------------
-    private static final float BALL_RADIUS_FRACTION = 0.035f; // ball radius (px) = min(w,h) * this
-    private static final float GUIDE_MIN_LEN_BALLS = 3.0f;   // min guide len in "ball radii"
-    private static final float GUIDE_MAX_LEN_BALLS = 12.0f;  // max guide len in "ball radii"
-    private static final float GUIDE_STEP_BALLS = 0.9f;   // dotted spacing in "ball radii"
+
+    /**
+     * Supplies the current cue power in the range [0..1].
+     */
+    public interface PowerProvider {
+        /**
+         * @return current cue power (0 to 1)
+         */
+        float get();
+    }
+
+    /**
+     * Caps the guide length (in pixels) based on the current physics state.
+     */
+    public interface GuideCapper {
+        /**
+         * @param cuePosNorm   cue ball position in normalised [0..1] space
+         * @param dirNorm      aim direction (unit vector)
+         * @param desiredLenPx desired guide length in pixels
+         * @param ballPx       cue ball radius in pixels
+         * @return capped guide length in pixels
+         */
+        float capGuideLenPx(Vector2 cuePosNorm, Vector2 dirNorm, float desiredLenPx, float ballPx);
+    }
+
+    // constants
+    private static final float BALL_RADIUS_FRACTION = 0.035f;
+    private static final float GUIDE_MIN_LEN_BALLS = 3.0f;
+    private static final float GUIDE_MAX_LEN_BALLS = 12.0f;
+    private static final float GUIDE_STEP_BALLS = 0.9f;
     private static final float DOT_SIZE_MIN_PX = 3f;
     private static final float DOT_SIZE_MAX_PX = 6f;
     private static final float GUIDE_ALPHA_MIN = 0.25f;
     private static final float GUIDE_ALPHA_MAX = 0.9f;
     private static final float CUE_KICK_DECAY = 3f;
+
     private final Texture tableTex;
-    private final TextureRegion[] ballTextures; // index 1..15 expected
-    private final Texture cueTex;               // texture for cue stick
+    private final TextureRegion[] ballTextures;
+    private final Texture cueTex;
     private final TextureRegion cueBallTex;
-    private final Texture whitePx;              // local 1x1 white for dots
+    private final Texture whitePx;
+
     // Bridges
     private final PowerProvider powerProvider;
     private final GuideCapper guideCapper;
-    // State (normalised table coordinates [0..1])
+
+    // State
     private final Vector2 cueBall = new Vector2();
+
     // Aiming
     private final Vector2 aimStart = new Vector2();
     private final Vector2 aimEnd = new Vector2();
@@ -52,12 +81,20 @@ public final class PoolTable extends Widget {
     private boolean aiming = false;
     private boolean showGuide = true;
     private boolean showCue = true;
-    // Cue kickback anim (0..1)
+
+    // Cue kickback animation (0..1)
     private float cueKickT = 0f;
 
-    // ------------------------------------------------------------
-    // Construction
-    // ------------------------------------------------------------
+    /**
+     * Constructs a new PoolTable.
+     *
+     * @param tableTex      texture for the table surface
+     * @param ballTextures  textures for the object balls
+     * @param cueTex        texture for the cue stick
+     * @param cueBallTex    texture for the cue ball
+     * @param powerProvider provides current cue power
+     * @param guideCapper   caps guide length based on physics
+     */
     public PoolTable(
             Texture tableTex,
             TextureRegion[] ballTextures,
@@ -74,7 +111,7 @@ public final class PoolTable extends Widget {
         this.guideCapper = guideCapper;
         this.whitePx = makeWhite();
 
-        // Pointer-driven aiming
+        // Add pointer input listener for aiming
         addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent e, float x, float y, int pointer, int button) {
@@ -101,6 +138,11 @@ public final class PoolTable extends Widget {
         });
     }
 
+    /**
+     * Creates a 1x1 white texture used for drawing the guide dots.
+     *
+     * @return a new white pixel texture
+     */
     private static Texture makeWhite() {
         Pixmap pm = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
         pm.setColor(Color.WHITE);
@@ -111,54 +153,69 @@ public final class PoolTable extends Widget {
     }
 
     /**
-     * Must be called by owner to release local resources.
+     * Disposes of temporary textures created by this renderer.
      */
     public void dispose() {
         whitePx.dispose();
     }
 
+    /**
+     * Shows or hides the cue stick.
+     *
+     * @param v true to show, false to hide
+     */
     public void setCueVisible(boolean v) {
         this.showCue = v;
     }
 
-    // ------------------------------------------------------------
-    // External API (UI-only)
-    // ------------------------------------------------------------
+    /**
+     * Shows or hides the aiming guide dots.
+     *
+     * @param v true to show, false to hide
+     */
     public void setGuideVisible(boolean v) {
         this.showGuide = v;
     }
 
     /**
-     * Cue ball position in normalised [0..1] table coords.
+     * Sets the cue ball position in normalised [0..1] table coordinates.
+     *
+     * @param normPos cue ball position
      */
     public void setCueBall(Vector2 normPos) {
         cueBall.set(MathUtils.clamp(normPos.x, 0f, 1f), MathUtils.clamp(normPos.y, 0f, 1f));
     }
 
     /**
-     * Object balls in normalised [0..1] table coords.
+     * Sets the positions of all object balls in normalised [0..1] table coordinates.
+     *
+     * @param normPositions array of ball positions
      */
     public void setObjectBalls(Vector2[] normPositions) {
         this.balls = (normPositions != null) ? normPositions : new Vector2[0];
     }
 
     /**
-     * Returns a copy of the current aim direction (normalised).
+     * @return a copy of the current aim direction (normalised)
      */
     public Vector2 getAimDir() {
         return aimDir.cpy();
     }
 
     /**
-     * Triggers a brief cue kickback animation.
+     * Starts a brief cue kickback animation.
+     *
+     * @param interp interpolation used for the animation
      */
     public void kickbackCue(Interpolation interp) {
         cueKickT = 1f;
     }
 
-    // ------------------------------------------------------------
-    // Scene2D
-    // ------------------------------------------------------------
+    /**
+     * Updates cue animation timing.
+     *
+     * @param delta time since last frame
+     */
     @Override
     public void act(float delta) {
         super.act(delta);
@@ -168,18 +225,21 @@ public final class PoolTable extends Widget {
         }
     }
 
+    /**
+     * Renders the table, balls, guide, and cue.
+     *
+     * @param batch       sprite batch used for drawing
+     * @param parentAlpha parent alpha for blending
+     */
     @Override
     public void draw(Batch batch, float parentAlpha) {
-        // Table surface
         batch.setColor(getColor().r, getColor().g, getColor().b, getColor().a * parentAlpha);
         batch.draw(tableTex, getX(), getY(), getWidth(), getHeight());
 
-        // Common measures
         final float ballPx = Math.min(getWidth(), getHeight()) * BALL_RADIUS_FRACTION;
         final float cbx = getX() + cueBall.x * getWidth();
         final float cby = getY() + cueBall.y * getHeight();
 
-        // Balls (simple draw; index 1..15)
         final float drawSize = ballPx * 1.2f;
         if (balls != null) {
             for (int i = 0; i < balls.length; i++) {
@@ -194,21 +254,21 @@ public final class PoolTable extends Widget {
             }
         }
 
-        // Cue ball
         batch.draw(cueBallTex, cbx - ballPx / 2f, cby - ballPx / 2f, ballPx, ballPx);
 
-        // Guide + Cue
         if (!aimDir.isZero(1e-4f)) {
             drawGuideAndCue(batch, ballPx, cbx, cby);
         }
 
-        // Restore color
         batch.setColor(1, 1, 1, 1);
     }
 
-    // ------------------------------------------------------------
-    // Aiming internals
-    // ------------------------------------------------------------
+    /**
+     * Begins aiming from the given pointer coordinates.
+     *
+     * @param x local x position
+     * @param y local y position
+     */
     public void beginAim(float x, float y) {
         aiming = true;
         aimStart.set(localToNorm(x, y));
@@ -216,45 +276,65 @@ public final class PoolTable extends Widget {
         computeDir();
     }
 
+    /**
+     * Updates the aim direction based on current pointer position.
+     *
+     * @param x local x position
+     * @param y local y position
+     */
     public void updateAim(float x, float y) {
         if (!aiming) return;
         aimEnd.set(localToNorm(x, y));
         computeDir();
     }
 
+    /**
+     * Finishes aiming interaction.
+     */
     public void finishAim() {
         aiming = false;
     }
 
+    /**
+     * Recomputes the current aim direction based on start and end positions.
+     */
     private void computeDir() {
         Vector2 target = aiming ? aimEnd : aimStart;
         aimDir.set(target).sub(cueBall).nor();
         if (Float.isNaN(aimDir.x) || Float.isNaN(aimDir.y)) aimDir.setZero();
     }
 
+    /**
+     * Converts local widget coordinates to normalised [0..1] table coordinates.
+     *
+     * @param x local x position
+     * @param y local y position
+     * @return normalised coordinate vector
+     */
     private Vector2 localToNorm(float x, float y) {
         float nx = MathUtils.clamp(x / getWidth(), 0f, 1f);
         float ny = MathUtils.clamp(y / getHeight(), 0f, 1f);
         return new Vector2(nx, ny);
     }
 
-    // ------------------------------------------------------------
-    // Rendering helpers
-    // ------------------------------------------------------------
+    /**
+     * Draws the aiming guide dots and cue stick.
+     *
+     * @param batch  sprite batch for rendering
+     * @param ballPx cue ball radius in pixels
+     * @param cbx    cue ball x position (pixels)
+     * @param cby    cue ball y position (pixels)
+     */
     private void drawGuideAndCue(Batch batch, float ballPx, float cbx, float cby) {
-        // live power (0..1)
         float power = MathUtils.clamp(powerProvider != null ? powerProvider.get() : 0.5f, 0f, 1f);
 
-        // Desired dotted length in pixels
         float desiredLenPx = MathUtils.lerp(ballPx * GUIDE_MIN_LEN_BALLS,
                 ballPx * GUIDE_MAX_LEN_BALLS, power);
 
-        // Clamp via physics if available
         float clampedLenPx = (showGuide && guideCapper != null)
                 ? guideCapper.capGuideLenPx(new Vector2(cueBall), new Vector2(aimDir).nor(), desiredLenPx, ballPx)
                 : desiredLenPx;
 
-        // Guide styling
         float alpha = MathUtils.lerp(GUIDE_ALPHA_MIN, GUIDE_ALPHA_MAX, power);
         float dotSize = MathUtils.lerp(DOT_SIZE_MIN_PX, DOT_SIZE_MAX_PX, power);
         float step = ballPx * GUIDE_STEP_BALLS;
@@ -271,13 +351,20 @@ public final class PoolTable extends Widget {
             batch.setColor(1, 1, 1, 1);
         }
 
-        // Cue stick
         if (showCue) {
             Sprite cueSprite = getCueSprite(ballPx, cbx, cby);
             cueSprite.draw(batch);
         }
     }
 
+    /**
+     * Builds and positions the cue sprite based on aim direction and kickback.
+     *
+     * @param ballPx cue ball radius in pixels
+     * @param cbx    cue ball x position (pixels)
+     * @param cby    cue ball y position (pixels)
+     * @return a configured cue sprite ready for rendering
+     */
     private Sprite getCueSprite(float ballPx, float cbx, float cby) {
         float cueLen = ballPx * 7f;
         float cueH = ballPx * 0.5f;
@@ -285,7 +372,6 @@ public final class PoolTable extends Widget {
 
         float offCenter = ballPx * 0.55f + kick + cueLen * 0.5f;
 
-        // the cue center position
         float cx = cbx - aimDir.x * offCenter;
         float cy = cby - aimDir.y * offCenter;
 
@@ -297,23 +383,5 @@ public final class PoolTable extends Widget {
         cueSprite.setRotation(angleDeg);
         cueSprite.setCenter(cx, cy);
         return cueSprite;
-    }
-
-    /**
-     * Supplies current cue power in [0..1].
-     */
-    public interface PowerProvider {
-        float get();
-    }
-
-    /**
-     * Caps the guide length (pixels) given:
-     * - cuePosNorm: cue ball position in [0..1] table space,
-     * - dirNorm: unit aim direction in [0..1] space,
-     * - desiredLenPx: requested guide length in pixels,
-     * - ballPx: cue ball radius in pixels (for stable px↔m conversion).
-     */
-    public interface GuideCapper {
-        float capGuideLenPx(Vector2 cuePosNorm, Vector2 dirNorm, float desiredLenPx, float ballPx);
     }
 }

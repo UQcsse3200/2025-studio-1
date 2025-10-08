@@ -1,14 +1,8 @@
 package com.csse3200.game.components.minigames.pool;
 
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.Fixture;
-import com.badlogic.gdx.physics.box2d.RayCastCallback;
-import com.badlogic.gdx.physics.box2d.World;
-import com.csse3200.game.components.minigames.pool.logic.BasicTwoPlayerRules;
-import com.csse3200.game.components.minigames.pool.logic.GameEvents;
-import com.csse3200.game.components.minigames.pool.logic.RuleSet;
-import com.csse3200.game.components.minigames.pool.logic.RulesEvents;
+import com.badlogic.gdx.physics.box2d.*;
+import com.csse3200.game.components.minigames.pool.logic.*;
 import com.csse3200.game.components.minigames.pool.physics.*;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.factories.InteractableStationFactory;
@@ -20,13 +14,23 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
+/**
+ * Manages the complete pool minigame system, including physics, rules,
+ * rendering, and UI synchronization.
+ * <p>
+ * The {@code PoolGame} coordinates the {@link TableBuilder}, {@link BallFactory},
+ * {@link PocketContactSystem}, and {@link RuleSet} to simulate pool gameplay.
+ * It also bridges updates between the physics world and the {@link PoolGameDisplay} UI.
+ */
 public class PoolGame {
     private static final Logger logger = LoggerFactory.getLogger(PoolGame.class);
+
     /**
-     * Spawn offsets expressed as fractions of table width for readability.
+     * Spawn offsets expressed as fractions of the table width.
      */
-    private static final float CUE_X_OFFSET_FRACTION = 0.30f; // left of center
-    private static final float RACK_X_OFFSET_FRACTION = 0.25f; // right of center
+    private static final float CUE_X_OFFSET_FRACTION = 0.30f; // cue ball (left of center)
+    private static final float RACK_X_OFFSET_FRACTION = 0.25f; // triangle rack (right of center)
+
     // Core systems
     private final PhysicsEngine engine;
     private final PoolWorld world;
@@ -35,12 +39,19 @@ public class PoolGame {
     private final BallFactory ballFactory;
     private final PocketContactSystem pockets;
     private final RuleSet rules;
-    // UI
+
+    // UI bridge
     private final Entity gameEntity;
     private final PoolGameDisplay display;
     private com.badlogic.gdx.utils.Timer.Task syncTask;
     private boolean uiVisible = false;
 
+    /**
+     * Constructs the pool minigame with all required systems and event wiring.
+     * <p>
+     * Initializes a dedicated physics world, configures the table, and links
+     * game rules and display components.
+     */
     public PoolGame() {
         World poolBox2d = new World(new Vector2(0, 0), true);
         this.engine = new PhysicsEngine(poolBox2d, ServiceLocator.getTimeSource());
@@ -52,7 +63,7 @@ public class PoolGame {
                 .pocketRadiusScale(2.5f)
                 .pocketInsetScaleX(1.0f)
                 .pocketInsetScaleY(1.0f)
-                .pocketFunnelScale(1.0f)
+                .pocketFunnelScale(0.9f)
                 .build();
 
         this.tableBuilder = new TableBuilder(world, config);
@@ -69,7 +80,9 @@ public class PoolGame {
         wireUiEvents();
     }
 
-
+    /**
+     * Connects rule events (turns, scores, fouls) to game-level event triggers.
+     */
     private void wireRuleEvents() {
         this.rules.setListener(new RulesEvents() {
             @Override
@@ -89,6 +102,11 @@ public class PoolGame {
         });
     }
 
+    /**
+     * Initializes the main {@link Entity} representing the pool game UI and logic station.
+     *
+     * @return the initialized entity containing UI and interaction components
+     */
     private Entity initGameEntity() {
         Entity game = InteractableStationFactory.createBaseStation();
         PoolGameDisplay disp = new PoolGameDisplay();
@@ -96,6 +114,7 @@ public class PoolGame {
         game.addComponent(new TextureRenderComponent("images/pool/table.png"));
         game.setInteractable(true);
 
+        // Hook display controller to pool logic
         disp.setController(new PoolGameDisplay.Controller() {
             @Override
             public void onStart() {
@@ -118,13 +137,19 @@ public class PoolGame {
             }
 
             /**
-             * Clamp the guide length (in pixels) based on world raycast against table/balls.
-             * Converts px → meters using config & UI ball px radius, does a world-space ray,
-             * then converts the clamped length back to pixels.
+             * Clamps the guide line length based on raycasting against table rails or balls.
+             * <p>
+             * Converts from pixels to meters using {@link TableConfig} scale,
+             * performs a world-space raycast, then converts back to pixels.
+             *
+             * @param cuePosNorm    cue ball position (normalized [0..1])
+             * @param dirNorm       normalized aim direction
+             * @param desiredLenPx  desired guide length in pixels
+             * @param ballPx        cue ball radius in pixels
+             * @return the clamped guide length in pixels
              */
             @Override
             public float capGuideLenPx(Vector2 cuePosNorm, Vector2 dirNorm, float desiredLenPx, float ballPx) {
-                // px↔meters conversion using config + the UI’s current ball pixel radius
                 float pxPerMeter = ballPx / config.ballR();
                 float desiredLenMeters = desiredLenPx / pxPerMeter;
 
@@ -133,7 +158,7 @@ public class PoolGame {
 
                 final float[] minHitFraction = {1f};
                 RayCastCallback cb = (fixture, point, normal, fraction) -> {
-                    if (fixture.getBody() == ballFactory.getCueBody()) return -1f; // ignore self
+                    if (fixture.getBody() == ballFactory.getCueBody()) return -1f; // ignore cue
                     if (fraction < minHitFraction[0]) minHitFraction[0] = fraction;
                     return fraction;
                 };
@@ -142,26 +167,28 @@ public class PoolGame {
                 world.raw().rayCast(cb, cuePosWorld, end);
 
                 float clampedMeters = desiredLenMeters * minHitFraction[0];
-                return clampedMeters * pxPerMeter; // back to pixels for the UI
+                return clampedMeters * pxPerMeter;
             }
 
             @Override
             public boolean isShotActive() {
                 return rules.isShotActive();
             }
-
         });
 
         return game;
     }
 
+    /**
+     * Connects UI input events and pocket contact events to game logic.
+     */
     private void wireUiEvents() {
         gameEntity.getEvents().addListener(GameEvents.INTERACT, this::onInteract);
         gameEntity.getEvents().addListener(GameEvents.START, this::onStart);
         gameEntity.getEvents().addListener(GameEvents.RESET, this::onStart);
         gameEntity.getEvents().addListener(GameEvents.STOP, this::onStop);
 
-        // bridge physics → rules → UI
+        // Bridge physics → rules → UI
         pockets.setListener(new PocketContactSystem.Listener() {
             @Override
             public void onScratch(int pocketIndex) {
@@ -177,9 +204,10 @@ public class PoolGame {
         });
     }
 
-    // ------------------------------------------------------------------
-    // Lifecycle
-    // ------------------------------------------------------------------
+
+    /**
+     * Handles interactions from the game world (toggle show/hide of UI).
+     */
     private void onInteract() {
         if (uiVisible) {
             onStop();
@@ -190,16 +218,20 @@ public class PoolGame {
         beginSession(true);
     }
 
+    /** Starts or resets the game session. */
     private void onStart() {
         beginSession(false);
     }
 
+    /** Stops the running pool game simulation. */
     private void onStop() {
         stopSync();
     }
 
     /**
-     * Common flow for both interact (show UI) and start/reset (optionally show UI).
+     * Common setup for both start and interact flows.
+     *
+     * @param showUi whether to show the pool UI after initialization
      */
     private void beginSession(boolean showUi) {
         ensureBuilt();
@@ -212,6 +244,10 @@ public class PoolGame {
         }
     }
 
+    /**
+     * Ensures the table and balls are built before the game starts.
+     * Builds missing components such as rails, pockets, and the ball rack.
+     */
     private void ensureBuilt() {
         if (!tableBuilder.isBuilt()) {
             tableBuilder.buildRails();
@@ -230,29 +266,32 @@ public class PoolGame {
         ServiceLocator.getRenderService().getDebug().renderPhysicsWorld(world.raw());
     }
 
+    /** Resets the current rack, cue, and turn state. */
     private void resetRack() {
         rules.onNewRack(ballFactory);
         pushPositionsToUI();
     }
 
-    // ------------------------------------------------------------------
-    // UI sync
-    // ------------------------------------------------------------------
+    /**
+     * Starts the scheduled physics update loop.
+     * <p>
+     * Steps the Box2D world, processes pocket contacts,
+     * and updates both rules and UI state at a fixed rate.
+     */
     private void startSync() {
         stopSync();
         syncTask = com.badlogic.gdx.utils.Timer.schedule(new com.badlogic.gdx.utils.Timer.Task() {
             @Override
             public void run() {
                 world.raw().step(GameTuning.SYNC_PERIOD, 6, 2);
-
                 pockets.processDeferred();
                 pushPositionsToUI();
-                // Tick-based turn update; rules decide when balls are settled.
                 rules.updateTurn();
             }
         }, 0f, GameTuning.SYNC_PERIOD);
     }
 
+    /** Stops the scheduled simulation update task. */
     private void stopSync() {
         if (syncTask != null) {
             syncTask.cancel();
@@ -260,17 +299,29 @@ public class PoolGame {
         }
     }
 
+    /**
+     * Updates the UI positions for all balls and the cue ball.
+     * Converts world coordinates to normalized table coordinates for display.
+     */
     private void pushPositionsToUI() {
         if (!uiVisible || display == null || ballFactory.getCueBody() == null) return;
 
-        Vector2 cue = TableSpace.toNorm(ballFactory.getCueBody().getPosition(), config);
-        List<Vector2> objs = TableSpace.toNorm(ballFactory.getObjectBallPositions(), config);
+        Vector2 cueNorm = TableSpace.toNorm(ballFactory.getCueBody().getPosition(), config);
+        display.setCueBall(cueNorm);
 
-        display.setCueBall(cue);
-        // Avoid extra libGDX Array allocation: convert List -> array directly
-        display.setBalls(objs.toArray(new Vector2[0]));
+        Vector2[] byIdWorld = ballFactory.getObjectBallPositionsById();
+        Vector2[] byIdNorm  = new Vector2[byIdWorld.length];
+        for (int i = 0; i < byIdWorld.length; i++) {
+            byIdNorm[i] = (byIdWorld[i] == null) ? null : TableSpace.toNorm(byIdWorld[i], config);
+        }
+        display.setBalls(byIdNorm);
     }
 
+    /**
+     * Returns the entity representing this pool game instance.
+     *
+     * @return the root {@link Entity} containing the pool game components
+     */
     public Entity getGameEntity() {
         return gameEntity;
     }
