@@ -2,25 +2,25 @@ package com.csse3200.game.areas;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.GridPoint2;
+import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.CameraComponent;
+import com.csse3200.game.components.KeycardGateComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.ItemSpawnConfig;
+import com.csse3200.game.entities.factories.KeycardFactory;
 import com.csse3200.game.entities.factories.characters.BossFactory;
 import com.csse3200.game.entities.factories.characters.FriendlyNPCFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.entities.spawner.ItemSpawner;
+import com.csse3200.game.physics.components.ColliderComponent;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.components.gamearea.GameAreaDisplay;
-import com.csse3200.game.entities.factories.characters.FriendlyNPCFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * This is the room that holds the Ground Moving Boss Boss.
  * This boss is a small robot that moves towards the player and attacks
- *
  * Room is empty except for boss and player
  */
 public class MovingBossRoom extends GameArea {
@@ -32,7 +32,7 @@ public class MovingBossRoom extends GameArea {
 
     /**
      * Creates a new MovingBossRoom for the room where the flying boss spawns.
-     * 
+     *
      * @param terrainFactory  TerrainFactory used to create the terrain for the
      *                        GameArea (required).
      * @param cameraComponent Camera helper supplying an OrthographicCamera
@@ -69,7 +69,6 @@ public class MovingBossRoom extends GameArea {
         spawnObjectDoors(new GridPoint2(0, 6), new GridPoint2(28, 6));
         spawnAssistor();
         spawnNurse();
-        spawnObjectDoors(new GridPoint2(0, 7), new GridPoint2(28, 7));
 
         ItemSpawner itemSpawner = new ItemSpawner(this);
         itemSpawner.spawnItems(ItemSpawnConfig.bossmap());
@@ -91,6 +90,13 @@ public class MovingBossRoom extends GameArea {
         GridPoint2 pos = new GridPoint2(15, 20);
 
         Entity boss = BossFactory.createRobot(player);
+
+        boss.getEvents().addListener("death", () -> ServiceLocator.getTimeSource().delayKeycardSpawn(0.05f, () -> {
+            Entity keycard = KeycardFactory.createKeycard(2);
+            keycard.setPosition(new Vector2(3f, 7f));
+            spawnEntity(keycard);
+        }));
+
         spawnEntityAt(boss, pos, true, true);
     }
     private void spawnAssistor() {
@@ -122,14 +128,18 @@ public class MovingBossRoom extends GameArea {
         float rightDoorY = b.bottomY();
         Entity rightDoor = ObstacleFactory.createDoorTrigger(WALL_WIDTH, rightDoorHeight);
         rightDoor.setPosition(b.rightX() - WALL_WIDTH - 0.001f, rightDoorY);
-        rightDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadOffice));
+        rightDoor.addComponent(new KeycardGateComponent(2, () -> {
+            ColliderComponent collider = rightDoor.getComponent(ColliderComponent.class);
+            if (collider != null) collider.setEnabled(false);
+            loadOffice();
+        }));
         spawnEntity(rightDoor);
     }
 
     /**
      * Setter method for the player spawn point
      * should be used when the player is traversing through the rooms
-     * 
+     *
      * @param newSpawn the new spawn point
      */
     public static void setRoomSpawn(GridPoint2 newSpawn) {

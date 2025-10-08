@@ -79,6 +79,12 @@ public class KeyboardPlayerInputComponent extends InputComponent {
                     holding = true;
                 }
                 return true;
+            case Keys.I:
+                PlayerInventoryDisplay inventoryDisplay = entity.getComponent(PlayerInventoryDisplay.class);
+                if (inventoryDisplay != null) {
+                    inventoryDisplay.toggleVisibility();
+                }
+                return true;
 
             default:
                 return false;
