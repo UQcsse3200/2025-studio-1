@@ -355,7 +355,7 @@ public class MainGameScreen extends ScreenAdapter {
         logger.info("Showing pause overlay");
         Stage stage = ServiceLocator.getRenderService().getStage();
         pauseOverlay = new Entity()
-                .addComponent(new PauseMenuDisplay(game))
+                .addComponent(new PauseMenuDisplay(game, true))
                 .addComponent(new InputDecorator(stage, 100));
         pauseOverlay.getEvents().addListener("save", this::saveState);
         pauseOverlay.getEvents().addListener("resume", this::hidePauseOverlay);

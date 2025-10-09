@@ -11,6 +11,40 @@
       "energyPod": "foreg_sprites/futuristic/EnergyPod.png"
     }
   },
+  "cues": {
+    "A": {
+      "cue": "Press A to drift left. Try not to scrape the walls.",
+      "feedback": "Left lane secured. Keep twitching, I'm calibrating your failures."
+    },
+    "D": {
+      "cue": "Press D to slide right. Don't wobble.",
+      "feedback": "Right vector locked. You're barely holding it together."
+    },
+    "SHIFT_LEFT-A": {
+      "cue": "Hold SHIFT, tap A to dash left. Prove you can think and move.",
+      "feedback": "Left dash confirmed. I could still run circles around you."
+    },
+    "SHIFT_LEFT-D": {
+      "cue": "Hold SHIFT, tap D to dash right. Try not to eat floor.",
+      "feedback": "Right dash registered. You didn't trip-unexpected."
+    },
+    "S": {
+      "cue": "Press S to crouch. Hide if you must; it won't save you.",
+      "feedback": "Crouch engaged. Pathetic tactic, but noted."
+    },
+    "SPACE": {
+      "cue": "Press SPACE to jump. Gravity likes you more than I do.",
+      "feedback": "Jump acknowledged. You fall even better than you rise."
+    },
+    "SPACE-SPACE": {
+      "cue": "Press SPACE twice to double jump. Impress me for once.",
+      "feedback": "Double jump executed. Try that when I'm actually trying to break you."
+    },
+    "TAB": {
+      "cue": "Press TAB to open the map",
+      "feedback": "Map online. Try not to get lost again."
+    }
+  },
   "entities": [
     {
       "name": "Player",
