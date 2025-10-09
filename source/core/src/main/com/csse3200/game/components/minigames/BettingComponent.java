@@ -176,9 +176,9 @@ public class BettingComponent extends UIComponent {
         closeBtn.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
+                ServiceLocator.getTimeSource().setPaused(false);
                 hide();
                 resultLabel.setText("Bet cancelled.");
-                ServiceLocator.getTimeSource().setPaused(false);
             }
         });
         root.add(closeBtn).width(160).height(50).padBottom(10f).row();
