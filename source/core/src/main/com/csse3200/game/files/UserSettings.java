@@ -39,7 +39,7 @@ public class UserSettings {
      */
     public static void set(Settings settings, boolean applyImmediate) {
         String path = ROOT_DIR + File.separator + SETTINGS_FILE;
-        FileLoader.write(settings, path, Location.EXTERNAL);
+        FileLoader.write(settings, path, Location.EXTERNAL, true);
 
         if (applyImmediate) {
             applySettings(settings);

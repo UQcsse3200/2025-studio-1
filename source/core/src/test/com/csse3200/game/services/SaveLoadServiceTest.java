@@ -61,29 +61,40 @@ class SaveLoadServiceTest {
 
         final SaveGame.GameState[] captured = new SaveGame.GameState[1];
         try (MockedStatic<FileLoader> mocked = mockStatic(FileLoader.class)) {
-            mocked.when(() ->
-                            FileLoader.write(any(SaveGame.GameState.class),
-                                    anyString(),
-                                    any(FileLoader.Location.class)))
+            mocked.when(() -> FileLoader.write(
+                            any(SaveGame.GameState.class),
+                            anyString(),
+                            any(FileLoader.Location.class),
+                            anyBoolean())
+                    )
                     .thenAnswer(invocation -> {
                         captured[0] = invocation.getArgument(0);
-                        return null;
+                        return null; // static void
                     });
 
             boolean ok = service.save(SLOT_ID, area);
 
             Assertions.assertTrue(ok, "save() should return true");
-            Assertions.assertNotNull(captured[0], "Expected a single writeClass() call");
+            Assertions.assertNotNull(captured[0], "Expected a single write() call");
 
             SaveGame.GameState out = captured[0];
 
-            // Assert snapshot fields
+            // snapshot fields
             Assertions.assertEquals(AREA_ID, out.getGameArea());
-            Assertions.assertEquals(INITIAL_HEALTH, out.getPlayer().currentHealth, "Health should originate from CombatStatsComponent");
+            Assertions.assertEquals(INITIAL_HEALTH, out.getPlayer().currentHealth,
+                    "Health should originate from CombatStatsComponent");
             Assertions.assertEquals(POS_X, out.getPlayer().playerPos.x, FLOAT_EPS);
             Assertions.assertEquals(POS_Y, out.getPlayer().playerPos.y, FLOAT_EPS);
             Assertions.assertEquals(EXPECTED_ROUND_NUMBER, out.getWave());
             Assertions.assertNotNull(out.getInventory(), "inventory list should be initialized (may be empty)");
+
+            // optional: verify call shape
+            mocked.verify(() -> FileLoader.write(
+                    same(out),
+                    anyString(),
+                    any(FileLoader.Location.class),
+                    eq(true)
+            ));
         }
     }
 

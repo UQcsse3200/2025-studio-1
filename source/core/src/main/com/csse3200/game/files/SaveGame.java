@@ -32,7 +32,7 @@ public class SaveGame {
     }
 
     public static void saveGame(GameState gameState, String fileName) {
-        FileLoader.write(gameState, fileName, FileLoader.Location.LOCAL);
+        FileLoader.write(gameState, fileName, FileLoader.Location.LOCAL, true);
     }
 
     /**
