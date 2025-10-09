@@ -10,6 +10,7 @@ import com.csse3200.game.services.MusicService;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.session.LeaderBoardManager;
+import com.csse3200.game.tutorial.TutorialGameScreen;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -101,7 +102,7 @@ public class GdxGame extends Game {
             case DEATH_SCREEN -> new DeathScreen(this);
             case WIN_SCREEN -> new WinScreen(this);
             case LOAD_GAME -> new MainGameScreen(this, "placeholder");
-            case TUTORIAL_SCREEN -> new TutorialScreen(this);
+            case TUTORIAL_SCREEN -> new TutorialGameScreen(this);
             case STORY -> new StoryScreen(this);
             case CHOOSE_AVATAR -> new AvatarChoiceScreen(this);
             case DIFFICULTY_SCREEN -> new DifficultyScreen(this);

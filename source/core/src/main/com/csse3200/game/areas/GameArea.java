@@ -2,7 +2,6 @@ package com.csse3200.game.areas;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
-import com.csse3200.game.entities.factories.characters.PlayerFactory;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -22,6 +21,7 @@ import com.csse3200.game.components.enemy.EnemyWavesDisplay;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.factories.ProjectileFactory;
 import com.csse3200.game.entities.factories.characters.NPCFactory;
+import com.csse3200.game.entities.factories.characters.PlayerFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.physics.components.PhysicsProjectileComponent;
 import com.csse3200.game.rendering.SolidColorRenderComponent;
@@ -39,14 +39,6 @@ import java.util.function.Supplier;
  * <p>Support for enabling/disabling game areas could be added by making this a Component instead.
  */
 public abstract class GameArea implements Disposable {
-    protected TerrainComponent terrain;
-    protected List<Entity> areaEntities;
-    protected TerrainFactory terrainFactory;
-    protected CameraComponent cameraComponent;
-    protected float baseScaling = 0f;
-    /** Global flag preventing re-entrant room transitions across any area */
-    protected static boolean isTransitioning = false;
-
     // Enemy name constants (standard + variants)
     private static final String DEEP_SPIN = "DeepSpin";
     private static final String DEEP_SPIN_RED = "DeepSpinRed";
@@ -61,7 +53,15 @@ public abstract class GameArea implements Disposable {
     private static final String GROK_DROID_RED = "GrokDroidRed";
     private static final String GROK_DROID_BLUE = "GrokDroidBlue";
     private static final String TURRET = "Turret";
-
+    /**
+     * Global flag preventing re-entrant room transitions across any area
+     */
+    protected static boolean isTransitioning = false;
+    protected TerrainComponent terrain;
+    protected List<Entity> areaEntities;
+    protected TerrainFactory terrainFactory;
+    protected CameraComponent cameraComponent;
+    protected float baseScaling = 0f;
     protected EnemyWaves wavesManager; // manage waves via terminal command
 
     protected GameArea(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
@@ -192,7 +192,39 @@ public abstract class GameArea implements Disposable {
         return 1f + 0.4f * Math.max(0, room - 1);
     }
 
-    protected void spawnEntityAt(
+    void spawnEnemyVariant(String variantLower, GridPoint2 grid) {
+        float scale = getBaseDifficultyScale();
+
+        Entity p = ServiceLocator.getPlayer();
+
+        Entity e = switch (variantLower) {
+            case "ghostgpt" -> NPCFactory.createGhostGPT(p, this, scale);
+            case "ghostgptred" -> NPCFactory.createGhostGPTRed(p, this, scale);
+            case "ghostgptblue" -> NPCFactory.createGhostGPTBlue(p, this, scale);
+
+            case "deepspin" -> NPCFactory.createDeepspin(p, this, scale);
+            case "deepspinred" -> NPCFactory.createDeepspinRed(p, this, scale);
+            case "deepspinblue" -> NPCFactory.createDeepspinBlue(p, this, scale);
+
+            case "vroomba" -> NPCFactory.createVroomba(p, scale);
+            case "vroombared" -> NPCFactory.createVroombaRed(p, scale);
+            case "vroombablue" -> NPCFactory.createVroombaBlue(p, scale);
+
+            case "grokdroid" -> NPCFactory.createGrokDroid(p, this, scale);
+            case "grokdroidred" -> NPCFactory.createGrokDroidRed(p, this, scale);
+            case "grokdroidblue" -> NPCFactory.createGrokDroidBlue(p, this, scale);
+
+            case "turret" -> NPCFactory.createTurret(p, this, scale);
+            default -> {
+                System.out.println("Unknown enemy subtype '{}' at {}" + variantLower + " " + grid);
+                yield NPCFactory.createGhostGPT(p, this, scale);
+            }
+        };
+
+        spawnEntityAt(e, grid, true, true);
+    }
+
+    public void spawnEntityAt(
             Entity entity, GridPoint2 tilePos, boolean centerX, boolean centerY) {
         Vector2 worldPos = terrain.tileToWorldPosition(tilePos);
         float tileSize = terrain.getTileSize();
@@ -366,6 +398,7 @@ public abstract class GameArea implements Disposable {
             spawnEntity(ghostGpt);
         }
     }
+
     /**
      * Adds GhostGPTRed enemies onto the map.
      *
@@ -381,6 +414,7 @@ public abstract class GameArea implements Disposable {
             spawnEntity(ghostGptRed);
         }
     }
+
     /**
      * Adds GhostGPTBlue enemies onto the map.
      *
@@ -396,6 +430,7 @@ public abstract class GameArea implements Disposable {
             spawnEntity(ghostGptBlue);
         }
     }
+
     /**
      * Adds DeepSpin enemies onto the map.
      *
@@ -412,6 +447,7 @@ public abstract class GameArea implements Disposable {
             spawnEntity(deepSpin);
         }
     }
+
     /**
      * Adds DeepSpinRed enemies onto the map.
      *
@@ -428,6 +464,7 @@ public abstract class GameArea implements Disposable {
             spawnEntity(deepSpinRed);
         }
     }
+
     /**
      * Adds DeepSpinBlue enemies onto the map.
      *
@@ -444,6 +481,7 @@ public abstract class GameArea implements Disposable {
             spawnEntity(deepSpinBlue);
         }
     }
+
     /**
      * Adds GrokDroid enemies onto the map.
      *
@@ -459,6 +497,7 @@ public abstract class GameArea implements Disposable {
             spawnEntity(grokDroid);
         }
     }
+
     /**
      * Adds GrokDroidRed enemies onto the map.
      *
@@ -474,6 +513,7 @@ public abstract class GameArea implements Disposable {
             spawnEntity(grokDroidRed);
         }
     }
+
     /**
      * Adds GrokDroidBlue enemies onto the map.
      *
@@ -505,6 +545,7 @@ public abstract class GameArea implements Disposable {
             spawnEntity(vroombaEntity);
         }
     }
+
     /**
      * Adds VroombaRed enemies onto the map.
      *
@@ -520,6 +561,7 @@ public abstract class GameArea implements Disposable {
             spawnEntity(vroombaRed);
         }
     }
+
     /**
      * Adds VroombaBlue enemies onto the map.
      *
@@ -535,6 +577,7 @@ public abstract class GameArea implements Disposable {
             spawnEntity(vroombaBlue);
         }
     }
+
     /**
      * Adds Turret enemies onto the map.
      *
@@ -989,6 +1032,7 @@ public abstract class GameArea implements Disposable {
             });
         });
     }
+
     /**
      * Checks if an entity is a partner NPC that should be preserved during transitions.
      *
@@ -997,7 +1041,7 @@ public abstract class GameArea implements Disposable {
      */
     protected boolean isPartnerNPC(Entity entity) {
         if (entity == null) return false;
-        
+
         // Check if entity has CompanionFollowShootComponent (partner NPCs have this)
         return entity.getComponent(com.csse3200.game.components.friendlynpc.CompanionFollowShootComponent.class) != null;
     }
@@ -1009,7 +1053,7 @@ public abstract class GameArea implements Disposable {
      * @param spawnPosition The position to spawn/reposition the player
      * @return The player entity (either existing or newly created)
      */
-    protected Entity spawnOrRepositionPlayer(GridPoint2 spawnPosition) {
+    public Entity spawnOrRepositionPlayer(GridPoint2 spawnPosition) {
         Entity existingPlayer = ServiceLocator.getPlayer();
 
         if (existingPlayer != null) {
@@ -1026,6 +1070,7 @@ public abstract class GameArea implements Disposable {
             return newPlayer;
         }
     }
+
     /**
      * Spawns decorative object doors (non-functional) at given positions.
      *

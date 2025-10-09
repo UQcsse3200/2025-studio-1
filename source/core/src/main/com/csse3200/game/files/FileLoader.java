@@ -2,6 +2,7 @@ package com.csse3200.game.files;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
@@ -9,10 +10,7 @@ import com.badlogic.gdx.utils.JsonWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Consumer;
 
 /**
@@ -149,11 +147,23 @@ public final class FileLoader {
     /**
      * Reads texture asset mappings from a JSON file.
      *
-     * <p>The JSON root must be an object. Any top-level member whose name ends with {@code "Textures"}
-     * is treated as a group of entries mapping {@code id -> relativeOrAbsolutePath}.</p>
+     * <p>Supports two shapes:</p>
+     * <ul>
+     *   <li>Nested container (preferred):
+     *     <pre>{@code
+     *     { "textures": { "<group>Textures": { id: "path", ... }, ... } }
+     *     }</pre>
+     *   </li>
+     *   <li>Legacy root-level groups:
+     *     <pre>{@code
+     *     { "<group>Textures": { id: "path", ... }, ... }
+     *     }</pre>
+     *   </li>
+     * </ul>
      *
-     * <p>If duplicate ids appear across groups, the <em>first</em> occurrence wins; a warning is logged for
-     * subsequent duplicates. Non-string or blank values are skipped with a warning.</p>
+     * <p>The JSON member name must end with {@code "Textures"} to be treated as a group.
+     * If duplicate ids appear across groups, the first occurrence wins; a warning is logged for duplicates.
+     * Non-string or blank values are skipped with a warning.</p>
      *
      * @param filename path to the JSON file appropriate for {@code location} (non-null)
      * @param location storage backend (non-null)
@@ -170,13 +180,23 @@ public final class FileLoader {
             if (rootOpt.isEmpty()) return Optional.empty();
 
             final var out = new LinkedHashMap<String, String>();
+
+            // 1) Preferred: nested "textures" container
+            final var texturesContainer = rootOpt.get().get("textures");
+            if (texturesContainer != null && texturesContainer.isObject()) {
+                for (var group = texturesContainer.child; group != null; group = group.next) {
+                    processTextureGroup(group, fhOpt.get(), out);
+                }
+            }
+
+            // 2) Legacy: also scan root-level groups (first-wins semantics prevent overwriting)
             for (var group = rootOpt.get().child; group != null; group = group.next) {
                 processTextureGroup(group, fhOpt.get(), out);
             }
 
             if (out.isEmpty()) {
                 log.atWarn()
-                        .setMessage("No '*Textures' sections or entries found in {}")
+                        .setMessage("No '*Textures' sections or entries found in {} (checked 'textures' and root)")
                         .addArgument(() -> fhOpt.map(FileHandle::path).orElse("(unknown)"))
                         .log();
                 return Optional.empty();
@@ -192,7 +212,96 @@ public final class FileLoader {
         }
     }
 
-    /* --------------------------------- Internals --------------------------------- */
+    /**
+     * Reads level entities from a JSON file that has a top-level "entities" array.
+     *
+     * <p>Each entity object should be:</p>
+     * <pre>{@code
+     * {
+     *   "name": "<id>",
+     *   "type": "<category>",
+     *   "location": { "x": <int>, "y": <int> }
+     * }
+     * }</pre>
+     *
+     * @param filename path appropriate for the given {@code location}
+     * @param location storage backend
+     * @return list of parsed {@link MapEntitySpec}, or empty if none valid
+     */
+    public static Optional<List<MapEntitySpec>> readMapEntities(String filename, Location location) {
+        final var fhOpt = resolveExisting(filename, location, "readMapEntities", "Entities");
+        if (fhOpt.isEmpty()) return Optional.empty();
+
+        try {
+            final var rootOpt = tryParseRootObject(fhOpt.get());
+            if (rootOpt.isEmpty()) return Optional.empty();
+
+            final var entitiesNode = rootOpt.get().get("entities");
+            if (entitiesNode == null || !entitiesNode.isArray()) {
+                log.atWarn()
+                        .setMessage("Top-level 'entities' array not found or not an array in {}")
+                        .addArgument(fhOpt.get()::path)
+                        .log();
+                return Optional.empty();
+            }
+
+            final var out = new ArrayList<MapEntitySpec>();
+            for (var item = entitiesNode.child; item != null; item = item.next) {
+                if (!item.isObject()) {
+                    log.atWarn()
+                            .setMessage("Skipping non-object entity in {}")
+                            .addArgument(fhOpt.get()::path)
+                            .log();
+                    continue;
+                }
+                final var nameVal = item.get("name");
+                final var typeVal = item.get(ARG_TYPE);
+                final var locVal = item.get(ARG_LOCATION);
+
+                if (nameVal == null || typeVal == null || locVal == null || !locVal.isObject()) {
+                    log.atWarn()
+                            .setMessage("Skipping entity missing name/type/location in {}: {}")
+                            .addArgument(fhOpt.get()::path)
+                            .addArgument(item::toString)
+                            .log();
+                    continue;
+                }
+
+                final var name = nameVal.asString();
+                final var type = typeVal.asString();
+                final var x = locVal.getInt("x", Integer.MIN_VALUE);
+                final var y = locVal.getInt("y", Integer.MIN_VALUE);
+
+                if (name == null || name.isBlank() || type == null || type.isBlank()
+                        || x == Integer.MIN_VALUE || y == Integer.MIN_VALUE) {
+                    log.atWarn()
+                            .setMessage("Skipping invalid entity values in {}: {}")
+                            .addArgument(fhOpt.get()::path)
+                            .addArgument(item::toString)
+                            .log();
+                    continue;
+                }
+
+                out.add(new MapEntitySpec(name, type, new GridPoint2(x, y)));
+            }
+
+            if (out.isEmpty()) {
+                log.atWarn()
+                        .setMessage("No valid entities found in {}")
+                        .addArgument(fhOpt.get()::path)
+                        .log();
+                return Optional.empty();
+            }
+            return Optional.of(out);
+        } catch (Exception e) {
+            log.atError()
+                    .setCause(e)
+                    .setMessage("Failed reading entities from {}")
+                    .addArgument(fhOpt.get()::path)
+                    .log();
+            return Optional.empty();
+        }
+    }
 
     /**
      * Helper to safely parse JSON into type {@code T} using a supplied configuration hook.
@@ -232,6 +341,8 @@ public final class FileLoader {
             return Optional.empty();
         }
     }
+
+    /* --------------------------------- Internals --------------------------------- */
 
     /**
      * Resolves a {@link FileHandle} for {@code filename} and {@code location}, verifying existence.
@@ -297,9 +408,10 @@ public final class FileLoader {
     }
 
     /**
-     * Processes a single top-level {@code *Textures} object, adding valid entries into {@code out}.
+     * Processes a single {@code *Textures} object (either under "textures" or at root),
+     * adding valid entries into {@code out}.
      *
-     * @param group JSON member at the root level
+     * @param group JSON member
      * @param file  file being parsed (for logging context)
      * @param out   output map to populate
      */
@@ -326,7 +438,7 @@ public final class FileLoader {
 
         if (!entry.isString()) {
             log.atWarn()
-                    .setMessage("Skipping non-string path (textureId={}, group={}, path={})")
+                    .setMessage("Skipping non-string texture path (textureId={}, group={}, file={})")
                     .addArgument(id)
                     .addArgument(groupName)
                     .addArgument(file::path)
@@ -337,7 +449,7 @@ public final class FileLoader {
         final var path = entry.asString();
         if (path == null || path.isBlank()) {
             log.atWarn()
-                    .setMessage("Skipping blank texture path (textureId={}, group={}, path={})")
+                    .setMessage("Skipping blank texture path (textureId={}, group={}, file={})")
                     .addArgument(id)
                     .addArgument(groupName)
                     .addArgument(file::path)
@@ -347,7 +459,7 @@ public final class FileLoader {
 
         if (out.containsKey(id)) {
             log.atWarn()
-                    .setMessage("Duplicate texture id; keeping first and ignoring duplicate (textureId={}, group={}, kept={}, ignored={})")
+                    .setMessage("Duplicate texture id; keeping first (textureId={}, group={}, kept={}, ignored={})")
                     .addArgument(id)
                     .addArgument(groupName)
                     .addArgument(() -> out.get(id))
@@ -439,5 +551,11 @@ public final class FileLoader {
          * {@code Gdx.files.absolute(filename)}
          */
         ABSOLUTE
+    }
+
+    /**
+     * Minimal entity spec for level placement: name, type, and grid location.
+     */
+    public static record MapEntitySpec(String name, String type, GridPoint2 location) {
     }
 }

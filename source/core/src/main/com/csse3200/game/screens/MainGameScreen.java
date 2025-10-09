@@ -253,6 +253,7 @@ public class MainGameScreen extends ScreenAdapter {
         }
     }
 
+
     @Override
     public void resize(int width, int height) {
         renderer.resize(width, height);
