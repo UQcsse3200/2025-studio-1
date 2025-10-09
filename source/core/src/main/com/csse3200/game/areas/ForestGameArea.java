@@ -308,7 +308,7 @@ public class ForestGameArea extends GameArea {
             "sounds/turretDamage.mp3",
             "sounds/turretDeath.mp3"
     };
-    private static final String BACKGROUND_MUSIC = "sounds/BGM_03.mp3";
+    private static final String BACKGROUND_MUSIC = "sounds/forestmusic.mp3";
     private static final String[] forestMusic = {BACKGROUND_MUSIC};
     private static GridPoint2 playerSpawn = new GridPoint2(3, 20);
     private final float VERTICAL_HEIGHT_OFFSET = 9.375f;
