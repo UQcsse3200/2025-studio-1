@@ -27,7 +27,7 @@ import com.badlogic.gdx.math.MathUtils;
 
 /**
  * Display class for the "Clanker Royale" minigame.
- * Handles UI transitions: welcome → betting → main game.
+ * Handles UI transitions: welcome → main game.
  */
 public class RobotFightingDisplay extends UIComponent {
     // --- UI Constants ---
@@ -41,11 +41,10 @@ public class RobotFightingDisplay extends UIComponent {
     private static final Color GOLD = Color.valueOf("FFD54F");
 
     // --- UI Elements ---
-    private Table root, welcomeRoot, betRoot, footer;
+    private Table root, welcomeRoot, footer;
     private Image frame, dimmer, background;
     private Texture pixelTex;
-    private Label currencyLabel, narratorLabel, dialogueLabel;
-    private TextField betInput;
+    private Label narratorLabel;
     private ProgressBar healthBar1;
     private ProgressBar healthBar2;
     private AnimatedImage competitor1;
@@ -73,11 +72,9 @@ public class RobotFightingDisplay extends UIComponent {
 
         buildBackdrop();
         buildWelcomeScreen();
-        buildBetScreen();
         buildMainUI();
         buildCompetitors();
 
-        subscribeCurrencyUpdates();
         hide();
     }
 
@@ -110,39 +107,6 @@ public class RobotFightingDisplay extends UIComponent {
         welcomeRoot.add(startBtn).width(200).height(60).row();
 
         stage.addActor(welcomeRoot);
-    }
-
-    private void buildBetScreen() {
-        betRoot = new Table();
-        betRoot.setSize(PANEL_W, PANEL_H);
-        betRoot.setPosition(background.getX(), background.getY());
-        betRoot.center().pad(20);
-
-        Label title = makeLabel("Place Your Bet", TITLE_COLOR, 1.8f);
-        currencyLabel = makeLabel("", GOLD, 1.2f);
-        updateBalanceLabel(currencyLabel);
-
-        betInput = new TextField("", skin);
-        betInput.setMessageText("Enter bet amount");
-        betInput.setAlignment(Align.center);
-        betInput.setDisabled(true);
-
-        TextButton plus10Btn = makeButton("+10", () -> adjustBet(10));
-        TextButton minus10Btn = makeButton("-10", () -> adjustBet(-10));
-        TextButton confirmBtn = makeButton("Confirm Bet", this::onConfirmBet);
-
-        Table betControls = new Table();
-        betControls.add(minus10Btn).width(80).height(50).padRight(10);
-        betControls.add(betInput).width(150).padRight(10);
-        betControls.add(plus10Btn).width(80).height(50);
-
-        betRoot.add(title).padBottom(20).row();
-        betRoot.add(betControls).padBottom(20).row();
-        betRoot.add(confirmBtn).width(200).height(60).padBottom(20).row();
-        betRoot.add(currencyLabel).expand().bottom().right().pad(10).row();
-
-        stage.addActor(betRoot);
-        betRoot.setVisible(false);
     }
 
     private void buildMainUI() {
@@ -245,17 +209,8 @@ public class RobotFightingDisplay extends UIComponent {
 
     private void onStartGame() {
         setScreenVisible(welcomeRoot, false);
-        setScreenVisible(betRoot, true);
-    }
-
-    private void onConfirmBet() {
-        int betAmount = parseIntOrZero(betInput.getText());
-        System.out.println("Player bet: " + betAmount);
-
-        setScreenVisible(betRoot, false);
-        setScreenVisible(root, true);
-
         narrateMain();
+        setScreenVisible(root, true);
     }
 
     private void onFighterSelect() {
@@ -313,53 +268,6 @@ public class RobotFightingDisplay extends UIComponent {
         }
 
         footer.invalidateHierarchy();
-    }
-
-    /**
-     * Handles end-of-fight logic and displays the final outcome.
-     *
-     * @param status fight result ("won", "lost", or "drew")
-     */
-    public void fightOver(String status) {
-        resetPostFightUI();
-        if (typewriterTask != null) {
-            typewriterTask.cancel();
-            typewriterTask = null;
-        }
-        Timer.instance().clear();
-
-        switch (status) {
-            case "won":
-                showTypewriterText(narratorLabel, "YOU WON!!!", 0.05f);
-                break;
-            case "lost":
-                showTypewriterText(narratorLabel, "YOU SUCK!!!", 0.05f);
-                break;
-            case "drew":
-                showTypewriterText(narratorLabel, "how did you draw", 0.05f);
-                break;
-        }
-
-        Timer.schedule(new Timer.Task() {
-            @Override
-            public void run() {
-                setScreenVisible(root, false);
-                setScreenVisible(betRoot, true);
-                setScreenVisible(competitor1, false);
-                setScreenVisible(competitor2, false);
-                healthBar1.setValue(100f);
-                healthBar2.setValue(100f);
-            }
-        }, 3f);
-    }
-
-    private void adjustBet(int delta) {
-        int currentBet = parseIntOrZero(betInput.getText());
-        int newBet = Math.max(0, currentBet + delta);
-        betInput.setText(String.valueOf(newBet));
-
-        int balance = getBalance();
-        currencyLabel.setText("Balance Remaining: $" + Math.max(0, balance - newBet));
     }
 
     private void narrateMain() {
@@ -426,13 +334,6 @@ public class RobotFightingDisplay extends UIComponent {
         Timer.schedule(motionTask, 0f, 0.05f);
     }
 
-    private void stopFighterMotion() {
-        if (motionTask != null) {
-            motionTask.cancel();
-            motionTask = null;
-        }
-    }
-
     /**
      * Plays the fighter's attack animation and triggers a hit effect.
      *
@@ -495,6 +396,38 @@ public class RobotFightingDisplay extends UIComponent {
     // Helpers
     // ------------------------------------------------------------------------
 
+    public void playExplosionEffect(Actor fighter) {
+        float centerX = fighter.getX() + fighter.getWidth() / 2f;
+        float centerY = fighter.getY() + fighter.getHeight() / 2f;
+
+        float explosionSize = 100f;
+        Image explosion = makeImage(pixelTex, Color.ORANGE,
+                explosionSize, explosionSize,
+                centerX - explosionSize / 2f,
+                centerY - explosionSize / 2f);
+        explosion.setOrigin(Align.center);
+        explosion.setColor(new Color(1f, 0.5f, 0f, 0.8f));
+
+        // Flash background to simulate shockwave
+        background.addAction(Actions.sequence(
+                Actions.color(Color.valueOf("FFECB3"), 0.1f), // light yellow flash
+                Actions.delay(0.1f),
+                Actions.color(PANEL_COLOR, 0.2f)
+        ));
+
+        explosion.addAction(Actions.sequence(
+                Actions.parallel(
+                        Actions.scaleTo(3f, 3f, 0.5f),
+                        Actions.color(Color.RED, 0.3f)
+                ),
+                Actions.fadeOut(0.4f),
+                Actions.run(explosion::remove)
+        ));
+
+        stage.addActor(explosion);
+    }
+
+
     /**
      * Switches the narrator label to a dialogue-style appearance:
      * white background, black text, and a slight padding.
@@ -537,7 +470,7 @@ public class RobotFightingDisplay extends UIComponent {
         narratorLabel.getStyle().fontColor = Color.CYAN;
         narratorLabel.setFontScale(1.6f);
         narratorLabel.setAlignment(Align.center);
-        narratorLabel.setWrap(true);
+        narratorLabel.setWrap(false);
         narratorLabel.setText("");
 
         footer.center();
@@ -545,7 +478,6 @@ public class RobotFightingDisplay extends UIComponent {
 
         footer.invalidateHierarchy();
     }
-
 
     private int getBalance() {
         var inv = game.getPlayer().getComponent(InventoryComponent.class);
@@ -747,9 +679,6 @@ public class RobotFightingDisplay extends UIComponent {
      */
     public void show() {
         active = true;
-        updateBalanceLabel(currencyLabel);
-        betInput.setText("0");
-
         for (Actor actor : new Actor[]{frame, background, dimmer, welcomeRoot})
             setScreenVisible(actor, true);
     }
@@ -759,8 +688,11 @@ public class RobotFightingDisplay extends UIComponent {
      */
     public void hide() {
         active = false;
-        for (Actor actor : new Actor[]{frame, background, dimmer, root, welcomeRoot, betRoot, competitor1, competitor2})
+        for (Actor actor : new Actor[]{frame, background, dimmer, root, welcomeRoot, competitor1, competitor2})
             setScreenVisible(actor, false);
+        resetPostFightUI();
+        healthBar1.setValue(100f);
+        healthBar2.setValue(100f);
     }
 
     /**
@@ -778,15 +710,9 @@ public class RobotFightingDisplay extends UIComponent {
      */
     @Override
     public void dispose() {
-        for (Actor actor : new Actor[]{root, dimmer, frame, background, welcomeRoot, betRoot})
+        for (Actor actor : new Actor[]{root, dimmer, frame, background, welcomeRoot})
             if (actor != null) actor.remove();
         if (pixelTex != null) pixelTex.dispose();
         super.dispose();
-    }
-
-    private void subscribeCurrencyUpdates() {
-        game.getPlayer().getEvents().addListener("updateProcessor", (Integer p) -> {
-            if (currencyLabel != null) currencyLabel.setText("Balance Remaining: $" + p);
-        });
     }
 }

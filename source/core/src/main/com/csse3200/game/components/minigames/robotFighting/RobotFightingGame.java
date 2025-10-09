@@ -1,6 +1,8 @@
 package com.csse3200.game.components.minigames.robotFighting;
 
 import com.badlogic.gdx.utils.Timer;
+import com.csse3200.game.components.minigames.BettingComponent;
+import com.csse3200.game.components.player.InventoryComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.factories.InteractableStationFactory;
 import com.csse3200.game.files.FileLoader;
@@ -46,8 +48,6 @@ public class RobotFightingGame {
 
     /** Whether the game UI is currently visible to the player. */
     private boolean gameDisplayed = false;
-    /** The player’s selected robot. */
-    private Robot selectedRobot = null;
     /** Current HP for the player’s fighter. */
     private int chosenFighterHp = 100;
     /** Current HP for the opposing fighter. */
@@ -68,7 +68,9 @@ public class RobotFightingGame {
         gameEntity = initGameEntity();
         gameDisplay = gameEntity.getComponent(RobotFightingDisplay.class);
 
+
         gameEntity.getEvents().addListener("interact", this::handleInteract);
+        gameEntity.getEvents().addListener("betPlaced", this::startGame);
         gameEntity.getEvents().addListener("robotFighting:choose", this::selectFighter);
         gameEntity.getEvents().addListener("robotFighting:startFight", this::startFight);
         gameEntity.getEvents().addListener("robotFighting:encourage", this::encourageFighter);
@@ -104,11 +106,13 @@ public class RobotFightingGame {
     private void handleInteract() {
         if (gameDisplayed) {
             gameDisplay.hide();
-            ServiceLocator.getTimeSource().setPaused(false);
             gameDisplayed = false;
-        } else {
+        }
+    }
+
+    private void startGame() {
+        if (!gameDisplayed) {
             gameDisplay.show();
-            ServiceLocator.getTimeSource().setPaused(true);
             gameDisplayed = true;
         }
     }
@@ -125,6 +129,8 @@ public class RobotFightingGame {
     protected Entity initGameEntity() {
         Entity game = InteractableStationFactory.createBaseStation();
         game.addComponent(new RobotFightingDisplay());
+        InventoryComponent inventory = ServiceLocator.getPlayer().getComponent(InventoryComponent.class);
+        game.addComponent(new BettingComponent(2, inventory));
         game.addComponent(new TextureRenderComponent("images/tree.png"));
         return game;
     }
@@ -135,7 +141,6 @@ public class RobotFightingGame {
      * @param fighter the selected {@link Robot}.
      */
     private void selectFighter(Robot fighter) {
-        selectedRobot = fighter;
     }
 
     /**
@@ -168,7 +173,7 @@ public class RobotFightingGame {
 
                 gameDisplay.playAttackAnimation(attacked);
 
-                int damage = (int) (Math.random() * 10 * encourageMult + 5);
+                int damage = (int) (Math.random() * 5 * encourageMult + 8);
                 otherFighterHp -= damage;
                 gameDisplay.setHealthFighter(attacked, otherFighterHp);
             }
@@ -212,8 +217,8 @@ public class RobotFightingGame {
         if (!successfulEncourage) return;
 
         double baseStrength = 0.1 + Math.random() * 0.2;
-        encourageMult += (2 - encourageMult) * baseStrength;
-        encourageMult = Math.min(encourageMult, 2);
+        encourageMult += (1.5 - encourageMult) * baseStrength;
+        encourageMult = Math.min(encourageMult, 1.5);
     }
 
     /**
@@ -238,13 +243,30 @@ public class RobotFightingGame {
     private void determineWinner() {
         if (chosenFighterHp <= 0) {
             if (otherFighterHp <= 0) {
-                gameDisplay.fightOver("drew");
+                gameDisplay.playExplosionEffect(gameDisplay.getChosenActor());
+                gameDisplay.playExplosionEffect(gameDisplay.getOtherActor(gameDisplay.getChosenActor()));
             } else {
-                gameDisplay.fightOver("lost");
+                gameDisplay.playExplosionEffect(gameDisplay.getOtherActor(gameDisplay.getChosenActor()));
             }
         } else {
-            gameDisplay.fightOver("won");
+            gameDisplay.playExplosionEffect(gameDisplay.getChosenActor());
         }
+
+        Timer.schedule(new Timer.Task() {
+            @Override
+            public void run() {
+                if (chosenFighterHp <= 0) {
+                    if (otherFighterHp <= 0) {
+                        gameEntity.getEvents().trigger("draw");
+                    } else {
+                        gameEntity.getEvents().trigger("lose");
+                    }
+                } else {
+                    gameEntity.getEvents().trigger("win");
+                }
+                gameEntity.getEvents().trigger("interact");
+            }
+        }, 1f);
     }
 
     /**
