@@ -52,6 +52,7 @@ public class WhackAMoleDisplay extends UIComponent {
     public void create() {
         super.create();
         entity.getEvents().addListener("betPlaced", this::show); // open on interact
+        entity.getEvents().addListener("interact", this::hide);
         hitSfx = ServiceLocator.getResourceService().getAsset("sounds/whack.mp3", Sound.class);
 
         Texture moleTex = ServiceLocator.getResourceService().getAsset("images/mole.png", Texture.class);
