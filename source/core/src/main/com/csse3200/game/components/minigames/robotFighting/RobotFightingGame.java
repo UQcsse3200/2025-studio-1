@@ -1,14 +1,14 @@
 package com.csse3200.game.components.minigames.robotFighting;
 
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.Timer;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.factories.InteractableStationFactory;
 import com.csse3200.game.files.FileLoader;
 import com.csse3200.game.rendering.TextureRenderComponent;
 import com.csse3200.game.services.ServiceLocator;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 
-import java.awt.*;
+import java.util.Optional;
 
 /**
  * Core logic class for the "Clanker Royale" (Robot Fighting) minigame.
@@ -37,22 +37,38 @@ import java.awt.*;
  * </ul>
  */
 public class RobotFightingGame {
-    /** Preloaded text data containing random encouragement messages. */
-    private final RobotFightingText encouragingMessages;
-    /** Root entity containing this minigame’s components and display. */
+    /**
+     * Preloaded text data containing random encouragement messages.
+     */
+    private final Optional<RobotFightingText> encouragingMessages;
+    /**
+     * Root entity containing this minigame’s components and display.
+     */
     private final Entity gameEntity;
-    /** The display/UI component that visualises the minigame. */
+    /**
+     * The display/UI component that visualises the minigame.
+     */
     private final RobotFightingDisplay gameDisplay;
 
-    /** Whether the game UI is currently visible to the player. */
+    /**
+     * Whether the game UI is currently visible to the player.
+     */
     private boolean gameDisplayed = false;
-    /** The player’s selected robot. */
+    /**
+     * The player’s selected robot.
+     */
     private Robot selectedRobot = null;
-    /** Current HP for the player’s fighter. */
+    /**
+     * Current HP for the player’s fighter.
+     */
     private int chosenFighterHp = 100;
-    /** Current HP for the opposing fighter. */
+    /**
+     * Current HP for the opposing fighter.
+     */
     private int otherFighterHp = 100;
-    /** Encouragement multiplier for player attack power (1.0–2.0). */
+    /**
+     * Encouragement multiplier for player attack power (1.0–2.0).
+     */
     private double encourageMult = 1.0;
 
     /**
@@ -63,7 +79,7 @@ public class RobotFightingGame {
      * </p>
      */
     public RobotFightingGame() {
-        encouragingMessages = FileLoader.readClass(RobotFightingText.class, "games/robot-fighting.json");
+        encouragingMessages = FileLoader.read(RobotFightingText.class, "games/robot-fighting.json", FileLoader.Location.INTERNAL);
 
         gameEntity = initGameEntity();
         gameDisplay = gameEntity.getComponent(RobotFightingDisplay.class);
