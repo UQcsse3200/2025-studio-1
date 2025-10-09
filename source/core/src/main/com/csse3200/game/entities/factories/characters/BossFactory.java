@@ -35,12 +35,10 @@ import com.csse3200.game.services.ServiceLocator;
  */
 
 public class BossFactory {
-    private static final NPCConfigs configs =
-            FileLoader.readClass(NPCConfigs.class, "configs/NPCs.json");
+    private static final NPCConfigs configs = FileLoader.read(NPCConfigs.class, "configs/NPCs.json", FileLoader.Location.INTERNAL).orElseGet(NPCConfigs::new);
 
     public static Entity createRobot(Entity target) {
-        AnimationRenderComponent animator = new AnimationRenderComponent(
-                ServiceLocator.getResourceService().getAsset("images/Robot_1.atlas", TextureAtlas.class));
+        AnimationRenderComponent animator = new AnimationRenderComponent(ServiceLocator.getResourceService().getAsset("images/Robot_1.atlas", TextureAtlas.class));
         animator.addAnimation("Idle", 0.12f, Animation.PlayMode.LOOP);
         animator.addAnimation("attack", 0.06f, Animation.PlayMode.LOOP);
         animator.addAnimation("fury", 0.10f, Animation.PlayMode.LOOP);
@@ -48,55 +46,20 @@ public class BossFactory {
 
         Vector2 moveSpeed = new Vector2(2.5f, 2.5f);
 
-        Entity robot = new Entity()
-                .addComponent(new PhysicsComponent())
-                .addComponent(new PhysicsMovementComponent(moveSpeed))
-                .addComponent(new ColliderComponent())
-                .addComponent(new HitboxComponent().setLayer(PhysicsLayer.NPC))
-                .addComponent(new BossAnimationController())
-                .addComponent(new TouchAttackComponent(PhysicsLayer.PLAYER, 1.5f))
-                .addComponent(new CombatStatsComponent(1000))
-                .addComponent(new WeaponsStatsComponent(5))
-                .addComponent(new BossStatusDisplay("Boss_1"))
-                .addComponent(new BossDeathComponent())
-                .addComponent(animator);
+        Entity robot = new Entity().addComponent(new PhysicsComponent()).addComponent(new PhysicsMovementComponent(moveSpeed)).addComponent(new ColliderComponent()).addComponent(new HitboxComponent().setLayer(PhysicsLayer.NPC)).addComponent(new BossAnimationController()).addComponent(new TouchAttackComponent(PhysicsLayer.PLAYER, 1.5f)).addComponent(new CombatStatsComponent(1000)).addComponent(new WeaponsStatsComponent(5)).addComponent(new BossStatusDisplay("Boss_1")).addComponent(new BossDeathComponent()).addComponent(animator);
 
         animator.startAnimation("Idle");
         animator.scaleEntity();
 
-        AITaskComponent ai = new AITaskComponent()
-                .addTask(new BossChaseTask(
-                        target,
-                        10,
-                        12f,
-                        18f
-                ))
-                .addTask(new WanderTask(
-                        new Vector2(1f, 1f),
-                        2f
-                ));
+        AITaskComponent ai = new AITaskComponent().addTask(new BossChaseTask(target, 10, 12f, 18f)).addTask(new WanderTask(new Vector2(1f, 1f), 2f));
         robot.addComponent(ai);
 
-        robot.addComponent(new BossFuryTask(
-                0.5f,
-                1.5f,
-                5,
-                0.25f
-        ));
+        robot.addComponent(new BossFuryTask(0.5f, 1.5f, 5, 0.25f));
 
         int maxHp = robot.getComponent(CombatStatsComponent.class).getHealth();
         int defenseHp = Math.round(maxHp * 0.30f);
 
-        robot
-                .addComponent(new com.csse3200.game.components.boss.DamageReductionComponent())
-                .addComponent(new com.csse3200.game.components.boss.BossDefenseComponent(
-                        10f,
-                        1.0f,
-                        defenseHp,
-                        false
-                ))
-                .addComponent(new AttackProtectionComponent())
-                .addComponent(new AttackProtectionDisplay());
+        robot.addComponent(new com.csse3200.game.components.boss.DamageReductionComponent()).addComponent(new com.csse3200.game.components.boss.BossDefenseComponent(10f, 1.0f, defenseHp, false)).addComponent(new AttackProtectionComponent()).addComponent(new AttackProtectionDisplay());
 
         // Replace original defense component with new cocoon defense component
         Vector2[] cocoonPositions = getDefaultCocoonPositions();
@@ -133,8 +96,7 @@ public class BossFactory {
         Entity boss2 = createBaseBoss2(target);
 
         BaseEntityConfig config = configs.boss2;
-        InventoryComponent playerInventory =
-                (target != null) ? target.getComponent(InventoryComponent.class) : null;
+        InventoryComponent playerInventory = (target != null) ? target.getComponent(InventoryComponent.class) : null;
         float patrolCenterX = 5f;
         float patrolHalfWidth = 3f;
         float leftX = patrolCenterX - patrolHalfWidth;
@@ -142,33 +104,9 @@ public class BossFactory {
         float patrolY = 9f;
         float patrolSpeed = 4f;
 
-        boss2
-                .addComponent(new CombatStatsComponent(1000))
-                .addComponent(new DamageReductionComponent())
-                .addComponent(new AttackProtectionComponent())
-                .addComponent(new AttackProtectionDisplay())
-                .addComponent(new com.csse3200.game.components.boss.Boss2HealthPhaseSwitcher(
-                        0.5f,   // phase2 threshold
-                        0.3f,   // angry   threshold
-                        "idle", "phase2", "angry"
-                ))
-                .addComponent(new BossStageComponent(boss2))
-                .addComponent(new FireballAttackComponent(target, 1.5f, 8f, 6f, config.baseAttack + 2))
-                .addComponent(new BossChargeSkillComponent(
-                        target,
-                        7f,
-                        5f,
-                        0.4f,
-                        12f,
-                        0.6f,
-                        1.5f,
-                        leftX, rightX, patrolY, patrolSpeed
-                ))
-                .addComponent(new BlackholeComponent(target, 7f, 8f))
-                .addComponent(new EnemyDeathRewardComponent(100, playerInventory))
-                .addComponent(new BossDeathComponent())
-                .addComponent(new MissueAttackComponent())
-                .addComponent(new BossStatusDisplay("Boss_2"));
+        boss2.addComponent(new CombatStatsComponent(1000)).addComponent(new DamageReductionComponent()).addComponent(new AttackProtectionComponent()).addComponent(new AttackProtectionDisplay()).addComponent(new com.csse3200.game.components.boss.Boss2HealthPhaseSwitcher(0.5f,   // phase2 threshold
+                0.3f,   // angry   threshold
+                "idle", "phase2", "angry")).addComponent(new BossStageComponent(boss2)).addComponent(new FireballAttackComponent(target, 1.5f, 8f, 6f, config.baseAttack + 2)).addComponent(new BossChargeSkillComponent(target, 7f, 5f, 0.4f, 12f, 0.6f, 1.5f, leftX, rightX, patrolY, patrolSpeed)).addComponent(new BlackholeComponent(target, 7f, 8f)).addComponent(new EnemyDeathRewardComponent(100, playerInventory)).addComponent(new BossDeathComponent()).addComponent(new MissueAttackComponent()).addComponent(new BossStatusDisplay("Boss_2"));
 
         AnimationRenderComponent arc = boss2.getComponent(AnimationRenderComponent.class);
         if (arc != null) {
@@ -193,26 +131,13 @@ public class BossFactory {
         if (target != null) {
             playerInventory = target.getComponent(InventoryComponent.class);
         }
-        Entity boss3 = new Entity()
-                .addComponent(new PhysicsComponent())
-                .addComponent(new ColliderComponent())
-                .addComponent(new HitboxComponent().setLayer(PhysicsLayer.NPC))
-                .addComponent(new CombatStatsComponent(500))
-                .addComponent(new WeaponsStatsComponent(config.baseAttack))
-                .addComponent(new EnemyDeathRewardComponent(100, playerInventory))
-                .addComponent(new BossDeathComponent())
-                .addComponent(new DamageReductionComponent())
-                .addComponent(new AttackProtectionComponent())
-                .addComponent(new AttackProtectionDisplay())
-                .addComponent(new TextureRenderComponent("images/Boss_3.png"))
-                .addComponent(new BossStatusDisplay("Boss_3"));
+        Entity boss3 = new Entity().addComponent(new PhysicsComponent()).addComponent(new ColliderComponent()).addComponent(new HitboxComponent().setLayer(PhysicsLayer.NPC)).addComponent(new CombatStatsComponent(500)).addComponent(new WeaponsStatsComponent(config.baseAttack)).addComponent(new EnemyDeathRewardComponent(100, playerInventory)).addComponent(new BossDeathComponent()).addComponent(new DamageReductionComponent()).addComponent(new AttackProtectionComponent()).addComponent(new AttackProtectionDisplay()).addComponent(new TextureRenderComponent("images/Boss_3.png")).addComponent(new BossStatusDisplay("Boss_3"));
 
         boss3.getComponent(TextureRenderComponent.class).scaleEntity();
         boss3.setScale(new Vector2(2f, 2f));
         PhysicsUtils.setScaledCollider(boss3, 1.2f, 0.6f);
 
-        TextureAtlas phaseAtlas = ServiceLocator.getResourceService()
-                .getAsset("images/boss3_phase2.atlas", TextureAtlas.class);
+        TextureAtlas phaseAtlas = ServiceLocator.getResourceService().getAsset("images/boss3_phase2.atlas", TextureAtlas.class);
         AnimationRenderComponent phaseArc = new AnimationRenderComponent(phaseAtlas);
         phaseArc.setDisposeAtlas(false);
         phaseArc.addAnimation("phase1", 0.08f, Animation.PlayMode.LOOP);
@@ -221,28 +146,17 @@ public class BossFactory {
         phaseArc.setEnabled(false);             // <- keep hidden until 50%
         boss3.addComponent(phaseArc);
 
-        boss3.addComponent(new EnemyMudBallAttackComponent(
-                target, "boss3_attack_cpu", 1.2f, 0f, 11f, 3f));
-        boss3.addComponent(new EnemyMudRingSprayComponent(
-                2.5f, 12, 6f, 3f));
+        boss3.addComponent(new EnemyMudBallAttackComponent(target, "boss3_attack_cpu", 1.2f, 0f, 11f, 3f));
+        boss3.addComponent(new EnemyMudRingSprayComponent(2.5f, 12, 6f, 3f));
 
         // Add phased animator: keep static until 50%, then play animations at 50/40/25
-        boss3.addComponent(
-                new com.csse3200.game.components.boss.Boss3HealthPhaseSwitcher(
-                        "images/boss3_phase2.atlas", 0.08f
-                )
-                        .addPhase(0.50f, "phase1")
-                        .addPhase(0.40f, "phase2")
-                        .addPhase(0.25f, "phase3")
-        );
+        boss3.addComponent(new com.csse3200.game.components.boss.Boss3HealthPhaseSwitcher("images/boss3_phase2.atlas", 0.08f).addPhase(0.50f, "phase1").addPhase(0.40f, "phase2").addPhase(0.25f, "phase3"));
 
         return boss3;
     }
 
     public static Entity createBlackhole(Vector2 pos, Entity target) {
-        Entity Blackhole = new Entity()
-                .addComponent(new TextureRenderComponent("images/blackhole1.png"))
-                .addComponent(new BlackholeAttackComponent(target, 1.5f, 4f));
+        Entity Blackhole = new Entity().addComponent(new TextureRenderComponent("images/blackhole1.png")).addComponent(new BlackholeAttackComponent(target, 1.5f, 4f));
         Blackhole.setPosition(pos);
         Blackhole.getComponent(TextureRenderComponent.class).scaleEntity();
         Vector2 s = Blackhole.getScale();
@@ -252,42 +166,24 @@ public class BossFactory {
     }
 
     public static Entity createFireball(Vector2 from, Vector2 velocity) {
-        Entity fireball = new Entity()
-                .addComponent(new PhysicsComponent())
-                .addComponent(new FireballMovementComponent(velocity))
-                .addComponent(new ColliderComponent())
-                .addComponent(new HitboxComponent().setLayer(PhysicsLayer.ENEMY_PROJECTILE))
-                .addComponent(new CombatStatsComponent(1))
-                .addComponent(new WeaponsStatsComponent(1))
-                .addComponent(new PhysicsProjectileComponent())
-                .addComponent(new TouchAttackComponent(PhysicsLayer.PLAYER, 1f));
+        Entity fireball = new Entity().addComponent(new PhysicsComponent()).addComponent(new FireballMovementComponent(velocity)).addComponent(new ColliderComponent()).addComponent(new HitboxComponent().setLayer(PhysicsLayer.ENEMY_PROJECTILE)).addComponent(new CombatStatsComponent(1)).addComponent(new WeaponsStatsComponent(1)).addComponent(new PhysicsProjectileComponent()).addComponent(new TouchAttackComponent(PhysicsLayer.PLAYER, 1f));
         fireball.setPosition(from);
         TextureRenderComponent texture = new TextureRenderComponent("images/laserball.png");
         fireball.addComponent(texture);
         texture.scaleEntity();
         ColliderComponent collider = fireball.getComponent(ColliderComponent.class);
-        collider.setLayer(PhysicsLayer.ENEMY_PROJECTILE)
-                .setFilter(PhysicsLayer.ENEMY_PROJECTILE, PhysicsLayer.PLAYER);
+        collider.setLayer(PhysicsLayer.ENEMY_PROJECTILE).setFilter(PhysicsLayer.ENEMY_PROJECTILE, PhysicsLayer.PLAYER);
         return fireball;
     }
 
     public static Entity createWarning(Vector2 pos) {
-        Entity warning = new Entity()
-                .addComponent(new TextureRenderComponent("images/warning.png"));
+        Entity warning = new Entity().addComponent(new TextureRenderComponent("images/warning.png"));
         warning.setPosition(pos);
         return warning;
     }
 
     public static Entity createMissle(Vector2 from) {
-        Entity missle = new Entity()
-                .addComponent(new PhysicsComponent())
-                .addComponent(new ColliderComponent())
-                .addComponent(new HitboxComponent().setLayer(PhysicsLayer.ENEMY_PROJECTILE))
-                .addComponent(new CombatStatsComponent(1))
-                .addComponent(new WeaponsStatsComponent(12))
-                .addComponent(new PhysicsProjectileComponent())
-                .addComponent(new MissleMovementComponent(3f))
-                .addComponent(new TouchAttackComponent(PhysicsLayer.PLAYER, 1f));
+        Entity missle = new Entity().addComponent(new PhysicsComponent()).addComponent(new ColliderComponent()).addComponent(new HitboxComponent().setLayer(PhysicsLayer.ENEMY_PROJECTILE)).addComponent(new CombatStatsComponent(1)).addComponent(new WeaponsStatsComponent(12)).addComponent(new PhysicsProjectileComponent()).addComponent(new MissleMovementComponent(3f)).addComponent(new TouchAttackComponent(PhysicsLayer.PLAYER, 1f));
         missle.setPosition(from);
         TextureRenderComponent texture = new TextureRenderComponent("images/missle.png");
         missle.addComponent(texture);
@@ -295,8 +191,7 @@ public class BossFactory {
         Vector2 s = missle.getScale();
         missle.setScale(s.x * 0.3f, s.y * 0.3f);
         ColliderComponent collider = missle.getComponent(ColliderComponent.class);
-        collider.setLayer(PhysicsLayer.ENEMY_PROJECTILE)
-                .setFilter(PhysicsLayer.ENEMY_PROJECTILE, PhysicsLayer.PLAYER);
+        collider.setLayer(PhysicsLayer.ENEMY_PROJECTILE).setFilter(PhysicsLayer.ENEMY_PROJECTILE, PhysicsLayer.PLAYER);
         return missle;
     }
 
@@ -309,33 +204,17 @@ public class BossFactory {
      */
 
     public static Entity createBaseNPC(Entity target) {
-        AITaskComponent aiComponent =
-                new AITaskComponent()
-                        .addTask(new WanderTask(new Vector2(4f, 4f), 2f))
-                        .addTask(new ChaseTask(target, 10, 6f, 8f));
-        Entity npc =
-                new Entity()
-                        .addComponent(new PhysicsComponent())
-                        .addComponent(new PhysicsMovementComponent())
-                        .addComponent(new ColliderComponent())
-                        .addComponent(new HitboxComponent().setLayer(PhysicsLayer.NPC))
-                        .addComponent(new TouchAttackComponent(PhysicsLayer.PLAYER, 1.5f))
-                        .addComponent(aiComponent);
+        AITaskComponent aiComponent = new AITaskComponent().addTask(new WanderTask(new Vector2(4f, 4f), 2f)).addTask(new ChaseTask(target, 10, 6f, 8f));
+        Entity npc = new Entity().addComponent(new PhysicsComponent()).addComponent(new PhysicsMovementComponent()).addComponent(new ColliderComponent()).addComponent(new HitboxComponent().setLayer(PhysicsLayer.NPC)).addComponent(new TouchAttackComponent(PhysicsLayer.PLAYER, 1.5f)).addComponent(aiComponent);
 
         PhysicsUtils.setScaledCollider(npc, 0.9f, 0.4f);
         return npc;
     }
 
     public static Entity createBaseBoss2(Entity target) {
-        Entity boss = new Entity()
-                .addComponent(new PhysicsComponent())
-                .addComponent(new PhysicsMovementComponent())
-                .addComponent(new ColliderComponent())
-                .addComponent(new HitboxComponent().setLayer(PhysicsLayer.NPC))
-                .addComponent(new TouchAttackComponent(PhysicsLayer.PLAYER, 1.5f));
+        Entity boss = new Entity().addComponent(new PhysicsComponent()).addComponent(new PhysicsMovementComponent()).addComponent(new ColliderComponent()).addComponent(new HitboxComponent().setLayer(PhysicsLayer.NPC)).addComponent(new TouchAttackComponent(PhysicsLayer.PLAYER, 1.5f));
 
-        TextureAtlas atlas = ServiceLocator.getResourceService()
-                .getAsset("images/boss_idle.atlas", TextureAtlas.class);
+        TextureAtlas atlas = ServiceLocator.getResourceService().getAsset("images/boss_idle.atlas", TextureAtlas.class);
 
         AnimationRenderComponent arc = new AnimationRenderComponent(atlas);
         arc.setDisposeAtlas(false);
@@ -357,11 +236,7 @@ public class BossFactory {
      * @return Array of cocoon spawn positions
      */
     public static Vector2[] getDefaultCocoonPositions() {
-        return new Vector2[]{
-                new Vector2(5f, 6f),
-                new Vector2(9f, 3f),
-                new Vector2(12f, 3f),
-        };
+        return new Vector2[]{new Vector2(5f, 6f), new Vector2(9f, 3f), new Vector2(12f, 3f),};
     }
 
     /**
@@ -373,9 +248,7 @@ public class BossFactory {
     public static Entity createRobotWithCocoons(Entity target) {
         // Create original robot using existing method
         Entity robot = createRobot(target);
-        robot
-                .addComponent(new PhysicsComponent())
-                .addComponent(new ColliderComponent());
+        robot.addComponent(new PhysicsComponent()).addComponent(new ColliderComponent());
 
         // Add cocoon spawner component to existing robot
         Vector2[] cocoonPositions = getDefaultCocoonPositions();

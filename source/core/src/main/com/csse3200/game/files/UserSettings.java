@@ -27,9 +27,8 @@ public class UserSettings {
      */
     public static Settings get() {
         String path = ROOT_DIR + File.separator + SETTINGS_FILE;
-        Settings fileSettings = FileLoader.readClass(Settings.class, path, Location.EXTERNAL);
-        // Use default values if file doesn't exist
-        return fileSettings != null ? fileSettings : new Settings();
+        return FileLoader.read(Settings.class, path, Location.EXTERNAL)
+                .orElseGet(Settings::new); // default values if file missing/invalid
     }
 
     /**
@@ -40,7 +39,7 @@ public class UserSettings {
      */
     public static void set(Settings settings, boolean applyImmediate) {
         String path = ROOT_DIR + File.separator + SETTINGS_FILE;
-        FileLoader.writeClass(settings, path, Location.EXTERNAL);
+        FileLoader.write(settings, path, Location.EXTERNAL);
 
         if (applyImmediate) {
             applySettings(settings);

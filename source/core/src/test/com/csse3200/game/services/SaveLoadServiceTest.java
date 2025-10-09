@@ -37,6 +37,56 @@ class SaveLoadServiceTest {
     private static final int INVENTORY_PROCESSES = 1;
     private static final int EXPECTED_ROUND_NUMBER = 2;
 
+    @Test
+    void save_setsExpectedSnapshot_withoutFileIO() {
+        CombatStatsComponent stats = new CombatStatsComponent(MAX_HEALTH);
+        stats.setHealth(INITIAL_HEALTH);
+
+        InventoryComponent inv = new InventoryComponent(INVENTORY_PROCESSES);
+        AmmoStatsComponent ammTest = new AmmoStatsComponent(INVENTORY_PROCESSES);
+        StaminaComponent stamTest = new StaminaComponent();
+
+        FakeEntity player = new FakeEntity();
+        player.addComponent(stats);
+        player.addComponent(inv);
+        player.addComponent(ammTest);
+        player.addComponent(stamTest);
+        player.setPosition(new Vector2(POS_X, POS_Y));
+
+        GameArea area = mock(GameArea.class);
+        when(area.getEntities()).thenReturn(List.of(player));
+        when(area.toString()).thenReturn(AREA_ID);
+
+        SaveLoadService service = new SaveLoadService();
+
+        final SaveGame.GameState[] captured = new SaveGame.GameState[1];
+        try (MockedStatic<FileLoader> mocked = mockStatic(FileLoader.class)) {
+            mocked.when(() ->
+                            FileLoader.write(any(SaveGame.GameState.class),
+                                    anyString(),
+                                    any(FileLoader.Location.class)))
+                    .thenAnswer(invocation -> {
+                        captured[0] = invocation.getArgument(0);
+                        return null;
+                    });
+
+            boolean ok = service.save(SLOT_ID, area);
+
+            Assertions.assertTrue(ok, "save() should return true");
+            Assertions.assertNotNull(captured[0], "Expected a single writeClass() call");
+
+            SaveGame.GameState out = captured[0];
+
+            // Assert snapshot fields
+            Assertions.assertEquals(AREA_ID, out.getGameArea());
+            Assertions.assertEquals(INITIAL_HEALTH, out.getPlayer().currentHealth, "Health should originate from CombatStatsComponent");
+            Assertions.assertEquals(POS_X, out.getPlayer().playerPos.x, FLOAT_EPS);
+            Assertions.assertEquals(POS_Y, out.getPlayer().playerPos.y, FLOAT_EPS);
+            Assertions.assertEquals(EXPECTED_ROUND_NUMBER, out.getWave());
+            Assertions.assertNotNull(out.getInventory(), "inventory list should be initialized (may be empty)");
+        }
+    }
+
     static class FakeEntity extends Entity {
         private final List<Component> comps = new ArrayList<>();
         private Vector2 pos = new Vector2();
@@ -67,56 +117,6 @@ class SaveLoadServiceTest {
             comps.add(component);
             component.setEntity(this);
             return this;
-        }
-    }
-
-    @Test
-    void save_setsExpectedSnapshot_withoutFileIO() {
-        CombatStatsComponent stats = new CombatStatsComponent(MAX_HEALTH);
-        stats.setHealth(INITIAL_HEALTH);
-
-        InventoryComponent inv = new InventoryComponent(INVENTORY_PROCESSES);
-        AmmoStatsComponent ammTest = new AmmoStatsComponent(INVENTORY_PROCESSES);
-        StaminaComponent stamTest = new StaminaComponent();
-
-        FakeEntity player = new FakeEntity();
-        player.addComponent(stats);
-        player.addComponent(inv);
-        player.addComponent(ammTest);
-        player.addComponent(stamTest);
-        player.setPosition(new Vector2(POS_X, POS_Y));
-
-        GameArea area = mock(GameArea.class);
-        when(area.getEntities()).thenReturn(List.of(player));
-        when(area.toString()).thenReturn(AREA_ID);
-
-        SaveLoadService service = new SaveLoadService();
-
-        final SaveGame.GameState[] captured = new SaveGame.GameState[1];
-        try (MockedStatic<FileLoader> mocked = mockStatic(FileLoader.class)) {
-            mocked.when(() ->
-                            FileLoader.writeClass(any(SaveGame.GameState.class),
-                                    anyString(),
-                                    any(FileLoader.Location.class)))
-                    .thenAnswer(invocation -> {
-                        captured[0] = invocation.getArgument(0);
-                        return null;
-                    });
-
-            boolean ok = service.save(SLOT_ID, area);
-
-            Assertions.assertTrue(ok, "save() should return true");
-            Assertions.assertNotNull(captured[0], "Expected a single writeClass() call");
-
-            SaveGame.GameState out = captured[0];
-
-            // Assert snapshot fields
-            Assertions.assertEquals(AREA_ID, out.getGameArea());
-            Assertions.assertEquals(INITIAL_HEALTH, out.getPlayer().currentHealth, "Health should originate from CombatStatsComponent");
-            Assertions.assertEquals(POS_X, out.getPlayer().playerPos.x, FLOAT_EPS);
-            Assertions.assertEquals(POS_Y, out.getPlayer().playerPos.y, FLOAT_EPS);
-            Assertions.assertEquals(EXPECTED_ROUND_NUMBER, out.getWave());
-            Assertions.assertNotNull(out.getInventory(), "inventory list should be initialized (may be empty)");
         }
     }
 }

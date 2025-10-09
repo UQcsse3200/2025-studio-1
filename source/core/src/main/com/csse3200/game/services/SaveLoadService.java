@@ -36,15 +36,13 @@ public class SaveLoadService {
      */
     public static SaveGame.GameState load() {
         String filePath = "saves" + File.separator + "slides.json";
-        SaveGame.GameState savedGame = SaveGame.loadGame(filePath);
-
-        return savedGame;
+        return SaveGame.loadGame(filePath)
+                .orElseThrow(() -> new IllegalStateException("Missing or invalid save: " + filePath));
     }
 
     /**
      * sets all the players stats based on the information from the save file json
      *
-     * @param playerStats
      */
     public static void loadPlayer(SaveGame.information playerStats) {
         ServiceLocator.getPlayer().getComponent(

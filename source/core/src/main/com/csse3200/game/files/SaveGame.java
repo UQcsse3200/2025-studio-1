@@ -16,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 
 /**
@@ -26,12 +27,12 @@ import java.util.ArrayList;
 public class SaveGame {
     private static final Logger logger = LoggerFactory.getLogger(SaveGame.class);
 
-    public static GameState loadGame(String fileName) {
-        return FileLoader.readPlayer(GameState.class, fileName, FileLoader.Location.LOCAL);
+    public static Optional<GameState> loadGame(String fileName) {
+        return FileLoader.readGameState(fileName, FileLoader.Location.LOCAL);
     }
 
     public static void saveGame(GameState gameState, String fileName) {
-        FileLoader.writeClass(gameState, fileName, FileLoader.Location.LOCAL);
+        FileLoader.write(gameState, fileName, FileLoader.Location.LOCAL);
     }
 
     /**

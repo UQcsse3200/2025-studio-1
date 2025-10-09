@@ -35,14 +35,15 @@ public class PlayerFactory {
     }
 
     private static PlayerConfig safeLoadPlayerConfig() {
-        PlayerConfig cfg = FileLoader.readClass(PlayerConfig.class, "configs/player.json");
-        if (cfg == null) {
-            cfg = new PlayerConfig();
-            cfg.gold = 0;
-            cfg.health = 100;
-            cfg.baseAttack = 10;
-        }
-        return cfg;
+        String path = "configs/player.json";
+        return FileLoader.read(PlayerConfig.class, path, FileLoader.Location.INTERNAL)
+                .orElseGet(() -> {
+                    PlayerConfig cfg = new PlayerConfig();
+                    cfg.gold = 0;
+                    cfg.health = 100;
+                    cfg.baseAttack = 10;
+                    return cfg;
+                });
     }
 
     /**

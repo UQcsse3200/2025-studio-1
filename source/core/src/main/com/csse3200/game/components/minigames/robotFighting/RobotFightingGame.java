@@ -8,8 +8,6 @@ import com.csse3200.game.files.FileLoader;
 import com.csse3200.game.rendering.TextureRenderComponent;
 import com.csse3200.game.services.ServiceLocator;
 
-import java.util.Optional;
-
 /**
  * Core logic class for the "Clanker Royale" (Robot Fighting) minigame.
  * <p>
@@ -40,7 +38,7 @@ public class RobotFightingGame {
     /**
      * Preloaded text data containing random encouragement messages.
      */
-    private final Optional<RobotFightingText> encouragingMessages;
+    private final RobotFightingText encouragingMessages;
     /**
      * Root entity containing this minigame’s components and display.
      */
@@ -79,7 +77,9 @@ public class RobotFightingGame {
      * </p>
      */
     public RobotFightingGame() {
-        encouragingMessages = FileLoader.read(RobotFightingText.class, "games/robot-fighting.json", FileLoader.Location.INTERNAL);
+        encouragingMessages = FileLoader
+                .read(RobotFightingText.class, "games/robot-fighting.json", FileLoader.Location.INTERNAL)
+                .orElseGet(RobotFightingText::new);
 
         gameEntity = initGameEntity();
         gameDisplay = gameEntity.getComponent(RobotFightingDisplay.class);

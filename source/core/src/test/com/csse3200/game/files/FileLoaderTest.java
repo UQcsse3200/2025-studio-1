@@ -16,37 +16,42 @@ class FileLoaderTest {
 
     @Test
     void loadFromValidFile() {
-        TestStats test = FileLoader.readClass(TestStats.class, "test/files/valid.json");
-        assertNotNull(test);
+        TestStats test = FileLoader
+                .read(TestStats.class, "test/files/valid.json", FileLoader.Location.INTERNAL)
+                .orElseThrow(() -> new AssertionError("Missing or invalid test/files/valid.json"));
         assertEquals(3, test.stat1);
         assertEquals(4, test.stat2);
     }
 
+
     @Test
     void loadFromEmptyFile() {
-        TestStats test =
-                FileLoader.readClass(
-                        TestStats.class, "test/files/empty.json");
+        TestStats test = FileLoader
+                .read(TestStats.class, "test/files/empty.json", FileLoader.Location.INTERNAL)
+                .orElseThrow(() -> new AssertionError("Missing or invalid test/files/empty.json"));
+
         assertNotNull(test);
         assertEquals(1, test.stat1);
         assertEquals(2, test.stat2);
     }
 
     @Test
-    void loadFromMissingFile() {
-        TestStats test =
-                FileLoader.readClass(
-                        TestStats.class, "test/files/missing.json");
-        assertNull(test);
+    void loadFromMissingFile_returnsEmptyOptional() {
+        var result = FileLoader.read(
+                TestStats.class,
+                "test/files/missing.json",
+                FileLoader.Location.INTERNAL);
+
+        assertTrue(result.isEmpty(), "Expected empty Optional for a missing file");
     }
 
     @Test
-    void loadFromInvalidFile() {
-        TestStats test =
-                FileLoader.readClass(
-                        TestStats.class, "test/files/invalid.json");
-        assertNull(test);
+    void loadFromInvalidFile_returnsEmptyOptional() {
+        var result = FileLoader.read(
+                TestStats.class,
+                "test/files/invalid.json",
+                FileLoader.Location.INTERNAL);
+
+        assertTrue(result.isEmpty(), "Expected empty Optional for an invalid JSON file");
     }
-
-
 }
