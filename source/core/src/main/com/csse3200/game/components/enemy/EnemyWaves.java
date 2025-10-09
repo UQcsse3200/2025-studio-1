@@ -218,6 +218,7 @@ public class EnemyWaves extends Component {
      */
     public void setMaxWaves(int maxWaves) {
         this.maxWaves = maxWaves;
+        this.eventHandler.trigger("updateMaxWave");
     }
 
     /**
@@ -236,6 +237,7 @@ public class EnemyWaves extends Component {
      */
     public void setWaveNumber(int waveNumber) {
         this.waveNumber = waveNumber;
+        this.eventHandler.trigger("updateWaveNumber");
     }
 
     /**
@@ -247,7 +249,9 @@ public class EnemyWaves extends Component {
         this.waveEndTime = waveEndTime;
     }
 
-    public int getWaveDelayInSeconds() { return (int)WAVE_DELAY_MS / 1000; }
+    public int getWaveDelayInSeconds() {
+        return (int) WAVE_DELAY_MS / 1000;
+    }
 
     public EventHandler getEvents() {
         return eventHandler;

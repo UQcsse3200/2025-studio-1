@@ -24,6 +24,7 @@ import com.csse3200.game.services.ServiceLocator;
  */
 public class WinScreen extends BaseScreen {
     private BaseEndScreenDisplays uiDisplay;
+
     /**
      * Constructs a new WinScreen instance.
      * <p>

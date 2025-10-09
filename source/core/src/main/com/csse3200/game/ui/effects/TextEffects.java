@@ -5,12 +5,15 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.Timer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.nio.charset.StandardCharsets;
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.concurrent.ThreadLocalRandom;
+import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -22,7 +25,7 @@ import java.util.regex.Pattern;
  * - CRAZY block animation: {CRAZY [key=value ...]}text{/CRAZY}
  * Supported opts: fps, jitter, cycles, from=rand|A, rainbow, rhz, rshift,
  * style=normal|explode|blast, origin=left|middle|right,
- * spread=<int>, flash=<frames>, overshoot=<hops>,
+ * spread=[int], flash=[frames], overshoot=[hops],
  * edgeboost=0..1, flashhexa, flashhexb
  * - Rainbow per-char effects (sweep), full-label pulse, strobe, sparkle
  * - Random-line reader from internal files
@@ -33,19 +36,21 @@ import java.util.regex.Pattern;
  * IMPORTANT: All colorizing effects rebuild from plain text to avoid nested markup.
  */
 public class TextEffects {
+    public static final String FFE_066 = "ffe066";
+    public static final String FFFFFF = "ffffff";
+    private static final Logger log = LoggerFactory.getLogger(TextEffects.class);
     // Punctuation wheel for CRAZY
     private static final char[] PUNCT_RING = (
             ".,;:!?-_/\\|@#$%^&*()[]{}<>'\"+=~`"
     ).toCharArray();
-
+    private static final Random RNG = new SecureRandom();
+    private static final String GLITCH_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#%$*+-_=<>/?";
     // Cached sources (set via refreshBases / crazyOrType)
     private String baseMarked = "";
     private String basePlain = "";
-
+    // ---------- Public helpers ----------
     // Single running task per instance
     private Timer.Task task;
-
-    // ---------- Public helpers ----------
 
     /**
      * Read a random non-empty, non-comment line from an internal file; return fallback on error/empty.
@@ -62,12 +67,14 @@ public class TextEffects {
                 if (!t.isEmpty() && !t.startsWith("#")) pool.add(t);
             }
             if (pool.isEmpty()) return fallback;
-            int idx = ThreadLocalRandom.current().nextInt(pool.size());
+            int idx = RNG.nextInt(pool.size());
             return pool.get(idx);
         } catch (Exception e) {
             return fallback;
         }
     }
+
+    // ---------- Internal base management ----------
 
     /**
      * Ensure the font backing this label parses LibGDX color markup.
@@ -91,41 +98,50 @@ public class TextEffects {
         return s.replace(ESC, "[");
     }
 
-    // ---------- Internal base management ----------
-
     private static List<Piece> parseCrazyPieces(String s) {
-        final String OPEN = "{CRAZY";
-        final String CLOSE = "{/CRAZY}";
+        final int n = s.length();
         int idx = 0;
         List<Piece> out = new ArrayList<>();
-        while (idx < s.length()) {
-            int a = s.indexOf(OPEN, idx);
-            if (a < 0) {
-                out.add(Piece.plain(s.substring(idx)));
-                break;
-            }
-            if (a > idx) out.add(Piece.plain(s.substring(idx, a)));
-
-            int tagEnd = s.indexOf('}', a + OPEN.length());
-            if (tagEnd < 0) {
-                out.add(Piece.plain(s.substring(a)));
-                break;
-            }
-            String tagInside = s.substring(a + OPEN.length(), tagEnd).trim();
-
-            int b = s.indexOf(CLOSE, tagEnd + 1);
-            if (b < 0) {
-                out.add(Piece.plain(s.substring(a)));
-                break;
-            }
-
-            String inner = s.substring(tagEnd + 1, b);
-            CrazyOpts opts = parseOpts(tagInside);
-            out.add(Piece.crazy(inner, opts));
-            idx = b + CLOSE.length();
+        while (idx < n) {
+            idx = processCrazyChunk(s, idx, out);
         }
         return out;
     }
+
+    private static int processCrazyChunk(String s, int idx, List<Piece> out) {
+        final String OPEN_PREFIX = "{CRAZY";
+        final String CLOSE = "{/CRAZY}";
+        final int n = s.length();
+
+        int a = s.indexOf(OPEN_PREFIX, idx);
+        if (a < 0) {                    // no more opens: rest is plain
+            if (idx < n) out.add(Piece.plain(s.substring(idx)));
+            return n;
+        }
+
+        if (a > idx) {                  // emit leading plain
+            out.add(Piece.plain(s.substring(idx, a)));
+        }
+
+        int tagEnd = s.indexOf('}', a + OPEN_PREFIX.length());
+        if (tagEnd < 0) {               // malformed open (no '}'): rest plain
+            out.add(Piece.plain(s.substring(a)));
+            return n;
+        }
+
+        String tagInside = s.substring(a + OPEN_PREFIX.length(), tagEnd).trim();
+        int b = s.indexOf(CLOSE, tagEnd + 1);
+        if (b < 0) {                    // missing close: rest plain
+            out.add(Piece.plain(s.substring(a)));
+            return n;
+        }
+
+        String inner = s.substring(tagEnd + 1, b);
+        CrazyOpts opts = parseOpts(tagInside);
+        out.add(Piece.crazy(inner, opts));
+        return b + CLOSE.length();      // continue after close
+    }
+
 
     private static CrazyOpts parseOpts(String optStr) {
         CrazyOpts o = new CrazyOpts();
@@ -145,25 +161,26 @@ public class TextEffects {
                     case "rainbow" -> o.rainbow = ("true".equals(v) || "1".equals(v));
                     case "rhz" -> o.rhz = Math.clamp(Float.parseFloat(v), 0.01f, 5f);
                     case "rshift" -> o.rshift = Math.clamp(Float.parseFloat(v), 0f, 360f);
-
                     case "style" -> o.style = switch (v) {
                         case "explode" -> CrazyOpts.Style.EXPLODE;
                         case "blast" -> CrazyOpts.Style.BLAST;
                         default -> CrazyOpts.Style.NORMAL;
                     };
-                    case "origin" -> {
-                        if ("left".equals(v)) o.origin = CrazyOpts.Origin.LEFT;
-                        else if ("right".equals(v)) o.origin = CrazyOpts.Origin.RIGHT;
-                        else o.origin = CrazyOpts.Origin.MIDDLE;
-                    }
+                    case "origin" -> o.origin = switch (v) {
+                        case "left" -> CrazyOpts.Origin.LEFT;
+                        case "right" -> CrazyOpts.Origin.RIGHT;
+                        default -> CrazyOpts.Origin.MIDDLE;
+                    };
                     case "spread" -> o.spread = Math.max(0, Integer.parseInt(v));
                     case "flash" -> o.flashFrames = Math.max(0, Integer.parseInt(v));
                     case "overshoot" -> o.overshoot = Math.max(0, Integer.parseInt(v));
                     case "edgeboost" -> o.edgeBoost = Math.clamp(Float.parseFloat(v), 0f, 1f);
                     case "flashhexa" -> o.flashHexA = v.replace("#", "");
                     case "flashhexb" -> o.flashHexB = v.replace("#", "");
+                    default -> { /* ignore unknown keys to keep robustness */ }
                 }
-            } catch (NumberFormatException ignored) {
+            } catch (NumberFormatException e) {
+                log.warn("Bad opt value for key '{}' = '{}'", k, v, e);
             }
         }
         return o;
@@ -193,6 +210,8 @@ public class TextEffects {
         return false;
     }
 
+    // ---------- Color helpers ----------
+
     private static int hsvToRgb(float hDeg, float s, float v) {
         float h = (hDeg % 360f + 360f) % 360f / 60f;
         int i = (int) Math.floor(h);
@@ -200,7 +219,9 @@ public class TextEffects {
         float p = v * (1f - s);
         float q = v * (1f - s * f);
         float t = v * (1f - s * (1f - f));
-        float r, g, b;
+        float r;
+        float g;
+        float b;
         switch (i) {
             case 0 -> {
                 r = v;
@@ -233,10 +254,10 @@ public class TextEffects {
                 b = q;
             }
         }
-        int R = (int) (r * 255.0f + 0.5f);
-        int G = (int) (g * 255.0f + 0.5f);
-        int B = (int) (b * 255.0f + 0.5f);
-        return (R << 16) | (G << 8) | B;
+        int rA = (int) (r * 255.0f + 0.5f);
+        int gA = (int) (g * 255.0f + 0.5f);
+        int bA = (int) (b * 255.0f + 0.5f);
+        return (rA << 16) | (gA << 8) | bA;
     }
 
     private static String toHex6(int rgb) {
@@ -246,103 +267,132 @@ public class TextEffects {
         return "0".repeat(pad) + s;
     }
 
-    // ---------- Color helpers ----------
+    // ---------- Core effects (plain-text driven) ----------
 
     /**
      * Builds a BlockAnim for one CRAZY piece, with EXPLODE/BLAST timing.
      */
     private static BlockAnim buildBlock(String text, CrazyOpts opts) {
-        char[] target = (text == null ? "" : text).toCharArray();
-        char[] curr = new char[target.length];
-        int[] delays = new int[target.length];
-        int[] remaining = new int[target.length];
+        final char[] target = (text == null ? "" : text).toCharArray();
+        final int n = target.length;
+        final char[] curr = new char[n];
+        final int[] delays = new int[n];
+        final int[] remaining = new int[n];
+
+        final boolean isBlast = (opts.style == CrazyOpts.Style.BLAST);
+        final boolean isExplode = (opts.style == CrazyOpts.Style.EXPLODE);
 
         // BLAST arrays (null when not used)
-        int[] flashLeft = null;
-        int[] overshootLeft = null;
-        int[] postLockHold = null;
+        final int[] flashLeft = isBlast ? new int[n] : null;
+        final int[] overshootLeft = isBlast ? new int[n] : null;
+        final int[] postLockHold = isBlast ? new int[n] : null;
 
-        ThreadLocalRandom r = ThreadLocalRandom.current();
-        int n = target.length;
-
-        // origin index
-        int originIdx = switch (opts.origin) {
-            case LEFT -> 0;
-            case RIGHT -> Math.max(0, n - 1);
-            default -> Math.max(0, (n - 1) / 2);
-        };
-
-        boolean isBlast = (opts.style == CrazyOpts.Style.BLAST);
-        boolean isExplode = (opts.style == CrazyOpts.Style.EXPLODE);
-
-        if (isBlast) {
-            flashLeft = new int[n];
-            overshootLeft = new int[n];
-            postLockHold = new int[n];
-        }
+        final int originIdx = originIndex(n, opts.origin);
+        final float invEdgeSpan = inverseEdgeSpan(n, originIdx);
+        final boolean useDistDelay = isExplode || isBlast;
 
         for (int i = 0; i < n; i++) {
-            char t = target[i];
+            final char t = target[i];
 
-            // base jitter
-            int d = r.nextInt(0, Math.max(1, opts.jitter)); // 0..jitter-1
+            // 1) Delay (jitter + optional distance spread)
+            delays[i] = baseDelay(i, originIdx, useDistDelay, opts.jitter, opts.spread);
 
-            // explode/blast distance delay
-            if (isExplode || isBlast) {
-                int dist = Math.abs(i - originIdx);
-                d += dist * Math.max(0, opts.spread);
-            }
-            delays[i] = d;
+            // 2) Base cycles + optional BLAST edge boost
+            int extraCycles = opts.cycles + edgeBoostCycles(isBlast, n, i, originIdx, invEdgeSpan, t, opts.edgeBoost);
 
-            // base cycles
-            int extraCycles = opts.cycles;
+            // 3) Seed current glyph + remaining steps
+            initSeedState(curr, remaining, i, t, extraCycles, opts);
 
-            // edge boost for BLAST: chars far from origin spin longer
-            if (isBlast && n > 1) {
-                float distNorm = Math.abs(i - originIdx) / (float) Math.max(1, Math.max(originIdx, n - 1 - originIdx));
-                int baseSpan = isLetter(t) ? 26 : isDigit(t) ? 10 : PUNCT_RING.length;
-                extraCycles += Math.round(distNorm * opts.edgeBoost * baseSpan);
-            }
-
-            remaining[i] = 0;
-
-            if (isLetter(t)) {
-                curr[i] = (opts.from == CrazyOpts.From.RAND)
-                        ? (isUpper(t) ? (char) ('A' + r.nextInt(26)) : (char) ('a' + r.nextInt(26)))
-                        : (isUpper(t) ? 'A' : 'a');
-                remaining[i] = extraCycles;
-            } else if (isDigit(t)) {
-                curr[i] = (opts.from == CrazyOpts.From.RAND) ? (char) ('0' + r.nextInt(10)) : '0';
-                remaining[i] = extraCycles;
-            } else if (isPunctGlobal(t)) {
-                int start = (opts.from == CrazyOpts.From.RAND) ? r.nextInt(PUNCT_RING.length) : 0;
-                curr[i] = PUNCT_RING[start];
-                remaining[i] = extraCycles;
-            } else {
-                curr[i] = t; // snap
-                delays[i] = 0;
-                remaining[i] = 0;
-            }
-
-            if (isBlast) {
-                // brief flash as it locks
-                flashLeft[i] = Math.max(0, opts.flashFrames);
-                // tiny overshoot hop after the spins finish (2 ticks per hop: off/back)
-                overshootLeft[i] = Math.max(0, opts.overshoot * 2);
-                // hold gets assigned in stepFrame when flash ends
-                postLockHold[i] = 0;
-            }
+            // 4) BLAST extras per-char
+            initBlastAt(isBlast, flashLeft, overshootLeft, postLockHold, i, opts.flashFrames, opts.overshoot);
         }
+
+        BlockAnim.Visual vis = new BlockAnim.Visual(
+                opts.rainbow,
+                opts.rhz,
+                opts.rshift,
+                sanitizeHex(opts.flashHexA, FFFFFF),
+                sanitizeHex(opts.flashHexB, FFE_066)
+        );
+
+        BlockAnim.BlastExtras blast = isBlast
+                ? new BlockAnim.BlastExtras(flashLeft, overshootLeft, postLockHold)
+                : null;
 
         return new BlockAnim(
                 Math.max(1, opts.fps),
-                delays, remaining, target, curr,
-                opts.rainbow, opts.rhz, opts.rshift,
-                flashLeft, overshootLeft, postLockHold,
-                (opts.flashHexA == null ? "ffffff" : opts.flashHexA),
-                (opts.flashHexB == null ? "ffe066" : opts.flashHexB)
+                delays,
+                remaining,
+                target,
+                curr,
+                vis,
+                blast
         );
     }
+
+    private static int originIndex(int n, CrazyOpts.Origin origin) {
+        return switch (origin) {
+            case LEFT -> 0;
+            case RIGHT -> Math.max(0, n - 1);
+            case MIDDLE -> Math.max(0, (n - 1) / 2);
+        };
+    }
+
+    private static float inverseEdgeSpan(int n, int originIdx) {
+        int edgeSpan = Math.max(originIdx, (n - 1) - originIdx);
+        return edgeSpan > 0 ? 1f / edgeSpan : 0f;
+    }
+
+    private static int baseDelay(int i, int originIdx, boolean distanceDelay, int jitter, int spread) {
+        int d = RNG.nextInt(0, Math.max(1, jitter)); // 0..jitter-1
+        if (distanceDelay) {
+            int dist = Math.abs(i - originIdx);
+            d += dist * Math.max(0, spread);
+        }
+        return d;
+    }
+
+    private static int glyphSpan(char t) {
+        if (isLetter(t)) return 26;
+        if (isDigit(t)) return 10;
+        return PUNCT_RING.length;
+    }
+
+    private static int edgeBoostCycles(boolean isBlast, int n, int i, int originIdx,
+                                       float invEdgeSpan, char t, float edgeBoost) {
+        if (!isBlast || n <= 1 || invEdgeSpan == 0f || edgeBoost <= 0f) return 0;
+        float distNorm = Math.abs(i - originIdx) * invEdgeSpan;
+        return Math.round(distNorm * edgeBoost * glyphSpan(t));
+    }
+
+    private static void initSeedState(char[] curr, int[] remaining, int idx, char t, int extraCycles, CrazyOpts opts) {
+        if (isLetter(t)) {
+            curr[idx] = BlockAnim.seedLetter(t, opts);
+            remaining[idx] = extraCycles;
+            return;
+        }
+        if (isDigit(t)) {
+            curr[idx] = BlockAnim.seedDigit(opts);
+            remaining[idx] = extraCycles;
+            return;
+        }
+        if (isPunctGlobal(t)) {
+            curr[idx] = BlockAnim.seedPunct(opts);
+            remaining[idx] = extraCycles;
+            return;
+        }
+        curr[idx] = t;         // snap for spaces/others
+        remaining[idx] = 0;
+    }
+
+    private static void initBlastAt(boolean isBlast, int[] flashLeft, int[] overshootLeft, int[] postLockHold,
+                                    int i, int flashFrames, int overshoot) {
+        if (!isBlast) return;
+        flashLeft[i] = Math.max(0, flashFrames);
+        overshootLeft[i] = Math.max(0, overshoot * 2); // off/back
+        postLockHold[i] = 0;                          // assigned when flash ends
+    }
+
 
     private static String sanitizeHex(String in, String def) {
         if (in == null) return def;
@@ -358,13 +408,126 @@ public class TextEffects {
         return s;
     }
 
-    // ---------- Core effects (plain-text driven) ----------
-
     public static void ensureOwnStyle(Label label) {
         Label.LabelStyle s = label.getStyle();
         if (s == null) return;
         // Defensive clone so we don't mutate a shared style from the Skin
         label.setStyle(new Label.LabelStyle(s));
+    }
+
+    /**
+     * Frames between A↔B color toggles for a given frequency. If hz <= 0, never toggles.
+     */
+    private static int framesPerToggle(float hz, int fps) {
+        if (hz <= 0f) return Integer.MAX_VALUE;
+        // Two toggles per full cycle (A->B and B->A), so divide by (hz*2)
+        return Math.max(1, Math.round(fps / (hz * 2f)));
+    }
+
+    private static List<BlockAnim> buildBlocks(List<Piece> pieces) {
+        List<BlockAnim> blocks = new ArrayList<>();
+        for (Piece p : pieces) {
+            if (p.kind == Piece.Kind.CRAZY) {
+                blocks.add(buildBlock(p.text, p.opts));
+            }
+        }
+        return blocks;
+    }
+
+    private static int maxFps(List<BlockAnim> blocks) {
+        int fps = 1;
+        for (BlockAnim b : blocks) {
+            if (b.fps > fps) fps = b.fps;
+        }
+        return fps;
+    }
+
+    private static boolean advanceAll(List<BlockAnim> blocks, int finalFps) {
+        boolean allDone = true;
+        for (BlockAnim b : blocks) {
+            b.subframe++;
+            int skip = Math.max(1, Math.round((float) finalFps / b.fps));
+            boolean shouldStep = (b.subframe % skip == 0) && !b.done;
+            if (shouldStep) {
+                b.stepFrame();
+            }
+            if (!b.done) {
+                allDone = false;
+            }
+        }
+        return allDone;
+    }
+
+    private static String renderPieces(List<Piece> pieces, List<BlockAnim> blocks) {
+        StringBuilder sb = new StringBuilder();
+        int bi = 0;
+        for (Piece p : pieces) {
+            if (p.kind == Piece.Kind.PLAIN) {
+                sb.append(p.text);
+            } else {
+                sb.append(blocks.get(bi++).currentString());
+            }
+        }
+        return sb.toString();
+    }
+
+    private static void initGlitchState(char[] target, char[] curr, boolean[] locked) {
+        for (int i = 0; i < target.length; i++) {
+            char t = target[i];
+            boolean isSpace = (t == ' ');
+            locked[i] = isSpace;
+            curr[i] = isSpace ? ' ' : GLITCH_CHARS.charAt(RNG.nextInt(GLITCH_CHARS.length()));
+        }
+    }
+
+    private static int lockCountForFrame(int frame, int totalFrames, int len) {
+        // proportionally increase locks; clamp to [0, len]
+        int count = Math.round((frame / (float) totalFrames) * len);
+        return Math.clamp(count, 0, len);
+    }
+
+    private static void lockProgress(boolean[] locked, char[] target, char[] curr, int lockCount) {
+        // lock from the start-up to lockCount indices that aren’t spaces and not yet locked
+        for (int i = 0; i < lockCount; i++) {
+            if (!locked[i] && target[i] != ' ') {
+                locked[i] = true;
+                curr[i] = target[i];
+            }
+        }
+    }
+
+
+    // ---------- CRAZY orchestration ----------
+
+    private static void scrambleUnlocked(boolean[] locked, char[] target, char[] curr) {
+        // refresh random glyphs for any still-unlocked, non-space characters
+        for (int i = 0; i < target.length; i++) {
+            if (!locked[i] && target[i] != ' ') {
+                curr[i] = GLITCH_CHARS.charAt(RNG.nextInt(GLITCH_CHARS.length()));
+            }
+        }
+    }
+
+    private static void appendSparkleChar(StringBuilder sb, char ch, boolean phaseA, float density) {
+        if (ch == ' ') {
+            sb.append(' ');
+            return;
+        }
+        boolean twinkle = RNG.nextFloat() < density;
+        if (twinkle) {
+            sb.append(phaseA ? "[#ffe066]" : "[#ffffff]");
+            appendEscaped(sb, ch);
+            sb.append("[]");
+        } else {
+            appendEscaped(sb, ch);
+        }
+    }
+
+    // ---------- Title/label color effects (driven from plain text) ----------
+
+    private static void appendEscaped(StringBuilder sb, char ch) {
+        if (ch == '[') sb.append("[[");
+        else sb.append(ch);
     }
 
     /**
@@ -389,14 +552,12 @@ public class TextEffects {
      * Basic typewriter from plain string.
      */
     public void typewriter(Label label, String fullText, float charsPerSecond) {
-        cancel();
-        final String text = fullText == null ? "" : fullText;
-        label.setText("");
-        if (text.isEmpty() || charsPerSecond <= 0f) return;
+        TypingInit init = prepareTyping(label, fullText, charsPerSecond);
+        if (init == null) return;
 
-        final float interval = 1f / charsPerSecond;
-        final StringBuilder buf = new StringBuilder();
-        final int[] i = {0};
+        final String text = init.text();
+        final StringBuilder buf = init.buf();
+        final int[] i = init.idx();
 
         task = Timer.schedule(new Timer.Task() {
             @Override
@@ -409,7 +570,7 @@ public class TextEffects {
                 buf.append(text.charAt(i[0]++));
                 label.setText(buf.toString());
             }
-        }, 0f, interval);
+        }, 0f, init.interval());
     }
 
     /**
@@ -417,14 +578,13 @@ public class TextEffects {
      */
     public void typewriterSmart(Label label, String fullText, float charsPerSecond,
                                 float shortPause, float longPause, Runnable onTick) {
-        cancel();
-        final String text = fullText == null ? "" : fullText;
-        label.setText("");
-        if (text.isEmpty() || charsPerSecond <= 0f) return;
+        TypingInit init = prepareTyping(label, fullText, charsPerSecond);
+        if (init == null) return;
 
-        final float baseInterval = 1f / charsPerSecond;
-        final StringBuilder buf = new StringBuilder();
-        final int[] i = {0};
+        final String text = init.text();
+        final StringBuilder buf = init.buf();
+        final int[] i = init.idx();
+        final float baseInterval = init.interval();
 
         task = Timer.schedule(new Timer.Task() {
             @Override
@@ -454,6 +614,22 @@ public class TextEffects {
                 task = Timer.schedule(this, Math.max(0f, baseInterval + extra));
             }
         }, 0f);
+    }
+
+    /**
+     * Common init for typing effects that start from an empty label.
+     * Cancels any running task, normalises text, clears label, validates cps,
+     * then returns the pieces you need to schedule the animation.
+     * Returns null if there is nothing to animate.
+     */
+    private TypingInit prepareTyping(Label label, String fullText, float charsPerSecond) {
+        cancel();
+        final String text = (fullText == null) ? "" : fullText;
+        label.setText("");
+        if (text.isEmpty() || charsPerSecond <= 0f) return null;
+
+        final float interval = 1f / charsPerSecond;
+        return new TypingInit(text, interval, new StringBuilder(), new int[]{0});
     }
 
     /**
@@ -512,7 +688,7 @@ public class TextEffects {
     public void backspaceTo(Label label, int targetLength, float charsPerSecond) {
         cancel();
         final StringBuilder buf = new StringBuilder(label.getText().toString());
-        final int tgt = Math.max(0, Math.min(targetLength, buf.length()));
+        final int tgt = Math.clamp(buf.length(), 0, targetLength);
         if (charsPerSecond <= 0f || buf.length() <= tgt) return;
 
         final float interval = 1f / charsPerSecond;
@@ -535,7 +711,8 @@ public class TextEffects {
     public void glitchReveal(Label label, String finalText, float durationSec) {
         cancel();
         enableMarkup(label);
-        final String tgt = finalText == null ? "" : finalText;
+
+        final String tgt = (finalText == null) ? "" : finalText;
         if (durationSec <= 0f || tgt.isEmpty()) {
             label.setText(tgt);
             return;
@@ -544,14 +721,8 @@ public class TextEffects {
         final char[] target = tgt.toCharArray();
         final char[] curr = new char[target.length];
         final boolean[] locked = new boolean[target.length];
-        final ThreadLocalRandom r = ThreadLocalRandom.current();
-        final String charset = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#%$*+-_=<>/?";
 
-        for (int i = 0; i < target.length; i++) {
-            char t = target[i];
-            curr[i] = (t == ' ' ? ' ' : charset.charAt(r.nextInt(charset.length())));
-            locked[i] = (t == ' ');
-        }
+        initGlitchState(target, curr, locked);
 
         final int fps = 60;
         final int totalFrames = Math.max(1, Math.round(durationSec * fps));
@@ -560,38 +731,21 @@ public class TextEffects {
         task = Timer.schedule(new Timer.Task() {
             @Override
             public void run() {
-                // EARLY EXIT so extra runs from tests don't overrun arrays
                 if (frame[0] >= totalFrames) {
                     label.setText(tgt);
                     cancel();
                     return;
                 }
 
-                float progress = (float) frame[0] / totalFrames;
-                int lockCount = Math.round(progress * target.length);
-                // CLAMP to avoid AIOOBE if extra runs happen
-                lockCount = Math.min(lockCount, target.length);
-
-                for (int k = 0; k < lockCount; k++) {
-                    if (!locked[k] && target[k] != ' ') {
-                        locked[k] = true;
-                        curr[k] = target[k];
-                    }
-                }
-                for (int i = 0; i < target.length; i++) {
-                    if (!locked[i] && target[i] != ' ') {
-                        curr[i] = charset.charAt(r.nextInt(charset.length()));
-                    }
-                }
+                final int lockCount = lockCountForFrame(frame[0], totalFrames, target.length);
+                lockProgress(locked, target, curr, lockCount);
+                scrambleUnlocked(locked, target, curr);
 
                 label.setText(new String(curr));
                 frame[0]++;
             }
         }, 0f, 1f / fps);
     }
-
-
-    // ---------- CRAZY orchestration ----------
 
     /**
      * Full-label rainbow pulse (no per-char phase).
@@ -642,20 +796,24 @@ public class TextEffects {
         }, 0f, interval);
     }
 
-    // ---------- Title/label color effects (driven from plain text) ----------
-
     /**
      * Blink-highlight first occurrence of substring using markup, then restore.
      */
     public void flashHighlight(Label label, String substring, int flashes, float hz, String colorHex) {
         cancel();
         final String text = label.getText().toString();
-        final int idx = (substring == null || substring.isEmpty()) ? -1 : text.indexOf(substring);
-        if (idx < 0 || flashes <= 0) return;
+        if (flashes <= 0) return;
+        if (substring == null || substring.isEmpty()) return;   // <— ensure non-null below
+        if (text.isEmpty()) return;
 
         enableMarkup(label);
+
+        final int idx = text.indexOf(substring);
+        if (idx < 0) return;
+
+        final int subLen = substring.length();
         final String pre = text.substring(0, idx);
-        final String mid = text.substring(idx, idx + substring.length());
+        final String mid = text.substring(idx, idx + subLen);
         final String post = text.substring(idx + substring.length());
         final String safeHex = (colorHex == null || colorHex.isEmpty()) ? "ffff00" : colorHex.toLowerCase(Locale.ROOT);
 
@@ -677,6 +835,8 @@ public class TextEffects {
             }
         }, 0f, interval);
     }
+
+    // ---------- CRAZY internal models + EXPLODE/BLAST ----------
 
     /**
      * Parse CRAZY blocks on the incoming text; if none, typewriter the plain text.
@@ -711,54 +871,27 @@ public class TextEffects {
     private void startCrazyRevealMulti(Label label, List<Piece> pieces) {
         cancel();
 
-        // Build per-piece animation states
-        List<BlockAnim> blocks = new ArrayList<>();
-        for (Piece p : pieces) if (p.kind == Piece.Kind.CRAZY) blocks.add(buildBlock(p.text, p.opts));
-
+        final List<BlockAnim> blocks = buildBlocks(pieces);
         if (blocks.isEmpty()) {
             label.setText(joinPiecesStatic(pieces));
             return;
         }
 
-        int fps = 1;
-        for (BlockAnim b : blocks) fps = Math.max(fps, b.fps);
-        final int finalFps = fps;
-        final float interval = 1f / (float) fps;
+        final int finalFps = maxFps(blocks);
+        final float interval = 1f / finalFps;
 
         task = Timer.schedule(new Timer.Task() {
             @Override
             public void run() {
-                boolean allDone = true;
-
-                for (BlockAnim b : blocks) {
-                    b.subframe++;
-                    int skip = Math.max(1, Math.round((float) finalFps / b.fps));
-                    if (b.subframe % skip != 0) {
-                        if (!b.done) allDone = false;
-                        continue;
-                    }
-                    if (!b.done) {
-                        b.stepFrame();
-                        if (!b.done) allDone = false;
-                    }
-                }
-
-                // Rebuild full string
-                StringBuilder sb = new StringBuilder();
-                int bi = 0;
-                for (Piece p : pieces) {
-                    if (p.kind == Piece.Kind.PLAIN) sb.append(p.text);
-                    else sb.append(blocks.get(bi++).currentString());
-                }
-                label.setText(sb.toString());
-
+                boolean allDone = advanceAll(blocks, finalFps);
+                label.setText(renderPieces(pieces, blocks));
                 if (allDone) cancel();
             }
         }, 0f, interval);
     }
 
     /**
-     * Rapid color strobe A<->B for duration; restores plain text after.
+     * Rapid color strobe A==B for duration; restores plain text after.
      */
     public void strobe(Label label, String hexA, String hexB, float hz, float durationSec) {
         cancel();
@@ -767,7 +900,7 @@ public class TextEffects {
         final String text = basePlain;
 
         final String a = sanitizeHex(hexA, "00ff00");  // default green if bad
-        final String b = sanitizeHex(hexB, "ffffff");  // default white if bad
+        final String b = sanitizeHex(hexB, FFFFFF);  // default white if bad
 
         final float interval = 1f / Math.max(0.1f, hz) / 2f;
         final int totalTicks = Math.max(1, Math.round(durationSec / interval));
@@ -787,9 +920,6 @@ public class TextEffects {
         }, 0f, interval);
     }
 
-
-    // ---------- CRAZY internal models + EXPLODE/BLAST ----------
-
     /**
      * Smoothly pulse between two colors indefinitely; wraps plain text.
      */
@@ -799,8 +929,8 @@ public class TextEffects {
         if (basePlain == null || basePlain.isEmpty()) refreshBases(label, null);
         final String base = basePlain;
 
-        final String A = sanitizeHex(hexA, "ffffff");
-        final String B = sanitizeHex(hexB, "ffffff");
+        final String A = sanitizeHex(hexA, FFFFFF);
+        final String B = sanitizeHex(hexB, FFFFFF);
         final int Ar = Integer.parseInt(A.substring(0, 2), 16);
         final int Ag = Integer.parseInt(A.substring(2, 4), 16);
         final int Ab = Integer.parseInt(A.substring(4, 6), 16);
@@ -836,30 +966,28 @@ public class TextEffects {
 
         final char[] chars = basePlain.toCharArray();
         final int n = chars.length;
-        if (n == 0) return;
+        if (n == 0 || durationSec <= 0f || density <= 0f) return;
 
-        final int fps = Math.max(10, Math.round(hz * 2f * 10)); // enough frame rate for twinkle
+        final float dens = Math.clamp(density, 0f, 1f);
+        final int fps = 60;
         final int totalFrames = Math.max(1, Math.round(durationSec * fps));
+        final int toggleFrames = framesPerToggle(hz, fps);
+        final boolean staticPhaseA = (toggleFrames == Integer.MAX_VALUE);
         final int[] frame = {0};
-        final java.util.Random rng = new java.util.Random();
 
         task = Timer.schedule(new Timer.Task() {
             @Override
             public void run() {
+                final boolean phaseA = staticPhaseA || (((frame[0] / Math.max(1, toggleFrames)) & 1) == 0);
+
                 StringBuilder sb = new StringBuilder(n * 12);
                 for (char ch : chars) {
-                    boolean twinkle = rng.nextFloat() < density && ch != ' ';
-                    if (twinkle) {
-                        boolean phaseA = ((frame[0] / Math.max(1, (fps / (int) Math.max(1, hz)))) % 2) == 0;
-                        sb.append(phaseA ? "[#ffe066]" : "[#ffffff]");
-                        sb.append(ch == '[' ? "[[" : ch).append("[]");
-                    } else {
-                        sb.append(ch == '[' ? "[[" : ch);
-                    }
+                    appendSparkleChar(sb, ch, phaseA, dens);
                 }
                 label.setText(sb.toString());
+
                 frame[0]++;
-                if (frame[0] > totalFrames) {
+                if (frame[0] >= totalFrames) {
                     label.setText(basePlain);
                     cancel();
                 }
@@ -918,7 +1046,7 @@ public class TextEffects {
         final int totalTicks = Math.max(1, Math.round(durationSec / interval));
         final int[] tick = {0};
 
-        task = com.badlogic.gdx.utils.Timer.schedule(new com.badlogic.gdx.utils.Timer.Task() {
+        task = Timer.schedule(new Timer.Task() {
             @Override
             public void run() {
                 style.fontColor = (tick[0] % 2 == 0) ? a : b;
@@ -933,6 +1061,45 @@ public class TextEffects {
             }
         }, 0f, interval);
     }
+
+    private record TypingInit(String text, float interval, StringBuilder buf, int[] idx) {
+
+        @Override
+        public boolean equals(Object o) {
+            if (o == this) return true;
+
+            // record pattern: destructure 'o' into its components
+            if (!(o instanceof TypingInit(String t, float itv, StringBuilder b, int[] idx2))) {
+                return false;
+            }
+
+            return Float.compare(this.interval, itv) == 0
+                    && java.util.Objects.equals(this.text, t)
+                    && this.buf == b
+                    && java.util.Arrays.equals(this.idx, idx2);
+        }
+
+
+        @Override
+        public int hashCode() {
+            // Use identity for buf to match equals
+            int h = java.util.Objects.hash(this.text, this.interval, System.identityHashCode(this.buf));
+            h = 31 * h + java.util.Arrays.hashCode(this.idx);
+            return h;
+        }
+
+        @Override
+        public String toString() {
+            // Show buf identity, and idx contents
+            return "TypingInit[text=%s, interval=%s, buf@%s, idx=%s]".formatted(
+                    this.text,
+                    this.interval,
+                    java.lang.Integer.toHexString(System.identityHashCode(this.buf)),
+                    java.util.Arrays.toString(this.idx)
+            );
+        }
+    }
+
 
     private record Piece(Kind kind, String text, CrazyOpts opts) {
 
@@ -965,8 +1132,8 @@ public class TextEffects {
         int flashFrames = 3;    // white/yellow flash frames before lock
         int overshoot = 1;      // quick hop past target then back (2 ticks = off/back)
         float edgeBoost = 0.6f; // add extra cycles at edges (0..1)
-        String flashHexA = "ffffff";
-        String flashHexB = "ffe066";
+        String flashHexA = FFFFFF;
+        String flashHexB = FFE_066;
 
         enum From {A, RAND}
 
@@ -977,8 +1144,8 @@ public class TextEffects {
 
     private static class BlockAnim {
         final int fps;
-        final int[] delays;     // frames to wait before char starts
-        final int[] remaining;  // spin steps before settle (letters/digits/punct)
+        final int[] delays;
+        final int[] remaining;
         final char[] target;
         final char[] curr;
 
@@ -986,159 +1153,287 @@ public class TextEffects {
         final boolean rainbow;
         final float rhz;
         final float rshift;
-
-        // BLAST extras (nullable if not used)
-        final int[] flashLeft;      // per-char pre-lock flash frames
-        final int[] overshootLeft;  // per-char quick hop frames
-        final int[] postLockHold;   // tiny hold so flash can render once
         final String flashHexA;
         final String flashHexB;
+
+        // BLAST extras (nullable if not used)
+        final int[] flashLeft;
+        final int[] overshootLeft;
+        final int[] postLockHold;
 
         boolean done = false;
         int subframe = 0;
         int frame = 0;
 
-        BlockAnim(int fps, int[] delays, int[] remaining, char[] target, char[] curr,
-                  boolean rainbow, float rhz, float rshift,
-                  int[] flashLeft, int[] overshootLeft, int[] postLockHold,
-                  String flashHexA, String flashHexB) {
-            this.fps = fps;
+        // ***** exactly 7 parameters *****
+        BlockAnim(int fps,
+                  int[] delays,
+                  int[] remaining,
+                  char[] target,
+                  char[] curr,
+                  Visual visual,
+                  BlastExtras blast) {
+
+            // basic validation (no imports needed)
+            if (delays == null || remaining == null || target == null || curr == null) {
+                throw new IllegalArgumentException("Null array passed to BlockAnim");
+            }
+            int n = target.length;
+            if (curr.length != n || delays.length != n || remaining.length != n) {
+                throw new IllegalArgumentException("Array length mismatch in BlockAnim");
+            }
+
+            this.fps = Math.max(1, fps);
             this.delays = delays;
             this.remaining = remaining;
             this.target = target;
             this.curr = curr;
-            this.rainbow = rainbow;
-            this.rhz = rhz;
-            this.rshift = rshift;
-            this.flashLeft = flashLeft;
-            this.overshootLeft = overshootLeft;
-            this.postLockHold = postLockHold;
-            this.flashHexA = flashHexA;
-            this.flashHexB = flashHexB;
+
+            Visual v = (visual == null) ? Visual.defaults() : visual;
+            this.rainbow = v.rainbow;
+            this.rhz = v.rhz;
+            this.rshift = v.rshift;
+            this.flashHexA = v.flashHexA;
+            this.flashHexB = v.flashHexB;
+
+            if (blast != null) {
+                // allow any of these to be null; we treat null as "feature off"
+                this.flashLeft = blast.flashLeft;
+                this.overshootLeft = blast.overshootLeft;
+                this.postLockHold = blast.postLockHold;
+                // optional: verify lengths if non-null
+                if ((flashLeft != null && flashLeft.length != n) ||
+                        (overshootLeft != null && overshootLeft.length != n) ||
+                        (postLockHold != null && postLockHold.length != n)) {
+                    throw new IllegalArgumentException("BlastExtras array length mismatch");
+                }
+            } else {
+                this.flashLeft = null;
+                this.overshootLeft = null;
+                this.postLockHold = null;
+            }
+        }
+
+        private static char seedLetter(char t, CrazyOpts opts) {
+            if (opts.from == CrazyOpts.From.RAND) {
+                return isUpper(t) ? (char) ('A' + RNG.nextInt(26)) : (char) ('a' + RNG.nextInt(26));
+            }
+            return isUpper(t) ? 'A' : 'a';
+        }
+
+        private static char seedDigit(CrazyOpts opts) {
+            return (opts.from == CrazyOpts.From.RAND) ? (char) ('0' + RNG.nextInt(10)) : '0';
+        }
+
+        private static char seedPunct(CrazyOpts opts) {
+            int start = (opts.from == CrazyOpts.From.RAND) ? RNG.nextInt(PUNCT_RING.length) : 0;
+            return PUNCT_RING[start];
+        }
+
+        private static void appendEscaped(StringBuilder sb, char ch) {
+            if (ch == '[') sb.append("[[");
+            else sb.append(ch);
+        }
+
+        private static boolean hasPending(int[] arr, int i) {
+            return arr != null && arr[i] > 0;
         }
 
         void stepFrame() {
-            boolean all = true;
+            boolean allFinished = true;
             for (int i = 0; i < target.length; i++) {
-                char t = target[i];
-
-                if (delays[i] > 0) {
-                    delays[i]--;
-                    all = false;
-                    continue;
-                }
-
-                // If we still have spin steps, advance ring
-                if (remaining[i] > 0) {
-                    if (isLetter(t)) spinLetter(i, t);
-                    else if (isDigit(t)) spinDigit(i, t);
-                    else if (isPunctGlobal(t)) spinPunct(i, t);
-                    remaining[i]--;
-                    all = false;
-                    continue;
-                }
-
-                // Overshoot (hop one step past target then back)
-                if (overshootLeft != null && overshootLeft[i] > 0) {
-                    if (overshootLeft[i] % 2 == 0) {
-                        // hop off target
-                        if (isLetter(t)) spinLetter(i, t);
-                        else if (isDigit(t)) spinDigit(i, t);
-                        else if (isPunctGlobal(t)) spinPunct(i, t);
-                    } else {
-                        // snap back to target
-                        curr[i] = t;
-                    }
-                    overshootLeft[i]--;
-                    all = false;
-                    continue;
-                }
-
-                // Flash frames before final settle (rendered in currentString)
-                if (flashLeft != null && flashLeft[i] > 0) {
-                    curr[i] = t; // ensure we show the real glyph during flash
-                    flashLeft[i]--;
-                    all = false;
-                    // we keep postLockHold so at least one frame shows final color after flash
-                    if (flashLeft[i] == 0 && postLockHold != null) postLockHold[i] = 1;
-                    continue;
-                }
-
-                // Hold one frame at final glyph (prevents skipping if multiple chars finish same frame)
-                if (postLockHold != null && postLockHold[i] > 0) {
-                    postLockHold[i]--;
-                    // fall through to mark finished this loop
-                } else {
-                    curr[i] = t; // ensure target
+                if (processCharAt(i)) { // true => more work pending for this char
+                    allFinished = false;
                 }
             }
-            done = all;
+            done = allFinished;
             frame++;
         }
 
+        private boolean processCharAt(int i) {
+            final char t = target[i];
+
+            if (hasPending(delays, i)) {
+                delays[i]--;
+                return true;
+            }
+
+            if (hasPending(remaining, i)) {
+                spinAdvance(i, t);
+                remaining[i]--;
+                return true;
+            }
+
+            if (handleOvershoot(i, t)) return true;
+            if (handleFlash(i, t)) return true;
+
+            if (hasPending(postLockHold, i)) {
+                postLockHold[i]--;
+                curr[i] = t;
+                return false;
+            }
+
+            curr[i] = t; // settled
+            return false;
+        }
+
+        private boolean handleOvershoot(int i, char t) {
+            if (!hasPending(overshootLeft, i)) return false;
+            if ((overshootLeft[i] & 1) == 0) {
+                spinAdvance(i, t);       // hop off target
+            } else {
+                curr[i] = t;             // snap back
+            }
+            overshootLeft[i]--;
+            return true;
+        }
+
+        private boolean handleFlash(int i, char t) {
+            if (!hasPending(flashLeft, i)) return false;
+            curr[i] = t;
+            flashLeft[i]--;
+            if (flashLeft[i] == 0 && postLockHold != null) {
+                postLockHold[i] = 1;     // ensure one visible frame after flash
+            }
+            return true;
+        }
+
+        private void spinAdvance(int i, char t) {
+            if (isLetter(t)) {
+                spinLetter(i, t);
+            } else if (isDigit(t)) {
+                spinDigit(i, t);
+            } else {
+                spinPunct(i, t);
+            }
+        }
+
+        // Only spin if t is a letter; otherwise do nothing.
         private void spinLetter(int i, char t) {
-            boolean upper = isUpper(t);
-            char base = upper ? 'A' : 'a';
-            int span = 26;
-            if (curr[i] == 0) curr[i] = base;
-            int off = (curr[i] - base + 1) % span;
-            curr[i] = (char) (base + off);
+            if (!isLetter(t)) return;
+
+            final boolean upper = isUpper(t);
+            final char base = upper ? 'A' : 'a';
+            final int span = 26;
+
+            char c = curr[i];
+            c = upper ? Character.toUpperCase(c) : Character.toLowerCase(c);
+            if (c < base || c > (char) (base + span - 1)) c = base;
+
+            // advance by 1 using floorMod; no need for the pos<0 fixup branch
+            int pos = Math.floorMod((c - base + 1), span);
+            curr[i] = (char) (base + pos);
         }
 
+        // Only spin if t is a digit; otherwise do nothing.
         private void spinDigit(int i, char t) {
-            char base = '0';
-            int span = 10;
-            if (curr[i] == 0) curr[i] = base;
-            int off = (curr[i] - base + 1) % span;
-            curr[i] = (char) (base + off);
+            if (!isDigit(t)) return;                 // <-- guard for tests
+
+            int pos = (curr[i] >= '0' && curr[i] <= '9') ? (curr[i] - '0') : 0;
+            pos = (pos + 1) % 10;
+            curr[i] = (char) ('0' + pos);
         }
 
+        // Only spin if t is punctuation in our ring; otherwise do nothing.
         private void spinPunct(int i, char t) {
-            if (curr[i] == 0) curr[i] = PUNCT_RING[0];
+            if (!isPunctGlobal(t)) return;           // <-- guard for tests
+
             int idx = 0;
-            for (int k = 0; k < PUNCT_RING.length; k++)
-                if (PUNCT_RING[k] == curr[i]) {
+            char c = curr[i];
+            for (int k = 0; k < PUNCT_RING.length; k++) {
+                if (PUNCT_RING[k] == c) {
                     idx = k;
                     break;
                 }
+            }
             curr[i] = PUNCT_RING[(idx + 1) % PUNCT_RING.length];
         }
 
         String currentString() {
-            // If rainbow-off and no flash needed, fast path
-            if (!rainbow && (flashLeft == null || allZero(flashLeft))) return new String(curr);
+            final boolean hasAnyFlash = (flashLeft != null) && !allZero(flashLeft);
 
-            StringBuilder sb = new StringBuilder(curr.length * 14);
-            float phase = (frame * (rhz / Math.max(1f, fps))) * 360f;
+            // Fast path: no rainbow and no flash anywhere
+            if (!rainbow && !hasAnyFlash) {
+                return new String(curr);
+            }
+
+            final StringBuilder sb = new StringBuilder(curr.length * 14);
+            final float phase = (frame * (rhz / Math.max(1f, fps))) * 360f;
 
             for (int i = 0; i < curr.length; i++) {
-                char ch = curr[i];
-
-                // Flash coloring if active
-                if (flashLeft != null && flashLeft[i] > 0) {
-                    boolean a = (flashLeft[i] % 2 == 0);
-                    sb.append("[#").append(a ? flashHexA : flashHexB).append("]");
-                    sb.append(ch == '[' ? "[[" : ch).append("[]");
-                    continue;
-                }
-
-                if (!rainbow && allZero(flashLeft)) {
-                    return new String(curr);   // <-- allZero(true) branch leads here
-                }
-
-
-                float hue = (phase + i * rshift) % 360f;
-                String hex = toHex6(hsvToRgb(hue, 1f, 1f));
-                sb.append("[#").append(hex).append("]");
-                sb.append(ch == '[' ? "[[" : ch).append("[]");
+                appendRenderedChar(sb, i, phase, rainbow);
             }
             return sb.toString();
+        }
+
+        private void appendRenderedChar(StringBuilder sb, int i, float phase, boolean rainbowActive) {
+            final char ch = curr[i];
+
+            // Flash takes priority over rainbow
+            if (isFlashing(i)) {
+                appendFlash(sb, ch, flashLeft[i]);
+                return;
+            }
+
+            if (!rainbowActive) {
+                appendEscaped(sb, ch);
+                return;
+            }
+
+            final float hue = (phase + i * rshift) % 360f;
+            final String hex = toHex6(hsvToRgb(hue, 1f, 1f));
+            sb.append("[#").append(hex).append("]");
+            appendEscaped(sb, ch);
+            sb.append("[]");
+        }
+
+        private boolean isFlashing(int i) {
+            return flashLeft != null && flashLeft[i] > 0;
+        }
+
+        private void appendFlash(StringBuilder sb, char ch, int flashCounter) {
+            final boolean useA = (flashCounter & 1) == 0;
+            sb.append("[#").append(useA ? flashHexA : flashHexB).append("]");
+            appendEscaped(sb, ch);
+            sb.append("[]");
         }
 
         private boolean allZero(int[] arr) {
             if (arr == null) return true;
             for (int v : arr) if (v != 0) return false;
             return true;
+        }
+
+        private static final class Visual {
+            final boolean rainbow;
+            final float rhz;
+            final float rshift;
+            final String flashHexA;
+            final String flashHexB;
+
+            Visual(boolean rainbow, float rhz, float rshift, String flashHexA, String flashHexB) {
+                this.rainbow = rainbow;
+                this.rhz = rhz;
+                this.rshift = rshift;
+                this.flashHexA = (flashHexA == null || flashHexA.isEmpty()) ? FFFFFF : flashHexA;
+                this.flashHexB = (flashHexB == null || flashHexB.isEmpty()) ? FFE_066 : flashHexB;
+            }
+
+            static Visual defaults() {
+                return new Visual(false, 0.6f, 18f, FFFFFF, FFE_066);
+            }
+        }
+
+        private static final class BlastExtras {
+            final int[] flashLeft;
+            final int[] overshootLeft;
+            final int[] postLockHold;
+
+            BlastExtras(int[] flashLeft, int[] overshootLeft, int[] postLockHold) {
+                this.flashLeft = flashLeft;
+                this.overshootLeft = overshootLeft;
+                this.postLockHold = postLockHold;
+            }
         }
     }
 }

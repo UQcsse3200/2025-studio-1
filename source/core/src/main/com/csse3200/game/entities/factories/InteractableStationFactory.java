@@ -15,6 +15,10 @@ import com.csse3200.game.rendering.TextureRenderComponent;
 public class InteractableStationFactory {
 
 
+    private InteractableStationFactory() {
+        throw new IllegalStateException("Instantiating static util class");
+    }
+
     /**
      * Creates a base interactable station
      *
@@ -49,11 +53,6 @@ public class InteractableStationFactory {
         bench.getComponent(ColliderComponent.class).setAsBoxAligned(new Vector2(1f, 1f),
                 PhysicsComponent.AlignX.CENTER, PhysicsComponent.AlignY.CENTER);
         return bench;
-    }
-
-
-    private InteractableStationFactory() {
-        throw new IllegalStateException("Instantiating static util class");
     }
 
 }

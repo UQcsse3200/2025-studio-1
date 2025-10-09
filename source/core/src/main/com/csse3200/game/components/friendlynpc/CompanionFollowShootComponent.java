@@ -2,17 +2,18 @@ package com.csse3200.game.components.friendlynpc;
 
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.components.Component;
-import com.csse3200.game.components.player.PlayerActions;
 import com.csse3200.game.components.WeaponsStatsComponent;
+import com.csse3200.game.components.player.PlayerActions;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.factories.ProjectileFactory;
 import com.csse3200.game.physics.components.PhysicsProjectileComponent;
+import com.csse3200.game.rendering.TextureRenderComponent;
 import com.csse3200.game.services.ServiceLocator;
 
 public class CompanionFollowShootComponent extends Component {
     private float cooldown = 0.25f;
     private float cd = 0f;
-
+    private boolean attack = false;
     private Entity boundPlayer;
 
     @Override
@@ -41,13 +42,12 @@ public class CompanionFollowShootComponent extends Component {
 
     private void onShootOrder(Vector2 world, Vector2 playerDir) {
         if (cd > 0f) return;
-
+        if (!attack) return;
         PlayerActions pa = (boundPlayer != null) ? boundPlayer.getComponent(PlayerActions.class) : null;
         WeaponsStatsComponent stats = (pa != null) ? pa.getCurrentWeaponStats() : null;
         if (stats == null) return;
 
-        Entity bullet = ProjectileFactory.createPistolBullet(stats, false);
-
+        Entity bullet = ProjectileFactory.createFireballBullet(stats);
         Vector2 from = entity.getCenterPosition();
         bullet.setPosition(from.x - bullet.getScale().x / 2f, from.y - bullet.getScale().y / 2f);
 
@@ -69,7 +69,12 @@ public class CompanionFollowShootComponent extends Component {
         cd = cooldown;
         entity.getEvents().trigger("fired");
     }
-
+    public boolean isAttack() {
+        return attack;
+    }
+    public void setAttack(boolean attack) {
+        this.attack = attack;
+    }
     public CompanionFollowShootComponent cooldown(float seconds) {
         this.cooldown = seconds;
         return this;

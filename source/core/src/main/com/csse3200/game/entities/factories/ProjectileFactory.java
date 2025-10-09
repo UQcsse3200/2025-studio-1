@@ -28,6 +28,10 @@ import com.csse3200.game.services.ServiceLocator;
 
 public class ProjectileFactory {
 
+    private ProjectileFactory() {
+        throw new IllegalStateException("Instantiating static util class");
+    }
+
     /**
      * Base class to create a projectile.
      *
@@ -196,13 +200,14 @@ public class ProjectileFactory {
 
         projectile.getComponent(TextureRenderWithRotationComponent.class).setRotation(angleToFire);
         projectile.getComponent(TextureRenderWithRotationComponent.class).scaleEntity();
+        projectile.getComponent(TextureRenderWithRotationComponent.class).setHasRotated(true);
 
         return projectile;
     }
 
-
-    private ProjectileFactory() {
-        throw new IllegalStateException("Instantiating static util class");
+    public static Entity createFireballBullet(WeaponsStatsComponent baseStats) {
+        Entity projectile = createProjectile(ProjectileTarget.ENEMY, baseStats, "images/laserbullet.png");
+        projectile.scaleHeight(0.3f);
+        return projectile;
     }
-
 }

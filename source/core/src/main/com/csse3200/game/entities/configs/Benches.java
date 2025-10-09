@@ -23,7 +23,6 @@ public enum Benches {
     }
 
     /**
-     *
      * @return the bench config
      */
     public BenchConfig getConfig() {

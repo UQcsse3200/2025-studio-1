@@ -12,10 +12,10 @@ import com.csse3200.game.GdxGame;
 import com.csse3200.game.ui.effects.TextEffects;
 
 import java.util.Locale;
-import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Supplier;
 
 public class BaseEndScreenDisplays extends BaseScreenDisplay {
+    public static final String DEFEATED_STR = "DEFEATED";
     private final String titleText;
     private final Color titleColor;
     private final String primaryText;
@@ -33,12 +33,17 @@ public class BaseEndScreenDisplays extends BaseScreenDisplay {
     private Label timeLabelRef;
     private Runnable leaderboardAction;
 
-    /** Allow chaining a Leaderboard button */
-    public BaseEndScreenDisplays withLeaderboard(Runnable leaderboardAction) {
-        this.leaderboardAction = leaderboardAction;
-        return this;
-    }
-
+    /**
+     * Constructs a new end-of-run display with the given configuration.
+     *
+     * @param game            game instance used for screen navigation
+     * @param titleText       title text (e.g., "Victory", "DEFEATED")
+     * @param titleColor      colour to apply to the title
+     * @param primaryText     label for the primary button
+     * @param primaryAction   action executed on primary button press
+     * @param secondaryAction action executed on secondary button press; if {@code null},
+     *                        defaults to {@link #backMainMenu()}
+     */
     protected BaseEndScreenDisplays(
             GdxGame game,
             String titleText,
@@ -69,6 +74,12 @@ public class BaseEndScreenDisplays extends BaseScreenDisplay {
         this.subtitleSupplier = subtitleSupplier;
     }
 
+    /**
+     * Convenience factory for a Victory end screen.
+     *
+     * @param game game instance for navigation
+     * @return a configured {@code BaseEndScreenDisplays} showing "Victory" with a "Continue" action
+     */
     public static BaseEndScreenDisplays victory(GdxGame game) {
         return new BaseEndScreenDisplays(
                 game, "Victory", new Color(0f, 1f, 0f, 1f), "Continue",
@@ -78,9 +89,15 @@ public class BaseEndScreenDisplays extends BaseScreenDisplay {
         );
     }
 
+    /**
+     * Convenience factory for a Defeated end screen.
+     *
+     * @param game game instance for navigation
+     * @return a configured {@code BaseEndScreenDisplays} showing "DEFEATED" with a "Try Again" action
+     */
     public static BaseEndScreenDisplays defeated(GdxGame game) {
         return new BaseEndScreenDisplays(
-                game, "DEFEATED", new Color(1f, 0f, 0f, 1f), "Try Again",
+                game, DEFEATED_STR, new Color(1f, 0f, 0f, 1f), "Try Again",
                 () -> game.setScreen(GdxGame.ScreenType.MAIN_GAME),
                 null,
                 () -> TextEffects.readRandomLine("text/deathprompt.txt", "Death is only the beginning.")
@@ -91,6 +108,12 @@ public class BaseEndScreenDisplays extends BaseScreenDisplay {
         return s == null ? "" : s.trim();
     }
 
+    /**
+     * Formats seconds into {@code mm:ss}.
+     *
+     * @param totalSeconds total seconds to format
+     * @return a string formatted as {@code mm:ss}
+     */
     private static String toMMSS(long totalSeconds) {
         long m = totalSeconds / 60;
         long s = totalSeconds % 60;
@@ -101,9 +124,60 @@ public class BaseEndScreenDisplays extends BaseScreenDisplay {
     private static void neutralizeTint(Actor label, Actor wrapper, Table root) {
         if (root != null) root.setColor(Color.WHITE);
         if (wrapper != null) wrapper.setColor(Color.WHITE);
-        if (label != null) ((Label) label).setColor(Color.WHITE);
+        if (label != null) label.setColor(Color.WHITE);
     }
 
+    private static void at(float delay, Runnable r) {
+        Timer.schedule(new Timer.Task() {
+            @Override
+            public void run() {
+                r.run();
+            }
+        }, delay);
+    }
+
+    private static void neutralizeTintDeep(Label lbl, Actor... ancestors) {
+        // Wipe actor tint
+        lbl.setColor(1f, 1f, 1f, 1f);
+
+        // Copy style so we don't globally change the Skin
+        Label.LabelStyle s = lbl.getStyle();
+        if (s != null) {
+            Label.LabelStyle copy = new Label.LabelStyle(s);
+            if (copy.fontColor == null) copy.fontColor = new Color(Color.WHITE);
+            else copy.fontColor.set(Color.WHITE);
+            if (copy.fontColor != null) copy.fontColor.set(Color.WHITE);
+            lbl.setStyle(copy);
+            if (copy.font != null && copy.font.getData() != null) {
+                copy.font.getData().markupEnabled = true;
+            }
+        }
+
+        // Parent tint multiplies too; make sure they're white
+        if (ancestors != null) {
+            for (Actor a : ancestors) {
+                if (a != null) a.setColor(1f, 1f, 1f, 1f);
+            }
+        }
+    }
+
+    /**
+     * Allow chaining a Leaderboard button
+     */
+    public BaseEndScreenDisplays withLeaderboard(Runnable leaderboardAction) {
+        this.leaderboardAction = leaderboardAction;
+        return this;
+    }
+
+    /**
+     * Builds the end-screen UI: title, round/time labels, and the action buttons.
+     * <p>
+     * Appearance can be tuned by overriding the styling hooks:
+     * {@link #titleFontScale()}, {@link #infoFontScale()},
+     * {@link #buttonLabelScale()}, {@link #buttonsGap()}, {@link #blockPad()}.
+     *
+     * @param root the root table (already added to the Stage by {@link BaseScreenDisplay})
+     */
     @Override
     protected void buildUI(Table root) {
         // Title via addTitle(...), then wrap so we can transform the wrapper.
@@ -128,7 +202,7 @@ public class BaseEndScreenDisplays extends BaseScreenDisplay {
         neutralizeTint(titleLbl, titleWrap, root);
 
         // === Title FX ===
-        if ("DEFEATED".equalsIgnoreCase(titleText)) {
+        if (DEFEATED_STR.equalsIgnoreCase(titleText)) {
             titleWrap.setScale(0.85f);
             titleLbl.setColor(new Color(0.9f, 0.2f, 0.2f, 1f));
             titleWrap.addAction(Actions.sequence(
@@ -144,15 +218,18 @@ public class BaseEndScreenDisplays extends BaseScreenDisplay {
                     28f
             );
 
-            final float glitchDelay = 0.22f, glitchDur = 0.55f;
+            final float glitchDelay = 0.22f;
+            final float glitchDur = 0.55f;
             titleFollowupTask = Timer.schedule(new Timer.Task() {
                 @Override
                 public void run() {
-                    titleFxPhase.glitchReveal(titleLbl, "DEFEATED", glitchDur);
+                    titleFxPhase.glitchReveal(titleLbl, DEFEATED_STR, glitchDur);
                 }
             }, glitchDelay);
 
-            final float totalShake = 0.9f, step = 0.045f, amp = 7f;
+            final float totalShake = 0.9f;
+            final float step = 0.045f;
+            final float amp = 7f;
             Timer.schedule(new Timer.Task() {
                 @Override
                 public void run() {
@@ -162,9 +239,9 @@ public class BaseEndScreenDisplays extends BaseScreenDisplay {
                     int steps = Math.max(1, (int) (totalShake / step));
                     Action seq = Actions.sequence();
                     for (int i = 0; i < steps; i++) {
-                        float dx = (ThreadLocalRandom.current().nextFloat() * 2f - 1f) * amp;
-                        float dy = (ThreadLocalRandom.current().nextFloat() * 2f - 1f) * amp;
-                        float rot = (ThreadLocalRandom.current().nextFloat() * 2f - 1f) * 1.2f;
+                        float dx = (new java.security.SecureRandom().nextFloat() * 2f - 1f) * amp;
+                        float dy = (new java.security.SecureRandom().nextFloat() * 2f - 1f) * amp;
+                        float rot = (new java.security.SecureRandom().nextFloat() * 2f - 1f) * 1.2f;
                         seq = Actions.sequence(seq,
                                 Actions.parallel(
                                         Actions.moveBy(dx, dy, step, Interpolation.sine),
@@ -193,12 +270,16 @@ public class BaseEndScreenDisplays extends BaseScreenDisplay {
 
         } else if ("Victory".equalsIgnoreCase(titleText)) {
             titleWrap.setScale(0.70f);
-            titleLbl.setColor(Color.WHITE);
+
+            // Start from a fully neutral color pipeline
+            neutralizeTintDeep(titleLbl, titleWrap, root); // see helper below
+
             titleWrap.addAction(Actions.sequence(
                     Actions.scaleTo(1.38f, 1.38f, 0.18f, Interpolation.swingOut),
                     Actions.scaleTo(1.08f, 1.08f, 0.10f, Interpolation.sine)
             ));
 
+            // Phase A: blast intro (can use rainbow, jitter, etc.)
             titleFxPhase.crazyOrType(
                     titleLbl,
                     "{CRAZY style=blast origin=middle spread=3 fps=130 cycles=2 jitter=3 " +
@@ -207,59 +288,57 @@ public class BaseEndScreenDisplays extends BaseScreenDisplay {
                     30f
             );
 
+            // Single timeline instead of nesting; we re-neutralize before each FX
             final float phaseAEnd = 1.10f;
-            Timer.schedule(new Timer.Task() {
-                @Override
-                public void run() {
-                    titleFxPhase.cancel();
+            float t = phaseAEnd;
 
-                    // Make absolutely sure nothing multiplies the color
-                    neutralizeTint(titleLbl, titleWrap, root);
-                    titleLbl.setText("VICTORY");
-                    TextEffects.enableMarkup(titleLbl);
+            Runnable resetForFx = () -> {
+                neutralizeTintDeep(titleLbl, titleWrap, root);
+                titleLbl.setText("VICTORY");
+                TextEffects.enableMarkup(titleLbl); // ensures font markup is on
+            };
 
-                    // GREEN ↔ WHITE thunderclap *after* cancel
-                    titleFxLoop.strobeDirect(titleLbl, Color.valueOf("00ff00"), Color.WHITE, 12f, 0.28f);
-                    Timer.schedule(new Timer.Task() {
-                        @Override
-                        public void run() {
-                            neutralizeTint(titleLbl, titleWrap, root);
-                            titleFxLoop.sparkle(titleLbl, 0.65f, 14f, 1.30f);
+            at(t, () -> {
+                titleFxPhase.cancel();   // stop intro anim cleanly
+                resetForFx.run();
+                // GREEN ↔ WHITE thunderclap
+                titleFxLoop.strobeDirect(titleLbl, Color.valueOf("00ff00"), Color.WHITE, 12f, 0.28f);
+            });
 
-                            Timer.schedule(new Timer.Task() {
-                                @Override
-                                public void run() {
-                                    neutralizeTint(titleLbl, titleWrap, root);
-                                    titleFxLoop.pulseBetween(titleLbl, "ffd54f", "fff6cc", 1.1f);
+            t += 0.06f;
+            at(t, () -> {
+                resetForFx.run();
+                titleFxLoop.sparkle(titleLbl, 0.65f, 14f, 1.30f);
+            });
 
-                                    Timer.schedule(new Timer.Task() {
-                                        @Override
-                                        public void run() {
-                                            neutralizeTint(titleLbl, titleWrap, root);
-                                            titleFxLoop.sweepRainbow(titleLbl, 0.70f, 22f, 0.26f);
+            t += 0.70f;
+            at(t, () -> {
+                resetForFx.run();
+                titleFxLoop.pulseBetween(titleLbl, "ffd54f", "fff6cc", 1.1f);
+            });
 
-                                            titleWrap.addAction(Actions.forever(Actions.sequence(
-                                                    Actions.parallel(
-                                                            Actions.scaleTo(1.12f, 1.12f, 0.40f, Interpolation.sine),
-                                                            Actions.rotateTo(2.0f, 0.40f, Interpolation.sine)
-                                                    ),
-                                                    Actions.parallel(
-                                                            Actions.scaleTo(1.04f, 1.04f, 0.40f, Interpolation.sine),
-                                                            Actions.rotateTo(-1.5f, 0.40f, Interpolation.sine)
-                                                    ),
-                                                    Actions.parallel(
-                                                            Actions.scaleTo(1.08f, 1.08f, 0.32f, Interpolation.sine),
-                                                            Actions.rotateTo(0.0f, 0.32f, Interpolation.sine)
-                                                    )
-                                            )));
-                                        }
-                                    }, 0.85f);
-                                }
-                            }, 0.70f);
-                        }
-                    }, 0.06f);
-                }
-            }, phaseAEnd);
+            t += 0.85f;
+            at(t, () -> {
+                resetForFx.run();
+                titleFxLoop.sweepRainbow(titleLbl, 0.70f, 22f, 0.26f);
+
+                // Gentle idle motion
+                titleWrap.clearActions();
+                titleWrap.addAction(Actions.forever(Actions.sequence(
+                        Actions.parallel(
+                                Actions.scaleTo(1.12f, 1.12f, 0.40f, Interpolation.sine),
+                                Actions.rotateTo(2.0f, 0.40f, Interpolation.sine)
+                        ),
+                        Actions.parallel(
+                                Actions.scaleTo(1.04f, 1.04f, 0.40f, Interpolation.sine),
+                                Actions.rotateTo(-1.5f, 0.40f, Interpolation.sine)
+                        ),
+                        Actions.parallel(
+                                Actions.scaleTo(1.08f, 1.08f, 0.32f, Interpolation.sine),
+                                Actions.rotateTo(0.0f, 0.32f, Interpolation.sine)
+                        )
+                )));
+            });
         }
 
         // Subtitle
@@ -279,16 +358,34 @@ public class BaseEndScreenDisplays extends BaseScreenDisplay {
 
         // Buttons
         Table row = new Table();
-        TextButton primary = button(primaryText, buttonLabelScale(), primaryAction);
-        TextButton secondary = button(secondaryText, buttonLabelScale(), secondaryAction);
+        TextButton primary = button(primaryText, buttonLabelScale(), primaryAction);   // Continue
+        TextButton secondary = button(secondaryText, buttonLabelScale(), secondaryAction); // Main Menu
         row.add(primary).left().padRight(buttonsGap());
         row.add(secondary).left();
 
-        if (leaderboardAction != null) {
-            root.add(button("Leaderboard", buttonLabelScale(), leaderboardAction))
-                    .pad(blockPad())
-                    .row();
-        }
+        root.add(row)
+                .colspan(2)
+                .center()
+                .padTop(blockPad())
+                .row();
+
+        pinLeaderboardTopRight(root);
+    }
+
+    private void pinLeaderboardTopRight(Table root) {
+        if (leaderboardAction == null) return;
+
+        TextButton leaderboardTop = button("Leaderboard", buttonLabelScale(), leaderboardAction);
+
+        // Overlay anchored to screen via fillParent
+        Table overlay = new Table();
+        overlay.setFillParent(true);
+        overlay.top().right();
+        overlay.add(leaderboardTop).padTop(16f).padRight(16f);
+
+        // Add as an actor so it doesn't participate in root's grid layout
+        root.addActor(overlay);
+        overlay.toFront();
     }
 
     public void setRound(int round) {
@@ -315,6 +412,11 @@ public class BaseEndScreenDisplays extends BaseScreenDisplay {
         }
     }
 
+    /**
+     * Font scale for the title label.
+     *
+     * @return title font scale (default {@code 3.0f})
+     */
     protected float titleFontScale() {
         return 3.0f;
     }
@@ -327,6 +429,13 @@ public class BaseEndScreenDisplays extends BaseScreenDisplay {
         return 2.0f;
     }
 
+    // --- Factories ---
+
+    /**
+     * Horizontal gap between the primary and secondary buttons.
+     *
+     * @return gap in pixels (default {@code 30f})
+     */
     protected float buttonsGap() {
         return 30f;
     }

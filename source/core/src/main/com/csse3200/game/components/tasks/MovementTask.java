@@ -83,18 +83,15 @@ public class MovementTask extends DefaultTask {
         return owner.getEntity().getPosition().dst(target) <= stopDistance;
     }
 
-    private void checkIfStuck() {
+    public boolean checkIfStuck() {
         if (didMove()) {
             lastTimeMoved = gameTime.getTime();
             lastPos = owner.getEntity().getPosition();
-        } else if (gameTime.getTimeSince(lastTimeMoved) > 500L) {
-            movementComponent.setMoving(false);
-            status = Status.FAILED;
-            logger.debug("Got stuck! Failing movement task");
-        }
+            return false;
+        } else return gameTime.getTimeSince(lastTimeMoved) > 500L;
     }
 
-    private boolean didMove() {
-        return owner.getEntity().getPosition().dst2(lastPos) > 0.001f;
+    public boolean didMove() {
+        return owner.getEntity().getPosition().dst2(lastPos) > 0.05f;
     }
 }

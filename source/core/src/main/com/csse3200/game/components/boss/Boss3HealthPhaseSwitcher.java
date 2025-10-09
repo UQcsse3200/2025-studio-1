@@ -22,14 +22,10 @@ import java.util.List;
  * The thresholds are ratios of current health / max health.
  */
 public class Boss3HealthPhaseSwitcher extends Component {
-    private record Phase(float threshold, String animName) {
-    }
-
     private final String atlasPath;
     private final float frameDuration;
     private final List<Phase> phases = new ArrayList<>();
     private float lastAppliedThreshold = 1.01f;
-
     public Boss3HealthPhaseSwitcher(String atlasPath, float frameDuration) {
         this.atlasPath = atlasPath;
         this.frameDuration = frameDuration;
@@ -115,5 +111,8 @@ public class Boss3HealthPhaseSwitcher extends Component {
         if (arc.hasAnimation(animName)) {
             arc.startAnimation(animName);
         }
+    }
+
+    private record Phase(float threshold, String animName) {
     }
 }

@@ -25,13 +25,13 @@ public class GPTGroundSlowChaseTask extends DefaultTask implements PriorityTask 
     private final DebugRenderer debugRenderer;
     private final RaycastHit hit = new RaycastHit();
     private final RaycastHit jumpHit = new RaycastHit();
-    private PhysicsComponent physicsComponent;
     // Jump mechanics
     private final GameTime timeSource;
-    private float timeSinceLastJump = 0f;
     private final float jumpCooldown = 1.2f; // seconds between jumps
     private final float obstacleCheckDistance = 0.6f; // horizontal ray distance to look for obstacle
     private final float jumpImpulse; // upward impulse (scaled by mass)
+    private PhysicsComponent physicsComponent;
+    private float timeSinceLastJump = 0f;
 
     /**
      * @param target      player entity to chase

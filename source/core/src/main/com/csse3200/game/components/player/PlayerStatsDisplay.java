@@ -2,9 +2,13 @@ package com.csse3200.game.components.player;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
+import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Align;
 import com.csse3200.game.components.AmmoStatsComponent;
 import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.components.MagazineComponent;
@@ -25,9 +29,6 @@ public class PlayerStatsDisplay extends BaseScreenDisplay {
     private static final float PAD = 10f;
     private static final int PCT_MAX = 100;
     private static final String WHITE = "white";
-
-    // Constants
-    private static final String ammoAmount = "Ammo :%d";
 
     // Ammo formats (dedupe string literals)
     private static final String AMMO_SINGLE_FMT = "Ammo: %d";
@@ -71,25 +72,29 @@ public class PlayerStatsDisplay extends BaseScreenDisplay {
     /* Build & draw */
     @Override
     protected void buildUI(Table root) {
-        Color HEALTH_TINT  = new Color(1f, 0.25f, 0.25f, 1f);
-        Color STAMINA_TINT = new Color(0.35f, 1f, 0.45f, 1f);
-        Color PANEL_BG     = new Color(0f, 0f, 0f, 0.3f);
+        Color healthTint = new Color(1f, 0.25f, 0.25f, 1f);
+        Color staminaTint = new Color(0.35f, 1f, 0.45f, 1f);
+        Color panelBg = new Color(0f, 0f, 0f, 0.3f);
 
-        final float GAP_X     = 8f;
+        final float GAP_X = 8f;
         final float PANEL_PAD = 4f;
 
         // Health bar: use real max if available, otherwise [0..100]
         int healthVal = (combat != null) ? combat.getHealth() : 0;
         int maxHealth = (combat != null) ? combat.getMaxHealth() : PCT_MAX;
 
-        healthBar  = new ProgressBar(0, maxHealth, 1, false,
-                makeBarStyle(HEALTH_TINT,  "progress-bar-horizontal", "progress-bar-horizontal-c"));
+        healthBar = new ProgressBar(0, maxHealth, 1, false,
+                makeBarStyle(healthTint, "progress-bar-horizontal", "progress-bar-horizontal-c"));
         healthBar.setAnimateDuration(0f);
         healthBar.setValue(clamp(healthVal, 0, maxHealth));
 
+
+        Stack healthStack = new Stack();
+        healthStack.add(healthBar);       // bar at the back
+
         // Stamina bar as percentage [0..100]
-        staminaBar = new ProgressBar(0, 100,      1, false,
-                makeBarStyle(STAMINA_TINT, "progress-bar-horizontal", "progress-bar-horizontal-c"));
+        staminaBar = new ProgressBar(0, 100, 1, false,
+                makeBarStyle(staminaTint, "progress-bar-horizontal", "progress-bar-horizontal-c"));
         staminaBar.setAnimateDuration(0f);
         staminaBar.setValue(PCT_MAX);
 
@@ -100,14 +105,14 @@ public class PlayerStatsDisplay extends BaseScreenDisplay {
         // Ammo label
         ammoLabel = new Label(formatAmmoLabel(), skin, WHITE);
 
-        Label healthTxt  = new Label("Health",  skin, WHITE);
+        Label healthTxt = new Label("Health", skin, WHITE);
         Label staminaTxt = new Label("Stamina", skin, WHITE);
 
         float labelW = Math.max(healthTxt.getPrefWidth(), staminaTxt.getPrefWidth());
 
         // Create panel
         Table panel = new Table();
-        panel.setBackground(skin.newDrawable(WHITE, PANEL_BG));
+        panel.setBackground(skin.newDrawable(WHITE, panelBg));
         panel.pad(PANEL_PAD);
         panel.defaults().left();
         panel.columnDefaults(0).width(labelW).padRight(GAP_X);
@@ -137,6 +142,10 @@ public class PlayerStatsDisplay extends BaseScreenDisplay {
         root.row();
     }
 
+    private String formatHealthText(int current, int max) {
+        return current + " / " + max;
+    }
+
     @Override
     public void draw(SpriteBatch batch) { /* Stage handles rendering */ }
 
@@ -144,8 +153,9 @@ public class PlayerStatsDisplay extends BaseScreenDisplay {
 
     public void updatePlayerHealthUI(int health) {
         if (healthBar == null) return;
-        float max = healthBar.getMaxValue();
-        healthBar.setValue(clamp(health, 0, (int) max));
+        int max = (int) healthBar.getMaxValue();
+        int clamped = clamp(health, 0, max);
+        healthBar.setValue(clamped);
     }
 
     public void updatePlayerStaminaUI(int current, int max) {

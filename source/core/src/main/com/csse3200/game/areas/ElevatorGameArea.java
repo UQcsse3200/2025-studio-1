@@ -8,8 +8,8 @@ import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.components.KeycardGateComponent;
 import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import com.csse3200.game.entities.Entity;
-import com.csse3200.game.entities.factories.KeycardFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
+import com.csse3200.game.entities.factories.system.TeleporterFactory;
 import com.csse3200.game.physics.PhysicsLayer;
 import com.csse3200.game.physics.components.ColliderComponent;
 import com.csse3200.game.physics.components.HitboxComponent;
@@ -20,10 +20,14 @@ import com.csse3200.game.rendering.TextureRenderComponent;
  **/
 public class ElevatorGameArea extends GameArea {
     private static final float WALL_WIDTH = 0.1f;
-    private static GridPoint2 PLAYER_SPAWN = new GridPoint2(10, 10);
+    private static GridPoint2 playerSpawn = new GridPoint2(10, 10);
 
     public ElevatorGameArea(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
         super(terrainFactory, cameraComponent);
+    }
+
+    public static ElevatorGameArea load(TerrainFactory terrainFactory, CameraComponent camera) {
+        return (new ElevatorGameArea(terrainFactory, camera));
     }
 
     @Override
@@ -34,17 +38,13 @@ public class ElevatorGameArea extends GameArea {
         /** Use the dedicated elevator background **/
         terrain = terrainFactory.createTerrain(TerrainType.ELEVATOR);
         spawnEntity(new Entity().addComponent(terrain));
-        float keycardX = 3f;
-        float keycardY = 10f;
-        Entity keycard = KeycardFactory.createKeycard(2);
-        keycard.setPosition(new Vector2(keycardX, keycardY));
-        spawnEntity(keycard);
         spawnBordersAndDoors();
         spawnPlayer();
         spawnObjectDoors(new GridPoint2(0, 6), new GridPoint2(28, 19));
         spawnFloor();
         spawnPlatforms();
         spawnDesk();
+        spawnTeleporter();
 
         Entity ui = new Entity();
         ui.addComponent(new GameAreaDisplay("Elevator"))
@@ -85,7 +85,7 @@ public class ElevatorGameArea extends GameArea {
         rightDoor.addComponent(new ColliderComponent());
         rightDoor.addComponent(new HitboxComponent().setLayer(PhysicsLayer.GATE));
         /**Add keycard logic **/
-        rightDoor.addComponent(new KeycardGateComponent(2, () -> {
+        rightDoor.addComponent(new KeycardGateComponent(0, () -> {
             ColliderComponent collider = rightDoor.getComponent(ColliderComponent.class);
             if (collider != null) collider.setEnabled(false);
             loadResearch();
@@ -94,9 +94,8 @@ public class ElevatorGameArea extends GameArea {
 
     }
 
-    private void spawnPlayer() {
-        Entity player = com.csse3200.game.entities.factories.characters.PlayerFactory.createPlayer();
-        spawnEntityAt(player, PLAYER_SPAWN, true, true);
+    private Entity spawnPlayer() {
+        return spawnOrRepositionPlayer(playerSpawn);
     }
 
     /**
@@ -116,6 +115,7 @@ public class ElevatorGameArea extends GameArea {
      */
     private void spawnPlatforms() {
         float p1x = 1f, p1y = 4f;
+        // teleporter will be at (0.5,3f) below first platform
         float p2x = 5f, p2y = 6f;
         float p3x = 10f, p3y = 6f;
 
@@ -132,8 +132,14 @@ public class ElevatorGameArea extends GameArea {
         spawnEntity(plat3);
     }
 
+    /** Bottom-left teleporter for elevator */
+    private void spawnTeleporter() {
+        Entity tp = TeleporterFactory.createTeleporter(new Vector2(1.5f, 3f));
+        spawnEntity(tp);
+    }
+
     private void loadOffice() {
-        OfficeGameArea.setRoomSpawn(new GridPoint2(27, 22));
+        OfficeGameArea.setRoomSpawn(new GridPoint2(24, 22));
         clearAndLoad(() -> new OfficeGameArea(terrainFactory, cameraComponent));
     }
 
@@ -158,14 +164,14 @@ public class ElevatorGameArea extends GameArea {
     /**
      * Setter method for the player spawn point
      * should be used when the player is traversing through the rooms
-     * 
+     *
      * @param newSpawn the new spawn point
      */
     public static void setRoomSpawn(GridPoint2 newSpawn) {
         if (newSpawn == null) {
             return;
         }
-        ElevatorGameArea.PLAYER_SPAWN = newSpawn;
+        ElevatorGameArea.playerSpawn = newSpawn;
     }
 
     @Override
@@ -178,11 +184,4 @@ public class ElevatorGameArea extends GameArea {
         // placeholder for errors
         return null;
     }
-
-    public static ElevatorGameArea load(TerrainFactory terrainFactory, CameraComponent camera) {
-        return (new ElevatorGameArea(terrainFactory, camera));
-    }
-
 }
-
-

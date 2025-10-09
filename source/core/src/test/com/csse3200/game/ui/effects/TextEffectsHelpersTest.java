@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.BitmapFontCache;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.csse3200.game.extensions.GameExtension;
 import org.junit.jupiter.api.BeforeAll;
@@ -29,17 +30,14 @@ import static org.mockito.Mockito.*;
 @ExtendWith(GameExtension.class)
 class TextEffectsHelpersTest {
 
-    private static MemFiles memFiles;
-
     @BeforeAll
     static void setupFiles() {
-        memFiles = new MemFiles();
-        Gdx.files = memFiles; // inject headless stub
+        Gdx.files = new MemFiles(); // inject headless stub
     }
 
     // -------------------------- Reflection helpers --------------------------
-    private static Method priv(Class<?> c, String name, Class<?>... params) throws Exception {
-        Method m = c.getDeclaredMethod(name, params);
+    private static Method priv(String name, Class<?>... params) throws Exception {
+        Method m = TextEffects.class.getDeclaredMethod(name, params);
         m.setAccessible(true);
         return m;
     }
@@ -51,6 +49,37 @@ class TextEffectsHelpersTest {
     }
 
     // -------------------------- readRandomLine --------------------------
+
+    private static Class<?> TE() throws Exception {
+        return Class.forName("com.csse3200.game.ui.effects.TextEffects");
+    }
+
+    private static Method TE_m(String name, Class<?>... ptypes) throws Exception {
+        Method m = TE().getDeclaredMethod(name, ptypes);
+        m.setAccessible(true);
+        return m;
+    }
+
+    private static Class<?> ORIGIN() throws Exception {
+        return Class.forName("com.csse3200.game.ui.effects.TextEffects$CrazyOpts$Origin");
+    }
+
+    private static Object optsFrom(String spec) throws Exception {
+        Class<?> te = Class.forName("com.csse3200.game.ui.effects.TextEffects");
+        java.lang.reflect.Method pm;
+        try {
+            pm = te.getDeclaredMethod("parseOpts", String.class);  // current name
+        } catch (NoSuchMethodException e) {
+            pm = te.getDeclaredMethod("dparseOpts", String.class); // fallback if older name
+        }
+        pm.setAccessible(true);
+        return pm.invoke(null, spec == null ? "" : spec);
+    }
+
+    private static Class<?> CRAZY_OPTS() throws Exception {
+        return Class.forName("com.csse3200.game.ui.effects.TextEffects$CrazyOpts");
+    }
+
 
     @Test
     void readRandomLine_exception_in_handle_returns_fallback() {
@@ -71,20 +100,19 @@ class TextEffectsHelpersTest {
         assertEquals("FALLBACK", TextEffects.readRandomLine("boom.txt", "FALLBACK"));
     }
 
-
     // -------------------------- enableMarkup / ensureOwnStyle --------------------------
     @Test
     void enableMarkup_sets_fontData_flag_and_ensureOwnStyle_clones_style() {
         BitmapFont.BitmapFontData data = new BitmapFont.BitmapFontData();
         data.markupEnabled = false;
-        BitmapFont font = mock(BitmapFont.class, withSettings().lenient());
+        BitmapFont font = mock(BitmapFont.class, withSettings());
         when(font.getData()).thenReturn(data);
 
         Label.LabelStyle style = new Label.LabelStyle();
         style.font = font;
         style.fontColor = Color.WHITE;
 
-        Label lbl = mock(Label.class, withSettings().lenient());
+        Label lbl = mock(Label.class, withSettings());
 
         // Style store for getStyle/setStyle
         final Label.LabelStyle[] store = {style};
@@ -112,7 +140,7 @@ class TextEffectsHelpersTest {
     // -------------------------- stripMarkup (private) --------------------------
     @Test
     void stripMarkup_removes_color_tags_and_preserves_literal_brackets() throws Exception {
-        Method strip = priv(TextEffects.class, "stripMarkup", String.class);
+        Method strip = priv("stripMarkup", String.class);
         assertEquals("", strip.invoke(null, ""));
         assertEquals("plain", strip.invoke(null, "plain"));
         assertEquals("[abc]", strip.invoke(null, "[[abc]"));
@@ -122,7 +150,7 @@ class TextEffectsHelpersTest {
     // -------------------------- sanitizeHex (private) --------------------------
     @Test
     void sanitizeHex_validates_and_normalizes_hex() throws Exception {
-        Method sanitize = priv(TextEffects.class, "sanitizeHex", String.class, String.class);
+        Method sanitize = priv("sanitizeHex", String.class, String.class);
         assertEquals("ffffff", sanitize.invoke(null, null, "ffffff"));          // null -> default
         assertEquals("00ff00", sanitize.invoke(null, "#00FF00", "ffffff"));     // strip '#', lowercase
         assertEquals("aabbcc", sanitize.invoke(null, "abc", "ffffff"));         // 3-digit expand
@@ -132,8 +160,8 @@ class TextEffectsHelpersTest {
     // -------------------------- hsvToRgb + toHex6 (private) --------------------------
     @Test
     void hsvToRgb_covers_all_switch_paths_including_case3_and_default() throws Exception {
-        Method hsvToRgb = priv(TextEffects.class, "hsvToRgb", float.class, float.class, float.class);
-        Method toHex6 = priv(TextEffects.class, "toHex6", int.class);
+        Method hsvToRgb = priv("hsvToRgb", float.class, float.class, float.class);
+        Method toHex6 = priv("toHex6", int.class);
 
         // case 0: 0° -> red
         assertEquals("ff0000", toHex6.invoke(null, hsvToRgb.invoke(null, 0f, 1f, 1f)));
@@ -152,10 +180,10 @@ class TextEffectsHelpersTest {
     // -------------------------- char helpers (private) --------------------------
     @Test
     void character_class_helpers_cover_all_branches() throws Exception {
-        Method isUpper = priv(TextEffects.class, "isUpper", char.class);
-        Method isLetter = priv(TextEffects.class, "isLetter", char.class);
-        Method isDigit = priv(TextEffects.class, "isDigit", char.class);
-        Method isPunct = priv(TextEffects.class, "isPunctGlobal", char.class); // keep your existing punct tests
+        Method isUpper = priv("isUpper", char.class);
+        Method isLetter = priv("isLetter", char.class);
+        Method isDigit = priv("isDigit", char.class);
+        Method isPunct = priv("isPunctGlobal", char.class); // keep your existing punct tests
 
         // --- isUpper: inside + both boundaries + just outside on each side
         assertTrue((Boolean) isUpper.invoke(null, 'A'));   // lower bound
@@ -190,7 +218,7 @@ class TextEffectsHelpersTest {
     // -------------------------- parseCrazyPieces + joinPiecesStatic (private) --------------------------
     @Test
     void parseCrazyPieces_tagEnd_missing_treated_as_plain_remainder() throws Exception {
-        Method parse = priv(TextEffects.class, "parseCrazyPieces", String.class);
+        Method parse = priv("parseCrazyPieces", String.class);
         // Missing the '}' that ends the opening tag header
         String src = "lead {CRAZY style=blast inner text with no close brace";
         @SuppressWarnings("unchecked")
@@ -206,7 +234,7 @@ class TextEffectsHelpersTest {
 
     @Test
     void parseCrazyPieces_close_tag_missing_treated_as_plain_remainder() throws Exception {
-        Method parse = priv(TextEffects.class, "parseCrazyPieces", String.class);
+        Method parse = priv("parseCrazyPieces", String.class);
         // Proper header ends with '}', but missing the closing "{/CRAZY}"
         String src = "head {CRAZY fps=60}dangling inner text without close";
         @SuppressWarnings("unchecked")
@@ -222,7 +250,7 @@ class TextEffectsHelpersTest {
 
     @Test
     void joinPiecesStatic_concatenates_in_order_for_plain_and_crazy() throws Exception {
-        Method join = priv(TextEffects.class, "joinPiecesStatic", List.class);
+        Method join = priv("joinPiecesStatic", List.class);
         Class<?> pieceClz = Class.forName("com.csse3200.game.ui.effects.TextEffects$Piece");
         Method plain = pieceClz.getDeclaredMethod("plain", String.class);
         Method crazy = pieceClz.getDeclaredMethod("crazy", String.class, Class.forName("com.csse3200.game.ui.effects.TextEffects$CrazyOpts"));
@@ -232,21 +260,20 @@ class TextEffectsHelpersTest {
         Object p2 = crazy.invoke(null, "MID", /* opts */ null); // text field still "MID"
         Object p3 = plain.invoke(null, " post");
 
-        @SuppressWarnings("unchecked")
         String out = (String) join.invoke(null, Arrays.asList(p1, p2, p3));
         assertEquals("pre MID post", out);
     }
 
     @Test
     void joinPiecesStatic_handles_empty_list() throws Exception {
-        Method join = priv(TextEffects.class, "joinPiecesStatic", List.class);
+        Method join = priv("joinPiecesStatic", List.class);
         String out = (String) join.invoke(null, Collections.emptyList());
         assertEquals("", out);
     }
 
     @Test
     void joinPiecesStatic_single_element_passthrough() throws Exception {
-        Method join = priv(TextEffects.class, "joinPiecesStatic", List.class);
+        Method join = priv("joinPiecesStatic", List.class);
         Class<?> pieceClz = Class.forName("com.csse3200.game.ui.effects.TextEffects$Piece");
         Method plain = pieceClz.getDeclaredMethod("plain", String.class);
         Object p = plain.invoke(null, "solo");
@@ -256,7 +283,7 @@ class TextEffectsHelpersTest {
 
     @Test
     void joinPiecesStatic_includes_empty_and_null_text_safely() throws Exception {
-        Method join = priv(TextEffects.class, "joinPiecesStatic", List.class);
+        Method join = priv("joinPiecesStatic", List.class);
         Class<?> pieceClz = Class.forName("com.csse3200.game.ui.effects.TextEffects$Piece");
         Method plain = pieceClz.getDeclaredMethod("plain", String.class);
 
@@ -269,17 +296,153 @@ class TextEffectsHelpersTest {
         assertEquals("nullX", out);
     }
 
+    @Test
+    void originIndex_boundaries_and_modes() throws Exception {
+        Method m = TE_m("originIndex", int.class, ORIGIN());
+        // n=0 -> always 0
+        assertEquals(0, m.invoke(null, 0, Enum.valueOf((Class) ORIGIN(), "LEFT")));
+        assertEquals(0, m.invoke(null, 0, Enum.valueOf((Class) ORIGIN(), "MIDDLE")));
+        assertEquals(0, m.invoke(null, 0, Enum.valueOf((Class) ORIGIN(), "RIGHT")));
+        // n=1 -> always 0
+        assertEquals(0, m.invoke(null, 1, Enum.valueOf((Class) ORIGIN(), "LEFT")));
+        assertEquals(0, m.invoke(null, 1, Enum.valueOf((Class) ORIGIN(), "MIDDLE")));
+        assertEquals(0, m.invoke(null, 1, Enum.valueOf((Class) ORIGIN(), "RIGHT")));
+        // n=5 -> LEFT=0, MIDDLE=2, RIGHT=4
+        assertEquals(0, m.invoke(null, 5, Enum.valueOf((Class) ORIGIN(), "LEFT")));
+        assertEquals(2, m.invoke(null, 5, Enum.valueOf((Class) ORIGIN(), "MIDDLE")));
+        assertEquals(4, m.invoke(null, 5, Enum.valueOf((Class) ORIGIN(), "RIGHT")));
+    }
+
+    @Test
+    void glyphSpan_all_categories() throws Exception {
+        Method m = TE_m("glyphSpan", char.class);
+        assertEquals(26, m.invoke(null, 'A'));
+        assertEquals(26, m.invoke(null, 'z'));
+        assertEquals(10, m.invoke(null, '5'));
+        int ringLen = (int) m.invoke(null, '.'); // punct returns ring length
+        assertTrue(ringLen >= 1);
+        // "other" path (space) returns ring length too
+        assertEquals(ringLen, m.invoke(null, ' '));
+    }
+
+    @Test
+    void initSeedState_sets_curr_and_remaining_per_category() throws Exception {
+        // private static method TextEffects.initSeedState(char[], int[], int, char, int, CrazyOpts)
+        Method m = TE_m(
+                "initSeedState",
+                char[].class, int[].class, int.class, char.class, int.class, CRAZY_OPTS()
+        );
+
+        // Build CrazyOpts deterministically: from=A
+        Object opts = optsFrom("from=A");
+
+        char[] curr = new char[4];
+        int[] rem = new int[4];
+
+        // letter
+        m.invoke(null, curr, rem, 0, 'C', 7, opts);
+        assertTrue(Character.isLetter(curr[0]));
+        assertEquals(7, rem[0]);
+
+        // digit
+        m.invoke(null, curr, rem, 1, '8', 5, opts);
+        assertTrue(Character.isDigit(curr[1]));
+        assertEquals(5, rem[1]);
+
+        // punct
+        m.invoke(null, curr, rem, 2, '.', 3, opts);
+        assertTrue(".,;:!?-_/\\|@#$%^&*()[]{}<>'\"+=~`".indexOf(curr[2]) >= 0);
+        assertEquals(3, rem[2]);
+
+        // other (space) -> snap, remaining=0
+        m.invoke(null, curr, rem, 3, ' ', 9, opts);
+        assertEquals(' ', curr[3]);
+        assertEquals(0, rem[3]);
+    }
+
+
+    @Test
+    void textEffects_appendEscaped_escapes_bracket_and_passes_other() throws Exception {
+        Method m = TE_m("appendEscaped", StringBuilder.class, char.class);
+        StringBuilder a = new StringBuilder();
+        m.invoke(null, a, '[');
+        assertEquals("[[", a.toString());
+        StringBuilder b = new StringBuilder();
+        m.invoke(null, b, 'X');
+        assertEquals("X", b.toString());
+    }
+
+    @Test
+    void baseDelay_covers_off_and_on_and_zero_edges() throws Exception {
+        Method m = TE_m("baseDelay", int.class, int.class, boolean.class, int.class, int.class);
+        // distanceDelay off -> returns jitter only
+        assertEquals(0, m.invoke(null, 3, 10, false, 0, 99));   // jitter=0 -> 0
+        // distanceDelay on, spread=0 -> jitter only
+        assertTrue((int) m.invoke(null, 3, 10, true, 1, 0) >= 0);
+        // distanceDelay on, spread>0 -> >= dist*spread
+        int out = (int) m.invoke(null, 7, 2, true, 0, 5); // dist=5 -> base 25
+        assertTrue(out >= 25);
+    }
+
+    @Test
+    void inverseEdgeSpan_zero_span_returns_zero() throws Exception {
+        Method m = TE_m("inverseEdgeSpan", int.class, int.class);
+        // n=1, any origin -> edgeSpan==0
+        assertEquals(0f, (float) m.invoke(null, 1, 0), 0f);
+    }
+
+    @Test
+    void ensureOwnStyle_handles_null_style_and_clones_when_present() {
+        TextEffects fx = new TextEffects();
+
+        // ---- Build a style with a mocked font (no disk IO) ----
+        BitmapFont.BitmapFontData data = new BitmapFont.BitmapFontData();
+        data.markupEnabled = false;
+        data.capHeight = 10f;
+        data.ascent = -8f;
+        data.lineHeight = 12f;
+
+        BitmapFont font = mock(BitmapFont.class);
+        when(font.getData()).thenReturn(data);
+        when(font.getColor()).thenReturn(Color.WHITE);
+        when(font.getCapHeight()).thenReturn(data.capHeight);
+        when(font.getAscent()).thenReturn(data.ascent);
+        when(font.getLineHeight()).thenReturn(data.lineHeight);
+        when(font.usesIntegerPositions()).thenReturn(true);
+
+        BitmapFontCache cache = mock(BitmapFontCache.class);
+        when(cache.getFont()).thenReturn(font);
+        when(font.newFontCache()).thenReturn(cache);
+
+        Label.LabelStyle style = new Label.LabelStyle(font, Color.WHITE);
+
+        // ---- Null-style path: override getStyle() to simulate missing style ----
+        Label nullStyleLabel = new Label("", style) {
+            @Override
+            public LabelStyle getStyle() {
+                return null;
+            }
+
+            // make setStyle a no-op so parent ctor doesn't trip anything weird
+            @Override
+            public void setStyle(LabelStyle s) { /* no-op */ }
+        };
+        assertDoesNotThrow(() -> fx.ensureOwnStyle(nullStyleLabel)); // early return when style is null
+
+        // ---- Clone path: style present -> defensive copy installed ----
+        Label hasStyle = new Label("", style);
+        fx.ensureOwnStyle(hasStyle);
+
+        assertNotSame(style, hasStyle.getStyle(), "style should be defensively cloned");
+        // sanity: basic fields copied over
+        assertSame(style.font, hasStyle.getStyle().font);
+        assertEquals(style.fontColor, hasStyle.getStyle().fontColor);
+    }
+
+
     // -------------------------- Gdx.files stub --------------------------
     static class MemFiles implements Files {
         final Map<String, String> mem = new HashMap<>();
-
-        void put(String path, String content) {
-            mem.put(path, content);
-        }
-
-        void remove(String path) {
-            mem.remove(path);
-        }
 
         private FileHandle fh(String path) {
             return new FileHandle() {
@@ -365,7 +528,7 @@ class TextEffectsHelpersTest {
     class TextEffectsParseOptsTest {
 
         private static Object parse(String s) throws Exception {
-            Method m = priv(TextEffects.class, "parseOpts", String.class);
+            Method m = priv("parseOpts", String.class);
             return m.invoke(null, s);
         }
 
@@ -385,8 +548,8 @@ class TextEffectsHelpersTest {
             return ((Number) get(o, f)).floatValue();
         }
 
-        private static boolean getb(Object o, String f) throws Exception {
-            return (Boolean) get(o, f);
+        private static boolean getb(Object o) throws Exception {
+            return get(o, "rainbow");
         }
 
         private static Enum<?> enumConst(Object enumObj, String name) {
@@ -412,10 +575,6 @@ class TextEffectsHelpersTest {
             Object origin2 = get(o2, "origin");
             assertEquals(style1, style2);
             assertEquals(origin1, origin2);
-
-            // Optional: also verify explicit defaults if you want (adjust names if different)
-            // assertEquals(enumConst(style1,  "NORMAL"), style1);
-            // assertEquals(enumConst(origin1, "MIDDLE"), origin1);
         }
 
 
@@ -423,7 +582,7 @@ class TextEffectsHelpersTest {
         void ignores_tokens_without_equals() throws Exception {
             Object o = parse("foo bar=baz quux"); // "foo" and "quux" ignored; "bar=baz" unknown -> ignored
             Object def = parse("");
-            assertEquals((String) get(def, "flashHexA"), (String) get(o, "flashHexA"));
+            assertEquals(get(def, "flashHexA"), (String) get(o, "flashHexA"));
             assertEquals(geti(def, "fps"), geti(o, "fps"));
         }
 
@@ -475,10 +634,10 @@ class TextEffectsHelpersTest {
             Object t2 = parse("rainbow=1");
             Object f1 = parse("rainbow=false");
             Object f2 = parse("rainbow=0");
-            assertTrue(getb(t1, "rainbow"));
-            assertTrue(getb(t2, "rainbow"));
-            assertFalse(getb(f1, "rainbow"));
-            assertFalse(getb(f2, "rainbow"));
+            assertTrue(getb(t1));
+            assertTrue(getb(t2));
+            assertFalse(getb(f1));
+            assertFalse(getb(f2));
         }
 
         @Test
@@ -511,12 +670,21 @@ class TextEffectsHelpersTest {
             Object blEnum = get(bl, "style");
             Object defEnum = get(def, "style");
 
-            @SuppressWarnings("unchecked")
-            Class<? extends Enum> styleEnumClass = (Class<? extends Enum>) exEnum.getClass();
-
-            Enum<?> explode = Enum.valueOf(styleEnumClass, "EXPLODE");
-            Enum<?> blast = Enum.valueOf(styleEnumClass, "BLAST");
-            Enum<?> normal = Enum.valueOf(styleEnumClass, "NORMAL");
+            Enum<?> explode = java.util.Arrays.stream(exEnum.getClass().getEnumConstants())
+                    .map(c -> (Enum<?>) c)
+                    .filter(e -> e.name().equals("EXPLODE"))
+                    .findFirst()
+                    .orElseThrow(() -> new IllegalArgumentException("No EXPLODE"));
+            Enum<?> blast = java.util.Arrays.stream(blEnum.getClass().getEnumConstants())
+                    .map(c -> (Enum<?>) c)
+                    .filter(e -> e.name().equals("BLAST"))
+                    .findFirst()
+                    .orElseThrow(() -> new IllegalArgumentException("No BLAST"));
+            Enum<?> normal = java.util.Arrays.stream(defEnum.getClass().getEnumConstants())
+                    .map(c -> (Enum<?>) c)
+                    .filter(e -> e.name().equals("NORMAL"))
+                    .findFirst()
+                    .orElseThrow(() -> new IllegalArgumentException("No NORMAL"));
 
             assertEquals(explode, exEnum);
             assertEquals(blast, blEnum);
@@ -534,13 +702,21 @@ class TextEffectsHelpersTest {
             Object rightEnum = get(r, "origin");
             Object midEnum = get(m, "origin");
 
-            // Derive the enum class reflectively and compare to constants by name
-            @SuppressWarnings("unchecked")
-            Class<? extends Enum> originEnumClass = (Class<? extends Enum>) leftEnum.getClass();
-
-            Enum<?> left = Enum.valueOf(originEnumClass, "LEFT");
-            Enum<?> right = Enum.valueOf(originEnumClass, "RIGHT");
-            Enum<?> middle = Enum.valueOf(originEnumClass, "MIDDLE");
+            Enum<?> left = java.util.Arrays.stream(leftEnum.getClass().getEnumConstants())
+                    .map(c -> (Enum<?>) c)
+                    .filter(e -> e.name().equals("LEFT"))
+                    .findFirst()
+                    .orElseThrow(() -> new IllegalArgumentException("No LEFT"));
+            Enum<?> right = java.util.Arrays.stream(rightEnum.getClass().getEnumConstants())
+                    .map(c -> (Enum<?>) c)
+                    .filter(e -> e.name().equals("RIGHT"))
+                    .findFirst()
+                    .orElseThrow(() -> new IllegalArgumentException("No RIGHT"));
+            Enum<?> middle = java.util.Arrays.stream(midEnum.getClass().getEnumConstants())
+                    .map(c -> (Enum<?>) c)
+                    .filter(e -> e.name().equals("MIDDLE"))
+                    .findFirst()
+                    .orElseThrow(() -> new IllegalArgumentException("No MIDDLE"));
 
             assertEquals(left, leftEnum);
             assertEquals(right, rightEnum);
@@ -566,8 +742,8 @@ class TextEffectsHelpersTest {
         @Test
         void flash_hexes_strip_hash() throws Exception {
             Object o = parse("flashHexA=#ff00aa flashHexB=00ffcc");
-            assertEquals("ff00aa", (String) get(o, "flashHexA"));
-            assertEquals("00ffcc", (String) get(o, "flashHexB"));
+            assertEquals("ff00aa", get(o, "flashHexA"));
+            assertEquals("00ffcc", get(o, "flashHexB"));
         }
 
         @Test
@@ -599,7 +775,7 @@ class TextEffectsHelpersTest {
             Object styleEnum = get(o, "style");
             Object originEnum = get(o, "origin");
             assertEquals(enumConst(fromEnum, "RAND"), fromEnum);
-            assertTrue(getb(o, "rainbow"));
+            assertTrue(getb(o));
             assertEquals(enumConst(styleEnum, "EXPLODE"), styleEnum);
             assertEquals(enumConst(originEnum, "RIGHT"), originEnum);
 
@@ -614,8 +790,10 @@ class TextEffectsHelpersTest {
             assertEquals(2, geti(o, "overshoot"));
 
             // strings
-            assertEquals("abc", (String) get(o, "flashHexA"));
-            assertEquals("def", (String) get(o, "flashHexB"));
+            assertEquals("abc", get(o, "flashHexA"));
+            assertEquals("def", get(o, "flashHexB"));
         }
     }
+
+
 }

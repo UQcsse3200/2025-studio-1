@@ -6,8 +6,8 @@ import org.slf4j.LoggerFactory;
 /**
  * Service for managing a countdown timer in a game.
  * <p>
- *     This service allows you to track elapsed time, check remaining time,
- *      pause and resume the countdown, and determine if the timer has expired.
+ * This service allows you to track elapsed time, check remaining time,
+ * pause and resume the countdown, and determine if the timer has expired.
  * </p>
  */
 public class CountdownTimerService {
@@ -44,7 +44,7 @@ public class CountdownTimerService {
     /**
      * Creates a new countdown timer
      *
-     * @param gameTime the {@link GameTime} for tracking time
+     * @param gameTime   the {@link GameTime} for tracking time
      * @param durationMS the duration of the countdown in ms
      */
     public CountdownTimerService(GameTime gameTime, long durationMS) {
@@ -60,8 +60,8 @@ public class CountdownTimerService {
      * Gets the remaining time in ms
      *
      * <p>
-     *     If the timer is paused, calculates based on the paused time;
-     *     otherwise calculates based on teh current game time
+     * If the timer is paused, calculates based on the paused time;
+     * otherwise calculates based on teh current game time
      * </p>
      *
      * @return the remaining game time in ms, minimum 0
@@ -94,7 +94,7 @@ public class CountdownTimerService {
      * Pause the countdown timer.
      *
      * <p>
-     *     If the time is paused, this method does nothing
+     * If the time is paused, this method does nothing
      * </p>
      */
     public void pause() {
@@ -111,7 +111,7 @@ public class CountdownTimerService {
      * Resume the counter timer if it was paused
      *
      * <p>
-     *     If the timer is not paused, this method does nothing
+     * If the timer is not paused, this method does nothing
      * </p>
      */
     public void resume() {
@@ -140,7 +140,7 @@ public class CountdownTimerService {
      *
      * @return the duration in ms
      */
-    public long getDuration(){
+    public long getDuration() {
         logger.debug("Countdown Timer duration: {}", duration);
         return duration;
     }

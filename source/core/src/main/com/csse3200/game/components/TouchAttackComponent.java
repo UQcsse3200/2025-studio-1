@@ -12,8 +12,6 @@ import com.csse3200.game.physics.components.HitboxComponent;
 import com.csse3200.game.physics.components.PhysicsComponent;
 import com.csse3200.game.physics.components.PhysicsProjectileComponent;
 import com.csse3200.game.rendering.AnimationRenderComponent;
-import com.csse3200.game.rendering.TextureRenderComponent;
-import com.csse3200.game.rendering.TextureRenderWithRotationComponent;
 import com.csse3200.game.services.ServiceLocator;
 
 /**
@@ -77,12 +75,13 @@ public class TouchAttackComponent extends Component {
             targetStats.takeDamage(attackerWeapon.getBaseAttack());
         }
 
-        // Apply knockback
+        // Apply knockback (if knockback resistance is not 100%)
         PhysicsComponent physicsComponent = target.getComponent(PhysicsComponent.class);
-        if (physicsComponent != null && knockbackForce > 0f) {
+        if (targetStats != null && targetStats.getKnockbackResistance() != 1f
+                && physicsComponent != null && knockbackForce > 0f) {
             Body targetBody = physicsComponent.getBody();
             Vector2 direction = target.getCenterPosition().sub(entity.getCenterPosition());
-            Vector2 impulse = direction.setLength(knockbackForce);
+            Vector2 impulse = direction.setLength(knockbackForce * (1 - targetStats.getKnockbackResistance()));
             targetBody.applyLinearImpulse(impulse, targetBody.getWorldCenter(), true);
         }
 
@@ -110,10 +109,10 @@ public class TouchAttackComponent extends Component {
 
         // Add a self-removing component
         explosion.addComponent(new Component() {
-            private float elapsedTime = 0f;
             private final int frameCount = atlas.findRegions("rocketExplosion").size;
             private final float frameDuration = 0.05f;
             private final float animationDuration = frameCount * frameDuration;
+            private float elapsedTime = 0f;
 
             @Override
             public void update() {
@@ -131,10 +130,6 @@ public class TouchAttackComponent extends Component {
 
         animator.startAnimation("rocketExplosion");
     }
-
-
-
-
 
 
 }
