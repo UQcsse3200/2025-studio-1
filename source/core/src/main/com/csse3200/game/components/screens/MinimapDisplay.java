@@ -134,24 +134,6 @@ public class MinimapDisplay extends BaseScreenDisplay {
                 return true;
             }
         });
-
-
-        // Resume on tab
-        stage.addListener(new InputListener() {
-            /** Prevents repeated TAB events. */
-            private boolean handled = false;
-
-            @Override
-            public boolean keyDown(InputEvent event, int keycode) {
-                if (keycode == Input.Keys.TAB && !handled) {
-                    handled = true;
-                    entity.getEvents().trigger("resume");
-                    root.removeListener(this);
-                    return true;
-                }
-                return false;
-            }
-        });
     }
 
     /**
