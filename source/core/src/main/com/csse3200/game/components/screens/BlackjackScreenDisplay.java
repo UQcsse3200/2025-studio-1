@@ -245,7 +245,6 @@ public class BlackjackScreenDisplay extends UIComponent {
      * and pauses game time.
      */
     public void show() {
-        ServiceLocator.getTimeSource().setPaused(true);
         if (background != null) background.setVisible(true);
         if (root != null) root.setVisible(true);
         if (dimmer != null) dimmer.setVisible(true);
@@ -260,7 +259,6 @@ public class BlackjackScreenDisplay extends UIComponent {
      * Hides the Blackjack screen and resumes game time.
      */
     public void hide() {
-        ServiceLocator.getTimeSource().setPaused(false);
         if (background != null) background.setVisible(false);
         if (root != null) root.setVisible(false);
         if (dimmer != null) dimmer.setVisible(false);
