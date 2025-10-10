@@ -215,7 +215,7 @@ public class DialogueDisplayTest {
         Field fLines = DialogueDisplay.class.getDeclaredField("lines");
         fLines.setAccessible(true);
 
-        assertEquals("NPC", (String) fSpeaker.get(ui));
+        assertEquals("NPC", fSpeaker.get(ui));
         assertArrayEquals(new String[]{"Hello", "World"}, (String[]) fLines.get(ui));
     }
 

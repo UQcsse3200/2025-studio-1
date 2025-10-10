@@ -1,6 +1,5 @@
 package com.csse3200.game.files;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.files.FileHandle;
 import org.slf4j.Logger;
@@ -8,7 +7,6 @@ import org.slf4j.LoggerFactory;
 
 import java.util.*;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 /**
  * Finds level files by glob (e.g., "levels/*.json"), loads them,
@@ -31,15 +29,6 @@ public final class LevelPatternLoader {
         this.synchronousTextureLoad = synchronousTextureLoad;
     }
 
-    private static FileHandle getFileHandle(String filename, FileLoader.Location location) {
-        return switch (location) {
-            case CLASSPATH -> Gdx.files.classpath(filename);
-            case INTERNAL -> Gdx.files.internal(filename);
-            case LOCAL -> Gdx.files.local(filename);
-            case EXTERNAL -> Gdx.files.external(filename);
-            case ABSOLUTE -> Gdx.files.absolute(filename);
-        };
-    }
 
     private static String join(String dir, String name) {
         return dir.endsWith("/") ? dir + name : dir + "/" + name;
@@ -61,20 +50,7 @@ public final class LevelPatternLoader {
                 case '?':
                     sb.append('.');
                     break;
-                case '.':
-                case '(':
-                case ')':
-                case '+':
-                case '|':
-                case '^':
-                case '$':
-                case '@':
-                case '%':
-                case '{':
-                case '}':
-                case '[':
-                case ']':
-                case '\\':
+                case '.', '(', ')', '+', '|', '^', '$', '@', '%', '{', '}', '[', ']', '\\':
                     sb.append('\\').append(c);
                     break;
                 default:
@@ -94,7 +70,7 @@ public final class LevelPatternLoader {
         Objects.requireNonNull(directory, "directory");
         Objects.requireNonNull(glob, "glob");
 
-        final FileHandle dir = getFileHandle(directory, location);
+        final FileHandle dir = FileLoader.getFileHandle(directory, location);
         if (dir == null || !dir.exists() || !dir.isDirectory()) {
             log.atError().setMessage("Directory {} ({}) not found or not a directory")
                     .addArgument(directory).addArgument(location).log();
@@ -106,7 +82,7 @@ public final class LevelPatternLoader {
                 .filter(f -> f.exists() && !f.isDirectory())
                 .filter(f -> namePattern.matcher(f.name()).matches())
                 .sorted(Comparator.comparing(FileHandle::name))
-                .collect(Collectors.toList());
+                .toList();
 
         if (matches.isEmpty()) {
             log.atWarn().setMessage("No files matched '{}' in {} ({})")

@@ -91,7 +91,7 @@ class BaseEndScreenDisplaysTest {
         Runnable customSecondary = () -> { /* no-op */ };
         return Stream.of(
                 // titleText,   supplier,                         secondaryAction, expectSubtitle
-                Arguments.of("Victory", (java.util.function.Supplier<String>) null, null, false), // supplier null
+                Arguments.of("Victory", null, null, false), // supplier null
                 Arguments.of("DEFEATED", (java.util.function.Supplier<String>) () -> "", null, false), // empty
                 Arguments.of("DEFEATED", (java.util.function.Supplier<String>) () -> "   ", null, false), // blank
                 Arguments.of("DEFEATED", (java.util.function.Supplier<String>) () -> "RIP", null, true),  // text
@@ -218,7 +218,7 @@ class BaseEndScreenDisplaysTest {
             final Runnable[] primaryV = new Runnable[1];
             final Runnable[] secondaryV = new Runnable[1];
 
-            doAnswer(inv -> new Label(inv.getArgument(1), new Label.LabelStyle(new BitmapFont(), (Color) inv.getArgument(3))))
+            doAnswer(inv -> new Label(inv.getArgument(1), new Label.LabelStyle(new BitmapFont(), inv.getArgument(3))))
                     .when(spyV).addTitle(any(), anyString(), anyFloat(), any(Color.class), anyFloat());
 
             doAnswer(inv -> {
@@ -256,7 +256,7 @@ class BaseEndScreenDisplaysTest {
             final Runnable[] primaryD = new Runnable[1];
             final Runnable[] secondaryD = new Runnable[1];
 
-            doAnswer(inv -> new Label(inv.getArgument(1), new Label.LabelStyle(new BitmapFont(), (Color) inv.getArgument(3))))
+            doAnswer(inv -> new Label(inv.getArgument(1), new Label.LabelStyle(new BitmapFont(), inv.getArgument(3))))
                     .when(spyD).addTitle(any(), anyString(), anyFloat(), any(Color.class), anyFloat());
 
             doAnswer(inv -> {

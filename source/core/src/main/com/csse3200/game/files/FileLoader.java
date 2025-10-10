@@ -115,7 +115,7 @@ public final class FileLoader {
 
         log.atDebug()
                 .setMessage("Writing {} to {} ({})")
-                .addArgument(() -> object.getClass().getSimpleName())
+                .addArgument(object.getClass().getSimpleName())
                 .addArgument(filename)
                 .addArgument(location)
                 .log();
@@ -232,63 +232,19 @@ public final class FileLoader {
         final var fhOpt = resolveExisting(filename, location, "readMapEntities", "Entities");
         if (fhOpt.isEmpty()) return Optional.empty();
 
+        final var file = fhOpt.get();
         try {
-            final var rootOpt = tryParseRootObject(fhOpt.get());
+            final var rootOpt = tryParseRootObject(file);
             if (rootOpt.isEmpty()) return Optional.empty();
 
-            final var entitiesNode = rootOpt.get().get("entities");
-            if (entitiesNode == null || !entitiesNode.isArray()) {
-                log.atWarn()
-                        .setMessage("Top-level 'entities' array not found or not an array in {}")
-                        .addArgument(fhOpt.get()::path)
-                        .log();
-                return Optional.empty();
-            }
+            final var entitiesNode = getEntitiesArray(rootOpt.get(), file);
+            if (entitiesNode == null) return Optional.empty();
 
-            final var out = new ArrayList<MapEntitySpec>();
-            for (var item = entitiesNode.child; item != null; item = item.next) {
-                if (!item.isObject()) {
-                    log.atWarn()
-                            .setMessage("Skipping non-object entity in {}")
-                            .addArgument(fhOpt.get()::path)
-                            .log();
-                    continue;
-                }
-                final var nameVal = item.get("name");
-                final var typeVal = item.get(ARG_TYPE);
-                final var locVal = item.get(ARG_LOCATION);
-
-                if (nameVal == null || typeVal == null || locVal == null || !locVal.isObject()) {
-                    log.atWarn()
-                            .setMessage("Skipping entity missing name/type/location in {}: {}")
-                            .addArgument(fhOpt.get()::path)
-                            .addArgument(item::toString)
-                            .log();
-                    continue;
-                }
-
-                final var name = nameVal.asString();
-                final var type = typeVal.asString();
-                final var x = locVal.getInt("x", Integer.MIN_VALUE);
-                final var y = locVal.getInt("y", Integer.MIN_VALUE);
-
-                if (name == null || name.isBlank() || type == null || type.isBlank()
-                        || x == Integer.MIN_VALUE || y == Integer.MIN_VALUE) {
-                    log.atWarn()
-                            .setMessage("Skipping invalid entity values in {}: {}")
-                            .addArgument(fhOpt.get()::path)
-                            .addArgument(item::toString)
-                            .log();
-                    continue;
-                }
-
-                out.add(new MapEntitySpec(name, type, new GridPoint2(x, y)));
-            }
-
+            final var out = collectValidEntities(entitiesNode, file);
             if (out.isEmpty()) {
                 log.atWarn()
                         .setMessage("No valid entities found in {}")
-                        .addArgument(fhOpt.get()::path)
+                        .addArgument(file::path)
                         .log();
                 return Optional.empty();
             }
@@ -297,11 +253,92 @@ public final class FileLoader {
             log.atError()
                     .setCause(e)
                     .setMessage("Failed reading entities from {}")
-                    .addArgument(fhOpt.get()::path)
+                    .addArgument(file::path)
                     .log();
             return Optional.empty();
         }
     }
+
+// --- helpers below ---
+
+    /**
+     * Returns the top-level "entities" array or logs and returns null if absent/wrong type.
+     */
+    private static JsonValue getEntitiesArray(JsonValue root, FileHandle file) {
+        final var entitiesNode = root.get("entities");
+        if (entitiesNode == null || !entitiesNode.isArray()) {
+            log.atWarn()
+                    .setMessage("Top-level 'entities' array not found or not an array in {}")
+                    .addArgument(file::path)
+                    .log();
+            return null;
+        }
+        return entitiesNode;
+    }
+
+    /**
+     * Iterates the array, validates each item, and collects valid specs.
+     */
+    private static List<MapEntitySpec> collectValidEntities(JsonValue entitiesNode, FileHandle file) {
+        final var out = new ArrayList<MapEntitySpec>();
+        for (var item = entitiesNode.child; item != null; item = item.next) {
+            tryBuildSpec(item, file).ifPresent(out::add);
+        }
+        return out;
+    }
+
+    /**
+     * Attempts to build a MapEntitySpec from a single JSON object, with logging on failures.
+     */
+    private static Optional<MapEntitySpec> tryBuildSpec(JsonValue item, FileHandle file) {
+        if (!item.isObject()) {
+            log.atWarn()
+                    .setMessage("Skipping non-object entity in {}")
+                    .addArgument(file::path)
+                    .log();
+            return Optional.empty();
+        }
+
+        final var nameVal = item.get("name");
+        final var typeVal = item.get(ARG_TYPE);
+        final var locVal = item.get(ARG_LOCATION);
+
+        if (isMissingEntityMembers(nameVal, typeVal, locVal)) {
+            log.atWarn()
+                    .setMessage("Skipping entity missing name/type/location in {}: {}")
+                    .addArgument(file::path)
+                    .addArgument(item::toString)
+                    .log();
+            return Optional.empty();
+        }
+
+        final var name = nameVal.asString();
+        final var type = typeVal.asString();
+        final var x = locVal.getInt("x", Integer.MIN_VALUE);
+        final var y = locVal.getInt("y", Integer.MIN_VALUE);
+
+        if (isInvalidEntityValues(name, type, x, y)) {
+            log.atWarn()
+                    .setMessage("Skipping invalid entity values in {}: {}")
+                    .addArgument(file::path)
+                    .addArgument(item::toString)
+                    .log();
+            return Optional.empty();
+        }
+
+        return Optional.of(new MapEntitySpec(name, type, new GridPoint2(x, y)));
+    }
+
+    private static boolean isMissingEntityMembers(JsonValue nameVal, JsonValue typeVal, JsonValue locVal) {
+        return nameVal == null || typeVal == null || locVal == null || !locVal.isObject();
+    }
+
+    private static boolean isInvalidEntityValues(String name, String type, int x, int y) {
+        return name == null || name.isBlank()
+                || type == null || type.isBlank()
+                || x == Integer.MIN_VALUE || y == Integer.MIN_VALUE;
+    }
+
 
     /**
      * Helper to safely parse JSON into type {@code T} using a supplied configuration hook.
@@ -360,7 +397,7 @@ public final class FileLoader {
 
         log.atDebug()
                 .setMessage("{} {} from {} ({})")
-                .addArgument(() -> capitalize(op))
+                .addArgument(capitalize(op))
                 .addArgument(kind)
                 .addArgument(location)
                 .addArgument(filename)
@@ -432,7 +469,7 @@ public final class FileLoader {
      * @param file      file being parsed (for logging context)
      * @param out       output map to populate
      */
-    private static void handleTextureEntry(String groupName, JsonValue entry, FileHandle file, Map<String, String> out) {
+    public static void handleTextureEntry(String groupName, JsonValue entry, FileHandle file, Map<String, String> out) {
         final var id = entry.name();
         if (id == null) return;
 
@@ -485,6 +522,27 @@ public final class FileLoader {
         return json;
     }
 
+    static FileHandle getFileHandleUnsafe(String filename, String locationName) {
+        Objects.requireNonNull(filename, ARG_FILENAME);
+        Objects.requireNonNull(locationName, ARG_LOCATION);
+
+        return switch (locationName) {
+            case "CLASSPATH" -> Gdx.files.classpath(filename);
+            case "INTERNAL" -> Gdx.files.internal(filename);
+            case "LOCAL" -> Gdx.files.local(filename);
+            case "EXTERNAL" -> Gdx.files.external(filename);
+            case "ABSOLUTE" -> Gdx.files.absolute(filename);
+            default -> {
+                log.atError()
+                        .setMessage("Unknown FileLoader.Location: {} (filename={})")
+                        .addArgument(locationName)
+                        .addArgument(filename)
+                        .log();
+                yield null;
+            }
+        };
+    }
+
     /**
      * Maps a logical {@link Location} to a LibGDX {@link FileHandle} using {@link Gdx#files}.
      *
@@ -493,17 +551,11 @@ public final class FileLoader {
      * @return a {@link FileHandle} for the given location
      * @throws NullPointerException if {@code filename} or {@code location} is {@code null}
      */
-    private static FileHandle getFileHandle(String filename, Location location) {
-        Objects.requireNonNull(filename, ARG_FILENAME);
+    public static FileHandle getFileHandle(String filename, Location location) {
         Objects.requireNonNull(location, ARG_LOCATION);
-        return switch (location) {
-            case CLASSPATH -> Gdx.files.classpath(filename);
-            case INTERNAL -> Gdx.files.internal(filename);
-            case LOCAL -> Gdx.files.local(filename);
-            case EXTERNAL -> Gdx.files.external(filename);
-            case ABSOLUTE -> Gdx.files.absolute(filename);
-        };
+        return getFileHandleUnsafe(filename, location.name());
     }
+
 
     /**
      * Capitalises the first character of the given string.
@@ -556,6 +608,6 @@ public final class FileLoader {
     /**
      * Minimal entity spec for level placement: name, type, and grid location.
      */
-    public static record MapEntitySpec(String name, String type, GridPoint2 location) {
+    public record MapEntitySpec(String name, String type, GridPoint2 location) {
     }
 }

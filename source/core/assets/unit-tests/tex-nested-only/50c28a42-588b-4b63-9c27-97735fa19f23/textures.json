@@ -1,0 +1,5 @@
+  {
+    "textures": {
+      "uiTextures": { "button": "ui/button.png", "label": "ui/label.png" }
+    }
+  }

@@ -427,11 +427,11 @@ class TextEffectsHelpersTest {
             @Override
             public void setStyle(LabelStyle s) { /* no-op */ }
         };
-        assertDoesNotThrow(() -> fx.ensureOwnStyle(nullStyleLabel)); // early return when style is null
+        assertDoesNotThrow(() -> TextEffects.ensureOwnStyle(nullStyleLabel)); // early return when style is null
 
         // ---- Clone path: style present -> defensive copy installed ----
         Label hasStyle = new Label("", style);
-        fx.ensureOwnStyle(hasStyle);
+        TextEffects.ensureOwnStyle(hasStyle);
 
         assertNotSame(style, hasStyle.getStyle(), "style should be defensively cloned");
         // sanity: basic fields copied over

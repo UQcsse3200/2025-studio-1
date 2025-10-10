@@ -61,7 +61,7 @@ public final class LevelIO {
     /**
      * In-memory representation of a level file.
      */
-    public static record LevelData(
+    public record LevelData(
             Map<String, String> textures,
             List<FileLoader.MapEntitySpec> entities
     ) {

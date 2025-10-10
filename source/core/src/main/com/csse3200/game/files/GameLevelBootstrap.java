@@ -88,9 +88,6 @@ public final class GameLevelBootstrap {
         return p.endsWith(".mp3") || p.endsWith(".ogg") || p.endsWith(".wav");
     }
 
-    /**
-     * Example wiring — replace handlers with your actual factories.
-     */
     public static RegistryEntityPlacer defaultPlacer(GameArea area) {
         // Fallback that pattern-matches "enemy:<variant>"
         RegistryEntityPlacer placer = new RegistryEntityPlacer((name, type, grid) -> {

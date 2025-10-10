@@ -16,6 +16,7 @@ public final class RegistryEntityPlacer implements LevelPatternLoader.EntityPlac
     private static final Logger log = LoggerFactory.getLogger(RegistryEntityPlacer.class);
     private final Map<String, SpawnHandler> handlers = new ConcurrentHashMap<>();
     private final SpawnHandler fallback;
+
     public RegistryEntityPlacer() {
         this((name, type, grid) ->
                 log.atWarn().setMessage("No handler for type={} (entity={}, at={})")
@@ -45,13 +46,20 @@ public final class RegistryEntityPlacer implements LevelPatternLoader.EntityPlac
 
     @Override
     public void place(FileLoader.MapEntitySpec spec) {
-        var key = spec.type();
-        var h = handlers.get(key);
-        if (h == null) {
-            // try case-insensitive if not found
-            h = handlers.get(key.toLowerCase());
+        String key = spec.type();
+        SpawnHandler h = null;
+
+        // Only query the map if key is non-null
+        if (key != null) {
+            h = handlers.get(key);
+            if (h == null) {
+                h = handlers.get(key.toLowerCase());
+            }
         }
-        if (h == null) h = fallback;
+
+        if (h == null) {
+            h = fallback;
+        }
         h.spawn(spec.name(), spec.type(), spec.location());
     }
 

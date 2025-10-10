@@ -3,7 +3,10 @@ package com.csse3200.game.components.minigames.robotFighting;
 import com.badlogic.gdx.utils.Timer;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.services.ServiceLocator;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -14,48 +17,6 @@ import static org.junit.jupiter.api.Assertions.*;
  * Unit tests for RobotFightingGame without relying on FileLoader.
  */
 class RobotFightingGameTest {
-
-    /** Minimal subclass that skips FileLoader usage. */
-    static class TestGame extends RobotFightingGame {
-        TestDisplay injectedDisplay;
-
-        TestGame(RobotFightingText text) {
-            super(text);
-        }
-
-        protected Entity initGameEntity() {
-            Entity fakeEntity = new Entity();
-            injectedDisplay = new TestDisplay();
-            fakeEntity.addComponent(injectedDisplay);
-            return fakeEntity;
-        }
-
-        TestDisplay getInjectedDisplay() {
-            return injectedDisplay;
-        }
-    }
-
-
-    /** Minimal stub display that avoids LibGDX UI dependencies. */
-    static class TestDisplay extends RobotFightingDisplay {
-        boolean shown = false;
-        boolean hidden = false;
-        int fightOverCalls = 0;
-        String lastResult = null;
-        String lastEncouragement = null;
-
-        @Override public void show() { shown = true; }
-        @Override public void hide() { hidden = true; }
-        @Override public void fightOver(String status) {
-            fightOverCalls++;
-            lastResult = status;
-        }
-        @Override public void encourageFighter(String msg) {
-            lastEncouragement = msg;
-        }
-
-        @Override public void draw(com.badlogic.gdx.graphics.g2d.SpriteBatch batch) {}
-    }
 
     private TestGame game;
     private Entity entity;
@@ -72,14 +33,12 @@ class RobotFightingGameTest {
 
         game = new TestGame(fakeText);
         entity = game.getGameEntity();
-        testDisplay = ((TestGame) game).getInjectedDisplay();
+        testDisplay = game.getInjectedDisplay();
 
         Field displayField = RobotFightingGame.class.getDeclaredField("gameDisplay");
         displayField.setAccessible(true);
         displayField.set(game, testDisplay);
     }
-
-
 
     @AfterEach
     void tearDown() {
@@ -142,15 +101,18 @@ class RobotFightingGameTest {
         cHp.setAccessible(true);
         oHp.setAccessible(true);
 
-        cHp.setInt(game, 50); oHp.setInt(game, 0);
+        cHp.setInt(game, 50);
+        oHp.setInt(game, 0);
         callMethod("determineWinner");
         assertEquals("won", testDisplay.lastResult);
 
-        cHp.setInt(game, 0); oHp.setInt(game, 50);
+        cHp.setInt(game, 0);
+        oHp.setInt(game, 50);
         callMethod("determineWinner");
         assertEquals("lost", testDisplay.lastResult);
 
-        cHp.setInt(game, 0); oHp.setInt(game, 0);
+        cHp.setInt(game, 0);
+        oHp.setInt(game, 0);
         callMethod("determineWinner");
         assertEquals("drew", testDisplay.lastResult);
     }
@@ -168,5 +130,63 @@ class RobotFightingGameTest {
         callMethod("startFight");
         assertEquals(100, cHp.getInt(game));
         assertEquals(100, oHp.getInt(game));
+    }
+
+    /**
+     * Minimal subclass that skips FileLoader usage.
+     */
+    static class TestGame extends RobotFightingGame {
+        TestDisplay injectedDisplay;
+
+        TestGame(RobotFightingText text) {
+            super(text);
+        }
+
+        protected Entity initGameEntity() {
+            Entity fakeEntity = new Entity();
+            injectedDisplay = new TestDisplay();
+            fakeEntity.addComponent(injectedDisplay);
+            return fakeEntity;
+        }
+
+        TestDisplay getInjectedDisplay() {
+            return injectedDisplay;
+        }
+    }
+
+    /**
+     * Minimal stub display that avoids LibGDX UI dependencies.
+     */
+    static class TestDisplay extends RobotFightingDisplay {
+        boolean shown = false;
+        boolean hidden = false;
+        int fightOverCalls = 0;
+        String lastResult = null;
+        String lastEncouragement = null;
+
+        @Override
+        public void show() {
+            shown = true;
+        }
+
+        @Override
+        public void hide() {
+            hidden = true;
+        }
+
+        @Override
+        public void fightOver(String status) {
+            fightOverCalls++;
+            lastResult = status;
+        }
+
+        @Override
+        public void encourageFighter(String msg) {
+            lastEncouragement = msg;
+        }
+
+        @Override
+        public void draw(com.badlogic.gdx.graphics.g2d.SpriteBatch batch) {
+        }
     }
 }
