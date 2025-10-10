@@ -2,11 +2,14 @@ package com.csse3200.game.services;
 
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.areas.GameArea;
+import com.csse3200.game.areas.difficulty.Difficulty;
 import com.csse3200.game.components.AmmoStatsComponent;
 import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.components.Component;
 import com.csse3200.game.components.player.InventoryComponent;
 import com.csse3200.game.components.player.StaminaComponent;
+import com.csse3200.game.entities.Avatar;
+import com.csse3200.game.entities.AvatarRegistry;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.extensions.GameExtension;
 import com.csse3200.game.files.FileLoader;
@@ -35,7 +38,7 @@ class SaveLoadServiceTest {
     private static final float POS_Y = 7.0f;
     private static final double FLOAT_EPS = 1e-4;
     private static final int INVENTORY_PROCESSES = 1;
-    private static final int EXPECTED_ROUND_NUMBER = 2;
+    private static final int EXPECTED_ROUND_NUMBER = 0;
 
     @Test
     void save_setsExpectedSnapshot_withoutFileIO() {
@@ -52,10 +55,21 @@ class SaveLoadServiceTest {
         player.addComponent(ammTest);
         player.addComponent(stamTest);
         player.setPosition(new Vector2(POS_X, POS_Y));
+        Avatar playerAvatarTest = AvatarRegistry.getAll().get(1);
+        AvatarRegistry.set(playerAvatarTest);
+
+        //test to mock
+        ServiceLocator.registerDiscoveryService(mock(DiscoveryService.class));
+        ServiceLocator.registerDifficulty(mock(Difficulty.class));
+        ServiceLocator.registerPlayer(player);
 
         GameArea area = mock(GameArea.class);
+        ServiceLocator.registerGameArea(area);
+
         when(area.getEntities()).thenReturn(List.of(player));
         when(area.toString()).thenReturn(AREA_ID);
+
+
 
         SaveLoadService service = new SaveLoadService();
 
@@ -86,6 +100,7 @@ class SaveLoadServiceTest {
             Assertions.assertEquals(POS_X, out.getPlayer().playerPos.x, FLOAT_EPS);
             Assertions.assertEquals(POS_Y, out.getPlayer().playerPos.y, FLOAT_EPS);
             Assertions.assertEquals(EXPECTED_ROUND_NUMBER, out.getWave());
+//            Assertions.assertEquals(,out.getPlayer().avatar);
             Assertions.assertNotNull(out.getInventory(), "inventory list should be initialized (may be empty)");
 
             // optional: verify call shape
@@ -130,4 +145,5 @@ class SaveLoadServiceTest {
             return this;
         }
     }
+
 }

@@ -105,7 +105,7 @@ public class NPCFactory {
                 .addComponent(animator)
                 .addComponent(new GhostAnimationController())
                 .addComponent(new LowHealthAttackBuffComponent(10, ghostGPTStats))
-                .addComponent(new EnemyDeathRewardComponent(15, playerInventory)) // Add reward + particles
+                .addComponent(new EnemyDeathRewardComponent(100, playerInventory)) // Add reward + particles
                 .addComponent(new DeathParticleSpawnerComponent("explosion_2"))
                 .addComponent(aiComponent)
                 .addComponent(projComp) // Add the ability to fire projectiles
@@ -141,7 +141,12 @@ public class NPCFactory {
         animator.setDisposeAtlas(false);
         animator.addAnimation("angry_float", 0.1f, Animation.PlayMode.LOOP);
         animator.addAnimation("float", 0.1f, Animation.PlayMode.LOOP);
+        animator.addAnimation("damage_taken", 0.1f, Animation.PlayMode.NORMAL);
 
+        SoundComponent soundComponent = new SoundComponent();
+        ghostGPTRed.addComponent(soundComponent);
+        soundComponent.registerSound("damageTaken", "sounds/GPTDamage.mp3");
+        soundComponent.registerSound("death", "sounds/GPTDeath.mp3");
 
         ProjectileLauncherComponent projComp = new ProjectileLauncherComponent(area, target, Projectiles.GHOSTGPT_LASER);
         // Use ground chase tasks for gravity-based movement
@@ -200,7 +205,12 @@ public class NPCFactory {
         animator.setDisposeAtlas(false);
         animator.addAnimation("angry_float", 0.1f, Animation.PlayMode.LOOP);
         animator.addAnimation("float", 0.1f, Animation.PlayMode.LOOP);
+        animator.addAnimation("damage_taken", 0.1f, Animation.PlayMode.NORMAL);
 
+        SoundComponent soundComponent = new SoundComponent();
+        ghostGPTBlue.addComponent(soundComponent);
+        soundComponent.registerSound("damageTaken", "sounds/GPTDamage.mp3");
+        soundComponent.registerSound("death", "sounds/GPTDeath.mp3");
 
         ProjectileLauncherComponent projComp = new ProjectileLauncherComponent(area, target, Projectiles.GHOSTGPT_LASER);
         // Use ground chase tasks for gravity-based movement
@@ -511,6 +521,13 @@ public class NPCFactory {
         animator.setDisposeAtlas(false);
         animator.addAnimation("angry_float", 0.1f, Animation.PlayMode.LOOP);
         animator.addAnimation("float", 0.1f, Animation.PlayMode.LOOP);
+        animator.addAnimation("damage_taken", 0.1f, Animation.PlayMode.NORMAL);
+
+        SoundComponent soundComponent = new SoundComponent();
+        grokDroidRed.addComponent(soundComponent);
+
+        soundComponent.registerSound("damageTaken", "sounds/grokDamage.mp3");
+        soundComponent.registerSound("death", "sounds/grokDeath.mp3");
 
         AITaskComponent aiComponent =
                 new AITaskComponent()
@@ -562,6 +579,13 @@ public class NPCFactory {
         animator.setDisposeAtlas(false);
         animator.addAnimation("angry_float", 0.1f, Animation.PlayMode.LOOP);
         animator.addAnimation("float", 0.1f, Animation.PlayMode.LOOP);
+        animator.addAnimation("damage_taken", 0.1f, Animation.PlayMode.NORMAL);
+
+        SoundComponent soundComponent = new SoundComponent();
+        grokDroidBlue.addComponent(soundComponent);
+
+        soundComponent.registerSound("damageTaken", "sounds/grokDamage.mp3");
+        soundComponent.registerSound("death", "sounds/grokDeath.mp3");
 
         AITaskComponent aiComponent =
                 new AITaskComponent()

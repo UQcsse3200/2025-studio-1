@@ -15,9 +15,12 @@ import com.csse3200.game.entities.factories.system.TeleporterFactory;
 public class OfficeGameArea extends GameArea {
     private static final float WALL_WIDTH = 0.1f;
     private static GridPoint2 playerSpawn = new GridPoint2(10, 10);
+    private static boolean isCleared;
 
     public OfficeGameArea(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
         super(terrainFactory, cameraComponent);
+        
+        this.getEvents().addListener("room cleared", OfficeGameArea::clearRoom);
     }
 
     public static OfficeGameArea load(TerrainFactory terrainFactory, CameraComponent camera) {
@@ -54,12 +57,16 @@ public class OfficeGameArea extends GameArea {
         spawnEntity(new Entity().addComponent(terrain));
 
         spawnBordersAndDoors();
-        spawnPlayer();
+        Entity player = spawnPlayer();
         spawnFloor();
         spawnObjectDoors(new GridPoint2(0, 14), new GridPoint2(28, 20));
         spawnPlatforms();
         spawnOfficeProps();
         spawnTeleporter();
+
+        if (!OfficeGameArea.isCleared) {
+            startWaves(player);
+        }
 
         Entity ui = new Entity();
         ui.addComponent(new GameAreaDisplay("Office"))
@@ -70,7 +77,7 @@ public class OfficeGameArea extends GameArea {
     private void spawnBordersAndDoors() {
         Bounds b = getCameraBounds(cameraComponent);
 
-        addVerticalDoorLeft(b, WALL_WIDTH, this::loadMovingBossRoom);
+        Entity leftDoor = addVerticalDoorLeft(b, WALL_WIDTH, this::loadMovingBossRoom);
         // Raise the right door higher than center
         addSolidWallTop(b, WALL_WIDTH);
         addSolidWallBottom(b, WALL_WIDTH);
@@ -84,16 +91,31 @@ public class OfficeGameArea extends GameArea {
             rightTop.setPosition(b.rightX() - WALL_WIDTH, rightDoorY + rightDoorHeight);
             spawnEntity(rightTop);
         }
+        // Add right wall below the door
+        float rightBottomSegHeight = Math.max(0f, rightDoorY - b.bottomY());
+        if (rightBottomSegHeight > 0f) {
+            Entity rightBottom = com.csse3200.game.entities.factories.system.ObstacleFactory.createWall(WALL_WIDTH, rightBottomSegHeight);
+            rightBottom.setPosition(b.rightX() - WALL_WIDTH, b.bottomY());
+            spawnEntity(rightBottom);
+        }
         Entity rightDoor = com.csse3200.game.entities.factories.system.ObstacleFactory.createDoorTrigger(WALL_WIDTH, rightDoorHeight);
         rightDoor.setPosition(b.rightX() - WALL_WIDTH - 0.001f, rightDoorY);
         rightDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadElevator));
         spawnEntity(rightDoor);
 
-
+        if (!OfficeGameArea.isCleared) registerDoors(new Entity[]{leftDoor, rightDoor});
     }
 
     private Entity spawnPlayer() {
-        return spawnOrRepositionPlayer(playerSpawn);
+        Entity player = spawnOrRepositionPlayer(playerSpawn);
+        // Set higher z-index to ensure player renders in front of sprites
+        if (player != null) {
+            var renderComponent = player.getComponent(com.csse3200.game.rendering.AnimationRenderComponent.class);
+            if (renderComponent != null) {
+                renderComponent.setZIndex(10f); // Higher z-index to render in front
+            }
+        }
+        return player;
     }
 
     private void spawnOfficeProps() {
@@ -177,5 +199,23 @@ public class OfficeGameArea extends GameArea {
     public Entity getPlayer() {
         //placeholder see previous
         return null;
+    }
+
+    /**
+     * Clear room, set this room's static
+     * boolean isCleared variable to true
+     */
+    public static void clearRoom() {
+        OfficeGameArea.isCleared = true;
+        logger.debug("Office is cleared");
+    }
+
+    /**
+     * Unclear room, set this room's static
+     * boolean isCleared variable to false
+     */
+    public static void unclearRoom() {
+        OfficeGameArea.isCleared = false;
+        logger.debug("Office is uncleared");
     }
 }

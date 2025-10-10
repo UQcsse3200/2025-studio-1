@@ -76,7 +76,7 @@ public final class FileLoader {
      * Specialised reader for {@link SaveGame.GameState} that also configures the element type for the
      * {@code loadedInventory} collection during deserialisation.
      *
-     * <p>Specifically, it sets {@code loadedInventory}'s element type to {@link SaveGame.itemRetrieve} to assist
+     * <p>Specifically, it sets {@code loadedInventory}'s element type to {@link SaveGame.itemInInven} to assist
      * LibGDX JSON in constructing the collection correctly.</p>
      *
      * @param filename file path appropriate for the given {@code location} (non-null)
@@ -90,7 +90,7 @@ public final class FileLoader {
         return fhOpt.flatMap(fh -> safeFromJson(
                 SaveGame.GameState.class,
                 fh,
-                json -> json.setElementType(SaveGame.GameState.class, "loadedInventory", SaveGame.itemRetrieve.class)
+                json -> json.setElementType(SaveGame.GameState.class, "loadedInventory", SaveGame.itemInInven.class)
         ));
     }
 

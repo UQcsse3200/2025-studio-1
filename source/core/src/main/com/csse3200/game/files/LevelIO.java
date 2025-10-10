@@ -10,7 +10,7 @@ import java.util.*;
 /**
  * Loads the level JSON schema:
  * {
- * "textures": { "<group>Textures": { id -> path, ... }, ... },
+ * "textures": { "groupTextures": { id -> path, ... }, ... },
  * "entities": [ { "name": "...", "type": "...", "location": { "x": .., "y": .. } }, ... ]
  * }
  */

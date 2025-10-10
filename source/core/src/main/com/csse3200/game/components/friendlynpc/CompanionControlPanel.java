@@ -20,7 +20,8 @@ import com.csse3200.game.entities.Entity;
 import com.csse3200.game.services.ServiceLocator;
 
 public final class CompanionControlPanel {
-    private CompanionControlPanel() {}
+    private CompanionControlPanel() {
+    }
 
     public static Table attach(Stage stage, Entity comp) {
         return attach(stage, comp, 0.44f);
@@ -98,14 +99,16 @@ public final class CompanionControlPanel {
         }
 
         follow.addListener(new ChangeListener() {
-            @Override public void changed(ChangeEvent event, Actor actor) {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
                 var ff = comp.getComponent(PartnerFollowComponent.class);
                 if (ff != null) ff.setMove(follow.isChecked());
             }
         });
 
         attack.addListener(new ChangeListener() {
-            @Override public void changed(ChangeEvent event, Actor actor) {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
                 boolean autoOn = attack.isChecked();
                 var auto = comp.getComponent(AutoCompanionShootComponent.class);
                 var order = comp.getComponent(CompanionFollowShootComponent.class);

@@ -63,10 +63,12 @@ public class MainMenuDisplay extends UIComponent {
 
         // --- Splash text (Minecraft-style) ---
         splashFx = new TextEffects();
+        Label.LabelStyle splashStyle = new Label.LabelStyle(skin.get(Label.LabelStyle.class));
+        splashStyle.fontColor = Color.YELLOW;
         String splashText = TextEffects.readRandomLine("text/mainmenu.txt", "Hello, Pilot!");
-        Label splashLabel = new Label(splashText, skin);
+        Label splashLabel = new Label(splashText, splashStyle);
         TextEffects.enableMarkup(splashLabel);
-        splashLabel.setColor(Color.valueOf("ffe066"));
+        splashLabel.setColor(1f, 1f, 1f, 1f);
         splashLabel.setFontScale(1.15f);
 
         Group splashGroup = new Group();
@@ -163,7 +165,6 @@ public class MainMenuDisplay extends UIComponent {
         table.add(titleStack)
                 .size(targetW, targetH)     // <-- this makes it taller on screen
                 .left().padBottom(1.5f).padLeft(-10f);
-        table.row();
         table.add(startBtn).padTop(1.5f).left();
         table.row();
         table.add(startBtn).padTop(15f).left();

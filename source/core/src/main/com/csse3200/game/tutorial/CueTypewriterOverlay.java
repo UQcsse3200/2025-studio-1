@@ -24,14 +24,16 @@ import java.util.List;
 
 /**
  * Centre-screen tutorial overlay that walks the player through a sequence of cues:
- * show prompt → validate key sequence → show feedback → advance.
- * <p>
- * UI upgrades:
- * - Rounded panel with soft border & drop shadow
- * - Subtle fade/scale-in on show; shake on error
- * - Softer palette (normal/green/red)
- * - Text wrapping + responsive width
- * - Blinking typewriter caret while typing
+ * show prompt &rarr; validate key sequence &rarr; show feedback &rarr; advance.
+ *
+ * <p><strong>UI upgrades:</strong></p>
+ * <ul>
+ *   <li>Rounded panel with soft border &amp; drop shadow</li>
+ *   <li>Subtle fade/scale-in on show; shake on error</li>
+ *   <li>Softer palette (normal/green/red)</li>
+ *   <li>Single-line text with ellipsis (no wrapping)</li>
+ *   <li>Blinking typewriter caret while typing</li>
+ * </ul>
  */
 public final class CueTypewriterOverlay extends Component {
     // ────────────────────────── Tunables ──────────────────────────
@@ -47,7 +49,7 @@ public final class CueTypewriterOverlay extends Component {
     private static final float SHADOW_ALPHA = 0.35f;    // shadow opacity
 
     private static final String AI_PREFIX = "ClankerAI: ";
-    private static final char CARET_CHAR = '\u2588'; // full block
+    private static final char CARET_CHAR = '█'; // full block
     private final List<Cue> cues;
     // ────────────────────────── Runtime state ──────────────────────────
     private final StringBuilder typed = new StringBuilder(); // efficient typed text buffer

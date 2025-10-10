@@ -11,7 +11,10 @@ public class RemoteOpenComponent extends Component {
     private Actor panel;
     private int key = Input.Keys.C;
 
-    public RemoteOpenComponent key(int k) { this.key = k; return this; }
+    public RemoteOpenComponent key(int k) {
+        this.key = k;
+        return this;
+    }
 
     @Override
     public void update() {
@@ -28,7 +31,10 @@ public class RemoteOpenComponent extends Component {
 
     @Override
     public void dispose() {
-        if (panel != null) { panel.remove(); panel = null; }
+        if (panel != null) {
+            panel.remove();
+            panel = null;
+        }
     }
 }
 

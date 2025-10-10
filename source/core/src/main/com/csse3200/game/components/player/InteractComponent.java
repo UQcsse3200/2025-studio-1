@@ -1,8 +1,10 @@
 package com.csse3200.game.components.player;
 
 import com.badlogic.gdx.physics.box2d.Fixture;
+import com.csse3200.game.components.items.ItemComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.physics.BodyUserData;
+import com.csse3200.game.physics.PhysicsLayer;
 import com.csse3200.game.physics.components.HitboxComponent;
 
 import java.util.ArrayList;
@@ -19,6 +21,7 @@ public class InteractComponent extends HitboxComponent {
         entity.getEvents().addListener("collisionEnd", this::entitySeparate);
         entity.getEvents().addListener("interact", this::attemptInteract);
 
+        this.setLayer(PhysicsLayer.DEFAULT);
         super.create();
     }
 
@@ -29,6 +32,7 @@ public class InteractComponent extends HitboxComponent {
         Entity otherEntity = userData.entity;
         if (otherEntity.isInteractable()) {
             collidedEntities.add(otherEntity);
+            otherEntity.getEvents().trigger("enteredInteractRadius");
         }
     }
 
@@ -39,6 +43,7 @@ public class InteractComponent extends HitboxComponent {
         Entity otherEntity = userData.entity;
         if (otherEntity.isInteractable()) {
             collidedEntities.remove(otherEntity);
+            otherEntity.getEvents().trigger("exitedInteractRadius");
         }
     }
 
@@ -61,6 +66,10 @@ public class InteractComponent extends HitboxComponent {
 
         if (closest != null) {
             closest.getEvents().trigger("interact");
+
+            if (closest.hasComponent(ItemComponent.class)) {
+                entity.getEvents().trigger("player:interact", closest);
+            }
         }
     }
 }

@@ -1,5 +1,6 @@
 package com.csse3200.game.entities.factories;
 
+import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.csse3200.game.components.TagComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.physics.PhysicsLayer;
@@ -22,7 +23,6 @@ public class PowerupsFactory {
         powerup.getComponent(TextureRenderComponent.class).scaleEntity();
         powerup.addComponent(new TagComponent("rapidfire"));
 
-
         return powerup;
     }
 
@@ -43,7 +43,6 @@ public class PowerupsFactory {
         powerup.addComponent(new TextureRenderComponent("images/aimbot_powerup.png"));
         powerup.getComponent(TextureRenderComponent.class).scaleEntity();
         powerup.addComponent(new TagComponent("aimbot"));
-
 
         return powerup;
     }
@@ -66,6 +65,7 @@ public class PowerupsFactory {
                 .addComponent(new HitboxComponent());
 
         PhysicsUtils.setScaledCollider(powerup, 0.5f, 0.5f);
+        powerup.getComponent(PhysicsComponent.class).setBodyType(BodyDef.BodyType.StaticBody);
         return powerup;
     }
 }

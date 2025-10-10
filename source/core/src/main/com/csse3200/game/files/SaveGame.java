@@ -1,21 +1,23 @@
 package com.csse3200.game.files;
 
 import com.badlogic.gdx.math.Vector2;
-import com.csse3200.game.areas.GameArea;
-import com.csse3200.game.components.AmmoStatsComponent;
-import com.csse3200.game.components.CombatStatsComponent;
-import com.csse3200.game.components.MagazineComponent;
-import com.csse3200.game.components.WeaponsStatsComponent;
-import com.csse3200.game.components.items.ConsumableComponent;
+import com.csse3200.game.areas.difficulty.DifficultyType;
+import com.csse3200.game.components.*;
+import com.csse3200.game.components.attachments.BulletEnhancerComponent;
+import com.csse3200.game.components.attachments.LaserComponent;
 import com.csse3200.game.components.items.ItemComponent;
 import com.csse3200.game.components.player.InventoryComponent;
 import com.csse3200.game.components.player.StaminaComponent;
+import com.csse3200.game.entities.AvatarRegistry;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.ItemTypes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+
+import java.util.Set;
 import java.util.Optional;
 
 
@@ -39,13 +41,37 @@ public class SaveGame {
      * sets and gets all necessary game information
      */
     public static class GameState {
-        //        private HashMap<String, Object> player;
         private information player;
         private String gameArea;
         private int wave;
-        private ArrayList<itemRetrieve> loadedInventory;
+        private ArrayList<itemInInven> loadedInventory;
+        private String difficulty;
+        private ArrayList<String> areasVisited;
+        private ArrayList<String> armour;
 
         public GameState() {
+        }
+
+        public void setAreasVisited(Set<String> areasVisited) {
+            this.areasVisited = new ArrayList<>(areasVisited);
+        }
+
+        public Set<String> getAreasVisited() {
+            return new HashSet<>(this.areasVisited);
+        }
+
+        public void setDifficulty(String difficulty) {
+            this.difficulty = difficulty;
+        }
+
+        public DifficultyType getDifficulty() {
+            //loops through the difficulty until the correct value is found
+            for (DifficultyType diff: DifficultyType.values()) {
+                if (diff.toString().equals(this.difficulty)) return diff;
+            }
+            logger.error("couldn't read difficulty {} from" +
+                    " save file setting to normal", difficulty);
+            return DifficultyType.NORMAL;
         }
 
         public information getPlayer() {
@@ -56,12 +82,12 @@ public class SaveGame {
          * Gather Important details for creating a player entity that needs to be set or adjusted
          * upon character creation
          *
-         * @param playerInfo
+         * @param playerInfo entity of the player
          */
         public void setPlayer(Entity playerInfo) {
             this.player = new information();
             this.player.playerPos = playerInfo.getPosition();
-            this.player.avatar = "placeholder";
+            this.player.avatar = AvatarRegistry.get().texturePath(); // gets current avatar
             this.player.processor = playerInfo.getComponent(InventoryComponent.class).getProcessor();
             this.player.ammoReserve = playerInfo.getComponent(AmmoStatsComponent.class).getAmmo();
             this.player.stamina = playerInfo.getComponent(StaminaComponent.class).getStamina();
@@ -74,7 +100,7 @@ public class SaveGame {
         }
 
         // saves any necessary information to do with gameArea (currently only needs to be string)
-        public void setArea(GameArea area) {
+        public void setArea(String area) {
             this.gameArea = area.toString();
         }
 
@@ -88,7 +114,7 @@ public class SaveGame {
         }
 
         public void setWave(int wave) {
-            this.wave = wave;
+            this.wave = Math.max(wave, 0);
         }
 
         //due to nature of json files or that im just silly this was a better implementation then making setInventory
@@ -101,7 +127,7 @@ public class SaveGame {
          * retrieves player inventory to be stored into json file
          */
 
-        public ArrayList<itemRetrieve> getInventory() {
+        public ArrayList<itemInInven> getInventory() {
             return loadedInventory;
         }
 
@@ -110,47 +136,41 @@ public class SaveGame {
          *
          * @param inventory The players inventory component
          */
-        private ArrayList<itemRetrieve> setInventory(InventoryComponent inventory) {
-            ArrayList<itemRetrieve> inventoryFilter = new ArrayList<>();
-            itemRetrieve itemiser = null;
-            //goes through players inventory and stores all items with a itemcomponent
-            for (int i = 0; i < inventory.getSize(); i++) {
-                if (inventory.get(i).hasComponent(ItemComponent.class)) {
-                    Entity item = inventory.get(i);
-                    ItemComponent inventoryItem = item.getComponent(ItemComponent.class);
+        private ArrayList<itemInInven> setInventory(InventoryComponent inventory) {
+            ArrayList<itemInInven> inventoryFilter = new ArrayList<>();
 
-                    // further sorts into weapons or consumables
-                    if (item.hasComponent(WeaponsStatsComponent.class)) {
+            itemInInven itemiser;
+            for (Entity e : inventory.getInventory()) {
+                //to ensure the inventory is populated by null items
+                itemiser = null;
 
-                        WeaponsStatsComponent weapon = item.getComponent(WeaponsStatsComponent.class);
+                if (e != null && e.hasComponent(ItemComponent.class)) {
+
+                    ItemComponent inventoryItem = e.getComponent(ItemComponent.class);
+
+                    itemiser = new itemInInven();
+                    // will set the consumable components as they do not have unique parts
+                    itemiser.type = inventoryItem.getType();
+                    itemiser.texture = inventoryItem.getTexture();
+                    itemiser.count = inventoryItem.getCount();
+                    itemiser.ammo = null;
+                    itemiser.upgradeStage = 1;
+
+                    // checks if item is a weapon or not
+                    if (e.hasComponent(WeaponsStatsComponent.class)) {
+                        WeaponsStatsComponent weapon = e.getComponent(WeaponsStatsComponent.class);
+
                         //last sorting will split between melee weapons and ranged weapons
-                        if (item.hasComponent(MagazineComponent.class)) {
-
-                            itemiser = new itemRetrieve();
-                            itemiser.type = inventoryItem.getType();
-                            itemiser.ammo = item.getComponent(MagazineComponent.class).getCurrentAmmo();
-                            itemiser.texture = inventoryItem.getTexture();
-                            itemiser.count = inventoryItem.getCount();
-                            itemiser.upgradeStage = weapon.getUpgradeStage();
-                        } else {
-
-                            itemiser = new itemRetrieve();
-                            itemiser.type = inventoryItem.getType();
-                            itemiser.ammo = 0;
-                            itemiser.texture = inventoryItem.getTexture();
-                            itemiser.count = inventoryItem.getCount();
-                            itemiser.upgradeStage = weapon.getUpgradeStage();
+                        if (e.hasComponent(MagazineComponent.class)) {
+                            itemiser.ammo = e.getComponent(MagazineComponent.class).getCurrentAmmo();
                         }
-
-                    } else if (item.hasComponent(ConsumableComponent.class)) {
-
-                        itemiser = new itemRetrieve();
-                        itemiser.type = inventoryItem.getType();
-                        itemiser.ammo = null;
-                        itemiser.texture = inventoryItem.getTexture();
-                        itemiser.count = inventoryItem.getCount();
-                        itemiser.upgradeStage = 1;
-
+                        itemiser.upgradeStage = weapon.getUpgradeStage();
+                    }
+                    if (e.hasComponent(LaserComponent.class)) {
+                        itemiser.Attachments.add("laser");
+                    }
+                    if (e.hasComponent(BulletEnhancerComponent.class)) {
+                        itemiser.Attachments.add("bullet");
                     }
                 }
                 inventoryFilter.add(itemiser);
@@ -158,11 +178,19 @@ public class SaveGame {
             return inventoryFilter;
         }
 
+        public void setArmour(ArrayList<String> armour) {
+            this.armour = armour;
+        }
+
+        public ArrayList<String> getArmour() {
+            return this.armour;
+        }
+
     }
 
     /**
      * helper class to improve the readibility of the output json file
-     * If new components that the Player needs to have saved insert here
+     * If new components that the Player needs to have saved insert here - yes bad practice to change existing code
      */
     public static class information {
         public Vector2 playerPos;
@@ -184,14 +212,16 @@ public class SaveGame {
     /**
      * helper class that cleans up json file for ease of readibility
      */
-    public static class itemRetrieve {
+    public static class itemInInven {
         public ItemTypes type;
         public Integer ammo;
         public String texture;
         public int count;
         public int upgradeStage;
+        public String name;
+        public ArrayList<String> Attachments;
 
-        public itemRetrieve() {
+        public itemInInven() {
         }
 
     }
