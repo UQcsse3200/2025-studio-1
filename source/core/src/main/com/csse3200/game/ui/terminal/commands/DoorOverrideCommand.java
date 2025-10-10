@@ -27,11 +27,8 @@ public class DoorOverrideCommand implements Command {
 
         boolean enable = args.getFirst().trim().equalsIgnoreCase("on");
 
-        // 1) Flip global keycard gate override (add the static flag/methods in KeycardGateComponent)
-        //    public static void setGlobalOverride(boolean);
         KeycardGateComponent.setGlobalOverride(enable);
 
-        // 2) (Optional) Also flip per-door override flags if any DoorComponent exists in scene
         EntityService es = ServiceLocator.getEntityService();
         int updated = 0;
         if (es != null) {

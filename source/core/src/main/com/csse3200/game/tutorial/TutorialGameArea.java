@@ -206,9 +206,12 @@ public class TutorialGameArea extends GameArea {
         if (cameraComponent != null) {
             var cam = (OrthographicCamera) cameraComponent.getCamera();
             Vector2 camPos = cameraComponent.getEntity().getPosition();
-            float vw = cam.viewportWidth, vh = cam.viewportHeight;
-            float leftX = camPos.x - vw / 2f, rightX = camPos.x + vw / 2f;
-            float bottomY = camPos.y - vh / 2f, topY = camPos.y + vh / 2f;
+            float vw = cam.viewportWidth;
+            float vh = cam.viewportHeight;
+            float leftX = camPos.x - vw / 2f;
+            float rightX = camPos.x + vw / 2f;
+            float bottomY = camPos.y - vh / 2f;
+            float topY = camPos.y + vh / 2f;
 
             Entity left = ObstacleFactory.createWall(WALL_THICKNESS, vh);
             left.setPosition(leftX, bottomY);

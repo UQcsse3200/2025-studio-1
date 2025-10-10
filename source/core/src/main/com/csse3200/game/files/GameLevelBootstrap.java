@@ -94,16 +94,13 @@ public final class GameLevelBootstrap {
             if (type == null) return;
             String t = type.trim().toLowerCase(Locale.ROOT);
 
-            switch (t) {
-                case "player" -> {
-                    area.spawnOrRepositionPlayer(grid);
-                    return;
-                }
-                case "door" -> {
-                    Entity d = ObstacleFactory.createDoor();
-                    area.spawnEntityAt(d, grid, false, false);
-                    return;
-                }
+            if (t.equals("player")) {
+                area.spawnOrRepositionPlayer(grid);
+                return;
+            } else if (t.equals("door")) {
+                Entity d = ObstacleFactory.createDoor();
+                area.spawnEntityAt(d, grid, false, false);
+                return;
             }
 
             if (t.startsWith("enemy")) {

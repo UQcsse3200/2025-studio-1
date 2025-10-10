@@ -108,9 +108,20 @@ public class TutorialGameScreen extends ScreenAdapter {
 
         // ESC → pause (unless teleporter consumed)
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
-            if (!TeleporterComponent.wasEscConsumedThisFrame()) {
-                if (!isPauseVisible) showPauseOverlay();
-                else hidePauseOverlay();
+            if (TeleporterComponent.wasEscConsumedThisFrame()) {
+                // teleporter UI handled ESC itself
+            } else if (isTeleporterVisible) {
+                // safety: if teleporter is up but didn't consume ESC, close it here
+                onTeleporterClose();
+            } else if (isPauseVisible) {
+                // close Pause first if it's open
+                hidePauseOverlay();
+            } else if (isMinimapVisible) {
+                // otherwise close Minimap
+                hideMinimapOverlay();
+            } else {
+                // nothing open → open Pause
+                showPauseOverlay();
             }
         }
 
@@ -172,7 +183,7 @@ public class TutorialGameScreen extends ScreenAdapter {
         // No tutorial gating overlays → allow
         return true;
     }
-    
+
     // ───────────── Overlays ─────────────
 
     private void showPauseOverlay() {
@@ -245,7 +256,7 @@ public class TutorialGameScreen extends ScreenAdapter {
     }
 
     public void onTeleporterClose() {
-        if (teleporterOverlay == null) {
+        if (teleporterOverlay != null) {
             teleporterOverlay.dispose();
             ServiceLocator.getEntityService().unregister(teleporterOverlay);
             teleporterOverlay = null;
