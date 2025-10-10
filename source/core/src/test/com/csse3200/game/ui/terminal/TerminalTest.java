@@ -1,13 +1,20 @@
 package com.csse3200.game.ui.terminal;
 
 import com.csse3200.game.GdxGame;
+import com.csse3200.game.areas.StaticBossRoom;
+import com.csse3200.game.areas.TunnelGameArea;
+import com.csse3200.game.components.DoorComponent;
 import com.csse3200.game.extensions.GameExtension;
 import com.csse3200.game.services.CountdownTimerService;
 import com.csse3200.game.ui.terminal.autocomplete.RadixTrie;
 import com.csse3200.game.ui.terminal.commands.Command;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -23,10 +30,13 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(GameExtension.class)
 class TerminalTest {
-    // Debounce in production code is 20ms; give ourselves a tiny buffer
     private static final Duration DEBOUNCE = Duration.ofMillis(20);
     private static final Duration DEBOUNCE_BUFFER = Duration.ofMillis(10);
     private static final Duration AT_MOST = Duration.ofMillis(500);
+    private AutoCloseable mocks;
+    private Terminal terminal;
+    @Mock
+    private DoorComponent door;
 
     /**
      * Wait until the terminal has produced a non-empty suggestions list.
@@ -57,6 +67,47 @@ class TerminalTest {
         return (String) m.invoke(null, in);
     }
 
+    private String getEntered() {
+        try {
+            return (String) Terminal.class.getMethod("getEnteredMessage").invoke(terminal);
+        } catch (ReflectiveOperationException e) {
+            try {
+                var f = Terminal.class.getDeclaredField("enteredMessage");
+                f.setAccessible(true);
+                return (String) f.get(terminal);
+            } catch (ReflectiveOperationException ex) {
+                throw new RuntimeException(ex);
+            }
+        }
+    }
+
+    private void setEntered(String s) {
+        try {
+            Terminal.class.getMethod("setEnteredMessage", String.class).invoke(terminal, s);
+        } catch (ReflectiveOperationException e) {
+            try {
+                var f = Terminal.class.getDeclaredField("enteredMessage");
+                f.setAccessible(true);
+                f.set(terminal, s);
+            } catch (ReflectiveOperationException ex) {
+                throw new RuntimeException(ex);
+            }
+        }
+    }
+
+    @BeforeEach
+    void setUp() {
+        mocks = MockitoAnnotations.openMocks(this);
+        terminal = new Terminal(null, null, null); // if your Terminal needs args, adjust accordingly
+        TunnelGameArea.exposedRightDoor = null; // start clean
+    }
+
+    @AfterEach
+    void tearDown() throws Exception {
+        TunnelGameArea.exposedRightDoor = null; // avoid test bleed
+        mocks.close();
+    }
+
     @Test
     void shouldSetOpenClosedAndToggle() {
         Terminal terminal = new Terminal(null, null, null);
@@ -75,6 +126,7 @@ class TerminalTest {
         terminal.toggleIsOpen();
         assertFalse(terminal.isOpen());
     }
+
 
     @Test
     void setEnteredMessageHandlesNullAndClearsOnClose() {
@@ -436,6 +488,72 @@ class TerminalTest {
         assertEquals(5, suggestions.size(), "Should cap suggestions to 5 when hits > 5");
         assertEquals(new ArrayList<>(List.of("hit0", "hit1", "hit2", "hit3", "hit4")),
                 new ArrayList<>(suggestions));
+    }
+
+    @Test
+    void processMessage_returnsFalse_onEmptyOrWhitespace() {
+        setEntered("   \t  ");
+        assertFalse(terminal.processMessage(), "Whitespace-only should be ignored");
+        assertEquals("   \t  ", getEntered(), "Message should remain unchanged on failure");
+    }
+
+    @Test
+    void processMessage_unlocksDoor_whenPasswordCorrectAndDoorPresent() {
+        StaticBossRoom.exposedRightDoor = door;
+
+        setEntered("0000");
+        boolean ok = terminal.processMessage();
+
+        assertTrue(ok, "Should succeed with the correct code when door exists");
+        verify(door).setLocked(false);
+        assertEquals("", getEntered(), "Entered message should be cleared on success");
+    }
+
+    @Test
+    void processMessage_trimsInput_beforeCheckingPassword() {
+        StaticBossRoom.exposedRightDoor = door;
+
+        setEntered("   0000   ");
+        boolean ok = terminal.processMessage();
+
+        assertTrue(ok, "Leading/trailing whitespace should be stripped");
+        verify(door).setLocked(false);
+        assertEquals("", getEntered(), "Entered message should be cleared on success");
+    }
+
+    @Test
+    void processMessage_returnsFalse_whenPasswordCorrectButDoorIsNull() {
+        StaticBossRoom.exposedRightDoor = null;
+
+        setEntered("0000");
+        boolean ok = terminal.processMessage();
+
+        assertFalse(ok, "Should fail when the backdoor code is correct but door is absent");
+        assertEquals("0000", getEntered(), "Message should not be cleared on failure");
+    }
+
+    @Test
+    void processMessage_requiresExactMatch_forPassword() {
+        StaticBossRoom.exposedRightDoor = door;
+
+        setEntered("0000 open");
+        boolean ok = terminal.processMessage();
+
+        assertFalse(ok, "Backdoor code must match exactly");
+        verify(door, never()).setLocked(false);
+        assertEquals("0000 open", getEntered(), "Message should remain unchanged on failure");
+    }
+
+    @Test
+    void processMessage_unknownCommand_returnsFalse_andKeepsMessage() {
+        StaticBossRoom.exposedRightDoor = door; // presence shouldn't matter here
+
+        setEntered("foo bar baz");
+        boolean ok = terminal.processMessage();
+
+        assertFalse(ok, "Unknown command should fail");
+        assertEquals("foo bar baz", getEntered(), "Message should remain for user correction");
+        verifyNoInteractions(door);
     }
 
     static class StubRadixTrie extends RadixTrie {

@@ -6,7 +6,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.CameraComponent;
-import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import com.csse3200.game.components.shop.CatalogService;
 import com.csse3200.game.components.shop.ShopDemo;
 import com.csse3200.game.components.shop.ShopManager;
@@ -16,6 +15,7 @@ import com.csse3200.game.entities.factories.ShopFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.entities.factories.system.TeleporterFactory;
 import com.csse3200.game.entities.spawner.ItemSpawner;
+import com.csse3200.game.services.ServiceLocator;
 
 /**
  * Second floor with different background and arrow-key controls.
@@ -34,8 +34,18 @@ public class Reception extends GameArea {
 
     @Override
     public void create() {
+        GenericLayout.ensureGenericAssets(this);
+        GenericLayout.setupTerrainWithOverlay(this, terrainFactory, TerrainType.LOBBY,
+                new Color(0.08f, 0.08f, 0.1f, 0.30f));
+
         ensureAssets();
-        spawnTerrain();
+
+        var ls = ServiceLocator.getLightingService();
+        if (ls != null && ls.getEngine() != null) {
+            ls.getEngine().setAmbientLight(0.65f);
+            ls.getEngine().getRayHandler().setShadows(true);
+        }
+
         spawnWallsAndDoor();
         player = spawnPlayer();
         spawnFloor();
@@ -46,6 +56,7 @@ public class Reception extends GameArea {
         spawndesk_reception();
         spawncomic_stand();
         spawnTeleporter();
+        spawnShopKiosk();
 
         if (!Reception.isCleared) {
             startWaves(player);
@@ -53,10 +64,7 @@ public class Reception extends GameArea {
             itemSpawner.spawnItems(ItemSpawnConfig.receptionmap());
         }
 
-        Entity ui = new Entity();
-        ui.addComponent(new GameAreaDisplay("Reception"))
-                .addComponent(new com.csse3200.game.components.gamearea.FloorLabelDisplay("Floor 2"));
-        spawnEntity(ui);
+        displayUIEntity("Reception", "Floor 2");
     }
 
     public static Reception load(TerrainFactory terrainFactory, CameraComponent camera) {
@@ -89,21 +97,18 @@ public class Reception extends GameArea {
         ensurePlayerAtlas();
     }
 
-    private void spawnTerrain() {
-        setupTerrainWithOverlay(terrainFactory, TerrainType.LOBBY, new Color(0.1f, 0.1f, 0.2f, 0.25f));
-    }
-
     private void spawnWallsAndDoor() {
         if (cameraComponent == null) return;
         Bounds b = getCameraBounds(cameraComponent);
         addSolidWallLeft(b, WALL_WIDTH);
         addSolidWallRight(b, WALL_WIDTH);
+        addSolidWallTop(b, WALL_WIDTH);
         float leftDoorHeight = Math.max(1f, b.viewHeight() * 0.2f);
-        float leftDoorY = b.bottomY();
+        float leftDoorY = b.bottomY()-1;
         float leftTopSegHeight = Math.max(0f, b.topY() - (leftDoorY + leftDoorHeight));
         if (leftTopSegHeight > 0f) {
             Entity leftTop = ObstacleFactory.createWall(WALL_WIDTH, leftTopSegHeight);
-            leftTop.setPosition(b.leftX(), leftDoorY + leftDoorHeight + 2f);
+            leftTop.setPosition(b.leftX(), leftDoorY + leftDoorHeight);
             spawnEntity(leftTop);
         }
         Entity leftDoor = ObstacleFactory.createDoorTrigger(WALL_WIDTH, leftDoorHeight);
@@ -129,12 +134,12 @@ public class Reception extends GameArea {
     }
 
     private void loadForest() {
-        ForestGameArea.setRoomSpawn(new GridPoint2(23, 8));
+        ForestGameArea.setRoomSpawn(new GridPoint2(23, 7));
         clearAndLoad(() -> new ForestGameArea(terrainFactory, cameraComponent));
     }
 
     private void loadBackToFloor5() {
-        MainHall.setRoomSpawn(new GridPoint2(8, 8));
+        MainHall.setRoomSpawn(new GridPoint2(1, 7));
         clearAndLoad(() -> new MainHall(terrainFactory, cameraComponent));
     }
 
@@ -170,7 +175,6 @@ public class Reception extends GameArea {
         Entity Platform4 = ObstacleFactory.createplatform2();
         Platform4.setPosition(PlatformX4, PlatformY4);
         spawnEntity(Platform4);
-
     }
 
     /**

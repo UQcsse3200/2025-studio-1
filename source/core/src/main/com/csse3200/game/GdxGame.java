@@ -107,7 +107,7 @@ public class GdxGame extends Game {
             case CHOOSE_AVATAR -> new AvatarChoiceScreen(this);
             case DIFFICULTY_SCREEN -> new DifficultyScreen(this);
             case LEADERBOARD -> new LeaderboardScreen(this);
-
+            case LOADING -> new LoadingScreen(this);
         };
     }
 
@@ -120,6 +120,6 @@ public class GdxGame extends Game {
 
     public enum ScreenType {
         MAIN_MENU, MAIN_GAME, SETTINGS, DEATH_SCREEN, WIN_SCREEN, TUTORIAL_SCREEN,
-        STORY, LOAD_GAME, DIFFICULTY_SCREEN, CHOOSE_AVATAR, LEADERBOARD
+        STORY, LOAD_GAME, DIFFICULTY_SCREEN, CHOOSE_AVATAR, LEADERBOARD, LOADING
     }
 }

@@ -15,12 +15,22 @@ import com.csse3200.game.entities.factories.KeycardFactory;
 import com.csse3200.game.entities.factories.characters.BossFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.entities.spawner.ItemSpawner;
+import com.csse3200.game.lighting.LightSpawner;
 import com.csse3200.game.physics.PhysicsLayer;
 import com.csse3200.game.physics.components.ColliderComponent;
 import com.csse3200.game.physics.components.HitboxComponent;
 import com.csse3200.game.services.ServiceLocator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import java.util.List;
+
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+
+import com.csse3200.game.entities.configs.benches.BenchConfig;
+import com.csse3200.game.entities.factories.InteractableStationFactory;
+import com.csse3200.game.components.stations.StationComponent;
+
+import com.csse3200.game.physics.PhysicsUtils;
+import com.csse3200.game.physics.components.PhysicsComponent;
 
 /**
  * This is the room that holds the static Boss.
@@ -31,11 +41,13 @@ import org.slf4j.LoggerFactory;
  * Room is empty except for boss and player
  */
 public class StaticBossRoom extends GameArea {
-    private static final Logger logger = LoggerFactory.getLogger(StaticBossRoom.class);
     private static final float WALL_WIDTH = 0.1f;
     private static GridPoint2 playerSpawn = new GridPoint2(3, 10);
     private static boolean isCleared;
     private Entity player;
+
+    private DoorComponent rightDoorComp;
+    public static volatile DoorComponent exposedRightDoor;
 
     /**
      * Creates a new StaticBossRoom for the room where the static boss spawns.
@@ -83,11 +95,30 @@ public class StaticBossRoom extends GameArea {
         GenericLayout.setupTerrainWithOverlay(this, terrainFactory, TerrainType.SERVER_ROOM,
                 new Color(0.10f, 0.12f, 0.10f, 0.24f));
 
+        //Checks to see if the lighting service is not null and then sets the ambient light and turns on shadows for the room.
+        var ls = ServiceLocator.getLightingService();
+        if (ls != null && ls.getEngine() != null) {
+            ls.getEngine().setAmbientLight(0.65f);
+            ls.getEngine().getRayHandler().setShadows(true);
+        }
+
+        LightSpawner.spawnCeilingCones(
+                this,
+                List.of(
+                        new GridPoint2(4,21),
+                        new GridPoint2(12,21),
+                        new GridPoint2(20,21)
+                ),
+                new Color(0.37f, 0.82f, 0.9f, 0.8f)
+        );
+
         spawnBordersAndDoors();
-        displayUI();
+        displayUIEntity("Static Boss Room", null);
 
         player = spawnPlayer();
 
+        spawnBoss();
+        spawnPasswordTerminal(new GridPoint2(14, 7));
         spawnObjectDoors(new GridPoint2(0, 7), new GridPoint2(28, 7));
 
         if (!StaticBossRoom.isCleared) {
@@ -96,13 +127,8 @@ public class StaticBossRoom extends GameArea {
             itemSpawner.spawnItems(ItemSpawnConfig.bossmap());
         }
 
+        spawnPlatforms();
         spawnVisibleFloor();
-    }
-
-    private void displayUI() {
-        Entity ui = new Entity();
-        ui.addComponent(new GameAreaDisplay("Static Boss Room"));
-        spawnEntity(ui);
     }
 
     private Entity spawnPlayer() {
@@ -120,11 +146,59 @@ public class StaticBossRoom extends GameArea {
                 Entity keycard = KeycardFactory.createKeycard(3);
                 keycard.setPosition(new Vector2(3f, 10f)); // adjust position if needed
                 spawnEntity(keycard);
+
+                addWinText(new Vector2(2.5f, 3.5f));
             });
         });
 
         spawnEntityAt(boss, pos, true, true);
         registerEnemy(boss);
+    }
+
+    /**
+     * Adds a text prompt where the player collects the keycard
+     * which tells the player the password
+     *
+     * @param pos The grid position to spawn the button at.
+     */
+    private void addWinText(Vector2 pos) {
+        Entity text = InteractableStationFactory.createBaseStation();
+        text.scaleHeight(2f);
+        PhysicsUtils.setScaledCollider(text, 1.2f, 1.2f);
+        text.getComponent(ColliderComponent.class)
+                .setAsBoxAligned(new Vector2(1.2f, 1.2f),
+                        PhysicsComponent.AlignX.CENTER,
+                        PhysicsComponent.AlignY.CENTER);
+        text.addComponent(new StationComponent(makeTextConfig()));
+
+        spawnEntity(text);
+        text.setPosition(pos);
+    }
+
+    /**
+     * Creates a {@link BenchConfig} used for the button hint station.
+     * - Displays "Password is 0000" when near.<br>
+     * When the player presses E, it unlocks the right exit door and updates the prompt message.<br>
+     * If the player is too far, it instructs them to move closer.
+     *
+     * @return The configuration used by the button's {@link StationComponent}.
+     */
+    private BenchConfig makeTextConfig() {
+        return new BenchConfig() {
+            {
+                this.texturePath = null;
+                this.promptText = "Door Password is 0000";
+            }
+
+            @Override
+            public int getPrice() {
+                return 0;
+            }
+
+            @Override
+            public void upgrade(boolean playerNear, com.csse3200.game.entities.Entity player, Label prompt) {
+            }
+        };
     }
 
     /**
@@ -134,7 +208,6 @@ public class StaticBossRoom extends GameArea {
         if (cameraComponent == null) return;
 
         Bounds b = getCameraBounds(cameraComponent);
-        //  addSolidWallLeft(b, WALL_WIDTH);
         addSolidWallTop(b, WALL_WIDTH);
         addSolidWallRight(b, WALL_WIDTH);
 
@@ -146,6 +219,12 @@ public class StaticBossRoom extends GameArea {
             leftTop.setPosition(b.leftX(), leftDoorY + leftDoorHeight);
             spawnEntity(leftTop);
         }
+
+
+        Entity leftDoorWall = ObstacleFactory.createWall(WALL_WIDTH, leftDoorHeight);
+        leftDoorWall.setPosition(b.leftX(), leftDoorY);
+        spawnEntity(leftDoorWall);
+
         Entity leftDoor = ObstacleFactory.createDoorTrigger(WALL_WIDTH, leftDoorHeight);
         leftDoor.setPosition(b.leftX() + 0.001f, leftDoorY);
         leftDoor.addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
@@ -158,16 +237,24 @@ public class StaticBossRoom extends GameArea {
         float rightDoorY = b.bottomY();
         Entity rightDoor = ObstacleFactory.createDoorTrigger(WALL_WIDTH, rightDoorHeight);
         rightDoor.setPosition(b.rightX() - WALL_WIDTH - 0.001f, rightDoorY);
+
+        DoorComponent doorComp = new DoorComponent(this::loadSecretRoom);
+        doorComp.setLocked(true);
+        rightDoor.addComponent(doorComp);
         rightDoor.addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
         rightDoor.addComponent(new HitboxComponent().setLayer(PhysicsLayer.OBSTACLE));
-        rightDoor.addComponent(new KeycardGateComponent(3, () -> {
-            ColliderComponent collider = rightDoor.getComponent(ColliderComponent.class);
-            if (collider != null) collider.setEnabled(false);
-            loadSecretRoom();
-        }));
         spawnEntity(rightDoor);
+        this.rightDoorComp = doorComp;
+        StaticBossRoom.exposedRightDoor = doorComp;
+    }
+    private void spawnPlatforms() {
+        Entity platform1 = ObstacleFactory.createThinFloor();
+        GridPoint2 platform1Pos = new GridPoint2(4, 10);
+        spawnEntityAt(platform1, platform1Pos, false, false);
 
-        if (!StaticBossRoom.isCleared) registerDoors(new Entity[]{leftDoor});
+        Entity platform3 = ObstacleFactory.createThinFloor();
+        GridPoint2 platform3Pos = new GridPoint2(22, 10);
+        spawnEntityAt(platform3, platform3Pos, false, false);
     }
 
     public void loadSecretRoom() {
@@ -180,10 +267,51 @@ public class StaticBossRoom extends GameArea {
     }
 
     public void loadTunnel() {
-        TunnelGameArea.setRoomSpawn(new GridPoint2(26, 8));
+        TunnelGameArea.setRoomSpawn(new GridPoint2(25, 7));
         clearAndLoad(() -> new TunnelGameArea(terrainFactory, cameraComponent));
     }
 
+    /**
+     * Spawns a password terminal and a nearby hint station in the given position.
+     */
+    private void spawnPasswordTerminal(GridPoint2 pos) {
+        Entity terminal = ObstacleFactory.createSecuritySystem();
+        spawnEntityAt(terminal, pos, true, false);
+
+        Entity hintStation = InteractableStationFactory.createBaseStation();
+        hintStation.addComponent(new StationComponent(makeTerminalHintConfig()));
+
+        PhysicsUtils.setScaledCollider(hintStation, 2.5f, 1.5f);
+        hintStation.getComponent(ColliderComponent.class)
+                .setAsBoxAligned(new Vector2(2.5f, 1.5f),
+                        PhysicsComponent.AlignX.CENTER, PhysicsComponent.AlignY.CENTER);
+
+        GridPoint2 hintPos = new GridPoint2(pos.x, pos.y + 2);
+        spawnEntityAt(hintStation, hintPos, true, false);
+    }
+
+    /**
+     * Creates a {@link BenchConfig} used for the password terminal's hint station.
+     */
+    private BenchConfig makeTerminalHintConfig() {
+        return new BenchConfig() {
+            {
+                this.texturePath = null;
+                this.promptText = "Press F1 to access terminal";
+                ServiceLocator.getGlobalEvents().addListener("unlock",
+                        () -> {promptText = "Correct Password! Door Unlocked!";});
+            }
+
+            @Override
+            public int getPrice() {
+                return 0;
+            }
+
+            @Override
+            public void upgrade(boolean playerNear, com.csse3200.game.entities.Entity player, Label prompt) {
+            }
+        };
+    }
 
     /**
      * Clear room, set this room's static

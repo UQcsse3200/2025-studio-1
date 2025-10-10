@@ -24,6 +24,7 @@ public class MainGameDisplay extends UIComponent {
 
     public MainGameDisplay(CountdownTimerService timerService) {
         this.timerService = timerService;
+        this.timerService.startTimer();
     }
 
     @Override

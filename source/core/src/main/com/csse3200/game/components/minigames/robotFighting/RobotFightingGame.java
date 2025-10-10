@@ -2,6 +2,8 @@ package com.csse3200.game.components.minigames.robotFighting;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.Timer;
+import com.csse3200.game.components.minigames.BettingComponent;
+import com.csse3200.game.components.player.InventoryComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.factories.InteractableStationFactory;
 import com.csse3200.game.files.FileLoader;
@@ -35,38 +37,20 @@ import com.csse3200.game.services.ServiceLocator;
  * </ul>
  */
 public class RobotFightingGame {
-    /**
-     * Preloaded text data containing random encouragement messages.
-     */
+    /** Preloaded text data containing random encouragement messages. */
     private final RobotFightingText encouragingMessages;
-    /**
-     * Root entity containing this minigame’s components and display.
-     */
+    /** Root entity containing this minigame’s components and display. */
     private final Entity gameEntity;
-    /**
-     * The display/UI component that visualises the minigame.
-     */
+    /** The display/UI component that visualises the minigame. */
     private final RobotFightingDisplay gameDisplay;
 
-    /**
-     * Whether the game UI is currently visible to the player.
-     */
+    /** Whether the game UI is currently visible to the player. */
     private boolean gameDisplayed = false;
-    /**
-     * The player’s selected robot.
-     */
-    private Robot selectedRobot = null;
-    /**
-     * Current HP for the player’s fighter.
-     */
+    /** Current HP for the player’s fighter. */
     private int chosenFighterHp = 100;
-    /**
-     * Current HP for the opposing fighter.
-     */
+    /** Current HP for the opposing fighter. */
     private int otherFighterHp = 100;
-    /**
-     * Encouragement multiplier for player attack power (1.0–2.0).
-     */
+    /** Encouragement multiplier for player attack power (1.0–2.0). */
     private double encourageMult = 1.0;
 
     /**
@@ -84,31 +68,20 @@ public class RobotFightingGame {
         gameEntity = initGameEntity();
         gameDisplay = gameEntity.getComponent(RobotFightingDisplay.class);
 
+
         gameEntity.getEvents().addListener("interact", this::handleInteract);
-        gameEntity.getEvents().addListener("robotFighting:choose", this::selectFighter);
+        gameEntity.getEvents().addListener("betPlaced", this::startGame);
         gameEntity.getEvents().addListener("robotFighting:startFight", this::startFight);
         gameEntity.getEvents().addListener("robotFighting:encourage", this::encourageFighter);
     }
 
     /**
-     * Alternate constructor used for testing.
-     * <p>
-     * Accepts a custom {@link RobotFightingText} to bypass {@link FileLoader}
-     * and avoid external asset loading.
-     * </p>
-     *
-     * @param customText Preloaded text data containing encouragement strings.
+     * Testing constructor that skips LibGDX or entity initialization.
      */
-    public RobotFightingGame(RobotFightingText customText) {
-        this.encouragingMessages = customText;
-
-        gameEntity = initGameEntity();
-        gameDisplay = gameEntity.getComponent(RobotFightingDisplay.class);
-
-        gameEntity.getEvents().addListener("interact", this::handleInteract);
-        gameEntity.getEvents().addListener("robotFighting:choose", this::selectFighter);
-        gameEntity.getEvents().addListener("robotFighting:startFight", this::startFight);
-        gameEntity.getEvents().addListener("robotFighting:encourage", this::encourageFighter);
+    protected RobotFightingGame(RobotFightingText text) {
+        this.encouragingMessages = text;
+        this.gameEntity = new Entity();
+        this.gameDisplay = null;
     }
 
     /**
@@ -117,14 +90,16 @@ public class RobotFightingGame {
      * When visible, the game is paused; when hidden, gameplay resumes.
      * </p>
      */
-    private void handleInteract() {
+    void handleInteract() {
         if (gameDisplayed) {
             gameDisplay.hide();
-            ServiceLocator.getTimeSource().setPaused(false);
             gameDisplayed = false;
-        } else {
+        }
+    }
+
+    void startGame() {
+        if (!gameDisplayed) {
             gameDisplay.show();
-            ServiceLocator.getTimeSource().setPaused(true);
             gameDisplayed = true;
         }
     }
@@ -141,17 +116,10 @@ public class RobotFightingGame {
     protected Entity initGameEntity() {
         Entity game = InteractableStationFactory.createBaseStation();
         game.addComponent(new RobotFightingDisplay());
-        game.addComponent(new TextureRenderComponent("images/tree.png"));
+        InventoryComponent inventory = ServiceLocator.getPlayer().getComponent(InventoryComponent.class);
+        game.addComponent(new BettingComponent(2, inventory));
+        game.addComponent(new TextureRenderComponent("images/clanker-royale.png"));
         return game;
-    }
-
-    /**
-     * Stores the player’s chosen robot type for the fight.
-     *
-     * @param fighter the selected {@link Robot}.
-     */
-    private void selectFighter(Robot fighter) {
-        selectedRobot = fighter;
     }
 
     /**
@@ -173,20 +141,9 @@ public class RobotFightingGame {
         Timer.schedule(new Timer.Task() {
             @Override
             public void run() {
-                if (chosenFighterHp <= 0 || otherFighterHp <= 0) {
+                if (!handleChosenFighter()) {
                     cancel();
-                    determineWinner();
-                    return;
                 }
-
-                Actor attacked = gameDisplay.getOtherActor(gameDisplay.getChosenActor());
-                if (attacked == null) return;
-
-                gameDisplay.playAttackAnimation(attacked);
-
-                int damage = (int) (Math.random() * 10 * encourageMult + 5);
-                otherFighterHp -= damage;
-                gameDisplay.setHealthFighter(attacked, otherFighterHp);
             }
         }, 1f, 1.5f + (float) Math.random());
 
@@ -194,23 +151,46 @@ public class RobotFightingGame {
         Timer.schedule(new Timer.Task() {
             @Override
             public void run() {
-                if (chosenFighterHp <= 0 || otherFighterHp <= 0) {
+                if (!handleOtherFighter()) {
                     cancel();
-                    return;
                 }
-
-                Actor attacked = gameDisplay.getChosenActor();
-                if (attacked == null) return;
-
-                gameDisplay.playAttackAnimation(attacked);
-
-                int damage = (int) (Math.random() * 5 + 10);
-                chosenFighterHp -= damage;
-                gameDisplay.setHealthFighter(attacked, chosenFighterHp);
-
-                loseCourage();
             }
         }, 1.3f, 1.5f + (float) Math.random());
+    }
+
+    boolean handleChosenFighter() {
+        if (chosenFighterHp <= 0 || otherFighterHp <= 0) {
+            determineWinner();
+            return false;
+        }
+
+        Actor attacked = gameDisplay.getOtherActor(gameDisplay.getChosenActor());
+        if (attacked == null) return false;
+
+        gameDisplay.playAttackAnimation(attacked);
+
+        int damage = (int) (Math.random() * 5 * encourageMult + 8);
+        otherFighterHp -= damage;
+        gameDisplay.setHealthFighter(attacked, otherFighterHp);
+        return true;
+    }
+
+    boolean handleOtherFighter() {
+        if (chosenFighterHp <= 0 || otherFighterHp <= 0) {
+            return false;
+        }
+
+        Actor attacked = gameDisplay.getChosenActor();
+        if (attacked == null) return false;
+
+        gameDisplay.playAttackAnimation(attacked);
+
+        int damage = (int) (Math.random() * 5 + 10);
+        chosenFighterHp -= damage;
+        gameDisplay.setHealthFighter(attacked, chosenFighterHp);
+
+        loseCourage();
+        return true;
     }
 
     /**
@@ -221,15 +201,15 @@ public class RobotFightingGame {
      * The closer it gets to 2, the smaller the increase.
      * </p>
      */
-    private void encourageFighter() {
+    void encourageFighter() {
         gameDisplay.encourageFighter(encouragingMessages.getRandom());
         boolean successfulEncourage = Math.random() < 0.5;
 
         if (!successfulEncourage) return;
 
         double baseStrength = 0.1 + Math.random() * 0.2;
-        encourageMult += (2 - encourageMult) * baseStrength;
-        encourageMult = Math.min(encourageMult, 2);
+        encourageMult += (1.5 - encourageMult) * baseStrength;
+        encourageMult = Math.min(encourageMult, 1.5);
     }
 
     /**
@@ -254,13 +234,21 @@ public class RobotFightingGame {
     private void determineWinner() {
         if (chosenFighterHp <= 0) {
             if (otherFighterHp <= 0) {
-                gameDisplay.fightOver("drew");
+                gameDisplay.playExplosionEffect(gameDisplay.getChosenActor());
+                gameDisplay.playExplosionEffect(gameDisplay.getOtherActor(gameDisplay.getChosenActor()));
             } else {
-                gameDisplay.fightOver("lost");
+                gameDisplay.playExplosionEffect(gameDisplay.getOtherActor(gameDisplay.getChosenActor()));
             }
         } else {
-            gameDisplay.fightOver("won");
+            gameDisplay.playExplosionEffect(gameDisplay.getChosenActor());
         }
+
+        Timer.schedule(new Timer.Task() {
+            @Override
+            public void run() {
+                determineWinnerImmediate();
+            }
+        }, 1f);
     }
 
     /**
@@ -273,5 +261,19 @@ public class RobotFightingGame {
      */
     public Entity getGameEntity() {
         return gameEntity;
+    }
+
+    // in RobotFightingGame.java
+    protected void determineWinnerImmediate() {
+        if (chosenFighterHp <= 0) {
+            if (otherFighterHp <= 0) {
+                gameEntity.getEvents().trigger("draw");
+            } else {
+                gameEntity.getEvents().trigger("lose");
+            }
+        } else {
+            gameEntity.getEvents().trigger("win");
+        }
+        gameEntity.getEvents().trigger("interact");
     }
 }

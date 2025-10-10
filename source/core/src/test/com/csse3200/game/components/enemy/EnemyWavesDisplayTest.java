@@ -45,7 +45,13 @@ public class EnemyWavesDisplayTest {
     }
 
     @Test
+    @DisplayName("Check initial labels at class creation")
     void checkLabelInitial() {
+        // Check number of enemies left
+        Assertions.assertNotNull(display.getEnemyNumLabel());
+        String expectedEnemyNum = "Enemies left: 0 / 0";
+        Assertions.assertEquals(expectedEnemyNum, display.getEnemyNumLabel().getText().toString());
+
         // Check initial waves spawned
         Assertions.assertNotNull(display.getWaveNumberLabel());
         String expectedWavesSpawned = "Waves spawned: 0";
@@ -63,7 +69,17 @@ public class EnemyWavesDisplayTest {
     }
 
     @Test
+    @DisplayName("Check Labels after some setters and event triggers")
     void checkLabelAfterSetter() {
+        // Check enemies left label
+        display.setInitialEnemyNum(5);
+        wavesManager.setEnemyLeft(2);
+        wavesManager.getEvents().trigger("numEnemyLeftChanged");
+
+        Assertions.assertNotNull(display.getEnemyNumLabel());
+        String expectedEnemyNum = "Enemies left: 2 / 5";
+        Assertions.assertEquals(expectedEnemyNum, display.getEnemyNumLabel().getText().toString());
+
         // Check updated max waves when no max waves specified
         wavesManager.setMaxWaves(5);
 
@@ -80,11 +96,12 @@ public class EnemyWavesDisplayTest {
     }
 
     @Test
+    @DisplayName("Test table visibility")
     void checkTableVisibility() {
-        // initially visible after calling addActors()
+        // initially invisible after calling addActors()
         assertFalse(display.getTable().isVisible());
 
-        // make invisible and assert
+        // make visible and assert
         wavesManager.getEvents().trigger("spawnWave");
         assertTrue(display.getTable().isVisible());
     }

@@ -6,17 +6,27 @@ import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.CameraComponent;
-import com.csse3200.game.components.gamearea.GameAreaDisplay;
+import com.csse3200.game.components.shop.CatalogService;
+import com.csse3200.game.components.shop.ShopDemo;
+import com.csse3200.game.components.shop.ShopManager;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.ItemSpawnConfig;
+import com.csse3200.game.entities.factories.ShopFactory;
+import com.csse3200.game.entities.factories.characters.FriendlyNPCFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.entities.factories.system.TeleporterFactory;
 import com.csse3200.game.entities.spawner.ItemSpawner;
+import com.csse3200.game.lighting.LightSpawner;
+import com.csse3200.game.services.ServiceLocator;
+
+import java.util.List;
+
 
 /**
  * Minimal generic Security room: walls, doors, and a subtle background overlay.
  */
 public class SecurityGameArea extends GameArea {
+    private Entity player;
     private static final float WALL_WIDTH = 0.1f;
     private static GridPoint2 playerSpawn = new GridPoint2(10, 10);
     private static boolean isCleared = false;
@@ -50,26 +60,49 @@ public class SecurityGameArea extends GameArea {
         GenericLayout.setupTerrainWithOverlay(this, terrainFactory, TerrainType.SECURITY_ROOM,
                 new Color(0.08f, 0.08f, 0.1f, 0.30f));
 
+        //Checks to see if the lighting service is not null and then sets the ambient light and turns on shadows for the room.
+        var ls = ServiceLocator.getLightingService();
+        if (ls != null && ls.getEngine() != null) {
+            ls.getEngine().setAmbientLight(0.65f);
+            ls.getEngine().getRayHandler().setShadows(true);
+        }
+
+        LightSpawner.spawnCeilingCones(
+                this,
+                List.of(
+                        new GridPoint2(4,20),
+                        new GridPoint2(12,20),
+                        new GridPoint2(20,20)
+                ),
+                new Color(0.37f, 0.82f, 0.9f, 0.8f)
+        );
         spawnBordersAndDoors();
-        Entity player = spawnPlayer();
+        player = spawnPlayer();
         spawnPlatforms();
         spawnObjectDoors(new GridPoint2(0, 6), new GridPoint2(28, 19));
         spawnSecurityProps();
         spawnTeleporter();
         spawnSpikes2();
+        spawnNurse(player);
+        spawnShopKiosk();
 
+        spawnEnemiesAndWeapons();
+        displayUIEntity("Security", "Floor 4");
+    }
+
+    public void spawnEnemiesAndWeapons() {
         if (!SecurityGameArea.isCleared) {
             startWaves(player);
             ItemSpawner itemSpawner = new ItemSpawner(this);
             itemSpawner.spawnItems(ItemSpawnConfig.securitymap());
         }
-
-        Entity ui = new Entity();
-        ui.addComponent(new GameAreaDisplay("Security"))
-                .addComponent(new com.csse3200.game.components.gamearea.FloorLabelDisplay("Floor 4"));
-        spawnEntity(ui);
     }
-
+    private void spawnShopKiosk() {
+        CatalogService catalog = ShopDemo.makeDemoCatalog();
+        ShopManager manager = new ShopManager(catalog);
+        Entity shop = ShopFactory.createShop(this, manager, "images/VendingMachine.png"); // have as tree now as placeholder, later need to change to actual shop icon
+        spawnEntityAt(shop, new GridPoint2(26, 6), true, false);
+    }
     private void spawnBordersAndDoors() {
         if (cameraComponent == null)
             return;
@@ -130,7 +163,7 @@ public class SecurityGameArea extends GameArea {
     private void spawnSecurityProps() {
 
         /* Security System (collidable) **/
-        GridPoint2 systemPos = new GridPoint2(27, 6);
+        GridPoint2 systemPos = new GridPoint2(57, 6);
         Entity system = ObstacleFactory.createSecuritySystem();
         spawnEntityAt(system, systemPos, true, false);
 
@@ -172,12 +205,12 @@ public class SecurityGameArea extends GameArea {
     }
 
     private void loadBackToFloor5() {
-        MainHall.setRoomSpawn(new GridPoint2(24, 20));
+        MainHall.setRoomSpawn(new GridPoint2(25, 17));
         clearAndLoad(() -> new MainHall(terrainFactory, cameraComponent));
     }
 
     private void loadMovingBossRoom() {
-        MovingBossRoom.setRoomSpawn(new GridPoint2(6, 8));
+        MovingBossRoom.setRoomSpawn(new GridPoint2(1, 7));
         clearAndLoad(() -> new MovingBossRoom(terrainFactory, cameraComponent));
     }
 
@@ -188,8 +221,7 @@ public class SecurityGameArea extends GameArea {
 
     @Override
     public Entity getPlayer() {
-        // placeholder
-        return null;
+        return player;
     }
 
     /**
@@ -199,6 +231,13 @@ public class SecurityGameArea extends GameArea {
     public static void clearRoom() {
         SecurityGameArea.isCleared = true;
         logger.debug("Security is cleared");
+    }
+
+    private void spawnNurse(Entity player) {
+        GridPoint2 pos = new GridPoint2(20, 8);
+
+        Entity nurse = FriendlyNPCFactory.createNurseNpc(player);
+        spawnEntityAt(nurse, pos, true, true);
     }
 
     /**

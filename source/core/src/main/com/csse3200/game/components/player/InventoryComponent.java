@@ -231,8 +231,7 @@ public class InventoryComponent extends Component {
     public void setProcessor(int processor) {
         int prev = this.processor;
         this.processor = Math.max(processor, 0);
-        // Fire event only after entity attached (not during constructor before
-        // setEntity)
+        // Fire event only after entity attached (not during constructor before setEntity)
         if (entity != null && prev != this.processor) {
             entity.getEvents().trigger("updateProcessor", this.processor);
         }
@@ -298,11 +297,6 @@ public class InventoryComponent extends Component {
      * @param slotIndex is the index of the slot from which the player wants to equip the weapon from
      */
     public void setEquippedSlot(int slotIndex) {
-        InventoryComponent inventory = entity.getComponent(InventoryComponent.class);
-        if (inventory == null) return;
-
-        //set the selected slot
-        //inventory.setSelectSlot(slotIndex-1);
         this.equippedSlot = slotIndex;
 
         //trigger the UI update and internal logic

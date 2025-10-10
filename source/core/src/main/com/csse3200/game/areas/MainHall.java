@@ -6,13 +6,16 @@ import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.CameraComponent;
-import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.ItemSpawnConfig;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.entities.spawner.ItemSpawner;
 import com.csse3200.game.entities.factories.system.TeleporterFactory;
+import com.csse3200.game.lighting.LightSpawner;
 import com.csse3200.game.rendering.SolidColorRenderComponent;
+import com.csse3200.game.services.ServiceLocator;
+
+import java.util.List;
 
 /**
  * Room 5 with its own background styling.
@@ -48,9 +51,30 @@ public class MainHall extends GameArea {
 
     @Override
     public void create() {
+        GenericLayout.ensureGenericAssets(this);
+        GenericLayout.setupTerrainWithOverlay(this, terrainFactory, TerrainType.MAIN_HALL,
+                new Color(0.08f, 0.08f, 0.1f, 0.30f));
+
         ensureAssets();
-        terrain = terrainFactory.createTerrain(TerrainType.MAIN_HALL);
-        spawnEntity(new Entity().addComponent(terrain));
+
+        //Checks to see if the lighting service is not null and then sets the ambient light and turns on shadows for the room.
+        var ls = ServiceLocator.getLightingService();
+        if (ls != null && ls.getEngine() != null) {
+            ls.getEngine().setAmbientLight(0.65f);
+            ls.getEngine().getRayHandler().setShadows(true);
+        }
+
+        LightSpawner.spawnCeilingCones(
+                this,
+                List.of(
+                        new GridPoint2(4,21),
+                        new GridPoint2(12,21),
+                        new GridPoint2(20,21),
+                        new GridPoint2(27,21)
+                ),
+                new Color(0.37f, 0.82f, 0.9f, 0.8f)
+        );
+
         Entity overlay = new Entity();
         overlay.setScale(1000f, 1000f);
         overlay.setPosition(-500f, -500f);
@@ -64,18 +88,17 @@ public class MainHall extends GameArea {
         player = spawnPlayer();
         spawnFloor();
 
+        spawnEnemiesAndWeapons();
         spawnTeleporter();
+        displayUIEntity("Main Hall", "Floor 3");
+    }
 
+    public void spawnEnemiesAndWeapons() {
         if (!MainHall.isCleared) {
             startWaves(player);
             ItemSpawner itemSpawner = new ItemSpawner(this);
             itemSpawner.spawnItems(ItemSpawnConfig.mainHallmap());
         }
-
-        Entity ui = new Entity();
-        ui.addComponent(new GameAreaDisplay("Main Hall"))
-                .addComponent(new com.csse3200.game.components.gamearea.FloorLabelDisplay("Floor 3"));
-        spawnEntity(ui);
     }
 
     private void ensureAssets() {
@@ -132,12 +155,12 @@ public class MainHall extends GameArea {
     }
 
     private void loadBackToFloor2() {
-        Reception.setRoomSpawn(new GridPoint2(24, 24));
+        Reception.setRoomSpawn(new GridPoint2(25, 20));
         clearAndLoad(() -> new Reception(terrainFactory, cameraComponent));
     }
 
     private void loadSecurity() {
-        SecurityGameArea.setRoomSpawn(new GridPoint2(6, 8));
+        SecurityGameArea.setRoomSpawn(new GridPoint2(1, 7));
         clearAndLoad(() -> new SecurityGameArea(terrainFactory, cameraComponent));
     }
 
@@ -169,17 +192,6 @@ public class MainHall extends GameArea {
         Entity Platform4 = ObstacleFactory.createplatform3();
         Platform4.setPosition(PlatformX4, PlatformY4);
         spawnEntity(Platform4);
-    }
-
-    /**
-     * spawns Sofa in bottom left
-     **/
-    private void spawnsofa() {
-        float PlatformX = 1f;
-        float PlatformY = 3f;
-        Entity sofa1 = ObstacleFactory.createMhall_sofa();
-        sofa1.setPosition(PlatformX, PlatformY);
-        spawnEntity(sofa1);
     }
 
     /**

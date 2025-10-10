@@ -1,20 +1,30 @@
 package com.csse3200.game.services;
 
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.areas.GameArea;
 import com.csse3200.game.areas.difficulty.Difficulty;
+import com.csse3200.game.areas.difficulty.DifficultyType;
 import com.csse3200.game.components.AmmoStatsComponent;
+import com.csse3200.game.components.ArmourComponent;
 import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.components.Component;
+import com.csse3200.game.components.player.ArmourEquipComponent;
 import com.csse3200.game.components.player.InventoryComponent;
 import com.csse3200.game.components.player.StaminaComponent;
 import com.csse3200.game.entities.Avatar;
 import com.csse3200.game.entities.AvatarRegistry;
 import com.csse3200.game.entities.Entity;
+import com.csse3200.game.entities.configs.Armour;
+import com.csse3200.game.entities.factories.items.ArmourFactory;
 import com.csse3200.game.extensions.GameExtension;
 import com.csse3200.game.files.FileLoader;
 import com.csse3200.game.files.SaveGame;
+import com.csse3200.game.physics.PhysicsEngine;
+import com.csse3200.game.physics.PhysicsService;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.MockedStatic;
@@ -39,79 +49,6 @@ class SaveLoadServiceTest {
     private static final double FLOAT_EPS = 1e-4;
     private static final int INVENTORY_PROCESSES = 1;
     private static final int EXPECTED_ROUND_NUMBER = 0;
-
-    @Test
-    void save_setsExpectedSnapshot_withoutFileIO() {
-        CombatStatsComponent stats = new CombatStatsComponent(MAX_HEALTH);
-        stats.setHealth(INITIAL_HEALTH);
-
-        InventoryComponent inv = new InventoryComponent(INVENTORY_PROCESSES);
-        AmmoStatsComponent ammTest = new AmmoStatsComponent(INVENTORY_PROCESSES);
-        StaminaComponent stamTest = new StaminaComponent();
-
-        FakeEntity player = new FakeEntity();
-        player.addComponent(stats);
-        player.addComponent(inv);
-        player.addComponent(ammTest);
-        player.addComponent(stamTest);
-        player.setPosition(new Vector2(POS_X, POS_Y));
-        Avatar playerAvatarTest = AvatarRegistry.getAll().get(1);
-        AvatarRegistry.set(playerAvatarTest);
-
-        //test to mock
-        ServiceLocator.registerDiscoveryService(mock(DiscoveryService.class));
-        ServiceLocator.registerDifficulty(mock(Difficulty.class));
-        ServiceLocator.registerPlayer(player);
-
-        GameArea area = mock(GameArea.class);
-        ServiceLocator.registerGameArea(area);
-
-        when(area.getEntities()).thenReturn(List.of(player));
-        when(area.toString()).thenReturn(AREA_ID);
-
-
-
-        SaveLoadService service = new SaveLoadService();
-
-        final SaveGame.GameState[] captured = new SaveGame.GameState[1];
-        try (MockedStatic<FileLoader> mocked = mockStatic(FileLoader.class)) {
-            mocked.when(() -> FileLoader.write(
-                            any(SaveGame.GameState.class),
-                            anyString(),
-                            any(FileLoader.Location.class),
-                            anyBoolean())
-                    )
-                    .thenAnswer(invocation -> {
-                        captured[0] = invocation.getArgument(0);
-                        return null; // static void
-                    });
-
-            boolean ok = service.save(SLOT_ID, area);
-
-            Assertions.assertTrue(ok, "save() should return true");
-            Assertions.assertNotNull(captured[0], "Expected a single write() call");
-
-            SaveGame.GameState out = captured[0];
-
-            // snapshot fields
-            Assertions.assertEquals(AREA_ID, out.getGameArea());
-            Assertions.assertEquals(INITIAL_HEALTH, out.getPlayer().currentHealth,
-                    "Health should originate from CombatStatsComponent");
-            Assertions.assertEquals(POS_X, out.getPlayer().playerPos.x, FLOAT_EPS);
-            Assertions.assertEquals(POS_Y, out.getPlayer().playerPos.y, FLOAT_EPS);
-            Assertions.assertEquals(EXPECTED_ROUND_NUMBER, out.getWave());
-//            Assertions.assertEquals(,out.getPlayer().avatar);
-            Assertions.assertNotNull(out.getInventory(), "inventory list should be initialized (may be empty)");
-
-            // optional: verify call shape
-            mocked.verify(() -> FileLoader.write(
-                    same(out),
-                    anyString(),
-                    any(FileLoader.Location.class),
-                    eq(true)
-            ));
-        }
-    }
 
     static class FakeEntity extends Entity {
         private final List<Component> comps = new ArrayList<>();
@@ -144,6 +81,125 @@ class SaveLoadServiceTest {
             component.setEntity(this);
             return this;
         }
+    }
+
+    @Test
+    void save_setsExpectedSnapshot_withoutFileIO() {
+        CombatStatsComponent stats = new CombatStatsComponent(MAX_HEALTH);
+        stats.setHealth(INITIAL_HEALTH);
+
+        InventoryComponent inv = new InventoryComponent(INVENTORY_PROCESSES);
+        AmmoStatsComponent ammTest = new AmmoStatsComponent(INVENTORY_PROCESSES);
+        StaminaComponent stamTest = new StaminaComponent();
+
+        FakeEntity player = new FakeEntity();
+        player.addComponent(stats);
+        player.addComponent(inv);
+        player.addComponent(ammTest);
+        player.addComponent(stamTest);
+        player.setPosition(new Vector2(POS_X, POS_Y));
+
+        Avatar playerAvatarTest = mock(Avatar.class);
+        AvatarRegistry.set(playerAvatarTest);
+
+        //test to mock
+        ServiceLocator.registerDiscoveryService(mock(DiscoveryService.class));
+        ServiceLocator.registerDifficulty(mock(Difficulty.class));
+        ServiceLocator.registerPlayer(player);
+
+        GameArea area = mock(GameArea.class);
+        ServiceLocator.registerGameArea(area);
+
+
+        when(area.getEntities()).thenReturn(List.of(player));
+        when(area.toString()).thenReturn(AREA_ID);
+
+        SaveLoadService service = new SaveLoadService();
+
+        final SaveGame.GameState[] captured = new SaveGame.GameState[1];
+        try (MockedStatic<FileLoader> mocked = mockStatic(FileLoader.class)) {
+            mocked.when(() ->
+                            FileLoader.writeClass(any(SaveGame.GameState.class),
+                                    anyString(),
+                                    any(FileLoader.Location.class)))
+                    .thenAnswer(invocation -> {
+                        captured[0] = invocation.getArgument(0);
+                        return null;
+                    });
+
+            boolean ok = service.save(SLOT_ID, area);
+
+            Assertions.assertTrue(ok, "save() should return true");
+            Assertions.assertNotNull(captured[0], "Expected a single writeClass() call");
+
+            SaveGame.GameState out = captured[0];
+
+            // Assert snapshot fields
+            Assertions.assertEquals(AREA_ID, out.getGameArea());
+            Assertions.assertEquals(INITIAL_HEALTH, out.getPlayer().currentHealth, "Health should originate from CombatStatsComponent");
+            Assertions.assertEquals(MAX_HEALTH, out.getPlayer().maxHealth);
+            Assertions.assertEquals(POS_X, out.getPlayer().playerPos.x, FLOAT_EPS);
+            Assertions.assertEquals(POS_Y, out.getPlayer().playerPos.y, FLOAT_EPS);
+            Assertions.assertEquals(EXPECTED_ROUND_NUMBER, out.getWave());
+            Assertions.assertNull(out.getPlayer().avatar);
+            Assertions.assertNotNull(out.getAreasVisited(), "discovery should be instantiated");
+            Assertions.assertNotNull(out.getInventory(), "inventory list should be initialized (may be empty)");
+            Assertions.assertNotNull(out.getArmour());
+            Assertions.assertEquals(DifficultyType.NORMAL, out.getDifficulty());
+            Assertions.assertEquals(0, out.getPlayer().keyCardLevel);
+            Assertions.assertEquals(Float.valueOf(100), out.getPlayer().stamina);
+            Assertions.assertEquals(1, out.getPlayer().ammoReserve);
+        }
+    }
+
+    @Test
+    @DisplayName("loading can retrieve player data")
+    void load_getsExpectedSnapshot_withFileIO() {
+        CombatStatsComponent stats = new CombatStatsComponent(MAX_HEALTH);
+        stats.setHealth(INITIAL_HEALTH);
+
+        ResourceService resourceService = mock(ResourceService.class);
+        ServiceLocator.registerResourceService(resourceService);
+        Texture texture = mock(Texture.class);
+        when(resourceService.getAsset(anyString(), eq(Texture.class))).thenReturn(texture);
+
+        InventoryComponent inv = new InventoryComponent(INVENTORY_PROCESSES);
+        AmmoStatsComponent ammTest = new AmmoStatsComponent(INVENTORY_PROCESSES);
+        StaminaComponent stamTest = new StaminaComponent();
+        PhysicsEngine physicsEngine = mock(PhysicsEngine.class);
+        PhysicsService physicsService = new PhysicsService(physicsEngine);
+        ServiceLocator.registerPhysicsService(physicsService);
+        ArmourEquipComponent armourTest = new ArmourEquipComponent();
+
+
+        FakeEntity player = new FakeEntity();
+        player.addComponent(stats);
+        player.addComponent(inv);
+        player.addComponent(ammTest);
+        player.addComponent(stamTest);
+        player.addComponent(armourTest);
+        player.setPosition(new Vector2(POS_X, POS_Y));
+
+        Avatar playerAvatarTest = mock(Avatar.class);
+        AvatarRegistry.set(playerAvatarTest);
+
+        //test to mock
+        ServiceLocator.registerDiscoveryService(mock(DiscoveryService.class));
+        ServiceLocator.registerDifficulty(mock(Difficulty.class));
+        ServiceLocator.registerPlayer(player);
+
+        GameArea area = mock(GameArea.class);
+        ServiceLocator.registerGameArea(area);
+
+        when(area.getEntities()).thenReturn(List.of(player));
+        when(area.toString()).thenReturn(AREA_ID);
+
+        SaveLoadService service = new SaveLoadService();
+        Assertions.assertNotNull(service.load("test/files/saveFileValid.json"));
+
+        final SaveGame.GameState captured = service.load("test/files/saveFileValid.json");
+
+        Assertions.assertNotNull(captured, "Expected File");
     }
 
 }

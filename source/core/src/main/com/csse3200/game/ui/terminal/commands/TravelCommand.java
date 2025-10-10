@@ -15,19 +15,38 @@ import java.util.ArrayList;
 
 import static com.csse3200.game.ui.terminal.commands.util.CommandPlayers.resolve;
 
+/**
+ * A command to move or travel the player within the game world.
+ */
 public class TravelCommand implements Command {
     private static final Logger logger = LoggerFactory.getLogger(TravelCommand.class);
 
+    /**
+     * Checks if the given string matches "center" (ignores case and whitespace).
+     *
+     * @param a string to check
+     * @return {@code true} if the string is "center", {@code false} otherwise
+     */
     private static boolean equalsIgnoreCaseTrim(String a) {
         return a != null && a.trim().equalsIgnoreCase("center");
     }
 
     /* --- Single-purpose helpers (keep action() tiny) --- */
 
+    /**
+     * Checks if the string can be parsed as a float.
+     * @param s string to be checked
+     * @return {@code true} if it can be parsed as a float
+     */
     private static boolean isNumeric(String s) {
         return parseFloat(s) != null;
     }
 
+    /**
+     * Parses a string to a Float
+     * @param s the string to be parsed to a Float
+     * @return the parsed Float if successful, or {@code null} if invalid
+     */
     private static Float parseFloat(String s) {
         if (s == null) return null;
         try {
@@ -65,11 +84,25 @@ public class TravelCommand implements Command {
         return false;
     }
 
+    /**
+     * Resolves the player entity from the EntityService
+     *
+     * @param es the EntityService instance
+     * @return the player Entity, or {@code null} if not found
+     */
     private Entity resolvePlayer(EntityService es) {
         Entity p = ServiceLocator.getPlayer();
         return (p != null) ? p : resolve(es);
     }
 
+    /**
+     * Handles travel commands with a single argument.
+     *
+     * @param area   current game area
+     * @param a0     the argument string
+     * @param player the player entity
+     * @return {@code true} if successful, {@code false} on failure
+     */
     private boolean handleSingleArg(GameArea area, String a0, Entity player) {
         if (equalsIgnoreCaseTrim(a0)) return toCameraCenter(player);
         if (isNumeric(a0)) {
@@ -79,6 +112,13 @@ public class TravelCommand implements Command {
         return transitionIfDiscovered(area, a0.trim());
     }
 
+    /**
+     * Moves the player to the specified room coordinates.
+     *
+     * @param args   list containing x and y coordinates
+     * @param player the player entity
+     * @return {@code true} if move was successful, {@code false} if coordinates are invalid
+     */
     private boolean toCoordinates(ArrayList<String> args, Entity player) {
         Float x = parseFloat(args.get(0));
         Float y = parseFloat(args.get(1));
@@ -91,6 +131,13 @@ public class TravelCommand implements Command {
         return true;
     }
 
+    /**
+     * Transitions the player to a discovered area.
+     *
+     * @param area the current game area
+     * @param room the room name to transition to
+     * @return {@code true} if transition was successful, {@code false} if room is undiscovered or unknown
+     */
     private boolean transitionIfDiscovered(GameArea area, String room) {
         DiscoveryService ds = ServiceLocator.getDiscoveryService();
         if (ds == null) {
@@ -107,6 +154,12 @@ public class TravelCommand implements Command {
         return ok;
     }
 
+    /**
+     * Moves the player to the center of the camera.
+     *
+     * @param player the player entity
+     * @return {@code true} if successful, {@code false} if camera is unavailable
+     */
     private boolean toCameraCenter(Entity player) {
         RenderService rs = ServiceLocator.getRenderService();
         if (rs == null || rs.getCamera() == null) {

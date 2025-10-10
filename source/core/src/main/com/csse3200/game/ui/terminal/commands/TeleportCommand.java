@@ -28,14 +28,30 @@ public class TeleportCommand implements Command {
     private static final String USAGE =
             "Usage: teleport | teleport center | teleport <x> <y> | teleport <RoomName>";
 
+    /**
+     * Case-insensitive comparison after trimming whitespace.
+     * @param a First string to be compared
+     * @param b Second string to be compared
+     * @return {@code true} if they are equaled
+     */
     private static boolean equalsIgnoreCaseTrim(String a, String b) {
         return a != null && a.trim().equalsIgnoreCase(b);
     }
 
+    /**
+     * Checks if the string can be parsed as a float.
+     * @param s string to be checked
+     * @return {@code true} if it can be parsed as a float
+     */
     private static boolean isNumeric(String s) {
         return parseFloat(s) != null;
     }
 
+    /**
+     * Parses a string to a Float
+     * @param s the string to be parsed to a Float
+     * @return the parsed Float if successful, or {@code null} if invalid
+     */
     private static Float parseFloat(String s) {
         if (s == null) return null;
         try {
@@ -62,6 +78,11 @@ public class TeleportCommand implements Command {
         };
     }
 
+
+    /**
+     * Resolves the game context
+     * @return Ctx a record containing GameArea area and Entity player
+     */
     private Ctx resolveContext() {
         GameArea area = ServiceLocator.getGameArea();
         if (area == null) {
@@ -84,6 +105,12 @@ public class TeleportCommand implements Command {
         return new Ctx(area, player);
     }
 
+    /**
+     * Handles teleport command with a single argument
+     * @param raw the argument
+     * @param ctx context containing area and player
+     * @return {@code true} if teleport successful, {@code false} otherwise
+     */
     private boolean handleSingleArg(String raw, Ctx ctx) {
         if (equalsIgnoreCaseTrim(raw, "center")) {
             return teleportToCameraCenter(ctx.player());
@@ -102,6 +129,12 @@ public class TeleportCommand implements Command {
         return false;
     }
 
+    /**
+     * Handles teleport command with two arguments.
+     * @param args the argument
+     * @param player player entity to move
+     * @return @code true} if teleport successful, {@code false} otherwise
+     */
     private boolean handleTwoArgs(List<String> args, Entity player) {
         Float x = parseFloat(args.getFirst());
         Float y = parseFloat(args.get(1));
@@ -114,11 +147,22 @@ public class TeleportCommand implements Command {
         return true;
     }
 
+    /**
+     * Handles invalid argument lengths.
+     * @param args arguments received
+     * @return false
+     */
     private boolean invalidArgs(List<String> args) {
         logger.debug("teleport: invalid arguments {}. {}", args, USAGE);
         return false;
     }
 
+    /**
+     * Moves the player to the current camera center position.
+     *
+     * @param player player entity to move
+     * @return {@code true} if teleport successful, {@code false} if camera or RenderService unavailable
+     */
     private boolean teleportToCameraCenter(Entity player) {
         RenderService rs = ServiceLocator.getRenderService();
         if (rs == null || rs.getCamera() == null) {

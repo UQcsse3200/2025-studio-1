@@ -1,6 +1,12 @@
 package com.csse3200.game.components.minigames.whackamole;
 
+import com.badlogic.gdx.ApplicationListener;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.backends.headless.HeadlessApplication;
+import com.badlogic.gdx.backends.headless.HeadlessApplicationConfiguration;
+import com.badlogic.gdx.backends.headless.HeadlessFiles;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.csse3200.game.entities.Entity;
@@ -20,6 +26,25 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 class WhackAMoleGameTest {
+
+    @BeforeAll
+    static void initGdx() {
+        if (Gdx.app == null) {
+            HeadlessApplicationConfiguration config = new HeadlessApplicationConfiguration();
+            new HeadlessApplication(new ApplicationListener() {
+                @Override public void create() {/* no-op */}
+                @Override public void resize(int width, int height) {/* no-op */}
+                @Override public void render() {/* no-op */}
+                @Override public void pause() {/* no-op */}
+                @Override public void resume() {/* no-op */}
+                @Override public void dispose() {/* no-op */}
+            }, config);
+
+            Gdx.files = new HeadlessFiles();  // fixes Gdx.files
+            Gdx.gl = mock(GL20.class);        // fixes Texture/Skin initialization
+            Gdx.gl20 = Gdx.gl;
+        }
+    }
 
     /** Lightweight test double of the display that avoids Stage/Skin. */
     static class TestDisplay extends WhackAMoleDisplay {

@@ -8,6 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.csse3200.game.GdxGame;
+import com.csse3200.game.screens.MainGameScreen;
 import com.csse3200.game.services.ServiceLocator;
 
 public class PauseMenuDisplay extends BaseScreenDisplay {
@@ -91,13 +92,19 @@ public class PauseMenuDisplay extends BaseScreenDisplay {
         if (hideSome) {
             panel.add(button("Restart", 2f, () -> {
                 ServiceLocator.getButtonSoundService().playClick();
-                game.setScreen(GdxGame.ScreenType.MAIN_GAME);
+                game.setScreen(GdxGame.ScreenType.LOADING);
             })).row();
         }
 
         panel.add(button("Main Menu", 2f, () -> {
             ServiceLocator.getButtonSoundService().playClick();
             backMainMenu();
+        })).row();
+        panel.add(button("Control", 2f, () -> {
+            ServiceLocator.getButtonSoundService().playClick();
+            entity.dispose();
+            ServiceLocator.getEntityService().unregister(entity);
+            ((MainGameScreen) game.getScreen()).showControlsOverlay();
         })).row();
 
         if (hideSome) {

@@ -12,20 +12,24 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.*;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.params.provider.Arguments.of;
 import static org.mockito.Mockito.*;
 
 /**
  * Helper-only coverage for TextEffects (no timers/animations).
  * Covers: readRandomLine, enableMarkup/ensureOwnStyle, stripMarkup, sanitizeHex,
  * hsvToRgb, toHex6, isUpper, isLetter, isDigit, isPunctGlobal, parseOpts,
- * parseCrazyPieces, joinPiecesStatic.
+ * parseCrazyPieces, joinPiecesStatic — refactored with parameterised matrices.
  */
 @ExtendWith(GameExtension.class)
 class TextEffectsHelpersTest {
@@ -35,7 +39,8 @@ class TextEffectsHelpersTest {
         Gdx.files = new MemFiles(); // inject headless stub
     }
 
-    // -------------------------- Reflection helpers --------------------------
+    /* -------------------------- Reflection helpers -------------------------- */
+
     private static Method priv(String name, Class<?>... params) throws Exception {
         Method m = TextEffects.class.getDeclaredMethod(name, params);
         m.setAccessible(true);
@@ -47,8 +52,6 @@ class TextEffectsHelpersTest {
         f.setAccessible(true);
         return f.get(o);
     }
-
-    // -------------------------- readRandomLine --------------------------
 
     private static Class<?> TE() throws Exception {
         return Class.forName("com.csse3200.game.ui.effects.TextEffects");
@@ -66,9 +69,9 @@ class TextEffectsHelpersTest {
 
     private static Object optsFrom(String spec) throws Exception {
         Class<?> te = Class.forName("com.csse3200.game.ui.effects.TextEffects");
-        java.lang.reflect.Method pm;
+        Method pm;
         try {
-            pm = te.getDeclaredMethod("parseOpts", String.class);  // current name
+            pm = te.getDeclaredMethod("parseOpts", String.class);
         } catch (NoSuchMethodException e) {
             pm = te.getDeclaredMethod("dparseOpts", String.class); // fallback if older name
         }
@@ -80,27 +83,108 @@ class TextEffectsHelpersTest {
         return Class.forName("com.csse3200.game.ui.effects.TextEffects$CrazyOpts");
     }
 
+    /* -------------------------- readRandomLine -------------------------- */
+
+    static Stream<Arguments> stripCases() {
+        return Stream.of(
+                of("", ""),
+                of("plain", "plain"),
+                of("[[abc]", "[abc]"),
+                of("[#ff0]hello[] [#00ff00]world[]", "hello world")
+        );
+    }
+
+    /* -------------------------- enableMarkup / ensureOwnStyle -------------------------- */
+
+    static Stream<Arguments> sanitizeCases() {
+        return Stream.of(
+                of(null, "ffffff", "ffffff"),     // null -> default
+                of("#00FF00", "ffffff", "00ff00"),// strip '#', lowercase
+                of("abc", "ffffff", "aabbcc"),    // 3-digit expand
+                of("zzzzzz", "ffffff", "ffffff")  // invalid -> default
+        );
+    }
+
+    /* -------------------------- stripMarkup (private) -------------------------- */
+
+    static Stream<Arguments> hsvHexCases() {
+        return Stream.of(
+                of(0f, "ff0000"), // case 0
+                of(60f, "ffff00"), // case 1
+                of(120f, "00ff00"), // case 2
+                of(180f, "00ffff"), // case 3
+                of(240f, "0000ff"), // case 4
+                of(300f, "ff00ff")  // default
+        );
+    }
+
+    static Stream<Arguments> upperCases() {
+        return Stream.of(
+                of('A', true), of('M', true), of('Z', true),
+                of('@', false), of('[', false)
+        );
+    }
+
+    /* -------------------------- sanitizeHex (private) -------------------------- */
+
+    static Stream<Arguments> letterCases() {
+        return Stream.of(
+                of('A', true), of('Z', true), of('a', true), of('z', true),
+                of('`', false), of('{', false)
+        );
+    }
+
+    static Stream<Arguments> digitCases() {
+        return Stream.of(
+                of('0', true), of('5', true), of('9', true),
+                of('/', false), of(':', false)
+        );
+    }
+
+    /* -------------------------- hsvToRgb + toHex6 (private) -------------------------- */
+
+    static Stream<Arguments> crazyPiecesMalformed() {
+        return Stream.of(
+                of("lead {CRAZY style=blast inner text with no close brace", "lead ", "{CRAZY"),
+                of("head {CRAZY fps=60}dangling inner text without close", "head ", "{CRAZY fps=60}")
+        );
+    }
+
+    static Stream<Arguments> originIndexCases() {
+        return Stream.of(
+                of(0, "LEFT", 0), of(0, "MIDDLE", 0), of(0, "RIGHT", 0),
+                of(1, "LEFT", 0), of(1, "MIDDLE", 0), of(1, "RIGHT", 0),
+                of(5, "LEFT", 0), of(5, "MIDDLE", 2), of(5, "RIGHT", 4)
+        );
+    }
+
+    /* -------------------------- char helpers (private) -------------------------- */
+
+    static Stream<Arguments> glyphSpanCases() {
+        return Stream.of(
+                of('A', "UPPER", 26),
+                of('z', "LOWER", 26),
+                of('5', "DIGIT", 10),
+                of('.', "PUNCT", -1), // -1 = compute from '.' at runtime
+                of(' ', "OTHER", -1)
+        );
+    }
 
     @Test
     void readRandomLine_exception_in_handle_returns_fallback() {
-        // Arrange
         Files files = mock(Files.class, CALLS_REAL_METHODS);
         FileHandle fh = mock(FileHandle.class);
         Gdx.files = files;
 
         when(files.internal("boom.txt")).thenReturn(fh);
-
-        // Shotgun-stub typical read paths
         when(fh.readString()).thenThrow(new RuntimeException("kaboom"));
         when(fh.readString(any())).thenThrow(new RuntimeException("kaboom"));
         when(fh.read()).thenThrow(new RuntimeException("kaboom"));
         when(fh.reader()).thenThrow(new RuntimeException("kaboom"));
 
-        // Act + Assert
         assertEquals("FALLBACK", TextEffects.readRandomLine("boom.txt", "FALLBACK"));
     }
 
-    // -------------------------- enableMarkup / ensureOwnStyle --------------------------
     @Test
     void enableMarkup_sets_fontData_flag_and_ensureOwnStyle_clones_style() {
         BitmapFont.BitmapFontData data = new BitmapFont.BitmapFontData();
@@ -113,22 +197,17 @@ class TextEffectsHelpersTest {
         style.fontColor = Color.WHITE;
 
         Label lbl = mock(Label.class, withSettings());
-
-        // Style store for getStyle/setStyle
         final Label.LabelStyle[] store = {style};
         when(lbl.getStyle()).thenAnswer(i -> store[0]);
         doAnswer(i -> {
             store[0] = i.getArgument(0);
             return null;
-        })
-                .when(lbl).setStyle(any(Label.LabelStyle.class));
+        }).when(lbl).setStyle(any(Label.LabelStyle.class));
 
-        // enableMarkup
         assertFalse(font.getData().markupEnabled);
         TextEffects.enableMarkup(lbl);
         assertTrue(font.getData().markupEnabled);
 
-        // ensureOwnStyle
         Label.LabelStyle before = store[0];
         TextEffects.ensureOwnStyle(lbl);
         Label.LabelStyle after = store[0];
@@ -137,115 +216,85 @@ class TextEffectsHelpersTest {
         assertEquals(before.fontColor, after.fontColor);
     }
 
-    // -------------------------- stripMarkup (private) --------------------------
-    @Test
-    void stripMarkup_removes_color_tags_and_preserves_literal_brackets() throws Exception {
+    @ParameterizedTest(name = "stripMarkup: \"{0}\" -> \"{1}\"")
+    @MethodSource("stripCases")
+    void stripMarkup_cases(String in, String expected) throws Exception {
         Method strip = priv("stripMarkup", String.class);
-        assertEquals("", strip.invoke(null, ""));
-        assertEquals("plain", strip.invoke(null, "plain"));
-        assertEquals("[abc]", strip.invoke(null, "[[abc]"));
-        assertEquals("hello world", strip.invoke(null, "[#ff0]hello[] [#00ff00]world[]"));
+        assertEquals(expected, strip.invoke(null, in));
     }
 
-    // -------------------------- sanitizeHex (private) --------------------------
-    @Test
-    void sanitizeHex_validates_and_normalizes_hex() throws Exception {
+    @ParameterizedTest(name = "sanitizeHex({0}, def={1}) -> {2}")
+    @MethodSource("sanitizeCases")
+    void sanitizeHex_cases(String in, String def, String out) throws Exception {
         Method sanitize = priv("sanitizeHex", String.class, String.class);
-        assertEquals("ffffff", sanitize.invoke(null, null, "ffffff"));          // null -> default
-        assertEquals("00ff00", sanitize.invoke(null, "#00FF00", "ffffff"));     // strip '#', lowercase
-        assertEquals("aabbcc", sanitize.invoke(null, "abc", "ffffff"));         // 3-digit expand
-        assertEquals("ffffff", sanitize.invoke(null, "zzzzzz", "ffffff"));      // invalid -> default
+        assertEquals(out, sanitize.invoke(null, in, def));
     }
 
-    // -------------------------- hsvToRgb + toHex6 (private) --------------------------
-    @Test
-    void hsvToRgb_covers_all_switch_paths_including_case3_and_default() throws Exception {
+    @ParameterizedTest(name = "HSV({0},1,1) -> {1}")
+    @MethodSource("hsvHexCases")
+    void hsvToRgb_toHex6_cases(float hue, String hex) throws Exception {
         Method hsvToRgb = priv("hsvToRgb", float.class, float.class, float.class);
         Method toHex6 = priv("toHex6", int.class);
-
-        // case 0: 0° -> red
-        assertEquals("ff0000", toHex6.invoke(null, hsvToRgb.invoke(null, 0f, 1f, 1f)));
-        // case 1: 60° -> yellow-ish (#ffff00 expected)
-        assertEquals("ffff00", toHex6.invoke(null, hsvToRgb.invoke(null, 60f, 1f, 1f)));
-        // case 2: 120° -> green
-        assertEquals("00ff00", toHex6.invoke(null, hsvToRgb.invoke(null, 120f, 1f, 1f)));
-        // case 3 (MISSING): 180° -> cyan (#00ffff)
-        assertEquals("00ffff", toHex6.invoke(null, hsvToRgb.invoke(null, 180f, 1f, 1f)));
-        // case 4: 240° -> blue
-        assertEquals("0000ff", toHex6.invoke(null, hsvToRgb.invoke(null, 240f, 1f, 1f)));
-        // default (MISSING): 300° -> magenta (#ff00ff)
-        assertEquals("ff00ff", toHex6.invoke(null, hsvToRgb.invoke(null, 300f, 1f, 1f)));
+        assertEquals(hex, toHex6.invoke(null, hsvToRgb.invoke(null, hue, 1f, 1f)));
     }
 
-    // -------------------------- char helpers (private) --------------------------
-    @Test
-    void character_class_helpers_cover_all_branches() throws Exception {
+    @ParameterizedTest(name = "isUpper('{0}') = {1}")
+    @MethodSource("upperCases")
+    void isUpper_cases(char c, boolean expected) throws Exception {
         Method isUpper = priv("isUpper", char.class);
+        assertEquals(expected, isUpper.invoke(null, c));
+    }
+
+    @ParameterizedTest(name = "isLetter('{0}') = {1}")
+    @MethodSource("letterCases")
+    void isLetter_cases(char c, boolean expected) throws Exception {
         Method isLetter = priv("isLetter", char.class);
+        assertEquals(expected, isLetter.invoke(null, c));
+    }
+
+    @ParameterizedTest
+    @NullAndEmptySource
+    void stripMarkup_earlyReturn_covers_null_and_empty(String in) throws Exception {
+        var strip = priv("stripMarkup", String.class);
+        // IMPORTANT: wrap the arg so reflection passes a single null parameter
+        String out = (String) strip.invoke(null, new Object[]{in});
+        assertEquals("", out);
+    }
+    /* -------------------------- parseCrazyPieces + joinPiecesStatic (private) -------------------------- */
+
+    @ParameterizedTest(name = "isDigit('{0}') = {1}")
+    @MethodSource("digitCases")
+    void isDigit_cases(char c, boolean expected) throws Exception {
         Method isDigit = priv("isDigit", char.class);
-        Method isPunct = priv("isPunctGlobal", char.class); // keep your existing punct tests
-
-        // --- isUpper: inside + both boundaries + just outside on each side
-        assertTrue((Boolean) isUpper.invoke(null, 'A'));   // lower bound
-        assertTrue((Boolean) isUpper.invoke(null, 'M'));   // middle
-        assertTrue((Boolean) isUpper.invoke(null, 'Z'));   // upper bound
-        assertFalse((Boolean) isUpper.invoke(null, '@'));  // just below 'A'
-        assertFalse((Boolean) isUpper.invoke(null, '['));  // just above 'Z'
-
-        // --- isLetter: uppercase path (delegates to isUpper), lowercase path, and non-letter
-        assertTrue((Boolean) isLetter.invoke(null, 'A'));  // via isUpper(c)
-        assertTrue((Boolean) isLetter.invoke(null, 'Z'));  // boundary via isUpper(c)
-        assertTrue((Boolean) isLetter.invoke(null, 'a'));  // lower bound of lowercase range
-        assertTrue((Boolean) isLetter.invoke(null, 'z'));  // upper bound of lowercase range
-        assertFalse((Boolean) isLetter.invoke(null, '`')); // just below 'a'
-        assertFalse((Boolean) isLetter.invoke(null, '{')); // just above 'z'
-
-        // --- isDigit: inside + both boundaries + just outside on each side
-        assertTrue((Boolean) isDigit.invoke(null, '0'));   // lower bound
-        assertTrue((Boolean) isDigit.invoke(null, '5'));   // middle
-        assertTrue((Boolean) isDigit.invoke(null, '9'));   // upper bound
-        assertFalse((Boolean) isDigit.invoke(null, '/'));  // just below '0'
-        assertFalse((Boolean) isDigit.invoke(null, ':'));  // just above '9'
-
-        // --- isPunctGlobal (from your original): early-return + typical true/false
-        assertFalse((Boolean) isPunct.invoke(null, ' '));  // early-return branch
-        for (char c : new char[]{'.', '!', '?', '-', '/', '\\', '[', ']', '@', '#', '{', '}', '^', '*', '~', '`'}) {
-            assertTrue((Boolean) isPunct.invoke(null, c), "expected punct true for: " + c);
-        }
-        assertFalse((Boolean) isPunct.invoke(null, 'A'));  // non-punct
+        assertEquals(expected, isDigit.invoke(null, c));
     }
 
-    // -------------------------- parseCrazyPieces + joinPiecesStatic (private) --------------------------
-    @Test
-    void parseCrazyPieces_tagEnd_missing_treated_as_plain_remainder() throws Exception {
+    @ParameterizedTest(name = "isPunctGlobal true set: '{0}'")
+    @ValueSource(strings = {".", "!", "?", "-", "/", "\\", "[", "]", "@", "#", "{", "}", "^", "*", "~", "`"})
+    void isPunct_true_cases(String s) throws Exception {
+        Method isPunct = priv("isPunctGlobal", char.class);
+        assertTrue((Boolean) isPunct.invoke(null, s.charAt(0)));
+    }
+
+    @ParameterizedTest(name = "isPunctGlobal false set: '{0}'")
+    @ValueSource(strings = {" ", "A"})
+    void isPunct_false_cases(String s) throws Exception {
+        Method isPunct = priv("isPunctGlobal", char.class);
+        assertFalse((Boolean) isPunct.invoke(null, s.charAt(0)));
+    }
+
+    @ParameterizedTest(name = "parseCrazyPieces malformed header/close: \"{0}\"")
+    @MethodSource("crazyPiecesMalformed")
+    void parseCrazyPieces_malformed_yields_plain_remainder(String src, String first, String startsWith) throws Exception {
         Method parse = priv("parseCrazyPieces", String.class);
-        // Missing the '}' that ends the opening tag header
-        String src = "lead {CRAZY style=blast inner text with no close brace";
         @SuppressWarnings("unchecked")
         List<Object> pieces = (List<Object>) parse.invoke(null, src);
 
-        // Expect two pieces: "lead " (plain) + remainder starting at "{CRAZY..." as plain
         assertEquals(2, pieces.size());
         assertEquals("PLAIN", get(pieces.get(0), "kind").toString());
-        assertEquals("lead ", get(pieces.get(0), "text").toString());
+        assertEquals(first, get(pieces.get(0), "text").toString());
         assertEquals("PLAIN", get(pieces.get(1), "kind").toString());
-        assertTrue(get(pieces.get(1), "text").toString().startsWith("{CRAZY"));
-    }
-
-    @Test
-    void parseCrazyPieces_close_tag_missing_treated_as_plain_remainder() throws Exception {
-        Method parse = priv("parseCrazyPieces", String.class);
-        // Proper header ends with '}', but missing the closing "{/CRAZY}"
-        String src = "head {CRAZY fps=60}dangling inner text without close";
-        @SuppressWarnings("unchecked")
-        List<Object> pieces = (List<Object>) parse.invoke(null, src);
-
-        // Expect two pieces: "head " (plain) + remainder starting at "{CRAZY..." as plain
-        assertEquals(2, pieces.size());
-        assertEquals("PLAIN", get(pieces.get(0), "kind").toString());
-        assertEquals("head ", get(pieces.get(0), "text").toString());
-        assertEquals("PLAIN", get(pieces.get(1), "kind").toString());
-        assertTrue(get(pieces.get(1), "text").toString().startsWith("{CRAZY fps=60}"));
+        assertTrue(get(pieces.get(1), "text").toString().startsWith(startsWith));
     }
 
     @Test
@@ -255,30 +304,27 @@ class TextEffectsHelpersTest {
         Method plain = pieceClz.getDeclaredMethod("plain", String.class);
         Method crazy = pieceClz.getDeclaredMethod("crazy", String.class, Class.forName("com.csse3200.game.ui.effects.TextEffects$CrazyOpts"));
 
-        // Build pieces: PLAIN + CRAZY + PLAIN
         Object p1 = plain.invoke(null, "pre ");
-        Object p2 = crazy.invoke(null, "MID", /* opts */ null); // text field still "MID"
+        Object p2 = crazy.invoke(null, "MID", null);
         Object p3 = plain.invoke(null, " post");
 
         String out = (String) join.invoke(null, Arrays.asList(p1, p2, p3));
         assertEquals("pre MID post", out);
     }
 
-    @Test
-    void joinPiecesStatic_handles_empty_list() throws Exception {
-        Method join = priv("joinPiecesStatic", List.class);
-        String out = (String) join.invoke(null, Collections.emptyList());
-        assertEquals("", out);
-    }
+    /* -------------------------- originIndex & glyphSpan -------------------------- */
 
-    @Test
-    void joinPiecesStatic_single_element_passthrough() throws Exception {
+    @ParameterizedTest
+    @CsvSource({
+            "'', ''",
+            "solo, solo"
+    })
+    void joinPiecesStatic_basic(String text, String expected) throws Exception {
         Method join = priv("joinPiecesStatic", List.class);
         Class<?> pieceClz = Class.forName("com.csse3200.game.ui.effects.TextEffects$Piece");
         Method plain = pieceClz.getDeclaredMethod("plain", String.class);
-        Object p = plain.invoke(null, "solo");
-        String out = (String) join.invoke(null, Collections.singletonList(p));
-        assertEquals("solo", out);
+        Object p = plain.invoke(null, text);
+        assertEquals(expected, join.invoke(null, Collections.singletonList(p)));
     }
 
     @Test
@@ -287,79 +333,57 @@ class TextEffectsHelpersTest {
         Class<?> pieceClz = Class.forName("com.csse3200.game.ui.effects.TextEffects$Piece");
         Method plain = pieceClz.getDeclaredMethod("plain", String.class);
 
-        // Create one with empty text and (if your Piece.plain guards null->"", this will still be "")
         Object pEmpty = plain.invoke(null, "");
-        Object pNull = plain.invoke(null, (Object) null); // call with null if factory permits
+        Object pNull = plain.invoke(null, (Object) null);
+        Object pX = plain.invoke(null, "X");
 
-        String out = (String) join.invoke(null, Arrays.asList(pEmpty, pNull, plain.invoke(null, "X")));
-        // If Piece guards null->"", expect just "X" prefixed by two empties
-        assertEquals("nullX", out);
+        String out = (String) join.invoke(null, Arrays.asList(pEmpty, pNull, pX));
+        assertEquals("nullX", out); // if nulls stringify; adjust if your factory maps null -> ""
     }
 
-    @Test
-    void originIndex_boundaries_and_modes() throws Exception {
+    @ParameterizedTest(name = "originIndex n={0}, origin={1} -> {2}")
+    @MethodSource("originIndexCases")
+    void originIndex_cases(int n, String origin, int expected) throws Exception {
         Method m = TE_m("originIndex", int.class, ORIGIN());
-        // n=0 -> always 0
-        assertEquals(0, m.invoke(null, 0, Enum.valueOf((Class) ORIGIN(), "LEFT")));
-        assertEquals(0, m.invoke(null, 0, Enum.valueOf((Class) ORIGIN(), "MIDDLE")));
-        assertEquals(0, m.invoke(null, 0, Enum.valueOf((Class) ORIGIN(), "RIGHT")));
-        // n=1 -> always 0
-        assertEquals(0, m.invoke(null, 1, Enum.valueOf((Class) ORIGIN(), "LEFT")));
-        assertEquals(0, m.invoke(null, 1, Enum.valueOf((Class) ORIGIN(), "MIDDLE")));
-        assertEquals(0, m.invoke(null, 1, Enum.valueOf((Class) ORIGIN(), "RIGHT")));
-        // n=5 -> LEFT=0, MIDDLE=2, RIGHT=4
-        assertEquals(0, m.invoke(null, 5, Enum.valueOf((Class) ORIGIN(), "LEFT")));
-        assertEquals(2, m.invoke(null, 5, Enum.valueOf((Class) ORIGIN(), "MIDDLE")));
-        assertEquals(4, m.invoke(null, 5, Enum.valueOf((Class) ORIGIN(), "RIGHT")));
+        Object enumVal = Enum.valueOf((Class<? extends Enum>) ORIGIN(), origin);
+        assertEquals(expected, m.invoke(null, n, enumVal));
     }
 
-    @Test
-    void glyphSpan_all_categories() throws Exception {
-        Method m = TE_m("glyphSpan", char.class);
-        assertEquals(26, m.invoke(null, 'A'));
-        assertEquals(26, m.invoke(null, 'z'));
-        assertEquals(10, m.invoke(null, '5'));
-        int ringLen = (int) m.invoke(null, '.'); // punct returns ring length
-        assertTrue(ringLen >= 1);
-        // "other" path (space) returns ring length too
-        assertEquals(ringLen, m.invoke(null, ' '));
+    @ParameterizedTest(name = "glyphSpan '{0}' ({1})")
+    @MethodSource("glyphSpanCases")
+    void glyphSpan_cases(char ch, String kind, int expected) throws Exception {
+        Method glyphSpan = TE_m("glyphSpan", char.class);
+        int ringLen = (int) glyphSpan.invoke(null, '.'); // for PUNCT/OTHER
+        int exp = expected >= 0 ? expected : ringLen;
+        assertEquals(exp, glyphSpan.invoke(null, ch));
     }
+
+    /* -------------------------- initSeedState & misc helpers -------------------------- */
 
     @Test
     void initSeedState_sets_curr_and_remaining_per_category() throws Exception {
-        // private static method TextEffects.initSeedState(char[], int[], int, char, int, CrazyOpts)
-        Method m = TE_m(
-                "initSeedState",
-                char[].class, int[].class, int.class, char.class, int.class, CRAZY_OPTS()
-        );
-
-        // Build CrazyOpts deterministically: from=A
+        Method m = TE_m("initSeedState", char[].class, int[].class, int.class, char.class, int.class, CRAZY_OPTS());
         Object opts = optsFrom("from=A");
 
         char[] curr = new char[4];
         int[] rem = new int[4];
 
-        // letter
-        m.invoke(null, curr, rem, 0, 'C', 7, opts);
+        m.invoke(null, curr, rem, 0, 'C', 7, opts);  // letter
         assertTrue(Character.isLetter(curr[0]));
         assertEquals(7, rem[0]);
 
-        // digit
-        m.invoke(null, curr, rem, 1, '8', 5, opts);
+        m.invoke(null, curr, rem, 1, '8', 5, opts);  // digit
         assertTrue(Character.isDigit(curr[1]));
         assertEquals(5, rem[1]);
 
-        // punct
-        m.invoke(null, curr, rem, 2, '.', 3, opts);
+        m.invoke(null, curr, rem, 2, '.', 3, opts);  // punct
         assertTrue(".,;:!?-_/\\|@#$%^&*()[]{}<>'\"+=~`".indexOf(curr[2]) >= 0);
         assertEquals(3, rem[2]);
 
-        // other (space) -> snap, remaining=0
-        m.invoke(null, curr, rem, 3, ' ', 9, opts);
+        m.invoke(null, curr, rem, 3, ' ', 9, opts);  // other
         assertEquals(' ', curr[3]);
         assertEquals(0, rem[3]);
     }
-
 
     @Test
     void textEffects_appendEscaped_escapes_bracket_and_passes_other() throws Exception {
@@ -375,19 +399,15 @@ class TextEffectsHelpersTest {
     @Test
     void baseDelay_covers_off_and_on_and_zero_edges() throws Exception {
         Method m = TE_m("baseDelay", int.class, int.class, boolean.class, int.class, int.class);
-        // distanceDelay off -> returns jitter only
-        assertEquals(0, m.invoke(null, 3, 10, false, 0, 99));   // jitter=0 -> 0
-        // distanceDelay on, spread=0 -> jitter only
-        assertTrue((int) m.invoke(null, 3, 10, true, 1, 0) >= 0);
-        // distanceDelay on, spread>0 -> >= dist*spread
-        int out = (int) m.invoke(null, 7, 2, true, 0, 5); // dist=5 -> base 25
+        assertEquals(0, m.invoke(null, 3, 10, false, 0, 99));          // jitter=0
+        assertTrue((int) m.invoke(null, 3, 10, true, 1, 0) >= 0);       // spread=0, jitter>=0
+        int out = (int) m.invoke(null, 7, 2, true, 0, 5);               // dist=5 -> base>=25
         assertTrue(out >= 25);
     }
 
     @Test
     void inverseEdgeSpan_zero_span_returns_zero() throws Exception {
         Method m = TE_m("inverseEdgeSpan", int.class, int.class);
-        // n=1, any origin -> edgeSpan==0
         assertEquals(0f, (float) m.invoke(null, 1, 0), 0f);
     }
 
@@ -395,7 +415,6 @@ class TextEffectsHelpersTest {
     void ensureOwnStyle_handles_null_style_and_clones_when_present() {
         TextEffects fx = new TextEffects();
 
-        // ---- Build a style with a mocked font (no disk IO) ----
         BitmapFont.BitmapFontData data = new BitmapFont.BitmapFontData();
         data.markupEnabled = false;
         data.capHeight = 10f;
@@ -416,31 +435,26 @@ class TextEffectsHelpersTest {
 
         Label.LabelStyle style = new Label.LabelStyle(font, Color.WHITE);
 
-        // ---- Null-style path: override getStyle() to simulate missing style ----
         Label nullStyleLabel = new Label("", style) {
             @Override
             public LabelStyle getStyle() {
                 return null;
             }
 
-            // make setStyle a no-op so parent ctor doesn't trip anything weird
             @Override
             public void setStyle(LabelStyle s) { /* no-op */ }
         };
-        assertDoesNotThrow(() -> TextEffects.ensureOwnStyle(nullStyleLabel)); // early return when style is null
+        assertDoesNotThrow(() -> fx.ensureOwnStyle(nullStyleLabel));
 
-        // ---- Clone path: style present -> defensive copy installed ----
         Label hasStyle = new Label("", style);
-        TextEffects.ensureOwnStyle(hasStyle);
-
-        assertNotSame(style, hasStyle.getStyle(), "style should be defensively cloned");
-        // sanity: basic fields copied over
+        fx.ensureOwnStyle(hasStyle);
+        assertNotSame(style, hasStyle.getStyle());
         assertSame(style.font, hasStyle.getStyle().font);
         assertEquals(style.fontColor, hasStyle.getStyle().fontColor);
     }
 
+    /* -------------------------- Gdx.files stub -------------------------- */
 
-    // -------------------------- Gdx.files stub --------------------------
     static class MemFiles implements Files {
         final Map<String, String> mem = new HashMap<>();
 
@@ -523,13 +537,13 @@ class TextEffectsHelpersTest {
         }
     }
 
-    // -------------------------- parseOpts (private) --------------------------
+    /* -------------------------- parseOpts (private) -------------------------- */
+
     @Nested
     class TextEffectsParseOptsTest {
 
         private static Object parse(String s) throws Exception {
-            Method m = priv("parseOpts", String.class);
-            return m.invoke(null, s);
+            return priv("parseOpts", String.class).invoke(null, s);
         }
 
         @SuppressWarnings("unchecked")
@@ -539,7 +553,6 @@ class TextEffectsHelpersTest {
             return (T) f.get(o);
         }
 
-        // Typed getters to avoid JUnit assertEquals overload ambiguity
         private static int geti(Object o, String f) throws Exception {
             return ((Number) get(o, f)).intValue();
         }
@@ -559,191 +572,169 @@ class TextEffectsHelpersTest {
 
         @Test
         void null_and_empty_return_defaults() throws Exception {
-            Object o1 = parse(null);
-            Object o2 = parse("");
-
+            Object o1 = parse(null), o2 = parse("");
             assertNotNull(o1);
             assertNotNull(o2);
 
-            // numbers: use primitive overloads
+            // numeric default
             assertEquals(geti(o1, "fps"), geti(o2, "fps"));
 
-            // enums: compare as enums (Object,Object overload), not strings/char[]
+            // enums: compare the actual constants (identity is fine for enums)
             Object style1 = get(o1, "style");
             Object style2 = get(o2, "style");
+            assertSame(style1, style2);
+
             Object origin1 = get(o1, "origin");
             Object origin2 = get(o2, "origin");
-            assertEquals(style1, style2);
-            assertEquals(origin1, origin2);
+            assertSame(origin1, origin2);
         }
-
 
         @Test
         void ignores_tokens_without_equals() throws Exception {
-            Object o = parse("foo bar=baz quux"); // "foo" and "quux" ignored; "bar=baz" unknown -> ignored
+            Object o = parse("foo bar=baz quux");
             Object def = parse("");
             assertEquals(get(def, "flashHexA"), (String) get(o, "flashHexA"));
             assertEquals(geti(def, "fps"), geti(o, "fps"));
         }
 
-        @Test
-        void fps_clamped_1_to_240() throws Exception {
-            Object lo = parse("fps=0");
-            Object hi = parse("fps=999");
-            Object ok = parse("fps=60");
-            assertEquals(1, geti(lo, "fps"));
-            assertEquals(240, geti(hi, "fps"));
-            assertEquals(60, geti(ok, "fps"));
+        @ParameterizedTest
+        @CsvSource({
+                "0,   1",
+                "999, 240",
+                "60,  60"
+        })
+        void fps_clamped_1_to_240(String in, int expected) throws Exception {
+            Object o = parse("fps=" + in);
+            assertEquals(expected, geti(o, "fps"));
         }
 
-        @Test
-        void jitter_clamped_0_to_60() throws Exception {
-            Object lo = parse("jitter=-5");
-            Object hi = parse("jitter=1000");
-            Object ok = parse("jitter=7");
-            assertEquals(0, geti(lo, "jitter"));
-            assertEquals(60, geti(hi, "jitter"));
-            assertEquals(7, geti(ok, "jitter"));
+        @ParameterizedTest
+        @CsvSource({
+                "-5,  0",
+                "1000,60",
+                "7,   7"
+        })
+        void jitter_clamped_0_to_60(String in, int expected) throws Exception {
+            Object o = parse("jitter=" + in);
+            assertEquals(expected, geti(o, "jitter"));
         }
 
-        @Test
-        void cycles_clamped_0_to_10() throws Exception {
-            Object lo = parse("cycles=-1");
-            Object hi = parse("cycles=99");
-            Object ok = parse("cycles=3");
-            assertEquals(0, geti(lo, "cycles"));
-            assertEquals(10, geti(hi, "cycles"));
-            assertEquals(3, geti(ok, "cycles"));
+        @ParameterizedTest
+        @CsvSource({
+                "-1, 0",
+                "99, 10",
+                "3,  3"
+        })
+        void cycles_clamped_0_to_10(String in, int expected) throws Exception {
+            Object o = parse("cycles=" + in);
+            assertEquals(expected, geti(o, "cycles"));
         }
 
-        @Test
-        void from_rand_or_default_A() throws Exception {
-            Object r = parse("from=rand");
-            Object a = parse("from=a");
-
-            Object rEnum = get(r, "from");
-            Object aEnum = get(a, "from");
-
-            assertEquals(enumConst(rEnum, "RAND"), rEnum);
-            assertEquals(enumConst(aEnum, "A"), aEnum);
+        @ParameterizedTest
+        @CsvSource({
+                "true,  true",
+                "1,     true",
+                "false, false",
+                "0,     false"
+        })
+        void rainbow_true_false_variants(String val, boolean expected) throws Exception {
+            Object o = parse("rainbow=" + val);
+            assertEquals(expected, getb(o));
         }
 
-        @Test
-        void rainbow_true_false_variants() throws Exception {
-            Object t1 = parse("rainbow=true");
-            Object t2 = parse("rainbow=1");
-            Object f1 = parse("rainbow=false");
-            Object f2 = parse("rainbow=0");
-            assertTrue(getb(t1));
-            assertTrue(getb(t2));
-            assertFalse(getb(f1));
-            assertFalse(getb(f2));
+        @ParameterizedTest
+        @CsvSource({
+                "0.0001, 0.01",
+                "99,     5",
+                "2.5,    2.5"
+        })
+        void rhz_clamped_0p01_to_5(String in, float expected) throws Exception {
+            Object o = parse("rhz=" + in);
+            assertEquals(expected, getf(o, "rhz"), 1e-6f);
         }
 
-        @Test
-        void rhz_clamped_0p01_to_5() throws Exception {
-            Object lo = parse("rhz=0.0001");
-            Object hi = parse("rhz=99");
-            Object ok = parse("rhz=2.5");
-            assertEquals(0.01f, getf(lo, "rhz"), 1e-6f);
-            assertEquals(5f, getf(hi, "rhz"), 1e-6f);
-            assertEquals(2.5f, getf(ok, "rhz"), 1e-6f);
+        @ParameterizedTest
+        @CsvSource({
+                "-1,  0",
+                "999, 360",
+                "180, 180"
+        })
+        void rshift_clamped_0_to_360(String in, float expected) throws Exception {
+            Object o = parse("rshift=" + in);
+            assertEquals(expected, getf(o, "rshift"), 1e-6f);
         }
 
-        @Test
-        void rshift_clamped_0_to_360() throws Exception {
-            Object lo = parse("rshift=-1");
-            Object hi = parse("rshift=999");
-            Object ok = parse("rshift=180");
-            assertEquals(0f, getf(lo, "rshift"), 1e-6f);
-            assertEquals(360f, getf(hi, "rshift"), 1e-6f);
-            assertEquals(180f, getf(ok, "rshift"), 1e-6f);
+        @ParameterizedTest
+        @CsvSource({
+                "explode, EXPLODE",
+                "blast,   BLAST",
+                "weird,   NORMAL"
+        })
+        void style_parse_variants(String val, String expected) throws Exception {
+            Object o = parse("style=" + val);
+            Object styleEnum = get(o, "style");
+            assertEquals(enumConst(styleEnum, expected), styleEnum);
         }
 
-        @Test
-        void style_explode_blast_default_normal() throws Exception {
-            Object ex = parse("style=explode");
-            Object bl = parse("style=blast");
-            Object def = parse("style=weird"); // default -> NORMAL
-
-            Object exEnum = get(ex, "style");
-            Object blEnum = get(bl, "style");
-            Object defEnum = get(def, "style");
-
-            Enum<?> explode = java.util.Arrays.stream(exEnum.getClass().getEnumConstants())
-                    .map(c -> (Enum<?>) c)
-                    .filter(e -> e.name().equals("EXPLODE"))
-                    .findFirst()
-                    .orElseThrow(() -> new IllegalArgumentException("No EXPLODE"));
-            Enum<?> blast = java.util.Arrays.stream(blEnum.getClass().getEnumConstants())
-                    .map(c -> (Enum<?>) c)
-                    .filter(e -> e.name().equals("BLAST"))
-                    .findFirst()
-                    .orElseThrow(() -> new IllegalArgumentException("No BLAST"));
-            Enum<?> normal = java.util.Arrays.stream(defEnum.getClass().getEnumConstants())
-                    .map(c -> (Enum<?>) c)
-                    .filter(e -> e.name().equals("NORMAL"))
-                    .findFirst()
-                    .orElseThrow(() -> new IllegalArgumentException("No NORMAL"));
-
-            assertEquals(explode, exEnum);
-            assertEquals(blast, blEnum);
-            assertEquals(normal, defEnum);
+        @ParameterizedTest
+        @CsvSource({
+                "left,   LEFT",
+                "right,  RIGHT",
+                "center, MIDDLE"
+        })
+        void origin_parse_variants(String val, String expected) throws Exception {
+            Object o = parse("origin=" + val);
+            Object originEnum = get(o, "origin");
+            assertEquals(enumConst(originEnum, expected), originEnum);
         }
 
-        @Test
-        void origin_left_right_default_middle() throws Exception {
-            Object l = parse("origin=left");
-            Object r = parse("origin=right");
-            Object m = parse("origin=center");
-
-            // Compare the actual enum values
-            Object leftEnum = get(l, "origin");
-            Object rightEnum = get(r, "origin");
-            Object midEnum = get(m, "origin");
-
-            Enum<?> left = java.util.Arrays.stream(leftEnum.getClass().getEnumConstants())
-                    .map(c -> (Enum<?>) c)
-                    .filter(e -> e.name().equals("LEFT"))
-                    .findFirst()
-                    .orElseThrow(() -> new IllegalArgumentException("No LEFT"));
-            Enum<?> right = java.util.Arrays.stream(rightEnum.getClass().getEnumConstants())
-                    .map(c -> (Enum<?>) c)
-                    .filter(e -> e.name().equals("RIGHT"))
-                    .findFirst()
-                    .orElseThrow(() -> new IllegalArgumentException("No RIGHT"));
-            Enum<?> middle = java.util.Arrays.stream(midEnum.getClass().getEnumConstants())
-                    .map(c -> (Enum<?>) c)
-                    .filter(e -> e.name().equals("MIDDLE"))
-                    .findFirst()
-                    .orElseThrow(() -> new IllegalArgumentException("No MIDDLE"));
-
-            assertEquals(left, leftEnum);
-            assertEquals(right, rightEnum);
-            assertEquals(middle, midEnum);
+        @ParameterizedTest
+        @CsvSource({
+                "-0.5, 0",
+                "2,    1",
+                "0.75, 0.75"
+        })
+        void edgeboost_clamped_0_to_1(String in, float expected) throws Exception {
+            Object o = parse("edgeboost=" + in);
+            assertEquals(expected, getf(o, "edgeBoost"), 1e-6f);
         }
 
-        @Test
-        void nonneg_ints_spread_flash_overshoot_and_edgeboost_clamp() throws Exception {
-            Object neg = parse("spread=-1 flash=-2 overshoot=-3 edgeboost=-0.5");
-            Object hi = parse("edgeboost=2");
-            Object ok = parse("spread=7 flash=9 overshoot=11 edgeboost=0.75");
-            assertEquals(0, geti(neg, "spread"));
-            assertEquals(0, geti(neg, "flashFrames"));
-            assertEquals(0, geti(neg, "overshoot"));
-            assertEquals(0f, getf(neg, "edgeBoost"), 1e-6f);
-            assertEquals(1f, getf(hi, "edgeBoost"), 1e-6f);
-            assertEquals(7, geti(ok, "spread"));
-            assertEquals(9, geti(ok, "flashFrames"));
-            assertEquals(11, geti(ok, "overshoot"));
-            assertEquals(0.75f, getf(ok, "edgeBoost"), 1e-6f);
+        @ParameterizedTest
+        @CsvSource({
+                "spread=-1,     0",
+                "spread=7,      7",
+                "flash=-2,      0",
+                "flash=9,       9",
+                "overshoot=-3,  0",
+                "overshoot=11,  11"
+        })
+        void nonneg_ints_spread_flash_overshoot(String spec, int expected) throws Exception {
+            Object o = parse(spec);
+            if (spec.startsWith("spread")) assertEquals(expected, geti(o, "spread"));
+            else if (spec.startsWith("flash")) assertEquals(expected, geti(o, "flashFrames"));
+            else assertEquals(expected, geti(o, "overshoot"));
         }
 
-        @Test
-        void flash_hexes_strip_hash() throws Exception {
-            Object o = parse("flashHexA=#ff00aa flashHexB=00ffcc");
-            assertEquals("ff00aa", get(o, "flashHexA"));
-            assertEquals("00ffcc", get(o, "flashHexB"));
+        @ParameterizedTest
+        @CsvSource({
+                "from=rand, RAND",
+                "from=a,    A"
+        })
+        void from_rand_or_A(String spec, String expected) throws Exception {
+            Object o = parse(spec);
+            Object e = get(o, "from");
+            assertEquals(enumConst(e, expected), e);
+        }
+
+        @ParameterizedTest
+        @CsvSource({
+                "flashHexA=#ff00aa, ff00aa",
+                "flashHexB=00ffcc,  00ffcc"
+        })
+        void flash_hexes_strip_hash(String spec, String expected) throws Exception {
+            Object o = parse(spec);
+            if (spec.startsWith("flashHexA")) assertEquals(expected, get(o, "flashHexA"));
+            else assertEquals(expected, get(o, "flashHexB"));
         }
 
         @Test
@@ -765,12 +756,10 @@ class TextEffectsHelpersTest {
         void mixed_options_all_paths_once() throws Exception {
             Object o = parse("  FPS=300  jitter=61 cycles=10  FROM=rand  rainbow=1  RHZ=0.001 rshift=361 style=explode origin=right spread=0 flash=1 overshoot=2 edgeboost=1.5  flashHexA=#abc flashHexB=def  ");
 
-            // ints
             assertEquals(240, geti(o, "fps"));
             assertEquals(60, geti(o, "jitter"));
             assertEquals(10, geti(o, "cycles"));
 
-            // enums & booleans
             Object fromEnum = get(o, "from");
             Object styleEnum = get(o, "style");
             Object originEnum = get(o, "origin");
@@ -779,21 +768,16 @@ class TextEffectsHelpersTest {
             assertEquals(enumConst(styleEnum, "EXPLODE"), styleEnum);
             assertEquals(enumConst(originEnum, "RIGHT"), originEnum);
 
-            // floats (with delta)
             assertEquals(0.01f, getf(o, "rhz"), 1e-6f);
             assertEquals(360f, getf(o, "rshift"), 1e-6f);
             assertEquals(1f, getf(o, "edgeBoost"), 1e-6f);
 
-            // remaining ints
             assertEquals(0, geti(o, "spread"));
             assertEquals(1, geti(o, "flashFrames"));
             assertEquals(2, geti(o, "overshoot"));
 
-            // strings
             assertEquals("abc", get(o, "flashHexA"));
             assertEquals("def", get(o, "flashHexB"));
         }
     }
-
-
 }

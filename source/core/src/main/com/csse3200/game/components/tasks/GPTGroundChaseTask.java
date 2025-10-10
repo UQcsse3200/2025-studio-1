@@ -32,6 +32,9 @@ public abstract class GPTGroundChaseTask extends DefaultTask implements Priority
     protected PhysicsComponent physicsComponent;
     protected float currentCooldown; // starts ready to fire
     protected float timeSinceLastJump = 0f;
+    protected boolean isVariant = false;
+    protected int burstAmount;
+    protected float angleDifferencesInBurst;
 
     /**
      * @param target   player entity to chase

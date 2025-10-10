@@ -612,8 +612,8 @@ public class ObstacleFactory {
                 new Entity()
                         .addComponent(new TextureRenderComponent("foreg_sprites/Security/SecuritySystem.png"))
                         .addComponent(new PhysicsComponent())
-                        .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE))
-                        .addComponent(new HitboxComponent().setLayer(PhysicsLayer.ALL));
+                        .addComponent(new HitboxComponent().setLayer(PhysicsLayer.ALL))
+                        .addComponent(new ColliderComponent().setLayer(PhysicsLayer.NONE));
 
         console.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
         console.getComponent(TextureRenderComponent.class).scaleEntity();
@@ -622,6 +622,21 @@ public class ObstacleFactory {
         console.getComponent(HitboxComponent.class).setAsBox(console.getScale());
         return console;
     }
+
+    /*
+    public static Entity createButtonSystem() {
+        Entity buttom =
+                new Entity()
+                        .addComponent(new TextureRenderComponent("images/OrangeButton.png"))
+                        .addComponent(new PhysicsComponent())
+                        .addComponent(new ColliderComponent().setLayer(PhysicsLayer.NONE))
+                        .addComponent(new HitboxComponent().setLayer(PhysicsLayer.ALL));
+        buttom.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
+        buttom.getComponent(TextureRenderComponent.class).scaleEntity();
+        buttom.scaleHeight(0.6f);
+        //PhysicsUtils.setScaledCollider(buttom, 0.8f, 0.8f);
+        return buttom;
+    }*/
 
     /**
      * Creates a laboratory main station entity with collision.

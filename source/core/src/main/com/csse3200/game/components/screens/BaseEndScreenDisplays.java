@@ -120,13 +120,23 @@ public class BaseEndScreenDisplays extends BaseScreenDisplay {
         return String.format(Locale.ROOT, "%02d:%02d", m, s);
     }
 
-    // Ensure there is no parent/label tint multiplying our markup colours.
+    /**
+     * Clears color tint effects from the label and its wrapper
+     * @param label the label actor
+     * @param wrapper its parent container
+     * @param root the root table
+     */
     private static void neutralizeTint(Actor label, Actor wrapper, Table root) {
         if (root != null) root.setColor(Color.WHITE);
         if (wrapper != null) wrapper.setColor(Color.WHITE);
         if (label != null) label.setColor(Color.WHITE);
     }
 
+    /**
+     * Schedules a task to run after a specified delay
+     * @param delay milliseconds to wait before executing
+     * @param r runnable to execute
+     */
     private static void at(float delay, Runnable r) {
         Timer.schedule(new Timer.Task() {
             @Override
@@ -136,6 +146,11 @@ public class BaseEndScreenDisplays extends BaseScreenDisplay {
         }, delay);
     }
 
+    /**
+     * Deeply clears all color tints and markup issues
+     * @param lbl
+     * @param ancestors
+     */
     private static void neutralizeTintDeep(Label lbl, Actor... ancestors) {
         // Wipe actor tint
         lbl.setColor(1f, 1f, 1f, 1f);
@@ -163,6 +178,9 @@ public class BaseEndScreenDisplays extends BaseScreenDisplay {
 
     /**
      * Allow chaining a Leaderboard button
+     *
+     * @param leaderboardAction the action to execute when the leaderboard button is clicked
+     * @return this instance for method chaining
      */
     public BaseEndScreenDisplays withLeaderboard(Runnable leaderboardAction) {
         this.leaderboardAction = leaderboardAction;
@@ -372,6 +390,10 @@ public class BaseEndScreenDisplays extends BaseScreenDisplay {
         pinLeaderboardTopRight(root);
     }
 
+    /**
+     * Positions a "Leaderboard" button in the top-right corner
+     * @param root the root table
+     */
     private void pinLeaderboardTopRight(Table root) {
         if (leaderboardAction == null) return;
 
@@ -388,18 +410,33 @@ public class BaseEndScreenDisplays extends BaseScreenDisplay {
         overlay.toFront();
     }
 
+    /**
+     * Sets the round number label
+     * @param round the current round number
+     */
     public void setRound(int round) {
         if (roundLabelRef != null) roundLabelRef.setText("Round: " + Math.max(1, round));
     }
 
+    /**
+     * Sets the elapsed time label from seconds
+     * @param seconds the number of elapsed seconds
+     */
     public void setElapsedSeconds(long seconds) {
         if (timeLabelRef != null) timeLabelRef.setText("Time: " + toMMSS(Math.max(0, seconds)));
     }
 
+    /**
+     * Sets the elapsed time label from a preformatted string
+     * @param mmss formatted time string in {@code mm:ss}
+     */
     public void setElapsedText(String mmss) {
         if (timeLabelRef != null) timeLabelRef.setText("Time: " + mmss);
     }
 
+    /**
+     * Releases all text effects and timers.
+     */
     @Override
     public void dispose() {
         super.dispose();

@@ -6,10 +6,11 @@ import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Timer;
-import com.csse3200.game.components.CameraComponent;
-import com.csse3200.game.components.WeaponsStatsComponent;
+import com.csse3200.game.components.*;
+import com.csse3200.game.effects.AimbotEffect;
 import com.csse3200.game.effects.AreaEffect;
 import com.csse3200.game.effects.Effect;
+import com.csse3200.game.effects.UnlimitedAmmoEffect;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.projectiles.ProjectileTarget;
 import com.csse3200.game.entities.factories.ProjectileFactory;
@@ -32,6 +33,8 @@ import com.csse3200.game.services.ServiceLocator;
  * </ul>
  */
 public class RangedUseComponent extends ItemActionsComponent {
+    private float timeSinceLastAttack = -9999f;
+    private Entity player;
 
     /**
      * Uses the ranged weapon/item for the given player.
@@ -43,43 +46,62 @@ public class RangedUseComponent extends ItemActionsComponent {
      * @param player the entity representing the player using the item
      */
     public void use(Entity player) {
-        playAttackSound();
-
-        Camera cam = getActiveCamera();
-        assert cam != null;
+        this.player = player;
 
         WeaponsStatsComponent weaponsStats = entity.getComponent(WeaponsStatsComponent.class);
         String texturePath = weaponsStats.getProjectileTexturePath();
+        if (!handleMagazine(weaponsStats)) { // dont run if active
+            return;
+        }
+        playAttackSound();
 
-        Entity bullet = createProjectileEntity(weaponsStats, texturePath);
-        initializeBullet(bullet, player, cam);
+        Entity bullet = createProjectileEntity(weaponsStats, texturePath, isPowerUpActive(AimbotEffect.class));
+
+        Camera cam = ServiceLocator.getCamera();
+        initializeBullet(bullet, cam);
 
         if (entity.hasComponent(ConsumableComponent.class)) {
             bombTimer(entity.getComponent(ConsumableComponent.class).getDuration(), bullet);
+        } else {
+            if (!isPowerUpActive(UnlimitedAmmoEffect.class)) {
+                decrementMagazine();
+            }
+            player.getEvents().trigger("after shoot");
         }
+        timeSinceLastAttack = ServiceLocator.getTimeSource().getTime();
+    }
+
+    private boolean handleMagazine(WeaponsStatsComponent weaponsStats) {
+        if (entity.hasComponent(ConsumableComponent.class)) {
+            return true;
+        }
+        MagazineComponent mag = entity.getComponent(MagazineComponent.class);
+        mag.update();
+        float coolDown = weaponsStats.getCoolDown();
+        float curTime = ServiceLocator.getTimeSource().getTime();
+        if ((curTime - timeSinceLastAttack) < coolDown * 1000) { // Converts to milliseconds
+            return false;
+        }
+        if (mag.getCurrentAmmo() <= 0 && !isPowerUpActive(UnlimitedAmmoEffect.class)) {
+            Sound attackSound = ServiceLocator.getResourceService().getAsset("sounds/shot_failed.mp3", Sound.class);
+            attackSound.play();
+            return false;
+        }
+        return true;
+    }
+
+    private void decrementMagazine() {
+        MagazineComponent mag = entity.getComponent(MagazineComponent.class);
+        mag.setCurrentAmmo(mag.getCurrentAmmo() - 1);
     }
 
     /**
      * Plays the attack sound for the ranged weapon.
      */
-    void playAttackSound() {
+    private void playAttackSound() {
         Sound attackSound = ServiceLocator.getResourceService()
-                .getAsset("sounds/Impact4.ogg", Sound.class);
+                .getAsset("sounds/laser_blast.mp3", Sound.class);
         attackSound.play();
-    }
-
-    /**
-     * Finds and returns the active {@link Camera} from the entity service.
-     *
-     * @return the active camera, or {@code null} if none found
-     */
-    Camera getActiveCamera() {
-        for (Entity entity : ServiceLocator.getEntityService().getEntities()) {
-            if (entity.hasComponent(CameraComponent.class)) {
-                return entity.getComponent(CameraComponent.class).getCamera();
-            }
-        }
-        return null;
     }
 
     /**
@@ -90,11 +112,11 @@ public class RangedUseComponent extends ItemActionsComponent {
      * @param texturePath  the texture path for the projectile
      * @return the created projectile entity
      */
-    Entity createProjectileEntity(WeaponsStatsComponent weaponsStats, String texturePath) {
+    Entity createProjectileEntity(WeaponsStatsComponent weaponsStats, String texturePath, boolean isHoming) {
         boolean isConsumable = entity.hasComponent(ConsumableComponent.class);
         return isConsumable
                 ? ProjectileFactory.createBomb(ProjectileTarget.ENEMY, weaponsStats, texturePath)
-                : ProjectileFactory.createProjectile(ProjectileTarget.ENEMY, weaponsStats, texturePath);
+                : ProjectileFactory.createPistolBullet(weaponsStats, isHoming);
     }
 
     /**
@@ -106,15 +128,14 @@ public class RangedUseComponent extends ItemActionsComponent {
      * </ul>
      *
      * @param bullet the projectile entity
-     * @param player the player entity
      * @param cam    the active camera
      */
-    private void initializeBullet(Entity bullet, Entity player, Camera cam) {
+    private void initializeBullet(Entity bullet, Camera cam) {
         PhysicsProjectileComponent projectilePhysics = bullet.getComponent(PhysicsProjectileComponent.class);
 
         // Place at player position
         Vector2 origin = new Vector2(player.getPosition());
-        bullet.setPosition(origin);
+        bullet.setPosition(origin.add(0.5f, 0.2f));
 
         // Register entity
         ServiceLocator.getEntityService().register(bullet);
@@ -122,10 +143,13 @@ public class RangedUseComponent extends ItemActionsComponent {
         // Fire toward mouse input
         Vector2 center = bullet.getCenterPosition();
         Vector3 destination = cam.unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
+        Vector2 destination2D = new Vector2(destination.x, destination.y);
+        Vector2 adjustedDestination = destination2D.sub(center);
         projectilePhysics.fire(
-                new Vector2(destination.x - center.x, destination.y - center.y),
+                adjustedDestination,
                 5
         );
+        player.getEvents().trigger("player_shoot_order", destination2D, adjustedDestination);
     }
 
     /**
@@ -286,5 +310,11 @@ public class RangedUseComponent extends ItemActionsComponent {
                 }, 0.3f);
             }
         }, delay);
+    }
+
+    // Power Ups Checking
+    private boolean isPowerUpActive(Class<? extends Effect> powerUpEffect) {
+        PowerupComponent powerUps = player.getComponent(PowerupComponent.class);
+        return powerUps.hasEffect(powerUpEffect);
     }
 }

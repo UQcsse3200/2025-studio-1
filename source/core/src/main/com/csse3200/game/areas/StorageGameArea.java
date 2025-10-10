@@ -6,12 +6,15 @@ import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.CameraComponent;
-import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.ItemSpawnConfig;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.entities.factories.system.TeleporterFactory;
 import com.csse3200.game.entities.spawner.ItemSpawner;
+import com.csse3200.game.lighting.LightSpawner;
+import com.csse3200.game.services.ServiceLocator;
+
+import java.util.List;
 
 /**
  * The "Storage" area of the game map. This class:
@@ -74,6 +77,22 @@ public class StorageGameArea extends GameArea {
         GenericLayout.setupTerrainWithOverlay(this, terrainFactory, TerrainType.STORAGE,
                 new Color(0.12f, 0.12f, 0.10f, 0.26f));
 
+        //Checks to see if the lighting service is not null and then sets the ambient light and turns on shadows for the room.
+        var ls = ServiceLocator.getLightingService();
+        if (ls != null && ls.getEngine() != null) {
+            ls.getEngine().setAmbientLight(0.65f);
+            ls.getEngine().getRayHandler().setShadows(true);
+        }
+
+        LightSpawner.spawnCeilingCones(
+                this,
+                List.of(
+                        new GridPoint2(4,21),
+                        new GridPoint2(20,21),
+                        new GridPoint2(27,21)
+                ),
+                new Color(0.37f, 0.82f, 0.9f, 0.8f)
+        );
         spawnBordersAndDoors();
         Entity player = spawnPlayer();
         spawnFloor();
@@ -87,10 +106,7 @@ public class StorageGameArea extends GameArea {
             itemSpawner.spawnItems(ItemSpawnConfig.storage1map());
         }
 
-        Entity ui = new Entity();
-        ui.addComponent(new GameAreaDisplay("Storage"))
-                .addComponent(new com.csse3200.game.components.gamearea.FloorLabelDisplay("Floor 9"));
-        spawnEntity(ui);
+        displayUIEntity("Storage", "Floor 9");
     }
 
     /**
@@ -132,6 +148,11 @@ public class StorageGameArea extends GameArea {
         leftDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadShipping));
         spawnEntity(leftDoor);
 
+
+        Entity leftDoorSprite = ObstacleFactory.createDoor();
+        leftDoorSprite.setPosition(b.leftX(), leftDoorY);
+        spawnEntity(leftDoorSprite);
+
         addSolidWallRight(b, WALL_WIDTH);
 
         float rightDoorHeight = Math.max(1f, b.viewHeight() * 0.2f);
@@ -140,6 +161,11 @@ public class StorageGameArea extends GameArea {
         rightDoor.setPosition(b.rightX() - WALL_WIDTH - 0.001f, rightDoorY);
         rightDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadServer));
         spawnEntity(rightDoor);
+
+
+        Entity rightDoorSprite = ObstacleFactory.createDoor();
+        rightDoorSprite.setPosition(b.rightX() - WALL_WIDTH - 1.0f, rightDoorY);
+        spawnEntity(rightDoorSprite);
 
         if (!StorageGameArea.isCleared) registerDoors(new Entity[]{leftDoor, rightDoor});
     }
@@ -158,7 +184,7 @@ public class StorageGameArea extends GameArea {
      * Clears the game area and loads the next section (Servers).
      */
     private void loadServer() {
-        ServerGameArea.setRoomSpawn(new GridPoint2(6, 8));
+        ServerGameArea.setRoomSpawn(new GridPoint2(1, 7));
         clearAndLoad(() -> new ServerGameArea(terrainFactory, cameraComponent));
     }
 
@@ -166,7 +192,7 @@ public class StorageGameArea extends GameArea {
      * Clears the game area and loads the previous section (Shipping).
      */
     private void loadShipping() {
-        ShippingGameArea.setRoomSpawn(new GridPoint2(26, 20));
+        ShippingGameArea.setRoomSpawn(new GridPoint2(26, 16));
         clearAndLoad(() -> new ShippingGameArea(terrainFactory, cameraComponent));
     }
 

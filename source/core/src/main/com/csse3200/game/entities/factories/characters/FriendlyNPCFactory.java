@@ -10,6 +10,7 @@ import com.csse3200.game.entities.factories.InteractableStationFactory;
 import com.csse3200.game.rendering.AnimationRenderComponent;
 import com.csse3200.game.rendering.TextureRenderComponent;
 import com.csse3200.game.services.ServiceLocator;
+import com.csse3200.game.components.friendlynpc.NpcAttackBoostComponent;
 
 import java.util.List;
 
@@ -56,14 +57,8 @@ public class FriendlyNPCFactory {
      * @return A new Entity representing the Guidance NPC with dialogue, tips, and animation.
      */
     public static Entity createGuidanceNpc(Entity player, List<Vector2> waypoints) {
-        TextureAtlas atlas = ServiceLocator.getResourceService()
-                .getAsset("images/guidance_npc.atlas", TextureAtlas.class);
-
-        AnimationRenderComponent arc = new AnimationRenderComponent(atlas);
-        arc.addAnimation("robot_fire", 0.12f, Animation.PlayMode.LOOP);
-
         Entity npc = InteractableStationFactory.createBaseStation()
-                .addComponent(arc)
+                .addComponent(new TextureRenderComponent("images/guidance_friendly_npc.png"))
                 .addComponent(new HoverBobComponent(0.08f, 2.0f))
                 .addComponent(new NpcTwoOptionMenuComponent())
                 .addComponent(new NpcLeadComponent(List.of(
@@ -133,11 +128,19 @@ public class FriendlyNPCFactory {
                         "Nurse", "", new String[]{
                         "Hello! I'm here to help.",
                         "Let me check your vitals...",
-                        "You're all patched up now!"
+                        "You're all patched up now! I've also boosted your power!"
                 }))
                 .addComponent(new DialogueDisplay())
-                .addComponent(new NpcHealingComponent(player, 25)
-                        .setCooldownMillis(30_000));
+                // + 50 HP
+                // If at full health, + 50 shield
+                .addComponent(new NpcHealingComponent(player, 50, 50, 60_000)
+                        .setCooldownMillis(30_000))
+                // Add attack boost: +10 attack for 15 seconds
+                .addComponent(new NpcAttackBoostComponent(player, 10, 15_000)
+                        .setCooldownMillis(30_000))
+                 .addComponent(new ShieldDisplay()
+                         .setIconPosition(6f, 22f)
+                         .setIconSize(16f));
         npc.getComponent(TextureRenderComponent.class).scaleEntity();
         npc.addComponent(new TipComponent(npc, player, 3f));
         npc.addComponent(new NpcInteractionComponent());

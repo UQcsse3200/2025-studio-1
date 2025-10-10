@@ -21,6 +21,9 @@ public class ButtonSoundService {
         clickSound = resourceService.getAsset(CLICK_SOUND, Sound.class);
     }
 
+    /**
+     * Plays the button sound if called
+     */
     public void playClick() {
         if (clickSound != null) {
             clickSound.play(0.6f);

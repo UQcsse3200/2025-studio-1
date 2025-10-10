@@ -8,18 +8,22 @@ import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.components.DoorComponent;
-import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import com.csse3200.game.components.stations.StationComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.ItemSpawnConfig;
 import com.csse3200.game.entities.configs.benches.BenchConfig;
 import com.csse3200.game.entities.factories.InteractableStationFactory;
+import com.csse3200.game.entities.factories.characters.FriendlyNPCFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.entities.factories.system.TeleporterFactory;
 import com.csse3200.game.entities.spawner.ItemSpawner;
+import com.csse3200.game.lighting.LightSpawner;
 import com.csse3200.game.physics.PhysicsUtils;
 import com.csse3200.game.physics.components.ColliderComponent;
 import com.csse3200.game.physics.components.PhysicsComponent;
+import com.csse3200.game.services.ServiceLocator;
+
+import java.util.List;
 
 /**
  * Tunnel room: minimal walls with left door back to Server Room.
@@ -29,7 +33,6 @@ public class TunnelGameArea extends GameArea {
     private static GridPoint2 playerSpawn = new GridPoint2(5, 7);
     private static boolean isCleared = false;
 
-    private DoorComponent rightDoorComp;
     public static volatile DoorComponent exposedRightDoor;
 
     public TunnelGameArea(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
@@ -37,7 +40,6 @@ public class TunnelGameArea extends GameArea {
 
         this.getEvents().addListener("room cleared", TunnelGameArea::clearRoom);
     }
-
 
     public static TunnelGameArea load(TerrainFactory terrainFactory, CameraComponent camera) {
         return (new TunnelGameArea(terrainFactory, camera));
@@ -59,6 +61,24 @@ public class TunnelGameArea extends GameArea {
         GenericLayout.setupTerrainWithOverlay(this, terrainFactory, TerrainType.TUNNEL_ROOM,
                 new Color(0.08f, 0.08f, 0.12f, 0.28f));
 
+        //Checks to see if the lighting service is not null and then sets the ambient light and turns on shadows for the room.
+        var ls = ServiceLocator.getLightingService();
+        if (ls != null && ls.getEngine() != null) {
+            ls.getEngine().setAmbientLight(0.65f);
+            ls.getEngine().getRayHandler().setShadows(true);
+        }
+
+        LightSpawner.spawnCeilingCones(
+                this,
+                List.of(
+                new GridPoint2(4,21),
+                new GridPoint2(12,21),
+                new GridPoint2(20,21),
+                new GridPoint2(27,21)
+                ),
+                new Color(0.67f, 0.19f, 0.19f, 0.95f)
+        );
+
         spawnBordersAndDoors();
         Entity player = spawnPlayer();
         spawnPlatforms();
@@ -66,9 +86,9 @@ public class TunnelGameArea extends GameArea {
         spawnTeleporter();
         spawnObjectDoors(new GridPoint2(0, 7), new GridPoint2(28, 7));
         spawnFloor();
-        spawnPasswordTerminal(new GridPoint2(22, 17));
         spawnSpikes();
         spawnVisibleFloor();
+        spawnNurse(player);
 
         if (!TunnelGameArea.isCleared) {
             startWaves(player);
@@ -76,10 +96,7 @@ public class TunnelGameArea extends GameArea {
             itemSpawner.spawnItems(ItemSpawnConfig.tunnelmap());
         }
 
-        Entity ui = new Entity();
-        ui.addComponent(new GameAreaDisplay("Tunnel"))
-                .addComponent(new com.csse3200.game.components.gamearea.FloorLabelDisplay("Floor 11"));
-        spawnEntity(ui);
+        displayUIEntity("Tunnel", "Floor 11");
     }
 
     /**
@@ -98,16 +115,29 @@ public class TunnelGameArea extends GameArea {
         leftDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadServer));
         spawnEntity(leftDoor);
 
-        addSolidWallRight(b, WALL_WIDTH);
-
+        // Right wall with door: create wall segments above and below the door
         float rightDoorHeight = Math.max(1f, b.viewHeight() * 0.2f);
         float rightDoorY = b.bottomY();
+
+
+        float rightTopSegHeight = Math.max(0f, b.topY() - (rightDoorY + rightDoorHeight));
+        if (rightTopSegHeight > 0f) {
+            Entity rightTop = ObstacleFactory.createWall(WALL_WIDTH, rightTopSegHeight);
+            rightTop.setPosition(b.rightX() - WALL_WIDTH, rightDoorY + rightDoorHeight);
+            spawnEntity(rightTop);
+        }
+
+
+        Entity rightDoorWall = ObstacleFactory.createWall(WALL_WIDTH, rightDoorHeight);
+        rightDoorWall.setPosition(b.rightX() - WALL_WIDTH, rightDoorY);
+        spawnEntity(rightDoorWall);
+
         Entity rightDoor = ObstacleFactory.createDoorTrigger(WALL_WIDTH, rightDoorHeight);
         rightDoor.setPosition(b.rightX() - WALL_WIDTH - 0.001f, rightDoorY);
         rightDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadBossRoom));
         spawnEntity(rightDoor);
 
-        rightDoorComp = rightDoor.getComponent(DoorComponent.class);
+        DoorComponent rightDoorComp = rightDoor.getComponent(DoorComponent.class);
         rightDoorComp.setLocked(true);
         TunnelGameArea.exposedRightDoor = rightDoorComp;
 
@@ -177,23 +207,13 @@ public class TunnelGameArea extends GameArea {
         spawnEntity(tp);
     }
 
-    /**
-     * Spawn entity door at the bottom left, and no door to the right
-     * as this is the last room (currently).
-     */
-    private void spawnObjectDoors() {
-        Entity leftDoor = ObstacleFactory.createDoor();
-        GridPoint2 leftDoorSpawn = new GridPoint2(0, 7);
-        spawnEntityAt(leftDoor, leftDoorSpawn, false, false);
-    }
-
     private void loadServer() {
-        ServerGameArea.setRoomSpawn(new GridPoint2(25, 24));
+        ServerGameArea.setRoomSpawn(new GridPoint2(25, 20));
         clearAndLoad(() -> new ServerGameArea(terrainFactory, cameraComponent));
     }
 
     private void loadBossRoom() {
-        StaticBossRoom.setRoomSpawn(new GridPoint2(4, 8));
+        StaticBossRoom.setRoomSpawn(new GridPoint2(1, 7));
         clearAndLoad(() -> new StaticBossRoom(terrainFactory, cameraComponent));
     }
 
@@ -222,52 +242,12 @@ public class TunnelGameArea extends GameArea {
     }
 
     /**
-     * Spawns a password terminal and a nearby hint station in the given position.
-     */
-    private void spawnPasswordTerminal(GridPoint2 pos) {
-        Entity terminal = ObstacleFactory.createSecuritySystem();
-        spawnEntityAt(terminal, pos, true, false);
-
-        Entity hintStation = InteractableStationFactory.createBaseStation();
-        hintStation.addComponent(new StationComponent(makeTerminalHintConfig()));
-
-        PhysicsUtils.setScaledCollider(hintStation, 2.5f, 1.5f);
-        hintStation.getComponent(ColliderComponent.class)
-                .setAsBoxAligned(new Vector2(2.5f, 1.5f),
-                        PhysicsComponent.AlignX.CENTER, PhysicsComponent.AlignY.CENTER);
-
-        GridPoint2 hintPos = new GridPoint2(pos.x, pos.y + 2);
-        spawnEntityAt(hintStation, hintPos, true, false);
-    }
-
-    /**
-     * Creates a {@link BenchConfig} used for the password terminal's hint station.
-     */
-    private BenchConfig makeTerminalHintConfig() {
-        return new BenchConfig() {
-            {
-                this.texturePath = null;
-                this.promptText = "Press F1 to access terminal";
-            }
-
-            @Override
-            public int getPrice() {
-                return 0;
-            }
-
-            @Override
-            public void upgrade(boolean playerNear, com.csse3200.game.entities.Entity player, Label prompt) {
-            }
-        };
-    }
-
-    /**
      * Clear room, set this room's static
      * boolean isCleared variable to true
      */
     public static void clearRoom() {
         TunnelGameArea.isCleared = true;
-        logger.debug("Reception is cleared");
+        logger.debug("Tunnel is cleared");
     }
 
     /**
@@ -276,7 +256,14 @@ public class TunnelGameArea extends GameArea {
      */
     public static void unclearRoom() {
         TunnelGameArea.isCleared = false;
-        logger.debug("Tunnel is cleared");
+        logger.debug("Tunnel is uncleared");
+    }
+
+    private void spawnNurse(Entity player) {
+        GridPoint2 pos = new GridPoint2(20, 8);
+
+        Entity nurse = FriendlyNPCFactory.createNurseNpc(player);
+        spawnEntityAt(nurse, pos, true, true);
     }
 
     /**
@@ -285,4 +272,5 @@ public class TunnelGameArea extends GameArea {
     public static boolean getClearField() {
         return TunnelGameArea.isCleared;
     }
+
 }

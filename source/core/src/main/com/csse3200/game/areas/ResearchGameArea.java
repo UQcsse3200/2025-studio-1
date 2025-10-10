@@ -6,12 +6,20 @@ import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.CameraComponent;
-import com.csse3200.game.components.gamearea.GameAreaDisplay;
+import com.csse3200.game.components.shop.CatalogService;
+import com.csse3200.game.components.shop.ShopDemo;
+import com.csse3200.game.components.shop.ShopManager;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.ItemSpawnConfig;
+import com.csse3200.game.entities.factories.ShopFactory;
+import com.csse3200.game.entities.factories.characters.FriendlyNPCFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.entities.factories.system.TeleporterFactory;
 import com.csse3200.game.entities.spawner.ItemSpawner;
+import com.csse3200.game.lighting.LightSpawner;
+import com.csse3200.game.services.ServiceLocator;
+
+import java.util.List;
 
 /**
  * Research room: futuristic laboratory with desks, pods, microscopes, and
@@ -19,6 +27,7 @@ import com.csse3200.game.entities.spawner.ItemSpawner;
  * Left door -> Elevator, Right door -> Storage.
  */
 public class ResearchGameArea extends GameArea {
+    private Entity player;
     private static final float WALL_WIDTH = 0.1f;
     private static GridPoint2 playerSpawn = new GridPoint2(10, 10);
     private static boolean isCleared = false;
@@ -52,22 +61,33 @@ public class ResearchGameArea extends GameArea {
         GenericLayout.setupTerrainWithOverlay(this, terrainFactory, TerrainType.RESEARCH_ROOM,
                 new Color(0.10f, 0.12f, 0.18f, 0.28f)); // subtle lab-themed overlay
         spawnObjectDoors(new GridPoint2(0, 6), new GridPoint2(28, 20));
+
+        //Checks to see if the lighting service is not null and then sets the ambient light and turns on shadows for the room.
+        var ls = ServiceLocator.getLightingService();
+        if (ls != null && ls.getEngine() != null) {
+            ls.getEngine().setAmbientLight(0.65f);
+            ls.getEngine().getRayHandler().setShadows(true);
+        }
+
+        LightSpawner.spawnCeilingCones(
+                this,
+                List.of(
+                        new GridPoint2(4,21),
+                        new GridPoint2(12,21)
+                ),
+                new Color(0.37f, 0.82f, 0.9f, 0.8f)
+        );
         spawnBordersAndDoors();
-        Entity player = spawnPlayer();
+        player = spawnPlayer();
         spawnPlatforms();
         spawnResearchProps();
         spawnTeleporter();
+        spawnNurse(player);
+        spawnEnemiesAndWeapons();
+        spawnShopKiosk();
 
-        if (!ResearchGameArea.isCleared) {
-            startWaves(player);
-            ItemSpawner itemSpawner = new ItemSpawner(this);
-            itemSpawner.spawnItems(ItemSpawnConfig.researchmap());
-        }
 
-        Entity ui = new Entity();
-        ui.addComponent(new GameAreaDisplay("Research"))
-                .addComponent(new com.csse3200.game.components.gamearea.FloorLabelDisplay("Floor 7"));
-        spawnEntity(ui);
+        displayUIEntity("Research", "Floor 7");
     }
 
     private void spawnBordersAndDoors() {
@@ -76,6 +96,7 @@ public class ResearchGameArea extends GameArea {
         Bounds b = getCameraBounds(cameraComponent);
         addSolidWallLeft(b, WALL_WIDTH);
         addSolidWallTop(b, WALL_WIDTH);
+        addSolidWallRight(b, WALL_WIDTH);
         float leftDoorHeight = Math.max(1f, b.viewHeight() * 0.2f);
         float leftDoorY = b.bottomY();
         Entity leftDoor = ObstacleFactory.createDoorTrigger(WALL_WIDTH, leftDoorHeight);
@@ -90,6 +111,14 @@ public class ResearchGameArea extends GameArea {
         spawnEntity(rightDoor);
 
         if (!ResearchGameArea.isCleared) registerDoors(new Entity[]{leftDoor, rightDoor});
+    }
+
+    public void spawnEnemiesAndWeapons() {
+        if (!ResearchGameArea.isCleared) {
+            startWaves(player);
+            ItemSpawner itemSpawner = new ItemSpawner(this);
+            itemSpawner.spawnItems(ItemSpawnConfig.researchmap());
+        }
     }
 
     private Entity spawnPlayer() {
@@ -156,14 +185,20 @@ public class ResearchGameArea extends GameArea {
         Entity tp = TeleporterFactory.createTeleporter(new Vector2(2f, 2.8f));
         spawnEntity(tp);
     }
+    private void spawnShopKiosk() {
+        CatalogService catalog = ShopDemo.makeDemoCatalog();
+        ShopManager manager = new ShopManager(catalog);
+        Entity shop = ShopFactory.createShop(this, manager, "images/VendingMachine.png"); // have as tree now as placeholder, later need to change to actual shop icon
+        spawnEntityAt(shop, new GridPoint2(9, 12), true, false);
+    }
 
     private void loadElevator() {
-        ElevatorGameArea.setRoomSpawn(new GridPoint2(21, 20));
+        ElevatorGameArea.setRoomSpawn(new GridPoint2(25, 21));
         clearAndLoad(() -> new ElevatorGameArea(terrainFactory, cameraComponent));
     }
 
     private void loadFlyingBossRoom() {
-        FlyingBossRoom.setRoomSpawn(new GridPoint2(6, 8));
+        FlyingBossRoom.setRoomSpawn(new GridPoint2(1, 7));
         clearAndLoad(() -> new FlyingBossRoom(terrainFactory, cameraComponent));
     }
 
@@ -174,8 +209,7 @@ public class ResearchGameArea extends GameArea {
 
     @Override
     public Entity getPlayer() {
-        // placeholder
-        return null;
+        return player;
     }
 
     /**
@@ -194,6 +228,13 @@ public class ResearchGameArea extends GameArea {
     public static void unclearRoom() {
         ResearchGameArea.isCleared = false;
         logger.debug("Research is uncleared");
+    }
+
+    private void spawnNurse(Entity player) {
+        GridPoint2 pos = new GridPoint2(20, 8);
+
+        Entity nurse = FriendlyNPCFactory.createNurseNpc(player);
+        spawnEntityAt(nurse, pos, true, true);
     }
 
     /**

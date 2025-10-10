@@ -40,33 +40,32 @@ public class SaveLoadService {
      * Load a save file from local storage and rebuild the area and the current
      * players stats.
      */
-    public static java.util.Optional<SaveGame.GameState> load() {
-        String filePath = "saves" + File.separator + "slides.json";
-
-        java.util.Optional<SaveGame.GameState> maybe = SaveGame.loadGame(filePath);
-        if (maybe.isPresent()) {
-            SaveGame.GameState savedGame = maybe.get();
+    public SaveGame.GameState load(String filePath) {
+        SaveGame.GameState savedGame;
+        if (SaveGame.loadGame(filePath) != null) {
+            savedGame = SaveGame.loadGame(filePath);
             setAvatar(savedGame.getPlayer().avatar);
-            return maybe;
         } else {
-            logger.error("Failed to load save file: {}", filePath);
-            return java.util.Optional.empty();
+            logger.error("failed to load in game");
+            savedGame = null;
         }
+        return savedGame;
     }
-
 
     /**
      * sets all the players stats based on the information from the save file json
      *
+     * @param playerStats
      */
     public static void loadPlayer(SaveGame.information playerStats,
                                   ArrayList<String> savedArmour,
                                   ArrayList<SaveGame.itemInInven> inventory) {
 
         ServiceLocator.getPlayer().getComponent(
-                CombatStatsComponent.class).setHealth(playerStats.currentHealth);
-        ServiceLocator.getPlayer().getComponent(
                 CombatStatsComponent.class).setMaxHealth(playerStats.maxHealth);
+        ServiceLocator.getPlayer().getComponent(
+                CombatStatsComponent.class).setHealth(playerStats.currentHealth);
+
         ServiceLocator.getPlayer().getComponent(
                 StaminaComponent.class).setStamina(playerStats.stamina);
         ServiceLocator.getPlayer().getComponent(
@@ -114,7 +113,7 @@ public class SaveLoadService {
 
             switch (item.type) {
                 case RANGED, MELEE -> itemEntity = getWeapon(item);
-                case CONSUMABLE -> itemEntity = getConsumable(item.texture);
+                case CONSUMABLE -> itemEntity = getConsumable(item.texture, item.count);
             }
             if (itemEntity != null) {
                 itemEntity.getComponent(ItemComponent.class).setCount(item.count);
@@ -122,6 +121,54 @@ public class SaveLoadService {
             }
         }
     }
+
+    /**
+     * Save the current GameArea to local storage (saves/slotX.json).
+     */
+    public boolean save(String slot, GameArea gameArea) {
+        Entity player = new Entity();
+        if (ServiceLocator.getGameArea() != null) {
+            player = ServiceLocator.getPlayer();
+        } else {
+            // if can't find through service locator will attempt hard check
+            for (Entity entity : gameArea.getEntities()) {
+                if (entity.hasComponent(InventoryComponent.class)) {
+                    player = entity;
+                }
+            }
+        }
+
+
+        Set<String> discovered = ServiceLocator.getDiscoveryService().getDiscovered();
+        SaveGame.GameState gamestate = new SaveGame.GameState();
+        ArrayList<String> armours = new ArrayList<>();
+
+        //will check that armour both exists and is not null
+        if (player.hasComponent(ArmourEquipComponent.class) &&
+                player.getComponent(ArmourEquipComponent.class).currentlyEquippedArmour != null
+        ) {
+            Set<Entity> armourSet = player.getComponent(ArmourEquipComponent.class).currentlyEquippedArmour.keySet();
+            String armourString;
+            for (Entity e : armourSet) {
+                armourString = e.getComponent(ItemComponent.class).getTexture();
+                armours.add(armourString);
+            }
+        }
+        //sets game state
+        gamestate.setPlayer(player);
+        gamestate.setLoadedInventory(player.getComponent(InventoryComponent.class));
+        gamestate.setArea(ServiceLocator.getGameArea().toString());
+        gamestate.setWave(ServiceLocator.getGameArea().currentWave());
+        gamestate.setAreasVisited(discovered);
+        gamestate.setArmour(armours);
+        gamestate.setDifficulty(ServiceLocator.getDifficulty().toString());
+
+        path = "saves" + File.separator + slot + ".json";
+
+        SaveGame.saveGame(gamestate, path);
+        return true;
+    }
+
 
     /**
      * helper method for turning items from savefile into entities
@@ -155,13 +202,15 @@ public class SaveLoadService {
         return weaponEntity;
     }
 
-    private static Entity getConsumable(String texture) {
+    private static Entity getConsumable(String texture, int count) {
+        Entity fromSave = null;
         for (Consumables consumable : Consumables.values()) {
             if (texture.equals(consumable.getConfig().texturePath)) {
-                return ConsumableFactory.createConsumable(consumable);
+                fromSave = ConsumableFactory.createConsumable(consumable);
+                fromSave.getComponent(ItemComponent.class).setCount(count);
             }
         }
-        return null;
+        return fromSave;
     }
 
     private static Avatar setAvatar(String texture) {
@@ -169,51 +218,6 @@ public class SaveLoadService {
             if (avatar.texturePath().equals(texture)) AvatarRegistry.set(avatar);
         }
         return null;
-    }
-
-    /**
-     * Save the current GameArea to local storage (saves/slotX.json).
-     */
-    public boolean save(String slot, GameArea gameArea) {
-        Entity player = new Entity();
-        if (ServiceLocator.getGameArea() != null) {
-            player = ServiceLocator.getPlayer();
-        } else {
-            // if can't find through service locator will attempt hard check
-            for (Entity entity : gameArea.getEntities()) {
-                if (entity.hasComponent(InventoryComponent.class)) {
-                    player = entity;
-                }
-            }
-        }
-        // variables
-
-        Set<String> discovered = ServiceLocator.getDiscoveryService().getDiscovered();
-        SaveGame.GameState gamestate = new SaveGame.GameState();
-        ArrayList<String> armours = new ArrayList<>();
-        if (player.hasComponent(ArmourEquipComponent.class) &&
-                player.getComponent(ArmourEquipComponent.class).currentlyEquippedArmour != null
-        ) {
-            Set<Entity> armourSet = player.getComponent(ArmourEquipComponent.class).currentlyEquippedArmour.keySet();
-            String armourString;
-            for (Entity e : armourSet) {
-                armourString = e.getComponent(ItemComponent.class).getTexture();
-                armours.add(armourString);
-            }
-        }
-        //sets game state
-        gamestate.setPlayer(player);
-        gamestate.setLoadedInventory(player.getComponent(InventoryComponent.class));
-        gamestate.setArea(ServiceLocator.getGameArea().toString());
-        gamestate.setWave(ServiceLocator.getGameArea().currentWave());
-        gamestate.setAreasVisited(discovered);
-        gamestate.setArmour(armours);
-        gamestate.setDifficulty(ServiceLocator.getDifficulty().toString());
-
-        path = "saves" + File.separator + slot + ".json";
-
-        SaveGame.saveGame(gamestate, path);
-        return true;
     }
 
 }
