@@ -13,14 +13,22 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.MockedStatic;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.CALLS_REAL_METHODS;
 import static org.mockito.Mockito.mockStatic;
@@ -31,7 +39,6 @@ import static org.mockito.Mockito.mockStatic;
  */
 @ExtendWith(GameExtension.class)
 class TextEffectsTimerTest {
-
     private static MemFiles memFiles;
 
     // --- Timer immediate exec harness (same shape as your other test) ---
@@ -110,7 +117,33 @@ class TextEffectsTimerTest {
     private static String stripLibgdxMarkup(CharSequence cs) {
         if (cs == null) return "";
         // Remove [#RRGGBB] or [#RRGGBBAA] and the closing [] tokens
-        return cs.toString().replaceAll("\\[#(?:[0-9a-fA-F]{6}|[0-9a-fA-F]{8})\\]|\\[]", "");
+        return cs.toString().replaceAll("\\[#(?:[0-9a-fA-F]{6}|[0-9a-fA-F]{8})]|\\[]", "");
+    }
+
+    private static Class<?> ownerClass() throws Exception {
+        try {
+            return Class.forName("com.csse3200.game.ui.effects.TextEffects");
+        } catch (ClassNotFoundException e) {
+            return Class.forName("com.csse3200.game.ui.effects.TypingInit");
+        }
+    }
+
+    private static Object newOwner() throws Exception {
+        Class<?> c = ownerClass();
+        Constructor<?> ctor = c.getDeclaredConstructor();
+        ctor.setAccessible(true);
+        return ctor.newInstance();
+    }
+
+    static Stream<Arguments> doublePunctCases() {
+        return Stream.of(
+                arguments("x..y", "x."),
+                arguments("x!!y", "x!"),
+                arguments("x??y", "x?"),
+                arguments("x.xy", "x."),
+                arguments("x!xy", "x!"),
+                arguments("x?xy", "x?")
+        );
     }
 
     // ---------------------- sparkle ----------------------
@@ -245,7 +278,6 @@ class TextEffectsTimerTest {
         }
     }
 
-
     // ---------------------- sweepRainbow ----------------------
     @Test
     void sweepRainbow_generatesPerCharColors() {
@@ -292,6 +324,341 @@ class TextEffectsTimerTest {
         }
     }
 
+    @Test
+    void earlyReturn_whenDensityZero() throws Exception {
+        // Resolve owner class (TextEffects or TypingInit) inline.
+        Class<?> clazz;
+        try {
+            clazz = Class.forName("com.csse3200.game.ui.effects.TextEffects");
+        } catch (ClassNotFoundException e) {
+            clazz = Class.forName("com.csse3200.game.ui.effects.TypingInit");
+        }
+
+        Object inst = clazz.getDeclaredConstructor().newInstance();
+
+        // basePlain non-empty so refreshBases() path is skipped.
+        Field basePlain = clazz.getDeclaredField("basePlain");
+        basePlain.setAccessible(true);
+        basePlain.set(inst, "Hello");
+
+        // Ensure task is null before call.
+        Field taskField = clazz.getDeclaredField("task");
+        taskField.setAccessible(true);
+        taskField.set(inst, null);
+
+        Label label = newLabel("X");
+
+        Method sparkle = clazz.getDeclaredMethod("sparkle", Label.class, float.class, float.class, float.class);
+        sparkle.setAccessible(true);
+        sparkle.invoke(inst, label, 0f, 5f, 0.2f); // density <= 0 => early return
+
+        assertEquals("X", label.getText().toString());
+        assertNull(taskField.get(inst));
+    }
+
+    @Test
+    void animates_then_resets_and_cancels() throws Exception {
+        Class<?> clazz;
+        try {
+            clazz = Class.forName("com.csse3200.game.ui.effects.TextEffects");
+        } catch (ClassNotFoundException e) {
+            clazz = Class.forName("com.csse3200.game.ui.effects.TypingInit");
+        }
+
+        Object inst = clazz.getDeclaredConstructor().newInstance();
+
+        Field basePlain = clazz.getDeclaredField("basePlain");
+        basePlain.setAccessible(true);
+        basePlain.set(inst, "Spark");
+
+        Label label = newLabel("ignored");
+
+        Method sparkle = clazz.getDeclaredMethod("sparkle", Label.class, float.class, float.class, float.class);
+        sparkle.setAccessible(true);
+        sparkle.invoke(inst, label, 1f, 5f, 0.1f); // ~6 frames at 60 FPS
+
+        Field taskField = clazz.getDeclaredField("task");
+        taskField.setAccessible(true);
+        Timer.Task task = (Timer.Task) taskField.get(inst);
+        assertNotNull(task);
+
+        // First frame should differ from basePlain.
+        task.run();
+        assertNotEquals("Spark", label.getText().toString());
+
+        int frames = Math.max(1, Math.round(0.1f * 60));
+        for (int i = 1; i < frames; i++) task.run();
+
+        // After last frame it should restore basePlain and cancel the task.
+        assertEquals("Spark", label.getText().toString());
+        assertFalse(task.isScheduled());
+    }
+
+    @Test
+    void staticPhase_whenHzZero_framesIdentical() throws Exception {
+        Class<?> clazz;
+        try {
+            clazz = Class.forName("com.csse3200.game.ui.effects.TextEffects");
+        } catch (ClassNotFoundException e) {
+            clazz = Class.forName("com.csse3200.game.ui.effects.TypingInit");
+        }
+
+        Object inst = clazz.getDeclaredConstructor().newInstance();
+
+        Field basePlain = clazz.getDeclaredField("basePlain");
+        basePlain.setAccessible(true);
+        basePlain.set(inst, "Static");
+
+        Label label = newLabel("ignored");
+
+        Method sparkle = clazz.getDeclaredMethod("sparkle", Label.class, float.class, float.class, float.class);
+        sparkle.setAccessible(true);
+        sparkle.invoke(inst, label, 1f, 0f, 0.2f); // hz=0 => static phase
+
+        Field taskField = clazz.getDeclaredField("task");
+        taskField.setAccessible(true);
+        Timer.Task task = (Timer.Task) taskField.get(inst);
+        assertNotNull(task);
+
+        task.run();
+        String a = label.getText().toString();
+        task.run();
+        String b = label.getText().toString();
+        assertEquals(a, b);
+    }
+
+    @Test
+    void restarting_cancels_previous_task() throws Exception {
+        Class<?> clazz;
+        try {
+            clazz = Class.forName("com.csse3200.game.ui.effects.TextEffects");
+        } catch (ClassNotFoundException e) {
+            clazz = Class.forName("com.csse3200.game.ui.effects.TypingInit");
+        }
+
+        Object inst = clazz.getDeclaredConstructor().newInstance();
+
+        Field basePlain = clazz.getDeclaredField("basePlain");
+        basePlain.setAccessible(true);
+        basePlain.set(inst, "Again");
+
+        Label label = newLabel("ignored");
+
+        Method sparkle = clazz.getDeclaredMethod("sparkle", Label.class, float.class, float.class, float.class);
+        sparkle.setAccessible(true);
+
+        // Start a long animation
+        sparkle.invoke(inst, label, 1f, 2f, 1.0f);
+        Field taskField = clazz.getDeclaredField("task");
+        taskField.setAccessible(true);
+        Timer.Task t1 = (Timer.Task) taskField.get(inst);
+        assertTrue(t1.isScheduled());
+
+        // Re-invoke with density==0 -> early return, but cancel() must run first.
+        sparkle.invoke(inst, label, 0f, 2f, 0.1f);
+        assertFalse(t1.isScheduled());
+        assertNull(taskField.get(inst));
+    }
+
+    @Test
+    void earlyReturn_when_prepareTyping_returns_null() throws Exception {
+        Object inst = newOwner();
+        Class<?> c = inst.getClass();
+
+        Field taskField = c.getDeclaredField("task");
+        taskField.setAccessible(true);
+        taskField.set(inst, null);
+
+        Method m = c.getDeclaredMethod(
+                "typewriterSmart", Label.class, String.class, float.class, float.class, float.class, Runnable.class);
+        m.setAccessible(true);
+
+        Label label = newLabel("keep");
+
+        // null fullText → prepareTyping(...) returns null
+        m.invoke(inst, label, null, 20f, 0.03f, 0.09f, (Runnable) null);
+
+        assertNull(taskField.get(inst), "No Timer task should be scheduled on early return");
+        assertEquals("", label.getText().toString(),
+                "Current implementation clears the label when init fails");
+    }
+
+    @ParameterizedTest(name = "[{index}] \"{0}\" ⇒ after 2 runs = \"{1}\"")
+    @MethodSource("doublePunctCases")
+    void doublePunctuation_scaling_branch_executes(String input, String expectedAfterSecondRun) throws Exception {
+        Object inst = newOwner();
+        Class<?> c = inst.getClass();
+
+        Method m = c.getDeclaredMethod("typewriterSmart",
+                Label.class, String.class, float.class, float.class, float.class, Runnable.class);
+        m.setAccessible(true);
+
+        Field taskField = c.getDeclaredField("task");
+        taskField.setAccessible(true);
+
+        Label label = newLabel("");
+        m.invoke(inst, label, input, 100f, 0.01f, 0.5f, (Runnable) () -> {
+        });
+
+        Timer.Task task = (Timer.Task) taskField.get(inst);
+        assertNotNull(task, "Task should be scheduled");
+
+        task.run(); // 'x'
+        assertEquals("x", label.getText().toString());
+
+        task.run(); // first punctuation; next char is same punctuation -> branch executes
+        assertEquals(expectedAfterSecondRun, label.getText().toString());
+    }
+
+    @Test
+    void progresses_chars_calls_onTick_and_finishes() throws Exception {
+        Object inst = newOwner();
+        Class<?> c = inst.getClass();
+
+        Field taskField = c.getDeclaredField("task");
+        taskField.setAccessible(true);
+
+        Method m = c.getDeclaredMethod("typewriterSmart", Label.class, String.class, float.class, float.class, float.class, Runnable.class);
+        m.setAccessible(true);
+
+        Label label = newLabel("");
+        AtomicInteger ticks = new AtomicInteger();
+
+        // Simple two-char text so we can hit the "finished" branch on the third run
+        m.invoke(inst, label, "ab", 60f, 0.01f, 0.02f, (Runnable) ticks::incrementAndGet);
+        Timer.Task task = (Timer.Task) taskField.get(inst);
+        assertNotNull(task, "Task should be scheduled immediately at t=0");
+
+        // 1st run → 'a'
+        task.run();
+        assertEquals("a", label.getText().toString());
+        assertEquals(1, ticks.get());
+
+        // 2nd run → 'b'
+        task.run();
+        assertEquals("ab", label.getText().toString());
+        assertEquals(2, ticks.get());
+
+        // 3rd run → i[0] >= len → cancel & keep final text
+        task.run();
+        assertEquals("ab", label.getText().toString());
+        assertFalse(task.isScheduled(), "Task should cancel itself after finishing");
+    }
+
+    @Test
+    void shortPause_branch_triggered_by_comma() throws Exception {
+        Object inst = newOwner();
+        Class<?> c = inst.getClass();
+
+        Field taskField = c.getDeclaredField("task");
+        taskField.setAccessible(true);
+
+        Method m = c.getDeclaredMethod("typewriterSmart", Label.class, String.class, float.class, float.class, float.class, Runnable.class);
+        m.setAccessible(true);
+
+        Label label = newLabel("");
+
+        // text with a comma to trigger shortPause branch
+        m.invoke(inst, label, "a,a", 50f, /*shortPause*/0.05f, /*longPause*/0.2f, null);
+        Timer.Task task = (Timer.Task) taskField.get(inst);
+        assertNotNull(task);
+
+        task.run(); // 'a'
+        assertEquals("a", label.getText().toString());
+
+        task.run(); // ',' → executes case ',', ';', ':'
+        assertEquals("a,", label.getText().toString());
+        assertTrue(task.isScheduled(), "Rescheduled after shortPause calculation");
+    }
+
+    @Test
+    void longPause_and_doublePunctuation_scaling_for_ellipsisLike_case() throws Exception {
+        Object inst = newOwner();
+        Class<?> c = inst.getClass();
+
+        Field taskField = c.getDeclaredField("task");
+        taskField.setAccessible(true);
+
+        Method m = c.getDeclaredMethod("typewriterSmart", Label.class, String.class, float.class, float.class, float.class, Runnable.class);
+        m.setAccessible(true);
+
+        Label label = newLabel("");
+
+        // 'a..b' will hit '.' with next '.' → extra *= 0.6f branch
+        m.invoke(inst, label, "a..b", 80f, 0.03f, 0.5f, null);
+        Timer.Task task = (Timer.Task) taskField.get(inst);
+        assertNotNull(task);
+
+        task.run(); // 'a'
+        assertEquals("a", label.getText().toString());
+
+        task.run(); // '.' with next '.' → executes longPause, then scaling (extra *= 0.6)
+        assertEquals("a.", label.getText().toString());
+
+        // Not asserting the actual delay time; executing this branch is enough for coverage.
+        assertTrue(task.isScheduled());
+    }
+
+    @Test
+    void covers_refreshBases_branch_then_animates() throws Exception {
+        // basePlain is null so (basePlain == null || isEmpty) is true
+        Class<?> clazz = ownerClass();
+        Constructor<?> ctor = clazz.getDeclaredConstructor();
+        ctor.setAccessible(true);
+        Object inst = ctor.newInstance();
+
+        Field basePlain = clazz.getDeclaredField("basePlain");
+        basePlain.setAccessible(true);
+        basePlain.set(inst, null);                          // <- triggers refreshBases path
+
+        Label label = newLabel("A[B");              // include '[' to hit the "[[" escape branch
+        Method sweep = clazz.getDeclaredMethod("sweepRainbow", Label.class, float.class, float.class, float.class);
+        sweep.setAccessible(true);
+
+        // invoke and manually tick one frame
+        sweep.invoke(inst, label, /*bandHz*/1f, /*perCharShiftDeg*/10f, /*travelHz*/4f);
+
+        Field taskField = clazz.getDeclaredField("task");
+        taskField.setAccessible(true);
+        Timer.Task task = (Timer.Task) taskField.get(inst);
+        assertNotNull(task, "Task should be scheduled after refreshBases fills basePlain");
+
+        task.run(); // drive one frame
+
+        String text = label.getText().toString();
+        assertTrue(text.startsWith("[#"), "should prepend hex colour tags");
+        assertTrue(text.contains("[["), "‘[’ must be escaped as ‘[[’");
+        assertTrue(text.endsWith("[]"), "LibGDX markup close tag should be present");
+    }
+
+    @Test
+    void covers_early_return_when_n_is_zero() throws Exception {
+        // basePlain empty, label empty -> n == 0 triggers early return
+        Class<?> clazz = ownerClass();
+        Constructor<?> ctor = clazz.getDeclaredConstructor();
+        ctor.setAccessible(true);
+        Object inst = ctor.newInstance();
+
+        Field basePlain = clazz.getDeclaredField("basePlain");
+        basePlain.setAccessible(true);
+        basePlain.set(inst, "");                            // empty triggers refreshBases, but label is also empty
+
+        Label label = newLabel("");
+
+        Field taskField = clazz.getDeclaredField("task");
+        taskField.setAccessible(true);
+        taskField.set(inst, null);
+
+        Method sweep = clazz.getDeclaredMethod("sweepRainbow", Label.class, float.class, float.class, float.class);
+        sweep.setAccessible(true);
+
+        // Act
+        sweep.invoke(inst, label, 2f, 15f, 3f);
+
+        // returned before scheduling
+        assertNull(taskField.get(inst), "No task should be scheduled when n==0");
+        assertEquals("", label.getText().toString(), "Label text must remain unchanged on early return");
+    }
 
     // ---------------------- Gdx.files stub ----------------------
     static class MemFiles implements Files {

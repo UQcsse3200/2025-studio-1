@@ -1064,19 +1064,19 @@ public class TextEffects {
 
     private record TypingInit(String text, float interval, StringBuilder buf, int[] idx) {
 
-        @Override
+        private static boolean idxEquals(int[] a, int[] b) {
+            return java.util.Arrays.equals(a, b);
+        }
+
         public boolean equals(Object o) {
             if (o == this) return true;
+            if (!(o instanceof TypingInit(String t, float itv, StringBuilder b, int[] idx2))) return false;
 
-            // record pattern: destructure 'o' into its components
-            if (!(o instanceof TypingInit(String t, float itv, StringBuilder b, int[] idx2))) {
-                return false;
-            }
+            boolean sameInterval = Float.compare(this.interval, itv) == 0;
+            boolean sameText = java.util.Objects.equals(this.text, t);
+            boolean sameBuf = this.buf == b;
 
-            return Float.compare(this.interval, itv) == 0
-                    && java.util.Objects.equals(this.text, t)
-                    && this.buf == b
-                    && java.util.Arrays.equals(this.idx, idx2);
+            return sameInterval && sameText && sameBuf && idxEquals(this.idx, idx2);
         }
 
 
@@ -1404,14 +1404,8 @@ public class TextEffects {
             return true;
         }
 
-        private static final class Visual {
-            final boolean rainbow;
-            final float rhz;
-            final float rshift;
-            final String flashHexA;
-            final String flashHexB;
-
-            Visual(boolean rainbow, float rhz, float rshift, String flashHexA, String flashHexB) {
+        private record Visual(boolean rainbow, float rhz, float rshift, String flashHexA, String flashHexB) {
+            private Visual(boolean rainbow, float rhz, float rshift, String flashHexA, String flashHexB) {
                 this.rainbow = rainbow;
                 this.rhz = rhz;
                 this.rshift = rshift;
@@ -1424,16 +1418,7 @@ public class TextEffects {
             }
         }
 
-        private static final class BlastExtras {
-            final int[] flashLeft;
-            final int[] overshootLeft;
-            final int[] postLockHold;
-
-            BlastExtras(int[] flashLeft, int[] overshootLeft, int[] postLockHold) {
-                this.flashLeft = flashLeft;
-                this.overshootLeft = overshootLeft;
-                this.postLockHold = postLockHold;
-            }
+        private record BlastExtras(int[] flashLeft, int[] overshootLeft, int[] postLockHold) {
         }
     }
 }
