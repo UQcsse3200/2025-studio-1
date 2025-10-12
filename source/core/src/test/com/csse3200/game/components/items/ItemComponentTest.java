@@ -24,7 +24,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(GameExtension.class)
-public class ItemComponentTest {
+ class ItemComponentTest {
 
     @BeforeEach
     void registerResourceService() {
@@ -76,13 +76,13 @@ public class ItemComponentTest {
         }
 
         @Test
-        public void testCountGetterSetter() {
+         void testCountGetterSetter() {
             item.setCount(2);
             assertEquals(2, item.getCount());
         }
 
         @Test
-        public void testTextureGetterSetter() {
+         void testTextureGetterSetter() {
             item.setTexture("images/mud.png");
             assertEquals("images/mud.png", item.getTexture());
         }
@@ -112,25 +112,25 @@ public class ItemComponentTest {
         }
 
         @Test
-        public void testNegativeCountEdgeCase() {
+         void testNegativeCountEdgeCase() {
             item.setCount(-1);
             assertFalse(item.getCount() > 0, "Count should be a positive integer");
         }
 
         @Test
-        public void testOutOfBoundEdgeCountCase() {
+         void testOutOfBoundEdgeCountCase() {
             item.setCount(6);
             assertFalse(item.getCount() < 5, "Max item count can be 5.");
         }
 
         @Test
-        public void testNullEdgeCountCase() {
+         void testNullEdgeCountCase() {
             item.setCount(0);
             assertEquals(0, item.getCount());
         }
 
         @Test
-        public void testNullTextureEdgeCase() {
+         void testNullTextureEdgeCase() {
             item.setTexture(null);
             assertNull(item.getTexture());
         }
