@@ -1,6 +1,5 @@
 package com.csse3200.game.components.tasks;
 
-import com.badlogic.gdx.physics.box2d.Body;
 import com.csse3200.game.ai.tasks.DefaultTask;
 import com.csse3200.game.ai.tasks.PriorityTask;
 import com.csse3200.game.entities.Entity;
