@@ -27,7 +27,7 @@ public abstract class AbstractChaseTask extends DefaultTask implements PriorityT
      * @param viewDistance     Maximum distance from the entity at which chasing can start.
      * @param maxChaseDistance Maximum distance from the entity while chasing before giving up.
      */
-    public AbstractChaseTask(Entity target, int priority, float viewDistance, float maxChaseDistance) {
+    protected AbstractChaseTask(Entity target, int priority, float viewDistance, float maxChaseDistance) {
         this.target = target;
         this.priority = priority;
         this.viewDistance = viewDistance;
