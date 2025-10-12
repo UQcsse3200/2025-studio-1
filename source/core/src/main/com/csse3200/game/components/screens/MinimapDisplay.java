@@ -1,5 +1,6 @@
 package com.csse3200.game.components.screens;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
@@ -44,6 +45,7 @@ public class MinimapDisplay extends BaseScreenDisplay {
      */
     public MinimapDisplay(GdxGame game) {
         super(game);
+        this.minimap = new Minimap(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
     }
 
     /**
@@ -160,7 +162,7 @@ public class MinimapDisplay extends BaseScreenDisplay {
     /**
      * Renders each of the rooms that need to be displayed in the minimap
      */
-    private void renderMinimapImages() {
+    void renderMinimapImages() {
         // Clear old images
         minimapTable.clearChildren();
 
@@ -198,7 +200,7 @@ public class MinimapDisplay extends BaseScreenDisplay {
      * @param amountY The scroll direction, negative is scroll down i.e., zoom out and
      *                positive is scroll up i.e., zoom in
      */
-    private void zoom(float x, float y, float amountY) {
+    void zoom(float x, float y, float amountY) {
         float oldScale = minimap.getScale();
 
         // Scroll up = zoom in; Scroll down = zoom out
