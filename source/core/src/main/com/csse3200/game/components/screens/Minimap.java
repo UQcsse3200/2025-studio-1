@@ -203,7 +203,7 @@ public class Minimap {
      */
     public void pan(Vector2 vector) {
         centre.x += vector.x * (1 / scale);
-        centre.y += vector.y * (1 / scale);
+        // Vertical panning is locked
     }
 
     /**
