@@ -4,6 +4,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.csse3200.game.GdxGame;
 import com.csse3200.game.extensions.GameExtension;
 import com.csse3200.game.input.InputService;
@@ -15,6 +17,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.mockito.ArgumentCaptor;
+import org.mockito.InOrder;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
@@ -185,6 +189,32 @@ public class MinimapDisplayTest {
     }
 
     @Test
+    void testPanDelegatesToMinimapAndThenRenders() {
+        // Spy so we can verify renderMinimapImages() invocation/order
+        MinimapDisplay spyDisplay = spy(display);
+
+        Vector2 delta = new Vector2(5f, -3f);
+        spyDisplay.pan(delta);
+
+        // Verify minimap.pan called with same vector and render called afterwards
+        InOrder inOrder = inOrder(mockMinimap, spyDisplay);
+        inOrder.verify(mockMinimap).pan(delta);
+        inOrder.verify(spyDisplay).renderMinimapImages();
+    }
+
+    @Test
+    void testPanPassesExactVectorInstance() {
+        Vector2 delta = new Vector2(10f, 20f);
+        display.pan(delta);
+
+        ArgumentCaptor<Vector2> captor = ArgumentCaptor.forClass(Vector2.class);
+        verify(mockMinimap).pan(captor.capture());
+
+        // assert the same reference (no copy was made)
+        assertSame(delta, captor.getValue(), "pan should forward the same Vector2 instance");
+    }
+
+    @Test
     void testRenderMinimapImagesWithMultipleRoomsAndReuse() throws Exception {
         Map<Vector2, String> rooms = new HashMap<>();
         rooms.put(new Vector2(10, 10), "images/minimap-images/Casino.png");
@@ -250,5 +280,124 @@ public class MinimapDisplayTest {
     @Test
     void testGetZIndex() {
         assertEquals(100f, display.getZIndex());
+    }
+
+    static class TestableMinimapDisplay extends MinimapDisplay {
+        public TestableMinimapDisplay(GdxGame game, Minimap minimap) {
+            super(game, minimap);
+        }
+
+        @Override
+        public void buildUI(Table root) {
+            super.buildUI(root);
+        }
+
+        public InputListener getMinimapListener() throws Exception {
+            Table table = getField(this, "minimapTable");
+            return (InputListener) table.getListeners().get(0);
+        }
+    }
+
+    @Test
+    void testTouchDownStoresCoordinates() throws Exception {
+        GdxGame game = mock(GdxGame.class);
+        Minimap minimap = mock(Minimap.class);
+        TestableMinimapDisplay testDisplay = new TestableMinimapDisplay(game, minimap);
+        testDisplay.create();
+
+        Table root = new Table();
+        testDisplay.buildUI(root);
+        InputListener listener = testDisplay.getMinimapListener();
+
+        InputEvent event = mock(InputEvent.class);
+
+        boolean result = listener.touchDown(event, 123f, 456f, 0, 0);
+        assertTrue(result, "touchDown should return true");
+    }
+
+    @Test
+    void testTouchDraggedPansMinimapAndRerenders() throws Exception {
+        GdxGame game = mock(GdxGame.class);
+        Minimap minimap = mock(Minimap.class);
+        when(minimap.getScale()).thenReturn(1.0f);
+        when(minimap.render()).thenReturn(new HashMap<>());
+        TestableMinimapDisplay testDisplay = new TestableMinimapDisplay(game, minimap);
+        testDisplay.create();
+
+        Table root = new Table();
+        testDisplay.buildUI(root);
+        InputListener listener = testDisplay.getMinimapListener();
+
+        InputEvent event = mock(InputEvent.class);
+
+        // First set "lastX/Y" via touchDown
+        listener.touchDown(event, 50f, 50f, 0, 0);
+
+        // Drag event - should cause pan
+        listener.touchDragged(event, 60f, 70f, 0);
+
+        verify(minimap, atLeastOnce()).pan(any(Vector2.class));
+    }
+
+    @Test
+    void testScrolledTriggersZoom() throws Exception {
+        GdxGame game = mock(GdxGame.class);
+        Minimap minimap = mock(Minimap.class);
+        when(minimap.getScale()).thenReturn(1.0f);
+        when(minimap.getCentre()).thenReturn(new Vector2(0, 0));
+
+        TestableMinimapDisplay testDisplay = spy(new TestableMinimapDisplay(game, minimap));
+        testDisplay.create();
+
+        Table root = new Table();
+        testDisplay.buildUI(root);
+        InputListener listener = testDisplay.getMinimapListener();
+
+        InputEvent event = mock(InputEvent.class);
+
+        listener.scrolled(event, 100f, 200f, 0f, 1f);
+
+        verify(testDisplay).zoom(100f, 200f, 1f);
+    }
+
+    @Test
+    void testTouchDraggedUpdatesLastCoordinates() throws Exception {
+        GdxGame game = mock(GdxGame.class);
+        Minimap minimap = mock(Minimap.class);
+        when(minimap.render()).thenReturn(new HashMap<>());
+        when(minimap.getScale()).thenReturn(1.0f);
+        TestableMinimapDisplay testDisplay = new TestableMinimapDisplay(game, minimap);
+        testDisplay.create();
+
+        Table root = new Table();
+        testDisplay.buildUI(root);
+        InputListener listener = testDisplay.getMinimapListener();
+
+        InputEvent event = mock(InputEvent.class);
+
+        listener.touchDown(event, 10f, 10f, 0, 0);
+        listener.touchDragged(event, 20f, 30f, 0);
+        listener.touchDragged(event, 40f, 60f, 0);
+
+        verify(minimap, atLeast(2)).pan(any(Vector2.class));
+    }
+
+    @Test
+    void testBuildUIAssignsScrollFocus() throws Exception {
+        GdxGame game = mock(GdxGame.class);
+        Minimap minimap = mock(Minimap.class);
+        when(minimap.render()).thenReturn(new HashMap<>());
+        when(minimap.getScale()).thenReturn(1.0f);
+
+        TestableMinimapDisplay testDisplay = new TestableMinimapDisplay(game, minimap);
+        testDisplay.create();
+
+        Stage mockStage = mock(Stage.class);
+        setField(testDisplay, "stage", mockStage);
+
+        Table root = new Table();
+        testDisplay.buildUI(root);
+
+        verify(mockStage).setScrollFocus(any(Table.class));
     }
 }
