@@ -3,12 +3,15 @@ package com.csse3200.game.components.player;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.csse3200.game.components.items.ItemComponent;
+import com.csse3200.game.components.items.ItemComponentTest;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
+import com.csse3200.game.entities.configs.ItemTypes;
 import com.csse3200.game.extensions.GameExtension;
 import com.csse3200.game.physics.PhysicsEngine;
 import com.csse3200.game.physics.PhysicsService;
 import com.csse3200.game.rendering.RenderService;
+import com.csse3200.game.rendering.TextureRenderComponent;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
 import org.junit.jupiter.api.BeforeEach;
@@ -272,4 +275,63 @@ class ItemPickUpComponentTest {
         // Removed but not respawned
         assertEquals(0, inventory.getSize());
     }
+
+    @Nested
+    @DisplayName("Create item from texture")
+    class CreationBehaviour {
+        ItemPickUpComponent component;
+
+        @BeforeEach
+        void setUp() {
+            component = new ItemPickUpComponent(mock(InventoryComponent.class));
+        }
+
+        @Test
+        void shouldCreateDagger() {
+            String tex = "dagger.png";
+            Entity dagger = component.createItemFromTexture(tex);
+            assertEquals("dagger", dagger.getComponent(ItemComponent.class).getName());
+            assertEquals(ItemTypes.MELEE, dagger.getComponent(ItemComponent.class).getType());
+        }
+
+        @Test
+        void shouldCreatePistol() {
+            String tex = "pistol.png";
+            Entity pistol = component.createItemFromTexture(tex);
+            assertEquals("pistol", pistol.getComponent(ItemComponent.class).getName());
+            assertEquals(ItemTypes.RANGED, pistol.getComponent(ItemComponent.class).getType());
+        }
+
+        @Test
+        void shouldCreateRifle() {
+            String tex = "rifle.png";
+            Entity rifle = component.createItemFromTexture(tex);
+            assertEquals("rifle", rifle.getComponent(ItemComponent.class).getName());
+            assertEquals(ItemTypes.RANGED, rifle.getComponent(ItemComponent.class).getType());
+        }
+
+        @Test
+        void shouldCreateLightsaber() {
+            String tex = "lightsaberSingle.png";
+            Entity lightsaber = component.createItemFromTexture(tex);
+            assertEquals("lightsaber", lightsaber.getComponent(ItemComponent.class).getName());
+            assertEquals(ItemTypes.MELEE, lightsaber.getComponent(ItemComponent.class).getType());
+        }
+
+        @Test
+        void shouldCreateRocketLauncher() {
+            String tex = "rocketlauncher.png";
+            Entity rocketlauncher = component.createItemFromTexture(tex);
+            assertEquals("rocketlauncher", rocketlauncher.getComponent(ItemComponent.class).getName());
+            assertEquals(ItemTypes.RANGED, rocketlauncher.getComponent(ItemComponent.class).getType());
+        }
+
+        @Test
+        void shouldntCreate() {
+            String tex = "random";
+            Entity ran = component.createItemFromTexture(tex);
+            assertNull(ran);
+        }
+    }
+
 }
