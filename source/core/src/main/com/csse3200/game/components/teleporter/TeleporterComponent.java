@@ -81,7 +81,7 @@ public class TeleporterComponent extends Component {
             return;
         }
 
-        if (isPlayerClose(player) && Gdx.input.isKeyJustPressed(Input.Keys.E)) {
+        if (isPlayerClose(player) && Gdx.input.isKeyJustPressed(Input.Keys.T)) {
             showMenu();
         }
     }
