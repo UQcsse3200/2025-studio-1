@@ -460,7 +460,7 @@ public class PlayerActions extends Component {
             mag.setCurrentAmmo(mag.getCurrentAmmo() - 1);
         }
 //        mag.setCurrentAmmo(mag.getCurrentAmmo() - 1);
-
+        entity.getEvents().trigger("after shoot");
         timeSinceLastAttack = 0;
     }
 
@@ -586,6 +586,7 @@ public class PlayerActions extends Component {
 
                 reloadSound.play();
                 timesinceLastReload = 0f;
+                entity.getEvents().trigger("after reload");
             }
         }
     }
