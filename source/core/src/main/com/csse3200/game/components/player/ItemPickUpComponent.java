@@ -156,7 +156,15 @@ public class ItemPickUpComponent extends Component {
             weapon.create();
             // The two following lines of code were generate by ChatGPT
             MagazineComponent mag = weapon.getComponent(MagazineComponent.class);
-            if (mag != null) mag.setTimeSinceLastReload(999f);
+            if (mag != null)  {
+                mag.setTimeSinceLastReload(999f);
+                //copies across magazine data from dropped item
+                if (item.hasComponent(MagazineComponent.class)) {
+                    mag.setCurrentAmmo(item.getComponent(MagazineComponent.class).getCurrentAmmo());
+                }
+
+            }
+
 
             boolean added = inventory.addItem(weapon);
             if (added) {
@@ -262,6 +270,14 @@ public class ItemPickUpComponent extends Component {
             logger.warn("Drop failed: could not remove item at index {}", focusedIndex);
             return;
         }
+        //Gets old magazine data
+        MagazineComponent mag = null;
+        if (item.hasComponent(MagazineComponent.class)) {
+            mag = new MagazineComponent(item.
+                    getComponent(MagazineComponent.class).getMaxAmmo());
+            mag.setCurrentAmmo(item.
+                    getComponent(MagazineComponent.class).getCurrentAmmo());
+        }
 
         // remove the item from being equipped
         entity.getComponent(PlayerEquipComponent.class).setItem(null, null);
@@ -276,6 +292,10 @@ public class ItemPickUpComponent extends Component {
         Entity newItem = WorldPickUpFactory.createPickupFromTexture(tex);
         if (newItem == null) {
             return;
+        }
+        //adds mag to the item, if it has it
+        if (mag != null) {
+            newItem.addComponent(mag);
         }
         // Make dropped items static so they behave like map-placed items
         PhysicsComponent phys = newItem.getComponent(PhysicsComponent.class);
