@@ -2,14 +2,9 @@ package com.csse3200.game.components.tasks;
 
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
-import com.csse3200.game.ai.tasks.DefaultTask;
-import com.csse3200.game.ai.tasks.PriorityTask;
 import com.csse3200.game.components.enemy.ProjectileLauncherComponent;
 import com.csse3200.game.entities.Entity;
-import com.csse3200.game.physics.PhysicsEngine;
 import com.csse3200.game.physics.PhysicsLayer;
-import com.csse3200.game.physics.raycast.RaycastHit;
-import com.csse3200.game.rendering.DebugRenderer;
 import com.csse3200.game.services.GameTime;
 import com.csse3200.game.services.ServiceLocator;
 import org.slf4j.Logger;
@@ -19,16 +14,8 @@ import org.slf4j.LoggerFactory;
  * Chases a target entity indefinitely and the entity being visible causes a speed increase
  * CAN have added functionality to launch projectiles at the player too if wanted.
  */
-public class GPTFastChaseTask extends DefaultTask implements PriorityTask {
+public class GPTFastChaseTask extends AbstractChaseTask {
     private static final Logger logger = LoggerFactory.getLogger(GPTFastChaseTask.class);
-    private final Entity target;
-    private final int priority;
-    private final Vector2 speed;
-    private final PhysicsEngine physics;
-    private final DebugRenderer debugRenderer;
-    private final RaycastHit hit = new RaycastHit();
-    private final float firingCooldown = 3f;
-    private MovementTask movementTask;
     // Projectile configurations
     private ProjectileLauncherComponent projectileLauncher = null;
     private GameTime timeSource = null;
@@ -42,14 +29,10 @@ public class GPTFastChaseTask extends DefaultTask implements PriorityTask {
     /**
      * @param target   The entity to chase.
      * @param priority Task priority when chasing (0 when not chasing).
-     * @param speed    The speed at which the enemy will chase the player
+     * @param speed    The speed to move at
      */
     public GPTFastChaseTask(Entity target, int priority, Vector2 speed) {
-        this.target = target;
-        this.priority = priority;
-        this.speed = speed;
-        physics = ServiceLocator.getPhysicsService().getPhysics();
-        debugRenderer = ServiceLocator.getRenderService().getDebug();
+        super(target, priority, speed);
     }
 
     /**
@@ -61,11 +44,7 @@ public class GPTFastChaseTask extends DefaultTask implements PriorityTask {
      */
     public GPTFastChaseTask(Entity target, int priority, Vector2 speed,
                             ProjectileLauncherComponent projectileLauncher, Entity shooter) {
-        this.target = target;
-        this.priority = priority;
-        this.speed = speed;
-        physics = ServiceLocator.getPhysicsService().getPhysics();
-        debugRenderer = ServiceLocator.getRenderService().getDebug();
+        super(target, priority, speed);
 
         // Projectile launcher
         this.projectileLauncher = projectileLauncher;
@@ -94,9 +73,9 @@ public class GPTFastChaseTask extends DefaultTask implements PriorityTask {
         Vector2 targetPos = target.getPosition();
 
         // Detect obstacles in each direction
-        boolean up    = hasObstacleUp(currentPos);
-        boolean down  = hasObstacleDown(currentPos);
-        boolean left  = hasObstacleLeft(currentPos);
+        boolean up = hasObstacleUp(currentPos);
+        boolean down = hasObstacleDown(currentPos);
+        boolean left = hasObstacleLeft(currentPos);
         boolean right = hasObstacleRight(currentPos);
 
         boolean obstaclesNearby = up || down || left || right;
@@ -112,7 +91,7 @@ public class GPTFastChaseTask extends DefaultTask implements PriorityTask {
             // Pick a nearby offset position to avoid obstacle
             offsetPos = getOffsetPosition(currentPos, targetPos, up, down, left, right);
             movementTask.setTarget(offsetPos);
-        }  else {
+        } else {
             // No obstacles in the way —> move directly toward target
             stuck = false;
             movementTask.setTarget(targetPos);
@@ -164,8 +143,7 @@ public class GPTFastChaseTask extends DefaultTask implements PriorityTask {
             rawX = currentPos.x + offsetDistance;
             if (right) rawX = currentPos.x - offsetDistance;
             rawY = currentPos.y + offsetSteer;
-        }
-        else if (left && targetLeft) {  // move up and steer right
+        } else if (left && targetLeft) {  // move up and steer right
             rawX = currentPos.x + offsetSteer;
             rawY = currentPos.y + offsetDistance;
             if (up) rawY = currentPos.y - offsetDistance;
@@ -188,6 +166,7 @@ public class GPTFastChaseTask extends DefaultTask implements PriorityTask {
         if (isTargetVisible() && projectileLauncher != null) {
             currentCooldown += timeSource.getDeltaTime();
 
+            float firingCooldown = 3f;
             if (currentCooldown >= firingCooldown) {
                 currentCooldown = currentCooldown % firingCooldown;
 
@@ -198,12 +177,6 @@ public class GPTFastChaseTask extends DefaultTask implements PriorityTask {
                         new Vector2(0.2f, 0.8f), new Vector2(0.5f, 0.5f));
             }
         }
-    }
-
-    @Override
-    public void stop() {
-        super.stop();
-        movementTask.stop();
     }
 
     @Override

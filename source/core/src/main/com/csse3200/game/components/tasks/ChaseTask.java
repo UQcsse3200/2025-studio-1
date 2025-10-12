@@ -16,4 +16,9 @@ public class ChaseTask extends AbstractChaseTask {
     public ChaseTask(Entity target, int priority, float viewDistance, float maxChaseDistance) {
         super(target, priority, viewDistance, maxChaseDistance);
     }
+
+    @Override
+    protected void triggerStartEvent() {
+        this.owner.getEntity().getEvents().trigger("chaseStart");
+    }
 }

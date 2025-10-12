@@ -1,5 +1,6 @@
 package com.csse3200.game.components.tasks;
 
+import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.ai.tasks.DefaultTask;
 import com.csse3200.game.ai.tasks.PriorityTask;
 import com.csse3200.game.entities.Entity;
@@ -7,10 +8,12 @@ import com.csse3200.game.physics.PhysicsEngine;
 import com.csse3200.game.physics.raycast.RaycastHit;
 import com.csse3200.game.rendering.DebugRenderer;
 import com.csse3200.game.services.ServiceLocator;
+import com.csse3200.game.utils.math.Vector2Utils;
 
 public abstract class AbstractChaseTask extends DefaultTask implements PriorityTask {
     protected Entity target;
     protected int priority;
+    protected Vector2 speed = Vector2Utils.ONE;
     protected float viewDistance;
     protected float maxChaseDistance;
     protected PhysicsEngine physics;
@@ -33,14 +36,43 @@ public abstract class AbstractChaseTask extends DefaultTask implements PriorityT
         debugRenderer = ServiceLocator.getRenderService().getDebug();
     }
 
+    /**
+     * @param target   The entity to chase.
+     * @param priority Task priority when chasing (0 when not chasing).
+     * @param speed    The speed at which to move at when chasing
+     */
+    public AbstractChaseTask(Entity target, int priority, Vector2 speed) {
+        this.target = target;
+        this.priority = priority;
+        this.speed = speed;
+        physics = ServiceLocator.getPhysicsService().getPhysics();
+        debugRenderer = ServiceLocator.getRenderService().getDebug();
+    }
+
     @Override
     public void start() {
         super.start();
-        movementTask = new MovementTask(target.getPosition());
+        movementTask = new MovementTask(target.getPosition(), getSpeed());
         movementTask.create(owner);
         movementTask.start();
 
-        this.owner.getEntity().getEvents().trigger("chaseStart");
+        triggerStartEvent();
+    }
+
+    /**
+     * Base implementation does nothing, children override to
+     * trigger a specified event if needed.
+     */
+    protected void triggerStartEvent() {
+    }
+
+    /**
+     * The speed to move at
+     *
+     * @return The set speed
+     */
+    protected Vector2 getSpeed() {
+        return speed;
     }
 
     @Override
