@@ -163,6 +163,91 @@ public class MinimapDisplayTest {
     }
 
     @Test
+    void testZoomNoScrollDoesNothing() {
+        when(mockMinimap.getScale()).thenReturn(1.0f);
+        when(mockMinimap.getCentre()).thenReturn(new Vector2(0, 0));
+
+        display.zoom(150, 150, 0f);
+
+        Vector2 zeroPan =  new Vector2(0, 0);
+
+        verify(mockMinimap).zoom(0f);
+        verify(mockMinimap).pan(zeroPan);
+    }
+
+    @Test
+    void testZoomExtremeScrollValues() {
+        when(mockMinimap.getScale()).thenReturn(1.0f, 1.25f);
+        when(mockMinimap.getCentre()).thenReturn(new Vector2(0, 0));
+
+        assertDoesNotThrow(() -> display.zoom(100f, 200f, 9999f));
+        assertDoesNotThrow(() -> display.zoom(100f, 200f, -9999f));
+    }
+
+    @Test
+    void testRenderMinimapImagesWithMultipleRoomsAndReuse() throws Exception {
+        Map<Vector2, String> rooms = new HashMap<>();
+        rooms.put(new Vector2(10, 10), "images/minimap-images/Casino.png");
+        rooms.put(new Vector2(20, 20), "images/minimap-images/Elevator.png");
+
+        when(mockMinimap.render()).thenReturn(rooms);
+        when(mockMinimap.getScale()).thenReturn(1.0f);
+
+        Map<String, Texture> texCache = spy(new HashMap<>());
+        setField(display, "textures", texCache);
+
+        display.renderMinimapImages();
+
+        verify(texCache, times(2)).computeIfAbsent(anyString(), any());
+    }
+
+    @Test
+    void testDisposeHandlesNullStageAndDimmer() throws Exception {
+        setField(display, "minimapTable", new Table());
+        setField(display, "stage", null);
+        setField(display, "dimmer", null);
+
+        Texture tex = mock(Texture.class);
+        Map<String, Texture> map = new HashMap<>();
+        map.put("x", tex);
+        setField(display, "textures", map);
+
+        display.dispose();
+
+        verify(tex).dispose();
+    }
+
+    @Test
+    void testZoomInOutSequence() {
+        when(mockMinimap.getScale()).thenReturn(1.0f);
+        display.zoomIn();
+        verify(mockMinimap).zoom(25f);
+
+        when(mockMinimap.getScale()).thenReturn(1.25f);
+        display.zoomOut();
+        verify(mockMinimap).zoom(-25f);
+    }
+
+    @Test
+    void testDisposeWithNullTextures() throws Exception {
+        Map<String, Texture> texMap = new HashMap<>();
+        texMap.put("a", null);
+        setField(display, "textures", texMap);
+
+        display.dispose(); // should not throw
+    }
+
+    @Test
+    void testZoomPanOffsetComputation() {
+        when(mockMinimap.getScale()).thenReturn(1.0f, 1.25f);
+        when(mockMinimap.getCentre()).thenReturn(new Vector2(0, 0));
+
+        display.zoom(50f, 50f, 1f);
+
+        verify(mockMinimap).pan(argThat(v -> Math.abs(v.len()) > 0));
+    }
+
+    @Test
     void testGetZIndex() {
         assertEquals(100f, display.getZIndex());
     }
