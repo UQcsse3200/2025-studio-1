@@ -39,16 +39,6 @@ public class MinimapDisplay extends BaseScreenDisplay {
     private final Map<String, Texture> textures = new HashMap<>();
 
     /**
-     * Constructs a screen display bound to a game instance.
-     *
-     * @param game game instance for navigation (e.g., {@link #backMainMenu()})
-     */
-    public MinimapDisplay(GdxGame game) {
-        super(game);
-        this.minimap = new Minimap(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-    }
-
-    /**
      * Constructs a screen display bound to a game instance and minimap.
      *
      * @param game game instance for navigation (e.g., {@link #backMainMenu()})
