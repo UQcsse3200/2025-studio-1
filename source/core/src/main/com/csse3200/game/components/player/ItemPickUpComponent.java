@@ -315,6 +315,7 @@ public class ItemPickUpComponent extends Component {
         if (texture.endsWith("dagger.png")) return WeaponsFactory.createWeapon(Weapons.DAGGER);
         if (texture.endsWith("pistol.png")) return WeaponsFactory.createWeapon(Weapons.PISTOL);
         if (texture.endsWith("rifle.png")) return WeaponsFactory.createWeapon(Weapons.RIFLE);
+        if (texture.endsWith("rocketlauncher.png")) return WeaponsFactory.createWeapon(Weapons.LAUNCHER);
         if (texture.endsWith("lightsaberSingle.png")) return WeaponsFactory.createWeapon(Weapons.LIGHTSABER);
         if (texture.endsWith("rapidfirepowerup.png")) return PowerupsFactory.createRapidFire();
         if (texture.endsWith("tree.png")) return ObstacleFactory.createTree();
