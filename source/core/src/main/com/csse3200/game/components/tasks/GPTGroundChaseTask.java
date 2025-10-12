@@ -14,8 +14,6 @@ import com.csse3200.game.rendering.DebugRenderer;
 import com.csse3200.game.services.GameTime;
 import com.csse3200.game.services.ServiceLocator;
 
-import static com.csse3200.game.components.tasks.TurretTask.checkVisibility;
-
 public abstract class GPTGroundChaseTask extends DefaultTask implements PriorityTask {
     protected Entity target;
     protected int priority;
@@ -114,11 +112,12 @@ public abstract class GPTGroundChaseTask extends DefaultTask implements Priority
      * Base implementation does nothing, children override to
      * trigger a specified event if needed.
      */
-    protected void triggerStartEvent() {}
+    protected void triggerStartEvent() {
+    }
 
     public abstract int getPriority();
 
     protected boolean isTargetVisible() {
-        return checkVisibility(target, owner.getEntity(), physics, hit, debugRenderer);
+        return TaskUtils.isVisible(owner.getEntity(), target, physics, debugRenderer, hit);
     }
 }

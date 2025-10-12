@@ -86,15 +86,6 @@ public class DashAttackTask extends DefaultTask implements PriorityTask {
     }
 
     private boolean isTargetVisible() {
-        Vector2 from = owner.getEntity().getCenterPosition();
-        Vector2 to = target.getCenterPosition();
-
-        // If there is an obstacle in the path to the player, not visible.
-        if (physics.raycast(from, to, PhysicsLayer.OBSTACLE, hit)) {
-            debugRenderer.drawLine(from, hit.point);
-            return false;
-        }
-        debugRenderer.drawLine(from, to);
-        return true;
+        return TaskUtils.isVisible(owner.getEntity(), target, physics, debugRenderer, hit);
     }
 }
