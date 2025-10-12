@@ -189,10 +189,6 @@ public class GPTFastChaseTask extends AbstractChaseTask {
         return -1;
     }
 
-    private boolean isTargetVisible() {
-        return TaskUtils.isVisible(owner.getEntity(), target, physics, debugRenderer, hit);
-    }
-
     /**
      * Checks whether the enemy has successfully avoided the obstacle
      * by reaching the offset position.

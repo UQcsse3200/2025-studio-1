@@ -1,7 +1,6 @@
 package com.csse3200.game.components.tasks;
 
 import com.csse3200.game.entities.Entity;
-import com.csse3200.game.physics.components.PhysicsComponent;
 
 /**
  * Ground slow-chase for GhostGPT: set X only; Box2D gravity handles Y.

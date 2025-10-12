@@ -30,8 +30,4 @@ public class GPTSlowChaseTask extends AbstractChaseTask {
         }
         return -1;
     }
-
-    private boolean isTargetVisible() {
-        return TaskUtils.isVisible(owner.getEntity(), target, physics, debugRenderer, hit);
-    }
 }

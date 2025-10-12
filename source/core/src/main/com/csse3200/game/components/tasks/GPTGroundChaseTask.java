@@ -38,7 +38,7 @@ public abstract class GPTGroundChaseTask extends DefaultTask implements Priority
      * @param priority task priority when chasing
      * @param speed    horizontal speed (units per second)
      */
-    public GPTGroundChaseTask(Entity target, int priority, float speed) {
+    protected GPTGroundChaseTask(Entity target, int priority, float speed) {
         this.target = target;
         this.priority = priority;
         this.speedX = speed;
@@ -69,8 +69,7 @@ public abstract class GPTGroundChaseTask extends DefaultTask implements Priority
         // Refs: Box2D manual (Forces/Impulses), iForce2D intro to forces, Wikipedia: Impulse (physics)
         // https://box2d.org/files/Box2D_Manual.pdf  https://www.iforce2d.net/b2dtut/force  https://en.wikipedia.org/wiki/Impulse_(physics)
         float currentVx = body.getLinearVelocity().x;
-        float impulseX = (desiredVx - currentVx) * body.getMass();
-        return impulseX;
+        return (desiredVx - currentVx) * body.getMass();
     }
 
     /**
@@ -114,8 +113,6 @@ public abstract class GPTGroundChaseTask extends DefaultTask implements Priority
      */
     protected void triggerStartEvent() {
     }
-
-    public abstract int getPriority();
 
     protected boolean isTargetVisible() {
         return TaskUtils.isVisible(owner.getEntity(), target, physics, debugRenderer, hit);

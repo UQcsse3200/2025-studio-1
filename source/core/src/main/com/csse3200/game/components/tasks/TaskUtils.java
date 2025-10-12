@@ -9,6 +9,10 @@ import com.csse3200.game.rendering.DebugRenderer;
 
 public class TaskUtils {
 
+    private TaskUtils() {
+        throw new IllegalStateException("Utility class");
+    }
+
     public static boolean isVisible(Entity owner, Entity target,
                                     PhysicsEngine physics, DebugRenderer debugRenderer, RaycastHit hit) {
         if (target == null)

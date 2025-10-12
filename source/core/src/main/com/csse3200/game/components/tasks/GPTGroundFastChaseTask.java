@@ -3,7 +3,6 @@ package com.csse3200.game.components.tasks;
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.components.enemy.ProjectileLauncherComponent;
 import com.csse3200.game.entities.Entity;
-import com.csse3200.game.physics.components.PhysicsComponent;
 
 /**
  * Ground fast-chase for GhostGPT: drive X only; Box2D gravity/collisions control Y.
