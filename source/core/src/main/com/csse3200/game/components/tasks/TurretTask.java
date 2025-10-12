@@ -68,8 +68,12 @@ public abstract class TurretTask extends DefaultTask implements PriorityTask {
     public abstract int getPriority();
 
     protected boolean isTargetVisible() {
+        return checkVisibility(target, owner.getEntity(), physics, hit, debugRenderer);
+    }
+
+    public static boolean checkVisibility(Entity target, Entity entity, PhysicsEngine physics, RaycastHit hit, DebugRenderer debugRenderer) {
         if (target == null) return false;
-        Vector2 from = owner.getEntity().getCenterPosition();
+        Vector2 from = entity.getCenterPosition();
         Vector2 to = target.getCenterPosition();
 
         if (physics.raycast(from, to, PhysicsLayer.OBSTACLE, hit)) {

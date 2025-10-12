@@ -14,6 +14,8 @@ import com.csse3200.game.rendering.DebugRenderer;
 import com.csse3200.game.services.GameTime;
 import com.csse3200.game.services.ServiceLocator;
 
+import static com.csse3200.game.components.tasks.TurretTask.checkVisibility;
+
 public abstract class GPTGroundChaseTask extends DefaultTask implements PriorityTask {
     protected Entity target;
     protected int priority;
@@ -117,15 +119,6 @@ public abstract class GPTGroundChaseTask extends DefaultTask implements Priority
     public abstract int getPriority();
 
     protected boolean isTargetVisible() {
-        if (target == null) return false;
-        Vector2 from = owner.getEntity().getCenterPosition();
-        Vector2 to = target.getCenterPosition();
-
-        if (physics.raycast(from, to, PhysicsLayer.OBSTACLE, hit)) {
-            debugRenderer.drawLine(from, hit.point);
-            return false;
-        }
-        debugRenderer.drawLine(from, to);
-        return true;
+        return checkVisibility(target, owner.getEntity(), physics, hit, debugRenderer);
     }
 }
