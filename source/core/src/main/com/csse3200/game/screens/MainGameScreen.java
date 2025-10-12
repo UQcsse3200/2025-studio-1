@@ -247,6 +247,13 @@ public class MainGameScreen extends ScreenAdapter {
             minimap.getComponent(MinimapDisplay.class).zoomOut();
         }
 
+        if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT) && isMinimapVisible) {
+            minimap.getComponent(MinimapDisplay.class).pan(new Vector2(-100, 0));
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT) && isMinimapVisible) {
+            minimap.getComponent(MinimapDisplay.class).pan(new Vector2(100, 0));
+        }
+
         //switch to death screen when countdown timer is up
         if (countdownTimer.isTimeUP()) {
             setDeathScreen();
