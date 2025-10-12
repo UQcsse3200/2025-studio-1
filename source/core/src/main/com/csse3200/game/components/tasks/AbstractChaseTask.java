@@ -41,7 +41,7 @@ public abstract class AbstractChaseTask extends DefaultTask implements PriorityT
      * @param priority Task priority when chasing (0 when not chasing).
      * @param speed    The speed at which to move at when chasing
      */
-    public AbstractChaseTask(Entity target, int priority, Vector2 speed) {
+    protected AbstractChaseTask(Entity target, int priority, Vector2 speed) {
         this.target = target;
         this.priority = priority;
         this.speed = speed;
@@ -118,7 +118,7 @@ public abstract class AbstractChaseTask extends DefaultTask implements PriorityT
         return -1;
     }
 
-    private boolean isTargetVisible() {
+    protected boolean isTargetVisible() {
         return TaskUtils.isVisible(owner.getEntity(), target, physics, debugRenderer, hit);
     }
 }

@@ -26,7 +26,7 @@ public abstract class TurretTask extends DefaultTask implements PriorityTask {
      * @param target   The target to fire at
      * @param priority The priority
      */
-    public TurretTask(Entity target, int priority) {
+    protected TurretTask(Entity target, int priority) {
         this.target = target;
         this.priority = priority;
         this.speedX = 0f;
@@ -51,7 +51,6 @@ public abstract class TurretTask extends DefaultTask implements PriorityTask {
     @Override
     public void update() {
         if (target == null || physicsComponent == null) return;
-        Body body = physicsComponent.getBody();
 
         performFiringAction();
     }
@@ -62,8 +61,6 @@ public abstract class TurretTask extends DefaultTask implements PriorityTask {
      */
     protected void performFiringAction() {
     }
-
-    public abstract int getPriority();
 
     protected boolean isTargetVisible() {
         return TaskUtils.isVisible(owner.getEntity(), target, physics, debugRenderer, hit);
