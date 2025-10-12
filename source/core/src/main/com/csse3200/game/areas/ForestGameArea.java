@@ -631,7 +631,6 @@ public class ForestGameArea extends GameArea {
      */
     private void equipItem(String tex) {
         Entity item = player.getComponent(ItemPickUpComponent.class).createItemFromTexture(tex);
-        System.out.println("\n" + tex + "\n");
         if (item == null) return;
 
         // Get the players Z index
