@@ -18,8 +18,9 @@ public class BossChaseTask extends AbstractChaseTask {
         super(target, priority, viewDistance, maxChaseDistance);
     }
 
-    private float getDistanceToTarget() {
-        return owner.getEntity().getPosition().dst(target.getPosition());
+    @Override
+    protected void triggerStartEvent() {
+        this.owner.getEntity().getEvents().trigger("chaseStart");
     }
 
     private boolean isTargetAbove() {
