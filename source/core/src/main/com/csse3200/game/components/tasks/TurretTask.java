@@ -1,12 +1,10 @@
 package com.csse3200.game.components.tasks;
 
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.csse3200.game.ai.tasks.DefaultTask;
 import com.csse3200.game.ai.tasks.PriorityTask;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.physics.PhysicsEngine;
-import com.csse3200.game.physics.PhysicsLayer;
 import com.csse3200.game.physics.components.PhysicsComponent;
 import com.csse3200.game.physics.raycast.RaycastHit;
 import com.csse3200.game.rendering.DebugRenderer;
@@ -68,19 +66,6 @@ public abstract class TurretTask extends DefaultTask implements PriorityTask {
     public abstract int getPriority();
 
     protected boolean isTargetVisible() {
-        return checkVisibility(target, owner.getEntity(), physics, hit, debugRenderer);
-    }
-
-    public static boolean checkVisibility(Entity target, Entity entity, PhysicsEngine physics, RaycastHit hit, DebugRenderer debugRenderer) {
-        if (target == null) return false;
-        Vector2 from = entity.getCenterPosition();
-        Vector2 to = target.getCenterPosition();
-
-        if (physics.raycast(from, to, PhysicsLayer.OBSTACLE, hit)) {
-            debugRenderer.drawLine(from, hit.point);
-            return false;
-        }
-        debugRenderer.drawLine(from, to);
-        return true;
+        return TaskUtils.isVisible(owner.getEntity(), target, physics, debugRenderer, hit);
     }
 }
