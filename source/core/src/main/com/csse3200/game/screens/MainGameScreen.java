@@ -344,9 +344,10 @@ public class MainGameScreen extends ScreenAdapter {
             }
         }
 
-        float timeBonusSeconds = (float) getRemainingSeconds();
+        //to fetch the time spent by the player in the round
+        float timePlayedSeconds = (float) getCompleteTime();
 
-        session.getLeaderBoardManager().addRound(processors, timeBonusSeconds);
+        session.getLeaderBoardManager().addRound(processors, timePlayedSeconds);
         session.getLeaderBoardManager().getLeaderBoard().forEach(entry -> logger.info(entry.toString()));
     }
 
