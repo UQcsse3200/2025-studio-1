@@ -16,7 +16,6 @@ import com.csse3200.game.entities.factories.system.TeleporterFactory;
 import com.csse3200.game.rendering.SolidColorRenderComponent;
 import com.csse3200.game.services.ServiceLocator;
 
-
 /**
  * Room 5 with its own background styling.
  */
@@ -124,6 +123,8 @@ public class MainHall extends GameArea {
         rightDoor.setPosition(b.rightX() - WALL_WIDTH - 0.001f, rightDoorY + 6f);
         rightDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadSecurity));
         spawnEntity(rightDoor);
+
+        registerDoors(new Entity[]{leftDoor, rightDoor});
     }
 
     private void loadBackToFloor2() {
@@ -139,14 +140,17 @@ public class MainHall extends GameArea {
     private Entity spawnPlayer() {
         return spawnOrRepositionPlayer(playerSpawn);
     }
+
     private void spawnEnemies() {
         if (player == null)
             return;
 
         Entity deepspin = com.csse3200.game.entities.factories.characters.NPCFactory.createDeepspin(player, this,
                 ServiceLocator.getDifficulty().getRoomDifficulty(this.roomDiffNumber));
+        registerEnemy(deepspin);
         spawnEntityAt(deepspin, new GridPoint2(22, 10), true, false);
     }
+
     private void spawnGrokDroids() {
         Entity grok1 = NPCFactory.createGrokDroid(player, this,
                 ServiceLocator.getDifficulty().getRoomDifficulty(this.roomDiffNumber));

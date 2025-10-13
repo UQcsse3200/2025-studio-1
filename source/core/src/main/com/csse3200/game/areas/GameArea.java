@@ -28,6 +28,8 @@ import com.csse3200.game.rendering.SolidColorRenderComponent;
 import com.csse3200.game.services.DiscoveryService;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.*;
 import java.util.function.Supplier;
@@ -39,6 +41,7 @@ import java.util.function.Supplier;
  * <p>Support for enabling/disabling game areas could be added by making this a Component instead.
  */
 public abstract class GameArea implements Disposable {
+    private static final Logger logger = LoggerFactory.getLogger(MainHall.class);
     protected TerrainComponent terrain;
     protected List<Entity> areaEntities;
     protected TerrainFactory terrainFactory;
@@ -46,6 +49,8 @@ public abstract class GameArea implements Disposable {
     protected float baseScaling = 0f;
     /** Global flag preventing re-entrant room transitions across any area */
     protected static boolean isTransitioning = false;
+    protected int enemyCount = 0;
+    protected List<Entity> doorList;
 
     // Enemy name constants (standard + variants)
     private static final String DEEP_SPIN = "DeepSpin";
@@ -67,6 +72,7 @@ public abstract class GameArea implements Disposable {
     protected GameArea(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
         this.terrainFactory = terrainFactory;
         this.cameraComponent = cameraComponent;
+        doorList = new ArrayList<>();
         areaEntities = new ArrayList<>();
     }
 
@@ -113,6 +119,54 @@ public abstract class GameArea implements Disposable {
             Gdx.app.postRunnable(() -> ServiceLocator.getEntityService().register(entity));
         } else {
             ServiceLocator.getEntityService().register(entity);
+        }
+    }
+
+    /**
+     * register an entity to the enemy entities list
+     * 
+     * @param entity Entity (registered to enemies)
+     */
+    public void registerEnemy(Entity entity) {
+        enemyCount++;
+        entity.getEvents().addListener("death", this::removeEnemy);
+    }
+
+
+    /**
+     * Decrements the enemy counter. If
+     * goes to 0, trigger 'room cleared' event
+     */
+    public void removeEnemy() {
+        enemyCount--;
+
+        if (enemyCount == 0) {
+            this.unlockDoors();
+        }
+    }
+
+    /**
+     * Adds room doors to the list.
+     * This method will lock doors, so
+     * it should be caleld upon room creating
+     * 
+     * @param doors static array of door entities
+     * @requires doors to have DoorComponent
+     */
+    public void registerDoors(Entity[] doors) {
+        for (Entity door : doors) {
+            this.doorList.add(door);
+            door.getComponent(DoorComponent.class).setLocked(true);
+        }
+    }
+
+    /**
+     * Unlocks the doors. Should be
+     * triggered when all the enemies are dead
+     */
+    public void unlockDoors() {
+        for (Entity door : this.doorList) {
+            door.getComponent(DoorComponent.class).setLocked(false);
         }
     }
 
@@ -362,6 +416,7 @@ public abstract class GameArea implements Disposable {
         ArrayList<Vector2> spawnPositions = positions.get(GHOST_GPT);
         for (Vector2 pos : spawnPositions) {
             Entity ghostGpt = NPCFactory.createGhostGPT(player, this, scaleFactor);
+            registerEnemy(ghostGpt);
             ghostGpt.setPosition(pos);
             spawnEntity(ghostGpt);
         }
@@ -377,6 +432,7 @@ public abstract class GameArea implements Disposable {
         ArrayList<Vector2> spawnPositions = positions.get(GHOST_GPT_RED);
         for (Vector2 pos : spawnPositions) {
             Entity ghostGptRed = NPCFactory.createGhostGPTRed(player, this, scaleFactor);
+            registerEnemy(ghostGptRed);
             ghostGptRed.setPosition(pos);
             spawnEntity(ghostGptRed);
         }
@@ -392,6 +448,7 @@ public abstract class GameArea implements Disposable {
         ArrayList<Vector2> spawnPositions = positions.get(GHOST_GPT_BLUE);
         for (Vector2 pos : spawnPositions) {
             Entity ghostGptBlue = NPCFactory.createGhostGPTBlue(player, this, scaleFactor);
+            registerEnemy(ghostGptBlue);
             ghostGptBlue.setPosition(pos);
             spawnEntity(ghostGptBlue);
         }
@@ -408,6 +465,7 @@ public abstract class GameArea implements Disposable {
 
         for (Vector2 pos : spawnPositions) {
             Entity deepSpin = NPCFactory.createDeepspin(player, this, scaleFactor);
+            registerEnemy(deepSpin);
             deepSpin.setPosition(pos);
             spawnEntity(deepSpin);
         }
@@ -424,6 +482,7 @@ public abstract class GameArea implements Disposable {
 
         for (Vector2 pos : spawnPositions) {
             Entity deepSpinRed = NPCFactory.createDeepspinRed(player, this, scaleFactor);
+            registerEnemy(deepSpinRed);
             deepSpinRed.setPosition(pos);
             spawnEntity(deepSpinRed);
         }
@@ -440,6 +499,7 @@ public abstract class GameArea implements Disposable {
 
         for (Vector2 pos : spawnPositions) {
             Entity deepSpinBlue = NPCFactory.createDeepspinBlue(player, this, scaleFactor);
+            registerEnemy(deepSpinBlue);
             deepSpinBlue.setPosition(pos);
             spawnEntity(deepSpinBlue);
         }
@@ -455,6 +515,7 @@ public abstract class GameArea implements Disposable {
         ArrayList<Vector2> spawnPositions = positions.get(GROK_DROID);
         for (Vector2 pos : spawnPositions) {
             Entity grokDroid = NPCFactory.createGrokDroid(player, this, scaleFactor);
+            registerEnemy(grokDroid);
             grokDroid.setPosition(pos);
             spawnEntity(grokDroid);
         }
@@ -470,6 +531,7 @@ public abstract class GameArea implements Disposable {
         ArrayList<Vector2> spawnPositions = positions.get(GROK_DROID_RED);
         for (Vector2 pos : spawnPositions) {
             Entity grokDroidRed = NPCFactory.createGrokDroidRed(player, this, scaleFactor);
+            registerEnemy(grokDroidRed);
             grokDroidRed.setPosition(pos);
             spawnEntity(grokDroidRed);
         }
@@ -485,6 +547,7 @@ public abstract class GameArea implements Disposable {
         ArrayList<Vector2> spawnPositions = positions.get(GROK_DROID_BLUE);
         for (Vector2 pos : spawnPositions) {
             Entity grokDroidBlue = NPCFactory.createGrokDroidBlue(player, this, scaleFactor);
+            registerEnemy(grokDroidBlue);
             grokDroidBlue.setPosition(pos);
             spawnEntity(grokDroidBlue);
         }
@@ -501,6 +564,7 @@ public abstract class GameArea implements Disposable {
         ArrayList<Vector2> spawnPositions = positions.get(VROOMBA);
         for (Vector2 pos : spawnPositions) {
             Entity vroombaEntity = NPCFactory.createVroomba(player, scaleFactor);
+            registerEnemy(vroombaEntity);
             vroombaEntity.setPosition(pos);
             spawnEntity(vroombaEntity);
         }
@@ -516,6 +580,7 @@ public abstract class GameArea implements Disposable {
         ArrayList<Vector2> spawnPositions = positions.get(VROOMBA_RED);
         for (Vector2 pos : spawnPositions) {
             Entity vroombaRed = NPCFactory.createVroombaRed(player, scaleFactor);
+            registerEnemy(vroombaRed);
             vroombaRed.setPosition(pos);
             spawnEntity(vroombaRed);
         }
@@ -531,6 +596,7 @@ public abstract class GameArea implements Disposable {
         ArrayList<Vector2> spawnPositions = positions.get(VROOMBA_BLUE);
         for (Vector2 pos : spawnPositions) {
             Entity vroombaBlue = NPCFactory.createVroombaBlue(player, scaleFactor);
+            registerEnemy(vroombaBlue);
             vroombaBlue.setPosition(pos);
             spawnEntity(vroombaBlue);
         }
@@ -548,6 +614,7 @@ public abstract class GameArea implements Disposable {
         ArrayList<Vector2> spawnPositions = positions.get(TURRET);
         for (Vector2 pos : spawnPositions) {
             Entity turretEntity = NPCFactory.createTurret(player, this, scaleFactor);
+            registerEnemy(turretEntity);
             turretEntity.setPosition(pos);
             spawnEntity(turretEntity);
         }
@@ -937,6 +1004,7 @@ public abstract class GameArea implements Disposable {
      * Helper to clear current entities and transition to a new area.
      */
     protected void clearAndLoad(Supplier<GameArea> nextAreaSupplier) {
+        if (enemyCount > 0) return; // kill enemies first!
         if (!beginTransition()) return;
 
         for (Entity entity : areaEntities) {
