@@ -319,6 +319,12 @@ public class MainGameScreen extends ScreenAdapter {
         ServiceLocator.getEntityService().register(ui);
     }
 
+    /** Remaining time in seconds, clamped to >= 0 */
+    private long getRemainingSeconds() {
+        long rem = countdownTimer.getRemainingMs();
+        return rem > 0 ? rem / 1000 : 0;
+    }
+
     /**
      * = Records player's current round performance and updates the leaderboard.
      * = This method is called automatically when a round ends.
@@ -338,10 +344,9 @@ public class MainGameScreen extends ScreenAdapter {
             }
         }
 
-        // Time = from your countdown service (seconds)
-        float timeSeconds = getCompleteTime();
+        float timeBonusSeconds = (float) getRemainingSeconds();
 
-        session.getLeaderBoardManager().addRound(processors, timeSeconds);
+        session.getLeaderBoardManager().addRound(processors, timeBonusSeconds);
         session.getLeaderBoardManager().getLeaderBoard().forEach(entry -> logger.info(entry.toString()));
     }
 
