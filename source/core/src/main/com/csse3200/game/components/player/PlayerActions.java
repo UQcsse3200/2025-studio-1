@@ -462,7 +462,6 @@ public class PlayerActions extends Component {
 //        mag.setCurrentAmmo(mag.getCurrentAmmo() - 1);
         entity.getEvents().trigger("after shoot");
         timeSinceLastAttack = 0;
-        System.out.println("Player position: " + entity.getCenterPosition());
     }
 
     public UnlimitedAmmoEffect getUnlimitedAmmoEffect() {
