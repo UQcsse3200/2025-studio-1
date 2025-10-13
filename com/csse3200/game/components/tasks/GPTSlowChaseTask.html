@@ -86,7 +86,9 @@ loadScripts(document, 'script');</script>
 </div>
 <div class="inheritance" title="Inheritance Tree"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">java.lang.Object</a>
 <div class="inheritance"><a href="../../ai/tasks/DefaultTask.html" title="class in com.csse3200.game.ai.tasks">com.csse3200.game.ai.tasks.DefaultTask</a>
+<div class="inheritance"><a href="AbstractChaseTask.html" title="class in com.csse3200.game.components.tasks">com.csse3200.game.components.tasks.AbstractChaseTask</a>
 <div class="inheritance">com.csse3200.game.components.tasks.GPTSlowChaseTask</div>
+</div>
 </div>
 </div>
 <section class="class-description" id="class-description">
@@ -96,8 +98,7 @@ loadScripts(document, 'script');</script>
 </dl>
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">GPTSlowChaseTask</span>
-<span class="extends-implements">extends <a href="../../ai/tasks/DefaultTask.html" title="class in com.csse3200.game.ai.tasks">DefaultTask</a>
-implements <a href="../../ai/tasks/PriorityTask.html" title="interface in com.csse3200.game.ai.tasks">PriorityTask</a></span></div>
+<span class="extends-implements">extends <a href="AbstractChaseTask.html" title="class in com.csse3200.game.components.tasks">AbstractChaseTask</a></span></div>
 <div class="block">Chases a target entity indefinitely and the entity being visible causes a speed increase</div>
 </section>
 <section class="summary">
@@ -115,6 +116,9 @@ implements <a href="../../ai/tasks/PriorityTask.html" title="interface in com.cs
 <li>
 <section class="field-summary" id="field-summary">
 <h2>Field Summary</h2>
+<div class="inherited-list">
+<h3 id="fields-inherited-from-class-com.csse3200.game.components.tasks.AbstractChaseTask">Fields inherited from class&nbsp;com.csse3200.game.components.tasks.<a href="AbstractChaseTask.html" title="class in com.csse3200.game.components.tasks">AbstractChaseTask</a></h3>
+<code><a href="AbstractChaseTask.html#debugRenderer">debugRenderer</a>, <a href="AbstractChaseTask.html#hit">hit</a>, <a href="AbstractChaseTask.html#maxChaseDistance">maxChaseDistance</a>, <a href="AbstractChaseTask.html#movementTask">movementTask</a>, <a href="AbstractChaseTask.html#physics">physics</a>, <a href="AbstractChaseTask.html#priority">priority</a>, <a href="AbstractChaseTask.html#speed">speed</a>, <a href="AbstractChaseTask.html#target">target</a>, <a href="AbstractChaseTask.html#viewDistance">viewDistance</a></code></div>
 <div class="inherited-list">
 <h3 id="fields-inherited-from-class-com.csse3200.game.ai.tasks.DefaultTask">Fields inherited from class&nbsp;com.csse3200.game.ai.tasks.<a href="../../ai/tasks/DefaultTask.html" title="class in com.csse3200.game.ai.tasks">DefaultTask</a></h3>
 <code><a href="../../ai/tasks/DefaultTask.html#owner">owner</a>, <a href="../../ai/tasks/DefaultTask.html#status">status</a></code></div>
@@ -149,24 +153,18 @@ implements <a href="../../ai/tasks/PriorityTask.html" title="interface in com.cs
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getPriority()" class="member-name-link">getPriority</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#start()" class="member-name-link">start</a>()</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#triggerStartEvent()" class="member-name-link">triggerStartEvent</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Start running this task.</div>
-</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#stop()" class="member-name-link">stop</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Stop the task immediately.</div>
-</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#update()" class="member-name-link">update</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Run one frame of the task.</div>
+<div class="block">Base implementation does nothing, children override to
+ trigger a specified event if needed.</div>
 </div>
 </div>
 </div>
 </div>
+<div class="inherited-list">
+<h3 id="methods-inherited-from-class-com.csse3200.game.components.tasks.AbstractChaseTask">Methods inherited from class&nbsp;com.csse3200.game.components.tasks.<a href="AbstractChaseTask.html" title="class in com.csse3200.game.components.tasks">AbstractChaseTask</a></h3>
+<code><a href="AbstractChaseTask.html#getActivePriority()">getActivePriority</a>, <a href="AbstractChaseTask.html#getInactivePriority()">getInactivePriority</a>, <a href="AbstractChaseTask.html#getSpeed()">getSpeed</a>, <a href="AbstractChaseTask.html#isTargetVisible()">isTargetVisible</a>, <a href="AbstractChaseTask.html#start()">start</a>, <a href="AbstractChaseTask.html#stop()">stop</a>, <a href="AbstractChaseTask.html#update()">update</a></code></div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-com.csse3200.game.ai.tasks.DefaultTask">Methods inherited from class&nbsp;com.csse3200.game.ai.tasks.<a href="../../ai/tasks/DefaultTask.html" title="class in com.csse3200.game.ai.tasks">DefaultTask</a></h3>
 <code><a href="../../ai/tasks/DefaultTask.html#create(com.csse3200.game.ai.tasks.TaskRunner)">create</a>, <a href="../../ai/tasks/DefaultTask.html#getStatus()">getStatus</a></code></div>
@@ -210,44 +208,15 @@ implements <a href="../../ai/tasks/PriorityTask.html" title="interface in com.cs
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="start()">
-<h3>start</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">start</span>()</div>
-<div class="block"><span class="description-from-type-label">Description copied from interface:&nbsp;<code><a href="../../ai/tasks/Task.html#start()">Task</a></code></span></div>
-<div class="block">Start running this task. This will usually be called by an AI controller.</div>
+<section class="detail" id="triggerStartEvent()">
+<h3>triggerStartEvent</h3>
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">triggerStartEvent</span>()</div>
+<div class="block"><span class="description-from-type-label">Description copied from class:&nbsp;<code><a href="AbstractChaseTask.html#triggerStartEvent()">AbstractChaseTask</a></code></span></div>
+<div class="block">Base implementation does nothing, children override to
+ trigger a specified event if needed.</div>
 <dl class="notes">
-<dt>Specified by:</dt>
-<dd><code><a href="../../ai/tasks/Task.html#start()">start</a></code>&nbsp;in interface&nbsp;<code><a href="../../ai/tasks/Task.html" title="interface in com.csse3200.game.ai.tasks">Task</a></code></dd>
 <dt>Overrides:</dt>
-<dd><code><a href="../../ai/tasks/DefaultTask.html#start()">start</a></code>&nbsp;in class&nbsp;<code><a href="../../ai/tasks/DefaultTask.html" title="class in com.csse3200.game.ai.tasks">DefaultTask</a></code></dd>
-</dl>
-</section>
-</li>
-<li>
-<section class="detail" id="update()">
-<h3>update</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">update</span>()</div>
-<div class="block"><span class="description-from-type-label">Description copied from interface:&nbsp;<code><a href="../../ai/tasks/Task.html#update()">Task</a></code></span></div>
-<div class="block">Run one frame of the task. Similar to the update() in Components.</div>
-<dl class="notes">
-<dt>Specified by:</dt>
-<dd><code><a href="../../ai/tasks/Task.html#update()">update</a></code>&nbsp;in interface&nbsp;<code><a href="../../ai/tasks/Task.html" title="interface in com.csse3200.game.ai.tasks">Task</a></code></dd>
-<dt>Overrides:</dt>
-<dd><code><a href="../../ai/tasks/DefaultTask.html#update()">update</a></code>&nbsp;in class&nbsp;<code><a href="../../ai/tasks/DefaultTask.html" title="class in com.csse3200.game.ai.tasks">DefaultTask</a></code></dd>
-</dl>
-</section>
-</li>
-<li>
-<section class="detail" id="stop()">
-<h3>stop</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">stop</span>()</div>
-<div class="block"><span class="description-from-type-label">Description copied from interface:&nbsp;<code><a href="../../ai/tasks/Task.html#stop()">Task</a></code></span></div>
-<div class="block">Stop the task immediately. This can be called at any time by the AI controller.</div>
-<dl class="notes">
-<dt>Specified by:</dt>
-<dd><code><a href="../../ai/tasks/Task.html#stop()">stop</a></code>&nbsp;in interface&nbsp;<code><a href="../../ai/tasks/Task.html" title="interface in com.csse3200.game.ai.tasks">Task</a></code></dd>
-<dt>Overrides:</dt>
-<dd><code><a href="../../ai/tasks/DefaultTask.html#stop()">stop</a></code>&nbsp;in class&nbsp;<code><a href="../../ai/tasks/DefaultTask.html" title="class in com.csse3200.game.ai.tasks">DefaultTask</a></code></dd>
+<dd><code><a href="AbstractChaseTask.html#triggerStartEvent()">triggerStartEvent</a></code>&nbsp;in class&nbsp;<code><a href="AbstractChaseTask.html" title="class in com.csse3200.game.components.tasks">AbstractChaseTask</a></code></dd>
 </dl>
 </section>
 </li>
@@ -258,6 +227,8 @@ implements <a href="../../ai/tasks/PriorityTask.html" title="interface in com.cs
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="../../ai/tasks/PriorityTask.html#getPriority()">getPriority</a></code>&nbsp;in interface&nbsp;<code><a href="../../ai/tasks/PriorityTask.html" title="interface in com.csse3200.game.ai.tasks">PriorityTask</a></code></dd>
+<dt>Overrides:</dt>
+<dd><code><a href="AbstractChaseTask.html#getPriority()">getPriority</a></code>&nbsp;in class&nbsp;<code><a href="AbstractChaseTask.html" title="class in com.csse3200.game.components.tasks">AbstractChaseTask</a></code></dd>
 </dl>
 </section>
 </li>
