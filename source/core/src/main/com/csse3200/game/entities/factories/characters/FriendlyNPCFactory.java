@@ -21,6 +21,7 @@ import com.csse3200.game.physics.components.ColliderComponent;
 import com.csse3200.game.physics.components.HitboxComponent;
 import com.csse3200.game.physics.components.PhysicsComponent;
 import com.csse3200.game.physics.components.PhysicsMovementComponent;
+import com.csse3200.game.components.friendlynpc.NpcAttackBoostComponent;
 
 import com.csse3200.game.components.friendlynpc.*;
 import java.util.List;
@@ -150,10 +151,13 @@ public class FriendlyNPCFactory {
                         "Nurse", "", new String[]{
                         "Hello! I'm here to help.",
                         "Let me check your vitals...",
-                        "You're all patched up now!"
+                        "You're all patched up now! I've also boosted your power!"
                 }))
                 .addComponent(new DialogueDisplay())
                 .addComponent(new NpcHealingComponent(player, 25)
+                        .setCooldownMillis(30_000))
+                // Add attack boost: +10 attack for 15 seconds
+                .addComponent(new NpcAttackBoostComponent(player, 10, 15_000)
                         .setCooldownMillis(30_000));
         npc.getComponent(TextureRenderComponent.class).scaleEntity();
         npc.addComponent(new TipComponent(npc, player, 3f));
