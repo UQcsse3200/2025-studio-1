@@ -35,7 +35,7 @@ class SaveLoadServiceTest {
     private static final float POS_Y = 7.0f;
     private static final double FLOAT_EPS = 1e-4;
     private static final int INVENTORY_PROCESSES = 1;
-    private static final int EXPECTED_ROUND_NUMBER = 2;
+    private static final int EXPECTED_ROUND_NUMBER = 0;
 
     static class FakeEntity extends Entity {
         private final List<Component> comps = new ArrayList<>();

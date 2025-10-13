@@ -3,6 +3,7 @@ package com.csse3200.game.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.graphics.profiling.GLErrorListener;
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -37,6 +38,8 @@ import com.csse3200.game.ui.terminal.TerminalDisplay;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
+
 
 /**
  * The game screen containing the main game.
@@ -65,7 +68,7 @@ public class MainGameScreen extends ScreenAdapter {
     private boolean isPauseVisible = false;
     private boolean isMinimapVisible = false;
 
-    public MainGameScreen(GdxGame game) {
+    public MainGameScreen(GdxGame game, boolean loadSaveGame) {
         this.game = game;
 
         logger.debug("Initialising main game screen services");
@@ -77,7 +80,7 @@ public class MainGameScreen extends ScreenAdapter {
         var prev = game.getCarryOverLeaderBoard();
         if (prev != null && !prev.getLeaderBoard().isEmpty()) {
             session.getLeaderBoardManager()
-                    .setLeaderboard(new java.util.ArrayList<>(prev.getLeaderBoard()));
+                    .setLeaderboard(new ArrayList<>(prev.getLeaderBoard()));
         }
         ServiceLocator.registerLeaderBoardManager(session.getLeaderBoardManager());
 
@@ -108,16 +111,46 @@ public class MainGameScreen extends ScreenAdapter {
 
         logger.debug("Initialising main game screen entities");
         TerrainFactory terrainFactory = new TerrainFactory(renderer.getCamera());
-        gameArea = new ForestGameArea(terrainFactory, renderer.getCamera());
-        com.csse3200.game.services.ServiceLocator.registerGameArea(gameArea);
-        ForestGameArea.setRoomSpawn(new GridPoint2(3, 20));
-        gameArea.create();
+
+
+        if (loadSaveGame) {
+            SaveGame.GameState load = SaveLoadService.load();
+
+            switch (load.getGameArea()) {
+                case "Forest" -> gameArea = ForestGameArea.load(terrainFactory, renderer.getCamera());
+                case "Elevator" -> gameArea = ElevatorGameArea.load(terrainFactory, renderer.getCamera());
+                case "Office" -> gameArea = OfficeGameArea.load(terrainFactory, renderer.getCamera());
+                case "Mainhall" -> gameArea = MainHall.load(terrainFactory, renderer.getCamera());
+                case "Reception" -> gameArea = Reception.load(terrainFactory, renderer.getCamera());
+                case "Tunnel" -> gameArea = TunnelGameArea.load(terrainFactory, renderer.getCamera());
+                case "Security" -> gameArea = SecurityGameArea.load(terrainFactory, renderer.getCamera());
+                case "Storage" -> gameArea = StorageGameArea.load(terrainFactory, renderer.getCamera());
+                case "Shipping" -> gameArea = ShippingGameArea.load(terrainFactory, renderer.getCamera());
+                case "Server" -> gameArea = ServerGameArea.load(terrainFactory, renderer.getCamera());
+                default -> gameArea = null;
+            }
+
+            if (gameArea != null) {
+                ServiceLocator.registerGameArea(gameArea);
+                gameArea.create();
+                SaveLoadService.loadPlayer(load.getPlayer());
+                SaveLoadService.loadPlayerInventory(load.getInventory());
+            } else {
+                logger.error("couldn't create Game area from file");
+            }
+        } else {
+            gameArea = new ForestGameArea(terrainFactory, renderer.getCamera());
+            ServiceLocator.registerGameArea(gameArea);
+            ForestGameArea.setRoomSpawn(new GridPoint2(3, 20));
+            gameArea.create();
+        }
         // mark initial area as discovered
         DiscoveryService dsInit = ServiceLocator.getDiscoveryService();
         if (dsInit != null) {
             dsInit.discover(gameArea.toString());
         }
     }
+
 
 
     /**
@@ -174,7 +207,6 @@ public class MainGameScreen extends ScreenAdapter {
             case "Server" -> areaLoad = ServerGameArea.load(terrainFactory, renderer.getCamera());
             default -> logger.error("couldn't create Game area from file");
         }
-        ServiceLocator.getResourceService().loadAll(); // test for loading into new areas
 
         gameArea = areaLoad;
         DiscoveryService ds = ServiceLocator.getDiscoveryService();

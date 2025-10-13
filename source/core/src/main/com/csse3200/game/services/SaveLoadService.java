@@ -36,8 +36,12 @@ public class SaveLoadService {
      */
     public static SaveGame.GameState load() {
         String filePath = "saves" + File.separator + "slides.json";
-        SaveGame.GameState savedGame = SaveGame.loadGame(filePath);
-
+        SaveGame.GameState savedGame;
+        if (SaveGame.loadGame(filePath) != null) {
+            savedGame = SaveGame.loadGame(filePath);
+        } else {
+            savedGame = null;
+        }
         return savedGame;
     }
 
@@ -119,14 +123,10 @@ public class SaveLoadService {
      * Save the current GameArea to local storage (saves/slotX.json).
      */
     public boolean save(String slot, GameArea gameArea) {
-        PlayerInfo gs = new PlayerInfo();
         Entity player = new Entity();
         if (ServiceLocator.getGameArea() != null) {
-            gs.areaId = ServiceLocator.getGameArea().toString();
             player = ServiceLocator.getPlayer();
         } else {
-            gs.areaId = gameArea.toString();
-            logger.error("failed to save Game area creating new instance");
             // if can't find through service locator will attempt hard check
             for (Entity entity : gameArea.getEntities()) {
                 if (entity.getComponent(InventoryComponent.class) != null) {
@@ -135,46 +135,15 @@ public class SaveLoadService {
             }
         }
 
-        // commented out because i might need this later
-//        if (player.getComponent(InventoryComponent.class) != null) {
-//                logger.info("Inventory component found: Player found.");
-//                CombatStatsComponent stat = player.getComponent(CombatStatsComponent.class);
-//                InventoryComponent inv = player.getComponent(InventoryComponent.class);
-//                gs.inventory = new ArrayList<>();
-//                for (int i = 0; i < inv.getSize(); i++) {
-//                    if (inv.get(i).getComponent(ItemComponent.class) != null) {
-//                        gs.inventory.add(inv.getTex(i));
-//                    }
-//                }
-//
-//        }
-        gs.Health = player.getComponent(CombatStatsComponent.class).getHealth();
-        gs.position.set(player.getPosition());
-        gs.ProcessNumber = player.getComponent(InventoryComponent.class).getProcessor();
-        // future solution
-        gs.RoundNumber = 2;
-
         SaveGame.GameState gamestate = new SaveGame.GameState();
         gamestate.setPlayer(player);
         gamestate.setLoadedInventory(player.getComponent(InventoryComponent.class));
         gamestate.setArea(gameArea);
-        gamestate.setWave(2);
+        gamestate.setWave(gameArea.currentWave());
 
         path = "saves" + File.separator + slot + ".json";
 
         SaveGame.saveGame(gamestate, path);
         return true;
-    }
-
-    /**
-     * mock game state to store entities.
-     */
-    public static class PlayerInfo {
-        public String areaId;
-        public ArrayList<Object> inventory;
-        public int Health;
-        public int ProcessNumber;
-        public Vector2 position = new Vector2();
-        public int RoundNumber;
     }
 }

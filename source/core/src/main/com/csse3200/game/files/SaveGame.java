@@ -2,6 +2,7 @@ package com.csse3200.game.files;
 
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.areas.GameArea;
+import com.csse3200.game.areas.difficulty.Difficulty;
 import com.csse3200.game.components.AmmoStatsComponent;
 import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.components.MagazineComponent;
@@ -38,13 +39,22 @@ public class SaveGame {
      * sets and gets all necessary game information
      */
     public static class GameState {
-        //        private HashMap<String, Object> player;
         private information player;
         private String gameArea;
         private int wave;
         private ArrayList<itemRetrieve> loadedInventory;
+        private Difficulty difficulty;
+
 
         public GameState() {
+        }
+
+        public void setDifficulty(Difficulty difficulty) {
+            this.difficulty = difficulty;
+        }
+
+        public Difficulty getDifficulty() {
+            return difficulty;
         }
 
         public information getPlayer() {
@@ -55,7 +65,7 @@ public class SaveGame {
          * Gather Important details for creating a player entity that needs to be set or adjusted
          * upon character creation
          *
-         * @param playerInfo
+         * @param playerInfo entity of the player
          */
         public void setPlayer(Entity playerInfo) {
             this.player = new information();
@@ -87,7 +97,7 @@ public class SaveGame {
         }
 
         public void setWave(int wave) {
-            this.wave = wave;
+            this.wave = Math.max(wave, 0);
         }
 
         //due to nature of json files or that im just silly this was a better implementation then making setInventory
@@ -161,7 +171,8 @@ public class SaveGame {
 
     /**
      * helper class to improve the readibility of the output json file
-     * If new components that the Player needs to have saved insert here
+     * If new components that the Player needs to have saved insert here - yes bad practice to change existing code
+     *
      */
     public static class information {
         public Vector2 playerPos;
