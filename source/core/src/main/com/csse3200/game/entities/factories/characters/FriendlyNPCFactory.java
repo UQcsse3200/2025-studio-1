@@ -154,7 +154,9 @@ public class FriendlyNPCFactory {
                         "You're all patched up now! I've also boosted your power!"
                 }))
                 .addComponent(new DialogueDisplay())
-                .addComponent(new NpcHealingComponent(player, 25)
+                // + 25 HP
+                // If at full health, +25 shield
+                .addComponent(new NpcHealingComponent(player, 25, 25, 60_000)
                         .setCooldownMillis(30_000))
                 // Add attack boost: +10 attack for 15 seconds
                 .addComponent(new NpcAttackBoostComponent(player, 10, 15_000)

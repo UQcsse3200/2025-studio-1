@@ -1,35 +1,47 @@
 package com.csse3200.game.components.friendlynpc;
 
-import com.badlogic.gdx.audio.Sound;
 import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.components.Component;
 import com.csse3200.game.entities.Entity;
-import com.csse3200.game.services.ResourceService;
-import com.csse3200.game.services.ServiceLocator;
 
 /**
  * NPC Healing Component
- * Restores player health when dialogue ends
+ * Restores player health when dialogue ends.
+ * If player is at full health, grants a temporary protection shield instead.
  */
 public class NpcHealingComponent extends Component {
     private final Entity player;
     private final int healAmount;
+    private final int shieldAmount;
+    private final long shieldDurationMillis;
+
     // Frequency / cooldown
     private long cooldownMillis = 0; // 0 = no cooldown
     private long lastTriggerTime = 0L;
 
-    private static final String HealPath = "sounds/healing-magic.mp3";
-    private static final float HealVolume = 1.0f;
-
     /**
-     * Creates an NPC healing component
+     * Creates an NPC healing component (healing only, no shield)
      *
      * @param player the player entity to heal
      * @param healAmount the amount of health to restore
      */
     public NpcHealingComponent(Entity player, int healAmount) {
+        this(player, healAmount, 0, 0);
+    }
+
+    /**
+     * Creates an NPC healing component with shield option
+     *
+     * @param player the player entity to heal
+     * @param healAmount the amount of health to restore
+     * @param shieldAmount the amount of protection to grant when at full health
+     * @param shieldDurationMillis how long the shield lasts (in milliseconds)
+     */
+    public NpcHealingComponent(Entity player, int healAmount, int shieldAmount, long shieldDurationMillis) {
         this.player = player;
         this.healAmount = Math.max(0, healAmount);
+        this.shieldAmount = Math.max(0, shieldAmount);
+        this.shieldDurationMillis = Math.max(0, shieldDurationMillis);
     }
 
     /**
@@ -50,7 +62,7 @@ public class NpcHealingComponent extends Component {
     }
 
     /**
-     * Heals the player when dialogue ends
+     * Heals the player or grants shield when dialogue ends
      */
     private void onDialogueEnd() {
         if (player == null) return;
@@ -66,15 +78,51 @@ public class NpcHealingComponent extends Component {
         if (combatStats.isDead()) {
             return;
         }
-        combatStats.addHealth(healAmount);
-        lastTriggerTime = now;
 
-        ResourceService rs = ServiceLocator.getResourceService();
-        if (rs != null) {
-            Sound sfx = rs.getAsset(HealPath, Sound.class);
-            if (sfx != null) {
-                sfx.play(HealVolume);
+        // Check if player is at full health
+        if (combatStats.getHealth() >= combatStats.getMaxHealth()) {
+            // Player is at full health - grant shield instead
+            if (shieldAmount > 0) {
+                grantShield(combatStats);
             }
+        } else {
+            // Player is not at full health - heal
+            combatStats.addHealth(healAmount);
         }
+
+        lastTriggerTime = now;
+    }
+
+    /**
+     * Grants a temporary protection shield to the player
+     *
+     * @param combatStats the player's combat stats component
+     */
+    private void grantShield(CombatStatsComponent combatStats) {
+        combatStats.addProtection(shieldAmount);
+
+        // Schedule shield removal after duration
+        if (shieldDurationMillis > 0) {
+            scheduleShieldRemoval(combatStats, shieldAmount);
+        }
+    }
+
+    /**
+     * Schedules the removal of the shield after the duration expires
+     *
+     * @param combatStats the player's combat stats component
+     * @param amount the amount of protection to remove
+     */
+    private void scheduleShieldRemoval(CombatStatsComponent combatStats, int amount) {
+        new Thread(() -> {
+            try {
+                Thread.sleep(shieldDurationMillis);
+                if (combatStats != null && combatStats.getEntity() != null) {
+                    combatStats.addProtection(-amount);
+                }
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }).start();
     }
 }
