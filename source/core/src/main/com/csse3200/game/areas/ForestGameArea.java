@@ -380,6 +380,7 @@ public class ForestGameArea extends GameArea {
         itemSpawner.spawnItems(ItemSpawnConfig.forestmap());
 
         spawnGuidanceNpc();
+        spawnDoubleProcessorsPowerup();
 
 
         // Place a keycard on the floor so the player can unlock the door

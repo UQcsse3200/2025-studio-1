@@ -44,7 +44,6 @@ public class PowerupsFactory {
         powerup.getComponent(TextureRenderComponent.class).scaleEntity();
         powerup.addComponent(new TagComponent("aimbot"));
 
-
         return powerup;
     }
 
