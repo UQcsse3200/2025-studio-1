@@ -78,13 +78,13 @@ public class PlayerFactory {
                         .addComponent(new PlayerAnimationController())
                         .addComponent(new PlayerEquipComponent())
                         .addComponent(new ArmourEquipComponent())
-                        .addComponent(new InteractComponent().setLayer(PhysicsLayer.DEFAULT));
+                        .addComponent(new InteractComponent());
         // Ensure global player reference is up-to-date for transitions
         ServiceLocator.registerPlayer(player);
 
         player.getComponent(AnimationRenderComponent.class).scaleEntity(2f);
         player.getComponent(ColliderComponent.class).setDensity(1.5f);
-        PhysicsUtils.setScaledCollider(player, 0.3f, 0.5f);
+        PhysicsUtils.setScaledCollider(player, 0.2f, 0.45f);
         player.getComponent(WeaponsStatsComponent.class).setCoolDown(0.2f);
 
 
