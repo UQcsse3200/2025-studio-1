@@ -380,7 +380,7 @@ public class ForestGameArea extends GameArea {
         itemSpawner.spawnItems(ItemSpawnConfig.forestmap());
 
         spawnGuidanceNpc();
-        spawnDoubleProcessorsPowerup();
+//        spawnDoubleProcessorsPowerup();
 
 
         // Place a keycard on the floor so the player can unlock the door
@@ -714,7 +714,7 @@ public class ForestGameArea extends GameArea {
 
     private void spawnDoubleProcessorsPowerup() {
         Entity newUnlimitedAmmoPowerup = PowerupsFactory.createDoubleProcessors();
-        spawnEntityAt(newUnlimitedAmmoPowerup, new GridPoint2(2, 30), true, true);
+        spawnEntityAt(newUnlimitedAmmoPowerup, new GridPoint2(5, 20), true, true);
     }
 
     private void spawnnpctest() {
