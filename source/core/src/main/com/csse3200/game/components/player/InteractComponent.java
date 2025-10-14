@@ -29,6 +29,7 @@ public class InteractComponent extends HitboxComponent {
         Entity otherEntity = userData.entity;
         if (otherEntity.isInteractable()) {
             collidedEntities.add(otherEntity);
+            otherEntity.getEvents().trigger("enteredInteractRadius");
         }
     }
 
@@ -39,6 +40,7 @@ public class InteractComponent extends HitboxComponent {
         Entity otherEntity = userData.entity;
         if (otherEntity.isInteractable()) {
             collidedEntities.remove(otherEntity);
+            otherEntity.getEvents().trigger("exitedInteractRadius");
         }
     }
 
