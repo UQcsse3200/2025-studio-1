@@ -112,7 +112,10 @@ public class MainGameScreen extends ScreenAdapter {
         com.csse3200.game.services.ServiceLocator.registerGameArea(gameArea);
         ForestGameArea.setRoomSpawn(new GridPoint2(3, 20));
         gameArea.create();
-        // mark initial area as discovered
+        ServiceLocator.getGlobalEvents().addListener("round:finished", (Boolean won) -> {
+            recordRoundForLeaderboard(won);
+            game.setCarryOverLeaderBoard(session.getLeaderBoardManager());
+        });
         DiscoveryService dsInit = ServiceLocator.getDiscoveryService();
         if (dsInit != null) {
             dsInit.discover(gameArea.toString());
@@ -331,7 +334,7 @@ public class MainGameScreen extends ScreenAdapter {
      * = The leaderboard only persists for the duration of the current game session
      * and is cleared when the session ends.
      */
-    private void recordRoundForLeaderboard() {
+    private void recordRoundForLeaderboard(boolean won) {
         if (session == null) return;
 
         // Currency = processors from the player's InventoryComponent
@@ -345,7 +348,8 @@ public class MainGameScreen extends ScreenAdapter {
         }
 
         //to fetch the time spent by the player in the round
-        float timePlayedSeconds = (float) getCompleteTime();
+        //float timePlayedSeconds = (float) getRemainingSeconds();
+        float timePlayedSeconds = won ? (float) getRemainingSeconds() : 0f;
 
         session.getLeaderBoardManager().addRound(processors, timePlayedSeconds);
         session.getLeaderBoardManager().getLeaderBoard().forEach(entry -> logger.info(entry.toString()));
@@ -448,7 +452,7 @@ public class MainGameScreen extends ScreenAdapter {
      * </p>
      */
     private void setDeathScreen() {
-        recordRoundForLeaderboard();
+        ServiceLocator.getGlobalEvents().trigger("round:finished", false);
         game.setCarryOverLeaderBoard(session.getLeaderBoardManager());
         DeathScreen deathScreen = new DeathScreen(game);
         deathScreen.updateTime(getCompleteTime());
