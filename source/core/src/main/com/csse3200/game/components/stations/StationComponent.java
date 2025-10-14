@@ -111,9 +111,9 @@ public class StationComponent extends Component {
     @Override
     public void create() {
         setPlayer(ServiceLocator.getPlayer());
-        entity.getEvents().addListener("collisionStart", this::onCollisionStart);
-        entity.getEvents().addListener("collisionEnd", this::onCollisionEnd);
-        ServiceLocator.getPlayer().getEvents().addListener("interact", this::upgrade);
+        entity.getEvents().addListener("enteredInteractRadius", this::onPlayerInRange);
+        entity.getEvents().addListener("exitedInteractRadius", this::onPlayerLeftRange);
+        entity.getEvents().addListener("interact", this::upgrade);
 
         // Font setup with mipmapping for smoother scaling
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/ithaca.ttf"));
@@ -155,39 +155,15 @@ public class StationComponent extends Component {
         ServiceLocator.getRenderService().getStage().addActor(buyPrompt);
     }
 
-    /**
-     * Updates when the player collides with the station
-     *
-     * @param me    the station
-     * @param other the player colliding
-     */
-    protected void onCollisionStart(Fixture me, Fixture other) {
-        Object data = other.getBody().getUserData();
-        if (!(data instanceof BodyUserData userData)) return;
-
-        Entity otherEntity = userData.entity;
-        if (otherEntity.getComponent(PlayerActions.class) != null) {
-            player = otherEntity;
-            playerNear = true;
-            buyPrompt.setVisible(true);
-            buyPrompt.setText(config.promptText);
-        }
+    protected void onPlayerInRange() {
+        playerNear = true;
+        buyPrompt.setVisible(true);
+        buyPrompt.setText(config.promptText);
     }
 
-    /**
-     * Updates when the player stops colliding with the station
-     *
-     * @param me    the station
-     * @param other the player
-     */
-    protected void onCollisionEnd(Fixture me, Fixture other) {
-        Object data = other.getBody().getUserData();
-        if (!(data instanceof BodyUserData userData)) return;
-        Entity otherEntity = userData.entity;
-        if (otherEntity.getComponent(PlayerActions.class) != null) {
-            playerNear = false;
-            buyPrompt.setVisible(false);
-        }
+    protected void onPlayerLeftRange() {
+        playerNear = false;
+        buyPrompt.setVisible(false);
     }
 
     /**
