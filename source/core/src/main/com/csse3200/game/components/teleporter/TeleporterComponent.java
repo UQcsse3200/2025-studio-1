@@ -1,10 +1,8 @@
 package com.csse3200.game.components.teleporter;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.components.Component;
-import com.csse3200.game.entities.Entity;
 import com.csse3200.game.rendering.AnimationRenderComponent;
 import com.csse3200.game.services.DiscoveryService;
 import com.csse3200.game.services.GameTime;
@@ -19,7 +17,6 @@ import com.csse3200.game.services.ServiceLocator;
  *  (No scaling/zoom effects are applied during activation.)
  */
 public class TeleporterComponent extends Component {
-    private static final float ACTIVATION_RADIUS = 2.5f;
     private static final float TELEPORT_DELAY = 0.65f; // seconds
 
     private TeleporterMenuUI menuUI;
@@ -34,14 +31,6 @@ public class TeleporterComponent extends Component {
 
     private GameTime time;
 
-    private static boolean escConsumedThisFrame = false; // track ESC consumption to suppress pause
-
-    public static boolean wasEscConsumedThisFrame() {
-        return escConsumedThisFrame;
-    }
-    public static void markEscConsumed() { escConsumedThisFrame = true; }
-    public static void resetEscConsumed() { escConsumedThisFrame = false; }
-
     @Override
     public void create() {
         time = ServiceLocator.getTimeSource();
@@ -53,43 +42,24 @@ public class TeleporterComponent extends Component {
         if (idle != null) idle.setVisible(true);
         AnimationRenderComponent arc = entity.getComponent(AnimationRenderComponent.class);
         if (arc != null) arc.stopAnimation();
+
+        entity.getEvents().addListener("interact", this::handleInteract);
+        entity.getEvents().addListener("exitedInteractRadius", this::hideMenu);
     }
 
     @Override
     public void update() {
-        // Sync internal state with UI component (user may press the UI Close button)
-        if (menuUI != null && menuVisible && !menuUI.isVisible()) {
-            menuVisible = false;
-        }
         if (teleporting) {
             updateActivation();
-            return;
-        }
-
-        Entity player = ServiceLocator.getPlayer();
-        if (player == null) return;
-
-        boolean esc = Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE);
-
-        if (menuVisible) {
-            if (esc) { // only mark consumed when ESC actually closes teleporter menu
-                hideMenu();
-                markEscConsumed();
-            } else if (!isPlayerClose(player)) {
-                hideMenu();
-            }
-            return;
-        }
-
-        if (isPlayerClose(player) && Gdx.input.isKeyJustPressed(Input.Keys.E)) {
-            showMenu();
         }
     }
 
-    private boolean isPlayerClose(Entity player) {
-        Vector2 p = player.getPosition();
-        Vector2 t = entity.getPosition();
-        return p.dst2(t) <= ACTIVATION_RADIUS * ACTIVATION_RADIUS;
+    private void handleInteract() {
+        if (menuVisible) {
+            hideMenu();
+        } else {
+            showMenu();
+        }
     }
 
     private void showMenu() {
@@ -172,9 +142,5 @@ public class TeleporterComponent extends Component {
         }
         teleporting = false;
         pendingDestination = null;
-    }
-
-    public boolean isTeleporting() {
-        return teleporting;
     }
 }
