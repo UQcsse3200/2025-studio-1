@@ -58,11 +58,17 @@ public class TutorialScreen extends BaseScreen {
     protected Entity createUIScreen(Stage stage) {
         TutorialClip moveClip = new TutorialClip("images/tutorial/move", "frame_%04d.png", 25, 12f, true);
         List<TutorialStep> steps = List.of(
-                new TutorialStep("Welcome!", "Use WASD to move your character.",
+                new TutorialStep("Basic Movement", "Use 'A/S/D' to move around, and 'Space' to jump",
                         moveClip),
-                new TutorialStep("Attack", "Use space to attack enemies.",
+                new TutorialStep("Game Pause", "Press 'ESC' to pause the game",
                         moveClip),
-                new TutorialStep("Pick up item", "Walk on an item to pick it up",
+                new TutorialStep("Item Pickup", "Press 'E' to pick up an item",
+                        moveClip),
+                new TutorialStep("Inventory", "Press 'I' to bring up inventory bar",
+                        moveClip),
+                new TutorialStep("Mini Map", "Press 'TAB' to open mini map",
+                        moveClip),
+                new TutorialStep("Teleporter", "Press 'E' to open teleporter menu",
                         moveClip)
         );
 
