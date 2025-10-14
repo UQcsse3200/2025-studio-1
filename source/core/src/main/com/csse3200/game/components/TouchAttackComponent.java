@@ -65,24 +65,26 @@ public class TouchAttackComponent extends Component {
         }
 
         // Try to attack target.
-        Entity target = ((BodyUserData) other.getBody().getUserData()).entity;
-        Entity attacker = ((BodyUserData) me.getBody().getUserData()).entity;
+        if (!PhysicsLayer.contains(PhysicsLayer.OBSTACLE, other.getFilterData().categoryBits)) {
+            Entity target = ((BodyUserData) other.getBody().getUserData()).entity;
+            Entity attacker = ((BodyUserData) me.getBody().getUserData()).entity;
 
-        CombatStatsComponent targetStats = target.getComponent(CombatStatsComponent.class);
-        WeaponsStatsComponent attackerWeapon = attacker.getComponent(WeaponsStatsComponent.class);
+            CombatStatsComponent targetStats = target.getComponent(CombatStatsComponent.class);
+            WeaponsStatsComponent attackerWeapon = attacker.getComponent(WeaponsStatsComponent.class);
 
-        if (targetStats != null && attackerWeapon != null) {
-            targetStats.takeDamage(attackerWeapon.getBaseAttack());
-        }
+            if (targetStats != null && attackerWeapon != null) {
+                targetStats.takeDamage(attackerWeapon.getBaseAttack());
+            }
 
-        // Apply knockback (if knockback resistance is not 100%)
-        PhysicsComponent physicsComponent = target.getComponent(PhysicsComponent.class);
-        if (targetStats != null && targetStats.getKnockbackResistance() != 1f
-                && physicsComponent != null && knockbackForce > 0f) {
-            Body targetBody = physicsComponent.getBody();
-            Vector2 direction = target.getCenterPosition().sub(entity.getCenterPosition());
-            Vector2 impulse = direction.setLength(knockbackForce * (1 - targetStats.getKnockbackResistance()));
-            targetBody.applyLinearImpulse(impulse, targetBody.getWorldCenter(), true);
+            // Apply knockback (if knockback resistance is not 100%)
+            PhysicsComponent physicsComponent = target.getComponent(PhysicsComponent.class);
+            if (targetStats != null && targetStats.getKnockbackResistance() != 1f
+                    && physicsComponent != null && knockbackForce > 0f) {
+                Body targetBody = physicsComponent.getBody();
+                Vector2 direction = target.getCenterPosition().sub(entity.getCenterPosition());
+                Vector2 impulse = direction.setLength(knockbackForce * (1 - targetStats.getKnockbackResistance()));
+                targetBody.applyLinearImpulse(impulse, targetBody.getWorldCenter(), true);
+            }
         }
 
         //disposes entity if it is a projectile
