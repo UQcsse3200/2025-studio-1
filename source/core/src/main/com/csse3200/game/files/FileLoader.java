@@ -3,6 +3,8 @@ package com.csse3200.game.files;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Json;
+import com.badlogic.gdx.utils.JsonReader;
+import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.JsonWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -75,7 +77,13 @@ public class FileLoader {
     public static <T> T readPlayer(Class<SaveGame.GameState> player, String filename, Location location) {
         logger.debug("Reading class {} from {}", player.getSimpleName(), filename);
         FileHandle file = getFileHandle(filename, location);
-
+        SaveGame.GameState test = json.fromJson(SaveGame.GameState.class, file);
+        try {
+            JsonValue root = new JsonReader().parse(filename);
+            System.out.println(root.prettyPrint(JsonWriter.OutputType.json, 1));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         if (file == null) {
             logger.error("Failed to create file handle for {}", filename);
             return null;
@@ -117,7 +125,7 @@ public class FileLoader {
      */
     public static void writeClass(Object object, String filename, Location location) {
         logger.debug("Reading class {} from {}", object.getClass().getSimpleName(), filename);
-        json.setElementType(SaveGame.GameState.class, "loadedInventory", SaveGame.itemRetrieve.class);
+        json.setElementType(SaveGame.GameState.class, "loadedInventory", SaveGame.itemInInven.class);
         FileHandle file = getFileHandle(filename, location);
         Json json = new Json(JsonWriter.OutputType.json);
         json.setTypeName(null);

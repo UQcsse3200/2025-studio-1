@@ -348,8 +348,12 @@ public abstract class GameArea implements Disposable {
      * Retrieves current wave count for services
      */
     public int currentWave() {
-        return wavesManager.getWaveNumber();
+        if (wavesManager != null) {
+            return wavesManager.getWaveNumber();
+        }
+        return 0;
     }
+
 
     /**
      * Adds GhostGPT enemies onto the map.

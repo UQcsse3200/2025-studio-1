@@ -11,12 +11,16 @@ import com.csse3200.game.components.items.ConsumableComponent;
 import com.csse3200.game.components.items.ItemComponent;
 import com.csse3200.game.components.player.InventoryComponent;
 import com.csse3200.game.components.player.StaminaComponent;
+import com.csse3200.game.entities.Avatar;
+import com.csse3200.game.entities.AvatarRegistry;
 import com.csse3200.game.entities.Entity;
+import com.csse3200.game.entities.configs.Armour;
 import com.csse3200.game.entities.configs.ItemTypes;
+import com.csse3200.game.entities.configs.Weapons;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
+import java.util.*;
 
 
 /**
@@ -42,18 +46,26 @@ public class SaveGame {
         private information player;
         private String gameArea;
         private int wave;
-        private ArrayList<itemRetrieve> loadedInventory;
-        private Difficulty difficulty;
-
+        private ArrayList<itemInInven> loadedInventory;
+        private String difficulty;
+        private ArrayList<String> areasVisited;
 
         public GameState() {
         }
 
-        public void setDifficulty(Difficulty difficulty) {
+        public void setAreasVisited(Set<String> areasVisited) {
+            this.areasVisited = new ArrayList<>(areasVisited);
+        }
+
+        public Set<String> getAreasVisited() {
+            return new HashSet<>(this.areasVisited);
+        }
+
+        public void setDifficulty(String difficulty) {
             this.difficulty = difficulty;
         }
 
-        public Difficulty getDifficulty() {
+        public String getDifficulty() {
             return difficulty;
         }
 
@@ -70,7 +82,7 @@ public class SaveGame {
         public void setPlayer(Entity playerInfo) {
             this.player = new information();
             this.player.playerPos = playerInfo.getPosition();
-            this.player.avatar = "placeholder";
+//            this.player.avatar = List.of( AvatarRegistry.get()); // gets current avatar
             this.player.processor = playerInfo.getComponent(InventoryComponent.class).getProcessor();
             this.player.ammoReserve = playerInfo.getComponent(AmmoStatsComponent.class).getAmmo();
             this.player.stamina = playerInfo.getComponent(StaminaComponent.class).getStamina();
@@ -110,7 +122,7 @@ public class SaveGame {
          * retrieves player inventory to be stored into json file
          */
 
-        public ArrayList<itemRetrieve> getInventory() {
+        public ArrayList<itemInInven> getInventory() {
             return loadedInventory;
         }
 
@@ -119,54 +131,52 @@ public class SaveGame {
          *
          * @param inventory The players inventory component
          */
-        private ArrayList<itemRetrieve> setInventory(InventoryComponent inventory) {
-            ArrayList<itemRetrieve> inventoryFilter = new ArrayList<>();
-            itemRetrieve itemiser = null;
-            //goes through players inventory and stores all items with a itemcomponent
-            for (int i = 0; i < inventory.getSize(); i++) {
-                if (inventory.get(i).hasComponent(ItemComponent.class)) {
-                    Entity item = inventory.get(i);
-                    ItemComponent inventoryItem = item.getComponent(ItemComponent.class);
+        private ArrayList<itemInInven> setInventory(InventoryComponent inventory) {
+            ArrayList<itemInInven> inventoryFilter = new ArrayList<>();
+            itemInInven itemiser;
+                for (Entity e: inventory.getInventory()) {
+                    //to ensure the inventory is populated by null items
+                    itemiser = null;
 
-                    // further sorts into weapons or consumables
-                    if (item.hasComponent(WeaponsStatsComponent.class)) {
+                    if (e != null && e.hasComponent(ItemComponent.class)) {
 
-                        WeaponsStatsComponent weapon = item.getComponent(WeaponsStatsComponent.class);
-                        //last sorting will split between melee weapons and ranged weapons
-                        if (item.hasComponent(MagazineComponent.class)) {
+                        ItemComponent inventoryItem = e.getComponent(ItemComponent.class);
 
-                            itemiser = new itemRetrieve();
-                            itemiser.type = inventoryItem.getType();
-                            itemiser.ammo = item.getComponent(MagazineComponent.class).getCurrentAmmo();
-                            itemiser.texture = inventoryItem.getTexture();
-                            itemiser.count = inventoryItem.getCount();
-                            itemiser.upgradeStage = weapon.getUpgradeStage();
-                        } else {
-
-                            itemiser = new itemRetrieve();
-                            itemiser.type = inventoryItem.getType();
-                            itemiser.ammo = 0;
-                            itemiser.texture = inventoryItem.getTexture();
-                            itemiser.count = inventoryItem.getCount();
-                            itemiser.upgradeStage = weapon.getUpgradeStage();
-                        }
-
-                    } else if (item.hasComponent(ConsumableComponent.class)) {
-
-                        itemiser = new itemRetrieve();
+                        itemiser = new itemInInven();
                         itemiser.type = inventoryItem.getType();
-                        itemiser.ammo = null;
-                        itemiser.texture = inventoryItem.getTexture();
-                        itemiser.count = inventoryItem.getCount();
-                        itemiser.upgradeStage = 1;
 
+
+                        // further sorts into weapons or consumables
+                        if (e.hasComponent(WeaponsStatsComponent.class)) {
+                            WeaponsStatsComponent weapon = e.getComponent(WeaponsStatsComponent.class);
+
+                            //last sorting will split between melee weapons and ranged weapons
+                            if (e.hasComponent(MagazineComponent.class)) {
+
+                                itemiser.ammo = e.getComponent(MagazineComponent.class).getCurrentAmmo();
+                                itemiser.texture = inventoryItem.getTexture();
+                                itemiser.count = inventoryItem.getCount();
+                                itemiser.upgradeStage = weapon.getUpgradeStage();
+
+                            } else {
+
+                                itemiser.ammo = 0;
+                                itemiser.texture = inventoryItem.getTexture();
+                                itemiser.count = inventoryItem.getCount();
+                                itemiser.upgradeStage = weapon.getUpgradeStage();
+                            }
+                        } else if (e.hasComponent(ConsumableComponent.class)) {
+
+                            itemiser.ammo = null;
+                            itemiser.texture = inventoryItem.getTexture();
+                            itemiser.count = inventoryItem.getCount();
+                            itemiser.upgradeStage = 1;
+                        }
                     }
-                }
                 inventoryFilter.add(itemiser);
             }
             return inventoryFilter;
         }
-
     }
 
     /**
@@ -176,7 +186,7 @@ public class SaveGame {
      */
     public static class information {
         public Vector2 playerPos;
-        public String avatar;
+        public List avatar;
         public int ammoReserve;
         public float stamina;
         public float maxStamina;
@@ -194,14 +204,15 @@ public class SaveGame {
     /**
      * helper class that cleans up json file for ease of readibility
      */
-    public static class itemRetrieve {
+    public static class itemInInven {
         public ItemTypes type;
         public Integer ammo;
         public String texture;
         public int count;
         public int upgradeStage;
+        public String name;
 
-        public itemRetrieve() {
+        public itemInInven() {
         }
 
     }

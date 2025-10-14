@@ -1,7 +1,8 @@
 package com.csse3200.game.services;
 
-import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.areas.GameArea;
+import com.csse3200.game.areas.difficulty.Difficulty;
+import com.csse3200.game.areas.difficulty.DifficultyType;
 import com.csse3200.game.components.AmmoStatsComponent;
 import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.components.MagazineComponent;
@@ -9,9 +10,11 @@ import com.csse3200.game.components.WeaponsStatsComponent;
 import com.csse3200.game.components.items.ItemComponent;
 import com.csse3200.game.components.player.InventoryComponent;
 import com.csse3200.game.components.player.StaminaComponent;
+import com.csse3200.game.entities.AvatarRegistry;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.Consumables;
 import com.csse3200.game.entities.configs.Weapons;
+import com.csse3200.game.entities.configs.weapons.LightsaberConfig;
 import com.csse3200.game.entities.factories.items.ConsumableFactory;
 import com.csse3200.game.entities.factories.items.WeaponsFactory;
 import com.csse3200.game.files.SaveGame;
@@ -40,6 +43,7 @@ public class SaveLoadService {
         if (SaveGame.loadGame(filePath) != null) {
             savedGame = SaveGame.loadGame(filePath);
         } else {
+            logger.error("failed to load in game");
             savedGame = null;
         }
         return savedGame;
@@ -64,6 +68,8 @@ public class SaveLoadService {
         ServiceLocator.getPlayer().getComponent(
                 AmmoStatsComponent.class).setAmmo(playerStats.ammoReserve);
         ServiceLocator.getPlayer().setPosition(playerStats.playerPos);
+
+
         //TEAMNOTE: set Avatar in next sprint or later tonight before PR
     }
 
@@ -72,39 +78,14 @@ public class SaveLoadService {
      *
      * @param inventory from the json file to be loaded
      */
-    public static void loadPlayerInventory(ArrayList<SaveGame.itemRetrieve> inventory) {
-        for (SaveGame.itemRetrieve item : inventory) {
-            Entity itemEntity = null;
+    public static void loadPlayerInventory(ArrayList<SaveGame.itemInInven> inventory) {
+        Entity itemEntity;
+        for (SaveGame.itemInInven item : inventory) {
+            itemEntity = null;
 
             switch (item.type) {
-                case MELEE:
-                    if (item.texture.equals(Weapons.LIGHTSABER.getConfig().texturePath)) {
-                        itemEntity = WeaponsFactory.createWeapon(Weapons.LIGHTSABER);
-                    } else if (item.texture.equals(Weapons.DAGGER.getConfig().texturePath)) {
-                        itemEntity = WeaponsFactory.createWeapon(Weapons.DAGGER);
-                    }
-                    break;
-                case CONSUMABLE:
-                    if (item.texture.equals(Consumables.HEALTH_MONSTER_DRINK.getConfig().texturePath)) {
-                        itemEntity = ConsumableFactory.createConsumable(Consumables.HEALTH_MONSTER_DRINK);
-
-                    } else if (item.texture.equals(Consumables.LIGHTNING_IN_A_BOTTLE.getConfig().texturePath)) {
-                        itemEntity = ConsumableFactory.createConsumable(Consumables.LIGHTNING_IN_A_BOTTLE);
-                    }
-
-                    break;
-                case RANGED:
-                    if (item.texture.equals(Weapons.RIFLE.getConfig().texturePath)) {
-                        itemEntity = WeaponsFactory.createWeapon(Weapons.PISTOL);
-                    } else if (item.texture.equals(Weapons.PISTOL.getConfig().texturePath)) {
-                        itemEntity = WeaponsFactory.createWeapon(Weapons.RIFLE);
-                    }
-
-                    assert itemEntity != null;
-                    itemEntity.getComponent(MagazineComponent.class).setCurrentAmmo(item.ammo);
-                    break;
-                default:
-                    logger.error("Invalid item type");
+                case RANGED, MELEE -> itemEntity = getWeapon(item);
+                case CONSUMABLE -> itemEntity = getConsumable(item.texture);
             }
 
             assert itemEntity != null;
@@ -138,12 +119,32 @@ public class SaveLoadService {
         SaveGame.GameState gamestate = new SaveGame.GameState();
         gamestate.setPlayer(player);
         gamestate.setLoadedInventory(player.getComponent(InventoryComponent.class));
-        gamestate.setArea(gameArea);
+        gamestate.setArea(ServiceLocator.getGameArea());
         gamestate.setWave(gameArea.currentWave());
+        gamestate.setAreasVisited(ServiceLocator.getDiscoveryService().getDiscovered());
+        gamestate.setDifficulty(ServiceLocator.getDifficulty().toString());
 
         path = "saves" + File.separator + slot + ".json";
 
         SaveGame.saveGame(gamestate, path);
         return true;
+    }
+
+    private static Entity getWeapon(SaveGame.itemInInven item) {
+        for (Weapons weapon : Weapons.values()) {
+            if (item.texture.equals(weapon.getConfig().texturePath)) {
+                return WeaponsFactory.createWeapon(weapon);
+            }
+        }
+        return null;
+    }
+
+    private static Entity getConsumable(String texture) {
+        for (Consumables consumable : Consumables.values()) {
+            if (texture.equals(consumable.getConfig().texturePath)) {
+                return ConsumableFactory.createConsumable(consumable);
+            }
+        }
+        return null;
     }
 }
