@@ -1,0 +1,11 @@
+{
+areaId: Forest
+inventory: []
+Health: 80
+ProcessNumber: 10000
+position: {
+	x: 9.410379
+	y: 4.5487356
+}
+RoundNumber: 2
+}
