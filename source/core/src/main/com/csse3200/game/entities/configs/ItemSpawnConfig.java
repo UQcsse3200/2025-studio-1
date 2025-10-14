@@ -56,9 +56,20 @@ public class ItemSpawnConfig {
                 new ItemSpawner.ItemSpawnInfo(new GridPoint2(14, 14), 1)
         ));
 
-        config.put("unlimitedammo", List.of(
-                new ItemSpawner.ItemSpawnInfo(new GridPoint2(5, 15), 1)
+        //Powerups
+        config.put("aimbot", List.of(
+                new ItemSpawner.ItemSpawnInfo(new GridPoint2(5, 13), 1)
         ));
+        config.put("unlimitedammo", List.of(
+                new ItemSpawner.ItemSpawnInfo(new GridPoint2(22, 13), 1)
+        ));
+        config.put("rapidfire", List.of(
+                new ItemSpawner.ItemSpawnInfo(new GridPoint2(11, 17), 1)
+        ));
+        config.put("doubleprocessors", List.of(
+                new ItemSpawner.ItemSpawnInfo(new GridPoint2(16, 17), 1)
+        ));
+
 
         return config;
     }
@@ -147,8 +158,8 @@ public class ItemSpawnConfig {
                 new ItemSpawner.ItemSpawnInfo(new GridPoint2(7, 7), 1)
         ));
 
-        config.put("unlimitedammo", List.of(
-                new ItemSpawner.ItemSpawnInfo(new GridPoint2(5, 13), 1)
+        config.put("rapidfire", List.of(
+                new ItemSpawner.ItemSpawnInfo(new GridPoint2(5, 15), 1)
         ));
 
         return config;
@@ -187,7 +198,12 @@ public class ItemSpawnConfig {
         config.put("doubleprocessors", List.of(
                 new ItemSpawner.ItemSpawnInfo(new GridPoint2(9, 13), 1)
         ));
-           return config;
+
+        config.put("unlimitedammo", List.of(
+                new ItemSpawner.ItemSpawnInfo(new GridPoint2(13, 20), 1)
+        ));
+
+        return config;
     }
 
     /**
@@ -203,6 +219,9 @@ public class ItemSpawnConfig {
                 new ItemSpawner.ItemSpawnInfo(new GridPoint2(22, 6), 1)
         ));
 
+        config.put("aimbot", List.of(
+                new ItemSpawner.ItemSpawnInfo(new GridPoint2(18, 15), 1)
+        ));
 
         return config;
     }
@@ -215,6 +234,14 @@ public class ItemSpawnConfig {
 
         config.put(Weapons.RIFLE.name(), List.of(
                 new ItemSpawner.ItemSpawnInfo(new GridPoint2(5, 7), 1)
+        ));
+
+        config.put("rapidfire", List.of(
+                new ItemSpawner.ItemSpawnInfo(new GridPoint2(13, 7), 1)
+        ));
+
+        config.put("unlimitedammo", List.of(
+                new ItemSpawner.ItemSpawnInfo(new GridPoint2(21, 7), 1)
         ));
 
         return config;
