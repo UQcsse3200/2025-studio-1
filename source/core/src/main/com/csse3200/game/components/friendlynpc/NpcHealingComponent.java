@@ -1,9 +1,11 @@
 package com.csse3200.game.components.friendlynpc;
 
+import com.badlogic.gdx.audio.Sound;
 import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.components.Component;
 import com.csse3200.game.entities.Entity;
-
+import com.csse3200.game.services.ResourceService;
+import com.csse3200.game.services.ServiceLocator;
 
 /**
  * NPC Healing Component
@@ -15,6 +17,9 @@ public class NpcHealingComponent extends Component {
     // Frequency / cooldown
     private long cooldownMillis = 0; // 0 = no cooldown
     private long lastTriggerTime = 0L;
+
+    private static final String HealPath = "sounds/healing-magic.mp3";
+    private static final float HealVolume = 1.0f;
 
     /**
      * Creates an NPC healing component
@@ -63,5 +68,13 @@ public class NpcHealingComponent extends Component {
         }
         combatStats.addHealth(healAmount);
         lastTriggerTime = now;
+
+        ResourceService rs = ServiceLocator.getResourceService();
+        if (rs != null) {
+            Sound sfx = rs.getAsset(HealPath, Sound.class);
+            if (sfx != null) {
+                sfx.play(HealVolume);
+            }
+        }
     }
 }
