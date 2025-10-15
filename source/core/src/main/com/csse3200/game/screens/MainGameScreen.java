@@ -347,8 +347,7 @@ public class MainGameScreen extends ScreenAdapter {
             }
         }
 
-        //to fetch the time spent by the player in the round
-        //float timePlayedSeconds = (float) getRemainingSeconds();
+        // Time played = remaining time on countdown timer if won, else 0
         float timePlayedSeconds = won ? (float) getRemainingSeconds() : 0f;
 
         session.getLeaderBoardManager().addRound(processors, timePlayedSeconds);
