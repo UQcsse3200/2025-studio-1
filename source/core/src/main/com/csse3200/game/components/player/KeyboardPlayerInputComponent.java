@@ -174,7 +174,6 @@ public class KeyboardPlayerInputComponent extends InputComponent {
             case Keys.NUM_5:
                 checkSlot(Keys.NUM_5 - OFFSET);
                 return true;
-            case Keys.P:
             case Keys.R:
                 triggerDropFocused();
                 return true;
