@@ -1,84 +1,57 @@
 package com.csse3200.game.components.tasks;
 
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.utils.Timer;
-import com.csse3200.game.ai.tasks.DefaultTask;
-import com.csse3200.game.ai.tasks.PriorityTask;
-import com.csse3200.game.ai.tasks.Task;
 import com.csse3200.game.components.enemy.ProjectileLauncherComponent;
 import com.csse3200.game.entities.Entity;
-import com.csse3200.game.physics.PhysicsEngine;
-import com.csse3200.game.physics.PhysicsLayer;
-import com.csse3200.game.physics.components.PhysicsComponent;
-import com.csse3200.game.physics.raycast.RaycastHit;
-import com.csse3200.game.rendering.DebugRenderer;
 import com.csse3200.game.services.GameTime;
 import com.csse3200.game.services.ServiceLocator;
 
 /**
  * Stationary entity with firing capabilities when it sees enemy on sight.  Does burst firing.
  */
-public class TurretFiringTask extends DefaultTask implements PriorityTask {
-    private final Entity target;
-    private final int priority;
-    private final float speedX;
-    private final PhysicsEngine physics;
-    private final DebugRenderer debugRenderer;
-    private final RaycastHit hit = new RaycastHit();
-    private final RaycastHit jumpHit = new RaycastHit();
-    private PhysicsComponent physicsComponent;
-
-    // Projectile firing
+public class TurretFiringTask extends TurretTask {
     private final ProjectileLauncherComponent projectileLauncher;
     private final Entity shooter;
     private final float firingCooldown; // seconds
     private float currentCooldown; // starts ready to fire
     private final GameTime timeSource;
-    private int burstAmount;
-    private float burstCooldown;
+    private final int burstAmount;
+    private final float burstCooldown;
 
     /**
      * Constructs the task
-     * @param target The target to fire at
-     * @param priority The priority
+     *
+     * @param target             The target to fire at
+     * @param priority           The priority
      * @param projectileLauncher The projectile launcher component used to fire the projectiles
-     * @param shooter The entity firing the projectiles
-     * @param firingCooldown The firing cooldown between each burst.
-     * @param currentCooldown The current cooldown
-     * @param burstAmount The amount of projectiles to fire in one burst
-     * @param burstCooldown The cooldown between each fired projectile in a burst
+     * @param shooter            The entity firing the projectiles
+     * @param firingCooldown     The firing cooldown between each burst.
+     * @param currentCooldown    The current cooldown
+     * @param burstAmount        The amount of projectiles to fire in one burst
+     * @param burstCooldown      The cooldown between each fired projectile in a burst
      */
     public TurretFiringTask(Entity target, int priority,
-                                  ProjectileLauncherComponent projectileLauncher, Entity shooter,
-                                  float firingCooldown, float currentCooldown, int burstAmount,
-                                  float burstCooldown) {
-        this.target = target;
-        this.priority = priority;
-        this.speedX = 0f;
+                            ProjectileLauncherComponent projectileLauncher, Entity shooter,
+                            float firingCooldown, float currentCooldown, int burstAmount,
+                            float burstCooldown) {
+        super(target, priority);
         this.projectileLauncher = projectileLauncher;
         this.shooter = shooter;
         this.firingCooldown = firingCooldown;
         this.currentCooldown = currentCooldown;
         this.burstAmount = burstAmount;
         this.burstCooldown = burstCooldown;
-        this.physics = ServiceLocator.getPhysicsService().getPhysics();
-        this.debugRenderer = ServiceLocator.getRenderService().getDebug();
         this.timeSource = ServiceLocator.getTimeSource();
     }
 
     @Override
-    public void start() {
-        super.start();
-        physicsComponent = owner.getEntity().getComponent(PhysicsComponent.class);
+    public void triggerStartEvent() {
         owner.getEntity().getEvents().trigger("chaseStart");
     }
 
     @Override
-    public void update() {
-        if (target == null || physicsComponent == null) return;
-        Body body = physicsComponent.getBody();
-
+    public void performFiringAction() {
         fireProjectiles();
     }
 
@@ -119,28 +92,10 @@ public class TurretFiringTask extends DefaultTask implements PriorityTask {
     }
 
     @Override
-    public void stop() {
-        super.stop();
-    }
-
-    @Override
     public int getPriority() {
         if (isTargetVisible()) {
             return priority;
         }
         return -1;
-    }
-
-    private boolean isTargetVisible() {
-        if (target == null) return false;
-        Vector2 from = owner.getEntity().getCenterPosition();
-        Vector2 to = target.getCenterPosition();
-
-        if (physics.raycast(from, to, PhysicsLayer.OBSTACLE, hit)) {
-            debugRenderer.drawLine(from, hit.point);
-            return false;
-        }
-        debugRenderer.drawLine(from, to);
-        return true;
     }
 }
