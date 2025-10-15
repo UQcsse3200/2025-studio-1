@@ -2,23 +2,48 @@ package com.csse3200.game.areas;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.GridPoint2;
+import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.CameraComponent;
+import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import com.csse3200.game.entities.Entity;
-import com.csse3200.game.entities.factories.characters.PlayerFactory;
+import com.csse3200.game.entities.configs.ItemSpawnConfig;
+import com.csse3200.game.entities.factories.characters.NPCFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
+import com.csse3200.game.entities.spawner.ItemSpawner;
+import com.csse3200.game.entities.factories.system.TeleporterFactory;
 import com.csse3200.game.rendering.SolidColorRenderComponent;
+import com.csse3200.game.services.ServiceLocator;
+
 
 /**
  * Room 5 with its own background styling.
  */
 public class MainHall extends GameArea {
     private static final float WALL_WIDTH = 0.1f;
-    private static final GridPoint2 PLAYER_SPAWN = new GridPoint2(10, 10);
-
+    private static GridPoint2 playerSpawn = new GridPoint2(10, 10);
+    private Entity player;
+    private int roomDiffNumber = 3;
     public MainHall(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
         super(terrainFactory, cameraComponent);
+    }
+
+    /**
+     * Setter method for the player spawn point
+     * should be used when the player is traversing through the rooms
+     *
+     * @param newSpawn the new spawn point
+     */
+    public static void setRoomSpawn(GridPoint2 newSpawn) {
+        if (newSpawn == null) {
+            return;
+        }
+        MainHall.playerSpawn = newSpawn;
+    }
+
+    public static MainHall load(TerrainFactory terrainFactory, CameraComponent camera) {
+        return (new MainHall(terrainFactory, camera));
     }
 
     @Override
@@ -32,13 +57,22 @@ public class MainHall extends GameArea {
         overlay.addComponent(new SolidColorRenderComponent(new Color(0.1f, 0.1f, 0.2f, 0.35f)));
         spawnEntity(overlay);
         spawnplatform3();
-        spawnsofa();
         spawnscreen();
         spawnholo();
         spawnObjectDoors(new GridPoint2(0, 6), new GridPoint2(28, 17));
         spawnWallsAndDoor();
-        spawnPlayer();
+        player = spawnPlayer();
         spawnFloor();
+        spawnEnemies();
+        spawnGrokDroids();
+        ItemSpawner itemSpawner = new ItemSpawner(this);
+        itemSpawner.spawnItems(ItemSpawnConfig.mainHallmap());
+        spawnTeleporter();
+
+        Entity ui = new Entity();
+        ui.addComponent(new GameAreaDisplay("Main Hall"))
+                .addComponent(new com.csse3200.game.components.gamearea.FloorLabelDisplay("Floor 3"));
+        spawnEntity(ui);
     }
 
     private void ensureAssets() {
@@ -63,6 +97,7 @@ public class MainHall extends GameArea {
         Bounds b = getCameraBounds(cameraComponent);
         addSolidWallLeft(b, WALL_WIDTH);
         addSolidWallRight(b, WALL_WIDTH);
+        addSolidWallTop(b, WALL_WIDTH);
         float leftDoorHeight = Math.max(1f, b.viewHeight() * 0.2f);
         float leftDoorY = b.bottomY();
         float leftTopSegHeight = Math.max(0f, b.topY() - (leftDoorY + leftDoorHeight));
@@ -86,27 +121,38 @@ public class MainHall extends GameArea {
             spawnEntity(rightTop);
         }
         Entity rightDoor = ObstacleFactory.createDoorTrigger(WALL_WIDTH, rightDoorHeight);
-        rightDoor.setPosition(b.rightX() - WALL_WIDTH - 0.001f, rightDoorY + 7f);
+        rightDoor.setPosition(b.rightX() - WALL_WIDTH - 0.001f, rightDoorY + 6f);
         rightDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadSecurity));
         spawnEntity(rightDoor);
     }
 
-
     private void loadBackToFloor2() {
-        roomNumber--;
+        Reception.setRoomSpawn(new GridPoint2(24, 24));
         clearAndLoad(() -> new Reception(terrainFactory, cameraComponent));
     }
 
     private void loadSecurity() {
-        roomNumber++;
+        SecurityGameArea.setRoomSpawn(new GridPoint2(6, 8));
         clearAndLoad(() -> new SecurityGameArea(terrainFactory, cameraComponent));
     }
 
-    private void spawnPlayer() {
-        Entity player = PlayerFactory.createPlayer();
-        spawnEntityAt(player, PLAYER_SPAWN, true, true);
+    private Entity spawnPlayer() {
+        return spawnOrRepositionPlayer(playerSpawn);
     }
+    private void spawnEnemies() {
+        if (player == null)
+            return;
 
+        Entity deepspin = com.csse3200.game.entities.factories.characters.NPCFactory.createDeepspin(player, this,
+                ServiceLocator.getDifficulty().getRoomDifficulty(this.roomDiffNumber));
+        spawnEntityAt(deepspin, new GridPoint2(22, 10), true, false);
+    }
+    private void spawnGrokDroids() {
+        Entity grok1 = NPCFactory.createGrokDroid(player, this,
+                ServiceLocator.getDifficulty().getRoomDifficulty(this.roomDiffNumber));
+        GridPoint2 grok1Pos = new GridPoint2(10, 20);
+        spawnEntityAt(grok1, grok1Pos, true, false);
+    }
     /**
      * Spawns 4 platforms for parkour
      **/
@@ -166,19 +212,19 @@ public class MainHall extends GameArea {
         spawnEntity(holo1);
     }
 
+    /** Bottom-left teleporter for discovered-room travel */
+    private void spawnTeleporter() {
+        Entity tp = TeleporterFactory.createTeleporter(new Vector2(4f, 3f));
+        spawnEntity(tp);
+    }
+
     public Entity getPlayer() {
         //tempoary placeholder return null to stop errors
-        return null;
+        return player;
     }
 
     @Override
     public String toString() {
         return "Mainhall";
     }
-
-    public static MainHall load(TerrainFactory terrainFactory, CameraComponent camera) {
-        return (new MainHall(terrainFactory, camera));
-    }
 }
-
-

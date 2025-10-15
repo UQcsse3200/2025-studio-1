@@ -3,7 +3,7 @@ package com.csse3200.game.entities.configs.weapons;
 import com.csse3200.game.entities.configs.ItemTypes;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class WeaponConfigsTest {
     @Test
@@ -15,7 +15,7 @@ public class WeaponConfigsTest {
         assertTrue(config.ammoCapacity >= 0);
         assertTrue(config.shootTimer >= 0);
         assertTrue(config.damage >= 0);
-        assertEquals(config.weaponType, ItemTypes.RANGED);
+        assertEquals(ItemTypes.RANGED, config.weaponType);
     }
 
     @Test
@@ -27,14 +27,14 @@ public class WeaponConfigsTest {
         assertTrue(config.ammoCapacity >= 0);
         assertTrue(config.shootTimer >= 0);
         assertTrue(config.damage >= 0);
-        assertEquals(config.weaponType, ItemTypes.RANGED);
+        assertEquals(ItemTypes.RANGED, config.weaponType);
     }
 
     @Test
     void daggerConfigTest() {
         MeleeWeaponConfig config = new DaggerConfig();
         assertNotNull(config.texturePath);
-        assertEquals(config.weaponType, ItemTypes.MELEE);
+        assertEquals(ItemTypes.MELEE, config.weaponType);
         assertTrue(config.damage >= 0);
         assertTrue(config.hitTimer >= 0);
         assertTrue(config.range >= 0);
@@ -45,12 +45,21 @@ public class WeaponConfigsTest {
     void LightsaberConfigTest() {
         MeleeWeaponConfig config = new LightsaberConfig();
         assertNotNull(config.texturePath);
-        assertEquals(config.weaponType, ItemTypes.MELEE);
+        assertEquals(ItemTypes.MELEE, config.weaponType);
         assertTrue(config.damage >= 0);
         assertTrue(config.hitTimer >= 0);
         assertTrue(config.range >= 0);
-
     }
 
-
+    @Test
+    void launcherConfigTest() {
+        RangedWeaponConfig config = new LauncherConfig();
+        assertNotNull(config.projectileTexturePath);
+        assertNotNull(config.texturePath);
+        assertTrue(config.reloadTimer >= 0);
+        assertTrue(config.ammoCapacity >= 0);
+        assertTrue(config.shootTimer >= 0);
+        assertTrue(config.damage >= 0);
+        assertEquals(ItemTypes.RANGED, config.weaponType);
+    }
 }

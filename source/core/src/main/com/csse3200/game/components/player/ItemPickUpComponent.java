@@ -9,13 +9,16 @@ import com.csse3200.game.components.Component;
 import com.csse3200.game.components.MagazineComponent;
 import com.csse3200.game.components.items.ItemComponent;
 import com.csse3200.game.entities.Entity;
+import com.csse3200.game.entities.configs.Armour;
 import com.csse3200.game.entities.configs.Weapons;
+import com.csse3200.game.entities.factories.PowerupsFactory;
+import com.csse3200.game.entities.factories.items.ArmourFactory;
 import com.csse3200.game.entities.factories.items.WeaponsFactory;
+import com.csse3200.game.entities.factories.items.WorldPickUpFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.physics.BodyUserData;
 import com.csse3200.game.physics.components.PhysicsComponent;
 import com.csse3200.game.services.ServiceLocator;
-import com.csse3200.game.entities.factories.items.WorldPickUpFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,6 +29,8 @@ import org.slf4j.LoggerFactory;
  */
 
 public class ItemPickUpComponent extends Component {
+    // Constructs a private Logger for this class.
+    private static final Logger logger = LoggerFactory.getLogger(ItemPickUpComponent.class);
     // Reference to the player's inventory used to store picked up items.
     private final InventoryComponent inventory;
     // The item entity currently in collision range and eligible to be picked up.
@@ -37,9 +42,6 @@ public class ItemPickUpComponent extends Component {
     public ItemPickUpComponent(InventoryComponent inventory) {
         this.inventory = inventory;
     }
-
-    // Constructs a private Logger for this class.
-    private static final Logger logger = LoggerFactory.getLogger(ItemPickUpComponent.class);
 
     /**
      * Called when the component is created. Registers listeners for relevant player events:
@@ -75,7 +77,8 @@ public class ItemPickUpComponent extends Component {
         }
 
         Entity otherEntity = userData.entity;
-        if (otherEntity.getComponent(ItemComponent.class) != null) {
+        if (otherEntity.getComponent(ItemComponent.class) != null
+                && otherEntity.getComponent(ItemComponent.class).isPickupable()) {
             targetItem = otherEntity;
             logger.trace("collisionStart: collided with item {}", targetItem);
         }
@@ -140,25 +143,39 @@ public class ItemPickUpComponent extends Component {
         }
 
         Entity weapon = weaponFromTexture(tex);
+        Entity armour = null;
         if (weapon == null) {
-            logger.warn("Unknown pickup texture {}, ignoring", ic.getTexture());
+            armour = armourFromTexture(tex);
+            if (armour == null) {
+                logger.warn("Unknown pickup texture {}, ignoring", ic.getTexture());
+                return;
+            }
+        }
+
+        if (weapon != null) {
+            weapon.create();
+            // The two following lines of code were generate by ChatGPT
+            MagazineComponent mag = weapon.getComponent(MagazineComponent.class);
+            if (mag != null) mag.setTimeSinceLastReload(999f);
+
+            boolean added = inventory.addItem(weapon);
+            if (added) {
+                item.dispose();
+                targetItem = null;
+                logger.info("Picked up item and added to inventory");
+            } else {
+                weapon.dispose();
+                logger.info("Inventory full. Cannot pick up item");
+            }
             return;
         }
 
-        weapon.create();
-        // The two following lines of code were generate by ChatGPT
-        MagazineComponent mag = weapon.getComponent(MagazineComponent.class);
-        if (mag != null) mag.setTimeSinceLastReload(999f);
-
-        boolean added = inventory.addItem(weapon);
-        if (added) {
-            item.dispose();
-            targetItem = null;
-            logger.info("Picked up item and added to inventory");
-        } else {
-            weapon.dispose();
-            logger.info("Inventory full. Cannot pick up item");
-        }
+        // if we are here, that means item is armour
+        // armour is not going to part of the inventory, gets immediately equipped
+        armour.create();
+        ArmourEquipComponent armourEquipper = entity.getComponent(ArmourEquipComponent.class);
+        item.dispose();
+        armourEquipper.setItem(armour);
     }
 
     /**
@@ -166,6 +183,7 @@ public class ItemPickUpComponent extends Component {
      * This method compares the given texture path against the Weapons
      * enum configuration and, if matched, creates the appropriate weapon
      * using the {@link WeaponsFactory}.
+     *
      * @param texture The texture file path associated with the world item.
      * @return A new {@link Entity} representing the weapon, or null if the
      * texture does not correspond to any known weapon type.
@@ -174,6 +192,25 @@ public class ItemPickUpComponent extends Component {
         for (Weapons w : Weapons.values()) {
             if (texture.equals(w.getConfig().texturePath)) {
                 return WeaponsFactory.createWeapon(w);
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Resolves a texture path string into a corresponding armour entity.
+     * This method compares the given texture path against the Armour
+     * enum configuration and, if matched, creates the appropriate armour
+     * using the {@link ArmourFactory}.
+     *
+     * @param texture The texture file path associated with the world item.
+     * @return A new {@link Entity} representing the weapon, or null if the
+     * texture does not correspond to any known weapon type.
+     */
+    private Entity armourFromTexture(String texture) {
+        for (Armour a : Armour.values()) {
+            if (texture.equals(a.getConfig().texturePath)) {
+                return ArmourFactory.createArmour(a);
             }
         }
         return null;
@@ -204,7 +241,6 @@ public class ItemPickUpComponent extends Component {
      * - Clears the focused index so another accidental drop does not occur.
      * - Attempts to respawn the dropped item back into the game world near the player,
      * using the texture to reconstruct the item entity.
-     *
      */
     private void onDropFocused() {
         // do nothing if no valid slot is currently focused
@@ -226,6 +262,10 @@ public class ItemPickUpComponent extends Component {
             logger.warn("Drop failed: could not remove item at index {}", focusedIndex);
             return;
         }
+
+        // remove the item from being equipped
+        entity.getComponent(PlayerEquipComponent.class).setItem(null, null);
+
         focusedIndex = -1;
         // If no texture info was stored, skip respawning to the world
         if (tex == null) {
@@ -275,7 +315,9 @@ public class ItemPickUpComponent extends Component {
         if (texture.endsWith("dagger.png")) return WeaponsFactory.createWeapon(Weapons.DAGGER);
         if (texture.endsWith("pistol.png")) return WeaponsFactory.createWeapon(Weapons.PISTOL);
         if (texture.endsWith("rifle.png")) return WeaponsFactory.createWeapon(Weapons.RIFLE);
+        if (texture.endsWith("rocketlauncher.png")) return WeaponsFactory.createWeapon(Weapons.LAUNCHER);
         if (texture.endsWith("lightsaberSingle.png")) return WeaponsFactory.createWeapon(Weapons.LIGHTSABER);
+        if (texture.endsWith("rapidfirepowerup.png")) return PowerupsFactory.createRapidFire();
         if (texture.endsWith("tree.png")) return ObstacleFactory.createTree();
         return null;
     }

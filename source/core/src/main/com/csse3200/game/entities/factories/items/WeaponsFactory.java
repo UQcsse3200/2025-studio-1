@@ -10,7 +10,7 @@ import com.csse3200.game.components.items.ItemComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.ItemTypes;
 import com.csse3200.game.entities.configs.Weapons;
-import com.csse3200.game.entities.configs.weapons.RifleConfig;
+import com.csse3200.game.entities.configs.weapons.RangedWeaponConfig;
 import com.csse3200.game.entities.configs.weapons.WeaponConfig;
 import com.csse3200.game.rendering.AnimationRenderComponent;
 import com.csse3200.game.rendering.TextureRenderComponent;
@@ -27,6 +27,10 @@ import com.csse3200.game.rendering.TextureRenderWithRotationComponent;
  * similar characteristics.
  */
 public class WeaponsFactory {
+
+    private WeaponsFactory() {
+        throw new IllegalStateException("Instantiating static util class");
+    }
 
     /**
      * Creates a new weapon entity based on the given weapon type.
@@ -46,29 +50,53 @@ public class WeaponsFactory {
         WeaponsStatsComponent weaponStats = weapon.getComponent(WeaponsStatsComponent.class);
         weaponStats.setCoolDown(0.2f);
 
-
+        //Set the weapon's name from the config
         ItemComponent item = weapon.getComponent(ItemComponent.class);
+        setItemNameFromConfig(config, item);
 
         // Attach type to weapon
         switch (config.weaponType) {
             case RANGED:
+                RangedWeaponConfig rangedConfig = (RangedWeaponConfig) config;
                 item.setType(ItemTypes.RANGED);
-                weapon.addComponent(new MagazineComponent(20));
+                weapon.addComponent(new MagazineComponent(rangedConfig.ammoCapacity));
+
                 // using TextureRenderWithRotationComponent to allow guns to follow cursor
-                weapon.addComponent(new TextureRenderWithRotationComponent(config.texturePath));
+                weapon.addComponent(new TextureRenderWithRotationComponent(rangedConfig.texturePath));
                 weapon.getComponent(TextureRenderComponent.class).disableComponent();
-                if (weaponType.getConfig() instanceof RifleConfig) {
-                    weapon.addComponent(new LaserComponent());
-                    weapon.addComponent(new BulletEnhancerComponent());
-                }
+                weaponStats.setCoolDown((float) rangedConfig.shootTimer);
                 break;
             case MELEE:
                 item.setType(ItemTypes.MELEE);
-                weapon.getComponent(TextureRenderComponent.class).disableComponent();
                 break;
             default:
                 item.setType(ItemTypes.NONE);
                 break;
+        }
+        return weapon;
+    }
+
+    /**
+     * Creates a weapon with attachments on it
+     *
+     * @param weaponType the type of weapon
+     * @param laser      true if laser attachment is wanted
+     * @param bullet     true if bullet attachment is wanted
+     * @return the new weapon with attachments
+     */
+    public static Entity createWeaponWithAttachment(Weapons weaponType, boolean laser, boolean bullet) {
+        Entity weapon = createWeapon(weaponType);
+
+        if (weaponType != Weapons.PISTOL && weaponType != Weapons.RIFLE) {
+            return weapon;
+        }
+
+        if (laser) {
+            weapon.addComponent(new LaserComponent());
+        }
+
+        if (bullet) {
+            weapon.addComponent(new BulletEnhancerComponent());
         }
         return weapon;
     }
@@ -88,7 +116,16 @@ public class WeaponsFactory {
         return animator;
     }
 
-    private WeaponsFactory() {
-        throw new IllegalStateException("Instantiating static util class");
+    /**
+     * Copies the name from the specified {@link WeaponConfig} into the given {@link ItemComponent}.
+     * If the config's name is not null or empty, this sets the item's name to match the config.
+     *
+     * @param config is the weapon configuration containing the name to assign
+     * @param item   is the ItemComponent whose name will be assigned
+     */
+    public static void setItemNameFromConfig(WeaponConfig config, ItemComponent item) {
+        if (!config.getName().isEmpty()) {
+            item.setName(config.getName());
+        }
     }
 }

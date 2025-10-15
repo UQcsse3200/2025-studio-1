@@ -4,12 +4,17 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.components.KeycardGateComponent;
 import com.csse3200.game.components.gamearea.GameAreaDisplay;
+import com.csse3200.game.components.items.ItemComponent;
 import com.csse3200.game.components.items.ItemHoldComponent;
+import com.csse3200.game.components.player.ItemPickUpComponent;
+import com.csse3200.game.components.player.PlayerEquipComponent;
+import com.csse3200.game.components.minigames.robotFighting.RobotFightingGame;
 import com.csse3200.game.components.player.InventoryComponent;
 import com.csse3200.game.components.shop.CatalogService;
 import com.csse3200.game.components.shop.ShopDemo;
@@ -23,19 +28,28 @@ import com.csse3200.game.entities.factories.KeycardFactory;
 import com.csse3200.game.entities.factories.PowerupsFactory;
 import com.csse3200.game.entities.factories.ShopFactory;
 import com.csse3200.game.entities.factories.characters.BossFactory;
+import com.csse3200.game.entities.factories.characters.FriendlyNPCFactory;
 import com.csse3200.game.entities.factories.characters.PlayerFactory;
 import com.csse3200.game.entities.factories.items.ItemFactory;
 import com.csse3200.game.entities.factories.items.WeaponsFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
+import com.csse3200.game.entities.factories.system.TeleporterFactory;
 import com.csse3200.game.entities.spawner.ItemSpawner;
+import com.csse3200.game.physics.PhysicsLayer;
+import com.csse3200.game.physics.components.HitboxComponent;
+import com.csse3200.game.physics.components.PhysicsComponent;
 import com.csse3200.game.rendering.AnimationRenderComponent;
 import com.csse3200.game.rendering.TextureRenderComponent;
+import com.csse3200.game.rendering.TextureRenderWithRotationComponent;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.security.SecureRandom;
+import static com.csse3200.game.entities.configs.Weapons.*;
+
+import java.util.List;
+import java.util.Collections;
 
 /**
  * A playable “Forest” style room. This class:
@@ -48,17 +62,12 @@ import java.security.SecureRandom;
  */
 public class ForestGameArea extends GameArea {
     private static final Logger logger = LoggerFactory.getLogger(ForestGameArea.class);
-    private static final GridPoint2 PLAYER_SPAWN = new GridPoint2(3, 20);
     private static final int NUM_ITEMS = 5;//this is for ItemFactory
     // private static final int NUM_TURRETS = 1;
     private static final float WALL_WIDTH = 0.1f;
-
-    private final float VERTICAL_HEIGHT_OFFSET = 9.375f;
-
     /**
      * Files or pictures used by the game (enemy/props,etc.).
      */
-    private static final String HEART = "images/heart.png";
     private static final String[] forestTextures = {
             "images/box_boy_leaf.png",
             "images/tree.png",
@@ -91,15 +100,18 @@ public class ForestGameArea extends GameArea {
             "images/pistol.png",
             "images/rifle.png",
             "images/dagger.png",
+            "images/rapidfirepowerup.png",
+            "images/aimbot_powerup.png",
+            "images/doubleprocessorspowerup.png",
             "images/laser_shot.png",
             "images/Spawn.png",
-            "images/SpawnResize.png",
             "images/LobbyWIP.png",
             "images/door.png",
             "images/KeycardDoor.png",
             "images/player.png",
+            "images/engineer.png",
+            "images/soldier.png",
             "images/mud.png",
-            "images/heart.png",
             "images/healthBench.png",
             "images/laserball.png",
             "images/computerBench.png",
@@ -111,15 +123,12 @@ public class ForestGameArea extends GameArea {
             "images/speedBench.png",
             "images/waterBullet.png",
             "images/VendingMachine.png",
-            HEART,
-            "images/heart.png",
             "images/laserball.png",
             "images/MarblePlatform.png",
             "images/computerBench.png",
             "images/monster.png",
             "images/electric_zap.png",
             "images/lightning_bottle.png",
-            "images/Shipping.png",
             "images/ShipmentBoxLid.png",
             "images/ShipmentCrane.png",
             "images/Conveyor.png",
@@ -129,9 +138,36 @@ public class ForestGameArea extends GameArea {
             "foreg_sprites/furniture/ServerRack.png",
             "foreg_sprites/furniture/ServerRack2.png",
             "foreg_sprites/furniture/Vent.png",
-            "images/Storage.png"
+            "images/rocketlauncher.png",
+            "images/rocket.png",
+            "images/rocketExplosion.png",
+            "images/Storage.png",
+            "images/casino.png",
+            "images/!.png",
+            "images/NpcDialogue.png",
+            "images/nurse_npc.png",
+            "images/partner.png",
+            "images/remote.png",
+            "images/Assistor.png",
+            "images/laserbullet.png",
+            "images/armour-assets/chestplate.png",
+            "images/armour-assets/hood.png",
+            "images/blackjack_table.png"
     };
-
+    private static final String[] backgroundTextures = {
+            "backgrounds/Reception.png",
+            "backgrounds/Shipping.png",
+            "backgrounds/SpawnResize.png",
+            "backgrounds/Storage.png",
+            "images/Storage.png",
+            "images/cards.png",
+            "backgrounds/Storage.png",
+            "backgrounds/MainHall.png",
+            "backgrounds/Office.png",
+            "backgrounds/Research.png",
+            "backgrounds/Security.png",
+            "backgrounds/Server.png"
+    };
     /**
      * General prop textures (floors, tiles, etc.).
      */
@@ -145,7 +181,11 @@ public class ForestGameArea extends GameArea {
             "foreg_sprites/general/ThinFloor.png",
             "foreg_sprites/general/ThinFloor2.png",
             "foreg_sprites/general/ThinFloor3.png",
-            "foreg_sprites/general/Test.png"
+            "foreg_sprites/general/Test.png",
+            "foreg_sprites/general/Test.png",
+            "foreg_sprites/furniture/LabPlant1.png",
+            "foreg_sprites/furniture/LabPlant2.png",
+            "foreg_sprites/furniture/PurpleWindow.png",
     };
     private static final String[] researchTextures = {
             "images/ResearchBackground.png",
@@ -163,9 +203,14 @@ public class ForestGameArea extends GameArea {
             "foreg_sprites/Security/SecuritySystem.png",
             "foreg_sprites/futuristic/storage_crate_green2.png",
             "foreg_sprites/futuristic/storage_crate_dark2.png",
-            "foreg_sprites/futuristic/SecurityCamera3.png"
+            "foreg_sprites/futuristic/SecurityCamera3.png",
+            "images/slots_kiosk.png",
+            "images/bell.png",
+            "images/cherry.png",
+            "images/diamond.png",
+            "images/lemon.png",
+            "images/watermelon.png"
     };
-
     /**
      * Spawn pad textures.
      */
@@ -173,7 +218,6 @@ public class ForestGameArea extends GameArea {
             "foreg_sprites/spawn_pads/SpawnPadPurple.png",
             "foreg_sprites/spawn_pads/SpawnPadRed.png",
     };
-
     /**
      * Office furniture textures used on the upper platform.
      */
@@ -186,7 +230,6 @@ public class ForestGameArea extends GameArea {
             "foreg_sprites/office/OfficeChair.png",
             "foreg_sprites/office/officeDesk4.png",
     };
-
     /**
      * Futuristic props used in this room (camera, energy pod, crates).
      */
@@ -196,7 +239,6 @@ public class ForestGameArea extends GameArea {
             "foreg_sprites/futuristic/storage_crate_green2.png",
             "foreg_sprites/futuristic/storage_crate_dark2.png",
     };
-
     /**
      * keycard textures
      */
@@ -206,7 +248,6 @@ public class ForestGameArea extends GameArea {
             "images/keycard_lvl3.png",
             "images/keycard_lvl4.png",
     };
-
     private static final String[] forestTextureAtlases = {
             "images/robot-2.atlas", "images/fireball.atlas", "images/blackhole.atlas", "images/Robot_1.atlas",
             "images/boss_idle.atlas",
@@ -214,45 +255,71 @@ public class ForestGameArea extends GameArea {
             "images/ghost.atlas",
             "images/ghostKing.atlas",
             "images/ghostGPT.atlas",
+            "images/ghostGPTRed.atlas",
+            "images/ghostGPTBlue.atlas",
             "images/Deepspin.atlas",
+            "images/DeepspinRed.atlas",
+            "images/DeepspinBlue.atlas",
             "images/Grokdroid.atlas",
+            "images/GrokdroidRed.atlas",
+            "images/GrokdroidBlue.atlas",
             "images/Vroomba.atlas",
+            "images/VroombaRed.atlas",
+            "images/VroombaBlue.atlas",
             "images/Turret.atlas",
             "images/explosion_1.atlas",
             "images/explosion_2.atlas",
+            "images/engineer.atlas",
             "images/player.atlas",
+            "images/soldier.atlas",
             "images/boss_explosion.atlas",
             "images/Boss3_Attacks.atlas",
             "images/player.atlas",
             "images/terrain_iso_grass.atlas",
-            "images/ghost.atlas",
-            "images/ghostKing.atlas",
-            "images/ghostGPT.atlas",
-            "images/explosion_1.atlas",
-            "images/explosion_2.atlas",
             "images/boss_explosion.atlas",
             "images/boss2_combined.atlas",
             "images/Boss3_Attacks.atlas",
-            "images/boss3_phase2.atlas"
+            "images/boss3_phase2.atlas",
+            "images/rocketExplosion.atlas",
+            "images/!animation.atlas",
+            "images/guidance_npc.atlas",
+            "images/assister_npc.atlas",
+            "images/cards.atlas"
+    };
+    private static final String[] extraTextures = {
+            "foreg_sprites/extras/Spikes.png","foreg_sprites/extras/Spikes2.png"
     };
     private static final String[] forestSounds = {"sounds/Impact4.ogg",
             "sounds/shot_failed.mp3",
             "sounds/reload.mp3",
             "sounds/laser_blast.mp3",
-            "sounds/ammo_replenished.mp3"};
-
+            "sounds/ammo_replenished.mp3",
+            "sounds/upgradeSound.mp3"};
     private static final String[] playerSound1 = {"sounds/jump.mp3"};
-    private static final String[] enemySounds = {"sounds/enemyDamage.mp3", "sounds/enemyDeath.mp3"};
-    private static final String BACKGROUND_MUSIC = "sounds/BGM_03.mp3";
-
+    private static final String[] enemySounds = {
+            "sounds/deepspinDamage.mp3",
+            "sounds/deepspinDeath.mp3",
+            "sounds/vroombaDamage.mp3",
+            "sounds/vroombaDeath.mp3",
+            "sounds/GPTDamage.mp3",
+            "sounds/GPTDeath.mp3",
+            "sounds/grokDamage.mp3",
+            "sounds/grokDeath.mp3",
+            "sounds/turretDamage.mp3",
+            "sounds/turretDeath.mp3"
+    };
+    private static final String BACKGROUND_MUSIC = "sounds/forestmusic.mp3";
     private static final String[] forestMusic = {BACKGROUND_MUSIC};
-
+    private static GridPoint2 playerSpawn = new GridPoint2(3, 20);
+    private final float VERTICAL_HEIGHT_OFFSET = 9.375f;
     private Entity player;
     private Entity dagger;
     private Entity lightsaber;
     private Entity bullet;
     private Entity pistol;
     private Entity rifle;
+    private Entity rapidFirePowerup;
+    private Entity unlimitedAmmoPowerup;
 
 
     /**
@@ -268,6 +335,23 @@ public class ForestGameArea extends GameArea {
     }
 
     /**
+     * Setter method for the player spawn point
+     * should be used when the player is traversing through the rooms
+     *
+     * @param newSpawn the new spawn point
+     */
+    public static void setRoomSpawn(GridPoint2 newSpawn) {
+        if (newSpawn == null) {
+            return;
+        }
+        ForestGameArea.playerSpawn = newSpawn;
+    }
+
+    public static ForestGameArea load(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
+        return (new ForestGameArea(terrainFactory, cameraComponent));
+    }
+
+    /**
      * Entry point for this room. This:
      * - Loads textures/sounds/music
      * - Registers this room in the ServiceLocator
@@ -277,39 +361,35 @@ public class ForestGameArea extends GameArea {
      */
     @Override
     public void create() {
+        this.baseScaling = 1f;
+
         ServiceLocator.registerGameArea(this);
         loadAssets();
         displayUI();
         spawnTerrain();
+        player = spawnPlayer();
+        ServiceLocator.registerPlayer(player);
         spawnComputerBench();
         spawnHealthBench();
         spawnSpeedBench();
-
-        player = spawnPlayer();
-        ServiceLocator.registerPlayer(player);
         spawnFloor();
         spawnBottomRightDoor();
         spawnMarblePlatforms();
-        spawnShopKiosk();
-        SecureRandom random = new SecureRandom();
-        int choice = random.nextInt(3);
-        switch (choice) {
-            case 0 -> spawnBoss2();
-            case 1 -> spawnRobots();
-            default -> spawnBoss3();
-        }
         playMusic();
         ItemSpawner itemSpawner = new ItemSpawner(this);
         itemSpawner.spawnItems(ItemSpawnConfig.forestmap());
 
+        spawnGuidanceNpc();
+
+
         // Place a keycard on the floor so the player can unlock the door
-        float keycardX = 1f;
-        float keycardY = 15f;
+        float keycardX = 3f;
+        float keycardY = 7f;
         Entity keycard = KeycardFactory.createKeycard(1);
         keycard.setPosition(new Vector2(keycardX, keycardY));
         spawnEntity(keycard);
 
-        spawnItems();
+        spawnTeleporter();
     }
 
     private void spawnRobots() {
@@ -388,7 +468,10 @@ public class ForestGameArea extends GameArea {
             Entity rightDoor = ObstacleFactory.createDoorTrigger(WALL_WIDTH, rightDoorHeight);
             rightDoor.setPosition(rightX - WALL_WIDTH - 0.001f, rightDoorY);
             rightDoor.addComponent(new com.csse3200.game.components.DoorComponent(() -> this.loadNextLevel()));
-            // spawnEntity(rightDoor);
+
+            // Left edge wall with door (used helper instead of manual split)
+            Bounds b = getCameraBounds(cameraComponent);
+            addVerticalDoorLeft(b, WALL_WIDTH, this::loadCasino);
         }
     }
 
@@ -397,9 +480,16 @@ public class ForestGameArea extends GameArea {
      * This is called by the door/keycard logic when the player exits.
      */
     private void loadNextLevel() {
-        roomNumber++;
         // Use the safe, render-thread transition helper
+        Reception.setRoomSpawn(new GridPoint2(6, 10));
         clearAndLoad(() -> new Reception(terrainFactory, cameraComponent));
+    }
+
+    /**
+     * Disposes current entities and switches to CasinoGameArea
+     */
+    private void loadCasino() {
+        clearAndLoad(() -> new CasinoGameArea(terrainFactory, cameraComponent));
     }
 
     /**
@@ -413,14 +503,6 @@ public class ForestGameArea extends GameArea {
         }
         Entity officeDesk = ObstacleFactory.createOfficeDesk();
         spawnEntityAt(officeDesk, new GridPoint2(5, 11), true, false);
-    }
-
-    private void spawnShopKiosk() {
-        CatalogService catalog = ShopDemo.makeDemoCatalog();
-        ShopManager manager = new ShopManager(catalog);
-
-        Entity shop = ShopFactory.createShop(this, manager, "images/VendingMachine.png"); // have as tree now as placeholder, later need to change to actual shop icon
-        spawnEntityAt(shop, new GridPoint2(18, 7), true, false);
     }
 
     private void spawnComputerBench() {
@@ -438,7 +520,6 @@ public class ForestGameArea extends GameArea {
         Entity bench = InteractableStationFactory.createStation(Benches.SPEED_BENCH);
         spawnEntityAt(bench, new GridPoint2(25, 7), true, true);
     }
-
 
     /**
      * Places a large door sprite at the bottom-right platform. The door uses a keycard gate:
@@ -515,40 +596,83 @@ public class ForestGameArea extends GameArea {
      * The number of items is set by NUM_ITEMS.
      * Each item is created and placed at a random spot on the terrain.
      */
-    private void spawnItems() {
-        GridPoint2 firstPos = new GridPoint2(5, 25);
-        GridPoint2 secondPos = new GridPoint2(10, 25);
-        GridPoint2 thirdPos = new GridPoint2(15, 25);
 
-        spawnEntityAt(ItemFactory.createItem(HEART), firstPos, true, false);
-        spawnEntityAt(ItemFactory.createItem(HEART), secondPos, true, false);
-        spawnEntityAt(ItemFactory.createItem(HEART), thirdPos, true, false);
+
+    /** Bottom-left teleporter for discovered-room travel */
+    private void spawnTeleporter() {
+        Entity tp = TeleporterFactory.createTeleporter(new Vector2(2f, 3f));
+        spawnEntity(tp);
     }
 
     private Entity spawnPlayer() {
-        Entity newPlayer = PlayerFactory.createPlayer();
-        spawnEntityAt(newPlayer, PLAYER_SPAWN, true, true);
+        Entity player = spawnOrRepositionPlayer(playerSpawn);
 
-        return newPlayer;
+        // Only add event listeners if this is a new player
+        if (ServiceLocator.getPlayer() == player) {
+            player.getEvents().addListener("equip", this::equipItem);
+            player.getEvents().addListener("unequip", this::unequipItem);
+        }
+
+        return player;
     }
 
     private Entity spawnDagger() {
-        Entity newDagger = WeaponsFactory.createWeapon(Weapons.DAGGER);
+        Entity newDagger = WeaponsFactory.createWeapon(DAGGER);
         Vector2 newDaggerOffset = new Vector2(0.7f, 0.3f);
         newDagger.addComponent(new ItemHoldComponent(this.player, newDaggerOffset));
 
         return newDagger;
     }
 
-    private void equipItem(Entity item) {
-        InventoryComponent inventory = this.player.getComponent(InventoryComponent.class);
-        inventory.addItem(item);
-        inventory.setCurrItem(item);
-        spawnEntityAt(item, PLAYER_SPAWN, true, true);
+    /**
+     * Sets the equipped item in the PlayerEquipComponent to be the given item
+     *
+     * @param tex Is an existing Item texture path, within the players inventory
+     */
+    private void equipItem(String tex) {
+        Entity item = player.getComponent(ItemPickUpComponent.class).createItemFromTexture(tex);
+        if (item == null) return;
+
+        // Get the players Z index
+        float playerZ = player.getComponent(AnimationRenderComponent.class).getZIndex();
+
+        // Get the relevant components from the item
+        TextureRenderComponent texComp = item.getComponent(TextureRenderComponent.class);
+        TextureRenderWithRotationComponent texRotComp = item.getComponent(
+                TextureRenderWithRotationComponent.class);
+
+        // Update the Z index for the item
+        if (texRotComp != null) {
+            texRotComp.setZIndex(playerZ + 0.01f);
+        } else if (texComp != null)
+            texComp.setZIndex(playerZ + 0.01f);
+
+        item.getComponent(HitboxComponent.class).setLayer(PhysicsLayer.OBSTACLE);
+
+        // Make it so that the player cannot pick up the item
+        item.getComponent(ItemComponent.class).setPickupable(false);
+
+        // Make dropped items static so they behave like map-placed items
+        PhysicsComponent phys = item.getComponent(PhysicsComponent.class);
+        if (phys != null) phys.setBodyType(BodyDef.BodyType.StaticBody);
+
+        // get the game area and spawn the item
+        ServiceLocator.getGameArea().spawnEntity(item);
+
+        // update offset from the players position
+        Vector2 offset = item.getComponent(ItemComponent.class).getEquipOffset();
+        player.getComponent(PlayerEquipComponent.class).setItem(item, offset);
+    }
+
+    /**
+     * Sets the equipped item in the PlayerEquipComponent to be null, along with the offset
+     */
+    private void unequipItem() {
+        player.getComponent(PlayerEquipComponent.class).setItem(null, null);
     }
 
     private Entity spawnLightsaber() {
-        Entity newLightsaber = WeaponsFactory.createWeapon(Weapons.LIGHTSABER);
+        Entity newLightsaber = WeaponsFactory.createWeapon(LIGHTSABER);
         Vector2 newLightsaberOffset = new Vector2(0.9f, -0.2f);
         newLightsaber.addComponent(new ItemHoldComponent(this.player, newLightsaberOffset));
         AnimationRenderComponent lightSaberAnimator = WeaponsFactory.createAnimation("images/lightSaber.atlas", this.player);
@@ -566,16 +690,62 @@ public class ForestGameArea extends GameArea {
     }
 
     private Entity spawnRifle() {
-        Entity newRifle = WeaponsFactory.createWeapon(Weapons.RIFLE);
+        Entity newRifle = WeaponsFactory.createWeapon(RIFLE);
         Vector2 newRifleOffset = new Vector2(0.8f, 0.15f);
         newRifle.addComponent(new ItemHoldComponent(this.player, newRifleOffset));
         return newRifle;
     }
 
-    private Entity spawnRapidFirePowerup() {
+    private void spawnRapidFirePowerup() {
         Entity newRapidFirePowerup = PowerupsFactory.createRapidFire();
-        spawnEntityAt(newRapidFirePowerup, new GridPoint2(2, 40), true, true);
-        return newRapidFirePowerup;
+        spawnEntityAt(newRapidFirePowerup, new GridPoint2(2, 30), true, true);
+    }
+
+    private void spawnUnlimitedAmmoPowerup() {
+        Entity newUnlimitedAmmoPowerup = PowerupsFactory.createUnlimitedAmmo();
+        spawnEntityAt(newUnlimitedAmmoPowerup, new GridPoint2(2, 30), true, true);
+    }
+
+    private void spawnAimbotPowerup() {
+        Entity newAimbot = PowerupsFactory.createAimBot();
+        spawnEntityAt(newAimbot, new GridPoint2(2, 30), true, true);
+    }
+
+    private void spawnDoubleProcessorsPowerup() {
+        Entity newUnlimitedAmmoPowerup = PowerupsFactory.createDoubleProcessors();
+        spawnEntityAt(newUnlimitedAmmoPowerup, new GridPoint2(2, 30), true, true);
+    }
+
+    private void spawnnpctest() {
+        GridPoint2 pos = new GridPoint2(16, 9);
+        Entity test = FriendlyNPCFactory.createTest(player);
+        spawnEntityAt(test, pos, true, true);
+    }
+
+    private void spawnPartnerNearPlayerIfNeeded() {
+        // Check if a partner already exists in the area
+        for (Entity entity : areaEntities) {
+            if (isPartnerNPC(entity)) {
+                // Partner already exists, don't spawn a new one
+                return;
+            }
+        }
+
+        Entity partner = FriendlyNPCFactory.createPartner(player);
+
+        GridPoint2 pos = new GridPoint2(8, 9);
+        spawnEntityAt(partner, pos, true, true);
+    }
+
+    private void spawnGuidanceNpc() {
+        var waypoints = List.of(new Vector2(12f, 7f), new Vector2(18f, 7f), new Vector2(25f, 12f));
+        Entity guide = FriendlyNPCFactory.createGuidanceNpc(player, waypoints);
+
+        spawnEntityAt(guide, new GridPoint2((int) player.getPosition().x + 2, (int) player.getPosition().y), true, true);
+
+        AnimationRenderComponent arc = guide.getComponent(AnimationRenderComponent.class);
+        arc.startAnimation("robot_fire");   // start anim
+        guide.setScale(1.2f, 1.2f);       // pick a size you like
     }
 
     private void spawnBoss2() {
@@ -603,6 +773,8 @@ public class ForestGameArea extends GameArea {
         music.play();
     }
 
+    // Removed area-specific dispose to avoid double disposal during transitions
+
     /**
      * Loads all textures, atlases, sounds and music needed by this room.
      * Blocks briefly until loading is complete. If you add new art, put it here.
@@ -613,11 +785,13 @@ public class ForestGameArea extends GameArea {
         resourceService.loadTextures(futuristicTextures);
         resourceService.loadTextures(keycardTextures);
         resourceService.loadTextures(generalTextures);
+        resourceService.loadTextures(backgroundTextures);
         resourceService.loadTextures(forestTextures);
         resourceService.loadTextures(spawnPadTextures);
         resourceService.loadTextures(officeTextures);
         resourceService.loadTextures(securityTextures);
         resourceService.loadTextures(researchTextures);
+        resourceService.loadTextures(extraTextures);
         resourceService.loadTextureAtlases(forestTextureAtlases);
         resourceService.loadSounds(playerSound1);
         resourceService.loadSounds(forestSounds);
@@ -640,6 +814,7 @@ public class ForestGameArea extends GameArea {
         resourceService.unloadAssets(keycardTextures);
         resourceService.unloadAssets(futuristicTextures);
         resourceService.unloadAssets(playerSound1);
+        resourceService.unloadAssets(backgroundTextures);
         resourceService.unloadAssets(forestTextures);
         resourceService.unloadAssets(generalTextures);
         resourceService.unloadAssets(forestTextureAtlases);
@@ -648,21 +823,16 @@ public class ForestGameArea extends GameArea {
         resourceService.unloadAssets(spawnPadTextures);
         resourceService.unloadAssets(officeTextures);
         resourceService.unloadAssets(securityTextures);
+        resourceService.unloadAssets(extraTextures);
     }
-
-    // Removed area-specific dispose to avoid double disposal during transitions
-
 
     public Entity getPlayer() {
         return player;
     }
 
+
     @Override
     public String toString() {
         return "Forest";
-    }
-
-    public static ForestGameArea load(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
-        return (new ForestGameArea(terrainFactory, cameraComponent));
     }
 }

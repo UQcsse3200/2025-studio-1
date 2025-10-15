@@ -1,7 +1,10 @@
 package com.csse3200.game.components.mainmenu;
 
 import com.csse3200.game.GdxGame;
+import com.csse3200.game.areas.difficulty.Difficulty;
+import com.csse3200.game.areas.difficulty.DifficultyType;
 import com.csse3200.game.components.Component;
+import com.csse3200.game.services.ServiceLocator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,6 +27,7 @@ public class MainMenuActions extends Component {
         entity.getEvents().addListener("exit", this::onExit);
         entity.getEvents().addListener("settings", this::onSettings);
         entity.getEvents().addListener("tutorial", this::onTutorial);
+        entity.getEvents().addListener("difficulty", this::onDifficulty);
     }
 
     /**
@@ -31,7 +35,16 @@ public class MainMenuActions extends Component {
      */
     private void onStart() {
         logger.info("Start game");
-        game.setScreen(GdxGame.ScreenType.STORY);
+
+        // Set the difficulty if it has not been set
+        if (ServiceLocator.getDifficulty() == null) {
+            ServiceLocator.registerDifficulty(new Difficulty(DifficultyType.NORMAL));
+        }
+
+        logger.info("Started game with difficulty: {}", ServiceLocator.getDifficulty());
+
+        //choose the avtar on starting a new game
+        game.setScreen(GdxGame.ScreenType.CHOOSE_AVATAR);
     }
 
     /**
@@ -62,5 +75,10 @@ public class MainMenuActions extends Component {
     private void onTutorial() {
         logger.info("Tutorial triggered");
         game.setScreen(GdxGame.ScreenType.TUTORIAL_SCREEN);
+    }
+
+    private void onDifficulty() {
+        logger.info("Launching Difficulty screen");
+        game.setScreen(GdxGame.ScreenType.DIFFICULTY_SCREEN);
     }
 }

@@ -14,10 +14,10 @@ public class PhysicsProjectileComponent extends Component {
 
     private static final Logger logger = LoggerFactory.
             getLogger(PhysicsProjectileComponent.class);
-    private PhysicsComponent physicsComponent;
-    private Vector2 initialVelocity;
-    private final float lifetime = 5f;
-    private float lived = 0f;
+    protected final float lifetime = 5f;
+    protected PhysicsComponent physicsComponent;
+    protected Vector2 initialVelocity;
+    protected float lived = 0f;
 
     /**
      * Manifests the physics for the projectile
@@ -57,7 +57,6 @@ public class PhysicsProjectileComponent extends Component {
 
     /**
      * Fires a bullet in a certain direction at a certain speed
-     *
      */
     public void fire(Vector2 direction, float speed) {
 

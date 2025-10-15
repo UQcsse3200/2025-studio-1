@@ -7,14 +7,14 @@ import com.badlogic.gdx.math.Vector2;
  */
 public interface MovementController {
     /**
-     * @param movementEnabled true to enable controller movement, false to disable.
-     */
-    void setMoving(boolean movementEnabled);
-
-    /**
      * @return True when movement enabled, false when disabled
      */
     boolean getMoving();
+
+    /**
+     * @param movementEnabled true to enable controller movement, false to disable.
+     */
+    void setMoving(boolean movementEnabled);
 
     /**
      * @return Target position in the world

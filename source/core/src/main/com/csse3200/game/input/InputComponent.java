@@ -5,6 +5,7 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.components.Component;
+import com.csse3200.game.components.player.PlayerInventoryDisplay;
 import com.csse3200.game.services.ServiceLocator;
 
 /**
@@ -42,12 +43,12 @@ public abstract class InputComponent extends Component
         ServiceLocator.getInputService().register(this);
     }
 
-    public void setPriority(int priority) {
-        this.priority = priority;
-    }
-
     public int getPriority() {
         return priority;
+    }
+
+    public void setPriority(int priority) {
+        this.priority = priority;
     }
 
     @Override
@@ -79,9 +80,6 @@ public abstract class InputComponent extends Component
      */
     @Override
     public boolean keyDown(int keycode) {
-        if (this.isPauseable() && ServiceLocator.getTimeSource().isPaused()) {
-            return false;
-        }
         return this.keyPressed(keycode);
     }
 
@@ -92,7 +90,16 @@ public abstract class InputComponent extends Component
      * @param keycode The key code of the key that was pressed.
      * @return true if the even was handled, false otherwise
      */
-    protected abstract boolean keyPressed(int keycode);
+    protected boolean keyPressed(int keycode) {
+        if (keycode == Input.Keys.I) {
+            PlayerInventoryDisplay inventoryDisplay = entity.getComponent(PlayerInventoryDisplay.class);
+            if (inventoryDisplay != null) {
+                inventoryDisplay.toggleVisibility();
+            }
+            return true;
+        }
+        return false;
+    }
 
     /**
      * @see InputProcessor#keyTyped(char)
@@ -113,9 +120,6 @@ public abstract class InputComponent extends Component
      */
     @Override
     public boolean keyUp(int keycode) {
-        if (this.isPauseable() && ServiceLocator.getTimeSource().isPaused()) {
-            return false;
-        }
         return this.keyReleased(keycode);
     }
 

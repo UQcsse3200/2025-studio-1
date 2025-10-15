@@ -16,21 +16,14 @@ public enum PurchaseError {
     LIMIT_REACHED(-5),
     INVALID_ITEM(-6),
     UNEXPECTED(-7),
-    ;
+    INVALID_WEAPON(-8),
+    ALREADY_HAVE_LASER(-9),
+    ALREADY_HAVE_BULLET(-10);
 
     private final int code;
 
     PurchaseError(int i) {
         this.code = i;
-    }
-
-    /**
-     * Returns the code associated with a PurchaseError
-     *
-     * @return an integer representing the PurchaseError
-     */
-    public int getCode() {
-        return code;
     }
 
     /**
@@ -46,6 +39,15 @@ public enum PurchaseError {
             }
         }
         return null;
+    }
+
+    /**
+     * Returns the code associated with a PurchaseError
+     *
+     * @return an integer representing the PurchaseError
+     */
+    public int getCode() {
+        return code;
     }
 }
 

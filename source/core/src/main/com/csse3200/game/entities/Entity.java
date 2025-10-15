@@ -28,9 +28,8 @@ import java.util.Comparator;
  */
 public class Entity {
     private static final Logger logger = LoggerFactory.getLogger(Entity.class);
-    private static int nextId = 0;
     private static final String EVT_NAME_POS = "setPosition";
-
+    private static int nextId = 0;
     private final int id;
     private final IntMap<Component> components;
     private final EventHandler eventHandler;
@@ -224,10 +223,6 @@ public class Entity {
         return this;
     }
 
-    public IntMap<Component> getComponents() {
-        return components;
-    }
-
     public <T extends Component> boolean hasComponent(Class<T> type) {
         ComponentType componentType = ComponentType.getFrom(type);
         return components.get(componentType.getId()) != null;
@@ -332,4 +327,5 @@ public class Entity {
     public String toString() {
         return String.format("Entity{id=%d}", id);
     }
+
 }

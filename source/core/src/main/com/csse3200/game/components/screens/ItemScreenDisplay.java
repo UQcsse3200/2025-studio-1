@@ -30,6 +30,16 @@ public class ItemScreenDisplay extends UIComponent {
     public ItemScreenDisplay() {
     }
 
+    // Helpers
+    private static Texture makeWhiteTexture() {
+        Pixmap pm = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
+        pm.setColor(Color.WHITE);
+        pm.fill();
+        Texture t = new Texture(pm);
+        pm.dispose();
+        return t;
+    }
+
     @Override
     public void create() {
         super.create();
@@ -131,16 +141,6 @@ public class ItemScreenDisplay extends UIComponent {
     public void dispose() {
         close();
         super.dispose();
-    }
-
-    // Helpers
-    private static Texture makeWhiteTexture() {
-        Pixmap pm = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
-        pm.setColor(Color.WHITE);
-        pm.fill();
-        Texture t = new Texture(pm);
-        pm.dispose();
-        return t;
     }
 
     private Label makeBlackLabel(String text) {

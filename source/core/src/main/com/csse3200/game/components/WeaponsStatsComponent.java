@@ -1,5 +1,6 @@
 package com.csse3200.game.components;
 
+import com.csse3200.game.entities.configs.weapons.LauncherConfig;
 import com.csse3200.game.entities.configs.weapons.WeaponConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,42 +26,40 @@ public class WeaponsStatsComponent extends Component {
      * Default setting for whether this weapon deals damage.
      */
     private static final boolean DEFAULT_DISABLE_DAMAGE = false;
-
-    /**
-     * Base attack damage before multipliers are applied (must be non-negative).
-     */
-    private int baseAttack;
-
-    /**
-     * Cooldown (in seconds) between attacks.
-     */
-    private float coolDown;
-
-    /**
-     * Flag that disables all outgoing damage when true.
-     */
-    private boolean disableDamage;
-
-    /**
-     * Path to the projectile's texture if this weapon fires projectiles.
-     */
-    private String projectileTexturePath;
-
-    /**
-     * Current weapon upgrade stage, starting from 1.
-     */
-    private int upgradeStage = 1;
-
     /**
      * Maximum number of upgrades allowed.
      */
     private final int maxUpgradeStage = 4;
-
+    /**
+     * Base attack damage before multipliers are applied (must be non-negative).
+     */
+    private int baseAttack;
+    /**
+     * Cooldown (in seconds) between attacks.
+     */
+    private float coolDown;
+    /**
+     * Flag that disables all outgoing damage when true.
+     */
+    private boolean disableDamage;
+    /**
+     * Path to the projectile's texture if this weapon fires projectiles.
+     */
+    private String projectileTexturePath;
+    /**
+     * Current weapon upgrade stage, starting from 1.
+     */
+    private int upgradeStage = 1;
     /**
      * Global damage multiplier applied to this weapon's base attack.
      * Default is 1.0 (no boost). Cheat codes or power-ups can increase this.
      */
     private float damageMultiplier = 1f;
+
+    /**
+     * Flag for if the weapon needs to make rocket bullets
+     */
+    private boolean rocket = false;
 
     /**
      * Constructs a {@code WeaponsStatsComponent} from a weapon configuration.
@@ -71,6 +70,10 @@ public class WeaponsStatsComponent extends Component {
         setBaseAttack(config.damage);
         setDisableDamage(DEFAULT_DISABLE_DAMAGE);
         setCoolDown(DEFAULT_COOLDOWN);
+
+        if (config instanceof LauncherConfig) {
+            rocket = true; //Used to make rocket bullets
+        }
     }
 
     /**
@@ -85,6 +88,31 @@ public class WeaponsStatsComponent extends Component {
     }
 
     /**
+     * @return the flag for if this weapon needs rocket bullets
+     */
+    public boolean getRocket() {
+        return this.rocket;
+    }
+
+    /**
+     * Sets if this weapon needs rocket bullets
+     *
+     * @param rocket true for rockets
+     */
+    public void setRocket(boolean rocket) {
+        this.rocket = rocket;
+    }
+
+    /**
+     * Gets the cooldown time between attacks.
+     *
+     * @return cooldown in seconds
+     */
+    public float getCoolDown() {
+        return this.coolDown;
+    }
+
+    /**
      * Sets the cooldown time between attacks.
      *
      * @param coolDown cooldown in seconds (clamped to minimum 0)
@@ -95,15 +123,6 @@ public class WeaponsStatsComponent extends Component {
         } else {
             this.coolDown = coolDown;
         }
-    }
-
-    /**
-     * Gets the cooldown time between attacks.
-     *
-     * @return cooldown in seconds
-     */
-    public float getCoolDown() {
-        return this.coolDown;
     }
 
     /**
@@ -137,21 +156,21 @@ public class WeaponsStatsComponent extends Component {
     }
 
     /**
-     * Sets the texture path for this weapon's projectile, if applicable.
-     *
-     * @param projectileTexturePath path to the projectile texture
-     */
-    public void setProjectileTexturePath(String projectileTexturePath) {
-        this.projectileTexturePath = projectileTexturePath;
-    }
-
-    /**
      * Gets the texture path for this weapon's projectile, if applicable.
      *
      * @return projectile texture path, or {@code null} if none
      */
     public String getProjectileTexturePath() {
         return this.projectileTexturePath;
+    }
+
+    /**
+     * Sets the texture path for this weapon's projectile, if applicable.
+     *
+     * @param projectileTexturePath path to the projectile texture
+     */
+    public void setProjectileTexturePath(String projectileTexturePath) {
+        this.projectileTexturePath = projectileTexturePath;
     }
 
     /**
@@ -213,6 +232,15 @@ public class WeaponsStatsComponent extends Component {
     }
 
     /**
+     * Gets the current damage multiplier applied to this weapon.
+     *
+     * @return current damage multiplier (default {@code 1.0})
+     */
+    public float getDamageMultiplier() {
+        return damageMultiplier;
+    }
+
+    /**
      * Sets the damage multiplier for this weapon.
      *
      * <p>The multiplier must be non-negative and finite. For example:</p>
@@ -230,14 +258,5 @@ public class WeaponsStatsComponent extends Component {
         } else {
             logger.warn("Ignoring invalid damage multiplier: {}", multiplier);
         }
-    }
-
-    /**
-     * Gets the current damage multiplier applied to this weapon.
-     *
-     * @return current damage multiplier (default {@code 1.0})
-     */
-    public float getDamageMultiplier() {
-        return damageMultiplier;
     }
 }

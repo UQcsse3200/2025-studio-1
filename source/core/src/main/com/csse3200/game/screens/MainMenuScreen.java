@@ -29,9 +29,9 @@ import org.slf4j.LoggerFactory;
  */
 public class MainMenuScreen extends ScreenAdapter {
     private static final Logger logger = LoggerFactory.getLogger(MainMenuScreen.class);
+    private static final String[] mainMenuTextures = {"images/logo.png", "images/menu_background.png"};
     private final GdxGame game;
     private final Renderer renderer;
-    private static final String[] mainMenuTextures = {"images/logo.png", "images/menu_background.png"};
 
     /**
      * Builds the main menu screen.
@@ -41,6 +41,8 @@ public class MainMenuScreen extends ScreenAdapter {
         this.game = game;
 
         logger.debug("Initialising main menu screen services");
+        // Clear any existing player reference when starting fresh
+        ServiceLocator.clear();
         ServiceLocator.registerInputService(new InputService());
         ServiceLocator.registerResourceService(new ResourceService());
         ServiceLocator.registerEntityService(new EntityService());

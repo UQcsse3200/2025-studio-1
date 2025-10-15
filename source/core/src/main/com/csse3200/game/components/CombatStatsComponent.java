@@ -13,21 +13,27 @@ import org.slf4j.LoggerFactory;
 public class CombatStatsComponent extends Component {
 
     private static final Logger logger = LoggerFactory.getLogger(CombatStatsComponent.class);
-
+    private final int thresholdForBuff = 20;
     /**
      * Current health points (HP). Never negative.
      */
     private int health;
-
     /**
      * Maximum health points. Caller-controlled; not enforced as an upper bound on {@link #setHealth(int)}.
      */
     private int maxHealth;
-
-
-    private final int thresholdForBuff = 20;
-
     private boolean healthUpgraded;
+
+    /**
+     * Knockback resistance of the entity, 0 meaning it's affected fully by knockback, and 1 means it's not affected by
+     * knockback at all.
+     */
+    private float knockbackResistance = 0;
+
+    /**
+     * Used to decrease damage taken if player has armour equipped.
+     */
+    private int currProtection = 0;
 
 
     /**
@@ -39,6 +45,22 @@ public class CombatStatsComponent extends Component {
         setMaxHealth(health);
         setHealth(health);
         healthUpgraded = false;
+        this.knockbackResistance = 0;
+    }
+
+    /**
+     * Construct a combat Stats Component (Health + Attack System)
+     *
+     * @param health initial health (values {@code < 0} are clamped to {@code 0})
+     * @param knockbackResistance The knockback resistance of this entity. Value range is [0, 1], where 0 means
+     *                            0% knockback resistance, and 1 means 100% knockback resistance (not affected by
+     *                            knockback at all)
+     */
+    public CombatStatsComponent(int health, float knockbackResistance) {
+        setMaxHealth(health);
+        setHealth(health);
+        healthUpgraded = false;
+        this.knockbackResistance = knockbackResistance;
     }
 
     /**
@@ -59,12 +81,6 @@ public class CombatStatsComponent extends Component {
      */
     public int getHealth() {
         return health;
-    }
-
-    public void takeDamage(int damage) {
-        damage = reduceIncomingDamage(damage);
-        applyDamage(damage);
-        entity.getEvents().trigger("damageTaken");
     }
 
     /**
@@ -91,6 +107,12 @@ public class CombatStatsComponent extends Component {
         }
     }
 
+    public void takeDamage(int damage) {
+        damage = reduceIncomingDamage(damage);
+        applyDamage(damage);
+        entity.getEvents().trigger("damageTaken");
+    }
+
     /**
      * Adds to the player's health. The amount added can be negative.
      *
@@ -98,6 +120,15 @@ public class CombatStatsComponent extends Component {
      */
     public void addHealth(int health) {
         setHealth(this.health + health);
+    }
+
+    /**
+     * Sets the entity's maximum health
+     *
+     * @return the entity's maximum health (never negative)
+     */
+    public int getMaxHealth() {
+        return this.maxHealth;
     }
 
     /**
@@ -114,15 +145,6 @@ public class CombatStatsComponent extends Component {
         if (entity != null) {
             entity.getEvents().trigger("updateMaxHealth", this.maxHealth);
         }
-    }
-
-    /**
-     * Sets the entity's maximum health
-     *
-     * @return the entity's maximum health (never negative)
-     */
-    public int getMaxHealth() {
-        return this.maxHealth;
     }
 
     /**
@@ -149,7 +171,7 @@ public class CombatStatsComponent extends Component {
         if (damage <= 0 || Boolean.TRUE.equals(isDead())) {
             return;
         }
-        setHealth(this.health - damage);
+        setHealth(this.health - damage + currProtection);
     }
 
     /**
@@ -173,5 +195,24 @@ public class CombatStatsComponent extends Component {
             damage = dr.apply(damage);
         }
         return damage;
+    }
+
+    /**
+     * Gets the knockback resistance of this entity
+     * @return The knockback resistance of this entity. Value range is [0, 1], where 0 means
+     *                           0% knockback resistance, and 1 means 100% knockback resistance (not affected by
+     *                           knockback at all)
+     */
+    public float getKnockbackResistance() {
+        return knockbackResistance;
+    }
+
+    /**
+     * Increases player protection - used for armour protection.
+     *
+     * @param protection Increase in protection for the entity.
+     */
+    public void addProtection(int protection) {
+        currProtection += protection;
     }
 }

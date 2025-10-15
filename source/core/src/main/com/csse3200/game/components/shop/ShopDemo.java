@@ -1,5 +1,8 @@
 package com.csse3200.game.components.shop;
 
+import com.csse3200.game.components.attachments.BulletEnhancerComponent;
+import com.csse3200.game.components.attachments.LaserComponent;
+import com.csse3200.game.components.items.ItemComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.Weapons;
 import com.csse3200.game.entities.factories.items.ConsumableFactory;
@@ -22,7 +25,15 @@ public class ShopDemo {
         Entity lightsaber = WeaponsFactory.createWeapon(Weapons.LIGHTSABER);
         Entity pistol = WeaponsFactory.createWeapon(Weapons.PISTOL);
         Entity dagger = WeaponsFactory.createWeapon(Weapons.DAGGER);
+        Entity laserSight = new Entity()
+                .addComponent(new ItemComponent())
+                .addComponent(new LaserComponent());
+        laserSight.getComponent(ItemComponent.class).setTexture("images/laser.png");
 
+        Entity waterBullets = new Entity()
+                .addComponent(new ItemComponent())
+                .addComponent(new BulletEnhancerComponent());
+        waterBullets.getComponent(ItemComponent.class).setTexture("images/waterBullet.png");
         demoEntries.add(new CatalogEntry(
                 healthPotion,
                 1,
@@ -65,6 +76,22 @@ public class ShopDemo {
 
         demoEntries.add(new CatalogEntry(
                 dagger,
+                10,
+                true,
+                1,
+                1
+        ));
+
+        demoEntries.add(new CatalogEntry(
+                laserSight,
+                10,
+                true,
+                1,
+                1
+        ));
+
+        demoEntries.add(new CatalogEntry(
+                waterBullets,
                 10,
                 true,
                 1,

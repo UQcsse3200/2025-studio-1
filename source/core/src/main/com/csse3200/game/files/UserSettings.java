@@ -16,6 +16,10 @@ public class UserSettings {
     private static final int WINDOW_WIDTH = 1280;
     private static final int WINDOW_HEIGHT = 800;
 
+    private UserSettings() {
+        throw new IllegalStateException("Instantiating static util class");
+    }
+
     /**
      * Get the stored user settings
      *
@@ -93,6 +97,16 @@ public class UserSettings {
          */
         public float uiScale = 1f;
         public DisplaySettings displayMode = null;
+
+        private boolean musicEnabled = true;
+
+        public boolean isMusicEnabled() {
+            return musicEnabled;
+        }
+
+        public void setMusicEnabled(boolean enabled) {
+            this.musicEnabled = enabled;
+        }
     }
 
     /**
@@ -111,9 +125,5 @@ public class UserSettings {
             this.height = displayMode.height;
             this.refreshRate = displayMode.refreshRate;
         }
-    }
-
-    private UserSettings() {
-        throw new IllegalStateException("Instantiating static util class");
     }
 }

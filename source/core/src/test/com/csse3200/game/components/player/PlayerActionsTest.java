@@ -3,8 +3,10 @@ package com.csse3200.game.components.player;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
+import com.csse3200.game.components.WeaponsStatsComponent;
 import com.csse3200.game.components.items.ItemComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
@@ -130,16 +132,26 @@ class PlayerActionsTest {
 
     @Test
     void shouldPlayAttackSound() {
+        ItemComponent mockItem = mock(ItemComponent.class);
+        when(mockItem.getTexture()).thenReturn("images/mud.png");
         ResourceService resourceService = mock(ResourceService.class);
         Sound sound = mock(Sound.class);
         when(resourceService.getAsset("sounds/Impact4.ogg", Sound.class)).thenReturn(sound);
         ServiceLocator.registerResourceService(resourceService);
 
         PlayerActions actions = new PlayerActions();
+        actions.setTimeSinceLastAttack(1.5f);
         Entity player = new Entity()
                 .addComponent(actions)
                 .addComponent(new StaminaComponent())
+                .addComponent(new InventoryComponent(50))
                 .addComponent(new com.csse3200.game.components.CombatStatsComponent(100)); // hp, atk
+
+        Entity weapon = new Entity();
+        weapon.addComponent(mockItem);
+        weapon.addComponent(new WeaponsStatsComponent(20));
+        player.getComponent(InventoryComponent.class).addItem(weapon);
+        player.getComponent(InventoryComponent.class).setEquippedSlot(0);
         player.create();
 
         actions.attack();
@@ -370,7 +382,7 @@ class PlayerActionsTest {
             inventory.addItem(item);
             inventory.setEquippedSlot(2);
 
-            assertEquals(1, inventory.getEquippedSlot());
+            assertEquals(2, inventory.getEquippedSlot());
         }
 
         /**
@@ -384,7 +396,7 @@ class PlayerActionsTest {
             inventory.addItem(item);
             inventory.setEquippedSlot(0);
 
-            assertEquals(-1, inventory.getEquippedSlot(), "Inventory is empty");
+            assertEquals(0, inventory.getEquippedSlot(), "Inventory is empty");
         }
 
 

@@ -21,30 +21,20 @@ import com.csse3200.game.services.ServiceLocator;
  * - Only visuals are created for warnings; the entity is disposed when the missile launches.
  */
 public class MissueAttackComponent extends Component {
-    private static final float cooldown = 0.3f;   // seconds between warning spawns
-    private static final int count = 1;           // warnings per spawn wave
-    private static final float warnTime = 2f;     // seconds a warning stays before missile drops
-    private static final float skyHeight = 7f;    // missile spawn height above ground warning
-    private static final float minX = 0f, maxX = 30f; // horizontal range for warnings
-
-    /**
-     * Whether the system is active (true = spawning warnings/missiles).
-     */
-    private boolean attack = false;
-
-    /**
-     * One active warning's state.
-     */
-    private static class WarningEntry {
-        Vector2 pos;     // ground position of the warning
-        float t;         // elapsed time since warning was spawned
-        Entity visual;   // the spawned warning entity (for cleanup)
-    }
-
+    private static final float COOLDOWN = 0.3f;   // seconds between warning spawns
+    private static final int COUNT = 1;           // warnings per spawn wave
+    private static final float WARN_TIME = 2f;     // seconds a warning stays before missile drops
+    private static final float SKY_HEIGHT = 7f;    // missile spawn height above ground warning
+    private static final float MIN_X = 0f;
+    private static final float MAX_X = 30f; // horizontal range for warnings
     /**
      * Currently active warnings.
      */
     private final java.util.ArrayList<WarningEntry> actives = new java.util.ArrayList<>();
+    /**
+     * Whether the system is active (true = spawning warnings/missiles).
+     */
+    private boolean attack = false;
     /**
      * Timer tracking time since last spawn wave.
      */
@@ -58,7 +48,7 @@ public class MissueAttackComponent extends Component {
         float dt = ServiceLocator.getTimeSource().getDeltaTime();
         timer += dt;
         // Periodically spawn new warnings
-        if (timer >= cooldown) {
+        if (timer >= COOLDOWN) {
             timer = 0f;
             spawnWarnings();
         }
@@ -67,7 +57,7 @@ public class MissueAttackComponent extends Component {
         for (int i = actives.size() - 1; i >= 0; i--) {
             WarningEntry w = actives.get(i);
             w.t += dt;
-            if (w.t >= warnTime) {
+            if (w.t >= WARN_TIME) {
                 launchMissile(w.pos);
                 if (w.visual != null) {
                     w.visual.dispose();
@@ -81,8 +71,8 @@ public class MissueAttackComponent extends Component {
      * Spawn a wave of ground warnings at random positions within the configured bounds.
      */
     private void spawnWarnings() {
-        for (int i = 0; i < count; i++) {
-            float x = MathUtils.random(minX, maxX);
+        for (int i = 0; i < COUNT; i++) {
+            float x = MathUtils.random(MIN_X, MAX_X);
             float y = 3f;
             Vector2 ground = new Vector2(x, y);
 
@@ -103,7 +93,7 @@ public class MissueAttackComponent extends Component {
      * Spawn a missile above the given ground point. Movement handled by the missile itself.
      */
     private void launchMissile(Vector2 ground) {
-        Vector2 spawn = new Vector2(ground.x, ground.y + skyHeight); //passed through to factory if used there
+        Vector2 spawn = new Vector2(ground.x, ground.y + SKY_HEIGHT); //passed through to factory if used there
         Entity missile = BossFactory.createMissle(spawn);
         ServiceLocator.getEntityService().register(missile);
     }
@@ -126,5 +116,14 @@ public class MissueAttackComponent extends Component {
      */
     public void setAttack(boolean attack) {
         this.attack = attack;
+    }
+
+    /**
+     * One active warning's state.
+     */
+    private static class WarningEntry {
+        Vector2 pos;     // ground position of the warning
+        float t;         // elapsed time since warning was spawned
+        Entity visual;   // the spawned warning entity (for cleanup)
     }
 }

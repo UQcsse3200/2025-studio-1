@@ -2,15 +2,18 @@ package com.csse3200.game.areas;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.GridPoint2;
+import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.CameraComponent;
+import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.ItemSpawnConfig;
 import com.csse3200.game.entities.factories.characters.NPCFactory;
-import com.csse3200.game.entities.factories.characters.PlayerFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
+import com.csse3200.game.entities.factories.system.TeleporterFactory;
 import com.csse3200.game.entities.spawner.ItemSpawner;
+import com.csse3200.game.services.ServiceLocator;
 
 /**
  * The "Storage" area of the game map. This class:
@@ -20,15 +23,20 @@ import com.csse3200.game.entities.spawner.ItemSpawner;
  */
 public class StorageGameArea extends GameArea {
     private static final float WALL_WIDTH = 0.1f;
-    private static final GridPoint2 PLAYER_SPAWN = new GridPoint2(4, 20);
+    private static final float ROOM_DIFF_NUMBER = 8;
+    private static GridPoint2 playerSpawn = new GridPoint2(4, 20);
     private Entity player;
 
     /**
-     * Initialise this StorageGameArea to use the provided TerrainFactory and camera helper.
-     * The camera is used to size the screen-edge walls and place the right-side door trigger.
+     * Initialise this StorageGameArea to use the provided TerrainFactory and camera
+     * helper.
+     * The camera is used to size the screen-edge walls and place the right-side
+     * door trigger.
      *
-     * @param terrainFactory  TerrainFactory used to create the terrain for the GameArea (required).
-     * @param cameraComponent Camera helper supplying an OrthographicCamera (optional but used here).
+     * @param terrainFactory  TerrainFactory used to create the terrain for the
+     *                        GameArea (required).
+     * @param cameraComponent Camera helper supplying an OrthographicCamera
+     *                        (optional but used here).
      * @requires terrainFactory != null
      */
     public StorageGameArea(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
@@ -36,7 +44,26 @@ public class StorageGameArea extends GameArea {
     }
 
     /**
-     * Create the game area, including terrain, static entities (platforms), dynamic entities (player)
+     * Setter method for the player spawn point
+     * should be used when the player is traversing through the rooms
+     *
+     * @param newSpawn the new spawn point
+     */
+    public static void setRoomSpawn(GridPoint2 newSpawn) {
+        if (newSpawn == null) {
+            return;
+        }
+        StorageGameArea.playerSpawn = newSpawn;
+    }
+
+    public static StorageGameArea load(TerrainFactory terrainFactory, CameraComponent camera) {
+
+        return (new StorageGameArea(terrainFactory, camera));
+    }
+
+    /**
+     * Create the game area, including terrain, static entities (platforms), dynamic
+     * entities (player)
      * Entry point for this room. This:
      * - Loads textures
      * - Creates the terrain, walls, and UI label
@@ -54,12 +81,14 @@ public class StorageGameArea extends GameArea {
         spawnShipmentBoxLid();
         spawnConveyor();
         spawnGrokDroids();
+        spawnTeleporter();
 
         ItemSpawner itemSpawner = new ItemSpawner(this);
         itemSpawner.spawnItems(ItemSpawnConfig.storage1map());
 
         Entity ui = new Entity();
-        ui.addComponent(new com.csse3200.game.components.gamearea.FloorLabelDisplay("Storage"));
+        ui.addComponent(new GameAreaDisplay("Storage"))
+                .addComponent(new com.csse3200.game.components.gamearea.FloorLabelDisplay("Floor 9"));
         spawnEntity(ui);
     }
 
@@ -90,9 +119,11 @@ public class StorageGameArea extends GameArea {
     }
 
     private void spawnBordersAndDoors() {
-        if (cameraComponent == null) return;
+        if (cameraComponent == null)
+            return;
         Bounds b = getCameraBounds(cameraComponent);
         addSolidWallLeft(b, WALL_WIDTH);
+        addSolidWallTop(b, WALL_WIDTH);
         float leftDoorHeight = Math.max(1f, b.viewHeight() * 0.2f);
         float leftDoorY = 8f;
         Entity leftDoor = ObstacleFactory.createDoorTrigger(WALL_WIDTH, leftDoorHeight);
@@ -111,27 +142,34 @@ public class StorageGameArea extends GameArea {
     }
 
     private Entity spawnPlayer() {
-        Entity player = PlayerFactory.createPlayer();
-        spawnEntityAt(player, PLAYER_SPAWN, true, true);
-        return player;
+        return spawnOrRepositionPlayer(playerSpawn);
     }
 
     /**
      * Spawn 2 high-level grok droids in the room as enemies.
      */
     private void spawnGrokDroids() {
-        Entity grok1 = NPCFactory.createGrokDroid(player, this, 3f);
+        Entity grok1 = NPCFactory.createGrokDroid(player, this,
+                ServiceLocator.getDifficulty().getRoomDifficulty(StorageGameArea.ROOM_DIFF_NUMBER));
         GridPoint2 grok1Pos = new GridPoint2(25, 7);
         spawnEntityAt(grok1, grok1Pos, true, false);
-        Entity grok2 = NPCFactory.createGrokDroid(player, this, 3f);
+        Entity grok2 = NPCFactory.createGrokDroid(player, this,
+                ServiceLocator.getDifficulty().getRoomDifficulty(StorageGameArea.ROOM_DIFF_NUMBER));
         GridPoint2 grok2Pos = new GridPoint2(25, 7);
         spawnEntityAt(grok2, grok2Pos, true, false);
+    }
+
+    /** Teleporter bottom-left */
+    private void spawnTeleporter() {
+        Entity tp = TeleporterFactory.createTeleporter(new Vector2(2f, 3.2f));
+        spawnEntity(tp);
     }
 
     /**
      * Clears the game area and loads the next section (Servers).
      */
     private void loadServer() {
+        ServerGameArea.setRoomSpawn(new GridPoint2(6, 8));
         clearAndLoad(() -> new ServerGameArea(terrainFactory, cameraComponent));
     }
 
@@ -139,7 +177,7 @@ public class StorageGameArea extends GameArea {
      * Clears the game area and loads the previous section (Shipping).
      */
     private void loadShipping() {
-        roomNumber++;
+        ShippingGameArea.setRoomSpawn(new GridPoint2(26, 20));
         clearAndLoad(() -> new ShippingGameArea(terrainFactory, cameraComponent));
     }
 
@@ -153,11 +191,4 @@ public class StorageGameArea extends GameArea {
         // placeholder
         return null;
     }
-
-    public static StorageGameArea load(TerrainFactory terrainFactory, CameraComponent camera) {
-
-        return (new StorageGameArea(terrainFactory, camera));
-    }
 }
-
-

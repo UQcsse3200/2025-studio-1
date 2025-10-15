@@ -1,21 +1,42 @@
 package com.csse3200.game.areas;
 
 import com.badlogic.gdx.math.GridPoint2;
+import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.CameraComponent;
+import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import com.csse3200.game.entities.Entity;
-import com.csse3200.game.entities.factories.characters.PlayerFactory;
+import com.csse3200.game.entities.factories.system.TeleporterFactory;
 
 /**
  * Office room: minimal walls and two doors (left--Security, right--Elevator).
  */
 public class OfficeGameArea extends GameArea {
     private static final float WALL_WIDTH = 0.1f;
-    private static final GridPoint2 PLAYER_SPAWN = new GridPoint2(10, 10);
+    private static GridPoint2 playerSpawn = new GridPoint2(10, 10);
 
     public OfficeGameArea(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
         super(terrainFactory, cameraComponent);
+    }
+
+    public static OfficeGameArea load(TerrainFactory terrainFactory, CameraComponent camera) {
+        return (new OfficeGameArea(terrainFactory, camera));
+    }
+
+    // Assets ensured via GenericLayout
+
+    /**
+     * Setter method for the player spawn point
+     * should be used when the player is traversing through the rooms
+     *
+     * @param newSpawn the new spawn point
+     */
+    public static void setRoomSpawn(GridPoint2 newSpawn) {
+        if (newSpawn == null) {
+            return;
+        }
+        OfficeGameArea.playerSpawn = newSpawn;
     }
 
     @Override
@@ -38,14 +59,18 @@ public class OfficeGameArea extends GameArea {
         spawnObjectDoors(new GridPoint2(0, 14), new GridPoint2(28, 20));
         spawnPlatforms();
         spawnOfficeProps();
-    }
+        spawnTeleporter();
 
-    // Assets ensured via GenericLayout
+        Entity ui = new Entity();
+        ui.addComponent(new GameAreaDisplay("Office"))
+                .addComponent(new com.csse3200.game.components.gamearea.FloorLabelDisplay("Floor 5"));
+        spawnEntity(ui);
+    }
 
     private void spawnBordersAndDoors() {
         Bounds b = getCameraBounds(cameraComponent);
 
-        addVerticalDoorLeft(b, WALL_WIDTH, this::loadSecurity);
+        addVerticalDoorLeft(b, WALL_WIDTH, this::loadMovingBossRoom);
         // Raise the right door higher than center
         addSolidWallTop(b, WALL_WIDTH);
         addSolidWallBottom(b, WALL_WIDTH);
@@ -67,9 +92,8 @@ public class OfficeGameArea extends GameArea {
 
     }
 
-    private void spawnPlayer() {
-        Entity player = PlayerFactory.createPlayer();
-        spawnEntityAt(player, PLAYER_SPAWN, true, true);
+    private Entity spawnPlayer() {
+        return spawnOrRepositionPlayer(playerSpawn);
     }
 
     private void spawnOfficeProps() {
@@ -87,6 +111,12 @@ public class OfficeGameArea extends GameArea {
         ceoChair.scaleHeight(3.0f);
         ceoChair.setPosition(2f, 3.0f);
         spawnEntity(ceoChair);
+    }
+
+    /** Teleporter bottom-left */
+    private void spawnTeleporter() {
+        Entity tp = TeleporterFactory.createTeleporter(new Vector2(5f, 3f));
+        spawnEntity(tp);
     }
 
     /**
@@ -128,13 +158,13 @@ public class OfficeGameArea extends GameArea {
         }
     }
 
-    private void loadSecurity() {
-        roomNumber--;
-        clearAndLoad(() -> new SecurityGameArea(terrainFactory, cameraComponent));
+    private void loadMovingBossRoom() {
+        MovingBossRoom.setRoomSpawn(new GridPoint2(24, 8));
+        clearAndLoad(() -> new MovingBossRoom(terrainFactory, cameraComponent));
     }
 
     private void loadElevator() {
-        roomNumber++;
+        ElevatorGameArea.setRoomSpawn(new GridPoint2(6, 8));
         clearAndLoad(() -> new ElevatorGameArea(terrainFactory, cameraComponent));
     }
 
@@ -148,10 +178,4 @@ public class OfficeGameArea extends GameArea {
         //placeholder see previous
         return null;
     }
-
-    public static OfficeGameArea load(TerrainFactory terrainFactory, CameraComponent camera) {
-        return (new OfficeGameArea(terrainFactory, camera));
-    }
 }
-
-

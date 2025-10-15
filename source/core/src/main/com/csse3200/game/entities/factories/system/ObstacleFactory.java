@@ -3,10 +3,14 @@ package com.csse3200.game.entities.factories.system;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+import com.csse3200.game.components.BreakablePlatformComponent;
+import com.csse3200.game.components.TouchAttackComponent;
+import com.csse3200.game.components.WeaponsStatsComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.physics.PhysicsLayer;
 import com.csse3200.game.physics.PhysicsUtils;
 import com.csse3200.game.physics.components.ColliderComponent;
+import com.csse3200.game.physics.components.HitboxComponent;
 import com.csse3200.game.physics.components.PhysicsComponent;
 import com.csse3200.game.rendering.SolidColorRenderComponent;
 import com.csse3200.game.rendering.TextureRenderComponent;
@@ -19,6 +23,10 @@ import com.csse3200.game.rendering.TextureRenderComponent;
  * to decide if it should block the player (OBSTACLE) or just detect overlap (DEFAULT + sensor).
  */
 public class ObstacleFactory {
+
+    private ObstacleFactory() {
+        throw new IllegalStateException("Instantiating static util class");
+    }
 
     /**
      * Creates a tree entity.
@@ -107,6 +115,25 @@ public class ObstacleFactory {
         longFloor.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
         longFloor.getComponent(TextureRenderComponent.class).scaleEntity();
         longFloor.scaleHeight(0.6f);
+        PhysicsUtils.setScaledCollider(longFloor, 1f, 1f);
+        return longFloor;
+    }
+
+    /**
+     * Create visible floor
+     *
+     * @return a visible static floor Entity
+     */
+    public static Entity createVisibleLongFloor() {
+        Entity longFloor =
+                new Entity()
+                        .addComponent(new TextureRenderComponent("foreg_sprites/general/LongFloor.png"))
+                        .addComponent(new PhysicsComponent())
+                        .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
+
+        longFloor.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
+        longFloor.getComponent(TextureRenderComponent.class).scaleEntity();
+        longFloor.scaleHeight(2f);
         PhysicsUtils.setScaledCollider(longFloor, 1f, 1f);
         return longFloor;
     }
@@ -207,12 +234,16 @@ public class ObstacleFactory {
                 new Entity()
                         .addComponent(new TextureRenderComponent("images/platform-2.png"))
                         .addComponent(new PhysicsComponent())
-                        .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
+                        .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE))
+                        .addComponent(new HitboxComponent().setLayer(PhysicsLayer.OBSTACLE));
 
         platform2.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
         platform2.getComponent(TextureRenderComponent.class).scaleEntity();
         platform2.scaleHeight(3f);
-        PhysicsUtils.setScaledCollider(platform2, 0.7f, 0.55f);
+        Vector2 colliderSize = new Vector2(platform2.getScale().x * 0.7f, platform2.getScale().y * 0.1f);
+        Vector2 offset = new Vector2(0f, platform2.getScale().y * 0.001f);
+        platform2.getComponent(ColliderComponent.class)
+                .setAsBox(colliderSize, platform2.getCenterPosition().add(offset));
         return platform2;
     }
 
@@ -222,12 +253,15 @@ public class ObstacleFactory {
     public static Entity createholoclock() {
         Entity clockSpawn =
                 new Entity()
-                        .addComponent(new TextureRenderComponent("images/holo-clock.png"));
+                        .addComponent(new TextureRenderComponent("images/holo-clock.png"))
+                        .addComponent(new PhysicsComponent())
+                        .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
+        clockSpawn.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
         clockSpawn.getComponent(TextureRenderComponent.class).scaleEntity();
         clockSpawn.scaleHeight(2f);
+        PhysicsUtils.setScaledCollider(clockSpawn, 0.2f, 1f);
         return clockSpawn;
     }
-
     /**
      * creating the platform for Office area
      **/
@@ -280,9 +314,13 @@ public class ObstacleFactory {
     public static Entity createdesk_reception() {
         Entity desk_receptionSpawn =
                 new Entity()
-                        .addComponent(new TextureRenderComponent("images/desk_reception.png"));
+                        .addComponent(new TextureRenderComponent("images/desk_reception.png"))
+                .addComponent(new PhysicsComponent())
+                .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
+        desk_receptionSpawn.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
         desk_receptionSpawn.getComponent(TextureRenderComponent.class).scaleEntity();
         desk_receptionSpawn.scaleHeight(3f);
+        PhysicsUtils.setScaledCollider(desk_receptionSpawn, 0.7f, 0.75f);
         return desk_receptionSpawn;
     }
 
@@ -292,9 +330,13 @@ public class ObstacleFactory {
     public static Entity createcomic_stand() {
         Entity comic_standSpawn =
                 new Entity()
-                        .addComponent(new TextureRenderComponent("images/comics.png"));
+                        .addComponent(new TextureRenderComponent("images/comics.png"))
+                .addComponent(new PhysicsComponent())
+                .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
+        comic_standSpawn.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
         comic_standSpawn.getComponent(TextureRenderComponent.class).scaleEntity();
-        comic_standSpawn.scaleHeight(1.5f);
+        comic_standSpawn.scaleHeight(1f);
+        PhysicsUtils.setScaledCollider(comic_standSpawn, 0.7f, 0.75f);
         return comic_standSpawn;
     }
 
@@ -306,22 +348,30 @@ public class ObstacleFactory {
                 new Entity()
                         .addComponent(new TextureRenderComponent("images/platform-3.png"))
                         .addComponent(new PhysicsComponent())
-                        .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
+                        .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE))
+                        .addComponent(new HitboxComponent().setLayer(PhysicsLayer.OBSTACLE));
 
         platform3.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
         platform3.getComponent(TextureRenderComponent.class).scaleEntity();
         platform3.scaleHeight(3f);
-        PhysicsUtils.setScaledCollider(platform3, 0.7f, 0.5f);
+
+        Vector2 colliderSize = new Vector2(platform3.getScale().x * 0.6f, platform3.getScale().y * 0.1f);
+        Vector2 offset = new Vector2(-platform3.getScale().x * 0.09f, platform3.getScale().y * 0.005f);
+
+        platform3.getComponent(ColliderComponent.class)
+                .setAsBox(colliderSize, platform3.getCenterPosition().add(offset));
+
         return platform3;
     }
-
     /**
      * creates Sofa in bottom left in main hall
      **/
     public static Entity createMhall_sofa() {
         Entity Mhall_sofaSpawn =
                 new Entity()
-                        .addComponent(new TextureRenderComponent("images/Mhall-sofa.png"));
+                        .addComponent(new TextureRenderComponent("images/Mhall-sofa.png"))
+                        .addComponent(new ColliderComponent())
+                        .addComponent(new HitboxComponent().setLayer(PhysicsLayer.OBSTACLE));
         Mhall_sofaSpawn.getComponent(TextureRenderComponent.class).scaleEntity();
         Mhall_sofaSpawn.scaleHeight(3f);
         return Mhall_sofaSpawn;
@@ -333,9 +383,14 @@ public class ObstacleFactory {
     public static Entity createMhall_screen() {
         Entity Mhall_screenSpawn =
                 new Entity()
-                        .addComponent(new TextureRenderComponent("images/Mhall-screen.png"));
+                        .addComponent(new TextureRenderComponent("images/Mhall-screen.png"))
+                        .addComponent(new PhysicsComponent())
+                        .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
+
+        Mhall_screenSpawn.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
         Mhall_screenSpawn.getComponent(TextureRenderComponent.class).scaleEntity();
         Mhall_screenSpawn.scaleHeight(1.5f);
+        PhysicsUtils.setScaledCollider(Mhall_screenSpawn, 0.7f, 0.75f);
         return Mhall_screenSpawn;
     }
 
@@ -345,12 +400,15 @@ public class ObstacleFactory {
     public static Entity createMhall_holo() {
         Entity Mhall_holoSpawn =
                 new Entity()
-                        .addComponent(new TextureRenderComponent("images/Mhall-holo.png"));
+                        .addComponent(new TextureRenderComponent("images/Mhall-holo.png"))
+                        .addComponent(new PhysicsComponent())
+                        .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
+        Mhall_holoSpawn.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
         Mhall_holoSpawn.getComponent(TextureRenderComponent.class).scaleEntity();
         Mhall_holoSpawn.scaleHeight(1.5f);
+        PhysicsUtils.setScaledCollider(Mhall_holoSpawn, 0.7f, 0.75f);
         return Mhall_holoSpawn;
     }
-
     /**
      * Purple spawn pad prop. Solid so it rests on the ground like other props.
      *
@@ -427,64 +485,27 @@ public class ObstacleFactory {
         return officeDesk;
     }
 
-
     /**
      * Glowing energy pod that acts as a solid prop on the floor.
      * Collider is slightly shorter (0.9) so it seats nicely on tiles when scaled.
      *
      * @return a static energy pod entity
      */
-    public static Entity createLargeEnergyPod() {
-        Entity energyPod =
-                new Entity()
-                        .addComponent(new TextureRenderComponent("foreg_sprites/futuristic/EnergyPod.png"))
-                        .addComponent(new PhysicsComponent())
-                        .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
 
-        energyPod.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
-        energyPod.getComponent(TextureRenderComponent.class).scaleEntity();
-        energyPod.scaleHeight(1.5f);
-        PhysicsUtils.setScaledCollider(energyPod, 1f, 0.9f);
-        return energyPod;
-    }
 
     /**
      * Green futuristic storage crate.
      *
      * @return a static crate entity (green)
      */
-    public static Entity createStorageCrateGreen() {
-        Entity crate =
-                new Entity()
-                        .addComponent(new TextureRenderComponent("foreg_sprites/futuristic/storage_crate_green2.png"))
-                        .addComponent(new PhysicsComponent())
-                        .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
 
-        crate.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
-        crate.getComponent(TextureRenderComponent.class).scaleEntity();
-        crate.scaleHeight(1.5f);
-        PhysicsUtils.setScaledCollider(crate, 1f, 1f);
-        return crate;
-    }
 
     /**
      * Dark futuristic storage crate.
      *
      * @return a static crate entity (dark)
      */
-    public static Entity createStorageCrateDark() {
-        Entity crate =
-                new Entity()
-                        .addComponent(new TextureRenderComponent("foreg_sprites/futuristic/storage_crate_dark2.png"))
-                        .addComponent(new PhysicsComponent())
-                        .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
 
-        crate.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
-        crate.getComponent(TextureRenderComponent.class).scaleEntity();
-        crate.scaleHeight(1.5f);
-        PhysicsUtils.setScaledCollider(crate, 1f, 1f);
-        return crate;
-    }
 
     /**
      * Creates a large security camera entity.
@@ -516,7 +537,7 @@ public class ObstacleFactory {
         monitor.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
         monitor.getComponent(TextureRenderComponent.class).scaleEntity();
         monitor.scaleHeight(2f);
-        PhysicsUtils.setScaledCollider(monitor, 0.7f, 0.7f);
+        PhysicsUtils.setScaledCollider(monitor, 0.7f, 0.8f);
         return monitor;
     }
 
@@ -531,12 +552,13 @@ public class ObstacleFactory {
                 new Entity()
                         .addComponent(new TextureRenderComponent("foreg_sprites/Security/Platform.png"))
                         .addComponent(new PhysicsComponent())
-                        .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
+                        .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE))
+                        .addComponent(new BreakablePlatformComponent());
 
         platform.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
         platform.getComponent(TextureRenderComponent.class).scaleEntity();
         platform.scaleHeight(1.0f);
-        PhysicsUtils.setScaledCollider(platform, 0.3f, 0.6f);
+        PhysicsUtils.setScaledCollider(platform, 1f, 0.5f);
         return platform;
     }
 
@@ -572,7 +594,7 @@ public class ObstacleFactory {
         console.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
         console.getComponent(TextureRenderComponent.class).scaleEntity();
         console.scaleHeight(2.0f);
-        PhysicsUtils.setScaledCollider(console, 0.7f, 0.7f);
+        PhysicsUtils.setScaledCollider(console, 0.7f, 0.8f);
         return console;
     }
 
@@ -591,7 +613,7 @@ public class ObstacleFactory {
         lab.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
         lab.getComponent(TextureRenderComponent.class).scaleEntity();
         lab.scaleHeight(3.0f);
-        PhysicsUtils.setScaledCollider(lab, 0.8f, 0.8f);
+        PhysicsUtils.setScaledCollider(lab, 0.8f, 0.9f);
         return lab;
     }
 
@@ -629,7 +651,7 @@ public class ObstacleFactory {
         desk.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
         desk.getComponent(TextureRenderComponent.class).scaleEntity();
         desk.scaleHeight(2.8f);
-        PhysicsUtils.setScaledCollider(desk, 0.8f, 0.7f);
+        PhysicsUtils.setScaledCollider(desk, 0.8f, 0.8f);
         return desk;
     }
 
@@ -651,7 +673,6 @@ public class ObstacleFactory {
         PhysicsUtils.setScaledCollider(pod, 0.6f, 0.9f);
         return pod;
     }
-
 
     /**
      * Server rack (first variant, lighter colour).
@@ -692,6 +713,93 @@ public class ObstacleFactory {
     }
 
     /**
+     * Spikes. Takes health from player upon contact
+     *
+     * @return Entity spike entity
+     */
+    public static Entity createSpikes() {
+        Entity spikes = new Entity()
+                .addComponent(new TextureRenderComponent("foreg_sprites/extras/Spikes.png"))
+                .addComponent(new PhysicsComponent())
+                .addComponent(new ColliderComponent())
+                .addComponent(new HitboxComponent().setLayer(PhysicsLayer.OBSTACLE))
+                .addComponent(new TouchAttackComponent(PhysicsLayer.PLAYER, 25f))
+                .addComponent(new WeaponsStatsComponent(30));
+
+        spikes.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
+        spikes.getComponent(TextureRenderComponent.class).scaleEntity();
+        spikes.scaleHeight(1f);
+        PhysicsUtils.setScaledCollider(spikes, 1f, 1f);
+        return spikes;
+    }
+    public static Entity createSpikes2() {
+        Entity spikes = new Entity()
+                .addComponent(new TextureRenderComponent("foreg_sprites/extras/Spikes2.png"))
+                .addComponent(new PhysicsComponent())
+                .addComponent(new ColliderComponent())
+                .addComponent(new HitboxComponent().setLayer(PhysicsLayer.OBSTACLE))
+                .addComponent(new TouchAttackComponent(PhysicsLayer.PLAYER, 10f))
+                .addComponent(new WeaponsStatsComponent(30));
+
+        spikes.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
+        spikes.getComponent(TextureRenderComponent.class).scaleEntity();
+        spikes.scaleHeight(0.9f);
+        PhysicsUtils.setScaledCollider(spikes, 1f, 1f);
+        return spikes;
+    }
+
+    /**
+     * Purple window object, non-collidable.
+     * 
+     * @return Entity window
+     */
+    public static Entity createWindow() {
+        Entity purpleWindow =
+                new Entity()
+                        .addComponent(new TextureRenderComponent("foreg_sprites/furniture/PurpleWindow.png"));
+
+        purpleWindow.getComponent(TextureRenderComponent.class).scaleEntity();
+        purpleWindow.scaleHeight(1.2f);
+        return purpleWindow;
+    }
+
+    /**
+     * Lab plant 1 object, collidable decoration object
+     * @return plant object
+     */
+    public static Entity createLabPlant1() {
+        Entity labPlant =
+                new Entity()
+                        .addComponent(new TextureRenderComponent("foreg_sprites/furniture/LabPlant1.png"))
+                        .addComponent(new PhysicsComponent())
+                        .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
+
+        labPlant.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
+        labPlant.getComponent(TextureRenderComponent.class).scaleEntity();
+        labPlant.scaleHeight(1.5f);
+        PhysicsUtils.setScaledCollider(labPlant, 1f, 1f);
+        return labPlant;
+    }
+
+    /**
+     * Lab plant 1 object, collidable decoration object
+     * @return plant object
+     */
+    public static Entity createLabPlant2() {
+        Entity labPlant =
+                new Entity()
+                        .addComponent(new TextureRenderComponent("foreg_sprites/furniture/LabPlant2.png"))
+                        .addComponent(new PhysicsComponent())
+                        .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
+
+        labPlant.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
+        labPlant.getComponent(TextureRenderComponent.class).scaleEntity();
+        labPlant.scaleHeight(1.5f);
+        PhysicsUtils.setScaledCollider(labPlant, 1f, 1f);
+        return labPlant;
+    }
+
+    /**
      * Makes a static door, no collision so that the player can pass through.
      */
     public static Entity createDoor() {
@@ -722,15 +830,11 @@ public class ObstacleFactory {
      */
     public static Entity createDoorTrigger(float width, float height) {
         Entity trigger = new Entity()
+
                 .addComponent(new PhysicsComponent().setBodyType(BodyType.StaticBody))
-                .addComponent(new ColliderComponent().setLayer(PhysicsLayer.DEFAULT))
-                .addComponent(new SolidColorRenderComponent(Color.BLACK));
+                .addComponent(new ColliderComponent().setLayer(PhysicsLayer.DEFAULT));
         trigger.getComponent(ColliderComponent.class).setSensor(true);
         trigger.setScale(width, height);
         return trigger;
-    }
-
-    private ObstacleFactory() {
-        throw new IllegalStateException("Instantiating static util class");
     }
 }

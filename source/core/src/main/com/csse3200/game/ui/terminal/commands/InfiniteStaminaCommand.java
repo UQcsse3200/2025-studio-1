@@ -13,9 +13,8 @@ import java.util.ArrayList;
  * A command for toggling whether a player uses stamina
  */
 public class InfiniteStaminaCommand implements Command {
-    private Array<Entity> entityList;
     private static final Logger logger = LoggerFactory.getLogger(DebugCommand.class);
-
+    private Array<Entity> entityList;
 
     public boolean action(ArrayList<String> args) {
         if (!isValid(args)) {

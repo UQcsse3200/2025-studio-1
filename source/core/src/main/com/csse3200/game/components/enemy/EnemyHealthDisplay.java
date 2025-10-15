@@ -1,5 +1,6 @@
 package com.csse3200.game.components.enemy;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
@@ -18,22 +19,34 @@ import org.slf4j.LoggerFactory;
 
 public class EnemyHealthDisplay extends Component {
     private static final Logger logger = LoggerFactory.getLogger(EnemyHealthDisplay.class);
-    int maxHealth;
-    int currentHealth;
-    ProgressBar healthBar;
     // UI constants
     private static final float BAR_WIDTH = 70f;
     private static final float BAR_HEIGHT = 5f;
     // Colours
     private static final Color COLOR_BG = Color.DARK_GRAY;
     private static final Color COLOR_HEALTH = Color.RED;
+    // Screen resolution info
+    // These values adapt drawing to different screen resolutions, while keeping
+    // the game world consistent with a base resolution of 1920x1080 (16:9).
+    private static final float screenWidth = (float) Gdx.graphics.getWidth();
+    private static final float height = (float) Gdx.graphics.getHeight();
+    // Conversion factors from world coordinates to stage coordinates.
+    // These constants were empirically derived to map world positions correctly to the UI stage.
+    private static final float WORLD_TO_STAGE_X = screenWidth / 14.82837630565971f;
+    private static final float WORLD_TO_STAGE_Y = screenWidth / 1.76f / 8.5f;
     protected Stage stage;
-    // Vertical offset for positioning the health bar above the enemy sprite
+    int maxHealth;
+    int currentHealth;
+    ProgressBar healthBar;
+    // Scale factor based on width, using 1920px as the base reference
+    float scale = screenWidth / 1920f;
+    // The height of the background when scaled to fit the current screen width
+    float scaledHeight = 1080f * scale;
+    // Vertical offset needed when the screen is not 16:9 (letterboxing case).
+    // This centers the background vertically by calculating unused space at the top/bottom.
+    float verticalScreenOffset = (height - scaledHeight) / 2;
+    // Vertical offset for positioning the health bar slightly above the enemy sprite
     private float offsetY = 0.6f;
-
-    // World-to-stage scaling factors (exact values)
-    private static final float WORLD_TO_STAGE_X = 129.4814725781657f;
-    private static final float WORLD_TO_STAGE_Y = 135.3720388672149f;
 
     public EnemyHealthDisplay() {
     }
@@ -112,8 +125,8 @@ public class EnemyHealthDisplay extends Component {
         Vector2 pos = entity.getPosition();
         // Convert world position to screen-space position and update the health bar's placement.
         healthBar.setPosition(
-                (pos.x + 0.2f) * WORLD_TO_STAGE_X,
-                (pos.y - 3f + offsetY) * WORLD_TO_STAGE_Y
+                (pos.x + 0.1f) * WORLD_TO_STAGE_X,
+                (pos.y - 2.8f + offsetY) * WORLD_TO_STAGE_Y + verticalScreenOffset
         );
     }
 

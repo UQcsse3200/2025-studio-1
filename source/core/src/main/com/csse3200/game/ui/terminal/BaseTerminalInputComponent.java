@@ -55,9 +55,7 @@ public abstract class BaseTerminalInputComponent extends InputComponent {
      */
     @Override
     public boolean keyTyped(char character) {
-        if (!terminal.isOpen()) {
-            return false;
-        }
+        if (!terminal.isOpen()) return false;
 
         if (character == '\b') {
             terminal.handleBackspace();
@@ -68,9 +66,8 @@ public abstract class BaseTerminalInputComponent extends InputComponent {
             }
             terminal.setEnteredMessage("");
             return true;
-        } else if (Character.isLetterOrDigit(character) || character == ' ') {
-            // append character to message
-            terminal.appendToMessage(character);
+        } else if (character >= 32 && character != 127) { // printable (space..~), exclude DEL
+            terminal.appendToMessage(character);           // this includes '@'
             return true;
         }
         return false;

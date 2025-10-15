@@ -9,10 +9,17 @@ import com.csse3200.game.rendering.TextureRenderComponent;
 
 /**
  * Utility factory class for creating item entities in the game.
- * <p>
- * <p>Each item entity type should have a creation method that returns a corresponding entity.
+ * Each item entity type should have a creation method that returns a corresponding entity.
  */
 public class ItemFactory {
+
+    /**
+     * Stops you from making an ItemFactory object.
+     * If you try, it throws an error.
+     */
+    private ItemFactory() {
+        throw new IllegalStateException("Instantiating static util class");
+    }
 
     /**
      * Creates and configures a new item entity.
@@ -34,13 +41,5 @@ public class ItemFactory {
         item.getComponent(TextureRenderComponent.class).scaleEntity();
         // Body is created in PhysicsComponent.create(), so avoid touching it here.
         return item;
-    }
-
-    /**
-     * Stops you from making an ItemFactory object.
-     * If you try, it throws an error.
-     */
-    private ItemFactory() {
-        throw new IllegalStateException("Instantiating static util class");
     }
 }

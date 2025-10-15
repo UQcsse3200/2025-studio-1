@@ -1,11 +1,13 @@
 package com.csse3200.game.services;
 
 import com.csse3200.game.areas.GameArea;
+import com.csse3200.game.areas.difficulty.Difficulty;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
 import com.csse3200.game.input.InputService;
 import com.csse3200.game.physics.PhysicsService;
 import com.csse3200.game.rendering.RenderService;
+import com.csse3200.game.session.LeaderBoardManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,6 +21,7 @@ import org.slf4j.LoggerFactory;
  */
 public class ServiceLocator {
     private static final Logger logger = LoggerFactory.getLogger(ServiceLocator.class);
+    private static final com.csse3200.game.events.EventHandler globalEvents = new com.csse3200.game.events.EventHandler();
     private static EntityService entityService;
     private static RenderService renderService;
     private static PhysicsService physicsService;
@@ -28,12 +31,20 @@ public class ServiceLocator {
     private static GameArea gameArea;
     private static SaveLoadService saveLoadService;
     private static Entity player;
+    private static MusicService musicService;
+    private static Difficulty difficulty;
+    private static DiscoveryService discoveryService; // track discovered rooms
+    private static ButtonSoundService buttonSoundService;
+    private static LeaderBoardManager leaderBoardManager;
+    private static volatile boolean transitioning = false;
+
+    private ServiceLocator() {
+        throw new IllegalStateException("Instantiating static util class");
+    }
 
     public static Entity getPlayer() {
         return player;
     }
-
-    private static volatile boolean transitioning = false;
 
     public static EntityService getEntityService() {
         return entityService;
@@ -73,6 +84,22 @@ public class ServiceLocator {
 
     public static SaveLoadService getSaveLoadService() {
         return saveLoadService;
+    }
+
+    public static MusicService getMusicService() {
+        return musicService;
+    }
+
+    public static Difficulty getDifficulty() {
+        return difficulty;
+    }
+
+    public static DiscoveryService getDiscoveryService() {
+        return discoveryService;
+    }
+
+    public static ButtonSoundService getButtonSoundService() {
+        return buttonSoundService;
     }
 
     public static void registerGameArea(GameArea theArea) {
@@ -119,6 +146,34 @@ public class ServiceLocator {
         saveLoadService = source;
     }
 
+    public static void registerMusicService(MusicService source) {
+        logger.debug("Registering music service {}", source);
+        musicService = source;
+    }
+
+    public static void registerDifficulty(Difficulty source) {
+        logger.debug("Registering difficulty {}", source);
+        difficulty = source;
+    }
+
+    public static void registerDiscoveryService(DiscoveryService service) {
+        logger.debug("Registering discovery service {}", service);
+        discoveryService = service;
+    }
+
+    public static void registerButtonSoundService(ButtonSoundService source) {
+        logger.debug("Registering button sound service {}", source);
+        buttonSoundService = source;
+    }
+
+    public static void registerLeaderBoardManager(LeaderBoardManager lbm) {
+        leaderBoardManager = lbm;
+    }
+
+    public static LeaderBoardManager getLeaderBoardManager() {
+        return leaderBoardManager;
+    }
+
     public static void clear() {
         entityService = null;
         renderService = null;
@@ -128,15 +183,38 @@ public class ServiceLocator {
         resourceService = null;
         gameArea = null;
         saveLoadService = null;
+        player = null;
+        discoveryService = null;
+        player = null;
     }
 
-    private static final com.csse3200.game.events.EventHandler globalEvents = new com.csse3200.game.events.EventHandler();
+    /**
+     * Clear all services except the player entity.
+     */
+    public static void clearExceptPlayer() {
+        entityService = null;
+        renderService = null;
+        physicsService = null;
+        timeSource = null;
+        inputService = null;
+        resourceService = null;
+        gameArea = null;
+        saveLoadService = null;
+        // Keep player entity: player = null; (commented out)
+        discoveryService = null;
+    }
+
+    /**
+     * Clears ONLY the player entity
+     */
+    public static void clearPlayer() {
+        if (player != null) {
+            player.dispose();
+        }
+        player = null;
+    }
 
     public static com.csse3200.game.events.EventHandler getGlobalEvents() {
         return globalEvents;
-    }
-
-    private ServiceLocator() {
-        throw new IllegalStateException("Instantiating static util class");
     }
 }

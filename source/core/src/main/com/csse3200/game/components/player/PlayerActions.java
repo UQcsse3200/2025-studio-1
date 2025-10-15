@@ -10,10 +10,13 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Timer;
 import com.csse3200.game.components.*;
+import com.csse3200.game.effects.AimbotEffect;
+import com.csse3200.game.effects.UnlimitedAmmoEffect;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.factories.ProjectileFactory;
 import com.csse3200.game.physics.PhysicsLayer;
 import com.csse3200.game.physics.components.HitboxComponent;
+import com.csse3200.game.physics.components.HomingPhysicsComponent;
 import com.csse3200.game.physics.components.PhysicsComponent;
 import com.csse3200.game.physics.components.PhysicsProjectileComponent;
 import com.csse3200.game.rendering.AnimationRenderComponent;
@@ -28,10 +31,6 @@ import com.csse3200.game.services.ServiceLocator;
  * and corresponding actions are triggered when these events occur.</p>
  */
 public class PlayerActions extends Component {
-    // Components
-    private StaminaComponent stamina;
-    private PhysicsComponent physicsComponent;
-
     // Movement Constants
     private static final Vector2 MAX_SPEED = new Vector2(3f, 3f);
     private static final Vector2 CROUCH_SPEED = new Vector2(1.5f, 3f);
@@ -39,17 +38,27 @@ public class PlayerActions extends Component {
     private static final Vector2 JUMP_VELOCITY = new Vector2(0f, 15f);
     private static final Vector2 DASH_SPEED = new Vector2(20f, 9.8f);
     private static final float DASH_DURATION = 0.1f;
-    private int DASH_COOLDOWN = 15;
-
     // Stamina Costs
     private static final int DASH_COST = 30;
     private static final int DOUBLE_JUMP_COST = 10;
     private static final int SPRINT_COST = 1;
-
     // Jumping Limits
     private static final int MAX_JUMPS = 2;
     private static final long JUMP_COOLDOWN_MS = 300;
-
+    /**
+     * if player already has a weapon --> unequip first
+     * sets new weapon as equipped
+     * repositions the weapon to appear in player's hand
+     */
+    Entity currentWeapon = null;
+    //to represent relative difference between the
+    //player's body position and player's hand.
+    float handOffsetX = 5f;
+    float handOffsetY = 10f;
+    // Components
+    private StaminaComponent stamina;
+    private PhysicsComponent physicsComponent;
+    private int DASH_COOLDOWN = 15;
     // Internal movement state
     private Vector2 walkDirection = Vector2.Zero.cpy();
     private boolean moving = false;
@@ -58,15 +67,16 @@ public class PlayerActions extends Component {
     private boolean dashing = false;
     private boolean crouching = false;
     private boolean grounded = true;
-
+    // Effects
+    private final UnlimitedAmmoEffect unlimitedAmmoEffect = new UnlimitedAmmoEffect(10f, this);
+    private final AimbotEffect aimbotEffect = new AimbotEffect(10f, this);
     // Ability cooldowns / counters
     private int dashCooldown = 0;
     private int jumpsLeft = MAX_JUMPS;
     private long lastJumpTime = 0; // timestamp of last ground jump
-
     // Tracks time since last attack for cooldown purposes
     private float timeSinceLastAttack = 0;
-
+    private float timesinceLastReload = 0;
     private Camera camera;
 
     /**
@@ -100,6 +110,7 @@ public class PlayerActions extends Component {
 
             }
         }
+
     }
 
     /**
@@ -129,6 +140,7 @@ public class PlayerActions extends Component {
         }
 
         timeSinceLastAttack += ServiceLocator.getTimeSource().getDeltaTime();
+        timesinceLastReload += ServiceLocator.getTimeSource().getDeltaTime();
     }
 
     /**
@@ -242,7 +254,7 @@ public class PlayerActions extends Component {
             // Check cooldown for ground jumps
             if (isGroundJump) {
                 if (!touchingGround()) canJump = false;
-                if (currentTime - lastJumpTime < JUMP_COOLDOWN_MS) canJump = false;
+                if (physicsComponent.getBody().getLinearVelocity().y > 0f) canJump = false;
             } else {
                 if (!stamina.trySpend(DOUBLE_JUMP_COST)) return;
             }
@@ -383,76 +395,101 @@ public class PlayerActions extends Component {
      * Fires a projectile towards the mouse cursor.
      */
     void shoot() {
-        if (ServiceLocator.getTimeSource().isPaused())
-            return;
-
-        WeaponsStatsComponent weapon = getCurrentWeaponStats();
-        if (weapon == null) {
-            return;
-        }
+        if (ServiceLocator.getTimeSource().isPaused() || timesinceLastReload < 1.5f) return;
 
         InventoryComponent inventory = entity.getComponent(InventoryComponent.class);
-        Entity gun = inventory.getCurrItem();
-
+        Entity gun = inventory.getCurrSlot();
         if (gun == null) {
             return;
         }
-
+        WeaponsStatsComponent gunStats = gun.getComponent(WeaponsStatsComponent.class);
+        if (gunStats == null) {
+            return;
+        }
         MagazineComponent mag = gun.getComponent(MagazineComponent.class);
-        // Check for cooldown, defaulting to zero if no current weapon
 
         if (mag == null) {
             return;
         }
-        float coolDown = weapon.getCoolDown();
-        if (this.timeSinceLastAttack < coolDown || mag.reloading()) {
+        // Check for cooldown, defaulting to zero if no current weapon
+        mag.update();
+        float coolDown = gunStats.getCoolDown();
+        if (this.timeSinceLastAttack < coolDown) {
             return;
         }
 
         if (mag.getCurrentAmmo() <= 0) {
-            Sound attackSound = ServiceLocator.getResourceService()
-                    .getAsset("sounds/shot_failed.mp3", Sound.class);
+            Sound attackSound = ServiceLocator.getResourceService().getAsset("sounds/shot_failed.mp3", Sound.class);
             attackSound.play();
             return;
         }
 
-
-        Sound attackSound = ServiceLocator.getResourceService()
-                .getAsset("sounds/laser_blast.mp3", Sound.class);
+        Sound attackSound = ServiceLocator.getResourceService().getAsset("sounds/laser_blast.mp3", Sound.class);
         attackSound.play();
-
-        Entity bullet = ProjectileFactory.createPistolBullet(weapon);
-        Vector2 origin = new Vector2(entity.getPosition());
-        bullet.setPosition(new Vector2(origin.x - bullet.getScale().x / 2f + 2f,
-                origin.y + 0.6f - bullet.getScale().y / 2f));
+        Entity bullet;
+        if (aimbotEffect != null && aimbotEffect.isActive()) {
+            bullet = ProjectileFactory.createPistolBullet(gunStats, true);
+        } else {
+            bullet = ProjectileFactory.createPistolBullet(gunStats, false);
+        }
+        Vector2 origin = new Vector2(entity.getCenterPosition());
+        bullet.setPosition(new Vector2(origin.x - bullet.getScale().x / 2f,
+                origin.y - bullet.getScale().y / 2f));
         com.csse3200.game.areas.GameArea area = ServiceLocator.getGameArea();
         if (area != null) {
             area.spawnEntity(bullet);
         } else {
             ServiceLocator.getEntityService().register(bullet);
         }
-
-        PhysicsProjectileComponent projectilePhysics = bullet.getComponent(PhysicsProjectileComponent.class);
-
+        PhysicsProjectileComponent projectilePhysics;
+        if (bullet.hasComponent(HomingPhysicsComponent.class)) {
+            projectilePhysics = bullet.getComponent(HomingPhysicsComponent.class);
+        } else {
+            projectilePhysics = bullet.getComponent(PhysicsProjectileComponent.class);
+        }
         Vector3 destination = camera.unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
+        Vector2 world = new Vector2(destination.x, destination.y);
+        Vector2 dir = new Vector2(destination.x - origin.x, destination.y - origin.y);
+        if (dir.len2() != 0f) dir.nor();
+        entity.getEvents().trigger("player_shoot_order", world, dir);
         projectilePhysics.fire(new Vector2(destination.x - origin.x, destination.y - origin.y), 5);
 
-
-        mag.setCurrentAmmo(mag.getCurrentAmmo() - 1);
+        if (unlimitedAmmoEffect != null && unlimitedAmmoEffect.isActive()) {
+//            unlimitedAmmoEffect.apply(gun);  // dont call every shot
+        } else {
+            mag.setCurrentAmmo(mag.getCurrentAmmo() - 1);
+        }
+//        mag.setCurrentAmmo(mag.getCurrentAmmo() - 1);
 
         timeSinceLastAttack = 0;
+    }
+
+    public UnlimitedAmmoEffect getUnlimitedAmmoEffect() {
+        return unlimitedAmmoEffect;
+    }
+
+    public AimbotEffect getAimbotEffect() {
+        return aimbotEffect;
     }
 
     /**
      * Performs a melee attack against nearby enemies.
      */
     void attack() {
-        if (ServiceLocator.getTimeSource().isPaused())
+        if (ServiceLocator.getTimeSource().isPaused()) return;
+        InventoryComponent inventory = entity.getComponent(InventoryComponent.class);
+        Entity melee = inventory.getCurrSlot();
+        if (melee == null) {
             return;
-        WeaponsStatsComponent weapon = getCurrentWeaponStats();
-        float coolDown = weapon != null ? weapon.getCoolDown() : 0;
-        if (this.timeSinceLastAttack < coolDown) return;
-
+        }
+        WeaponsStatsComponent meleeStats = melee.getComponent(WeaponsStatsComponent.class);
+        if (meleeStats == null) {
+            return;
+        }
+        float coolDown = meleeStats != null ? meleeStats.getCoolDown() : 0;
+        if (this.timeSinceLastAttack < coolDown) {
+            return;
+        }
         Sound attackSound = ServiceLocator.getResourceService().getAsset("sounds/Impact4.ogg", Sound.class);
         attackSound.play();
 
@@ -501,7 +538,6 @@ public class PlayerActions extends Component {
     }
 
     /**
-     *
      * @return the max speed vector
      */
     public Vector2 getMaxSpeed() {
@@ -509,7 +545,6 @@ public class PlayerActions extends Component {
     }
 
     /**
-     *
      * @return the crouch speed
      */
     public Vector2 getCrouchSpeed() {
@@ -517,13 +552,11 @@ public class PlayerActions extends Component {
     }
 
     /**
-     *
      * @return the sprint speed
      */
     public Vector2 getSprintSpeed() {
         return SPRINT_SPEED;
     }
-
 
     /**
      * Makes player reload their equipped weapon
@@ -532,13 +565,13 @@ public class PlayerActions extends Component {
 
 
         InventoryComponent inventory = entity.getComponent(InventoryComponent.class);
-        Entity equippedItem = inventory.getCurrItem();
+        Entity gun = inventory.getCurrSlot();
 
-        if (equippedItem != null) {
-            MagazineComponent mag = equippedItem.getComponent(MagazineComponent.class);
+        if (gun != null) {
+            MagazineComponent mag = gun.getComponent(MagazineComponent.class);
             if (mag != null) {
 
-                if (mag.reloading()) {
+                if (timesinceLastReload <= 1.5f) {
 
                     return;
                 }
@@ -546,14 +579,13 @@ public class PlayerActions extends Component {
                 Sound reloadSound;
 
                 if (mag.reload(entity)) {
-                    reloadSound = ServiceLocator.getResourceService()
-                            .getAsset("sounds/reload.mp3", Sound.class);
+                    reloadSound = ServiceLocator.getResourceService().getAsset("sounds/reload.mp3", Sound.class);
                 } else {
-                    reloadSound = ServiceLocator.getResourceService()
-                            .getAsset("sounds/shot_failed.mp3", Sound.class);
+                    reloadSound = ServiceLocator.getResourceService().getAsset("sounds/shot_failed.mp3", Sound.class);
                 }
 
                 reloadSound.play();
+                timesinceLastReload = 0f;
             }
         }
     }
@@ -563,53 +595,6 @@ public class PlayerActions extends Component {
             entity.getEvents().trigger("anim");
         }
     }
-
-    /**
-     * equipSlot(int slotIndex) selects the item slot in the inventory for the item that the player wants to equip
-     *
-     * @param slotIndex
-     */
-    public void equipSlot(int slotIndex) {
-        InventoryComponent inventory = entity.getComponent(InventoryComponent.class);
-        if (inventory == null) return;  //player does not have any existing inventory
-
-        int inventoryIndex = slotIndex - 1; //slot index for inventory are 0 based
-
-        Entity item = inventory.get(inventoryIndex);
-        if (item == null) {
-            //if the inventory is empty prints a message on the console
-            Gdx.app.log("Inventory ", "No item in slot - " + slotIndex);
-            return;
-        }
-
-        //select the slot at inventoryIndex
-        inventory.setSelectSlot(inventoryIndex);
-        //equip the player with the weapon at that slot
-        inventory.setEquippedSlot(inventoryIndex);
-        //set that weapon as the current item in use in inventory
-        inventory.setCurrItem(item);
-        entity.getEvents().trigger("focus item", inventoryIndex);
-    }
-
-    /**
-     * this function is to unequip the player
-     */
-    public void unequipPlayer() {
-        InventoryComponent inventory = entity.getComponent(InventoryComponent.class);
-        if (inventory == null) return;
-
-        inventory.setEquippedSlot(-1);
-        inventory.setCurrItem(null);
-        entity.getEvents().trigger("focus item", -1);
-    }
-
-
-    /**
-     * if player already has a weapon --> unequip first
-     * sets new weapon as equipped
-     * repositions the weapon to appear in player's hand
-     */
-    Entity currentWeapon = null;
 
     public void equipWeapon(Entity weapon) {
         if (currentWeapon != null) {
@@ -639,11 +624,6 @@ public class PlayerActions extends Component {
 
         currentWeapon = null;
     }
-
-    //to represent relative difference between the
-    //player's body position and player's hand.
-    float handOffsetX = 5f;
-    float handOffsetY = 10f;
 
     /**
      * this function sets the coordinates for the weapon in player's hand
@@ -679,5 +659,27 @@ public class PlayerActions extends Component {
         } else {
             body.setTransform(playerPos.x - handOffsetX, playerPos.y + handOffsetY, 0f);
         }
+    }
+
+    /**
+     * Sets time since last attack, used for testing
+     *
+     * @param timeSinceLastAttack time since last attack
+     */
+    public void setTimeSinceLastAttack(float timeSinceLastAttack) {
+        this.timeSinceLastAttack = timeSinceLastAttack;
+    }
+
+    /**
+     * Sets the camera, used for testing
+     *
+     * @param camera camera
+     */
+    public void setCamera(Camera camera) {
+        this.camera = camera;
+    }
+
+    public boolean isFacingRight() {
+        return this.facingRight;
     }
 }

@@ -19,17 +19,16 @@ import java.util.ArrayList;
 public class InventoryComponent extends Component {
 
     private static final Logger logger = LoggerFactory.getLogger(InventoryComponent.class);
-
-    private int inventoryCount = 0;
     private final int maxCapacity = 5;
     private final int minCapacity = 0;
     private final ArrayList<Entity> items = new ArrayList<>(maxCapacity);
     private final ArrayList<String> itemTexs = new ArrayList<>(maxCapacity);
+    private int inventoryCount = 0;
     private int processor;
     private Entity currItem;
-    private int selectedSlot = -1; // -1 = no selectedSlot
     private int equippedSlot = -1; // no slot is equipped initially
     private int keycardLevel = 0;
+    private boolean doubleProcessors = false;
 
     /**
      * Constructs an inventory for the player and a beginning currency amount
@@ -45,6 +44,14 @@ public class InventoryComponent extends Component {
         }
     }
 
+    /**
+     * getter method for the keycard level
+     *
+     * @return the current keycard level
+     */
+    public int getKeycardLevel() {
+        return this.keycardLevel;
+    }
 
     /**
      * setter method for the keycard level
@@ -53,15 +60,6 @@ public class InventoryComponent extends Component {
      */
     public void setKeycardLevel(int level) {
         this.keycardLevel = level;
-    }
-
-    /**
-     * getter method for the keycard level
-     *
-     * @return the current keycard level
-     */
-    public int getKeycardLevel() {
-        return this.keycardLevel;
     }
 
     /**
@@ -119,6 +117,15 @@ public class InventoryComponent extends Component {
             return null;
         }
         return this.itemTexs.get(index);
+    }
+
+    /**
+     * Returns the current item that is being selected
+     *
+     * @return The item that is currently being selected
+     */
+    public Entity getCurrSlot() {
+        return this.currItem;
     }
 
     /**
@@ -217,17 +224,6 @@ public class InventoryComponent extends Component {
     }
 
     /**
-     * Returns if the player has a certain amount of processor's.
-     *
-     * @param processor required amount of processor's
-     * @return player has greater than or equal to the required amount of
-     * processor's
-     */
-    public Boolean hasProcessor(int processor) {
-        return this.processor >= processor;
-    }
-
-    /**
      * Sets the player's processor's. Processor's has a minimum bound of 0.
      *
      * @param processor processor
@@ -240,6 +236,17 @@ public class InventoryComponent extends Component {
         if (entity != null && prev != this.processor) {
             entity.getEvents().trigger("updateProcessor", this.processor);
         }
+    }
+
+    /**
+     * Returns if the player has a certain amount of processor's.
+     *
+     * @param processor required amount of processor's
+     * @return player has greater than or equal to the required amount of
+     * processor's
+     */
+    public Boolean hasProcessor(int processor) {
+        return this.processor >= processor;
     }
 
     /**
@@ -261,13 +268,6 @@ public class InventoryComponent extends Component {
     }
 
     /**
-     * Set the current item
-     */
-    public void setCurrItem(Entity item) {
-        this.currItem = item;
-    }
-
-    /**
      * Get the current item
      *
      * @return the current item
@@ -277,58 +277,19 @@ public class InventoryComponent extends Component {
     }
 
     /**
-     * Get the current item
-     *
-     * @return the current item
+     * Set the current item
      */
-    public Entity getCurrSlot() {
-        if (selectedSlot >= 0 && selectedSlot < items.size()) {
-            return items.get(selectedSlot);
-        }
-        return null;
-    }
-
-
-    /**
-     *
-     * @param slotIndex takes the index of the slot selected
-     */
-    public void setSelectSlot(int slotIndex) {
-        if (slotIndex >= 0 && slotIndex < this.items.size()) {
-            this.selectedSlot = slotIndex;
-        }
+    public void setCurrItem(Entity item) {
+        this.currItem = item;
     }
 
     /**
-     * Returns the item that is currently selected in the inventory.
+     * Gets the currently equipped slot
      *
-     * @return the selected item, or null if no slot is selected
+     * @return the slot index that is currently equipped
      */
-    public int getSelectedSlot() {
-        if (selectedSlot >= 0 && selectedSlot < items.size()) {
-            return selectedSlot;
-        }
-        return -1; // no item selected
-    }
-
-
-    @Override
-    /**
-     * to setup the component to respond whenever player focuses on an
-     * inventory item
-     */
-    public void create() {
-        super.create();
-        entity.getEvents().addListener("focus item", this::onFocusItem);
-    }
-
-    /**
-     *
-     * @param slotIndex puts focus on the item at that slot
-     */
-    private void onFocusItem(int slotIndex) {
-        setSelectSlot(slotIndex);
-        entity.getEvents().trigger("inventoryItemSelected", slotIndex);
+    public int getEquippedSlot() {
+        return this.equippedSlot;
     }
 
     /**
@@ -342,18 +303,28 @@ public class InventoryComponent extends Component {
 
         //set the selected slot
         //inventory.setSelectSlot(slotIndex-1);
-        this.equippedSlot = slotIndex - 1;
+        this.equippedSlot = slotIndex;
 
         //trigger the UI update and internal logic
         entity.getEvents().trigger("focus item", slotIndex);
     }
 
+    public void setDoubleProcessors(boolean active) {
+        this.doubleProcessors = active;
+    }
+
+    public boolean hasDoubleProcessors() {
+        return doubleProcessors;
+    }
 
     /**
-     *
-     * @return the slot that is currently equipped
+     * Removes the current item if there is one selected
      */
-    public int getEquippedSlot() {
-        return this.equippedSlot;
+    public void removeCurrItem() {
+        if (this.equippedSlot != -1) {
+            items.set(equippedSlot, null);
+            itemTexs.set(equippedSlot, null);
+            inventoryCount--;
+        }
     }
 }

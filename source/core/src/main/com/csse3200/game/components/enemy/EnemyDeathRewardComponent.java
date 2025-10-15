@@ -7,14 +7,17 @@ import com.csse3200.game.components.player.InventoryComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.services.ServiceLocator;
 
+import java.security.SecureRandom;
 import java.util.Random;
 
 /**
  * Awards the player processor when the enemy dies.
  */
 public class EnemyDeathRewardComponent extends Component {
-    private final int rewardProcessor;
+    //1/4 chance of enemy adding ammo to the player
+    private final Random random = new SecureRandom();
     private final InventoryComponent playerInventory;
+    private int rewardProcessor;
 
     public EnemyDeathRewardComponent(int rewardProcessor, InventoryComponent playerInventory) {
         this.rewardProcessor = rewardProcessor;
@@ -33,16 +36,16 @@ public class EnemyDeathRewardComponent extends Component {
         if (playerInventory == null) {
             return;
         }
+
+        if (playerInventory.hasDoubleProcessors()) {
+            rewardProcessor *= 2;
+        }
+
         playerInventory.addProcessor(rewardProcessor);
 
-
-        //1/4 chance of enemy adding ammo to the player
-        Random rand = new Random();
-
-        int chance = rand.nextInt(4);
+        int chance = random.nextInt(4);
 
         if (chance == 0) {
-
             Entity player = playerInventory.getEntity();
             AmmoStatsComponent playerAmmo = player.getComponent(AmmoStatsComponent.class);
             int currentAmmo = playerAmmo.getAmmo();
@@ -51,7 +54,6 @@ public class EnemyDeathRewardComponent extends Component {
                     .getAsset("sounds/ammo_replenished.mp3", Sound.class);
             attackSound.play();
             player.getEvents().trigger("ammo replenished");
-
         }
     }
 
@@ -63,6 +65,11 @@ public class EnemyDeathRewardComponent extends Component {
         if (playerInventory == null) {
             return;
         }
+
+        if (playerInventory.hasDoubleProcessors()) {
+            rewardProcessor *= 2;
+        }
+
         playerInventory.addProcessor(rewardProcessor);
 
 
@@ -76,6 +83,5 @@ public class EnemyDeathRewardComponent extends Component {
         attackSound.play();
         player.getEvents().trigger("ammo replenished");
     }
-
 
 }

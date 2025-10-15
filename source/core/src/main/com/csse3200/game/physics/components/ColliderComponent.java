@@ -188,23 +188,6 @@ public class ColliderComponent extends Component {
     }
 
     /**
-     * Set the collider layer, used in collision logic
-     *
-     * @param layerMask Bitmask of {@link PhysicsLayer} this collider belongs to
-     * @return self
-     */
-    public ColliderComponent setLayer(short layerMask) {
-        if (fixture == null) {
-            fixtureDef.filter.categoryBits = layerMask;
-        } else {
-            Filter filter = fixture.getFilterData();
-            filter.categoryBits = layerMask;
-            fixture.setFilterData(filter);
-        }
-        return this;
-    }
-
-    /**
      * Masks the collider component to ensure that collision events are only triggered
      * with certain entities
      *
@@ -238,6 +221,23 @@ public class ColliderComponent extends Component {
             return fixtureDef.filter.categoryBits;
         }
         return fixture.getFilterData().categoryBits;
+    }
+
+    /**
+     * Set the collider layer, used in collision logic
+     *
+     * @param layerMask Bitmask of {@link PhysicsLayer} this collider belongs to
+     * @return self
+     */
+    public ColliderComponent setLayer(short layerMask) {
+        if (fixture == null) {
+            fixtureDef.filter.categoryBits = layerMask;
+        } else {
+            Filter filter = fixture.getFilterData();
+            filter.categoryBits = layerMask;
+            fixture.setFilterData(filter);
+        }
+        return this;
     }
 
     @Override

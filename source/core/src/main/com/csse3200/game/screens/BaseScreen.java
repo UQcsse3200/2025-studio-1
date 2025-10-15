@@ -105,8 +105,8 @@ abstract class BaseScreen extends ScreenAdapter {
         renderer.dispose();
         unloadAssets();
         ServiceLocator.getRenderService().dispose();
-        ServiceLocator.getEntityService().dispose();
-        ServiceLocator.clear();
+        ServiceLocator.getEntityService().disposeExceptPlayer();
+        ServiceLocator.clearExceptPlayer();
         logger.debug("{} services cleared", getClass().getSimpleName());
     }
 

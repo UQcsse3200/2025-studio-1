@@ -14,14 +14,6 @@ public abstract class InputFactory {
     private static final Logger logger = LoggerFactory.getLogger(InputFactory.class);
 
     /**
-     * Input device types
-     */
-    public enum InputType {
-        KEYBOARD, // keyboard and touch
-        TOUCH // alternate keyboard and touch
-    }
-
-    /**
      * @param inputType the type of input ot be handled by the game
      * @return an InputFactory for the specified input type
      */
@@ -57,4 +49,12 @@ public abstract class InputFactory {
      * @return Terminal input handler
      */
     public abstract InputComponent createForTerminal();
+
+    /**
+     * Input device types
+     */
+    public enum InputType {
+        KEYBOARD, // keyboard and touch
+        TOUCH // alternate keyboard and touch
+    }
 }

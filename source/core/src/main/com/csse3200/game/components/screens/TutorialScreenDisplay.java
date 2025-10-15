@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Scaling;
 import com.csse3200.game.GdxGame;
+import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.AnimatedClipImage;
 
 import java.util.List;
@@ -88,10 +89,10 @@ public class TutorialScreenDisplay extends BaseScreenDisplay {
         TutorialStep step = steps.get(stepIndex);
 
         // Title
-        addTitle(root, step.title(), 3f, null, 20f);
+        addTitle(root, step.title(), 2f, null, 20f);
 
         // Description (clone small style; keep text white)
-        Label.LabelStyle small = new Label.LabelStyle(skin.get("small", Label.LabelStyle.class));
+        Label.LabelStyle small = new Label.LabelStyle(skin.get(Label.LabelStyle.class));
         small.fontColor = skin.getColor("white");
         Label desc = new Label(step.description(), small);
         desc.setFontScale(2f);
@@ -131,13 +132,17 @@ public class TutorialScreenDisplay extends BaseScreenDisplay {
         root.row();
 
         // Bottom controls
-        TextButton mainMenuBtn = button("Main Menu", 2.0f, this::backMainMenu);
+        TextButton mainMenuBtn = button("Main Menu", 2.0f, () -> {
+            ServiceLocator.getButtonSoundService().playClick();
+            backMainMenu();
+        });
         root.add(mainMenuBtn).colspan(2).center().padTop(20f);
 
         // Listeners
         prevBtn.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
+                ServiceLocator.getButtonSoundService().playClick();
                 if (currentStep > 0) {
                     currentStep--;
                     showStep(currentStep);
@@ -148,6 +153,7 @@ public class TutorialScreenDisplay extends BaseScreenDisplay {
         nextBtn.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
+                ServiceLocator.getButtonSoundService().playClick();
                 if (currentStep < steps.size() - 1) {
                     currentStep++;
                     showStep(currentStep);

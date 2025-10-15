@@ -48,6 +48,34 @@ public class TerrainFactory {
         this.orientation = orientation;
     }
 
+    private static void fillTilesAtRandom(
+            TiledMapTileLayer layer, GridPoint2 mapSize, TerrainTile tile, int amount) {
+        GridPoint2 min = new GridPoint2(0, 0);
+        GridPoint2 max = new GridPoint2(mapSize.x - 1, mapSize.y - 1);
+
+        for (int i = 0; i < amount; i++) {
+            GridPoint2 tilePos = RandomUtils.random(min, max);
+            Cell cell = layer.getCell(tilePos.x, tilePos.y);
+            cell.setTile(tile);
+        }
+    }
+
+    private static void fillTiles(TiledMapTileLayer layer, GridPoint2 mapSize, TerrainTile tile) {
+        for (int x = 0; x < mapSize.x; x++) {
+            for (int y = 0; y < mapSize.y; y++) {
+                Cell cell = new Cell();
+                cell.setTile(tile);
+                layer.setCell(x, y, cell);
+            }
+        }
+    }
+
+    private static void fillBackground(TiledMapTileLayer layer, GridPoint2 mapSize, TerrainTile tile) {
+        Cell cell = new Cell();
+        cell.setTile(tile);
+        layer.setCell(0, 0, cell);
+    }
+
     /**
      * Create a terrain of the given type, using the orientation of the factory. This can be extended
      * to add additional game terrains.
@@ -60,23 +88,23 @@ public class TerrainFactory {
         switch (terrainType) {
             case SPAWN_ROOM:
                 TextureRegion spawnBackground =
-                        new TextureRegion(resourceService.getAsset("images/SpawnResize.png", Texture.class));
+                        new TextureRegion(resourceService.getAsset("backgrounds/SpawnResize.png", Texture.class));
                 return createGameRooms(0.5f, spawnBackground);
             case STORAGE:
                 TextureRegion storageBackground =
-                        new TextureRegion(resourceService.getAsset("images/Storage.png", Texture.class));
+                        new TextureRegion(resourceService.getAsset("backgrounds/Storage.png", Texture.class));
                 return createGameRooms(0.5f, storageBackground);
             case LOBBY:
                 TextureRegion lobbyBackground =
-                        new TextureRegion(resourceService.getAsset("images/background-reception.png", Texture.class));
+                        new TextureRegion(resourceService.getAsset("backgrounds/Reception.png", Texture.class));
                 return createGameRooms(0.5f, lobbyBackground);
             case OFFICE:
                 TextureRegion officeBackground =
-                        new TextureRegion(resourceService.getAsset("images/Office and elevator/Office Background.png", Texture.class));
+                        new TextureRegion(resourceService.getAsset("backgrounds/Office.png", Texture.class));
                 return createGameRooms(0.5f, officeBackground);
             case SERVER_ROOM:
                 TextureRegion serverBackground =
-                        new TextureRegion(resourceService.getAsset("images/ServerRoomBackgroundResize.png", Texture.class));
+                        new TextureRegion(resourceService.getAsset("backgrounds/Server.png", Texture.class));
                 return createGameRooms(0.5f, serverBackground);
             case TUNNEL_ROOM:
                 TextureRegion tunnelBackground =
@@ -84,19 +112,19 @@ public class TerrainFactory {
                 return createGameRooms(0.5f, tunnelBackground);
             case SECURITY_ROOM:
                 TextureRegion securityBackground =
-                        new TextureRegion(resourceService.getAsset("images/SecurityBackground.png", Texture.class));
+                        new TextureRegion(resourceService.getAsset("backgrounds/Security.png", Texture.class));
                 return createGameRooms(0.5f, securityBackground);
             case RESEARCH_ROOM:
                 TextureRegion researchBackground =
-                        new TextureRegion(resourceService.getAsset("images/ResearchBackground.png", Texture.class));
+                        new TextureRegion(resourceService.getAsset("backgrounds/Research.png", Texture.class));
                 return createGameRooms(0.5f, researchBackground);
             case MAIN_HALL:
                 TextureRegion hallBackground =
-                        new TextureRegion(resourceService.getAsset("images/mainHall-background.png", Texture.class));
+                        new TextureRegion(resourceService.getAsset("backgrounds/MainHall.png", Texture.class));
                 return createGameRooms(0.5f, hallBackground);
             case SHIPPING:
                 TextureRegion shippingBackground =
-                        new TextureRegion(resourceService.getAsset("images/Shipping.png", Texture.class));
+                        new TextureRegion(resourceService.getAsset("backgrounds/Shipping.png", Texture.class));
                 return createGameRooms(0.5f, shippingBackground);
             case ELEVATOR:
                 TextureRegion elevatorBackground =
@@ -126,6 +154,15 @@ public class TerrainFactory {
                 TextureRegion hexRocks =
                         new TextureRegion(resourceService.getAsset("images/hex_grass_3.png", Texture.class));
                 return createForestDemoTerrain(1f, hexGrass, hexTuft, hexRocks);
+            case WIN_SCREEN:
+                TextureRegion factoryBackground =
+                        new TextureRegion(resourceService.getAsset("images/WinscreenAnimationBackground.png",
+                                Texture.class));
+                return createGameRooms(0.5f, factoryBackground);
+            case CASINO:
+                TextureRegion casinoBackground =
+                        new TextureRegion(resourceService.getAsset("images/casino.png", Texture.class));
+                return createGameRooms(0.5f, casinoBackground);
             default:
                 return null;
         }
@@ -192,34 +229,6 @@ public class TerrainFactory {
         return tiledMap;
     }
 
-    private static void fillTilesAtRandom(
-            TiledMapTileLayer layer, GridPoint2 mapSize, TerrainTile tile, int amount) {
-        GridPoint2 min = new GridPoint2(0, 0);
-        GridPoint2 max = new GridPoint2(mapSize.x - 1, mapSize.y - 1);
-
-        for (int i = 0; i < amount; i++) {
-            GridPoint2 tilePos = RandomUtils.random(min, max);
-            Cell cell = layer.getCell(tilePos.x, tilePos.y);
-            cell.setTile(tile);
-        }
-    }
-
-    private static void fillTiles(TiledMapTileLayer layer, GridPoint2 mapSize, TerrainTile tile) {
-        for (int x = 0; x < mapSize.x; x++) {
-            for (int y = 0; y < mapSize.y; y++) {
-                Cell cell = new Cell();
-                cell.setTile(tile);
-                layer.setCell(x, y, cell);
-            }
-        }
-    }
-
-    private static void fillBackground(TiledMapTileLayer layer, GridPoint2 mapSize, TerrainTile tile) {
-        Cell cell = new Cell();
-        cell.setTile(tile);
-        layer.setCell(0, 0, cell);
-    }
-
     /**
      * This enum should contain the different terrains in your game, e.g. forest, cave, home, all with
      * the same oerientation. But for demonstration purposes, the base code has the same level in 3
@@ -239,6 +248,8 @@ public class TerrainFactory {
         TUNNEL_ROOM,
         STORAGE,
         RESEARCH_ROOM,
-        OFFICE
+        OFFICE,
+        WIN_SCREEN,
+        CASINO
     }
 }

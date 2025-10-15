@@ -6,10 +6,12 @@ import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.services.ServiceLocator;
 
 /**
- * Render a static texture.
+ * Render a static texture, with optional fade (alpha).
  */
 public class TextureRenderComponent extends RenderComponent {
     private final Texture texture;
+    private float alpha = 1f; // Added for fade/opacity
+    private float zIndex;
 
     /**
      * @param texturePath Internal path of static texture to render.
@@ -17,8 +19,8 @@ public class TextureRenderComponent extends RenderComponent {
      */
     public TextureRenderComponent(String texturePath) {
         this(ServiceLocator.getResourceService().getAsset(texturePath, Texture.class));
+        this.zIndex = Float.MIN_VALUE;
     }
-//...
 
     /**
      * @param texture Static texture to render. Will be scaled to the entity's scale.
@@ -34,8 +36,24 @@ public class TextureRenderComponent extends RenderComponent {
         entity.setScale(1f, (float) texture.getHeight() / texture.getWidth());
     }
 
-    protected Texture getTexture() {
+    public Texture getTexture() {
         return texture;
+    }
+
+    /**
+     * Gets the current opacity (alpha multiplier).
+     */
+    public float getAlpha() {
+        return alpha;
+    }
+
+    /**
+     * Sets the opacity (alpha multiplier 0-1) for fade effects.
+     *
+     * @param alpha value from 0.0 (fully transparent) to 1.0 (fully opaque)
+     */
+    public void setAlpha(float alpha) {
+        this.alpha = Math.clamp(alpha, 0f, 1f);
     }
 
     @Override
@@ -43,7 +61,32 @@ public class TextureRenderComponent extends RenderComponent {
         if (!isDisabled()) {
             Vector2 position = entity.getPosition();
             Vector2 scale = entity.getScale();
+            batch.setColor(1f, 1f, 1f, alpha); // Set fade/opacity
             batch.draw(texture, position.x, position.y, scale.x, scale.y);
+            batch.setColor(1f, 1f, 1f, 1f); // Reset color for other renders
         }
+    }
+
+    /**
+     * Gets the zIndex of the entity to determine rendering order.
+     *
+     * @return If zIndex hasn't been set, return negative entity's y position, else return the set value.
+     */
+    @Override
+    public float getZIndex() {
+        if (this.zIndex != Float.MIN_VALUE) {
+            return this.zIndex;
+        } else {
+            return -entity.getPosition().y;
+        }
+    }
+
+    /**
+     * Set the zIndex.
+     *
+     * @param zIndex zIndex to be set.
+     */
+    public void setZIndex(float zIndex) {
+        this.zIndex = zIndex;
     }
 }

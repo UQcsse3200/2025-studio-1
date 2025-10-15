@@ -8,17 +8,37 @@ import java.util.*;
  */
 public class BKTree {
     private static final int K = 5;
-
-    private static final class Node {
-        final String term;
-        final Map<Integer, Node> children = new HashMap<>();
-
-        Node(String t) {
-            term = t;
-        }
-    }
-
     private Node root;
+
+    /**
+     * Fast Levenshtein with early exit for distance > 2 (tiny commands).
+     */
+    private static int distLE2(String a, String b) {
+        // small optimization: if |len(a)-len(b)| > 2, bail early with >2
+        int la = a.length(), lb = b.length();
+        int diff = Math.abs(la - lb);
+        if (diff > 2) return diff; // already > 2
+        // classic DP but trimmed because la,lb are tiny (command words)
+        int[] prev = new int[lb + 1];
+        int[] cur = new int[lb + 1];
+        for (int j = 0; j <= lb; j++) prev[j] = j;
+        for (int i = 1; i <= la; i++) {
+            cur[0] = i;
+            char ca = a.charAt(i - 1);
+            int rowMin = cur[0];
+            for (int j = 1; j <= lb; j++) {
+                int cost = (ca == b.charAt(j - 1)) ? 0 : 1;
+                cur[j] = Math.min(Math.min(cur[j - 1] + 1, prev[j] + 1), prev[j - 1] + cost);
+                rowMin = Math.min(rowMin, cur[j]);
+            }
+            // early exit: if minimal in row already exceeds 2, we can stop
+            if (rowMin > 2) return rowMin;
+            int[] tmp = prev;
+            prev = cur;
+            cur = tmp;
+        }
+        return prev[lb];
+    }
 
     public void insert(String term) {
         if (term == null || term.isEmpty()) return;
@@ -60,33 +80,12 @@ public class BKTree {
         return out;
     }
 
-    /**
-     * Fast Levenshtein with early exit for distance > 2 (tiny commands).
-     */
-    private static int distLE2(String a, String b) {
-        // small optimization: if |len(a)-len(b)| > 2, bail early with >2
-        int la = a.length(), lb = b.length();
-        int diff = Math.abs(la - lb);
-        if (diff > 2) return diff; // already > 2
-        // classic DP but trimmed because la,lb are tiny (command words)
-        int[] prev = new int[lb + 1];
-        int[] cur = new int[lb + 1];
-        for (int j = 0; j <= lb; j++) prev[j] = j;
-        for (int i = 1; i <= la; i++) {
-            cur[0] = i;
-            char ca = a.charAt(i - 1);
-            int rowMin = cur[0];
-            for (int j = 1; j <= lb; j++) {
-                int cost = (ca == b.charAt(j - 1)) ? 0 : 1;
-                cur[j] = Math.min(Math.min(cur[j - 1] + 1, prev[j] + 1), prev[j - 1] + cost);
-                rowMin = Math.min(rowMin, cur[j]);
-            }
-            // early exit: if minimal in row already exceeds 2, we can stop
-            if (rowMin > 2) return rowMin;
-            int[] tmp = prev;
-            prev = cur;
-            cur = tmp;
+    private static final class Node {
+        final String term;
+        final Map<Integer, Node> children = new HashMap<>();
+
+        Node(String t) {
+            term = t;
         }
-        return prev[lb];
     }
 }

@@ -10,9 +10,7 @@ import com.csse3200.game.services.ServiceLocator;
 
 
 public class BossChargeSkillComponent extends Component {
-    private enum State {PATROL, PREP, CHARGING, RETURN, COOLDOWN}
-
-    private PhysicsComponent phys;
+    private static final String BOSS_PATROL = "boss2:patrol";
     private final Entity target;
     private final float triggerRange;
     private final float dwellTime;
@@ -25,8 +23,6 @@ public class BossChargeSkillComponent extends Component {
     private final float patrolRightX;
     private final float patrolY;
     private final float patrolSpeed;
-
-
     private final Vector2 lockedPos = new Vector2();
     private final Vector2 vel = new Vector2();
     private float dwellCounter = 0f;
@@ -38,7 +34,6 @@ public class BossChargeSkillComponent extends Component {
     private boolean crash = false;
     private GameTime time;
     private AITaskComponent ai;
-
     public BossChargeSkillComponent(Entity target,
                                     float triggerRange,
                                     float dwellTime,
@@ -67,7 +62,7 @@ public class BossChargeSkillComponent extends Component {
     public void create() {
         time = ServiceLocator.getTimeSource();
         ai = entity.getComponent(AITaskComponent.class);
-        phys = entity.getComponent(PhysicsComponent.class);
+        PhysicsComponent phys = entity.getComponent(PhysicsComponent.class);
         if (phys != null && phys.getBody() != null) {
             phys.getBody().setGravityScale(0f);
             phys.getBody().setFixedRotation(true);
@@ -75,7 +70,7 @@ public class BossChargeSkillComponent extends Component {
         }
         Vector2 p = entity.getPosition();
         entity.setPosition(p.x, patrolY);
-        triggerAnim("boss2:patrol");
+        triggerAnim(BOSS_PATROL);
     }
 
     @Override
@@ -122,7 +117,7 @@ public class BossChargeSkillComponent extends Component {
                 if (!crash) {
                     pauseAI(false);
                     dwellCounter = 0f;
-                    triggerAnim("boss2:patrol");
+                    triggerAnim(BOSS_PATROL);
                     state = State.PATROL;
                     break;
                 }
@@ -183,7 +178,7 @@ public class BossChargeSkillComponent extends Component {
                 if (timer <= 0f) {
                     pauseAI(false);
                     dwellCounter = 0f;
-                    triggerAnim("boss2:patrol");
+                    triggerAnim(BOSS_PATROL);
                     state = State.PATROL;
                 }
                 break;
@@ -211,6 +206,8 @@ public class BossChargeSkillComponent extends Component {
     public void setCrash(boolean crash) {
         this.crash = crash;
     }
+
+    private enum State {PATROL, PREP, CHARGING, RETURN, COOLDOWN}
 }
 
 

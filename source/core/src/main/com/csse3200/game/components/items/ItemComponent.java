@@ -1,5 +1,6 @@
 package com.csse3200.game.components.items;
 
+import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.components.Component;
 import com.csse3200.game.entities.configs.ItemTypes;
 
@@ -8,6 +9,7 @@ public class ItemComponent extends Component {
     private ItemTypes type;
     private int count = 1;
     private String texture;
+    private boolean pickupable = true;
 
     public ItemComponent() {
         this.type = ItemTypes.NONE;
@@ -50,6 +52,24 @@ public class ItemComponent extends Component {
     }
 
     /**
+     * This checks if the item can be picked up
+     *
+     * @return True if pickupable is true, false otherwise
+     */
+    public boolean isPickupable() {
+        return pickupable;
+    }
+
+    /**
+     * This changes whether the Item can be picked up by the player
+     *
+     * @param status True if the item can be picked up, False otherwise
+     */
+    public void setPickupable(boolean status) {
+        this.pickupable = status;
+    }
+
+    /**
      * Gets the current number of existing items that are the same within
      * the game
      *
@@ -69,19 +89,19 @@ public class ItemComponent extends Component {
     }
 
     /**
+     * Returns the texture path of the current item
+     */
+    public String getTexture() {
+        return this.texture;
+    }
+
+    /**
      * Sets the texture path of the current item
      *
      * @param texture sets the texture path of the current item
      */
     public void setTexture(String texture) {
         this.texture = texture;
-    }
-
-    /**
-     * Returns the texture path of the current item
-     */
-    public String getTexture() {
-        return this.texture;
     }
 
     /**
@@ -95,6 +115,21 @@ public class ItemComponent extends Component {
                 + "\nId : " + entity.getId()
                 + "\nType : " + this.getType()
                 + "\nCount : " + this.getCount());
+    }
+
+    /**
+     * Returns the offset of where the item should be displayed from the player
+     * for it to look normal
+     *
+     * @return A new Vector2 containing the offset as x and y displacement.
+     */
+    public Vector2 getEquipOffset() {
+        if ("rifle".equals(this.getName())) return new Vector2(0.8f, 0.15f);
+        if ("lightsaber".equals(this.getName())) return new Vector2(0.7f, -0.2f); // works while facing left
+        if ("dagger".equals(this.getName())) return new Vector2(1.0f, 0.3f);
+        if ("pistol".equals(this.getName())) return new Vector2(0.75f, -0.1f);
+        if ("rocketlauncher".equals(this.getName())) return new Vector2(0.75f, -0.1f);
+        return new Vector2(0.7f, 0.3f);
     }
 }
 

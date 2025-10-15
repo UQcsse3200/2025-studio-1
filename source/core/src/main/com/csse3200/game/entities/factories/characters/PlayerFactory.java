@@ -4,9 +4,10 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.csse3200.game.components.*;
 import com.csse3200.game.components.player.*;
-import com.csse3200.game.components.player.InventoryComponent;
+import com.csse3200.game.effects.DoubleProcessorsEffect;
 import com.csse3200.game.effects.Effect;
 import com.csse3200.game.effects.RapidFireEffect;
+import com.csse3200.game.entities.AvatarRegistry;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.characters.PlayerConfig;
 import com.csse3200.game.entities.configs.consumables.RapidFireConsumableConfig;
@@ -28,6 +29,10 @@ import com.csse3200.game.services.ServiceLocator;
  */
 public class PlayerFactory {
     private static final PlayerConfig stats = safeLoadPlayerConfig();
+
+    private PlayerFactory() {
+        throw new IllegalStateException("Instantiating static util class");
+    }
 
     private static PlayerConfig safeLoadPlayerConfig() {
         PlayerConfig cfg = FileLoader.readClass(PlayerConfig.class, "configs/player.json");
@@ -52,15 +57,15 @@ public class PlayerFactory {
 
         AnimationRenderComponent animator = new AnimationRenderComponent(
                 ServiceLocator.getResourceService()
-                        .getAsset("images/player.atlas", TextureAtlas.class));
+                        .getAsset(AvatarRegistry.get().atlas(), TextureAtlas.class));
         add_animations(animator);
         Entity player =
                 new Entity()
                         .addComponent(new PhysicsComponent())
                         .addComponent(new ColliderComponent().setLayer(PhysicsLayer.PLAYER))
                         .addComponent(new PlayerActions())
-                        .addComponent(new CombatStatsComponent(stats.health))
-                        .addComponent(new WeaponsStatsComponent(stats.baseAttack))
+                        .addComponent(new CombatStatsComponent(AvatarRegistry.get().baseHealth()))
+                        .addComponent(new WeaponsStatsComponent(AvatarRegistry.get().baseDamage()))
                         .addComponent(new AmmoStatsComponent(1000))
                         .addComponent(playerInventory)
                         .addComponent(new ItemPickUpComponent(playerInventory))
@@ -69,10 +74,13 @@ public class PlayerFactory {
                         .addComponent(new PlayerInventoryDisplay(playerInventory))
                         .addComponent(new StaminaComponent())
                         .addComponent(animator)
-                        .addComponent(new PlayerAnimationController())
                         .addComponent(new PowerupComponent())
                         .addComponent(new PlayerAnimationController())
+                        .addComponent(new PlayerEquipComponent())
+                        .addComponent(new ArmourEquipComponent())
                         .addComponent(new InteractComponent().setLayer(PhysicsLayer.DEFAULT));
+        // Ensure global player reference is up-to-date for transitions
+        ServiceLocator.registerPlayer(player);
 
         player.getComponent(AnimationRenderComponent.class).scaleEntity(2f);
         player.getComponent(ColliderComponent.class).setDensity(1.5f);
@@ -80,37 +88,77 @@ public class PlayerFactory {
         player.getComponent(WeaponsStatsComponent.class).setCoolDown(0.2f);
 
 
-        //Unequip player at spawn
-        PlayerActions actions = player.getComponent(PlayerActions.class);
-        actions.unequipPlayer();  //start without a weapon equipped
-
         // pick up rapid fire powerup
         // remove this if we have item pickup available
         // (disposes entity when player go near it)
         player.addComponent(new Component() {
+            @Override
             public void update() {
                 var entities = ServiceLocator.getEntityService().getEntities();
                 for (int i = 0; i < entities.size; i++) {
-                    Entity entityRapidFirePowerup = entities.get(i);
-                    TagComponent tag = entityRapidFirePowerup.getComponent(TagComponent.class);
+                    Entity entityPowerup = entities.get(i);
+                    TagComponent tag = entityPowerup.getComponent(TagComponent.class);
 
-                    if (tag != null && tag.getTag().equals("rapidfire")) {
-                        if (entityRapidFirePowerup.getCenterPosition().dst(player.getCenterPosition()) < 1f) {
+                    if (tag != null) {
+                        if (tag.getTag().equals("rapidfire")) {
+                            if (entityPowerup.getCenterPosition().dst(player.getCenterPosition()) < 1f) {
+                                InventoryComponent inventory = player.getComponent(InventoryComponent.class);
+                                Entity equippedWeapon = inventory.getCurrItem();
 
-                            InventoryComponent inventory = player.getComponent(InventoryComponent.class);
-                            Entity equippedWeapon = inventory.getCurrItem();
-
-                            if (equippedWeapon != null) {
-                                RapidFireConsumableConfig config = new RapidFireConsumableConfig();
-                                for (Effect e : config.effects) {
-                                    if (e instanceof RapidFireEffect rapidFireEffect) {
-                                        player.getComponent(PowerupComponent.class).setEquippedWeapon(equippedWeapon);
-                                        player.getComponent(PowerupComponent.class).addEffect(rapidFireEffect);
+                                if (equippedWeapon != null) {
+                                    RapidFireConsumableConfig config = new RapidFireConsumableConfig();
+                                    for (Effect e : config.effects) {
+                                        if (e instanceof RapidFireEffect rapidFireEffect) {
+                                            player.getComponent(PowerupComponent.class).setEquippedWeapon(equippedWeapon);
+                                            player.getComponent(PowerupComponent.class).addEffect(rapidFireEffect);
+                                        }
                                     }
                                 }
+                                entityPowerup.dispose();
                             }
+                        }
 
-                            entityRapidFirePowerup.dispose();
+                        if (tag.getTag().equals("unlimitedammo")) {
+                            if (entityPowerup.getCenterPosition().dst(player.getCenterPosition()) < 1f) {
+                                InventoryComponent inventory = player.getComponent(InventoryComponent.class);
+                                Entity equippedWeapon = inventory.getCurrItem();
+
+                                if (equippedWeapon != null) {
+                                    PowerupComponent powerup = player.getComponent(PowerupComponent.class);
+                                    powerup.setEquippedWeapon(equippedWeapon);
+                                    PlayerActions playerActions = player.getComponent(PlayerActions.class);
+                                    playerActions.getUnlimitedAmmoEffect().apply(equippedWeapon);
+                                    powerup.addEffect(playerActions.getUnlimitedAmmoEffect());
+                                }
+                                entityPowerup.dispose();
+                            }
+                        }
+
+                        if (tag.getTag().equals("aimbot")) {
+                            if (entityPowerup.getCenterPosition().dst(player.getCenterPosition()) < 1f) {
+                                InventoryComponent inventory = player.getComponent(InventoryComponent.class);
+                                Entity equippedWeapon = inventory.getCurrItem();
+
+                                if (equippedWeapon != null) {
+                                    PowerupComponent powerup = player.getComponent(PowerupComponent.class);
+                                    powerup.setEquippedWeapon(equippedWeapon);
+                                    PlayerActions playerActions = player.getComponent(PlayerActions.class);
+                                    playerActions.getAimbotEffect().apply(equippedWeapon);
+                                    powerup.addEffect(playerActions.getAimbotEffect());
+                                }
+                                entityPowerup.dispose();
+                            }
+                        }
+
+                        if (tag.getTag().equals("doubleprocessors")) {
+                            if (entityPowerup.getCenterPosition().dst(player.getCenterPosition()) < 1f) {
+                                PowerupComponent powerup = player.getComponent(PowerupComponent.class);
+                                if (powerup != null) {
+                                    DoubleProcessorsEffect effect = new DoubleProcessorsEffect(30f);
+                                    powerup.addEffect(effect);
+                                }
+                                entityPowerup.dispose();
+                            }
                         }
                     }
                 }
@@ -180,10 +228,6 @@ public class PlayerFactory {
         PhysicsUtils.setScaledCollider(player, 0.3f, 0.5f);
         player.getComponent(WeaponsStatsComponent.class).setCoolDown(0.2f);
         return player;
-    }
-
-    private PlayerFactory() {
-        throw new IllegalStateException("Instantiating static util class");
     }
 
 }

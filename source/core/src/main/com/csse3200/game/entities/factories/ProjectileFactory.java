@@ -11,10 +11,7 @@ import com.csse3200.game.entities.configs.ActiveProjectileTypes;
 import com.csse3200.game.entities.configs.projectiles.ActiveProjectile;
 import com.csse3200.game.entities.configs.projectiles.ProjectileConfig;
 import com.csse3200.game.entities.configs.projectiles.ProjectileTarget;
-import com.csse3200.game.physics.components.ColliderComponent;
-import com.csse3200.game.physics.components.HitboxComponent;
-import com.csse3200.game.physics.components.PhysicsComponent;
-import com.csse3200.game.physics.components.PhysicsProjectileComponent;
+import com.csse3200.game.physics.components.*;
 import com.csse3200.game.rendering.TextureRenderWithRotationComponent;
 import com.csse3200.game.services.ServiceLocator;
 
@@ -31,6 +28,10 @@ import com.csse3200.game.services.ServiceLocator;
 
 public class ProjectileFactory {
 
+    private ProjectileFactory() {
+        throw new IllegalStateException("Instantiating static util class");
+    }
+
     /**
      * Base class to create a projectile.
      *
@@ -44,15 +45,16 @@ public class ProjectileFactory {
         ProjectileConfig config = new ProjectileConfig(target, texturePath);
 
         // Create the projectile and add components
+        WeaponsStatsComponent newWeaponStats = new WeaponsStatsComponent(source.getBaseAttack());
+        newWeaponStats.setRocket(source.getRocket());
         Entity projectile = new Entity()
                 .addComponent(new PhysicsComponent())
                 .addComponent(new PhysicsProjectileComponent())
-                .addComponent(new WeaponsStatsComponent(source.getBaseAttack()))
+                .addComponent(newWeaponStats)
                 .addComponent(new TextureRenderWithRotationComponent(config.texturePath))
                 .addComponent(new ColliderComponent())
                 .addComponent(new HitboxComponent().setLayer(config.projectileType))
                 .addComponent(new TouchAttackComponent(config.target, 1f));
-
         projectile.getComponent(PhysicsComponent.class).setBodyType(BodyDef.BodyType.DynamicBody);
 
         // Ensure the collision is only checked between the projectile and the target
@@ -124,14 +126,12 @@ public class ProjectileFactory {
                 .addComponent(new ColliderComponent())
                 .addComponent(new HitboxComponent().setLayer(config.projectileType))
                 .addComponent(new TouchAttackComponent(config.target, 1f));
-
         projectile.getComponent(PhysicsComponent.class).setBodyType(BodyDef.BodyType.DynamicBody);
 
         // Ensure the collision is only checked between the projectile and the target
         ColliderComponent collider = projectile.getComponent(ColliderComponent.class);
         collider.setLayer(config.projectileType)
                 .setFilter(config.projectileType, config.target);
-
         projectile.setTarget(targetEntity);
         projectile.setProjectileSpeed(speed);
         projectile.setActiveProjectileType(ActiveProjectileTypes.FOLLOW_TARGET);
@@ -149,7 +149,6 @@ public class ProjectileFactory {
                 .addComponent(new PhysicsProjectileComponent())
                 .addComponent(new WeaponsStatsComponent(source.getBaseAttack()))
                 .addComponent(new TextureRenderWithRotationComponent(config.texturePath));
-
         projectile.getComponent(PhysicsComponent.class).setBodyType(BodyDef.BodyType.DynamicBody);
 
         return projectile;
@@ -160,17 +159,29 @@ public class ProjectileFactory {
      *
      * @return pistol bullet entity
      */
-    public static Entity createPistolBullet(WeaponsStatsComponent source) {
+    public static Entity createPistolBullet(WeaponsStatsComponent source, boolean homing) {
         ProjectileTarget target = ProjectileTarget.ENEMY;
-        Entity item = ServiceLocator.getPlayer().getComponent(InventoryComponent.class).getCurrItem();
+        Entity item = ServiceLocator.getPlayer().getComponent(InventoryComponent.class).getCurrSlot();
         //Player's weapon has the water bullet upgrade
+        if (source.getRocket()) {
+            Entity projectile = createProjectile(target, source, "images/rocket.png");
+            projectile.addComponent(new HomingPhysicsComponent());
+            projectile.scaleHeight(0.85f);
+            return projectile;
+        }
         if (item.hasComponent(BulletEnhancerComponent.class)) {
             Entity projectile = createProjectile(target, source, "images/waterBullet.png");
             projectile.scaleHeight(0.85f);
+            if (homing) {
+                projectile.addComponent(new HomingPhysicsComponent());
+            }
             return projectile;
         }
         Entity projectile = createProjectile(target, source, "images/round.png");
         projectile.scaleHeight(0.85f);
+        if (homing) {
+            projectile.addComponent(new HomingPhysicsComponent());
+        }
         return projectile;
     }
 
@@ -189,13 +200,14 @@ public class ProjectileFactory {
 
         projectile.getComponent(TextureRenderWithRotationComponent.class).setRotation(angleToFire);
         projectile.getComponent(TextureRenderWithRotationComponent.class).scaleEntity();
+        projectile.getComponent(TextureRenderWithRotationComponent.class).setHasRotated(true);
 
         return projectile;
     }
 
-
-    private ProjectileFactory() {
-        throw new IllegalStateException("Instantiating static util class");
+    public static Entity createFireballBullet(WeaponsStatsComponent baseStats) {
+        Entity projectile = createProjectile(ProjectileTarget.ENEMY, baseStats, "images/laserbullet.png");
+        projectile.scaleHeight(0.3f);
+        return projectile;
     }
-
 }

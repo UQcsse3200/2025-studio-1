@@ -12,6 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Scaling;
 import com.csse3200.game.areas.ForestGameArea;
+import com.csse3200.game.areas.Reception;
 import com.csse3200.game.components.shop.CatalogEntry;
 import com.csse3200.game.components.shop.CatalogService;
 import com.csse3200.game.components.shop.PurchaseError;
@@ -36,6 +37,11 @@ public class ShopScreenDisplay extends UIComponent {
     private static final String LIMIT_REACHED_MESSAGE = ". Item limit has been reached.";
     private static final String INVALID_ITEM_MESSAGE = ". Invalid item.";
     private static final String UNEXPECTED_MESSAGE = ". Unexpected error.";
+    private static final String INVALID_WEAPON_MESSAGE = ". This item does not support attachments.";
+    private static final String ALREADY_HAVE_LASER_MESSAGE = ". This weapon already has a laser sight.";
+    private static final String ALREADY_HAVE_BULLET_MESSAGE = ". This weapon already has " +
+            "the bullet enhancement attachment";
+
 
     // UI constants
     private static final float PANEL_W = 720f;
@@ -50,10 +56,10 @@ public class ShopScreenDisplay extends UIComponent {
     private static final Color GOLD = Color.valueOf("FFD54F");
 
     // Dependencies
-    private final ForestGameArea game;
+    private final Reception game;
     private final CatalogService catalog;
     private final ShopManager manager;
-
+    Image background;
     // Scene2D Widgets
     private Table root;
     private Table grid;
@@ -62,7 +68,6 @@ public class ShopScreenDisplay extends UIComponent {
     private Texture pixelTex;
     private Label currencyLabel;
     private ItemScreenDisplay itemPopup;
-    Image background;
 
     /**
      * UI component that displays the shop screen
@@ -71,10 +76,19 @@ public class ShopScreenDisplay extends UIComponent {
      * @param area    Game area containing player
      * @param manager Shop manager to handle purchases
      */
-    public ShopScreenDisplay(ForestGameArea area, ShopManager manager) {
+    public ShopScreenDisplay(Reception area, ShopManager manager) {
         this.game = area;
         this.catalog = manager.getCatalog();
         this.manager = manager;
+    }
+
+    private static Texture makeSolidTexture(Color color) {
+        Pixmap pm = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
+        pm.setColor(color);
+        pm.fill();
+        Texture t = new Texture(pm);
+        pm.dispose();
+        return t;
     }
 
     /**
@@ -383,15 +397,6 @@ public class ShopScreenDisplay extends UIComponent {
         currencyLabel.setText("Balance: $" + amount);
     }
 
-    private static Texture makeSolidTexture(Color color) {
-        Pixmap pm = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
-        pm.setColor(color);
-        pm.fill();
-        Texture t = new Texture(pm);
-        pm.dispose();
-        return t;
-    }
-
     // Errors
     private void showError(String itemName, PurchaseError error) {
         String errorMsg = switch (error) {
@@ -401,6 +406,9 @@ public class ShopScreenDisplay extends UIComponent {
             case LIMIT_REACHED -> LIMIT_REACHED_MESSAGE;
             case INVENTORY_FULL -> INVENTORY_FULL_MESSAGE;
             case INSUFFICIENT_FUNDS -> INSUFFICIENT_FUNDS_MESSAGE;
+            case INVALID_WEAPON -> INVALID_WEAPON_MESSAGE;
+            case ALREADY_HAVE_BULLET -> ALREADY_HAVE_BULLET_MESSAGE;
+            case ALREADY_HAVE_LASER -> ALREADY_HAVE_LASER_MESSAGE;
             default -> UNEXPECTED_MESSAGE;
         };
         Dialog dialog = new Dialog("Error", skin);

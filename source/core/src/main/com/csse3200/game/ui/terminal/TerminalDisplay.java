@@ -32,8 +32,8 @@ public class TerminalDisplay extends BaseScreenDisplay {
     private static final float SUGGESTION_ROW_PAD_X = 10f;
     private static final float SUGGESTION_ROW_PAD_Y = 6f;
     private static final int SUGGESTION_MAX = 5;
+    private static final String WHITE = "white";
     private final Vector2 tmp = new Vector2();
-
     private Table container;
     private Table promptBox;
     private Label label;
@@ -49,6 +49,40 @@ public class TerminalDisplay extends BaseScreenDisplay {
     public TerminalDisplay(GdxGame game) {
         super(game);
     }
+
+    private static boolean sameList(List<String> a, List<String> b) {
+        if (a == b) return true;
+        if (a == null || b == null) return false;
+        if (a.size() != b.size()) return false;
+        for (int i = 0; i < a.size(); i++) {
+            if (!Objects.equals(a.get(i), b.get(i))) return false;
+        }
+        return true;
+    }
+
+    private static int skipFirstToken(String s, boolean returnStart) {
+        s = (s == null) ? "" : s;
+        int i = 0;
+        while (i < s.length() && Character.isWhitespace(s.charAt(i))) i++;
+        int start = i;
+        while (i < s.length() && !Character.isWhitespace(s.charAt(i))) i++;
+        return returnStart ? start : i;
+    }
+
+    private static String extractFirstToken(String s) {
+        s = (s == null) ? "" : s;
+        int start = skipFirstToken(s, true);
+        int end = skipFirstToken(s, false);
+        return s.substring(start, end);
+    }
+
+    private static String stripFirstToken(String s) {
+        s = (s == null) ? "" : s;
+        int end = skipFirstToken(s, false);
+        return s.substring(end);
+    }
+
+    // ---------- helpers ----------
 
     @Override
     public void create() {
@@ -77,7 +111,7 @@ public class TerminalDisplay extends BaseScreenDisplay {
         if (skin.has("textfield", Drawable.class)) bg = skin.getDrawable("textfield");
         else if (skin.has("rounded", Drawable.class)) bg = skin.getDrawable("rounded");
         else if (skin.has("button", Drawable.class)) bg = skin.getDrawable("button");
-        if (bg == null) bg = skin.newDrawable("white", new Color(0f, 0f, 0f, 0.6f));
+        if (bg == null) bg = skin.newDrawable(WHITE, new Color(0f, 0f, 0f, 0.6f));
         promptBox.setBackground(bg);
 
         Label.LabelStyle promptLabelStyle = new Label.LabelStyle(skin.get(Label.LabelStyle.class));
@@ -113,8 +147,8 @@ public class TerminalDisplay extends BaseScreenDisplay {
         suggestionsBox = new Table();
         suggestionsBox.align(Align.bottomLeft);
         suggestionsBox.setTouchable(Touchable.enabled);
-        Drawable suggestionsBg = skin.newDrawable("white", new Color(0f, 0f, 0f, 0.75f));
-        suggestionHoverBg = skin.newDrawable("white", new Color(1f, 1f, 1f, 0.10f));
+        Drawable suggestionsBg = skin.newDrawable(WHITE, new Color(0f, 0f, 0f, 0.75f));
+        suggestionHoverBg = skin.newDrawable(WHITE, new Color(1f, 1f, 1f, 0.10f));
         suggestionsBox.setBackground(suggestionsBg);
         suggestionsBox.setVisible(false);
 
@@ -196,8 +230,6 @@ public class TerminalDisplay extends BaseScreenDisplay {
         return Z_INDEX;
     }
 
-    // ---------- helpers ----------
-
     private void rebuildSuggestionRows(List<String> items) {
         suggestionsBox.clearChildren();
 
@@ -249,41 +281,5 @@ public class TerminalDisplay extends BaseScreenDisplay {
         // Optional: hide popup immediately
         suggestionsBox.setVisible(false);
         lastShown.clear();
-    }
-
-    private static boolean sameList(List<String> a, List<String> b) {
-        if (a == b) return true;
-        if (a == null || b == null) return false;
-        if (a.size() != b.size()) return false;
-        for (int i = 0; i < a.size(); i++) {
-            if (!Objects.equals(a.get(i), b.get(i))) return false;
-        }
-        return true;
-    }
-
-    private static String safeString(String s) {
-        return (s == null) ? "" : s;
-    }
-
-    private static int skipFirstToken(String s, boolean returnStart) {
-        s = (s == null) ? "" : s;
-        int i = 0;
-        while (i < s.length() && Character.isWhitespace(s.charAt(i))) i++;
-        int start = i;
-        while (i < s.length() && !Character.isWhitespace(s.charAt(i))) i++;
-        return returnStart ? start : i;
-    }
-
-    private static String extractFirstToken(String s) {
-        s = (s == null) ? "" : s;
-        int start = skipFirstToken(s, true);
-        int end = skipFirstToken(s, false);
-        return s.substring(start, end);
-    }
-
-    private static String stripFirstToken(String s) {
-        s = (s == null) ? "" : s;
-        int end = skipFirstToken(s, false);
-        return s.substring(end);
     }
 }

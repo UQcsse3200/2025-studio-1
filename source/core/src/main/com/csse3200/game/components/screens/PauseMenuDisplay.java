@@ -8,6 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.csse3200.game.GdxGame;
+import com.csse3200.game.services.ServiceLocator;
 
 /**
  * Pause menu overlay shown above the main game and HUD.
@@ -22,6 +23,13 @@ import com.csse3200.game.GdxGame;
  * ESC is handled once to immediately resume gameplay.
  */
 public class PauseMenuDisplay extends BaseScreenDisplay {
+    /** Tracks if ESC was consumed by the pause menu in the current frame. */
+    private static boolean escConsumedThisFrame = false;
+
+    public static boolean wasEscConsumedThisFrame() { return escConsumedThisFrame; }
+    public static void markEscConsumed() { escConsumedThisFrame = true; }
+    public static void resetEscConsumed() { escConsumedThisFrame = false; }
+
     /**
      * Full-screen dimmer image. Kept as a field so we can avoid adding duplicates
      * when the pause overlay is opened multiple times and to remove it in {@link #dispose()}.
@@ -66,35 +74,34 @@ public class PauseMenuDisplay extends BaseScreenDisplay {
         addTitle(root, "Game Paused", 2.0f, Color.WHITE, 24f);
 
         // Buttons
-//        TextButton resumeBtn   = new TextButton("Resume", style);
-//        TextButton restartBtm = new TextButton("Restart", style);
-//        TextButton mainBtn     = new TextButton("Main Menu", style);
-//        TextButton saveBtn     = new TextButton("Save", style);
-
-        // Label text size
-//        resumeBtn.getLabel().setFontScale(1.8f);
-//        restartBtm.getLabel().setFontScale(1.8f);
-//        mainBtn.getLabel().setFontScale(1.8f);
-//        saveBtn.getLabel().setFontScale(1.8f);
-        logger.debug("Buttons created");
-
         Table panel = new Table();
         panel.defaults().pad(10f);
-        panel.add(button("Resume", 1.8f, () -> entity.getEvents().trigger("resume"))).row();
-        panel.add(button("Restart", 1.8f, () -> game.setScreen(GdxGame.ScreenType.MAIN_GAME))).row();
-        panel.add(button("Main Menu", 1.8f, this::backMainMenu)).row();
-        panel.add(button("save", 1.8f, () -> {
+        panel.add(button("Resume", 1.8f, () -> {
+            ServiceLocator.getButtonSoundService().playClick();
+            entity.getEvents().trigger("resume");
+        })).row();
+
+        panel.add(button("Restart", 2f, () -> {
+            ServiceLocator.getButtonSoundService().playClick();
+            game.setScreen(GdxGame.ScreenType.MAIN_GAME);
+        })).row();
+
+        panel.add(button("Main Menu", 2f, () -> {
+            ServiceLocator.getButtonSoundService().playClick();
+            backMainMenu();
+        })).row();
+
+        panel.add(button("Save", 1.8f, () -> {
+            ServiceLocator.getButtonSoundService().playClick();
             entity.getEvents().trigger("save");
             backMainMenu();
         })).row();
 
-
-        root.add(panel);
+        root.add(panel).center().expandX().row();
 
         // Keyboard focus + one-shot ESC to resume
         stage.setKeyboardFocus(root);
         root.setTouchable(Touchable.enabled);
-
 
         final InputListener escOnce = new InputListener() {
             /** Prevents repeated ESC events (debounce). */
@@ -105,6 +112,7 @@ public class PauseMenuDisplay extends BaseScreenDisplay {
                 if (keycode == Input.Keys.ESCAPE && !handled) {
                     handled = true;                       // first ESC only
                     entity.getEvents().trigger("resume"); // resume game
+                    PauseMenuDisplay.markEscConsumed();    // mark ESC consumed for this frame
                     root.removeListener(this);            // remove listener immediately
                     return true;
                 }
