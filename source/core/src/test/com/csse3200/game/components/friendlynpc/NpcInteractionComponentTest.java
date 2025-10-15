@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.mockito.Mockito.*;
 
-public class NpcInteractionComponentTest {
+class NpcInteractionComponentTest {
     private Entity npc;
     private DialogueDisplay ui;
     private NpcDialogueDataComponent data;
