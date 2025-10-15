@@ -30,6 +30,8 @@ import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import com.csse3200.game.events.EventHandler;
+
 
 import java.util.*;
 import java.util.function.Supplier;
@@ -51,6 +53,7 @@ public abstract class GameArea implements Disposable {
     protected static boolean isTransitioning = false;
     protected int enemyCount = 0;
     protected List<Entity> doorList;
+    protected EventHandler eventHandler;
 
     // Enemy name constants (standard + variants)
     private static final String DEEP_SPIN = "DeepSpin";
@@ -79,7 +82,10 @@ public abstract class GameArea implements Disposable {
     /**
      * Create the game area in the world.
      */
-    public abstract void create();
+    public void create() {
+        eventHandler = new EventHandler();
+        this.getEvents().addListener("room cleared", this::unlockDoors);
+    }
 
     /**
      * Dispose of all internal entities in the area
@@ -141,7 +147,7 @@ public abstract class GameArea implements Disposable {
         enemyCount--;
 
         if (enemyCount == 0) {
-            this.unlockDoors();
+            this.getEvents().trigger("room cleared");
         }
     }
 
@@ -1165,6 +1171,16 @@ public abstract class GameArea implements Disposable {
         loadArea(target);
         return true;
     }
+
+    /**
+     * Getter method for this room's event handler.
+     * 
+     * @return this room's eventHandler
+     */
+    public EventHandler getEvents() {
+        return eventHandler;
+    }
+
 
     /**
      * A helper record to store the calculated boundaries of the camera's viewport.
