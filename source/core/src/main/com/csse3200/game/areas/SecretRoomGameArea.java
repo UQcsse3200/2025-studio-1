@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.csse3200.game.areas.cutscenes.GoodWinAnimationScreen;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.CameraComponent;
@@ -20,6 +21,7 @@ import com.csse3200.game.physics.components.ColliderComponent;
 import com.csse3200.game.physics.components.PhysicsComponent;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.rendering.TextureRenderComponent;
+
 /**
  * Secret room: A minimal area with only background, a floor,
  * and side walls to prevent the player from leaving the scene
@@ -27,6 +29,7 @@ import com.csse3200.game.rendering.TextureRenderComponent;
 public class SecretRoomGameArea extends GameArea {
     private static final float WALL_WIDTH = 0.1f;
     private static final GridPoint2 PLAYER_SPAWN = new GridPoint2(10, 10);
+    private static final GridPoint2 BUTTON_SPAWN = new GridPoint2(10,10);
 
     /** Reference to the right exit door component (used for unlocking). */
     private DoorComponent rightExitDoorComp;
@@ -44,7 +47,7 @@ public class SecretRoomGameArea extends GameArea {
                 "images/OrangeButton.png",
                 "images/KeycardDoor.png"
         });
-
+        ensureAssets();
         // Use the Office terrain as the background of this room
         terrain = terrainFactory.createTerrain(TerrainType.OFFICE);
         spawnEntity(new Entity().addComponent(terrain));
@@ -54,6 +57,16 @@ public class SecretRoomGameArea extends GameArea {
         spawnBorders();
         spawnRightLockedDoor();
         addOrangeImageButton(new GridPoint2(14, 7));
+    }
+
+    private void ensureAssets() {
+        String[] textures = new String[]{
+                "images/Office and elevator/Office Background.png",
+                "foreg_sprites/general/ThinFloor3.png",
+        };
+        GenericLayout.ensureGenericAssets(this);
+        ensureTextures(textures);
+        ensurePlayerAtlas();
     }
 
     /**
@@ -101,7 +114,7 @@ public class SecretRoomGameArea extends GameArea {
         rightDoor.addComponent(doorTex);
 
         // Add interaction behavior
-        DoorComponent doorComp = new DoorComponent(this::loadNextArea);
+        DoorComponent doorComp = new DoorComponent(this::loadWin);
         rightDoor.addComponent(doorComp);
         spawnEntity(rightDoor);
 
@@ -160,7 +173,7 @@ public class SecretRoomGameArea extends GameArea {
         return new BenchConfig() {
             {
                 this.texturePath = null;
-                this.promptText = "Press E to destroy the factory";
+                this.promptText = "Press E to destroy the AI factory";
             }
 
             @Override
@@ -181,15 +194,9 @@ public class SecretRoomGameArea extends GameArea {
             }
         };
     }
-
-    /**
-     * set tunnel room first can change to win screen
-     */
-    private void loadNextArea() {
-        clearAndLoad(() -> new TunnelGameArea(terrainFactory, cameraComponent));
+    private void loadWin() {
+        clearAndLoad(() -> new GoodWinAnimationScreen(terrainFactory, cameraComponent));
     }
-
-
 }
 
 
