@@ -2,6 +2,7 @@ package com.csse3200.game.areas;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.csse3200.game.components.enemy.WaveAlertDisplay;
 import com.csse3200.game.entities.factories.characters.PlayerFactory;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -141,6 +142,8 @@ public abstract class GameArea implements Disposable {
             int maxWaves = room > 4 ? 2 : 1; // mimic original behaviour: higher rooms get 2 waves
             wavesManager = new EnemyWaves(maxWaves, this, player);
             EnemyWavesDisplay waveDisplay = new EnemyWavesDisplay(wavesManager);
+//            WaveAlertDisplay waveAlertDisplay = new WaveAlertDisplay();
+//            waveAlertDisplay.display();  // example of waveAlertDisplay constructor
             Gdx.app.log("GameArea", "Initializing waves: room=" + room + " maxWaves=" + maxWaves);
         }
         wavesManager.startWave();
