@@ -77,7 +77,7 @@ public class TutorialScreen extends BaseScreen {
                         inventoryClip),
                 new TutorialStep("Mini Map", "Press 'TAB' to open mini map, 'Ctrl +/-' to resize",
                         miniMapClip),
-                new TutorialStep("Teleporter", "Press 'E' to open teleporter menu",
+                new TutorialStep("Teleporter", "Press 'T' to open teleporter menu",
                         teleportClip)
         );
 
