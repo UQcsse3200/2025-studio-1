@@ -104,7 +104,7 @@ public class Reception extends GameArea {
             spawnEntity(leftTop);
         }
         Entity leftDoor = ObstacleFactory.createDoorTrigger(WALL_WIDTH, leftDoorHeight);
-        leftDoor.setPosition(b.leftX() + 0.001f, leftDoorY + leftDoorHeight);
+        leftDoor.setPosition(b.leftX() + 0.001f, leftDoorY);
         leftDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadForest));
         spawnEntity(leftDoor);
 
@@ -124,7 +124,7 @@ public class Reception extends GameArea {
     }
 
     private void loadForest() {
-        ForestGameArea.setRoomSpawn(new GridPoint2(24, 8));
+        ForestGameArea.setRoomSpawn(new GridPoint2(23, 8));
         clearAndLoad(() -> new ForestGameArea(terrainFactory, cameraComponent));
     }
 
