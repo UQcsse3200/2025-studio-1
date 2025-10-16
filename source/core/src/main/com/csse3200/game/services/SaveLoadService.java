@@ -1,8 +1,6 @@
 package com.csse3200.game.services;
 
 import com.csse3200.game.areas.GameArea;
-import com.csse3200.game.areas.difficulty.Difficulty;
-import com.csse3200.game.areas.difficulty.DifficultyType;
 import com.csse3200.game.components.AmmoStatsComponent;
 import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.components.MagazineComponent;
@@ -10,11 +8,12 @@ import com.csse3200.game.components.WeaponsStatsComponent;
 import com.csse3200.game.components.items.ItemComponent;
 import com.csse3200.game.components.player.InventoryComponent;
 import com.csse3200.game.components.player.StaminaComponent;
+import com.csse3200.game.entities.Avatar;
 import com.csse3200.game.entities.AvatarRegistry;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.Consumables;
+import com.csse3200.game.entities.configs.ItemTypes;
 import com.csse3200.game.entities.configs.Weapons;
-import com.csse3200.game.entities.configs.weapons.LightsaberConfig;
 import com.csse3200.game.entities.factories.items.ConsumableFactory;
 import com.csse3200.game.entities.factories.items.WeaponsFactory;
 import com.csse3200.game.files.SaveGame;
@@ -42,10 +41,12 @@ public class SaveLoadService {
         SaveGame.GameState savedGame;
         if (SaveGame.loadGame(filePath) != null) {
             savedGame = SaveGame.loadGame(filePath);
+            setAvatar(savedGame.getPlayer().avatar);
         } else {
             logger.error("failed to load in game");
             savedGame = null;
         }
+
         return savedGame;
     }
 
@@ -55,6 +56,7 @@ public class SaveLoadService {
      * @param playerStats
      */
     public static void loadPlayer(SaveGame.information playerStats) {
+
         ServiceLocator.getPlayer().getComponent(
                 CombatStatsComponent.class).setHealth(playerStats.currentHealth);
         ServiceLocator.getPlayer().getComponent(
@@ -80,23 +82,21 @@ public class SaveLoadService {
      */
     public static void loadPlayerInventory(ArrayList<SaveGame.itemInInven> inventory) {
         Entity itemEntity;
+        InventoryComponent loadedInventory =
+                ServiceLocator.getPlayer().getComponent(InventoryComponent.class);
+
         for (SaveGame.itemInInven item : inventory) {
+            if (item == null) continue;
             itemEntity = null;
 
             switch (item.type) {
                 case RANGED, MELEE -> itemEntity = getWeapon(item);
                 case CONSUMABLE -> itemEntity = getConsumable(item.texture);
             }
-
-            assert itemEntity != null;
-            if (itemEntity.hasComponent(WeaponsStatsComponent.class)) {
-                while (itemEntity.getComponent(WeaponsStatsComponent.class).getUpgradeStage() < item.upgradeStage) {
-                    itemEntity.getComponent(WeaponsStatsComponent.class).upgrade();
-                }
+            if (itemEntity != null) {
+                itemEntity.getComponent(ItemComponent.class).setCount(item.count);
+                loadedInventory.addItem(itemEntity);
             }
-            itemEntity.getComponent(ItemComponent.class).setCount(item.count);
-            InventoryComponent loadedInventory = ServiceLocator.getPlayer().getComponent(InventoryComponent.class);
-            loadedInventory.addItem(itemEntity);
         }
     }
 
@@ -131,12 +131,29 @@ public class SaveLoadService {
     }
 
     private static Entity getWeapon(SaveGame.itemInInven item) {
+        Entity weaponEntity = null;
+        boolean addLaser = false;
+        boolean addBullet = false;
+        // sets the attachments
+        if (item.Attachments != null) {
+            if (item.Attachments.contains("laser")) addLaser = true;
+            if (item.Attachments.contains("bullet")) addBullet = true;
+        }
         for (Weapons weapon : Weapons.values()) {
             if (item.texture.equals(weapon.getConfig().texturePath)) {
-                return WeaponsFactory.createWeapon(weapon);
+                weaponEntity = WeaponsFactory.createWeaponWithAttachment(weapon, addLaser, addBullet);
             }
         }
-        return null;
+        if (weaponEntity == null) return null;
+        if (item.type == ItemTypes.RANGED) {
+            weaponEntity.getComponent(MagazineComponent.class).setCurrentAmmo(item.ammo);
+        }
+
+        // while loop to ensure upgrade matches with save
+        while (weaponEntity.getComponent(WeaponsStatsComponent.class).getUpgradeStage() < item.upgradeStage) {
+            weaponEntity.getComponent(WeaponsStatsComponent.class).upgrade();
+        }
+        return weaponEntity;
     }
 
     private static Entity getConsumable(String texture) {
@@ -147,4 +164,12 @@ public class SaveLoadService {
         }
         return null;
     }
+
+    private static Avatar setAvatar(String texture) {
+        for (Avatar avatar : AvatarRegistry.getAll()) {
+            if (avatar.texturePath().equals(texture)) AvatarRegistry.set(avatar);
+        }
+        return null;
+    }
+
 }

@@ -9,6 +9,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.csse3200.game.GdxGame;
 import com.csse3200.game.areas.*;
+import com.csse3200.game.areas.difficulty.Difficulty;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.components.gamearea.PerformanceDisplay;
@@ -136,6 +137,7 @@ public class MainGameScreen extends ScreenAdapter {
                 gameArea.create();
                 SaveLoadService.loadPlayer(load.getPlayer());
                 SaveLoadService.loadPlayerInventory(load.getInventory());
+                ServiceLocator.registerDifficulty(new Difficulty(load.getDifficulty()));
             } else {
                 logger.error("couldn't create Game area from file");
             }
