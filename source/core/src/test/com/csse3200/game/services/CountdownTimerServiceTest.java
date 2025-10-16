@@ -22,22 +22,12 @@ class CountdownTimerServiceTest {
     }
 
     @Test
-    void testStartTimer(){
-        assertFalse(timer.getIsRunning(), "Timer should not be running at start");
-        assertEquals(5000, timer.getRemainingMs(), "Full duration before start: 5 seconds");
-        timer.startTimer();
-        assertTrue(timer.getIsRunning(), "Timer should be running");
-    }
-
-    @Test
     void testStartingGameRemainingTime() {
-        timer.startTimer();
         assertEquals(5000, timer.getRemainingMs(), "Full duration at start: 5 seconds");
         assertFalse(timer.isTimeUP(), "Timer should report time is not up");
     }
     @Test
     void testCountdown() {
-        timer.startTimer();
         when(mockGameTime.getTime()).thenReturn(2000L);
         assertEquals(3000, timer.getRemainingMs(), "Remaining time: 3 seconds");
         assertFalse(timer.isTimeUP(), "Timer should report time is not up");
@@ -45,7 +35,6 @@ class CountdownTimerServiceTest {
 
     @Test
     void testTimesUp() {
-        timer.startTimer();
         when(mockGameTime.getTime()).thenReturn(5000L);
         assertEquals(0, timer.getRemainingMs(), "Remaining time: 0 seconds");
         assertTrue(timer.isTimeUP(), "Timer should report time is up");
@@ -53,7 +42,6 @@ class CountdownTimerServiceTest {
 
     @Test
     void testHandleNegativeRemainingTime() {
-        timer.startTimer();
         when(mockGameTime.getTime()).thenReturn(6000L);
         assertEquals(0, timer.getRemainingMs(), "Remaining should not be negative");
         assertTrue(timer.isTimeUP(), "Timer should report time is up");
@@ -61,7 +49,6 @@ class CountdownTimerServiceTest {
 
     @Test
     void testPauseAndResumeTimer() {
-        timer.startTimer();
         when(mockGameTime.getTime()).thenReturn(2000L);
         assertEquals(3000, timer.getRemainingMs(), "Remaining time: 3 seconds");
         timer.pause();
@@ -77,7 +64,6 @@ class CountdownTimerServiceTest {
 
     @Test
     void testIsPausedFlag() {
-        timer.startTimer();
         assertFalse(timer.isPaused(), "Start game not paused");
         timer.pause();
         assertTrue(timer.isPaused(), "Should be paused after pause()");
