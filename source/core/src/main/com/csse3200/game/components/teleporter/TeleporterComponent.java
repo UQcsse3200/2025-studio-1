@@ -68,11 +68,9 @@ public class TeleporterComponent extends Component {
 
         boolean esc = Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE);
 
-        if (menuVisible) {
-            if (esc && playerInRange) { // only mark consumed when ESC actually closes teleporter menu
-                markEscConsumed();
-                hideMenu();
-            }
+        if (menuVisible && esc && playerInRange) { // only mark consumed when ESC actually closes teleporter menu
+            markEscConsumed();
+            hideMenu();
         }
     }
 
