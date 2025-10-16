@@ -30,11 +30,16 @@ public class EnemyWaves extends Component {
 
     private static final long WAVE_DELAY_MS = 5000; // delay between waves after all enemies dead
     private static final float TICK_SEC = 0.1f;     // poll cadence
+    private static final float ALERT_DURATION_SEC = 2.0f; // how long to show wave alert before spawning
 
     private Timer.Task task;
     private long waveEndTime = 0; // timestamp when last enemy of a wave died
 
     private final EventHandler eventHandler;
+
+    // UI alert shown before spawning a wave
+    private WaveAlertDisplay alertDisplay;
+    private boolean alertShowing = false;
 
     public EnemyWaves(int maxWaves, GameArea area, Entity player) {
         this.maxWaves = Math.max(1, maxWaves);
@@ -64,10 +69,9 @@ public class EnemyWaves extends Component {
                 tick();
             }
         }, TICK_SEC, TICK_SEC);
-        // If no waves spawned yet, spawn first immediately
+        // If no waves spawned yet, begin with an alert then spawn
         if (waveNumber == 0) {
-            spawnWave();
-            this.eventHandler.trigger("spawnWave");
+            showAlertThenSpawn();
         }
     }
 
@@ -78,6 +82,50 @@ public class EnemyWaves extends Component {
         waveNumber = 0;
         scalingFactor = 1f;
         waveEndTime = 0;
+        alertShowing = false;
+        alertDisplay = null;
+    }
+
+    /**
+     * Shows the pre-wave alert, waits for it to finish, then spawns the wave.
+     * If the alert cannot be shown (e.g., no stage), spawns immediately.
+     */
+    private void showAlertThenSpawn() {
+        if (waveNumber >= maxWaves) {
+            return; // nothing to spawn
+        }
+        if (alertShowing) {
+            return; // already showing alert
+        }
+        try {
+            alertDisplay = new WaveAlertDisplay();
+            alertDisplay.display();
+            alertShowing = true;
+            Timer.schedule(new Timer.Task() {
+                @Override
+                public void run() {
+                    try {
+                        if (alertDisplay != null) {
+                            alertDisplay.dispose();
+                        }
+                    } catch (Exception ignored) { }
+                    finally {
+                        alertDisplay = null;
+                        alertShowing = false;
+                    }
+                    // Guard in case session finished while alert was visible
+                    if (waveNumber < maxWaves) {
+                        spawnWave();
+                        eventHandler.trigger("spawnWave");
+                    }
+                }
+            }, ALERT_DURATION_SEC);
+        } catch (Exception e) {
+            // If anything goes wrong showing the alert, spawn immediately
+            logger.debug("Wave alert could not be shown: {}", e.getMessage());
+            spawnWave();
+            eventHandler.trigger("spawnWave");
+        }
     }
 
     /**
@@ -136,7 +184,7 @@ public class EnemyWaves extends Component {
                     logger.info("EnemyWaves: wave {} cleared; next in {} ms", waveNumber, WAVE_DELAY_MS);
                 } else if (now - waveEndTime >= WAVE_DELAY_MS) {
                     waveEndTime = 0;
-                    spawnWave();
+                    showAlertThenSpawn();
                 }
             } else {
                 // finished all waves
@@ -269,3 +317,4 @@ public class EnemyWaves extends Component {
         return enemyLeft;
     }
 }
+
