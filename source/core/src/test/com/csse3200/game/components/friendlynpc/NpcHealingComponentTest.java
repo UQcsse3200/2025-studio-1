@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
 /**
@@ -276,5 +277,60 @@ class NpcHealingComponentTest {
 
         // No shield should be granted (amount was clamped to 0)
         verify(combatStats, never()).addProtection(anyInt());
+    }
+
+    /**
+     * Fires "shieldStart" when shield is granted
+     */
+    @Test
+    void firesShieldStart_whenShieldGranted() throws InterruptedException {
+        player.addComponent(combatStats);
+        when(combatStats.isDead()).thenReturn(false);
+        when(combatStats.getHealth()).thenReturn(100);
+        when(combatStats.getMaxHealth()).thenReturn(100);
+
+        final boolean[] started = {false};
+        npc.getEvents().addListener("shieldStart", () -> started[0] = true);
+
+        NpcHealingComponent healing = new NpcHealingComponent(player, 25, 15, 100);
+        npc.addComponent(healing);
+        npc.create();
+
+        npc.getEvents().trigger("npcDialogueEnd");
+
+        Thread.sleep(80);
+        assertTrue(started[0], "Expected 'shieldStart' to be fired");
+        verify(combatStats, atLeastOnce()).addProtection(15);
+    }
+
+
+
+    /**
+     * After duration, fires "shieldEnd" and removes protection
+     */
+    @Test
+    void firesShieldEnd_afterDuration() throws InterruptedException {
+        int shieldAmount = 10;
+        long durationMs = 50;
+
+        player.addComponent(combatStats);
+        when(combatStats.isDead()).thenReturn(false);
+        when(combatStats.getHealth()).thenReturn(100);
+        when(combatStats.getMaxHealth()).thenReturn(100);
+        when(combatStats.getEntity()).thenReturn(player);
+
+        final boolean[] ended = {false};
+        npc.getEvents().addListener("shieldEnd", () -> ended[0] = true);
+
+        NpcHealingComponent healing = new NpcHealingComponent(player, 25, shieldAmount, durationMs);
+        npc.addComponent(healing);
+        npc.create();
+
+        npc.getEvents().trigger("npcDialogueEnd");
+
+        // wait a bit longer than duration for the background thread to run
+        Thread.sleep(durationMs + 200);
+        assertTrue(ended[0], "Expected 'shieldEnd' to be fired after duration");
+        verify(combatStats, atLeastOnce()).addProtection(-shieldAmount);
     }
 }

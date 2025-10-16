@@ -101,6 +101,10 @@ public class NpcHealingComponent extends Component {
     private void grantShield(CombatStatsComponent combatStats) {
         combatStats.addProtection(shieldAmount);
 
+        if (entity != null) {
+            entity.getEvents().trigger("shieldStart");
+        }
+
         // Schedule shield removal after duration
         if (shieldDurationMillis > 0) {
             scheduleShieldRemoval(combatStats, shieldAmount);
@@ -122,6 +126,10 @@ public class NpcHealingComponent extends Component {
                 }
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
+            } finally {
+                if (entity != null) {
+                    entity.getEvents().trigger("shieldEnd");
+                }
             }
         }).start();
     }

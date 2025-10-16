@@ -160,7 +160,10 @@ public class FriendlyNPCFactory {
                         .setCooldownMillis(30_000))
                 // Add attack boost: +10 attack for 15 seconds
                 .addComponent(new NpcAttackBoostComponent(player, 10, 15_000)
-                        .setCooldownMillis(30_000));
+                        .setCooldownMillis(30_000))
+                 .addComponent(new ShieldDisplay()
+                         .setIconPosition(6f, 22f)
+                         .setIconSize(16f));
         npc.getComponent(TextureRenderComponent.class).scaleEntity();
         npc.addComponent(new TipComponent(npc, player, 3f));
         npc.addComponent(new NpcInterationComponent(player, 3f));
