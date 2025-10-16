@@ -97,7 +97,7 @@ public class StaticBossRoom extends GameArea {
 
         player = spawnPlayer();
 
-        //spawnBoss();
+        spawnBoss();
         spawnPasswordTerminal(new GridPoint2(14, 7));
         spawnObjectDoors(new GridPoint2(0, 7), new GridPoint2(28, 7));
 
@@ -169,14 +169,6 @@ public class StaticBossRoom extends GameArea {
         DoorComponent doorComp = new DoorComponent(this::loadSecretRoom);
         doorComp.setLocked(true);
         rightDoor.addComponent(doorComp);
-        //
-        //rightDoor.addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
-        //rightDoor.addComponent(new HitboxComponent().setLayer(PhysicsLayer.OBSTACLE));
-        //rightDoor.addComponent(new KeycardGateComponent(3, () -> {
-            //ColliderComponent collider = rightDoor.getComponent(ColliderComponent.class);
-            //if (collider != null) collider.setEnabled(false);
-            //loadTunnel();
-        //}));
         spawnEntity(rightDoor);
         this.rightDoorComp = doorComp;
         StaticBossRoom.exposedRightDoor = doorComp;

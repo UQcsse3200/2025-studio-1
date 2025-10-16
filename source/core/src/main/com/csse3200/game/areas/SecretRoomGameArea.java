@@ -2,25 +2,24 @@ package com.csse3200.game.areas;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.GridPoint2;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.CameraComponent;
+import com.csse3200.game.components.DoorComponent;
+import com.csse3200.game.components.gamearea.GameAreaDisplay;
+import com.csse3200.game.components.stations.StationComponent;
 import com.csse3200.game.entities.Entity;
-import com.csse3200.game.entities.factories.characters.PlayerFactory;
-import com.csse3200.game.entities.factories.system.ObstacleFactory;
-
 import com.csse3200.game.entities.configs.benches.BenchConfig;
 import com.csse3200.game.entities.factories.InteractableStationFactory;
-import com.csse3200.game.components.stations.StationComponent;
-
+import com.csse3200.game.entities.factories.characters.PlayerFactory;
+import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.physics.PhysicsUtils;
-import com.csse3200.game.physics.components.PhysicsComponent;
-
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.csse3200.game.physics.components.ColliderComponent;
-import com.badlogic.gdx.math.Vector2;
+import com.csse3200.game.physics.components.PhysicsComponent;
+import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.rendering.TextureRenderComponent;
-
 /**
  * Secret room: A minimal area with only background, a floor,
  * and side walls to prevent the player from leaving the scene
@@ -28,6 +27,9 @@ import com.csse3200.game.rendering.TextureRenderComponent;
 public class SecretRoomGameArea extends GameArea {
     private static final float WALL_WIDTH = 0.1f;
     private static final GridPoint2 PLAYER_SPAWN = new GridPoint2(10, 10);
+
+    /** Reference to the right exit door component (used for unlocking). */
+    private DoorComponent rightExitDoorComp;
 
     public SecretRoomGameArea(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
         super(terrainFactory, cameraComponent);
@@ -39,21 +41,18 @@ public class SecretRoomGameArea extends GameArea {
         ensureTextures(new String[]{
                 "images/Office and elevator/Office Background.png",
                 "foreg_sprites/general/ThinFloor3.png",
-                "images/OrangeButton.png"
+                "images/OrangeButton.png",
+                "images/KeycardDoor.png"
         });
 
         // Use the Office terrain as the background of this room
         terrain = terrainFactory.createTerrain(TerrainType.OFFICE);
         spawnEntity(new Entity().addComponent(terrain));
 
-
-        Entity ui = new Entity();
-        ui.addComponent(new com.csse3200.game.components.gamearea.GameAreaDisplay("Secret Room"));
-
         spawnFloor();
         spawnPlayer();
         spawnBorders();
-
+        spawnRightLockedDoor();
         addOrangeImageButton(new GridPoint2(14, 7));
     }
 
@@ -82,6 +81,35 @@ public class SecretRoomGameArea extends GameArea {
         spawnOrRepositionPlayer(PLAYER_SPAWN);
     }
 
+    /**
+     * Spawns a right-side exit door that starts in a locked state.
+     * The door acts as a trigger (non-solid collider). Once the orange button is
+     * pressed by the player, this door becomes unlocked. Interacting with the door
+     * will then trigger a transition to the next area.
+     */
+    private void spawnRightLockedDoor() {
+        if (cameraComponent == null) return;
+
+        Bounds b = getCameraBounds(cameraComponent);
+        float rightDoorHeight = Math.max(1f, b.viewHeight() * 0.2f);
+
+        Entity rightDoor = ObstacleFactory.createDoorTrigger(WALL_WIDTH * 10, rightDoorHeight);
+        rightDoor.setPosition(13.9f, 3.75f);
+
+        // Add visible door texture
+        TextureRenderComponent doorTex = new TextureRenderComponent("images/KeycardDoor.png");
+        rightDoor.addComponent(doorTex);
+
+        // Add interaction behavior
+        DoorComponent doorComp = new DoorComponent(this::loadNextArea);
+        rightDoor.addComponent(doorComp);
+        spawnEntity(rightDoor);
+
+        // Initially locked until the player activates the orange button
+        doorComp.setLocked(true);
+        this.rightExitDoorComp = doorComp;
+    }
+
     @Override
     public String toString() {
         return "SecretRoom";
@@ -97,6 +125,14 @@ public class SecretRoomGameArea extends GameArea {
         return (new SecretRoomGameArea(terrainFactory, camera));
     }
 
+    /**
+     * Adds an interactable orange button in the room.
+     * When the player approaches the button, a prompt will appear saying
+     * <b>"Press E to destroy the factory"</b>. When the player presses E,
+     * the {@link #makeButtonConfig()} logic is executed — unlocking the right door.
+     *
+     * @param pos The grid position to spawn the button at.
+     */
     private void addOrangeImageButton(GridPoint2 pos) {
         Entity button = InteractableStationFactory.createBaseStation();
         button.addComponent(new TextureRenderComponent("images/OrangeButton.png"));
@@ -112,11 +148,19 @@ public class SecretRoomGameArea extends GameArea {
         spawnEntityAt(button, pos, true, false);
     }
 
+    /**
+     * Creates a {@link BenchConfig} used for the button hint station.
+     * - Displays "Press E to destroy the factory" when near.<br>
+     * When the player presses E, it unlocks the right exit door and updates the prompt message.<br>
+     * If the player is too far, it instructs them to move closer.
+     *
+     * @return The configuration used by the button's {@link StationComponent}.
+     */
     private BenchConfig makeButtonConfig() {
         return new BenchConfig() {
             {
                 this.texturePath = null;
-                this.promptText = "Press E to destory the factory";
+                this.promptText = "Press E to destroy the factory";
             }
 
             @Override
@@ -130,10 +174,22 @@ public class SecretRoomGameArea extends GameArea {
                     prompt.setText("Move closer to use the button");
                     return;
                 }
-                prompt.setText("Button activated!");
+                if (rightExitDoorComp != null) {
+                    rightExitDoorComp.setLocked(false);
+                }
+                prompt.setText("Button activated! Door unlocked!");
             }
         };
     }
+
+    /**
+     * set tunnel room first can change to win screen
+     */
+    private void loadNextArea() {
+        clearAndLoad(() -> new TunnelGameArea(terrainFactory, cameraComponent));
+    }
+
+
 }
 
 
