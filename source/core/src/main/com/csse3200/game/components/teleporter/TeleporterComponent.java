@@ -3,8 +3,6 @@ package com.csse3200.game.components.teleporter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.csse3200.game.components.Component;
 import com.csse3200.game.rendering.AnimationRenderComponent;
 import com.csse3200.game.services.DiscoveryService;
@@ -29,6 +27,7 @@ public class TeleporterComponent extends Component {
     private boolean teleporting;
     private float teleportTimer;
     private String pendingDestination;
+    private boolean playerInRange = false;
 
     private final Vector2 baseScale = new Vector2();
     private boolean baseScaleSet;
@@ -52,23 +51,8 @@ public class TeleporterComponent extends Component {
         if (arc != null) arc.stopAnimation();
 
         entity.getEvents().addListener("interact", this::handleInteract);
-        entity.getEvents().addListener("exitedInteractRadius", this::hideMenu);
-
-        final InputListener escOnce = new InputListener() {
-            /** Prevents repeated ESC events (debounce). */
-            private boolean handled = false;
-
-            @Override
-            public boolean keyDown(InputEvent event, int keycode) {
-                if (keycode == Input.Keys.ESCAPE && !handled) {
-                    handled = true;                       // first ESC only
-                    entity.getEvents().trigger("resume"); // resume game
-                    markEscConsumed();    // mark ESC consumed for this frame
-                    return true;
-                }
-                return false;
-            }
-        };
+        entity.getEvents().addListener("enteredInteractRadius", this::playerEnteredRange);
+        entity.getEvents().addListener("exitedInteractRadius", this::playerExitedRange);
     }
 
     @Override
@@ -76,6 +60,29 @@ public class TeleporterComponent extends Component {
         if (teleporting) {
             updateActivation();
         }
+
+        // Sync internal state with UI component (user may press the UI Close button)
+        if (menuUI != null && menuVisible && !menuUI.isVisible()) {
+            menuVisible = false;
+        }
+
+        boolean esc = Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE);
+
+        if (menuVisible) {
+            if (esc && playerInRange) { // only mark consumed when ESC actually closes teleporter menu
+                markEscConsumed();
+                hideMenu();
+            }
+        }
+    }
+
+    private void playerEnteredRange() {
+        playerInRange = true;
+    }
+
+    private void playerExitedRange() {
+        playerInRange = false;
+        hideMenu();
     }
 
     private void handleInteract() {
