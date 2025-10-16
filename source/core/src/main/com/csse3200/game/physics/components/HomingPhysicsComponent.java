@@ -109,7 +109,7 @@ public class HomingPhysicsComponent extends PhysicsProjectileComponent {
         } else if (position.y < 3.85 || position.y > 11.25) {
             //projectile is a rocket
             if (entity.getComponent(WeaponsStatsComponent.class).getRocket()) {
-                spawnExplosion(position);
+                spawnExplosion(entity.getCenterPosition());
             }
             entity.setToRemove();
             body.setLinearVelocity(new Vector2(0f, 0f));
