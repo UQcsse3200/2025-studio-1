@@ -99,7 +99,37 @@ public class SecretRoomGameArea extends GameArea {
     private void addOrangeImageButton(GridPoint2 pos) {
         Entity buttom = ObstacleFactory.createButtonSystem();
         spawnEntityAt(buttom, pos, true, false);
+
+        Entity hintStation = InteractableStationFactory.createBaseStation();
+        hintStation.addComponent(new StationComponent(makeTerminalHintConfig()));
+
+        PhysicsUtils.setScaledCollider(hintStation, 0.5f, 0.5f);
+        hintStation.getComponent(ColliderComponent.class)
+                .setAsBoxAligned(new Vector2(0.5f, 0.5f),
+                        PhysicsComponent.AlignX.CENTER, PhysicsComponent.AlignY.CENTER);
+
+        GridPoint2 hintPos = new GridPoint2(pos.x, pos.y + 2);
+        spawnEntityAt(hintStation, hintPos, true, false);
     }
+
+    private BenchConfig makeTerminalHintConfig() {
+        return new BenchConfig() {
+            {
+                this.texturePath = null;
+                this.promptText = "Press E to destory the factory";
+            }
+
+            @Override
+            public int getPrice() {
+                return 0;
+            }
+
+            @Override
+            public void upgrade(boolean playerNear, com.csse3200.game.entities.Entity player, Label prompt) {
+            }
+        };
+    }
+
 
 }
 
