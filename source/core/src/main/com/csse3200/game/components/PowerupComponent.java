@@ -33,7 +33,7 @@ public class PowerupComponent extends Component {
                 activeEffects.add(aimbot);
             }
         } else if (effect instanceof DoubleProcessorsEffect doubleProcessors) {
-            if (doubleProcessors.apply(equippedWeapon)) {
+            if (doubleProcessors.apply(entity)) {
                 activeEffects.add(doubleProcessors);
             }
         }

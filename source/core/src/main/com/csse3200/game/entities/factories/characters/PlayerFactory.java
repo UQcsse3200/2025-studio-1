@@ -86,11 +86,6 @@ public class PlayerFactory {
         player.getComponent(ColliderComponent.class).setDensity(1.5f);
         PhysicsUtils.setScaledCollider(player, 0.3f, 0.5f);
         player.getComponent(WeaponsStatsComponent.class).setCoolDown(0.2f);
-
-
-        // pick up rapid fire powerup
-        // remove this if we have item pickup available
-        // (disposes entity when player go near it)
         player.addComponent(new Component() {
             @Override
             public void update() {

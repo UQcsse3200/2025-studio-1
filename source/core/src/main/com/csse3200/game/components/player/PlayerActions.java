@@ -656,7 +656,7 @@ public class PlayerActions extends Component {
         if (facingRight) {
             body.setTransform(playerPos.x + handOffsetX, playerPos.y + handOffsetY, 0f);
         } else {
-            body.setTransform(playerPos.x - handOffsetX, playerPos.y + handOffsetY, 0f);
+            body.setTransform(playerPos.x - handOffsetX,  playerPos.y + handOffsetY, 0f);
         }
     }
 

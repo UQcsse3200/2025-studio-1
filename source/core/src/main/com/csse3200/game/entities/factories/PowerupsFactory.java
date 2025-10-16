@@ -23,7 +23,6 @@ public class PowerupsFactory {
         powerup.getComponent(TextureRenderComponent.class).scaleEntity();
         powerup.addComponent(new TagComponent("rapidfire"));
 
-
         return powerup;
     }
 
