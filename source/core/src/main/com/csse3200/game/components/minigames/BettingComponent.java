@@ -195,6 +195,16 @@ public class BettingComponent extends UIComponent {
         entity.getEvents().addListener("win", this::onWin);
         entity.getEvents().addListener("tie", this::onTie);
         entity.getEvents().addListener("lose", this::onLose);
+        entity.getEvents().addListener("split", this::split);
+        entity.getEvents().addListener("double", this::doubleDown);
+    }
+
+    void split() {
+        logic.split();
+    }
+
+    void doubleDown() {
+        logic.doubleBet();
     }
 
     /**
