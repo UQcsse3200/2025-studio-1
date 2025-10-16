@@ -33,6 +33,9 @@ public class SecretRoomGameArea extends GameArea {
         spawnEntity(new Entity().addComponent(terrain));
 
 
+        Entity ui = new Entity();
+        ui.addComponent(new com.csse3200.game.components.gamearea.GameAreaDisplay("Secret Room"));
+
         spawnFloor();
         spawnPlayer();
         spawnBorders();
@@ -60,8 +63,7 @@ public class SecretRoomGameArea extends GameArea {
     }
 
     private void spawnPlayer() {
-        Entity player = com.csse3200.game.entities.factories.characters.PlayerFactory.createPlayer();
-        spawnEntityAt(player, PLAYER_SPAWN, true, true);
+        spawnOrRepositionPlayer(PLAYER_SPAWN);
     }
 
     @Override
