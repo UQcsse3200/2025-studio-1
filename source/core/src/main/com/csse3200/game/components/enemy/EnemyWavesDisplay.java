@@ -7,6 +7,10 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.csse3200.game.components.CombatStatsComponent;
+import com.csse3200.game.components.npc.GhostAnimationController;
+import com.csse3200.game.entities.Entity;
+import com.csse3200.game.entities.EntityService;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.UIComponent;
 import org.slf4j.Logger;
@@ -23,7 +27,9 @@ public class EnemyWavesDisplay extends UIComponent {
     private Label waveNumberLabel;
     private Label waveDelayLabel;
     private Label maxWavesLabel;
+    private Label enemyNumLabel;
     protected Stage stage;
+    private Integer initialEnemyNum;
 
     /**
      * Constructs the EnemyWavesDisplay for the given EnemyWaves manager.
@@ -40,6 +46,7 @@ public class EnemyWavesDisplay extends UIComponent {
         wavesManager.getEvents().addListener("updateMaxWave", this::updateMaxWave);
         wavesManager.getEvents().addListener("spawnWave", this::setTableVisible);
         wavesManager.getEvents().addListener("allWavesFinished", this::setTableInvisible);
+        wavesManager.getEvents().addListener("numEnemyLeftChanged", this::updateEnemyNumber);
     }
 
     private float safeScreenHeight() {
@@ -69,6 +76,10 @@ public class EnemyWavesDisplay extends UIComponent {
         table.setSize(300f, 150f);
         table.setPosition(30f, safeScreenHeight() * 3/5f);
 
+        // Number of enemies on screen
+        CharSequence enemyNumText = String.format("Enemies left: %d / %d", 0, 0);
+        enemyNumLabel = makeLabel(enemyNumText);
+
         // Current wave number
         int waveNumber = wavesManager.getWaveNumber();
         CharSequence waveNumberText = String.format("Waves spawned: %d", waveNumber);
@@ -85,13 +96,16 @@ public class EnemyWavesDisplay extends UIComponent {
         waveDelayLabel = makeLabel(waveDelayText);
 
         // Layout:
-        // Row 1: Waves spawned/current wave
+        // Row 1: Enemies left
+        table.add(enemyNumLabel).left().padLeft(10f);
+        table.row();
+        // Row 2: Waves spawned/current wave
         table.add(waveNumberLabel).left().padLeft(10f);
         table.row();
-        // Row 2: Max waves
+        // Row 3: Max waves
         table.add(maxWavesLabel).left().padLeft(10f);
         table.row();
-        // Row 3: Wave delay in seconds
+        // Row 4: Wave delay in seconds
         table.add(waveDelayLabel).left().padLeft(10f);
         table.row();
 
@@ -112,6 +126,15 @@ public class EnemyWavesDisplay extends UIComponent {
     @Override
     public void draw(SpriteBatch batch) {
         // draw handled by stage
+    }
+
+    public void updateEnemyNumber() {
+        if (initialEnemyNum == null) {
+            initialEnemyNum = wavesManager.getEnemyLeft();
+        }
+        int enemyNum = wavesManager.getEnemyLeft();
+        CharSequence enemyNumText = String.format("Enemies left: %d / %d", enemyNum, initialEnemyNum);
+        enemyNumLabel.setText(enemyNumText);
     }
 
     /**
