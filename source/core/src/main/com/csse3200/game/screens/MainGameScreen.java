@@ -119,21 +119,22 @@ public class MainGameScreen extends ScreenAdapter {
             game.setCarryOverLeaderBoard(session.getLeaderBoardManager());
         });
 
+
+
         if (loadSaveGame) {
             logger.info("loading game from save file");
             SaveGame.GameState load = SaveLoadService.load();
             gameArea = new ForestGameArea(terrainFactory, renderer.getCamera());
             ServiceLocator.registerGameArea(gameArea);
+            ForestGameArea.setRoomSpawn(new GridPoint2(3, 20));
             gameArea.create();
-
-
-
+            //all areas in the game
             switch (load.getGameArea()) {
                 case "Forest" -> gameArea = ForestGameArea.load(terrainFactory, renderer.getCamera());
                 case "Elevator" -> gameArea = ElevatorGameArea.load(terrainFactory, renderer.getCamera());
                 case "Office" -> gameArea = OfficeGameArea.load(terrainFactory, renderer.getCamera());
-                case "Mainhall" -> gameArea = MainHall.load(terrainFactory, renderer.getCamera());
-                case "Reception" -> gameArea = Reception.load(terrainFactory, renderer.getCamera());
+                case "Mainhall" -> gameArea.clearAndLoad(() -> MainHall.load(terrainFactory, renderer.getCamera()));
+                case "Reception" -> gameArea.clearAndLoad(() -> Reception.load(terrainFactory, renderer.getCamera()));
                 case "Tunnel" -> gameArea = TunnelGameArea.load(terrainFactory, renderer.getCamera());
                 case "Security" -> gameArea = SecurityGameArea.load(terrainFactory, renderer.getCamera());
                 case "Storage" -> gameArea = StorageGameArea.load(terrainFactory, renderer.getCamera());
@@ -143,12 +144,10 @@ public class MainGameScreen extends ScreenAdapter {
             }
 
             if (gameArea != null) {
-                gameArea.clearAndLoad(() -> gameArea);
                 ServiceLocator.registerGameArea(gameArea);
                 ServiceLocator.registerDifficulty(new Difficulty(load.getDifficulty()));
                 SaveLoadService.loadPlayer(load.getPlayer());
                 SaveLoadService.loadPlayerInventory(load.getInventory());
-
             } else {
                 logger.error("couldn't create Game area from file");
             }
@@ -158,6 +157,7 @@ public class MainGameScreen extends ScreenAdapter {
             ForestGameArea.setRoomSpawn(new GridPoint2(3, 20));
             gameArea.create();
         }
+
         // mark initial area as discovered
         DiscoveryService dsInit = ServiceLocator.getDiscoveryService();
         if (dsInit != null) {
