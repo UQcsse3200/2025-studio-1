@@ -598,7 +598,7 @@ public class ObstacleFactory {
         return console;
     }
 
-    //.setLayer(PhysicsLayer.ITEM)
+    /*
     public static Entity createButtonSystem() {
         Entity buttom =
                 new Entity()
@@ -608,9 +608,9 @@ public class ObstacleFactory {
         buttom.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
         buttom.getComponent(TextureRenderComponent.class).scaleEntity();
         buttom.scaleHeight(0.6f);
-        //PhysicsUtils.setScaledCollider(buttom, 0.8f, 0.9f);
+        //PhysicsUtils.setScaledCollider(buttom, 0.8f, 0.8f);
         return buttom;
-    }
+    }*/
 
     /**
      * Creates a laboratory main station entity with collision.

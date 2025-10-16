@@ -19,6 +19,7 @@ import com.csse3200.game.physics.components.PhysicsComponent;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.csse3200.game.physics.components.ColliderComponent;
 import com.badlogic.gdx.math.Vector2;
+import com.csse3200.game.rendering.TextureRenderComponent;
 
 /**
  * Secret room: A minimal area with only background, a floor,
@@ -97,22 +98,21 @@ public class SecretRoomGameArea extends GameArea {
     }
 
     private void addOrangeImageButton(GridPoint2 pos) {
-        Entity buttom = ObstacleFactory.createButtonSystem();
-        spawnEntityAt(buttom, pos, true, false);
+        Entity button = InteractableStationFactory.createBaseStation();
+        button.addComponent(new TextureRenderComponent("images/OrangeButton.png"));
+        button.getComponent(TextureRenderComponent.class).scaleEntity();
+        button.scaleHeight(0.6f);
+        PhysicsUtils.setScaledCollider(button, 1.2f, 1.2f);
+        button.getComponent(ColliderComponent.class)
+                .setAsBoxAligned(new Vector2(1.2f, 1.2f),
+                        PhysicsComponent.AlignX.CENTER,
+                        PhysicsComponent.AlignY.CENTER);
+        button.addComponent(new StationComponent(makeButtonConfig()));
 
-        Entity hintStation = InteractableStationFactory.createBaseStation();
-        hintStation.addComponent(new StationComponent(makeTerminalHintConfig()));
-
-        PhysicsUtils.setScaledCollider(hintStation, 0.5f, 0.5f);
-        hintStation.getComponent(ColliderComponent.class)
-                .setAsBoxAligned(new Vector2(0.5f, 0.5f),
-                        PhysicsComponent.AlignX.CENTER, PhysicsComponent.AlignY.CENTER);
-
-        GridPoint2 hintPos = new GridPoint2(pos.x, pos.y + 2);
-        spawnEntityAt(hintStation, hintPos, true, false);
+        spawnEntityAt(button, pos, true, false);
     }
 
-    private BenchConfig makeTerminalHintConfig() {
+    private BenchConfig makeButtonConfig() {
         return new BenchConfig() {
             {
                 this.texturePath = null;
@@ -126,11 +126,14 @@ public class SecretRoomGameArea extends GameArea {
 
             @Override
             public void upgrade(boolean playerNear, com.csse3200.game.entities.Entity player, Label prompt) {
+                if (!playerNear) {
+                    prompt.setText("Move closer to use the button");
+                    return;
+                }
+                prompt.setText("Button activated!");
             }
         };
     }
-
-
 }
 
 
