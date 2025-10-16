@@ -6,6 +6,8 @@ import com.csse3200.game.components.cards.Deck;
 import com.csse3200.game.components.cards.Hand;
 import com.csse3200.game.components.cards.Rank;
 
+import java.sql.Array;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -20,18 +22,21 @@ public class BlackJackGame extends Component {
     /** The dealer’s current hand of cards. */
     private Hand dealerHand;
     /** The player’s current hand of cards. */
-    private Hand playerHand;
+    private List<Hand> playerHands;
     /** The deck used for drawing cards. */
     private Deck deck;
     /** Indicates whether a winner has been determined this round. */
     private boolean winner;
+    Hand currentHand;
 
     /** Initializes the game by creating a new deck and empty hands,
      * and registers listeners for player actions (hit and stand). */
     public void create() {
         deck = new Deck();
         dealerHand = new Hand();
-        playerHand = new Hand();
+        playerHands = new ArrayList<>();
+        playerHands.add(new Hand());
+        currentHand = playerHands.getFirst();
         entity.getEvents().addListener("drawCard", this::drawCard);
         entity.getEvents().addListener("stand", this::dealerTurn);
     }
@@ -43,12 +48,12 @@ public class BlackJackGame extends Component {
 
     /** Returns the total value of the player’s hand, accounting for ace adjustments. */
     public int playerHandValue() {
-        return getHandValue(playerHand);
+        return getHandValue(currentHand);
     }
 
     /** Returns the player’s hand. */
     public List<Card> getPlayerHand() {
-        return playerHand.getCards();
+        return currentHand.getCards();
     }
 
     /** Returns the dealer’s hand. */
@@ -68,7 +73,7 @@ public class BlackJackGame extends Component {
             }
 
             int dealerValue = getHandValue(dealerHand);
-            int playerValue = getHandValue(playerHand);
+            int playerValue = getHandValue(currentHand);
 
             if (dealerValue > 21) {
                 entity.getEvents().trigger("dealerbust");
@@ -92,10 +97,11 @@ public class BlackJackGame extends Component {
         winner = false;
         deck.resetDeck();
         dealerHand.resetHand();
-        playerHand.resetHand();
+        playerHands.clear();
+        currentHand.resetHand();
 
-        playerHand.addCard(deck.drawCard());
-        playerHand.addCard(deck.drawCard());
+        currentHand.addCard(deck.drawCard());
+        currentHand.addCard(deck.drawCard());
         dealerHand.addCard(deck.drawCard());
         dealerHand.addCard(deck.drawCard());
     }
@@ -103,8 +109,8 @@ public class BlackJackGame extends Component {
     /** Draws a card for the player (on "Hit"). If the player’s hand exceeds 21, triggers bust events. */
     void drawCard() {
         if (!winner) {
-            playerHand.addCard(deck.drawCard());
-            if (getHandValue(playerHand) > 21) {
+            currentHand.addCard(deck.drawCard());
+            if (getHandValue(currentHand) > 21) {
                 winner = true;
                 entity.getEvents().trigger("playerbust");
                 entity.getEvents().trigger("lose");
@@ -136,4 +142,18 @@ public class BlackJackGame extends Component {
 
         return value;
     }
+
+    public boolean canSplit(Hand hand) {
+        List<Card> cards = hand.getCards();
+        if(cards.size() != 2) {
+            return false;
+        }
+        Card card1 = cards.getFirst();
+        Card card2 = cards.getLast();
+        if(card1.getValue() == card2.getValue()) {
+            return true;
+        }
+        return false;
+    }
+
 }
