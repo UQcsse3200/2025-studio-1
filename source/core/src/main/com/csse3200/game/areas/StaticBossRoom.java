@@ -97,7 +97,7 @@ public class StaticBossRoom extends GameArea {
 
         player = spawnPlayer();
 
-        spawnBoss();
+        //spawnBoss();
         spawnPasswordTerminal(new GridPoint2(14, 7));
         spawnObjectDoors(new GridPoint2(0, 7), new GridPoint2(28, 7));
 

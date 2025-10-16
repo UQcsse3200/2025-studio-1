@@ -589,13 +589,27 @@ public class ObstacleFactory {
                 new Entity()
                         .addComponent(new TextureRenderComponent("foreg_sprites/Security/SecuritySystem.png"))
                         .addComponent(new PhysicsComponent())
-                        .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
+                        .addComponent(new ColliderComponent().setLayer(PhysicsLayer.NONE));
 
         console.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
         console.getComponent(TextureRenderComponent.class).scaleEntity();
         console.scaleHeight(2.0f);
         PhysicsUtils.setScaledCollider(console, 0.7f, 0.8f);
         return console;
+    }
+
+    //.setLayer(PhysicsLayer.ITEM)
+    public static Entity createButtonSystem() {
+        Entity buttom =
+                new Entity()
+                        .addComponent(new TextureRenderComponent("images/OrangeButton.png"))
+                        .addComponent(new PhysicsComponent())
+                        .addComponent(new ColliderComponent().setLayer(PhysicsLayer.NONE));
+        buttom.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
+        buttom.getComponent(TextureRenderComponent.class).scaleEntity();
+        buttom.scaleHeight(0.6f);
+        //PhysicsUtils.setScaledCollider(buttom, 0.8f, 0.9f);
+        return buttom;
     }
 
     /**

@@ -7,6 +7,18 @@ import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.factories.characters.PlayerFactory;
+import com.csse3200.game.entities.factories.system.ObstacleFactory;
+
+import com.csse3200.game.entities.configs.benches.BenchConfig;
+import com.csse3200.game.entities.factories.InteractableStationFactory;
+import com.csse3200.game.components.stations.StationComponent;
+
+import com.csse3200.game.physics.PhysicsUtils;
+import com.csse3200.game.physics.components.PhysicsComponent;
+
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.csse3200.game.physics.components.ColliderComponent;
+import com.badlogic.gdx.math.Vector2;
 
 /**
  * Secret room: A minimal area with only background, a floor,
@@ -26,6 +38,7 @@ public class SecretRoomGameArea extends GameArea {
         ensureTextures(new String[]{
                 "images/Office and elevator/Office Background.png",
                 "foreg_sprites/general/ThinFloor3.png",
+                "images/OrangeButton.png"
         });
 
         // Use the Office terrain as the background of this room
@@ -39,6 +52,8 @@ public class SecretRoomGameArea extends GameArea {
         spawnFloor();
         spawnPlayer();
         spawnBorders();
+
+        addOrangeImageButton(new GridPoint2(14, 7));
     }
 
     /**
@@ -79,6 +94,11 @@ public class SecretRoomGameArea extends GameArea {
 
     public static SecretRoomGameArea load(TerrainFactory terrainFactory, CameraComponent camera) {
         return (new SecretRoomGameArea(terrainFactory, camera));
+    }
+
+    private void addOrangeImageButton(GridPoint2 pos) {
+        Entity buttom = ObstacleFactory.createButtonSystem();
+        spawnEntityAt(buttom, pos, true, false);
     }
 
 }
