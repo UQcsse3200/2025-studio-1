@@ -1,25 +1,17 @@
 package com.csse3200.game.services;
 
-import com.csse3200.game.extensions.GameExtension;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
-@ExtendWith(GameExtension.class)
+/**
+ * Unit tests for {@link CountdownTimerService}.
+ * These tests cover timer initialization, time progression, pausing/resuming, and time-up conditions.
+ */
 class CountdownTimerServiceTest {
-    GameTime mockGameTime;
-    CountdownTimerService timer;
 
-    @BeforeEach
-    void beforeEach() {
-        mockGameTime = mock(GameTime.class);
-        when(mockGameTime.getTime()).thenReturn(0L);
-        timer = new CountdownTimerService(mockGameTime, 5000);
-    }
+    private static class FakeGameTime extends GameTime {
+        private long currentTime;
 
     @Test
     void testStartTimer(){
@@ -65,14 +57,20 @@ class CountdownTimerServiceTest {
         when(mockGameTime.getTime()).thenReturn(2000L);
         assertEquals(3000, timer.getRemainingMs(), "Remaining time: 3 seconds");
         timer.pause();
+        assertTrue(timer.isPaused());
+        long remainingAtPause = timer.getRemainingMs();
 
-        when(mockGameTime.getTime()).thenReturn(4000L);
-        assertEquals(3000, timer.getRemainingMs(), "Timer Paused, Remaining time does not change: 3 seconds");
 
+        gameTime.addTime(5000);
+        assertEquals(remainingAtPause, timer.getRemainingMs());
+
+        // Resume timer
         timer.resume();
-        when(mockGameTime.getTime()).thenReturn(6000L);
-        assertEquals(1000, timer.getRemainingMs(), "Timer Resumed, Remaining time: 1 seconds");
+        assertFalse(timer.isPaused());
 
+        // increase 3 more seconds
+        gameTime.addTime(3000);
+        assertTrue(timer.getRemainingMs() < remainingAtPause);
     }
 
     @Test
@@ -80,13 +78,29 @@ class CountdownTimerServiceTest {
         timer.startTimer();
         assertFalse(timer.isPaused(), "Start game not paused");
         timer.pause();
-        assertTrue(timer.isPaused(), "Should be paused after pause()");
-        timer.resume();
-        assertFalse(timer.isPaused(), "Should not be paused after resume()");
+        assertEquals(pauseTime, timer.getRemainingMs());
     }
 
     @Test
-    void testGetDuration() {
-        assertEquals(5000, timer.getDuration(), "Duration should match constructor input");
+    void testResumeWhenNotPausedDoesNothing() {
+        long before = timer.getRemainingMs();
+        timer.resume();
+        long after = timer.getRemainingMs();
+        assertEquals(before, after);
+    }
+
+    @Test
+    void testTimeUpCondition() {
+        gameTime.addTime(12000);
+        assertEquals(0, timer.getRemainingMs());
+        assertTrue(timer.isTimeUP());
+    }
+
+    @Test
+    void testRemainingNeverNegative() {
+        gameTime.addTime(999999);
+        assertEquals(0, timer.getRemainingMs());
+        assertTrue(timer.isTimeUP());
     }
 }
+

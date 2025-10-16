@@ -5,6 +5,7 @@ import com.csse3200.game.GdxGame;
 import com.csse3200.game.screens.DeathScreen;
 import com.csse3200.game.screens.WinScreen;
 import com.csse3200.game.services.CountdownTimerService;
+import com.csse3200.game.services.ServiceLocator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,7 +21,8 @@ import java.util.ArrayList;
 public record EndScreenCommand(
         GdxGame game,
         GdxGame.ScreenType screenType,
-        CountdownTimerService timer
+        CountdownTimerService timer,
+        boolean won
 ) implements Command {
     private static final Logger logger = LoggerFactory.getLogger(EndScreenCommand.class);
 
@@ -28,6 +30,9 @@ public record EndScreenCommand(
     public boolean action(ArrayList<String> args) {
         logger.info("Switching to {}", screenType);
         long elapsedSeconds = (timer.getDuration() - timer.getRemainingMs()) / 1000;
+
+        boolean won = (screenType == GdxGame.ScreenType.WIN_SCREEN);
+        ServiceLocator.getGlobalEvents().trigger("round:finished", won);
 
         switch (screenType) {
             case DEATH_SCREEN, WIN_SCREEN -> {

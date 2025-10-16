@@ -32,7 +32,7 @@ class EndScreenCommandTests {
         WinScreen win = mock(WinScreen.class);
         when(game.getScreen()).thenReturn(win);
 
-        EndScreenCommand cmd = new EndScreenCommand(game, GdxGame.ScreenType.WIN_SCREEN, timer);
+        EndScreenCommand cmd = new EndScreenCommand(game, GdxGame.ScreenType.WIN_SCREEN, timer, true);
 
         boolean ok = run(cmd);
         assertTrue(ok);
@@ -57,7 +57,7 @@ class EndScreenCommandTests {
         DeathScreen death = mock(DeathScreen.class);
         when(game.getScreen()).thenReturn(death);
 
-        EndScreenCommand cmd = new EndScreenCommand(game, GdxGame.ScreenType.DEATH_SCREEN, timer);
+        EndScreenCommand cmd = new EndScreenCommand(game, GdxGame.ScreenType.DEATH_SCREEN, timer, false);
 
         boolean ok = run(cmd);
         assertTrue(ok);
@@ -81,7 +81,7 @@ class EndScreenCommandTests {
         // Router hasn’t populated current screen yet
         when(game.getScreen()).thenReturn(null);
 
-        EndScreenCommand cmd = new EndScreenCommand(game, GdxGame.ScreenType.WIN_SCREEN, timer);
+        EndScreenCommand cmd = new EndScreenCommand(game, GdxGame.ScreenType.WIN_SCREEN, timer, true);
 
         boolean ok = run(cmd);
         assertTrue(ok);
@@ -104,7 +104,9 @@ class EndScreenCommandTests {
         Screen other = mock(Screen.class);
         when(game.getScreen()).thenReturn(other);
 
-        EndScreenCommand cmd = new EndScreenCommand(game, GdxGame.ScreenType.WIN_SCREEN, timer);
+        boolean won = true;
+
+        EndScreenCommand cmd = new EndScreenCommand(game, GdxGame.ScreenType.WIN_SCREEN, timer, won);
 
         boolean ok = run(cmd);
         assertTrue(ok);
@@ -130,7 +132,7 @@ class EndScreenCommandTests {
         WinScreen win = mock(WinScreen.class);
         when(game.getScreen()).thenReturn(win);
 
-        EndScreenCommand cmd = new EndScreenCommand(game, GdxGame.ScreenType.WIN_SCREEN, timer);
+        EndScreenCommand cmd = new EndScreenCommand(game, GdxGame.ScreenType.WIN_SCREEN, timer, true);
 
         boolean ok = run(cmd);
         assertTrue(ok);

@@ -64,6 +64,7 @@ public class MainGameScreen extends ScreenAdapter {
     private Entity minimap;
     private boolean isPauseVisible = false;
     private boolean isMinimapVisible = false;
+    private boolean pauseToggledThisFrame = false; // guard to avoid reopen on same ESC
 
     public MainGameScreen(GdxGame game) {
         this.game = game;
@@ -112,7 +113,10 @@ public class MainGameScreen extends ScreenAdapter {
         com.csse3200.game.services.ServiceLocator.registerGameArea(gameArea);
         ForestGameArea.setRoomSpawn(new GridPoint2(3, 20));
         gameArea.create();
-        // mark initial area as discovered
+        ServiceLocator.getGlobalEvents().addListener("round:finished", (Boolean won) -> {
+            recordRoundForLeaderboard(won);
+            game.setCarryOverLeaderBoard(session.getLeaderBoardManager());
+        });
         DiscoveryService dsInit = ServiceLocator.getDiscoveryService();
         if (dsInit != null) {
             dsInit.discover(gameArea.toString());
@@ -189,6 +193,9 @@ public class MainGameScreen extends ScreenAdapter {
         if (dsInit != null) {
             dsInit.discover(gameArea.toString());
         }
+
+        SaveLoadService.loadPlayer(load.getPlayer());
+        SaveLoadService.loadPlayerInventory(load.getInventory());
     }
 
     @Override
@@ -196,8 +203,9 @@ public class MainGameScreen extends ScreenAdapter {
         //accumulates elapsed time
         this.roundTime += delta;
 
-        // Reset teleporter ESC consumption at start of frame
+        // Reset per-frame ESC consumption flags at start of frame
         TeleporterComponent.resetEscConsumed();
+        // PauseMenuDisplay.resetEscConsumed(); // moved to end of render to avoid reopening pause
         if (!isPauseVisible && !(ServiceLocator.getTimeSource().isPaused())
                 && !ServiceLocator.isTransitioning()) {
             physicsEngine.update();
@@ -213,18 +221,32 @@ public class MainGameScreen extends ScreenAdapter {
                 setDeathScreen();
             }
         }
+
+        // Capture overlay visibility before Stage processes input (renderer.render likely advances Stage)
+        boolean preIsMinimapVisible = isMinimapVisible;
+        boolean preIsPauseVisible = isPauseVisible;
+
         renderer.render();
+        // Unified ESC handling priority: Teleporter -> Minimap -> Pause
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
-            if (TeleporterComponent.wasEscConsumedThisFrame()) {
-                // ESC was used to close teleporter menu this frame; suppress pause toggle
-            } else if (!isPauseVisible) {
-                showPauseOverlay();
-                countdownTimer.pause();
-            } else {
+            if (PauseMenuDisplay.wasEscConsumedThisFrame() || TeleporterComponent.wasEscConsumedThisFrame() || pauseToggledThisFrame) {
+                // ESC was consumed by a focused overlay (pause or teleporter), or pause toggled earlier this frame; suppress others
+            } else if (preIsMinimapVisible) {
+                // Close minimap first if it was open at the start of this frame
+                hideMinimapOverlay();
+                if (!isPauseVisible) {
+                    countdownTimer.resume();
+                }
+            } else if (preIsPauseVisible) {
+                // If pause menu was open at the start of this frame, close it
                 hidePauseOverlay();
                 if (!isMinimapVisible) {
                     countdownTimer.resume();
                 }
+            } else {
+                // Otherwise, open pause menu
+                showPauseOverlay();
+                countdownTimer.pause();
             }
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.TAB)) {
@@ -252,6 +274,10 @@ public class MainGameScreen extends ScreenAdapter {
         if (countdownTimer.isTimeUP()) {
             setDeathScreen();
         }
+
+        // Reset per-frame guards/flags for the next frame
+        PauseMenuDisplay.resetEscConsumed();
+        pauseToggledThisFrame = false;
     }
 
     @Override
@@ -320,13 +346,19 @@ public class MainGameScreen extends ScreenAdapter {
         ServiceLocator.getEntityService().register(ui);
     }
 
+    /** Remaining time in seconds, clamped to >= 0 */
+    private long getRemainingSeconds() {
+        long rem = countdownTimer.getRemainingMs();
+        return rem > 0 ? rem / 1000 : 0;
+    }
+
     /**
      * = Records player's current round performance and updates the leaderboard.
      * = This method is called automatically when a round ends.
      * = The leaderboard only persists for the duration of the current game session
      * and is cleared when the session ends.
      */
-    private void recordRoundForLeaderboard() {
+    private void recordRoundForLeaderboard(boolean won) {
         if (session == null) return;
 
         // Currency = processors from the player's InventoryComponent
@@ -339,10 +371,10 @@ public class MainGameScreen extends ScreenAdapter {
             }
         }
 
-        // Time = from your countdown service (seconds)
-        float timeSeconds = getCompleteTime();
+        // Time played = remaining time on countdown timer if won, else 0
+        float timePlayedSeconds = won ? (float) getRemainingSeconds() : 0f;
 
-        session.getLeaderBoardManager().addRound(processors, timeSeconds);
+        session.getLeaderBoardManager().addRound(processors, timePlayedSeconds);
         session.getLeaderBoardManager().getLeaderBoard().forEach(entry -> logger.info(entry.toString()));
     }
 
@@ -356,7 +388,8 @@ public class MainGameScreen extends ScreenAdapter {
         Stage stage = ServiceLocator.getRenderService().getStage();
         pauseOverlay = new Entity()
                 .addComponent(new PauseMenuDisplay(game))
-                .addComponent(new InputDecorator(stage, 100));
+                .addComponent(new InputDecorator(stage, 100))
+                .addComponent(new com.csse3200.game.components.screens.PauseEscInputComponent(110));
         pauseOverlay.getEvents().addListener("save", this::saveState);
         pauseOverlay.getEvents().addListener("resume", this::hidePauseOverlay);
         ServiceLocator.getEntityService().register(pauseOverlay);
@@ -365,6 +398,7 @@ public class MainGameScreen extends ScreenAdapter {
             countdownTimer.pause();
         }
         isPauseVisible = true;
+        pauseToggledThisFrame = true;
     }
 
     /**
@@ -381,12 +415,16 @@ public class MainGameScreen extends ScreenAdapter {
             pauseOverlay = null;
         }
 
-        ServiceLocator.getTimeSource().setPaused(false);
-        if (countdownTimer.isPaused()) {
-            countdownTimer.resume();
+        // Only unpause/resume if minimap is not visible
+        if (!isMinimapVisible) {
+            ServiceLocator.getTimeSource().setPaused(false);
+            if (countdownTimer.isPaused()) {
+                countdownTimer.resume();
+            }
         }
 
         isPauseVisible = false;
+        pauseToggledThisFrame = true;
     }
 
     private void saveState() {
@@ -443,7 +481,7 @@ public class MainGameScreen extends ScreenAdapter {
      * </p>
      */
     private void setDeathScreen() {
-        recordRoundForLeaderboard();
+        ServiceLocator.getGlobalEvents().trigger("round:finished", false);
         game.setCarryOverLeaderBoard(session.getLeaderBoardManager());
         DeathScreen deathScreen = new DeathScreen(game);
         deathScreen.updateTime(getCompleteTime());
