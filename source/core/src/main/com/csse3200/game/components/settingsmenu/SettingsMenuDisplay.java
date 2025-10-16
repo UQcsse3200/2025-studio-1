@@ -223,10 +223,12 @@ public class SettingsMenuDisplay extends UIComponent {
     private Table makeMenuBtns() {
         TextButton exitBtn = new TextButton("Exit", skin);
         TextButton applyBtn = new TextButton("Apply", skin);
+        TextButton controlBtn = new TextButton("Control", skin);
 
         // Label text size
         exitBtn.getLabel().setFontScale(1.5f);
         applyBtn.getLabel().setFontScale(1.5f);
+        controlBtn.getLabel().setFontScale(1.5f);
 
         // Button sizing relative to screen
         float btnW = stage.getWidth() * 0.10f;
@@ -237,6 +239,7 @@ public class SettingsMenuDisplay extends UIComponent {
         table.center();
         table.add(exitBtn).width(btnW).height(btnH).padRight(gap);
         table.add(applyBtn).width(btnW).height(btnH).padLeft(gap);
+        table.add(controlBtn).width(btnW).height(btnH).padLeft(gap);
 
         // Button actions
         exitBtn.addListener(
@@ -258,9 +261,28 @@ public class SettingsMenuDisplay extends UIComponent {
                         applyChanges();
                     }
                 });
+        controlBtn.addListener(
+                new ChangeListener() {
+                    @Override
+                    public void changed(ChangeEvent changeEvent, Actor actor) {
+                        ServiceLocator.getButtonSoundService().playClick();
+                        // This line pushes the new control screen/ui
+                        showControlsMenu();
+                    }
+                });
 
         return table;
     }
+
+    //Switches the UI from the settings menu to the controls/keybindings display.
+    private void showControlsMenu() {
+        rootTable.setVisible(false);
+        rootTable.remove();
+        ControlDisplay controlDisplay = new ControlDisplay(this, stage);
+        controlDisplay.create();
+
+    }
+
 
     /**
      * Reads values from the UI controls and writes them to {@code UserSettings},
