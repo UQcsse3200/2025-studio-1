@@ -106,7 +106,7 @@ public class NPCFactory {
                 .addComponent(animator)
                 .addComponent(new GhostAnimationController())
                 .addComponent(new LowHealthAttackBuffComponent(10, ghostGPTStats))
-                .addComponent(new EnemyDeathRewardComponent(15, playerInventory)) // Add reward + particles
+                .addComponent(new EnemyDeathRewardComponent(100, playerInventory)) // Add reward + particles
                 .addComponent(new DeathParticleSpawnerComponent("explosion_2"))
                 .addComponent(aiComponent)
                 .addComponent(projComp) // Add the ability to fire projectiles

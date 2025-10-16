@@ -113,7 +113,10 @@ public class MainGameScreen extends ScreenAdapter {
         com.csse3200.game.services.ServiceLocator.registerGameArea(gameArea);
         ForestGameArea.setRoomSpawn(new GridPoint2(3, 20));
         gameArea.create();
-        // mark initial area as discovered
+        ServiceLocator.getGlobalEvents().addListener("round:finished", (Boolean won) -> {
+            recordRoundForLeaderboard(won);
+            game.setCarryOverLeaderBoard(session.getLeaderBoardManager());
+        });
         DiscoveryService dsInit = ServiceLocator.getDiscoveryService();
         if (dsInit != null) {
             dsInit.discover(gameArea.toString());
@@ -342,13 +345,19 @@ public class MainGameScreen extends ScreenAdapter {
         ServiceLocator.getEntityService().register(ui);
     }
 
+    /** Remaining time in seconds, clamped to >= 0 */
+    private long getRemainingSeconds() {
+        long rem = countdownTimer.getRemainingMs();
+        return rem > 0 ? rem / 1000 : 0;
+    }
+
     /**
      * = Records player's current round performance and updates the leaderboard.
      * = This method is called automatically when a round ends.
      * = The leaderboard only persists for the duration of the current game session
      * and is cleared when the session ends.
      */
-    private void recordRoundForLeaderboard() {
+    private void recordRoundForLeaderboard(boolean won) {
         if (session == null) return;
 
         // Currency = processors from the player's InventoryComponent
@@ -361,10 +370,10 @@ public class MainGameScreen extends ScreenAdapter {
             }
         }
 
-        // Time = from your countdown service (seconds)
-        float timeSeconds = getCompleteTime();
+        // Time played = remaining time on countdown timer if won, else 0
+        float timePlayedSeconds = won ? (float) getRemainingSeconds() : 0f;
 
-        session.getLeaderBoardManager().addRound(processors, timeSeconds);
+        session.getLeaderBoardManager().addRound(processors, timePlayedSeconds);
         session.getLeaderBoardManager().getLeaderBoard().forEach(entry -> logger.info(entry.toString()));
     }
 
@@ -471,7 +480,7 @@ public class MainGameScreen extends ScreenAdapter {
      * </p>
      */
     private void setDeathScreen() {
-        recordRoundForLeaderboard();
+        ServiceLocator.getGlobalEvents().trigger("round:finished", false);
         game.setCarryOverLeaderBoard(session.getLeaderBoardManager());
         DeathScreen deathScreen = new DeathScreen(game);
         deathScreen.updateTime(getCompleteTime());
