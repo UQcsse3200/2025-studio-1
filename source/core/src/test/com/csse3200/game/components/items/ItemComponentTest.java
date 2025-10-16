@@ -1,14 +1,17 @@
-package com.csse3200.game.entities;
+package com.csse3200.game.components.items;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
-import com.csse3200.game.components.items.ItemComponent;
+import com.csse3200.game.entities.Entity;
+import com.csse3200.game.entities.configs.ItemTypes;
 import com.csse3200.game.entities.factories.items.ItemFactory;
 import com.csse3200.game.extensions.GameExtension;
 import com.csse3200.game.physics.PhysicsEngine;
 import com.csse3200.game.physics.PhysicsService;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
+import jdk.jfr.Description;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -21,7 +24,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(GameExtension.class)
-public class ItemComponentTest {
+ class ItemComponentTest {
 
     @BeforeEach
     void registerResourceService() {
@@ -73,14 +76,27 @@ public class ItemComponentTest {
         }
 
         @Test
-        public void testCountGetterSetter() {
+         void testCountGetterSetter() {
             item.setCount(2);
             assertEquals(2, item.getCount());
         }
 
         @Test
-        public void testTextureGetterSetter() {
+         void testTextureGetterSetter() {
             item.setTexture("images/mud.png");
+            assertEquals("images/mud.png", item.getTexture());
+        }
+
+        @Test
+        void shouldSetName() {
+            item.setName("test");
+            assertEquals("test", item.getName());
+        }
+
+        @Test
+        void shouldSetType() {
+            item.setType(ItemTypes.ARMOUR);
+            assertEquals(ItemTypes.ARMOUR, item.getType());
         }
     }
 
@@ -96,27 +112,93 @@ public class ItemComponentTest {
         }
 
         @Test
-        public void testNegativeCountEdgeCase() {
+         void testNegativeCountEdgeCase() {
             item.setCount(-1);
             assertFalse(item.getCount() > 0, "Count should be a positive integer");
         }
 
         @Test
-        public void testOutOfBoundEdgeCountCase() {
+         void testOutOfBoundEdgeCountCase() {
             item.setCount(6);
             assertFalse(item.getCount() < 5, "Max item count can be 5.");
         }
 
         @Test
-        public void testNullEdgeCountCase() {
+         void testNullEdgeCountCase() {
             item.setCount(0);
             assertEquals(0, item.getCount());
         }
 
         @Test
-        public void testNullTextureEdgeCase() {
+         void testNullTextureEdgeCase() {
             item.setTexture(null);
             assertNull(item.getTexture());
+        }
+    }
+
+    @Nested
+    @DisplayName("EuqipTests")
+    class EquipTest {
+        ItemComponent item;
+
+        @BeforeEach
+        void setUp() {
+            item = new ItemComponent();
+        }
+
+        @Test
+        void shouldUnlockPickup() {
+            assertTrue(item.isPickupable());
+            item.setPickupable(true);
+            assertTrue(item.isPickupable());
+        }
+
+        @Test
+        void shouldLockPickup() {
+            item.setPickupable(false);
+            assertFalse(item.isPickupable());
+        }
+
+        @Test
+        @Description("rifle")
+        void shouldGetCorrectOffset1() {
+            item.setName("rifle");
+            assertEquals(new Vector2(0.8f, 0.15f), item.getEquipOffset());
+        }
+
+        @Test
+        @Description("lightsaber")
+        void shouldGetCorrectOffset2() {
+            item.setName("lightsaber");
+            assertEquals(new Vector2(0.7f, -0.2f), item.getEquipOffset());
+        }
+
+        @Test
+        @Description("dagger")
+        void shouldGetCorrectOffset3() {
+            item.setName("dagger");
+            assertEquals(new Vector2(1.0f, 0.3f), item.getEquipOffset());
+        }
+
+        @Test
+        @Description("pistol")
+        void shouldGetCorrectOffset4() {
+            item.setName("pistol");
+            assertEquals(new Vector2(0.75f, -0.1f), item.getEquipOffset());
+        }
+
+        @Test
+        @Description("rocket launcher")
+        void shouldGetCorrectOffset5() {
+            item.setName("rocketlauncher");
+            assertEquals(new Vector2(0.75f, -0.1f), item.getEquipOffset());
+        }
+
+        @Test
+        @Description("unknown")
+        void shouldGetCorrectOffset6() {
+            item.setName("unknown");
+            assertEquals(new Vector2(0.7f, 0.3f), item.getEquipOffset());
         }
     }
 }
