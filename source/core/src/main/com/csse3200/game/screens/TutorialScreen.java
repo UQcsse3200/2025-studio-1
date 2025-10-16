@@ -36,8 +36,6 @@ public class TutorialScreen extends BaseScreen {
      *   <li>Load required assets</li>
      *   <li>Build the UI (via {@link #createUIScreen(Stage stage)})</li>
      * </ul>
-     *
-     * @param game the {@link GdxGame} instance, used for screen navigation
      */
     public static final String FRAME_PATTERN = "frame_%04d.png";
     public static final float  DEFAULT_FPS    = 12f;
