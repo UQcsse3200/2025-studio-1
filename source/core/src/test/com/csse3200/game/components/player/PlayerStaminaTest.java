@@ -1,5 +1,6 @@
 package com.csse3200.game.components.player;
 
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.csse3200.game.entities.Entity;
@@ -7,6 +8,7 @@ import com.csse3200.game.events.EventHandler;
 import com.csse3200.game.extensions.GameExtension;
 import com.csse3200.game.physics.PhysicsService;
 import com.csse3200.game.physics.components.PhysicsComponent;
+import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -124,6 +126,11 @@ class PlayerStaminaTest {
         Body body = mock(Body.class);
         when(physicsComponent.getBody()).thenReturn(body);
         when(body.getWorldCenter()).thenReturn(new Vector2(0f, 0f));
+
+        ResourceService resourceService = mock(ResourceService.class);
+        Sound sound = mock(Sound.class);
+        when(resourceService.getAsset("sounds/jump.mp3", Sound.class)).thenReturn(sound);
+        ServiceLocator.registerResourceService(resourceService);
 
         PlayerActions actions = new PlayerActions();
         attachEntity(actions);

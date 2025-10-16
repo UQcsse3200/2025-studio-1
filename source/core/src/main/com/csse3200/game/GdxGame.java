@@ -73,12 +73,12 @@ public class GdxGame extends Game {
      */
     public void setScreen(ScreenType screenType) {
         logger.info("Setting game screen to {}", screenType);
-        ServiceLocator.getGlobalEvents().trigger("screenChanged", screenType.name());
         Screen currentScreen = getScreen();
         if (currentScreen != null) {
             currentScreen.dispose();
         }
         setScreen(newScreen(screenType));
+        ServiceLocator.getGlobalEvents().trigger("screenChanged", screenType.name());
     }
 
     @Override

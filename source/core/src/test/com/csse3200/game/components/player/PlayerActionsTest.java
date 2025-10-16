@@ -3,7 +3,6 @@ package com.csse3200.game.components.player;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.csse3200.game.components.WeaponsStatsComponent;
@@ -28,6 +27,7 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(GameExtension.class)
 class PlayerActionsTest {
+    private Sound sound;
 
     @BeforeEach
     void setUp() {
@@ -35,6 +35,11 @@ class PlayerActionsTest {
         // Minimal services PlayerActions expects during create()/update()
         ServiceLocator.registerEntityService(new EntityService());
         ServiceLocator.registerTimeSource(new GameTime()); // provides deltaTime
+        ResourceService resourceService = mock(ResourceService.class);
+        sound = mock(Sound.class);
+        when(resourceService.getAsset("sounds/jump.mp3", Sound.class)).thenReturn(sound);
+        when(resourceService.getAsset("sounds/Impact4.ogg", Sound.class)).thenReturn(sound);
+        ServiceLocator.registerResourceService(resourceService);
     }
 
     @AfterEach
@@ -134,10 +139,6 @@ class PlayerActionsTest {
     void shouldPlayAttackSound() {
         ItemComponent mockItem = mock(ItemComponent.class);
         when(mockItem.getTexture()).thenReturn("images/mud.png");
-        ResourceService resourceService = mock(ResourceService.class);
-        Sound sound = mock(Sound.class);
-        when(resourceService.getAsset("sounds/Impact4.ogg", Sound.class)).thenReturn(sound);
-        ServiceLocator.registerResourceService(resourceService);
 
         PlayerActions actions = new PlayerActions();
         actions.setTimeSinceLastAttack(1.5f);
@@ -372,8 +373,7 @@ class PlayerActionsTest {
         }
 
         @Test
-        /**
-         * should select slot, set as equipped slot, and set as current item if slot is not empty
+         /* should select slot, set as equipped slot, and set as current item if slot is not empty
          */
         void testingEquipSlot() {
             Entity item = new Entity();
