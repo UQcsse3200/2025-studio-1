@@ -59,7 +59,7 @@ public abstract class GameArea implements Disposable {
     private static final String GROK_DROID_RED = "GrokDroidRed";
     private static final String GROK_DROID_BLUE = "GrokDroidBlue";
     private static final String TURRET = "Turret";
-
+    private static final Random r = new Random();
     protected EnemyWaves wavesManager; // manage waves via terminal command
 
     protected GameArea(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
@@ -338,6 +338,8 @@ public abstract class GameArea implements Disposable {
                 positions.put(VROOMBA_BLUE, respectiveSpawns);
                 spawnVroombaBlue(total, scaleFactor, player, positions);
                 break;
+            case ("Random"):
+                spawnRandom(total, scaleFactor, player, positions, respectiveSpawns);
         }
     }
 
@@ -542,7 +544,71 @@ public abstract class GameArea implements Disposable {
             spawnEntity(turretEntity);
         }
     }
+    public void spawnRandom(
+            int total, float scaleFactor, Entity player,
+            Map<String, ArrayList<Vector2>> positions,
+            ArrayList<Vector2> respectiveSpawns
+    ) {
+        int random = r.nextInt(220);
 
+        if (random <= 29) {
+            positions.put(GHOST_GPT, respectiveSpawns);
+            spawnGhostGPT(total, scaleFactor, player, positions);
+        }
+        else if (random <= 59) {
+            positions.put(GROK_DROID, respectiveSpawns);
+            spawnGrokDroid(total, scaleFactor, player, positions);
+        }
+        else if (random <= 89) {
+            positions.put(VROOMBA, respectiveSpawns);
+            spawnVroomba(total, scaleFactor, player, positions);
+        }
+        else if (random <= 119) {
+            positions.put(VROOMBA, respectiveSpawns);
+            spawnTurret(total, scaleFactor, player, positions);
+        }
+        else if (random <= 149) {
+            positions.put(DEEP_SPIN, respectiveSpawns);
+            spawnDeepspin(total, scaleFactor, player, positions);
+        }
+        else if (random <= 179){
+            positions.put(TURRET, respectiveSpawns);
+            spawnTurret(total, scaleFactor, player, positions);
+        }
+        else if (random <= 184) {
+            positions.put(GHOST_GPT_RED, respectiveSpawns);
+            spawnGhostGPTRed(total, scaleFactor, player, positions);
+        }
+        else if (random <= 189) {
+            positions.put(GHOST_GPT_BLUE, respectiveSpawns);
+            spawnGhostGPTBlue(total, scaleFactor, player, positions);
+        }
+        else if (random <= 194) {
+            positions.put(GROK_DROID_RED, respectiveSpawns);
+            spawnGrokDroidRed(total, scaleFactor, player, positions);
+        }
+        else if (random <= 199) {
+            positions.put(GROK_DROID_BLUE, respectiveSpawns);
+            spawnGrokDroidBlue(total, scaleFactor, player, positions);
+        }
+        else if (random <= 204) {
+            positions.put(DEEP_SPIN_RED, respectiveSpawns);
+            spawnDeepspinRed(total, scaleFactor, player, positions);
+        }
+        else if (random <= 209) {
+            positions.put(DEEP_SPIN_BLUE, respectiveSpawns);
+            spawnDeepspinBlue(total, scaleFactor, player, positions);
+        }
+        else if (random <= 214) {
+            positions.put(VROOMBA_RED, respectiveSpawns);
+            spawnVroombaRed(total, scaleFactor, player, positions);
+        }
+        else if (random <= 219) {
+            positions.put(VROOMBA_BLUE, respectiveSpawns);
+            spawnVroombaBlue(total, scaleFactor, player, positions);
+        }
+
+    }
     /**
      * Spawns the projectile used by the Ghost GPT Enemy
      *
