@@ -6,7 +6,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.csse3200.game.components.Component;
-import com.csse3200.game.components.screens.PauseMenuDisplay;
 import com.csse3200.game.rendering.AnimationRenderComponent;
 import com.csse3200.game.services.DiscoveryService;
 import com.csse3200.game.services.GameTime;
