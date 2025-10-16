@@ -39,6 +39,10 @@ public class TutorialScreen extends BaseScreen {
      *
      * @param game the {@link GdxGame} instance, used for screen navigation
      */
+    public static final String FRAME_PATTERN = "frame_%04d.png";
+    public static final float  DEFAULT_FPS    = 12f;
+
+
     public TutorialScreen(GdxGame game) {
         super(game, "images/background.png");
     }
@@ -56,14 +60,25 @@ public class TutorialScreen extends BaseScreen {
      */
     @Override
     protected Entity createUIScreen(Stage stage) {
-        TutorialClip moveClip = new TutorialClip("images/tutorial/move", "frame_%04d.png", 25, 12f, true);
+        TutorialClip movementClip = new TutorialClip("images/tutorial/movement", FRAME_PATTERN, 60, DEFAULT_FPS, true);
+        TutorialClip pauseClip = new TutorialClip("images/tutorial/pause", FRAME_PATTERN, 43, DEFAULT_FPS, true);
+        TutorialClip pickupClip = new TutorialClip("images/tutorial/pickup", FRAME_PATTERN, 46, DEFAULT_FPS, true);
+        TutorialClip inventoryClip = new TutorialClip("images/tutorial/inventory", FRAME_PATTERN, 33, DEFAULT_FPS, true);
+        TutorialClip miniMapClip = new TutorialClip("images/tutorial/mini_map", FRAME_PATTERN, 93, DEFAULT_FPS, true);
+        TutorialClip teleportClip = new TutorialClip("images/tutorial/teleport", FRAME_PATTERN, 61, DEFAULT_FPS, true);
         List<TutorialStep> steps = List.of(
-                new TutorialStep("Welcome!", "Use WASD to move your character.",
-                        moveClip),
-                new TutorialStep("Attack", "Use space to attack enemies.",
-                        moveClip),
-                new TutorialStep("Pick up item", "Walk on an item to pick it up",
-                        moveClip)
+                new TutorialStep("Basic Movement", "Use 'A/S/D' to move around, and 'Space' to jump",
+                        movementClip),
+                new TutorialStep("Game Pause", "Press 'ESC' to pause the game",
+                        pauseClip),
+                new TutorialStep("Item Pickup", "Press 'E' to pick up an item",
+                        pickupClip),
+                new TutorialStep("Inventory", "Press 'I' to toggle inventory bar",
+                        inventoryClip),
+                new TutorialStep("Mini Map", "Press 'TAB' to open mini map, 'Ctrl +/-' to resize",
+                        miniMapClip),
+                new TutorialStep("Teleporter", "Press 'T' to open teleporter menu",
+                        teleportClip)
         );
 
         // Create UI entity and register

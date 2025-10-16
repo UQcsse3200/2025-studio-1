@@ -326,6 +326,7 @@ public class SettingsMenuDisplay extends UIComponent {
 
         UserSettings.set(settings, true);
         ServiceLocator.getMusicService().setMenuMusicPlaying(musicCheck.isChecked());
+        ServiceLocator.getMusicService().setForestMusicPlaying(musicCheck.isChecked());
     }
 
     /**
