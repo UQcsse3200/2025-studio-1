@@ -192,10 +192,10 @@ public class PowerupComponentTest {
     // double processors effect
     @Test
     void testDoubleProcessorsEffectAddSuccessfully() {
+        Entity player = new Entity();
         InventoryComponent inventory = new InventoryComponent(0);
-        weapon.addComponent(inventory);
-        powerupComponent.setEquippedWeapon(weapon);
-
+        player.addComponent(inventory); // ← should be on player, not weapon
+        powerupComponent.setEntity(player); // ensure component knows its owner
         DoubleProcessorsEffect effect = new DoubleProcessorsEffect(1f);
 
         powerupComponent.addEffect(effect);
@@ -204,6 +204,7 @@ public class PowerupComponentTest {
         assertTrue(inventory.hasDoubleProcessors());
         assertTrue(effect.isActive());
     }
+
 
     @Test
     void testDoubleProcessorsEffectFailsWithoutInventory() {
