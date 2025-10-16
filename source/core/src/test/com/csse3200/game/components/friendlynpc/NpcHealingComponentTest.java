@@ -333,4 +333,110 @@ class NpcHealingComponentTest {
         assertTrue(ended[0], "Expected 'shieldEnd' to be fired after duration");
         verify(combatStats, atLeastOnce()).addProtection(-shieldAmount);
     }
+
+
+    @Test
+    void playsSound_onHealBranch() {
+        // player not full to the heal branch
+        player.addComponent(combatStats);
+        when(combatStats.isDead()).thenReturn(false);
+        when(combatStats.getHealth()).thenReturn(50);
+        when(combatStats.getMaxHealth()).thenReturn(100);
+
+        com.csse3200.game.services.ResourceService rs = mock(com.csse3200.game.services.ResourceService.class);
+        com.badlogic.gdx.audio.Sound sound = mock(com.badlogic.gdx.audio.Sound.class);
+
+        try (org.mockito.MockedStatic<com.csse3200.game.services.ServiceLocator> sl =
+                     mockStatic(com.csse3200.game.services.ServiceLocator.class)) {
+            sl.when(com.csse3200.game.services.ServiceLocator::getResourceService).thenReturn(rs);
+            when(rs.getAsset("sounds/healing-magic.mp3", com.badlogic.gdx.audio.Sound.class)).thenReturn(sound);
+
+            NpcHealingComponent c = new NpcHealingComponent(player, 25);
+            npc.addComponent(c);
+            npc.create();
+
+            npc.getEvents().trigger("npcDialogueEnd");
+
+            // overload-agnostic: accept play() or play(float)
+            boolean played = true;
+            try {
+                verify(sound, atLeastOnce()).play(anyFloat());
+            } catch (AssertionError e) {
+                played = false;
+            }
+            if (!played) {
+                verify(sound, atLeastOnce()).play();
+            }
+        }
+    }
+
+
+    @Test
+    void playsSound_onShieldBranch() {
+        // player full to the shield branch
+        player.addComponent(combatStats);
+        when(combatStats.isDead()).thenReturn(false);
+        when(combatStats.getHealth()).thenReturn(100);
+        when(combatStats.getMaxHealth()).thenReturn(100);
+
+        com.csse3200.game.services.ResourceService rs = mock(com.csse3200.game.services.ResourceService.class);
+        com.badlogic.gdx.audio.Sound sound = mock(com.badlogic.gdx.audio.Sound.class);
+
+        try (org.mockito.MockedStatic<com.csse3200.game.services.ServiceLocator> sl =
+                     mockStatic(com.csse3200.game.services.ServiceLocator.class)) {
+            sl.when(com.csse3200.game.services.ServiceLocator::getResourceService).thenReturn(rs);
+            when(rs.getAsset("sounds/healing-magic.mp3", com.badlogic.gdx.audio.Sound.class)).thenReturn(sound);
+
+            NpcHealingComponent c = new NpcHealingComponent(player, 25, 15, 0);
+            npc.addComponent(c);
+            npc.create();
+
+            npc.getEvents().trigger("npcDialogueEnd");
+
+            boolean played = true;
+            try {
+                verify(sound, atLeastOnce()).play(anyFloat());
+            } catch (AssertionError e) {
+                played = false;
+            }
+            if (!played) {
+                verify(sound, atLeastOnce()).play();
+            }
+        }
+    }
+
+    /**
+     * If the sound asset is missing (null), component should not crash and should not call play().
+     */
+    @Test
+    void noCrash_whenSoundAssetMissing() {
+        // choose either branch; here: full HP to go shield branch
+        player.addComponent(combatStats);
+        when(combatStats.isDead()).thenReturn(false);
+        when(combatStats.getHealth()).thenReturn(100);
+        when(combatStats.getMaxHealth()).thenReturn(100);
+
+        com.csse3200.game.services.ResourceService rs = mock(com.csse3200.game.services.ResourceService.class);
+        com.badlogic.gdx.audio.Sound sound = mock(com.badlogic.gdx.audio.Sound.class);
+
+        try (org.mockito.MockedStatic<com.csse3200.game.services.ServiceLocator> sl =
+                     mockStatic(com.csse3200.game.services.ServiceLocator.class)) {
+            sl.when(com.csse3200.game.services.ServiceLocator::getResourceService).thenReturn(rs);
+            // return null → simulate missing asset
+            when(rs.getAsset("sounds/healing-magic.mp3", com.badlogic.gdx.audio.Sound.class))
+                    .thenReturn(null);
+
+            NpcHealingComponent c = new NpcHealingComponent(player, 25, 10, 0);
+            npc.addComponent(c);
+            npc.create();
+
+            // should not throw
+            org.junit.jupiter.api.Assertions.assertDoesNotThrow(() -> npc.getEvents()
+                    .trigger("npcDialogueEnd"));
+
+            // and should not play any sound
+            verify(sound, never()).play();
+            verify(sound, never()).play(anyFloat());
+        }
+    }
 }

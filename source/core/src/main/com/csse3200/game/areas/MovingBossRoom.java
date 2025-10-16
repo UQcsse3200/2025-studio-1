@@ -65,6 +65,7 @@ public class MovingBossRoom extends GameArea {
 
         ResourceService rs = ServiceLocator.getResourceService();
         rs.loadSounds(new String[] { "sounds/healing-magic.mp3" });
+        rs.loadAll();
 
         GenericLayout.ensureGenericAssets(this);
         GenericLayout.setupTerrainWithOverlay(this, terrainFactory, TerrainType.SERVER_ROOM,
