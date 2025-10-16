@@ -5,11 +5,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.csse3200.game.files.UserSettings;
 import com.csse3200.game.screens.*;
-import com.csse3200.game.screens.LeaderboardScreen;
+import com.csse3200.game.services.ButtonSoundService;
+import com.csse3200.game.services.MusicService;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
-import com.csse3200.game.services.MusicService;
-import com.csse3200.game.services.ButtonSoundService;
 import com.csse3200.game.session.LeaderBoardManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,12 +25,12 @@ public class GdxGame extends Game {
 
     private LeaderBoardManager carryOverLeaderBoard;
 
-    public void setCarryOverLeaderBoard(LeaderBoardManager lbm) {
-        this.carryOverLeaderBoard = lbm;
-    }
-
     public LeaderBoardManager getCarryOverLeaderBoard() {
         return carryOverLeaderBoard;
+    }
+
+    public void setCarryOverLeaderBoard(LeaderBoardManager lbm) {
+        this.carryOverLeaderBoard = lbm;
     }
 
     @Override
@@ -74,12 +73,12 @@ public class GdxGame extends Game {
      */
     public void setScreen(ScreenType screenType) {
         logger.info("Setting game screen to {}", screenType);
-        ServiceLocator.getGlobalEvents().trigger("screenChanged", screenType.name());
         Screen currentScreen = getScreen();
         if (currentScreen != null) {
             currentScreen.dispose();
         }
         setScreen(newScreen(screenType));
+        ServiceLocator.getGlobalEvents().trigger("screenChanged", screenType.name());
     }
 
     @Override
@@ -104,16 +103,11 @@ public class GdxGame extends Game {
             case LOAD_GAME -> new MainGameScreen(this, "placeholder");
             case TUTORIAL_SCREEN -> new TutorialScreen(this);
             case STORY -> new StoryScreen(this);
-            case CHOOSE_AVATAR  -> new AvatarChoiceScreen(this);
+            case CHOOSE_AVATAR -> new AvatarChoiceScreen(this);
             case DIFFICULTY_SCREEN -> new DifficultyScreen(this);
             case LEADERBOARD -> new LeaderboardScreen(this);
 
         };
-    }
-
-    public enum ScreenType {
-        MAIN_MENU, MAIN_GAME, SETTINGS, DEATH_SCREEN, WIN_SCREEN, TUTORIAL_SCREEN,
-        STORY, LOAD_GAME, DIFFICULTY_SCREEN, CHOOSE_AVATAR, LEADERBOARD
     }
 
     /**
@@ -121,5 +115,10 @@ public class GdxGame extends Game {
      */
     public void exit() {
         app.exit();
+    }
+
+    public enum ScreenType {
+        MAIN_MENU, MAIN_GAME, SETTINGS, DEATH_SCREEN, WIN_SCREEN, TUTORIAL_SCREEN,
+        STORY, LOAD_GAME, DIFFICULTY_SCREEN, CHOOSE_AVATAR, LEADERBOARD
     }
 }

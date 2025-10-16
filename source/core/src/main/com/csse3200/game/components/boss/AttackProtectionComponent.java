@@ -10,11 +10,10 @@ import com.csse3200.game.components.Component;
  * - When hit count reaches limit, start no-damage via DamageReductionComponent.start(1f, seconds).
  */
 public class AttackProtectionComponent extends Component {
-    private int lastHealth = Integer.MIN_VALUE;
-    private int hits = 0;
-
     private final int limit;      // hits required to trigger
     private final float seconds;  // no-damage duration
+    private int lastHealth = Integer.MIN_VALUE;
+    private int hits = 0;
 
     public AttackProtectionComponent() {
         this(6, 2f);

@@ -21,8 +21,8 @@ import com.csse3200.game.services.ServiceLocator;
 public class PhysicsComponent extends Component {
     private static final float GROUND_FRICTION = 5f;
     private final PhysicsEngine physics;
-    private Body body;
     private final BodyDef bodyDef = new BodyDef();
+    private Body body;
 
     /**
      * Create a physics component with default settings.

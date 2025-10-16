@@ -33,6 +33,17 @@ public class BaseEndScreenDisplays extends BaseScreenDisplay {
     private Label timeLabelRef;
     private Runnable leaderboardAction;
 
+    /**
+     * Constructs a new end-of-run display with the given configuration.
+     *
+     * @param game            game instance used for screen navigation
+     * @param titleText       title text (e.g., "Victory", "DEFEATED")
+     * @param titleColor      colour to apply to the title
+     * @param primaryText     label for the primary button
+     * @param primaryAction   action executed on primary button press
+     * @param secondaryAction action executed on secondary button press; if {@code null},
+     *                        defaults to {@link #backMainMenu()}
+     */
     protected BaseEndScreenDisplays(
             GdxGame game,
             String titleText,
@@ -63,6 +74,12 @@ public class BaseEndScreenDisplays extends BaseScreenDisplay {
         this.subtitleSupplier = subtitleSupplier;
     }
 
+    /**
+     * Convenience factory for a Victory end screen.
+     *
+     * @param game game instance for navigation
+     * @return a configured {@code BaseEndScreenDisplays} showing "Victory" with a "Continue" action
+     */
     public static BaseEndScreenDisplays victory(GdxGame game) {
         return new BaseEndScreenDisplays(
                 game, "Victory", new Color(0f, 1f, 0f, 1f), "Continue",
@@ -72,6 +89,12 @@ public class BaseEndScreenDisplays extends BaseScreenDisplay {
         );
     }
 
+    /**
+     * Convenience factory for a Defeated end screen.
+     *
+     * @param game game instance for navigation
+     * @return a configured {@code BaseEndScreenDisplays} showing "DEFEATED" with a "Try Again" action
+     */
     public static BaseEndScreenDisplays defeated(GdxGame game) {
         return new BaseEndScreenDisplays(
                 game, DEFEATED_STR, new Color(1f, 0f, 0f, 1f), "Try Again",
@@ -85,6 +108,12 @@ public class BaseEndScreenDisplays extends BaseScreenDisplay {
         return s == null ? "" : s.trim();
     }
 
+    /**
+     * Formats seconds into {@code mm:ss}.
+     *
+     * @param totalSeconds total seconds to format
+     * @return a string formatted as {@code mm:ss}
+     */
     private static String toMMSS(long totalSeconds) {
         long m = totalSeconds / 60;
         long s = totalSeconds % 60;
@@ -140,6 +169,15 @@ public class BaseEndScreenDisplays extends BaseScreenDisplay {
         return this;
     }
 
+    /**
+     * Builds the end-screen UI: title, round/time labels, and the action buttons.
+     * <p>
+     * Appearance can be tuned by overriding the styling hooks:
+     * {@link #titleFontScale()}, {@link #infoFontScale()},
+     * {@link #buttonLabelScale()}, {@link #buttonsGap()}, {@link #blockPad()}.
+     *
+     * @param root the root table (already added to the Stage by {@link BaseScreenDisplay})
+     */
     @Override
     protected void buildUI(Table root) {
         // Title via addTitle(...), then wrap so we can transform the wrapper.
@@ -374,6 +412,11 @@ public class BaseEndScreenDisplays extends BaseScreenDisplay {
         }
     }
 
+    /**
+     * Font scale for the title label.
+     *
+     * @return title font scale (default {@code 3.0f})
+     */
     protected float titleFontScale() {
         return 3.0f;
     }
@@ -386,6 +429,13 @@ public class BaseEndScreenDisplays extends BaseScreenDisplay {
         return 2.0f;
     }
 
+    // --- Factories ---
+
+    /**
+     * Horizontal gap between the primary and secondary buttons.
+     *
+     * @return gap in pixels (default {@code 30f})
+     */
     protected float buttonsGap() {
         return 30f;
     }

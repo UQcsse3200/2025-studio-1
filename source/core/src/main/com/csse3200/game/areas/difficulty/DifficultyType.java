@@ -18,7 +18,7 @@ public enum DifficultyType {
     /**
      * Constructor for an enum, simply
      * sets the difficulty scaler
-     * 
+     *
      * @param diffScaler
      */
     DifficultyType(float diffScaler) {
@@ -28,7 +28,7 @@ public enum DifficultyType {
     /**
      * return the respective scaler depending on the
      * enum
-     * 
+     *
      * @return float a difficulty scaler constant
      */
     public float getScaler() {

@@ -16,11 +16,6 @@ import com.csse3200.game.GdxGame;
 
 public class StoryScreen extends ScreenAdapter {
     private final GdxGame game;
-    private Stage stage;
-    private Skin skin;
-    private Label dialogueLabel;
-    private Texture bgTexture;
-
     private final String[] storyLines = {
             "In the not so far future, robotic companions have become a fully realised reality.",
             "Ranging from simple janitors to full blown military application - their use is seen on a global scale.",
@@ -31,9 +26,12 @@ public class StoryScreen extends ScreenAdapter {
             "a lone operative has infiltrated the plant and must now navigate its chaotic twists and turns to shut" +
                     " down the artificial menace."
     };
-
-    private int currentLine = 0;
     private final float typeSpeed = 0.03f;
+    private Stage stage;
+    private Skin skin;
+    private Label dialogueLabel;
+    private Texture bgTexture;
+    private int currentLine = 0;
     private float typeTimer = 0f;
     private int charIndex = 0;
     private boolean typing;

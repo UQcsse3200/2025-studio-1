@@ -10,8 +10,8 @@ import com.csse3200.game.services.ServiceLocator;
 
 public class MagazineComponent extends Component {
 
-    private int currentAmmo;
     private final int maxAmmo;
+    private int currentAmmo;
     private float timeSinceLastReload;
 
     /**

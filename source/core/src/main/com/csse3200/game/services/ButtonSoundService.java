@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Handles menu button sound clicks
  */
-public class ButtonSoundService  {
+public class ButtonSoundService {
     private static final Logger logger = LoggerFactory.getLogger(ButtonSoundService.class);
 
     private static final String CLICK_SOUND = "sounds/buttonClick.mp3";

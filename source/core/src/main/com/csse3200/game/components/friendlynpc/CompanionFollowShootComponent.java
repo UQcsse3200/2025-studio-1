@@ -2,8 +2,8 @@ package com.csse3200.game.components.friendlynpc;
 
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.components.Component;
-import com.csse3200.game.components.player.PlayerActions;
 import com.csse3200.game.components.WeaponsStatsComponent;
+import com.csse3200.game.components.player.PlayerActions;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.factories.ProjectileFactory;
 import com.csse3200.game.physics.components.PhysicsProjectileComponent;

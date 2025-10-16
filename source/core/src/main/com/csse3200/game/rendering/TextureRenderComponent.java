@@ -36,16 +36,8 @@ public class TextureRenderComponent extends RenderComponent {
         entity.setScale(1f, (float) texture.getHeight() / texture.getWidth());
     }
 
-    protected Texture getTexture() {
+    public Texture getTexture() {
         return texture;
-    }
-
-    /**
-     * Sets the opacity (alpha multiplier 0-1) for fade effects.
-     * @param alpha value from 0.0 (fully transparent) to 1.0 (fully opaque)
-     */
-    public void setAlpha(float alpha) {
-        this.alpha = Math.clamp(alpha, 0f, 1f);
     }
 
     /**
@@ -53,6 +45,15 @@ public class TextureRenderComponent extends RenderComponent {
      */
     public float getAlpha() {
         return alpha;
+    }
+
+    /**
+     * Sets the opacity (alpha multiplier 0-1) for fade effects.
+     *
+     * @param alpha value from 0.0 (fully transparent) to 1.0 (fully opaque)
+     */
+    public void setAlpha(float alpha) {
+        this.alpha = Math.clamp(alpha, 0f, 1f);
     }
 
     @Override
@@ -68,6 +69,7 @@ public class TextureRenderComponent extends RenderComponent {
 
     /**
      * Gets the zIndex of the entity to determine rendering order.
+     *
      * @return If zIndex hasn't been set, return negative entity's y position, else return the set value.
      */
     @Override
@@ -81,6 +83,7 @@ public class TextureRenderComponent extends RenderComponent {
 
     /**
      * Set the zIndex.
+     *
      * @param zIndex zIndex to be set.
      */
     public void setZIndex(float zIndex) {

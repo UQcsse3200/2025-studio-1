@@ -13,6 +13,11 @@ public class ComponentType {
 
     private final int id;
 
+    private ComponentType() {
+        id = nextId;
+        nextId++;
+    }
+
     public static ComponentType getFrom(Class<? extends Component> type) {
         ComponentType componentType = componentTypes.get(type);
         if (componentType == null) {
@@ -24,10 +29,5 @@ public class ComponentType {
 
     public int getId() {
         return id;
-    }
-
-    private ComponentType() {
-        id = nextId;
-        nextId++;
     }
 }

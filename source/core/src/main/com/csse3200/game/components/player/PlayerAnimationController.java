@@ -16,42 +16,35 @@ import org.slf4j.LoggerFactory;
  * based on the player's state and direction.</p>
  */
 public class PlayerAnimationController extends Component {
+    private static final Logger logger = LoggerFactory.getLogger(PlayerAnimationController.class);
     /**
      * The animation component used to play animations.
      */
     AnimationRenderComponent animator;
-
-    private static final Logger logger = LoggerFactory.getLogger(PlayerAnimationController.class);
-
-    /**
-     * True if the player is facing right, false if left.
-     */
-    private boolean facingRight = true;
-
-    /**
-     * True if the player is stopped, false if moving.
-     */
-    private boolean stopped = true;
-
-    /**
-     * True if the player is sprinting.
-     */
-    private boolean sprinting = false;
-
-    /**
-     * True if the player is crouching.
-     */
-    private boolean crouching = false;
-
-    /**
-     * True if the player is falling.
-     */
-    private boolean falling = true;
-
     /**
      * True if the armour is facing right.
      */
     Boolean armourFacingRight = true;
+    /**
+     * True if the player is facing right, false if left.
+     */
+    private boolean facingRight = true;
+    /**
+     * True if the player is stopped, false if moving.
+     */
+    private boolean stopped = true;
+    /**
+     * True if the player is sprinting.
+     */
+    private boolean sprinting = false;
+    /**
+     * True if the player is crouching.
+     */
+    private boolean crouching = false;
+    /**
+     * True if the player is falling.
+     */
+    private boolean falling = true;
 
     /**
      * Creates a new animation controller, retrieves the animator component,

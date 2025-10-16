@@ -99,16 +99,16 @@ public class DebugRenderer {
         requestCount++;
     }
 
+    public boolean getActive() {
+        return active;
+    }
+
     /**
      * @param active true to enable debug drawing, false to disable
      */
     public void setActive(boolean active) {
         logger.info("Set debug to: {}", active);
         this.active = active;
-    }
-
-    public boolean getActive() {
-        return active;
     }
 
     public void render(Matrix4 projMatrix) {
@@ -167,6 +167,11 @@ public class DebugRenderer {
         }
     }
 
+    enum DrawRequestType {
+        LINE,
+        RECT
+    }
+
     /**
      * Stores a draw request. One class stores the potential options for all shapes, to prevent
      * allocating/deallocating new instances every render.
@@ -178,10 +183,5 @@ public class DebugRenderer {
         public float lineWidth;
 
         public Vector2 end;
-    }
-
-    enum DrawRequestType {
-        LINE,
-        RECT
     }
 }

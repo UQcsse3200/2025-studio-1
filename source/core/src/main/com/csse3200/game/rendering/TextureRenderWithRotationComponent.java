@@ -8,9 +8,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.components.MagazineComponent;
-import com.csse3200.game.components.TouchAttackComponent;
 import com.csse3200.game.components.WeaponsStatsComponent;
-import com.csse3200.game.components.enemy.ProjectileLauncherComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.physics.PhysicsLayer;
 import com.csse3200.game.physics.components.HitboxComponent;
@@ -25,14 +23,22 @@ import static com.badlogic.gdx.Gdx.input;
  */
 public class TextureRenderWithRotationComponent extends TextureRenderComponent {
     private final TextureRegion region;
+    private final String texturePath; //For testing
     private float rotation = 0;
     private Camera camera;
     private boolean rotated = false;
-    private final String texturePath; //For testing
+
     public TextureRenderWithRotationComponent(String texturePath) {
         super(texturePath); // still loads the Texture
         this.texturePath = texturePath;
         region = new TextureRegion(super.getTexture());
+    }
+
+    /**
+     * @return The rotation value
+     */
+    public float getRotation() {
+        return rotation;
     }
 
     /**
@@ -49,18 +55,11 @@ public class TextureRenderWithRotationComponent extends TextureRenderComponent {
      *
      * @param value The boolean value to set to "rotated"
      */
-    public void setHasRotated(boolean value) {rotated = value; }
-
-    /**
-     *
-     * @return The rotation value
-     */
-    public float getRotation() {
-        return rotation;
+    public void setHasRotated(boolean value) {
+        rotated = value;
     }
 
     /**
-     *
      * @return the texture path
      */
     public String getTexturePath() {

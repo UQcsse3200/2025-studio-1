@@ -116,9 +116,9 @@ public class ShopManager extends Component {
                 Entity newWeapon;
                 // Recreate the weapon they're holding
                 if (weapon.getComponent(ItemComponent.class).getTexture().equals("images/pistol.png")) {
-                     newWeapon = WeaponsFactory.createWeaponWithAttachment(Weapons.PISTOL, laser, bullet);
+                    newWeapon = WeaponsFactory.createWeaponWithAttachment(Weapons.PISTOL, laser, bullet);
                 } else if (weapon.getComponent(ItemComponent.class).getTexture().equals("images/rifle.png")) {
-                     newWeapon = WeaponsFactory.createWeaponWithAttachment(Weapons.RIFLE, laser, bullet);
+                    newWeapon = WeaponsFactory.createWeaponWithAttachment(Weapons.RIFLE, laser, bullet);
                 } else {
                     //Just default to rifle
                     newWeapon = WeaponsFactory.createWeaponWithAttachment(Weapons.RIFLE, laser, bullet);

@@ -10,6 +10,8 @@ import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Disposable;
+import com.csse3200.game.areas.cutscenes.BadWinAnimationScreen;
+import com.csse3200.game.areas.cutscenes.GoodWinAnimationScreen;
 import com.csse3200.game.areas.terrain.TerrainComponent;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.components.CameraComponent;
@@ -150,7 +152,6 @@ public abstract class GameArea implements Disposable {
      * Returns the room name corresponding to the current floor.
      *
      * @return the name of the current room
-     *
      */
     public String getRoomName() {
         return this.toString();
@@ -174,6 +175,8 @@ public abstract class GameArea implements Disposable {
             case "Storage" -> 9;
             case "Server" -> 10;
             case "Tunnel" -> 11;
+            case "GoodWinAnimation" -> 101; //Animation start from 101
+            case "BadWinAnimation" -> 102;
             default -> 1;
         };
     }
@@ -339,6 +342,13 @@ public abstract class GameArea implements Disposable {
                 spawnVroombaBlue(total, scaleFactor, player, positions);
                 break;
         }
+    }
+
+    /**
+     * Retrieves current wave count for services
+     */
+    public int currentWave() {
+        return wavesManager.getWaveNumber();
     }
 
     /**
@@ -769,6 +779,23 @@ public abstract class GameArea implements Disposable {
     }
 
     /**
+     * Convenience to load atlases if not already loaded.
+     */
+    protected void ensureAtlases(String[] atlasPaths) {
+        ResourceService rs = ServiceLocator.getResourceService();
+        List<String> toLoad = new ArrayList<>();
+        for (String path : atlasPaths) {
+            if (!rs.containsAsset(path, TextureAtlas.class)) {
+                toLoad.add(path);
+            }
+        }
+        if (!toLoad.isEmpty()) {
+            rs.loadTextureAtlases(toLoad.toArray(new String[0]));
+            rs.loadAll();
+        }
+    }
+
+    /**
      * Ensure the common player atlas is available.
      */
     protected void ensurePlayerAtlas() {
@@ -1058,6 +1085,8 @@ public abstract class GameArea implements Disposable {
             case "shipping" -> ShippingGameArea.class;
             case "server" -> ServerGameArea.class;
             case "research" -> ResearchGameArea.class;
+            case "goodwinanimation" -> GoodWinAnimationScreen.class;
+            case "badwinanimation" -> BadWinAnimationScreen.class;
             default -> {
                 Gdx.app.log("GameArea", "transitionToArea: unknown area name '" + areaName + "'");
                 yield null;

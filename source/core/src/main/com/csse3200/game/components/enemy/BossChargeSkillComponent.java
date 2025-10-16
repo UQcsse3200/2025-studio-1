@@ -10,8 +10,7 @@ import com.csse3200.game.services.ServiceLocator;
 
 
 public class BossChargeSkillComponent extends Component {
-    private enum State {PATROL, PREP, CHARGING, RETURN, COOLDOWN}
-
+    private static final String BOSS_PATROL = "boss2:patrol";
     private final Entity target;
     private final float triggerRange;
     private final float dwellTime;
@@ -24,9 +23,6 @@ public class BossChargeSkillComponent extends Component {
     private final float patrolRightX;
     private final float patrolY;
     private final float patrolSpeed;
-
-    private static final String BOSS_PATROL = "boss2:patrol";
-
     private final Vector2 lockedPos = new Vector2();
     private final Vector2 vel = new Vector2();
     private float dwellCounter = 0f;
@@ -38,7 +34,6 @@ public class BossChargeSkillComponent extends Component {
     private boolean crash = false;
     private GameTime time;
     private AITaskComponent ai;
-
     public BossChargeSkillComponent(Entity target,
                                     float triggerRange,
                                     float dwellTime,
@@ -211,6 +206,8 @@ public class BossChargeSkillComponent extends Component {
     public void setCrash(boolean crash) {
         this.crash = crash;
     }
+
+    private enum State {PATROL, PREP, CHARGING, RETURN, COOLDOWN}
 }
 
 

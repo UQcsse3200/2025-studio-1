@@ -1,7 +1,6 @@
 package com.csse3200.game.entities.configs.consumables;
 
 import com.csse3200.game.components.player.PlayerActions;
-import com.csse3200.game.effects.RapidFireEffect;
 import com.csse3200.game.effects.UnlimitedAmmoEffect;
 
 import java.util.ArrayList;

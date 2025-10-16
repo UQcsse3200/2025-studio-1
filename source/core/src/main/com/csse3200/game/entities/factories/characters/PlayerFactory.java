@@ -4,16 +4,13 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.csse3200.game.components.*;
 import com.csse3200.game.components.player.*;
-import com.csse3200.game.components.player.InventoryComponent;
 import com.csse3200.game.effects.DoubleProcessorsEffect;
 import com.csse3200.game.effects.Effect;
 import com.csse3200.game.effects.RapidFireEffect;
 import com.csse3200.game.entities.AvatarRegistry;
-import com.csse3200.game.effects.UnlimitedAmmoEffect;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.characters.PlayerConfig;
 import com.csse3200.game.entities.configs.consumables.RapidFireConsumableConfig;
-import com.csse3200.game.entities.configs.consumables.UnlimitedAmmoConsumableConfig;
 import com.csse3200.game.files.FileLoader;
 import com.csse3200.game.input.InputComponent;
 import com.csse3200.game.physics.PhysicsLayer;
@@ -32,6 +29,10 @@ import com.csse3200.game.services.ServiceLocator;
  */
 public class PlayerFactory {
     private static final PlayerConfig stats = safeLoadPlayerConfig();
+
+    private PlayerFactory() {
+        throw new IllegalStateException("Instantiating static util class");
+    }
 
     private static PlayerConfig safeLoadPlayerConfig() {
         PlayerConfig cfg = FileLoader.readClass(PlayerConfig.class, "configs/player.json");
@@ -58,10 +59,15 @@ public class PlayerFactory {
                 ServiceLocator.getResourceService()
                         .getAsset(AvatarRegistry.get().atlas(), TextureAtlas.class));
         add_animations(animator);
+
+        ColliderComponent groundCollider = new ColliderComponent().setLayer(PhysicsLayer.PLAYER);
+        PlayerHurtboxComponent playerCollider = new PlayerHurtboxComponent();
+
         Entity player =
                 new Entity()
                         .addComponent(new PhysicsComponent())
-                        .addComponent(new ColliderComponent().setLayer(PhysicsLayer.PLAYER))
+                        .addComponent(groundCollider)
+                        .addComponent(playerCollider)
                         .addComponent(new PlayerActions())
                         .addComponent(new CombatStatsComponent(AvatarRegistry.get().baseHealth()))
                         .addComponent(new WeaponsStatsComponent(AvatarRegistry.get().baseDamage()))
@@ -81,15 +87,17 @@ public class PlayerFactory {
         // Ensure global player reference is up-to-date for transitions
         ServiceLocator.registerPlayer(player);
 
+        // Scale Player Sprite
         player.getComponent(AnimationRenderComponent.class).scaleEntity(2f);
-        player.getComponent(ColliderComponent.class).setDensity(1.5f);
-        PhysicsUtils.setScaledCollider(player, 0.3f, 0.5f);
+
+        // Scale and set up Player Colliders
+        PhysicsUtils.setScaledCollider(player, groundCollider,0.2f, 0.1f);
+        PhysicsUtils.setScaledCollider(player, playerCollider, 0.3f, 0.5f);
+        playerCollider.setDensity(1.5f);
+        playerCollider.setFriction(0f);
+        PhysicsUtils.setScaledCollider(player, player.getComponent(InteractComponent.class), 1f, 0.75f);
+
         player.getComponent(WeaponsStatsComponent.class).setCoolDown(0.2f);
-
-
-        //Unequip player at spawn
-        PlayerActions actions = player.getComponent(PlayerActions.class);
-        actions.create();
 
 
         // pick up rapid fire powerup
@@ -232,10 +240,6 @@ public class PlayerFactory {
         PhysicsUtils.setScaledCollider(player, 0.3f, 0.5f);
         player.getComponent(WeaponsStatsComponent.class).setCoolDown(0.2f);
         return player;
-    }
-
-    private PlayerFactory() {
-        throw new IllegalStateException("Instantiating static util class");
     }
 
 }

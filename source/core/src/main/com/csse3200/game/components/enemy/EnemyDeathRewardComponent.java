@@ -16,8 +16,8 @@ import java.util.Random;
 public class EnemyDeathRewardComponent extends Component {
     //1/4 chance of enemy adding ammo to the player
     private final Random random = new SecureRandom();
-    private int rewardProcessor;
     private final InventoryComponent playerInventory;
+    private int rewardProcessor;
 
     public EnemyDeathRewardComponent(int rewardProcessor, InventoryComponent playerInventory) {
         this.rewardProcessor = rewardProcessor;

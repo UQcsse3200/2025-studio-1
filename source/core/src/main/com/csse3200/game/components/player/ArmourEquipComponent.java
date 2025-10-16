@@ -20,6 +20,7 @@ public class ArmourEquipComponent extends Component {
 
     /**
      * Equips item and adds it to set of currently equipped armour.
+     *
      * @param item The entity created of the item that needs to be equipped.
      */
     public void setItem(Entity item) {
@@ -33,10 +34,10 @@ public class ArmourEquipComponent extends Component {
 
         item.getComponent(TextureRenderComponent.class).setZIndex(-entity.getPosition().y + 5);
         currentlyEquippedArmour.put(item, new Vector2[]
-                        {
-                                item.getComponent(ArmourComponent.class).rightOffset,
-                                item.getComponent(ArmourComponent.class).leftOffset
-                        });
+                {
+                        item.getComponent(ArmourComponent.class).rightOffset,
+                        item.getComponent(ArmourComponent.class).leftOffset
+                });
 
         entity.getComponent(CombatStatsComponent.class).addProtection(item.getComponent(ArmourComponent.class).protection);
         // initial pos setting
@@ -56,7 +57,7 @@ public class ArmourEquipComponent extends Component {
     @Override
     public void update() {
         boolean facingRight = entity.getComponent(PlayerActions.class).isFacingRight();
-        for (Entity item: currentlyEquippedArmour.keySet()) {
+        for (Entity item : currentlyEquippedArmour.keySet()) {
             Vector2[] armourOffsets = currentlyEquippedArmour.get(item);
             if (facingRight) {
                 item.setPosition(entity.getPosition().cpy().add(armourOffsets[0]));

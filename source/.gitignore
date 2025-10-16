@@ -117,4 +117,4 @@ Thumbs.db
 **/.DS_Store
 
 ## Project Assets / Saves
-/source/core/assets/saves/slides.json
+core/assets/saves/slides.json

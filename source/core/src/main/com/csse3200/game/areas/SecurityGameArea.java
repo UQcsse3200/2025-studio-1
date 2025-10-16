@@ -9,7 +9,6 @@ import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.ItemSpawnConfig;
-import com.csse3200.game.entities.factories.characters.PlayerFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.entities.factories.system.TeleporterFactory;
 import com.csse3200.game.entities.spawner.ItemSpawner;
@@ -30,6 +29,19 @@ public class SecurityGameArea extends GameArea {
 
     public static SecurityGameArea load(TerrainFactory terrainFactory, CameraComponent camera) {
         return (new SecurityGameArea(terrainFactory, camera));
+    }
+
+    /**
+     * Setter method for the player spawn point
+     * should be used when the player is traversing through the rooms
+     *
+     * @param newSpawn the new spawn point
+     */
+    public static void setRoomSpawn(GridPoint2 newSpawn) {
+        if (newSpawn == null) {
+            return;
+        }
+        SecurityGameArea.playerSpawn = newSpawn;
     }
 
     @Override
@@ -66,7 +78,7 @@ public class SecurityGameArea extends GameArea {
         leftDoor.setPosition(b.leftX() + 0.001f, leftDoorY);
         leftDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadBackToFloor5));
         spawnEntity(leftDoor);
-
+        addSolidWallTop(b, WALL_WIDTH);
         addSolidWallRight(b, WALL_WIDTH);
 
         float rightDoorHeight = Math.max(1f, b.viewHeight() * 0.2f);
@@ -142,9 +154,10 @@ public class SecurityGameArea extends GameArea {
 
     private void spawnSpikes2() {
         Entity spikes = ObstacleFactory.createSpikes2();
-        GridPoint2 spikesSpawn = new GridPoint2(4,  12);
+        GridPoint2 spikesSpawn = new GridPoint2(4, 12);
         spawnEntityAt(spikes, spikesSpawn, true, false);
     }
+
     /**
      * Spawn a Vroomba and Deepspin in Security room.
      */
@@ -161,7 +174,9 @@ public class SecurityGameArea extends GameArea {
         spawnEntityAt(deepspin, new GridPoint2(22, 12), true, false);
     }
 
-    /** Teleporter entity bottom-left */
+    /**
+     * Teleporter entity bottom-left
+     */
     private void spawnTeleporter() {
         Entity tp = TeleporterFactory.createTeleporter(new Vector2(2f, 2.8f));
         spawnEntity(tp);
@@ -175,19 +190,6 @@ public class SecurityGameArea extends GameArea {
     private void loadMovingBossRoom() {
         MovingBossRoom.setRoomSpawn(new GridPoint2(6, 8));
         clearAndLoad(() -> new MovingBossRoom(terrainFactory, cameraComponent));
-    }
-
-    /**
-     * Setter method for the player spawn point
-     * should be used when the player is traversing through the rooms
-     * 
-     * @param newSpawn the new spawn point
-     */
-    public static void setRoomSpawn(GridPoint2 newSpawn) {
-        if (newSpawn == null) {
-            return;
-        }
-        SecurityGameArea.playerSpawn = newSpawn;
     }
 
     @Override

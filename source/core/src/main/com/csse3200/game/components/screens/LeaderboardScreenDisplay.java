@@ -2,8 +2,8 @@ package com.csse3200.game.components.screens;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Align;
 import com.csse3200.game.GdxGame;
 import com.csse3200.game.records.RoundData;
@@ -18,7 +18,9 @@ import java.util.List;
  * This class extends BaseScreenDisplay and provides the specific UI for the leaderboard.
  */
 public class LeaderboardScreenDisplay extends BaseScreenDisplay {
-    /** Creates a new Leaderboard screen display.
+    /**
+     * Creates a new Leaderboard screen display.
+     *
      * @param game which is used for screeen navigation actions
      */
     public LeaderboardScreenDisplay(GdxGame game) {
@@ -27,6 +29,7 @@ public class LeaderboardScreenDisplay extends BaseScreenDisplay {
 
     /**
      * Builds the leaderboard UI which includes the title, current highscore, leaderboard data rows, and navigation buttons.
+     *
      * @param root it is the root table to which the Ui elements are added.
      */
     @Override
@@ -62,7 +65,7 @@ public class LeaderboardScreenDisplay extends BaseScreenDisplay {
 
         headerTable.add(new Label("Round", leaderboardStyle)).expandX().center();
         headerTable.add(new Label("Currency", leaderboardStyle)).expandX().center();
-        headerTable.add(new Label("Time", leaderboardStyle)).expandX().center();
+        headerTable.add(new Label("Time Bonus", leaderboardStyle)).expandX().center();
         headerTable.add(new Label("Score", leaderboardStyle)).expandX().center();
         panel.add(headerTable).growX().row();
 
@@ -106,6 +109,7 @@ public class LeaderboardScreenDisplay extends BaseScreenDisplay {
 
     /**
      * Gets the highest score from the leaderboard.
+     *
      * @return the highest score, or 0 if the leaderboard is empty or not available.
      */
     private int getHighestScore() {
