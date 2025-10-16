@@ -1,8 +1,12 @@
 package com.csse3200.game.components.teleporter;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.csse3200.game.components.Component;
+import com.csse3200.game.components.screens.PauseMenuDisplay;
 import com.csse3200.game.rendering.AnimationRenderComponent;
 import com.csse3200.game.services.DiscoveryService;
 import com.csse3200.game.services.GameTime;
@@ -22,6 +26,7 @@ public class TeleporterComponent extends Component {
     private TeleporterMenuUI menuUI;
     private boolean menuVisible;
 
+    private static boolean escConsumedThisFrame;
     private boolean teleporting;
     private float teleportTimer;
     private String pendingDestination;
@@ -30,6 +35,10 @@ public class TeleporterComponent extends Component {
     private boolean baseScaleSet;
 
     private GameTime time;
+
+    public static boolean wasEscConsumedThisFrame() { return escConsumedThisFrame; }
+    public static void markEscConsumed() { escConsumedThisFrame = true; }
+    public static void resetEscConsumed() { escConsumedThisFrame = false; }
 
     @Override
     public void create() {
@@ -45,6 +54,22 @@ public class TeleporterComponent extends Component {
 
         entity.getEvents().addListener("interact", this::handleInteract);
         entity.getEvents().addListener("exitedInteractRadius", this::hideMenu);
+
+        final InputListener escOnce = new InputListener() {
+            /** Prevents repeated ESC events (debounce). */
+            private boolean handled = false;
+
+            @Override
+            public boolean keyDown(InputEvent event, int keycode) {
+                if (keycode == Input.Keys.ESCAPE && !handled) {
+                    handled = true;                       // first ESC only
+                    entity.getEvents().trigger("resume"); // resume game
+                    markEscConsumed();    // mark ESC consumed for this frame
+                    return true;
+                }
+                return false;
+            }
+        };
     }
 
     @Override
