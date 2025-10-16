@@ -1,6 +1,5 @@
 package com.csse3200.game.components.screens;
 
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
@@ -37,6 +36,9 @@ public class MinimapDisplay extends BaseScreenDisplay {
     private Table minimapTable;
     private Minimap minimap;
     private final Map<String, Texture> textures = new HashMap<>();
+
+    /** Default image width for a room in pixels. */
+    public static final int IMAGE_WIDTH = 1280;
 
     /**
      * Constructs a screen display bound to a game instance and minimap.
@@ -152,10 +154,15 @@ public class MinimapDisplay extends BaseScreenDisplay {
     /**
      * Pans the minimap by the coordinates given and renders it
      *
-     * @param distance The distance by which the panning should happen
+     * @param direction The direction of panning
      */
-    public void pan(Vector2 distance) {
-        minimap.pan(distance);
+    public void pan(String direction) {
+        if (direction.equals("left")) {
+            minimap.pan(new Vector2(-(IMAGE_WIDTH * minimap.getScale()), 0));
+        }
+        if (direction.equals("right")) {
+            minimap.pan(new Vector2(IMAGE_WIDTH * minimap.getScale(), 0));
+        }
         renderMinimapImages();
     }
 

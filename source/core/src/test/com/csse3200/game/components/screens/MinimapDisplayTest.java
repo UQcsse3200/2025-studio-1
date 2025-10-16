@@ -192,26 +192,22 @@ public class MinimapDisplayTest {
     void testPanDelegatesToMinimapAndThenRenders() {
         // Spy so we can verify renderMinimapImages() invocation/order
         MinimapDisplay spyDisplay = spy(display);
+        when(mockMinimap.getScale()).thenReturn(1.0f);
 
-        Vector2 delta = new Vector2(5f, -3f);
-        spyDisplay.pan(delta);
+        spyDisplay.pan("left");
 
         // Verify minimap.pan called with same vector and render called afterwards
         InOrder inOrder = inOrder(mockMinimap, spyDisplay);
-        inOrder.verify(mockMinimap).pan(delta);
+        inOrder.verify(mockMinimap).pan(new Vector2(-(1280 * mockMinimap.getScale()), 0));
         inOrder.verify(spyDisplay).renderMinimapImages();
     }
 
     @Test
     void testPanPassesExactVectorInstance() {
-        Vector2 delta = new Vector2(10f, 20f);
-        display.pan(delta);
+        display.pan("right");
 
         ArgumentCaptor<Vector2> captor = ArgumentCaptor.forClass(Vector2.class);
         verify(mockMinimap).pan(captor.capture());
-
-        // assert the same reference (no copy was made)
-        assertSame(delta, captor.getValue(), "pan should forward the same Vector2 instance");
     }
 
     @Test
