@@ -940,7 +940,7 @@ public abstract class GameArea implements Disposable {
     /**
      * Helper to clear current entities and transition to a new area.
      */
-    protected void clearAndLoad(Supplier<GameArea> nextAreaSupplier) {
+    public void clearAndLoad(Supplier<GameArea> nextAreaSupplier) {
         if (!beginTransition()) return;
 
         for (Entity entity : areaEntities) {

@@ -23,6 +23,8 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.util.ArrayList;
 
+import java.util.Set;
+
 
 /**
  * save load service that will extract all information about the current game state and will add it to save file to
@@ -110,18 +112,23 @@ public class SaveLoadService {
         } else {
             // if can't find through service locator will attempt hard check
             for (Entity entity : gameArea.getEntities()) {
-                if (entity.getComponent(InventoryComponent.class) != null) {
+                if (entity.hasComponent(InventoryComponent.class)) {
                     player = entity;
                 }
             }
         }
+        //better to set variables and inject them
 
+        Set<String> discovered = ServiceLocator.getDiscoveryService().getDiscovered();
         SaveGame.GameState gamestate = new SaveGame.GameState();
+
+
         gamestate.setPlayer(player);
         gamestate.setLoadedInventory(player.getComponent(InventoryComponent.class));
-        gamestate.setArea(ServiceLocator.getGameArea());
-        gamestate.setWave(gameArea.currentWave());
-        gamestate.setAreasVisited(ServiceLocator.getDiscoveryService().getDiscovered());
+        gamestate.setArea(ServiceLocator.getGameArea().toString());
+        gamestate.setWave(ServiceLocator.getGameArea().currentWave());
+        gamestate.setAreasVisited(discovered);
+
         gamestate.setDifficulty(ServiceLocator.getDifficulty().toString());
 
         path = "saves" + File.separator + slot + ".json";

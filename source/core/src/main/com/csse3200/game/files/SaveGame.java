@@ -68,10 +68,11 @@ public class SaveGame {
         }
 
         public DifficultyType getDifficulty() {
+            //loops through the difficulty until the correct value is found
             for (DifficultyType diff: DifficultyType.values()) {
                 if (diff.toString().equals(this.difficulty)) return diff;
             }
-            logger.error("couldnt read difficulty {} from" +
+            logger.error("couldn't read difficulty {} from" +
                     " save file setting to normal", difficulty);
             return DifficultyType.NORMAL;
         }
@@ -102,7 +103,7 @@ public class SaveGame {
         }
 
         // saves any necessary information to do with gameArea (currently only needs to be string)
-        public void setArea(GameArea area) {
+        public void setArea(String area) {
             this.gameArea = area.toString();
         }
 
