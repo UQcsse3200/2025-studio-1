@@ -34,11 +34,11 @@ public class StaminaComponent extends Component {
         emitChanged();
         if (AvatarRegistry.get() != null) {
             float playerSpeed = AvatarRegistry.get().moveSpeed();
-            MAX_STAMINA     = 100 + Math.round(10f * (playerSpeed - 1f));
+            MAX_STAMINA = 100 + Math.round(10f * (playerSpeed - 1f));
             INITIAL_STAMINA = MAX_STAMINA;
-            DRAIN_PER_SEC   = 18f + 3f * (playerSpeed - 3f);
-            REGEN_PER_SEC   = 10f - (playerSpeed - 3f);
-            REGEN_DELAY_MS  = (long)(700 + 100 * (playerSpeed - 3f));
+            DRAIN_PER_SEC = 18f + 3f * (playerSpeed - 3f);
+            REGEN_PER_SEC = 10f - (playerSpeed - 3f);
+            REGEN_DELAY_MS = (long) (700 + 100 * (playerSpeed - 3f));
 
         }
     }
@@ -85,6 +85,7 @@ public class StaminaComponent extends Component {
         emitChanged();
         return true;
     }
+
     /**
      * Returns the current stamina value.
      *
@@ -109,6 +110,7 @@ public class StaminaComponent extends Component {
             stamina = clamped;
         }
     }
+
     /**
      * Updates the infiniteStamina parameter
      *

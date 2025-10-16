@@ -9,10 +9,9 @@ import com.csse3200.game.physics.components.PhysicsComponent;
 
 public class KeycardPickupComponent extends Component {
 
+    private static final String keycardPickup = "KeycardPickup";
     private final int level;
     private boolean collected = false;
-
-    private static final String keycardPickup = "KeycardPickup";
 
     public KeycardPickupComponent(int level) {
         /** Initializes the component with a specific keycard level to grant on pickup. */

@@ -5,7 +5,6 @@ import com.csse3200.game.ai.tasks.DefaultTask;
 import com.csse3200.game.ai.tasks.PriorityTask;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.physics.PhysicsEngine;
-import com.csse3200.game.physics.PhysicsLayer;
 import com.csse3200.game.physics.raycast.RaycastHit;
 import com.csse3200.game.rendering.DebugRenderer;
 import com.csse3200.game.services.ServiceLocator;
@@ -19,10 +18,10 @@ public class DashAttackTask extends DefaultTask implements PriorityTask {
     private final Vector2 speed;
     private final long cooldown;
     private final long dashTime;
-    private long lastDashTime;
     private final PhysicsEngine physics;
     private final DebugRenderer debugRenderer;
     private final RaycastHit hit = new RaycastHit();
+    private long lastDashTime;
     private MovementTask movementTask;
 
     /**
@@ -86,15 +85,6 @@ public class DashAttackTask extends DefaultTask implements PriorityTask {
     }
 
     private boolean isTargetVisible() {
-        Vector2 from = owner.getEntity().getCenterPosition();
-        Vector2 to = target.getCenterPosition();
-
-        // If there is an obstacle in the path to the player, not visible.
-        if (physics.raycast(from, to, PhysicsLayer.OBSTACLE, hit)) {
-            debugRenderer.drawLine(from, hit.point);
-            return false;
-        }
-        debugRenderer.drawLine(from, to);
-        return true;
+        return TaskUtils.isVisible(owner.getEntity(), target, physics, debugRenderer, hit);
     }
 }

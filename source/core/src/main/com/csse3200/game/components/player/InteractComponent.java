@@ -10,7 +10,7 @@ import java.util.ArrayList;
 /**
  * Handles "interact" event triggered by pressing E as seen in KeyboardPlayerInputComponent
  */
-public class InteractComponent extends HitboxComponent{
+public class InteractComponent extends HitboxComponent {
     private final ArrayList<Entity> collidedEntities = new ArrayList<>();
 
     @Override

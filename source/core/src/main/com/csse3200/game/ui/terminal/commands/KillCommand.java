@@ -15,8 +15,8 @@ import java.util.ArrayList;
 /**
  * Command to kill entities.
  * Usage:
- *   kill @p   -> kills the player (shows death screen)
- *   kill @a   -> kills all enemies (not the player)
+ * kill @p   -> kills the player (shows death screen)
+ * kill @a   -> kills all enemies (not the player)
  */
 public class KillCommand implements Command {
     private static final Logger logger = LoggerFactory.getLogger(KillCommand.class);

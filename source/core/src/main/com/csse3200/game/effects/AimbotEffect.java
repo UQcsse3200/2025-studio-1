@@ -7,9 +7,9 @@ import com.csse3200.game.entities.Entity;
 public class AimbotEffect extends Effect {
 
     private final float duration;
+    private final PlayerActions playerActions;
     private float elapsed = 0f;
     private boolean active = false;
-    private final PlayerActions playerActions;
 
     public AimbotEffect(float duration, PlayerActions playerActions) {
 

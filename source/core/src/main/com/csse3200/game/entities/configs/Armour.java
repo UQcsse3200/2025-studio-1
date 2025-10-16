@@ -10,7 +10,9 @@ public enum Armour {
 
     private final ArmourConfig config;
 
-    Armour(ArmourConfig config) {this.config = config;}
+    Armour(ArmourConfig config) {
+        this.config = config;
+    }
 
     public ArmourConfig getConfig() {
         return this.config;

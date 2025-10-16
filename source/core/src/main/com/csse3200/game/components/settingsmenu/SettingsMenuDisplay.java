@@ -3,6 +3,7 @@ package com.csse3200.game.components.settingsmenu;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Graphics.DisplayMode;
 import com.badlogic.gdx.Graphics.Monitor;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Event;
@@ -40,6 +41,18 @@ public class SettingsMenuDisplay extends UIComponent {
     public SettingsMenuDisplay(GdxGame game) {
         super();
         this.game = game;
+    }
+
+    /**
+     * Sets the provided labels' font colour to white by cloning their styles.
+     */
+    private static void makeWhite(Label... labels) {
+        for (Label l : labels) {
+            Label.LabelStyle st = new Label.LabelStyle(l.getStyle());
+            st.fontColor = Color.WHITE;
+            l.setStyle(st);
+            logger.debug("Label styled to white");
+        }
     }
 
     /**

@@ -6,6 +6,8 @@ import com.csse3200.game.services.CountdownTimerService;
 import com.csse3200.game.ui.terminal.autocomplete.BKTree;
 import com.csse3200.game.ui.terminal.autocomplete.RadixTrie;
 import com.csse3200.game.ui.terminal.commands.*;
+import com.csse3200.game.areas.TunnelGameArea;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,19 +41,23 @@ public class Terminal extends Component {
 
         addCommand("damageMultiplier", new DamageMultiplierCommand());
         addCommand("debug", new DebugCommand());
-        addCommand("deathScreen", new EndScreenCommand(game, GdxGame.ScreenType.DEATH_SCREEN, timer));
+        addCommand("deathScreen", new EndScreenCommand(game, GdxGame.ScreenType.DEATH_SCREEN, timer, false));
         addCommand("disableDamage", new DisableDamageCommand());
         addCommand("doorOverride", new DoorOverrideCommand());
         addCommand("infiniteStamina", new InfiniteStaminaCommand());
         addCommand("infiniteDash", new InfiniteDashCommand());
         addCommand("infiniteJumps", new InfiniteJumpsCommand());
+        addCommand("doorOverride", new DoorOverrideCommand());
+//        addCommand("teleport", new TeleportCommand());
+
+        // Initial index build
         addCommand("kill", new KillCommand());
         addCommand("pickupAll", new PickupAllCommand());
         addCommand("spawn", new SpawnCommand());
         addCommand("teleport", new TeleportCommand());
         addCommand("travel", new TravelCommand());
         addCommand("waves", new WavesCommand());
-        addCommand("winScreen", new EndScreenCommand(game, GdxGame.ScreenType.WIN_SCREEN, timer));
+        addCommand("winScreen", new EndScreenCommand(game, GdxGame.ScreenType.WIN_SCREEN, timer, true));
 
         rebuildAutocompleteIndex();
     }
@@ -146,6 +152,17 @@ public class Terminal extends Component {
         logger.debug("Processing message");
         var message = enteredMessage.strip();
         if (message.isEmpty()) return false;
+
+
+        // When the player types a password into the terminal, this method checks if it
+        // matches the required code. If the password is correct (in this case "0000"):
+        if (message.equals("0000")) {
+            if (TunnelGameArea.exposedRightDoor != null) {
+                TunnelGameArea.exposedRightDoor.setLocked(false);
+                setEnteredMessage("");
+                return true;
+            }
+        }
 
         var parts = message.split("\\s+");
         var commandName = parts[0];

@@ -257,7 +257,9 @@ public class EnemyWaves extends Component {
         this.waveEndTime = waveEndTime;
     }
 
-    public int getWaveDelayInSeconds() { return (int)WAVE_DELAY_MS / 1000; }
+    public int getWaveDelayInSeconds() {
+        return (int) WAVE_DELAY_MS / 1000;
+    }
 
     public EventHandler getEvents() {
         return eventHandler;

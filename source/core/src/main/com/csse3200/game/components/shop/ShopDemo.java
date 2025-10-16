@@ -1,6 +1,5 @@
 package com.csse3200.game.components.shop;
 
-import com.csse3200.game.components.Component;
 import com.csse3200.game.components.attachments.BulletEnhancerComponent;
 import com.csse3200.game.components.attachments.LaserComponent;
 import com.csse3200.game.components.items.ItemComponent;
@@ -8,7 +7,6 @@ import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.Weapons;
 import com.csse3200.game.entities.factories.items.ConsumableFactory;
 import com.csse3200.game.entities.factories.items.WeaponsFactory;
-import com.csse3200.game.rendering.TextureRenderComponent;
 
 import java.util.ArrayList;
 

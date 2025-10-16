@@ -14,15 +14,14 @@ import com.csse3200.game.components.gamearea.PerformanceDisplay;
 import com.csse3200.game.components.maingame.MainGameActions;
 import com.csse3200.game.components.maingame.MainGameDisplay;
 import com.csse3200.game.components.player.InventoryComponent;
-import com.csse3200.game.components.player.ItemPickUpComponent;
 import com.csse3200.game.components.screens.Minimap;
 import com.csse3200.game.components.screens.MinimapDisplay;
 import com.csse3200.game.components.screens.PauseMenuDisplay;
 import com.csse3200.game.components.teleporter.TeleporterComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
-import com.csse3200.game.entities.factories.characters.PlayerFactory;
 import com.csse3200.game.entities.factories.system.RenderFactory;
+import com.csse3200.game.files.SaveGame;
 import com.csse3200.game.input.InputComponent;
 import com.csse3200.game.input.InputDecorator;
 import com.csse3200.game.input.InputService;
@@ -61,11 +60,11 @@ public class MainGameScreen extends ScreenAdapter {
     private GameSession session;
     private float roundTime = 0f;
 
-
     private Entity pauseOverlay;
     private Entity minimap;
     private boolean isPauseVisible = false;
     private boolean isMinimapVisible = false;
+    private boolean pauseToggledThisFrame = false; // guard to avoid reopen on same ESC
 
     public MainGameScreen(GdxGame game) {
         this.game = game;
@@ -114,12 +113,16 @@ public class MainGameScreen extends ScreenAdapter {
         com.csse3200.game.services.ServiceLocator.registerGameArea(gameArea);
         ForestGameArea.setRoomSpawn(new GridPoint2(3, 20));
         gameArea.create();
-        // mark initial area as discovered
+        ServiceLocator.getGlobalEvents().addListener("round:finished", (Boolean won) -> {
+            recordRoundForLeaderboard(won);
+            game.setCarryOverLeaderBoard(session.getLeaderBoardManager());
+        });
         DiscoveryService dsInit = ServiceLocator.getDiscoveryService();
         if (dsInit != null) {
             dsInit.discover(gameArea.toString());
         }
     }
+
 
     /**
      * Overloaded constructor for loading the game from save file
@@ -131,7 +134,8 @@ public class MainGameScreen extends ScreenAdapter {
 
 
         this.game = game;
-        SaveLoadService.PlayerInfo load = SaveLoadService.load();
+
+
         logger.debug("Initialising main game screen services from file load");
         ServiceLocator.registerTimeSource(new GameTime());
 
@@ -142,8 +146,8 @@ public class MainGameScreen extends ScreenAdapter {
         ServiceLocator.registerInputService(new InputService());
         ServiceLocator.registerResourceService(new ResourceService());
         ServiceLocator.registerSaveLoadService(new SaveLoadService());
-        ServiceLocator.registerDiscoveryService(new DiscoveryService());
 
+        SaveGame.GameState load = SaveLoadService.load();
 
         ServiceLocator.registerEntityService(new EntityService());
         ServiceLocator.registerRenderService(new RenderService());
@@ -153,14 +157,15 @@ public class MainGameScreen extends ScreenAdapter {
         renderer.getDebug().renderPhysicsWorld(physicsEngine.getWorld());
 
         loadAssets();
+        countdownTimer = new CountdownTimerService(ServiceLocator.getTimeSource(), 60000);
         createUI();
-        // null so default can return error
-        GameArea areaLoad = null;
+
         logger.debug("Initialising main game screen entities");
         TerrainFactory terrainFactory = new TerrainFactory(renderer.getCamera());
-
+        GameArea areaLoad = null;
         //cases for all current areas
-        switch (load.areaId) {
+
+        switch (load.getGameArea()) {
             case "Forest" -> areaLoad = ForestGameArea.load(terrainFactory, renderer.getCamera());
             case "Elevator" -> areaLoad = ElevatorGameArea.load(terrainFactory, renderer.getCamera());
             case "Office" -> areaLoad = OfficeGameArea.load(terrainFactory, renderer.getCamera());
@@ -171,33 +176,25 @@ public class MainGameScreen extends ScreenAdapter {
             case "Storage" -> areaLoad = StorageGameArea.load(terrainFactory, renderer.getCamera());
             case "Shipping" -> areaLoad = ShippingGameArea.load(terrainFactory, renderer.getCamera());
             case "Server" -> areaLoad = ServerGameArea.load(terrainFactory, renderer.getCamera());
-            default -> logger.error("couldnt create Game area from file");
+            default -> logger.error("couldn't create Game area from file");
         }
+        ServiceLocator.getResourceService().loadAll(); // test for loading into new areas
 
         gameArea = areaLoad;
-        com.csse3200.game.services.ServiceLocator.registerGameArea(gameArea);
-        gameArea.create();
-        // Mark initial area as discovered
         DiscoveryService ds = ServiceLocator.getDiscoveryService();
         if (ds != null && gameArea != null) {
             ds.discover(gameArea.toString());
         }
-        InventoryComponent help = gameArea.getPlayer().getComponent(InventoryComponent.class);
-        ItemPickUpComponent testLoading = new ItemPickUpComponent(help);
-        //repopulates the inventory
-        if (load.inventory != null) {
-            for (int i = 0; i < load.inventory.size(); i++) {
-                Entity placehold = testLoading.createItemFromTexture(load.inventory.get(i));
-                help.addItem(placehold);
-            }
+        ServiceLocator.registerGameArea(gameArea);
+        gameArea.create();
+        // mark initial area as discovered
+        DiscoveryService dsInit = ServiceLocator.getDiscoveryService();
+        if (dsInit != null) {
+            dsInit.discover(gameArea.toString());
         }
 
-
-        // currently not needed: sprint 3 refactor to fix everything
-        // gameArea.getPlayer().getEvents().trigger("load player", load.inventory, load.ProcessNumber);
-        // functionally bad but if it works
-        // gameArea.loadIn(load.inventory, load.Health,load.ProcessNumber, load.position.x, load.position.y);
-
+        SaveLoadService.loadPlayer(load.getPlayer());
+        SaveLoadService.loadPlayerInventory(load.getInventory());
     }
 
     @Override
@@ -205,8 +202,9 @@ public class MainGameScreen extends ScreenAdapter {
         //accumulates elapsed time
         this.roundTime += delta;
 
-        // Reset teleporter ESC consumption at start of frame
+        // Reset per-frame ESC consumption flags at start of frame
         TeleporterComponent.resetEscConsumed();
+        // PauseMenuDisplay.resetEscConsumed(); // moved to end of render to avoid reopening pause
         if (!isPauseVisible && !(ServiceLocator.getTimeSource().isPaused())
                 && !ServiceLocator.isTransitioning()) {
             physicsEngine.update();
@@ -222,18 +220,32 @@ public class MainGameScreen extends ScreenAdapter {
                 setDeathScreen();
             }
         }
+
+        // Capture overlay visibility before Stage processes input (renderer.render likely advances Stage)
+        boolean preIsMinimapVisible = isMinimapVisible;
+        boolean preIsPauseVisible = isPauseVisible;
+
         renderer.render();
+        // Unified ESC handling priority: Teleporter -> Minimap -> Pause
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
-            if (TeleporterComponent.wasEscConsumedThisFrame()) {
-                // ESC was used to close teleporter menu this frame; suppress pause toggle
-            } else if (!isPauseVisible) {
-                showPauseOverlay();
-                countdownTimer.pause();
-            } else {
+            if (PauseMenuDisplay.wasEscConsumedThisFrame() || TeleporterComponent.wasEscConsumedThisFrame() || pauseToggledThisFrame) {
+                // ESC was consumed by a focused overlay (pause or teleporter), or pause toggled earlier this frame; suppress others
+            } else if (preIsMinimapVisible) {
+                // Close minimap first if it was open at the start of this frame
+                hideMinimapOverlay();
+                if (!isPauseVisible) {
+                    countdownTimer.resume();
+                }
+            } else if (preIsPauseVisible) {
+                // If pause menu was open at the start of this frame, close it
                 hidePauseOverlay();
                 if (!isMinimapVisible) {
                     countdownTimer.resume();
                 }
+            } else {
+                // Otherwise, open pause menu
+                showPauseOverlay();
+                countdownTimer.pause();
             }
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.TAB)) {
@@ -261,6 +273,10 @@ public class MainGameScreen extends ScreenAdapter {
         if (countdownTimer.isTimeUP()) {
             setDeathScreen();
         }
+
+        // Reset per-frame guards/flags for the next frame
+        PauseMenuDisplay.resetEscConsumed();
+        pauseToggledThisFrame = false;
     }
 
     @Override
@@ -329,13 +345,19 @@ public class MainGameScreen extends ScreenAdapter {
         ServiceLocator.getEntityService().register(ui);
     }
 
+    /** Remaining time in seconds, clamped to >= 0 */
+    private long getRemainingSeconds() {
+        long rem = countdownTimer.getRemainingMs();
+        return rem > 0 ? rem / 1000 : 0;
+    }
+
     /**
      * = Records player's current round performance and updates the leaderboard.
      * = This method is called automatically when a round ends.
      * = The leaderboard only persists for the duration of the current game session
      * and is cleared when the session ends.
      */
-    private void recordRoundForLeaderboard() {
+    private void recordRoundForLeaderboard(boolean won) {
         if (session == null) return;
 
         // Currency = processors from the player's InventoryComponent
@@ -348,10 +370,10 @@ public class MainGameScreen extends ScreenAdapter {
             }
         }
 
-        // Time = from your countdown service (seconds)
-        float timeSeconds = getCompleteTime();
+        // Time played = remaining time on countdown timer if won, else 0
+        float timePlayedSeconds = won ? (float) getRemainingSeconds() : 0f;
 
-        session.getLeaderBoardManager().addRound(processors, timeSeconds);
+        session.getLeaderBoardManager().addRound(processors, timePlayedSeconds);
         session.getLeaderBoardManager().getLeaderBoard().forEach(entry -> logger.info(entry.toString()));
     }
 
@@ -365,7 +387,8 @@ public class MainGameScreen extends ScreenAdapter {
         Stage stage = ServiceLocator.getRenderService().getStage();
         pauseOverlay = new Entity()
                 .addComponent(new PauseMenuDisplay(game))
-                .addComponent(new InputDecorator(stage, 100));
+                .addComponent(new InputDecorator(stage, 100))
+                .addComponent(new com.csse3200.game.components.screens.PauseEscInputComponent(110));
         pauseOverlay.getEvents().addListener("save", this::saveState);
         pauseOverlay.getEvents().addListener("resume", this::hidePauseOverlay);
         ServiceLocator.getEntityService().register(pauseOverlay);
@@ -374,6 +397,7 @@ public class MainGameScreen extends ScreenAdapter {
             countdownTimer.pause();
         }
         isPauseVisible = true;
+        pauseToggledThisFrame = true;
     }
 
     /**
@@ -390,12 +414,16 @@ public class MainGameScreen extends ScreenAdapter {
             pauseOverlay = null;
         }
 
-        ServiceLocator.getTimeSource().setPaused(false);
-        if (countdownTimer.isPaused()) {
-            countdownTimer.resume();
+        // Only unpause/resume if minimap is not visible
+        if (!isMinimapVisible) {
+            ServiceLocator.getTimeSource().setPaused(false);
+            if (countdownTimer.isPaused()) {
+                countdownTimer.resume();
+            }
         }
 
         isPauseVisible = false;
+        pauseToggledThisFrame = true;
     }
 
     private void saveState() {
@@ -452,7 +480,7 @@ public class MainGameScreen extends ScreenAdapter {
      * </p>
      */
     private void setDeathScreen() {
-        recordRoundForLeaderboard();
+        ServiceLocator.getGlobalEvents().trigger("round:finished", false);
         game.setCarryOverLeaderBoard(session.getLeaderBoardManager());
         DeathScreen deathScreen = new DeathScreen(game);
         deathScreen.updateTime(getCompleteTime());

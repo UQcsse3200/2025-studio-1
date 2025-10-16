@@ -22,13 +22,14 @@ import org.slf4j.LoggerFactory;
  */
 public class EnemyWavesDisplay extends UIComponent {
     private static final Logger logger = LoggerFactory.getLogger(EnemyWavesDisplay.class);
+    private static final float screenHeight = (float) Gdx.graphics.getHeight();
     private final EnemyWaves wavesManager;
+    protected Stage stage;
     private Table table;
+    private Label maxWavesLabel;
     private Label waveNumberLabel;
     private Label waveDelayLabel;
-    private Label maxWavesLabel;
     private Label enemyNumLabel;
-    protected Stage stage;
     private Integer initialEnemyNum;
 
     /**
@@ -74,7 +75,7 @@ public class EnemyWavesDisplay extends UIComponent {
     private void addActors() {
         table = new Table();
         table.setSize(300f, 150f);
-        table.setPosition(30f, safeScreenHeight() * 3/5f);
+        table.setPosition(30f, safeScreenHeight() * 3 / 5f);
 
         // Number of enemies on screen
         CharSequence enemyNumText = String.format("Enemies left: %d / %d", 0, 0);
@@ -157,14 +158,33 @@ public class EnemyWavesDisplay extends UIComponent {
         maxWavesLabel.setText(maxWavesText);
     }
 
-    /** Makes the wave info table visible. */
-    public void setTableVisible() { table.setVisible(true); }
+    /**
+     * Makes the wave info table visible.
+     */
+    public void setTableVisible() {
+        table.setVisible(true);
+    }
 
-    /** Hides the wave info table. */
-    public void setTableInvisible() { table.setVisible(false); }
+    /**
+     * Hides the wave info table.
+     */
+    public void setTableInvisible() {
+        table.setVisible(false);
+    }
 
-    public Table getTable() { return table; }
-    public Label getWaveNumberLabel() { return waveNumberLabel; }
-    public Label getMaxWavesLabel() { return maxWavesLabel; }
-    public Label getWaveDelayLabel() { return waveDelayLabel; }
+    public Table getTable() {
+        return table;
+    }
+
+    public Label getWaveNumberLabel() {
+        return waveNumberLabel;
+    }
+
+    public Label getMaxWavesLabel() {
+        return maxWavesLabel;
+    }
+
+    public Label getWaveDelayLabel() {
+        return waveDelayLabel;
+    }
 }

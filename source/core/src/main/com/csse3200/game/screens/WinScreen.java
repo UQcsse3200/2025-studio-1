@@ -24,6 +24,7 @@ import com.csse3200.game.services.ServiceLocator;
  */
 public class WinScreen extends BaseScreen {
     private BaseEndScreenDisplays uiDisplay;
+
     /**
      * Constructs a new WinScreen instance.
      * <p>
@@ -54,9 +55,8 @@ public class WinScreen extends BaseScreen {
      */
     @Override
     protected Entity createUIScreen(Stage stage) {
-        uiDisplay = BaseEndScreenDisplays.victory(game);
+        uiDisplay = BaseEndScreenDisplays.victory(game).withLeaderboard(() -> game.setScreen(GdxGame.ScreenType.LEADERBOARD));
         return new Entity()
-                .addComponent(BaseEndScreenDisplays.victory(game).withLeaderboard(() -> game.setScreen(GdxGame.ScreenType.LEADERBOARD)))
                 .addComponent(uiDisplay)
                 .addComponent(new InputDecorator(stage, 10));
     }
