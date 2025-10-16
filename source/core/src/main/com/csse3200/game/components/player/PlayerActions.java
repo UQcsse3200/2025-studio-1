@@ -131,11 +131,16 @@ public class PlayerActions extends Component {
             updateSpeed();
         }
 
+        if (Gdx.input.isKeyJustPressed(Input.Keys.E)) {
+            entity.getEvents().trigger("interact");
+        }
+
         if (touchingGround()) {
             updateGrounded();
         } else {
             updateMidair();
         }
+
 
         timeSinceLastAttack += ServiceLocator.getTimeSource().getDeltaTime();
         timesinceLastReload += ServiceLocator.getTimeSource().getDeltaTime();
