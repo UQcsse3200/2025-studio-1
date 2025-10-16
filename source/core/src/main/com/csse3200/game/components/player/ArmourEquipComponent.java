@@ -39,6 +39,15 @@ public class ArmourEquipComponent extends Component {
                         });
 
         entity.getComponent(CombatStatsComponent.class).addProtection(item.getComponent(ArmourComponent.class).protection);
+        // initial pos setting
+        entity.getComponent(PlayerAnimationController.class).flipArmour();
+        boolean facingRight = entity.getComponent(PlayerActions.class).isFacingRight();
+        Vector2[] armourOffsets = currentlyEquippedArmour.get(item);
+        if (facingRight) {
+            item.setPosition(entity.getPosition().cpy().add(armourOffsets[0]));
+        } else {
+            item.setPosition(entity.getPosition().cpy().add(armourOffsets[1]));
+        }
     }
 
     /**
