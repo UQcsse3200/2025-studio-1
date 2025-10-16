@@ -6,7 +6,7 @@ import com.csse3200.game.services.CountdownTimerService;
 import com.csse3200.game.ui.terminal.autocomplete.BKTree;
 import com.csse3200.game.ui.terminal.autocomplete.RadixTrie;
 import com.csse3200.game.ui.terminal.commands.*;
-import com.csse3200.game.areas.TunnelGameArea;
+import com.csse3200.game.areas.StaticBossRoom;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -157,8 +157,8 @@ public class Terminal extends Component {
         // When the player types a password into the terminal, this method checks if it
         // matches the required code. If the password is correct (in this case "0000"):
         if (message.equals("0000")) {
-            if (TunnelGameArea.exposedRightDoor != null) {
-                TunnelGameArea.exposedRightDoor.setLocked(false);
+            if (StaticBossRoom.exposedRightDoor != null) {
+                StaticBossRoom.exposedRightDoor.setLocked(false);
                 setEnteredMessage("");
                 return true;
             }

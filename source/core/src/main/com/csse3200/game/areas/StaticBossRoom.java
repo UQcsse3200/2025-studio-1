@@ -22,6 +22,15 @@ import com.csse3200.game.services.ServiceLocator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+
+import com.csse3200.game.entities.configs.benches.BenchConfig;
+import com.csse3200.game.entities.factories.InteractableStationFactory;
+import com.csse3200.game.components.stations.StationComponent;
+
+import com.csse3200.game.physics.PhysicsUtils;
+import com.csse3200.game.physics.components.PhysicsComponent;
+
 /**
  * This is the room that holds the static Boss.
  * The boss is a static enemy that spawns on the floor and
@@ -35,6 +44,9 @@ public class StaticBossRoom extends GameArea {
     private static final float WALL_WIDTH = 0.1f;
     private static GridPoint2 playerSpawn = new GridPoint2(3, 10);
     private Entity player;
+
+    private DoorComponent rightDoorComp;
+    public static volatile DoorComponent exposedRightDoor;
 
     /**
      * Creates a new StaticBossRoom for the room where the static boss spawns.
@@ -86,6 +98,7 @@ public class StaticBossRoom extends GameArea {
         player = spawnPlayer();
 
         spawnBoss();
+        spawnPasswordTerminal(new GridPoint2(14, 7));
         spawnObjectDoors(new GridPoint2(0, 7), new GridPoint2(28, 7));
 
         ItemSpawner itemSpawner = new ItemSpawner(this);
@@ -152,14 +165,21 @@ public class StaticBossRoom extends GameArea {
         float rightDoorY = b.bottomY();
         Entity rightDoor = ObstacleFactory.createDoorTrigger(WALL_WIDTH, rightDoorHeight);
         rightDoor.setPosition(b.rightX() - WALL_WIDTH - 0.001f, rightDoorY);
-        rightDoor.addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
-        rightDoor.addComponent(new HitboxComponent().setLayer(PhysicsLayer.OBSTACLE));
-        rightDoor.addComponent(new KeycardGateComponent(3, () -> {
-            ColliderComponent collider = rightDoor.getComponent(ColliderComponent.class);
-            if (collider != null) collider.setEnabled(false);
-            loadTunnel();
-        }));
+
+        DoorComponent doorComp = new DoorComponent(this::loadSecretRoom);
+        doorComp.setLocked(true);
+        rightDoor.addComponent(doorComp);
+        //
+        //rightDoor.addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
+        //rightDoor.addComponent(new HitboxComponent().setLayer(PhysicsLayer.OBSTACLE));
+        //rightDoor.addComponent(new KeycardGateComponent(3, () -> {
+            //ColliderComponent collider = rightDoor.getComponent(ColliderComponent.class);
+            //if (collider != null) collider.setEnabled(false);
+            //loadTunnel();
+        //}));
         spawnEntity(rightDoor);
+        this.rightDoorComp = doorComp;
+        StaticBossRoom.exposedRightDoor = doorComp;
     }
 
     public void loadSecurity() {
@@ -175,5 +195,49 @@ public class StaticBossRoom extends GameArea {
     public void loadTunnel() {
         TunnelGameArea.setRoomSpawn(new GridPoint2(26, 8));
         clearAndLoad(() -> new TunnelGameArea(terrainFactory, cameraComponent));
+    }
+
+    private void loadSecretRoom() {
+        clearAndLoad(() -> new SecretRoomGameArea(terrainFactory, cameraComponent));
+    }
+
+    /**
+     * Spawns a password terminal and a nearby hint station in the given position.
+     */
+    private void spawnPasswordTerminal(GridPoint2 pos) {
+        Entity terminal = ObstacleFactory.createSecuritySystem();
+        spawnEntityAt(terminal, pos, true, false);
+
+        Entity hintStation = InteractableStationFactory.createBaseStation();
+        hintStation.addComponent(new StationComponent(makeTerminalHintConfig()));
+
+        PhysicsUtils.setScaledCollider(hintStation, 2.5f, 1.5f);
+        hintStation.getComponent(ColliderComponent.class)
+                .setAsBoxAligned(new Vector2(2.5f, 1.5f),
+                        PhysicsComponent.AlignX.CENTER, PhysicsComponent.AlignY.CENTER);
+
+        GridPoint2 hintPos = new GridPoint2(pos.x, pos.y + 2);
+        spawnEntityAt(hintStation, hintPos, true, false);
+    }
+
+    /**
+     * Creates a {@link BenchConfig} used for the password terminal's hint station.
+     */
+    private BenchConfig makeTerminalHintConfig() {
+        return new BenchConfig() {
+            {
+                this.texturePath = null;
+                this.promptText = "Press F1 to access terminal";
+            }
+
+            @Override
+            public int getPrice() {
+                return 0;
+            }
+
+            @Override
+            public void upgrade(boolean playerNear, com.csse3200.game.entities.Entity player, Label prompt) {
+            }
+        };
     }
 }
