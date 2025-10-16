@@ -117,6 +117,7 @@ public class MainGameScreen extends ScreenAdapter {
         if (dsInit != null) {
             dsInit.discover(gameArea.toString());
         }
+        countdownTimer.startTimer();
     }
 
 
