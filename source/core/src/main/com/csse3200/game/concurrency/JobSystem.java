@@ -4,6 +4,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.function.Supplier;
+import com.csse3200.game.components.Component;
 
 /**
  * A job system provides a general-purpose way to run multi-threaded code. This is a recommended
