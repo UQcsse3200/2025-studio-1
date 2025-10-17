@@ -13,6 +13,9 @@ import com.badlogic.gdx.utils.Align;
 import com.csse3200.game.services.ServiceLocator;
 
 public class PromptFactory {
+    private PromptFactory() {
+        throw new IllegalStateException("Utility class");
+    }
 
     public static void createPrompt() {
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/ithaca.ttf"));
