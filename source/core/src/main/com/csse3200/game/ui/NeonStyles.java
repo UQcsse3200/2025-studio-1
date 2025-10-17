@@ -32,6 +32,19 @@ public class NeonStyles {
     }
 
     /**
+     * Fills a rounded rectangle into the given Pixmap.
+     */
+    private static void drawRound(Pixmap pm, int x, int y, int w, int h, int r, Color c) {
+        pm.setColor(c);
+        pm.fillRectangle(x + r, y, w - 2 * r, h);
+        pm.fillRectangle(x, y + r, w, h - 2 * r);
+        pm.fillCircle(x + r, y + r, r);
+        pm.fillCircle(x + w - r - 1, y + r, r);
+        pm.fillCircle(x + r, y + h - r - 1, r);
+        pm.fillCircle(x + w - r - 1, y + h - r - 1, r);
+    }
+
+    /**
      * Builds a {@link TextButtonStyle} with rounded corners and a neon rim.
      */
     public TextButtonStyle buttonRounded() {
@@ -103,19 +116,6 @@ public class NeonStyles {
 
         NinePatch nine = new NinePatch(new TextureRegion(tex), split, split, split, split);
         return new NinePatchDrawable(nine);
-    }
-
-    /**
-     * Fills a rounded rectangle into the given Pixmap.
-     */
-    private static void drawRound(Pixmap pm, int x, int y, int w, int h, int r, Color c) {
-        pm.setColor(c);
-        pm.fillRectangle(x + r, y, w - 2 * r, h);
-        pm.fillRectangle(x, y + r, w, h - 2 * r);
-        pm.fillCircle(x + r, y + r, r);
-        pm.fillCircle(x + w - r - 1, y + r, r);
-        pm.fillCircle(x + r, y + h - r - 1, r);
-        pm.fillCircle(x + w - r - 1, y + h - r - 1, r);
     }
 
     /**

@@ -4,7 +4,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.csse3200.game.GdxGame;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
@@ -132,24 +131,6 @@ public class MinimapDisplay extends BaseScreenDisplay {
             public boolean scrolled(InputEvent event, float x, float y, float amountX, float amountY) {
                 zoom(x, y, amountY);
                 return true;
-            }
-        });
-
-
-        // Resume on tab
-        stage.addListener(new InputListener() {
-            /** Prevents repeated TAB events. */
-            private boolean handled = false;
-
-            @Override
-            public boolean keyDown(InputEvent event, int keycode) {
-                if (keycode == Input.Keys.TAB && !handled) {
-                    handled = true;
-                    entity.getEvents().trigger("resume");
-                    root.removeListener(this);
-                    return true;
-                }
-                return false;
             }
         });
     }

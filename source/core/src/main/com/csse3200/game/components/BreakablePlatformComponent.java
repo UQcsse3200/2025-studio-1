@@ -44,6 +44,7 @@ public class BreakablePlatformComponent extends Component {
         render = entity.getComponent(TextureRenderComponent.class);
         entity.getEvents().addListener("collisionStart", this::onCollision);
     }
+
     /**
      * Handles collision events from physics engine.
      * Checks if the colliding entity is the player standing on top,
@@ -70,6 +71,7 @@ public class BreakablePlatformComponent extends Component {
             }
         }
     }
+
     /**
      * Starts the shaking animation by moving the platform back and forth randomly for the configured duration.
      * Once shaking completes, initiates the fade out.

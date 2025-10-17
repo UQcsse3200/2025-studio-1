@@ -13,9 +13,9 @@ import com.csse3200.game.components.player.InventoryComponent;
 public class BettingLogic {
 
     private final InventoryComponent inventory;
+    private final int multiplier;
     private int balance;
     private int bet;
-    private final int multiplier;
 
     /**
      * Constructs a new {@code BettingLogic} instance.

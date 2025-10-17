@@ -13,20 +13,15 @@ import org.slf4j.LoggerFactory;
 public class CombatStatsComponent extends Component {
 
     private static final Logger logger = LoggerFactory.getLogger(CombatStatsComponent.class);
-
+    private final int thresholdForBuff = 20;
     /**
      * Current health points (HP). Never negative.
      */
     private int health;
-
     /**
      * Maximum health points. Caller-controlled; not enforced as an upper bound on {@link #setHealth(int)}.
      */
     private int maxHealth;
-
-
-    private final int thresholdForBuff = 20;
-
     private boolean healthUpgraded;
 
     /**
@@ -88,12 +83,6 @@ public class CombatStatsComponent extends Component {
         return health;
     }
 
-    public void takeDamage(int damage) {
-        damage = reduceIncomingDamage(damage);
-        applyDamage(damage);
-        entity.getEvents().trigger("damageTaken");
-    }
-
     /**
      * Sets the entity's health. Health is always clamped between 0 and maxHealth.
      *
@@ -118,6 +107,12 @@ public class CombatStatsComponent extends Component {
         }
     }
 
+    public void takeDamage(int damage) {
+        damage = reduceIncomingDamage(damage);
+        applyDamage(damage);
+        entity.getEvents().trigger("damageTaken");
+    }
+
     /**
      * Adds to the player's health. The amount added can be negative.
      *
@@ -125,6 +120,15 @@ public class CombatStatsComponent extends Component {
      */
     public void addHealth(int health) {
         setHealth(this.health + health);
+    }
+
+    /**
+     * Sets the entity's maximum health
+     *
+     * @return the entity's maximum health (never negative)
+     */
+    public int getMaxHealth() {
+        return this.maxHealth;
     }
 
     /**
@@ -141,15 +145,6 @@ public class CombatStatsComponent extends Component {
         if (entity != null) {
             entity.getEvents().trigger("updateMaxHealth", this.maxHealth);
         }
-    }
-
-    /**
-     * Sets the entity's maximum health
-     *
-     * @return the entity's maximum health (never negative)
-     */
-    public int getMaxHealth() {
-        return this.maxHealth;
     }
 
     /**
@@ -214,6 +209,7 @@ public class CombatStatsComponent extends Component {
 
     /**
      * Increases player protection - used for armour protection.
+     *
      * @param protection Increase in protection for the entity.
      */
     public void addProtection(int protection) {

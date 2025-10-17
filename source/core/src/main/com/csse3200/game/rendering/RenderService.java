@@ -14,24 +14,22 @@ import com.csse3200.game.utils.SortedIntMap;
 public class RenderService implements Disposable {
     private static final int INITIAL_LAYER_CAPACITY = 4;
     private static final int INITIAL_CAPACITY = 4;
-    private Stage stage;
-    private DebugRenderer debugRenderer;
-    private OrthographicCamera camera;
-
-    public void setCamera(OrthographicCamera camera) {
-        this.camera = camera;
-    }
-
-    public OrthographicCamera getCamera() {
-        return camera;
-    }
-
-
     /**
      * Map from layer to list of renderables, allows us to render each layer in the correct order
      */
     private final SortedIntMap<Array<Renderable>> renderables =
             new SortedIntMap<>(INITIAL_LAYER_CAPACITY);
+    private Stage stage;
+    private DebugRenderer debugRenderer;
+    private OrthographicCamera camera;
+
+    public OrthographicCamera getCamera() {
+        return camera;
+    }
+
+    public void setCamera(OrthographicCamera camera) {
+        this.camera = camera;
+    }
 
     /**
      * Register a new renderable.
@@ -75,20 +73,20 @@ public class RenderService implements Disposable {
         }
     }
 
-    public void setStage(Stage stage) {
-        this.stage = stage;
-    }
-
     public Stage getStage() {
         return stage;
     }
 
-    public void setDebug(DebugRenderer debugRenderer) {
-        this.debugRenderer = debugRenderer;
+    public void setStage(Stage stage) {
+        this.stage = stage;
     }
 
     public DebugRenderer getDebug() {
         return debugRenderer;
+    }
+
+    public void setDebug(DebugRenderer debugRenderer) {
+        this.debugRenderer = debugRenderer;
     }
 
     @Override

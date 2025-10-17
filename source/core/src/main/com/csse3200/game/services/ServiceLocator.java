@@ -21,6 +21,7 @@ import org.slf4j.LoggerFactory;
  */
 public class ServiceLocator {
     private static final Logger logger = LoggerFactory.getLogger(ServiceLocator.class);
+    private static final com.csse3200.game.events.EventHandler globalEvents = new com.csse3200.game.events.EventHandler();
     private static EntityService entityService;
     private static RenderService renderService;
     private static PhysicsService physicsService;
@@ -35,12 +36,15 @@ public class ServiceLocator {
     private static DiscoveryService discoveryService; // track discovered rooms
     private static ButtonSoundService buttonSoundService;
     private static LeaderBoardManager leaderBoardManager;
+    private static volatile boolean transitioning = false;
+
+    private ServiceLocator() {
+        throw new IllegalStateException("Instantiating static util class");
+    }
 
     public static Entity getPlayer() {
         return player;
     }
-
-    private static volatile boolean transitioning = false;
 
     public static EntityService getEntityService() {
         return entityService;
@@ -90,11 +94,10 @@ public class ServiceLocator {
         return difficulty;
     }
 
-
     public static DiscoveryService getDiscoveryService() {
         return discoveryService;
     }
-  
+
     public static ButtonSoundService getButtonSoundService() {
         return buttonSoundService;
     }
@@ -157,7 +160,7 @@ public class ServiceLocator {
         logger.debug("Registering discovery service {}", service);
         discoveryService = service;
     }
-  
+
     public static void registerButtonSoundService(ButtonSoundService source) {
         logger.debug("Registering button sound service {}", source);
         buttonSoundService = source;
@@ -182,6 +185,7 @@ public class ServiceLocator {
         saveLoadService = null;
         player = null;
         discoveryService = null;
+        player = null;
     }
 
     /**
@@ -210,13 +214,7 @@ public class ServiceLocator {
         player = null;
     }
 
-    private static final com.csse3200.game.events.EventHandler globalEvents = new com.csse3200.game.events.EventHandler();
-
     public static com.csse3200.game.events.EventHandler getGlobalEvents() {
         return globalEvents;
-    }
-
-    private ServiceLocator() {
-        throw new IllegalStateException("Instantiating static util class");
     }
 }

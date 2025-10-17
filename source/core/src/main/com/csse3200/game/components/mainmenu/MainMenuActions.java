@@ -5,7 +5,6 @@ import com.csse3200.game.areas.difficulty.Difficulty;
 import com.csse3200.game.areas.difficulty.DifficultyType;
 import com.csse3200.game.components.Component;
 import com.csse3200.game.services.ServiceLocator;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,7 +40,7 @@ public class MainMenuActions extends Component {
         if (ServiceLocator.getDifficulty() == null) {
             ServiceLocator.registerDifficulty(new Difficulty(DifficultyType.NORMAL));
         }
- 
+
         logger.info("Started game with difficulty: {}", ServiceLocator.getDifficulty());
 
         //choose the avtar on starting a new game
