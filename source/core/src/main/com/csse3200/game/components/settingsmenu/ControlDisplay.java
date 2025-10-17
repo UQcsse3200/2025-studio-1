@@ -1,17 +1,90 @@
 package com.csse3200.game.components.settingsmenu;
 
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.utils.Align;
+import com.csse3200.game.ui.UIComponent;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 
-public class ControlDisplay {
-    public ControlDisplay(SettingsMenuDisplay settingsMenuDisplay, Stage stage) {
+public class ControlDisplay extends UIComponent {
+    private Table rootTable;
+    private final SettingsMenuDisplay parentMenu;
+    private final Stage stage;
+
+    public ControlDisplay(SettingsMenuDisplay parentMenu, Stage stage) {
+        this.parentMenu = parentMenu;
+        this.stage = stage;
     }
 
+    @Override
     public void create() {
+        rootTable = new Table();
+        rootTable.setFillParent(true);
+
+        Label title = new Label("Controls", skin, "title");
+        title.setFontScale(1.5f);
+        title.setAlignment(Align.center);
+
+        // Table for keybindings
+        Table controlsTable = new Table();
+        String[][] keybindings = {
+                {"A", "Move Left"},
+                {"D", "Move Right"},
+                {"S", "Crouch"},
+                {"Space", "Jump"},
+                {"Spacex2", "Double Jump"},
+                {"I", "Inventory"},
+                {"E", "Pick Item"},
+                {"R", "Drop Item"},
+                {"Tab", "Open Mini-map"}
+        };
+
+        for (String[] pair : keybindings) {
+            Label actionLabel = new Label(pair[1], skin, "white");
+            actionLabel.setFontScale(1.2f);
+
+            TextButton keyBtn = new TextButton(pair[0], skin, "default");
+            keyBtn.setDisabled(true);
+            keyBtn.getLabel().setFontScale(1.3f);
+            keyBtn.getLabel().setAlignment(Align.center);
+            keyBtn.setWidth(120f);
+
+            controlsTable.add(actionLabel).left().pad(7).expandX();
+            controlsTable.add(keyBtn).width(140).height(48).pad(7).right();
+            controlsTable.row();
+        }
+
+        rootTable.add(title).expandX().top().padTop(70f);
+
+        rootTable.row();
+        rootTable.add(controlsTable).padTop(36f).padBottom(60f).expand();
+        rootTable.row();
+        TextButton backBtn = new TextButton("Back", skin);
+        backBtn.getLabel().setFontScale(1.4f);
+        rootTable.add(backBtn).padTop(30f).expandX().center();
+
+        backBtn.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                rootTable.remove();
+                parentMenu.getRootTable().setVisible(true);
+                stage.addActor(parentMenu.getRootTable());
+            }
+        });
+
+        stage.addActor(rootTable);
+    }
+ //
+    @Override
+    protected void draw(com.badlogic.gdx.graphics.g2d.SpriteBatch batch) {
+        // draw is handled by the stage
     }
 
-    public Actor getRootTable() {
-        return null;
+    @Override
+    public void update() {
+        // update is handled by the stage
     }
 }
-
