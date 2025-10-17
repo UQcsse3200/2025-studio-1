@@ -319,7 +319,20 @@ public class SettingsMenuDisplay extends UIComponent {
         return table;
     }
 
-    //Switches the UI from the settings menu to the controls/keybindings display.
+    /**
+     * Returns the root {@link Table} of this UI component.
+     * This table contains all the UI elements for the current menu or screen.
+     */
+    public Table getRootTable() {
+        return rootTable;
+    }
+
+    /**
+     * Switches the UI from the settings menu to the controls/keybindings display.
+     * The {@code ControlDisplay} is constructed with a reference to this settings menu
+     * and the current stage, so that it can return to the settings menu when the user
+     * clicks the "Back" button.
+     */
     private void showControlsMenu() {
         rootTable.setVisible(false);
         rootTable.remove();
