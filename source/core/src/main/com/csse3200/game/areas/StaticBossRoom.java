@@ -176,4 +176,9 @@ public class StaticBossRoom extends GameArea {
         TunnelGameArea.setRoomSpawn(new GridPoint2(26, 8));
         clearAndLoad(() -> new TunnelGameArea(terrainFactory, cameraComponent));
     }
+
+    @Override
+    public String toString() {
+        return "StaticBossRoom";
+    }
 }

@@ -140,6 +140,10 @@ public abstract class GameArea implements Disposable {
     public void startWaves(Entity player) {
         if (wavesManager == null || wavesManager.allWavesFinished()) {
             int room = getRoomNumber();
+            if (room == -1) {
+                Gdx.app.log("GameArea", "Waves are not going to spawn in this room");
+                return;
+            }
             int maxWaves = room > 4 ? 2 : 1; // mimic original behaviour: higher rooms get 2 waves
             wavesManager = new EnemyWaves(maxWaves, this, player);
             EnemyWavesDisplay waveDisplay = new EnemyWavesDisplay(wavesManager);
@@ -175,6 +179,7 @@ public abstract class GameArea implements Disposable {
             case "Storage" -> 9;
             case "Server" -> 10;
             case "Tunnel" -> 11;
+            case "Casino", "FlyingBoss", "MovingBoss", "SecretRoom", "StaticBossRoom" -> -1;
             case "GoodWinAnimation" -> 101; //Animation start from 101
             case "BadWinAnimation" -> 102;
             default -> 1;
@@ -270,9 +275,7 @@ public abstract class GameArea implements Disposable {
                 spawnVroomba(total, scaleFactor, player, positions);
                 break;
             default:
-                spawnGhostGPT(total, scaleFactor, player, positions);
-                spawnGrokDroid(total, scaleFactor, player, positions);
-                break;
+                // Spawn nothing, hence empty default case.
         }
     }
 
@@ -765,14 +768,7 @@ public abstract class GameArea implements Disposable {
                 positions.put(GROK_DROID, respectiveSpawns);
             }
             default -> {
-                respectiveSpawns.add(new Vector2(12f, 11f));
-                respectiveSpawns.add(new Vector2(7.6f, 4f));
-                respectiveSpawns.add(new Vector2(2f, 4f));
-                positions.put(GHOST_GPT, respectiveSpawns);
-                respectiveSpawns = new ArrayList<>();
-                respectiveSpawns.add(new Vector2(5f, 10f));
-                respectiveSpawns.add(new Vector2(2f, 10f));
-                positions.put(GROK_DROID, respectiveSpawns);
+                // No spawns, hence not assigning any spawn positions
             }
         }
         return positions;
@@ -1062,6 +1058,10 @@ public abstract class GameArea implements Disposable {
                     endTransition();
                 }
             });
+        });
+
+        Gdx.app.postRunnable(() -> {
+            startWaves(getPlayer());
         });
     }
     /**
