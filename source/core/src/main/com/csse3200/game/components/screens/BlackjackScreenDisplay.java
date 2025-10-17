@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -15,9 +16,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.csse3200.game.components.cards.Card;
+import com.csse3200.game.components.cards.Hand;
 import com.csse3200.game.components.minigames.BlackJackGame;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.UIComponent;
+import java.util.List;
 
 /**
  * A UI component that displays the Blackjack game screen, including
@@ -31,7 +34,7 @@ import com.csse3200.game.ui.UIComponent;
 public class BlackjackScreenDisplay extends UIComponent {
 
     private static final float PANEL_W = 800f;
-    private static final float PANEL_H = 800f;
+    private static final float PANEL_H = 1000f;
 
     private Image background;
     private Image dimmer;
@@ -40,15 +43,15 @@ public class BlackjackScreenDisplay extends UIComponent {
     private TextButton exitBtn;
     private TextButton hitBtn;
     private TextButton standBtn;
+    private TextButton splitBtn;
     private Table dealerCardsTable;
     private Table playerCardsTable;
+    private Table resultsTable;
     private Label dealerValueLabel;
-    private Label playerValueLabel;
     private TextureAtlas atlas;
 
     private BlackJackGame gameLogic;
     private Texture pixelTex;
-    private boolean dealerTurn;
 
     /**
      * Utility to create a 1x1 solid color texture.
@@ -81,7 +84,6 @@ public class BlackjackScreenDisplay extends UIComponent {
         addDealerSection();
         addPlayerSection();
         addButtons();
-        dealerTurn = false;
 
         // Game event listeners
         entity.getEvents().addListener("playerbust", () -> showRestart("Player Busts! Dealer Wins"));
@@ -91,6 +93,7 @@ public class BlackjackScreenDisplay extends UIComponent {
         entity.getEvents().addListener("tie", () -> showRestart("It's a Tie!"));
         entity.getEvents().addListener("hide", this::hide);
         entity.getEvents().addListener("betPlaced", this::show);
+        entity.getEvents().addListener("displayResults", this::showResults);
 
         hide();
     }
@@ -138,7 +141,7 @@ public class BlackjackScreenDisplay extends UIComponent {
 
         // Table background
         root.setBackground(new TextureRegionDrawable(new TextureRegion(pixelTex)));
-        root.setColor(Color.OLIVE);
+        root.setColor(Color.DARK_GRAY);
         root.top().pad(20);
         root.defaults().pad(10);
         stage.addActor(root);
@@ -182,10 +185,12 @@ public class BlackjackScreenDisplay extends UIComponent {
      */
     private void addPlayerSection() {
         root.add(new Label("Player:", skin)).left().row();
+
         playerCardsTable = new Table();
         root.add(playerCardsTable).left().row();
-        playerValueLabel = new Label("", skin);
-        root.add(playerValueLabel).left().padTop(5f).row();
+
+        resultsTable = new Table();
+        root.add(resultsTable).left().row(); // <-- add results here
 
         resultLabel = new Label("", skin);
         resultLabel.setColor(Color.YELLOW);
@@ -211,7 +216,6 @@ public class BlackjackScreenDisplay extends UIComponent {
         standBtn.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                dealerTurn = true;
                 entity.getEvents().trigger("stand");
                 updateHands();
             }
@@ -223,7 +227,6 @@ public class BlackjackScreenDisplay extends UIComponent {
         exitBtn.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                dealerTurn = false;
                 exitBtn.setVisible(false);
                 resultLabel.setText("");
                 entity.getEvents().trigger("interact");
@@ -231,12 +234,23 @@ public class BlackjackScreenDisplay extends UIComponent {
             }
         });
 
+
         root.add(exitBtn).padTop(10f).center().row();
+
+         splitBtn = new TextButton("Split", skin);
+         splitBtn.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                gameLogic.splitHand();
+                updateHands();
+            }
+        });
 
         // Arrange Hit/Stand side by side
         Table buttonRow = new Table();
         buttonRow.add(hitBtn).padRight(10f);
-        buttonRow.add(standBtn);
+        buttonRow.add(standBtn).padRight(10f);
+        buttonRow.add(splitBtn);
         root.add(buttonRow).padTop(15f).row();
     }
 
@@ -249,10 +263,12 @@ public class BlackjackScreenDisplay extends UIComponent {
         if (root != null) root.setVisible(true);
         if (dimmer != null) dimmer.setVisible(true);
 
-        gameLogic.startGame();
-        updateHands();
         hitBtn.setVisible(true);
         standBtn.setVisible(true);
+        gameLogic.startGame();
+        resultsTable.clearChildren();
+        updateHands();
+
     }
 
     /**
@@ -273,8 +289,11 @@ public class BlackjackScreenDisplay extends UIComponent {
         dealerCardsTable.clearChildren();
         playerCardsTable.clearChildren();
 
+
         // Dealer’s cards
-        if (!dealerTurn) {
+        if (!gameLogic.isDealerTurn()) {
+            splitBtn.setVisible(
+                    gameLogic.getCurrentHand().canSplit());
             if (!gameLogic.getDealerHand().isEmpty()) {
                 TextureRegion firstCard = gameLogic.getDealerHand().getFirst().getTexture();
                 Image cardImage = new Image(new TextureRegionDrawable(firstCard));
@@ -292,13 +311,64 @@ public class BlackjackScreenDisplay extends UIComponent {
             dealerValueLabel.setText("Value: " + gameLogic.dealerHandValue());
         }
 
+        displayPlayerHand();
+
         // Player’s cards
-        for (Card card : gameLogic.getPlayerHand()) {
-            TextureRegion texture = card.getTexture();
-            playerCardsTable.add(new Image(new TextureRegionDrawable(texture))).size(72, 96).pad(3f);
-        }
-        playerValueLabel.setText("Value: " + gameLogic.playerHandValue());
+
     }
+
+    private void displayPlayerHand() {
+        int activeIndex = gameLogic.getActiveHandIndex();
+        int index = 0;
+
+        playerCardsTable.clearChildren(); // Clear previous hands
+
+        for (Hand hand : gameLogic.getPlayerHands()) {
+            // Create a sub-table for this hand
+            Table handTable = new Table();
+
+            // Highlight the active hand
+            if (index == activeIndex) {
+                TextureRegionDrawable highlightBg = new TextureRegionDrawable(new TextureRegion(pixelTex));
+                handTable.setBackground(highlightBg.tint(Color.OLIVE));
+
+                // Subtle pulsing animation
+                handTable.getColor().a = 0.9f;
+                handTable.addAction(Actions.forever(
+                        Actions.sequence(
+                                Actions.alpha(0.6f, 0.6f),
+                                Actions.alpha(0.9f, 0.6f)
+                        )
+                ));
+            } else {
+                // Dim background for inactive hands
+                TextureRegionDrawable normalBg = new TextureRegionDrawable(new TextureRegion(pixelTex));
+                handTable.setBackground(normalBg.tint(new Color(0f, 0f, 0f, 0.25f)));
+            }
+
+            // Cards subtable (to keep layout clean)
+            Table cardsTable = new Table();
+            for (Card card : hand.getCards()) {
+                TextureRegion texture = card.getTexture();
+                cardsTable.add(new Image(new TextureRegionDrawable(texture))).size(72, 96).pad(3f);
+            }
+
+            // Hand value label
+            Label handValueLabel = new Label("Value: " + hand.getValue(), skin);
+            handValueLabel.setColor(Color.WHITE);
+
+            // Add cards and value on same row
+            handTable.add(cardsTable).left().padRight(10f);
+            handTable.add(handValueLabel).left().padLeft(5f);
+
+            // Add full hand table to playerCardsTable
+            playerCardsTable.add(handTable).left().padBottom(15f).row();
+
+            index++;
+        }
+    }
+
+
 
     /**
      * Displays a round result message and enables the "Continue" button.
@@ -306,12 +376,29 @@ public class BlackjackScreenDisplay extends UIComponent {
      * @param msg the message to display to the player
      */
     private void showRestart(String msg) {
-        dealerTurn = true;
+        /*
         updateHands();
         resultLabel.setText(msg);
         exitBtn.setVisible(true);
         hitBtn.setVisible(false);
+        standBtn.setVisible(false); */
+    }
+
+    private void showResults(List<String> results) {
+        resultsTable.clearChildren();
+
+        for (String msg : results) {
+            Label msgLabel = new Label(msg, skin);
+            msgLabel.setColor(Color.YELLOW);
+            resultsTable.add(msgLabel).left().padBottom(5f).row();
+        }
+
+        exitBtn.setVisible(true);
+        hitBtn.setVisible(false);
         standBtn.setVisible(false);
+        splitBtn.setVisible(false);
+
+       // resultsTable.invalidateHierarchy();
     }
 
     /**

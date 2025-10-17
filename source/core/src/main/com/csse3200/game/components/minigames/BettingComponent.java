@@ -23,7 +23,7 @@ public class BettingComponent extends UIComponent {
 
     private static final float PANEL_W = 600f;
     private static final float PANEL_H = 400f;
-    private static final Color PANEL_COLOR = Color.OLIVE;
+    private static final Color PANEL_COLOR = Color.DARK_GRAY;
     private static final Color TEXT_COLOR = Color.WHITE;
 
     private final BettingLogic logic;

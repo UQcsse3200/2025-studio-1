@@ -28,6 +28,9 @@ public class Deck {
     }
 
     public Card drawCard() {
+        //TextureAtlas atlas = ServiceLocator.getResourceService().getAsset("images/cards.atlas", TextureAtlas.class);
+       // TextureRegion texture = atlas.findRegion("KH");
+       // return new Card(Suit.HEARTS, Rank.KING, texture);
         return deck.get(position++);
     }
 
