@@ -12,9 +12,12 @@ import com.csse3200.game.services.ServiceLocator;
  */
 public abstract class UIComponent extends RenderComponent implements Renderable {
     private static final int UI_LAYER = 2;
-    public static final Skin skin =
+    protected static final Skin skin =
             new Skin(Gdx.files.internal("quantum-horizon/skin/quantum-horizon-ui.json"));
     protected Stage stage;
+
+    public static Skin getSkin() { return skin; }
+
 
     @Override
     public void create() {
