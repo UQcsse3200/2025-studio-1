@@ -40,12 +40,13 @@ public class Reception extends GameArea {
         player = spawnPlayer();
         spawnFloor();
         spawnholoclock();
-        spawnEnemies();
         spawnplatform2();
         spawnObjectDoors(new GridPoint2(0, 6), new GridPoint2(28, 20));
         spawndesk_reception();
         spawncomic_stand();
         spawnTeleporter();
+
+        startWaves(player);
 
         Entity ui = new Entity();
         ui.addComponent(new GameAreaDisplay("Reception"))
@@ -144,7 +145,6 @@ public class Reception extends GameArea {
         Entity vroomba = com.csse3200.game.entities.factories.characters.NPCFactory.createVroomba(player,
                 ServiceLocator.getDifficulty().getRoomDifficulty(this.roomDiffNumber));
         spawnEntityAt(vroomba, new GridPoint2(5, 17), true, false);
-
     }
 
     private void spawnGPTs() {

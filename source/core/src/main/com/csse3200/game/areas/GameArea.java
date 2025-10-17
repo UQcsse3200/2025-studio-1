@@ -77,15 +77,14 @@ public abstract class GameArea implements Disposable {
         this.cameraComponent = cameraComponent;
         doorList = new ArrayList<>();
         areaEntities = new ArrayList<>();
+        eventHandler = new EventHandler();
+        this.getEvents().addListener("room cleared", this::unlockDoors);
     }
 
     /**
      * Create the game area in the world.
      */
-    public void create() {
-        eventHandler = new EventHandler();
-        this.getEvents().addListener("room cleared", this::unlockDoors);
-    }
+    public abstract void create();
 
     /**
      * Dispose of all internal entities in the area
@@ -146,7 +145,7 @@ public abstract class GameArea implements Disposable {
     public void removeEnemy() {
         enemyCount--;
 
-        if (enemyCount == 0) {
+        if (enemyCount == 0 && this.wavesManager.allWavesFinished()) {
             this.getEvents().trigger("room cleared");
         }
     }
@@ -247,9 +246,7 @@ public abstract class GameArea implements Disposable {
      * @return Scaling factor as a float.
      */
     public float getBaseDifficultyScale() {
-        int room = getRoomNumber();
-        // +40% per room after first (tweak as needed)
-        return 1f + 0.4f * Math.max(0, room - 1);
+        return ServiceLocator.getDifficulty().getRoomDifficulty(getRoomNumber());
     }
 
     protected void spawnEntityAt(

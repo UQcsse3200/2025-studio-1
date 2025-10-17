@@ -62,11 +62,11 @@ public class MainHall extends GameArea {
         spawnWallsAndDoor();
         player = spawnPlayer();
         spawnFloor();
-        spawnEnemies();
-        spawnGrokDroids();
         ItemSpawner itemSpawner = new ItemSpawner(this);
         itemSpawner.spawnItems(ItemSpawnConfig.mainHallmap());
         spawnTeleporter();
+
+        startWaves(player);
 
         Entity ui = new Entity();
         ui.addComponent(new GameAreaDisplay("Main Hall"))
@@ -141,22 +141,22 @@ public class MainHall extends GameArea {
         return spawnOrRepositionPlayer(playerSpawn);
     }
 
-    private void spawnEnemies() {
-        if (player == null)
-            return;
+    // private void spawnEnemies() {
+    //     if (player == null)
+    //         return;
 
-        Entity deepspin = com.csse3200.game.entities.factories.characters.NPCFactory.createDeepspin(player, this,
-                ServiceLocator.getDifficulty().getRoomDifficulty(this.roomDiffNumber));
-        registerEnemy(deepspin);
-        spawnEntityAt(deepspin, new GridPoint2(22, 10), true, false);
-    }
+    //     Entity deepspin = com.csse3200.game.entities.factories.characters.NPCFactory.createDeepspin(player, this,
+    //             ServiceLocator.getDifficulty().getRoomDifficulty(this.roomDiffNumber));
+    //     registerEnemy(deepspin);
+    //     spawnEntityAt(deepspin, new GridPoint2(22, 10), true, false);
+    // }
 
-    private void spawnGrokDroids() {
-        Entity grok1 = NPCFactory.createGrokDroid(player, this,
-                ServiceLocator.getDifficulty().getRoomDifficulty(this.roomDiffNumber));
-        GridPoint2 grok1Pos = new GridPoint2(10, 20);
-        spawnEntityAt(grok1, grok1Pos, true, false);
-    }
+    // private void spawnGrokDroids() {
+    //     Entity grok1 = NPCFactory.createGrokDroid(player, this,
+    //             ServiceLocator.getDifficulty().getRoomDifficulty(this.roomDiffNumber));
+    //     GridPoint2 grok1Pos = new GridPoint2(10, 20);
+    //     spawnEntityAt(grok1, grok1Pos, true, false);
+    // }
     /**
      * Spawns 4 platforms for parkour
      **/
