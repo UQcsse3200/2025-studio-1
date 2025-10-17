@@ -112,10 +112,6 @@ public class TeleporterMenuUI extends UIComponent {
             Set<String> discovered = ds.getDiscovered();
             ordered.addAll(discovered);
         }
-        // Ensure Casino is always available even if not discovered yet
-        if (!ordered.contains("casino")) {
-            ordered.add("casino");
-        }
         ordered.sort(String::compareTo);
 
         for (String key : ordered) {

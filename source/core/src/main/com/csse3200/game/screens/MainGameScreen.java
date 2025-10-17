@@ -146,6 +146,7 @@ public class MainGameScreen extends ScreenAdapter {
         ServiceLocator.registerInputService(new InputService());
         ServiceLocator.registerResourceService(new ResourceService());
         ServiceLocator.registerSaveLoadService(new SaveLoadService());
+        ServiceLocator.registerDiscoveryService(new DiscoveryService());
 
         SaveGame.GameState load = SaveLoadService.load();
 
