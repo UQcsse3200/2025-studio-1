@@ -1,5 +1,6 @@
 package com.csse3200.game.areas;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Vector2;
@@ -19,8 +20,13 @@ import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.physics.PhysicsUtils;
 import com.csse3200.game.physics.components.ColliderComponent;
 import com.csse3200.game.physics.components.PhysicsComponent;
+import com.csse3200.game.services.DiscoveryService;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.rendering.TextureRenderComponent;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Supplier;
 
 /**
  * Secret room: A minimal area with only background, a floor,
@@ -194,6 +200,43 @@ public class SecretRoomGameArea extends GameArea {
             }
         };
     }
+
+
+    @Override
+    protected void clearAndLoad(Supplier<GameArea> nextAreaSupplier) {
+        if (!beginTransition()) return;
+
+        for (Entity entity : areaEntities) {
+            entity.setEnabled(false);
+        }
+
+        /** Ensure transition happens on the render thread to avoid race conditions **/
+        Gdx.app.postRunnable(() -> {
+            /** Phase 1: dispose all entities **/
+            for (Entity entity : areaEntities) {
+                // Dispose every entity
+                entity.dispose();
+            }
+            areaEntities.clear();
+
+            /* Phase 2: on the next frame, build the next area to avoid Box2D world-locked/native races */
+            Gdx.app.postRunnable(() -> {
+                try {
+                    GameArea next = nextAreaSupplier.get();
+                    ServiceLocator.registerGameArea(next);
+                    next.create();
+                    // mark next area as discovered when entered
+                    DiscoveryService ds = ServiceLocator.getDiscoveryService();
+                    if (ds != null) {
+                        ds.discover(next.toString());
+                    }
+                } finally {
+                    endTransition();
+                }
+            });
+        });
+    }
+
     private void loadWin() {
         clearAndLoad(() -> new GoodWinAnimationScreen(terrainFactory, cameraComponent));
     }

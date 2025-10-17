@@ -1085,6 +1085,7 @@ public abstract class GameArea implements Disposable {
             case "shipping" -> ShippingGameArea.class;
             case "server" -> ServerGameArea.class;
             case "research" -> ResearchGameArea.class;
+            case "secretroom" -> SecretRoomGameArea.class;
             case "goodwinanimation" -> GoodWinAnimationScreen.class;
             case "badwinanimation" -> BadWinAnimationScreen.class;
             default -> {
