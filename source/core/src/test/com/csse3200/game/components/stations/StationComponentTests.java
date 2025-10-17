@@ -258,6 +258,29 @@ public class StationComponentTests {
             assertEquals(currDamage, prevDamage);
             assertEquals("Weapon is fully upgraded already!", stationComponent.getBuyPrompt().getText().toString());
         }
+
+        @Test
+        void upgradeOnNullPlayerDoesNothing() {
+            player = null;
+            ServiceLocator.registerPlayer(player);
+            stationComponent.setPlayer(player);
+            int prevDamage = weapon.getComponent(WeaponsStatsComponent.class).getBaseAttack();
+            stationComponent.upgrade();
+            int currDamage = weapon.getComponent(WeaponsStatsComponent.class).getBaseAttack();
+            assertEquals(currDamage, prevDamage);
+            assertEquals("", stationComponent.getBuyPrompt().getText().toString());
+
+        }
+
+        @Test
+        void currItemNullDoesNothing() {
+            player.getComponent(InventoryComponent.class).setCurrItem(null);
+            int prevDamage = weapon.getComponent(WeaponsStatsComponent.class).getBaseAttack();
+            stationComponent.upgrade();
+            int currDamage = weapon.getComponent(WeaponsStatsComponent.class).getBaseAttack();
+            assertEquals(currDamage, prevDamage);
+            assertEquals("", stationComponent.getBuyPrompt().getText().toString());
+        }
     }
 
     @Nested
