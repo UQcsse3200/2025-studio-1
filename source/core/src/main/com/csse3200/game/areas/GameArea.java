@@ -146,10 +146,10 @@ public abstract class GameArea implements Disposable {
             }
             int maxWaves = room > 4 ? 2 : 1; // mimic original behaviour: higher rooms get 2 waves
             wavesManager = new EnemyWaves(maxWaves, this, player);
-            EnemyWavesDisplay waveDisplay = new EnemyWavesDisplay(wavesManager);
+            //EnemyWavesDisplay waveDisplay = new EnemyWavesDisplay(wavesManager);
             Gdx.app.log("GameArea", "Initializing waves: room=" + room + " maxWaves=" + maxWaves);
+            wavesManager.startWave();
         }
-        wavesManager.startWave();
     }
 
     /**
@@ -179,7 +179,7 @@ public abstract class GameArea implements Disposable {
             case "Storage" -> 9;
             case "Server" -> 10;
             case "Tunnel" -> 11;
-            case "Casino", "FlyingBoss", "MovingBoss", "SecretRoom", "StaticBossRoom" -> -1;
+            case "Casino" -> -1;
             case "GoodWinAnimation" -> 101; //Animation start from 101
             case "BadWinAnimation" -> 102;
             default -> 1;
