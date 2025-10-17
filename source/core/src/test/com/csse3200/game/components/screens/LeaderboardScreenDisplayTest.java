@@ -66,8 +66,8 @@ class LeaderboardScreenDisplayTest {
 
         display = spy(new LeaderboardScreenDisplay(mockGame));
 
-        if (UIComponent.skin != null && UIComponent.skin.getDrawable("white") == null) {
-            UIComponent.skin.add("white", new BaseDrawable());
+        if (UIComponent.getSkin().getDrawable("white") == null) {
+            UIComponent.getSkin().add("white", new BaseDrawable());
         }
 
         // provided by ChatGPT
