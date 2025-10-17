@@ -3,6 +3,7 @@ package com.csse3200.game.components.teleporter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.csse3200.game.components.Component;
 import com.csse3200.game.rendering.AnimationRenderComponent;
 import com.csse3200.game.services.DiscoveryService;
@@ -74,13 +75,18 @@ public class TeleporterComponent extends Component {
         }
     }
 
+    // Again very messy way to do the labels but oh well
     private void playerEnteredRange() {
         playerInRange = true;
+        showLabel();
     }
 
     private void playerExitedRange() {
         playerInRange = false;
-        hideMenu();
+        hideLabel();
+        if (menuVisible) {
+            hideMenu();
+        }
     }
 
     private void handleInteract() {
@@ -92,6 +98,7 @@ public class TeleporterComponent extends Component {
     }
 
     private void showMenu() {
+        hideLabel();
         if (teleporting) return;
         DiscoveryService ds = ServiceLocator.getDiscoveryService();
         if (ds == null) {
@@ -109,9 +116,21 @@ public class TeleporterComponent extends Component {
     }
 
     private void hideMenu() {
+        showLabel();
         if (menuUI != null) menuUI.setVisible(false);
         menuVisible = false;
         Gdx.app.log("Teleporter", "Menu closed");
+    }
+
+    private void showLabel() {
+        Label interactLabel = ServiceLocator.getPrompt();
+        interactLabel.setText("Press E to interact with Teleporter");
+        interactLabel.setVisible(true);
+    }
+
+    private void hideLabel() {
+        Label interactLabel = ServiceLocator.getPrompt();
+        interactLabel.setVisible(false);
     }
 
     /** Called by TeleporterMenuUI when a destination is selected. */
