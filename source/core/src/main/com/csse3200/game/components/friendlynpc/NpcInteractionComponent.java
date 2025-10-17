@@ -4,8 +4,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.csse3200.game.components.Component;
 import com.csse3200.game.services.ServiceLocator;
 
-import java.awt.*;
-
 public class NpcInteractionComponent extends Component {
     private boolean active = false;
 
