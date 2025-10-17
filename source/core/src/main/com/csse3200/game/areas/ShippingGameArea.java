@@ -77,13 +77,12 @@ public class ShippingGameArea extends GameArea {
 
         spawnBordersAndDoors();
         player = spawnPlayer();
-        spawnGrokDroids();
-        spawnVroombaAndDeepspin();
         spawnFloor();
         spawnShipmentBoxLid();
         spawnShipmentCrane();
         spawnConveyor();
         spawnTeleporter();
+        startWaves(player);
 
         ItemSpawner itemSpawner = new ItemSpawner(this);
         itemSpawner.spawnItems(ItemSpawnConfig.shippingmap());
@@ -162,6 +161,8 @@ public class ShippingGameArea extends GameArea {
         rightDoor.setPosition(b.rightX() - WALL_WIDTH - 0.001f, rightDoorY);
         rightDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadStorage));
         spawnEntity(rightDoor);
+
+        registerDoors(new Entity[]{leftDoor, rightDoor});
     }
 
     private Entity spawnPlayer() {

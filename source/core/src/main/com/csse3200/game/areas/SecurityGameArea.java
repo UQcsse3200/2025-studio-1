@@ -55,11 +55,12 @@ public class SecurityGameArea extends GameArea {
         spawnPlatforms();
         spawnObjectDoors(new GridPoint2(0, 6), new GridPoint2(28, 19));
         spawnSecurityProps();
-        spawnEnemies();
         spawnTeleporter();
         spawnSpikes2();
         ItemSpawner itemSpawner = new ItemSpawner(this);
         itemSpawner.spawnItems(ItemSpawnConfig.securitymap());
+
+        startWaves(player);
 
         Entity ui = new Entity();
         ui.addComponent(new GameAreaDisplay("Security"))
@@ -87,6 +88,8 @@ public class SecurityGameArea extends GameArea {
         rightDoor.setPosition(b.rightX() - WALL_WIDTH - 0.001f, rightDoorY);
         rightDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadMovingBossRoom));
         spawnEntity(rightDoor);
+
+        registerDoors(new Entity[]{leftDoor, rightDoor});
     }
 
     private Entity spawnPlayer() {

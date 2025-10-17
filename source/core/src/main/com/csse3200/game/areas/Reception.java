@@ -122,6 +122,8 @@ public class Reception extends GameArea {
         rightDoor.setPosition(b.rightX() - WALL_WIDTH - 0.001f, rightDoorY + 8f);
         rightDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadBackToFloor5));
         spawnEntity(rightDoor);
+
+        registerDoors(new Entity[]{leftDoor, rightDoor});
     }
 
     private void loadForest() {

@@ -307,9 +307,7 @@ public abstract class GameArea implements Disposable {
                 spawnGrokDroid(total, scaleFactor, player, positions);
                 break;
             case "Shipping":
-                spawnGhostGPT(total, scaleFactor, player, positions);
                 spawnGrokDroid(total, scaleFactor, player, positions);
-                spawnVroomba(total, scaleFactor, player, positions);
                 break;
             case "Storage":
                 spawnTurret(total, scaleFactor, player, positions);
@@ -712,13 +710,6 @@ public abstract class GameArea implements Disposable {
                 positions.put(GROK_DROID, respectiveSpawns);
             }
             case "Shipping" -> {
-                respectiveSpawns.add(new Vector2(12f, 11f));
-                respectiveSpawns.add(new Vector2(2f, 5f));
-                positions.put(GHOST_GPT, respectiveSpawns);
-                respectiveSpawns = new ArrayList<>();
-                respectiveSpawns.add(new Vector2(12f, 5f));
-                positions.put(VROOMBA, respectiveSpawns);
-                respectiveSpawns = new ArrayList<>();
                 respectiveSpawns.add(new Vector2(3f, 10f));
                 respectiveSpawns.add(new Vector2(5f, 10f));
                 positions.put(GROK_DROID, respectiveSpawns);
