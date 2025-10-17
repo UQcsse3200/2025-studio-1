@@ -59,10 +59,15 @@ public class PlayerFactory {
                 ServiceLocator.getResourceService()
                         .getAsset(AvatarRegistry.get().atlas(), TextureAtlas.class));
         add_animations(animator);
+
+        ColliderComponent groundCollider = new ColliderComponent().setLayer(PhysicsLayer.PLAYER);
+        PlayerHurtboxComponent playerCollider = new PlayerHurtboxComponent();
+
         Entity player =
                 new Entity()
                         .addComponent(new PhysicsComponent())
-                        .addComponent(new ColliderComponent().setLayer(PhysicsLayer.PLAYER))
+                        .addComponent(groundCollider)
+                        .addComponent(playerCollider)
                         .addComponent(new PlayerActions())
                         .addComponent(new CombatStatsComponent(AvatarRegistry.get().baseHealth()))
                         .addComponent(new WeaponsStatsComponent(AvatarRegistry.get().baseDamage()))
@@ -78,13 +83,20 @@ public class PlayerFactory {
                         .addComponent(new PlayerAnimationController())
                         .addComponent(new PlayerEquipComponent())
                         .addComponent(new ArmourEquipComponent())
-                        .addComponent(new InteractComponent());
+                        .addComponent(new InteractComponent().setLayer(PhysicsLayer.DEFAULT));
         // Ensure global player reference is up-to-date for transitions
         ServiceLocator.registerPlayer(player);
 
+        // Scale Player Sprite
         player.getComponent(AnimationRenderComponent.class).scaleEntity(2f);
-        player.getComponent(ColliderComponent.class).setDensity(1.5f);
-        PhysicsUtils.setScaledCollider(player, 0.2f, 0.45f);
+
+        // Scale and set up Player Colliders
+        PhysicsUtils.setScaledCollider(player, groundCollider,0.2f, 0.1f);
+        PhysicsUtils.setScaledCollider(player, playerCollider, 0.3f, 0.5f);
+        playerCollider.setDensity(1.5f);
+        playerCollider.setFriction(0f);
+        PhysicsUtils.setScaledCollider(player, player.getComponent(InteractComponent.class), 1f, 0.75f);
+
         player.getComponent(WeaponsStatsComponent.class).setCoolDown(0.2f);
 
 

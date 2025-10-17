@@ -25,8 +25,8 @@ public class LeaderBoardManager {
     }
 
     /**
-     * @param currency earned in the round
-     * @param time     taken to complete the round
+     * @param currency left in the round
+     * @param time left in the round that will be added to the high score
      */
     public void addRound(int currency, float time) {
         logger.info("LeaderBoardManager.addRound currency={} time={}", currency, time);

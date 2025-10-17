@@ -44,7 +44,6 @@ public class PlayerActions extends Component {
     private static final int SPRINT_COST = 1;
     // Jumping Limits
     private static final int MAX_JUMPS = 2;
-    private static final long JUMP_COOLDOWN_MS = 300;
     /**
      * if player already has a weapon --> unequip first
      * sets new weapon as equipped
@@ -73,7 +72,6 @@ public class PlayerActions extends Component {
     // Ability cooldowns / counters
     private int dashCooldown = 0;
     private int jumpsLeft = MAX_JUMPS;
-    private long lastJumpTime = 0; // timestamp of last ground jump
     // Tracks time since last attack for cooldown purposes
     private float timeSinceLastAttack = 0;
     private float timesinceLastReload = 0;
@@ -240,12 +238,14 @@ public class PlayerActions extends Component {
      * Adds vertical velocity to the player to jump if jumps remain.
      */
     void jump() {
-        long currentTime = System.currentTimeMillis();
         Body body = physicsComponent.getBody();
 
         if (dashing) return;
 
         if (jumpsLeft > 0) {
+            Sound jump = ServiceLocator.getResourceService().getAsset("sounds/jump.mp3", Sound.class);
+            jump.play();
+
             setGrounded(false);
 
             boolean isGroundJump = (jumpsLeft == MAX_JUMPS);
@@ -263,9 +263,7 @@ public class PlayerActions extends Component {
                 entity.getEvents().trigger("jump");
                 body.applyLinearImpulse(JUMP_VELOCITY, body.getWorldCenter(), true);
                 jumpsLeft--;
-                lastJumpTime = currentTime;
             }
-
         }
     }
 
