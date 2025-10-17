@@ -176,6 +176,7 @@ public class MainGameScreen extends ScreenAdapter {
             case "Storage" -> areaLoad = StorageGameArea.load(terrainFactory, renderer.getCamera());
             case "Shipping" -> areaLoad = ShippingGameArea.load(terrainFactory, renderer.getCamera());
             case "Server" -> areaLoad = ServerGameArea.load(terrainFactory, renderer.getCamera());
+            case "Casino" -> areaLoad = CasinoGameArea.load(terrainFactory, renderer.getCamera());
             default -> logger.error("couldn't create Game area from file");
         }
         ServiceLocator.getResourceService().loadAll(); // test for loading into new areas
