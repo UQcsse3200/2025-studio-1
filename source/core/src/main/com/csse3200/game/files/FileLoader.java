@@ -65,45 +65,6 @@ public class FileLoader {
         return object;
     }
 
-    /**
-     * Read playerinfo from a JSON file and write into class.
-     *
-     * @param player   class type
-     * @param filename file to read from
-     * @param location File storage type. See
-     * @param <T>      Class type to read JSON into
-     * @return instance of class, may be null
-     */
-    public static <T> T readPlayer(Class<SaveGame.GameState> player, String filename, Location location) {
-        logger.debug("Reading class {} from {}", player.getSimpleName(), filename);
-        FileHandle file = getFileHandle(filename, location);
-        SaveGame.GameState test = json.fromJson(SaveGame.GameState.class, file);
-        try {
-            JsonValue root = new JsonReader().parse(filename);
-            System.out.println(root.prettyPrint(JsonWriter.OutputType.json, 1));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        if (file == null) {
-            logger.error("Failed to create file handle for {}", filename);
-            return null;
-        }
-        Object object;
-        try {
-            object = json.fromJson(player, file);
-        } catch (Exception e) {
-            logger.error(e.getMessage());
-            return null;
-        }
-
-        if (object == null) {
-            String path = file.path();
-            logger.error("Error creating {} class instance from {}", player.getSimpleName(), path);
-        }
-        logger.info(json.prettyPrint(object));
-
-        return (T) object;
-    }
 
     /**
      * Write generic Java classes to a JSON file.

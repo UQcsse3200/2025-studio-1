@@ -29,7 +29,7 @@ public class SaveGame {
     private static final Logger logger = LoggerFactory.getLogger(SaveGame.class);
 
     public static GameState loadGame(String fileName) {
-        return FileLoader.readPlayer(GameState.class, fileName, FileLoader.Location.LOCAL);
+        return FileLoader.readClass(GameState.class, fileName, FileLoader.Location.LOCAL);
     }
 
     public static void saveGame(GameState gameState, String fileName) {
