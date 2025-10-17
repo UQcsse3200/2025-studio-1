@@ -1,13 +1,8 @@
 package com.csse3200.game.files;
 
 import com.badlogic.gdx.math.Vector2;
-import com.csse3200.game.areas.GameArea;
-import com.csse3200.game.areas.difficulty.Difficulty;
 import com.csse3200.game.areas.difficulty.DifficultyType;
-import com.csse3200.game.components.AmmoStatsComponent;
-import com.csse3200.game.components.CombatStatsComponent;
-import com.csse3200.game.components.MagazineComponent;
-import com.csse3200.game.components.WeaponsStatsComponent;
+import com.csse3200.game.components.*;
 import com.csse3200.game.components.attachments.BulletEnhancerComponent;
 import com.csse3200.game.components.attachments.LaserComponent;
 import com.csse3200.game.components.items.ItemComponent;
@@ -21,7 +16,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
+
 import java.util.Set;
 
 
@@ -51,6 +46,7 @@ public class SaveGame {
         private ArrayList<itemInInven> loadedInventory;
         private String difficulty;
         private ArrayList<String> areasVisited;
+        private ArrayList<String> armour;
 
         public GameState() {
         }
@@ -180,6 +176,15 @@ public class SaveGame {
             }
             return inventoryFilter;
         }
+
+        public void setArmour(ArrayList<String> armour) {
+            this.armour = armour;
+        }
+
+        public ArrayList<String> getArmour() {
+            return this.armour;
+        }
+
     }
 
     /**

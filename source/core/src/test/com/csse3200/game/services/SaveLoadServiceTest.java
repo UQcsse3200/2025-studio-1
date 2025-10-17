@@ -134,4 +134,5 @@ class SaveLoadServiceTest {
             Assertions.assertNotNull(out.getInventory(), "inventory list should be initialized (may be empty)");
         }
     }
+
 }

@@ -3,7 +3,6 @@ package com.csse3200.game.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ScreenAdapter;
-import com.badlogic.gdx.graphics.profiling.GLErrorListener;
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -11,7 +10,6 @@ import com.csse3200.game.GdxGame;
 import com.csse3200.game.areas.*;
 import com.csse3200.game.areas.difficulty.Difficulty;
 import com.csse3200.game.areas.terrain.TerrainFactory;
-import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.components.gamearea.PerformanceDisplay;
 import com.csse3200.game.components.maingame.MainGameActions;
@@ -19,6 +17,7 @@ import com.csse3200.game.components.maingame.MainGameDisplay;
 import com.csse3200.game.components.player.InventoryComponent;
 import com.csse3200.game.components.screens.Minimap;
 import com.csse3200.game.components.screens.MinimapDisplay;
+import com.csse3200.game.components.screens.PauseEscInputComponent;
 import com.csse3200.game.components.screens.PauseMenuDisplay;
 import com.csse3200.game.components.teleporter.TeleporterComponent;
 import com.csse3200.game.entities.Entity;
@@ -41,6 +40,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 
 /**
@@ -119,7 +120,7 @@ public class MainGameScreen extends ScreenAdapter {
             game.setCarryOverLeaderBoard(session.getLeaderBoardManager());
         });
 
-
+        Set<String> exploredAreas = new HashSet<>();
 
         if (loadSaveGame) {
             logger.info("loading game from save file");
@@ -128,7 +129,7 @@ public class MainGameScreen extends ScreenAdapter {
             ServiceLocator.registerGameArea(gameArea);
             ForestGameArea.setRoomSpawn(new GridPoint2(3, 20));
             gameArea.create();
-            //all areas in the game
+            //all areas in the game for loading
             switch (load.getGameArea()) {
                 case "Forest" -> gameArea = ForestGameArea.load(terrainFactory, renderer.getCamera());
                 case "Elevator" -> gameArea = ElevatorGameArea.load(terrainFactory, renderer.getCamera());
@@ -143,25 +144,45 @@ public class MainGameScreen extends ScreenAdapter {
                 default -> gameArea = null;
             }
 
+            //will instantiate all items
             if (gameArea != null) {
                 ServiceLocator.registerGameArea(gameArea);
                 ServiceLocator.registerDifficulty(new Difficulty(load.getDifficulty()));
-                SaveLoadService.loadPlayer(load.getPlayer());
-                SaveLoadService.loadPlayerInventory(load.getInventory());
+                SaveLoadService.loadPlayer(
+                        load.getPlayer(),
+                        load.getArmour(),
+                        load.getInventory()
+                );
+                exploredAreas = load.getAreasVisited();
+
             } else {
                 logger.error("couldn't create Game area from file");
             }
+
         } else {
+
             gameArea = new ForestGameArea(terrainFactory, renderer.getCamera());
             ServiceLocator.registerGameArea(gameArea);
             ForestGameArea.setRoomSpawn(new GridPoint2(3, 20));
             gameArea.create();
+            exploredAreas.add(gameArea.toString());
         }
+        // for when loading a save game
+        discover(exploredAreas);
+    }
 
-        // mark initial area as discovered
+    /**
+     * private helper method for setting multiple areas to be discovered on startup
+     * such as on loading
+     * @param areas Set of areas to be marked discovered
+     */
+    private void discover(Set<String> areas) {
         DiscoveryService dsInit = ServiceLocator.getDiscoveryService();
+        // mark any area of a savefile or initial area as discovered
         if (dsInit != null) {
-            dsInit.discover(gameArea.toString());
+            for (String areaString : areas) {
+                dsInit.discover(areaString);
+            }
         }
     }
 
@@ -177,7 +198,7 @@ public class MainGameScreen extends ScreenAdapter {
                 && !ServiceLocator.isTransitioning()) {
             physicsEngine.update();
         }
-        if (!com.csse3200.game.services.ServiceLocator.isTransitioning()) {
+        if (!ServiceLocator.isTransitioning()) {
             ServiceLocator.getEntityService().update();
         }
         Entity player = gameArea.getPlayer();
@@ -356,7 +377,7 @@ public class MainGameScreen extends ScreenAdapter {
         pauseOverlay = new Entity()
                 .addComponent(new PauseMenuDisplay(game))
                 .addComponent(new InputDecorator(stage, 100))
-                .addComponent(new com.csse3200.game.components.screens.PauseEscInputComponent(110));
+                .addComponent(new PauseEscInputComponent(110));
         pauseOverlay.getEvents().addListener("save", this::saveState);
         pauseOverlay.getEvents().addListener("resume", this::hidePauseOverlay);
         ServiceLocator.getEntityService().register(pauseOverlay);

@@ -1,19 +1,19 @@
 package com.csse3200.game.services;
 
 import com.csse3200.game.areas.GameArea;
-import com.csse3200.game.components.AmmoStatsComponent;
-import com.csse3200.game.components.CombatStatsComponent;
-import com.csse3200.game.components.MagazineComponent;
-import com.csse3200.game.components.WeaponsStatsComponent;
+import com.csse3200.game.components.*;
 import com.csse3200.game.components.items.ItemComponent;
+import com.csse3200.game.components.player.ArmourEquipComponent;
 import com.csse3200.game.components.player.InventoryComponent;
 import com.csse3200.game.components.player.StaminaComponent;
 import com.csse3200.game.entities.Avatar;
 import com.csse3200.game.entities.AvatarRegistry;
 import com.csse3200.game.entities.Entity;
+import com.csse3200.game.entities.configs.Armour;
 import com.csse3200.game.entities.configs.Consumables;
 import com.csse3200.game.entities.configs.ItemTypes;
 import com.csse3200.game.entities.configs.Weapons;
+import com.csse3200.game.entities.factories.items.ArmourFactory;
 import com.csse3200.game.entities.factories.items.ConsumableFactory;
 import com.csse3200.game.entities.factories.items.WeaponsFactory;
 import com.csse3200.game.files.SaveGame;
@@ -48,8 +48,8 @@ public class SaveLoadService {
             logger.error("failed to load in game");
             savedGame = null;
         }
-
         return savedGame;
+
     }
 
     /**
@@ -57,7 +57,9 @@ public class SaveLoadService {
      *
      * @param playerStats
      */
-    public static void loadPlayer(SaveGame.information playerStats) {
+    public static void loadPlayer(SaveGame.information playerStats,
+                                  ArrayList<String> savedArmour,
+                                  ArrayList<SaveGame.itemInInven> inventory) {
 
         ServiceLocator.getPlayer().getComponent(
                 CombatStatsComponent.class).setHealth(playerStats.currentHealth);
@@ -73,8 +75,25 @@ public class SaveLoadService {
                 AmmoStatsComponent.class).setAmmo(playerStats.ammoReserve);
         ServiceLocator.getPlayer().setPosition(playerStats.playerPos);
 
+        if (!savedArmour.isEmpty()) getArmourfromsave(savedArmour);
+        loadPlayerInventory(inventory);
 
-        //TEAMNOTE: set Avatar in next sprint or later tonight before PR
+    }
+
+    private static void getArmourfromsave(ArrayList<String> savedArmour) {
+        Entity newArmour;
+        ArmourEquipComponent armourEquip =
+                ServiceLocator.getPlayer().getComponent(ArmourEquipComponent.class);
+            // sets the attachments
+        for (Armour armour : Armour.values()) {
+            if (savedArmour.contains(armour.getConfig().texturePath)) {
+
+                newArmour = ArmourFactory.createArmour(armour);
+                newArmour.create();
+                armourEquip.setItem(newArmour);
+                logger.info("armour found and equipped");
+            }
+        }
     }
 
     /**
@@ -82,7 +101,7 @@ public class SaveLoadService {
      *
      * @param inventory from the json file to be loaded
      */
-    public static void loadPlayerInventory(ArrayList<SaveGame.itemInInven> inventory) {
+    private static void loadPlayerInventory(ArrayList<SaveGame.itemInInven> inventory) {
         Entity itemEntity;
         InventoryComponent loadedInventory =
                 ServiceLocator.getPlayer().getComponent(InventoryComponent.class);
@@ -117,18 +136,28 @@ public class SaveLoadService {
                 }
             }
         }
-        //better to set variables and inject them
+        // variables
 
         Set<String> discovered = ServiceLocator.getDiscoveryService().getDiscovered();
         SaveGame.GameState gamestate = new SaveGame.GameState();
-
-
+        ArrayList<String> armours = new ArrayList<>();
+        if (player.hasComponent(ArmourEquipComponent.class) &&
+        player.getComponent(ArmourEquipComponent.class).currentlyEquippedArmour != null
+        ) {
+            Set<Entity> armourSet = player.getComponent(ArmourEquipComponent.class).currentlyEquippedArmour.keySet();
+            String armourString;
+            for (Entity e: armourSet) {
+                armourString = e.getComponent(ItemComponent.class).getTexture();
+                armours.add(armourString);
+            }
+        }
+        //sets game state
         gamestate.setPlayer(player);
         gamestate.setLoadedInventory(player.getComponent(InventoryComponent.class));
         gamestate.setArea(ServiceLocator.getGameArea().toString());
         gamestate.setWave(ServiceLocator.getGameArea().currentWave());
         gamestate.setAreasVisited(discovered);
-
+        gamestate.setArmour(armours);
         gamestate.setDifficulty(ServiceLocator.getDifficulty().toString());
 
         path = "saves" + File.separator + slot + ".json";
@@ -137,6 +166,12 @@ public class SaveLoadService {
         return true;
     }
 
+
+    /**
+     * helper method for turning items from savefile into entities
+     * @param item
+     * @return Weapon
+     */
     private static Entity getWeapon(SaveGame.itemInInven item) {
         Entity weaponEntity = null;
         boolean addLaser = false;
