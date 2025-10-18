@@ -11,9 +11,13 @@ import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.entities.factories.system.TeleporterFactory;
 import com.csse3200.game.physics.PhysicsLayer;
+import com.csse3200.game.physics.PhysicsUtils;
+import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.physics.components.ColliderComponent;
 import com.csse3200.game.physics.components.HitboxComponent;
+import com.csse3200.game.physics.components.PhysicsComponent;
 import com.csse3200.game.rendering.TextureRenderComponent;
+import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 
 /**
  * Elevator room: minimal walls and two doors (left--Office, right--Research).
@@ -45,6 +49,8 @@ public class ElevatorGameArea extends GameArea {
         spawnPlatforms();
         spawnDesk();
         spawnTeleporter();
+        spawnSpikes();
+        spawnEnemies();
 
         Entity ui = new Entity();
         ui.addComponent(new GameAreaDisplay("Elevator"))
@@ -80,6 +86,13 @@ public class ElevatorGameArea extends GameArea {
             rightTop.setPosition(b.rightX() - WALL_WIDTH, rightDoorY + rightDoorHeight);
             spawnEntity(rightTop);
         }
+        // Add right wall below the door
+        float rightBottomSegHeight = Math.max(0f, rightDoorY - b.bottomY());
+        if (rightBottomSegHeight > 0f) {
+            Entity rightBottom = ObstacleFactory.createWall(WALL_WIDTH, rightBottomSegHeight);
+            rightBottom.setPosition(b.rightX() - WALL_WIDTH, b.bottomY());
+            spawnEntity(rightBottom);
+        }
         Entity rightDoor = ObstacleFactory.createDoorTrigger(WALL_WIDTH, rightDoorHeight);
         rightDoor.setPosition(b.rightX() - WALL_WIDTH - 0.001f, rightDoorY);
         rightDoor.addComponent(new ColliderComponent());
@@ -95,7 +108,15 @@ public class ElevatorGameArea extends GameArea {
     }
 
     private Entity spawnPlayer() {
-        return spawnOrRepositionPlayer(playerSpawn);
+        Entity player = spawnOrRepositionPlayer(playerSpawn);
+        // Set higher z-index to ensure player renders in front of sprites
+        if (player != null) {
+            var renderComponent = player.getComponent(com.csse3200.game.rendering.AnimationRenderComponent.class);
+            if (renderComponent != null) {
+                renderComponent.setZIndex(10f); // Higher z-index to render in front
+            }
+        }
+        return player;
     }
 
     /**
@@ -103,10 +124,15 @@ public class ElevatorGameArea extends GameArea {
      */
     private void spawnDesk() {
         Entity desk = new Entity()
-                .addComponent(new TextureRenderComponent("images/Office and elevator/Office desk.png"));
+                .addComponent(new TextureRenderComponent("images/Office and elevator/Office desk.png"))
+                .addComponent(new PhysicsComponent())
+                .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
+        
+        desk.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
         desk.getComponent(TextureRenderComponent.class).scaleEntity();
         desk.scaleHeight(3.0f);
-        desk.setPosition(7f, 3f);
+        PhysicsUtils.setScaledCollider(desk, 0.8f, 0.6f);
+        desk.setPosition(12f, 3f);
         spawnEntity(desk);
     }
 
@@ -136,6 +162,36 @@ public class ElevatorGameArea extends GameArea {
     private void spawnTeleporter() {
         Entity tp = TeleporterFactory.createTeleporter(new Vector2(1.5f, 3f));
         spawnEntity(tp);
+    }
+
+    /**
+     * Spawn spikes around the elevator area to create challenging obstacles
+     */
+    private void spawnSpikes() {
+        // Two spikes near the platforms
+        Entity spikes1 = ObstacleFactory.createSpikes2();
+        spikes1.setPosition(9.3f, 3.2f);
+        spawnEntity(spikes1);
+
+        Entity spikes2 = ObstacleFactory.createSpikes2();
+        spikes2.setPosition(7.4f, 3.2f);
+        spawnEntity(spikes2);
+    }
+
+    /**
+     * Spawn 2 enemies in the elevator room
+     */
+    private void spawnEnemies() {
+        Entity player = ServiceLocator.getPlayer();
+        if (player == null) return;
+
+        // Enemy 1: GhostGPT
+        Entity ghostGPT = com.csse3200.game.entities.factories.characters.NPCFactory.createGhostGPT(player, this, 1.0f);
+        spawnEntityAt(ghostGPT, new GridPoint2(15, 8), true, false);
+
+        // Enemy 2: GrokDroid
+        Entity grokDroid = com.csse3200.game.entities.factories.characters.NPCFactory.createGrokDroid(player, this, 1.0f);
+        spawnEntityAt(grokDroid, new GridPoint2(18, 20), true, false);
     }
 
     private void loadOffice() {

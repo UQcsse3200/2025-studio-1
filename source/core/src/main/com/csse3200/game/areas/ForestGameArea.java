@@ -123,7 +123,6 @@ public class ForestGameArea extends GameArea {
             "images/waterBullet.png",
             "images/VendingMachine.png",
             "images/laserball.png",
-            "images/MarblePlatform.png",
             "images/computerBench.png",
             "images/monster.png",
             "images/electric_zap.png",
@@ -156,16 +155,16 @@ public class ForestGameArea extends GameArea {
     private static final String[] backgroundTextures = {
             "backgrounds/Reception.png",
             "backgrounds/Shipping.png",
-            "backgrounds/SpawnResize.png",
-            "backgrounds/Storage.png",
-            "images/Storage.png",
-            "images/cards.png",
+            "backgrounds/Spawn.png",
             "backgrounds/Storage.png",
             "backgrounds/MainHall.png",
             "backgrounds/Office.png",
             "backgrounds/Research.png",
             "backgrounds/Security.png",
-            "backgrounds/Server.png"
+            "backgrounds/Server.png",
+            "backgrounds/Tunnel.png",
+            "backgrounds/Elevator.png",
+            "images/cards.png"
     };
     /**
      * General prop textures (floors, tiles, etc.).
@@ -371,7 +370,6 @@ public class ForestGameArea extends GameArea {
         spawnSpeedBench();
         spawnFloor();
         spawnBottomRightDoor();
-        spawnMarblePlatforms();
         ServiceLocator.getMusicService().playForestMusic();
         ItemSpawner itemSpawner = new ItemSpawner(this);
         itemSpawner.spawnItems(ItemSpawnConfig.forestmap());
@@ -537,35 +535,6 @@ public class ForestGameArea extends GameArea {
         }));
 
         spawnEntity(door);
-    }
-
-    /**
-     * Places two platforms within the room for players to jump on.
-     */
-    private void spawnMarblePlatforms() {
-        float platformX = 2.5f;
-        float platformX2 = 5.4f;
-        float platformX3 = 8.2f;
-        float platformX4 = 11.1f;
-        float platformY = 6f;
-        float platformY2 = 8f;
-
-        Entity platform1 = ObstacleFactory.createMarblePlatform();
-        platform1.setPosition(platformX, platformY);
-
-        Entity platform2 = ObstacleFactory.createMarblePlatform();
-        platform2.setPosition(platformX2, platformY2);
-
-        Entity platform3 = ObstacleFactory.createMarblePlatform();
-        platform3.setPosition(platformX3, platformY2);
-
-        Entity platform4 = ObstacleFactory.createMarblePlatform();
-        platform4.setPosition(platformX4, platformY);
-
-        spawnEntity(platform1);
-        spawnEntity(platform2);
-        spawnEntity(platform3);
-        spawnEntity(platform4);
     }
 
     /**
