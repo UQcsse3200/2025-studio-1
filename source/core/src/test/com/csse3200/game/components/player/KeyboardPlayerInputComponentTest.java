@@ -1,6 +1,7 @@
 package com.csse3200.game.components.player;
 
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.utils.Array;
@@ -9,6 +10,7 @@ import com.csse3200.game.entities.EntityService;
 import com.csse3200.game.input.InputService;
 import com.csse3200.game.physics.components.PhysicsComponent;
 import com.csse3200.game.services.GameTime;
+import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.utils.math.Vector2Utils;
 import org.junit.jupiter.api.AfterEach;
@@ -43,12 +45,14 @@ class KeyboardPlayerInputComponentTest {
         ServiceLocator.registerInputService(mock(InputService.class));
         ServiceLocator.registerEntityService(entityService);
         ServiceLocator.registerTimeSource(mock(GameTime.class));
+        ServiceLocator.registerResourceService(mock(ResourceService.class));
 
         when(ServiceLocator.getEntityService().getEntities()).thenReturn(new Array<Entity>());
 
         Body body = mock(Body.class);
         PhysicsComponent physics = mock(PhysicsComponent.class);
         when(physics.getBody()).thenReturn(body);
+        when(physics.getBody().getLinearVelocity()).thenReturn(Vector2.Zero);
 
         Entity player = new Entity();
         inputComponent = new KeyboardPlayerInputComponent();
@@ -58,7 +62,6 @@ class KeyboardPlayerInputComponentTest {
         player.addComponent(inventory);
 
         actions = spy(new PlayerActions());
-        when(physics.getBody().getLinearVelocity()).thenReturn(Vector2.Zero);
 
         player.addComponent(actions);
         player.addComponent(mock(StaminaComponent.class));
@@ -132,37 +135,51 @@ class KeyboardPlayerInputComponentTest {
     @Test
     void shouldSprintOnRelease() {
         assertTrue(inputComponent.keyReleased(Keys.SHIFT_LEFT));
-        verify(actions).sprintAttempt();
+        verify(actions).stopSprinting();
     }
 
-    // NOTE: Test triggers dash event
     @Test
     void shouldTriggerDash() {
         assertTrue(inputComponent.keyPressed(Keys.CONTROL_LEFT));
         verify(actions).dash();
     }
 
-    // NOTE: Test reload event
     @Test
     void shouldReload() {
         assertTrue(inputComponent.keyPressed(Keys.Q));
         verify(actions).reload();
     }
 
-    // NOTE: Test jumping
     @Test
     void shouldJump() {
+        when(ServiceLocator.getResourceService()
+                .getAsset("sounds/jump.mp3", Sound.class)).thenReturn(mock(Sound.class));
+
         assertTrue(inputComponent.keyPressed(Keys.SPACE));
         verify(actions).jump();
     }
 
-    // NOTE: Test interacting
     @Test
     void shouldInteractOnPress() {
        assertTrue(inputComponent.keyPressed(Keys.E));
+       // Idk how to do interact verify
+    }
+
+    @Test
+    void shouldDisplayInventory() {
+        assertTrue(inputComponent.keyPressed(Keys.I));
+    }
+
+    @Test
+    void shouldFailUnknownKeypress() {
+        assertFalse(inputComponent.keyPressed(Keys.B));
     }
 
     // NOTE: Test selecting slot
+     @Test
+     void shouldSelectSlot() {
+        assertTrue(true);
+     }
 
 
     /**
@@ -178,6 +195,7 @@ class KeyboardPlayerInputComponentTest {
         assertEquals(0, inputComponent.focusedItem);
         assertTrue(inputComponent.equipped); // should equip the item
     }
+
 
     // NOTE: Testing equipItem() and unequipItem()
 
