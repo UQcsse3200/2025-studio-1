@@ -28,10 +28,21 @@ import com.csse3200.game.services.ServiceLocator;
  * the properties stored in 'PlayerConfig'.
  */
 public class PlayerFactory {
-    private static final PlayerConfig stats = safeLoadPlayerConfig();
+    private static PlayerConfig stats;
 
     private PlayerFactory() {
         throw new IllegalStateException("Instantiating static util class");
+    }
+
+    public static PlayerConfig getStats() {
+        if (stats == null) {
+            stats = safeLoadPlayerConfig();
+        }
+        return stats;
+    }
+
+    public static void reset() {
+        stats = null;
     }
 
     private static PlayerConfig safeLoadPlayerConfig() {

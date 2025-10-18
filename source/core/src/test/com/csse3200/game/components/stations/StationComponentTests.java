@@ -121,7 +121,11 @@ public class StationComponentTests {
             player.getComponent(InventoryComponent.class)
                     .addProcessor(-player.getComponent(InventoryComponent.class).getProcessor()); //Make the player broke
             stationComponent.upgrade();
+            healthStationComponent.upgrade();
+            speedStationComponent.upgrade();
             assertEquals("You are broke! Fries in the bag!", stationComponent.getBuyPrompt().getText().toString());
+            assertEquals("You are broke! Fries in the bag!", healthStationComponent.getBuyPrompt().getText().toString());
+            assertEquals("You are broke! Fries in the bag!", speedStationComponent.getBuyPrompt().getText().toString());
 
         }
 
@@ -131,6 +135,16 @@ public class StationComponentTests {
             stationComponent.upgrade();
             int currMoney = player.getComponent(InventoryComponent.class).getProcessor();
             assertEquals(prevMoney - stationComponent.getPrice(), currMoney);
+
+            prevMoney = player.getComponent(InventoryComponent.class).getProcessor();
+            speedStationComponent.upgrade();
+            currMoney = player.getComponent(InventoryComponent.class).getProcessor();
+            assertEquals(prevMoney - speedStationComponent.getPrice(), currMoney);
+
+            prevMoney = player.getComponent(InventoryComponent.class).getProcessor();
+            healthStationComponent.upgrade();
+            currMoney = player.getComponent(InventoryComponent.class).getProcessor();
+            assertEquals(prevMoney - healthStationComponent.getPrice(), currMoney);
         }
 
         @Test
