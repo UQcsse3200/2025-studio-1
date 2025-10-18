@@ -51,8 +51,7 @@ public class WhackAMoleDisplay extends UIComponent {
     @Override
     public void create() {
         super.create();
-        entity.getEvents().addListener("betPlaced", this::show); // open on interact
-        entity.getEvents().addListener("interact", this::hide);
+        entity.getEvents().addListener("interact", this::show); // open on interact
         hitSfx = ServiceLocator.getResourceService().getAsset("sounds/whack.mp3", Sound.class);
 
         Texture moleTex = ServiceLocator.getResourceService().getAsset("images/mole.png", Texture.class);
@@ -299,6 +298,7 @@ public class WhackAMoleDisplay extends UIComponent {
 
     /** Hide modal + resume time + ensure loop stops. */
     public void hide() {
+        ServiceLocator.getTimeSource().setPaused(false);
         setVisible(false);
         entity.getEvents().trigger("wm:stop");
     }

@@ -37,7 +37,7 @@ public class WhackAMoleGame {
     public WhackAMoleGame() {
         gameEntity = initGameEntity();
         display = gameEntity.getComponent(WhackAMoleDisplay.class);
-        gameEntity.getEvents().addListener("betPlaced", this::onInteract);
+        gameEntity.getEvents().addListener("interact", this::onInteract);
         gameEntity.getEvents().addListener("wm:start", this::onStart);
         gameEntity.getEvents().addListener("wm:stop", this::onStop);
         gameEntity.getEvents().addListener("wm:hit", this::onHit);
@@ -162,7 +162,6 @@ public class WhackAMoleGame {
             display.resetScore();
             display.showEnd("You Lose", "You missed " + misses + " moles.\nTry again!");
             gameEntity.getEvents().trigger("lose");
-            gameEntity.getEvents().trigger("interact");
             betPlaced = false;
         }
     }
@@ -178,7 +177,6 @@ public class WhackAMoleGame {
             display.resetScore();
             display.showEnd("You Win!", "Reached " + TARGET_SCORE + " points!");
             gameEntity.getEvents().trigger("win");
-            gameEntity.getEvents().trigger("interact");
             betPlaced = false;
         }
     }
