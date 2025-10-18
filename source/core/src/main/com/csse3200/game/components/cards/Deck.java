@@ -15,20 +15,30 @@ public class Deck {
     public Deck() {
         TextureAtlas atlas = ServiceLocator.getResourceService().getAsset("images/cards.atlas", TextureAtlas.class);
         deck = new ArrayList<>();
-        for (Suit suit : Suit.values()) {
-            for (Rank rank : Rank.values()) {
-                TextureRegion texture = atlas.findRegion(rank.getSymbol() + suit.getSymbol());
-                deck.add(new Card(suit, rank, texture));
-            }
+        for(int i = 0; i < 2; i++) {
+            for (Suit suit : Suit.values()) {
+                for (Rank rank : Rank.values()) {
+                    TextureRegion texture = atlas.findRegion(rank.getSymbol() + suit.getSymbol());
+                    deck.add(new Card(suit, rank, texture));
+                }
 
+            }
         }
 
         Collections.shuffle(deck);
         position = 0;
     }
 
+    public int cardsRemaining() {
+        return 104 - position;
+    }
+
     public Card drawCard() {
+        if(position > 100) {
+            resetDeck();
+        }
         return deck.get(position++);
+
     }
 
     public void resetDeck() {

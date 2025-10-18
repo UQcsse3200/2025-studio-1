@@ -195,6 +195,7 @@ public class WhackAMoleDisplay extends UIComponent {
             @Override public void changed(ChangeEvent event, Actor actor) {
                 // ensure loop stops & UI resets when closing
                 entity.getEvents().trigger("wm:stop");
+                // ServiceLocator.getTimeSource().setPaused(false);
                 prepareToPlay();
                 hide();
             }

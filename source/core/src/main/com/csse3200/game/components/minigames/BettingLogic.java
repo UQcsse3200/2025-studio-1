@@ -115,4 +115,31 @@ public class BettingLogic {
     public void onLose() {
         // Already subtracted bet, nothing more to do
     }
-}
+
+    public void doubleBet() {
+        if (bet > balance) throw new IllegalArgumentException("Not enough balance");
+        inventory.addProcessor(-bet);
+        balance = inventory.getProcessor();
+    }
+
+    public boolean canDouble() {
+        return bet < balance;
+    }
+
+    public void split() {
+        placeBet(bet);
+    }
+
+    public void doubleWin() {
+        int winnings = calculateWinnings();
+        inventory.addProcessor(winnings * 2);
+        balance = inventory.getProcessor();
+    }
+
+    public void doubleTie() {
+        inventory.addProcessor(bet * 2);
+        balance = inventory.getProcessor();
+    }
+
+
+    }

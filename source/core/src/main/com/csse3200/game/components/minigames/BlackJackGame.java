@@ -3,7 +3,7 @@ package com.csse3200.game.components.minigames;
 import com.csse3200.game.components.Component;
 import com.csse3200.game.components.cards.Card;
 import com.csse3200.game.components.cards.Deck;
-import com.csse3200.game.components.cards.Rank;
+import com.csse3200.game.components.cards.Hand;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,154 +17,196 @@ import java.util.List;
  * </p>
  */
 public class BlackJackGame extends Component {
-    /**
-     * The dealer’s current hand of cards.
-     */
-    private List<Card> dealerHand;
-    /**
-     * The player’s current hand of cards.
-     */
-    private List<Card> playerHand;
-    /**
-     * The deck used for drawing cards.
-     */
+    /** The dealer’s current hand of cards. */
+    private Hand dealerHand;
+    /** The player’s current hand of cards. */
+    private List<Hand> playerHands;
+    /** The deck used for drawing cards. */
     private Deck deck;
-    /**
-     * Indicates whether a winner has been determined this round.
-     */
-    private boolean winner;
+    /** Indicates whether a winner has been determined this round. */
+    private Hand currentHand;
+    int handIndex;
+    boolean dealerTurn;
 
-    /**
-     * Initializes the game by creating a new deck and empty hands,
-     * and registers listeners for player actions (hit and stand).
-     */
+    /** Initializes the game by creating a new deck and empty hands,
+     * and registers listeners for player actions (hit and stand). */
     public void create() {
         deck = new Deck();
-        dealerHand = new ArrayList<>();
-        playerHand = new ArrayList<>();
+        dealerHand = new Hand();
+        playerHands = new ArrayList<>();
+        playerHands.add(new Hand());
+        currentHand = playerHands.getFirst();
         entity.getEvents().addListener("drawCard", this::drawCard);
-        entity.getEvents().addListener("stand", this::dealerTurn);
+        entity.getEvents().addListener("stand", this::nextHand);
+        handIndex = 0;
+        dealerTurn = false;
     }
 
-    /**
-     * Returns the total value of the dealer's hand, accounting for ace adjustments.
-     *
-     * @return the total numeric value of the dealer’s hand
-     */
+    /** Returns the total value of the dealer's hand, accounting for ace adjustments. */
     public int dealerHandValue() {
-        return getHandValue(dealerHand);
+        return dealerHand.getValue();
     }
 
-    /**
-     * Returns the total value of the player’s hand, accounting for ace adjustments.
-     *
-     * @return the total numeric value of the player’s hand
-     */
+    /** Returns the total value of the player’s hand, accounting for ace adjustments. */
     public int playerHandValue() {
-        return getHandValue(playerHand);
+        return currentHand.getValue();
     }
 
-    /**
-     * Returns the list of cards currently in the player’s hand.
-     *
-     * @return the player’s hand as a list of {@link Card} objects
-     */
-    public List<Card> getPlayerHand() {
-        return playerHand;
+    /** Returns the player’s hand. */
+    public List<Hand> getPlayerHands() {
+        return playerHands;
     }
 
-    /**
-     * Returns the list of cards currently in the dealer’s hand.
-     *
-     * @return the dealer’s hand as a list of {@link Card} objects
-     */
-    public List<Card> getDealerHand() {
+    /** Returns the dealer’s hand. */
+    public Hand getDealerHand() {
         return dealerHand;
     }
 
+    public Hand getCurrentHand() {
+        return currentHand;
+    }
     /**
      * Executes the dealer’s turn logic. The dealer continues drawing cards until their
      * hand value reaches at least 17. Once done, the game outcome is determined based
      * on hand values and the appropriate game event is triggered.
-     * <ul>
-     *     <li>Triggers {@code dealerbust} and {@code win} if the dealer exceeds 21.</li>
-     *     <li>Triggers {@code playerWin} and {@code win} if the player’s hand is higher.</li>
-     *     <li>Triggers {@code dealerWin} and {@code lose} if the dealer’s hand is higher.</li>
-     *     <li>Triggers {@code tie} if both hands are equal.</li>
-     * </ul>
      */
     void dealerTurn() {
-        if (!winner) {
-            while (getHandValue(dealerHand) < 17) {
-                dealerHand.add(deck.drawCard());
+        dealerTurn = true;
+            while (dealerHand.getValue() < 17) {
+                dealerHand.addCard(deck.drawCard());
             }
-            if (getHandValue(dealerHand) > 21) {
-                entity.getEvents().trigger("dealerbust");
-                entity.getEvents().trigger("win");
-            } else if (getHandValue(playerHand) > getHandValue(dealerHand)) {
-                entity.getEvents().trigger("playerWin");
-                entity.getEvents().trigger("win");
-            } else if (getHandValue(playerHand) < getHandValue(dealerHand)) {
-                entity.getEvents().trigger("dealerWin");
-                entity.getEvents().trigger("lose");
-            } else {
-                entity.getEvents().trigger("tie");
-            }
-            winner = true;
-        }
+
+            checkWinners();
+
     }
 
-    /**
-     * Starts a new game by resetting the deck and dealing two cards each to the
-     * player and dealer. Clears previous hands and sets {@code winner} to false.
-     */
+    /** Starts a new game by resetting the deck and dealing two cards each to the player and dealer. */
     public void startGame() {
-        winner = false;
-        deck.resetDeck();
-        dealerHand.clear();
-        playerHand.clear();
-        playerHand.add(deck.drawCard());
-        playerHand.add(deck.drawCard());
-        dealerHand.add(deck.drawCard());
-        dealerHand.add(deck.drawCard());
+        dealerTurn = false;
+        handIndex = 0;
+        dealerHand.resetHand();
+        playerHands.clear();
+        playerHands.add(currentHand);
+        currentHand.resetHand();
+
+        currentHand.addCard(deck.drawCard());
+        currentHand.addCard(deck.drawCard());
+        dealerHand.addCard(deck.drawCard());
+        dealerHand.addCard(deck.drawCard());
+        if(currentHand.isBlackjack()) {
+            nextHand();
+        }
     }
 
-    /**
-     * Draws a card for the player (on "Hit"). If the player’s hand exceeds 21,
-     * the player busts and the appropriate lose events are triggered.
-     */
+    /** Draws a card for the player (on "Hit"). If the player’s hand exceeds 21, triggers bust events. */
     void drawCard() {
-        if (!winner) {
-            playerHand.add(deck.drawCard());
-            if (getHandValue(playerHand) > 21) {
-                winner = true;
-                entity.getEvents().trigger("playerbust");
-                entity.getEvents().trigger("lose");
+            currentHand.addCard(deck.drawCard());
+            if(currentHand.isBust()) {
+                nextHand();
             }
+
+    }
+
+    public Deck getDeck() {
+        return deck;
+    }
+
+    public void nextHand() {
+        if (handIndex < playerHands.size() - 1) {
+            handIndex++;
+            currentHand = playerHands.get(handIndex);
+            currentHand.addCard(deck.drawCard());
+        } else {
+            dealerTurn(); // once all hands played, dealer acts
         }
     }
 
-    /**
-     * Calculates the numeric value of a given hand, with special handling for Aces.
-     * Aces count as 1 or 11, whichever provides the highest value without exceeding 21.
-     *
-     * @param hand the list of cards to evaluate
-     * @return the total hand value as an integer
-     */
-    private int getHandValue(List<Card> hand) {
-        int value = 0;
-        int aces = 0;
-        for (Card card : hand) {
-            value += card.getValue();
-            if (card.getRank() == Rank.ACE) {
-                aces++;
+    public void splitHand() {
+        if (currentHand.canSplit() && playerHands.size() < 4) {
+            Card second = currentHand.getCards().get(1);
+
+            currentHand.remove(second);
+            currentHand.addCard(deck.drawCard());
+            Hand hand2 = new Hand();
+            hand2.addCard(second);
+
+            playerHands.add(hand2);
+
+            if(currentHand.isBlackjack()) {
+                nextHand();
             }
+
         }
-        for (int i = 0; i < aces; i++) {
-            if ((value + 10) <= 21) {
-                value += 10;
-            }
-        }
-        return value;
     }
+
+    public void doubleDown() {
+        currentHand.setDoubled(true);
+        currentHand.addCard(deck.drawCard());
+        nextHand();
+    }
+
+    public int getActiveHandIndex() {
+        return handIndex;
+    }
+
+    public boolean isDealerTurn() {
+        return dealerTurn;
+    }
+
+    private void checkWinners() {
+        List<String> results = new ArrayList<>();
+        int i = 1;
+
+        for(Hand hand : playerHands) {
+            String outcome;
+            if(hand.isBlackjack()) {
+                outcome = "Hand " + i + ": Blackjack! Player Wins!";
+                winner(hand);
+            } else if(hand.isBust()) {
+                outcome = "Hand " + i + ": Bust! Dealer Wins!";
+                lose(hand);
+            } else if(dealerHand.isBust()){
+                outcome = "Hand " + i + ": Dealer Busts! Player Wins!";
+                winner(hand);
+            } else if(hand.getValue() < dealerHand.getValue()) {
+                outcome = "Hand " + i + ": Dealer Wins!";
+                lose(hand);
+            } else if (hand.getValue() > dealerHand.getValue()) {
+                outcome = "Hand " + i + ": Player Wins!";
+                winner(hand);
+            } else {
+                outcome = "Hand " + i + ": Tie!";
+                if(hand.isDoubled()) {
+                    entity.getEvents().trigger("doubleTie");
+                    hand.setDoubled(false);
+                } else {
+                    entity.getEvents().trigger("tie");
+                }
+            }
+            results.add(outcome);
+            i++;
+        }
+        entity.getEvents().trigger("displayResults", results);
+    }
+
+    private void winner(Hand hand) {
+        if(hand.isDoubled()) {
+            entity.getEvents().trigger("doubleWin");
+            hand.setDoubled(false);
+        } else {
+            entity.getEvents().trigger("win");
+        }
+    }
+
+    private void lose(Hand hand) {
+        if(hand.isDoubled()) {
+            entity.getEvents().trigger("doubleLose");
+            hand.setDoubled(false);
+        } else {
+            entity.getEvents().trigger("lose");
+        }
+    }
+
+
+
 }

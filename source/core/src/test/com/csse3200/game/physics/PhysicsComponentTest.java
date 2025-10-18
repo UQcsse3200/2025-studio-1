@@ -40,7 +40,6 @@ class PhysicsComponentTest {
         entity.create();
 
         verify(engine).createBody(any());
-        System.out.println(body);
         assertEquals(body, component.getBody());
 
         verify(body).setActive(true);

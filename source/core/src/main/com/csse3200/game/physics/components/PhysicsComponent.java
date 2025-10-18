@@ -75,10 +75,8 @@ public class PhysicsComponent extends Component {
      */
     @Override
     public void create() {
-        System.out.println("PhysicsComponent.create() called for entity: " + entity);
         if (body == null) {
             body = physics.createBody(bodyDef);
-            System.out.println("Physics body created: " + body);
         }
 
         Vector2 pos = entity.getPosition();
