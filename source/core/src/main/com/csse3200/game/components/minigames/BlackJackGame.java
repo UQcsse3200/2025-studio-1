@@ -60,8 +60,8 @@ public class BlackJackGame extends Component {
     }
 
     /** Returns the dealer’s hand. */
-    public List<Card> getDealerHand() {
-        return dealerHand.getCards();
+    public Hand getDealerHand() {
+        return dealerHand;
     }
 
     public Hand getCurrentHand() {

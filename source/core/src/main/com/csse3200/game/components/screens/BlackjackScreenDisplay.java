@@ -314,16 +314,16 @@ public class BlackjackScreenDisplay extends UIComponent {
                     gameLogic.getCurrentHand().canSplit());
             doubleBtn.setVisible(gameLogic.getCurrentHand().canDouble());
             if (!gameLogic.getDealerHand().isEmpty()) {
-                TextureRegion firstCard = gameLogic.getDealerHand().getFirst().getTexture();
+                TextureRegion firstCard = gameLogic.getDealerHand().getCards().getFirst().getTexture();
                 Image cardImage = new Image(new TextureRegionDrawable(firstCard));
                 dealerCardsTable.add(cardImage).size(72, 96).pad(3f);
 
                 TextureRegion hiddenCard = atlas.findRegion("facedown");
                 dealerCardsTable.add(new Image(new TextureRegionDrawable(hiddenCard))).size(72, 96).pad(3f);
             }
-            dealerValueLabel.setText("Value: " + gameLogic.getDealerHand().getFirst().getValue());
+            dealerValueLabel.setText("Value: " + gameLogic.getDealerHand().getCards().getFirst().getValue());
         } else {
-            for (Card card : gameLogic.getDealerHand()) {
+            for (Card card : gameLogic.getDealerHand().getCards()) {
                 TextureRegion texture = card.getTexture();
                 dealerCardsTable.add(new Image(new TextureRegionDrawable(texture))).size(72, 96).pad(3f);
             }
