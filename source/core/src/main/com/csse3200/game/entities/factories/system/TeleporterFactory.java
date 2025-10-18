@@ -7,6 +7,7 @@ import com.csse3200.game.components.teleporter.TeleporterComponent;
 import com.csse3200.game.components.teleporter.TeleporterMenuUI;
 import com.csse3200.game.components.teleporter.TeleporterIdleRenderComponent;
 import com.csse3200.game.entities.Entity;
+import com.csse3200.game.entities.factories.InteractableStationFactory;
 import com.csse3200.game.rendering.AnimationRenderComponent;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
@@ -44,7 +45,7 @@ public class TeleporterFactory {
         ResourceService rs = ServiceLocator.getResourceService();
         TextureAtlas atlas = rs.getAsset(TELEPORTER_ATLAS, TextureAtlas.class);
 
-        Entity tp = new Entity();
+        Entity tp = InteractableStationFactory.createBaseStation();
 
         // Static idle renderer (draws first frame only)
         tp.addComponent(new TeleporterIdleRenderComponent(atlas, "teleporter1"));

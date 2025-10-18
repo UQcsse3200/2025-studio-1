@@ -2,6 +2,7 @@ package com.csse3200.game.areas;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.csse3200.game.entities.PromptFactory;
 import com.csse3200.game.entities.factories.characters.PlayerFactory;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -68,6 +69,7 @@ public abstract class GameArea implements Disposable {
         this.terrainFactory = terrainFactory;
         this.cameraComponent = cameraComponent;
         areaEntities = new ArrayList<>();
+        PromptFactory.createPrompt();
     }
 
     /**

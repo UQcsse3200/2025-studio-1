@@ -1,5 +1,6 @@
 package com.csse3200.game.services;
 
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.csse3200.game.areas.GameArea;
 import com.csse3200.game.areas.difficulty.Difficulty;
 import com.csse3200.game.entities.Entity;
@@ -37,6 +38,7 @@ public class ServiceLocator {
     private static ButtonSoundService buttonSoundService;
     private static LeaderBoardManager leaderBoardManager;
     private static volatile boolean transitioning = false;
+    private static Label prompt;
 
     private ServiceLocator() {
         throw new IllegalStateException("Instantiating static util class");
@@ -211,6 +213,14 @@ public class ServiceLocator {
             player.dispose();
         }
         player = null;
+    }
+
+    public static void registerPrompt(Label newPrompt) {
+        prompt = newPrompt;
+    }
+
+    public static Label getPrompt() {
+        return prompt;
     }
 
     public static com.csse3200.game.events.EventHandler getGlobalEvents() {
