@@ -24,7 +24,7 @@ public class PlayerAnimationController extends Component {
     /**
      * True if the armour is facing right.
      */
-    Boolean armourFacingRight = true;
+    Boolean armourFacingRight = null;
     /**
      * True if the player is facing right, false if left.
      */
@@ -283,7 +283,7 @@ public class PlayerAnimationController extends Component {
         if (armourEquipComponent == null) {
             return null;
         }
-        if (armourFacingRight == null) {
+        if (armourFacingRight == null || armourFacingRight != facingRight) {
                 for (Entity a : armourEquipComponent.currentlyEquippedArmour.keySet()) {
                     Vector2 scale = a.getScale();
                     if (facingRight) {
@@ -292,15 +292,6 @@ public class PlayerAnimationController extends Component {
                         a.setScale(-Math.abs(scale.x), scale.y);
                     }
                 }
-        } else if (armourFacingRight != facingRight) {
-            for (Entity a : armourEquipComponent.currentlyEquippedArmour.keySet()) {
-                Vector2 scale = a.getScale();
-                if (facingRight) {
-                    a.setScale(Math.abs(scale.x), scale.y);
-                } else {
-                    a.setScale(-Math.abs(scale.x), scale.y);
-                }
-            }
         }
         armourFacingRight = facingRight;
         return armourFacingRight;
