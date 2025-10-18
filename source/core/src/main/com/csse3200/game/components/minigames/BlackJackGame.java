@@ -4,9 +4,7 @@ import com.csse3200.game.components.Component;
 import com.csse3200.game.components.cards.Card;
 import com.csse3200.game.components.cards.Deck;
 import com.csse3200.game.components.cards.Hand;
-import com.csse3200.game.components.cards.Rank;
 
-import java.sql.Array;
 import java.util.ArrayList;
 import java.util.List;
 

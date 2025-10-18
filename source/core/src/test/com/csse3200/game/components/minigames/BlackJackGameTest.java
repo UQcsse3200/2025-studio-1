@@ -1,7 +1,6 @@
 package com.csse3200.game.components.minigames;
 
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.csse3200.game.components.cards.Card;
 import com.csse3200.game.components.cards.Hand;
 import com.csse3200.game.components.cards.Rank;
@@ -11,8 +10,6 @@ import com.csse3200.game.services.GameTime;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
 import org.junit.jupiter.api.*;
-
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -102,7 +99,7 @@ class BlackJackGameTest {
         game.startGame();
 
         Hand dealer = new Hand();
-        dealer.addCard(new Card(Suit.CLUBS, Rank.SIX, dummyTexture));
+        dealer.addCard(new Card(Suit.CLUBS, Rank.SEVEN, dummyTexture));
         dealer.addCard(new Card(Suit.CLUBS, Rank.TEN, dummyTexture));
         game.getDealerHand().getCards().clear();
         game.getDealerHand().getCards().addAll(dealer.getCards());
