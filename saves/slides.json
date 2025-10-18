@@ -1,0 +1,33 @@
+{
+"player": {
+	"playerPos": {
+		"x": 2.589371,
+		"y": 3.6149998
+	},
+	"avatar": "placeholder",
+	"ammoReserve": 1000,
+	"stamina": 140,
+	"maxStamina": 140,
+	"maxHealth": 80,
+	"currentHealth": 80,
+	"processor": 7000
+},
+"gameArea": "Forest",
+"wave": 2,
+"loadedInventory": [
+	{
+		"type": "MELEE",
+		"ammo": 0,
+		"texture": "images/dagger.png",
+		"count": 1,
+		"upgradeStage": 1
+	},
+	{
+		"type": "RANGED",
+		"ammo": 30,
+		"texture": "images/pistol.png",
+		"count": 1,
+		"upgradeStage": 4
+	}
+]
+}

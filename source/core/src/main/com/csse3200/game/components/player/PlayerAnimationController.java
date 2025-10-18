@@ -24,7 +24,7 @@ public class PlayerAnimationController extends Component {
     /**
      * True if the armour is facing right.
      */
-    boolean armourFacingRight = true;
+    Boolean armourFacingRight = null;
     /**
      * True if the player is facing right, false if left.
      */
@@ -83,6 +83,7 @@ public class PlayerAnimationController extends Component {
      * whether the player is walking, sprinting, crouching, or falling.
      */
     void animateMove() {
+        this.flipArmour();
         if (falling) {
             animateFall();
         } else if (crouching) {
@@ -98,7 +99,6 @@ public class PlayerAnimationController extends Component {
      * Plays the walking animation for the current facing direction.
      */
     void animateWalk() {
-        this.flipArmour();
         if (facingRight) {
             logger.debug("Animating right walk");
             animator.startAnimation("right_walk");
@@ -278,17 +278,22 @@ public class PlayerAnimationController extends Component {
     /**
      * Used to flip armour direction, so it coincides with player movement direction.
      */
-    public void flipArmour() {
+    public Boolean flipArmour() {
         ArmourEquipComponent armourEquipComponent = entity.getComponent(ArmourEquipComponent.class);
         if (armourEquipComponent == null) {
-            return;
+            return null;
         }
-        if (facingRight != armourFacingRight) {
-            for (Entity a : armourEquipComponent.currentlyEquippedArmour.keySet()) {
-                Vector2 scale = a.getScale();
-                a.setScale(-scale.x, scale.y);
-            }
-            armourFacingRight = facingRight;
+        if (armourFacingRight == null || armourFacingRight != facingRight) {
+                for (Entity a : armourEquipComponent.currentlyEquippedArmour.keySet()) {
+                    Vector2 scale = a.getScale();
+                    if (facingRight) {
+                        a.setScale(Math.abs(scale.x), scale.y);
+                    } else {
+                        a.setScale(-Math.abs(scale.x), scale.y);
+                    }
+                }
         }
+        armourFacingRight = facingRight;
+        return armourFacingRight;
     }
 }

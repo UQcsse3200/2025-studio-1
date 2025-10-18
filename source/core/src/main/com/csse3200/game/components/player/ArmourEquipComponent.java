@@ -32,14 +32,48 @@ public class ArmourEquipComponent extends Component {
             throw new IllegalArgumentException("Item is not an armour entity.");
         }
 
+        if (this.checkDuplicates(item)) {
+            System.out.println("Trying to equip same armour type twice - NOT ALLOWED");
+            return;
+        }
+
+        if (currentlyEquippedArmour.size() >= 2) {
+            System.out.println("Reached max equip slots");
+            return;
+        }
+
         item.getComponent(TextureRenderComponent.class).setZIndex(-entity.getPosition().y + 5);
         currentlyEquippedArmour.put(item, new Vector2[]
                 {
                         item.getComponent(ArmourComponent.class).rightOffset,
                         item.getComponent(ArmourComponent.class).leftOffset
                 });
-
         entity.getComponent(CombatStatsComponent.class).addProtection(item.getComponent(ArmourComponent.class).protection);
+        // initial pos setting
+        boolean facingRight = entity.getComponent(PlayerActions.class).isFacingRight();
+        Vector2[] armourOffsets = currentlyEquippedArmour.get(item);
+        if (facingRight) {
+            // add offset + flip armour in right direction
+            item.setPosition(entity.getPosition().cpy().add(armourOffsets[0]));
+            item.setScale(Math.abs(item.getScale().x), item.getScale().y);
+        } else {
+            item.setPosition(entity.getPosition().cpy().add(armourOffsets[1]));
+            item.setScale(-Math.abs(item.getScale().x), item.getScale().y);
+        }
+    }
+
+    /**
+     * Method used to check for duplicate armour types. Ensures each armour type is equipped only once.
+     * @param item Armour being equipped.
+     * @return True if armour is already equipped, false otherwise.
+     */
+    private boolean checkDuplicates(Entity item) {
+        for (Entity e : currentlyEquippedArmour.keySet()) {
+            if (e.getComponent(ArmourComponent.class).armourType.equals(item.getComponent(ArmourComponent.class).armourType)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
