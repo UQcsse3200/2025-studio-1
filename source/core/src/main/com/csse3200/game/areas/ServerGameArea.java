@@ -84,7 +84,7 @@ public class ServerGameArea extends GameArea {
         spawnVisibleFloor();
 
         player = spawnPlayer();
-        spawnGPTs();
+        startWaves(player);
 
         ItemSpawner itemSpawner = new ItemSpawner(this);
         itemSpawner.spawnItems(ItemSpawnConfig.servermap());
@@ -298,6 +298,8 @@ public class ServerGameArea extends GameArea {
         rightDoor.setPosition(b.rightX() - WALL_WIDTH - 0.001f, rightDoorY);
         rightDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadTunnel));
         spawnEntity(rightDoor);
+
+        registerDoors(new Entity[]{rightDoor, leftDoor});
     }
 
     private void loadTunnel() {

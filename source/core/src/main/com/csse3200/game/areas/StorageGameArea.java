@@ -80,8 +80,9 @@ public class StorageGameArea extends GameArea {
         spawnFloor();
         spawnShipmentBoxLid();
         spawnConveyor();
-        spawnGrokDroids();
         spawnTeleporter();
+
+        startWaves(player);
 
         ItemSpawner itemSpawner = new ItemSpawner(this);
         itemSpawner.spawnItems(ItemSpawnConfig.storage1map());
@@ -139,6 +140,8 @@ public class StorageGameArea extends GameArea {
         rightDoor.setPosition(b.rightX() - WALL_WIDTH - 0.001f, rightDoorY);
         rightDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadServer));
         spawnEntity(rightDoor);
+
+        registerDoors(new Entity[]{leftDoor, rightDoor});
     }
 
     private Entity spawnPlayer() {

@@ -64,13 +64,14 @@ public class TunnelGameArea extends GameArea {
         player = spawnPlayer();
         spawnPlatforms();
         spawnSpawnPads();
-        spawnGrokDroids();
         spawnTeleporter();
         spawnObjectDoors(new GridPoint2(0, 7), new GridPoint2(28, 7));
         spawnFloor();
         spawnPasswordTerminal(new GridPoint2(22, 17));
         spawnSpikes();
         spawnVisibleFloor();
+
+        startWaves(player);
 
         ItemSpawner itemSpawner = new ItemSpawner(this);
         itemSpawner.spawnItems(ItemSpawnConfig.tunnelmap());
@@ -109,6 +110,8 @@ public class TunnelGameArea extends GameArea {
         rightDoorComp = rightDoor.getComponent(DoorComponent.class);
         rightDoorComp.setLocked(true);
         TunnelGameArea.exposedRightDoor = rightDoorComp;
+
+        registerDoors(new Entity[]{leftDoor, rightDoor});
     }
 
     /**

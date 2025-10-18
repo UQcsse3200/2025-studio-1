@@ -56,8 +56,10 @@ public class ResearchGameArea extends GameArea {
         player = spawnPlayer();
         spawnPlatforms();
         spawnResearchProps();
-        spawnEnemies();
         spawnTeleporter();
+
+        startWaves(player);
+
         ItemSpawner itemSpawner = new ItemSpawner(this);
         itemSpawner.spawnItems(ItemSpawnConfig.researchmap());
 
@@ -85,6 +87,8 @@ public class ResearchGameArea extends GameArea {
         rightDoor.setPosition(b.rightX() - WALL_WIDTH - 0.001f, rightDoorY);
         rightDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadFlyingBossRoom));
         spawnEntity(rightDoor);
+
+        registerDoors(new Entity[]{leftDoor, rightDoor});
     }
 
     private Entity spawnPlayer() {
