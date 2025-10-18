@@ -37,7 +37,7 @@ loadScripts(document, 'script');</script>
 <li>
 <p>Summary:</p>
 <ul>
-<li><a href="#nested-class-summary">Nested</a></li>
+<li>Nested</li>
 <li>Field</li>
 <li><a href="#constructor-summary">Constr</a></li>
 <li><a href="#method-summary">Method</a></li>
@@ -57,7 +57,7 @@ loadScripts(document, 'script');</script>
 <div id="navbar-sub-list">
 <ul class="sub-nav-list">
 <li>Summary:&nbsp;</li>
-<li><a href="#nested-class-summary">Nested</a>&nbsp;|&nbsp;</li>
+<li>Nested&nbsp;|&nbsp;</li>
 <li>Field&nbsp;|&nbsp;</li>
 <li><a href="#constructor-summary">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method-summary">Method</a></li>
@@ -96,23 +96,6 @@ loadScripts(document, 'script');</script>
 </section>
 <section class="summary">
 <ul class="summary-list">
-<!-- ======== NESTED CLASS SUMMARY ======== -->
-<li>
-<section class="nested-class-summary" id="nested-class-summary">
-<h2>Nested Class Summary</h2>
-<div class="caption"><span>Nested Classes</span></div>
-<div class="summary-table three-column-summary">
-<div class="table-header col-first">Modifier and Type</div>
-<div class="table-header col-second">Class</div>
-<div class="table-header col-last">Description</div>
-<div class="col-first even-row-color"><code>static class&nbsp;</code></div>
-<div class="col-second even-row-color"><code><a href="SaveLoadService.PlayerInfo.html" class="type-name-link" title="class in com.csse3200.game.services">SaveLoadService.PlayerInfo</a></code></div>
-<div class="col-last even-row-color">
-<div class="block">mock game state to store entities.</div>
-</div>
-</div>
-</section>
-</li>
 <!-- ======== CONSTRUCTOR SUMMARY ======== -->
 <li>
 <section class="constructor-summary" id="constructor-summary">
@@ -144,19 +127,16 @@ loadScripts(document, 'script');</script>
  players stats.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#loadPlayer(com.csse3200.game.files.SaveGame.information)" class="member-name-link">loadPlayer</a><wbr>(<a href="../files/SaveGame.information.html" title="class in com.csse3200.game.files">SaveGame.information</a>&nbsp;playerStats)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#loadPlayer(com.csse3200.game.files.SaveGame.information,java.util.ArrayList,java.util.ArrayList)" class="member-name-link">loadPlayer</a><wbr>(<a href="../files/SaveGame.information.html" title="class in com.csse3200.game.files">SaveGame.information</a>&nbsp;playerStats,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/ArrayList.html" title="class or interface in java.util" class="external-link">ArrayList</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;savedArmour,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/ArrayList.html" title="class or interface in java.util" class="external-link">ArrayList</a>&lt;<a href="../files/SaveGame.itemInInven.html" title="class in com.csse3200.game.files">SaveGame.itemInInven</a>&gt;&nbsp;inventory)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">sets all the players stats based on the information from the save file json</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#loadPlayerInventory(java.util.ArrayList)" class="member-name-link">loadPlayerInventory</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/ArrayList.html" title="class or interface in java.util" class="external-link">ArrayList</a>&lt;<a href="../files/SaveGame.itemRetrieve.html" title="class in com.csse3200.game.files">SaveGame.itemRetrieve</a>&gt;&nbsp;inventory)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">loads plays items into their inventory</div>
-</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#save(java.lang.String,com.csse3200.game.areas.GameArea)" class="member-name-link">save</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;slot,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#save(java.lang.String,com.csse3200.game.areas.GameArea)" class="member-name-link">save</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;slot,
  <a href="../areas/GameArea.html" title="class in com.csse3200.game.areas">GameArea</a>&nbsp;gameArea)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Save the current GameArea to local storage (saves/slotX.json).</div>
 </div>
 </div>
@@ -199,24 +179,15 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="loadPlayer(com.csse3200.game.files.SaveGame.information)">
+<section class="detail" id="loadPlayer(com.csse3200.game.files.SaveGame.information,java.util.ArrayList,java.util.ArrayList)">
 <h3>loadPlayer</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">loadPlayer</span><wbr><span class="parameters">(<a href="../files/SaveGame.information.html" title="class in com.csse3200.game.files">SaveGame.information</a>&nbsp;playerStats)</span></div>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">loadPlayer</span><wbr><span class="parameters">(<a href="../files/SaveGame.information.html" title="class in com.csse3200.game.files">SaveGame.information</a>&nbsp;playerStats,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/ArrayList.html" title="class or interface in java.util" class="external-link">ArrayList</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;savedArmour,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/ArrayList.html" title="class or interface in java.util" class="external-link">ArrayList</a>&lt;<a href="../files/SaveGame.itemInInven.html" title="class in com.csse3200.game.files">SaveGame.itemInInven</a>&gt;&nbsp;inventory)</span></div>
 <div class="block">sets all the players stats based on the information from the save file json</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>playerStats</code> - </dd>
-</dl>
-</section>
-</li>
-<li>
-<section class="detail" id="loadPlayerInventory(java.util.ArrayList)">
-<h3>loadPlayerInventory</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">loadPlayerInventory</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/ArrayList.html" title="class or interface in java.util" class="external-link">ArrayList</a>&lt;<a href="../files/SaveGame.itemRetrieve.html" title="class in com.csse3200.game.files">SaveGame.itemRetrieve</a>&gt;&nbsp;inventory)</span></div>
-<div class="block">loads plays items into their inventory</div>
-<dl class="notes">
-<dt>Parameters:</dt>
-<dd><code>inventory</code> - from the json file to be loaded</dd>
 </dl>
 </section>
 </li>
