@@ -102,17 +102,32 @@ public class SettingsMenuDisplay extends UIComponent {
         // Get current values
         UserSettings.Settings settings = UserSettings.get();
 
+        TextField.TextFieldStyle style = new TextField.TextFieldStyle(skin.get(TextField.TextFieldStyle.class));
+        style.font.getData().setScale(1.5f);
+
+
         // Create components
         Label fpsLabel = new Label("FPS Cap:", skin, STYLE_WHITE);
-        fpsText = new TextField(Integer.toString(settings.fps), skin);
+        fpsText = new TextField(Integer.toString(settings.fps), style);
 
         Label fullScreenLabel = new Label("Fullscreen:", skin, STYLE_WHITE);
         fullScreenCheck = new CheckBox("", skin);
         fullScreenCheck.setChecked(settings.fullscreen);
+        Label fullScreenState = new Label(settings.fullscreen ? "ON" : "OFF", skin, STYLE_WHITE);
+        HorizontalGroup fullScreenCheckGroup = new HorizontalGroup();
+        fullScreenCheckGroup.space(15f);
+        fullScreenCheckGroup.addActor(fullScreenCheck);
+        fullScreenCheckGroup.addActor(fullScreenState);
 
         Label vsyncLabel = new Label("VSync:", skin, STYLE_WHITE);
         vsyncCheck = new CheckBox("", skin);
         vsyncCheck.setChecked(settings.vsync);
+        Label vsyncCheckState = new Label(settings.vsync ? "ON" : "OFF", skin, STYLE_WHITE);
+        HorizontalGroup vsyncCheckGroup = new HorizontalGroup();
+        vsyncCheckGroup.space(15f);
+        vsyncCheckGroup.addActor(vsyncCheck);
+        vsyncCheckGroup.addActor(vsyncCheckState);
+
 
         Label uiScaleLabel = new Label("ui Scale (Unused):", skin, STYLE_WHITE);
         uiScaleSlider = new Slider(0.2f, 2f, 0.1f, false, skin);
@@ -128,6 +143,20 @@ public class SettingsMenuDisplay extends UIComponent {
         Label musicLabel = new Label("Music:", skin, STYLE_WHITE);
         musicCheck = new CheckBox("", skin);
         musicCheck.setChecked(settings.isMusicEnabled());
+        Label musicStateLabel = new Label(musicCheck.isChecked() ? "ON" : "OFF", skin, STYLE_WHITE);
+        HorizontalGroup musicCheckGroup = new HorizontalGroup();
+        musicCheckGroup.space(15f);
+        musicCheckGroup.addActor(musicCheck);
+        musicCheckGroup.addActor(musicStateLabel);
+
+        //Enlarge label text
+        fpsLabel.setFontScale(2f);
+        fullScreenLabel.setFontScale(2f);
+        vsyncLabel.setFontScale(2f);
+        uiScaleLabel.setFontScale(2f);
+        displayModeLabel.setFontScale(2f);
+        musicLabel.setFontScale(2f);
+
 
         // Layout table
         Table table = new Table();
@@ -137,11 +166,11 @@ public class SettingsMenuDisplay extends UIComponent {
 
         table.row().padTop(10f);
         table.add(fullScreenLabel).right().padRight(15f);
-        table.add(fullScreenCheck).left();
+        table.add(fullScreenCheckGroup).left();
 
         table.row().padTop(10f);
         table.add(vsyncLabel).right().padRight(15f);
-        table.add(vsyncCheck).left();
+        table.add(vsyncCheckGroup).left();
 
         table.row().padTop(10f);
         Table uiScaleTable = new Table();
@@ -157,7 +186,7 @@ public class SettingsMenuDisplay extends UIComponent {
 
         table.row().padTop(10f);
         table.add(musicLabel).right().padRight(15f);
-        table.add(musicCheck).left();
+        table.add(musicCheckGroup).left();
 
         // Events on inputs
         uiScaleSlider.addListener(
@@ -171,11 +200,27 @@ public class SettingsMenuDisplay extends UIComponent {
                 (Event event) -> {
                     settings.setMusicEnabled(musicCheck.isChecked());
                     UserSettings.set(settings, true);
+                    musicStateLabel.setText(musicCheck.isChecked() ? "ON" : "OFF");
                     return true;
                 });
 
+        fullScreenCheck.addListener(event -> {
+            boolean checked = fullScreenCheck.isChecked();
+            fullScreenState.setText(checked ? "ON" : "OFF");
+            return true;
+        });
+
+
+        vsyncCheck.addListener(event -> {
+            boolean checked = vsyncCheck.isChecked();
+            fullScreenState.setText(checked ? "ON" : "OFF");
+            return true;
+        });
+
+
         return table;
     }
+
 
     /**
      * Returns the display mode from the provided list that matches the current system mode,
@@ -281,6 +326,7 @@ public class SettingsMenuDisplay extends UIComponent {
 
         UserSettings.set(settings, true);
         ServiceLocator.getMusicService().setMenuMusicPlaying(musicCheck.isChecked());
+        ServiceLocator.getMusicService().setForestMusicPlaying(musicCheck.isChecked());
     }
 
     /**
