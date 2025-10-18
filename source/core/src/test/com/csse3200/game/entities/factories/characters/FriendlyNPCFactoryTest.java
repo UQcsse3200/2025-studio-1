@@ -5,7 +5,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.rendering.AnimationRenderComponent;
@@ -25,7 +24,6 @@ import static org.mockito.Mockito.*;
 
 /**
  * Unit tests for FriendlyNPCFactory.
- *
  * These tests verify that each factory method correctly attaches
  * expected components and sets appropriate scaling values.
  * LibGDX dependencies are mocked to allow headless testing.
@@ -77,7 +75,7 @@ class FriendlyNPCFactoryTest {
         assertNotNull(npc.getComponent(NpcDebugKeyInteractionComponent.class));
         assertNotNull(npc.getComponent(NpcDialogueDataComponent.class));
         assertNotNull(npc.getComponent(TipComponent.class));
-        assertNotNull(npc.getComponent(NpcInterationComponent.class));
+        assertNotNull(npc.getComponent(NpcInteractionComponent.class));
     }
 
     /**
@@ -92,7 +90,7 @@ class FriendlyNPCFactoryTest {
         assertNotNull(assister.getComponent(NpcDialogueDataComponent.class));
         assertNotNull(assister.getComponent(AssistorTaskComponent.class));
         assertNotNull(assister.getComponent(TipComponent.class));
-        assertNotNull(assister.getComponent(NpcInterationComponent.class));
+        assertNotNull(assister.getComponent(NpcInteractionComponent.class));
 
         assertEquals(1.1f, assister.getScale().x, 1e-5);
         assertEquals(1.1f, assister.getScale().y, 1e-5);
@@ -110,7 +108,7 @@ class FriendlyNPCFactoryTest {
         assertNotNull(nurse.getComponent(NpcDialogueDataComponent.class));
         assertNotNull(nurse.getComponent(NpcHealingComponent.class));
         assertNotNull(nurse.getComponent(TipComponent.class));
-        assertNotNull(nurse.getComponent(NpcInterationComponent.class));
+        assertNotNull(nurse.getComponent(NpcInteractionComponent.class));
     }
 
     /**
