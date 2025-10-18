@@ -27,9 +27,13 @@ public class Reception extends GameArea {
     private int roomDiffNumber = 2;
     private Entity player;
     private static GridPoint2 playerSpawn = new GridPoint2(8, 10);
+    
+    private static boolean isCleared = false;
 
     public Reception(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
         super(terrainFactory, cameraComponent);
+
+        this.getEvents().addListener("room cleared", Reception::clearRoom);
     }
 
     @Override
@@ -46,15 +50,16 @@ public class Reception extends GameArea {
         spawncomic_stand();
         spawnTeleporter();
 
-        startWaves(player);
+        if (!Reception.isCleared) {
+            startWaves(player);
+            ItemSpawner itemSpawner = new ItemSpawner(this);
+            itemSpawner.spawnItems(ItemSpawnConfig.receptionmap());
+        }
 
         Entity ui = new Entity();
         ui.addComponent(new GameAreaDisplay("Reception"))
                 .addComponent(new com.csse3200.game.components.gamearea.FloorLabelDisplay("Floor 2"));
         spawnEntity(ui);
-        ItemSpawner itemSpawner = new ItemSpawner(this);
-        itemSpawner.spawnItems(ItemSpawnConfig.receptionmap());
-
     }
 
     public static Reception load(TerrainFactory terrainFactory, CameraComponent camera) {
@@ -123,7 +128,7 @@ public class Reception extends GameArea {
         rightDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadBackToFloor5));
         spawnEntity(rightDoor);
 
-        registerDoors(new Entity[]{leftDoor, rightDoor});
+        if (!Reception.isCleared) registerDoors(new Entity[]{leftDoor, rightDoor});
     }
 
     private void loadForest() {
@@ -247,5 +252,10 @@ public class Reception extends GameArea {
 
     public Entity getPlayer() {
         return player;
+    }
+
+    public static void clearRoom() {
+        Reception.isCleared = true;
+        logger.debug("Reception is cleared");
     }
 }

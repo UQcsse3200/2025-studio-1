@@ -43,7 +43,7 @@ import java.util.function.Supplier;
  * <p>Support for enabling/disabling game areas could be added by making this a Component instead.
  */
 public abstract class GameArea implements Disposable {
-    private static final Logger logger = LoggerFactory.getLogger(MainHall.class);
+    protected static final Logger logger = LoggerFactory.getLogger(MainHall.class);
     protected TerrainComponent terrain;
     protected List<Entity> areaEntities;
     protected TerrainFactory terrainFactory;
