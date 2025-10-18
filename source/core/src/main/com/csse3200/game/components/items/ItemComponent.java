@@ -128,6 +128,7 @@ public class ItemComponent extends Component {
         if ("lightsaber".equals(this.getName())) return new Vector2(0.7f, -0.2f); // works while facing left
         if ("dagger".equals(this.getName())) return new Vector2(1.0f, 0.3f);
         if ("pistol".equals(this.getName())) return new Vector2(0.75f, -0.1f);
+        if ("rocketlauncher".equals(this.getName())) return new Vector2(0.75f, -0.1f);
         return new Vector2(0.7f, 0.3f);
     }
 }

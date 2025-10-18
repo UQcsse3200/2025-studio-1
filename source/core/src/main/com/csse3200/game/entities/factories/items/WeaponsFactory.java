@@ -60,6 +60,7 @@ public class WeaponsFactory {
                 RangedWeaponConfig rangedConfig = (RangedWeaponConfig) config;
                 item.setType(ItemTypes.RANGED);
                 weapon.addComponent(new MagazineComponent(rangedConfig.ammoCapacity));
+
                 // using TextureRenderWithRotationComponent to allow guns to follow cursor
                 weapon.addComponent(new TextureRenderWithRotationComponent(rangedConfig.texturePath));
                 weapon.getComponent(TextureRenderComponent.class).disableComponent();

@@ -32,7 +32,6 @@ public class InteractableStationFactory {
         base.getComponent(ColliderComponent.class).setSensor(true);
         base.setInteractable(true);
         return base;
-
     }
 
     /**
@@ -54,5 +53,4 @@ public class InteractableStationFactory {
                 PhysicsComponent.AlignX.CENTER, PhysicsComponent.AlignY.CENTER);
         return bench;
     }
-
 }
