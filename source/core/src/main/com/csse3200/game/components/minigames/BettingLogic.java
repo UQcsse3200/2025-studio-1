@@ -16,7 +16,6 @@ public class BettingLogic {
     private final int multiplier;
     private int balance;
     private int bet;
-    private boolean doubled;
 
     /**
      * Constructs a new {@code BettingLogic} instance.
@@ -30,7 +29,6 @@ public class BettingLogic {
         this.inventory = inventory;
         this.balance = inventory.getProcessor();
         this.bet = 0;
-        this.doubled = false;
     }
 
     /**
@@ -97,7 +95,6 @@ public class BettingLogic {
         int winnings = calculateWinnings();
         inventory.addProcessor(winnings);
         balance = inventory.getProcessor();
-        undoDouble();
     }
 
     /**
@@ -106,7 +103,6 @@ public class BettingLogic {
     public void onTie() {
         inventory.addProcessor(bet);
         balance = inventory.getProcessor();
-        undoDouble();
     }
 
     /**
@@ -117,16 +113,13 @@ public class BettingLogic {
      * </p>
      */
     public void onLose() {
-        undoDouble();
         // Already subtracted bet, nothing more to do
     }
 
     public void doubleBet() {
         if (bet > balance) throw new IllegalArgumentException("Not enough balance");
-        bet *= 2;
         inventory.addProcessor(-bet);
         balance = inventory.getProcessor();
-        doubled = true;
     }
 
     public boolean canDouble() {
@@ -137,10 +130,16 @@ public class BettingLogic {
         placeBet(bet);
     }
 
-    private void undoDouble() {
-        if(doubled) {
-            bet /= 2;
-            doubled = false;
-        }
+    public void doubleWin() {
+        int winnings = calculateWinnings();
+        inventory.addProcessor(winnings * 2);
+        balance = inventory.getProcessor();
     }
+
+    public void doubleTie() {
+        inventory.addProcessor(bet * 2);
+        balance = inventory.getProcessor();
+    }
+
+
     }

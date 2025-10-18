@@ -44,10 +44,12 @@ public class BlackjackScreenDisplay extends UIComponent {
     private TextButton hitBtn;
     private TextButton standBtn;
     private TextButton splitBtn;
+    private TextButton doubleBtn;
     private Table dealerCardsTable;
     private Table playerCardsTable;
     private Table resultsTable;
     private Label dealerValueLabel;
+    private Label cardsRemainingLabel;
     private TextureAtlas atlas;
 
     private BlackJackGame gameLogic;
@@ -86,14 +88,11 @@ public class BlackjackScreenDisplay extends UIComponent {
         addButtons();
 
         // Game event listeners
-        entity.getEvents().addListener("playerbust", () -> showRestart("Player Busts! Dealer Wins"));
-        entity.getEvents().addListener("dealerbust", () -> showRestart("Dealer Busts! Player Wins"));
-        entity.getEvents().addListener("playerWin", () -> showRestart("Player Wins!"));
-        entity.getEvents().addListener("dealerWin", () -> showRestart("Dealer Wins!"));
-        entity.getEvents().addListener("tie", () -> showRestart("It's a Tie!"));
         entity.getEvents().addListener("hide", this::hide);
         entity.getEvents().addListener("betPlaced", this::show);
         entity.getEvents().addListener("displayResults", this::showResults);
+        entity.getEvents().addListener("splitSuccess", this::split);
+        entity.getEvents().addListener("doubleSuccess", this::doubleDown);
 
         hide();
     }
@@ -145,6 +144,15 @@ public class BlackjackScreenDisplay extends UIComponent {
         root.top().pad(20);
         root.defaults().pad(10);
         stage.addActor(root);
+
+        root.top(); // align to top of the screen
+
+// Top row for deck info
+        cardsRemainingLabel = new Label("Cards: " + "104", skin);
+        cardsRemainingLabel.setFontScale(1.1f);
+
+        root.add(cardsRemainingLabel).expandX().right().pad(10); // right-align it
+        root.row();
     }
 
     /**
@@ -241,7 +249,16 @@ public class BlackjackScreenDisplay extends UIComponent {
          splitBtn.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                gameLogic.splitHand();
+                entity.getEvents().trigger("split");
+                updateHands();
+            }
+        });
+
+        doubleBtn = new TextButton("Double", skin);
+        doubleBtn.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                entity.getEvents().trigger("double");
                 updateHands();
             }
         });
@@ -250,7 +267,8 @@ public class BlackjackScreenDisplay extends UIComponent {
         Table buttonRow = new Table();
         buttonRow.add(hitBtn).padRight(10f);
         buttonRow.add(standBtn).padRight(10f);
-        buttonRow.add(splitBtn);
+        buttonRow.add(splitBtn).padRight(10f);
+        buttonRow.add(doubleBtn).padRight(10f);
         root.add(buttonRow).padTop(15f).row();
     }
 
@@ -294,6 +312,7 @@ public class BlackjackScreenDisplay extends UIComponent {
         if (!gameLogic.isDealerTurn()) {
             splitBtn.setVisible(
                     gameLogic.getCurrentHand().canSplit());
+            doubleBtn.setVisible(gameLogic.getCurrentHand().canDouble());
             if (!gameLogic.getDealerHand().isEmpty()) {
                 TextureRegion firstCard = gameLogic.getDealerHand().getFirst().getTexture();
                 Image cardImage = new Image(new TextureRegionDrawable(firstCard));
@@ -312,6 +331,7 @@ public class BlackjackScreenDisplay extends UIComponent {
         }
 
         displayPlayerHand();
+        cardsRemainingLabel.setText("Cards: " + gameLogic.getDeck().cardsRemaining());
 
         // Player’s cards
 
@@ -373,17 +393,8 @@ public class BlackjackScreenDisplay extends UIComponent {
     /**
      * Displays a round result message and enables the "Continue" button.
      *
-     * @param msg the message to display to the player
+     * @param results the messages to display to the player
      */
-    private void showRestart(String msg) {
-        /*
-        updateHands();
-        resultLabel.setText(msg);
-        exitBtn.setVisible(true);
-        hitBtn.setVisible(false);
-        standBtn.setVisible(false); */
-    }
-
     private void showResults(List<String> results) {
         resultsTable.clearChildren();
 
@@ -397,8 +408,16 @@ public class BlackjackScreenDisplay extends UIComponent {
         hitBtn.setVisible(false);
         standBtn.setVisible(false);
         splitBtn.setVisible(false);
+        doubleBtn.setVisible(false);
+    }
 
-       // resultsTable.invalidateHierarchy();
+    private void split() {
+        gameLogic.splitHand();
+        updateHands();
+    }
+
+    private void doubleDown() {
+        gameLogic.doubleDown();
     }
 
     /**

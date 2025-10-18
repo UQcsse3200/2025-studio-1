@@ -86,7 +86,6 @@ public class BlackJackGame extends Component {
     public void startGame() {
         dealerTurn = false;
         handIndex = 0;
-        deck.resetDeck();
         dealerHand.resetHand();
         playerHands.clear();
         playerHands.add(currentHand);
@@ -110,6 +109,10 @@ public class BlackJackGame extends Component {
 
     }
 
+    public Deck getDeck() {
+        return deck;
+    }
+
     public void nextHand() {
         if (handIndex < playerHands.size() - 1) {
             handIndex++;
@@ -122,7 +125,6 @@ public class BlackJackGame extends Component {
 
     public void splitHand() {
         if (currentHand.canSplit() && playerHands.size() < 4) {
-            entity.getEvents().trigger("split");
             Card second = currentHand.getCards().get(1);
 
             currentHand.remove(second);
@@ -137,6 +139,12 @@ public class BlackJackGame extends Component {
             }
 
         }
+    }
+
+    public void doubleDown() {
+        currentHand.setDoubled(true);
+        currentHand.addCard(deck.drawCard());
+        nextHand();
     }
 
     public int getActiveHandIndex() {
@@ -155,27 +163,50 @@ public class BlackJackGame extends Component {
             String outcome;
             if(hand.isBlackjack()) {
                 outcome = "Hand " + i + ": Blackjack! Player Wins!";
-                entity.getEvents().trigger("win");
+                winner(hand);
             } else if(hand.isBust()) {
                 outcome = "Hand " + i + ": Bust! Dealer Wins!";
-                entity.getEvents().trigger("lose");
+                lose(hand);
             } else if(dealerHand.isBust()){
                 outcome = "Hand " + i + ": Dealer Busts! Player Wins!";
-                entity.getEvents().trigger("win");
+                winner(hand);
             } else if(hand.getValue() < dealerHand.getValue()) {
                 outcome = "Hand " + i + ": Dealer Wins!";
-                entity.getEvents().trigger("lose");
+                lose(hand);
             } else if (hand.getValue() > dealerHand.getValue()) {
                 outcome = "Hand " + i + ": Player Wins!";
-                entity.getEvents().trigger("win");
+                winner(hand);
             } else {
                 outcome = "Hand " + i + ": Tie!";
-                entity.getEvents().trigger("tie");
+                if(hand.isDoubled()) {
+                    entity.getEvents().trigger("doubleTie");
+                    hand.setDoubled(false);
+                } else {
+                    entity.getEvents().trigger("tie");
+                }
             }
             results.add(outcome);
             i++;
         }
         entity.getEvents().trigger("displayResults", results);
+    }
+
+    private void winner(Hand hand) {
+        if(hand.isDoubled()) {
+            entity.getEvents().trigger("doubleWin");
+            hand.setDoubled(false);
+        } else {
+            entity.getEvents().trigger("win");
+        }
+    }
+
+    private void lose(Hand hand) {
+        if(hand.isDoubled()) {
+            entity.getEvents().trigger("doubleLose");
+            hand.setDoubled(false);
+        } else {
+            entity.getEvents().trigger("lose");
+        }
     }
 
 

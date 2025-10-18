@@ -5,9 +5,11 @@ import java.util.List;
 
 public class Hand {
     List<Card> cards;
+    boolean doubled;
 
     public Hand() {
         cards = new ArrayList<>();
+        doubled = false;
     }
 
     public void addCard(Card card) {
@@ -24,6 +26,14 @@ public class Hand {
 
     public boolean isEmpty() {
         return cards.isEmpty();
+    }
+
+    public void setDoubled(boolean bool) {
+        doubled = bool;
+    }
+
+    public boolean isDoubled() {
+        return doubled;
     }
 
     /**
@@ -72,6 +82,10 @@ public class Hand {
             return true;
         }
         return false;
+    }
+
+    public boolean canDouble() {
+        return cards.size() == 2;
     }
 
     public void remove(Card card) {
