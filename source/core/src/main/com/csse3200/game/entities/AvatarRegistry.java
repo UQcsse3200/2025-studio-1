@@ -19,7 +19,7 @@ public class AvatarRegistry {
      * simple class to create avatars stats.
      */
     private AvatarRegistry() {
-
+        throw new IllegalStateException("Utility class");
     }
 
     /**
