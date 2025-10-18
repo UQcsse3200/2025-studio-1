@@ -34,6 +34,10 @@ public class PlayerFactory {
         throw new IllegalStateException("Instantiating static util class");
     }
 
+    /**
+     *
+     * @return the player config
+     */
     public static PlayerConfig getStats() {
         if (stats == null) {
             stats = safeLoadPlayerConfig();
@@ -41,6 +45,17 @@ public class PlayerFactory {
         return stats;
     }
 
+    /**
+     * Sets the stats
+     * @param pc PlayerConfig
+     */
+    public static void setStats(PlayerConfig pc) {
+        stats = pc;
+    }
+
+    /**
+     * resets the stats (for testing)
+     */
     public static void reset() {
         stats = null;
     }
