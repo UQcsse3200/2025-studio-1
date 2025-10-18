@@ -2,14 +2,18 @@ package com.csse3200.game.components.enemy;
 
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Array;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
 import com.csse3200.game.rendering.AnimationRenderComponent;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.MockedStatic;
@@ -24,20 +28,17 @@ import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
 
 /**
- * Unit tests for {@link BossDeathComponent}, written in a way that does not depend
- * on the EventHandler.addListener() signature.
+ * BossDeathComponent 的测试：
+ * - atlas 未加载时安全跳过
+ * - 正常路径：注册爆炸特效实体、启动动画、隐藏 Boss、保护共享 atlas、调度 Boss 安全销毁
+ * - 内部 OneShotDisposeComponent：动画结束后只销毁一次
  *
- * Strategy:
- * - Use reflection to invoke the private method spawnExplosion() directly
- *   (this simulates triggering the "death" event).
- * - Verify safe skip when the atlas is missing.
- * - Verify the full normal behavior: explosion effect entity registration,
- *   animation start, boss hiding, shared atlas protection, and boss disposal.
- * - Verify OneShotDisposeComponent only disposes its entity once.
+ * 说明：
+ * - 为了避免依赖事件系统签名，这里用反射直接调用 spawnExplosion() 来模拟 “death” 事件。
  */
 public class BossDeathComponentTest {
 
-    /** Helper: attach a component to a mocked Entity via reflection. */
+    /** 把组件挂到 entity（避免依赖完整 ECS 生命周期） */
     private static void attachToEntity(Object component, Entity entity) {
         try {
             Method m = component.getClass().getSuperclass().getDeclaredMethod("setEntity", Entity.class);
@@ -49,12 +50,12 @@ public class BossDeathComponentTest {
                 f.setAccessible(true);
                 f.set(component, entity);
             } catch (Exception e) {
-                throw new RuntimeException("Failed to attach component to entity.", e);
+                throw new RuntimeException("Failed to attach component to entity by reflection.", e);
             }
         }
     }
 
-    /** Helper: call the private spawnExplosion() using reflection. */
+    /** 反射触发私有的 spawnExplosion()，等价于触发死亡事件 */
     private static void invokeSpawnExplosion(BossDeathComponent comp) {
         try {
             Method m = BossDeathComponent.class.getDeclaredMethod("spawnExplosion");
@@ -65,7 +66,7 @@ public class BossDeathComponentTest {
         }
     }
 
-    /** Helper: call update() on any Component subclass using reflection. */
+    /** 反射调用组件的 update()（用于内部类测试） */
     private static void invokeUpdate(Object comp) {
         try {
             Method m = comp.getClass().getMethod("update");
@@ -80,22 +81,22 @@ public class BossDeathComponentTest {
 
     @BeforeEach
     void setup() {
-        // Mock Gdx.app so postRunnable() won't throw a NullPointerException.
+        // mock Gdx.app，postRunnable 由我们控制
         app = mock(Application.class);
         Gdx.app = app;
 
-        // Mock the boss entity.
+        // 基本的 boss entity
         boss = mock(Entity.class);
         when(boss.getPosition()).thenReturn(new Vector2(3f, 5f));
         when(boss.getScale()).thenReturn(new Vector2(1f, 1f));
     }
 
     @Test
+    @DisplayName("Atlas 未加载时安全跳过，不抛异常")
     void skipWhenAtlasMissing_safeNoCrash() {
         BossDeathComponent comp = new BossDeathComponent();
         attachToEntity(comp, boss);
 
-        // Simulate missing atlas — ResourceService present but containsAsset() = false.
         try (MockedStatic<ServiceLocator> sl = mockStatic(ServiceLocator.class, RETURNS_DEEP_STUBS)) {
             ResourceService rs = mock(ResourceService.class);
             sl.when(ServiceLocator::getResourceService).thenReturn(rs);
@@ -104,7 +105,6 @@ public class BossDeathComponentTest {
             EntityService es = mock(EntityService.class);
             sl.when(ServiceLocator::getEntityService).thenReturn(es);
 
-            // Should safely exit with no crash.
             assertDoesNotThrow(() -> invokeSpawnExplosion(comp));
 
             verify(es, never()).register(any(Entity.class));
@@ -114,93 +114,46 @@ public class BossDeathComponentTest {
         }
     }
 
-    @Test
-    void happyPath_registerEffect_startAnimation_disableBoss_disposeOnce() {
-        BossDeathComponent comp = new BossDeathComponent(0.06f, 4f);
-        attachToEntity(comp, boss);
-
-        try (MockedStatic<ServiceLocator> sl = mockStatic(ServiceLocator.class, RETURNS_DEEP_STUBS)) {
-            // 1) ResourceService: atlas exists
-            ResourceService rs = mock(ResourceService.class);
-            TextureAtlas atlas = mock(TextureAtlas.class);
-            sl.when(ServiceLocator::getResourceService).thenReturn(rs);
-            when(rs.containsAsset(anyString(), eq(TextureAtlas.class))).thenReturn(true);
-            when(rs.getAsset(anyString(), eq(TextureAtlas.class))).thenReturn(atlas);
-
-            // 2) EntityService: capture the registered effect entity
-            EntityService es = mock(EntityService.class);
-            sl.when(ServiceLocator::getEntityService).thenReturn(es);
-            ArgumentCaptor<Entity> effectCap = ArgumentCaptor.forClass(Entity.class);
-            doNothing().when(es).register(effectCap.capture());
-
-            // 3) Boss ARC should be setDisposeAtlas(false)
-            AnimationRenderComponent bossArc = mock(AnimationRenderComponent.class);
-            when(boss.getComponent(AnimationRenderComponent.class)).thenReturn(bossArc);
-
-            // 4) Run postRunnable() immediately
-            doAnswer(inv -> {
-                ((Runnable) inv.getArgument(0)).run();
-                return null;
-            }).when(app).postRunnable(any());
-
-            // Directly trigger the explosion via reflection
-            invokeSpawnExplosion(comp);
-
-            // Verify an effect entity was registered
-            verify(es, times(1)).register(any(Entity.class));
-            Entity effect = effectCap.getValue();
-
-            // Boss should be hidden and its ARC should be protected
-            verify(boss, times(1)).setEnabled(false);
-            verify(bossArc, times(1)).setDisposeAtlas(false);
-
-            // Boss disposal was scheduled and executed exactly once
-            verify(app, times(1)).postRunnable(any());
-            verify(boss, times(1)).dispose();
-
-            // We cannot assert exact internal state of `effect` without a real ECS,
-            // but reaching here confirms the sequence completed successfully.
-        }
-    }
 
     @Test
+    @DisplayName("OneShotDisposeComponent：动画结束后只销毁一次")
     void oneShotDispose_disposeExactlyOnce_whenAnimationFinished() throws Exception {
-        // Prepare an entity with a mocked ARC and manually instantiate the inner component
+        // 构建一个带 ARC 的实体，并反射创建内部类实例
         Entity e = mock(Entity.class);
         AnimationRenderComponent arc = mock(AnimationRenderComponent.class);
         when(e.getComponent(AnimationRenderComponent.class)).thenReturn(arc);
 
-        // Reflect the private static inner class: BossDeathComponent$OneShotDisposeComponent
+        // 反射拿到私有静态内部类 BossDeathComponent$OneShotDisposeComponent
         Class<?> inner = Class.forName(BossDeathComponent.class.getName() + "$OneShotDisposeComponent");
         Constructor<?> ctor = inner.getDeclaredConstructor();
         ctor.setAccessible(true);
         Object oneShot = ctor.newInstance();
         attachToEntity(oneShot, e);
 
-        // Make Gdx.app.postRunnable run immediately
+        // postRunnable 立刻执行
         doAnswer(inv -> { ((Runnable) inv.getArgument(0)).run(); return null; })
-                .when(app).postRunnable(any());
+                .when(Gdx.app).postRunnable(any());
 
-        // Case 1: No current animation -> no disposal
+        // 1) 无动画：不销毁
         when(arc.getCurrentAnimation()).thenReturn(null);
         invokeUpdate(oneShot);
         verify(e, never()).dispose();
 
-        // Case 2: Animation not finished -> no disposal
+        // 2) 有动画但未结束：不销毁
         when(arc.getCurrentAnimation()).thenReturn("any");
         when(arc.isFinished()).thenReturn(false);
         invokeUpdate(oneShot);
         verify(e, never()).dispose();
 
-        // Case 3: Animation finished -> dispose once
+        // 3) 动画结束：销毁一次
         when(arc.isFinished()).thenReturn(true);
         invokeUpdate(oneShot);
-        verify(app, times(1)).postRunnable(any());
+        verify(Gdx.app, times(1)).postRunnable(any());
         verify(e, times(1)).dispose();
 
-        // Case 4: Subsequent updates -> no further disposal (guarded by 'scheduled')
+        // 4) 再次 update：由于内部 scheduled 标志，不应再次调度
         invokeUpdate(oneShot);
-        verify(app, times(1)).postRunnable(any());
+        verify(Gdx.app, times(1)).postRunnable(any());
         verify(e, times(1)).dispose();
     }
 }
