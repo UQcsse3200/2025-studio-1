@@ -18,24 +18,31 @@ import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
 
 /**
- * Tests for BlackholeAttackComponent without referencing a TimeSource type.
- * Covers:
- *  - early return when entity == null
- *  - early return when target == null
- *  - pull when player within radius
- *  - no pull when player outside radius
- *  - disposal after lifeTime via Gdx.app.postRunnable() and only once
+ * Unit tests for {@link BlackholeAttackComponent}.
+ *
+ * This test class verifies all logical branches without relying on a TimeSource type.
+ * It covers:
+ *  - Early return when entity == null
+ *  - Early return when target == null
+ *  - Pull effect when player is within radius
+ *  - No pull when player is outside the radius
+ *  - Disposal after lifetime expiration (via Gdx.app.postRunnable) and ensuring it only happens once
  */
 public class BlackholeAttackComponentTest {
 
-    // Attach component to a mocked Entity without full ECS
+    /**
+     * Helper: Attach the component to a mocked Entity using reflection,
+     * so we don’t require a full ECS environment.
+     */
     private static void attachToEntity(Object component, Entity entity) {
         try {
+            // Preferred method: use setEntity(Entity)
             Method m = component.getClass().getSuperclass().getDeclaredMethod("setEntity", Entity.class);
             m.setAccessible(true);
             m.invoke(component, entity);
         } catch (Exception ignored1) {
             try {
+                // Fallback: directly assign to the protected 'entity' field
                 Field f = component.getClass().getSuperclass().getDeclaredField("entity");
                 f.setAccessible(true);
                 f.set(component, entity);
@@ -47,11 +54,12 @@ public class BlackholeAttackComponentTest {
 
     @BeforeEach
     void setupGdxApp() {
-        // Mock Gdx.app; tests可在需要时让postRunnable立刻执行
+        // Mock Gdx.app so that postRunnable can be safely intercepted in tests
         Application app = mock(Application.class);
         Gdx.app = app;
     }
 
+    /** Verifies that update() exits early if entity == null (component not attached). */
     @Test
     void update_returnsEarly_whenEntityIsNull() {
         Entity target = mock(Entity.class);
@@ -61,6 +69,7 @@ public class BlackholeAttackComponentTest {
         verifyNoInteractions(target);
     }
 
+    /** Verifies that update() exits early if target == null (no player target). */
     @Test
     void update_returnsEarly_whenTargetIsNull() {
         Entity host = mock(Entity.class);
@@ -71,9 +80,10 @@ public class BlackholeAttackComponentTest {
         verify(host, never()).dispose();
     }
 
+    /** Verifies the pull effect occurs when the player is within the blackhole’s radius. */
     @Test
     void update_appliesPull_whenWithinRadius() {
-        // 使用 deep stubs：直接链式 stub ServiceLocator.getTimeSource().getDeltaTime()
+        // Using deep stubs allows chaining: ServiceLocator.getTimeSource().getDeltaTime()
         try (MockedStatic<ServiceLocator> sl =
                      mockStatic(ServiceLocator.class, RETURNS_DEEP_STUBS)) {
             sl.when(() -> ServiceLocator.getTimeSource().getDeltaTime()).thenReturn(0.016f);
@@ -81,9 +91,9 @@ public class BlackholeAttackComponentTest {
             Entity host = mock(Entity.class);
             Entity player = mock(Entity.class);
 
-            // 黑洞中心 (10,10)
+            // Blackhole center (10,10)
             when(host.getCenterPosition()).thenReturn(new Vector2(10f, 10f));
-            // 玩家中心 (12,10) 在半径5内；玩家当前位置用于 setPosition 计算
+            // Player center (12,10) — within radius 5
             when(player.getCenterPosition()).thenReturn(new Vector2(12f, 10f));
             when(player.getPosition()).thenReturn(new Vector2(12f, 10f));
 
@@ -92,13 +102,14 @@ public class BlackholeAttackComponentTest {
 
             comp.update();
 
-            // 期望：pullFactor=0.07 -> (11.86, 10.0)
+            // Expected pullFactor = 0.07 -> new position ≈ (11.86, 10.0)
             verify(player).setPosition(floatThat(x -> Math.abs(x - 11.86f) < 1e-3f),
                     floatThat(y -> Math.abs(y - 10f) < 1e-3f));
             verify(host, never()).dispose();
         }
     }
 
+    /** Verifies that no pull occurs if the player is outside the radius. */
     @Test
     void update_doesNotPull_whenOutsideRadius() {
         try (MockedStatic<ServiceLocator> sl =
@@ -108,7 +119,7 @@ public class BlackholeAttackComponentTest {
             Entity host = mock(Entity.class);
             Entity player = mock(Entity.class);
 
-            // 距离很大：> radius 5
+            // Very far apart (> radius 5)
             when(host.getCenterPosition()).thenReturn(new Vector2(0f, 0f));
             when(player.getCenterPosition()).thenReturn(new Vector2(100f, 0f));
             when(player.getPosition()).thenReturn(new Vector2(100f, 0f));
@@ -123,15 +134,20 @@ public class BlackholeAttackComponentTest {
         }
     }
 
+    /**
+     * Verifies that:
+     *  - The component disposes the entity once the lifetime is exceeded.
+     *  - The disposal happens only once, even after multiple updates.
+     */
     @Test
     void update_disposesOnLifetimeExpiry_onlyOnce() {
         try (MockedStatic<ServiceLocator> sl =
                      mockStatic(ServiceLocator.class, RETURNS_DEEP_STUBS)) {
-            // 两帧 0.6 + 0.6 > lifeTime(1.0)
+            // Three frames: 0.6 + 0.6 = 1.2 > lifeTime (1.0)
             sl.when(() -> ServiceLocator.getTimeSource().getDeltaTime())
                     .thenReturn(0.6f, 0.6f, 0.6f);
 
-            // 让 postRunnable 立即执行 runnable
+            // Make postRunnable execute the Runnable immediately
             doAnswer(invocation -> {
                 Runnable r = invocation.getArgument(0);
                 r.run();
@@ -148,19 +164,20 @@ public class BlackholeAttackComponentTest {
             BlackholeAttackComponent comp = new BlackholeAttackComponent(player, 5f, 1.0f);
             attachToEntity(comp, host);
 
-            // 第一次：0.6 未到期
+            // 1st frame: 0.6s elapsed, not expired yet
             comp.update();
             verify(host, never()).dispose();
 
-            // 第二次：1.2 到期 -> 应只调度/销毁一次
+            // 2nd frame: total 1.2s -> expired -> should dispose once
             comp.update();
             verify(Gdx.app, times(1)).postRunnable(any());
             verify(host, times(1)).dispose();
 
-            // 第三次：已处于 disposed 状态，不应再次调度
+            // 3rd frame: already disposed -> should not dispose again
             comp.update();
             verify(Gdx.app, times(1)).postRunnable(any());
             verify(host, times(1)).dispose();
         }
     }
 }
+
