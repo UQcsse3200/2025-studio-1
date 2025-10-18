@@ -121,6 +121,14 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Field</div>
 <div class="table-header col-last">Description</div>
+<div class="col-first even-row-color"><code>static final float</code></div>
+<div class="col-second even-row-color"><code><a href="#DEFAULT_FPS" class="member-name-link">DEFAULT_FPS</a></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code>static final <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color"><code><a href="#FRAME_PATTERN" class="member-name-link">FRAME_PATTERN</a></code></div>
+<div class="col-last odd-row-color">
+<div class="block">Constructs a new WinScreen instance.</div>
+</div>
 <div class="col-first even-row-color"><code>protected final <a href="../GdxGame.html" title="class in com.csse3200.game">GdxGame</a></code></div>
 <div class="col-second even-row-color"><code><a href="#game" class="member-name-link">game</a></code></div>
 <div class="col-last even-row-color">
@@ -143,9 +151,7 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
 <div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(com.csse3200.game.GdxGame)" class="member-name-link">TutorialScreen</a><wbr>(<a href="../GdxGame.html" title="class in com.csse3200.game">GdxGame</a>&nbsp;game)</code></div>
-<div class="col-last even-row-color">
-<div class="block">Constructs a new WinScreen instance.</div>
-</div>
+<div class="col-last even-row-color">&nbsp;</div>
 </div>
 </section>
 </li>
@@ -196,6 +202,43 @@ loadScripts(document, 'script');</script>
 <h2>Field Details</h2>
 <ul class="member-list">
 <li>
+<section class="detail" id="FRAME_PATTERN">
+<h3>FRAME_PATTERN</h3>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">FRAME_PATTERN</span></div>
+<div class="block">Constructs a new WinScreen instance.
+ <p>
+ This will:
+ <ul>
+   <li>Register services with <a href="../services/ServiceLocator.html" title="class in com.csse3200.game.services"><code>ServiceLocator</code></a></li>
+   <li>Create a renderer and position its camera</li>
+   <li>Load required assets</li>
+   <li>Build the UI (via <a href="#createUIScreen(com.badlogic.gdx.scenes.scene2d.Stage)"><code>createUIScreen(Stage stage)</code></a>)</li>
+ </ul></div>
+<dl class="notes">
+<dt>See Also:</dt>
+<dd>
+<ul class="tag-list">
+<li><a href="../../../../constant-values.html#com.csse3200.game.screens.TutorialScreen.FRAME_PATTERN">Constant Field Values</a></li>
+</ul>
+</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="DEFAULT_FPS">
+<h3>DEFAULT_FPS</h3>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">DEFAULT_FPS</span></div>
+<dl class="notes">
+<dt>See Also:</dt>
+<dd>
+<ul class="tag-list">
+<li><a href="../../../../constant-values.html#com.csse3200.game.screens.TutorialScreen.DEFAULT_FPS">Constant Field Values</a></li>
+</ul>
+</dd>
+</dl>
+</section>
+</li>
+<li>
 <section class="detail" id="game">
 <h3>game</h3>
 <div class="member-signature"><span class="modifiers">protected final</span>&nbsp;<span class="return-type"><a href="../GdxGame.html" title="class in com.csse3200.game">GdxGame</a></span>&nbsp;<span class="element-name">game</span></div>
@@ -221,19 +264,6 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="&lt;init&gt;(com.csse3200.game.GdxGame)">
 <h3>TutorialScreen</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">TutorialScreen</span><wbr><span class="parameters">(<a href="../GdxGame.html" title="class in com.csse3200.game">GdxGame</a>&nbsp;game)</span></div>
-<div class="block">Constructs a new WinScreen instance.
- <p>
- This will:
- <ul>
-   <li>Register services with <a href="../services/ServiceLocator.html" title="class in com.csse3200.game.services"><code>ServiceLocator</code></a></li>
-   <li>Create a renderer and position its camera</li>
-   <li>Load required assets</li>
-   <li>Build the UI (via <a href="#createUIScreen(com.badlogic.gdx.scenes.scene2d.Stage)"><code>createUIScreen(Stage stage)</code></a>)</li>
- </ul></div>
-<dl class="notes">
-<dt>Parameters:</dt>
-<dd><code>game</code> - the <a href="../GdxGame.html" title="class in com.csse3200.game"><code>GdxGame</code></a> instance, used for screen navigation</dd>
-</dl>
 </section>
 </li>
 </ul>
