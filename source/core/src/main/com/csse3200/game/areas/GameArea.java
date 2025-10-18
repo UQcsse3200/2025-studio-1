@@ -163,7 +163,7 @@ public abstract class GameArea implements Disposable {
      * @return Room number as an int if the floor name is in the format "Floor2"
      * with 2 being any number, otherwise returns 1.
      */
-    public int getRoomNumber() { // changed from protected to public for EnemyWaves access
+    private int getRoomNumber() {
         return switch (this.toString()) {
             case "Reception" -> 2;
             case "Mainhall" -> 3;
@@ -348,8 +348,12 @@ public abstract class GameArea implements Disposable {
      * Retrieves current wave count for services
      */
     public int currentWave() {
-        return wavesManager.getWaveNumber();
+        if (wavesManager != null) {
+            return wavesManager.getWaveNumber();
+        }
+        return 0;
     }
+
 
     /**
      * Adds GhostGPT enemies onto the map.
@@ -936,7 +940,7 @@ public abstract class GameArea implements Disposable {
     /**
      * Helper to clear current entities and transition to a new area.
      */
-    protected void clearAndLoad(Supplier<GameArea> nextAreaSupplier) {
+    public void clearAndLoad(Supplier<GameArea> nextAreaSupplier) {
         if (!beginTransition()) return;
 
         for (Entity entity : areaEntities) {

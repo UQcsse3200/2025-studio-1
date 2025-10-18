@@ -185,7 +185,6 @@ public class ServiceLocator {
         saveLoadService = null;
         player = null;
         discoveryService = null;
-        player = null;
     }
 
     /**
