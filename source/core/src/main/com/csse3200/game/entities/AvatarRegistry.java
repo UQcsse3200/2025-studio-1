@@ -16,6 +16,13 @@ public class AvatarRegistry {
     private static Avatar current; //storage system for the avatar to be able to be extracted later
 
     /**
+     * simple class to create avatars stats.
+     */
+    private AvatarRegistry() {
+
+    }
+
+    /**
      * finds the file with all the information about the avatars and constructs a list with all the avatars and their
      * information
      *
