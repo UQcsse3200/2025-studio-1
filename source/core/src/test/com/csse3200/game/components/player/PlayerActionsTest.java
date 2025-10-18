@@ -369,7 +369,6 @@ class PlayerActionsTest {
             inventory = new InventoryComponent(5);
             actions = new PlayerActions();
             player = new Entity().addComponent(actions).addComponent(inventory);
-            player.create();
         }
 
         @Test

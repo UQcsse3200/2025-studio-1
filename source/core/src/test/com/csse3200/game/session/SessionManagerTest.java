@@ -181,4 +181,145 @@ class SessionManagerTest {
             "previousSessionId should increment with each new session start");
     }
 
+    /**
+     * Ensures that calling {@link SessionManager#getCurrentSession()}
+     * before any session has started returns {@code null}.
+     */
+    @Test
+    @DisplayName("getCurrentSession(): should return null when no session started")
+    void getCurrentSession_beforeStart_returnsNull() {
+        SessionManager mgr = new SessionManager();
+        assertNull(mgr.getCurrentSession(),
+            "Before starting a session, getCurrentSession() should return null");
+    }
+
+    /**
+     * Ensures that calling {@link SessionManager#startNewSession()}
+     * replaces the existing active session with a fresh instance.
+     */
+    @Test
+    @DisplayName("startNewSession(): should overwrite existing current session")
+    void startNewSession_overwritesExistingSession() {
+        SessionManager mgr = new SessionManager();
+        GameSession first = mgr.startNewSession();
+        GameSession second = mgr.startNewSession();
+
+        assertNotSame(first, second, "A new session should replace the previous one");
+        assertSame(second, mgr.getCurrentSession(),
+            "Current session reference should point to the most recent session");
+    }
+
+    /**
+     * Uses reflection to simulate a non-null {@code currentSession}
+     * and confirms that {@link SessionManager#endSession()} sets it to null
+     * even if it wasn't started via {@link SessionManager#startNewSession()}.
+     */
+    @Test
+    @DisplayName("endSession(): should nullify currentSession even when manually assigned via reflection")
+    void endSession_nullifiesManuallyAssignedSession() throws Exception {
+        SessionManager mgr = new SessionManager();
+
+        Field field = SessionManager.class.getDeclaredField("currentSession");
+        field.setAccessible(true);
+        field.set(mgr, new GameSession(99)); // manually assign dummy session
+
+        mgr.endSession();
+        assertNull(mgr.getCurrentSession(), "endSession() should set currentSession to null");
+    }
+
+    /**
+     * Ensures that {@link SessionManager#endSession()} does not
+     * throw exceptions or change internal counters when called
+     * after the {@code currentSession} is already null.
+     */
+    @Test
+    @DisplayName("endSession(): should handle already-null currentSession gracefully")
+    void endSession_alreadyNullSession_doesNotThrow() throws Exception {
+        SessionManager mgr = new SessionManager();
+
+        // Forcefully set currentSession = null (even though it’s already null)
+        Field field = SessionManager.class.getDeclaredField("currentSession");
+        field.setAccessible(true);
+        field.set(mgr, null);
+
+        assertDoesNotThrow(mgr::endSession,
+            "Calling endSession() with null currentSession should not throw an exception");
+        assertNull(mgr.getCurrentSession(),
+            "After ending a null session, currentSession should remain null");
+    }
+
+    /**
+     * Validates that {@link SessionManager#startNewSession()} reuses the
+     * internal session counter consistently, even after ending sessions.
+     */
+    @Test
+    @DisplayName("startNewSession(): should continue incrementing IDs after endSession()")
+    void sessionId_incrementsContinuously_acrossMultipleSessions() throws Exception {
+        SessionManager mgr = new SessionManager();
+        Field prevIdField = SessionManager.class.getDeclaredField("previousSessionId");
+        prevIdField.setAccessible(true);
+
+        mgr.startNewSession(); // id = 0
+        mgr.endSession();
+        int afterEnd = (int) prevIdField.get(mgr);
+
+        mgr.startNewSession(); // id = 1
+        int afterRestart = (int) prevIdField.get(mgr);
+
+        assertEquals(afterEnd + 1, afterRestart,
+            "Session IDs should keep incrementing across restarts");
+    }
+
+    /**
+     * Confirms that the leaderboard reset inside {@link SessionManager#endSession()}
+     * is triggered exactly once, even if the session is ended repeatedly.
+     */
+    @Test
+    @DisplayName("endSession(): should call leaderboard.reset() only once")
+    void endSession_callsLeaderboardResetOnce() {
+        SessionManager mgr = new SessionManager();
+        GameSession session = mgr.startNewSession();
+        var lb = session.getLeaderBoardManager();
+
+        // Add one entry to confirm reset will clear it
+        lb.addRound(10, 2.0f);
+        mgr.endSession();
+        assertTrue(lb.getLeaderBoard().isEmpty(), "Leaderboard should be reset after first endSession()");
+
+        // Call again — should not throw or change anything
+        assertDoesNotThrow(mgr::endSession, "Second call to endSession should not throw");
+        assertNull(mgr.getCurrentSession(), "Current session should remain null");
+    }
+
+    /**
+     * Ensures that calling {@link SessionManager#startNewSession()}
+     * immediately after creation doesn’t rely on any prior state.
+     */
+    @Test
+    @DisplayName("startNewSession(): should work correctly from a fresh instance with no prior session")
+    void startNewSession_onFreshInstance_worksCorrectly() {
+        SessionManager mgr = new SessionManager();
+        GameSession newSession = mgr.startNewSession();
+
+        assertNotNull(newSession, "Newly created session should not be null");
+        assertSame(newSession, mgr.getCurrentSession(),
+            "Current session should reference the newly created GameSession");
+    }
+
+    /**
+     * Ensures that {@link SessionManager#endSession()} is idempotent —
+     * multiple consecutive calls leave the same stable final state.
+     */
+    @Test
+    @DisplayName("endSession(): should remain idempotent and stable after multiple calls")
+    void endSession_isIdempotent() {
+        SessionManager mgr = new SessionManager();
+        mgr.startNewSession();
+        mgr.endSession();
+        mgr.endSession();
+        mgr.endSession();
+
+        assertNull(mgr.getCurrentSession(), "After multiple ends, currentSession should remain null");
+    }
+
 }

@@ -560,8 +560,6 @@ public class PlayerActions extends Component {
      * Makes player reload their equipped weapon
      */
     void reload() {
-
-
         InventoryComponent inventory = entity.getComponent(InventoryComponent.class);
         Entity gun = inventory.getCurrSlot();
 

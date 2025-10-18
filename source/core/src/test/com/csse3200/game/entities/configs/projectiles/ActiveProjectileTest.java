@@ -47,7 +47,7 @@ class ActiveProjectileTest {
      * The name must be one of
      * ["gravityStrength", "target", "activeProjectileType", "speed"]
      *
-     * @param component An initialised PlayerEquipComponent
+     * @param component An initialised ActiveProjectile component
      * @param name      The string of the name of the member that is wanted
      * @return The value that the private member is holding
      * @throws NoSuchFieldException   If the name given does not exist
