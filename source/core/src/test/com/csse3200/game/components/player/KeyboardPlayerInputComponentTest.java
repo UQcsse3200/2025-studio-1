@@ -161,8 +161,7 @@ class KeyboardPlayerInputComponentTest {
 
     @Test
     void shouldInteractOnPress() {
-       assertTrue(inputComponent.keyPressed(Keys.E));
-       // Idk how to do interact verify
+        assertTrue(inputComponent.keyPressed(Keys.E));
     }
 
     @Test
@@ -176,10 +175,20 @@ class KeyboardPlayerInputComponentTest {
     }
 
     // NOTE: Test selecting slot
-     @Test
-     void shouldSelectSlot() {
-        assertTrue(true);
-     }
+//    @Test
+//    void shouldEquipWhenSlotSelected() {
+//        assertTrue(inputComponent.keyReleased(Keys.NUM_1));
+//        verify(actions).equipWeapon(any(Entity.class));
+//    }
+
+//    @Test
+//    void shouldUnequipWhenSameSlotSelected() {
+//        assertTrue(inputComponent.keyReleased(Keys.NUM_1));
+//        verify(inputComponent).equipCurrentItem();
+//
+//        assertTrue(inputComponent.keyReleased(Keys.NUM_1));
+//        verify(inputComponent).unequipCurrentItem();
+//    }
 
 
     /**
