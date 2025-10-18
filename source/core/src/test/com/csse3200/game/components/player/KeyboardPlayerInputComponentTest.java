@@ -190,7 +190,6 @@ class KeyboardPlayerInputComponentTest {
 //        verify(inputComponent).unequipCurrentItem();
 //    }
 
-
     /**
      * Tests that selecting an inventory slot equips the item if nothing
      * is currently equipped.

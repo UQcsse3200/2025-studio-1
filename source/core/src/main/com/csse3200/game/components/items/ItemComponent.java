@@ -105,6 +105,19 @@ public class ItemComponent extends Component {
     }
 
     /**
+     * Gets the description for the item
+     *
+     * @return A formatted description of the item
+     * with its: name, id, type, and current count.
+     */
+    public String getDescription() {
+        return ("Item: " + this.getName()
+                + "\nId: " + entity.getId()
+                + "\nType: " + this.getType()
+                + "\nCount: " + this.getCount());
+    }
+
+    /**
      * Returns the offset of where the item should be displayed from the player
      * for it to look normal
      *
