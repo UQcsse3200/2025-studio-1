@@ -9,6 +9,7 @@ import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.services.ServiceLocator;
+import com.csse3200.game.lighting.LightingService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -102,8 +103,17 @@ public class Renderer implements Disposable {
         batch.begin();
         renderService.render(batch);
         batch.end();
-        debugRenderer.render(projMatrix);
 
+        LightingService ls = ServiceLocator.getLightingService();
+        if (ls != null && ls.getEngine() != null) {
+            // Only render lights in rooms that actually spawn lights
+            var area = ServiceLocator.getGameArea();
+            if (area instanceof com.csse3200.game.areas.CasinoGameArea) {
+                ls.getEngine().render();
+            }
+        }
+
+        debugRenderer.render(projMatrix);
         stage.act();
         stage.draw();
     }

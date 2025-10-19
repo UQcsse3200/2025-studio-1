@@ -1,5 +1,6 @@
 package com.csse3200.game.services;
 
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.csse3200.game.areas.GameArea;
 import com.csse3200.game.areas.difficulty.Difficulty;
 import com.csse3200.game.entities.Entity;
@@ -8,6 +9,7 @@ import com.csse3200.game.input.InputService;
 import com.csse3200.game.physics.PhysicsService;
 import com.csse3200.game.rendering.RenderService;
 import com.csse3200.game.session.LeaderBoardManager;
+import com.csse3200.game.lighting.LightingService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,7 +38,9 @@ public class ServiceLocator {
     private static DiscoveryService discoveryService; // track discovered rooms
     private static ButtonSoundService buttonSoundService;
     private static LeaderBoardManager leaderBoardManager;
+    private static LightingService lightingService;
     private static volatile boolean transitioning = false;
+    private static Label prompt;
 
     private ServiceLocator() {
         throw new IllegalStateException("Instantiating static util class");
@@ -102,6 +106,8 @@ public class ServiceLocator {
         return buttonSoundService;
     }
 
+    public static LightingService getLightingService() { return lightingService; }
+
     public static void registerGameArea(GameArea theArea) {
         logger.debug("Registering game area service {}", theArea);
         gameArea = theArea;
@@ -166,6 +172,11 @@ public class ServiceLocator {
         buttonSoundService = source;
     }
 
+    public static void registerLightingService(LightingService service) {
+        logger.debug("Registering lighting service {}", service);
+        lightingService = service;
+    }
+
     public static void registerLeaderBoardManager(LeaderBoardManager lbm) {
         leaderBoardManager = lbm;
     }
@@ -186,6 +197,7 @@ public class ServiceLocator {
         player = null;
         discoveryService = null;
         player = null;
+        lightingService = null;
     }
 
     /**
@@ -212,6 +224,14 @@ public class ServiceLocator {
             player.dispose();
         }
         player = null;
+    }
+
+    public static void registerPrompt(Label newPrompt) {
+        prompt = newPrompt;
+    }
+
+    public static Label getPrompt() {
+        return prompt;
     }
 
     public static com.csse3200.game.events.EventHandler getGlobalEvents() {
