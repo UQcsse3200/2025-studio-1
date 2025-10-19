@@ -1,5 +1,6 @@
 package com.csse3200.game.components.friendlynpc;
 
+import com.badlogic.gdx.Gdx;
 import com.csse3200.game.components.Component;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.services.ServiceLocator;
@@ -17,9 +18,11 @@ public class AssistorTaskComponent extends Component {
     public void create() {
         entity.getEvents().addListener("npcDialogueEnd", this::onDialogueEnd);
     }
-    private void onDialogueEnd() {
-        Entity partner = FriendlyNPCFactory.createPartner(player);
-        partner.setPosition(entity.getPosition().x, entity.getPosition().y);
-        ServiceLocator.getEntityService().register(partner);
+    public void onDialogueEnd() {
+        Gdx.app.postRunnable(() -> {
+            Entity partner = FriendlyNPCFactory.createPartner(player);
+            partner.setPosition(entity.getPosition().x, entity.getPosition().y);
+            ServiceLocator.getEntityService().register(partner);
+        });
     }
 }

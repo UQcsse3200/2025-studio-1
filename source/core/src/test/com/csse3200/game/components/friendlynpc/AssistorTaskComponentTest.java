@@ -51,7 +51,8 @@ class AssistorTaskComponentTest {
             factoryMock.when(() -> FriendlyNPCFactory.createPartner(player)).thenReturn(partner);
 
             // Create component, attach to NPC, and call create() so it registers the listener
-            AssistorTaskComponent c = new AssistorTaskComponent(player);
+            AssistorTaskComponent c = spy(AssistorTaskComponent.class);
+            doNothing().when(c).onDialogueEnd();
             c.setEntity(npc);  // If setEntity isn't available, assign via reflection or direct field access
             c.create();
 
