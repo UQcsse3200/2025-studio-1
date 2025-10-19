@@ -3,7 +3,6 @@ package com.csse3200.game.components.player;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.components.items.ItemComponent;
 import com.csse3200.game.entities.Entity;
@@ -68,9 +67,6 @@ public class KeyboardPlayerInputComponent extends InputComponent {
 
             case Keys.SPACE:
                 triggerJumpEvent();
-                Sound jump = ServiceLocator.getResourceService().getAsset("sounds/jump.mp3", Sound.class);
-                jump.play();
-                entity.getEvents().trigger("anim");
                 return true;
 
             case Keys.E:
@@ -138,7 +134,6 @@ public class KeyboardPlayerInputComponent extends InputComponent {
         // Unaffected by pausing meaning checking for paused needs to be handled by "interact" event users
         if (keycode == Keys.E) {
             holding = false;
-            triggerAddItem();
             return true;
         }
 
@@ -177,11 +172,6 @@ public class KeyboardPlayerInputComponent extends InputComponent {
                 return true;
             case Keys.NUM_5:
                 checkSlot(Keys.NUM_5 - OFFSET);
-                return true;
-            case Keys.P:
-            case Keys.E:
-                holding = false;
-                triggerAddItem();
                 return true;
             case Keys.R:
                 triggerDropFocused();
@@ -245,14 +235,6 @@ public class KeyboardPlayerInputComponent extends InputComponent {
 
     private void triggerDashEvent() {
         entity.getEvents().trigger("dashAttempt");
-    }
-
-    /**
-     * Triggers an item pickup request.
-     */
-    private void triggerAddItem() {
-        System.out.println("Pick up event triggered");
-        entity.getEvents().trigger("pick up");
     }
 
     /**

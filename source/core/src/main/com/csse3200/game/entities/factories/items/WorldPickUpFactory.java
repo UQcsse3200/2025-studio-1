@@ -25,6 +25,7 @@ public class WorldPickUpFactory {
         pickup.getComponent(ItemComponent.class).setType(
                 type.getConfig().weaponType == com.csse3200.game.entities.configs.ItemTypes.MELEE
                         ? ItemTypes.MELEE : ItemTypes.RANGED);
+        pickup.setInteractable(true);
 
         pickup.getComponent(PhysicsComponent.class).setBodyType(BodyDef.BodyType.StaticBody);
         return pickup;
@@ -43,6 +44,7 @@ public class WorldPickUpFactory {
         pickup.getComponent(ItemComponent.class).setType(
                 type.getConfig().armourType == ItemTypes.CHESTPLATE_ARMOUR
                         ? ItemTypes.CHESTPLATE_ARMOUR : ItemTypes.HOOD_ARMOUR);
+        pickup.setInteractable(true);
 
         pickup.getComponent(PhysicsComponent.class).setBodyType(BodyDef.BodyType.StaticBody);
         return pickup;

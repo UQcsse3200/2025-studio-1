@@ -3,7 +3,6 @@ package com.csse3200.game.components.player;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.Fixture;
 import com.csse3200.game.areas.GameArea;
 import com.csse3200.game.components.Component;
 import com.csse3200.game.components.MagazineComponent;
@@ -16,7 +15,6 @@ import com.csse3200.game.entities.factories.items.ArmourFactory;
 import com.csse3200.game.entities.factories.items.WeaponsFactory;
 import com.csse3200.game.entities.factories.items.WorldPickUpFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
-import com.csse3200.game.physics.BodyUserData;
 import com.csse3200.game.physics.components.PhysicsComponent;
 import com.csse3200.game.services.ServiceLocator;
 import org.slf4j.Logger;
@@ -33,8 +31,6 @@ public class ItemPickUpComponent extends Component {
     private static final Logger logger = LoggerFactory.getLogger(ItemPickUpComponent.class);
     // Reference to the player's inventory used to store picked up items.
     private final InventoryComponent inventory;
-    // The item entity currently in collision range and eligible to be picked up.
-    private Entity targetItem;
     // The currently focused inventory slot (set via number key events).
     private int focusedIndex = -1;
 
@@ -53,9 +49,7 @@ public class ItemPickUpComponent extends Component {
      */
     @Override
     public void create() {
-        entity.getEvents().addListener("collisionStart", this::onCollisionStart);
-        entity.getEvents().addListener("collisionEnd", this::onCollisionEnd);
-        entity.getEvents().addListener("pick up", this::onPickupRequest);
+        entity.getEvents().addListener("player:interact", this::onPickupRequest);
         entity.getEvents().addListener("focus item", this::onFocusItem);
         entity.getEvents().addListener("drop focused", this::onDropFocused);
         entity.getEvents().addListener("pickupAll", this::onPickupAll);
@@ -63,53 +57,10 @@ public class ItemPickUpComponent extends Component {
     }
 
     /**
-     * Handles the start of a collision. If the colliding entity is an item, it is set as
-     * the current target for potential pickup.
-     *
-     * @param me    Fixture to retrieve entity data
-     * @param other Fixture to retrieve entity data
-     */
-    private void onCollisionStart(Fixture me, Fixture other) {
-        Object data = other.getBody().getUserData();
-        if (!(data instanceof BodyUserData userData)) {
-            logger.trace("collisionStart: no BodyUserData on other fixture");
-            return;
-        }
-
-        Entity otherEntity = userData.entity;
-        if (otherEntity.getComponent(ItemComponent.class) != null
-                && otherEntity.getComponent(ItemComponent.class).isPickupable()) {
-            targetItem = otherEntity;
-            logger.trace("collisionStart: collided with item {}", targetItem);
-        }
-    }
-
-    /**
-     * Handles the end of a collision. If the player stops colliding with the currently
-     * targeted item, the target is cleared.
-     *
-     * @param me    Fixture to retrieve entity data
-     * @param other Fixture to retrieve entity data
-     */
-    private void onCollisionEnd(Fixture me, Fixture other) {
-        Object data = other.getBody().getUserData();
-        if (!(data instanceof BodyUserData userData)) {
-            logger.trace("collisionEnd: no BodyUserData on other fixture");
-            return;
-        }
-
-        Entity otherEntity = userData.entity;
-        if (targetItem == otherEntity) {
-            targetItem = null;
-            logger.debug("collisionEnd: cleared target for {}", otherEntity);
-        }
-    }
-
-    /**
      * Handles a pickup request (triggered by pressing the pickup key).
      * If there is a valid target item in range, attempts to add it to the inventory.
      */
-    private void onPickupRequest() {
+    private void onPickupRequest(Entity targetItem) {
         logger.debug("pick up event: current target={}", targetItem);
         if (targetItem != null) {
             pickUpItem(targetItem);
@@ -161,7 +112,6 @@ public class ItemPickUpComponent extends Component {
             boolean added = inventory.addItem(weapon);
             if (added) {
                 item.dispose();
-                targetItem = null;
                 logger.info("Picked up item and added to inventory");
             } else {
                 weapon.dispose();
