@@ -88,7 +88,7 @@ public class TerrainFactory {
         switch (terrainType) {
             case SPAWN_ROOM:
                 TextureRegion spawnBackground =
-                        new TextureRegion(resourceService.getAsset("backgrounds/SpawnResize.png", Texture.class));
+                        new TextureRegion(resourceService.getAsset("backgrounds/Spawn.png", Texture.class));
                 return createGameRooms(0.5f, spawnBackground);
             case STORAGE:
                 TextureRegion storageBackground =
@@ -108,7 +108,7 @@ public class TerrainFactory {
                 return createGameRooms(0.5f, serverBackground);
             case TUNNEL_ROOM:
                 TextureRegion tunnelBackground =
-                        new TextureRegion(resourceService.getAsset("images/TunnelRoomBackgResize.png", Texture.class));
+                        new TextureRegion(resourceService.getAsset("backgrounds/Tunnel.png", Texture.class));
                 return createGameRooms(0.5f, tunnelBackground);
             case SECURITY_ROOM:
                 TextureRegion securityBackground =
@@ -128,7 +128,7 @@ public class TerrainFactory {
                 return createGameRooms(0.5f, shippingBackground);
             case ELEVATOR:
                 TextureRegion elevatorBackground =
-                        new TextureRegion(resourceService.getAsset("images/Elevator background.png", Texture.class));
+                        new TextureRegion(resourceService.getAsset("backgrounds/Elevator.png", Texture.class));
                 return createGameRooms(0.5f, elevatorBackground);
             case FOREST_DEMO:
                 TextureRegion orthoGrass =
