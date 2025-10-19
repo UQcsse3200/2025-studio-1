@@ -19,68 +19,83 @@ import java.util.List;
 public class BlackJackGame extends Component {
     /** The dealer’s current hand of cards. */
     private Hand dealerHand;
-    /** The player’s current hand of cards. */
+
+    /** The player’s current hands of cards. Multiple hands allowed due to splits. */
     private List<Hand> playerHands;
+
     /** The deck used for drawing cards. */
     private Deck deck;
-    /** Indicates whether a winner has been determined this round. */
+
+    /** The currently active player hand. */
     private Hand currentHand;
+
+    /** Index of the current active hand in {@code playerHands}. */
     int handIndex;
+
+    /** True if it is the dealer's turn to draw cards. */
     boolean dealerTurn;
 
-    /** Initializes the game by creating a new deck and empty hands,
-     * and registers listeners for player actions (hit and stand). */
+    /**
+     * Initializes the game component, sets up deck and hands,
+     * and registers listeners for player actions (hit and stand).
+     */
     public void create() {
         deck = new Deck();
         dealerHand = new Hand();
         playerHands = new ArrayList<>();
         playerHands.add(new Hand());
-        currentHand = playerHands.getFirst();
+        currentHand = playerHands.get(0);
+
+        // Listen for player actions
         entity.getEvents().addListener("drawCard", this::drawCard);
         entity.getEvents().addListener("stand", this::nextHand);
+
         handIndex = 0;
         dealerTurn = false;
     }
 
-    /** Returns the total value of the dealer's hand, accounting for ace adjustments. */
+    /** Returns the total value of the dealer's hand, accounting for Ace adjustments. */
     public int dealerHandValue() {
         return dealerHand.getValue();
     }
 
-    /** Returns the total value of the player’s hand, accounting for ace adjustments. */
+    /** Returns the total value of the currently active player's hand. */
     public int playerHandValue() {
         return currentHand.getValue();
     }
 
-    /** Returns the player’s hand. */
+    /** Returns all of the player's hands. */
     public List<Hand> getPlayerHands() {
         return playerHands;
     }
 
-    /** Returns the dealer’s hand. */
+    /** Returns the dealer's hand. */
     public Hand getDealerHand() {
         return dealerHand;
     }
 
+    /** Returns the currently active player hand. */
     public Hand getCurrentHand() {
         return currentHand;
     }
+
     /**
-     * Executes the dealer’s turn logic. The dealer continues drawing cards until their
-     * hand value reaches at least 17. Once done, the game outcome is determined based
-     * on hand values and the appropriate game event is triggered.
+     * Executes the dealer's turn logic. Dealer draws cards until hand value ≥ 17,
+     * then checks the outcomes against all player hands.
      */
     void dealerTurn() {
         dealerTurn = true;
-            while (dealerHand.getValue() < 17) {
-                dealerHand.addCard(deck.drawCard());
-            }
-
-            checkWinners();
-
+        while (dealerHand.getValue() < 17) {
+            dealerHand.addCard(deck.drawCard());
+        }
+        checkWinners();
     }
 
-    /** Starts a new game by resetting the deck and dealing two cards each to the player and dealer. */
+    /**
+     * Starts a new game by resetting the deck and dealing two cards each to
+     * the player and dealer. Automatically moves to next hand if the player
+     * has a blackjack.
+     */
     public void startGame() {
         dealerTurn = false;
         handIndex = 0;
@@ -89,44 +104,57 @@ public class BlackJackGame extends Component {
         playerHands.add(currentHand);
         currentHand.resetHand();
 
+        // Deal initial cards
         currentHand.addCard(deck.drawCard());
         currentHand.addCard(deck.drawCard());
         dealerHand.addCard(deck.drawCard());
         dealerHand.addCard(deck.drawCard());
+
         if(currentHand.isBlackjack()) {
             nextHand();
         }
     }
 
-    /** Draws a card for the player (on "Hit"). If the player’s hand exceeds 21, triggers bust events. */
+    /**
+     * Draws a card for the current player hand. If the hand exceeds 21, moves to the next hand.
+     */
     void drawCard() {
-            currentHand.addCard(deck.drawCard());
-            if(currentHand.isBust()) {
-                nextHand();
-            }
-
+        currentHand.addCard(deck.drawCard());
+        if(currentHand.isBust()) {
+            nextHand();
+        }
     }
 
+    /** Returns the deck being used in the game. */
     public Deck getDeck() {
         return deck;
     }
 
+    /**
+     * Moves to the next hand if multiple hands exist. If all hands played,
+     * triggers the dealer's turn.
+     */
     public void nextHand() {
         if (handIndex < playerHands.size() - 1) {
             handIndex++;
             currentHand = playerHands.get(handIndex);
             currentHand.addCard(deck.drawCard());
         } else {
-            dealerTurn(); // once all hands played, dealer acts
+            dealerTurn();
         }
     }
 
+    /**
+     * Splits the current hand into two hands if allowed (same value cards),
+     * and deals one new card to each hand.
+     */
     public void splitHand() {
         if (currentHand.canSplit() && playerHands.size() < 4) {
             Card second = currentHand.getCards().get(1);
 
             currentHand.remove(second);
             currentHand.addCard(deck.drawCard());
+
             Hand hand2 = new Hand();
             hand2.addCard(second);
 
@@ -135,24 +163,33 @@ public class BlackJackGame extends Component {
             if(currentHand.isBlackjack()) {
                 nextHand();
             }
-
         }
     }
 
+    /**
+     * Doubles the current bet (sets doubled flag) and draws exactly one more card,
+     * then moves to the next hand.
+     */
     public void doubleDown() {
         currentHand.setDoubled(true);
         currentHand.addCard(deck.drawCard());
         nextHand();
     }
 
+    /** Returns the index of the currently active hand. */
     public int getActiveHandIndex() {
         return handIndex;
     }
 
+    /** Returns true if it is the dealer's turn. */
     public boolean isDealerTurn() {
         return dealerTurn;
     }
 
+    /**
+     * Compares each player hand against the dealer hand to determine outcomes.
+     * Triggers events for win, lose, tie, and doubled conditions.
+     */
     private void checkWinners() {
         List<String> results = new ArrayList<>();
         int i = 1;
@@ -186,9 +223,11 @@ public class BlackJackGame extends Component {
             results.add(outcome);
             i++;
         }
+
         entity.getEvents().trigger("displayResults", results);
     }
 
+    /** Triggers a win event for the given hand, handling doubled bets. */
     private void winner(Hand hand) {
         if(hand.isDoubled()) {
             entity.getEvents().trigger("doubleWin");
@@ -198,6 +237,7 @@ public class BlackJackGame extends Component {
         }
     }
 
+    /** Triggers a lose event for the given hand, handling doubled bets. */
     private void lose(Hand hand) {
         if(hand.isDoubled()) {
             entity.getEvents().trigger("doubleLose");
@@ -206,7 +246,4 @@ public class BlackJackGame extends Component {
             entity.getEvents().trigger("lose");
         }
     }
-
-
-
 }
