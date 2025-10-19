@@ -17,6 +17,7 @@ import java.util.Map;
 public class ArmourEquipComponent extends Component {
     // hashmap storing armour and corresponding offsets
     public Map<Entity, Vector2[]> currentlyEquippedArmour = new HashMap<>();
+    private final int MAX_ARMOUR_COUNT = 2;
 
     /**
      * Equips item and adds it to set of currently equipped armour.
@@ -37,7 +38,7 @@ public class ArmourEquipComponent extends Component {
             return;
         }
 
-        if (currentlyEquippedArmour.size() >= 2) {
+        if (currentlyEquippedArmour.size() >= MAX_ARMOUR_COUNT) {
             System.out.println("Reached max equip slots");
             return;
         }
