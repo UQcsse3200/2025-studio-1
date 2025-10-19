@@ -22,13 +22,11 @@ public class PowerComponent extends Component {
         for (int i = 0; i < entities.size; i++) {
             Entity entityPowerup = entities.get(i);
             TagComponent tag = entityPowerup.getComponent(TagComponent.class);
-
             if (tag != null) {
                 if (tag.getTag().equals("rapidfire")) {
                     if (entityPowerup.getCenterPosition().dst(player.getCenterPosition()) < 1f) {
                         InventoryComponent inventory = player.getComponent(InventoryComponent.class);
                         Entity equippedWeapon = inventory.getCurrItem();
-
                         if (equippedWeapon != null) {
                             RapidFireConsumableConfig config = new RapidFireConsumableConfig();
                             for (Effect e : config.effects) {

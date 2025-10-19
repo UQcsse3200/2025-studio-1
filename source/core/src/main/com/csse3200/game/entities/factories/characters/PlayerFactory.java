@@ -63,6 +63,7 @@ public class PlayerFactory {
     private static PlayerConfig safeLoadPlayerConfig() {
         PlayerConfig cfg = FileLoader.readClass(PlayerConfig.class, "configs/player.json");
         if (cfg == null) {
+            System.out.println("ITS NULL?");
             cfg = new PlayerConfig();
             cfg.gold = 0;
             cfg.health = 100;
@@ -79,6 +80,7 @@ public class PlayerFactory {
     public static Entity createPlayer() {
         InputComponent inputComponent =
                 ServiceLocator.getInputService().getInputFactory().createForPlayer();
+        stats = safeLoadPlayerConfig();
         InventoryComponent playerInventory = new InventoryComponent(stats.gold);
 
         AnimationRenderComponent animator = new AnimationRenderComponent(
