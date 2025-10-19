@@ -349,6 +349,32 @@ class PlayerActionsTest {
         inOrder.verify(body).applyLinearImpulse(approx(expectedNormalImpulse), eq(worldCenter), eq(true));
     }
 
+    @Test
+    void shouldSetCrouchingWhenGrounded() throws Exception {
+        PhysicsComponent physicsComponent = mock(PhysicsComponent.class);
+        Body body = mock(Body.class);
+        when(physicsComponent.getBody()).thenReturn(body);
+        when(body.getLinearVelocity()).thenReturn(new Vector2(0f, 0f));
+
+        PlayerActions actions = new PlayerActions();
+        Entity player = new Entity()
+                .addComponent(actions)
+                .addComponent(new StaminaComponent());
+        player.create();
+
+        Field physField = PlayerActions.class.getDeclaredField("physicsComponent");
+        physField.setAccessible(true);
+        physField.set(actions, physicsComponent);
+
+        actions.crouchAttempt();
+
+        Field crouchingField = PlayerActions.class.getDeclaredField("crouching");
+        crouchingField.setAccessible(true);
+        boolean crouchingState = crouchingField.getBoolean(actions);
+
+        assertEquals(true, crouchingState, "Player should be crouching when grounded and crouchAttempt is called");
+    }
+
     private static Vector2 approx(Vector2 expected) {
         return org.mockito.ArgumentMatchers.argThat(v ->
                 v != null &&
