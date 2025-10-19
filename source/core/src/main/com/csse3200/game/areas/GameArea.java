@@ -278,6 +278,157 @@ public abstract class GameArea implements Disposable {
                 // Spawn nothing, hence empty default case.
         }
     }
+    /**
+     * Spawns Random enemies based on the room number given.
+     *
+     * @param roomName    The name of the current floor/room.
+     * @param total       The total number of enemies to be spawned.
+     * @param scaleFactor The scaling factor of the difficulty of the enemies to be spawned.
+     * @param player      The player {@link Entity} that is to be targeted by the enemies.
+     */
+    public void spawnRandomEnemies(String roomName, int total, float scaleFactor, Entity player) {
+        HashMap<String, ArrayList<Vector2>> positions = new HashMap<>();
+        ArrayList<Vector2> respectiveSpawns = new ArrayList<>();
+        switch (roomName) {
+            case "Forest" -> {
+                respectiveSpawns.add(new Vector2(2.5f, 11f));
+                spawnRandom(total, scaleFactor, player, positions, respectiveSpawns);
+                respectiveSpawns = new ArrayList<>();
+                respectiveSpawns.add(new Vector2(5.4f, 11f));
+                spawnRandom(total, scaleFactor, player, positions, respectiveSpawns);
+                respectiveSpawns = new ArrayList<>();
+                respectiveSpawns.add(new Vector2(8.2f, 11f));
+                spawnRandom(total, scaleFactor, player, positions, respectiveSpawns);
+                respectiveSpawns = new ArrayList<>();
+                respectiveSpawns.add(new Vector2(11.1f, 10f));
+                spawnRandom(total, scaleFactor, player, positions, respectiveSpawns);
+                respectiveSpawns = new ArrayList<>();
+                respectiveSpawns.add(new Vector2(12f, 5f));
+                spawnRandom(total, scaleFactor, player, positions, respectiveSpawns);
+                respectiveSpawns = new ArrayList<>();
+            }
+            case "Reception" -> {
+                respectiveSpawns.add(new Vector2(5.7f, 5f));
+                spawnRandom(total, scaleFactor, player, positions, respectiveSpawns);
+                respectiveSpawns = new ArrayList<>();
+                respectiveSpawns.add(new Vector2(1.5f, 7f));
+                spawnRandom(total, scaleFactor, player, positions, respectiveSpawns);
+                respectiveSpawns = new ArrayList<>();
+                respectiveSpawns.add(new Vector2(11.5f, 10f));
+                spawnRandom(total, scaleFactor, player, positions, respectiveSpawns);
+                respectiveSpawns = new ArrayList<>();
+            }
+            case "Mainhall" -> {
+                respectiveSpawns.add(new Vector2(10f, 10f));
+                spawnRandom(total, scaleFactor, player, positions, respectiveSpawns);
+                respectiveSpawns = new ArrayList<>();
+                respectiveSpawns.add(new Vector2(2f, 10f));
+                spawnRandom(total, scaleFactor, player, positions, respectiveSpawns);
+                respectiveSpawns = new ArrayList<>();
+                respectiveSpawns.add(new Vector2(11f, 6f));
+                spawnRandom(total, scaleFactor, player, positions, respectiveSpawns);
+                respectiveSpawns = new ArrayList<>();
+                respectiveSpawns.add(new Vector2(2f, 8f));
+                spawnRandom(total, scaleFactor, player, positions, respectiveSpawns);
+                respectiveSpawns = new ArrayList<>();
+            }
+            case "Security" -> {
+                respectiveSpawns.add(new Vector2(12f, 10f));
+                respectiveSpawns.add(new Vector2(2f, 5f));
+                spawnRandom(total, scaleFactor, player, positions, respectiveSpawns);
+                respectiveSpawns = new ArrayList<>();
+                respectiveSpawns.add(new Vector2(7f, 11f));
+                respectiveSpawns.add(new Vector2(3f, 10f));
+                spawnRandom(total, scaleFactor, player, positions, respectiveSpawns);
+                respectiveSpawns = new ArrayList<>();
+            }
+            case "Office" -> {
+                respectiveSpawns.add(new Vector2(12f, 3f));
+                respectiveSpawns.add(new Vector2(6f, 6f));
+                respectiveSpawns.add(new Vector2(8.2f, 11f));
+                respectiveSpawns.add(new Vector2(2f, 10f));
+                spawnRandom(total, scaleFactor, player, positions, respectiveSpawns);
+                respectiveSpawns = new ArrayList<>();
+            }
+            case "Elevator" -> {
+                respectiveSpawns.add(new Vector2(13f, 4f));
+                respectiveSpawns.add(new Vector2(11f, 8f));
+                spawnRandom(total, scaleFactor, player, positions, respectiveSpawns);
+                respectiveSpawns = new ArrayList<>();
+                respectiveSpawns.add(new Vector2(8.4f, 10f));
+                respectiveSpawns.add(new Vector2(2f, 8f));
+                spawnRandom(total, scaleFactor, player, positions, respectiveSpawns);
+                respectiveSpawns = new ArrayList<>();
+            }
+            case "Research" -> {
+                respectiveSpawns.add(new Vector2(12f, 11f));
+                respectiveSpawns.add(new Vector2(2f, 7f));
+                spawnRandom(total, scaleFactor, player, positions, respectiveSpawns);
+                respectiveSpawns = new ArrayList<>();
+                respectiveSpawns.add(new Vector2(11f, 4f));
+                respectiveSpawns.add(new Vector2(3f, 10f));
+                respectiveSpawns.add(new Vector2(5f, 10f));
+                spawnRandom(total, scaleFactor, player, positions, respectiveSpawns);
+                respectiveSpawns = new ArrayList<>();
+            }
+            case "Shipping" -> {
+                respectiveSpawns.add(new Vector2(12f, 11f));
+                spawnRandom(total, scaleFactor, player, positions, respectiveSpawns);
+                respectiveSpawns = new ArrayList<>();
+                respectiveSpawns.add(new Vector2(2f, 5f));
+                spawnRandom(total, scaleFactor, player, positions, respectiveSpawns);
+                respectiveSpawns = new ArrayList<>();
+                respectiveSpawns.add(new Vector2(12f, 5f));
+                spawnRandom(total, scaleFactor, player, positions, respectiveSpawns);
+                respectiveSpawns = new ArrayList<>();
+                respectiveSpawns.add(new Vector2(3f, 10f));
+                respectiveSpawns.add(new Vector2(5f, 10f));
+                spawnRandom(total, scaleFactor, player, positions, respectiveSpawns);
+                respectiveSpawns = new ArrayList<>();
+            }
+            case "Storage" -> {
+                respectiveSpawns.add(new Vector2(12f, 5f));
+                respectiveSpawns = new ArrayList<>();
+                respectiveSpawns.add(new Vector2(12f, 11f));
+                respectiveSpawns.add(new Vector2(12f, 8f));
+                respectiveSpawns.add(new Vector2(8f, 8f));
+                spawnRandom(total, scaleFactor, player, positions, respectiveSpawns);
+                respectiveSpawns = new ArrayList<>();
+            }
+            case "Server" -> {
+                respectiveSpawns.add(new Vector2(12f, 11f));
+                respectiveSpawns.add(new Vector2(7.6f, 4f));
+                respectiveSpawns.add(new Vector2(11f, 8f));
+                spawnRandom(total, scaleFactor, player, positions, respectiveSpawns);
+                respectiveSpawns = new ArrayList<>();
+                respectiveSpawns.add(new Vector2(2f, 4f));
+                spawnRandom(total, scaleFactor, player, positions, respectiveSpawns);
+                respectiveSpawns = new ArrayList<>();
+                respectiveSpawns.add(new Vector2(3f, 10f));
+                respectiveSpawns.add(new Vector2(5f, 10f));
+                spawnRandom(total, scaleFactor, player, positions, respectiveSpawns);
+                respectiveSpawns = new ArrayList<>();
+            }
+            case "Tunnel" -> {
+                respectiveSpawns.add(new Vector2(12f, 4f));
+                respectiveSpawns.add(new Vector2(3f, 4f));
+                spawnRandom(total, scaleFactor, player, positions, respectiveSpawns);
+                respectiveSpawns = new ArrayList<>();
+                respectiveSpawns.add(new Vector2(10f, 10f));
+                spawnRandom(total, scaleFactor, player, positions, respectiveSpawns);
+                respectiveSpawns = new ArrayList<>();
+                respectiveSpawns.add(new Vector2(4f, 10f));
+                spawnRandom(total, scaleFactor, player, positions, respectiveSpawns);
+                respectiveSpawns = new ArrayList<>();
+                respectiveSpawns.add(new Vector2(6f, 10f));
+                spawnRandom(total, scaleFactor, player, positions, respectiveSpawns);
+                respectiveSpawns = new ArrayList<>();
+            }
+            default -> {
+                // No spawns, hence not assigning any spawn positions
+            }
+        }
+    }
 
     /**
      * Spawns the enemies based on the enemy name
@@ -361,6 +512,7 @@ public abstract class GameArea implements Disposable {
      *
      * @param total       The total number of GhostGPT to be spawned.
      * @param scaleFactor The scale of increase in difficulty of the GhostGPT
+     * @param positions   The list of positions of where to spawn enemy
      */
     public void spawnGhostGPT(
             int total, float scaleFactor, Entity player, Map<String, ArrayList<Vector2>> positions) {
@@ -374,8 +526,9 @@ public abstract class GameArea implements Disposable {
     /**
      * Adds GhostGPTRed enemies onto the map.
      *
-     * @param total       The total number of GhostGPT to be spawned.
-     * @param scaleFactor The scale of increase in difficulty of the GhostGPT
+     * @param total       The total number of GhostGPTRed to be spawned.
+     * @param scaleFactor The scale of increase in difficulty of the GhostGPTRed
+     * @param positions   The list of positions of where to spawn enemy
      */
     public void spawnGhostGPTRed(
             int total, float scaleFactor, Entity player, Map<String, ArrayList<Vector2>> positions) {
@@ -389,8 +542,9 @@ public abstract class GameArea implements Disposable {
     /**
      * Adds GhostGPTBlue enemies onto the map.
      *
-     * @param total       The total number of GhostGPT to be spawned.
-     * @param scaleFactor The scale of increase in difficulty of the GhostGPT
+     * @param total       The total number of GhostGPTBlue to be spawned.
+     * @param scaleFactor The scale of increase in difficulty of the GhostGPTBlue
+     * @param positions   The list of positions of where to spawn enemy
      */
     public void spawnGhostGPTBlue(
             int total, float scaleFactor, Entity player, Map<String, ArrayList<Vector2>> positions) {
@@ -406,6 +560,7 @@ public abstract class GameArea implements Disposable {
      *
      * @param total       The total number of DeepSpins to be spawned.
      * @param scaleFactor The scale of increase in difficulty of the DeepSpin
+     * @param positions   The list of positions of where to spawn enemy
      */
     public void spawnDeepspin(
             int total, float scaleFactor, Entity player, Map<String, ArrayList<Vector2>> positions) {
@@ -420,8 +575,9 @@ public abstract class GameArea implements Disposable {
     /**
      * Adds DeepSpinRed enemies onto the map.
      *
-     * @param total       The total number of DeepSpins to be spawned.
-     * @param scaleFactor The scale of increase in difficulty of the DeepSpin
+     * @param total       The total number of DeepSpinReds to be spawned.
+     * @param scaleFactor The scale of increase in difficulty of the DeepSpinRed
+     * @param positions   The list of positions of where to spawn enemy
      */
     public void spawnDeepspinRed(
             int total, float scaleFactor, Entity player, Map<String, ArrayList<Vector2>> positions) {
@@ -436,8 +592,9 @@ public abstract class GameArea implements Disposable {
     /**
      * Adds DeepSpinBlue enemies onto the map.
      *
-     * @param total       The total number of DeepSpins to be spawned.
-     * @param scaleFactor The scale of increase in difficulty of the DeepSpin
+     * @param total       The total number of DeepSpinBlues to be spawned.
+     * @param scaleFactor The scale of increase in difficulty of the DeepSpinBlue
+     * @param positions   The list of positions of where to spawn enemy
      */
     public void spawnDeepspinBlue(
             int total, float scaleFactor, Entity player, Map<String, ArrayList<Vector2>> positions) {
@@ -454,6 +611,7 @@ public abstract class GameArea implements Disposable {
      *
      * @param total       The total number of GrokDroid to be spawned.
      * @param scaleFactor The scale of increase in difficulty of the GrokDroid
+     * @param positions   The list of positions of where to spawn enemy
      */
     public void spawnGrokDroid(
             int total, float scaleFactor, Entity player, Map<String, ArrayList<Vector2>> positions) {
@@ -467,8 +625,9 @@ public abstract class GameArea implements Disposable {
     /**
      * Adds GrokDroidRed enemies onto the map.
      *
-     * @param total       The total number of GrokDroid to be spawned.
-     * @param scaleFactor The scale of increase in difficulty of the GrokDroid
+     * @param total       The total number of GrokDroidRed to be spawned.
+     * @param scaleFactor The scale of increase in difficulty of the GrokDroidRed
+     * @param positions   The list of positions of where to spawn enemy
      */
     public void spawnGrokDroidRed(
             int total, float scaleFactor, Entity player, Map<String, ArrayList<Vector2>> positions) {
@@ -482,8 +641,9 @@ public abstract class GameArea implements Disposable {
     /**
      * Adds GrokDroidBlue enemies onto the map.
      *
-     * @param total       The total number of GrokDroid to be spawned.
-     * @param scaleFactor The scale of increase in difficulty of the GrokDroid
+     * @param total       The total number of GrokDroidBlue to be spawned.
+     * @param scaleFactor The scale of increase in difficulty of the GrokDroidBlue
+     * @param positions   The list of positions of where to spawn enemy
      */
     public void spawnGrokDroidBlue(
             int total, float scaleFactor, Entity player, Map<String, ArrayList<Vector2>> positions) {
@@ -500,6 +660,7 @@ public abstract class GameArea implements Disposable {
      *
      * @param total       The total number of Vroomba to be spawned.
      * @param scaleFactor The scale of increase in difficulty of the Vroomba
+     * @param positions   The list of positions of where to spawn enemy
      */
     public void spawnVroomba(
             int total, float scaleFactor, Entity player, Map<String, ArrayList<Vector2>> positions) {
@@ -513,8 +674,9 @@ public abstract class GameArea implements Disposable {
     /**
      * Adds VroombaRed enemies onto the map.
      *
-     * @param total       The total number of Vroomba to be spawned.
-     * @param scaleFactor The scale of increase in difficulty of the Vroomba
+     * @param total       The total number of VroombaRed to be spawned.
+     * @param scaleFactor The scale of increase in difficulty of the VroombaRed
+     * @param positions   The list of positions of where to spawn enemy
      */
     public void spawnVroombaRed(
             int total, float scaleFactor, Entity player, Map<String, ArrayList<Vector2>> positions) {
@@ -528,8 +690,9 @@ public abstract class GameArea implements Disposable {
     /**
      * Adds VroombaBlue enemies onto the map.
      *
-     * @param total       The total number of Vroomba to be spawned.
-     * @param scaleFactor The scale of increase in difficulty of the Vroomba
+     * @param total       The total number of VroombaBlue to be spawned.
+     * @param scaleFactor The scale of increase in difficulty of the VroombaBlue
+     * @param positions   The list of positions of where to spawn enemy
      */
     public void spawnVroombaBlue(
             int total, float scaleFactor, Entity player, Map<String, ArrayList<Vector2>> positions) {
@@ -544,7 +707,8 @@ public abstract class GameArea implements Disposable {
      * Adds Turret enemies onto the map.
      *
      * @param total       The total number of Turret to be spawned.
-     * @param scaleFactor The scale of increase in difficulty of the GhostGPT
+     * @param scaleFactor The scale of increase in difficulty of the Turret
+     * @param positions   The list of positions of where to spawn enemy
      */
     public void spawnTurret(
             int total, float scaleFactor, Entity player,
@@ -557,6 +721,14 @@ public abstract class GameArea implements Disposable {
             spawnEntity(turretEntity);
         }
     }
+    /**
+     * Spawn a random enemy on the map.
+     *
+     * @param total       The total number of enemy to be spawned.
+     * @param scaleFactor The scale of increase in difficulty of the enemy
+     * @param positions   The list of positions of where to spawn enemy
+     * @param respectiveSpawns the position of where the enemy should be spawned
+     */
     public void spawnRandom(
             int total, float scaleFactor, Entity player,
             Map<String, ArrayList<Vector2>> positions,
@@ -631,6 +803,8 @@ public abstract class GameArea implements Disposable {
         }
 
     }
+
+
     /**
      * Spawns the projectile used by the Ghost GPT Enemy
      *
