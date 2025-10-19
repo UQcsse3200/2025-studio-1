@@ -116,5 +116,11 @@ public class MagazineComponent extends Component {
         this.timeSinceLastReload = timeSinceLastReload;
     }
 
-
+    /**
+     * Retrieves max ammo
+     * @return max ammo
+     */
+    public int getMaxAmmo() {
+        return maxAmmo;
+    }
 }

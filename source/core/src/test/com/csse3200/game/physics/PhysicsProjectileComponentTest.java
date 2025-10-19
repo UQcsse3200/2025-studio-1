@@ -45,6 +45,7 @@ public class PhysicsProjectileComponentTest {
         entity.addComponent(physicsComponent);
         entity.addComponent(projectile);
         entity.create();
+        entity.setPosition(5f, 5f);
         return entity;
     }
 
