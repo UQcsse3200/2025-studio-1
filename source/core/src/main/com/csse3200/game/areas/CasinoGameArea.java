@@ -70,7 +70,7 @@ public class CasinoGameArea extends GameArea {
 
         var ls = ServiceLocator.getLightingService();
         if (ls != null && ls.getEngine() != null) {
-            ls.getEngine().setAmbientLight(0.8f); // 0.7–0.8 feels “casino”
+            ls.getEngine().setAmbientLight(0.65f); // 0.7–0.8 feels “casino”
             ls.getEngine().getRayHandler().setShadows(true);
             ls.getEngine().getRayHandler().removeAll();
         }
@@ -111,59 +111,64 @@ public class CasinoGameArea extends GameArea {
 
     }
 
+    // Soft overall wash + ceiling bulbs above play areas
     private void spawnLight() {
-        // 1) A faint top-down wash so the background is never crushed
+        // Very faint white directional wash so backgrounds never go fully black
         spawnEntity(LightFactory.createDirectionalLightEntity(
-                64, new Color(1f, 1f, 1f, 0.20f), 270f, /*xray=*/true)); // from top
+                64, new Color(1f, 1f, 1f, 0.18f), 270f, true)); // from top, xray
 
-        // 2) Neon strips (x-ray) along top and bottom
-        // NOTE: ChainLight now takes a single interleaved XY array: {x1,y1, x2,y2, ...}
-        spawnEntity(LightFactory.createChainLightEntity(
-                48, new Color(1f, 0.2f, 0.75f, 0.50f), 20f,
-                new float[]{ 6f, 13.1f, 28f, 13.1f }, /*xray=*/true));
+        // Ceiling “bulbs” (xray point lights) — place above tables/machines
+        Color bulb = new Color(1f, 0.95f, 0.85f, 0.34f);
+        float bulbDist = 22f;
 
-        spawnEntity(LightFactory.createChainLightEntity(
-                48, new Color(0.1f, 0.95f, 1f, 0.50f), 20f,
-                new float[]{ 6f, 3.1f, 28f, 3.1f }, /*xray=*/true));
-
-        // 3) Ceiling “bulbs” (x-ray points) above play areas
-        spawnEntityAt(LightFactory.createPointLightEntity(
-                        64, new Color(1f,0.95f,0.85f,0.38f), 22f, /*xray=*/true, new Vector2(0f, 0f)),
+        spawnEntityAt(
+                LightFactory.createPointLightEntity(64, bulb, bulbDist, true, new Vector2(0f, 0f)),
                 new GridPoint2(11, 12), true, true);
 
-        spawnEntityAt(LightFactory.createPointLightEntity(
-                        64, new Color(1f,0.95f,0.85f,0.38f), 22f, /*xray=*/true, new Vector2(0f, 0f)),
+        spawnEntityAt(
+                LightFactory.createPointLightEntity(64, bulb, bulbDist, true, new Vector2(0f, 0f)),
                 new GridPoint2(18, 12), true, true);
 
-        spawnEntityAt(LightFactory.createPointLightEntity(
-                        64, new Color(1f,0.95f,0.85f,0.38f), 22f, /*xray=*/true, new Vector2(0f, 0f)),
+        spawnEntityAt(
+                LightFactory.createPointLightEntity(64, bulb, bulbDist, true, new Vector2(0f, 0f)),
                 new GridPoint2(24, 12), true, true);
     }
 
     private void spawnNeonRig() {
-        // soft magenta+cyan directional washes (xray) to tint the room
+        // Use live camera bounds so strips always fit the room
+        Bounds b = getCameraBounds(cameraComponent);
+        float left  = b.leftX()   + 0.30f;
+        float right = b.rightX()  - 0.30f;
+        float topY  = b.topY()    - 0.30f;
+        float botY  = b.bottomY() + 0.30f;
+
+        // Softer directional washes (xray) to tint the room
         spawnEntity(LightFactory.createDirectionalLightEntity(
-                96, new Color(1f, 0.25f, 0.85f, 0.18f), 315f, /*xray=*/true)); // from top-left
+                96, new Color(1f, 0.25f, 0.85f, 0.14f), 315f, true)); // magenta from top-left
         spawnEntity(LightFactory.createDirectionalLightEntity(
-                96, new Color(0.15f, 0.95f, 1f, 0.18f), 135f, /*xray=*/true)); // from top-right
+                96, new Color(0.15f, 0.95f, 1f, 0.14f), 135f, true)); // cyan from top-right
 
-        // neon border strips (xray ChainLight)
+        // Top & bottom neon strips (xray chain lights) spanning full width
+        float stripDist = (right - left) * 1.1f; // reach; bump up/down to taste
+
+        // Top strip (magenta)
         spawnEntity(LightFactory.createChainLightEntity(
-                48, new Color(1f, 0.2f, 0.75f, 0.40f), 16f,
-                new float[]{ 6f, 13.2f, 28f, 13.2f }, /*xray=*/true));
+                48, new Color(1f, 0.20f, 0.75f, 0.35f), stripDist,
+                new float[]{ left, topY, right, topY }, true));
 
+        // Bottom strip (cyan)
         spawnEntity(LightFactory.createChainLightEntity(
-                48, new Color(0.1f, 0.95f, 1f, 0.40f), 16f,
-                new float[]{ 6f, 3.0f, 28f, 3.0f }, /*xray=*/true));
+                48, new Color(0.10f, 0.95f, 1f, 0.35f), stripDist,
+                new float[]{ left, botY, right, botY }, true));
 
-        // faint corner bulbs to soften corners
-        spawnEntityAt(LightFactory.createPointLightEntity(
-                        64, new Color(1f,1f,1f,0.18f), 20f, /*xray=*/true, new Vector2(0f,0f)),
-                new GridPoint2(6, 13), true, true);
-
-        spawnEntityAt(LightFactory.createPointLightEntity(
-                        64, new Color(1f,1f,1f,0.18f), 20f, /*xray=*/true, new Vector2(0f,0f)),
-                new GridPoint2(28, 13), true, true);
+        // Optional: vertical side strips to frame the room
+        float sideDist = (topY - botY) * 1.1f;
+        spawnEntity(LightFactory.createChainLightEntity(
+                48, new Color(1f, 0.20f, 0.75f, 0.30f), sideDist,
+                new float[]{ left, botY, left, topY }, true));
+        spawnEntity(LightFactory.createChainLightEntity(
+                48, new Color(0.10f, 0.95f, 1f, 0.30f), sideDist,
+                new float[]{ right, botY, right, topY }, true));
     }
 
     /**
