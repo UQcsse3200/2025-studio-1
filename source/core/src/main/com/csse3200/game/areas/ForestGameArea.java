@@ -1,6 +1,5 @@
 package com.csse3200.game.areas;
 
-import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Vector2;
@@ -299,8 +298,6 @@ public class ForestGameArea extends GameArea {
             "sounds/turretDamage.mp3",
             "sounds/turretDeath.mp3"
     };
-    private static final String BACKGROUND_MUSIC = "sounds/BGM_03.mp3";
-    private static final String[] forestMusic = {BACKGROUND_MUSIC};
     private static GridPoint2 playerSpawn = new GridPoint2(3, 20);
     private final float VERTICAL_HEIGHT_OFFSET = 9.375f;
     private Entity player;
@@ -344,7 +341,7 @@ public class ForestGameArea extends GameArea {
 
     /**
      * Entry point for this room. This:
-     * - Loads textures/sounds/music
+     * - Loads textures/sounds
      * - Registers this room in the ServiceLocator
      * - Creates the terrain, walls, and UI label
      * - Spawns player, props (desk, crates, pod), door (with keycard gate), and enemies
@@ -366,7 +363,7 @@ public class ForestGameArea extends GameArea {
         spawnFloor();
         spawnBottomRightDoor();
         spawnMarblePlatforms();
-        playMusic();
+        ServiceLocator.getMusicService().setForestMusicPlaying(true);
         ItemSpawner itemSpawner = new ItemSpawner(this);
         itemSpawner.spawnItems(ItemSpawnConfig.forestmap());
 
@@ -756,17 +753,10 @@ public class ForestGameArea extends GameArea {
         spawnEntityAt(item, position, false, false);
     }
 
-    private void playMusic() {
-        Music music = ServiceLocator.getResourceService().getAsset(BACKGROUND_MUSIC, Music.class);
-        music.setLooping(true);
-        music.setVolume(0.3f);
-        music.play();
-    }
-
     // Removed area-specific dispose to avoid double disposal during transitions
 
     /**
-     * Loads all textures, atlases, sounds and music needed by this room.
+     * Loads all textures, atlases, sounds needed by this room.
      * Blocks briefly until loading is complete. If you add new art, put it here.
      */
     private void loadAssets() {
@@ -786,7 +776,6 @@ public class ForestGameArea extends GameArea {
         resourceService.loadSounds(playerSound1);
         resourceService.loadSounds(forestSounds);
         resourceService.loadSounds(enemySounds);
-        resourceService.loadMusic(forestMusic);
 
         while (resourceService.loadForMillis(10)) {
             // This could be upgraded to a loading screen
@@ -809,7 +798,6 @@ public class ForestGameArea extends GameArea {
         resourceService.unloadAssets(generalTextures);
         resourceService.unloadAssets(forestTextureAtlases);
         resourceService.unloadAssets(forestSounds);
-        resourceService.unloadAssets(forestMusic);
         resourceService.unloadAssets(spawnPadTextures);
         resourceService.unloadAssets(officeTextures);
         resourceService.unloadAssets(securityTextures);
