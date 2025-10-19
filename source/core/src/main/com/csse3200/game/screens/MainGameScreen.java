@@ -34,6 +34,7 @@ import com.csse3200.game.session.GameSession;
 import com.csse3200.game.session.SessionManager;
 import com.csse3200.game.ui.terminal.Terminal;
 import com.csse3200.game.ui.terminal.TerminalDisplay;
+import com.csse3200.game.lighting.LightingService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -103,6 +104,10 @@ public class MainGameScreen extends ScreenAdapter {
         renderer.getCamera().getEntity().setPosition(CAMERA_POSITION);
         renderer.getDebug().renderPhysicsWorld(physicsEngine.getWorld());
 
+        LightingService lightingService =
+                new LightingService(renderer.getCamera(), physicsEngine.getWorld());
+        ServiceLocator.registerLightingService(lightingService);
+
         loadAssets();
         countdownTimer = new CountdownTimerService(ServiceLocator.getTimeSource(), 240000);
         createUI();
@@ -152,6 +157,11 @@ public class MainGameScreen extends ScreenAdapter {
         renderer = RenderFactory.createRenderer();
         renderer.getCamera().getEntity().setPosition(CAMERA_POSITION);
         renderer.getDebug().renderPhysicsWorld(physicsEngine.getWorld());
+
+        LightingService lightingService =
+                new LightingService(renderer.getCamera(), physicsEngine.getWorld());
+        ServiceLocator.registerLightingService(lightingService);
+
 
         loadAssets();
         countdownTimer = new CountdownTimerService(ServiceLocator.getTimeSource(), 60000);
@@ -295,6 +305,12 @@ public class MainGameScreen extends ScreenAdapter {
     @Override
     public void dispose() {
         logger.debug("Disposing main game screen");
+
+        // Dispose lighting first (safe if null)
+        var ls = ServiceLocator.getLightingService();
+        if (ls != null && ls.getEngine() != null) {
+            ls.getEngine().dispose();
+        }
 
         renderer.dispose();
         unloadAssets();
