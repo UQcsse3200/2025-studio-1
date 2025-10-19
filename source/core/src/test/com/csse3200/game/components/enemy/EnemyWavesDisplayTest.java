@@ -98,10 +98,10 @@ public class EnemyWavesDisplayTest {
     @Test
     @DisplayName("Test table visibility")
     void checkTableVisibility() {
-        // initially visible after calling addActors()
+        // initially invisible after calling addActors()
         assertFalse(display.getTable().isVisible());
 
-        // make invisible and assert
+        // make visible and assert
         wavesManager.getEvents().trigger("spawnWave");
         assertTrue(display.getTable().isVisible());
     }
