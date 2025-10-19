@@ -15,7 +15,7 @@ public class HealthBenchConfig extends BenchConfig {
     public HealthBenchConfig() {
         benchType = ItemTypes.HEALTH_BENCH;
         texturePath = "images/healthBench.png";
-        price = 1000;
+        price = 500;
         promptText = "Press E to upgrade health for " + price;
         upgradeUsed = false;
     }
