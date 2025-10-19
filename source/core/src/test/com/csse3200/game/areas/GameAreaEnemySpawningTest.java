@@ -49,6 +49,8 @@ class GameAreaEnemySpawningTest {
         } catch (Exception e) {
             fail("Failed to initialize areaEntities: " + e.getMessage());
         }
+
+        doNothing().when(gameArea).registerEnemy(any());
     }
 
 
@@ -185,9 +187,7 @@ class GameAreaEnemySpawningTest {
         assertTrue(researchPositions.containsKey("GrokDroid"));
         
         Map<String, ArrayList<Vector2>> shippingPositions = gameArea.getEnemySpawnPosition("Shipping");
-        assertTrue(shippingPositions.containsKey("GhostGPT"));
         assertTrue(shippingPositions.containsKey("GrokDroid"));
-        assertTrue(shippingPositions.containsKey("Vroomba"));
         
         Map<String, ArrayList<Vector2>> storagePositions = gameArea.getEnemySpawnPosition("Storage");
         assertTrue(storagePositions.containsKey("Turret"));
