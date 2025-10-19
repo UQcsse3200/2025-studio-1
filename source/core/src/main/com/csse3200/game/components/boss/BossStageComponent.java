@@ -6,6 +6,9 @@ import com.csse3200.game.components.enemy.BlackholeComponent;
 import com.csse3200.game.components.enemy.BossChargeSkillComponent;
 import com.csse3200.game.components.enemy.FireballAttackComponent;
 import com.csse3200.game.entities.Entity;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.csse3200.game.physics.components.PhysicsComponent;
 
 public class BossStageComponent extends Component {
     private final Entity boss;
@@ -40,13 +43,29 @@ public class BossStageComponent extends Component {
 
     private void enterStage3() {
         currentStage = 3;
+
         FireballAttackComponent fireball = entity.getComponent(FireballAttackComponent.class);
-        fireball.setAttack(false);
-        BlackholeComponent balckhole = entity.getComponent(BlackholeComponent.class);
-        balckhole.setAttack(false);
+        if (fireball != null) fireball.setAttack(false);
+
+        BlackholeComponent blackhole = entity.getComponent(BlackholeComponent.class);
+        if (blackhole != null) blackhole.setAttack(false);
+
         MissueAttackComponent missle = entity.getComponent(MissueAttackComponent.class);
-        missle.setAttack(true);
+        if (missle != null) missle.setAttack(true);
+
         BossChargeSkillComponent move = entity.getComponent(BossChargeSkillComponent.class);
-        move.setAttack(false);
+        if (move != null) move.setAttack(false);
+
+        // ★ 关键：切换刚体类型，抵抗外部击退
+        PhysicsComponent phys = entity.getComponent(PhysicsComponent.class);
+        if (phys != null && phys.getBody() != null) {
+            Body body = phys.getBody();
+            if (body.getType() != BodyDef.BodyType.KinematicBody) {
+                body.setType(BodyDef.BodyType.KinematicBody);
+            }
+            body.setLinearVelocity(0f, 0f);
+            body.setAngularVelocity(0f);
+            body.setGravityScale(0f);
+        }
     }
 }
