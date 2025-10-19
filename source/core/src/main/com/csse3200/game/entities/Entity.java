@@ -233,8 +233,10 @@ public class Entity {
      */
     public void dispose() {
         // Dispose in reverse creation order so dependents (e.g., Collider) tear down before owners (Physics)
-        for (int i = createdComponents.size - 1; i >= 0; i--) {
-            createdComponents.get(i).dispose();
+        if (createdComponents != null) {
+            for (int i = createdComponents.size - 1; i >= 0; i--) {
+                createdComponents.get(i).dispose();
+            }
         }
         ServiceLocator.getEntityService().unregister(this);
     }
