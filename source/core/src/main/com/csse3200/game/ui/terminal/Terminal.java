@@ -41,7 +41,7 @@ public class Terminal extends Component {
 
         addCommand("damageMultiplier", new DamageMultiplierCommand());
         addCommand("debug", new DebugCommand());
-        addCommand("deathScreen", new EndScreenCommand(game, GdxGame.ScreenType.DEATH_SCREEN, timer));
+        addCommand("deathScreen", new EndScreenCommand(game, GdxGame.ScreenType.DEATH_SCREEN, timer, false));
         addCommand("disableDamage", new DisableDamageCommand());
         addCommand("doorOverride", new DoorOverrideCommand());
         addCommand("infiniteStamina", new InfiniteStaminaCommand());
@@ -57,7 +57,7 @@ public class Terminal extends Component {
         addCommand("teleport", new TeleportCommand());
         addCommand("travel", new TravelCommand());
         addCommand("waves", new WavesCommand());
-        addCommand("winScreen", new EndScreenCommand(game, GdxGame.ScreenType.WIN_SCREEN, timer));
+        addCommand("winScreen", new EndScreenCommand(game, GdxGame.ScreenType.WIN_SCREEN, timer, true));
 
         rebuildAutocompleteIndex();
     }

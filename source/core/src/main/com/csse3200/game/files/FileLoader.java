@@ -3,6 +3,8 @@ package com.csse3200.game.files;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Json;
+import com.badlogic.gdx.utils.JsonReader;
+import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.JsonWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,39 +65,6 @@ public class FileLoader {
         return object;
     }
 
-    /**
-     * Read playerinfo from a JSON file and write into class.
-     *
-     * @param player   class type
-     * @param filename file to read from
-     * @param location File storage type. See
-     * @param <T>      Class type to read JSON into
-     * @return instance of class, may be null
-     */
-    public static <T> T readPlayer(Class<SaveGame.GameState> player, String filename, Location location) {
-        logger.debug("Reading class {} from {}", player.getSimpleName(), filename);
-        FileHandle file = getFileHandle(filename, location);
-
-        if (file == null) {
-            logger.error("Failed to create file handle for {}", filename);
-            return null;
-        }
-        Object object;
-        try {
-            object = json.fromJson(player, file);
-        } catch (Exception e) {
-            logger.error(e.getMessage());
-            return null;
-        }
-
-        if (object == null) {
-            String path = file.path();
-            logger.error("Error creating {} class instance from {}", player.getSimpleName(), path);
-        }
-        logger.info(json.prettyPrint(object));
-
-        return (T) object;
-    }
 
     /**
      * Write generic Java classes to a JSON file.
@@ -117,7 +86,7 @@ public class FileLoader {
      */
     public static void writeClass(Object object, String filename, Location location) {
         logger.debug("Reading class {} from {}", object.getClass().getSimpleName(), filename);
-        json.setElementType(SaveGame.GameState.class, "loadedInventory", SaveGame.itemRetrieve.class);
+        json.setElementType(SaveGame.GameState.class, "loadedInventory", SaveGame.itemInInven.class);
         FileHandle file = getFileHandle(filename, location);
         Json json = new Json(JsonWriter.OutputType.json);
         json.setTypeName(null);

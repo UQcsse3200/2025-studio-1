@@ -290,8 +290,8 @@ com.badlogic.gdx.scenes.scene2d.ui.Button$ButtonStyle: {
 }
 com.badlogic.gdx.scenes.scene2d.ui.CheckBox$CheckBoxStyle: {
 	default: {
-		checkboxOn: radio-button-c
-		checkboxOff: radio-button-clear
+		checkboxOn: radio-button-c,
+		checkboxOff: radio-button-off-c,
 		checkboxOver: radio-button-off-c
 		font: font
 		fontColor: color
