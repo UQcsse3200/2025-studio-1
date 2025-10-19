@@ -453,12 +453,10 @@ public class PlayerActions extends Component {
         projectilePhysics.fire(new Vector2(destination.x - origin.x, destination.y - origin.y), 5);
 
         if (unlimitedAmmoEffect != null && unlimitedAmmoEffect.isActive()) {
-//            unlimitedAmmoEffect.apply(gun);  // dont call every shot
         } else {
             mag.setCurrentAmmo(mag.getCurrentAmmo() - 1);
         }
-//        mag.setCurrentAmmo(mag.getCurrentAmmo() - 1);
-
+        entity.getEvents().trigger("after shoot");
         timeSinceLastAttack = 0;
     }
 
@@ -582,6 +580,7 @@ public class PlayerActions extends Component {
 
                 reloadSound.play();
                 timesinceLastReload = 0f;
+                entity.getEvents().trigger("after reload");
             }
         }
     }
@@ -653,7 +652,7 @@ public class PlayerActions extends Component {
         if (facingRight) {
             body.setTransform(playerPos.x + handOffsetX, playerPos.y + handOffsetY, 0f);
         } else {
-            body.setTransform(playerPos.x - handOffsetX, playerPos.y + handOffsetY, 0f);
+            body.setTransform(playerPos.x - handOffsetX,  playerPos.y + handOffsetY, 0f);
         }
     }
 
