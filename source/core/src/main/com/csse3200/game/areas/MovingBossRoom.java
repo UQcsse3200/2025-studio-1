@@ -170,7 +170,7 @@ public class MovingBossRoom extends GameArea {
 
 
     private void spawnNurse() {
-        GridPoint2 pos = new GridPoint2(20, 8); // 在地图右侧,与Assistor对称
+        GridPoint2 pos = new GridPoint2(20, 8);
 
         Entity nurse = FriendlyNPCFactory.createNurseNpc(player);
         spawnEntityAt(nurse, pos, true, true);
