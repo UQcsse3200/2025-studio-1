@@ -91,8 +91,8 @@ public class PlayerFactory {
         player.getComponent(AnimationRenderComponent.class).scaleEntity(2f);
 
         // Scale and set up Player Colliders
-        PhysicsUtils.setScaledCollider(player, groundCollider,0.2f, 0.1f);
-        PhysicsUtils.setScaledCollider(player, playerCollider, 0.3f, 0.5f);
+        PhysicsUtils.setScaledCollider(player, groundCollider,0.15f, 0.1f);
+        PhysicsUtils.setScaledCollider(player, playerCollider, 0.2f, 0.4f);
         playerCollider.setDensity(1.5f);
         playerCollider.setFriction(0f);
         PhysicsUtils.setScaledCollider(player, player.getComponent(InteractComponent.class), 1f, 0.75f);

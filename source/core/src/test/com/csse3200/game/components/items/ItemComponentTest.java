@@ -318,9 +318,9 @@ import static org.mockito.Mockito.when;
 
         String description = item.getDescription();
 
-        assertTrue(description.contains("Item : Health Potion"));
-        assertTrue(description.contains("Id : " + entity.getId())); // use real entity id
-        assertTrue(description.contains("Type : CONSUMABLE"));
-        assertTrue(description.contains("Count : 3"));
+        assertTrue(description.contains("Item: Health Potion"));
+        assertTrue(description.contains("Id: " + entity.getId())); // use real entity id
+        assertTrue(description.contains("Type: CONSUMABLE"));
+        assertTrue(description.contains("Count: 3"));
     }
 }

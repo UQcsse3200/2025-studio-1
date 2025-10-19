@@ -68,7 +68,7 @@ public class TeleporterMenuUI extends UIComponent {
         panel.row();
 
         // Buttons row (Close only for now)
-        TextButton closeBtn = new TextButton("Close (Esc)", neon.buttonRounded());
+        TextButton closeBtn = new TextButton("Close (E)", neon.buttonRounded());
         closeBtn.getLabel().setFontScale(1.2f);
         closeBtn.addListener(new ClickListener() {
             @Override

@@ -134,7 +134,6 @@ public class KeyboardPlayerInputComponent extends InputComponent {
         // Unaffected by pausing meaning checking for paused needs to be handled by "interact" event users
         if (keycode == Keys.E) {
             holding = false;
-            triggerAddItem();
             return true;
         }
 
@@ -155,7 +154,6 @@ public class KeyboardPlayerInputComponent extends InputComponent {
             case Keys.SHIFT_LEFT:
                 triggerStopSprintingEvent();
                 return true;
-
             case Keys.S:
                 triggerStopCrouchingEvent();
                 return true;
@@ -195,7 +193,6 @@ public class KeyboardPlayerInputComponent extends InputComponent {
     }
 
     private void triggerReloadEvent() {
-
         entity.getEvents().trigger("reload");
     }
 
@@ -236,14 +233,6 @@ public class KeyboardPlayerInputComponent extends InputComponent {
 
     private void triggerDashEvent() {
         entity.getEvents().trigger("dashAttempt");
-    }
-
-    /**
-     * Triggers an item pickup request.
-     */
-    private void triggerAddItem() {
-        System.out.println("Pick up event triggered");
-        entity.getEvents().trigger("pick up");
     }
 
     /**
