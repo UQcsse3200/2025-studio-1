@@ -89,13 +89,13 @@ public class TutorialScreenDisplay extends BaseScreenDisplay {
         TutorialStep step = steps.get(stepIndex);
 
         // Title
-        addTitle(root, step.title(), 2f, null, 20f);
+        addTitle(root, step.title(), 1.5f, null, 30f);
 
         // Description (clone small style; keep text white)
         Label.LabelStyle small = new Label.LabelStyle(skin.get(Label.LabelStyle.class));
         small.fontColor = skin.getColor("white");
         Label desc = new Label(step.description(), small);
-        desc.setFontScale(2f);
+        desc.setFontScale(1.8f);
         root.add(desc).colspan(2).center().padBottom(20f);
         root.row();
 

@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.components.Component;
 import com.csse3200.game.components.friendlynpc.*;
 import com.csse3200.game.entities.Entity;
+import com.csse3200.game.entities.factories.InteractableStationFactory;
 import com.csse3200.game.rendering.AnimationRenderComponent;
 import com.csse3200.game.rendering.TextureRenderComponent;
 import com.csse3200.game.services.ServiceLocator;
@@ -25,7 +26,7 @@ public class FriendlyNPCFactory {
     }
 
     public static Entity createTest(Entity player) {
-        Entity test = new Entity()
+        Entity test = InteractableStationFactory.createBaseStation()
                 .addComponent(new TextureRenderComponent("images/nurse_npc.png"))
                 .addComponent(new NpcDialogueDataComponent(
                         "Friendly NPC", "", new String[]{
@@ -37,11 +38,9 @@ public class FriendlyNPCFactory {
                 .addComponent(new DialogueDisplay())
                 .addComponent(new NpcHealingComponent(player, 50))
                 .addComponent(new AssistorTaskComponent(player));
-        var data = test.getComponent(NpcDialogueDataComponent.class);
-        var ui = test.getComponent(DialogueDisplay.class);
         test.getComponent(TextureRenderComponent.class).scaleEntity();
         test.addComponent(new TipComponent(test, player, 3f));
-        test.addComponent(new NpcInterationComponent(player, 3f));
+        test.addComponent(new NpcInteractionComponent());
         return test;
     }
 
@@ -63,7 +62,7 @@ public class FriendlyNPCFactory {
         AnimationRenderComponent arc = new AnimationRenderComponent(atlas);
         arc.addAnimation("robot_fire", 0.12f, Animation.PlayMode.LOOP);
 
-        Entity npc = new Entity()
+        Entity npc = InteractableStationFactory.createBaseStation()
                 .addComponent(arc)
                 .addComponent(new HoverBobComponent(0.08f, 2.0f))
                 .addComponent(new NpcTwoOptionMenuComponent())
@@ -83,7 +82,7 @@ public class FriendlyNPCFactory {
                 .addComponent(new DialogueDisplay());
 
         npc.addComponent(new TipComponent(npc, player, 3f));
-        npc.addComponent(new NpcInterationComponent(player, 3f));
+        npc.addComponent(new NpcInteractionComponent());
 
         return npc;
     }
@@ -99,7 +98,7 @@ public class FriendlyNPCFactory {
      * @return A new Entity representing the Assister NPC with walking animations.
      */
     public static Entity createAssisterNpc(Entity player) {
-        Entity assistor = new Entity()
+        Entity assistor = InteractableStationFactory.createBaseStation()
                 .addComponent(new TextureRenderComponent("images/Assistor.png"))
                 .addComponent(new NpcDialogueDataComponent(
                         "Friendly NPC", "", new String[]{
@@ -110,11 +109,9 @@ public class FriendlyNPCFactory {
                 ))
                 .addComponent(new DialogueDisplay())
                 .addComponent(new AssistorTaskComponent(player));
-        var data = assistor.getComponent(NpcDialogueDataComponent.class);
-        var ui = assistor.getComponent(DialogueDisplay.class);
         assistor.getComponent(TextureRenderComponent.class).scaleEntity();
         assistor.addComponent(new TipComponent(assistor, player, 3f));
-        assistor.addComponent(new NpcInterationComponent(player, 3f));
+        assistor.addComponent(new NpcInteractionComponent());
         assistor.getComponent(TextureRenderComponent.class).scaleEntity();
         assistor.setScale(1.1f, 1.1f);
         return assistor;
@@ -130,7 +127,7 @@ public class FriendlyNPCFactory {
      * @return A new Entity representing the Nurse NPC with a scaled texture.
      */
     public static Entity createNurseNpc(Entity player) {
-        Entity npc = new Entity()
+        Entity npc = InteractableStationFactory.createBaseStation()
                 .addComponent(new TextureRenderComponent("images/nurse_npc.png"))
                 .addComponent(new NpcDialogueDataComponent(
                         "Nurse", "", new String[]{
@@ -143,13 +140,13 @@ public class FriendlyNPCFactory {
                         .setCooldownMillis(30_000));
         npc.getComponent(TextureRenderComponent.class).scaleEntity();
         npc.addComponent(new TipComponent(npc, player, 3f));
-        npc.addComponent(new NpcInterationComponent(player, 3f));
+        npc.addComponent(new NpcInteractionComponent());
 
         return npc;
     }
 
     public static Entity createPartner(Entity player) {
-        Entity partner = new Entity()
+        Entity partner = InteractableStationFactory.createBaseStation()
                 .addComponent(new TextureRenderComponent("images/partner.png"))
                 .addComponent(new PartnerFollowComponent(player))
                 .addComponent(new CompanionFollowShootComponent())
