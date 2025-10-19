@@ -196,7 +196,7 @@ public class SecretRoomGameArea extends GameArea {
                 if (rightExitDoorComp != null) {
                     rightExitDoorComp.setLocked(false);
                 }
-                prompt.setText("Button activated! Door unlocked!");
+                prompt.setText("Factory Exploding! Escape Out The Door To The Right!");
             }
         };
     }
