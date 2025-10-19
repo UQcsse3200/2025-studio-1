@@ -14,6 +14,14 @@ import com.csse3200.game.rendering.TextureRenderComponent;
 public class ItemFactory {
 
     /**
+     * Stops you from making an ItemFactory object.
+     * If you try, it throws an error.
+     */
+    private ItemFactory() {
+        throw new IllegalStateException("Instantiating static util class");
+    }
+
+    /**
      * Creates and configures a new item entity.
      * The item has a texture, physics, and other needed parts.
      * This class is called by other Factories, to add other components as needed.
@@ -33,13 +41,5 @@ public class ItemFactory {
         item.getComponent(TextureRenderComponent.class).scaleEntity();
         // Body is created in PhysicsComponent.create(), so avoid touching it here.
         return item;
-    }
-
-    /**
-     * Stops you from making an ItemFactory object.
-     * If you try, it throws an error.
-     */
-    private ItemFactory() {
-        throw new IllegalStateException("Instantiating static util class");
     }
 }

@@ -28,6 +28,10 @@ public class JobSystem {
      */
     private static final ExecutorService blockingExecutor = Executors.newCachedThreadPool();
 
+    private JobSystem() {
+        throw new IllegalStateException("Instantiating static util class");
+    }
+
     /**
      * Launch an asynchronous job which may be run on a separate thread. The job should not block on
      * anything except other jobs, i.e. using get(). For jobs which block on I/O, delays, etc. use
@@ -55,9 +59,5 @@ public class JobSystem {
      */
     public static <T> CompletableFuture<T> launchBlocking(Supplier<T> supplier) {
         return CompletableFuture.supplyAsync(supplier, blockingExecutor);
-    }
-
-    private JobSystem() {
-        throw new IllegalStateException("Instantiating static util class");
     }
 }

@@ -47,8 +47,8 @@ public class AnimatedClipImage extends Image {
     private final Animation<TextureRegion> animation;
     private final boolean looping;
     private final List<String> loadedPaths;
-    private float stateTime = 0f;
     private final TextureRegionDrawable drawable;
+    private float stateTime = 0f;
 
     /**
      * Creates an animated image from the frames described by the given {@link TutorialClip}.
@@ -69,12 +69,6 @@ public class AnimatedClipImage extends Image {
 
         this.drawable = new TextureRegionDrawable(animation.getKeyFrame(0));
         setDrawable(drawable);
-    }
-
-    /**
-     * Internal holder for the build results.
-     */
-    private record Built(Animation<TextureRegion> animation, List<String> paths) {
     }
 
     /**
@@ -157,5 +151,11 @@ public class AnimatedClipImage extends Image {
     public boolean remove() {
         disposeAssets();
         return super.remove();
+    }
+
+    /**
+     * Internal holder for the build results.
+     */
+    private record Built(Animation<TextureRegion> animation, List<String> paths) {
     }
 }

@@ -11,10 +11,6 @@ import com.csse3200.game.entities.configs.ActiveProjectileTypes;
 import com.csse3200.game.entities.configs.projectiles.ActiveProjectile;
 import com.csse3200.game.entities.configs.projectiles.ProjectileConfig;
 import com.csse3200.game.entities.configs.projectiles.ProjectileTarget;
-import com.csse3200.game.physics.components.ColliderComponent;
-import com.csse3200.game.physics.components.HitboxComponent;
-import com.csse3200.game.physics.components.PhysicsComponent;
-import com.csse3200.game.physics.components.PhysicsProjectileComponent;
 import com.csse3200.game.physics.components.*;
 import com.csse3200.game.rendering.TextureRenderWithRotationComponent;
 import com.csse3200.game.services.ServiceLocator;
@@ -31,6 +27,10 @@ import com.csse3200.game.services.ServiceLocator;
  */
 
 public class ProjectileFactory {
+
+    private ProjectileFactory() {
+        throw new IllegalStateException("Instantiating static util class");
+    }
 
     /**
      * Base class to create a projectile.
@@ -203,11 +203,6 @@ public class ProjectileFactory {
         projectile.getComponent(TextureRenderWithRotationComponent.class).setHasRotated(true);
 
         return projectile;
-    }
-
-
-    private ProjectileFactory() {
-        throw new IllegalStateException("Instantiating static util class");
     }
 
     public static Entity createFireballBullet(WeaponsStatsComponent baseStats) {

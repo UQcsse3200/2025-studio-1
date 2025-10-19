@@ -1,7 +1,7 @@
 package com.csse3200.game.effects;
 
-import com.csse3200.game.entities.Entity;
 import com.csse3200.game.components.player.InventoryComponent;
+import com.csse3200.game.entities.Entity;
 
 public class DoubleProcessorsEffect extends Effect {
     private final float duration;

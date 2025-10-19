@@ -52,21 +52,21 @@ public class ItemComponent extends Component {
     }
 
     /**
-     * This changes whether the Item can be picked up by the player
-     *
-     * @param status True if the item can be picked up, False otherwise
-     */
-    public void setPickupable(boolean status) {
-        this.pickupable = status;
-    }
-
-    /**
      * This checks if the item can be picked up
      *
      * @return True if pickupable is true, false otherwise
      */
     public boolean isPickupable() {
         return pickupable;
+    }
+
+    /**
+     * This changes whether the Item can be picked up by the player
+     *
+     * @param status True if the item can be picked up, False otherwise
+     */
+    public void setPickupable(boolean status) {
+        this.pickupable = status;
     }
 
     /**
@@ -89,19 +89,19 @@ public class ItemComponent extends Component {
     }
 
     /**
+     * Returns the texture path of the current item
+     */
+    public String getTexture() {
+        return this.texture;
+    }
+
+    /**
      * Sets the texture path of the current item
      *
      * @param texture sets the texture path of the current item
      */
     public void setTexture(String texture) {
         this.texture = texture;
-    }
-
-    /**
-     * Returns the texture path of the current item
-     */
-    public String getTexture() {
-        return this.texture;
     }
 
     /**
@@ -128,6 +128,7 @@ public class ItemComponent extends Component {
         if ("lightsaber".equals(this.getName())) return new Vector2(0.7f, -0.2f); // works while facing left
         if ("dagger".equals(this.getName())) return new Vector2(1.0f, 0.3f);
         if ("pistol".equals(this.getName())) return new Vector2(0.75f, -0.1f);
+        if ("rocketlauncher".equals(this.getName())) return new Vector2(0.75f, -0.1f);
         return new Vector2(0.7f, 0.3f);
     }
 }

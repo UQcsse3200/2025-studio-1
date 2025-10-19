@@ -10,26 +10,83 @@ import java.util.*;
  */
 public class RadixTrie {
     private static final int K = 5;
+    private final Node root = new Node();
 
-    private static final class Node {
-        // Children keyed by edge-label first char; values kept in sorted order by label
-        private final TreeMap<Character, List<Edge>> children = new TreeMap<>();
-        private boolean terminal = false;
-        // Cached top-5 (lexicographic) completions from this subtree
-        private final ArrayList<String> topK = new ArrayList<>(K);
+    private static void insertIntoEdge(Node parent, Edge e, String remaining, String full) {
+        int lcp = lcpLen(remaining, e.label);
+        if (lcp == e.label.length()) {
+            // edge fully matches; continue with rest
+            String remRest = remaining.substring(lcp);
+            if (remRest.isEmpty()) {
+                if (!e.next.terminal) {
+                    e.next.terminal = true;
+                    cachePush(e.next.topK, full);
+                }
+            } else {
+                new RadixTrie().insertInternal(e.next, remRest, full); // delegate
+            }
+        } else if (lcp > 0) {
+            // split edge at lcp
+            String common = e.label.substring(0, lcp);
+            String eRest = e.label.substring(lcp);
+            Node mid = new Node();
+            // existing edge becomes mid child
+            mid.children.computeIfAbsent(eRest.charAt(0), k -> new ArrayList<>())
+                    .add(new Edge(eRest, e.next));
+            sortBucket(mid.children.get(eRest.charAt(0)));
+            // update original edge to common->mid
+            e.label = common;
+            e.next = mid;
+
+            String remRest = remaining.substring(lcp);
+            if (remRest.isEmpty()) {
+                if (!mid.terminal) {
+                    mid.terminal = true;
+                    cachePush(mid.topK, full);
+                }
+            } else {
+                new RadixTrie().insertInternal(mid, remRest, full);
+            }
+        } else {
+            // no common prefix with this edge, caller handles other edges/bucket insert
+            // (should not reach here with the current calling pattern)
+        }
+        // bubble caches
+        cachePush(parent.topK, full);
     }
 
-    private static final class Edge {
-        String label; // compressed edge label
-        Node next;
-
-        Edge(String label, Node next) {
-            this.label = label;
-            this.next = next;
+    private static void cachePush(ArrayList<String> topK, String candidate) {
+        int pos = Collections.binarySearch(topK, candidate);
+        if (pos >= 0) return; // already present
+        int ins = -pos - 1;
+        if (topK.size() < K) {
+            topK.add(ins, candidate);
+        } else if (ins < K) {
+            topK.add(ins, candidate);
+            topK.remove(K);
         }
     }
 
-    private final Node root = new Node();
+    private static int lcpLen(String a, String b) {
+        int n = Math.min(a.length(), b.length());
+        int i = 0;
+        while (i < n && a.charAt(i) == b.charAt(i)) i++;
+        return i;
+    }
+
+    private static void sortBucket(List<Edge> bucket) {
+        bucket.sort(Comparator.comparing(e -> e.label));
+    }
+
+    private static int lowerBound(List<Edge> bucket, String rem) {
+        int lo = 0, hi = bucket.size();
+        while (lo < hi) {
+            int mid = (lo + hi) >>> 1;
+            if (bucket.get(mid).label.compareTo(rem) < 0) lo = mid + 1;
+            else hi = mid;
+        }
+        return lo;
+    }
 
     public void clear() {
         // not strictly necessary for GC, but explicit if you rebuild often
@@ -39,6 +96,8 @@ public class RadixTrie {
         if (word == null || word.isEmpty()) return;
         insertInternal(root, word, word);
     }
+
+    // --- helpers ---
 
     private void insertInternal(Node node, String remaining, String full) {
         if (remaining.isEmpty()) {
@@ -109,49 +168,6 @@ public class RadixTrie {
         cachePush(node.topK, full);
         // keep bucket sorted
         sortBucket(bucket);
-    }
-
-    private static void insertIntoEdge(Node parent, Edge e, String remaining, String full) {
-        int lcp = lcpLen(remaining, e.label);
-        if (lcp == e.label.length()) {
-            // edge fully matches; continue with rest
-            String remRest = remaining.substring(lcp);
-            if (remRest.isEmpty()) {
-                if (!e.next.terminal) {
-                    e.next.terminal = true;
-                    cachePush(e.next.topK, full);
-                }
-            } else {
-                new RadixTrie().insertInternal(e.next, remRest, full); // delegate
-            }
-        } else if (lcp > 0) {
-            // split edge at lcp
-            String common = e.label.substring(0, lcp);
-            String eRest = e.label.substring(lcp);
-            Node mid = new Node();
-            // existing edge becomes mid child
-            mid.children.computeIfAbsent(eRest.charAt(0), k -> new ArrayList<>())
-                    .add(new Edge(eRest, e.next));
-            sortBucket(mid.children.get(eRest.charAt(0)));
-            // update original edge to common->mid
-            e.label = common;
-            e.next = mid;
-
-            String remRest = remaining.substring(lcp);
-            if (remRest.isEmpty()) {
-                if (!mid.terminal) {
-                    mid.terminal = true;
-                    cachePush(mid.topK, full);
-                }
-            } else {
-                new RadixTrie().insertInternal(mid, remRest, full);
-            }
-        } else {
-            // no common prefix with this edge, caller handles other edges/bucket insert
-            // (should not reach here with the current calling pattern)
-        }
-        // bubble caches
-        cachePush(parent.topK, full);
     }
 
     public List<String> suggestTopK(String prefix) {
@@ -270,38 +286,21 @@ public class RadixTrie {
         return out;
     }
 
-    // --- helpers ---
+    private static final class Node {
+        // Children keyed by edge-label first char; values kept in sorted order by label
+        private final TreeMap<Character, List<Edge>> children = new TreeMap<>();
+        // Cached top-5 (lexicographic) completions from this subtree
+        private final ArrayList<String> topK = new ArrayList<>(K);
+        private boolean terminal = false;
+    }
 
-    private static void cachePush(ArrayList<String> topK, String candidate) {
-        int pos = Collections.binarySearch(topK, candidate);
-        if (pos >= 0) return; // already present
-        int ins = -pos - 1;
-        if (topK.size() < K) {
-            topK.add(ins, candidate);
-        } else if (ins < K) {
-            topK.add(ins, candidate);
-            topK.remove(K);
+    private static final class Edge {
+        String label; // compressed edge label
+        Node next;
+
+        Edge(String label, Node next) {
+            this.label = label;
+            this.next = next;
         }
-    }
-
-    private static int lcpLen(String a, String b) {
-        int n = Math.min(a.length(), b.length());
-        int i = 0;
-        while (i < n && a.charAt(i) == b.charAt(i)) i++;
-        return i;
-    }
-
-    private static void sortBucket(List<Edge> bucket) {
-        bucket.sort(Comparator.comparing(e -> e.label));
-    }
-
-    private static int lowerBound(List<Edge> bucket, String rem) {
-        int lo = 0, hi = bucket.size();
-        while (lo < hi) {
-            int mid = (lo + hi) >>> 1;
-            if (bucket.get(mid).label.compareTo(rem) < 0) lo = mid + 1;
-            else hi = mid;
-        }
-        return lo;
     }
 }

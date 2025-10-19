@@ -1,6 +1,6 @@
 package com.csse3200.game.components.minigames.slots;
 
-import com.csse3200.game.components.player.InventoryComponent; // <-- NEW
+import com.csse3200.game.components.player.InventoryComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.factories.InteractableStationFactory;
 import com.csse3200.game.rendering.TextureRenderComponent;
@@ -10,12 +10,16 @@ public class SlotsGame {
     private final SlotsDisplay display;
     private boolean shown = false;
 
-    /** Old no-arg constructor preserved for compatibility (no wallet) */
+    /**
+     * Old no-arg constructor preserved for compatibility (no wallet)
+     */
     public SlotsGame() {
         this(null);
     }
 
-    /** New: pass the player's InventoryComponent so Slots uses real money */
+    /**
+     * New: pass the player's InventoryComponent so Slots uses real money
+     */
     public SlotsGame(InventoryComponent inventory) {
         gameEntity = initGameEntity();
         display = gameEntity.getComponent(SlotsDisplay.class);
@@ -26,7 +30,8 @@ public class SlotsGame {
     }
 
     private void toggle() {
-        if (shown) display.hide(); else display.show();
+        if (shown) display.hide();
+        else display.show();
         shown = !shown;
     }
 

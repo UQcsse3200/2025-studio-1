@@ -2,9 +2,9 @@ package com.csse3200.game.screens;
 
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.csse3200.game.GdxGame;
+import com.csse3200.game.components.screens.LeaderboardScreenDisplay;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.input.InputDecorator;
-import com.csse3200.game.components.screens.LeaderboardScreenDisplay;
 
 /**
  * Screen shown to display the leaderboard.
@@ -19,6 +19,7 @@ public class LeaderboardScreen extends BaseScreen {
 
     /**
      * Creates the UI entity for the leaderboard screen.
+     *
      * @param stage the stage to which the UI entity is added.
      * @return the created UI entity.
      */

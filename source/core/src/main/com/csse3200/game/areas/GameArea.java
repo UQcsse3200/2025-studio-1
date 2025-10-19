@@ -10,6 +10,8 @@ import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Disposable;
+import com.csse3200.game.areas.cutscenes.BadWinAnimationScreen;
+import com.csse3200.game.areas.cutscenes.GoodWinAnimationScreen;
 import com.csse3200.game.areas.terrain.TerrainComponent;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.components.CameraComponent;
@@ -138,19 +140,22 @@ public abstract class GameArea implements Disposable {
     public void startWaves(Entity player) {
         if (wavesManager == null || wavesManager.allWavesFinished()) {
             int room = getRoomNumber();
+            if (room == -1) {
+                Gdx.app.log("GameArea", "Waves are not going to spawn in this room");
+                return;
+            }
             int maxWaves = room > 4 ? 2 : 1; // mimic original behaviour: higher rooms get 2 waves
-            wavesManager = new EnemyWaves(maxWaves, this, player);
-            EnemyWavesDisplay waveDisplay = new EnemyWavesDisplay(wavesManager);
+            wavesManager = new EnemyWaves(maxWaves, ServiceLocator.getGameArea(), player);
+            //EnemyWavesDisplay waveDisplay = new EnemyWavesDisplay(wavesManager);
             Gdx.app.log("GameArea", "Initializing waves: room=" + room + " maxWaves=" + maxWaves);
+            wavesManager.startWave();
         }
-        wavesManager.startWave();
     }
 
     /**
      * Returns the room name corresponding to the current floor.
      *
      * @return the name of the current room
-     *
      */
     public String getRoomName() {
         return this.toString();
@@ -162,8 +167,8 @@ public abstract class GameArea implements Disposable {
      * @return Room number as an int if the floor name is in the format "Floor2"
      * with 2 being any number, otherwise returns 1.
      */
-    public int getRoomNumber() { // changed from protected to public for EnemyWaves access
-        return switch (this.toString()) {
+    public int getRoomNumber() {
+        return switch (ServiceLocator.getGameArea().toString()) {
             case "Reception" -> 2;
             case "Mainhall" -> 3;
             case "Security" -> 4;
@@ -174,6 +179,9 @@ public abstract class GameArea implements Disposable {
             case "Storage" -> 9;
             case "Server" -> 10;
             case "Tunnel" -> 11;
+            case "Casino", "FlyingBoss", "MovingBoss", "SecretRoom", "StaticBossRoom" -> -1;
+            case "GoodWinAnimation" -> 101; //Animation start from 101
+            case "BadWinAnimation" -> 102;
             default -> 1;
         };
     }
@@ -267,9 +275,7 @@ public abstract class GameArea implements Disposable {
                 spawnVroomba(total, scaleFactor, player, positions);
                 break;
             default:
-                spawnGhostGPT(total, scaleFactor, player, positions);
-                spawnGrokDroid(total, scaleFactor, player, positions);
-                break;
+                // Spawn nothing, hence empty default case.
         }
     }
 
@@ -341,6 +347,13 @@ public abstract class GameArea implements Disposable {
             case ("Random"):
                 spawnRandom(total, scaleFactor, player, positions, respectiveSpawns);
         }
+    }
+
+    /**
+     * Retrieves current wave count for services
+     */
+    public int currentWave() {
+        return wavesManager.getWaveNumber();
     }
 
     /**
@@ -755,14 +768,7 @@ public abstract class GameArea implements Disposable {
                 positions.put(GROK_DROID, respectiveSpawns);
             }
             default -> {
-                respectiveSpawns.add(new Vector2(12f, 11f));
-                respectiveSpawns.add(new Vector2(7.6f, 4f));
-                respectiveSpawns.add(new Vector2(2f, 4f));
-                positions.put(GHOST_GPT, respectiveSpawns);
-                respectiveSpawns = new ArrayList<>();
-                respectiveSpawns.add(new Vector2(5f, 10f));
-                respectiveSpawns.add(new Vector2(2f, 10f));
-                positions.put(GROK_DROID, respectiveSpawns);
+                // No spawns, hence not assigning any spawn positions
             }
         }
         return positions;
@@ -839,6 +845,23 @@ public abstract class GameArea implements Disposable {
         }
         if (!toLoad.isEmpty()) {
             rs.loadTextures(toLoad.toArray(new String[0]));
+            rs.loadAll();
+        }
+    }
+
+    /**
+     * Convenience to load atlases if not already loaded.
+     */
+    protected void ensureAtlases(String[] atlasPaths) {
+        ResourceService rs = ServiceLocator.getResourceService();
+        List<String> toLoad = new ArrayList<>();
+        for (String path : atlasPaths) {
+            if (!rs.containsAsset(path, TextureAtlas.class)) {
+                toLoad.add(path);
+            }
+        }
+        if (!toLoad.isEmpty()) {
+            rs.loadTextureAtlases(toLoad.toArray(new String[0]));
             rs.loadAll();
         }
     }
@@ -1033,6 +1056,7 @@ public abstract class GameArea implements Disposable {
                     }
                 } finally {
                     endTransition();
+                    startWaves(getPlayer());
                 }
             });
         });
@@ -1133,6 +1157,8 @@ public abstract class GameArea implements Disposable {
             case "shipping" -> ShippingGameArea.class;
             case "server" -> ServerGameArea.class;
             case "research" -> ResearchGameArea.class;
+            case "goodwinanimation" -> GoodWinAnimationScreen.class;
+            case "badwinanimation" -> BadWinAnimationScreen.class;
             default -> {
                 Gdx.app.log("GameArea", "transitionToArea: unknown area name '" + areaName + "'");
                 yield null;

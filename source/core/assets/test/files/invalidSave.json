@@ -1,0 +1,54 @@
+{
+"player": {
+"playerPos": {
+"x": 8.361221,
+"y": 5.5184298
+},
+"avatar": "placeholder",
+"ammoReserve": 1000,
+"stamina": 100,
+"maxStamina": 100,
+"maxHealth": 100,
+"currentHealth": 100,
+"processor": 9991,
+"keyCardLevel": 1
+},
+"gameArea": "Forest",
+"wave": 2,
+"loadedInventory": [
+{
+"type": "MELEE",
+"ammo": 0,
+"texture": "images/dagger.png",
+"count": 1,
+"upgradeStage": 1
+},
+{
+"type": "MELEE",
+"ammo": 0,
+"texture": "images/dagger.png",
+"count": 1,
+"upgradeStage": 1
+},
+{
+"type": "RANGED",
+"ammo": 30,
+"texture": "images/pistol.png",
+"count": 1,
+"upgradeStage": 1
+},
+{
+"type": "RANGED",
+"ammo": 50,
+"texture": "images/rifle.png",
+"count": 1,
+"upgradeStage": 1
+},
+{
+"type": "CONSUMABLE",
+"texture": "images/monster.png",
+"count": 9,
+"upgradeStage": 1
+}
+]
+}
