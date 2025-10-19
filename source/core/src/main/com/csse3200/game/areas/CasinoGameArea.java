@@ -2,6 +2,7 @@ package com.csse3200.game.areas;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.GridPoint2;
+import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.CameraComponent;
@@ -16,6 +17,8 @@ import com.csse3200.game.components.screens.BlackjackScreenDisplay;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.factories.InteractableStationFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
+import com.csse3200.game.entities.factories.LightFactory;
+import com.csse3200.game.components.lighting.PointLightFollowComponent;
 import com.csse3200.game.rendering.TextureRenderComponent;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
@@ -64,9 +67,27 @@ public class CasinoGameArea extends GameArea {
                 new Color(0.08f, 0.08f, 0.1f, 0.30f));
 
         ensureAssets();
+
+        var ls = ServiceLocator.getLightingService();
+        if (ls != null && ls.getEngine() != null) {
+            ls.getEngine().setAmbientLight(0.8f); // 0.7–0.8 feels “casino”
+            ls.getEngine().getRayHandler().setShadows(true);
+            ls.getEngine().getRayHandler().removeAll();
+        }
+
+        spawnNeonRig();
         spawnBordersAndDoors();
         spawnFloor();
+        spawnLight();
         player = spawnPlayer();
+
+        if (player.getComponent(com.csse3200.game.components.lighting.PointLightComponent.class) == null &&
+                player.getComponent(com.csse3200.game.components.lighting.PointLightFollowComponent.class) == null) {
+            player.addComponent(new com.csse3200.game.components.lighting.PointLightFollowComponent(
+                    32, new com.badlogic.gdx.graphics.Color(1f,1f,1f,0.35f), 6.5f, new com.badlogic.gdx.math.Vector2(0f, 1f)
+            ));
+        }
+
         spawnBlackjack();
         spawnSlotsGame();
         spawnWhackAMoleGame();
@@ -88,6 +109,61 @@ public class CasinoGameArea extends GameArea {
         rs.unloadAssets(CASINO_ATLAS);
         rs.unloadAssets(CASINO_SOUNDS);
 
+    }
+
+    private void spawnLight() {
+        // 1) A faint top-down wash so the background is never crushed
+        spawnEntity(LightFactory.createDirectionalLightEntity(
+                64, new Color(1f, 1f, 1f, 0.20f), 270f, /*xray=*/true)); // from top
+
+        // 2) Neon strips (x-ray) along top and bottom
+        // NOTE: ChainLight now takes a single interleaved XY array: {x1,y1, x2,y2, ...}
+        spawnEntity(LightFactory.createChainLightEntity(
+                48, new Color(1f, 0.2f, 0.75f, 0.50f), 20f,
+                new float[]{ 6f, 13.1f, 28f, 13.1f }, /*xray=*/true));
+
+        spawnEntity(LightFactory.createChainLightEntity(
+                48, new Color(0.1f, 0.95f, 1f, 0.50f), 20f,
+                new float[]{ 6f, 3.1f, 28f, 3.1f }, /*xray=*/true));
+
+        // 3) Ceiling “bulbs” (x-ray points) above play areas
+        spawnEntityAt(LightFactory.createPointLightEntity(
+                        64, new Color(1f,0.95f,0.85f,0.38f), 22f, /*xray=*/true, new Vector2(0f, 0f)),
+                new GridPoint2(11, 12), true, true);
+
+        spawnEntityAt(LightFactory.createPointLightEntity(
+                        64, new Color(1f,0.95f,0.85f,0.38f), 22f, /*xray=*/true, new Vector2(0f, 0f)),
+                new GridPoint2(18, 12), true, true);
+
+        spawnEntityAt(LightFactory.createPointLightEntity(
+                        64, new Color(1f,0.95f,0.85f,0.38f), 22f, /*xray=*/true, new Vector2(0f, 0f)),
+                new GridPoint2(24, 12), true, true);
+    }
+
+    private void spawnNeonRig() {
+        // soft magenta+cyan directional washes (xray) to tint the room
+        spawnEntity(LightFactory.createDirectionalLightEntity(
+                96, new Color(1f, 0.25f, 0.85f, 0.18f), 315f, /*xray=*/true)); // from top-left
+        spawnEntity(LightFactory.createDirectionalLightEntity(
+                96, new Color(0.15f, 0.95f, 1f, 0.18f), 135f, /*xray=*/true)); // from top-right
+
+        // neon border strips (xray ChainLight)
+        spawnEntity(LightFactory.createChainLightEntity(
+                48, new Color(1f, 0.2f, 0.75f, 0.40f), 16f,
+                new float[]{ 6f, 13.2f, 28f, 13.2f }, /*xray=*/true));
+
+        spawnEntity(LightFactory.createChainLightEntity(
+                48, new Color(0.1f, 0.95f, 1f, 0.40f), 16f,
+                new float[]{ 6f, 3.0f, 28f, 3.0f }, /*xray=*/true));
+
+        // faint corner bulbs to soften corners
+        spawnEntityAt(LightFactory.createPointLightEntity(
+                        64, new Color(1f,1f,1f,0.18f), 20f, /*xray=*/true, new Vector2(0f,0f)),
+                new GridPoint2(6, 13), true, true);
+
+        spawnEntityAt(LightFactory.createPointLightEntity(
+                        64, new Color(1f,1f,1f,0.18f), 20f, /*xray=*/true, new Vector2(0f,0f)),
+                new GridPoint2(28, 13), true, true);
     }
 
     /**
