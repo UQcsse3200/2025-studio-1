@@ -145,7 +145,7 @@ public abstract class GameArea implements Disposable {
     public void removeEnemy() {
         enemyCount--;
 
-        if (enemyCount == 0 && this.wavesManager.allWavesFinished()) {
+        if (enemyCount == 0 && (this.wavesManager == null || this.wavesManager.allWavesFinished())) {
             this.getEvents().trigger("room cleared");
         }
     }

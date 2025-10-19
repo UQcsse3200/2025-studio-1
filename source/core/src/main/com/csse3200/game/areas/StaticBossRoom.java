@@ -34,6 +34,7 @@ public class StaticBossRoom extends GameArea {
     private static final Logger logger = LoggerFactory.getLogger(StaticBossRoom.class);
     private static final float WALL_WIDTH = 0.1f;
     private static GridPoint2 playerSpawn = new GridPoint2(3, 10);
+    private static boolean isCleared;
     private Entity player;
 
     /**
@@ -47,6 +48,8 @@ public class StaticBossRoom extends GameArea {
      */
     public StaticBossRoom(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
         super(terrainFactory, cameraComponent);
+
+        this.getEvents().addListener("room cleared", StaticBossRoom::clearRoom);
     }
 
 
@@ -85,11 +88,13 @@ public class StaticBossRoom extends GameArea {
 
         player = spawnPlayer();
 
-        spawnBoss();
         spawnObjectDoors(new GridPoint2(0, 7), new GridPoint2(28, 7));
 
-        ItemSpawner itemSpawner = new ItemSpawner(this);
-        itemSpawner.spawnItems(ItemSpawnConfig.bossmap());
+        if (!StaticBossRoom.isCleared) {
+            spawnBoss();
+            ItemSpawner itemSpawner = new ItemSpawner(this);
+            itemSpawner.spawnItems(ItemSpawnConfig.bossmap());
+        }
 
         spawnVisibleFloor();
     }
@@ -160,6 +165,8 @@ public class StaticBossRoom extends GameArea {
             loadTunnel();
         }));
         spawnEntity(rightDoor);
+
+        if (!StaticBossRoom.isCleared) registerDoors(new Entity[]{leftDoor});
     }
 
     public void loadSecurity() {
@@ -175,5 +182,15 @@ public class StaticBossRoom extends GameArea {
     public void loadTunnel() {
         TunnelGameArea.setRoomSpawn(new GridPoint2(26, 8));
         clearAndLoad(() -> new TunnelGameArea(terrainFactory, cameraComponent));
+    }
+
+    public static void clearRoom() {
+        StaticBossRoom.isCleared = true;
+        logger.debug("Static Boss Room is cleared");
+    }
+
+    public static void unclearRoom() {
+        StaticBossRoom.isCleared = false;
+        logger.debug("Static Boss Room is uncleared");
     }
 }

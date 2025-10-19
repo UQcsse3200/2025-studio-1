@@ -98,6 +98,7 @@ public class MainGameScreen extends ScreenAdapter {
         ServiceLocator.registerRenderService(new RenderService());
 
         ServiceLocator.clearPlayer();
+        this.unclearAllRooms();
 
         renderer = RenderFactory.createRenderer();
         renderer.getCamera().getEntity().setPosition(CAMERA_POSITION);
@@ -476,5 +477,28 @@ public class MainGameScreen extends ScreenAdapter {
         DeathScreen deathScreen = new DeathScreen(game);
         deathScreen.updateTime(getCompleteTime());
         game.setScreen(deathScreen);
+    }
+
+    /**
+     * This private helper function sets the 
+     * 'isCleared' variable to false, so that
+     * enemies will spawn in all the rooms
+     * 
+     * Should be called sometime before the game starts
+     */
+    private void unclearAllRooms() {
+        Reception.unclearRoom();
+        MainHall.unclearRoom();
+        ElevatorGameArea.unclearRoom();
+        OfficeGameArea.unclearRoom();
+        ResearchGameArea.unclearRoom();
+        SecurityGameArea.unclearRoom();
+        ServerGameArea.unclearRoom();
+        ShippingGameArea.unclearRoom();
+        StorageGameArea.unclearRoom();
+        TunnelGameArea.unclearRoom();
+        MovingBossRoom.unclearRoom();
+        StaticBossRoom.unclearRoom();
+        FlyingBossRoom.unclearRoom();
     }
 }

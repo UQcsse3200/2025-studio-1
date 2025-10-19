@@ -15,6 +15,7 @@ import com.csse3200.game.entities.factories.system.TeleporterFactory;
 public class OfficeGameArea extends GameArea {
     private static final float WALL_WIDTH = 0.1f;
     private static GridPoint2 playerSpawn = new GridPoint2(10, 10);
+    private static boolean isCleared;
 
     public OfficeGameArea(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
         super(terrainFactory, cameraComponent);
@@ -177,5 +178,15 @@ public class OfficeGameArea extends GameArea {
     public Entity getPlayer() {
         //placeholder see previous
         return null;
+    }
+
+    public static void clearRoom() {
+        OfficeGameArea.isCleared = true;
+        logger.debug("Office is cleared");
+    }
+
+    public static void unclearRoom() {
+        OfficeGameArea.isCleared = false;
+        logger.debug("Office is uncleared");
     }
 }

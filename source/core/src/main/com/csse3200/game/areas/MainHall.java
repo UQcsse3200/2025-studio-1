@@ -24,8 +24,12 @@ public class MainHall extends GameArea {
     private static GridPoint2 playerSpawn = new GridPoint2(10, 10);
     private Entity player;
     private int roomDiffNumber = 3;
+    private static boolean isCleared;
+
     public MainHall(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
         super(terrainFactory, cameraComponent);
+
+        this.getEvents().addListener("room cleared", MainHall::clearRoom);
     }
 
     /**
@@ -62,11 +66,14 @@ public class MainHall extends GameArea {
         spawnWallsAndDoor();
         player = spawnPlayer();
         spawnFloor();
-        ItemSpawner itemSpawner = new ItemSpawner(this);
-        itemSpawner.spawnItems(ItemSpawnConfig.mainHallmap());
+
         spawnTeleporter();
 
-        startWaves(player);
+        if (!MainHall.isCleared) {
+            startWaves(player);
+            ItemSpawner itemSpawner = new ItemSpawner(this);
+            itemSpawner.spawnItems(ItemSpawnConfig.mainHallmap());
+        }
 
         Entity ui = new Entity();
         ui.addComponent(new GameAreaDisplay("Main Hall"))
@@ -124,7 +131,7 @@ public class MainHall extends GameArea {
         rightDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadSecurity));
         spawnEntity(rightDoor);
 
-        registerDoors(new Entity[]{leftDoor, rightDoor});
+        if (!MainHall.isCleared) registerDoors(new Entity[]{leftDoor, rightDoor});
     }
 
     private void loadBackToFloor2() {
@@ -230,5 +237,15 @@ public class MainHall extends GameArea {
     @Override
     public String toString() {
         return "Mainhall";
+    }
+
+    public static void clearRoom() {
+        MainHall.isCleared = true;
+        logger.debug("Main Hall is cleared");
+    }
+
+    public static void unclearRoom() {
+        MainHall.isCleared = false;
+        logger.debug("Main hall is uncleared");
     }
 }

@@ -26,6 +26,7 @@ public class StorageGameArea extends GameArea {
     private static final float ROOM_DIFF_NUMBER = 8;
     private static GridPoint2 playerSpawn = new GridPoint2(4, 20);
     private Entity player;
+    private static boolean isCleared = false;
 
     /**
      * Initialise this StorageGameArea to use the provided TerrainFactory and camera
@@ -41,6 +42,8 @@ public class StorageGameArea extends GameArea {
      */
     public StorageGameArea(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
         super(terrainFactory, cameraComponent);
+
+        this.getEvents().addListener("room cleared", StorageGameArea::clearRoom);
     }
 
     /**
@@ -82,10 +85,11 @@ public class StorageGameArea extends GameArea {
         spawnConveyor();
         spawnTeleporter();
 
-        startWaves(player);
-
-        ItemSpawner itemSpawner = new ItemSpawner(this);
-        itemSpawner.spawnItems(ItemSpawnConfig.storage1map());
+        if (!StorageGameArea.isCleared) {
+            startWaves(player);
+            ItemSpawner itemSpawner = new ItemSpawner(this);
+            itemSpawner.spawnItems(ItemSpawnConfig.storage1map());
+        }
 
         Entity ui = new Entity();
         ui.addComponent(new GameAreaDisplay("Storage"))
@@ -141,7 +145,7 @@ public class StorageGameArea extends GameArea {
         rightDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadServer));
         spawnEntity(rightDoor);
 
-        registerDoors(new Entity[]{leftDoor, rightDoor});
+        if (!StorageGameArea.isCleared) registerDoors(new Entity[]{leftDoor, rightDoor});
     }
 
     private Entity spawnPlayer() {
@@ -193,5 +197,15 @@ public class StorageGameArea extends GameArea {
     public Entity getPlayer() {
         // placeholder
         return null;
+    }
+
+    public static void clearRoom() {
+        StorageGameArea.isCleared = true;
+        logger.debug("Storage is cleared");
+    }
+
+    public static void unclearRoom() {
+        StorageGameArea.isCleared = false;
+        logger.debug("Storage is uncleared");
     }
 }

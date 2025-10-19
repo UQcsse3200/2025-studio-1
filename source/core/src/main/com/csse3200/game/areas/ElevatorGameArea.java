@@ -20,6 +20,7 @@ import com.csse3200.game.rendering.TextureRenderComponent;
  **/
 public class ElevatorGameArea extends GameArea {
     private static final float WALL_WIDTH = 0.1f;
+    private static boolean isCleared = false;
     private static GridPoint2 playerSpawn = new GridPoint2(10, 10);
 
     public ElevatorGameArea(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
@@ -183,5 +184,15 @@ public class ElevatorGameArea extends GameArea {
     public Entity getPlayer() {
         // placeholder for errors
         return null;
+    }
+
+    public static void clearRoom() {
+        ElevatorGameArea.isCleared = true;
+        logger.debug("Elevator is cleared");
+    }
+
+    public static void unclearRoom() {
+        ElevatorGameArea.isCleared = false;
+        logger.debug("Elevator is uncleared");
     }
 }

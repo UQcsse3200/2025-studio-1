@@ -27,7 +27,6 @@ public class Reception extends GameArea {
     private int roomDiffNumber = 2;
     private Entity player;
     private static GridPoint2 playerSpawn = new GridPoint2(8, 10);
-    
     private static boolean isCleared = false;
 
     public Reception(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
@@ -257,5 +256,10 @@ public class Reception extends GameArea {
     public static void clearRoom() {
         Reception.isCleared = true;
         logger.debug("Reception is cleared");
+    }
+
+    public static void unclearRoom() {
+        Reception.isCleared = false;
+        logger.debug("Reception is uncleared");
     }
 }

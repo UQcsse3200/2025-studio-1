@@ -28,6 +28,7 @@ public class ServerGameArea extends GameArea {
     private static final float ROOM_DIFF_NUMBER = 9;
     private static GridPoint2 playerSpawn = new GridPoint2(10, 10);
     private Entity player;
+    private static boolean isCleared = false;
 
     /**
      * Constructor for the Server Room, simples calls GameArea constructor.
@@ -37,6 +38,8 @@ public class ServerGameArea extends GameArea {
      */
     public ServerGameArea(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
         super(terrainFactory, cameraComponent);
+
+        this.getEvents().addListener("room cleared", ServerGameArea::clearRoom);
     }
 
 
@@ -82,12 +85,13 @@ public class ServerGameArea extends GameArea {
         spawnTeleporter();
         spawnHealthBench();
         spawnVisibleFloor();
-
         player = spawnPlayer();
-        startWaves(player);
 
-        ItemSpawner itemSpawner = new ItemSpawner(this);
-        itemSpawner.spawnItems(ItemSpawnConfig.servermap());
+        if (!ServerGameArea.isCleared) {
+            startWaves(player);
+            ItemSpawner itemSpawner = new ItemSpawner(this);
+            itemSpawner.spawnItems(ItemSpawnConfig.servermap());
+        }
 
         Entity ui = new Entity();
         ui.addComponent(new GameAreaDisplay("Server"))
@@ -299,7 +303,7 @@ public class ServerGameArea extends GameArea {
         rightDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadTunnel));
         spawnEntity(rightDoor);
 
-        registerDoors(new Entity[]{rightDoor, leftDoor});
+        if (!ServerGameArea.isCleared) registerDoors(new Entity[]{rightDoor, leftDoor});
     }
 
     private void loadTunnel() {
@@ -323,5 +327,15 @@ public class ServerGameArea extends GameArea {
     @Override
     public String toString() {
         return "Server";
+    }
+
+    public static void clearRoom() {
+        ServerGameArea.isCleared = true;
+        logger.debug("Server is cleared");
+    }
+
+    public static void unclearRoom() {
+        ServerGameArea.isCleared = false;
+        logger.debug("Server is uncleared");
     }
 }

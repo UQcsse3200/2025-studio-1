@@ -31,12 +31,15 @@ public class TunnelGameArea extends GameArea {
     private static final float ROOM_DIFF_NUMBER = 10;
     private static GridPoint2 playerSpawn = new GridPoint2(5, 7);
     private Entity player;
+    private static boolean isCleared = false;
 
     private DoorComponent rightDoorComp;
     public static volatile DoorComponent exposedRightDoor;
 
     public TunnelGameArea(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
         super(terrainFactory, cameraComponent);
+
+        this.getEvents().addListener("room cleared", TunnelGameArea::clearRoom);
     }
 
 
@@ -71,10 +74,11 @@ public class TunnelGameArea extends GameArea {
         spawnSpikes();
         spawnVisibleFloor();
 
-        startWaves(player);
-
-        ItemSpawner itemSpawner = new ItemSpawner(this);
-        itemSpawner.spawnItems(ItemSpawnConfig.tunnelmap());
+        if (!TunnelGameArea.isCleared) {
+            startWaves(player);
+            ItemSpawner itemSpawner = new ItemSpawner(this);
+            itemSpawner.spawnItems(ItemSpawnConfig.tunnelmap());
+        }
 
         Entity ui = new Entity();
         ui.addComponent(new GameAreaDisplay("Tunnel"))
@@ -111,7 +115,7 @@ public class TunnelGameArea extends GameArea {
         rightDoorComp.setLocked(true);
         TunnelGameArea.exposedRightDoor = rightDoorComp;
 
-        registerDoors(new Entity[]{leftDoor, rightDoor});
+        if (!TunnelGameArea.isCleared) registerDoors(new Entity[]{leftDoor, rightDoor});
     }
 
     /**
@@ -274,5 +278,15 @@ public class TunnelGameArea extends GameArea {
             public void upgrade(boolean playerNear, com.csse3200.game.entities.Entity player, Label prompt) {
             }
         };
+    }
+
+    public static void clearRoom() {
+        TunnelGameArea.isCleared = true;
+        logger.debug("Reception is cleared");
+    }
+
+    public static void unclearRoom() {
+        TunnelGameArea.isCleared = false;
+        logger.debug("Tunnel is cleared");
     }
 }
