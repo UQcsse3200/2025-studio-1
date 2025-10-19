@@ -1,0 +1,18 @@
+{
+"player": {
+	"playerPos": {
+		"x": 2.294844,
+		"y": 3.6149998
+	},
+	"avatar": "placeholder",
+	"ammoReserve": 1000,
+	"stamina": 136.80022,
+	"maxStamina": 136.80022,
+	"maxHealth": 80,
+	"currentHealth": 80,
+	"processor": 9990
+},
+"gameArea": "Forest",
+"wave": 2,
+"loadedInventory": []
+}
