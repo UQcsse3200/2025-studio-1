@@ -549,7 +549,7 @@ public abstract class GameArea implements Disposable {
             Map<String, ArrayList<Vector2>> positions,
             ArrayList<Vector2> respectiveSpawns
     ) {
-        int random = r.nextInt(215);
+        int random = r.nextInt(230);
 
         if (random <= 29) {
             positions.put(GHOST_GPT, respectiveSpawns);
@@ -576,22 +576,22 @@ public abstract class GameArea implements Disposable {
             spawnTurret(total, scaleFactor, player, positions);
             positions.remove(TURRET, respectiveSpawns);
         }
-        else if (random <= 179) {
+        else if (random <= 159) {
             positions.put(GHOST_GPT_RED, respectiveSpawns);
             spawnGhostGPTRed(total, scaleFactor, player, positions);
             positions.remove(GHOST_GPT_RED, respectiveSpawns);
         }
-        else if (random <= 184) {
+        else if (random <= 169) {
             positions.put(GHOST_GPT_BLUE, respectiveSpawns);
             spawnGhostGPTBlue(total, scaleFactor, player, positions);
             positions.remove(GHOST_GPT_BLUE, respectiveSpawns);
         }
-        else if (random <= 189) {
+        else if (random <= 179) {
             positions.put(GROK_DROID_RED, respectiveSpawns);
             spawnGrokDroidRed(total, scaleFactor, player, positions);
             positions.remove(GROK_DROID_RED, respectiveSpawns);
         }
-        else if (random <= 194) {
+        else if (random <= 189) {
             positions.put(GROK_DROID_BLUE, respectiveSpawns);
             spawnGrokDroidBlue(total, scaleFactor, player, positions);
             positions.remove(GROK_DROID_BLUE, respectiveSpawns);
@@ -601,17 +601,17 @@ public abstract class GameArea implements Disposable {
             spawnDeepspinRed(total, scaleFactor, player, positions);
             positions.remove(DEEP_SPIN_RED, respectiveSpawns);
         }
-        else if (random <= 204) {
+        else if (random <= 209) {
             positions.put(DEEP_SPIN_BLUE, respectiveSpawns);
             spawnDeepspinBlue(total, scaleFactor, player, positions);
             positions.remove(DEEP_SPIN_BLUE, respectiveSpawns);
         }
-        else if (random <= 209) {
+        else if (random <= 219) {
             positions.put(VROOMBA_RED, respectiveSpawns);
             spawnVroombaRed(total, scaleFactor, player, positions);
             positions.remove(VROOMBA_RED, respectiveSpawns);
         }
-        else if (random <= 214) {
+        else if (random <= 229) {
             positions.put(VROOMBA_BLUE, respectiveSpawns);
             spawnVroombaBlue(total, scaleFactor, player, positions);
             positions.remove(VROOMBA_BLUE, respectiveSpawns);
