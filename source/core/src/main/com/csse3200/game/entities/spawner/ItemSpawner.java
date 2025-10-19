@@ -6,6 +6,7 @@ import com.csse3200.game.areas.*;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.Armour;
 import com.csse3200.game.entities.configs.Weapons;
+import com.csse3200.game.entities.factories.PowerupsFactory;
 import com.csse3200.game.entities.factories.items.WorldPickUpFactory;
 import com.csse3200.game.physics.components.PhysicsComponent;
 import org.slf4j.Logger;
@@ -137,6 +138,14 @@ public class ItemSpawner {
                 return WorldPickUpFactory.createArmourPickup(armour);
             } catch (IllegalArgumentException e2) {
                 switch (type.toLowerCase()) {
+                    case "unlimitedammo":
+                        return PowerupsFactory.createUnlimitedAmmo();
+                    case "aimbot":
+                        return PowerupsFactory.createAimBot();
+                    case "rapidfire":
+                        return PowerupsFactory.createRapidFire();
+                    case "doubleprocessors":
+                        return PowerupsFactory.createDoubleProcessors();
                     default:
                         logger.warn("Unknown item type: {}", type);
                         return null;

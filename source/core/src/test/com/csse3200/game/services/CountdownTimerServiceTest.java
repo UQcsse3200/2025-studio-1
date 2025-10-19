@@ -1,3 +1,4 @@
+
 package com.csse3200.game.services;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -37,7 +38,18 @@ class CountdownTimerServiceTest {
     }
 
     @Test
+    void testStartTimer(){
+        assertFalse(timer.getIsRunning(), "Timer should not be running at start");
+        assertEquals(10000, timer.getRemainingMs(), "Full duration before start: 5 seconds");
+        timer.startTimer();
+        assertTrue(timer.getIsRunning(), "Timer should be running");
+    }
+
+
+
+    @Test
     void testInitialState() {
+        timer.startTimer();
         assertEquals(10000, timer.getDuration());
         assertFalse(timer.isPaused());
         assertEquals(10000, timer.getRemainingMs());
@@ -46,6 +58,7 @@ class CountdownTimerServiceTest {
 
     @Test
     void testTimeProgression() {
+        timer.startTimer();
         gameTime.addTime(3000); // 3 seconds later
         assertTrue(timer.getRemainingMs() <= 7000 && timer.getRemainingMs() > 6900);
         assertFalse(timer.isTimeUP());
@@ -53,6 +66,7 @@ class CountdownTimerServiceTest {
 
     @Test
     void testPauseAndResume() {
+        timer.startTimer();
         gameTime.addTime(4000);
         timer.pause();
         assertTrue(timer.isPaused());
@@ -73,6 +87,7 @@ class CountdownTimerServiceTest {
 
     @Test
     void testPauseWhenAlreadyPausedDoesNothing() {
+        timer.startTimer();
         timer.pause();
         long pauseTime = timer.getRemainingMs();
         timer.pause();
@@ -81,6 +96,7 @@ class CountdownTimerServiceTest {
 
     @Test
     void testResumeWhenNotPausedDoesNothing() {
+        timer.startTimer();
         long before = timer.getRemainingMs();
         timer.resume();
         long after = timer.getRemainingMs();
@@ -89,6 +105,7 @@ class CountdownTimerServiceTest {
 
     @Test
     void testTimeUpCondition() {
+        timer.startTimer();
         gameTime.addTime(12000);
         assertEquals(0, timer.getRemainingMs());
         assertTrue(timer.isTimeUP());
@@ -96,9 +113,11 @@ class CountdownTimerServiceTest {
 
     @Test
     void testRemainingNeverNegative() {
+        timer.startTimer();
         gameTime.addTime(999999);
         assertEquals(0, timer.getRemainingMs());
         assertTrue(timer.isTimeUP());
     }
 }
+
 

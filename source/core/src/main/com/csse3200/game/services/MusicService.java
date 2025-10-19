@@ -82,18 +82,12 @@ public class MusicService {
         }
     }
 
-    public void playForestMusic() {
-        if (forestMusic != null && UserSettings.get().isMusicEnabled() && !forestMusic.isPlaying()) {
-            forestMusic.play();
-        }
-    }
-
-    public void resetForestMusic() {
+    public void setForestMusicPlaying(boolean play) {
         if (forestMusic != null) {
-            forestMusic.stop();
-            forestMusic.setPosition(0);
-            if (UserSettings.get().isMusicEnabled()) {
+            if (play && UserSettings.get().isMusicEnabled() && !forestMusic.isPlaying()) {
                 forestMusic.play();
+            } else if (!play && forestMusic.isPlaying()) {
+                forestMusic.stop();
             }
         }
     }
