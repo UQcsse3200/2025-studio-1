@@ -13,6 +13,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.*;
 
 /**
@@ -165,5 +166,68 @@ public class Boss3HealthPhaseSwitcherTest {
         verify(arc, times(1)).startAnimation("crack50");
         verify(arc, never()).startAnimation("crack40");
         verify(arc, never()).startAnimation("crack25");
+    }
+
+    @Test
+    void doesNotStartAnimationIfAnimNotFound() {
+        Entity boss = new Entity();
+        boss.setScale(new Vector2(2f, 2f));
+
+        CombatStatsComponent stats = mock(CombatStatsComponent.class);
+        when(stats.getMaxHealth()).thenReturn(100);
+        when(stats.getHealth()).thenReturn(40); // below threshold
+        boss.addComponent(stats);
+
+        AnimationRenderComponent arc = mock(AnimationRenderComponent.class);
+        when(arc.hasAnimation("crack50")).thenReturn(false);
+        boss.addComponent(arc);
+
+        Boss3HealthPhaseSwitcher switcher = new Boss3HealthPhaseSwitcher("images/Boss3_Attacks.atlas", 0.1f)
+                .addPhase(0.50f, "crack50");
+        boss.addComponent(switcher);
+
+        switcher.create();
+
+        // Assert: since hasAnimation is false, startAnimation should NOT be called
+        verify(arc, never()).startAnimation(anyString());
+    }
+
+    @Test
+    void doesNothingWhenNoPhasesAdded() {
+        Entity boss = new Entity();
+        CombatStatsComponent stats = mock(CombatStatsComponent.class);
+        when(stats.getMaxHealth()).thenReturn(100);
+        when(stats.getHealth()).thenReturn(50);
+        boss.addComponent(stats);
+
+        AnimationRenderComponent arc = mock(AnimationRenderComponent.class);
+        boss.addComponent(arc);
+
+        Boss3HealthPhaseSwitcher switcher = new Boss3HealthPhaseSwitcher("images/Boss3_Attacks.atlas", 0.1f);
+        boss.addComponent(switcher);
+
+        switcher.create();
+        switcher.update();
+
+        verify(arc, never()).startAnimation(anyString());
+    }
+
+    @Test
+    void defaultsToOneWhenInvalidMaxHealth() {
+        Entity boss = new Entity();
+        CombatStatsComponent stats = mock(CombatStatsComponent.class);
+        when(stats.getMaxHealth()).thenReturn(0);
+        when(stats.getHealth()).thenReturn(50);
+        boss.addComponent(stats);
+
+        AnimationRenderComponent arc = mock(AnimationRenderComponent.class);
+        boss.addComponent(arc);
+
+        Boss3HealthPhaseSwitcher switcher = new Boss3HealthPhaseSwitcher("images/Boss3_Attacks.atlas", 0.1f)
+                .addPhase(0.50f, "crack50");
+        boss.addComponent(switcher);
+
+        switcher.create();
+        verify(arc, never()).startAnimation(anyString());
     }
 }
