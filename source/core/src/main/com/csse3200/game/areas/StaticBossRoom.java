@@ -82,15 +82,12 @@ public class StaticBossRoom extends GameArea {
 
         spawnBordersAndDoors();
         displayUI();
-
         player = spawnPlayer();
-
         spawnBoss();
         spawnObjectDoors(new GridPoint2(0, 7), new GridPoint2(28, 7));
-
+        spawnPlatforms();
         ItemSpawner itemSpawner = new ItemSpawner(this);
         itemSpawner.spawnItems(ItemSpawnConfig.bossmap());
-
         spawnVisibleFloor();
     }
 
@@ -160,6 +157,15 @@ public class StaticBossRoom extends GameArea {
             loadTunnel();
         }));
         spawnEntity(rightDoor);
+    }
+    private void spawnPlatforms() {
+        Entity platform1 = ObstacleFactory.createThinFloor();
+        GridPoint2 platform1Pos = new GridPoint2(4, 10);
+        spawnEntityAt(platform1, platform1Pos, false, false);
+
+        Entity platform3 = ObstacleFactory.createThinFloor();
+        GridPoint2 platform3Pos = new GridPoint2(22, 10);
+        spawnEntityAt(platform3, platform3Pos, false, false);
     }
 
     public void loadSecurity() {

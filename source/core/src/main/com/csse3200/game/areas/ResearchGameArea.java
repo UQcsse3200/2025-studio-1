@@ -7,8 +7,12 @@ import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.components.gamearea.GameAreaDisplay;
+import com.csse3200.game.components.shop.CatalogService;
+import com.csse3200.game.components.shop.ShopDemo;
+import com.csse3200.game.components.shop.ShopManager;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.ItemSpawnConfig;
+import com.csse3200.game.entities.factories.ShopFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.entities.factories.system.TeleporterFactory;
 import com.csse3200.game.entities.spawner.ItemSpawner;
@@ -58,6 +62,7 @@ public class ResearchGameArea extends GameArea {
         spawnResearchProps();
         spawnEnemies();
         spawnTeleporter();
+        spawnShopKiosk();
         ItemSpawner itemSpawner = new ItemSpawner(this);
         itemSpawner.spawnItems(ItemSpawnConfig.researchmap());
 
@@ -169,6 +174,12 @@ public class ResearchGameArea extends GameArea {
         Entity tp = TeleporterFactory.createTeleporter(new Vector2(2f, 2.8f));
         spawnEntity(tp);
     }
+    private void spawnShopKiosk() {
+        CatalogService catalog = ShopDemo.makeDemoCatalog();
+        ShopManager manager = new ShopManager(catalog);
+        Entity shop = ShopFactory.createShop(this, manager, "images/VendingMachine.png"); // have as tree now as placeholder, later need to change to actual shop icon
+        spawnEntityAt(shop, new GridPoint2(9, 12), true, false);
+    }
 
     private void loadElevator() {
         ElevatorGameArea.setRoomSpawn(new GridPoint2(21, 20));
@@ -187,7 +198,6 @@ public class ResearchGameArea extends GameArea {
 
     @Override
     public Entity getPlayer() {
-        // placeholder
-        return null;
+        return player;
     }
 }

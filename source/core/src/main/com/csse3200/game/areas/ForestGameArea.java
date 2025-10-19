@@ -377,15 +377,6 @@ public class ForestGameArea extends GameArea {
         itemSpawner.spawnItems(ItemSpawnConfig.forestmap());
 
         spawnGuidanceNpc();
-
-
-        // Place a keycard on the floor so the player can unlock the door
-        float keycardX = 3f;
-        float keycardY = 7f;
-        Entity keycard = KeycardFactory.createKeycard(1);
-        keycard.setPosition(new Vector2(keycardX, keycardY));
-        spawnEntity(keycard);
-
         spawnTeleporter();
     }
 
@@ -531,7 +522,7 @@ public class ForestGameArea extends GameArea {
         door.addComponent(texture);
         texture.scaleEntity();
         door.setPosition(doorX, doorY);
-        door.addComponent(new KeycardGateComponent(1, () -> {
+        door.addComponent(new KeycardGateComponent(0, () -> {
             logger.info("Bottom-right platform door unlocked — loading next level");
             loadNextLevel();
         }));

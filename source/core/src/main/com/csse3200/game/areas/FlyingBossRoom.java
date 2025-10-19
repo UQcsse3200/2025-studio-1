@@ -11,7 +11,9 @@ import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import com.csse3200.game.components.KeycardGateComponent;
 import com.csse3200.game.entities.Entity;
+import com.csse3200.game.entities.configs.Benches;
 import com.csse3200.game.entities.configs.ItemSpawnConfig;
+import com.csse3200.game.entities.factories.InteractableStationFactory;
 import com.csse3200.game.entities.factories.KeycardFactory;
 import com.csse3200.game.entities.factories.characters.BossFactory;
 import com.csse3200.game.entities.factories.characters.PlayerFactory;
@@ -75,7 +77,7 @@ public class FlyingBossRoom extends GameArea {
         player = spawnPlayer();
 
         spawnPlatforms();
-
+        spawnHealthBench();
         spawnFlyingBoss();
         spawnObjectDoors(new GridPoint2(0, 7), new GridPoint2(28, 7));
 
@@ -104,7 +106,10 @@ public class FlyingBossRoom extends GameArea {
     private Entity spawnPlayer() {
         return spawnOrRepositionPlayer(playerSpawn);
     }
-
+    private void spawnHealthBench() {
+        Entity bench = InteractableStationFactory.createStation(Benches.HEALTH_BENCH);
+        spawnEntityAt(bench, new GridPoint2(25, 12), true, true);
+    }
     private void spawnFlyingBoss() {
         GridPoint2 pos = new GridPoint2(15, 20);
 
@@ -112,7 +117,7 @@ public class FlyingBossRoom extends GameArea {
 
         flyingBoss.getEvents().addListener("death", () -> {
             ServiceLocator.getTimeSource().delayKeycardSpawn(0.05f, () -> {
-                Entity keycard = KeycardFactory.createKeycard(3);
+                Entity keycard = KeycardFactory.createKeycard(2);
                 keycard.setPosition(new Vector2(3f, 5f));
                 spawnEntity(keycard);
             });
@@ -134,7 +139,11 @@ public class FlyingBossRoom extends GameArea {
         float leftDoorY = b.bottomY();
         Entity leftDoor = ObstacleFactory.createDoorTrigger(WALL_WIDTH, leftDoorHeight);
         leftDoor.setPosition(b.leftX() + 0.001f, leftDoorY);
-        leftDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadResearch));
+        leftDoor.addComponent(new KeycardGateComponent(2, () -> {
+            ColliderComponent collider = leftDoor.getComponent(ColliderComponent.class);
+            if (collider != null) collider.setEnabled(false);
+            loadResearch();
+        }));
         spawnEntity(leftDoor);
 
         addSolidWallRight(b, WALL_WIDTH);
@@ -143,7 +152,7 @@ public class FlyingBossRoom extends GameArea {
         float rightDoorY = b.bottomY();
         Entity rightDoor = ObstacleFactory.createDoorTrigger(WALL_WIDTH, rightDoorHeight);
         rightDoor.setPosition(b.rightX() - WALL_WIDTH - 0.001f, rightDoorY);
-        rightDoor.addComponent(new KeycardGateComponent(3, () -> {
+        rightDoor.addComponent(new KeycardGateComponent(2, () -> {
             ColliderComponent collider = rightDoor.getComponent(ColliderComponent.class);
             if (collider != null) collider.setEnabled(false);
             loadShipping();
