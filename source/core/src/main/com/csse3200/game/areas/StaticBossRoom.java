@@ -124,6 +124,7 @@ public class StaticBossRoom extends GameArea {
         });
 
         spawnEntityAt(boss, pos, true, true);
+        registerEnemy(boss);
     }
 
     /**
@@ -149,7 +150,7 @@ public class StaticBossRoom extends GameArea {
         leftDoor.setPosition(b.leftX() + 0.001f, leftDoorY);
         leftDoor.addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
         leftDoor.addComponent(new HitboxComponent().setLayer(PhysicsLayer.OBSTACLE));
-        leftDoor.addComponent(new DoorComponent(this::loadSecurity));
+        leftDoor.addComponent(new DoorComponent(this::loadTunnel));
         spawnEntity(leftDoor);
 
 
@@ -162,16 +163,15 @@ public class StaticBossRoom extends GameArea {
         rightDoor.addComponent(new KeycardGateComponent(3, () -> {
             ColliderComponent collider = rightDoor.getComponent(ColliderComponent.class);
             if (collider != null) collider.setEnabled(false);
-            loadTunnel();
+            loadSecretRoom();
         }));
         spawnEntity(rightDoor);
 
         if (!StaticBossRoom.isCleared) registerDoors(new Entity[]{leftDoor});
     }
 
-    public void loadSecurity() {
-        SecurityGameArea.setRoomSpawn(new GridPoint2(26, 8));
-        clearAndLoad(() -> new SecurityGameArea(terrainFactory, cameraComponent));
+    public void loadSecretRoom() {
+        clearAndLoad(() -> new SecretRoomGameArea(terrainFactory, cameraComponent));
     }
 
 

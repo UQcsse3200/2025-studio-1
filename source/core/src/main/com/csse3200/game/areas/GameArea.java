@@ -731,11 +731,11 @@ public abstract class GameArea implements Disposable {
             }
             case "Server" -> {
                 respectiveSpawns.add(new Vector2(12f, 11f));
-                respectiveSpawns.add(new Vector2(7.6f, 4f));
+                respectiveSpawns.add(new Vector2(11f, 11f));
                 respectiveSpawns.add(new Vector2(11f, 8f));
                 positions.put(GHOST_GPT, respectiveSpawns);
                 respectiveSpawns = new ArrayList<>();
-                respectiveSpawns.add(new Vector2(2f, 4f));
+                respectiveSpawns.add(new Vector2(3f, 6f));
                 positions.put(TURRET, respectiveSpawns);
                 respectiveSpawns = new ArrayList<>();
                 respectiveSpawns.add(new Vector2(3f, 10f));
@@ -744,7 +744,7 @@ public abstract class GameArea implements Disposable {
             }
             case "Tunnel" -> {
                 respectiveSpawns.add(new Vector2(12f, 4f));
-                respectiveSpawns.add(new Vector2(3f, 4f));
+                respectiveSpawns.add(new Vector2(12f, 4f));
                 positions.put(GHOST_GPT, respectiveSpawns);
                 respectiveSpawns = new ArrayList<>();
                 respectiveSpawns.add(new Vector2(10f, 10f));
@@ -941,7 +941,7 @@ public abstract class GameArea implements Disposable {
     /**
      * Add a vertical door on the left edge, splitting the wall into two segments.
      */
-    protected void addVerticalDoorLeft(Bounds b, float wallWidth, Runnable onEnter) {
+    protected Entity addVerticalDoorLeft(Bounds b, float wallWidth, Runnable onEnter) {
         float doorHeight = Math.max(1f, b.viewHeight * 0.2f);
         float doorY = b.camPos.y - doorHeight / 2f;
         float topSegHeight = Math.max(0f, b.topY - (doorY + doorHeight));
@@ -960,6 +960,8 @@ public abstract class GameArea implements Disposable {
         door.setPosition(b.leftX + 0.001f, doorY);
         door.addComponent(new DoorComponent(onEnter));
         spawnEntity(door);
+
+        return door;
     }
 
     /**

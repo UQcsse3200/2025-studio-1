@@ -124,6 +124,7 @@ public class FlyingBossRoom extends GameArea {
         });
 
         spawnEntityAt(flyingBoss, pos, true, true);
+        registerEnemy(flyingBoss);
     }
     /**
      * Spawns the borders and doors of the room.
