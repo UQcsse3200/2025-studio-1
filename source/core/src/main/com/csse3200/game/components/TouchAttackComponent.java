@@ -85,16 +85,17 @@ public class TouchAttackComponent extends Component {
                 Vector2 impulse = direction.setLength(knockbackForce * (1 - targetStats.getKnockbackResistance()));
                 targetBody.applyLinearImpulse(impulse, targetBody.getWorldCenter(), true);
             }
+            //disposes entity if it is a projectile
+            if (entity.hasComponent(PhysicsProjectileComponent.class)) {
+                //Do explosion if it is a rocket only
+                if (entity.getComponent(WeaponsStatsComponent.class).getRocket()) {
+                    spawnExplosion(entity.getPosition());
+                }
+                entity.setToRemove();
+            }
         }
 
-        //disposes entity if it is a projectile
-        if (entity.hasComponent(PhysicsProjectileComponent.class)) {
-            //Do explosion if it is a rocket only
-            if (entity.getComponent(WeaponsStatsComponent.class).getRocket()) {
-                spawnExplosion(entity.getPosition());
-            }
-            entity.setToRemove();
-        }
+
     }
 
 
