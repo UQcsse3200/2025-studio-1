@@ -1,18 +1,53 @@
 {
   "player": {
     "playerPos": {
-      "x": 4.59662,
-      "y": 8.152639
+      "x": 1,
+      "y": 1
     },
-    "avatar": "placeholder",
-    "ammoReserve": 1000,
-    "stamina": 100,
-    "maxStamina": 100,
-    "maxHealth": 100,
-    "currentHealth": 100,
-    "processor": 10000
+    "avatar": "images/avatars/fighter.png",
+    "ammoReserve": 1,
+    "stamina": 1,
+    "maxStamina": 1,
+    "maxHealth": 1,
+    "currentHealth": 1,
+    "processor": 1
   },
-  "gameArea": "Forest",
-  "wave": 2,
-  "loadedInventory": []
+  "gameArea": "Test#Area",
+  "loadedInventory": [
+    {
+      "type": "MELEE",
+      "texture": "images/dagger.png",
+      "count": 1,
+      "upgradeStage": 1
+    },
+    {
+      "type": "RANGED",
+      "ammo": 30,
+      "texture": "images/pistol.png",
+      "count": 1,
+      "upgradeStage": 1
+    },
+    {
+      "type": "RANGED",
+      "ammo": 1,
+      "texture": "images/rocketlauncher.png",
+      "count": 1,
+      "upgradeStage": 1
+    },
+    {
+      "type": "RANGED",
+      "ammo": 1,
+      "texture": "images/rifle.png",
+      "count": 1,
+      "upgradeStage": 1
+    },
+    null
+  ],
+  "difficulty": "NORMAL",
+  "areasVisited": [
+    "TestArea"
+  ],
+  "armour": [
+    "images/armour-assets/chestplate.png"
+  ]
 }
