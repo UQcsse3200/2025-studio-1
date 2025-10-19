@@ -119,7 +119,12 @@ public class StationComponentTests {
             player.getComponent(InventoryComponent.class)
                     .addProcessor(-player.getComponent(InventoryComponent.class).getProcessor()); // broke player
             stationComponent.upgrade();
-            assertEquals("You are broke! Fries in the bag!", buyPrompt.getText().toString());
+            healthStationComponent.upgrade();
+            speedStationComponent.upgrade();
+            assertEquals("You are broke! Fries in the bag!", stationComponent.getBuyPrompt().getText().toString());
+            assertEquals("You are broke! Fries in the bag!", healthStationComponent.getBuyPrompt().getText().toString());
+            assertEquals("You are broke! Fries in the bag!", speedStationComponent.getBuyPrompt().getText().toString());
+
         }
 
         @Test
@@ -128,6 +133,16 @@ public class StationComponentTests {
             stationComponent.upgrade();
             int currMoney = player.getComponent(InventoryComponent.class).getProcessor();
             assertEquals(prevMoney - stationComponent.getPrice(), currMoney);
+
+            prevMoney = player.getComponent(InventoryComponent.class).getProcessor();
+            speedStationComponent.upgrade();
+            currMoney = player.getComponent(InventoryComponent.class).getProcessor();
+            assertEquals(prevMoney - speedStationComponent.getPrice(), currMoney);
+
+            prevMoney = player.getComponent(InventoryComponent.class).getProcessor();
+            healthStationComponent.upgrade();
+            currMoney = player.getComponent(InventoryComponent.class).getProcessor();
+            assertEquals(prevMoney - healthStationComponent.getPrice(), currMoney);
         }
 
         @Test
@@ -211,6 +226,29 @@ public class StationComponentTests {
             int currDamage = weapon.getComponent(WeaponsStatsComponent.class).getBaseAttack();
             assertEquals(currDamage, prevDamage);
             assertEquals("Weapon is fully upgraded already!", buyPrompt.getText().toString());
+        }
+
+        @Test
+        void upgradeOnNullPlayerDoesNothing() {
+            player = null;
+            ServiceLocator.registerPlayer(player);
+            stationComponent.setPlayer(player);
+            int prevDamage = weapon.getComponent(WeaponsStatsComponent.class).getBaseAttack();
+            stationComponent.upgrade();
+            int currDamage = weapon.getComponent(WeaponsStatsComponent.class).getBaseAttack();
+            assertEquals(currDamage, prevDamage);
+            assertEquals("", stationComponent.getBuyPrompt().getText().toString());
+
+        }
+
+        @Test
+        void currItemNullDoesNothing() {
+            player.getComponent(InventoryComponent.class).setCurrItem(null);
+            int prevDamage = weapon.getComponent(WeaponsStatsComponent.class).getBaseAttack();
+            stationComponent.upgrade();
+            int currDamage = weapon.getComponent(WeaponsStatsComponent.class).getBaseAttack();
+            assertEquals(currDamage, prevDamage);
+            assertEquals("", stationComponent.getBuyPrompt().getText().toString());
         }
     }
 

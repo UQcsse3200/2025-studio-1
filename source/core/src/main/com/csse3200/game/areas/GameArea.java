@@ -224,7 +224,7 @@ public abstract class GameArea implements Disposable {
      * @return Room number as an int if the floor name is in the format "Floor2"
      * with 2 being any number, otherwise returns 1.
      */
-    private int getRoomNumber() {
+    protected int getRoomNumber() {
         return switch (this.toString()) {
             case "Reception" -> 2;
             case "Mainhall" -> 3;
