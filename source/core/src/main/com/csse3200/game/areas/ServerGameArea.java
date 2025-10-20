@@ -306,7 +306,7 @@ public class ServerGameArea extends GameArea {
     }
 
     private void loadStorage() {
-        StorageGameArea.setRoomSpawn(new GridPoint2(26, 8));
+        StorageGameArea.setRoomSpawn(new GridPoint2(26, 7));
         clearAndLoad(() -> new StorageGameArea(terrainFactory, cameraComponent));
     }
 
