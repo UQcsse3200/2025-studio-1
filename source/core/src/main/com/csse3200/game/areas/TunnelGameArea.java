@@ -199,7 +199,7 @@ public class TunnelGameArea extends GameArea {
     }
 
     private void loadServer() {
-        ServerGameArea.setRoomSpawn(new GridPoint2(25, 24));
+        ServerGameArea.setRoomSpawn(new GridPoint2(25, 20));
         clearAndLoad(() -> new ServerGameArea(terrainFactory, cameraComponent));
     }
 

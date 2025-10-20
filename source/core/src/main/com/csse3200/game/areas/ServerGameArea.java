@@ -84,7 +84,7 @@ public class ServerGameArea extends GameArea {
         spawnVisibleFloor();
 
         player = spawnPlayer();
-        spawnGPTs();
+        //spawnGPTs();
 
         ItemSpawner itemSpawner = new ItemSpawner(this);
         itemSpawner.spawnItems(ItemSpawnConfig.servermap());
@@ -301,7 +301,7 @@ public class ServerGameArea extends GameArea {
     }
 
     private void loadTunnel() {
-        TunnelGameArea.setRoomSpawn(new GridPoint2(4, 8));
+        TunnelGameArea.setRoomSpawn(new GridPoint2(1, 7));
         clearAndLoad(() -> new TunnelGameArea(terrainFactory, cameraComponent));
     }
 
