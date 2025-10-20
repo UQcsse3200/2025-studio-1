@@ -16,7 +16,6 @@ import com.csse3200.game.entities.factories.system.TeleporterFactory;
 import com.csse3200.game.rendering.SolidColorRenderComponent;
 import com.csse3200.game.services.ServiceLocator;
 
-
 /**
  * Room 5 with its own background styling.
  */
@@ -25,8 +24,12 @@ public class MainHall extends GameArea {
     private static GridPoint2 playerSpawn = new GridPoint2(10, 10);
     private Entity player;
     private int roomDiffNumber = 3;
+    private static boolean isCleared;
+
     public MainHall(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
         super(terrainFactory, cameraComponent);
+
+        this.getEvents().addListener("room cleared", MainHall::clearRoom);
     }
 
     /**
@@ -63,11 +66,14 @@ public class MainHall extends GameArea {
         spawnWallsAndDoor();
         player = spawnPlayer();
         spawnFloor();
-        spawnEnemies();
-        spawnGrokDroids();
-        ItemSpawner itemSpawner = new ItemSpawner(this);
-        itemSpawner.spawnItems(ItemSpawnConfig.mainHallmap());
+
         spawnTeleporter();
+
+        if (!MainHall.isCleared) {
+            startWaves(player);
+            ItemSpawner itemSpawner = new ItemSpawner(this);
+            itemSpawner.spawnItems(ItemSpawnConfig.mainHallmap());
+        }
 
         Entity ui = new Entity();
         ui.addComponent(new GameAreaDisplay("Main Hall"))
@@ -124,6 +130,8 @@ public class MainHall extends GameArea {
         rightDoor.setPosition(b.rightX() - WALL_WIDTH - 0.001f, rightDoorY + 6f);
         rightDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadSecurity));
         spawnEntity(rightDoor);
+
+        if (!MainHall.isCleared) registerDoors(new Entity[]{leftDoor, rightDoor});
     }
 
     private void loadBackToFloor2() {
@@ -139,20 +147,23 @@ public class MainHall extends GameArea {
     private Entity spawnPlayer() {
         return spawnOrRepositionPlayer(playerSpawn);
     }
-    private void spawnEnemies() {
-        if (player == null)
-            return;
 
-        Entity deepspin = com.csse3200.game.entities.factories.characters.NPCFactory.createDeepspin(player, this,
-                ServiceLocator.getDifficulty().getRoomDifficulty(this.roomDiffNumber));
-        spawnEntityAt(deepspin, new GridPoint2(22, 10), true, false);
-    }
-    private void spawnGrokDroids() {
-        Entity grok1 = NPCFactory.createGrokDroid(player, this,
-                ServiceLocator.getDifficulty().getRoomDifficulty(this.roomDiffNumber));
-        GridPoint2 grok1Pos = new GridPoint2(10, 20);
-        spawnEntityAt(grok1, grok1Pos, true, false);
-    }
+    // private void spawnEnemies() {
+    //     if (player == null)
+    //         return;
+
+    //     Entity deepspin = com.csse3200.game.entities.factories.characters.NPCFactory.createDeepspin(player, this,
+    //             ServiceLocator.getDifficulty().getRoomDifficulty(this.roomDiffNumber));
+    //     registerEnemy(deepspin);
+    //     spawnEntityAt(deepspin, new GridPoint2(22, 10), true, false);
+    // }
+
+    // private void spawnGrokDroids() {
+    //     Entity grok1 = NPCFactory.createGrokDroid(player, this,
+    //             ServiceLocator.getDifficulty().getRoomDifficulty(this.roomDiffNumber));
+    //     GridPoint2 grok1Pos = new GridPoint2(10, 20);
+    //     spawnEntityAt(grok1, grok1Pos, true, false);
+    // }
     /**
      * Spawns 4 platforms for parkour
      **/
@@ -226,5 +237,15 @@ public class MainHall extends GameArea {
     @Override
     public String toString() {
         return "Mainhall";
+    }
+
+    public static void clearRoom() {
+        MainHall.isCleared = true;
+        logger.debug("Main Hall is cleared");
+    }
+
+    public static void unclearRoom() {
+        MainHall.isCleared = false;
+        logger.debug("Main hall is uncleared");
     }
 }

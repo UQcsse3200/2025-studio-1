@@ -36,6 +36,7 @@ public class FlyingBossRoom extends GameArea {
 
     private static final float WALL_WIDTH = 0.1f;
     private static GridPoint2 playerSpawn = new GridPoint2(3, 10);
+    private static boolean isCleared = false;
     private Entity player;
 
     /**
@@ -49,6 +50,8 @@ public class FlyingBossRoom extends GameArea {
      */
     public FlyingBossRoom(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
         super(terrainFactory, cameraComponent);
+
+        this.getEvents().addListener("room cleared", FlyingBossRoom::clearRoom);
     }
 
     /**
@@ -76,11 +79,13 @@ public class FlyingBossRoom extends GameArea {
 
         spawnPlatforms();
 
-        spawnFlyingBoss();
         spawnObjectDoors(new GridPoint2(0, 7), new GridPoint2(28, 7));
 
-        ItemSpawner itemSpawner = new ItemSpawner(this);
-        itemSpawner.spawnItems(ItemSpawnConfig.bossmap());
+        if (!FlyingBossRoom.isCleared) {
+            spawnFlyingBoss();
+            ItemSpawner itemSpawner = new ItemSpawner(this);
+            itemSpawner.spawnItems(ItemSpawnConfig.bossmap());
+        }
 
         spawnVisibleFloor();
     }
@@ -119,6 +124,7 @@ public class FlyingBossRoom extends GameArea {
         });
 
         spawnEntityAt(flyingBoss, pos, true, true);
+        registerEnemy(flyingBoss);
     }
     /**
      * Spawns the borders and doors of the room.
@@ -150,6 +156,7 @@ public class FlyingBossRoom extends GameArea {
         }));
         spawnEntity(rightDoor);
 
+        if (!FlyingBossRoom.isCleared) registerDoors(new Entity[]{leftDoor});
     }
 
     /**
@@ -182,6 +189,16 @@ public class FlyingBossRoom extends GameArea {
     @Override
     public String toString() {
         return "FlyingBoss";
+    }
+
+    public static void clearRoom() {
+        FlyingBossRoom.isCleared = true;
+        logger.debug("Flying Boss Room is cleared");
+    }
+
+    public static void unclearRoom() {
+        FlyingBossRoom.isCleared = false;
+        logger.debug("Flying Boss Room is uncleared");
     }
 }
 

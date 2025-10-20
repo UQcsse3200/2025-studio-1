@@ -25,8 +25,12 @@ public class ResearchGameArea extends GameArea {
     private static final float ROOM_DIFF_NUMBER = 6;
     private Entity player;
 
+    private static boolean isCleared = false;
+
     public ResearchGameArea(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
         super(terrainFactory, cameraComponent);
+
+        this.getEvents().addListener("room cleared", ResearchGameArea::clearRoom);
     }
 
     public static ResearchGameArea load(TerrainFactory terrainFactory, CameraComponent camera) {
@@ -56,10 +60,13 @@ public class ResearchGameArea extends GameArea {
         player = spawnPlayer();
         spawnPlatforms();
         spawnResearchProps();
-        spawnEnemies();
         spawnTeleporter();
-        ItemSpawner itemSpawner = new ItemSpawner(this);
-        itemSpawner.spawnItems(ItemSpawnConfig.researchmap());
+
+        if (!ResearchGameArea.isCleared) {
+            startWaves(player);
+            ItemSpawner itemSpawner = new ItemSpawner(this);
+            itemSpawner.spawnItems(ItemSpawnConfig.researchmap());
+        }
 
         Entity ui = new Entity();
         ui.addComponent(new GameAreaDisplay("Research"))
@@ -85,6 +92,8 @@ public class ResearchGameArea extends GameArea {
         rightDoor.setPosition(b.rightX() - WALL_WIDTH - 0.001f, rightDoorY);
         rightDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadFlyingBossRoom));
         spawnEntity(rightDoor);
+
+        if (!ResearchGameArea.isCleared) registerDoors(new Entity[]{leftDoor, rightDoor});
     }
 
     private Entity spawnPlayer() {
@@ -189,5 +198,22 @@ public class ResearchGameArea extends GameArea {
     public Entity getPlayer() {
         // placeholder
         return null;
+    }
+
+    public static void clearRoom() {
+        ResearchGameArea.isCleared = true;
+        logger.debug("Research is cleared");
+    }
+
+    public static void unclearRoom() {
+        ResearchGameArea.isCleared = false;
+        logger.debug("Research is uncleared");
+    }
+
+    /**
+     * FOR TESTING PURPOSES
+     */
+    public static boolean getClearField() {
+        return ResearchGameArea.isCleared;
     }
 }

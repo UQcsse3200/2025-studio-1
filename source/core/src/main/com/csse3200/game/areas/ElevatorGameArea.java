@@ -24,10 +24,14 @@ import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
  **/
 public class ElevatorGameArea extends GameArea {
     private static final float WALL_WIDTH = 0.1f;
+    private static boolean isCleared = false;
+    private Entity player;
     private static GridPoint2 playerSpawn = new GridPoint2(10, 10);
 
     public ElevatorGameArea(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
         super(terrainFactory, cameraComponent);
+
+        this.getEvents().addListener("room cleared", ElevatorGameArea::clearRoom);
     }
 
     public static ElevatorGameArea load(TerrainFactory terrainFactory, CameraComponent camera) {
@@ -43,14 +47,17 @@ public class ElevatorGameArea extends GameArea {
         terrain = terrainFactory.createTerrain(TerrainType.ELEVATOR);
         spawnEntity(new Entity().addComponent(terrain));
         spawnBordersAndDoors();
-        spawnPlayer();
+        player = spawnPlayer();
         spawnObjectDoors(new GridPoint2(0, 6), new GridPoint2(28, 19));
         spawnFloor();
         spawnPlatforms();
         spawnDesk();
         spawnTeleporter();
         spawnSpikes();
-        spawnEnemies();
+
+        if (!ElevatorGameArea.isCleared) {
+            startWaves(player);
+        }
 
         Entity ui = new Entity();
         ui.addComponent(new GameAreaDisplay("Elevator"))
@@ -105,6 +112,7 @@ public class ElevatorGameArea extends GameArea {
         }));
         spawnEntity(rightDoor);
 
+        if (!ElevatorGameArea.isCleared) registerDoors(new Entity[]{leftDoor});
     }
 
     private Entity spawnPlayer() {
@@ -178,22 +186,6 @@ public class ElevatorGameArea extends GameArea {
         spawnEntity(spikes2);
     }
 
-    /**
-     * Spawn 2 enemies in the elevator room
-     */
-    private void spawnEnemies() {
-        Entity player = ServiceLocator.getPlayer();
-        if (player == null) return;
-
-        // Enemy 1: GhostGPT
-        Entity ghostGPT = com.csse3200.game.entities.factories.characters.NPCFactory.createGhostGPT(player, this, 1.0f);
-        spawnEntityAt(ghostGPT, new GridPoint2(15, 8), true, false);
-
-        // Enemy 2: GrokDroid
-        Entity grokDroid = com.csse3200.game.entities.factories.characters.NPCFactory.createGrokDroid(player, this, 1.0f);
-        spawnEntityAt(grokDroid, new GridPoint2(18, 20), true, false);
-    }
-
     private void loadOffice() {
         OfficeGameArea.setRoomSpawn(new GridPoint2(24, 22));
         clearAndLoad(() -> new OfficeGameArea(terrainFactory, cameraComponent));
@@ -239,5 +231,15 @@ public class ElevatorGameArea extends GameArea {
     public Entity getPlayer() {
         // placeholder for errors
         return null;
+    }
+
+    public static void clearRoom() {
+        ElevatorGameArea.isCleared = true;
+        logger.debug("Elevator is cleared");
+    }
+
+    public static void unclearRoom() {
+        ElevatorGameArea.isCleared = false;
+        logger.debug("Elevator is uncleared");
     }
 }

@@ -22,9 +22,12 @@ public class SecurityGameArea extends GameArea {
     private static GridPoint2 playerSpawn = new GridPoint2(10, 10);
     private static final float ROOM_DIFF_NUMBER = 2;
     private Entity player;
+    private static boolean isCleared = false;
 
     public SecurityGameArea(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
         super(terrainFactory, cameraComponent);
+
+        this.getEvents().addListener("room cleared", SecurityGameArea::clearRoom);
     }
 
     public static SecurityGameArea load(TerrainFactory terrainFactory, CameraComponent camera) {
@@ -55,11 +58,14 @@ public class SecurityGameArea extends GameArea {
         spawnPlatforms();
         spawnObjectDoors(new GridPoint2(0, 6), new GridPoint2(28, 19));
         spawnSecurityProps();
-        spawnEnemies();
         spawnTeleporter();
         spawnSpikes2();
-        ItemSpawner itemSpawner = new ItemSpawner(this);
-        itemSpawner.spawnItems(ItemSpawnConfig.securitymap());
+
+        if (!SecurityGameArea.isCleared) {
+            startWaves(player);
+            ItemSpawner itemSpawner = new ItemSpawner(this);
+            itemSpawner.spawnItems(ItemSpawnConfig.securitymap());
+        }
 
         Entity ui = new Entity();
         ui.addComponent(new GameAreaDisplay("Security"))
@@ -87,6 +93,8 @@ public class SecurityGameArea extends GameArea {
         rightDoor.setPosition(b.rightX() - WALL_WIDTH - 0.001f, rightDoorY);
         rightDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadMovingBossRoom));
         spawnEntity(rightDoor);
+
+        if (!SecurityGameArea.isCleared) registerDoors(new Entity[]{leftDoor, rightDoor});
     }
 
     private Entity spawnPlayer() {
@@ -201,5 +209,15 @@ public class SecurityGameArea extends GameArea {
     public Entity getPlayer() {
         // placeholder
         return null;
+    }
+
+    public static void clearRoom() {
+        SecurityGameArea.isCleared = true;
+        logger.debug("Security is cleared");
+    }
+
+    public static void unclearRoom() {
+        SecurityGameArea.isCleared = false;
+        logger.debug("Security is uncleared");
     }
 }

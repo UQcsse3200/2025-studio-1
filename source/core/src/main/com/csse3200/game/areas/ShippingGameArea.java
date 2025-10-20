@@ -26,6 +26,7 @@ public class ShippingGameArea extends GameArea {
     private static final float ROOM_DIFF_NUMBER = 7;
     private static GridPoint2 playerSpawn = new GridPoint2(10, 10);
     private Entity player;
+    private static boolean isCleared = false;
 
     /**
      * Initialise this ShippingGameArea to use the provided TerrainFactory and
@@ -41,6 +42,8 @@ public class ShippingGameArea extends GameArea {
      */
     public ShippingGameArea(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
         super(terrainFactory, cameraComponent);
+
+        this.getEvents().addListener("room cleared", ShippingGameArea::clearRoom);
     }
 
 
@@ -77,16 +80,17 @@ public class ShippingGameArea extends GameArea {
 
         spawnBordersAndDoors();
         player = spawnPlayer();
-        spawnGrokDroids();
-        spawnVroombaAndDeepspin();
         spawnFloor();
         spawnShipmentBoxLid();
         spawnShipmentCrane();
         spawnConveyor();
         spawnTeleporter();
 
-        ItemSpawner itemSpawner = new ItemSpawner(this);
-        itemSpawner.spawnItems(ItemSpawnConfig.shippingmap());
+        if (!ShippingGameArea.isCleared) {
+            startWaves(player);
+            ItemSpawner itemSpawner = new ItemSpawner(this);
+            itemSpawner.spawnItems(ItemSpawnConfig.shippingmap());
+        }
 
         Entity ui = new Entity();
         ui.addComponent(new GameAreaDisplay("Shipping"))
@@ -162,6 +166,8 @@ public class ShippingGameArea extends GameArea {
         rightDoor.setPosition(b.rightX() - WALL_WIDTH - 0.001f, rightDoorY);
         rightDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadStorage));
         spawnEntity(rightDoor);
+
+        if (!ShippingGameArea.isCleared) registerDoors(new Entity[]{leftDoor, rightDoor});
     }
 
     private Entity spawnPlayer() {
@@ -223,5 +229,15 @@ public class ShippingGameArea extends GameArea {
     public Entity getPlayer() {
         // placeholder
         return null;
+    }
+
+    public static void clearRoom() {
+        ShippingGameArea.isCleared = true;
+        logger.debug("Shipping is cleared");
+    }
+
+    public static void unclearRoom() {
+        ShippingGameArea.isCleared = false;
+        logger.debug("Shipping is uncleared");
     }
 }
