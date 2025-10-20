@@ -39,6 +39,7 @@ import com.csse3200.game.ui.terminal.TerminalDisplay;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
@@ -124,7 +125,7 @@ public class MainGameScreen extends ScreenAdapter {
 
         if (loadSaveGame) {
             logger.info("loading game from save file");
-            SaveGame.GameState load = SaveLoadService.load();
+            SaveGame.GameState load = SaveLoadService.load("saves" + File.separator + "slides.json");
             gameArea = new ForestGameArea(terrainFactory, renderer.getCamera());
             ServiceLocator.registerGameArea(gameArea);
             ForestGameArea.setRoomSpawn(new GridPoint2(3, 20));
@@ -132,8 +133,9 @@ public class MainGameScreen extends ScreenAdapter {
             //all areas in the game for loading
             switch (load.getGameArea()) {
                 case "Forest" -> gameArea = ForestGameArea.load(terrainFactory, renderer.getCamera());
-                case "Elevator" -> gameArea = ElevatorGameArea.load(terrainFactory, renderer.getCamera());
-                case "Office" -> gameArea = OfficeGameArea.load(terrainFactory, renderer.getCamera());
+                case "Elevator" ->
+                        gameArea.clearAndLoad(() -> ElevatorGameArea.load(terrainFactory, renderer.getCamera()));
+                case "Office" -> gameArea.clearAndLoad(() -> OfficeGameArea.load(terrainFactory, renderer.getCamera()));
                 case "Mainhall" -> gameArea.clearAndLoad(() -> MainHall.load(terrainFactory, renderer.getCamera()));
                 case "Reception" -> gameArea.clearAndLoad(() -> Reception.load(terrainFactory, renderer.getCamera()));
                 case "Tunnel" -> gameArea = TunnelGameArea.load(terrainFactory, renderer.getCamera());
@@ -141,6 +143,8 @@ public class MainGameScreen extends ScreenAdapter {
                 case "Storage" -> gameArea = StorageGameArea.load(terrainFactory, renderer.getCamera());
                 case "Shipping" -> gameArea = ShippingGameArea.load(terrainFactory, renderer.getCamera());
                 case "Server" -> gameArea = ServerGameArea.load(terrainFactory, renderer.getCamera());
+                case "Research" ->
+                        gameArea.clearAndLoad(() -> ResearchGameArea.load(terrainFactory, renderer.getCamera()));
                 default -> gameArea = null;
             }
 
@@ -153,11 +157,12 @@ public class MainGameScreen extends ScreenAdapter {
                         load.getArmour(),
                         load.getInventory()
                 );
+                gameArea.setWave(load.getWave());
                 exploredAreas = load.getAreasVisited();
-
 
             } else {
                 logger.error("couldn't create Game area from file");
+
             }
 
         } else {
@@ -175,6 +180,7 @@ public class MainGameScreen extends ScreenAdapter {
     /**
      * private helper method for setting multiple areas to be discovered on startup
      * such as on loading
+     *
      * @param areas Set of areas to be marked discovered
      */
     private void discover(Set<String> areas) {
@@ -335,7 +341,9 @@ public class MainGameScreen extends ScreenAdapter {
         ServiceLocator.getEntityService().register(ui);
     }
 
-    /** Remaining time in seconds, clamped to >= 0 */
+    /**
+     * Remaining time in seconds, clamped to >= 0
+     */
     private long getRemainingSeconds() {
         long rem = countdownTimer.getRemainingMs();
         return rem > 0 ? rem / 1000 : 0;

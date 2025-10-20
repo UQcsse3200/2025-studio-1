@@ -8,10 +8,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 //Sprint 4 willupon this
 @ExtendWith(GameExtension.class)
 public class TestGameStateStats {
+
     public String difficultyLoad = "";
 
 
-    public class playerStatTest {
+    public static class PlayerStatTest {
         public Vector2 PossLoad = new Vector2(1, 1);
         public String avatarLoad = "testAvatar";
         public int stamLoad = 1;
@@ -20,12 +21,12 @@ public class TestGameStateStats {
         public int ammoLoad = 1;
     }
 
-    public class inventoryComponentTest {
-        public String typeLoad = "MELEE";
+    public static class onlyArgsInventory {
+        public String typeLoad = "";
         public String itemTextureLoad = "";
         public int stamLoad = 1;
         public int upgradeLoad = 1;
-        public int itemCountLoad = 2;
+        public int itemCountLoad = 1;
         public int weaponAmmoLoad = 1;
     }
 

@@ -130,6 +130,7 @@ class SaveLoadServiceTest {
             // Assert snapshot fields
             Assertions.assertEquals(AREA_ID, out.getGameArea());
             Assertions.assertEquals(INITIAL_HEALTH, out.getPlayer().currentHealth, "Health should originate from CombatStatsComponent");
+            Assertions.assertEquals(MAX_HEALTH, out.getPlayer().maxHealth);
             Assertions.assertEquals(POS_X, out.getPlayer().playerPos.x, FLOAT_EPS);
             Assertions.assertEquals(POS_Y, out.getPlayer().playerPos.y, FLOAT_EPS);
             Assertions.assertEquals(EXPECTED_ROUND_NUMBER, out.getWave());
@@ -141,8 +142,6 @@ class SaveLoadServiceTest {
             Assertions.assertEquals(0,out.getPlayer().keyCardLevel);
             Assertions.assertEquals(Float.valueOf(100), out.getPlayer().stamina);
             Assertions.assertEquals(1, out.getPlayer().ammoReserve);
-
-
         }
     }
 

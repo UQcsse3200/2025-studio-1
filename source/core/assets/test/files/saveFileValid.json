@@ -8,9 +8,10 @@
     "ammoReserve": 1,
     "stamina": 1,
     "maxStamina": 1,
-    "maxHealth": 1,
+    "maxHealth": 10,
     "currentHealth": 1,
-    "processor": 1
+    "processor": 1,
+    "keyCardLevel": 1
   },
   "gameArea": "Test#Area",
   "loadedInventory": [
@@ -28,19 +29,12 @@
       "upgradeStage": 1
     },
     {
-      "type": "RANGED",
-      "ammo": 1,
-      "texture": "images/rocketlauncher.png",
-      "count": 1,
+      "type": "CONSUMABLE",
+      "texture": "images/monster.png",
+      "count": 10,
       "upgradeStage": 1
     },
-    {
-      "type": "RANGED",
-      "ammo": 1,
-      "texture": "images/rifle.png",
-      "count": 1,
-      "upgradeStage": 1
-    },
+    null,
     null
   ],
   "difficulty": "NORMAL",
