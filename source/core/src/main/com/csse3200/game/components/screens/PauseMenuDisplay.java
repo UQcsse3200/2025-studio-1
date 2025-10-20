@@ -1,9 +1,6 @@
 package com.csse3200.game.components.screens;
 
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -23,12 +20,22 @@ import com.csse3200.game.services.ServiceLocator;
  * ESC is handled once to immediately resume gameplay.
  */
 public class PauseMenuDisplay extends BaseScreenDisplay {
-    /** Tracks if ESC was consumed by the pause menu in the current frame. */
+    /**
+     * Tracks if ESC was consumed by the pause menu in the current frame.
+     */
     private static boolean escConsumedThisFrame = false;
 
-    public static boolean wasEscConsumedThisFrame() { return escConsumedThisFrame; }
-    public static void markEscConsumed() { escConsumedThisFrame = true; }
-    public static void resetEscConsumed() { escConsumedThisFrame = false; }
+    public static boolean wasEscConsumedThisFrame() {
+        return escConsumedThisFrame;
+    }
+
+    public static void markEscConsumed() {
+        escConsumedThisFrame = true;
+    }
+
+    public static void resetEscConsumed() {
+        escConsumedThisFrame = false;
+    }
 
     /**
      * Full-screen dimmer image. Kept as a field so we can avoid adding duplicates
@@ -103,23 +110,6 @@ public class PauseMenuDisplay extends BaseScreenDisplay {
         stage.setKeyboardFocus(root);
         root.setTouchable(Touchable.enabled);
 
-        final InputListener escOnce = new InputListener() {
-            /** Prevents repeated ESC events (debounce). */
-            private boolean handled = false;
-
-            @Override
-            public boolean keyDown(InputEvent event, int keycode) {
-                if (keycode == Input.Keys.ESCAPE && !handled) {
-                    handled = true;                       // first ESC only
-                    entity.getEvents().trigger("resume"); // resume game
-                    PauseMenuDisplay.markEscConsumed();    // mark ESC consumed for this frame
-                    root.removeListener(this);            // remove listener immediately
-                    return true;
-                }
-                return false;
-            }
-        };
-        root.addListener(escOnce);
     }
 
     /**

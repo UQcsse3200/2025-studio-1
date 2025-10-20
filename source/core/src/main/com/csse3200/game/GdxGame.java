@@ -73,12 +73,12 @@ public class GdxGame extends Game {
      */
     public void setScreen(ScreenType screenType) {
         logger.info("Setting game screen to {}", screenType);
-        ServiceLocator.getGlobalEvents().trigger("screenChanged", screenType.name());
         Screen currentScreen = getScreen();
         if (currentScreen != null) {
             currentScreen.dispose();
         }
         setScreen(newScreen(screenType));
+        ServiceLocator.getGlobalEvents().trigger("screenChanged", screenType.name());
     }
 
     @Override
@@ -96,11 +96,11 @@ public class GdxGame extends Game {
     private Screen newScreen(ScreenType screenType) {
         return switch (screenType) {
             case MAIN_MENU -> new MainMenuScreen(this);
-            case MAIN_GAME -> new MainGameScreen(this);
+            case MAIN_GAME -> new MainGameScreen(this, false);
             case SETTINGS -> new SettingsScreen(this);
             case DEATH_SCREEN -> new DeathScreen(this);
             case WIN_SCREEN -> new WinScreen(this);
-            case LOAD_GAME -> new MainGameScreen(this, "placeholder");
+            case LOAD_GAME -> new MainGameScreen(this, true);
             case TUTORIAL_SCREEN -> new TutorialScreen(this);
             case STORY -> new StoryScreen(this);
             case CHOOSE_AVATAR -> new AvatarChoiceScreen(this);
