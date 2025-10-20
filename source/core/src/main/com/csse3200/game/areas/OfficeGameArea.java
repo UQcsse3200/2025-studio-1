@@ -68,6 +68,7 @@ public class OfficeGameArea extends GameArea {
         spawnObjectDoors(new GridPoint2(0, 14), new GridPoint2(28, 20));
         spawnPlatforms();
         spawnOfficeProps();
+        spawnEnemies();
         spawnTeleporter();
 
         Entity ui = new Entity();
@@ -118,6 +119,13 @@ public class OfficeGameArea extends GameArea {
             rightTop.setPosition(b.rightX() - WALL_WIDTH, rightDoorY + rightDoorHeight);
             spawnEntity(rightTop);
         }
+        // Add right wall below the door
+        float rightBottomSegHeight = Math.max(0f, rightDoorY - b.bottomY());
+        if (rightBottomSegHeight > 0f) {
+            Entity rightBottom = com.csse3200.game.entities.factories.system.ObstacleFactory.createWall(WALL_WIDTH, rightBottomSegHeight);
+            rightBottom.setPosition(b.rightX() - WALL_WIDTH, b.bottomY());
+            spawnEntity(rightBottom);
+        }
         Entity rightDoor = com.csse3200.game.entities.factories.system.ObstacleFactory.createDoorTrigger(WALL_WIDTH, rightDoorHeight);
         rightDoor.setPosition(b.rightX() - WALL_WIDTH - 0.001f, rightDoorY);
         rightDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadElevator));
@@ -127,7 +135,15 @@ public class OfficeGameArea extends GameArea {
     }
 
     private Entity spawnPlayer() {
-        return spawnOrRepositionPlayer(playerSpawn);
+        Entity player = spawnOrRepositionPlayer(playerSpawn);
+        // Set higher z-index to ensure player renders in front of sprites
+        if (player != null) {
+            var renderComponent = player.getComponent(com.csse3200.game.rendering.AnimationRenderComponent.class);
+            if (renderComponent != null) {
+                renderComponent.setZIndex(10f); // Higher z-index to render in front
+            }
+        }
+        return player;
     }
 
     private void spawnOfficeProps() {
@@ -191,6 +207,23 @@ public class OfficeGameArea extends GameArea {
             floor.setPosition(floor.getPosition().x, floor.getPosition().y - 0.3f);
         }
     }
+
+    /**
+     * Spawn 3 enemies in the office room
+     */
+    private void spawnEnemies() {
+        Entity player = ServiceLocator.getPlayer();
+        if (player == null) return;
+
+        // Enemy 1: GhostGPT
+        Entity ghostGPT = com.csse3200.game.entities.factories.characters.NPCFactory.createGhostGPT(player, this, 1.0f);
+        spawnEntityAt(ghostGPT, new GridPoint2(15, 8), true, false);
+
+        // Enemy 2: Deepspin
+        Entity deepspin = com.csse3200.game.entities.factories.characters.NPCFactory.createDeepspin(player, this, 1.0f);
+        spawnEntityAt(deepspin, new GridPoint2(20, 20), true, false);
+
+       }
 
     private void loadMovingBossRoom() {
         MovingBossRoom.setRoomSpawn(new GridPoint2(24, 8));

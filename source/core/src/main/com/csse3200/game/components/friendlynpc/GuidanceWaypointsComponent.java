@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.components.Component;
 import com.csse3200.game.entities.Entity;
+
 import java.util.List;
 
 /**
@@ -12,16 +13,16 @@ import java.util.List;
  * - Waits for the player to get close before moving to the next point.
  * - Can either teleport or move smoothly.
  * - Controlled by events.
- *
+ * <p>
  * Listens for:
- *   "guide:start"  → start moving
- *   "guide:pause"  → pause
- *   "guide:resume" → resume
- *   "guide:reset"  → reset to the first waypoint
- *
+ * "guide:start"  → start moving
+ * "guide:pause"  → pause
+ * "guide:resume" → resume
+ * "guide:reset"  → reset to the first waypoint
+ * <p>
  * Emits:
- *   "guide:reached" (index) → when reaching a waypoint
- *   "guide:finished"        → when reaching the last waypoint
+ * "guide:reached" (index) → when reaching a waypoint
+ * "guide:finished"        → when reaching the last waypoint
  */
 public class GuidanceWaypointsComponent extends Component {
     private final Entity player;
@@ -56,10 +57,22 @@ public class GuidanceWaypointsComponent extends Component {
         }
     }
 
-    private void onStart() { started = true; }
-    private void onPause() { started = false; }
-    private void onResume() { started = true; }
-    private void onReset() { index = 0; started = false; }
+    private void onStart() {
+        started = true;
+    }
+
+    private void onPause() {
+        started = false;
+    }
+
+    private void onResume() {
+        started = true;
+    }
+
+    private void onReset() {
+        index = 0;
+        started = false;
+    }
 
     @Override
     public void update() {

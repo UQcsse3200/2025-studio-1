@@ -23,6 +23,7 @@ class RobotFightingGameTest {
             super(text);
         }
 
+        @Override
         protected Entity initGameEntity() {
             Entity fakeEntity = new Entity();
             injectedDisplay = new TestDisplay();
@@ -54,7 +55,6 @@ class RobotFightingGameTest {
             lastEncouragement = msg;
         }
 
-        @Override public void draw(com.badlogic.gdx.graphics.g2d.SpriteBatch batch) {}
     }
 
     private TestGame game;
@@ -98,12 +98,6 @@ class RobotFightingGameTest {
         Field f = RobotFightingGame.class.getDeclaredField("encourageMult");
         f.setAccessible(true);
         f.setDouble(game, v);
-    }
-
-    private boolean isDisplayed() throws Exception {
-        Field f = RobotFightingGame.class.getDeclaredField("gameDisplayed");
-        f.setAccessible(true);
-        return f.getBoolean(game);
     }
 
     private void callMethod(String name, Class<?>... params) throws Exception {

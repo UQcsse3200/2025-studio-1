@@ -13,21 +13,27 @@ public class HoverBobComponent extends Component {
     private float t = 0f;
     private float anchorY;
 
-    /** Creates a bob with defaults: amplitude=0.1, speed=2.2. */
-    public HoverBobComponent() {}
+    /**
+     * Creates a bob with defaults: amplitude=0.1, speed=2.2.
+     */
+    public HoverBobComponent() {
+    }
 
     /**
      * Creates a bob with custom parameters.
      *
      * @param amplitude peak vertical displacement (world units)
-     * @param speed oscillation speed (radians/second); {@code 2π} ≈ one cycle/sec
+     * @param speed     oscillation speed (radians/second); {@code 2π} ≈ one cycle/sec
      */
     public HoverBobComponent(float amplitude, float speed) {
-        this.amplitude = amplitude; this.speed = speed;
+        this.amplitude = amplitude;
+        this.speed = speed;
     }
 
     @Override
-    public void create() { anchorY = entity.getPosition().y; }
+    public void create() {
+        anchorY = entity.getPosition().y;
+    }
 
     /**
      * Advances the sine wave and applies the new vertical offset.
@@ -41,7 +47,7 @@ public class HoverBobComponent extends Component {
         // recentre bob if something else moved the entity
         float curY = entity.getPosition().y;
         anchorY = anchorY + (curY - anchorY) * Math.min(1f, dt * 5f);
-        float yOff = (float)Math.sin(t * speed) * amplitude;
+        float yOff = (float) Math.sin(t * speed) * amplitude;
         entity.setPosition(entity.getPosition().x, anchorY + yOff); // don’t touch X
     }
 }

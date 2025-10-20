@@ -17,6 +17,7 @@ public class AssistorTaskComponent extends Component {
     public void create() {
         entity.getEvents().addListener("npcDialogueEnd", this::onDialogueEnd);
     }
+
     private void onDialogueEnd() {
         Entity partner = FriendlyNPCFactory.createPartner(player);
         partner.setPosition(entity.getPosition().x, entity.getPosition().y);

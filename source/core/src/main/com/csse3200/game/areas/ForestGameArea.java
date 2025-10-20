@@ -13,11 +13,6 @@ import com.csse3200.game.components.items.ItemComponent;
 import com.csse3200.game.components.items.ItemHoldComponent;
 import com.csse3200.game.components.player.ItemPickUpComponent;
 import com.csse3200.game.components.player.PlayerEquipComponent;
-import com.csse3200.game.components.minigames.robotFighting.RobotFightingGame;
-import com.csse3200.game.components.player.InventoryComponent;
-import com.csse3200.game.components.shop.CatalogService;
-import com.csse3200.game.components.shop.ShopDemo;
-import com.csse3200.game.components.shop.ShopManager;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.Benches;
 import com.csse3200.game.entities.configs.ItemSpawnConfig;
@@ -25,11 +20,8 @@ import com.csse3200.game.entities.configs.Weapons;
 import com.csse3200.game.entities.factories.InteractableStationFactory;
 import com.csse3200.game.entities.factories.KeycardFactory;
 import com.csse3200.game.entities.factories.PowerupsFactory;
-import com.csse3200.game.entities.factories.ShopFactory;
 import com.csse3200.game.entities.factories.characters.BossFactory;
 import com.csse3200.game.entities.factories.characters.FriendlyNPCFactory;
-import com.csse3200.game.entities.factories.characters.PlayerFactory;
-import com.csse3200.game.entities.factories.items.ItemFactory;
 import com.csse3200.game.entities.factories.items.WeaponsFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.entities.factories.system.TeleporterFactory;
@@ -48,7 +40,6 @@ import org.slf4j.LoggerFactory;
 import static com.csse3200.game.entities.configs.Weapons.*;
 
 import java.util.List;
-import java.util.Collections;
 
 /**
  * A playable “Forest” style room. This class:
@@ -377,7 +368,6 @@ public class ForestGameArea extends GameArea {
 
         spawnGuidanceNpc();
 
-
         // Place a keycard on the floor so the player can unlock the door
         float keycardX = 3f;
         float keycardY = 7f;
@@ -680,7 +670,7 @@ public class ForestGameArea extends GameArea {
 
     private void spawnDoubleProcessorsPowerup() {
         Entity newUnlimitedAmmoPowerup = PowerupsFactory.createDoubleProcessors();
-        spawnEntityAt(newUnlimitedAmmoPowerup, new GridPoint2(2, 30), true, true);
+        spawnEntityAt(newUnlimitedAmmoPowerup, new GridPoint2(5, 20), true, true);
     }
 
     private void spawnnpctest() {

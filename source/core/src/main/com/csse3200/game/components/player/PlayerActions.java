@@ -255,8 +255,6 @@ public class PlayerActions extends Component {
             if (isGroundJump) {
                 if (!touchingGround()) canJump = false;
                 if (physicsComponent.getBody().getLinearVelocity().y > 0f) canJump = false;
-            } else {
-                if (!stamina.trySpend(DOUBLE_JUMP_COST)) return;
             }
 
             if (canJump) {
@@ -453,12 +451,10 @@ public class PlayerActions extends Component {
         projectilePhysics.fire(new Vector2(destination.x - origin.x, destination.y - origin.y), 5);
 
         if (unlimitedAmmoEffect != null && unlimitedAmmoEffect.isActive()) {
-//            unlimitedAmmoEffect.apply(gun);  // dont call every shot
         } else {
             mag.setCurrentAmmo(mag.getCurrentAmmo() - 1);
         }
-//        mag.setCurrentAmmo(mag.getCurrentAmmo() - 1);
-
+        entity.getEvents().trigger("after shoot");
         timeSinceLastAttack = 0;
     }
 
@@ -584,6 +580,7 @@ public class PlayerActions extends Component {
 
                 reloadSound.play();
                 timesinceLastReload = 0f;
+                entity.getEvents().trigger("after reload");
             }
         }
     }
