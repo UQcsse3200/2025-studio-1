@@ -140,10 +140,13 @@ public class ElevatorGameArea extends GameArea {
      * Spawn a few floating platforms
      */
     private void spawnPlatforms() {
-        float p1x = 1f, p1y = 4f;
+        float p1x = 1f;
+        float p1y = 4f;
         // teleporter will be at (0.5,3f) below first platform
-        float p2x = 5f, p2y = 6f;
-        float p3x = 10f, p3y = 6f;
+        float p2x = 5f;
+        float p2y = 6f;
+        float p3x = 10f;
+        float p3y = 6f;
 
         Entity plat1 = com.csse3200.game.entities.factories.system.ObstacleFactory.createElevatorPlatform();
         plat1.setPosition(p1x, p1y);

@@ -147,19 +147,6 @@ public class Reception extends GameArea {
 
     }
 
-    private void spawnGPTs() {
-        Entity ghost1 = NPCFactory.createGhostGPT(player, this, ServiceLocator.getDifficulty().getRoomDifficulty(this.roomDiffNumber));
-        GridPoint2 ghost1Pos = new GridPoint2(25, 7);
-        spawnEntityAt(ghost1, ghost1Pos, true, false);
-    }
-
-    private void spawnShopKiosk() {
-        CatalogService catalog = ShopDemo.makeDemoCatalog();
-        ShopManager manager = new ShopManager(catalog);
-        Entity shop = ShopFactory.createShop(this, manager, "images/VendingMachine.png"); // have as tree now as placeholder, later need to change to actual shop icon
-        spawnEntityAt(shop, new GridPoint2(24, 7), true, false);
-    }
-
     private void spawnplatform2() {
         float PlatformX = 5.5f;
         float PlatformY = 3f;

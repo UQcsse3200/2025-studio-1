@@ -19,7 +19,6 @@ import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.components.DoorComponent;
 import com.csse3200.game.components.WeaponsStatsComponent;
 import com.csse3200.game.components.enemy.EnemyWaves;
-import com.csse3200.game.components.enemy.EnemyWavesDisplay;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.factories.ProjectileFactory;
 import com.csse3200.game.entities.factories.characters.NPCFactory;
@@ -63,6 +62,20 @@ public abstract class GameArea implements Disposable {
     private static final String GROK_DROID_BLUE = "GrokDroidBlue";
     private static final String TURRET = "Turret";
 
+    // Area names
+    private static final String GAME_AREA = "GameArea";
+    private static final String RECEPTION = "Reception";
+    private static final String MAIN_HALL = "Mainhall";
+    private static final String SECURITY = "Security";
+    private static final String OFFICE = "Office";
+    private static final String ELEVATOR = "Elevator";
+    private static final String RESEARCH = "Research";
+    private static final String SHIPPING = "Shipping";
+    private static final String STORAGE = "Storage";
+    private static final String SERVER = "Server";
+    private static final String TUNNEL = "Tunnel";
+
+
     protected EnemyWaves wavesManager; // manage waves via terminal command
 
     protected GameArea(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
@@ -89,7 +102,7 @@ public abstract class GameArea implements Disposable {
     /**
      * Attempt to start a room transition. Returns false if one is already in progress.
      */
-    protected boolean beginTransition() {
+    protected static boolean beginTransition() {
         if (isTransitioning || ServiceLocator.isTransitioning()) return false;
         isTransitioning = true;
         ServiceLocator.setTransitioning(true);
@@ -99,7 +112,7 @@ public abstract class GameArea implements Disposable {
     /**
      * Mark the end of a room transition.
      */
-    protected void endTransition() {
+    protected static void endTransition() {
         isTransitioning = false;
         ServiceLocator.setTransitioning(false);
     }
@@ -144,8 +157,7 @@ public abstract class GameArea implements Disposable {
             int room = getRoomNumber();
             int maxWaves = room > 4 ? 2 : 1; // mimic original behaviour: higher rooms get 2 waves
             wavesManager = new EnemyWaves(maxWaves, this, player);
-            EnemyWavesDisplay waveDisplay = new EnemyWavesDisplay(wavesManager);
-            Gdx.app.log("GameArea", "Initializing waves: room=" + room + " maxWaves=" + maxWaves);
+            Gdx.app.log(GAME_AREA, "Initializing waves: room=" + room + " maxWaves=" + maxWaves);
         }
         wavesManager.startWave();
     }
@@ -167,16 +179,16 @@ public abstract class GameArea implements Disposable {
      */
     protected int getRoomNumber() {
         return switch (this.toString()) {
-            case "Reception" -> 2;
-            case "Mainhall" -> 3;
-            case "Security" -> 4;
-            case "Office" -> 5;
-            case "Elevator" -> 6;
-            case "Research" -> 7;
-            case "Shipping" -> 8;
-            case "Storage" -> 9;
-            case "Server" -> 10;
-            case "Tunnel" -> 11;
+            case RECEPTION -> 2;
+            case MAIN_HALL -> 3;
+            case SECURITY -> 4;
+            case OFFICE -> 5;
+            case ELEVATOR -> 6;
+            case RESEARCH -> 7;
+            case SHIPPING -> 8;
+            case STORAGE -> 9;
+            case SERVER -> 10;
+            case TUNNEL -> 11;
             case "GoodWinAnimation" -> 101; //Animation start from 101
             case "BadWinAnimation" -> 102;
             default -> 1;
@@ -225,47 +237,47 @@ public abstract class GameArea implements Disposable {
                 spawnDeepspin(total, scaleFactor, player, positions);
                 spawnTurret(total, scaleFactor, player, positions);
                 break;
-            case "Reception":
+            case RECEPTION:
                 spawnVroomba(total, scaleFactor, player, positions);
                 spawnGhostGPT(total, scaleFactor, player, positions);
                 break;
-            case "Mainhall":
+            case MAIN_HALL:
                 spawnVroomba(total, scaleFactor, player, positions);
                 spawnDeepspin(total, scaleFactor, player, positions);
                 break;
-            case "Security":
+            case SECURITY:
                 spawnGhostGPT(total, scaleFactor, player, positions);
                 spawnDeepspin(total, scaleFactor, player, positions);
                 break;
-            case "Office":
+            case OFFICE:
                 spawnGhostGPT(total, scaleFactor, player, positions);
                 spawnDeepspin(total, scaleFactor, player, positions);
                 spawnVroomba(total, scaleFactor, player, positions);
                 break;
-            case "Elevator":
+            case ELEVATOR:
                 spawnGhostGPT(total, scaleFactor, player, positions);
                 spawnGrokDroid(total, scaleFactor, player, positions);
                 break;
-            case "Research":
+            case RESEARCH:
                 spawnTurret(total, scaleFactor, player, positions);
                 spawnGhostGPT(total, scaleFactor, player, positions);
                 spawnGrokDroid(total, scaleFactor, player, positions);
                 break;
-            case "Shipping":
+            case SHIPPING:
                 spawnGhostGPT(total, scaleFactor, player, positions);
                 spawnGrokDroid(total, scaleFactor, player, positions);
                 spawnVroomba(total, scaleFactor, player, positions);
                 break;
-            case "Storage":
+            case STORAGE:
                 spawnTurret(total, scaleFactor, player, positions);
                 spawnGrokDroid(total, scaleFactor, player, positions);
                 break;
-            case "Server":
+            case SERVER:
                 spawnGhostGPT(total, scaleFactor, player, positions);
                 spawnDeepspin(total, scaleFactor, player, positions);
                 spawnTurret(total, scaleFactor, player, positions);
                 break;
-            case "Tunnel":
+            case TUNNEL:
                 spawnGhostGPT(total, scaleFactor, player, positions);
                 spawnGrokDroid(total, scaleFactor, player, positions);
                 spawnTurret(total, scaleFactor, player, positions);
@@ -343,6 +355,8 @@ public abstract class GameArea implements Disposable {
                 positions.put(VROOMBA_BLUE, respectiveSpawns);
                 spawnVroombaBlue(total, scaleFactor, player, positions);
                 break;
+            default:
+                break;
         }
     }
 
@@ -355,7 +369,6 @@ public abstract class GameArea implements Disposable {
         }
         return 0;
     }
-
 
     /**
      * Adds GhostGPT enemies onto the map.
@@ -372,6 +385,7 @@ public abstract class GameArea implements Disposable {
             spawnEntity(ghostGpt);
         }
     }
+
     /**
      * Adds GhostGPTRed enemies onto the map.
      *
@@ -387,6 +401,7 @@ public abstract class GameArea implements Disposable {
             spawnEntity(ghostGptRed);
         }
     }
+
     /**
      * Adds GhostGPTBlue enemies onto the map.
      *
@@ -402,6 +417,7 @@ public abstract class GameArea implements Disposable {
             spawnEntity(ghostGptBlue);
         }
     }
+
     /**
      * Adds DeepSpin enemies onto the map.
      *
@@ -418,6 +434,7 @@ public abstract class GameArea implements Disposable {
             spawnEntity(deepSpin);
         }
     }
+
     /**
      * Adds DeepSpinRed enemies onto the map.
      *
@@ -434,6 +451,7 @@ public abstract class GameArea implements Disposable {
             spawnEntity(deepSpinRed);
         }
     }
+
     /**
      * Adds DeepSpinBlue enemies onto the map.
      *
@@ -450,6 +468,7 @@ public abstract class GameArea implements Disposable {
             spawnEntity(deepSpinBlue);
         }
     }
+
     /**
      * Adds GrokDroid enemies onto the map.
      *
@@ -465,6 +484,7 @@ public abstract class GameArea implements Disposable {
             spawnEntity(grokDroid);
         }
     }
+
     /**
      * Adds GrokDroidRed enemies onto the map.
      *
@@ -480,6 +500,7 @@ public abstract class GameArea implements Disposable {
             spawnEntity(grokDroidRed);
         }
     }
+
     /**
      * Adds GrokDroidBlue enemies onto the map.
      *
@@ -511,6 +532,7 @@ public abstract class GameArea implements Disposable {
             spawnEntity(vroombaEntity);
         }
     }
+
     /**
      * Adds VroombaRed enemies onto the map.
      *
@@ -526,6 +548,7 @@ public abstract class GameArea implements Disposable {
             spawnEntity(vroombaRed);
         }
     }
+
     /**
      * Adds VroombaBlue enemies onto the map.
      *
@@ -541,6 +564,7 @@ public abstract class GameArea implements Disposable {
             spawnEntity(vroombaBlue);
         }
     }
+
     /**
      * Adds Turret enemies onto the map.
      *
@@ -589,7 +613,7 @@ public abstract class GameArea implements Disposable {
                 respectiveSpawns.add(new Vector2(12f, 5f));
                 positions.put(TURRET, respectiveSpawns);
             }
-            case "Reception" -> {
+            case RECEPTION -> {
                 respectiveSpawns.add(new Vector2(5.7f, 5f));
                 respectiveSpawns.add(new Vector2(1.5f, 7f));
                 positions.put(VROOMBA, respectiveSpawns);
@@ -597,7 +621,7 @@ public abstract class GameArea implements Disposable {
                 respectiveSpawns.add(new Vector2(11.5f, 10f));
                 positions.put(GHOST_GPT, respectiveSpawns);
             }
-            case "Mainhall" -> {
+            case MAIN_HALL -> {
                 respectiveSpawns.add(new Vector2(10f, 10f));
                 respectiveSpawns.add(new Vector2(2f, 10f));
                 positions.put(DEEP_SPIN, respectiveSpawns);
@@ -606,7 +630,7 @@ public abstract class GameArea implements Disposable {
                 respectiveSpawns.add(new Vector2(2f, 8f));
                 positions.put(VROOMBA, respectiveSpawns);
             }
-            case "Security" -> {
+            case SECURITY -> {
                 respectiveSpawns.add(new Vector2(12f, 10f));
                 respectiveSpawns.add(new Vector2(2f, 5f));
                 positions.put(GHOST_GPT, respectiveSpawns);
@@ -615,7 +639,7 @@ public abstract class GameArea implements Disposable {
                 respectiveSpawns.add(new Vector2(3f, 10f));
                 positions.put(DEEP_SPIN, respectiveSpawns);
             }
-            case "Office" -> {
+            case OFFICE -> {
                 respectiveSpawns.add(new Vector2(12f, 3f));
                 positions.put(GHOST_GPT, respectiveSpawns);
                 respectiveSpawns = new ArrayList<>();
@@ -626,7 +650,7 @@ public abstract class GameArea implements Disposable {
                 respectiveSpawns.add(new Vector2(2f, 10f));
                 positions.put(DEEP_SPIN, respectiveSpawns);
             }
-            case "Elevator" -> {
+            case ELEVATOR -> {
                 respectiveSpawns.add(new Vector2(13f, 4f));
                 respectiveSpawns.add(new Vector2(11f, 8f));
                 positions.put(GHOST_GPT, respectiveSpawns);
@@ -635,7 +659,7 @@ public abstract class GameArea implements Disposable {
                 respectiveSpawns.add(new Vector2(2f, 8f));
                 positions.put(GROK_DROID, respectiveSpawns);
             }
-            case "Research" -> {
+            case RESEARCH -> {
                 respectiveSpawns.add(new Vector2(12f, 11f));
                 positions.put(TURRET, respectiveSpawns);
                 respectiveSpawns = new ArrayList<>();
@@ -647,7 +671,7 @@ public abstract class GameArea implements Disposable {
                 respectiveSpawns.add(new Vector2(5f, 10f));
                 positions.put(GROK_DROID, respectiveSpawns);
             }
-            case "Shipping" -> {
+            case SHIPPING -> {
                 respectiveSpawns.add(new Vector2(12f, 11f));
                 respectiveSpawns.add(new Vector2(2f, 5f));
                 positions.put(GHOST_GPT, respectiveSpawns);
@@ -659,7 +683,7 @@ public abstract class GameArea implements Disposable {
                 respectiveSpawns.add(new Vector2(5f, 10f));
                 positions.put(GROK_DROID, respectiveSpawns);
             }
-            case "Storage" -> {
+            case STORAGE -> {
                 respectiveSpawns.add(new Vector2(12f, 5f));
                 positions.put(TURRET, respectiveSpawns);
                 respectiveSpawns = new ArrayList<>();
@@ -668,7 +692,7 @@ public abstract class GameArea implements Disposable {
                 respectiveSpawns.add(new Vector2(8f, 8f));
                 positions.put(GROK_DROID, respectiveSpawns);
             }
-            case "Server" -> {
+            case SERVER -> {
                 respectiveSpawns.add(new Vector2(12f, 11f));
                 respectiveSpawns.add(new Vector2(7.6f, 4f));
                 respectiveSpawns.add(new Vector2(11f, 8f));
@@ -681,7 +705,7 @@ public abstract class GameArea implements Disposable {
                 respectiveSpawns.add(new Vector2(5f, 10f));
                 positions.put(DEEP_SPIN, respectiveSpawns);
             }
-            case "Tunnel" -> {
+            case TUNNEL -> {
                 respectiveSpawns.add(new Vector2(12f, 4f));
                 respectiveSpawns.add(new Vector2(3f, 4f));
                 positions.put(GHOST_GPT, respectiveSpawns);
@@ -741,24 +765,16 @@ public abstract class GameArea implements Disposable {
     }
 
     protected Vector2 getRoomSpawnPosition(String roomName) {
-        switch (roomName) {
-            case "Floor1":
-                return randomInBounds(2f, 8f, 2f, 8f);
-            case "Floor2":
-                return randomInBounds(4f, 18f, 4f, 18f);
-            case "Floor3":
-                return randomInBounds(5f, 20f, 5f, 20f);
-            case "Floor4":
-                return randomInBounds(6f, 22f, 6f, 22f);
-            case "Floor5":
-                return randomInBounds(7f, 24f, 7f, 24f);
-            case "Floor6":
-                return randomInBounds(8f, 26f, 8f, 26f);
-            case "Floor7":
-                return randomInBounds(9f, 28f, 9f, 28f);
-            default:
-                return new Vector2(0f, 0f);
-        }
+        return switch (roomName) {
+            case "Floor1" -> randomInBounds(2f, 8f, 2f, 8f);
+            case "Floor2" -> randomInBounds(4f, 18f, 4f, 18f);
+            case "Floor3" -> randomInBounds(5f, 20f, 5f, 20f);
+            case "Floor4" -> randomInBounds(6f, 22f, 6f, 22f);
+            case "Floor5" -> randomInBounds(7f, 24f, 7f, 24f);
+            case "Floor6" -> randomInBounds(8f, 26f, 8f, 26f);
+            case "Floor7" -> randomInBounds(9f, 28f, 9f, 28f);
+            default -> new Vector2(0f, 0f);
+        };
     }
 
     private Vector2 randomInBounds(float minX, float maxX, float minY, float maxY) {
@@ -1056,7 +1072,7 @@ public abstract class GameArea implements Disposable {
 
     @Override
     public String toString() {
-        return "GameArea";
+        return GAME_AREA;
     }
 
     /**
@@ -1065,8 +1081,6 @@ public abstract class GameArea implements Disposable {
      * @return player entity
      */
     public abstract Entity getPlayer();
-
-//  public abstract Entity spawnPlayer(List<String> inventory, int CPU, int health);
 
     /**
      * Transition to another area by its name (case-insensitive), if known.
@@ -1094,7 +1108,7 @@ public abstract class GameArea implements Disposable {
             case "goodwinanimation" -> GoodWinAnimationScreen.class;
             case "badwinanimation" -> BadWinAnimationScreen.class;
             default -> {
-                Gdx.app.log("GameArea", "transitionToArea: unknown area name '" + areaName + "'");
+                Gdx.app.log(GAME_AREA, "transitionToArea: unknown area name '" + areaName + "'");
                 yield null;
             }
         };

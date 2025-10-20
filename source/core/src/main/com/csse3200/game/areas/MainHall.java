@@ -180,17 +180,6 @@ public class MainHall extends GameArea {
     }
 
     /**
-     * spawns Sofa in bottom left
-     **/
-    private void spawnsofa() {
-        float PlatformX = 1f;
-        float PlatformY = 3f;
-        Entity sofa1 = ObstacleFactory.createMhall_sofa();
-        sofa1.setPosition(PlatformX, PlatformY);
-        spawnEntity(sofa1);
-    }
-
-    /**
      * spawns a screen
      **/
     private void spawnscreen() {
