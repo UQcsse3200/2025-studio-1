@@ -118,6 +118,7 @@ public class MagazineComponent extends Component {
 
     /**
      * Retrieves max ammo
+     *
      * @return max ammo
      */
     public int getMaxAmmo() {

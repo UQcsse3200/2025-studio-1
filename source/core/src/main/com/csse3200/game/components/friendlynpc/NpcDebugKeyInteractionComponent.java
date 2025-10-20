@@ -6,12 +6,14 @@ import com.badlogic.gdx.Input;
 
 /**
  * Debug/temporary key handler for the Guidance NPC.
- *
+ * <p>
  * - Y to open menu (only if player is in proximity)
  * - 6 for "Instructions"
  */
 public class NpcDebugKeyInteractionComponent extends Component {
-    /** Controller for NPC menu/instruction actions. Must be present on the same entity. */
+    /**
+     * Controller for NPC menu/instruction actions. Must be present on the same entity.
+     */
     private NpcTwoOptionMenuComponent menu;
     private NpcProximityGateComponent gate;
 
