@@ -91,6 +91,13 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">Deck</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
+<div class="block">Represents a standard double deck of playing cards used in Blackjack.
+ <p>
+ The <code>Deck</code> class manages the creation, shuffling, and drawing of cards.
+ It loads all card textures from a LibGDX <code>TextureAtlas</code> and provides
+ methods to retrieve cards, count remaining cards, and reset the deck when
+ necessary. Two full 52-card decks (104 cards total) are included.
+ </p></div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -103,7 +110,10 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
 <div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E()" class="member-name-link">Deck</a>()</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">Constructs a new shuffled double deck (104 cards) using assets
+ from <code>images/cards.atlas</code>.</div>
+</div>
 </div>
 </section>
 </li>
@@ -118,12 +128,22 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="Card.html" title="class in com.csse3200.game.components.cards">Card</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#drawCard()" class="member-name-link">drawCard</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#resetDeck()" class="member-name-link">resetDeck</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#cardsRemaining()" class="member-name-link">cardsRemaining</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Returns the number of cards remaining in the deck.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="Card.html" title="class in com.csse3200.game.components.cards">Card</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#drawCard()" class="member-name-link">drawCard</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Draws the next card from the deck.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#resetDeck()" class="member-name-link">resetDeck</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Resets the deck to its initial state by shuffling
+ all 104 cards and resetting the draw position.</div>
+</div>
 </div>
 </div>
 </div>
@@ -145,6 +165,12 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="&lt;init&gt;()">
 <h3>Deck</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">Deck</span>()</div>
+<div class="block">Constructs a new shuffled double deck (104 cards) using assets
+ from <code>images/cards.atlas</code>.
+ <p>
+ Each deck contains one of each <a href="Rank.html" title="enum class in com.csse3200.game.components.cards"><code>Rank</code></a> and <a href="Suit.html" title="enum class in com.csse3200.game.components.cards"><code>Suit</code></a> combination,
+ and two full decks are generated for use in Blackjack.
+ </p></div>
 </section>
 </li>
 </ul>
@@ -156,15 +182,37 @@ loadScripts(document, 'script');</script>
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
+<section class="detail" id="cardsRemaining()">
+<h3>cardsRemaining</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">cardsRemaining</span>()</div>
+<div class="block">Returns the number of cards remaining in the deck.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>the number of cards left to draw</dd>
+</dl>
+</section>
+</li>
+<li>
 <section class="detail" id="drawCard()">
 <h3>drawCard</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="Card.html" title="class in com.csse3200.game.components.cards">Card</a></span>&nbsp;<span class="element-name">drawCard</span>()</div>
+<div class="block">Draws the next card from the deck.
+ <p>
+ If the deck is nearly empty (less than 4 cards left),
+ it is automatically reset and reshuffled.
+ </p></div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>the next <a href="Card.html" title="class in com.csse3200.game.components.cards"><code>Card</code></a> from the deck</dd>
+</dl>
 </section>
 </li>
 <li>
 <section class="detail" id="resetDeck()">
 <h3>resetDeck</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">resetDeck</span>()</div>
+<div class="block">Resets the deck to its initial state by shuffling
+ all 104 cards and resetting the draw position.</div>
 </section>
 </li>
 </ul>

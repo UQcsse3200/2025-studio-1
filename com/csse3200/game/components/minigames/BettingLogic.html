@@ -138,6 +138,27 @@ loadScripts(document, 'script');</script>
 <div class="block">Calculates the total winnings if the player wins,
  based on the bet and multiplier.</div>
 </div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#canDouble()" class="member-name-link">canDouble</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Checks if the player has enough balance to double their current bet.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#doubleBet()" class="member-name-link">doubleBet</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Doubles the current bet by subtracting the bet amount again
+ from the player's inventory.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#doubleTie()" class="member-name-link">doubleTie</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Handles the double-tie condition, refunding double the bet amount to the player.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#doubleWin()" class="member-name-link">doubleWin</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Handles the double-win condition, awarding double winnings to the player's inventory.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getBalance()" class="member-name-link">getBalance</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
@@ -168,6 +189,11 @@ loadScripts(document, 'script');</script>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#placeBet(int)" class="member-name-link">placeBet</a><wbr>(int&nbsp;amount)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Places a bet of the given amount.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#split()" class="member-name-link">split</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Splits the current bet into a new bet of equal size.</div>
 </div>
 </div>
 </div>
@@ -294,6 +320,53 @@ loadScripts(document, 'script');</script>
  The bet has already been deducted when placed, so no additional
  balance updates are needed.
  </p></div>
+</section>
+</li>
+<li>
+<section class="detail" id="doubleBet()">
+<h3>doubleBet</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">doubleBet</span>()</div>
+<div class="block">Doubles the current bet by subtracting the bet amount again
+ from the player's inventory.</div>
+<dl class="notes">
+<dt>Throws:</dt>
+<dd><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/IllegalArgumentException.html" title="class or interface in java.lang" class="external-link">IllegalArgumentException</a></code> - if the player does not have enough balance</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="canDouble()">
+<h3>canDouble</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">canDouble</span>()</div>
+<div class="block">Checks if the player has enough balance to double their current bet.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>true if doubling is allowed, false otherwise</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="split()">
+<h3>split</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">split</span>()</div>
+<div class="block">Splits the current bet into a new bet of equal size.
+ <p>
+ In this simplified logic, it simply places another bet of the same amount.
+ </p></div>
+</section>
+</li>
+<li>
+<section class="detail" id="doubleWin()">
+<h3>doubleWin</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">doubleWin</span>()</div>
+<div class="block">Handles the double-win condition, awarding double winnings to the player's inventory.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="doubleTie()">
+<h3>doubleTie</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">doubleTie</span>()</div>
+<div class="block">Handles the double-tie condition, refunding double the bet amount to the player.</div>
 </section>
 </li>
 </ul>

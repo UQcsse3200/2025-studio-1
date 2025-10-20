@@ -138,34 +138,71 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#create()" class="member-name-link">create</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Initializes the game by creating a new deck and empty hands,
+<div class="block">Initializes the game component, sets up deck and hands,
  and registers listeners for player actions (hit and stand).</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#dealerHandValue()" class="member-name-link">dealerHandValue</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Returns the total value of the dealer's hand, accounting for ace adjustments.</div>
+<div class="block">Returns the total value of the dealer's hand, accounting for Ace adjustments.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="../cards/Card.html" title="class in com.csse3200.game.components.cards">Card</a>&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getDealerHand()" class="member-name-link">getDealerHand</a>()</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#doubleDown()" class="member-name-link">doubleDown</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Returns the list of cards currently in the dealer’s hand.</div>
+<div class="block">Doubles the current bet (sets doubled flag) and draws exactly one more card,
+ then moves to the next hand.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="../cards/Card.html" title="class in com.csse3200.game.components.cards">Card</a>&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getPlayerHand()" class="member-name-link">getPlayerHand</a>()</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getActiveHandIndex()" class="member-name-link">getActiveHandIndex</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Returns the list of cards currently in the player’s hand.</div>
+<div class="block">Returns the index of the currently active hand.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../cards/Hand.html" title="class in com.csse3200.game.components.cards">Hand</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getCurrentHand()" class="member-name-link">getCurrentHand</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Returns the currently active player hand.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../cards/Hand.html" title="class in com.csse3200.game.components.cards">Hand</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getDealerHand()" class="member-name-link">getDealerHand</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Returns the dealer's hand.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../cards/Deck.html" title="class in com.csse3200.game.components.cards">Deck</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getDeck()" class="member-name-link">getDeck</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Returns the deck being used in the game.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="../cards/Hand.html" title="class in com.csse3200.game.components.cards">Hand</a>&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getPlayerHands()" class="member-name-link">getPlayerHands</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Returns all of the player's hands.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isDealerTurn()" class="member-name-link">isDealerTurn</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Returns true if it is the dealer's turn.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#nextHand()" class="member-name-link">nextHand</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Moves to the next hand if multiple hands exist.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#playerHandValue()" class="member-name-link">playerHandValue</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Returns the total value of the player’s hand, accounting for ace adjustments.</div>
+<div class="block">Returns the total value of the currently active player's hand.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#startGame()" class="member-name-link">startGame</a>()</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#splitHand()" class="member-name-link">splitHand</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Starts a new game by resetting the deck and dealing two cards each to the
- player and dealer.</div>
+<div class="block">Splits the current hand into two hands if allowed (same value cards),
+ and deals one new card to each hand.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#startGame()" class="member-name-link">startGame</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Starts a new game by resetting the deck and dealing two cards each to
+ the player and dealer.</div>
 </div>
 </div>
 </div>
@@ -205,7 +242,7 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="create()">
 <h3>create</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">create</span>()</div>
-<div class="block">Initializes the game by creating a new deck and empty hands,
+<div class="block">Initializes the game component, sets up deck and hands,
  and registers listeners for player actions (hit and stand).</div>
 <dl class="notes">
 <dt>Overrides:</dt>
@@ -217,52 +254,89 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="dealerHandValue()">
 <h3>dealerHandValue</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">dealerHandValue</span>()</div>
-<div class="block">Returns the total value of the dealer's hand, accounting for ace adjustments.</div>
-<dl class="notes">
-<dt>Returns:</dt>
-<dd>the total numeric value of the dealer’s hand</dd>
-</dl>
+<div class="block">Returns the total value of the dealer's hand, accounting for Ace adjustments.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="playerHandValue()">
 <h3>playerHandValue</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">playerHandValue</span>()</div>
-<div class="block">Returns the total value of the player’s hand, accounting for ace adjustments.</div>
-<dl class="notes">
-<dt>Returns:</dt>
-<dd>the total numeric value of the player’s hand</dd>
-</dl>
+<div class="block">Returns the total value of the currently active player's hand.</div>
 </section>
 </li>
 <li>
-<section class="detail" id="getPlayerHand()">
-<h3>getPlayerHand</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../cards/Card.html" title="class in com.csse3200.game.components.cards">Card</a>&gt;</span>&nbsp;<span class="element-name">getPlayerHand</span>()</div>
-<div class="block">Returns the list of cards currently in the player’s hand.</div>
-<dl class="notes">
-<dt>Returns:</dt>
-<dd>the player’s hand as a list of <a href="../cards/Card.html" title="class in com.csse3200.game.components.cards"><code>Card</code></a> objects</dd>
-</dl>
+<section class="detail" id="getPlayerHands()">
+<h3>getPlayerHands</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../cards/Hand.html" title="class in com.csse3200.game.components.cards">Hand</a>&gt;</span>&nbsp;<span class="element-name">getPlayerHands</span>()</div>
+<div class="block">Returns all of the player's hands.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="getDealerHand()">
 <h3>getDealerHand</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../cards/Card.html" title="class in com.csse3200.game.components.cards">Card</a>&gt;</span>&nbsp;<span class="element-name">getDealerHand</span>()</div>
-<div class="block">Returns the list of cards currently in the dealer’s hand.</div>
-<dl class="notes">
-<dt>Returns:</dt>
-<dd>the dealer’s hand as a list of <a href="../cards/Card.html" title="class in com.csse3200.game.components.cards"><code>Card</code></a> objects</dd>
-</dl>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../cards/Hand.html" title="class in com.csse3200.game.components.cards">Hand</a></span>&nbsp;<span class="element-name">getDealerHand</span>()</div>
+<div class="block">Returns the dealer's hand.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="getCurrentHand()">
+<h3>getCurrentHand</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../cards/Hand.html" title="class in com.csse3200.game.components.cards">Hand</a></span>&nbsp;<span class="element-name">getCurrentHand</span>()</div>
+<div class="block">Returns the currently active player hand.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="startGame()">
 <h3>startGame</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">startGame</span>()</div>
-<div class="block">Starts a new game by resetting the deck and dealing two cards each to the
- player and dealer. Clears previous hands and sets <code>winner</code> to false.</div>
+<div class="block">Starts a new game by resetting the deck and dealing two cards each to
+ the player and dealer. Automatically moves to next hand if the player
+ has a blackjack.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="getDeck()">
+<h3>getDeck</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../cards/Deck.html" title="class in com.csse3200.game.components.cards">Deck</a></span>&nbsp;<span class="element-name">getDeck</span>()</div>
+<div class="block">Returns the deck being used in the game.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="nextHand()">
+<h3>nextHand</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">nextHand</span>()</div>
+<div class="block">Moves to the next hand if multiple hands exist. If all hands played,
+ triggers the dealer's turn.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="splitHand()">
+<h3>splitHand</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">splitHand</span>()</div>
+<div class="block">Splits the current hand into two hands if allowed (same value cards),
+ and deals one new card to each hand.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="doubleDown()">
+<h3>doubleDown</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">doubleDown</span>()</div>
+<div class="block">Doubles the current bet (sets doubled flag) and draws exactly one more card,
+ then moves to the next hand.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="getActiveHandIndex()">
+<h3>getActiveHandIndex</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">getActiveHandIndex</span>()</div>
+<div class="block">Returns the index of the currently active hand.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="isDealerTurn()">
+<h3>isDealerTurn</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isDealerTurn</span>()</div>
+<div class="block">Returns true if it is the dealer's turn.</div>
 </section>
 </li>
 </ul>

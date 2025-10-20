@@ -91,6 +91,13 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">Card</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
+<div class="block">Represents a single playing card in the game of Blackjack.
+ <p>
+ Each <code>Card</code> has a <a href="Suit.html" title="enum class in com.csse3200.game.components.cards"><code>Suit</code></a>, a <a href="Rank.html" title="enum class in com.csse3200.game.components.cards"><code>Rank</code></a>, and a
+ <code>TextureRegion</code> used for rendering its visual appearance.
+ Cards provide convenient access to their symbolic name and
+ Blackjack-specific numeric value.
+ </p></div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -105,7 +112,9 @@ loadScripts(document, 'script');</script>
 <div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(com.csse3200.game.components.cards.Suit,com.csse3200.game.components.cards.Rank,com.badlogic.gdx.graphics.g2d.TextureRegion)" class="member-name-link">Card</a><wbr>(<a href="Suit.html" title="enum class in com.csse3200.game.components.cards">Suit</a>&nbsp;suit,
  <a href="Rank.html" title="enum class in com.csse3200.game.components.cards">Rank</a>&nbsp;rank,
  com.badlogic.gdx.graphics.g2d.TextureRegion&nbsp;texture)</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">Constructs a card with the specified suit, rank, and texture.</div>
+</div>
 </div>
 </section>
 </li>
@@ -122,22 +131,34 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getName()" class="member-name-link">getName</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Returns the symbolic name of this card, combining rank and suit.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="Rank.html" title="enum class in com.csse3200.game.components.cards">Rank</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getRank()" class="member-name-link">getRank</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Returns the rank of this card.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="Suit.html" title="enum class in com.csse3200.game.components.cards">Suit</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getSuit()" class="member-name-link">getSuit</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Returns the suit of this card.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.badlogic.gdx.graphics.g2d.TextureRegion</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getTexture()" class="member-name-link">getTexture</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Returns the texture image used to render this card.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getValue()" class="member-name-link">getValue</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Returns the Blackjack value of this card.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#toString()" class="member-name-link">toString</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Returns a string representation of this card, consisting of its rank and suit symbols.</div>
+</div>
 </div>
 </div>
 </div>
@@ -161,6 +182,13 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">Card</span><wbr><span class="parameters">(<a href="Suit.html" title="enum class in com.csse3200.game.components.cards">Suit</a>&nbsp;suit,
  <a href="Rank.html" title="enum class in com.csse3200.game.components.cards">Rank</a>&nbsp;rank,
  com.badlogic.gdx.graphics.g2d.TextureRegion&nbsp;texture)</span></div>
+<div class="block">Constructs a card with the specified suit, rank, and texture.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>suit</code> - the <a href="Suit.html" title="enum class in com.csse3200.game.components.cards"><code>Suit</code></a> of the card</dd>
+<dd><code>rank</code> - the <a href="Rank.html" title="enum class in com.csse3200.game.components.cards"><code>Rank</code></a> of the card</dd>
+<dd><code>texture</code> - the <code>TextureRegion</code> image representing the card</dd>
+</dl>
 </section>
 </li>
 </ul>
@@ -175,9 +203,15 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="toString()">
 <h3>toString</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">toString</span>()</div>
+<div class="block">Returns a string representation of this card, consisting of its rank and suit symbols.
+ <p>
+ For example, the Ace of Spades might be represented as <code>"AS"</code>.
+ </p></div>
 <dl class="notes">
 <dt>Overrides:</dt>
 <dd><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#toString()" title="class or interface in java.lang" class="external-link">toString</a></code>&nbsp;in class&nbsp;<code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></code></dd>
+<dt>Returns:</dt>
+<dd>the symbolic name of this card</dd>
 </dl>
 </section>
 </li>
@@ -185,30 +219,58 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="getName()">
 <h3>getName</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">getName</span>()</div>
+<div class="block">Returns the symbolic name of this card, combining rank and suit.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>the card's symbol, such as <code>"KH"</code> or <code>"7D"</code></dd>
+</dl>
 </section>
 </li>
 <li>
 <section class="detail" id="getSuit()">
 <h3>getSuit</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="Suit.html" title="enum class in com.csse3200.game.components.cards">Suit</a></span>&nbsp;<span class="element-name">getSuit</span>()</div>
+<div class="block">Returns the suit of this card.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>the <a href="Suit.html" title="enum class in com.csse3200.game.components.cards"><code>Suit</code></a> of this card</dd>
+</dl>
 </section>
 </li>
 <li>
 <section class="detail" id="getRank()">
 <h3>getRank</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="Rank.html" title="enum class in com.csse3200.game.components.cards">Rank</a></span>&nbsp;<span class="element-name">getRank</span>()</div>
+<div class="block">Returns the rank of this card.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>the <a href="Rank.html" title="enum class in com.csse3200.game.components.cards"><code>Rank</code></a> of this card</dd>
+</dl>
 </section>
 </li>
 <li>
 <section class="detail" id="getValue()">
 <h3>getValue</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">getValue</span>()</div>
+<div class="block">Returns the Blackjack value of this card.
+ <p>
+ For example, face cards are worth 10 and an Ace is worth 1 (or 11 depending on the hand).
+ </p></div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>the numeric value of this card</dd>
+</dl>
 </section>
 </li>
 <li>
 <section class="detail" id="getTexture()">
 <h3>getTexture</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">com.badlogic.gdx.graphics.g2d.TextureRegion</span>&nbsp;<span class="element-name">getTexture</span>()</div>
+<div class="block">Returns the texture image used to render this card.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>this card's <code>TextureRegion</code></dd>
+</dl>
 </section>
 </li>
 </ul>
