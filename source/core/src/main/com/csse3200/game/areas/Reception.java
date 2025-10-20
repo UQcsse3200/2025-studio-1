@@ -39,6 +39,7 @@ public class Reception extends GameArea {
         spawnWallsAndDoor();
         player = spawnPlayer();
         spawnFloor();
+        spawnShopKiosk();
         spawnholoclock();
         spawnEnemies();
         spawnplatform2();

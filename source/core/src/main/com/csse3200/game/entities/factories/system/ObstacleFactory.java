@@ -258,7 +258,7 @@ public class ObstacleFactory {
         platform2.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
         platform2.getComponent(TextureRenderComponent.class).scaleEntity();
         platform2.scaleHeight(3f);
-        Vector2 colliderSize = new Vector2(platform2.getScale().x * 0.7f, platform2.getScale().y * 0.1f);
+        Vector2 colliderSize = new Vector2(platform2.getScale().x * 0.85f, platform2.getScale().y * 0.1f);
         Vector2 offset = new Vector2(0f, platform2.getScale().y * 0.001f);
         platform2.getComponent(ColliderComponent.class)
                 .setAsBox(colliderSize, platform2.getCenterPosition().add(offset));
@@ -272,15 +272,11 @@ public class ObstacleFactory {
     public static Entity createholoclock() {
         Entity clockSpawn =
                 new Entity()
-                        .addComponent(new TextureRenderComponent("images/holo-clock.png"))
-                        .addComponent(new PhysicsComponent())
-                        .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE))
-                        .addComponent(new HitboxComponent().setLayer(PhysicsLayer.ALL));
-        clockSpawn.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
+                        .addComponent(new TextureRenderComponent("images/holo-clock.png"));
+
         clockSpawn.getComponent(TextureRenderComponent.class).scaleEntity();
+        clockSpawn.getComponent(TextureRenderComponent.class).setZIndex(-10);
         clockSpawn.scaleHeight(2f);
-        PhysicsUtils.setScaledCollider(clockSpawn, 0.2f, 1f);
-        clockSpawn.getComponent(HitboxComponent.class).setAsBox(clockSpawn.getScale());
         return clockSpawn;
     }
     /**
@@ -357,15 +353,10 @@ public class ObstacleFactory {
     public static Entity createcomic_stand() {
         Entity comic_standSpawn =
                 new Entity()
-                        .addComponent(new TextureRenderComponent("images/comics.png"))
-                        .addComponent(new PhysicsComponent())
-                        .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE))
-                        .addComponent(new HitboxComponent().setLayer(PhysicsLayer.ALL));
-        comic_standSpawn.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
+                        .addComponent(new TextureRenderComponent("images/comics.png"));
         comic_standSpawn.getComponent(TextureRenderComponent.class).scaleEntity();
+        comic_standSpawn.getComponent(TextureRenderComponent.class).setZIndex(-99);
         comic_standSpawn.scaleHeight(1f);
-        PhysicsUtils.setScaledCollider(comic_standSpawn, 0.7f, 0.75f);
-        comic_standSpawn.getComponent(HitboxComponent.class).setAsBox(comic_standSpawn.getScale());
         return comic_standSpawn;
     }
 
@@ -413,14 +404,10 @@ public class ObstacleFactory {
     public static Entity createMhall_screen() {
         Entity Mhall_screenSpawn =
                 new Entity()
-                        .addComponent(new TextureRenderComponent("images/Mhall-screen.png"))
-                        .addComponent(new PhysicsComponent())
-                        .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
-
-        Mhall_screenSpawn.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
+                        .addComponent(new TextureRenderComponent("images/Mhall-screen.png"));
         Mhall_screenSpawn.getComponent(TextureRenderComponent.class).scaleEntity();
+        Mhall_screenSpawn.getComponent(TextureRenderComponent.class).setZIndex(-10);
         Mhall_screenSpawn.scaleHeight(1.5f);
-        PhysicsUtils.setScaledCollider(Mhall_screenSpawn, 0.7f, 0.75f);
         return Mhall_screenSpawn;
     }
 
@@ -430,13 +417,10 @@ public class ObstacleFactory {
     public static Entity createMhall_holo() {
         Entity Mhall_holoSpawn =
                 new Entity()
-                        .addComponent(new TextureRenderComponent("images/Mhall-holo.png"))
-                        .addComponent(new PhysicsComponent())
-                        .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
-        Mhall_holoSpawn.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
+                        .addComponent(new TextureRenderComponent("images/Mhall-holo.png"));
         Mhall_holoSpawn.getComponent(TextureRenderComponent.class).scaleEntity();
+        Mhall_holoSpawn.getComponent(TextureRenderComponent.class).setZIndex(-10);
         Mhall_holoSpawn.scaleHeight(1.5f);
-        PhysicsUtils.setScaledCollider(Mhall_holoSpawn, 0.7f, 0.75f);
         return Mhall_holoSpawn;
     }
     /**

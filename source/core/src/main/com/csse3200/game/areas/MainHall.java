@@ -160,7 +160,7 @@ public class MainHall extends GameArea {
         float PlatformX = 10.5f;
         float PlatformY = 7f;
         float PlatformX2 = 5f;
-        float PlatformY2 = 9f;
+        float PlatformY2 = 8f;
         float PlatformX3 = 1.5f;
         float PlatformY3 = 5f;
         float PlatformX4 = 8f;
