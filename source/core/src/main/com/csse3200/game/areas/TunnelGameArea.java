@@ -165,20 +165,6 @@ public class TunnelGameArea extends GameArea {
     }
 
     /**
-     * Spawn 2 high-level grok droids in the room as enemies.
-     */
-    private void spawnGrokDroids() {
-        Entity grok1 = NPCFactory.createGrokDroid(player, this,
-                ServiceLocator.getDifficulty().getRoomDifficulty(TunnelGameArea.ROOM_DIFF_NUMBER));
-        GridPoint2 grok1Pos = new GridPoint2(25, 7);
-        spawnEntityAt(grok1, grok1Pos, true, false);
-        Entity grok2 = NPCFactory.createGrokDroid(player, this,
-                ServiceLocator.getDifficulty().getRoomDifficulty(TunnelGameArea.ROOM_DIFF_NUMBER));
-        GridPoint2 grok2Pos = new GridPoint2(25, 7);
-        spawnEntityAt(grok2, grok2Pos, true, false);
-    }
-
-    /**
      * Spawn the spikes
      */
     private void spawnSpikes() {

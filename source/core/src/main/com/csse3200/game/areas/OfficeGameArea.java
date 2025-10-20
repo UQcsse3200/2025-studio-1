@@ -8,7 +8,6 @@ import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.factories.system.TeleporterFactory;
-import com.csse3200.game.services.ServiceLocator;
 
 /**
  * Office room: minimal walls and two doors (left--Security, right--Elevator).
@@ -16,7 +15,6 @@ import com.csse3200.game.services.ServiceLocator;
 public class OfficeGameArea extends GameArea {
     private static final float WALL_WIDTH = 0.1f;
     private static GridPoint2 playerSpawn = new GridPoint2(10, 10);
-    private Entity player;
     private static boolean isCleared;
 
     public OfficeGameArea(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
@@ -59,7 +57,7 @@ public class OfficeGameArea extends GameArea {
         spawnEntity(new Entity().addComponent(terrain));
 
         spawnBordersAndDoors();
-        player = spawnPlayer();
+        Entity player = spawnPlayer();
         spawnFloor();
         spawnObjectDoors(new GridPoint2(0, 14), new GridPoint2(28, 20));
         spawnPlatforms();

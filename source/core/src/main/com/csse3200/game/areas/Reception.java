@@ -144,15 +144,6 @@ public class Reception extends GameArea {
         return spawnOrRepositionPlayer(playerSpawn);
     }
 
-    private void spawnEnemies() {
-        if (player == null)
-            return;
-
-        Entity vroomba = com.csse3200.game.entities.factories.characters.NPCFactory.createVroomba(player,
-                ServiceLocator.getDifficulty().getRoomDifficulty(this.roomDiffNumber));
-        spawnEntityAt(vroomba, new GridPoint2(5, 17), true, false);
-    }
-
     private void spawnGPTs() {
         Entity ghost1 = NPCFactory.createGhostGPT(player, this, ServiceLocator.getDifficulty().getRoomDifficulty(this.roomDiffNumber));
         GridPoint2 ghost1Pos = new GridPoint2(25, 7);

@@ -175,37 +175,6 @@ public class ShippingGameArea extends GameArea {
     }
 
     /**
-     * Spawn 2 high-level grok droids in the room as enemies.
-     */
-    private void spawnGrokDroids() {
-        Entity grok1 = NPCFactory.createGrokDroid(player, this,
-                ServiceLocator.getDifficulty().getRoomDifficulty(ShippingGameArea.ROOM_DIFF_NUMBER));
-        GridPoint2 grok1Pos = new GridPoint2(25, 7);
-        spawnEntityAt(grok1, grok1Pos, true, false);
-        Entity grok2 = NPCFactory.createGrokDroid(player, this,
-                ServiceLocator.getDifficulty().getRoomDifficulty(ShippingGameArea.ROOM_DIFF_NUMBER));
-        GridPoint2 grok2Pos = new GridPoint2(25, 7);
-        spawnEntityAt(grok2, grok2Pos, true, false);
-    }
-
-    /**
-     * Spawn a Vroomba and a Deepspin to diversify Shipping enemies.
-     */
-    private void spawnVroombaAndDeepspin() {
-        // Vroomba on the left side floor
-        Entity vroomba = NPCFactory.createVroomba(player,
-                ServiceLocator.getDifficulty().getRoomDifficulty(ShippingGameArea.ROOM_DIFF_NUMBER));
-        GridPoint2 vPos = new GridPoint2(6, 7);
-        spawnEntityAt(vroomba, vPos, true, false);
-
-        // Deepspin on the right side near crates
-        Entity deepspin = NPCFactory.createDeepspin(player, this,
-                ServiceLocator.getDifficulty().getRoomDifficulty(ShippingGameArea.ROOM_DIFF_NUMBER));
-        GridPoint2 dPos = new GridPoint2(22, 8);
-        spawnEntityAt(deepspin, dPos, true, false);
-    }
-
-    /**
      * Clears the game area and loads the previous section (Research).
      */
     private void loadFlyingBossRoom() {

@@ -154,24 +154,6 @@ public class ResearchGameArea extends GameArea {
     }
 
     /**
-     * Spawn a pair of enemies to keep Research lively.
-     */
-    private void spawnEnemies() {
-        if (player == null)
-            return;
-
-        // Vroomba near the bottom platforms
-        Entity vroomba = com.csse3200.game.entities.factories.characters.NPCFactory.createVroomba(player,
-                ServiceLocator.getDifficulty().getRoomDifficulty(ResearchGameArea.ROOM_DIFF_NUMBER));
-        spawnEntityAt(vroomba, new GridPoint2(8, 6), true, false);
-
-        // Deepspin near the top right area
-        Entity deepspin = com.csse3200.game.entities.factories.characters.NPCFactory.createDeepspin(player, this,
-                ServiceLocator.getDifficulty().getRoomDifficulty(ResearchGameArea.ROOM_DIFF_NUMBER));
-        spawnEntityAt(deepspin, new GridPoint2(24, 15), true, false);
-    }
-
-    /**
      * Teleporter bottom-left
      */
     private void spawnTeleporter() {

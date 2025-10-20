@@ -167,22 +167,6 @@ public class SecurityGameArea extends GameArea {
     }
 
     /**
-     * Spawn a Vroomba and Deepspin in Security room.
-     */
-    private void spawnEnemies() {
-        if (player == null)
-            return;
-
-        Entity vroomba = com.csse3200.game.entities.factories.characters.NPCFactory.createVroomba(player,
-                ServiceLocator.getDifficulty().getRoomDifficulty(SecurityGameArea.ROOM_DIFF_NUMBER));
-        spawnEntityAt(vroomba, new GridPoint2(8, 6), true, false);
-
-        Entity deepspin = com.csse3200.game.entities.factories.characters.NPCFactory.createDeepspin(player, this,
-                ServiceLocator.getDifficulty().getRoomDifficulty(SecurityGameArea.ROOM_DIFF_NUMBER));
-        spawnEntityAt(deepspin, new GridPoint2(22, 12), true, false);
-    }
-
-    /**
      * Teleporter entity bottom-left
      */
     private void spawnTeleporter() {

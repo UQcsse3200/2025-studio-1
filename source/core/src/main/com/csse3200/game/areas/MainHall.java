@@ -9,12 +9,10 @@ import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.ItemSpawnConfig;
-import com.csse3200.game.entities.factories.characters.NPCFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.entities.spawner.ItemSpawner;
 import com.csse3200.game.entities.factories.system.TeleporterFactory;
 import com.csse3200.game.rendering.SolidColorRenderComponent;
-import com.csse3200.game.services.ServiceLocator;
 
 /**
  * Room 5 with its own background styling.
@@ -23,7 +21,6 @@ public class MainHall extends GameArea {
     private static final float WALL_WIDTH = 0.1f;
     private static GridPoint2 playerSpawn = new GridPoint2(10, 10);
     private Entity player;
-    private int roomDiffNumber = 3;
     private static boolean isCleared;
 
     public MainHall(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
@@ -148,22 +145,6 @@ public class MainHall extends GameArea {
         return spawnOrRepositionPlayer(playerSpawn);
     }
 
-    // private void spawnEnemies() {
-    //     if (player == null)
-    //         return;
-
-    //     Entity deepspin = com.csse3200.game.entities.factories.characters.NPCFactory.createDeepspin(player, this,
-    //             ServiceLocator.getDifficulty().getRoomDifficulty(this.roomDiffNumber));
-    //     registerEnemy(deepspin);
-    //     spawnEntityAt(deepspin, new GridPoint2(22, 10), true, false);
-    // }
-
-    // private void spawnGrokDroids() {
-    //     Entity grok1 = NPCFactory.createGrokDroid(player, this,
-    //             ServiceLocator.getDifficulty().getRoomDifficulty(this.roomDiffNumber));
-    //     GridPoint2 grok1Pos = new GridPoint2(10, 20);
-    //     spawnEntityAt(grok1, grok1Pos, true, false);
-    // }
     /**
      * Spawns 4 platforms for parkour
      **/

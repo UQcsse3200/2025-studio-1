@@ -12,7 +12,6 @@ import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.entities.factories.system.TeleporterFactory;
 import com.csse3200.game.physics.PhysicsLayer;
 import com.csse3200.game.physics.PhysicsUtils;
-import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.physics.components.ColliderComponent;
 import com.csse3200.game.physics.components.HitboxComponent;
 import com.csse3200.game.physics.components.PhysicsComponent;
@@ -25,7 +24,6 @@ import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 public class ElevatorGameArea extends GameArea {
     private static final float WALL_WIDTH = 0.1f;
     private static boolean isCleared = false;
-    private Entity player;
     private static GridPoint2 playerSpawn = new GridPoint2(10, 10);
 
     public ElevatorGameArea(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
@@ -47,7 +45,7 @@ public class ElevatorGameArea extends GameArea {
         terrain = terrainFactory.createTerrain(TerrainType.ELEVATOR);
         spawnEntity(new Entity().addComponent(terrain));
         spawnBordersAndDoors();
-        player = spawnPlayer();
+        Entity player = spawnPlayer();
         spawnObjectDoors(new GridPoint2(0, 6), new GridPoint2(28, 19));
         spawnFloor();
         spawnPlatforms();
@@ -148,10 +146,13 @@ public class ElevatorGameArea extends GameArea {
      * Spawn a few floating platforms
      */
     private void spawnPlatforms() {
-        float p1x = 1f, p1y = 4f;
+        float p1x = 1f;
+        float p1y = 4f;
         // teleporter will be at (0.5,3f) below first platform
-        float p2x = 5f, p2y = 6f;
-        float p3x = 10f, p3y = 6f;
+        float p2x = 5f;
+        float p2y = 6f;
+        float p3x = 10f;
+        float p3y = 6f;
 
         Entity plat1 = com.csse3200.game.entities.factories.system.ObstacleFactory.createElevatorPlatform();
         plat1.setPosition(p1x, p1y);
