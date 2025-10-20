@@ -315,6 +315,10 @@ public class SlotsDisplay extends UIComponent {
         if (background != null) background.setVisible(false);
         if (root != null) root.setVisible(false);
         if (dimmer != null) dimmer.setVisible(false);
+        if (stage != null) {
+            stage.setKeyboardFocus(null);
+            stage.unfocusAll();
+        }
     }
 
     @Override
