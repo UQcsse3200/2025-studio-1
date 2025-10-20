@@ -377,12 +377,6 @@ public class ForestGameArea extends GameArea {
         spawnTeleporter();
     }
 
-    private void spawnRobots() {
-        GridPoint2 pos = new GridPoint2(8, 13);
-        Entity robot = BossFactory.createRobot(player);
-        spawnEntityAt(robot, pos, true, true);
-
-    }
 
     private void displayUI() {
         Entity ui = new Entity();

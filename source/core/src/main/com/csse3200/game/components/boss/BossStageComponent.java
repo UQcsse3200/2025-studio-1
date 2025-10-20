@@ -55,8 +55,6 @@ public class BossStageComponent extends Component {
 
         BossChargeSkillComponent move = entity.getComponent(BossChargeSkillComponent.class);
         if (move != null) move.setAttack(false);
-
-        // ★ 关键：切换刚体类型，抵抗外部击退
         PhysicsComponent phys = entity.getComponent(PhysicsComponent.class);
         if (phys != null && phys.getBody() != null) {
             Body body = phys.getBody();

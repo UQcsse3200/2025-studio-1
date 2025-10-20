@@ -1,5 +1,6 @@
 package com.csse3200.game.entities.factories.characters;
 
+import com.csse3200.game.areas.GameArea;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
@@ -47,16 +48,21 @@ public class BossFactory {
         animator.addAnimation("die", 0.10f, Animation.PlayMode.NORMAL);
 
         Vector2 moveSpeed = new Vector2(2.5f, 2.5f);
-
+        float scale = 1f;
+        var diff = ServiceLocator.getDifficulty();
+        GameArea area = ServiceLocator.getGameArea();
+        float room = (area != null) ? area.roomNumber() : 1f;
+        if (diff != null) scale = diff.getRoomDifficulty(room);
+        int hp = (int) (500f * scale);
         Entity robot = new Entity()
                 .addComponent(new PhysicsComponent())
                 .addComponent(new PhysicsMovementComponent(moveSpeed))
                 .addComponent(new ColliderComponent())
                 .addComponent(new HitboxComponent().setLayer(PhysicsLayer.NPC))
                 .addComponent(new BossAnimationController())
-                .addComponent(new TouchAttackComponent(PhysicsLayer.PLAYER, 1.5f))
-                .addComponent(new CombatStatsComponent(1000))
-                .addComponent(new WeaponsStatsComponent(5))
+                .addComponent(new TouchAttackComponent(PhysicsLayer.PLAYER, 1.5f*scale))
+                .addComponent(new CombatStatsComponent(hp))
+                .addComponent(new WeaponsStatsComponent(Math.max(1, Math.round(5f * scale))))
                 .addComponent(new BossStatusDisplay("Boss_1"))
                 .addComponent(new BossDeathComponent())
                 .addComponent(animator);
@@ -83,7 +89,6 @@ public class BossFactory {
                 5,
                 0.25f
         ));
-
         int maxHp = robot.getComponent(CombatStatsComponent.class).getHealth();
         int defenseHp = Math.round(maxHp * 0.30f);
 
@@ -131,7 +136,13 @@ public class BossFactory {
 
     public static Entity createBoss2(Entity target) {
         Entity boss2 = createBaseBoss2(target);
-
+        float scale = 1f;
+        var diff = ServiceLocator.getDifficulty();
+        GameArea area = ServiceLocator.getGameArea();
+        float room = (area != null) ? area.roomNumber() : 1f;
+        if (diff != null) scale = diff.getRoomDifficulty(room);
+        int hp = (int) (500f * scale);
+         int damage = (int) (5f * scale);
         BaseEntityConfig config = configs.boss2;
         InventoryComponent playerInventory =
                 (target != null) ? target.getComponent(InventoryComponent.class) : null;
@@ -143,7 +154,7 @@ public class BossFactory {
         float patrolSpeed = 4f;
 
         boss2
-                .addComponent(new CombatStatsComponent(1000))
+                .addComponent(new CombatStatsComponent(hp))
                 .addComponent(new DamageReductionComponent())
                 .addComponent(new AttackProtectionComponent())
                 .addComponent(new AttackProtectionDisplay())
@@ -153,7 +164,7 @@ public class BossFactory {
                         "idle", "phase2", "angry"
                 ))
                 .addComponent(new BossStageComponent(boss2))
-                .addComponent(new FireballAttackComponent(target, 1.5f, 8f, 6f, config.baseAttack + 2))
+                .addComponent(new FireballAttackComponent(target, 1.5f, 8f, 6f, damage))
                 .addComponent(new BossChargeSkillComponent(
                         target,
                         7f,
@@ -190,6 +201,12 @@ public class BossFactory {
     public static Entity createBoss3(Entity target) {
         BaseEntityConfig config = configs.boss3;
         InventoryComponent playerInventory = null;
+        float scale = 1f;
+        var diff = ServiceLocator.getDifficulty();
+        GameArea area = ServiceLocator.getGameArea();
+        float room = (area != null) ? area.roomNumber() : 1f;
+        if (diff != null) scale = diff.getRoomDifficulty(room);
+        int hp = (int) (500f * scale);
         if (target != null) {
             playerInventory = target.getComponent(InventoryComponent.class);
         }
@@ -197,7 +214,7 @@ public class BossFactory {
                 .addComponent(new PhysicsComponent())
                 .addComponent(new ColliderComponent())
                 .addComponent(new HitboxComponent().setLayer(PhysicsLayer.NPC))
-                .addComponent(new CombatStatsComponent(500))
+                .addComponent(new CombatStatsComponent(hp))
                 .addComponent(new WeaponsStatsComponent(config.baseAttack))
                 .addComponent(new EnemyDeathRewardComponent(100, playerInventory))
                 .addComponent(new BossDeathComponent())
@@ -252,15 +269,21 @@ public class BossFactory {
     }
 
     public static Entity createFireball(Vector2 from, Vector2 velocity) {
+        float scale = 1f;
+        var diff = ServiceLocator.getDifficulty();
+        GameArea area = ServiceLocator.getGameArea();
+        float room = (area != null) ? area.roomNumber() : 1f;
+        if (diff != null) scale = diff.getRoomDifficulty(room);
+        int damage = (int) (3f * scale);
         Entity fireball = new Entity()
                 .addComponent(new PhysicsComponent())
                 .addComponent(new FireballMovementComponent(velocity))
                 .addComponent(new ColliderComponent())
                 .addComponent(new HitboxComponent().setLayer(PhysicsLayer.ENEMY_PROJECTILE))
                 .addComponent(new CombatStatsComponent(1))
-                .addComponent(new WeaponsStatsComponent(1))
+                .addComponent(new WeaponsStatsComponent(damage))
                 .addComponent(new PhysicsProjectileComponent())
-                .addComponent(new TouchAttackComponent(PhysicsLayer.PLAYER, 1f));
+                .addComponent(new TouchAttackComponent(PhysicsLayer.PLAYER, 1f*scale));
         fireball.setPosition(from);
         TextureRenderComponent texture = new TextureRenderComponent("images/laserball.png");
         fireball.addComponent(texture);
@@ -279,12 +302,18 @@ public class BossFactory {
     }
 
     public static Entity createMissle(Vector2 from) {
+        float scale = 1f;
+        var diff = ServiceLocator.getDifficulty();
+        GameArea area = ServiceLocator.getGameArea();
+        float room = (area != null) ? area.roomNumber() : 1f;
+        if (diff != null) scale = diff.getRoomDifficulty(room);
+        int damage = (int) (3f * scale);
         Entity missle = new Entity()
                 .addComponent(new PhysicsComponent())
                 .addComponent(new ColliderComponent())
                 .addComponent(new HitboxComponent().setLayer(PhysicsLayer.ENEMY_PROJECTILE))
                 .addComponent(new CombatStatsComponent(1))
-                .addComponent(new WeaponsStatsComponent(12))
+                .addComponent(new WeaponsStatsComponent(damage))
                 .addComponent(new PhysicsProjectileComponent())
                 .addComponent(new MissleMovementComponent(3f))
                 .addComponent(new TouchAttackComponent(PhysicsLayer.PLAYER, 1f));
@@ -343,7 +372,6 @@ public class BossFactory {
         arc.addAnimation("phase2", 0.1f, Animation.PlayMode.LOOP);
         arc.addAnimation("angry", 0.1f, Animation.PlayMode.LOOP);
         boss.addComponent(arc);
-        // 碰撞体缩放
         PhysicsUtils.setScaledCollider(boss, 0.9f, 0.4f);
 
         boss.addComponent(new ApplyInitialBoss2Setup(4f, "idle"));
@@ -370,28 +398,7 @@ public class BossFactory {
      * @param target The player entity that the boss will chase and attack
      * @return Enhanced Robot entity with cocoon spawning capability
      */
-    public static Entity createRobotWithCocoons(Entity target) {
-        // Create original robot using existing method
-        Entity robot = createRobot(target);
-        robot
-                .addComponent(new PhysicsComponent())
-                .addComponent(new ColliderComponent());
 
-        // Add cocoon spawner component to existing robot
-        Vector2[] cocoonPositions = getDefaultCocoonPositions();
-        robot.addComponent(new CocoonSpawnerComponent(0.30f, cocoonPositions));
-
-        // Add event listeners for cocoon spawning
-        robot.getEvents().addListener("cocoonsSpawned", (Integer count) -> {
-            System.out.println("Boss defense activated! " + count + " cocoons spawned!");
-        });
-
-        robot.getEvents().addListener("allCocoonsDestroyed", () -> {
-            System.out.println("All cocoons destroyed! Boss defense can be overcome!");
-        });
-
-        return robot;
-    }
 
     public static class ApplyInitialBoss2Setup extends Component {
         private final float scaleK;
