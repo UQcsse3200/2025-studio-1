@@ -14,10 +14,11 @@ import com.csse3200.game.services.ServiceLocator;
 public class PartnerFollowComponent extends Component {
     private final Entity player;
     private static final float STOP_RADIUS = 1.0f;
-    private static final float TELEPORT_R  = 5.0f;
-    private static final float SPEED       = 8.0f;
+    private static final float TELEPORT_R = 5.0f;
+    private static final float SPEED = 8.0f;
     private static final Vector2 TELEPORT_OFFSET = new Vector2(0.8f, 0f);
     private boolean move = true;
+
     public PartnerFollowComponent(Entity player) {
         this.player = player;
     }
@@ -29,7 +30,9 @@ public class PartnerFollowComponent extends Component {
         float dt = 0.016f;
         try {
             dt = ServiceLocator.getTimeSource().getDeltaTime();
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+            // ignore exception
+        }
 
         Vector2 myPos = entity.getPosition();
         Vector2 plPos = player.getPosition();
@@ -54,9 +57,11 @@ public class PartnerFollowComponent extends Component {
             entity.setPosition(myPos.x + toPlayer.x, myPos.y + toPlayer.y);
         }
     }
+
     public void setMove(boolean move) {
         this.move = move;
     }
+
     public boolean isMove() {
         return move;
     }

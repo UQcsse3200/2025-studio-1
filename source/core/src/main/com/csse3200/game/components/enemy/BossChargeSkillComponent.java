@@ -34,6 +34,7 @@ public class BossChargeSkillComponent extends Component {
     private boolean crash = false;
     private GameTime time;
     private AITaskComponent ai;
+
     public BossChargeSkillComponent(Entity target,
                                     float triggerRange,
                                     float dwellTime,

@@ -18,12 +18,14 @@ public class Boss2AnimationController extends Component {
     private final Speeds speeds;
     private final Animation.PlayMode loopMode;
     private AnimationRenderComponent arc;
+
     /**
      * Use default names (idle/patrol/prep/charge/return/cooldown/death/hurt) and default speeds.
      */
     public Boss2AnimationController() {
         this(new Names(), new Speeds(), Animation.PlayMode.LOOP);
     }
+
     /**
      * Fully custom names and speeds. Set any name to null to disable that animation.
      */

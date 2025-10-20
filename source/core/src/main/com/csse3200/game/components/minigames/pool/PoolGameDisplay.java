@@ -143,13 +143,17 @@ public class PoolGameDisplay extends UIComponent {
         hide();
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void draw(SpriteBatch batch) {
         // Scene2D stage handles all rendering
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void dispose() {
         if (pixel != null) {
@@ -192,7 +196,9 @@ public class PoolGameDisplay extends UIComponent {
         if (foulLbl != null) foulLbl.setText(msg == null ? "" : msg);
     }
 
-    /** Clears any displayed foul message. */
+    /**
+     * Clears any displayed foul message.
+     */
     public void clearFoul() {
         setFoul("");
     }
@@ -217,13 +223,17 @@ public class PoolGameDisplay extends UIComponent {
     }
 
 
-    /** Shows the pool minigame UI. */
+    /**
+     * Shows the pool minigame UI.
+     */
     public void show() {
         running = true;
         setVisible(true);
     }
 
-    /** Hides the pool minigame UI and triggers a stop event. */
+    /**
+     * Hides the pool minigame UI and triggers a stop event.
+     */
     public void hide() {
         setVisible(false);
         entity.getEvents().trigger(GameEvents.STOP);
@@ -240,7 +250,9 @@ public class PoolGameDisplay extends UIComponent {
     }
 
 
-    /** Loads all texture and atlas assets for the pool UI. */
+    /**
+     * Loads all texture and atlas assets for the pool UI.
+     */
     private void loadAssets() {
         tableTex = ServiceLocator.getResourceService().getAsset("images/pool/table.png", Texture.class);
         TextureAtlas ballAtlas = ServiceLocator.getResourceService().getAsset("images/pool/balls.atlas", TextureAtlas.class);
@@ -254,7 +266,9 @@ public class PoolGameDisplay extends UIComponent {
         cueBallTex = new TextureRegion(cueBallTextureRaw);
     }
 
-    /** Builds the dimmer overlay and panel background layers. */
+    /**
+     * Builds the dimmer overlay and panel background layers.
+     */
     private void buildBackdrop() {
         pixel = makeSolid(Color.WHITE);
 
@@ -274,7 +288,9 @@ public class PoolGameDisplay extends UIComponent {
         stage.addActor(background);
     }
 
-    /** Builds the root table container for the UI layout. */
+    /**
+     * Builds the root table container for the UI layout.
+     */
     private void buildRoot() {
         root = new Table();
         root.setSize(PANEL_W, PANEL_H);
@@ -285,7 +301,9 @@ public class PoolGameDisplay extends UIComponent {
         stage.addActor(root);
     }
 
-    /** Builds the header section containing the title and score HUD. */
+    /**
+     * Builds the header section containing the title and score HUD.
+     */
     private void buildHeader() {
         Label titleLbl = label("8-Ball Pool", TITLE_COLOR, 1.5f);
         p1Lbl = label("P1: 0", GOLD);
@@ -308,7 +326,9 @@ public class PoolGameDisplay extends UIComponent {
         root.add(foulRow).growX().padTop(2).row();
     }
 
-    /** Builds and embeds the interactive {@link PoolTable} widget. */
+    /**
+     * Builds and embeds the interactive {@link PoolTable} widget.
+     */
     private void buildTableArea() {
         float aspect = (float) tableTex.getWidth() / tableTex.getHeight();
         float targetW = PANEL_W - 40f;
@@ -358,7 +378,9 @@ public class PoolGameDisplay extends UIComponent {
         root.add(poolTable).size(targetW, targetH).padTop(6).row();
     }
 
-    /** Builds the footer controls: power slider, guide toggle, and buttons. */
+    /**
+     * Builds the footer controls: power slider, guide toggle, and buttons.
+     */
     private void buildFooter() {
         powerSlider = new Slider(0f, 1f, 0.01f, false, skin);
         powerSlider.setValue(0.5f);
@@ -432,7 +454,9 @@ public class PoolGameDisplay extends UIComponent {
     }
 
 
-    /** Updates interactivity (guide toggle, shoot button, cue visibility) per frame. */
+    /**
+     * Updates interactivity (guide toggle, shoot button, cue visibility) per frame.
+     */
     private void updateUiState() {
         if (controller == null || poolTable == null) return;
 
@@ -456,7 +480,9 @@ public class PoolGameDisplay extends UIComponent {
         }
     }
 
-    /** Wires game event listeners to update the HUD reactively. */
+    /**
+     * Wires game event listeners to update the HUD reactively.
+     */
     private void wireHudEvents() {
         entity.getEvents().addListener(GameEvents.TURN, (Integer current, Integer p1, Integer p2) -> {
             setScores(p1, p2);
@@ -502,7 +528,9 @@ public class PoolGameDisplay extends UIComponent {
      * plus current ball pixel radius; the controller returns the clamped guide length in pixels.
      */
     public interface Controller {
-        /** Starts a new rack or resets the current one. */
+        /**
+         * Starts a new rack or resets the current one.
+         */
         void onStart();
 
         /**
@@ -514,24 +542,30 @@ public class PoolGameDisplay extends UIComponent {
          */
         void onShoot(float dirX, float dirY, float power);
 
-        /** Resets the rack positions without leaving the UI. */
+        /**
+         * Resets the rack positions without leaving the UI.
+         */
         void onReset();
 
-        /** Stops the minigame and hides the UI. */
+        /**
+         * Stops the minigame and hides the UI.
+         */
         void onStop();
 
         /**
          * Returns the maximum guide length in pixels, capped using physics raycasts.
          *
-         * @param cuePosNorm    cue position in normalized table space ([0..1])
-         * @param dirNorm       normalized aim direction
-         * @param desiredLenPx  desired guide length in pixels
-         * @param ballPx        cue ball radius in pixels
+         * @param cuePosNorm   cue position in normalized table space ([0..1])
+         * @param dirNorm      normalized aim direction
+         * @param desiredLenPx desired guide length in pixels
+         * @param ballPx       cue ball radius in pixels
          * @return clamped guide length in pixels
          */
         float capGuideLenPx(Vector2 cuePosNorm, Vector2 dirNorm, float desiredLenPx, float ballPx);
 
-        /** @return true while a shot is in progress (balls are moving). */
+        /**
+         * @return true while a shot is in progress (balls are moving).
+         */
         boolean isShotActive();
     }
 }

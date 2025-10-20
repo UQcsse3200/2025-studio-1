@@ -65,6 +65,7 @@ public class ArmourEquipComponent extends Component {
 
     /**
      * Method used to check for duplicate armour types. Ensures each armour type is equipped only once.
+     *
      * @param item Armour being equipped.
      * @return True if armour is already equipped, false otherwise.
      */
