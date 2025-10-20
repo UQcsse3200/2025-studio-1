@@ -32,48 +32,37 @@ class GameAreaCoreMethodsTest {
     void testGetRoomNumber() {
         // Test different room types
         GameArea reception = new Reception(terrainFactory, cameraComponent);
-        ServiceLocator.registerGameArea(reception);
         assertEquals(2, reception.getRoomNumber());
         
         GameArea mainHall = new MainHall(terrainFactory, cameraComponent);
-        ServiceLocator.registerGameArea(mainHall);
         assertEquals(3, mainHall.getRoomNumber());
         
         GameArea security = new SecurityGameArea(terrainFactory, cameraComponent);
-        ServiceLocator.registerGameArea(security);
         assertEquals(4, security.getRoomNumber());
         
         GameArea office = new OfficeGameArea(terrainFactory, cameraComponent);
-        ServiceLocator.registerGameArea(office);
         assertEquals(5, office.getRoomNumber());
         
         GameArea elevator = new ElevatorGameArea(terrainFactory, cameraComponent);
-        ServiceLocator.registerGameArea(elevator);
         assertEquals(6, elevator.getRoomNumber());
         
         GameArea research = new ResearchGameArea(terrainFactory, cameraComponent);
-        ServiceLocator.registerGameArea(research);
         assertEquals(7, research.getRoomNumber());
         
         GameArea shipping = new ShippingGameArea(terrainFactory, cameraComponent);
-        ServiceLocator.registerGameArea(shipping);
         assertEquals(8, shipping.getRoomNumber());
         
         GameArea storage = new StorageGameArea(terrainFactory, cameraComponent);
-        ServiceLocator.registerGameArea(storage);
         assertEquals(9, storage.getRoomNumber());
         
         GameArea server = new ServerGameArea(terrainFactory, cameraComponent);
-        ServiceLocator.registerGameArea(server);
         assertEquals(10, server.getRoomNumber());
         
         GameArea tunnel = new TunnelGameArea(terrainFactory, cameraComponent);
-        ServiceLocator.registerGameArea(tunnel);
         assertEquals(11, tunnel.getRoomNumber());
         
         // Test default case - use a concrete implementation
         GameArea forest = new ForestGameArea(terrainFactory, cameraComponent);
-        ServiceLocator.registerGameArea(forest);
         assertEquals(1, forest.getRoomNumber());
     }
 

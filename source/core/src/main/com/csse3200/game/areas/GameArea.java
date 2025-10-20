@@ -147,11 +147,11 @@ public abstract class GameArea implements Disposable {
                 return;
             }
             int maxWaves = room > 4 ? 2 : 1; // mimic original behaviour: higher rooms get 2 waves
-            wavesManager = new EnemyWaves(maxWaves, ServiceLocator.getGameArea(), player);
+            wavesManager = new EnemyWaves(maxWaves, this, player);
             //EnemyWavesDisplay waveDisplay = new EnemyWavesDisplay(wavesManager);
             Gdx.app.log("GameArea", "Initializing waves: room=" + room + " maxWaves=" + maxWaves);
-            wavesManager.startWave();
         }
+        wavesManager.startWave();
     }
 
     /**
@@ -170,7 +170,7 @@ public abstract class GameArea implements Disposable {
      * with 2 being any number, otherwise returns 1.
      */
     public int getRoomNumber() {
-        return switch (ServiceLocator.getGameArea().toString()) {
+        return switch (this.toString()) {
             case "Reception" -> 2;
             case "Mainhall" -> 3;
             case "Security" -> 4;
@@ -1235,7 +1235,6 @@ public abstract class GameArea implements Disposable {
                     }
                 } finally {
                     endTransition();
-                    startWaves(getPlayer());
                 }
             });
         });
