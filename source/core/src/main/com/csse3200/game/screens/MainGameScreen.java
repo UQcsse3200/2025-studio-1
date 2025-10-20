@@ -293,18 +293,18 @@ public class MainGameScreen extends ScreenAdapter {
     public void dispose() {
         logger.debug("Disposing main game screen");
 
-        // Dispose lighting first (safe if null)
-        var ls = ServiceLocator.getLightingService();
-        if (ls != null && ls.getEngine() != null) {
-            ls.getEngine().dispose();
-        }
-
         renderer.dispose();
         unloadAssets();
 
         // Preserve player entity during disposal
         Entity player = ServiceLocator.getPlayer();
         ServiceLocator.getEntityService().disposeExceptPlayer();
+
+        var ls = ServiceLocator.getLightingService();
+        if (ls != null && ls.getEngine() != null) {
+            ls.getEngine().dispose();
+        }
+
         ServiceLocator.getRenderService().dispose();
         ServiceLocator.getResourceService().dispose();
         ServiceLocator.clearExceptPlayer();
