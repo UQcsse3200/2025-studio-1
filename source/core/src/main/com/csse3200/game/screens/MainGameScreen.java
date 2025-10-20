@@ -145,6 +145,8 @@ public class MainGameScreen extends ScreenAdapter {
                 default -> gameArea = null;
             }
 
+            clearUpTo(load.getGameArea());
+
             //will instantiate all items
             if (gameArea != null) {
                 ServiceLocator.registerGameArea(gameArea);
@@ -498,5 +500,33 @@ public class MainGameScreen extends ScreenAdapter {
         MovingBossRoom.unclearRoom();
         StaticBossRoom.unclearRoom();
         FlyingBossRoom.unclearRoom();
+    }
+
+    /**
+     * Clears all rooms up to specified room
+     * Should be called when loading in.
+     * 
+     * @param room room that the player will be spawned in.
+     * Clear all rooms behind it
+     */
+    private void clearUpTo(String room) {
+        String[] roomList = {"Forest", "Reception", "Mainhall",
+                "Security", "MovingBossRoom", "Office", "Elevator",
+                "Research", "FlyingBossRoom", "Shipping",
+                "Storage", "Server", "Tunnel"};
+                
+        Runnable[] runnables = {() -> {}, Reception::clearRoom,
+                MainHall::clearRoom, SecurityGameArea::clearRoom,
+                OfficeGameArea::clearRoom, ElevatorGameArea::clearRoom,
+                ResearchGameArea::clearRoom, FlyingBossRoom::clearRoom,
+                ShippingGameArea::clearRoom, StorageGameArea::clearRoom,
+                ServerGameArea::clearRoom, TunnelGameArea::clearRoom};
+                
+        int i = 0;
+        for (String eachRoom : roomList) {
+            if (eachRoom.equals(room)) return;
+            runnables[i].run();
+            i++;
+        }
     }
 }
