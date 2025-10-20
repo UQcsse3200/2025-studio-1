@@ -70,12 +70,22 @@ public class WhackAMoleGame {
             display.hide();
             onStop();
             uiShown = false;
-        } else {
-            resetRuntime();
-            display.prepareToPlay();
-            display.show();
-            uiShown = true;
+            return;
         }
+
+        // If no bet yet, open the betting UI first
+        if(!betPlaced) {
+            com.csse3200.game.components.minigames.BettingComponent bet =
+                    gameEntity.getComponent(com.csse3200.game.components.minigames.BettingComponent.class);
+            if (bet != null) {
+                bet.show(); // betting panel pauses the game.
+            }
+            return;
+        }
+        resetRuntime();
+        display.prepareToPlay();
+        display.show();
+        uiShown = true;
     }
 
     /**
@@ -198,6 +208,14 @@ public class WhackAMoleGame {
 
     private void onBetPlaced() {
         betPlaced = true;
+
+        // If the game UI isn't open yet, open and prep.
+        if (!uiShown) {
+            resetRuntime();
+            display.prepareToPlay();
+            display.show();
+            uiShown = true;
+        }
     }
 
     /**
