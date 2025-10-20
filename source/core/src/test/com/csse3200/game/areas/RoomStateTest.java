@@ -1,7 +1,5 @@
 package com.csse3200.game.areas;
 
-import com.csse3200.game.areas.terrain.TerrainFactory;
-import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.components.DoorComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
@@ -22,14 +20,9 @@ import java.util.ArrayList;
 @ExtendWith(GameExtension.class)
 class RoomStateTest {
 
-    private TerrainFactory terrainFactory;
-    private CameraComponent cameraComponent;
-
     @BeforeEach
     void beforeEach() {
         ServiceLocator.registerEntityService(new EntityService());
-        TerrainFactory terrainFactory = mock(TerrainFactory.class);
-        CameraComponent camera = mock(CameraComponent.class);
     }
 
     @Test
