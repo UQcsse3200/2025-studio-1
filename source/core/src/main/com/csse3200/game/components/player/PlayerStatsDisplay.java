@@ -62,8 +62,8 @@ public class PlayerStatsDisplay extends BaseScreenDisplay {
         entity.getEvents().addListener("updateHealth", this::updatePlayerHealthUI);
         entity.getEvents().addListener("staminaChanged", this::updatePlayerStaminaUI);
         entity.getEvents().addListener("updateProcessor", this::updatePlayerProcessorUI);
-        entity.getEvents().addListener("shoot", this::updateAmmoUI);
-        entity.getEvents().addListener("reload", this::updateAmmoUI);
+        entity.getEvents().addListener("after shoot", this::updateAmmoUI);
+        entity.getEvents().addListener("after reload", this::updateAmmoUI);
         entity.getEvents().addListener("pick up", this::updateAmmoUI);
         entity.getEvents().addListener("ammo replenished", this::updateAmmoUI);
         entity.getEvents().addListener("focus item", this::updateAmmoUIAfterSwitch);

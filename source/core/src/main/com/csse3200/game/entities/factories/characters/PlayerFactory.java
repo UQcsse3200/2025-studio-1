@@ -4,13 +4,9 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.csse3200.game.components.*;
 import com.csse3200.game.components.player.*;
-import com.csse3200.game.effects.DoubleProcessorsEffect;
-import com.csse3200.game.effects.Effect;
-import com.csse3200.game.effects.RapidFireEffect;
 import com.csse3200.game.entities.AvatarRegistry;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.characters.PlayerConfig;
-import com.csse3200.game.entities.configs.consumables.RapidFireConsumableConfig;
 import com.csse3200.game.files.FileLoader;
 import com.csse3200.game.input.InputComponent;
 import com.csse3200.game.physics.PhysicsLayer;
@@ -28,15 +24,42 @@ import com.csse3200.game.services.ServiceLocator;
  * the properties stored in 'PlayerConfig'.
  */
 public class PlayerFactory {
-    private static final PlayerConfig stats = safeLoadPlayerConfig();
+    private static PlayerConfig stats;
 
     private PlayerFactory() {
         throw new IllegalStateException("Instantiating static util class");
     }
 
+    /**
+     *
+     * @return the player config
+     */
+    public static PlayerConfig getStats() {
+        if (stats == null) {
+            stats = safeLoadPlayerConfig();
+        }
+        return stats;
+    }
+
+    /**
+     * Sets the stats
+     * @param pc PlayerConfig
+     */
+    public static void setStats(PlayerConfig pc) {
+        stats = pc;
+    }
+
+    /**
+     * resets the stats (for testing)
+     */
+    public static void reset() {
+        stats = null;
+    }
+
     private static PlayerConfig safeLoadPlayerConfig() {
         PlayerConfig cfg = FileLoader.readClass(PlayerConfig.class, "configs/player.json");
         if (cfg == null) {
+            System.out.println("ITS NULL?");
             cfg = new PlayerConfig();
             cfg.gold = 0;
             cfg.health = 100;
@@ -53,6 +76,7 @@ public class PlayerFactory {
     public static Entity createPlayer() {
         InputComponent inputComponent =
                 ServiceLocator.getInputService().getInputFactory().createForPlayer();
+        stats = safeLoadPlayerConfig();
         InventoryComponent playerInventory = new InventoryComponent(stats.gold);
 
         AnimationRenderComponent animator = new AnimationRenderComponent(
@@ -91,93 +115,14 @@ public class PlayerFactory {
         player.getComponent(AnimationRenderComponent.class).scaleEntity(2f);
 
         // Scale and set up Player Colliders
-        PhysicsUtils.setScaledCollider(player, groundCollider,0.2f, 0.1f);
-        PhysicsUtils.setScaledCollider(player, playerCollider, 0.3f, 0.5f);
+        PhysicsUtils.setScaledCollider(player, groundCollider,0.15f, 0.1f);
+        PhysicsUtils.setScaledCollider(player, playerCollider, 0.2f, 0.4f);
         playerCollider.setDensity(1.5f);
         playerCollider.setFriction(0f);
         PhysicsUtils.setScaledCollider(player, player.getComponent(InteractComponent.class), 1f, 0.75f);
 
         player.getComponent(WeaponsStatsComponent.class).setCoolDown(0.2f);
-
-
-        // pick up rapid fire powerup
-        // remove this if we have item pickup available
-        // (disposes entity when player go near it)
-        player.addComponent(new Component() {
-            @Override
-            public void update() {
-                var entities = ServiceLocator.getEntityService().getEntities();
-                for (int i = 0; i < entities.size; i++) {
-                    Entity entityPowerup = entities.get(i);
-                    TagComponent tag = entityPowerup.getComponent(TagComponent.class);
-
-                    if (tag != null) {
-                        if (tag.getTag().equals("rapidfire")) {
-                            if (entityPowerup.getCenterPosition().dst(player.getCenterPosition()) < 1f) {
-                                InventoryComponent inventory = player.getComponent(InventoryComponent.class);
-                                Entity equippedWeapon = inventory.getCurrItem();
-
-                                if (equippedWeapon != null) {
-                                    RapidFireConsumableConfig config = new RapidFireConsumableConfig();
-                                    for (Effect e : config.effects) {
-                                        if (e instanceof RapidFireEffect rapidFireEffect) {
-                                            player.getComponent(PowerupComponent.class).setEquippedWeapon(equippedWeapon);
-                                            player.getComponent(PowerupComponent.class).addEffect(rapidFireEffect);
-                                        }
-                                    }
-                                }
-                                entityPowerup.dispose();
-                            }
-                        }
-
-                        if (tag.getTag().equals("unlimitedammo")) {
-                            if (entityPowerup.getCenterPosition().dst(player.getCenterPosition()) < 1f) {
-                                InventoryComponent inventory = player.getComponent(InventoryComponent.class);
-                                Entity equippedWeapon = inventory.getCurrItem();
-
-                                if (equippedWeapon != null) {
-                                    PowerupComponent powerup = player.getComponent(PowerupComponent.class);
-                                    powerup.setEquippedWeapon(equippedWeapon);
-                                    PlayerActions playerActions = player.getComponent(PlayerActions.class);
-                                    playerActions.getUnlimitedAmmoEffect().apply(equippedWeapon);
-                                    powerup.addEffect(playerActions.getUnlimitedAmmoEffect());
-                                }
-                                entityPowerup.dispose();
-                            }
-                        }
-
-                        if (tag.getTag().equals("aimbot")) {
-                            if (entityPowerup.getCenterPosition().dst(player.getCenterPosition()) < 1f) {
-                                InventoryComponent inventory = player.getComponent(InventoryComponent.class);
-                                Entity equippedWeapon = inventory.getCurrItem();
-
-                                if (equippedWeapon != null) {
-                                    PowerupComponent powerup = player.getComponent(PowerupComponent.class);
-                                    powerup.setEquippedWeapon(equippedWeapon);
-                                    PlayerActions playerActions = player.getComponent(PlayerActions.class);
-                                    playerActions.getAimbotEffect().apply(equippedWeapon);
-                                    powerup.addEffect(playerActions.getAimbotEffect());
-                                }
-                                entityPowerup.dispose();
-                            }
-                        }
-
-                        if (tag.getTag().equals("doubleprocessors")) {
-                            if (entityPowerup.getCenterPosition().dst(player.getCenterPosition()) < 1f) {
-                                PowerupComponent powerup = player.getComponent(PowerupComponent.class);
-                                if (powerup != null) {
-                                    DoubleProcessorsEffect effect = new DoubleProcessorsEffect(30f);
-                                    powerup.addEffect(effect);
-                                }
-                                entityPowerup.dispose();
-                            }
-                        }
-                    }
-                }
-            }
-        });
-
-
+        player.addComponent(new PowerComponent(player));
         return player;
     }
 

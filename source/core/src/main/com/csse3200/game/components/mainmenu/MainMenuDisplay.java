@@ -163,7 +163,6 @@ public class MainMenuDisplay extends UIComponent {
         table.add(titleStack)
                 .size(targetW, targetH)     // <-- this makes it taller on screen
                 .left().padBottom(1.5f).padLeft(-10f);
-        table.row();
         table.add(startBtn).padTop(1.5f).left();
         table.row();
         table.add(startBtn).padTop(15f).left();

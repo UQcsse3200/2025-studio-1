@@ -51,7 +51,7 @@ public class CombatStatsComponent extends Component {
     /**
      * Construct a combat Stats Component (Health + Attack System)
      *
-     * @param health initial health (values {@code < 0} are clamped to {@code 0})
+     * @param health              initial health (values {@code < 0} are clamped to {@code 0})
      * @param knockbackResistance The knockback resistance of this entity. Value range is [0, 1], where 0 means
      *                            0% knockback resistance, and 1 means 100% knockback resistance (not affected by
      *                            knockback at all)
@@ -199,9 +199,10 @@ public class CombatStatsComponent extends Component {
 
     /**
      * Gets the knockback resistance of this entity
+     *
      * @return The knockback resistance of this entity. Value range is [0, 1], where 0 means
-     *                           0% knockback resistance, and 1 means 100% knockback resistance (not affected by
-     *                           knockback at all)
+     * 0% knockback resistance, and 1 means 100% knockback resistance (not affected by
+     * knockback at all)
      */
     public float getKnockbackResistance() {
         return knockbackResistance;

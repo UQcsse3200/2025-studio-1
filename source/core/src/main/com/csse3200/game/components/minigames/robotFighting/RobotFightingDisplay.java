@@ -666,12 +666,12 @@ public class RobotFightingDisplay extends UIComponent {
     /**
      * Creates an AnimatedImage fighter from a texture atlas and animation name.
      *
-     * @param robot         enum of robot type
-     * @param animName      name of the animation region inside the atlas
-     * @param x             X position on stage
-     * @param y             Y position on stage
-     * @param width         desired display width
-     * @param height        desired display height
+     * @param robot    enum of robot type
+     * @param animName name of the animation region inside the atlas
+     * @param x        X position on stage
+     * @param y        Y position on stage
+     * @param width    desired display width
+     * @param height   desired display height
      * @return an AnimatedImage ready to be added to the stage
      */
     private AnimatedImage createFighter(Robot robot, String animName,
@@ -695,7 +695,8 @@ public class RobotFightingDisplay extends UIComponent {
         // Add a simple fade-in effect
 
         fighter.addListener(new ClickListener() {
-            @Override public void clicked(InputEvent event, float x, float y) {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
                 switch (robot) {
                     case DEEP_SPIN -> selectedFighter = Robot.DEEP_SPIN;
                     case GHOST_GPT -> selectedFighter = Robot.GHOST_GPT;
