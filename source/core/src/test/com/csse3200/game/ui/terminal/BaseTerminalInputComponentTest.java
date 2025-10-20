@@ -149,6 +149,50 @@ class BaseTerminalInputComponentTest {
         }
     }
 
+    @Test
+    void keyTyped_printable_boundaries_andExtended_append_andReturnTrue() {
+        Terminal terminal = mock(Terminal.class);
+        when(terminal.isOpen()).thenReturn(true);
+
+        BaseTerminalInputComponentTest.TestInput comp = new BaseTerminalInputComponentTest.TestInput(terminal);
+
+        // low boundary (32) space – if you already test space elsewhere, you can keep or drop this call
+        assertTrue(comp.keyTyped(' '));
+        // high ASCII boundary (126) tilde
+        assertTrue(comp.keyTyped('~'));
+        // extended ASCII/Unicode >= 128
+        assertTrue(comp.keyTyped((char) 128));
+        // explicit Unicode example (Euro sign)
+        assertTrue(comp.keyTyped('\u20AC'));
+
+        // verify appends for each printable char
+        verify(terminal, times(4)).isOpen();
+        verify(terminal).appendToMessage(' ');
+        verify(terminal).appendToMessage('~');
+        verify(terminal).appendToMessage((char) 128);
+        verify(terminal).appendToMessage('\u20AC');
+        verifyNoMoreInteractions(terminal);
+    }
+
+    @Test
+    void keyTyped_nonPrintable_belowSpace_returnsFalse_andNoAppend() {
+        Terminal terminal = mock(Terminal.class);
+        when(terminal.isOpen()).thenReturn(true);
+
+        BaseTerminalInputComponentTest.TestInput comp = new BaseTerminalInputComponentTest.TestInput(terminal);
+
+        // 31 is just below space -> not printable
+        assertFalse(comp.keyTyped((char) 31));
+
+        verify(terminal).isOpen();
+        verify(terminal, never()).appendToMessage(anyChar());
+        verify(terminal, never()).handleBackspace();
+        verify(terminal, never()).processMessage();
+        verify(terminal, never()).toggleIsOpen();
+        verify(terminal, never()).setEnteredMessage(anyString());
+        verifyNoMoreInteractions(terminal);
+    }
+
     /**
      * Minimal concrete seam for testing protected/abstract bits.
      */
