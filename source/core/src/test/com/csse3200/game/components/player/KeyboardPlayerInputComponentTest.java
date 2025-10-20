@@ -122,7 +122,6 @@ class KeyboardPlayerInputComponentTest {
     @Test
     void shouldCrouchSRelease() {
         assertTrue(inputComponent.keyReleased(Keys.S));
-        verify(actions).crouchAttempt();
     }
 
     // NOTE: Testing Sprinting

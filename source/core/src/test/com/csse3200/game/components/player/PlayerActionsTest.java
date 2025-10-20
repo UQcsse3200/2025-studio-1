@@ -20,8 +20,7 @@ import org.mockito.InOrder;
 
 import java.lang.reflect.Field;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
@@ -376,7 +375,7 @@ class PlayerActionsTest {
         crouchingField.setAccessible(true);
         boolean crouchingState = crouchingField.getBoolean(actions);
 
-        assertEquals(true, crouchingState, "Player should be crouching when grounded and crouchAttempt is called");
+        assertTrue(crouchingState, "Player should be crouching when grounded and crouchAttempt is called");
     }
 
     private static Vector2 approx(Vector2 expected) {
@@ -386,6 +385,7 @@ class PlayerActionsTest {
                         Math.abs(v.y - expected.y) <= (float) 0.001
         );
     }
+
 //    @Test
 //    void shouldNotCrouchWhileAirborne() throws Exception {
 //        PhysicsComponent physicsComponent = mock(PhysicsComponent.class);
