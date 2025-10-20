@@ -358,9 +358,9 @@ public class BossFactory {
      */
     public static Vector2[] getDefaultCocoonPositions() {
         return new Vector2[]{
-                new Vector2(5f, 6f),
-                new Vector2(9f, 3f),
-                new Vector2(12f, 3f),
+                new Vector2(4f, 4f),
+                new Vector2(11f, 4f),
+                new Vector2(8f, 9f),
         };
     }
 
