@@ -35,7 +35,7 @@ public class CasinoGameArea extends GameArea {
             "images/hole.png",
             "images/pool/cue.png",
             "images/pool/cue_ball.png",
-            "images/pool/table.png",
+            "images/pool/table.png"
     };
     private static final String[] CASINO_ATLAS = {
             "images/pool/balls.atlas"
@@ -111,9 +111,9 @@ public class CasinoGameArea extends GameArea {
                         new com.badlogic.gdx.math.Vector2(0f, 0f),             // no local offset
                         new Color(1f, 0.25f, 0.85f, 0.70f),                    // c1 (alpha = brightness)
                         new Color(0.20f, 0.95f, 1f, 0.70f),                    // c2
-                        17.5f,                                                   // base radius
+                        17.5f,                                                 // base radius
                         4.5f,                                                  // pulse amount
-                        1.5f,                                                    // speed
+                        1.5f,                                                  // speed
                         true                                                   // xray -> no shadows
                 ));
 
