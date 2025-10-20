@@ -23,7 +23,6 @@ public class WhackAMoleGame {
     private final Entity gameEntity;
     private final WhackAMoleDisplay display;
 
-    private boolean betPlaced = false;
     private boolean uiShown = false;
     private boolean running = false;
 
@@ -39,11 +38,10 @@ public class WhackAMoleGame {
     public WhackAMoleGame() {
         gameEntity = initGameEntity();
         display = gameEntity.getComponent(WhackAMoleDisplay.class);
-        gameEntity.getEvents().addListener("interact", this::onInteract);
+        gameEntity.getEvents().addListener("betPlaced", this::onInteract);
         gameEntity.getEvents().addListener("wm:start", this::onStart);
         gameEntity.getEvents().addListener("wm:stop", this::onStop);
         gameEntity.getEvents().addListener("wm:hit", this::onHit);
-        gameEntity.getEvents().addListener("betPlaced", this::onBetPlaced);
     }
 
     /**
@@ -85,12 +83,6 @@ public class WhackAMoleGame {
      */
     private void onStart() {
         if (running) return;
-
-        if (!betPlaced) {
-            display.showEnd("Place a Bet", "Set a bet before starting the round.");
-            display.setRunning(false);
-            return;
-        }
 
         running = true;
         resetRuntime();
@@ -177,7 +169,7 @@ public class WhackAMoleGame {
             display.resetScore();
             display.showEnd("You Lose", "You missed " + misses + " moles.\nTry again!");
             gameEntity.getEvents().trigger("lose");
-            betPlaced = false;
+            gameEntity.getEvents().trigger("interact");
         }
     }
 
@@ -192,12 +184,9 @@ public class WhackAMoleGame {
             display.resetScore();
             display.showEnd("You Win!", "Reached " + TARGET_SCORE + " points!");
             gameEntity.getEvents().trigger("win");
-            betPlaced = false;
-        }
-    }
+            gameEntity.getEvents().trigger("interact");
 
-    private void onBetPlaced() {
-        betPlaced = true;
+        }
     }
 
     /**
