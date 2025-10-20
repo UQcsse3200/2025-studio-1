@@ -15,7 +15,7 @@ public class SpeedBenchConfig extends BenchConfig {
     public SpeedBenchConfig() {
         benchType = ItemTypes.SPEED_BENCH;
         texturePath = "images/speedBench.png";
-        price = 1000;
+        price = 500;
         promptText = "Press E to boost speed for " + price;
         upgradeUsed = false;
     }

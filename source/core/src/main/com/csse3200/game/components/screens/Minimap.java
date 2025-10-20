@@ -20,36 +20,55 @@ import org.slf4j.LoggerFactory;
  * The minimap supports scaling (zoom in/out), panning centered on the player's current position,
  * and rendering only the visible rooms within the current viewport. Each minimap image is
  * represented as a com.badlogic.gdx.scenes.scene2d.ui.Image}.
- *
  */
 public class Minimap {
-    /** Path to the texture used for undiscovered or locked rooms. */
+    /**
+     * Path to the texture used for undiscovered or locked rooms.
+     */
     private static final String LOCKED = "images/minimap-images/Locked.png";
-    /** Logger instance for error and debugging output. */
+    /**
+     * Logger instance for error and debugging output.
+     */
     private static final Logger logger = LoggerFactory.getLogger(Minimap.class);
-    /** Default image height for a room in pixels. */
+    /**
+     * Default image height for a room in pixels.
+     */
     public static final int IMAGE_HEIGHT = 720;
-    /** Default image width for a room in pixels. */
+    /**
+     * Default image width for a room in pixels.
+     */
     public static final int IMAGE_WIDTH = 1280;
 
-    /** Maps grid coordinates to corresponding minimap image paths. */
+    /**
+     * Maps grid coordinates to corresponding minimap image paths.
+     */
     private final Map<Vector2, String> grid;
-    /** Maps room names to their positions in the minimap grid. */
+    /**
+     * Maps room names to their positions in the minimap grid.
+     */
     private final Map<String, Vector2> roomPositions;
-    /** Current zoom scale of the minimap (1 = default, >1 = zoomed in). */
+    /**
+     * Current zoom scale of the minimap (1 = default, >1 = zoomed in).
+     */
     private float scale;
-    /** The current center of the minimap in terms of map coordinates. */
+    /**
+     * The current center of the minimap in terms of map coordinates.
+     */
     private Vector2 centre;
-    /** The height of the screen (in pixels). */
+    /**
+     * The height of the screen (in pixels).
+     */
     private final int screenHeight;
-    /** The width of the screen (in pixels). */
+    /**
+     * The width of the screen (in pixels).
+     */
     private final int screenWidth;
 
     /**
      * Creates a new Minimap with the given screen dimensions.
      *
      * @param screenHeight the height of the screen in pixels
-     * @param screenWidth the width of the screen in pixels
+     * @param screenWidth  the width of the screen in pixels
      */
     public Minimap(int screenHeight, int screenWidth) {
         this.screenHeight = screenHeight;
@@ -64,8 +83,8 @@ public class Minimap {
      * Creates a new {@code Minimap} using predefined room grid data.
      *
      * @param screenHeight the height of the screen in pixels
-     * @param screenWidth the width of the screen in pixels
-     * @param grid a map of grid coordinates to room names
+     * @param screenWidth  the width of the screen in pixels
+     * @param grid         a map of grid coordinates to room names
      */
     public Minimap(int screenHeight, int screenWidth, Map<Vector2, String> grid) {
         this(screenHeight, screenWidth);
@@ -78,8 +97,8 @@ public class Minimap {
      * Creates a new {@code Minimap} using predefined config file.
      *
      * @param screenHeight the height of the screen in pixels
-     * @param screenWidth the width of the screen in pixels
-     * @param filepath a path to the config file
+     * @param screenWidth  the width of the screen in pixels
+     * @param filepath     a path to the config file
      */
     public Minimap(int screenHeight, int screenWidth, String filepath) {
         this(screenHeight, screenWidth);
@@ -107,7 +126,7 @@ public class Minimap {
      * must be unique across the minimap.
      *
      * @param coordinates the grid coordinates (integer x, y) of the room
-     * @param roomName the name of the room
+     * @param roomName    the name of the room
      * @return true if the room was successfully added, false otherwise
      */
     public boolean addRoom(Vector2 coordinates, String roomName) {
@@ -178,6 +197,7 @@ public class Minimap {
     /**
      * Zooms the minimap in or out by a specified percentage.
      * Requires: percentage is in the range (-100, infinity)
+     *
      * @param percentage the percentage to zoom (positive = zoom in, negative = zoom out)
      */
     public void zoom(float percentage) {
@@ -199,6 +219,7 @@ public class Minimap {
     /**
      * Pans the images across by moving the centre of the minimap area.
      * It will shift the images across by the number of screen pixels specified in vector.
+     *
      * @param vector magnitude and direction of pixel shift when panning.
      */
     public void pan(Vector2 vector) {
@@ -241,6 +262,7 @@ public class Minimap {
 
     /**
      * Returns the centre of the minimap.
+     *
      * @return The centre of the minimap as a {@link Vector2}
      */
     public Vector2 getCentre() {

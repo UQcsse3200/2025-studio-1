@@ -26,6 +26,7 @@ public class Boss3HealthPhaseSwitcher extends Component {
     private final float frameDuration;
     private final List<Phase> phases = new ArrayList<>();
     private float lastAppliedThreshold = 1.01f;
+
     public Boss3HealthPhaseSwitcher(String atlasPath, float frameDuration) {
         this.atlasPath = atlasPath;
         this.frameDuration = frameDuration;

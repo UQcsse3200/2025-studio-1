@@ -43,7 +43,7 @@ public class MinimapDisplay extends BaseScreenDisplay {
     /**
      * Constructs a screen display bound to a game instance and minimap.
      *
-     * @param game game instance for navigation (e.g., {@link #backMainMenu()})
+     * @param game    game instance for navigation (e.g., {@link #backMainMenu()})
      * @param minimap The minimap object made by {@link Minimap}
      */
     public MinimapDisplay(GdxGame game, Minimap minimap) {
@@ -202,8 +202,8 @@ public class MinimapDisplay extends BaseScreenDisplay {
      * Zooms in or out on the minimap by 25% depending on the scroll direction
      * and renders the zoomed in map at the position of the cursor
      *
-     * @param x x coordinate of the mouse cursor
-     * @param y y coordinate of the mouse cursor
+     * @param x       x coordinate of the mouse cursor
+     * @param y       y coordinate of the mouse cursor
      * @param amountY The scroll direction, negative is scroll down i.e., zoom out and
      *                positive is scroll up i.e., zoom in
      */
