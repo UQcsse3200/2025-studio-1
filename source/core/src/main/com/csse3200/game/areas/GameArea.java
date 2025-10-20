@@ -676,7 +676,7 @@ public abstract class GameArea implements Disposable {
             }
             case "Security" -> {
                 respectiveSpawns.add(new Vector2(12f, 10f));
-                respectiveSpawns.add(new Vector2(2f, 5f));
+                respectiveSpawns.add(new Vector2(2f, 8f));
                 positions.put(GHOST_GPT, respectiveSpawns);
                 respectiveSpawns = new ArrayList<>();
                 respectiveSpawns.add(new Vector2(7f, 11f));
@@ -734,9 +734,6 @@ public abstract class GameArea implements Disposable {
                 respectiveSpawns.add(new Vector2(11f, 11f));
                 respectiveSpawns.add(new Vector2(11f, 8f));
                 positions.put(GHOST_GPT, respectiveSpawns);
-                respectiveSpawns = new ArrayList<>();
-                respectiveSpawns.add(new Vector2(3f, 6f));
-                positions.put(TURRET, respectiveSpawns);
                 respectiveSpawns = new ArrayList<>();
                 respectiveSpawns.add(new Vector2(3f, 10f));
                 respectiveSpawns.add(new Vector2(5f, 10f));
