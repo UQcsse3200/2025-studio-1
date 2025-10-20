@@ -38,6 +38,9 @@ public class DiscoBallLightComponent extends Component {
         this.xray = xray;
     }
 
+    /**
+     * Creates the underlying light and positions it at the entity.
+     */
     @Override
     public void create() {
         RayHandler rh = ServiceLocator.getLightingService().getEngine().getRayHandler();
@@ -50,6 +53,9 @@ public class DiscoBallLightComponent extends Component {
         light.setPosition(p.x + offset.x, p.y + offset.y);
     }
 
+    /**
+     * Follows the entity and animates colour and distance over time.
+     */
     @Override
     public void update() {
         if (light == null) return;
@@ -66,6 +72,9 @@ public class DiscoBallLightComponent extends Component {
         light.setDistance(baseDist + pulseDist * (float)(0.5 + 0.5 * Math.sin(t * speed * 1.7)));
     }
 
+    /**
+     * Removes the light from the RayHandler and clears references.
+     */
     @Override
     public void dispose() {
         if (light != null) {

@@ -83,6 +83,9 @@ public class CasinoGameArea extends GameArea {
         spawnPoolGame();
     }
 
+    /**
+     * Load textures, atlases and sounds used by this room.
+     */
     private void ensureAssets() {
         ResourceService rs = ServiceLocator.getResourceService();
         rs.loadTextures(CASINO_TEXTURES);
@@ -91,6 +94,9 @@ public class CasinoGameArea extends GameArea {
         rs.loadAll();
     }
 
+    /**
+     * Unload textures, atlases and sounds when leaving the room.
+     */
     private void unloadAssets() {
         ResourceService rs = ServiceLocator.getResourceService();
         rs.unloadAssets(CASINO_TEXTURES);
@@ -99,6 +105,10 @@ public class CasinoGameArea extends GameArea {
 
     }
 
+    /**
+     * Adds a pulsing point light at the top centre
+     * to simulate a simple disco ball.
+     */
     private void spawnDiscoBall() {
         // place it at the top-middle of the visible room
         Bounds b = getCameraBounds(cameraComponent);
@@ -155,6 +165,9 @@ public class CasinoGameArea extends GameArea {
         return spawnOrRepositionPlayer(PLAYER_SPAWN);
     }
 
+    /**
+     * Spawns the Whack-A-Mole station and wires its betting component.
+     */
     private void spawnWhackAMoleGame() {
         GridPoint2 pos = new GridPoint2(5, 7);
 
@@ -167,11 +180,17 @@ public class CasinoGameArea extends GameArea {
         spawnEntityAt(station, pos, true, true);
     }
 
+    /**
+     * Spawns the robot fighting minigame station.
+     */
     private void spawnRobotFightingGame() {
         GridPoint2 pos = new GridPoint2(16, 7);
         spawnEntityAt(new RobotFightingGame().getGameEntity(), pos, true, true);
     }
 
+    /**
+     * Spawns the pool table minigame.
+     */
     private void spawnPoolGame() {
         GridPoint2 pos = new GridPoint2(11, 7);
         spawnEntityAt(new PoolGame().getGameEntity(), pos, true, true);
@@ -196,6 +215,9 @@ public class CasinoGameArea extends GameArea {
         return player;
     }
 
+    /**
+     * Spawns the Blackjack table, betting, game logic, and UI hook.
+     */
     private void spawnBlackjack() {
         Entity blackjack = InteractableStationFactory.createBaseStation();
         blackjack.addComponent(new TextureRenderComponent("images/blackjack_table.png"));
@@ -205,6 +227,9 @@ public class CasinoGameArea extends GameArea {
         spawnEntityAt(blackjack, new GridPoint2(20, 7), true, true);
     }
 
+    /**
+     * Spawns the slot machine with betting wired in.
+     */
     private void spawnSlotsGame() {
         GridPoint2 pos = new GridPoint2(23, 7);
         InventoryComponent inv = player.getComponent(InventoryComponent.class);
