@@ -195,11 +195,19 @@ public class SecurityGameArea extends GameArea {
         return null;
     }
 
+    /**
+     * Clear room, set this room's static
+     * boolean isCleared variable to true
+     */
     public static void clearRoom() {
         SecurityGameArea.isCleared = true;
         logger.debug("Security is cleared");
     }
 
+    /**
+     * Unclear room, set this room's static
+     * boolean isCleared variable to false
+     */
     public static void unclearRoom() {
         SecurityGameArea.isCleared = false;
         logger.debug("Security is uncleared");

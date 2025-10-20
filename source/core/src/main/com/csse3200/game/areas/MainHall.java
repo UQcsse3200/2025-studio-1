@@ -220,11 +220,19 @@ public class MainHall extends GameArea {
         return "Mainhall";
     }
 
+    /**
+     * Clear room, set this room's static
+     * boolean isCleared variable to true
+     */
     public static void clearRoom() {
         MainHall.isCleared = true;
         logger.debug("Main Hall is cleared");
     }
 
+    /**
+     * Unclear room, set this room's static
+     * boolean isCleared variable to false
+     */
     public static void unclearRoom() {
         MainHall.isCleared = false;
         logger.debug("Main hall is uncleared");

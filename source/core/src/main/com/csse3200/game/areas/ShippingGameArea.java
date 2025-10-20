@@ -200,11 +200,19 @@ public class ShippingGameArea extends GameArea {
         return null;
     }
 
+    /**
+     * Clear room, set this room's static
+     * boolean isCleared variable to true
+     */
     public static void clearRoom() {
         ShippingGameArea.isCleared = true;
         logger.debug("Shipping is cleared");
     }
 
+    /**
+     * Unclear room, set this room's static
+     * boolean isCleared variable to false
+     */
     public static void unclearRoom() {
         ShippingGameArea.isCleared = false;
         logger.debug("Shipping is uncleared");

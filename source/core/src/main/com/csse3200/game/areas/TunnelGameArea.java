@@ -265,11 +265,19 @@ public class TunnelGameArea extends GameArea {
         };
     }
 
+    /**
+     * Clear room, set this room's static
+     * boolean isCleared variable to true
+     */
     public static void clearRoom() {
         TunnelGameArea.isCleared = true;
         logger.debug("Reception is cleared");
     }
 
+    /**
+     * Unclear room, set this room's static
+     * boolean isCleared variable to false
+     */
     public static void unclearRoom() {
         TunnelGameArea.isCleared = false;
         logger.debug("Tunnel is cleared");

@@ -191,11 +191,19 @@ public class FlyingBossRoom extends GameArea {
         return "FlyingBoss";
     }
 
+    /**
+     * Clear room, set this room's static
+     * boolean isCleared variable to true
+     */
     public static void clearRoom() {
         FlyingBossRoom.isCleared = true;
         logger.debug("Flying Boss Room is cleared");
     }
 
+    /**
+     * Unclear room, set this room's static
+     * boolean isCleared variable to false
+     */
     public static void unclearRoom() {
         FlyingBossRoom.isCleared = false;
         logger.debug("Flying Boss Room is uncleared");

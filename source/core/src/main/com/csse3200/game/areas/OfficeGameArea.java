@@ -201,11 +201,19 @@ public class OfficeGameArea extends GameArea {
         return null;
     }
 
+    /**
+     * Clear room, set this room's static
+     * boolean isCleared variable to true
+     */
     public static void clearRoom() {
         OfficeGameArea.isCleared = true;
         logger.debug("Office is cleared");
     }
 
+    /**
+     * Unclear room, set this room's static
+     * boolean isCleared variable to false
+     */
     public static void unclearRoom() {
         OfficeGameArea.isCleared = false;
         logger.debug("Office is uncleared");

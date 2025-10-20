@@ -234,11 +234,19 @@ public class ElevatorGameArea extends GameArea {
         return null;
     }
 
+    /**
+     * Clear room, set this room's static
+     * boolean isCleared variable to true
+     */
     public static void clearRoom() {
         ElevatorGameArea.isCleared = true;
         logger.debug("Elevator is cleared");
     }
 
+    /**
+     * Unclear room, set this room's static
+     * boolean isCleared variable to false
+     */
     public static void unclearRoom() {
         ElevatorGameArea.isCleared = false;
         logger.debug("Elevator is uncleared");

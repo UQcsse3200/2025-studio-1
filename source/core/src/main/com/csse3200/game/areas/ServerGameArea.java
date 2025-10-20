@@ -317,11 +317,19 @@ public class ServerGameArea extends GameArea {
         return "Server";
     }
 
+    /**
+     * Clear room, set this room's static
+     * boolean isCleared variable to true
+     */
     public static void clearRoom() {
         ServerGameArea.isCleared = true;
         logger.debug("Server is cleared");
     }
 
+    /**
+     * Unclear room, set this room's static
+     * boolean isCleared variable to false
+     */
     public static void unclearRoom() {
         ServerGameArea.isCleared = false;
         logger.debug("Server is uncleared");

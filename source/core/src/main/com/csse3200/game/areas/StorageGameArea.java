@@ -185,11 +185,19 @@ public class StorageGameArea extends GameArea {
         return null;
     }
 
+    /**
+     * Clear room, set this room's static
+     * boolean isCleared variable to true
+     */
     public static void clearRoom() {
         StorageGameArea.isCleared = true;
         logger.debug("Storage is cleared");
     }
 
+    /**
+     * Unclear room, set this room's static
+     * boolean isCleared variable to false
+     */
     public static void unclearRoom() {
         StorageGameArea.isCleared = false;
         logger.debug("Storage is uncleared");

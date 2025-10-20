@@ -244,11 +244,19 @@ public class Reception extends GameArea {
         return player;
     }
 
+    /**
+     * Clear room, set this room's static
+     * boolean isCleared variable to true
+     */
     public static void clearRoom() {
         Reception.isCleared = true;
         logger.debug("Reception is cleared");
     }
 
+    /**
+     * Unclear room, set this room's static
+     * boolean isCleared variable to false
+     */
     public static void unclearRoom() {
         Reception.isCleared = false;
         logger.debug("Reception is uncleared");
