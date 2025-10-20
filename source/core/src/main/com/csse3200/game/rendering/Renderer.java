@@ -7,6 +7,7 @@ import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.csse3200.game.areas.*;
 import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.lighting.LightingService;
@@ -108,7 +109,35 @@ public class Renderer implements Disposable {
         if (ls != null && ls.getEngine() != null) {
             // Only render lights in rooms that actually spawn lights
             var area = ServiceLocator.getGameArea();
-            if (area instanceof com.csse3200.game.areas.CasinoGameArea) {
+            if (area instanceof CasinoGameArea) {
+                ls.getEngine().render();
+            } else if (area instanceof Reception) {
+                ls.getEngine().render();
+            } else if (area instanceof MainHall) {
+                ls.getEngine().render();
+            } else if (area instanceof SecurityGameArea) {
+                ls.getEngine().render();
+            } else if (area instanceof OfficeGameArea) {
+                ls.getEngine().render();
+            } else if (area instanceof ElevatorGameArea) {
+                ls.getEngine().render();
+            } else if (area instanceof ResearchGameArea) {
+                ls.getEngine().render();
+            } else if (area instanceof ShippingGameArea) {
+                ls.getEngine().render();
+            } else if (area instanceof StorageGameArea) {
+                ls.getEngine().render();
+            } else if (area instanceof ServerGameArea) {
+                ls.getEngine().render();
+            } else if (area instanceof TunnelGameArea) {
+                ls.getEngine().render();
+            } else if (area instanceof FlyingBossRoom) {
+                ls.getEngine().render();
+            } else if (area instanceof MovingBossRoom) {
+                ls.getEngine().render();
+            } else if (area instanceof StaticBossRoom) {
+                ls.getEngine().render();
+            } else if (area instanceof SecretRoomGameArea) {
                 ls.getEngine().render();
             }
         }

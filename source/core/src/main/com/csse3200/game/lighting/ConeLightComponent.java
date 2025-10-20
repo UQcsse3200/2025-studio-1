@@ -11,7 +11,6 @@ public class ConeLightComponent extends Component {
     private final int rays;
     private final Color color;
     private final float distance;
-    private final float coneDegree;
     private final boolean xray;
     private final Vector2 offset;
     private ConeLight light;
@@ -20,7 +19,6 @@ public class ConeLightComponent extends Component {
         this.rays = rays;
         this.color = color;
         this.distance = distance;
-        this.coneDegree = coneDegree;
         this.xray = xray;
         this.offset = offset != null ? offset : new Vector2();
     }
@@ -30,7 +28,7 @@ public class ConeLightComponent extends Component {
         RayHandler rh = ServiceLocator.getLightingService().getEngine().getRayHandler();
         Vector2 p = entity.getPosition();
 
-        light = new ConeLight(rh, rays, color, distance, 0f, 0f,-90f, 20f);
+        light = new ConeLight(rh, rays, color, distance, 0f, 0f,-90f, 60f);
         light.setXray(xray);
         light.setSoftnessLength(1f);
         light.setPosition(p.x + offset.x,p.y + offset.y);

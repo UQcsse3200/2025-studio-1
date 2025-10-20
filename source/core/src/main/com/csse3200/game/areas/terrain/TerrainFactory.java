@@ -130,30 +130,6 @@ public class TerrainFactory {
                 TextureRegion elevatorBackground =
                         new TextureRegion(resourceService.getAsset("backgrounds/Elevator.png", Texture.class));
                 return createGameRooms(0.5f, elevatorBackground);
-            case FOREST_DEMO:
-                TextureRegion orthoGrass =
-                        new TextureRegion(resourceService.getAsset("images/grass_1.png", Texture.class));
-                TextureRegion orthoTuft =
-                        new TextureRegion(resourceService.getAsset("images/grass_2.png", Texture.class));
-                TextureRegion orthoRocks =
-                        new TextureRegion(resourceService.getAsset("images/grass_3.png", Texture.class));
-                return createForestDemoTerrain(0.5f, orthoGrass, orthoTuft, orthoRocks);
-            case FOREST_DEMO_ISO:
-                TextureRegion isoGrass =
-                        new TextureRegion(resourceService.getAsset("images/iso_grass_1.png", Texture.class));
-                TextureRegion isoTuft =
-                        new TextureRegion(resourceService.getAsset("images/iso_grass_2.png", Texture.class));
-                TextureRegion isoRocks =
-                        new TextureRegion(resourceService.getAsset("images/iso_grass_3.png", Texture.class));
-                return createForestDemoTerrain(1f, isoGrass, isoTuft, isoRocks);
-            case FOREST_DEMO_HEX:
-                TextureRegion hexGrass =
-                        new TextureRegion(resourceService.getAsset("images/hex_grass_1.png", Texture.class));
-                TextureRegion hexTuft =
-                        new TextureRegion(resourceService.getAsset("images/hex_grass_2.png", Texture.class));
-                TextureRegion hexRocks =
-                        new TextureRegion(resourceService.getAsset("images/hex_grass_3.png", Texture.class));
-                return createForestDemoTerrain(1f, hexGrass, hexTuft, hexRocks);
             case WIN_SCREEN:
                 TextureRegion factoryBackground =
                         new TextureRegion(resourceService.getAsset("images/WinscreenAnimationBackground.png",
@@ -163,6 +139,10 @@ public class TerrainFactory {
                 TextureRegion casinoBackground =
                         new TextureRegion(resourceService.getAsset("images/casino.png", Texture.class));
                 return createGameRooms(0.5f, casinoBackground);
+            case SECRET:
+                TextureRegion secretBackground =
+                        new TextureRegion(resourceService.getAsset("backgrounds/Secret.png", Texture.class));
+                return createGameRooms(0.5f, secretBackground);
             default:
                 return null;
         }
@@ -250,6 +230,7 @@ public class TerrainFactory {
         RESEARCH_ROOM,
         OFFICE,
         WIN_SCREEN,
-        CASINO
+        CASINO,
+        SECRET
     }
 }

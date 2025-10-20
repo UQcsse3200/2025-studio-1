@@ -18,6 +18,7 @@ import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.factories.InteractableStationFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.entities.factories.LightFactory;
+import com.csse3200.game.lighting.PointLightComponent;
 import com.csse3200.game.lighting.PointLightFollowComponent;
 import com.csse3200.game.rendering.TextureRenderComponent;
 import com.csse3200.game.services.ResourceService;
@@ -74,18 +75,14 @@ public class CasinoGameArea extends GameArea {
             ls.getEngine().getRayHandler().setShadows(true);
         }
 
-        spawnCeilingCones();
-        //spawnConeLight();
-        //spawnNeonRig();
         spawnBordersAndDoors();
         spawnFloor();
-        //spawnLight();
         player = spawnPlayer();
 
-        if (player.getComponent(com.csse3200.game.lighting.PointLightComponent.class) == null &&
-                player.getComponent(com.csse3200.game.lighting.PointLightFollowComponent.class) == null) {
-            player.addComponent(new com.csse3200.game.lighting.PointLightFollowComponent(
-                    32, new com.badlogic.gdx.graphics.Color(1f,1f,1f,0.35f), 6.5f, new com.badlogic.gdx.math.Vector2(0f, 1f)
+        if (player.getComponent(PointLightComponent.class) == null &&
+                player.getComponent(PointLightFollowComponent.class) == null) {
+            player.addComponent(new PointLightFollowComponent(
+                    32, new Color(1f,1f,1f,0.35f), 6.5f, new Vector2(0f, 1f)
             ));
         }
 
@@ -112,94 +109,6 @@ public class CasinoGameArea extends GameArea {
 
     }
 
-    // Soft overall wash + ceiling bulbs above play areas
-    private void spawnLight() {
-        // Very faint white directional wash so backgrounds never go fully black
-        spawnEntity(LightFactory.createDirectionalLightEntity(
-                64, new Color(1f, 1f, 1f, 0.18f), 270f, true)); // from top, xray
-
-        // Ceiling “bulbs” (xray point lights) — place above tables/machines
-        Color bulb = new Color(1f, 0.95f, 0.85f, 0.34f);
-        float bulbDist = 22f;
-
-        spawnEntityAt(
-                LightFactory.createPointLightEntity(64, bulb, bulbDist, true, new Vector2(0f, 0f)),
-                new GridPoint2(11, 12), true, true);
-
-        spawnEntityAt(
-                LightFactory.createPointLightEntity(64, bulb, bulbDist, true, new Vector2(0f, 0f)),
-                new GridPoint2(18, 12), true, true);
-
-        spawnEntityAt(
-                LightFactory.createPointLightEntity(64, bulb, bulbDist, true, new Vector2(0f, 0f)),
-                new GridPoint2(24, 12), true, true);
-    }
-
-    private void spawnConeLight() {
-        Color bulb = new Color(1f,0.95f,0.85f,0.34f);
-
-        spawnEntityAt(
-                LightFactory.createConeLightEntity(64, bulb, 22f,-90f,true, new Vector2(0f,0f)),
-                new GridPoint2(15, 12), true, true);
-    }
-
-    private void spawnCeilingCones() {
-        // Warm-ish cone spotlights from ceiling pointing straight down (-90 degrees)
-        var warm = new Color(0.6f, 0f, 1f, 0.95f); // tweak alpha for brightness
-        int rays = 96;
-        float dist = 14f;    // reach of the cone
-        boolean xray = true; // true = no hard shadows (so it stays “clean”)
-
-        // positions above your play areas (Y slightly below top wall so the hotspot hits tables)
-        spawnEntityAt(
-                LightFactory.createConeLightEntity(rays, warm, dist, -90f, xray, new com.badlogic.gdx.math.Vector2(0f, 0f)),
-                new GridPoint2(9, 23), true, true);
-
-        spawnEntityAt(
-                LightFactory.createConeLightEntity(rays, warm, dist, -90f, xray, new com.badlogic.gdx.math.Vector2(0f, 0f)),
-                new GridPoint2(17, 23), true, true);
-
-        spawnEntityAt(
-                LightFactory.createConeLightEntity(rays, warm, dist, -90f, xray, new com.badlogic.gdx.math.Vector2(0f, 0f)),
-                new GridPoint2(22, 23), true, true);
-    }
-
-    private void spawnNeonRig() {
-        // Use live camera bounds so strips always fit the room
-        Bounds b = getCameraBounds(cameraComponent);
-        float left  = b.leftX()   + 0.30f;
-        float right = b.rightX()  - 0.30f;
-        float topY  = b.topY()    - 0.30f;
-        float botY  = b.bottomY() + 0.30f;
-
-        // Softer directional washes (xray) to tint the room
-        spawnEntity(LightFactory.createDirectionalLightEntity(
-                96, new Color(1f, 0.25f, 0.85f, 0.14f), 315f, true)); // magenta from top-left
-        spawnEntity(LightFactory.createDirectionalLightEntity(
-                96, new Color(0.15f, 0.95f, 1f, 0.14f), 135f, true)); // cyan from top-right
-
-        // Top & bottom neon strips (xray chain lights) spanning full width
-        float stripDist = (right - left) * 1.1f; // reach; bump up/down to taste
-
-        // Top strip (magenta)
-        spawnEntity(LightFactory.createChainLightEntity(
-                48, new Color(1f, 0.20f, 0.75f, 0.35f), stripDist,
-                new float[]{ left, topY, right, topY }, true));
-
-        // Bottom strip (cyan)
-        spawnEntity(LightFactory.createChainLightEntity(
-                48, new Color(0.10f, 0.95f, 1f, 0.35f), stripDist,
-                new float[]{ left, botY, right, botY }, true));
-
-        // Optional: vertical side strips to frame the room
-        float sideDist = (topY - botY) * 1.1f;
-        spawnEntity(LightFactory.createChainLightEntity(
-                48, new Color(1f, 0.20f, 0.75f, 0.30f), sideDist,
-                new float[]{ left, botY, left, topY }, true));
-        spawnEntity(LightFactory.createChainLightEntity(
-                48, new Color(0.10f, 0.95f, 1f, 0.30f), sideDist,
-                new float[]{ right, botY, right, topY }, true));
-    }
 
     /**
      * Spawns the borders and right door inside the room.

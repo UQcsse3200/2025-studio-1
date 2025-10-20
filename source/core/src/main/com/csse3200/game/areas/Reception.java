@@ -18,6 +18,8 @@ import com.csse3200.game.entities.factories.characters.NPCFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.entities.factories.system.TeleporterFactory;
 import com.csse3200.game.entities.spawner.ItemSpawner;
+import com.csse3200.game.lighting.PointLightComponent;
+import com.csse3200.game.lighting.PointLightFollowComponent;
 import com.csse3200.game.services.ServiceLocator;
 
 /**
@@ -40,9 +42,23 @@ public class Reception extends GameArea {
                 new Color(0.08f, 0.08f, 0.1f, 0.30f));
 
         ensureAssets();
-        //spawnTerrain();
+
+        var ls = ServiceLocator.getLightingService();
+        if (ls != null && ls.getEngine() != null) {
+            ls.getEngine().setAmbientLight(0.65f);
+            ls.getEngine().getRayHandler().setShadows(true);
+        }
+
         spawnWallsAndDoor();
         player = spawnPlayer();
+
+        if (player.getComponent(PointLightComponent.class) == null &&
+                player.getComponent(PointLightFollowComponent.class) == null) {
+            player.addComponent(new PointLightFollowComponent(
+                    32, new Color(1f,1f,1f,0.35f), 6.5f, new Vector2(0f, 1f)
+            ));
+        }
+
         spawnFloor();
         spawnholoclock();
         spawnEnemies();
@@ -51,7 +67,6 @@ public class Reception extends GameArea {
         spawndesk_reception();
         spawncomic_stand();
         spawnTeleporter();
-        spawnCeilingCones();
 
         Entity ui = new Entity();
         ui.addComponent(new GameAreaDisplay("Reception"))
@@ -59,20 +74,6 @@ public class Reception extends GameArea {
         spawnEntity(ui);
         ItemSpawner itemSpawner = new ItemSpawner(this);
         itemSpawner.spawnItems(ItemSpawnConfig.receptionmap());
-
-        var ls = ServiceLocator.getLightingService();
-        if (ls != null && ls.getEngine() != null) {
-            ls.getEngine().setAmbientLight(0.65f); // 0.7–0.8 feels “casino”
-            ls.getEngine().getRayHandler().setShadows(true);
-            ls.getEngine().getRayHandler().removeAll();
-        }
-
-        if (player.getComponent(com.csse3200.game.lighting.PointLightComponent.class) == null &&
-                player.getComponent(com.csse3200.game.lighting.PointLightFollowComponent.class) == null) {
-            player.addComponent(new com.csse3200.game.lighting.PointLightFollowComponent(
-                    32, new com.badlogic.gdx.graphics.Color(1f,1f,1f,0.35f), 6.5f, new com.badlogic.gdx.math.Vector2(0f, 1f)
-            ));
-        }
     }
 
     public static Reception load(TerrainFactory terrainFactory, CameraComponent camera) {
@@ -103,32 +104,6 @@ public class Reception extends GameArea {
         };
         ensureTextures(needed);
         ensurePlayerAtlas();
-    }
-
-    //private void spawnTerrain() {
-       // setupTerrainWithOverlay(terrainFactory, TerrainType.LOBBY, new Color(0.1f, 0.1f, 0.2f, 0.25f));
-    //}
-
-
-    private void spawnCeilingCones() {
-        // Warm-ish cone spotlights from ceiling pointing straight down (-90 degrees)
-        var warm = new Color(0.1f, 0.1f, 1f, 0.95f); // tweak alpha for brightness
-        int rays = 96;
-        float dist = 14f;    // reach of the cone
-        boolean xray = true; // true = no hard shadows (so it stays “clean”)
-
-        // positions above your play areas (Y slightly below top wall so the hotspot hits tables)
-        spawnEntityAt(
-                LightFactory.createConeLightEntity(rays, warm, dist, -90f, xray, new com.badlogic.gdx.math.Vector2(0f, 0f)),
-                new GridPoint2(9, 8), true, true);
-
-        spawnEntityAt(
-                LightFactory.createConeLightEntity(rays, warm, dist, -90f, xray, new com.badlogic.gdx.math.Vector2(0f, 0f)),
-                new GridPoint2(17, 8), true, true);
-
-        spawnEntityAt(
-                LightFactory.createConeLightEntity(rays, warm, dist, -90f, xray, new com.badlogic.gdx.math.Vector2(0f, 0f)),
-                new GridPoint2(22, 8), true, true);
     }
 
     private void spawnWallsAndDoor() {

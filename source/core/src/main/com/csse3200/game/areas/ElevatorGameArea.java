@@ -1,5 +1,6 @@
 package com.csse3200.game.areas;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.areas.terrain.TerrainFactory;
@@ -8,12 +9,14 @@ import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.components.KeycardGateComponent;
 import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import com.csse3200.game.entities.Entity;
+import com.csse3200.game.entities.factories.LightFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.entities.factories.system.TeleporterFactory;
 import com.csse3200.game.physics.PhysicsLayer;
 import com.csse3200.game.physics.components.ColliderComponent;
 import com.csse3200.game.physics.components.HitboxComponent;
 import com.csse3200.game.rendering.TextureRenderComponent;
+import com.csse3200.game.services.ServiceLocator;
 
 /**
  * Elevator room: minimal walls and two doors (left--Office, right--Research).
@@ -36,8 +39,17 @@ public class ElevatorGameArea extends GameArea {
         /** Ensure the thin floor texture is available for the elevator room **/
         ensureTextures(new String[]{"foreg_sprites/general/ThinFloor3.png", "images/Elevator background.png", "images/keycard_lvl2.png", "images/KeycardDoor.png", "images/Office and elevator/Office platform.png", "images/Office and elevator/Office desk.png"});
         /** Use the dedicated elevator background **/
-        terrain = terrainFactory.createTerrain(TerrainType.ELEVATOR);
-        spawnEntity(new Entity().addComponent(terrain));
+        GenericLayout.ensureGenericAssets(this);
+        GenericLayout.setupTerrainWithOverlay(this, terrainFactory, TerrainType.ELEVATOR,
+                new Color(0.08f, 0.08f, 0.1f, 0.30f));
+
+        var ls = ServiceLocator.getLightingService();
+        if (ls != null && ls.getEngine() != null) {
+            ls.getEngine().setAmbientLight(0.65f);
+            ls.getEngine().getRayHandler().setShadows(true);
+        }
+
+        spawnCeilingCones();
         spawnBordersAndDoors();
         spawnPlayer();
         spawnObjectDoors(new GridPoint2(0, 6), new GridPoint2(28, 19));
@@ -50,6 +62,31 @@ public class ElevatorGameArea extends GameArea {
         ui.addComponent(new GameAreaDisplay("Elevator"))
                 .addComponent(new com.csse3200.game.components.gamearea.FloorLabelDisplay("Floor 6"));
         spawnEntity(ui);
+    }
+
+    private void spawnCeilingCones() {
+        // Warm-ish cone spotlights from ceiling pointing straight down (-90 degrees)
+        var warm = new Color(0.37f, 0.82f, 0.9f, 0.95f); // tweak alpha for brightness
+        int rays = 96;
+        float dist = 7f;    // reach of the cone
+        boolean xray = true; // true = no hard shadows (so it stays “clean”)
+
+        // positions above your play areas (Y slightly below top wall so the hotspot hits tables)
+        spawnEntityAt(
+                LightFactory.createConeLightEntity(rays, warm, dist, -90f, xray, new Vector2(0f, 0f)),
+                new GridPoint2(4, 21), true, true);
+
+        spawnEntityAt(
+                LightFactory.createConeLightEntity(rays, warm, dist, -90f, xray, new Vector2(0f, 0f)),
+                new GridPoint2(12, 21), true, true);
+
+        spawnEntityAt(
+                LightFactory.createConeLightEntity(rays, warm, dist, -90f, xray, new Vector2(0f, 0f)),
+                new GridPoint2(20, 21), true, true);
+
+        spawnEntityAt(
+                LightFactory.createConeLightEntity(rays, warm, dist, -90f, xray, new Vector2(0f, 0f)),
+                new GridPoint2(27, 21), true, true);
     }
 
     private void spawnBordersAndDoors() {

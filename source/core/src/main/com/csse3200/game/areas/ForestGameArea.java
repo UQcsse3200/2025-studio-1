@@ -164,7 +164,8 @@ public class ForestGameArea extends GameArea {
             "backgrounds/Server.png",
             "backgrounds/Tunnel.png",
             "backgrounds/Elevator.png",
-            "images/cards.png"
+            "images/cards.png",
+            "backgrounds/Secret.png"
     };
     /**
      * General prop textures (floors, tiles, etc.).
