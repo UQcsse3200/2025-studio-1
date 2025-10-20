@@ -1118,4 +1118,7 @@ public abstract class GameArea implements Disposable {
     protected record Bounds(float leftX, float rightX, float bottomY, float topY, float viewWidth, float viewHeight,
                             Vector2 camPos) {
     }
+    public float roomNumber() {
+        return (float)getRoomNumber();
+    }
 }

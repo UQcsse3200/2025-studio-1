@@ -10,6 +10,18 @@ import com.csse3200.game.entities.factories.InteractableStationFactory;
 import com.csse3200.game.rendering.AnimationRenderComponent;
 import com.csse3200.game.rendering.TextureRenderComponent;
 import com.csse3200.game.services.ServiceLocator;
+import com.badlogic.gdx.math.Vector2;
+import com.csse3200.game.ai.tasks.AITaskComponent;
+import com.csse3200.game.components.*;
+import com.csse3200.game.components.tasks.ChaseTask;
+import com.csse3200.game.components.tasks.WanderTask;
+import com.csse3200.game.physics.PhysicsLayer;
+import com.csse3200.game.physics.PhysicsUtils;
+import com.csse3200.game.physics.components.ColliderComponent;
+import com.csse3200.game.physics.components.HitboxComponent;
+import com.csse3200.game.physics.components.PhysicsComponent;
+import com.csse3200.game.physics.components.PhysicsMovementComponent;
+import com.csse3200.game.components.friendlynpc.NpcAttackBoostComponent;
 
 import java.util.List;
 
@@ -133,11 +145,19 @@ public class FriendlyNPCFactory {
                         "Nurse", "", new String[]{
                         "Hello! I'm here to help.",
                         "Let me check your vitals...",
-                        "You're all patched up now!"
+                        "You're all patched up now! I've also boosted your power!"
                 }))
                 .addComponent(new DialogueDisplay())
-                .addComponent(new NpcHealingComponent(player, 25)
-                        .setCooldownMillis(30_000));
+                // + 50 HP
+                // If at full health, + 50 shield
+                .addComponent(new NpcHealingComponent(player, 50, 50, 60_000)
+                        .setCooldownMillis(30_000))
+                // Add attack boost: +10 attack for 15 seconds
+                .addComponent(new NpcAttackBoostComponent(player, 10, 15_000)
+                        .setCooldownMillis(30_000))
+                 .addComponent(new ShieldDisplay()
+                         .setIconPosition(6f, 22f)
+                         .setIconSize(16f));
         npc.getComponent(TextureRenderComponent.class).scaleEntity();
         npc.addComponent(new TipComponent(npc, player, 3f));
         npc.addComponent(new NpcInteractionComponent());

@@ -137,6 +137,7 @@ public class ForestGameArea extends GameArea {
             "images/nurse_npc.png",
             "images/partner.png",
             "images/remote.png",
+            "images/remotetip.png",
             "images/Assistor.png",
             "images/laserbullet.png",
             "images/armour-assets/chestplate.png",
@@ -377,12 +378,6 @@ public class ForestGameArea extends GameArea {
         spawnTeleporter();
     }
 
-    private void spawnRobots() {
-        GridPoint2 pos = new GridPoint2(8, 13);
-        Entity robot = BossFactory.createRobot(player);
-        spawnEntityAt(robot, pos, true, true);
-
-    }
 
     private void displayUI() {
         Entity ui = new Entity();

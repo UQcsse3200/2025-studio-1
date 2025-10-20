@@ -1,6 +1,7 @@
 package com.csse3200.game.components.enemy;
 
 import com.badlogic.gdx.math.Vector2;
+import com.csse3200.game.areas.GameArea;
 import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.components.Component;
 import com.csse3200.game.components.TouchAttackComponent;
@@ -60,8 +61,12 @@ public class EnemyMudRingSprayComponent extends Component {
     }
 
     private void spawnOne(Vector2 start, Vector2 velocity, int dmg) {
-        dmg = dmg / 8; // attack do less damage
-
+        float scale = 1f;
+        var diff = ServiceLocator.getDifficulty();
+        GameArea area = ServiceLocator.getGameArea();
+        float room = (area != null) ? area.roomNumber() : 1f;
+        if (diff != null) scale = diff.getRoomDifficulty(room);
+        dmg = (int) (scale * dmg / 8);
         Entity proj = new Entity()
                 .addComponent(new PhysicsComponent())
                 .addComponent(new ColliderComponent().setSensor(true))
