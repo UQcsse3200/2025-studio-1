@@ -3,8 +3,8 @@ package com.csse3200.game.components.teleporter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.csse3200.game.components.Component;
-import com.csse3200.game.entities.Entity;
 import com.csse3200.game.rendering.AnimationRenderComponent;
 import com.csse3200.game.services.DiscoveryService;
 import com.csse3200.game.services.GameTime;
@@ -12,35 +12,40 @@ import com.csse3200.game.services.ServiceLocator;
 
 /**
  * Teleporter behaviour:
- *  - Idle: only a static frame (TeleporterIdleRenderComponent) is shown (no animation running).
- *  - Player presses E within radius -> menu shows discovered destinations.
- *  - Selecting a destination plays the teleporter atlas animation for a short delay (TELEPORT_DELAY).
- *  - After delay, area transition occurs, animation stops, static frame returns.
- *  (No scaling/zoom effects are applied during activation.)
+ * - Idle: only a static frame (TeleporterIdleRenderComponent) is shown (no animation running).
+ * - Player presses E within radius -> menu shows discovered destinations.
+ * - Selecting a destination plays the teleporter atlas animation for a short delay (TELEPORT_DELAY).
+ * - After delay, area transition occurs, animation stops, static frame returns.
+ * (No scaling/zoom effects are applied during activation.)
  */
 public class TeleporterComponent extends Component {
-    private static final float ACTIVATION_RADIUS = 2.5f;
     private static final float TELEPORT_DELAY = 0.65f; // seconds
 
     private TeleporterMenuUI menuUI;
     private boolean menuVisible;
 
+    private static boolean escConsumedThisFrame;
     private boolean teleporting;
     private float teleportTimer;
     private String pendingDestination;
+    private boolean playerInRange = false;
 
     private final Vector2 baseScale = new Vector2();
     private boolean baseScaleSet;
 
     private GameTime time;
 
-    private static boolean escConsumedThisFrame = false; // track ESC consumption to suppress pause
-
     public static boolean wasEscConsumedThisFrame() {
         return escConsumedThisFrame;
     }
-    public static void markEscConsumed() { escConsumedThisFrame = true; }
-    public static void resetEscConsumed() { escConsumedThisFrame = false; }
+
+    public static void markEscConsumed() {
+        escConsumedThisFrame = true;
+    }
+
+    public static void resetEscConsumed() {
+        escConsumedThisFrame = false;
+    }
 
     @Override
     public void create() {
@@ -53,46 +58,55 @@ public class TeleporterComponent extends Component {
         if (idle != null) idle.setVisible(true);
         AnimationRenderComponent arc = entity.getComponent(AnimationRenderComponent.class);
         if (arc != null) arc.stopAnimation();
+
+        entity.getEvents().addListener("interact", this::handleInteract);
+        entity.getEvents().addListener("enteredInteractRadius", this::playerEnteredRange);
+        entity.getEvents().addListener("exitedInteractRadius", this::playerExitedRange);
     }
 
     @Override
     public void update() {
+        if (teleporting) {
+            updateActivation();
+        }
+
         // Sync internal state with UI component (user may press the UI Close button)
         if (menuUI != null && menuVisible && !menuUI.isVisible()) {
             menuVisible = false;
         }
-        if (teleporting) {
-            updateActivation();
-            return;
-        }
-
-        Entity player = ServiceLocator.getPlayer();
-        if (player == null) return;
 
         boolean esc = Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE);
 
-        if (menuVisible) {
-            if (esc) { // only mark consumed when ESC actually closes teleporter menu
-                hideMenu();
-                markEscConsumed();
-            } else if (!isPlayerClose(player)) {
-                hideMenu();
-            }
-            return;
+        if (menuVisible && esc && playerInRange) { // only mark consumed when ESC actually closes teleporter menu
+            markEscConsumed();
+            hideMenu();
         }
+    }
 
-        if (isPlayerClose(player) && Gdx.input.isKeyJustPressed(Input.Keys.E)) {
+    // Again very messy way to do the labels but oh well
+    private void playerEnteredRange() {
+        playerInRange = true;
+        showLabel();
+    }
+
+    private void playerExitedRange() {
+        playerInRange = false;
+        hideLabel();
+        if (menuVisible) {
+            hideMenu();
+        }
+    }
+
+    private void handleInteract() {
+        if (menuVisible) {
+            hideMenu();
+        } else {
             showMenu();
         }
     }
 
-    private boolean isPlayerClose(Entity player) {
-        Vector2 p = player.getPosition();
-        Vector2 t = entity.getPosition();
-        return p.dst2(t) <= ACTIVATION_RADIUS * ACTIVATION_RADIUS;
-    }
-
     private void showMenu() {
+        hideLabel();
         if (teleporting) return;
         DiscoveryService ds = ServiceLocator.getDiscoveryService();
         if (ds == null) {
@@ -110,12 +124,26 @@ public class TeleporterComponent extends Component {
     }
 
     private void hideMenu() {
+        showLabel();
         if (menuUI != null) menuUI.setVisible(false);
         menuVisible = false;
         Gdx.app.log("Teleporter", "Menu closed");
     }
 
-    /** Called by TeleporterMenuUI when a destination is selected. */
+    private void showLabel() {
+        Label interactLabel = ServiceLocator.getPrompt();
+        interactLabel.setText("Press E to interact with Teleporter");
+        interactLabel.setVisible(true);
+    }
+
+    private void hideLabel() {
+        Label interactLabel = ServiceLocator.getPrompt();
+        interactLabel.setVisible(false);
+    }
+
+    /**
+     * Called by TeleporterMenuUI when a destination is selected.
+     */
     public void startTeleport(String destination) {
         if (teleporting || destination == null || destination.isEmpty()) return;
         pendingDestination = destination;
@@ -147,7 +175,7 @@ public class TeleporterComponent extends Component {
     }
 
     private void updateActivation() {
-        float dt = time != null ? time.getDeltaTime() : 1/60f;
+        float dt = time != null ? time.getDeltaTime() : 1 / 60f;
         teleportTimer -= dt;
         // No scale/zoom effect: keep original scale the whole time.
         if (teleportTimer <= 0f) {
@@ -172,9 +200,5 @@ public class TeleporterComponent extends Component {
         }
         teleporting = false;
         pendingDestination = null;
-    }
-
-    public boolean isTeleporting() {
-        return teleporting;
     }
 }

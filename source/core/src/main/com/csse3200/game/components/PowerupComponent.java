@@ -11,14 +11,34 @@ public class PowerupComponent extends Component {
     private final List<Effect> activeEffects = new ArrayList<>();
     private Entity equippedWeapon;
 
+    /**
+     * @return the equipped weapon
+     */
     public Entity getEquippedWeapon() {
         return equippedWeapon;
     }
 
+    /**
+     * Sets the equipped weapon
+     *
+     * @param weapon the weapon
+     */
     public void setEquippedWeapon(Entity weapon) {
         this.equippedWeapon = weapon;
     }
 
+    /**
+     * @return the active effects
+     */
+    public List<Effect> getEffects() {
+        return this.activeEffects;
+    }
+
+    /**
+     * Adds an effect to the active effects
+     *
+     * @param effect the effect
+     */
     public void addEffect(Effect effect) {
         if (effect instanceof RapidFireEffect rapidfire && equippedWeapon != null) {
             if (rapidfire.apply(equippedWeapon)) {

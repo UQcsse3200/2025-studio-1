@@ -3,8 +3,6 @@ package com.csse3200.game.components.stations;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.csse3200.game.components.CombatStatsComponent;
@@ -16,7 +14,6 @@ import com.csse3200.game.entities.configs.benches.ComputerBenchConfig;
 import com.csse3200.game.entities.configs.benches.HealthBenchConfig;
 import com.csse3200.game.entities.configs.benches.SpeedBenchConfig;
 import com.csse3200.game.extensions.GameExtension;
-import com.csse3200.game.physics.BodyUserData;
 import com.csse3200.game.physics.PhysicsService;
 import com.csse3200.game.rendering.RenderService;
 import com.csse3200.game.services.ResourceService;
@@ -40,20 +37,23 @@ public class StationComponentTests {
 
     @BeforeEach
     void beforeEach() {
-        //Register services
+        // Register required services
         RenderService renderService = new RenderService();
         renderService.setStage(mock(Stage.class));
         ServiceLocator.registerRenderService(renderService);
         ServiceLocator.registerPhysicsService(new PhysicsService());
+
         ResourceService resourceService = mock(ResourceService.class);
         ServiceLocator.registerResourceService(resourceService);
+
         Sound sound = mock(Sound.class);
         when(resourceService.getAsset("sounds/upgradeSound.mp3", Sound.class)).thenReturn(sound);
         when(sound.play()).thenReturn(1L);
-        //Make station, player, inventory
 
+        // Make station, player, inventory
         stationComponent = new StationComponent(new ComputerBenchConfig());
         stationComponent.setPlayerNear(true);
+
         player = new Entity();
         inventory = new InventoryComponent(10000);
         player.addComponent(inventory);
@@ -61,21 +61,22 @@ public class StationComponentTests {
         player.addComponent(new PlayerActions());
         stationComponent.setPlayer(player);
 
-        //Make weapon
+        // Make weapon
         weapon = new Entity();
         weapon.addComponent(new WeaponsStatsComponent(10));
 
-        //Assign player to the station, and weapon to the player
+        // Assign player to the station, and weapon to the player
         player.getComponent(InventoryComponent.class).setCurrItem(weapon);
         ServiceLocator.registerPlayer(player);
 
-        //Make the buyPrompt
+        // Make the buyPrompt
         BitmapFont font = new BitmapFont();
         Label.LabelStyle labelStyle = new Label.LabelStyle();
         labelStyle.font = font;
         buyPrompt = new Label("", labelStyle);
         stationComponent.setBuyPrompt(buyPrompt);
 
+        // Additional stations
         healthStationComponent = new StationComponent(new HealthBenchConfig());
         healthStationComponent.setPlayer(player);
         healthStationComponent.setPlayerNear(true);
@@ -89,7 +90,7 @@ public class StationComponentTests {
 
     @Nested
     @DisplayName("Get and Set Tests")
-    class getSetTests {
+    class GetSetTests {
         @Test
         void shouldSetGetConfig() {
             stationComponent.setConfig(new SpeedBenchConfig());
@@ -108,20 +109,21 @@ public class StationComponentTests {
             stationComponent.setPlayerNear(true);
             assertTrue(stationComponent.isPlayerNear());
         }
-
-
     }
 
     @Nested
-    @DisplayName("CurrencyTests")
+    @DisplayName("Currency Tests")
     class CurrencyTests {
         @Test
         void notEnoughMoneyShouldNotUpgrade() {
-
             player.getComponent(InventoryComponent.class)
-                    .addProcessor(-player.getComponent(InventoryComponent.class).getProcessor()); //Make the player broke
+                    .addProcessor(-player.getComponent(InventoryComponent.class).getProcessor()); // broke player
             stationComponent.upgrade();
+            healthStationComponent.upgrade();
+            speedStationComponent.upgrade();
             assertEquals("You are broke! Fries in the bag!", stationComponent.getBuyPrompt().getText().toString());
+            assertEquals("You are broke! Fries in the bag!", healthStationComponent.getBuyPrompt().getText().toString());
+            assertEquals("You are broke! Fries in the bag!", speedStationComponent.getBuyPrompt().getText().toString());
 
         }
 
@@ -131,6 +133,16 @@ public class StationComponentTests {
             stationComponent.upgrade();
             int currMoney = player.getComponent(InventoryComponent.class).getProcessor();
             assertEquals(prevMoney - stationComponent.getPrice(), currMoney);
+
+            prevMoney = player.getComponent(InventoryComponent.class).getProcessor();
+            speedStationComponent.upgrade();
+            currMoney = player.getComponent(InventoryComponent.class).getProcessor();
+            assertEquals(prevMoney - speedStationComponent.getPrice(), currMoney);
+
+            prevMoney = player.getComponent(InventoryComponent.class).getProcessor();
+            healthStationComponent.upgrade();
+            currMoney = player.getComponent(InventoryComponent.class).getProcessor();
+            assertEquals(prevMoney - healthStationComponent.getPrice(), currMoney);
         }
 
         @Test
@@ -144,8 +156,6 @@ public class StationComponentTests {
             stationComponent.upgrade();
             int currMoney = player.getComponent(InventoryComponent.class).getProcessor();
             assertEquals(currMoney, prevMoney);
-
-
         }
 
         @Test
@@ -157,82 +167,41 @@ public class StationComponentTests {
             int currMoney = player.getComponent(InventoryComponent.class).getProcessor();
             assertEquals(currMoney, prevMoney);
         }
-
     }
 
     @Nested
-    @DisplayName("StationCollisionTests")
-    class CollisionTests {
+    @DisplayName("Interaction Radius Tests")
+    class InteractionRadiusTests {
         @Test
-        void collideShouldUpdateLabel() {
-            //Make two mock fixtures and call collide and check if the label appears
-            assertEquals("", stationComponent.getBuyPrompt().getText().toString());
-            Fixture me = mock(Fixture.class);
-            Fixture other = mock(Fixture.class);
-            Body body = mock(Body.class);
-            when(other.getBody()).thenReturn(body);
-            when(body.getUserData()).thenReturn(player);
-            BodyUserData userData = new BodyUserData();
-            userData.entity = player;
-            player.addComponent(new PlayerActions());
-            when(other.getBody().getUserData()).thenReturn(userData);
-            stationComponent.onCollisionStart(me, other);
-
-            assertEquals("Press E to upgrade weapon for " + stationComponent.getPrice(),
-                    stationComponent.getBuyPrompt().getText().toString());
+        void enteringRangeShouldShowPrompt() {
+            buyPrompt.setVisible(false);
+            stationComponent.onPlayerInRange();
+            assertTrue(stationComponent.isPlayerNear());
+            assertTrue(buyPrompt.isVisible());
+            assertEquals(stationComponent.getConfig().promptText, buyPrompt.getText().toString());
         }
 
         @Test
-        void shouldNotCollideWithNotPlayer() {
-            stationComponent.setPlayerNear(false);
-
-            assertEquals("", stationComponent.getBuyPrompt().getText().toString());
-            Fixture me = mock(Fixture.class);
-            Fixture other = mock(Fixture.class);
-            Body body = mock(Body.class);
-            when(other.getBody()).thenReturn(body);
-            when(body.getUserData()).thenReturn(player);
-            BodyUserData userData = new BodyUserData();
-            //Not a player
-            userData.entity = new Entity();
-            when(other.getBody().getUserData()).thenReturn(userData);
-            stationComponent.onCollisionStart(me, other);
+        void exitingRangeShouldHidePrompt() {
+            stationComponent.setPlayerNear(true);
+            buyPrompt.setVisible(true);
+            stationComponent.onPlayerLeftRange();
             assertFalse(stationComponent.isPlayerNear());
-        }
-
-        @Test
-        void onCollisionEndWorksForPlayer() {
-            //Make two mock fixtures and call uncollide and check if the label is gone
-            Fixture me = mock(Fixture.class);
-            Fixture other = mock(Fixture.class);
-            Body body = mock(Body.class);
-            when(other.getBody()).thenReturn(body);
-            when(body.getUserData()).thenReturn(player);
-            BodyUserData userData = new BodyUserData();
-            userData.entity = player;
-            player.addComponent(new PlayerActions());
-            when(other.getBody().getUserData()).thenReturn(userData);
-            stationComponent.onCollisionEnd(me, other);
-            assertEquals("", stationComponent.getBuyPrompt().getText().toString());
-            assertFalse(stationComponent.isPlayerNear());
+            assertFalse(buyPrompt.isVisible());
         }
     }
 
     @Nested
-    @DisplayName("StationUpgradeTests")
+    @DisplayName("Station Upgrade Tests")
     class UpgradeTests {
-
         @Test
         void upgradeShouldCallUpgradeOnItem() {
-            //Test the upgrading calls upgrade and the text changes
             stationComponent.upgrade();
-
-            assertEquals("Item has been upgraded", stationComponent.getBuyPrompt().getText().toString());
+            assertEquals("Item has been upgraded", buyPrompt.getText().toString());
         }
 
         @Test
         void upgradeIncreasesDamage() {
-            //Check if the damage is increased when upgrading
             int initialDamage = weapon.getComponent(WeaponsStatsComponent.class).getBaseAttack();
             stationComponent.upgrade();
             assertTrue(initialDamage < weapon.getComponent(WeaponsStatsComponent.class).getBaseAttack());
@@ -243,7 +212,7 @@ public class StationComponentTests {
             Entity notWeapon = new Entity();
             player.getComponent(InventoryComponent.class).setCurrItem(notWeapon);
             stationComponent.upgrade();
-            assertEquals("Not a weapon!", stationComponent.getBuyPrompt().getText().toString());
+            assertEquals("Not a weapon!", buyPrompt.getText().toString());
         }
 
         @Test
@@ -256,12 +225,35 @@ public class StationComponentTests {
             stationComponent.upgrade();
             int currDamage = weapon.getComponent(WeaponsStatsComponent.class).getBaseAttack();
             assertEquals(currDamage, prevDamage);
-            assertEquals("Weapon is fully upgraded already!", stationComponent.getBuyPrompt().getText().toString());
+            assertEquals("Weapon is fully upgraded already!", buyPrompt.getText().toString());
+        }
+
+        @Test
+        void upgradeOnNullPlayerDoesNothing() {
+            player = null;
+            ServiceLocator.registerPlayer(player);
+            stationComponent.setPlayer(player);
+            int prevDamage = weapon.getComponent(WeaponsStatsComponent.class).getBaseAttack();
+            stationComponent.upgrade();
+            int currDamage = weapon.getComponent(WeaponsStatsComponent.class).getBaseAttack();
+            assertEquals(currDamage, prevDamage);
+            assertEquals("", stationComponent.getBuyPrompt().getText().toString());
+
+        }
+
+        @Test
+        void currItemNullDoesNothing() {
+            player.getComponent(InventoryComponent.class).setCurrItem(null);
+            int prevDamage = weapon.getComponent(WeaponsStatsComponent.class).getBaseAttack();
+            stationComponent.upgrade();
+            int currDamage = weapon.getComponent(WeaponsStatsComponent.class).getBaseAttack();
+            assertEquals(currDamage, prevDamage);
+            assertEquals("", stationComponent.getBuyPrompt().getText().toString());
         }
     }
 
     @Nested
-    @DisplayName("HealthUpgradeTests")
+    @DisplayName("Health Upgrade Tests")
     class HealthTests {
         @Test
         void interactShouldIncreaseHealth() {
@@ -291,7 +283,7 @@ public class StationComponentTests {
     }
 
     @Nested
-    @DisplayName("SpeedUpgradeTests")
+    @DisplayName("Speed Upgrade Tests")
     class SpeedTests {
         @Test
         void interactShouldIncreaseSpeed() {
@@ -301,16 +293,15 @@ public class StationComponentTests {
             newPlayer.addComponent(new PlayerActions());
             speedStationComponent.setPlayer(newPlayer);
 
-            float prevSpeed = newPlayer.getComponent(PlayerActions.class).getMaxSpeed().cpy().len();
-            float prevCrouchSpeed = newPlayer.getComponent(PlayerActions.class).getCrouchSpeed().cpy().len();
-            float prevSprintSpeed = newPlayer.getComponent(PlayerActions.class).getSprintSpeed().cpy().len();
+            float prevSpeed = newPlayer.getComponent(PlayerActions.class).getMaxSpeed().len();
+            float prevCrouchSpeed = newPlayer.getComponent(PlayerActions.class).getCrouchSpeed().len();
+            float prevSprintSpeed = newPlayer.getComponent(PlayerActions.class).getSprintSpeed().len();
 
             speedStationComponent.upgrade();
 
             float currSpeed = newPlayer.getComponent(PlayerActions.class).getMaxSpeed().len();
             float currCrouchSpeed = newPlayer.getComponent(PlayerActions.class).getCrouchSpeed().len();
             float currSprintSpeed = newPlayer.getComponent(PlayerActions.class).getSprintSpeed().len();
-
 
             assertTrue(currSpeed > prevSpeed);
             assertTrue(currCrouchSpeed > prevCrouchSpeed);
@@ -319,10 +310,7 @@ public class StationComponentTests {
 
         @Test
         void shouldNotUpgradeTwice() {
-            Entity newPlayer = new Entity();
-
             speedStationComponent.upgrade();
-
             Vector2 prevSpeed = player.getComponent(PlayerActions.class).getMaxSpeed();
             Vector2 prevCrouchSpeed = player.getComponent(PlayerActions.class).getCrouchSpeed();
             Vector2 prevSprintSpeed = player.getComponent(PlayerActions.class).getSprintSpeed();
