@@ -206,8 +206,7 @@ class GameAreaEnemySpawningTest {
         
         // Test default case
         Map<String, ArrayList<Vector2>> defaultPositions = gameArea.getEnemySpawnPosition("Unknown");
-        assertTrue(defaultPositions.containsKey("GhostGPT"));
-        assertTrue(defaultPositions.containsKey("GrokDroid"));
+        assertTrue(defaultPositions.isEmpty());
     }
 
     @Test
