@@ -155,6 +155,7 @@ public class MainGameScreen extends ScreenAdapter {
                 );
                 exploredAreas = load.getAreasVisited();
 
+
             } else {
                 logger.error("couldn't create Game area from file");
             }

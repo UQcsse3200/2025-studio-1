@@ -2,13 +2,18 @@ package com.csse3200.game.physics.components;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.utils.Array;
 import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.components.CombatStatsComponent;
+import com.csse3200.game.components.Component;
+import com.csse3200.game.components.WeaponsStatsComponent;
 import com.csse3200.game.entities.Entity;
+import com.csse3200.game.rendering.AnimationRenderComponent;
 import com.csse3200.game.services.ServiceLocator;
 
 public class HomingPhysicsComponent extends PhysicsProjectileComponent {
@@ -75,15 +80,14 @@ public class HomingPhysicsComponent extends PhysicsProjectileComponent {
         float dt = ServiceLocator.getTimeSource().getDeltaTime();
         Body body = physicsComponent.getBody();
 
-
+        Vector2 position = entity.getCenterPosition();
         //checks target entity is alive
         if (target != null && !target.getComponent(CombatStatsComponent.class).isDead()) {
 
             //finds direction vector to the target
-            Vector2 origin = entity.getCenterPosition();
             Vector2 destination = target.getCenterPosition();
-            Vector2 desiredDirection = new Vector2(destination.x - origin.x,
-                    destination.y - origin.y).nor();
+            Vector2 desiredDirection = new Vector2(destination.x - position.x,
+                    destination.y - position.y).nor();
 
             Vector2 currentDirection = body.getLinearVelocity().nor();
             Vector2 newDirection = currentDirection.lerp(desiredDirection,
@@ -95,12 +99,18 @@ public class HomingPhysicsComponent extends PhysicsProjectileComponent {
             }
 
             body.setLinearVelocity(newDirection.scl(speed));
-
         }
 
         lived += dt;
 
         if (lived > lifetime) {
+            entity.setToRemove();
+            body.setLinearVelocity(new Vector2(0f, 0f));
+        } else if (position.y < 3.85 || position.y > 11.25) {
+            //projectile is a rocket
+            if (entity.getComponent(WeaponsStatsComponent.class).getRocket()) {
+                spawnExplosion(entity.getCenterPosition());
+            }
             entity.setToRemove();
             body.setLinearVelocity(new Vector2(0f, 0f));
         }
@@ -142,6 +152,46 @@ public class HomingPhysicsComponent extends PhysicsProjectileComponent {
      */
     public void setTargetEntity(Entity target) {
         this.target = target;
+    }
+
+    /**
+     * Spawns an explosion at the entity's position
+     *
+     * @param position entity position
+     */
+    private void spawnExplosion(Vector2 position) {
+        TextureAtlas atlas = ServiceLocator.getResourceService()
+                .getAsset("images/rocketExplosion.atlas", TextureAtlas.class);
+
+        AnimationRenderComponent animator = new AnimationRenderComponent(atlas);
+        animator.addAnimation("rocketExplosion", 0.05f, Animation.PlayMode.NORMAL);
+
+        // Create the explosion entity first
+        Entity explosion = new Entity();
+        explosion.addComponent(animator);
+
+        // Add a self-removing component
+        explosion.addComponent(new Component() {
+            private final int frameCount = atlas.findRegions("rocketExplosion").size;
+            private final float frameDuration = 0.05f;
+            private final float animationDuration = frameCount * frameDuration;
+            private float elapsedTime = 0f;
+
+            @Override
+            public void update() {
+                elapsedTime += ServiceLocator.getTimeSource().getDeltaTime();
+                if (elapsedTime >= animationDuration) {
+                    explosion.setToRemove();
+                }
+            }
+        });
+
+        explosion.setScale(2f, 2f);
+        explosion.setPosition(position);
+
+        ServiceLocator.getEntityService().register(explosion);
+
+        animator.startAnimation("rocketExplosion");
     }
 
 }

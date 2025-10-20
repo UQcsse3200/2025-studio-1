@@ -136,11 +136,13 @@ public class SaveLoadService {
                 }
             }
         }
-        // variables
+
 
         Set<String> discovered = ServiceLocator.getDiscoveryService().getDiscovered();
         SaveGame.GameState gamestate = new SaveGame.GameState();
         ArrayList<String> armours = new ArrayList<>();
+
+        //will check that armour both exists and is not null
         if (player.hasComponent(ArmourEquipComponent.class) &&
         player.getComponent(ArmourEquipComponent.class).currentlyEquippedArmour != null
         ) {
