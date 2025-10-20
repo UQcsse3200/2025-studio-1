@@ -26,7 +26,7 @@ public class Reception extends GameArea {
     private static final float WALL_WIDTH = 0.1f;
     private int roomDiffNumber = 2;
     private Entity player;
-    private static GridPoint2 playerSpawn = new GridPoint2(8, 10);
+    private static GridPoint2 playerSpawn = new GridPoint2(8, 4);
 
     public Reception(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
         super(terrainFactory, cameraComponent);
@@ -124,7 +124,7 @@ public class Reception extends GameArea {
     }
 
     private void loadForest() {
-        ForestGameArea.setRoomSpawn(new GridPoint2(24, 8));
+        ForestGameArea.setRoomSpawn(new GridPoint2(23, 8));
         clearAndLoad(() -> new ForestGameArea(terrainFactory, cameraComponent));
     }
 
