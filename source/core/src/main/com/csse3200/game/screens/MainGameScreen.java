@@ -142,6 +142,7 @@ public class MainGameScreen extends ScreenAdapter {
                 case "Storage" -> gameArea = StorageGameArea.load(terrainFactory, renderer.getCamera());
                 case "Shipping" -> gameArea = ShippingGameArea.load(terrainFactory, renderer.getCamera());
                 case "Server" -> gameArea = ServerGameArea.load(terrainFactory, renderer.getCamera());
+                case "Casino" -> gameArea = CasinoGameArea.load(terrainFactory, renderer.getCamera());
                 default -> gameArea = null;
             }
 
