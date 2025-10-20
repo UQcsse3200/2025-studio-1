@@ -164,7 +164,7 @@ public class MovingBossRoom extends GameArea {
     }
 
     public void loadOffice() {
-        OfficeGameArea.setRoomSpawn(new GridPoint2(2, 14));
+        OfficeGameArea.setRoomSpawn(new GridPoint2(1, 14));
         clearAndLoad(() -> new OfficeGameArea(terrainFactory, cameraComponent));
     }
 

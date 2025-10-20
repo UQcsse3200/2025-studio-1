@@ -1,29 +1,65 @@
 {
 "player": {
 	"playerPos": {
-		"x": -0.68500006,
-		"y": 3.6149998
+		"x": 13.685,
+		"y": 3.5149999
 	},
 	"avatar": "images/avatars/burger.png",
-	"ammoReserve": 1000,
+	"ammoReserve": 1090,
 	"stamina": 140,
 	"maxStamina": 140,
 	"maxHealth": 80,
-	"currentHealth": 80,
-	"processor": 1240
+	"currentHealth": 11,
+	"processor": 1195,
+	"keyCardLevel": 1
 },
-"gameArea": "Casino",
+"gameArea": "MovingBoss",
 "loadedInventory": [
-	null,
-	null,
-	null,
-	null,
-	null
+	{
+		"type": "RANGED",
+		"ammo": 50,
+		"texture": "images/rifle.png",
+		"count": 1,
+		"upgradeStage": 1
+	},
+	{
+		"type": "RANGED",
+		"ammo": 0,
+		"texture": "images/rocketlauncher.png",
+		"count": 1,
+		"upgradeStage": 1
+	},
+	{
+		"type": "RANGED",
+		"ammo": -1,
+		"texture": "images/rifle.png",
+		"count": 1,
+		"upgradeStage": 1
+	},
+	{
+		"type": "RANGED",
+		"ammo": 45,
+		"texture": "images/rifle.png",
+		"count": 1,
+		"upgradeStage": 1
+	},
+	{
+		"type": "MELEE",
+		"texture": "images/lightsaberSingle.png",
+		"count": 1,
+		"upgradeStage": 1
+	}
 ],
 "difficulty": "NORMAL",
 "areasVisited": [
 	"forest",
-	"casino"
+	"security",
+	"movingboss",
+	"casino",
+	"mainhall",
+	"reception"
 ],
-"armour": []
+"armour": [
+	"images/armour-assets/hood.png"
+]
 }

@@ -17,7 +17,7 @@ public class KeycardGateComponent extends Component {
     /**
      * Global cheat: when true, all keycard checks are bypassed.
      */
-    private static volatile boolean GLOBAL_OVERRIDE = false;
+    private static volatile boolean GLOBAL_OVERRIDE = true;
     // --- existing fields ---
     private final int requiredLevel;
     private final Runnable onUnlock;
