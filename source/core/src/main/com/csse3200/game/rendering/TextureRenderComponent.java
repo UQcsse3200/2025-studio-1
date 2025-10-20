@@ -36,7 +36,7 @@ public class TextureRenderComponent extends RenderComponent {
         entity.setScale(1f, (float) texture.getHeight() / texture.getWidth());
     }
 
-    protected Texture getTexture() {
+    public Texture getTexture() {
         return texture;
     }
 
