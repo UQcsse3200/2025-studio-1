@@ -142,7 +142,8 @@ public class ForestGameArea extends GameArea {
             "images/laserbullet.png",
             "images/armour-assets/chestplate.png",
             "images/armour-assets/hood.png",
-            "images/blackjack_table.png"
+            "images/blackjack_table.png",
+            "images/guidance_friendly_npc.png"
     };
     private static final String[] backgroundTextures = {
             "backgrounds/Reception.png",
@@ -693,11 +694,9 @@ public class ForestGameArea extends GameArea {
         Entity guide = FriendlyNPCFactory.createGuidanceNpc(player, waypoints);
 
         // Spawn at a fixed tile position
-        spawnEntityAt(guide, new GridPoint2(2, 10), true, true);
+        spawnEntityAt(guide, new GridPoint2(2, 9), true, true);
 
-        AnimationRenderComponent arc = guide.getComponent(AnimationRenderComponent.class);
-        arc.startAnimation("robot_fire");   // start anim
-        guide.setScale(1.2f, 1.2f);       // pick a size you like
+        guide.setScale(1.8f, 1.8f);
     }
 
     private void spawnBoss2() {
