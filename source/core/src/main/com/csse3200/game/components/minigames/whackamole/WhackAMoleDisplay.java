@@ -66,29 +66,33 @@ public class WhackAMoleDisplay extends UIComponent {
         hide(); // start hidden
     }
 
-    /** Backdrop: screen dimmer, frame, main panel. */
+    /**
+     * Backdrop: screen dimmer, frame, main panel.
+     */
     private void buildBackdrop() {
         pixel = solid(Color.WHITE);
 
         dimmer = new Image(new TextureRegionDrawable(new TextureRegion(pixel)));
         dimmer.setFillParent(true);
-        dimmer.setColor(0,0,0,0.6f);
+        dimmer.setColor(0, 0, 0, 0.6f);
         stage.addActor(dimmer);
 
         frame = new Image(new TextureRegionDrawable(new TextureRegion(pixel)));
         frame.setSize(PANEL_W + 8, PANEL_H + 8);
-        frame.setPosition((stage.getWidth()-frame.getWidth())/2f, (stage.getHeight()-frame.getHeight())/2f);
+        frame.setPosition((stage.getWidth() - frame.getWidth()) / 2f, (stage.getHeight() - frame.getHeight()) / 2f);
         frame.setColor(Color.BLACK);
         stage.addActor(frame);
 
         background = new Image(new TextureRegionDrawable(new TextureRegion(pixel)));
         background.setSize(PANEL_W, PANEL_H);
-        background.setPosition((stage.getWidth()-background.getWidth())/2f, (stage.getHeight()-background.getHeight())/2f);
+        background.setPosition((stage.getWidth() - background.getWidth()) / 2f, (stage.getHeight() - background.getHeight()) / 2f);
         background.setColor(PANEL_COLOR);
         stage.addActor(background);
     }
 
-    /** Root layout table inside the panel. */
+    /**
+     * Root layout table inside the panel.
+     */
     private void buildRoot() {
         root = new Table();
         root.setSize(PANEL_W, PANEL_H);
@@ -98,7 +102,9 @@ public class WhackAMoleDisplay extends UIComponent {
         stage.addActor(root);
     }
 
-    /** Header: title on left, live score on right, divider line. */
+    /**
+     * Header: title on left, live score on right, divider line.
+     */
     private void buildHeader() {
         Label.LabelStyle titleStyle = new Label.LabelStyle(skin.get(Label.LabelStyle.class));
         titleStyle.fontColor = TITLE_COLOR;
@@ -124,7 +130,7 @@ public class WhackAMoleDisplay extends UIComponent {
      * 3×3 grid:
      * - Each cell is a hole + mole
      * - Click counts only if mole is visible:
-     *   flash, +1, play sfx, increment score, fire wm:hit, hide mole
+     * flash, +1, play sfx, increment score, fire wm:hit, hide mole
      */
     private void buildGrid() {
         Table grid = new Table();
@@ -151,7 +157,10 @@ public class WhackAMoleDisplay extends UIComponent {
                     if (mole.isVisible()) {
                         mole.setColor(0.35f, 0.85f, 0.35f, 1f); // flash
                         com.badlogic.gdx.utils.Timer.schedule(new com.badlogic.gdx.utils.Timer.Task() {
-                            @Override public void run() { mole.setColor(1f, 1f, 1f, 1f); }
+                            @Override
+                            public void run() {
+                                mole.setColor(1f, 1f, 1f, 1f);
+                            }
                         }, 0.10f);
 
                         playHitFeedback(cell);
@@ -178,7 +187,8 @@ public class WhackAMoleDisplay extends UIComponent {
     private void buildFooter() {
         startBtn = new TextButton("Start", skin);
         startBtn.addListener(new ChangeListener() {
-            @Override public void changed(ChangeEvent event, Actor actor) {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
                 boolean starting = "Start".contentEquals(startBtn.getText());
                 startBtn.setText(starting ? "Stop" : "Start");
                 if (starting) {
@@ -191,10 +201,11 @@ public class WhackAMoleDisplay extends UIComponent {
 
         closeBtn = new TextButton("Close", skin);
         closeBtn.addListener(new ChangeListener() {
-            @Override public void changed(ChangeEvent event, Actor actor) {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
                 // ensure loop stops & UI resets when closing
                 entity.getEvents().trigger("wm:stop");
-                // ServiceLocator.getTimeSource().setPaused(false);
+                ServiceLocator.getTimeSource().setPaused(false);
                 prepareToPlay();
                 hide();
             }
@@ -206,47 +217,63 @@ public class WhackAMoleDisplay extends UIComponent {
         root.add(footer).padTop(4).row();
     }
 
-    /** Show a mole by index (safe bounds check). */
+    /**
+     * Show a mole by index (safe bounds check).
+     */
     public void showMoleAt(int idx) {
         if (idx >= 0 && idx < moleImgs.length) moleImgs[idx].setVisible(true);
     }
 
-    /** Hide a mole by index (safe bounds check). */
+    /**
+     * Hide a mole by index (safe bounds check).
+     */
     public void hideMoleAt(int idx) {
         if (idx >= 0 && idx < moleImgs.length) moleImgs[idx].setVisible(false);
     }
 
-    /** Hide all moles. */
+    /**
+     * Hide all moles.
+     */
     public void hideAllMoles() {
         if (moleImgs == null) return;
         for (Image m : moleImgs) m.setVisible(false);
     }
 
-    /** Reset UI for a fresh run (score=0, no moles, Start label). */
+    /**
+     * Reset UI for a fresh run (score=0, no moles, Start label).
+     */
     public void prepareToPlay() {
         setScore(0);
         hideAllMoles();
         setRunning(false);
     }
 
-    /** Score label -> 0. */
+    /**
+     * Score label -> 0.
+     */
     public void resetScore() {
         score = 0;
         if (scoreLabel != null) scoreLabel.setText("Score: 0");
     }
 
-    /** Update score label (clamped to >= 0). */
+    /**
+     * Update score label (clamped to >= 0).
+     */
     public void setScore(int value) {
         score = Math.max(0, value);
         if (scoreLabel != null) scoreLabel.setText("Score: " + score);
     }
 
-    /** Get current score value. */
+    /**
+     * Get current score value.
+     */
     public int getScore() {
         return score;
     }
 
-    /** Spawn the “+1” label and animate it up+fade. */
+    /**
+     * Spawn the “+1” label and animate it up+fade.
+     */
     private void spawnPlusOne(Actor target) {
         Label.LabelStyle st = new Label.LabelStyle(skin.get(Label.LabelStyle.class));
         st.fontColor = GOLD;
@@ -273,36 +300,48 @@ public class WhackAMoleDisplay extends UIComponent {
         ));
     }
 
-    /** Play hitsound (whack.mp3) */
+    /**
+     * Play hitsound (whack.mp3)
+     */
     private void playHitSound() {
         if (hitSfx != null) hitSfx.play(0.6f);
     }
 
-    /** Spawn the “+1” label and animate it up+fade. */
+    /**
+     * Spawn the “+1” label and animate it up+fade.
+     */
     private void playHitFeedback(Actor target) {
         spawnPlusOne(target);
         playHitSound();
     }
 
-    /** Set Start/Stop button label. */
+    /**
+     * Set Start/Stop button label.
+     */
     public void setRunning(boolean running) {
         if (startBtn != null) startBtn.setText(running ? "Stop" : "Start");
     }
 
-    /** Show modal + pause game time. */
+    /**
+     * Show modal + pause game time.
+     */
     public void show() {
         ServiceLocator.getTimeSource().setPaused(true);
         setVisible(true);
     }
 
-    /** Hide modal + resume time + ensure loop stops. */
+    /**
+     * Hide modal + resume time + ensure loop stops.
+     */
     public void hide() {
         ServiceLocator.getTimeSource().setPaused(false);
         setVisible(false);
         entity.getEvents().trigger("wm:stop");
     }
 
-    /** Toggle visibility for backdrop and root. */
+    /**
+     * Toggle visibility for backdrop and root.
+     */
     private void setVisible(boolean v) {
         if (dimmer != null) dimmer.setVisible(v);
         if (frame != null) frame.setVisible(v);
@@ -310,16 +349,21 @@ public class WhackAMoleDisplay extends UIComponent {
         if (root != null) root.setVisible(v);
     }
 
-    /** Build a 1×1 solid texture (remember to dispose). */
+    /**
+     * Build a 1×1 solid texture (remember to dispose).
+     */
     private static Texture solid(Color c) {
-        Pixmap pm = new Pixmap(1,1, Pixmap.Format.RGBA8888);
-        pm.setColor(c); pm.fill();
+        Pixmap pm = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
+        pm.setColor(c);
+        pm.fill();
         Texture t = new Texture(pm);
         pm.dispose();
         return t;
     }
 
-    /** Simple end dialog (used for Win/Lose). */
+    /**
+     * Simple end dialog (used for Win/Lose).
+     */
     public void showEnd(String title, String message) {
         Dialog d = new Dialog(title, skin);
         d.text(message);
@@ -327,9 +371,11 @@ public class WhackAMoleDisplay extends UIComponent {
         d.show(stage);
     }
 
-    @Override public void draw(SpriteBatch batch) { /* Stage draws */ }
+    @Override
+    public void draw(SpriteBatch batch) { /* Stage draws */ }
 
-    @Override public void dispose() {
+    @Override
+    public void dispose() {
         if (pixel != null) pixel.dispose();
         super.dispose();
     }

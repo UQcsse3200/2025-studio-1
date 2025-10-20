@@ -12,21 +12,27 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
  * </p>
  */
 public class Card {
-    /** The suit of this card (e.g., Hearts, Clubs). */
+    /**
+     * The suit of this card (e.g., Hearts, Clubs).
+     */
     private Suit suit;
 
-    /** The rank of this card (e.g., Two, King, Ace). */
+    /**
+     * The rank of this card (e.g., Two, King, Ace).
+     */
     private Rank rank;
 
-    /** The texture used to render this card on screen. */
+    /**
+     * The texture used to render this card on screen.
+     */
     private TextureRegion texture;
 
     /**
      * Constructs a card with the specified suit, rank, and texture.
      *
-     * @param suit     the {@link Suit} of the card
-     * @param rank     the {@link Rank} of the card
-     * @param texture  the {@link TextureRegion} image representing the card
+     * @param suit    the {@link Suit} of the card
+     * @param rank    the {@link Rank} of the card
+     * @param texture the {@link TextureRegion} image representing the card
      */
     public Card(Suit suit, Rank rank, TextureRegion texture) {
         this.suit = suit;

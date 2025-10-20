@@ -12,11 +12,11 @@ import com.csse3200.game.services.ServiceLocator;
 
 /**
  * Teleporter behaviour:
- *  - Idle: only a static frame (TeleporterIdleRenderComponent) is shown (no animation running).
- *  - Player presses E within radius -> menu shows discovered destinations.
- *  - Selecting a destination plays the teleporter atlas animation for a short delay (TELEPORT_DELAY).
- *  - After delay, area transition occurs, animation stops, static frame returns.
- *  (No scaling/zoom effects are applied during activation.)
+ * - Idle: only a static frame (TeleporterIdleRenderComponent) is shown (no animation running).
+ * - Player presses E within radius -> menu shows discovered destinations.
+ * - Selecting a destination plays the teleporter atlas animation for a short delay (TELEPORT_DELAY).
+ * - After delay, area transition occurs, animation stops, static frame returns.
+ * (No scaling/zoom effects are applied during activation.)
  */
 public class TeleporterComponent extends Component {
     private static final float TELEPORT_DELAY = 0.65f; // seconds
@@ -35,9 +35,17 @@ public class TeleporterComponent extends Component {
 
     private GameTime time;
 
-    public static boolean wasEscConsumedThisFrame() { return escConsumedThisFrame; }
-    public static void markEscConsumed() { escConsumedThisFrame = true; }
-    public static void resetEscConsumed() { escConsumedThisFrame = false; }
+    public static boolean wasEscConsumedThisFrame() {
+        return escConsumedThisFrame;
+    }
+
+    public static void markEscConsumed() {
+        escConsumedThisFrame = true;
+    }
+
+    public static void resetEscConsumed() {
+        escConsumedThisFrame = false;
+    }
 
     @Override
     public void create() {
@@ -133,7 +141,9 @@ public class TeleporterComponent extends Component {
         interactLabel.setVisible(false);
     }
 
-    /** Called by TeleporterMenuUI when a destination is selected. */
+    /**
+     * Called by TeleporterMenuUI when a destination is selected.
+     */
     public void startTeleport(String destination) {
         if (teleporting || destination == null || destination.isEmpty()) return;
         pendingDestination = destination;
@@ -165,7 +175,7 @@ public class TeleporterComponent extends Component {
     }
 
     private void updateActivation() {
-        float dt = time != null ? time.getDeltaTime() : 1/60f;
+        float dt = time != null ? time.getDeltaTime() : 1 / 60f;
         teleportTimer -= dt;
         // No scale/zoom effect: keep original scale the whole time.
         if (teleportTimer <= 0f) {

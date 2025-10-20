@@ -112,7 +112,7 @@ class BlackJackGameTest {
         final boolean[] winTriggered = {false};
         entity.getEvents().addListener("win", () -> winTriggered[0] = true);
 
-        game.dealerTurn();
+        game.dealerPlay();
         assertTrue(winTriggered[0], "Player should win if hand beats dealer");
     }
 
@@ -133,7 +133,7 @@ class BlackJackGameTest {
         final boolean[] loseTriggered = {false};
         entity.getEvents().addListener("lose", () -> loseTriggered[0] = true);
 
-        game.dealerTurn();
+        game.dealerPlay();
         assertTrue(loseTriggered[0], "Dealer should win if hand beats player");
     }
 
@@ -154,7 +154,7 @@ class BlackJackGameTest {
         final boolean[] tieTriggered = {false};
         entity.getEvents().addListener("tie", () -> tieTriggered[0] = true);
 
-        game.dealerTurn();
+        game.dealerPlay();
         assertTrue(tieTriggered[0], "Tie event should trigger when hands equal");
     }
 
