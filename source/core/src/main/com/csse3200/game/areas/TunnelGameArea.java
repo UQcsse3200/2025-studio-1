@@ -14,23 +14,19 @@ import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.ItemSpawnConfig;
 import com.csse3200.game.entities.configs.benches.BenchConfig;
 import com.csse3200.game.entities.factories.InteractableStationFactory;
-import com.csse3200.game.entities.factories.characters.NPCFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.entities.factories.system.TeleporterFactory;
 import com.csse3200.game.entities.spawner.ItemSpawner;
 import com.csse3200.game.physics.PhysicsUtils;
 import com.csse3200.game.physics.components.ColliderComponent;
 import com.csse3200.game.physics.components.PhysicsComponent;
-import com.csse3200.game.services.ServiceLocator;
 
 /**
  * Tunnel room: minimal walls with left door back to Server Room.
  */
 public class TunnelGameArea extends GameArea {
     private static final float WALL_WIDTH = 0.1f;
-    private static final float ROOM_DIFF_NUMBER = 10;
     private static GridPoint2 playerSpawn = new GridPoint2(5, 7);
-    private Entity player;
     private static boolean isCleared = false;
 
     private DoorComponent rightDoorComp;
@@ -64,7 +60,7 @@ public class TunnelGameArea extends GameArea {
                 new Color(0.08f, 0.08f, 0.12f, 0.28f));
 
         spawnBordersAndDoors();
-        player = spawnPlayer();
+        Entity player = spawnPlayer();
         spawnPlatforms();
         spawnSpawnPads();
         spawnTeleporter();

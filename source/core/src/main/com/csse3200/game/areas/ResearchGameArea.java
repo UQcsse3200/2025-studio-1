@@ -12,7 +12,6 @@ import com.csse3200.game.entities.configs.ItemSpawnConfig;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.entities.factories.system.TeleporterFactory;
 import com.csse3200.game.entities.spawner.ItemSpawner;
-import com.csse3200.game.services.ServiceLocator;
 
 /**
  * Research room: futuristic laboratory with desks, pods, microscopes, and
@@ -22,9 +21,6 @@ import com.csse3200.game.services.ServiceLocator;
 public class ResearchGameArea extends GameArea {
     private static final float WALL_WIDTH = 0.1f;
     private static GridPoint2 playerSpawn = new GridPoint2(10, 10);
-    private static final float ROOM_DIFF_NUMBER = 6;
-    private Entity player;
-
     private static boolean isCleared = false;
 
     public ResearchGameArea(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
@@ -57,7 +53,7 @@ public class ResearchGameArea extends GameArea {
                 new Color(0.10f, 0.12f, 0.18f, 0.28f)); // subtle lab-themed overlay
         spawnObjectDoors(new GridPoint2(0, 6), new GridPoint2(28, 20));
         spawnBordersAndDoors();
-        player = spawnPlayer();
+        Entity player = spawnPlayer();
         spawnPlatforms();
         spawnResearchProps();
         spawnTeleporter();

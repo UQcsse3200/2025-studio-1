@@ -9,11 +9,9 @@ import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.ItemSpawnConfig;
-import com.csse3200.game.entities.factories.characters.NPCFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.entities.factories.system.TeleporterFactory;
 import com.csse3200.game.entities.spawner.ItemSpawner;
-import com.csse3200.game.services.ServiceLocator;
 
 /**
  * The "Storage" area of the game map. This class:
@@ -23,9 +21,7 @@ import com.csse3200.game.services.ServiceLocator;
  */
 public class StorageGameArea extends GameArea {
     private static final float WALL_WIDTH = 0.1f;
-    private static final float ROOM_DIFF_NUMBER = 8;
     private static GridPoint2 playerSpawn = new GridPoint2(4, 20);
-    private Entity player;
     private static boolean isCleared = false;
 
     /**
@@ -79,7 +75,7 @@ public class StorageGameArea extends GameArea {
                 new Color(0.12f, 0.12f, 0.10f, 0.26f));
 
         spawnBordersAndDoors();
-        player = spawnPlayer();
+        Entity player = spawnPlayer();
         spawnFloor();
         spawnShipmentBoxLid();
         spawnConveyor();
@@ -104,10 +100,10 @@ public class StorageGameArea extends GameArea {
         float lidX = 5.05f;
         float lidY = 6.05f;
 
-        Entity BoxLid = ObstacleFactory.createShipmentBoxes();
-        BoxLid.setPosition(lidX, lidY);
+        Entity boxLid = ObstacleFactory.createShipmentBoxes();
+        boxLid.setPosition(lidX, lidY);
 
-        spawnEntity(BoxLid);
+        spawnEntity(boxLid);
     }
 
     /**
@@ -117,10 +113,10 @@ public class StorageGameArea extends GameArea {
         float conveyorX = 0f;
         float conveyorY = 8f;
 
-        Entity Conveyor = ObstacleFactory.createConveyor();
-        Conveyor.setPosition(conveyorX, conveyorY);
+        Entity conveyor = ObstacleFactory.createConveyor();
+        conveyor.setPosition(conveyorX, conveyorY);
 
-        spawnEntity(Conveyor);
+        spawnEntity(conveyor);
     }
 
     private void spawnBordersAndDoors() {

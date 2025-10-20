@@ -12,7 +12,6 @@ import com.csse3200.game.entities.configs.ItemSpawnConfig;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.entities.factories.system.TeleporterFactory;
 import com.csse3200.game.entities.spawner.ItemSpawner;
-import com.csse3200.game.services.ServiceLocator;
 
 /**
  * Minimal generic Security room: walls, doors, and a subtle background overlay.
@@ -20,8 +19,6 @@ import com.csse3200.game.services.ServiceLocator;
 public class SecurityGameArea extends GameArea {
     private static final float WALL_WIDTH = 0.1f;
     private static GridPoint2 playerSpawn = new GridPoint2(10, 10);
-    private static final float ROOM_DIFF_NUMBER = 2;
-    private Entity player;
     private static boolean isCleared = false;
 
     public SecurityGameArea(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
@@ -54,7 +51,7 @@ public class SecurityGameArea extends GameArea {
                 new Color(0.08f, 0.08f, 0.1f, 0.30f));
 
         spawnBordersAndDoors();
-        player = spawnPlayer();
+        Entity player = spawnPlayer();
         spawnPlatforms();
         spawnObjectDoors(new GridPoint2(0, 6), new GridPoint2(28, 19));
         spawnSecurityProps();

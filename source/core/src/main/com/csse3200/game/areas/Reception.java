@@ -13,18 +13,15 @@ import com.csse3200.game.components.shop.ShopManager;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.ItemSpawnConfig;
 import com.csse3200.game.entities.factories.ShopFactory;
-import com.csse3200.game.entities.factories.characters.NPCFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.entities.factories.system.TeleporterFactory;
 import com.csse3200.game.entities.spawner.ItemSpawner;
-import com.csse3200.game.services.ServiceLocator;
 
 /**
  * Second floor with different background and arrow-key controls.
  */
 public class Reception extends GameArea {
     private static final float WALL_WIDTH = 0.1f;
-    private int roomDiffNumber = 2;
     private Entity player;
     private static GridPoint2 playerSpawn = new GridPoint2(8, 10);
     private static boolean isCleared = false;
@@ -142,12 +139,6 @@ public class Reception extends GameArea {
 
     private Entity spawnPlayer() {
         return spawnOrRepositionPlayer(playerSpawn);
-    }
-
-    private void spawnGPTs() {
-        Entity ghost1 = NPCFactory.createGhostGPT(player, this, ServiceLocator.getDifficulty().getRoomDifficulty(this.roomDiffNumber));
-        GridPoint2 ghost1Pos = new GridPoint2(25, 7);
-        spawnEntityAt(ghost1, ghost1Pos, true, false);
     }
 
     private void spawnShopKiosk() {

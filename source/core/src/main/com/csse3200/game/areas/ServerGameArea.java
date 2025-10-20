@@ -12,7 +12,6 @@ import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.Benches;
 import com.csse3200.game.entities.configs.ItemSpawnConfig;
 import com.csse3200.game.entities.factories.InteractableStationFactory;
-import com.csse3200.game.entities.factories.characters.NPCFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.entities.factories.system.TeleporterFactory;
 import com.csse3200.game.entities.spawner.ItemSpawner;
@@ -25,7 +24,6 @@ import com.csse3200.game.services.ServiceLocator;
 public class ServerGameArea extends GameArea {
     private static final float WALL_WIDTH = 0.1f;
     private static final float WALL_HEIGHT = 0.1f;
-    private static final float ROOM_DIFF_NUMBER = 9;
     private static GridPoint2 playerSpawn = new GridPoint2(10, 10);
     private Entity player;
     private static boolean isCleared = false;
