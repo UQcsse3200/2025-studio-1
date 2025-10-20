@@ -66,6 +66,9 @@ public class KeyboardPlayerInputComponent extends InputComponent {
                 return true;
 
             case Keys.SPACE:
+                if (ServiceLocator.getTimeSource().isPaused()) {
+                    return false;
+                }
                 triggerJumpEvent();
                 return true;
 
@@ -134,7 +137,6 @@ public class KeyboardPlayerInputComponent extends InputComponent {
         // Unaffected by pausing meaning checking for paused needs to be handled by "interact" event users
         if (keycode == Keys.E) {
             holding = false;
-            triggerAddItem();
             return true;
         }
 
@@ -236,14 +238,6 @@ public class KeyboardPlayerInputComponent extends InputComponent {
 
     private void triggerDashEvent() {
         entity.getEvents().trigger("dashAttempt");
-    }
-
-    /**
-     * Triggers an item pickup request.
-     */
-    private void triggerAddItem() {
-        System.out.println("Pick up event triggered");
-        entity.getEvents().trigger("pick up");
     }
 
     /**
