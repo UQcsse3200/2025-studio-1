@@ -338,4 +338,11 @@ public class ServerGameArea extends GameArea {
         ServerGameArea.isCleared = false;
         logger.debug("Server is uncleared");
     }
+
+    /**
+     * FOR TESTING PURPOSES
+     */
+    public static boolean getClearField() {
+        return ServerGameArea.isCleared;
+    }
 }

@@ -209,4 +209,11 @@ public class ResearchGameArea extends GameArea {
         ResearchGameArea.isCleared = false;
         logger.debug("Research is uncleared");
     }
+
+    /**
+     * FOR TESTING PURPOSES
+     */
+    public static boolean getClearField() {
+        return ResearchGameArea.isCleared;
+    }
 }

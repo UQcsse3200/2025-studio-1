@@ -198,4 +198,11 @@ public class MovingBossRoom extends GameArea {
         MovingBossRoom.isCleared = false;
         logger.debug("Moving Boss Room is uncleared");
     }
+
+    /**
+     * FOR TESTING PURPOSES
+     */
+    public static boolean getClearField() {
+        return MovingBossRoom.isCleared;
+    }
 }

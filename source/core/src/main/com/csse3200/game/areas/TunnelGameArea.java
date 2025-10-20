@@ -288,4 +288,11 @@ public class TunnelGameArea extends GameArea {
         TunnelGameArea.isCleared = false;
         logger.debug("Tunnel is cleared");
     }
+
+    /**
+     * FOR TESTING PURPOSES
+     */
+    public static boolean getClearField() {
+        return TunnelGameArea.isCleared;
+    }
 }
