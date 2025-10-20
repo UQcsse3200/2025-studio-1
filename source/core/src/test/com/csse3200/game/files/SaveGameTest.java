@@ -138,11 +138,7 @@ public class SaveGameTest {
     }
 
     @Test
-    public void saveFileCompares() {
+    public void saveFileComparitor() {
 
     }
-
-
-
-
 }
