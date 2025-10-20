@@ -10,7 +10,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.csse3200.game.services.DiscoveryService;
 import com.csse3200.game.services.ServiceLocator;
-import com.csse3200.game.ui.NeonStyles;
 import com.csse3200.game.ui.UIComponent;
 
 import java.util.ArrayList;
@@ -26,7 +25,6 @@ public class TeleporterMenuUI extends UIComponent {
     private Table listTable;          // destination buttons container
     private ScrollPane scrollPane;    // scroll around listTable
     private Image dimmer;             // full-screen translucent background
-    private NeonStyles neon;          // button styling helper
     private boolean visible;
 
     @Override
@@ -37,8 +35,6 @@ public class TeleporterMenuUI extends UIComponent {
     }
 
     private void buildUI() {
-        neon = new NeonStyles(0.70f);
-
         // Dim background similar to PauseMenuDisplay
         dimmer = new Image(skin.newDrawable("white", new Color(0, 0, 0, 0.6f)));
         dimmer.setFillParent(true);
@@ -68,7 +64,7 @@ public class TeleporterMenuUI extends UIComponent {
         panel.row();
 
         // Buttons row (Close only for now)
-        TextButton closeBtn = new TextButton("Close (Esc)", neon.buttonRounded());
+        TextButton closeBtn = new TextButton("Close (E)", skin);
         closeBtn.getLabel().setFontScale(1.2f);
         closeBtn.addListener(new ClickListener() {
             @Override
@@ -101,7 +97,9 @@ public class TeleporterMenuUI extends UIComponent {
         panel.toFront();
     }
 
-    /** Refresh list of discovered destinations, building neon-styled buttons. */
+    /**
+     * Refresh list of discovered destinations, building neon-styled buttons.
+     */
     public void refresh() {
         if (listTable == null) return;
         listTable.clearChildren();
@@ -121,7 +119,7 @@ public class TeleporterMenuUI extends UIComponent {
 
         for (String key : ordered) {
             final String display = capitalize(key);
-            TextButton btn = new TextButton(display, neon.buttonRounded());
+            TextButton btn = new TextButton(display, skin);
             btn.getLabel().setFontScale(1.1f);
             btn.addListener(new ClickListener() {
                 @Override
@@ -142,18 +140,30 @@ public class TeleporterMenuUI extends UIComponent {
     private String capitalize(String k) {
         if (k == null || k.isEmpty()) return k;
         switch (k) {
-            case "mainhall": return "MainHall";
-            case "server": return "Server";
-            case "storage": return "Storage";
-            case "shipping": return "Shipping";
-            case "research": return "Research";
-            case "elevator": return "Elevator";
-            case "office": return "Office";
-            case "security": return "Security";
-            case "reception": return "Reception";
-            case "forest": return "Forest";
-            case "tunnel": return "Tunnel";
-            default: return Character.toUpperCase(k.charAt(0)) + k.substring(1);
+            case "mainhall":
+                return "MainHall";
+            case "server":
+                return "Server";
+            case "storage":
+                return "Storage";
+            case "shipping":
+                return "Shipping";
+            case "research":
+                return "Research";
+            case "elevator":
+                return "Elevator";
+            case "office":
+                return "Office";
+            case "security":
+                return "Security";
+            case "reception":
+                return "Reception";
+            case "forest":
+                return "Forest";
+            case "tunnel":
+                return "Tunnel";
+            default:
+                return Character.toUpperCase(k.charAt(0)) + k.substring(1);
         }
     }
 
@@ -179,7 +189,6 @@ public class TeleporterMenuUI extends UIComponent {
     public void dispose() {
         if (panel != null) panel.remove();
         if (dimmer != null) dimmer.remove();
-        if (neon != null) neon.dispose();
         super.dispose();
     }
 }

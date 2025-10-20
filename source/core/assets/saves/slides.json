@@ -1,11 +1,18 @@
 {
-areaId: Forest
-inventory: []
-Health: 80
-ProcessNumber: 10000
-position: {
-	x: 9.410379
-	y: 4.5487356
-}
-RoundNumber: 2
+"player": {
+	"playerPos": {
+		"x": 10.313381,
+		"y": 3.6149998
+	},
+	"avatar": "placeholder",
+	"ammoReserve": 1000,
+	"stamina": 140,
+	"maxStamina": 140,
+	"maxHealth": 80,
+	"currentHealth": 80,
+	"processor": 9000
+},
+"gameArea": "Forest",
+"wave": 2,
+"loadedInventory": []
 }

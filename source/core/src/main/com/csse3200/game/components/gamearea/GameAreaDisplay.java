@@ -44,7 +44,8 @@ public class GameAreaDisplay extends UIComponent {
         stage.addActor(overlay);
     }
 
-    @Override public void draw(SpriteBatch batch) { /* Scene2D lays it out */ }
+    @Override
+    public void draw(SpriteBatch batch) { /* Scene2D lays it out */ }
 
     @Override
     public void dispose() {
@@ -59,7 +60,9 @@ public class GameAreaDisplay extends UIComponent {
         }
     }
 
-    /** Create a solid-coloured 1x1 drawable */
+    /**
+     * Create a solid-coloured 1x1 drawable
+     */
     private Drawable makeSolidBg(Color c) {
         Pixmap pm = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
         pm.setColor(c);

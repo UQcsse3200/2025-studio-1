@@ -2,6 +2,7 @@ package com.csse3200.game.areas;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.csse3200.game.entities.PromptFactory;
 import com.csse3200.game.components.enemy.WaveAlertDisplay;
 import com.csse3200.game.entities.factories.characters.PlayerFactory;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -69,6 +70,7 @@ public abstract class GameArea implements Disposable {
         this.terrainFactory = terrainFactory;
         this.cameraComponent = cameraComponent;
         areaEntities = new ArrayList<>();
+        PromptFactory.createPrompt();
     }
 
     /**
@@ -166,7 +168,7 @@ public abstract class GameArea implements Disposable {
      * @return Room number as an int if the floor name is in the format "Floor2"
      * with 2 being any number, otherwise returns 1.
      */
-    public int getRoomNumber() { // changed from protected to public for EnemyWaves access
+    protected int getRoomNumber() {
         return switch (this.toString()) {
             case "Reception" -> 2;
             case "Mainhall" -> 3;
@@ -351,7 +353,10 @@ public abstract class GameArea implements Disposable {
      * Retrieves current wave count for services
      */
     public int currentWave() {
-        return wavesManager.getWaveNumber();
+        if (wavesManager != null) {
+            return wavesManager.getWaveNumber();
+        }
+        return 0;
     }
 
     /**
@@ -939,7 +944,7 @@ public abstract class GameArea implements Disposable {
     /**
      * Helper to clear current entities and transition to a new area.
      */
-    protected void clearAndLoad(Supplier<GameArea> nextAreaSupplier) {
+    public void clearAndLoad(Supplier<GameArea> nextAreaSupplier) {
         if (!beginTransition()) return;
 
         for (Entity entity : areaEntities) {
