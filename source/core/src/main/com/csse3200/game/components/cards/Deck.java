@@ -22,7 +22,7 @@ public class Deck {
      * The list of all cards currently in the deck.
      */
     private final List<Card> cards;
-    private static final int totalCards = 104;
+    private static final int TOTAL_CARDS = 104;
     /**
      * The index of the next card to be drawn.
      */
@@ -60,7 +60,7 @@ public class Deck {
      * @return the number of cards left to draw
      */
     public int cardsRemaining() {
-        return totalCards - position;
+        return TOTAL_CARDS - position;
     }
 
     /**

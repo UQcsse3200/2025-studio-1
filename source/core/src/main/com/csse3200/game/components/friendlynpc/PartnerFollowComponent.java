@@ -31,6 +31,7 @@ public class PartnerFollowComponent extends Component {
         try {
             dt = ServiceLocator.getTimeSource().getDeltaTime();
         } catch (Exception ignored) {
+            // ignore exception
         }
 
         Vector2 myPos = entity.getPosition();
