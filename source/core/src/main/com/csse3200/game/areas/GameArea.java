@@ -754,14 +754,7 @@ public abstract class GameArea implements Disposable {
                 positions.put(GROK_DROID, respectiveSpawns);
             }
             default -> {
-                respectiveSpawns.add(new Vector2(12f, 11f));
-                respectiveSpawns.add(new Vector2(7.6f, 4f));
-                respectiveSpawns.add(new Vector2(2f, 4f));
-                positions.put(GHOST_GPT, respectiveSpawns);
-                respectiveSpawns = new ArrayList<>();
-                respectiveSpawns.add(new Vector2(5f, 10f));
-                respectiveSpawns.add(new Vector2(2f, 10f));
-                positions.put(GROK_DROID, respectiveSpawns);
+                // No enemies spawn in other rooms.
             }
         }
         return positions;
