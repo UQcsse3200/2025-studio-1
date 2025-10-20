@@ -1,5 +1,6 @@
 package com.csse3200.game.services;
 
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.csse3200.game.areas.GameArea;
 import com.csse3200.game.areas.difficulty.Difficulty;
@@ -39,6 +40,7 @@ public class ServiceLocator {
     private static LeaderBoardManager leaderBoardManager;
     private static volatile boolean transitioning = false;
     private static Label prompt;
+    private static Camera camera;
 
     private ServiceLocator() {
         throw new IllegalStateException("Instantiating static util class");
@@ -62,6 +64,10 @@ public class ServiceLocator {
 
     public static GameTime getTimeSource() {
         return timeSource;
+    }
+
+    public static Camera getCamera() {
+        return camera;
     }
 
     public static InputService getInputService() {
@@ -168,6 +174,11 @@ public class ServiceLocator {
         buttonSoundService = source;
     }
 
+    public static void registerCamera(Camera source) {
+        logger.debug("Registering camera service {}", source);
+        camera = source;
+    }
+
     public static void registerLeaderBoardManager(LeaderBoardManager lbm) {
         leaderBoardManager = lbm;
     }
@@ -187,6 +198,7 @@ public class ServiceLocator {
         saveLoadService = null;
         player = null;
         discoveryService = null;
+        camera = null;
     }
 
     /**
