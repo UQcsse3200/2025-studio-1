@@ -121,7 +121,7 @@ class KeyboardPlayerInputComponentTest {
 
     @Test
     void shouldCrouchSRelease() {
-        assertTrue(inputComponent.keyPressed(Keys.S));
+        assertTrue(inputComponent.keyReleased(Keys.S));
         verify(actions).crouchAttempt();
     }
 
@@ -159,7 +159,7 @@ class KeyboardPlayerInputComponentTest {
         verify(actions).jump();
     }
 
-    @Test
+    @Test //NOTE how to test
     void shouldInteractOnPress() {
         assertTrue(inputComponent.keyPressed(Keys.E));
     }
@@ -169,26 +169,52 @@ class KeyboardPlayerInputComponentTest {
         assertTrue(inputComponent.keyPressed(Keys.I));
     }
 
+    // NOTE: Test selecting slot
     @Test
-    void shouldFailUnknownKeypress() {
-        assertFalse(inputComponent.keyPressed(Keys.B));
+    void shouldEquipWhenSlotSelected() {
+        assertTrue(inputComponent.keyReleased(Keys.NUM_1));
+        assertEquals(0, inputComponent.focusedItem);
+
+        assertTrue(inputComponent.keyReleased(Keys.NUM_2));
+        assertEquals(1, inputComponent.focusedItem);
+
+        assertTrue(inputComponent.keyReleased(Keys.NUM_3));
+        assertEquals(2, inputComponent.focusedItem);
+
+        assertTrue(inputComponent.keyReleased(Keys.NUM_4));
+        assertEquals(3, inputComponent.focusedItem);
+
+        assertTrue(inputComponent.keyReleased(Keys.NUM_5));
+        assertEquals(4, inputComponent.focusedItem);
+        assertTrue(inputComponent.equipped);
     }
 
-    // NOTE: Test selecting slot
-//    @Test
-//    void shouldEquipWhenSlotSelected() {
-//        assertTrue(inputComponent.keyReleased(Keys.NUM_1));
-//        verify(actions).equipWeapon(any(Entity.class));
-//    }
+    @Test
+    void shouldUnequipWhenSameSlotSelected() {
+        assertTrue(inputComponent.keyReleased(Keys.NUM_1));
+        assertTrue(inputComponent.equipped);
+        assertTrue(inputComponent.keyReleased(Keys.NUM_1));
+        assertEquals(-1, inputComponent.focusedItem);
+        assertFalse(inputComponent.equipped);
+    }
 
-//    @Test
-//    void shouldUnequipWhenSameSlotSelected() {
-//        assertTrue(inputComponent.keyReleased(Keys.NUM_1));
-//        verify(inputComponent).equipCurrentItem();
-//
-//        assertTrue(inputComponent.keyReleased(Keys.NUM_1));
-//        verify(inputComponent).unequipCurrentItem();
-//    }
+    @Test
+    void shouldUnequipWhenSlotSelected() {
+        assertTrue(inputComponent.keyReleased(Keys.NUM_1));
+        assertTrue(inputComponent.keyReleased(Keys.NUM_2));
+        assertTrue(inputComponent.equipped);
+    }
+
+    @Test
+    void shouldDropFocused() {
+        assertTrue(inputComponent.keyReleased(Keys.R));
+    }
+
+    @Test
+    void shouldFailOnUnknownKey() {
+        assertFalse(inputComponent.keyPressed(Keys.ENTER));
+        assertFalse(inputComponent.keyReleased(Keys.ENTER));
+    }
 
     /**
      * Tests that selecting an inventory slot equips the item if nothing
