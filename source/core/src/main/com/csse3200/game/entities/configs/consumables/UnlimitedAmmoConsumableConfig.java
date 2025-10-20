@@ -9,7 +9,7 @@ public class UnlimitedAmmoConsumableConfig extends ConsumableConfig {
 
     public UnlimitedAmmoConsumableConfig(PlayerActions playerActions) {
         this.effects = new ArrayList<>();
-        this.effects.add(new UnlimitedAmmoEffect(20f, playerActions));
+        this.effects.add(new UnlimitedAmmoEffect(20f));
         this.texturePath = "images/rapidfirepowerup.png";
         this.isProjectile = false;
     }

@@ -6,15 +6,13 @@ import com.csse3200.game.entities.Entity;
 
 public class UnlimitedAmmoEffect extends Effect {
     private final float duration;
-    private final PlayerActions playerActions;
     private float elapsed = 0f;
     private boolean active = false;
     private MagazineComponent magazine;
 
 
-    public UnlimitedAmmoEffect(float duration, PlayerActions playerActions) {
+    public UnlimitedAmmoEffect(float duration) {
         this.duration = duration;
-        this.playerActions = playerActions;
     }
 
     @Override
