@@ -7,6 +7,7 @@ import com.csse3200.game.components.WeaponsStatsComponent;
 import com.csse3200.game.components.attachments.BulletEnhancerComponent;
 import com.csse3200.game.components.attachments.LaserComponent;
 import com.csse3200.game.components.items.ItemComponent;
+import com.csse3200.game.components.items.RangedUseComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.ItemTypes;
 import com.csse3200.game.entities.configs.Weapons;
@@ -65,6 +66,8 @@ public class WeaponsFactory {
                 weapon.addComponent(new TextureRenderWithRotationComponent(rangedConfig.texturePath));
                 weapon.getComponent(TextureRenderComponent.class).disableComponent();
                 weaponStats.setCoolDown((float) rangedConfig.shootTimer);
+
+                weapon.addComponent(new RangedUseComponent());
                 break;
             case MELEE:
                 item.setType(ItemTypes.MELEE);
