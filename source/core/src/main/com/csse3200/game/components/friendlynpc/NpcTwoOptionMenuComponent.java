@@ -7,7 +7,7 @@ import com.csse3200.game.entities.Entity;
  * A simple two-option interaction menu for NPCs.
  * Option 1: Shows an instruction line.
  * Option 2: Makes the NPC lead the player to a location.
- *
+ * <p>
  * You can trigger open() when the player presses the interact key near the NPC.
  */
 public class NpcTwoOptionMenuComponent extends Component {
@@ -19,10 +19,10 @@ public class NpcTwoOptionMenuComponent extends Component {
         if (ui != null) {
             ui.setText(
                     "[Guide Menu]\n" +
-                    "1) Instructions - controls & tips\n" +
-                    "2) Lead me there - escort to next objective\n" +
-                    "Stay near me to interact.\n" +
-                    "(Shortcut: 6 for quick tips)"
+                            "1) Instructions - controls & tips\n" +
+                            "2) Lead me there - escort to next objective\n" +
+                            "Stay near me to interact.\n" +
+                            "(Shortcut: 6 for quick tips)"
             );
             ui.show();
         } else {

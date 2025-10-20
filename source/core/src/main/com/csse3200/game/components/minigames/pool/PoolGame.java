@@ -218,12 +218,16 @@ public class PoolGame {
         beginSession(true);
     }
 
-    /** Starts or resets the game session. */
+    /**
+     * Starts or resets the game session.
+     */
     private void onStart() {
         beginSession(false);
     }
 
-    /** Stops the running pool game simulation. */
+    /**
+     * Stops the running pool game simulation.
+     */
     private void onStop() {
         stopSync();
     }
@@ -266,7 +270,9 @@ public class PoolGame {
         ServiceLocator.getRenderService().getDebug().renderPhysicsWorld(world.raw());
     }
 
-    /** Resets the current rack, cue, and turn state. */
+    /**
+     * Resets the current rack, cue, and turn state.
+     */
     private void resetRack() {
         rules.onNewRack(ballFactory);
         pushPositionsToUI();
@@ -291,7 +297,9 @@ public class PoolGame {
         }, 0f, GameTuning.SYNC_PERIOD);
     }
 
-    /** Stops the scheduled simulation update task. */
+    /**
+     * Stops the scheduled simulation update task.
+     */
     private void stopSync() {
         if (syncTask != null) {
             syncTask.cancel();
@@ -310,7 +318,7 @@ public class PoolGame {
         display.setCueBall(cueNorm);
 
         Vector2[] byIdWorld = ballFactory.getObjectBallPositionsById();
-        Vector2[] byIdNorm  = new Vector2[byIdWorld.length];
+        Vector2[] byIdNorm = new Vector2[byIdWorld.length];
         for (int i = 0; i < byIdWorld.length; i++) {
             byIdNorm[i] = (byIdWorld[i] == null) ? null : TableSpace.toNorm(byIdWorld[i], config);
         }

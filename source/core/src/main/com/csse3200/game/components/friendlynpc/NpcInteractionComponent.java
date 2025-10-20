@@ -12,14 +12,14 @@ public class NpcInteractionComponent extends Component {
 
     @Override
     public void create() {
-         ui = entity.getComponent(DialogueDisplay.class);
-         data = entity.getComponent(NpcDialogueDataComponent.class);
-         entity.getEvents().addListener("interact", this::handleInteract);
-         entity.getEvents().addListener("enteredInteractRadius", this::playerEnteredRange);
-         entity.getEvents().addListener("exitedInteractRadius", this::playerLeftRange);
+        ui = entity.getComponent(DialogueDisplay.class);
+        data = entity.getComponent(NpcDialogueDataComponent.class);
+        entity.getEvents().addListener("interact", this::handleInteract);
+        entity.getEvents().addListener("enteredInteractRadius", this::playerEnteredRange);
+        entity.getEvents().addListener("exitedInteractRadius", this::playerLeftRange);
     }
 
-    private void handleInteract(){
+    private void handleInteract() {
         if (!active) {
             hideLabel();
             ui.bindData(data);
@@ -36,22 +36,22 @@ public class NpcInteractionComponent extends Component {
     }
 
     // This is a messy way to display this label but oh well
-    private void playerEnteredRange(){
+    private void playerEnteredRange() {
         showLabel();
     }
 
-    private void playerLeftRange(){
+    private void playerLeftRange() {
         hideLabel();
         safelyCloseUI();
     }
 
-    private void showLabel(){
+    private void showLabel() {
         Label interactLabel = ServiceLocator.getPrompt();
         interactLabel.setText("Press E to interact with NPC");
         interactLabel.setVisible(true);
     }
 
-    private void hideLabel(){
+    private void hideLabel() {
         Label interactLabel = ServiceLocator.getPrompt();
         interactLabel.setVisible(false);
     }

@@ -35,8 +35,13 @@ public class TeleporterIdleRenderComponent extends RenderComponent {
         }
     }
 
-    public void setVisible(boolean v) { this.visible = v; }
-    public boolean isVisible() { return visible; }
+    public void setVisible(boolean v) {
+        this.visible = v;
+    }
+
+    public boolean isVisible() {
+        return visible;
+    }
 
     @Override
     protected void draw(SpriteBatch batch) {
