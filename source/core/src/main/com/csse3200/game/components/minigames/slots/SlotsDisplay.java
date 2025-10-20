@@ -38,13 +38,12 @@ public class SlotsDisplay extends UIComponent {
     private Label.LabelStyle whiteLabelStyle, winLabelStyle, loseLabelStyle;
 
     private ReelActor[] reelActors = new ReelActor[3];
-    private TextButton spinBtn;      // disable while spinning
-    private int spinningCount = 0;   // reels still spinning
-    private int spinningBet = 0;     // bet locked for current spin
-    private SlotSymbol[] lastTargets; // target symbols this spin
+    private TextButton spinBtn;
+    private int spinningCount = 0;
+    private int spinningBet = 0;
+    private SlotSymbol[] lastTargets;
 
 
-    // --- NEW: wallet powered by InventoryComponent ---
     private Wallet wallet;
 
     private ItemScreenDisplay itemPopup;
@@ -62,9 +61,6 @@ public class SlotsDisplay extends UIComponent {
         return new TextureRegionDrawable(new TextureRegion(tex));
     }
 
-    /**
-     * Plug a player's inventory into the slots UI. Call this once before showing UI.
-     */
     public void setInventory(InventoryComponent inventory) {
         this.wallet = new DefaultInventoryWallet(inventory);
         updateBalanceLabel();
@@ -79,14 +75,14 @@ public class SlotsDisplay extends UIComponent {
         private float frameAccum;
         private boolean spinning;
         private int orderIdx = 0;
-        private final int indexInRow; // 0,1,2 for callbacks
+        private final int indexInRow;
 
         // Tuning:
-        private final float maxFps = 40f; // fast at start
-        private final float minFps = 6f;  // slow at end
+        private final float maxFps = 40f;
+        private final float minFps = 6f;
 
         ReelActor(int indexInRow) {
-            super(); // important: no-arg super(), then set drawable
+            super();
             this.indexInRow = indexInRow;
             setScaling(Scaling.fit);
 
@@ -105,7 +101,6 @@ public class SlotsDisplay extends UIComponent {
             this.frameAccum = 0f;
             this.spinning = true;
 
-            // avoid instant stop if starting already on target
             if (current == target) advanceOne();
         }
 
@@ -118,9 +113,8 @@ public class SlotsDisplay extends UIComponent {
 
             elapsed += delta;
 
-            // ease-out: fast -> slow
             float t = Math.min(1f, elapsed / duration);
-            float ease = 1f - (1f - t) * (1f - t); // quadratic ease-out
+            float ease = 1f - (1f - t) * (1f - t);
             float fps = maxFps + (minFps - maxFps) * ease;
             float frameInterval = 1f / fps;
 
@@ -214,13 +208,12 @@ public class SlotsDisplay extends UIComponent {
         Table reels = new Table();
         for (int i = 0; i < 3; i++) {
             ReelActor reel = new ReelActor(i);
-            reel.setDrawable(makeRegion(SlotSymbol.CHERRY)); // initial symbol
+            reel.setDrawable(makeRegion(SlotSymbol.CHERRY));
             reelActors[i] = reel;
             reels.add(reel).size(128, 128).pad(8);
         }
         root.add(reels).padTop(12f).row();
 
-        // --- BET ROW ---
         Table betRow = new Table();
         Label betLabel = new Label("Bet:", whiteStyle);
         betInput = new TextField("", skin);
@@ -238,12 +231,10 @@ public class SlotsDisplay extends UIComponent {
         betRow.add(plusBtn).width(80).height(48);
         root.add(betRow).padTop(10f).row();
 
-        // --- SPIN BUTTON: save to field so we can disable during spin ---
         spinBtn = new TextButton("Spin", skin);
         spinBtn.addListener(new ChangeListener() { @Override public void changed(ChangeEvent e, Actor a){ onSpin(); }});
         root.add(spinBtn).width(220f).height(64f).padTop(10f).row();
 
-        // --- RESULT LABEL ---
         resultLabel = new Label("Place a bet and spin!", whiteStyle);
         this.winLabelStyle  = winStyle;
         this.loseLabelStyle = loseStyle;
@@ -291,11 +282,9 @@ public class SlotsDisplay extends UIComponent {
         wallet.subtract(bet);
         updateBalanceLabel();
 
-        // Choose each reel's final symbol and remember bet
         spinningBet = bet;
         lastTargets = spinRow();
 
-        // Start reels with a pleasing cadence
         float base = 1.0f;  // first reel duration
         float step = 0.4f;  // extra per reel -> 1.0s, 1.4s, 1.8s
         spinningCount = 3;
@@ -448,9 +437,6 @@ public class SlotsDisplay extends UIComponent {
         }
     }
 
-    /**
-     * Abstraction over where the money lives (Inventory, separate economy system, etc.)
-     */
     private interface Wallet {
         int get();
 
@@ -461,9 +447,6 @@ public class SlotsDisplay extends UIComponent {
         void subtract(int amount);
     }
 
-    /**
-     * Adapter to your InventoryComponent. Adjust method names here if needed.
-     */
     private static class DefaultInventoryWallet implements Wallet {
         private final InventoryComponent inv;
 
