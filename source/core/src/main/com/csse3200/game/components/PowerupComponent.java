@@ -34,6 +34,13 @@ public class PowerupComponent extends Component {
         return this.activeEffects;
     }
 
+    public boolean hasEffect(Class<? extends Effect> effect) {
+        for (Effect e : activeEffects) {
+            if (e.getClass() == effect) return true;
+        }
+        return false;
+    }
+
     /**
      * Adds an effect to the active effects
      *
