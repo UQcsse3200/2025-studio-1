@@ -36,6 +36,7 @@ public class SecretRoomGameArea extends GameArea {
         GenericLayout.setupTerrainWithOverlay(this, terrainFactory, TerrainType.SECRET,
                 new Color(0.08f, 0.08f, 0.1f, 0.30f));
 
+        //Checks to see if the lighting service is not null and then sets the ambient light and turns on shadows for the room.
         var ls = ServiceLocator.getLightingService();
         if (ls != null && ls.getEngine() != null) {
             ls.getEngine().setAmbientLight(0.65f);
@@ -48,6 +49,9 @@ public class SecretRoomGameArea extends GameArea {
         spawnBorders();
     }
 
+    /**
+     * Creates and spawns the lighting effects at the designated locations.
+     */
     private void spawnCeilingCones() {
         // Warm-ish cone spotlights from ceiling pointing straight down (-90 degrees)
         var warm = new Color(0.37f, 0.82f, 0.9f, 0.95f); // tweak alpha for brightness

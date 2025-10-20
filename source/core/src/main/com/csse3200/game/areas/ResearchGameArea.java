@@ -54,6 +54,7 @@ public class ResearchGameArea extends GameArea {
                 new Color(0.10f, 0.12f, 0.18f, 0.28f)); // subtle lab-themed overlay
         spawnObjectDoors(new GridPoint2(0, 6), new GridPoint2(28, 20));
 
+        //Checks to see if the lighting service is not null and then sets the ambient light and turns on shadows for the room.
         var ls = ServiceLocator.getLightingService();
         if (ls != null && ls.getEngine() != null) {
             ls.getEngine().setAmbientLight(0.65f);
@@ -76,6 +77,9 @@ public class ResearchGameArea extends GameArea {
         spawnEntity(ui);
     }
 
+    /**
+     * Creates and spawns the lighting effects at the designated locations.
+     */
     private void spawnCeilingCones() {
         // Warm-ish cone spotlights from ceiling pointing straight down (-90 degrees)
         var warm = new Color(0.37f, 0.82f, 0.9f, 0.95f); // tweak alpha for brightness
