@@ -486,4 +486,19 @@ public class MainGameScreen extends ScreenAdapter {
         deathScreen.updateTime(getCompleteTime());
         game.setScreen(deathScreen);
     }
+
+    /**
+            * Sets the game's screen to win screen
+            *
+            * <p>
+     * Updates the win screen with the elapsed time before switching.
+            * </p>
+            */
+    private void setWinScreen() {
+        ServiceLocator.getGlobalEvents().trigger("round:finished", false);
+        game.setCarryOverLeaderBoard(session.getLeaderBoardManager());
+        WinScreen winScreen = new WinScreen(game);
+        winScreen.updateTime(getCompleteTime());
+        game.setScreen(winScreen);
+    }
 }
