@@ -30,7 +30,7 @@ public class FloorLabelDisplay extends UIComponent {
         // Create panel
         Table panel = new Table();
         panel.left();
-        panel.setBackground(skin.newDrawable("white", new Color(0f,0f,0f,0.3f)));
+        panel.setBackground(skin.newDrawable("white", new Color(0f, 0f, 0f, 0.3f)));
         panel.pad(4f, 4f, 0f, 8f);
         panel.add(label).left();
 

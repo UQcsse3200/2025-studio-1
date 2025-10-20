@@ -46,7 +46,7 @@ public class BlackJackGame extends Component {
      * True if it is the dealer's turn to draw cards.
      */
     boolean dealerTurn;
-    private String handLabel = "Hand ";
+    private static final String HAND_LABEL = "Hand ";
 
     /**
      * Initializes the game component, sets up deck and hands,
@@ -226,22 +226,22 @@ public class BlackJackGame extends Component {
         for (Hand hand : playerHands) {
             String outcome;
             if (hand.isBlackjack()) {
-                outcome = handLabel + i + ": Blackjack! Player Wins!";
+                outcome = HAND_LABEL + i + ": Blackjack! Player Wins!";
                 winner(hand);
             } else if (hand.isBust()) {
-                outcome = handLabel + i + ": Bust! Dealer Wins!";
+                outcome = HAND_LABEL + i + ": Bust! Dealer Wins!";
                 lose(hand);
             } else if (dealerHand.isBust()) {
-                outcome = handLabel + i + ": Dealer Busts! Player Wins!";
+                outcome = HAND_LABEL + i + ": Dealer Busts! Player Wins!";
                 winner(hand);
             } else if (hand.getValue() < dealerHand.getValue()) {
-                outcome = handLabel + i + ": Dealer Wins!";
+                outcome = HAND_LABEL + i + ": Dealer Wins!";
                 lose(hand);
             } else if (hand.getValue() > dealerHand.getValue()) {
-                outcome = handLabel + i + ": Player Wins!";
+                outcome = HAND_LABEL + i + ": Player Wins!";
                 winner(hand);
             } else {
-                outcome = handLabel + i + ": Tie!";
+                outcome = HAND_LABEL + i + ": Tie!";
                 if (hand.isDoubled()) {
                     entity.getEvents().trigger("doubleTie");
                     hand.setDoubled(false);

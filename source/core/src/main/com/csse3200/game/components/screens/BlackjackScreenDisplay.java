@@ -35,8 +35,8 @@ public class BlackjackScreenDisplay extends UIComponent {
 
     private static final float PANEL_W = 800f;
     private static final float PANEL_H = 1000f;
-    private final int TOTAL_CARDS = 104;
-    private final String valueLabel = "Value: ";
+    private static final int TOTAL_CARDS = 104;
+    private static final String VALUE_LABEL = "Value: ";
 
     /**
      * Background panel of the game screen.
@@ -351,13 +351,13 @@ public class BlackjackScreenDisplay extends UIComponent {
                 dealerCardsTable.add(new Image(new TextureRegionDrawable(hiddenCard)))
                         .size(72, 96).pad(3f);
             }
-            dealerValueLabel.setText(valueLabel + gameLogic.getDealerHand().getCards().getFirst().getValue());
+            dealerValueLabel.setText(VALUE_LABEL + gameLogic.getDealerHand().getCards().getFirst().getValue());
         } else {
             for (Card card : gameLogic.getDealerHand().getCards()) {
                 dealerCardsTable.add(new Image(new TextureRegionDrawable(card.getTexture())))
                         .size(72, 96).pad(3f);
             }
-            dealerValueLabel.setText(valueLabel + gameLogic.dealerHandValue());
+            dealerValueLabel.setText(VALUE_LABEL + gameLogic.dealerHandValue());
         }
 
         displayPlayerHand();
@@ -392,7 +392,7 @@ public class BlackjackScreenDisplay extends UIComponent {
                         .size(72, 96).pad(3f);
             }
 
-            Label handValueLabel = new Label(valueLabel + hand.getValue(), skin);
+            Label handValueLabel = new Label(VALUE_LABEL + hand.getValue(), skin);
             handValueLabel.setColor(Color.WHITE);
 
             handTable.add(cardsTable).left().padRight(10f);
