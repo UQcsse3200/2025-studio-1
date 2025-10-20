@@ -159,7 +159,7 @@ public class MovingBossRoom extends GameArea {
     }
 
     public void loadSecurity() {
-        SecurityGameArea.setRoomSpawn(new GridPoint2(24, 22));
+        SecurityGameArea.setRoomSpawn(new GridPoint2(25, 18));
         clearAndLoad(() -> new SecurityGameArea(terrainFactory, cameraComponent));
     }
 
