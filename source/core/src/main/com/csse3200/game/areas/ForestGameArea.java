@@ -137,6 +137,7 @@ public class ForestGameArea extends GameArea {
             "images/nurse_npc.png",
             "images/partner.png",
             "images/remote.png",
+            "images/remotetip.png",
             "images/Assistor.png",
             "images/laserbullet.png",
             "images/armour-assets/chestplate.png",
