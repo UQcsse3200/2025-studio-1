@@ -18,6 +18,10 @@ public class RoomAccessRegistry {
         roomAccessLevels.put("Floor7", 1);
     }
 
+    public RoomAccessRegistry() {
+        throw new IllegalStateException("Utility class");
+    }
+
     public static int getRequiredKeycardLevel(String roomName) {
         return roomAccessLevels.getOrDefault(roomName, 0);
     }

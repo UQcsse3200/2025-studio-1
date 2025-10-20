@@ -11,9 +11,7 @@ import org.slf4j.LoggerFactory;
  * extended for more specific combat needs.
  */
 public class CombatStatsComponent extends Component {
-
-    private static final Logger logger = LoggerFactory.getLogger(CombatStatsComponent.class);
-    private final int thresholdForBuff = 20;
+    private static final int thresholdForBuff = 20;
     /**
      * Current health points (HP). Never negative.
      */
@@ -95,10 +93,9 @@ public class CombatStatsComponent extends Component {
             entity.getEvents().trigger("updateHealth", this.health);
 
             // Apply attack buff on low health if the entity has that component
-            if (this.health <= thresholdForBuff && (!isDead())) {
-                if (entity.getComponent(LowHealthAttackBuffComponent.class) != null) {
-                    entity.getEvents().trigger("buff");
-                }
+            if (this.health <= thresholdForBuff && (!isDead())
+                    && entity.getComponent(LowHealthAttackBuffComponent.class) != null) {
+                entity.getEvents().trigger("buff");
             }
 
             if (prevHealth > 0 && this.health == 0) {
