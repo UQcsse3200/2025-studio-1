@@ -22,6 +22,7 @@ public class KeycardGateComponent extends Component {
     private final int requiredLevel;
     private final Runnable onUnlock;
     private boolean unlocked = false;
+
     public KeycardGateComponent(int requiredLevel, Runnable onUnlock) {
         this.requiredLevel = requiredLevel;
         this.onUnlock = onUnlock;

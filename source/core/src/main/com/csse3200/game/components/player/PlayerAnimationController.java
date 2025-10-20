@@ -284,14 +284,14 @@ public class PlayerAnimationController extends Component {
             return null;
         }
         if (armourFacingRight == null || armourFacingRight != facingRight) {
-                for (Entity a : armourEquipComponent.currentlyEquippedArmour.keySet()) {
-                    Vector2 scale = a.getScale();
-                    if (facingRight) {
-                        a.setScale(Math.abs(scale.x), scale.y);
-                    } else {
-                        a.setScale(-Math.abs(scale.x), scale.y);
-                    }
+            for (Entity a : armourEquipComponent.currentlyEquippedArmour.keySet()) {
+                Vector2 scale = a.getScale();
+                if (facingRight) {
+                    a.setScale(Math.abs(scale.x), scale.y);
+                } else {
+                    a.setScale(-Math.abs(scale.x), scale.y);
                 }
+            }
         }
         armourFacingRight = facingRight;
         return armourFacingRight;

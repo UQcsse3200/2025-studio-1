@@ -12,7 +12,6 @@ public class PowerupComponent extends Component {
     private Entity equippedWeapon;
 
     /**
-     *
      * @return the equipped weapon
      */
     public Entity getEquippedWeapon() {
@@ -21,6 +20,7 @@ public class PowerupComponent extends Component {
 
     /**
      * Sets the equipped weapon
+     *
      * @param weapon the weapon
      */
     public void setEquippedWeapon(Entity weapon) {
@@ -28,7 +28,6 @@ public class PowerupComponent extends Component {
     }
 
     /**
-     *
      * @return the active effects
      */
     public List<Effect> getEffects() {
@@ -37,6 +36,7 @@ public class PowerupComponent extends Component {
 
     /**
      * Adds an effect to the active effects
+     *
      * @param effect the effect
      */
     public void addEffect(Effect effect) {
