@@ -150,8 +150,8 @@ public abstract class GameArea implements Disposable {
             wavesManager = new EnemyWaves(maxWaves, this, player);
             //EnemyWavesDisplay waveDisplay = new EnemyWavesDisplay(wavesManager);
             Gdx.app.log("GameArea", "Initializing waves: room=" + room + " maxWaves=" + maxWaves);
+            wavesManager.startWave();
         }
-        wavesManager.startWave();
     }
 
     /**
