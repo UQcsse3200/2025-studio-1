@@ -18,10 +18,14 @@ import java.util.List;
  * </p>
  */
 public class Deck {
-    /** The list of all cards currently in the deck. */
-    private final List<Card> deck;
-
-    /** The index of the next card to be drawn. */
+    /**
+     * The list of all cards currently in the deck.
+     */
+    private final List<Card> cards;
+    private final int TOTAL_CARDS = 104;
+    /**
+     * The index of the next card to be drawn.
+     */
     private int position;
 
     /**
@@ -34,19 +38,19 @@ public class Deck {
      */
     public Deck() {
         TextureAtlas atlas = ServiceLocator.getResourceService().getAsset("images/cards.atlas", TextureAtlas.class);
-        deck = new ArrayList<>();
+        cards = new ArrayList<>();
 
         // Create two standard 52-card decks
         for (int i = 0; i < 2; i++) {
             for (Suit suit : Suit.values()) {
                 for (Rank rank : Rank.values()) {
                     TextureRegion texture = atlas.findRegion(rank.getSymbol() + suit.getSymbol());
-                    deck.add(new Card(suit, rank, texture));
+                    cards.add(new Card(suit, rank, texture));
                 }
             }
         }
 
-        Collections.shuffle(deck);
+        Collections.shuffle(cards);
         position = 0;
     }
 
@@ -56,7 +60,7 @@ public class Deck {
      * @return the number of cards left to draw
      */
     public int cardsRemaining() {
-        return 104 - position;
+        return TOTAL_CARDS - position;
     }
 
     /**
@@ -72,7 +76,7 @@ public class Deck {
         if (position > 100) {
             resetDeck();
         }
-        return deck.get(position++);
+        return cards.get(position++);
     }
 
     /**
@@ -81,6 +85,6 @@ public class Deck {
      */
     public void resetDeck() {
         position = 0;
-        Collections.shuffle(deck);
+        Collections.shuffle(cards);
     }
 }

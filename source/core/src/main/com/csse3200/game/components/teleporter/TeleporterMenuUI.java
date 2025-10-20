@@ -97,7 +97,9 @@ public class TeleporterMenuUI extends UIComponent {
         panel.toFront();
     }
 
-    /** Refresh list of discovered destinations, building neon-styled buttons. */
+    /**
+     * Refresh list of discovered destinations, building neon-styled buttons.
+     */
     public void refresh() {
         if (listTable == null) return;
         listTable.clearChildren();
@@ -138,18 +140,30 @@ public class TeleporterMenuUI extends UIComponent {
     private String capitalize(String k) {
         if (k == null || k.isEmpty()) return k;
         switch (k) {
-            case "mainhall": return "MainHall";
-            case "server": return "Server";
-            case "storage": return "Storage";
-            case "shipping": return "Shipping";
-            case "research": return "Research";
-            case "elevator": return "Elevator";
-            case "office": return "Office";
-            case "security": return "Security";
-            case "reception": return "Reception";
-            case "forest": return "Forest";
-            case "tunnel": return "Tunnel";
-            default: return Character.toUpperCase(k.charAt(0)) + k.substring(1);
+            case "mainhall":
+                return "MainHall";
+            case "server":
+                return "Server";
+            case "storage":
+                return "Storage";
+            case "shipping":
+                return "Shipping";
+            case "research":
+                return "Research";
+            case "elevator":
+                return "Elevator";
+            case "office":
+                return "Office";
+            case "security":
+                return "Security";
+            case "reception":
+                return "Reception";
+            case "forest":
+                return "Forest";
+            case "tunnel":
+                return "Tunnel";
+            default:
+                return Character.toUpperCase(k.charAt(0)) + k.substring(1);
         }
     }
 

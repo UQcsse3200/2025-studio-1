@@ -12,10 +12,14 @@ import java.util.List;
  * </p>
  */
 public class Hand {
-    /** The list of cards currently in this hand. */
+    /**
+     * The list of cards currently in this hand.
+     */
     private List<Card> cards;
 
-    /** Whether this hand has been doubled down. */
+    /**
+     * Whether this hand has been doubled down.
+     */
     private boolean doubled;
 
     /**

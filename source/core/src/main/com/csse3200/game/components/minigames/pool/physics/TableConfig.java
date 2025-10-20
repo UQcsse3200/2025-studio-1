@@ -22,15 +22,15 @@ public class TableConfig {
     /**
      * Creates a new immutable table configuration.
      *
-     * @param tableW         table width (world units)
-     * @param tableH         table height (world units)
-     * @param railX          rail thickness along the X axis
-     * @param railY          rail thickness along the Y axis
-     * @param ballR          ball radius (world units)
-     * @param pocketRScale   scale factor for pocket radius relative to ball radius
-     * @param insetX         horizontal inset scale for pocket position
-     * @param insetY         vertical inset scale for pocket position
-     * @param funnelScale    scale factor for pocket funnel offset
+     * @param tableW       table width (world units)
+     * @param tableH       table height (world units)
+     * @param railX        rail thickness along the X axis
+     * @param railY        rail thickness along the Y axis
+     * @param ballR        ball radius (world units)
+     * @param pocketRScale scale factor for pocket radius relative to ball radius
+     * @param insetX       horizontal inset scale for pocket position
+     * @param insetY       vertical inset scale for pocket position
+     * @param funnelScale  scale factor for pocket funnel offset
      */
     private TableConfig(float tableW, float tableH, float railX, float railY,
                         float ballR, float pocketRScale,

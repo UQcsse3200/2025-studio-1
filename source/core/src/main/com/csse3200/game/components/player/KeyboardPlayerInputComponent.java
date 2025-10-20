@@ -66,7 +66,7 @@ public class KeyboardPlayerInputComponent extends InputComponent {
                 return true;
 
             case Keys.SPACE:
-                if(ServiceLocator.getTimeSource().isPaused()){
+                if (ServiceLocator.getTimeSource().isPaused()) {
                     return false;
                 }
                 triggerJumpEvent();

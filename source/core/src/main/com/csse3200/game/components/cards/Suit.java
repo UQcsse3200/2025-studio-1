@@ -8,19 +8,29 @@ package com.csse3200.game.components.cards;
  * </p>
  */
 public enum Suit {
-    /** Clubs suit, symbol "C". */
+    /**
+     * Clubs suit, symbol "C".
+     */
     CLUBS("C"),
 
-    /** Diamonds suit, symbol "D". */
+    /**
+     * Diamonds suit, symbol "D".
+     */
     DIAMONDS("D"),
 
-    /** Hearts suit, symbol "H". */
+    /**
+     * Hearts suit, symbol "H".
+     */
     HEARTS("H"),
 
-    /** Spades suit, symbol "S". */
+    /**
+     * Spades suit, symbol "S".
+     */
     SPADES("S");
 
-    /** Symbolic representation of the suit (e.g., "C", "D", "H", "S"). */
+    /**
+     * Symbolic representation of the suit (e.g., "C", "D", "H", "S").
+     */
     private final String symbol;
 
     /**
