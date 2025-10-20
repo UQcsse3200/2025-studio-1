@@ -28,7 +28,10 @@ public class WaveAlertDisplay extends UIComponent {
         addActors();
     }
 
-    /** Initialise and add the alert label to the stage. */
+    /**
+     * Initialises and adds the labels and table to the stage.
+     * Sets up layout, background, and initial visibility.
+     */
     private void addActors() {
         table = new Table();
         table.setFillParent(true); // center on screen
@@ -45,8 +48,7 @@ public class WaveAlertDisplay extends UIComponent {
         }
         alertLabel1.setColor(Color.SKY);
         alertLabel2.setColor(Color.SKY);
-        alertLabel1.setVisible(false);
-        alertLabel2.setVisible(false);
+        table.setVisible(false);
 
         float scale = Math.min(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()) / 250f;
         alertLabel1.setFontScale(scale);
@@ -65,10 +67,12 @@ public class WaveAlertDisplay extends UIComponent {
         // draw handled by stage
     }
 
-    /** Show the alert with a flashing/pulsing effect. */
+    /**
+     * Displays the wave alert on screen with a flashing color effect.
+     * Makes the table visible and starts their color animation.
+     */
     public void display() {
-        alertLabel1.setVisible(true);
-        alertLabel2.setVisible(true);
+       table.setVisible(true);
         alertLabel1.clearActions();
         alertLabel2.clearActions();
 
@@ -87,7 +91,10 @@ public class WaveAlertDisplay extends UIComponent {
         ));
     }
 
-    /** Hide and stop the alert. */
+    /**
+     * Hides the wave alert and stops all ongoing animations.
+     * Also removes the alert table from the stage to clean up resources.
+     */
     public void dispose() {
         alertLabel1.setVisible(false);
         alertLabel2.setVisible(false);
@@ -96,11 +103,24 @@ public class WaveAlertDisplay extends UIComponent {
         table.remove();
     }
 
+    /**
+     * @return the first alert label used in the flashing wave alert display
+     */
     public Label getAlertLabel1() {
         return alertLabel1;
     }
 
+    /**
+     * @return the second alert label used in the flashing wave alert display
+     */
     public Label getAlertLabel2() {
         return alertLabel2;
+    }
+
+    /**
+     * @return the root {@link Table} used for layout and display.
+     */
+    public Table getTable() {
+        return table;
     }
 }

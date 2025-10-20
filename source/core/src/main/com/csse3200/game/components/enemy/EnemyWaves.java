@@ -305,16 +305,40 @@ public class EnemyWaves extends Component {
         this.waveEndTime = waveEndTime;
     }
 
+    /**
+     * Returns the delay between enemy waves in seconds.
+     *
+     * @return wave delay duration in seconds
+     */
     public int getWaveDelayInSeconds() {
         return (int) WAVE_DELAY_MS / 1000;
     }
 
+    /**
+     * @return the {@link EventHandler} managing wave-related events
+     */
     public EventHandler getEvents() {
         return eventHandler;
     }
 
+    /**
+     * Sets the current number of enemies remaining.
+     * Primarily used for testing or manual state updates.
+     *
+     * @param enemyNum the number of enemies left
+     */
+    public void setEnemyLeft(int enemyNum) {
+        enemyLeft = enemyNum;
+    }
+
+    /**
+     * Returns the current number of enemies remaining in the wave.
+     *
+     * @return the number of enemies left
+     */
     public int getEnemyLeft() {
         return enemyLeft;
     }
+
 }
 
