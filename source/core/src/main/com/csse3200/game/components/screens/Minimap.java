@@ -244,8 +244,6 @@ public class Minimap {
      */
     public void open() {
         DiscoveryService discoveryService = ServiceLocator.getDiscoveryService();
-        Vector2 playerPosition = ServiceLocator.getPlayer().getPosition();
-        logger.info(playerPosition.x + ", " + playerPosition.y);
 
         // Get the current room and set the center to the player's location
         String currentRoom = ServiceLocator.getGameArea().toString();

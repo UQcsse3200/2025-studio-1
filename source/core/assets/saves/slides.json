@@ -1,18 +1,29 @@
 {
 "player": {
 	"playerPos": {
-		"x": 10.313381,
+		"x": -0.68500006,
 		"y": 3.6149998
 	},
-	"avatar": "placeholder",
+	"avatar": "images/avatars/burger.png",
 	"ammoReserve": 1000,
 	"stamina": 140,
 	"maxStamina": 140,
 	"maxHealth": 80,
 	"currentHealth": 80,
-	"processor": 9000
+	"processor": 1240
 },
-"gameArea": "Forest",
-"wave": 2,
-"loadedInventory": []
+"gameArea": "Casino",
+"loadedInventory": [
+	null,
+	null,
+	null,
+	null,
+	null
+],
+"difficulty": "NORMAL",
+"areasVisited": [
+	"forest",
+	"casino"
+],
+"armour": []
 }
