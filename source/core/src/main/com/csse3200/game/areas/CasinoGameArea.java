@@ -18,7 +18,7 @@ import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.factories.InteractableStationFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.entities.factories.LightFactory;
-import com.csse3200.game.components.lighting.PointLightFollowComponent;
+import com.csse3200.game.lighting.PointLightFollowComponent;
 import com.csse3200.game.rendering.TextureRenderComponent;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
@@ -81,9 +81,9 @@ public class CasinoGameArea extends GameArea {
         spawnLight();
         player = spawnPlayer();
 
-        if (player.getComponent(com.csse3200.game.components.lighting.PointLightComponent.class) == null &&
-                player.getComponent(com.csse3200.game.components.lighting.PointLightFollowComponent.class) == null) {
-            player.addComponent(new com.csse3200.game.components.lighting.PointLightFollowComponent(
+        if (player.getComponent(com.csse3200.game.lighting.PointLightComponent.class) == null &&
+                player.getComponent(com.csse3200.game.lighting.PointLightFollowComponent.class) == null) {
+            player.addComponent(new com.csse3200.game.lighting.PointLightFollowComponent(
                     32, new com.badlogic.gdx.graphics.Color(1f,1f,1f,0.35f), 6.5f, new com.badlogic.gdx.math.Vector2(0f, 1f)
             ));
         }
