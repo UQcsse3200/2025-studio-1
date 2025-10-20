@@ -44,7 +44,9 @@ public class FileLoader {
      * @return instance of class, may be null
      */
     public static <T> T readClass(Class<T> type, String filename, Location location) {
-        logger.debug("Reading class {} from {}", type.getSimpleName(), filename);
+        if (type != null) {
+            logger.debug("Reading class {} from {}", type.getSimpleName(), filename);
+        }
         FileHandle file = getFileHandle(filename, location);
 
         if (file == null) {

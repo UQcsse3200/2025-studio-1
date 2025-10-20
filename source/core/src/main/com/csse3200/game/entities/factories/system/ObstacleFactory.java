@@ -55,11 +55,13 @@ public class ObstacleFactory {
         Entity MarblePlatform = new Entity()
                 .addComponent(new TextureRenderComponent("images/MarblePlatform.png"))
                 .addComponent(new PhysicsComponent())
-                .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
+                .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE))
+                .addComponent(new HitboxComponent().setLayer(PhysicsLayer.ALL));
         MarblePlatform.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
         MarblePlatform.getComponent(TextureRenderComponent.class).scaleEntity();
         MarblePlatform.scaleHeight(0.5f);
         PhysicsUtils.setScaledCollider(MarblePlatform, 1f, 0.75f);
+        MarblePlatform.getComponent(HitboxComponent.class).setAsBox(MarblePlatform.getScale());
         return MarblePlatform;
     }
 
@@ -67,11 +69,13 @@ public class ObstacleFactory {
         Entity ShipmentBoxes = new Entity()
                 .addComponent(new TextureRenderComponent("images/ShipmentBoxLid.png"))
                 .addComponent(new PhysicsComponent())
-                .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
+                .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE))
+                .addComponent(new HitboxComponent().setLayer(PhysicsLayer.ALL));
         ShipmentBoxes.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
         ShipmentBoxes.getComponent(TextureRenderComponent.class).scaleEntity();
         ShipmentBoxes.scaleHeight(0.05f);
         PhysicsUtils.setScaledCollider(ShipmentBoxes, 1f, 0.75f);
+        ShipmentBoxes.getComponent(HitboxComponent.class).setAsBox(ShipmentBoxes.getScale());
         return ShipmentBoxes;
     }
 
@@ -79,11 +83,13 @@ public class ObstacleFactory {
         Entity ShipmentCrane = new Entity()
                 .addComponent(new TextureRenderComponent("images/ShipmentCrane.png"))
                 .addComponent(new PhysicsComponent())
-                .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
+                .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE))
+                .addComponent(new HitboxComponent().setLayer(PhysicsLayer.ALL));
         ShipmentCrane.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
         ShipmentCrane.getComponent(TextureRenderComponent.class).scaleEntity();
         ShipmentCrane.scaleHeight(0.05f);
         PhysicsUtils.setScaledCollider(ShipmentCrane, 1f, 0.75f);
+        ShipmentCrane.getComponent(HitboxComponent.class).setAsBox(ShipmentCrane.getScale());
         return ShipmentCrane;
     }
 
@@ -91,11 +97,13 @@ public class ObstacleFactory {
         Entity ShipmentCrane = new Entity()
                 .addComponent(new TextureRenderComponent("images/Conveyor.png"))
                 .addComponent(new PhysicsComponent())
-                .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
+                .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE))
+                .addComponent(new HitboxComponent().setLayer(PhysicsLayer.ALL));
         ShipmentCrane.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
         ShipmentCrane.getComponent(TextureRenderComponent.class).scaleEntity();
         ShipmentCrane.scaleHeight(0.05f);
         PhysicsUtils.setScaledCollider(ShipmentCrane, 1f, 0.75f);
+        ShipmentCrane.getComponent(HitboxComponent.class).setAsBox(ShipmentCrane.getScale());
         return ShipmentCrane;
     }
 
@@ -110,12 +118,14 @@ public class ObstacleFactory {
                 new Entity()
                         .addComponent(new TextureRenderComponent("foreg_sprites/general/Test.png"))
                         .addComponent(new PhysicsComponent())
-                        .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
+                        .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE))
+                        .addComponent(new HitboxComponent().setLayer(PhysicsLayer.ALL));
 
         longFloor.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
         longFloor.getComponent(TextureRenderComponent.class).scaleEntity();
         longFloor.scaleHeight(0.6f);
         PhysicsUtils.setScaledCollider(longFloor, 1f, 1f);
+        longFloor.getComponent(HitboxComponent.class).setAsBox(longFloor.getScale());
         return longFloor;
     }
 
@@ -129,12 +139,14 @@ public class ObstacleFactory {
                 new Entity()
                         .addComponent(new TextureRenderComponent("foreg_sprites/general/LongFloor.png"))
                         .addComponent(new PhysicsComponent())
-                        .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
+                        .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE))
+                        .addComponent(new HitboxComponent().setLayer(PhysicsLayer.ALL));
 
         longFloor.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
         longFloor.getComponent(TextureRenderComponent.class).scaleEntity();
         longFloor.scaleHeight(2f);
         PhysicsUtils.setScaledCollider(longFloor, 1f, 1f);
+        longFloor.getComponent(HitboxComponent.class).setAsBox(longFloor.getScale());
         return longFloor;
     }
 
@@ -149,12 +161,14 @@ public class ObstacleFactory {
                 new Entity()
                         .addComponent(new TextureRenderComponent("foreg_sprites/general/ThickFloor.png"))
                         .addComponent(new PhysicsComponent())
-                        .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
+                        .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE))
+                        .addComponent(new HitboxComponent().setLayer(PhysicsLayer.ALL));
 
         bigThickFloor.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
         bigThickFloor.getComponent(TextureRenderComponent.class).scaleEntity();
         bigThickFloor.scaleHeight(20f);
         PhysicsUtils.setScaledCollider(bigThickFloor, 1f, 1f);
+        bigThickFloor.getComponent(HitboxComponent.class).setAsBox(bigThickFloor.getScale());
         return bigThickFloor;
     }
 
@@ -202,12 +216,14 @@ public class ObstacleFactory {
                 new Entity()
                         .addComponent(new TextureRenderComponent("foreg_sprites/general/ThickFloor.png"))
                         .addComponent(new PhysicsComponent())
-                        .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
+                        .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE))
+                        .addComponent(new HitboxComponent().setLayer(PhysicsLayer.ALL));
 
         thickFloor.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
         thickFloor.getComponent(TextureRenderComponent.class).scaleEntity();
         thickFloor.scaleHeight(3f);
         PhysicsUtils.setScaledCollider(thickFloor, 1f, 1f);
+        thickFloor.getComponent(HitboxComponent.class).setAsBox(thickFloor.getScale());
         return thickFloor;
     }
 
@@ -217,12 +233,14 @@ public class ObstacleFactory {
                 new Entity()
                         .addComponent(new TextureRenderComponent("foreg_sprites/general/ThinFloor3.png"))
                         .addComponent(new PhysicsComponent())
-                        .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
+                        .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE))
+                        .addComponent(new HitboxComponent().setLayer(PhysicsLayer.ALL));
 
         thinFloor.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
         thinFloor.getComponent(TextureRenderComponent.class).scaleEntity();
         thinFloor.scaleHeight(0.8f);
         PhysicsUtils.setScaledCollider(thinFloor, 1f, 0.9f);
+        thinFloor.getComponent(HitboxComponent.class).setAsBox(thinFloor.getScale());
         return thinFloor;
     }
 
@@ -235,7 +253,7 @@ public class ObstacleFactory {
                         .addComponent(new TextureRenderComponent("images/platform-2.png"))
                         .addComponent(new PhysicsComponent())
                         .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE))
-                        .addComponent(new HitboxComponent().setLayer(PhysicsLayer.OBSTACLE));
+                        .addComponent(new HitboxComponent().setLayer(PhysicsLayer.ALL));
 
         platform2.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
         platform2.getComponent(TextureRenderComponent.class).scaleEntity();
@@ -244,6 +262,7 @@ public class ObstacleFactory {
         Vector2 offset = new Vector2(0f, platform2.getScale().y * 0.001f);
         platform2.getComponent(ColliderComponent.class)
                 .setAsBox(colliderSize, platform2.getCenterPosition().add(offset));
+        platform2.getComponent(HitboxComponent.class).setAsBox(colliderSize, platform2.getCenterPosition().add(offset));
         return platform2;
     }
 
@@ -255,11 +274,13 @@ public class ObstacleFactory {
                 new Entity()
                         .addComponent(new TextureRenderComponent("images/holo-clock.png"))
                         .addComponent(new PhysicsComponent())
-                        .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
+                        .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE))
+                        .addComponent(new HitboxComponent().setLayer(PhysicsLayer.ALL));
         clockSpawn.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
         clockSpawn.getComponent(TextureRenderComponent.class).scaleEntity();
         clockSpawn.scaleHeight(2f);
         PhysicsUtils.setScaledCollider(clockSpawn, 0.2f, 1f);
+        clockSpawn.getComponent(HitboxComponent.class).setAsBox(clockSpawn.getScale());
         return clockSpawn;
     }
     /**
@@ -270,7 +291,8 @@ public class ObstacleFactory {
                 new Entity()
                         .addComponent(new TextureRenderComponent("images/Office and elevator/Platform for elevator.png"))
                         .addComponent(new PhysicsComponent())
-                        .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
+                        .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE))
+                        .addComponent(new HitboxComponent().setLayer(PhysicsLayer.ALL));
 
         platform.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
         platform.getComponent(TextureRenderComponent.class).scaleEntity();
@@ -283,6 +305,7 @@ public class ObstacleFactory {
                 platform.getScale().x / 2f,
                 platform.getScale().y - (colliderSize.y / 2f) - offsetDown);
         platform.getComponent(ColliderComponent.class).setAsBox(colliderSize, colliderPos);
+        platform.getComponent(HitboxComponent.class).setAsBox(colliderSize, colliderPos);
         return platform;
     }
 
@@ -294,7 +317,8 @@ public class ObstacleFactory {
                 new Entity()
                         .addComponent(new TextureRenderComponent("images/Office and elevator/Office platform.png"))
                         .addComponent(new PhysicsComponent())
-                        .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
+                        .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE))
+                        .addComponent(new HitboxComponent().setLayer(PhysicsLayer.ALL));
 
         platform.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
         platform.getComponent(TextureRenderComponent.class).scaleEntity();
@@ -305,6 +329,7 @@ public class ObstacleFactory {
                 platform.getScale().x / 2f,
                 platform.getScale().y - (colliderSize.y / 2f) - offsetDown);
         platform.getComponent(ColliderComponent.class).setAsBox(colliderSize, colliderPos);
+        platform.getComponent(HitboxComponent.class).setAsBox(colliderSize, colliderPos);
         return platform;
     }
 
@@ -315,12 +340,14 @@ public class ObstacleFactory {
         Entity desk_receptionSpawn =
                 new Entity()
                         .addComponent(new TextureRenderComponent("images/desk_reception.png"))
-                .addComponent(new PhysicsComponent())
-                .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
+                        .addComponent(new PhysicsComponent())
+                        .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE))
+                        .addComponent(new HitboxComponent().setLayer(PhysicsLayer.ALL));
         desk_receptionSpawn.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
         desk_receptionSpawn.getComponent(TextureRenderComponent.class).scaleEntity();
         desk_receptionSpawn.scaleHeight(3f);
         PhysicsUtils.setScaledCollider(desk_receptionSpawn, 0.7f, 0.75f);
+        desk_receptionSpawn.getComponent(HitboxComponent.class).setAsBox(desk_receptionSpawn.getScale());
         return desk_receptionSpawn;
     }
 
@@ -331,12 +358,14 @@ public class ObstacleFactory {
         Entity comic_standSpawn =
                 new Entity()
                         .addComponent(new TextureRenderComponent("images/comics.png"))
-                .addComponent(new PhysicsComponent())
-                .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
+                        .addComponent(new PhysicsComponent())
+                        .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE))
+                        .addComponent(new HitboxComponent().setLayer(PhysicsLayer.ALL));
         comic_standSpawn.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
         comic_standSpawn.getComponent(TextureRenderComponent.class).scaleEntity();
         comic_standSpawn.scaleHeight(1f);
         PhysicsUtils.setScaledCollider(comic_standSpawn, 0.7f, 0.75f);
+        comic_standSpawn.getComponent(HitboxComponent.class).setAsBox(comic_standSpawn.getScale());
         return comic_standSpawn;
     }
 
@@ -349,7 +378,7 @@ public class ObstacleFactory {
                         .addComponent(new TextureRenderComponent("images/platform-3.png"))
                         .addComponent(new PhysicsComponent())
                         .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE))
-                        .addComponent(new HitboxComponent().setLayer(PhysicsLayer.OBSTACLE));
+                        .addComponent(new HitboxComponent().setLayer(PhysicsLayer.ALL));
 
         platform3.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
         platform3.getComponent(TextureRenderComponent.class).scaleEntity();
@@ -360,7 +389,7 @@ public class ObstacleFactory {
 
         platform3.getComponent(ColliderComponent.class)
                 .setAsBox(colliderSize, platform3.getCenterPosition().add(offset));
-
+        platform3.getComponent(HitboxComponent.class).setAsBox(colliderSize, platform3.getCenterPosition().add(offset));
         return platform3;
     }
     /**
@@ -370,10 +399,11 @@ public class ObstacleFactory {
         Entity Mhall_sofaSpawn =
                 new Entity()
                         .addComponent(new TextureRenderComponent("images/Mhall-sofa.png"))
-                        .addComponent(new ColliderComponent())
-                        .addComponent(new HitboxComponent().setLayer(PhysicsLayer.OBSTACLE));
+                        .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE))
+                        .addComponent(new HitboxComponent().setLayer(PhysicsLayer.ALL));
         Mhall_sofaSpawn.getComponent(TextureRenderComponent.class).scaleEntity();
         Mhall_sofaSpawn.scaleHeight(3f);
+        Mhall_sofaSpawn.getComponent(HitboxComponent.class).setAsBox(Mhall_sofaSpawn.getScale());
         return Mhall_sofaSpawn;
     }
 
@@ -457,12 +487,15 @@ public class ObstacleFactory {
                 new Entity()
                         .addComponent(new TextureRenderComponent("foreg_sprites/office/Crate.png"))
                         .addComponent(new PhysicsComponent())
-                        .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
+                        .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE))
+                        .addComponent(new HitboxComponent().setLayer(PhysicsLayer.ALL));
+
 
         crate.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
         crate.getComponent(TextureRenderComponent.class).scaleEntity();
         crate.scaleHeight(1f);
         PhysicsUtils.setScaledCollider(crate, 1f, 1f);
+        crate.getComponent(HitboxComponent.class).setAsBox(crate.getScale());
         return crate;
     }
 
@@ -476,12 +509,14 @@ public class ObstacleFactory {
                 new Entity()
                         .addComponent(new TextureRenderComponent("foreg_sprites/office/officeDesk4.png"))
                         .addComponent(new PhysicsComponent())
-                        .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
+                        .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE))
+                        .addComponent(new HitboxComponent().setLayer(PhysicsLayer.ALL));
 
         officeDesk.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
         officeDesk.getComponent(TextureRenderComponent.class).scaleEntity();
         officeDesk.scaleHeight(2.0f);
         PhysicsUtils.setScaledCollider(officeDesk, 1f, 1f);
+        officeDesk.getComponent(HitboxComponent.class).setAsBox(officeDesk.getScale());
         return officeDesk;
     }
 
@@ -532,12 +567,14 @@ public class ObstacleFactory {
                 new Entity()
                         .addComponent(new TextureRenderComponent("foreg_sprites/Security/Monitor.png"))
                         .addComponent(new PhysicsComponent())
-                        .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
+                        .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE))
+                        .addComponent(new HitboxComponent().setLayer(PhysicsLayer.ALL));
 
         monitor.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
         monitor.getComponent(TextureRenderComponent.class).scaleEntity();
         monitor.scaleHeight(2f);
         PhysicsUtils.setScaledCollider(monitor, 0.7f, 0.8f);
+        monitor.getComponent(HitboxComponent.class).setAsBox(monitor.getScale());
         return monitor;
     }
 
@@ -553,12 +590,14 @@ public class ObstacleFactory {
                         .addComponent(new TextureRenderComponent("foreg_sprites/Security/Platform.png"))
                         .addComponent(new PhysicsComponent())
                         .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE))
-                        .addComponent(new BreakablePlatformComponent());
+                        .addComponent(new BreakablePlatformComponent())
+                        .addComponent(new HitboxComponent().setLayer(PhysicsLayer.ALL));
 
         platform.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
         platform.getComponent(TextureRenderComponent.class).scaleEntity();
         platform.scaleHeight(1.0f);
         PhysicsUtils.setScaledCollider(platform, 1f, 0.5f);
+        platform.getComponent(HitboxComponent.class).setAsBox(platform.getScale());
         return platform;
     }
 
@@ -589,12 +628,14 @@ public class ObstacleFactory {
                 new Entity()
                         .addComponent(new TextureRenderComponent("foreg_sprites/Security/SecuritySystem.png"))
                         .addComponent(new PhysicsComponent())
-                        .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
+                        .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE))
+                        .addComponent(new HitboxComponent().setLayer(PhysicsLayer.ALL));
 
         console.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
         console.getComponent(TextureRenderComponent.class).scaleEntity();
         console.scaleHeight(2.0f);
         PhysicsUtils.setScaledCollider(console, 0.7f, 0.8f);
+        console.getComponent(HitboxComponent.class).setAsBox(console.getScale());
         return console;
     }
 
@@ -608,12 +649,14 @@ public class ObstacleFactory {
         Entity lab = new Entity()
                 .addComponent(new TextureRenderComponent("foreg_sprites/Research/Laboratory.png"))
                 .addComponent(new PhysicsComponent())
-                .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
+                .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE))
+                .addComponent(new HitboxComponent().setLayer(PhysicsLayer.ALL));
 
         lab.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
         lab.getComponent(TextureRenderComponent.class).scaleEntity();
         lab.scaleHeight(3.0f);
         PhysicsUtils.setScaledCollider(lab, 0.8f, 0.9f);
+        lab.getComponent(HitboxComponent.class).setAsBox(lab.getScale());
         return lab;
     }
 
@@ -627,12 +670,14 @@ public class ObstacleFactory {
         Entity scope = new Entity()
                 .addComponent(new TextureRenderComponent("foreg_sprites/Research/Microscope.png"))
                 .addComponent(new PhysicsComponent())
-                .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
+                .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE))
+                .addComponent(new HitboxComponent().setLayer(PhysicsLayer.ALL));
 
         scope.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
         scope.getComponent(TextureRenderComponent.class).scaleEntity();
         scope.scaleHeight(1.6f);
         PhysicsUtils.setScaledCollider(scope, 0.6f, 0.8f);
+        scope.getComponent(HitboxComponent.class).setAsBox(scope.getScale());
         return scope;
     }
 
@@ -646,12 +691,14 @@ public class ObstacleFactory {
         Entity desk = new Entity()
                 .addComponent(new TextureRenderComponent("foreg_sprites/Research/ResearchDesk.png"))
                 .addComponent(new PhysicsComponent())
-                .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
+                .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE))
+                .addComponent(new HitboxComponent().setLayer(PhysicsLayer.ALL));
 
         desk.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
         desk.getComponent(TextureRenderComponent.class).scaleEntity();
         desk.scaleHeight(2.8f);
         PhysicsUtils.setScaledCollider(desk, 0.8f, 0.8f);
+        desk.getComponent(HitboxComponent.class).setAsBox(desk.getScale());
         return desk;
     }
 
@@ -665,12 +712,14 @@ public class ObstacleFactory {
         Entity pod = new Entity()
                 .addComponent(new TextureRenderComponent("foreg_sprites/Research/ResearchPod.png"))
                 .addComponent(new PhysicsComponent())
-                .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
+                .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE))
+                .addComponent(new HitboxComponent().setLayer(PhysicsLayer.ALL));
 
         pod.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
         pod.getComponent(TextureRenderComponent.class).scaleEntity();
         pod.scaleHeight(1.6f);
         PhysicsUtils.setScaledCollider(pod, 0.6f, 0.9f);
+        pod.getComponent(HitboxComponent.class).setAsBox(pod.getScale());
         return pod;
     }
 
@@ -684,12 +733,14 @@ public class ObstacleFactory {
                 new Entity()
                         .addComponent(new TextureRenderComponent("foreg_sprites/furniture/ServerRack.png"))
                         .addComponent(new PhysicsComponent())
-                        .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
+                        .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE))
+                        .addComponent(new HitboxComponent().setLayer(PhysicsLayer.ALL));
 
         serverRack.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
         serverRack.getComponent(TextureRenderComponent.class).scaleEntity();
         serverRack.scaleHeight(1f);
         PhysicsUtils.setScaledCollider(serverRack, 1f, 1f);
+        serverRack.getComponent(HitboxComponent.class).setAsBox(serverRack.getScale());
         return serverRack;
     }
 
@@ -722,7 +773,7 @@ public class ObstacleFactory {
                 .addComponent(new TextureRenderComponent("foreg_sprites/extras/Spikes.png"))
                 .addComponent(new PhysicsComponent())
                 .addComponent(new ColliderComponent())
-                .addComponent(new HitboxComponent().setLayer(PhysicsLayer.OBSTACLE))
+                .addComponent(new HitboxComponent().setLayer(PhysicsLayer.ALL))
                 .addComponent(new TouchAttackComponent(PhysicsLayer.PLAYER, 25f))
                 .addComponent(new WeaponsStatsComponent(30));
 
@@ -730,6 +781,7 @@ public class ObstacleFactory {
         spikes.getComponent(TextureRenderComponent.class).scaleEntity();
         spikes.scaleHeight(1f);
         PhysicsUtils.setScaledCollider(spikes, 1f, 1f);
+        spikes.getComponent(HitboxComponent.class).setAsBox(spikes.getScale());
         return spikes;
     }
     public static Entity createSpikes2() {
@@ -737,7 +789,7 @@ public class ObstacleFactory {
                 .addComponent(new TextureRenderComponent("foreg_sprites/extras/Spikes2.png"))
                 .addComponent(new PhysicsComponent())
                 .addComponent(new ColliderComponent())
-                .addComponent(new HitboxComponent().setLayer(PhysicsLayer.OBSTACLE))
+                .addComponent(new HitboxComponent().setLayer(PhysicsLayer.ALL))
                 .addComponent(new TouchAttackComponent(PhysicsLayer.PLAYER, 10f))
                 .addComponent(new WeaponsStatsComponent(30));
 
@@ -745,6 +797,7 @@ public class ObstacleFactory {
         spikes.getComponent(TextureRenderComponent.class).scaleEntity();
         spikes.scaleHeight(0.9f);
         PhysicsUtils.setScaledCollider(spikes, 1f, 1f);
+        spikes.getComponent(HitboxComponent.class).setAsBox(spikes.getScale());
         return spikes;
     }
 
@@ -772,12 +825,14 @@ public class ObstacleFactory {
                 new Entity()
                         .addComponent(new TextureRenderComponent("foreg_sprites/furniture/LabPlant1.png"))
                         .addComponent(new PhysicsComponent())
-                        .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
+                        .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE))
+                        .addComponent(new HitboxComponent().setLayer(PhysicsLayer.ALL));
 
         labPlant.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
         labPlant.getComponent(TextureRenderComponent.class).scaleEntity();
         labPlant.scaleHeight(1.5f);
         PhysicsUtils.setScaledCollider(labPlant, 1f, 1f);
+        labPlant.getComponent(HitboxComponent.class).setAsBox(labPlant.getScale());
         return labPlant;
     }
 
@@ -813,8 +868,10 @@ public class ObstacleFactory {
     public static Entity createWall(float width, float height) {
         Entity wall = new Entity()
                 .addComponent(new PhysicsComponent().setBodyType(BodyType.StaticBody))
-                .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
+                .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE))
+                .addComponent(new HitboxComponent().setLayer(PhysicsLayer.ALL));
         wall.setScale(width, height);
+        wall.getComponent(HitboxComponent.class).setAsBox(wall.getScale());
         return wall;
     }
 
