@@ -1,4 +1,4 @@
-package com.csse3200.game.components.lighting;
+package com.csse3200.game.lighting;
 
 import box2dLight.DirectionalLight;
 import box2dLight.RayHandler;

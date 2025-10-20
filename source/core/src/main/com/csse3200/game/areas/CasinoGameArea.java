@@ -18,7 +18,7 @@ import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.factories.InteractableStationFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.entities.factories.LightFactory;
-import com.csse3200.game.components.lighting.PointLightFollowComponent;
+import com.csse3200.game.lighting.PointLightFollowComponent;
 import com.csse3200.game.rendering.TextureRenderComponent;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
@@ -72,18 +72,19 @@ public class CasinoGameArea extends GameArea {
         if (ls != null && ls.getEngine() != null) {
             ls.getEngine().setAmbientLight(0.65f); // 0.7–0.8 feels “casino”
             ls.getEngine().getRayHandler().setShadows(true);
-            ls.getEngine().getRayHandler().removeAll();
         }
 
-        spawnNeonRig();
+        spawnCeilingCones();
+        //spawnConeLight();
+        //spawnNeonRig();
         spawnBordersAndDoors();
         spawnFloor();
-        spawnLight();
+        //spawnLight();
         player = spawnPlayer();
 
-        if (player.getComponent(com.csse3200.game.components.lighting.PointLightComponent.class) == null &&
-                player.getComponent(com.csse3200.game.components.lighting.PointLightFollowComponent.class) == null) {
-            player.addComponent(new com.csse3200.game.components.lighting.PointLightFollowComponent(
+        if (player.getComponent(com.csse3200.game.lighting.PointLightComponent.class) == null &&
+                player.getComponent(com.csse3200.game.lighting.PointLightFollowComponent.class) == null) {
+            player.addComponent(new com.csse3200.game.lighting.PointLightFollowComponent(
                     32, new com.badlogic.gdx.graphics.Color(1f,1f,1f,0.35f), 6.5f, new com.badlogic.gdx.math.Vector2(0f, 1f)
             ));
         }
@@ -132,6 +133,35 @@ public class CasinoGameArea extends GameArea {
         spawnEntityAt(
                 LightFactory.createPointLightEntity(64, bulb, bulbDist, true, new Vector2(0f, 0f)),
                 new GridPoint2(24, 12), true, true);
+    }
+
+    private void spawnConeLight() {
+        Color bulb = new Color(1f,0.95f,0.85f,0.34f);
+
+        spawnEntityAt(
+                LightFactory.createConeLightEntity(64, bulb, 22f,-90f,true, new Vector2(0f,0f)),
+                new GridPoint2(15, 12), true, true);
+    }
+
+    private void spawnCeilingCones() {
+        // Warm-ish cone spotlights from ceiling pointing straight down (-90 degrees)
+        var warm = new Color(0.6f, 0f, 1f, 0.95f); // tweak alpha for brightness
+        int rays = 96;
+        float dist = 14f;    // reach of the cone
+        boolean xray = true; // true = no hard shadows (so it stays “clean”)
+
+        // positions above your play areas (Y slightly below top wall so the hotspot hits tables)
+        spawnEntityAt(
+                LightFactory.createConeLightEntity(rays, warm, dist, -90f, xray, new com.badlogic.gdx.math.Vector2(0f, 0f)),
+                new GridPoint2(9, 23), true, true);
+
+        spawnEntityAt(
+                LightFactory.createConeLightEntity(rays, warm, dist, -90f, xray, new com.badlogic.gdx.math.Vector2(0f, 0f)),
+                new GridPoint2(17, 23), true, true);
+
+        spawnEntityAt(
+                LightFactory.createConeLightEntity(rays, warm, dist, -90f, xray, new com.badlogic.gdx.math.Vector2(0f, 0f)),
+                new GridPoint2(22, 23), true, true);
     }
 
     private void spawnNeonRig() {

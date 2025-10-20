@@ -370,7 +370,6 @@ public class ForestGameArea extends GameArea {
         spawnSpeedBench();
         spawnFloor();
         spawnBottomRightDoor();
-        spawnMarblePlatforms();
         ServiceLocator.getMusicService().setForestMusicPlaying(true);
         ItemSpawner itemSpawner = new ItemSpawner(this);
         itemSpawner.spawnItems(ItemSpawnConfig.forestmap());
