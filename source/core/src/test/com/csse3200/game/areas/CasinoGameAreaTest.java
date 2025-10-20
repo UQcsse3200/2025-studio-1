@@ -5,10 +5,12 @@ import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
+import com.csse3200.game.entities.PromptFactory;
 import com.csse3200.game.entities.factories.characters.PlayerFactory;
 import com.csse3200.game.extensions.GameExtension;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -25,6 +27,12 @@ class CasinoGameAreaTest {
     private CameraComponent cameraComponent;
     private CasinoGameArea casino;
 
+    @BeforeAll
+    static void setUpStaticMocks() {
+        MockedStatic<PromptFactory> pf = mockStatic(PromptFactory.class);
+        pf.when(PromptFactory::createPrompt).thenAnswer(invocation -> null);
+    }
+
     @BeforeEach
     void setUp() {
         ServiceLocator.registerEntityService(new EntityService());
@@ -34,10 +42,12 @@ class CasinoGameAreaTest {
         terrainFactory = mock(TerrainFactory.class);
         cameraComponent = mock(CameraComponent.class);
 
+
         casino = spy(new CasinoGameArea(terrainFactory, cameraComponent));
 
         doNothing().when(casino)
                 .spawnEntityAt(any(Entity.class), any(GridPoint2.class), anyBoolean(), anyBoolean());
+
     }
 
     @Test
@@ -67,4 +77,6 @@ class CasinoGameAreaTest {
         ResourceService rs = ServiceLocator.getResourceService();
         verify(rs, atLeastOnce()).unloadAssets(any(String[].class));
     }
+
+
 }

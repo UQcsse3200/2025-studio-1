@@ -35,7 +35,7 @@ public class PlayerActions extends Component {
     private static final Vector2 MAX_SPEED = new Vector2(3f, 3f);
     private static final Vector2 CROUCH_SPEED = new Vector2(1.5f, 3f);
     private static final Vector2 SPRINT_SPEED = new Vector2(7f, 3f);
-    private static final Vector2 JUMP_VELOCITY = new Vector2(0f, 15f);
+    private static final Vector2 JUMP_VELOCITY = new Vector2(0f, 8f);
     private static final Vector2 DASH_SPEED = new Vector2(20f, 9.8f);
     private static final float DASH_DURATION = 0.1f;
     // Stamina Costs
@@ -44,7 +44,6 @@ public class PlayerActions extends Component {
     private static final int SPRINT_COST = 1;
     // Jumping Limits
     private static final int MAX_JUMPS = 2;
-    private static final long JUMP_COOLDOWN_MS = 300;
     /**
      * if player already has a weapon --> unequip first
      * sets new weapon as equipped
@@ -73,7 +72,6 @@ public class PlayerActions extends Component {
     // Ability cooldowns / counters
     private int dashCooldown = 0;
     private int jumpsLeft = MAX_JUMPS;
-    private long lastJumpTime = 0; // timestamp of last ground jump
     // Tracks time since last attack for cooldown purposes
     private float timeSinceLastAttack = 0;
     private float timesinceLastReload = 0;
@@ -240,12 +238,14 @@ public class PlayerActions extends Component {
      * Adds vertical velocity to the player to jump if jumps remain.
      */
     void jump() {
-        long currentTime = System.currentTimeMillis();
         Body body = physicsComponent.getBody();
 
         if (dashing) return;
 
         if (jumpsLeft > 0) {
+            Sound jump = ServiceLocator.getResourceService().getAsset("sounds/jump.mp3", Sound.class);
+            jump.play();
+
             setGrounded(false);
 
             boolean isGroundJump = (jumpsLeft == MAX_JUMPS);
@@ -263,9 +263,7 @@ public class PlayerActions extends Component {
                 entity.getEvents().trigger("jump");
                 body.applyLinearImpulse(JUMP_VELOCITY, body.getWorldCenter(), true);
                 jumpsLeft--;
-                lastJumpTime = currentTime;
             }
-
         }
     }
 
@@ -455,12 +453,10 @@ public class PlayerActions extends Component {
         projectilePhysics.fire(new Vector2(destination.x - origin.x, destination.y - origin.y), 5);
 
         if (unlimitedAmmoEffect != null && unlimitedAmmoEffect.isActive()) {
-//            unlimitedAmmoEffect.apply(gun);  // dont call every shot
         } else {
             mag.setCurrentAmmo(mag.getCurrentAmmo() - 1);
         }
-//        mag.setCurrentAmmo(mag.getCurrentAmmo() - 1);
-
+        entity.getEvents().trigger("after shoot");
         timeSinceLastAttack = 0;
     }
 
@@ -586,6 +582,7 @@ public class PlayerActions extends Component {
 
                 reloadSound.play();
                 timesinceLastReload = 0f;
+                entity.getEvents().trigger("after reload");
             }
         }
     }

@@ -65,7 +65,7 @@ public class LeaderboardScreenDisplay extends BaseScreenDisplay {
 
         headerTable.add(new Label("Round", leaderboardStyle)).expandX().center();
         headerTable.add(new Label("Currency", leaderboardStyle)).expandX().center();
-        headerTable.add(new Label("Time", leaderboardStyle)).expandX().center();
+        headerTable.add(new Label("Time Bonus", leaderboardStyle)).expandX().center();
         headerTable.add(new Label("Score", leaderboardStyle)).expandX().center();
         panel.add(headerTable).growX().row();
 
