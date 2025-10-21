@@ -220,7 +220,6 @@ public class SaveGame {
         public String texture;
         public int count;
         public int upgradeStage;
-        public String name;
         public ArrayList<String> Attachments;
 
         public itemInInven() {

@@ -12,9 +12,11 @@ import com.csse3200.game.components.player.StaminaComponent;
 import com.csse3200.game.entities.Avatar;
 import com.csse3200.game.entities.AvatarRegistry;
 import com.csse3200.game.entities.Entity;
+import com.csse3200.game.entities.configs.ItemTypes;
 import com.csse3200.game.entities.configs.Weapons;
 import com.csse3200.game.entities.factories.items.WeaponsFactory;
 import com.csse3200.game.extensions.GameExtension;
+import com.csse3200.game.physics.PhysicsEngine;
 import com.csse3200.game.physics.PhysicsService;
 import com.csse3200.game.physics.components.PhysicsComponent;
 import com.csse3200.game.rendering.RenderService;
@@ -31,6 +33,8 @@ import java.security.Provider;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -110,6 +114,17 @@ public class SaveGameTest {
 
         InventoryComponent fakeInventory = player.getComponent(InventoryComponent.class);
 
+        player.addComponent(mock(InventoryComponent.class));
+
+        PhysicsEngine physicsEngine = mock(PhysicsEngine.class);
+        PhysicsService physicsService = new PhysicsService(physicsEngine);
+        ServiceLocator.registerPhysicsService(physicsService);
+
+        ResourceService resourceService = mock(ResourceService.class);
+        ServiceLocator.registerResourceService(resourceService);
+        Texture texture = mock(Texture.class);
+
+        when(resourceService.getAsset(anyString(), eq(Texture.class))).thenReturn(texture);
 
         testState.setLoadedInventory(fakeInventory);
         testStats = new TestGameStats.PlayerStatTest();
@@ -133,6 +148,21 @@ public class SaveGameTest {
     void inventoryGetsSetTest() {
         inventoryTest = testState.getInventory();
         assertEquals("[null, null, null, null, null]",inventoryTest.toString());
+    }
+
+    @Test
+    void
+    inventoryNotEmptyTest() {
+        InventoryComponent nonEmptyInv = player.getComponent(InventoryComponent.class);
+        Entity weapon = WeaponsFactory.createWeapon(Weapons.DAGGER);
+        nonEmptyInv.addItem(weapon);
+        testState.setLoadedInventory(nonEmptyInv);
+        SaveGame.itemInInven test = testState.getInventory().getFirst();
+        assertNull(test.ammo);
+        assertEquals(1, test.count);
+        assertEquals(1, test.upgradeStage);
+        assertEquals("images/dagger.png", test.texture);
+        assertEquals(ItemTypes.MELEE, test.type);
     }
 
     @Test
