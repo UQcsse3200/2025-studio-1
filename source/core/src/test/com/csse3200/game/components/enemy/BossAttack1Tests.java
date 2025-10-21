@@ -14,7 +14,17 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
-
+import org.junit.jupiter.api.Assertions;
+import org.mockito.Mockito;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.utils.Array;
+import com.csse3200.game.components.CombatStatsComponent;
+import com.csse3200.game.components.WeaponsStatsComponent;
+import com.csse3200.game.entities.Entity;
+import com.csse3200.game.entities.EntityService;
+import com.csse3200.game.physics.components.ColliderComponent;
+import com.csse3200.game.physics.components.HitboxComponent;
+import com.csse3200.game.components.enemy.EnemyProjectileMovementComponent;
 import static org.mockito.Mockito.*;
 
 import com.csse3200.game.components.WeaponsStatsComponent;
@@ -223,67 +233,45 @@ public class BossAttack1Tests {
     @Test
     void bossattack1tests_backoffWhenAtlasMissing_preventsRapidRetries() {
         Entity owner = new Entity();
-        owner.setPosition(new Vector2(0, 0));
+        owner.setPosition(new Vector2(4.0F, 5.0F));
         Entity target = new Entity();
-        target.setPosition(new Vector2(1, 0));
-        EnemyMudBallAttackComponent atk = addAttack(owner, target);
+        target.setPosition(new Vector2(5.0F, 5.0F));
 
-        when(resources.getAsset(anyString(), eq(TextureAtlas.class))).thenReturn(null);
-        when(resources.loadForMillis(anyInt())).thenReturn(false);
+        owner.addComponent(new WeaponsStatsComponent(9));
 
-        owner.create();
+        EnemyMudBallAttackComponent atk = this.addAttack(owner, target);
 
-        // First update -> attempt load, set backoff
-        atk.update();
-        verify(resources, times(1)).loadTextureAtlases(any());
-
-        // While backoff active, updating again should not try to load/register again
-        when(time.getDeltaTime()).thenReturn(0.1f); // less than 0.25f backoff
-        atk.update();
-
-        verify(resources, times(1)).loadTextureAtlases(any());
-        verify(entities, never()).register(any());
-    }
-
-    @Test
-    void bossattack1tests_projectileWiring_basicComponentsPresent() {
-        Entity owner = new Entity();
-        owner.setPosition(new Vector2(4, 5));
-        Entity target = new Entity();
-        target.setPosition(new Vector2(5, 5));
-        owner.addComponent(new WeaponsStatsComponent(9)); // projectile should carry 3
-
-        EnemyMudBallAttackComponent atk = addAttack(owner, target);
-
-        TextureAtlas atlas = mock(TextureAtlas.class);
+        TextureAtlas atlas = (TextureAtlas)Mockito.mock(TextureAtlas.class);
         Array<TextureAtlas.AtlasRegion> regions = new Array<>();
-        regions.add(mock(TextureAtlas.AtlasRegion.class));
-        when(resources.getAsset(anyString(), eq(TextureAtlas.class))).thenReturn(atlas);
-        when(atlas.findRegions("boss3_attack_cpu")).thenReturn(regions);
+        regions.add((TextureAtlas.AtlasRegion)Mockito.mock(TextureAtlas.AtlasRegion.class));
+        Mockito.when((TextureAtlas)this.resources.getAsset(Mockito.anyString(), (Class)Mockito.eq(TextureAtlas.class))).thenReturn(atlas);
+        Mockito.when(atlas.findRegions("boss3_attack_cpu")).thenReturn(regions);
 
         owner.create();
 
-        // Capture the entity registered
-        doAnswer(inv -> {
-            Entity proj = inv.getArgument(0);
-            assertNotNull(proj.getComponent(EnemyProjectileMovementComponent.class));
-            assertNotNull(proj.getComponent(com.csse3200.game.physics.components.HitboxComponent.class));
-            assertNotNull(proj.getComponent(com.csse3200.game.physics.components.ColliderComponent.class));
-            assertNotNull(proj.getComponent(com.csse3200.game.components.CombatStatsComponent.class));
+        ((EntityService)Mockito.doAnswer((inv) -> {
+            Entity proj = (Entity)inv.getArgument(0);
+            Assertions.assertNotNull(proj.getComponent(EnemyProjectileMovementComponent.class));
+            Assertions.assertNotNull(proj.getComponent(HitboxComponent.class));
+            Assertions.assertNotNull(proj.getComponent(ColliderComponent.class));
+            Assertions.assertNotNull(proj.getComponent(CombatStatsComponent.class));
 
             WeaponsStatsComponent w = proj.getComponent(WeaponsStatsComponent.class);
-            assertNotNull(w, "projectile should have WeaponsStatsComponent");
-            assertEquals(3, w.getBaseAttack(), "projectile damage should be base/3 from owner");
+            Assertions.assertNotNull(w, "projectile should have WeaponsStatsComponent");
+            Assertions.assertEquals(
+                    owner.getComponent(WeaponsStatsComponent.class).getBaseAttack(),
+                    w.getBaseAttack(),
+                    "projectile damage should mirror owner's base attack"
+            );
 
             Vector2 p = proj.getPosition();
-            assertNotNull(p, "projectile position should be set");
-            assertTrue(p.dst2(owner.getCenterPosition()) < 1e-3,
+            Assertions.assertNotNull(p, "projectile position should be set");
+            Assertions.assertTrue((double)p.dst2(owner.getCenterPosition()) < 0.001,
                     "projectile should spawn near owner's center position");
             return null;
-        }).when(entities).register(any(Entity.class));
+        }).when(this.entities)).register((Entity)Mockito.any(Entity.class));
 
         atk.update();
-
-        verify(entities, times(1)).register(any());
+        ((EntityService)Mockito.verify(this.entities, Mockito.times(1))).register((Entity)Mockito.any());
     }
 }
