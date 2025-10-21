@@ -17,16 +17,16 @@ import static org.junit.jupiter.api.Assertions.*;
  * to avoid framework dependencies and to simplify position/dispose checks.
  * </p>
  */
- class PlayerEquipComponentTest {
+class PlayerEquipComponentTest {
     PlayerEquipComponent component;
 
     @BeforeEach
-     void setup() {
+    void setup() {
         component = new PlayerEquipComponent();
     }
 
     @Test
-     void checkInitialiseTest() throws NoSuchFieldException, IllegalAccessException {
+    void checkInitialiseTest() throws NoSuchFieldException, IllegalAccessException {
         Entity item = (Entity) getPrivateMember(component, "item");
         Vector2 offset = (Vector2) getPrivateMember(component, "offset");
         assertNull(item);
@@ -34,7 +34,7 @@ import static org.junit.jupiter.api.Assertions.*;
     }
 
     @Test
-     void setNotNullTest() throws NoSuchFieldException, IllegalAccessException {
+    void setNotNullTest() throws NoSuchFieldException, IllegalAccessException {
         Entity testItem = new Entity();
         Vector2 testOffset = new Vector2(1f, 2f);
         component.setItem(testItem, new Vector2(1f, 2f));
@@ -52,7 +52,7 @@ import static org.junit.jupiter.api.Assertions.*;
      * @throws IllegalAccessException if field access is not allowed
      */
     @Test
-     void setNullTest() throws NoSuchFieldException, IllegalAccessException {
+    void setNullTest() throws NoSuchFieldException, IllegalAccessException {
         FakeEntity player = new FakeEntity(new Vector2(0, 0));
         component.setEntity(player);
 
@@ -64,7 +64,6 @@ import static org.junit.jupiter.api.Assertions.*;
         assertNotEquals(getPrivateMember(component, "item"), testItem);
         assertNull(getPrivateMember(component, "item"));
     }
-
 
     /**
      * Gets the private member with the given name -> must be "item" or "offset"
