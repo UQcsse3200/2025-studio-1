@@ -7,6 +7,7 @@ import com.csse3200.game.components.WeaponsStatsComponent;
 import com.csse3200.game.components.attachments.BulletEnhancerComponent;
 import com.csse3200.game.components.attachments.LaserComponent;
 import com.csse3200.game.components.items.ItemComponent;
+import com.csse3200.game.components.items.MeleeUseComponent;
 import com.csse3200.game.components.items.RangedUseComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.ItemTypes;
@@ -71,6 +72,7 @@ public class WeaponsFactory {
                 break;
             case MELEE:
                 item.setType(ItemTypes.MELEE);
+                weapon.addComponent(new MeleeUseComponent());
                 break;
             default:
                 item.setType(ItemTypes.NONE);
