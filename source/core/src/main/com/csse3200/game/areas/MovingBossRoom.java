@@ -75,13 +75,15 @@ public class MovingBossRoom extends GameArea {
         spawnAssistor();
         spawnNurse();
 
+        spawnVisibleFloor();
+    }
+
+    public void spawnBossAndItems() {
         if (!MovingBossRoom.isCleared) {
             spawnBoss();
             ItemSpawner itemSpawner = new ItemSpawner(this);
             itemSpawner.spawnItems(ItemSpawnConfig.bossmap());
         }
-
-        spawnVisibleFloor();
     }
 
     private void displayUI() {
@@ -94,7 +96,7 @@ public class MovingBossRoom extends GameArea {
         return spawnOrRepositionPlayer(playerSpawn);
     }
 
-    private void spawnBoss() {
+    public void spawnBoss() {
         GridPoint2 pos = new GridPoint2(15, 20);
 
         Entity boss = BossFactory.createRobot(player);

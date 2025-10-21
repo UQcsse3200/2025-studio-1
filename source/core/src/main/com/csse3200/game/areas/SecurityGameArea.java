@@ -17,6 +17,7 @@ import com.csse3200.game.entities.spawner.ItemSpawner;
  * Minimal generic Security room: walls, doors, and a subtle background overlay.
  */
 public class SecurityGameArea extends GameArea {
+    private Entity player;
     private static final float WALL_WIDTH = 0.1f;
     private static GridPoint2 playerSpawn = new GridPoint2(10, 10);
     private static boolean isCleared = false;
@@ -51,23 +52,26 @@ public class SecurityGameArea extends GameArea {
                 new Color(0.08f, 0.08f, 0.1f, 0.30f));
 
         spawnBordersAndDoors();
-        Entity player = spawnPlayer();
+        player = spawnPlayer();
         spawnPlatforms();
         spawnObjectDoors(new GridPoint2(0, 6), new GridPoint2(28, 19));
         spawnSecurityProps();
         spawnTeleporter();
         spawnSpikes2();
 
+        spawnEnemiesAndWeapons();
+        Entity ui = new Entity();
+        ui.addComponent(new GameAreaDisplay("Security"))
+                .addComponent(new com.csse3200.game.components.gamearea.FloorLabelDisplay("Floor 4"));
+        spawnEntity(ui);
+    }
+
+    public void spawnEnemiesAndWeapons() {
         if (!SecurityGameArea.isCleared) {
             startWaves(player);
             ItemSpawner itemSpawner = new ItemSpawner(this);
             itemSpawner.spawnItems(ItemSpawnConfig.securitymap());
         }
-
-        Entity ui = new Entity();
-        ui.addComponent(new GameAreaDisplay("Security"))
-                .addComponent(new com.csse3200.game.components.gamearea.FloorLabelDisplay("Floor 4"));
-        spawnEntity(ui);
     }
 
     private void spawnBordersAndDoors() {
