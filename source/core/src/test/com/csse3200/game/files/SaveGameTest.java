@@ -20,7 +20,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 
 @ExtendWith(GameExtension.class)
@@ -44,6 +43,7 @@ public class SaveGameTest {
     private static final int EXPECTED_ROUND_NUMBER = 1;
     private static TestGameStats.PlayerStatTest testStats;
     private static final int keyCard = 1;
+    private static FakeEntity player;
 
     private static final ArrayList<String> Armours =
             new ArrayList<>(Arrays.asList("Armour1", "Armour2"));
@@ -84,7 +84,7 @@ public class SaveGameTest {
 
     @BeforeAll
     static void fakeGameState() {
-        FakeEntity player = new FakeEntity();
+        player = new FakeEntity();
         player.addComponent(new StaminaComponent());
         player.addComponent(new CombatStatsComponent(MAX_HEALTH));
         player.addComponent(new InventoryComponent(INVENTORY_PROCESSOR));
@@ -100,7 +100,6 @@ public class SaveGameTest {
         testState.setArmour(Armours);
 
         testState.setWave(EXPECTED_ROUND_NUMBER);
-        testState.setPlayer(player);
         InventoryComponent fakeInventory = player.getComponent(InventoryComponent.class);
 
         testState.setLoadedInventory(fakeInventory);
@@ -109,7 +108,6 @@ public class SaveGameTest {
         testState.setAreasVisited(Areas);
 
         testStats = new TestGameStats.PlayerStatTest();
-        playerInfo = testState.getPlayer();
     }
 
     @Test
@@ -124,22 +122,19 @@ public class SaveGameTest {
     }
 
     @Test
-    void setPlayerInfoTest() {
-       assertEquals( testStats.avatarLoad, playerInfo.avatar);
-       assertEquals(testStats.stamLoad, playerInfo.maxStamina);
-       assertEquals(testStats.ammoLoad, playerInfo.ammoReserve);
-       assertEquals( testStats.processorLoad, playerInfo.processor);
-       assertEquals(testStats.keyCardLvl, playerInfo.keyCardLevel);
-       assertEquals( testStats.healthLoad, playerInfo.currentHealth);
-       assertEquals(testStats.possLoad, playerInfo.playerPos);
-       assertEquals(testStats.maxHealth, playerInfo.maxHealth);
-
-    }
-
-    @Test
     void getPlayerInfoTest() {
-
+        testState.setPlayer(player);
+        playerInfo = testState.getPlayer();
+        assertEquals( testStats.avatarLoad, playerInfo.avatar);
+        assertEquals(testStats.stamLoad, playerInfo.maxStamina);
+        assertEquals(testStats.ammoLoad, playerInfo.ammoReserve);
+        assertEquals( testStats.processorLoad, playerInfo.processor);
+        assertEquals(testStats.keyCardLvl, playerInfo.keyCardLevel);
+        assertEquals( testStats.healthLoad, playerInfo.currentHealth);
+        assertEquals(testStats.possLoad, playerInfo.playerPos);
+        assertEquals(testStats.maxHealth, playerInfo.maxHealth);
     }
+
 
     @Test
     void invalidSaveFails() {
