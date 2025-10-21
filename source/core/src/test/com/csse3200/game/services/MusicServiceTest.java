@@ -18,50 +18,31 @@ class MusicServiceTest {
         private boolean looping = false;
         private float volume = 0f;
 
-        @Override
-        public void play() { playing = true; }
-        @Override
-        public void stop() { playing = false; }
-        @Override
-        public void pause() {}
-        @Override
-        public boolean isPlaying() { return playing; }
-        @Override
-        public void setLooping(boolean isLooping) { looping = isLooping; }
-        @Override
-        public boolean isLooping() { return looping; }
-        @Override
-        public void setVolume(float volume) { this.volume = volume; }
-        @Override
-        public float getVolume() { return volume; }
-        @Override
-        public void setPan(float pan, float volume) {}
-        @Override
-        public void setPosition(float position) {}
-        @Override
-        public float getPosition() { return 0; }
-        @Override
-        public void dispose() {}
-        @Override
-        public void setOnCompletionListener(OnCompletionListener listener) {}
+        @Override public void play() { playing = true; }
+        @Override public void stop() { playing = false; }
+        @Override public boolean isPlaying() { return playing; }
+        @Override public void setLooping(boolean looping) { this.looping = looping; }
+        @Override public void setVolume(float volume) { this.volume = volume; }
+
+        @Override public void pause() {}
+        @Override public boolean isLooping() { return looping; }
+        @Override public float getVolume() { return volume; }
+        @Override public void setPan(float pan, float volume) {}
+        @Override public void setPosition(float position) {}
+        @Override public float getPosition() { return 0; }
+        @Override public void dispose() {}
+        @Override public void setOnCompletionListener(OnCompletionListener listener) {}
     }
 
-    /**
-     * A fake ResourceService to simulate asset loading and unloading.
-     */
     private static class FakeResourceService extends ResourceService {
         private final FakeMusic menuMusic = new FakeMusic();
         private final FakeMusic forestMusic = new FakeMusic();
 
         @Override
-        public void loadMusic(String[] musicPaths) {
-            // Simulate loading
-        }
+        public void loadMusic(String[] musicPaths) {}
 
         @Override
-        public void loadAll() {
-            // Simulate all loaded
-        }
+        public void loadAll() {}
 
         @Override
         public <T> T getAsset(String path, Class<T> type) {
@@ -71,9 +52,7 @@ class MusicServiceTest {
         }
 
         @Override
-        public void unloadAssets(String[] assetPaths) {
-            // Simulate unloading
-        }
+        public void unloadAssets(String[] assetPaths) {}
     }
 
     private MusicService musicService;
@@ -83,27 +62,46 @@ class MusicServiceTest {
     void setUp() {
         musicService = new MusicService();
         resourceService = new FakeResourceService();
+        UserSettings.get().setMusicEnabled(true);
+    }
+
+    @Test
+    void testLoadInitializesMusic() {
+        musicService.load(resourceService);
+        assertNotNull(resourceService.menuMusic, "Menu music should be loaded");
+        assertNotNull(resourceService.forestMusic, "Forest music should be loaded");
     }
 
     @Test
     void testUpdateForScreenStopsMenuMusic() {
-        UserSettings.get().setMusicEnabled(true);
         musicService.load(resourceService);
-
+        resourceService.menuMusic.play();
         musicService.updateForScreen("MAIN_GAME");
         assertFalse(resourceService.menuMusic.isPlaying(), "Menu music should stop during main game");
     }
 
     @Test
-    void testSetForestMusicPlayingTogglesPlayback() {
-        UserSettings.get().setMusicEnabled(true);
+    void testSetMenuMusicPlayingTogglesPlayback() {
         musicService.load(resourceService);
 
+        musicService.setMenuMusicPlaying(true);
+        assertTrue(resourceService.menuMusic.isPlaying(), "Menu music should start playing");
+
+        musicService.setMenuMusicPlaying(false);
+        assertFalse(resourceService.menuMusic.isPlaying(), "Menu music should stop playing");
+    }
+
+    @Test
+    void testSetForestMusicPlayingTogglesPlayback() {
+        musicService.load(resourceService);
+
+        musicService.updateForScreen("MAIN_GAME");
+
         musicService.setForestMusicPlaying(true);
-        assertTrue(resourceService.forestMusic.isPlaying());
+        assertTrue(resourceService.forestMusic.isPlaying(), "Forest music should start playing");
 
         musicService.setForestMusicPlaying(false);
-        assertFalse(resourceService.forestMusic.isPlaying());
+        assertFalse(resourceService.forestMusic.isPlaying(), "Forest music should stop playing");
     }
 
     @Test
