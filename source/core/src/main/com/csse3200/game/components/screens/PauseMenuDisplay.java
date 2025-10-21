@@ -90,7 +90,7 @@ public class PauseMenuDisplay extends BaseScreenDisplay {
 
         panel.add(button("Restart", 2f, () -> {
             ServiceLocator.getButtonSoundService().playClick();
-            game.setScreen(GdxGame.ScreenType.MAIN_GAME);
+            game.setScreen(GdxGame.ScreenType.LOADING);
         })).row();
 
         panel.add(button("Main Menu", 2f, () -> {

@@ -104,7 +104,7 @@ public class StoryScreen extends ScreenAdapter {
      * Ends the story and switches to the main game
      */
     private void endStory() {
-        game.setScreen(GdxGame.ScreenType.MAIN_GAME);
+        game.setScreen(GdxGame.ScreenType.LOADING);
     }
 
     @Override
