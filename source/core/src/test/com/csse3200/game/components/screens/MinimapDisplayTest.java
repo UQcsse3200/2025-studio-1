@@ -394,21 +394,21 @@ public class MinimapDisplayTest {
     }
 
     @Test
-    void testClampPositivePan_touchDragged_sizeAtLeast2_noPan() {
+    void testClampPositivePanWithTouchDragged() {
         when(mockMinimap.render()).thenReturn(makeRooms(2));
         display.clampMinimapPosition(5.0f, true);
         verify(mockMinimap, never()).pan(any());
     }
 
     @Test
-    void testClampNegativePan_touchDragged_sizeAtLeast2_noPan() {
+    void testClampNegativePanWithTouchDragged() {
         when(mockMinimap.render()).thenReturn(makeRooms(2));
         display.clampMinimapPosition(-3.0f, true);
         verify(mockMinimap, never()).pan(any());
     }
 
     @Test
-    void testClampNegativePan_notTouchDragged_sizeLessThan3_triggersPan() {
+    void testClampNegativePanTriggersPan() {
         when(mockMinimap.render()).thenReturn(makeRooms(2));
         display.clampMinimapPosition(-4.0f, false);
 
@@ -421,7 +421,7 @@ public class MinimapDisplayTest {
     }
 
     @Test
-    void testClampPositivePan_notTouchDragged_sizeLessThan2_triggersPan() {
+    void testClampPositivePanTriggersPan() {
         when(mockMinimap.render()).thenReturn(makeRooms(1));
         display.clampMinimapPosition(3.5f, false);
 
@@ -434,28 +434,28 @@ public class MinimapDisplayTest {
     }
 
     @Test
-    void testClampPanDistanceZero_doesNothing() {
+    void testClampPanDistanceZero() {
         when(mockMinimap.render()).thenReturn(makeRooms(1));
         display.clampMinimapPosition(0.0f, false);
         verify(mockMinimap, never()).pan(any());
     }
 
     @Test
-    void testClampNegativePan_notTouchDragged_sizeEqual3_noPan() {
+    void testClampNegativePanNoPan() {
         when(mockMinimap.render()).thenReturn(makeRooms(3));
         display.clampMinimapPosition(-2.0f, false);
         verify(mockMinimap, never()).pan(any());
     }
 
     @Test
-    void testClampPositivePan_notTouchDragged_sizeEqual2_noPan() {
+    void testClampPositivePanNoPan() {
         when(mockMinimap.render()).thenReturn(makeRooms(2));
         display.clampMinimapPosition(2.0f, false);
         verify(mockMinimap, never()).pan(any());
     }
 
     @Test
-    void testClampHandlesNullVisibleRoomsSafely() {
+    void testClampHandlesNullRooms() {
         when(mockMinimap.render()).thenReturn(null);
         assertDoesNotThrow(() -> display.clampMinimapPosition(1.0f, false));
     }
