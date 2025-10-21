@@ -24,7 +24,7 @@ public class EnemyWaves extends Component {
     private int maxWaves;      // total waves per session
     private int waveNumber = 0;      // waves spawned so far
     private float scalingFactor = 1f; // difficulty scaling
-    private final int baseEnemies = 3;
+    private static final int baseEnemies = 3;
 
     private static final long WAVE_DELAY_MS = 5000; // delay between waves after all enemies dead
     private static final float TICK_SEC = 0.1f;     // poll cadence
