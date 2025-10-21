@@ -16,8 +16,6 @@ import com.csse3200.game.entities.factories.ShopFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.entities.factories.system.TeleporterFactory;
 import com.csse3200.game.entities.spawner.ItemSpawner;
-import com.csse3200.game.lighting.PointLightComponent;
-import com.csse3200.game.lighting.PointLightFollowComponent;
 import com.csse3200.game.services.ServiceLocator;
 
 /**
@@ -51,13 +49,6 @@ public class Reception extends GameArea {
 
         spawnWallsAndDoor();
         player = spawnPlayer();
-
-        if (player.getComponent(PointLightComponent.class) == null &&
-                player.getComponent(PointLightFollowComponent.class) == null) {
-            player.addComponent(new PointLightFollowComponent(
-                    32, new Color(1f,1f,1f,0.35f), 6.5f, new Vector2(0f, 1f)
-            ));
-        }
 
         spawnFloor();
         spawnShopKiosk();

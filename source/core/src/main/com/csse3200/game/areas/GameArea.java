@@ -272,6 +272,11 @@ public abstract class GameArea implements Disposable {
         spawnEntity(entity);
     }
 
+    public void spawnEntityPublic(
+            Entity entity, GridPoint2 pos, boolean centerX, boolean centerY) {
+        spawnEntityAt(entity, pos, centerX, centerY);
+    }
+
     /**
      * Spawns the enemies based on the room number given.
      *

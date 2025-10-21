@@ -107,39 +107,7 @@ public class Renderer implements Disposable {
 
         LightingService ls = ServiceLocator.getLightingService();
         if (ls != null && ls.getEngine() != null) {
-            // Only render lights in rooms that actually spawn lights
-            var area = ServiceLocator.getGameArea();
-            if (area instanceof CasinoGameArea) {
-                ls.getEngine().render();
-            } else if (area instanceof Reception) {
-                ls.getEngine().render();
-            } else if (area instanceof MainHall) {
-                ls.getEngine().render();
-            } else if (area instanceof SecurityGameArea) {
-                ls.getEngine().render();
-            } else if (area instanceof OfficeGameArea) {
-                ls.getEngine().render();
-            } else if (area instanceof ElevatorGameArea) {
-                ls.getEngine().render();
-            } else if (area instanceof ResearchGameArea) {
-                ls.getEngine().render();
-            } else if (area instanceof ShippingGameArea) {
-                ls.getEngine().render();
-            } else if (area instanceof StorageGameArea) {
-                ls.getEngine().render();
-            } else if (area instanceof ServerGameArea) {
-                ls.getEngine().render();
-            } else if (area instanceof TunnelGameArea) {
-                ls.getEngine().render();
-            } else if (area instanceof FlyingBossRoom) {
-                ls.getEngine().render();
-            } else if (area instanceof MovingBossRoom) {
-                ls.getEngine().render();
-            } else if (area instanceof StaticBossRoom) {
-                ls.getEngine().render();
-            } else if (area instanceof SecretRoomGameArea) {
-                ls.getEngine().render();
-            }
+            ls.getEngine().render();
         }
 
         debugRenderer.render(projMatrix);

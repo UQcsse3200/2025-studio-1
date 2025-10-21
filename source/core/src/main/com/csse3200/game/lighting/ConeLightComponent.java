@@ -19,17 +19,23 @@ public class ConeLightComponent extends Component {
         this.offset = offset != null ? offset : new Vector2();
     }
 
+    /**
+     * Creates the light and can be updated with an offset.
+     */
     @Override
     public void create() {
         RayHandler rh = ServiceLocator.getLightingService().getEngine().getRayHandler();
         Vector2 p = entity.getPosition();
 
-        light = new ConeLight(rh, 96, color, 7f, 0f, 0f, -90f, 60f);
+        light = new ConeLight(rh, 96, color, 10f, 0f, 0f, -90f, 60f);
         light.setXray(xray);
         light.setSoftnessLength(1f);
         light.setPosition(p.x + offset.x,p.y + offset.y);
     }
 
+    /**
+     * Continually renders the lights.
+     */
     @Override
     public void update() {
         if (light == null) return;
@@ -38,6 +44,9 @@ public class ConeLightComponent extends Component {
         light.setDirection(-90f);
     }
 
+    /**
+     * Removes the light from the RayHandler.
+     */
     @Override
     public void dispose() {
         if (light != null) {

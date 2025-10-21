@@ -351,6 +351,13 @@ public class ForestGameArea extends GameArea {
     public void create() {
         this.baseScaling = 1f;
 
+        //Checks to see if the lighting service is not null and then sets the ambient light and turns on shadows for the room.
+        var ls = ServiceLocator.getLightingService();
+        if (ls != null && ls.getEngine() != null) {
+            ls.getEngine().setAmbientLight(0.65f);
+            ls.getEngine().getRayHandler().setShadows(true);
+        }
+
         ServiceLocator.registerGameArea(this);
         loadAssets();
         displayUI();
@@ -468,7 +475,7 @@ public class ForestGameArea extends GameArea {
     private void loadNextLevel() {
         // Use the safe, render-thread transition helper
         Reception.setRoomSpawn(new GridPoint2(6, 10));
-        clearAndLoad(() -> new Reception(terrainFactory, cameraComponent));
+        clearAndLoad(() -> new MainHall(terrainFactory, cameraComponent));
     }
 
     /**

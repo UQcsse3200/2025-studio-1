@@ -9,10 +9,13 @@ import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.ItemSpawnConfig;
-import com.csse3200.game.entities.factories.LightFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.entities.factories.system.TeleporterFactory;
 import com.csse3200.game.entities.spawner.ItemSpawner;
+import com.csse3200.game.lighting.LightSpawner;
+import com.csse3200.game.services.ServiceLocator;
+
+import java.util.List;
 
 /**
  * Minimal generic Security room: walls, doors, and a subtle background overlay.
@@ -58,7 +61,15 @@ public class SecurityGameArea extends GameArea {
             ls.getEngine().getRayHandler().setShadows(true);
         }
 
-        spawnCeilingCones();
+        LightSpawner.spawnCeilingCones(
+                this,
+                List.of(
+                        new GridPoint2(4,20),
+                        new GridPoint2(12,20),
+                        new GridPoint2(20,20)
+                ),
+                new Color(0.37f, 0.82f, 0.9f, 0.8f)
+        );
         spawnBordersAndDoors();
         Entity player = spawnPlayer();
         spawnPlatforms();
@@ -77,28 +88,6 @@ public class SecurityGameArea extends GameArea {
         ui.addComponent(new GameAreaDisplay("Security"))
                 .addComponent(new com.csse3200.game.components.gamearea.FloorLabelDisplay("Floor 4"));
         spawnEntity(ui);
-    }
-
-    /**
-     * Creates and spawns the lighting effects at the designated locations.
-     */
-    private void spawnCeilingCones() {
-        // Warm-ish cone spotlights from ceiling pointing straight down (-90 degrees)
-        var warm = new Color(0.37f, 0.82f, 0.9f, 0.95f); // tweak alpha for brightness
-        boolean xray = true; // true = no hard shadows (so it stays “clean”)
-
-        // positions above your play areas (Y slightly below top wall so the hotspot hits tables)
-        spawnEntityAt(
-                LightFactory.createConeLightEntity(warm, xray, new Vector2(0f, 0f)),
-                new GridPoint2(4, 20), true, true);
-
-        spawnEntityAt(
-                LightFactory.createConeLightEntity(warm, xray, new Vector2(0f, 0f)),
-                new GridPoint2(12, 20), true, true);
-
-        spawnEntityAt(
-                LightFactory.createConeLightEntity(warm, xray, new Vector2(0f, 0f)),
-                new GridPoint2(20, 20), true, true);
     }
 
     private void spawnBordersAndDoors() {

@@ -14,14 +14,17 @@ import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.ItemSpawnConfig;
 import com.csse3200.game.entities.configs.benches.BenchConfig;
 import com.csse3200.game.entities.factories.InteractableStationFactory;
-import com.csse3200.game.entities.factories.LightFactory;
-import com.csse3200.game.entities.factories.characters.NPCFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.entities.factories.system.TeleporterFactory;
 import com.csse3200.game.entities.spawner.ItemSpawner;
+import com.csse3200.game.lighting.ConeLightComponent;
+import com.csse3200.game.lighting.LightSpawner;
 import com.csse3200.game.physics.PhysicsUtils;
 import com.csse3200.game.physics.components.ColliderComponent;
 import com.csse3200.game.physics.components.PhysicsComponent;
+import com.csse3200.game.services.ServiceLocator;
+
+import java.util.List;
 
 /**
  * Tunnel room: minimal walls with left door back to Server Room.
@@ -68,7 +71,17 @@ public class TunnelGameArea extends GameArea {
             ls.getEngine().getRayHandler().setShadows(true);
         }
 
-        spawnCeilingCones();
+        LightSpawner.spawnCeilingCones(
+                this,
+                List.of(
+                new GridPoint2(4,21),
+                new GridPoint2(12,21),
+                new GridPoint2(20,21),
+                new GridPoint2(27,21)
+                ),
+                new Color(0.67f, 0.19f, 0.19f, 0.95f)
+        );
+
         spawnBordersAndDoors();
         Entity player = spawnPlayer();
         spawnPlatforms();
@@ -90,32 +103,6 @@ public class TunnelGameArea extends GameArea {
         ui.addComponent(new GameAreaDisplay("Tunnel"))
                 .addComponent(new com.csse3200.game.components.gamearea.FloorLabelDisplay("Floor 11"));
         spawnEntity(ui);
-    }
-
-    /**
-     * Creates and spawns the lighting effects at the designated locations.
-     */
-    private void spawnCeilingCones() {
-        // Warm-ish cone spotlights from ceiling pointing straight down (-90 degrees)
-        var warm = new Color(0.67f, 0.19f, 0.19f, 0.95f); // tweak alpha for brightness
-        boolean xray = true; // true = no hard shadows (so it stays “clean”)
-
-        // positions above your play areas (Y slightly below top wall so the hotspot hits tables)
-        spawnEntityAt(
-                LightFactory.createConeLightEntity(warm, xray, new Vector2(0f, 0f)),
-                new GridPoint2(4, 21), true, true);
-
-        spawnEntityAt(
-                LightFactory.createConeLightEntity(warm, xray, new Vector2(0f, 0f)),
-                new GridPoint2(12, 21), true, true);
-
-        spawnEntityAt(
-                LightFactory.createConeLightEntity(warm, xray, new Vector2(0f, 0f)),
-                new GridPoint2(20, 21), true, true);
-
-        spawnEntityAt(
-                LightFactory.createConeLightEntity(warm, xray, new Vector2(0f, 0f)),
-                new GridPoint2(27, 21), true, true);
     }
 
     /**
