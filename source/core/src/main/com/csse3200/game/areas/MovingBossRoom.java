@@ -145,8 +145,6 @@ public class MovingBossRoom extends GameArea {
             loadOffice();
         }));
         spawnEntity(rightDoor);
-
-        if (!MovingBossRoom.isCleared) registerDoors(new Entity[]{leftDoor});
     }
 
     /**

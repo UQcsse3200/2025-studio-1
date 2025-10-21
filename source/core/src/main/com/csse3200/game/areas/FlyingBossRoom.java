@@ -147,8 +147,6 @@ public class FlyingBossRoom extends GameArea {
             loadShipping();
         }));
         spawnEntity(rightDoor);
-
-        if (!FlyingBossRoom.isCleared) registerDoors(new Entity[]{leftDoor});
     }
 
     /**

@@ -161,8 +161,6 @@ public class StaticBossRoom extends GameArea {
             loadSecretRoom();
         }));
         spawnEntity(rightDoor);
-
-        if (!StaticBossRoom.isCleared) registerDoors(new Entity[]{leftDoor});
     }
     private void spawnPlatforms() {
         Entity platform1 = ObstacleFactory.createThinFloor();
