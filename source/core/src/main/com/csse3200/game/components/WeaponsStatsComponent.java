@@ -144,7 +144,7 @@ public class WeaponsStatsComponent extends Component {
      *
      * @param attack base attack damage (must be {@code >= 0})
      */
-    public void setBaseAttack(int attack) {
+    public static void setBaseAttack(int attack) {
         if (attack >= 0) {
             baseAttack = attack;
         } else {
