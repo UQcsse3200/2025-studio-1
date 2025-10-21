@@ -191,7 +191,7 @@ public class StaticBossRoom extends GameArea {
      * Clear room, set this room's static
      * boolean isCleared variable to true
      */
-    public static void clearRoom() {
+    public void clearRoom() {
         StaticBossRoom.isCleared = true;
         logger.debug("Static Boss Room is cleared");
     }
@@ -200,7 +200,7 @@ public class StaticBossRoom extends GameArea {
      * Unclear room, set this room's static
      * boolean isCleared variable to false
      */
-    public static void unclearRoom() {
+    public void unclearRoom() {
         StaticBossRoom.isCleared = false;
         logger.debug("Static Boss Room is uncleared");
     }
