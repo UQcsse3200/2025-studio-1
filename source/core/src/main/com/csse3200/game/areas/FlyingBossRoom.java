@@ -18,8 +18,6 @@ import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.entities.spawner.ItemSpawner;
 import com.csse3200.game.physics.components.ColliderComponent;
 import com.csse3200.game.services.ServiceLocator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * This is the room that holds the Flying Boss.
@@ -113,10 +111,10 @@ public class FlyingBossRoom extends GameArea {
 
         flyingBoss.getEvents().addListener("death",
                 () -> ServiceLocator.getTimeSource().delayKeycardSpawn(0.05f, () -> {
-            Entity keycard = KeycardFactory.createKeycard(3);
-            keycard.setPosition(new Vector2(3f, 5f));
-            spawnEntity(keycard);
-        }));
+                    Entity keycard = KeycardFactory.createKeycard(3);
+                    keycard.setPosition(new Vector2(3f, 5f));
+                    spawnEntity(keycard);
+                }));
 
         spawnEntityAt(flyingBoss, pos, true, true);
         registerEnemy(flyingBoss);

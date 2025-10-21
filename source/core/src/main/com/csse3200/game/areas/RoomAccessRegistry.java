@@ -18,7 +18,7 @@ public class RoomAccessRegistry {
         roomAccessLevels.put("Floor7", 1);
     }
 
-    public RoomAccessRegistry() {
+    private RoomAccessRegistry() {
         throw new IllegalStateException("Utility class");
     }
 

@@ -2,8 +2,6 @@ package com.csse3200.game.components;
 
 import com.csse3200.game.components.boss.DamageReductionComponent;
 import com.csse3200.game.components.enemy.LowHealthAttackBuffComponent;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Component used to store information related to combat such as health, attack, etc. Any entities
@@ -11,7 +9,7 @@ import org.slf4j.LoggerFactory;
  * extended for more specific combat needs.
  */
 public class CombatStatsComponent extends Component {
-    private static final int thresholdForBuff = 20;
+    private static final int THRESHOLD_FOR_BUFF = 20;
     /**
      * Current health points (HP). Never negative.
      */
@@ -93,7 +91,7 @@ public class CombatStatsComponent extends Component {
             entity.getEvents().trigger("updateHealth", this.health);
 
             // Apply attack buff on low health if the entity has that component
-            if (this.health <= thresholdForBuff && (!isDead())
+            if (this.health <= THRESHOLD_FOR_BUFF && (!isDead())
                     && entity.getComponent(LowHealthAttackBuffComponent.class) != null) {
                 entity.getEvents().trigger("buff");
             }
