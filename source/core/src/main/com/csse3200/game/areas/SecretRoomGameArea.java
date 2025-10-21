@@ -197,6 +197,10 @@ public class SecretRoomGameArea extends GameArea {
                     rightExitDoorComp.setLocked(false);
                 }
                 prompt.setText("Factory Exploding! Escape Out The Door To The Right!");
+
+                ServiceLocator.getGlobalEvents().trigger("escape timer");
+
+
             }
         };
     }
