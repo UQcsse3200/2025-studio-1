@@ -9,6 +9,7 @@ import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.factories.system.TeleporterFactory;
 import com.csse3200.game.services.ServiceLocator;
+import com.csse3200.game.entities.factories.characters.FriendlyNPCFactory;
 
 /**
  * Office room: minimal walls and two doors (left--Security, right--Elevator).
@@ -62,7 +63,7 @@ public class OfficeGameArea extends GameArea {
         spawnOfficeProps();
         spawnEnemies();
         spawnTeleporter();
-
+        spawnAssistor();
         Entity ui = new Entity();
         ui.addComponent(new GameAreaDisplay("Office"))
                 .addComponent(new com.csse3200.game.components.gamearea.FloorLabelDisplay("Floor 5"));
@@ -178,6 +179,13 @@ public class OfficeGameArea extends GameArea {
     /**
      * Spawn 3 enemies in the office room
      */
+    private void spawnAssistor() {
+        Entity player = ServiceLocator.getPlayer();
+        GridPoint2 pos = new GridPoint2(3, 8);
+
+        Entity assistor = FriendlyNPCFactory.createAssisterNpc(player);
+        spawnEntityAt(assistor, pos, true, true);
+    }
     private void spawnEnemies() {
         Entity player = ServiceLocator.getPlayer();
         if (player == null) return;

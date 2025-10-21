@@ -2,6 +2,7 @@ package com.csse3200.game.components.boss;
 
 import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.components.Component;
+import com.badlogic.gdx.Gdx;
 
 /**
  * Individual Cocoon Component - Handles behavior for individual cocoon entities
@@ -48,11 +49,11 @@ public class IndividualCocoonComponent extends Component {
         if (isDestroyed) return;
 
         isDestroyed = true;
-
-        entity.setScale(0f, 0f);
         System.out.println("White cocoon destroyed!");
         entity.getEvents().trigger("cocoonDestroyed");
-
+        Gdx.app.postRunnable(() -> {
+            try { entity.dispose(); } catch (Exception ignored) { }
+        });
         // The death event is automatically triggered by CombatStatsComponent
         // and caught by the CocoonSpawnerComponent through the death listener
     }

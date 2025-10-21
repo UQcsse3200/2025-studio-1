@@ -80,7 +80,6 @@ public class MovingBossRoom extends GameArea {
 
         spawnBoss();
         spawnObjectDoors(new GridPoint2(0, 6), new GridPoint2(28, 6));
-        spawnAssistor();
         spawnNurse();
 
         ItemSpawner itemSpawner = new ItemSpawner(this);
@@ -113,12 +112,7 @@ public class MovingBossRoom extends GameArea {
         spawnEntityAt(boss, pos, true, true);
     }
 
-    private void spawnAssistor() {
-        GridPoint2 pos = new GridPoint2(7, 8);
 
-        Entity assistor = FriendlyNPCFactory.createAssisterNpc(player);
-        spawnEntityAt(assistor, pos, true, true);
-    }
 
     /**
      * Spawns the borders and doors of the room.

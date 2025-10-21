@@ -126,10 +126,6 @@ public class BossFactory {
         Vector2 s = robot.getScale();
         float k = 2.0f;
         robot.setScale(s.x * k, s.y * k);
-
-        PhysicsUtils.setScaledCollider(robot, 0.1f, 0.3f);
-        robot.getComponent(ColliderComponent.class).setDensity(1.5f);
-
         return robot;
     }
 
