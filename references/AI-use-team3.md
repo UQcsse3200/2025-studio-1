@@ -3,7 +3,6 @@
 
 ### Code Development
 - **Debugging**: Used AI to analyze logger exceptions and runtime errors, providing targeted fixes for compilation and runtime issues
-- Prompt: "The game crashes when entering the Forest area can you help me identify what's causing the exception?"
 - **Code Repair**: Leveraged AI to identify and fix broken code, including missing braces, null pointer exceptions, and syntax errors
 - **Architecture Analysis**: AI helped understand complex codebases and suggest improvements to game area implementations
 - Prompt: "Can you review my code structure and suggest improvements to make it better?"
