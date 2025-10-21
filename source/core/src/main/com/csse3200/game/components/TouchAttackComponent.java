@@ -104,7 +104,7 @@ public class TouchAttackComponent extends Component {
                 .getAsset("images/rocketExplosion.atlas", TextureAtlas.class);
 
         AnimationRenderComponent animator = new AnimationRenderComponent(atlas);
-        animator.addAnimation("ROCKET_EXPLOSION", 0.05f, Animation.PlayMode.NORMAL);
+        animator.addAnimation(ROCKET_EXPLOSION, 0.05f, Animation.PlayMode.NORMAL);
 
         // Create the explosion entity first
         Entity explosion = new Entity();
@@ -112,7 +112,7 @@ public class TouchAttackComponent extends Component {
 
         // Add a self-removing component
         explosion.addComponent(new Component() {
-            private final int frameCount = atlas.findRegions("ROCKET_EXPLOSION").size;
+            private final int frameCount = atlas.findRegions(ROCKET_EXPLOSION).size;
             private final float frameDuration = 0.05f;
             private final float animationDuration = frameCount * frameDuration;
             private float elapsedTime = 0f;
@@ -131,7 +131,7 @@ public class TouchAttackComponent extends Component {
 
         ServiceLocator.getEntityService().register(explosion);
 
-        animator.startAnimation("ROCKET_EXPLOSION");
+        animator.startAnimation(ROCKET_EXPLOSION);
     }
 
 

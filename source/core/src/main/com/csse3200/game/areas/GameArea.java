@@ -375,7 +375,7 @@ public abstract class GameArea implements Disposable {
                 respectiveSpawns.add(new Vector2(12f, 4f));
                 spawnRandom(total, scaleFactor, player, positions, respectiveSpawns);
             }
-            case "Reception" -> {
+            case RECEPTION -> {
                 respectiveSpawns.add(new Vector2(8f, 9.5f));
                 spawnRandom(total, scaleFactor, player, positions, respectiveSpawns);
                 respectiveSpawns = new ArrayList<>();
@@ -385,7 +385,7 @@ public abstract class GameArea implements Disposable {
                 respectiveSpawns.add(new Vector2(11.5f, 5f));
                 spawnRandom(total, scaleFactor, player, positions, respectiveSpawns);
             }
-            case "Mainhall" -> {
+            case MAIN_HALL -> {
                 respectiveSpawns.add(new Vector2(12f, 9.5f));
                 spawnRandom(total, scaleFactor, player, positions, respectiveSpawns);
                 respectiveSpawns = new ArrayList<>();
@@ -398,7 +398,7 @@ public abstract class GameArea implements Disposable {
                 respectiveSpawns.add(new Vector2(4f, 7f));
                 spawnRandom(total, scaleFactor, player, positions, respectiveSpawns);
             }
-            case "Security" -> {
+            case SECURITY -> {
                 respectiveSpawns.add(new Vector2(12f, 10f));
                 respectiveSpawns.add(new Vector2(1.75f, 6.5f));
                 spawnRandom(total, scaleFactor, player, positions, respectiveSpawns);
@@ -407,14 +407,14 @@ public abstract class GameArea implements Disposable {
                 respectiveSpawns.add(new Vector2(3f, 6.5f));
                 spawnRandom(total, scaleFactor, player, positions, respectiveSpawns);
             }
-            case "Office" -> {
+            case OFFICE -> {
                 respectiveSpawns.add(new Vector2(12f, 4f));
                 respectiveSpawns.add(new Vector2(6f, 6.5f));
                 respectiveSpawns.add(new Vector2(8.2f, 9f));
                 respectiveSpawns.add(new Vector2(13f, 11f));
                 spawnRandom(total, scaleFactor, player, positions, respectiveSpawns);
             }
-            case "Elevator" -> {
+            case ELEVATOR -> {
                 respectiveSpawns.add(new Vector2(11f, 4f));
                 respectiveSpawns.add(new Vector2(11f, 8f));
                 spawnRandom(total, scaleFactor, player, positions, respectiveSpawns);
@@ -423,7 +423,7 @@ public abstract class GameArea implements Disposable {
                 respectiveSpawns.add(new Vector2(2f, 6f));
                 spawnRandom(total, scaleFactor, player, positions, respectiveSpawns);
             }
-            case "Research" -> {
+            case RESEARCH -> {
                 respectiveSpawns.add(new Vector2(12f, 10.3f));
                 respectiveSpawns.add(new Vector2(2f, 6f));
                 spawnRandom(total, scaleFactor, player, positions, respectiveSpawns);
@@ -433,7 +433,7 @@ public abstract class GameArea implements Disposable {
                 respectiveSpawns.add(new Vector2(1f, 6f));
                 spawnRandom(total, scaleFactor, player, positions, respectiveSpawns);
             }
-            case "Shipping" -> {
+            case SHIPPING -> {
                 respectiveSpawns.add(new Vector2(12f, 9f));
                 spawnRandom(total, scaleFactor, player, positions, respectiveSpawns);
                 respectiveSpawns = new ArrayList<>();
@@ -447,7 +447,7 @@ public abstract class GameArea implements Disposable {
                 respectiveSpawns.add(new Vector2(13f, 9f));
                 spawnRandom(total, scaleFactor, player, positions, respectiveSpawns);
             }
-            case "Storage" -> {
+            case STORAGE -> {
                 respectiveSpawns.add(new Vector2(12f, 5f));
                 respectiveSpawns = new ArrayList<>();
                 respectiveSpawns.add(new Vector2(10f, 5f));
@@ -455,7 +455,7 @@ public abstract class GameArea implements Disposable {
                 respectiveSpawns.add(new Vector2(8f, 5f));
                 spawnRandom(total, scaleFactor, player, positions, respectiveSpawns);
             }
-            case "Server" -> {
+            case SERVER -> {
                 respectiveSpawns.add(new Vector2(12f, 10f));
                 respectiveSpawns.add(new Vector2(8f, 5f));
                 respectiveSpawns.add(new Vector2(11f, 7.5f));
@@ -468,7 +468,7 @@ public abstract class GameArea implements Disposable {
                 respectiveSpawns.add(new Vector2(2f, 8.5f));
                 spawnRandom(total, scaleFactor, player, positions, respectiveSpawns);
             }
-            case "Tunnel" -> {
+            case TUNNEL -> {
                 respectiveSpawns.add(new Vector2(12f, 4f));
                 respectiveSpawns.add(new Vector2(4.5f, 6f));
                 spawnRandom(total, scaleFactor, player, positions, respectiveSpawns);
@@ -555,6 +555,7 @@ public abstract class GameArea implements Disposable {
                 break;
             case ("Random"):
                 spawnRandom(total, scaleFactor, player, positions, respectiveSpawns);
+                break;
             default:
                 break;
         }

@@ -37,10 +37,6 @@ public class WeaponsStatsComponent extends Component {
      */
     private float coolDown;
     /**
-     * Flag that disables all outgoing damage when true.
-     */
-    private boolean disableDamage;
-    /**
      * Path to the projectile's texture if this weapon fires projectiles.
      */
     private String projectileTexturePath;
@@ -53,7 +49,6 @@ public class WeaponsStatsComponent extends Component {
      * Default is 1.0 (no boost). Cheat codes or power-ups can increase this.
      */
     private float damageMultiplier = 1f;
-
     /**
      * Flag for if the weapon needs to make rocket bullets
      */
@@ -147,7 +142,7 @@ public class WeaponsStatsComponent extends Component {
      */
     public void setBaseAttack(int attack) {
         if (attack >= 0) {
-            this.baseAttack = attack;
+            baseAttack = attack;
         } else {
             logger.error("Cannot set base attack to a negative value: {}", attack);
         }
@@ -207,7 +202,7 @@ public class WeaponsStatsComponent extends Component {
     public void upgrade() {
         if (this.upgradeStage < maxUpgradeStage) {
             this.upgradeStage++;
-            this.baseAttack *= 2;
+            baseAttack *= 2;
         }
     }
 

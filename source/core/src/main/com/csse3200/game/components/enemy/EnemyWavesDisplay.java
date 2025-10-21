@@ -18,7 +18,7 @@ import org.slf4j.LoggerFactory;
  */
 public class EnemyWavesDisplay extends UIComponent {
     private static final Logger logger = LoggerFactory.getLogger(EnemyWavesDisplay.class);
-    private static final float screenHeight = (float) Gdx.graphics.getHeight();
+    private static final float SCREEN_HEIGHT = Gdx.graphics.getHeight();
     private final EnemyWaves wavesManager;
     protected Stage stage;
     private Table table;
