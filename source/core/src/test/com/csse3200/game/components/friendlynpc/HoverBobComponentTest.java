@@ -8,10 +8,9 @@ import java.lang.reflect.Field;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Tests that do NOT depend on any Time/GameTime/ServiceLocator code.
- * We do NOT call update(); we only cover constructor semantics and create()/anchoring.
+ * Tests for HoverBobComponent.
  */
-class HoverBobComponentNoTimeTest {
+class HoverBobComponentTest {
 
     private static float getPrivateFloat(Object obj, String field) {
         try {
