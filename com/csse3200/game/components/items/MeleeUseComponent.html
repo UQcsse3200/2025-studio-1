@@ -95,6 +95,9 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">MeleeUseComponent</span>
 <span class="extends-implements">extends <a href="ItemActionsComponent.html" title="class in com.csse3200.game.components.items">ItemActionsComponent</a></span></div>
+<div class="block">Handles melee weapon usage and attack logic for entities.
+ <p>
+ Checks cooldowns, detects nearby enemies, applies damage, and triggers attack animations and sounds.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -133,7 +136,9 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#use(com.csse3200.game.entities.Entity)" class="member-name-link">use</a><wbr>(<a href="../../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a>&nbsp;player)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Performs a melee attack from the player entity if the cooldown has elapsed.</div>
+</div>
 </div>
 </div>
 </div>
@@ -175,9 +180,12 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="use(com.csse3200.game.entities.Entity)">
 <h3>use</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">use</span><wbr><span class="parameters">(<a href="../../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a>&nbsp;player)</span></div>
+<div class="block">Performs a melee attack from the player entity if the cooldown has elapsed.</div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="ItemActionsComponent.html#use(com.csse3200.game.entities.Entity)">use</a></code>&nbsp;in class&nbsp;<code><a href="ItemActionsComponent.html" title="class in com.csse3200.game.components.items">ItemActionsComponent</a></code></dd>
+<dt>Parameters:</dt>
+<dd><code>player</code> - The entity performing the attack.</dd>
 </dl>
 </section>
 </li>
