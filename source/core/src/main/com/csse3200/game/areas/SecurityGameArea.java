@@ -9,9 +9,11 @@ import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.ItemSpawnConfig;
+import com.csse3200.game.entities.factories.characters.FriendlyNPCFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.entities.factories.system.TeleporterFactory;
 import com.csse3200.game.entities.spawner.ItemSpawner;
+
 
 /**
  * Minimal generic Security room: walls, doors, and a subtle background overlay.
@@ -57,6 +59,7 @@ public class SecurityGameArea extends GameArea {
         spawnSecurityProps();
         spawnTeleporter();
         spawnSpikes2();
+        spawnNurse(player);
 
         if (!SecurityGameArea.isCleared) {
             startWaves(player);
@@ -199,6 +202,13 @@ public class SecurityGameArea extends GameArea {
     public static void clearRoom() {
         SecurityGameArea.isCleared = true;
         logger.debug("Security is cleared");
+    }
+
+    private void spawnNurse(Entity player) {
+        GridPoint2 pos = new GridPoint2(20, 8);
+
+        Entity nurse = FriendlyNPCFactory.createNurseNpc(player);
+        spawnEntityAt(nurse, pos, true, true);
     }
 
     /**

@@ -12,8 +12,8 @@ import com.csse3200.game.physics.components.PhysicsComponent;
 
 public class BossStageComponent extends Component {
     private final Entity boss;
-    private final float stage2 = 0.5f;
-    private final float stage3 = 0.3f;// 50%
+    private static final float STAGE_2 = 0.5f;
+    private static final float STAGE_3 = 0.3f;// 50%
     private int currentStage = 1;
 
     public BossStageComponent(Entity boss) {
@@ -25,10 +25,10 @@ public class BossStageComponent extends Component {
         CombatStatsComponent stats = boss.getComponent(CombatStatsComponent.class);
         int currentHp = stats.getHealth();
         int maxHp = stats.getMaxHealth();
-        if (currentStage == 1 && currentHp <= maxHp * stage2) {
+        if (currentStage == 1 && currentHp <= maxHp * STAGE_2) {
             enterStage2();
         }
-        if (currentStage == 2 && currentHp <= maxHp * stage3) {
+        if (currentStage == 2 && currentHp <= maxHp * STAGE_3) {
             enterStage3();
         }
     }

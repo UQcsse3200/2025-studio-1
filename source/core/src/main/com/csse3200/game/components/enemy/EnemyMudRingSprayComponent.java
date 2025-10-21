@@ -65,7 +65,7 @@ public class EnemyMudRingSprayComponent extends Component {
         var diff = ServiceLocator.getDifficulty();
         GameArea area = ServiceLocator.getGameArea();
         float room = (area != null) ? area.roomNumber() : 1f;
-        if (diff != null) scale = diff.getRoomDifficulty(room);
+        if (diff != null) scale = diff.getRoomDifficulty(room)+1f;
         dmg = (int) (scale * dmg / 8);
         Entity proj = new Entity()
                 .addComponent(new PhysicsComponent())

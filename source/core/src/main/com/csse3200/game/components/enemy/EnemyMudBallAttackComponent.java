@@ -28,7 +28,10 @@ public class EnemyMudBallAttackComponent extends Component {
     private static final String BOSS3 = "Boss3";
 
     private final Entity target;
-    private final float cooldown, range, speed, life;
+    private final float cooldown;
+    private final float range;
+    private final float speed;
+    private final float life;
     private final String projectileAnimName;
 
     private float timer = 0f;
@@ -97,6 +100,7 @@ public class EnemyMudBallAttackComponent extends Component {
             attacksAtlas = rs.getAsset(ATTACKS_ATLAS_PATH, TextureAtlas.class);
             if (attacksAtlas != null) return attacksAtlas;
         } catch (GdxRuntimeException ignored) {
+            // intentionally empty
         }
 
         // Lazy load
@@ -118,7 +122,7 @@ public class EnemyMudBallAttackComponent extends Component {
         var diff = ServiceLocator.getDifficulty();
         GameArea area = ServiceLocator.getGameArea();
         float room = (area != null) ? area.roomNumber() : 1f;
-        if (diff != null) scale = diff.getRoomDifficulty(room);
+        if (diff != null) scale = diff.getRoomDifficulty(room)+1f;
         int dmg = (int) (scale * 5f);
         WeaponsStatsComponent bossStats = entity.getComponent(WeaponsStatsComponent.class);
         if (bossStats != null) dmg = bossStats.getBaseAttack();

@@ -6,6 +6,8 @@ import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.components.Component;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.services.ServiceLocator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +18,7 @@ import java.util.List;
  * Only handles cocoon spawning and tracking, not Boss defense state
  */
 public class CocoonSpawnerComponent extends Component {
+    private static final Logger log = LoggerFactory.getLogger(CocoonSpawnerComponent.class);
 
     private final float healthThreshold; // Health percentage threshold to spawn cocoons (0.3f = 30%)
     private final Vector2[] cocoonPositions; // Spawn positions for cocoons
@@ -27,7 +30,6 @@ public class CocoonSpawnerComponent extends Component {
 
     /**
      * Constructor
-     *
      * @param healthThreshold Health percentage threshold to spawn cocoons (0.0-1.0)
      * @param cocoonPositions Array of spawn positions for cocoons
      */
@@ -46,7 +48,7 @@ public class CocoonSpawnerComponent extends Component {
             this.maxHealth = combatStats.getMaxHealth();
         }
 
-        System.out.println("CocoonSpawnerComponent created and ready!");
+        log.debug("CocoonSpawnerComponent created and ready!");
 
         // Listen for Boss health update events
         entity.getEvents().addListener("updateHealth", this::onBossHealthUpdate);
@@ -67,20 +69,20 @@ public class CocoonSpawnerComponent extends Component {
      * Handler for when Boss health is updated
      */
     private void onBossHealthUpdate(int currentHealth) {
-        System.out.println("Boss health updated! Current: " + currentHealth + "/" + maxHealth + ", spawned: " + cocoonsSpawned);
+        log.debug("Boss health updated! Current: {}/{}, spawned: {}", currentHealth, maxHealth, cocoonsSpawned);
 
         if (cocoonsSpawned) return;
 
         float currentHealthPercent = (float) currentHealth / maxHealth;
-        System.out.println("Boss health percentage: " + (currentHealthPercent * 100) + "%");
+        log.debug("Boss health percentage: {}%", currentHealthPercent * 100);
 
         // Spawn cocoons when health drops below threshold
         if (currentHealthPercent <= healthThreshold) {
-            System.out.println("Health threshold reached! Flagging for cocoon spawning...");
+            log.debug("Health threshold reached! Flagging for cocoon spawning...");
             cocoonsSpawned = true;
             shouldSpawnCocoons = true; // Flag for next update cycle
         } else {
-            System.out.println("Health threshold not reached yet. Need: " + (healthThreshold * 100) + "%");
+            log.debug("Health threshold not reached yet. Need: {}%", healthThreshold * 100);
         }
     }
 
@@ -88,7 +90,7 @@ public class CocoonSpawnerComponent extends Component {
      * Actually create the cocoons (called from update cycle, safe from Box2D locks)
      */
     private void createCocoonsNow() {
-        System.out.println("Creating cocoons now in safe update cycle...");
+        log.debug("Creating cocoons now in safe update cycle...");
 
         for (Vector2 position : cocoonPositions) {
             Entity cocoon = createCocoonEntity(position);
@@ -107,7 +109,7 @@ public class CocoonSpawnerComponent extends Component {
         // Trigger cocoon spawned event (can be used for effects/sounds)
         entity.getEvents().trigger("cocoonsSpawned", activeCocoons.size());
 
-        System.out.println("Successfully spawned " + activeCocoons.size() + " white cocoons!");
+        log.debug("Successfully spawned {} white cocoons!", activeCocoons.size());
     }
 
     /**
@@ -141,9 +143,7 @@ public class CocoonSpawnerComponent extends Component {
      * Set up death listener for a specific cocoon
      */
     private void setupCocoonDeathListener(Entity cocoon) {
-        cocoon.getEvents().addListener("death", () -> {
-            onCocoonDestroyed(cocoon);
-        });
+        cocoon.getEvents().addListener("death", () -> onCocoonDestroyed(cocoon));
     }
 
     /**
@@ -152,7 +152,7 @@ public class CocoonSpawnerComponent extends Component {
     private void onCocoonDestroyed(Entity destroyedCocoon) {
         activeCocoons.remove(destroyedCocoon);
 
-        System.out.println("Cocoon destroyed! Remaining cocoons: " + activeCocoons.size());
+        log.debug("Cocoon destroyed! Remaining cocoons: {}", activeCocoons.size());
 
         updateBossDefenseState();
     }
@@ -170,11 +170,11 @@ public class CocoonSpawnerComponent extends Component {
             if (hasActiveCocoons) {
                 // Activate defense: complete immunity (1.0 reduction) for a long duration
                 defenseComponent.start(1.0f, 999f); // 1.0 = complete immunity, 999s = very long
-                System.out.println("Boss is protected by " + activeCocoons.size() + " cocoons - INVULNERABLE");
+                log.debug("Boss is protected by {} cocoons - INVULNERABLE", activeCocoons.size());
             } else {
                 // Deactivate defense
                 defenseComponent.stop(); // Assuming there's a stop method, or set reduction to 0
-                System.out.println("All cocoons destroyed! Boss is now VULNERABLE");
+                log.debug("All cocoons destroyed! Boss is now VULNERABLE");
                 entity.getEvents().trigger("allCocoonsDestroyed");
             }
         }

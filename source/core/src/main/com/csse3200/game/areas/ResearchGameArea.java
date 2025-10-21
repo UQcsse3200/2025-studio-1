@@ -9,6 +9,7 @@ import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.ItemSpawnConfig;
+import com.csse3200.game.entities.factories.characters.FriendlyNPCFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.entities.factories.system.TeleporterFactory;
 import com.csse3200.game.entities.spawner.ItemSpawner;
@@ -57,6 +58,7 @@ public class ResearchGameArea extends GameArea {
         spawnPlatforms();
         spawnResearchProps();
         spawnTeleporter();
+        spawnNurse(player);
 
         if (!ResearchGameArea.isCleared) {
             startWaves(player);
@@ -194,6 +196,13 @@ public class ResearchGameArea extends GameArea {
     public static void unclearRoom() {
         ResearchGameArea.isCleared = false;
         logger.debug("Research is uncleared");
+    }
+
+    private void spawnNurse(Entity player) {
+        GridPoint2 pos = new GridPoint2(20, 8);
+
+        Entity nurse = FriendlyNPCFactory.createNurseNpc(player);
+        spawnEntityAt(nurse, pos, true, true);
     }
 
     /**

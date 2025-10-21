@@ -279,4 +279,8 @@ public class BlackJackGame extends Component {
             entity.getEvents().trigger("lose");
         }
     }
+
+    public void setDeck(Deck deck) {
+        this.deck = deck;
+    }
 }
