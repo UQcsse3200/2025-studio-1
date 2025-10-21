@@ -194,19 +194,6 @@ public class OfficeGameArea extends GameArea {
         Entity assistor = FriendlyNPCFactory.createAssisterNpc(player);
         spawnEntityAt(assistor, pos, true, true);
     }
-    private void spawnEnemies() {
-        Entity player = ServiceLocator.getPlayer();
-        if (player == null) return;
-
-        // Enemy 1: GhostGPT
-        Entity ghostGPT = com.csse3200.game.entities.factories.characters.NPCFactory.createGhostGPT(player, this, 1.0f);
-        spawnEntityAt(ghostGPT, new GridPoint2(15, 8), true, false);
-
-        // Enemy 2: Deepspin
-        Entity deepspin = com.csse3200.game.entities.factories.characters.NPCFactory.createDeepspin(player, this, 1.0f);
-        spawnEntityAt(deepspin, new GridPoint2(20, 20), true, false);
-
-       }
 
     private void loadMovingBossRoom() {
         MovingBossRoom.setRoomSpawn(new GridPoint2(24, 8));

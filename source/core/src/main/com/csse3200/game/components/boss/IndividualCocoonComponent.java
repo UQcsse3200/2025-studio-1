@@ -47,12 +47,15 @@ public class IndividualCocoonComponent extends Component {
      */
     private void onCocoonDeath() {
         if (isDestroyed) return;
-
         isDestroyed = true;
         System.out.println("White cocoon destroyed!");
         entity.getEvents().trigger("cocoonDestroyed");
         Gdx.app.postRunnable(() -> {
-            try { entity.dispose(); } catch (Exception ignored) { }
+            try {
+                entity.dispose();
+            } catch (Exception ignored) {
+                // Safe to ignore disposal errors
+            }
         });
         // The death event is automatically triggered by CombatStatsComponent
         // and caught by the CocoonSpawnerComponent through the death listener
