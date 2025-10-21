@@ -293,138 +293,127 @@ public abstract class GameArea implements Disposable {
         ArrayList<Vector2> respectiveSpawns = new ArrayList<>();
         switch (roomName) {
             case "Forest" -> {
-                respectiveSpawns.add(new Vector2(2.5f, 11f));
+                respectiveSpawns.add(new Vector2(6f, 4f));
                 spawnRandom(total, scaleFactor, player, positions, respectiveSpawns);
                 respectiveSpawns = new ArrayList<>();
-                respectiveSpawns.add(new Vector2(5.4f, 11f));
+                respectiveSpawns.add(new Vector2(7f, 4f));
                 spawnRandom(total, scaleFactor, player, positions, respectiveSpawns);
                 respectiveSpawns = new ArrayList<>();
-                respectiveSpawns.add(new Vector2(8.2f, 11f));
+                respectiveSpawns.add(new Vector2(8.5f, 4f));
                 spawnRandom(total, scaleFactor, player, positions, respectiveSpawns);
                 respectiveSpawns = new ArrayList<>();
-                respectiveSpawns.add(new Vector2(11.1f, 10f));
+                respectiveSpawns.add(new Vector2(10f, 4f));
                 spawnRandom(total, scaleFactor, player, positions, respectiveSpawns);
                 respectiveSpawns = new ArrayList<>();
-                respectiveSpawns.add(new Vector2(12f, 5f));
+                respectiveSpawns.add(new Vector2(12f, 4f));
                 spawnRandom(total, scaleFactor, player, positions, respectiveSpawns);
-                respectiveSpawns = new ArrayList<>();
             }
             case "Reception" -> {
-                respectiveSpawns.add(new Vector2(5.7f, 5f));
+                respectiveSpawns.add(new Vector2(8f, 9.5f));
                 spawnRandom(total, scaleFactor, player, positions, respectiveSpawns);
                 respectiveSpawns = new ArrayList<>();
-                respectiveSpawns.add(new Vector2(1.5f, 7f));
+                respectiveSpawns.add(new Vector2(1.5f, 8f));
                 spawnRandom(total, scaleFactor, player, positions, respectiveSpawns);
                 respectiveSpawns = new ArrayList<>();
-                respectiveSpawns.add(new Vector2(11.5f, 10f));
+                respectiveSpawns.add(new Vector2(11.5f, 5f));
                 spawnRandom(total, scaleFactor, player, positions, respectiveSpawns);
-                respectiveSpawns = new ArrayList<>();
             }
             case "Mainhall" -> {
-                respectiveSpawns.add(new Vector2(10f, 10f));
+                respectiveSpawns.add(new Vector2(12f, 9.5f));
                 spawnRandom(total, scaleFactor, player, positions, respectiveSpawns);
                 respectiveSpawns = new ArrayList<>();
-                respectiveSpawns.add(new Vector2(2f, 10f));
+                respectiveSpawns.add(new Vector2(2f, 8.5f));
                 spawnRandom(total, scaleFactor, player, positions, respectiveSpawns);
                 respectiveSpawns = new ArrayList<>();
                 respectiveSpawns.add(new Vector2(11f, 6f));
                 spawnRandom(total, scaleFactor, player, positions, respectiveSpawns);
                 respectiveSpawns = new ArrayList<>();
-                respectiveSpawns.add(new Vector2(2f, 8f));
+                respectiveSpawns.add(new Vector2(4f, 7f));
                 spawnRandom(total, scaleFactor, player, positions, respectiveSpawns);
-                respectiveSpawns = new ArrayList<>();
             }
             case "Security" -> {
                 respectiveSpawns.add(new Vector2(12f, 10f));
-                respectiveSpawns.add(new Vector2(2f, 5f));
+                respectiveSpawns.add(new Vector2(1.75f, 6.5f));
                 spawnRandom(total, scaleFactor, player, positions, respectiveSpawns);
                 respectiveSpawns = new ArrayList<>();
-                respectiveSpawns.add(new Vector2(7f, 11f));
-                respectiveSpawns.add(new Vector2(3f, 10f));
+                respectiveSpawns.add(new Vector2(0.5f, 6.5f));
+                respectiveSpawns.add(new Vector2(3f, 6.5f));
                 spawnRandom(total, scaleFactor, player, positions, respectiveSpawns);
-                respectiveSpawns = new ArrayList<>();
             }
             case "Office" -> {
-                respectiveSpawns.add(new Vector2(12f, 3f));
-                respectiveSpawns.add(new Vector2(6f, 6f));
-                respectiveSpawns.add(new Vector2(8.2f, 11f));
-                respectiveSpawns.add(new Vector2(2f, 10f));
+                respectiveSpawns.add(new Vector2(12f, 4f));
+                respectiveSpawns.add(new Vector2(6f, 6.5f));
+                respectiveSpawns.add(new Vector2(8.2f, 9f));
+                respectiveSpawns.add(new Vector2(13f, 11f));
                 spawnRandom(total, scaleFactor, player, positions, respectiveSpawns);
-                respectiveSpawns = new ArrayList<>();
             }
             case "Elevator" -> {
-                respectiveSpawns.add(new Vector2(13f, 4f));
+                respectiveSpawns.add(new Vector2(11f, 4f));
                 respectiveSpawns.add(new Vector2(11f, 8f));
                 spawnRandom(total, scaleFactor, player, positions, respectiveSpawns);
                 respectiveSpawns = new ArrayList<>();
-                respectiveSpawns.add(new Vector2(8.4f, 10f));
-                respectiveSpawns.add(new Vector2(2f, 8f));
+                respectiveSpawns.add(new Vector2(6f, 8f));
+                respectiveSpawns.add(new Vector2(2f, 6f));
                 spawnRandom(total, scaleFactor, player, positions, respectiveSpawns);
-                respectiveSpawns = new ArrayList<>();
             }
             case "Research" -> {
-                respectiveSpawns.add(new Vector2(12f, 11f));
-                respectiveSpawns.add(new Vector2(2f, 7f));
+                respectiveSpawns.add(new Vector2(12f, 10.3f));
+                respectiveSpawns.add(new Vector2(2f, 6f));
                 spawnRandom(total, scaleFactor, player, positions, respectiveSpawns);
                 respectiveSpawns = new ArrayList<>();
                 respectiveSpawns.add(new Vector2(11f, 4f));
-                respectiveSpawns.add(new Vector2(3f, 10f));
-                respectiveSpawns.add(new Vector2(5f, 10f));
+                respectiveSpawns.add(new Vector2(3f, 6f));
+                respectiveSpawns.add(new Vector2(1f, 6f));
                 spawnRandom(total, scaleFactor, player, positions, respectiveSpawns);
-                respectiveSpawns = new ArrayList<>();
             }
             case "Shipping" -> {
-                respectiveSpawns.add(new Vector2(12f, 11f));
+                respectiveSpawns.add(new Vector2(12f, 9f));
                 spawnRandom(total, scaleFactor, player, positions, respectiveSpawns);
                 respectiveSpawns = new ArrayList<>();
-                respectiveSpawns.add(new Vector2(2f, 5f));
+                respectiveSpawns.add(new Vector2(11f, 5f));
                 spawnRandom(total, scaleFactor, player, positions, respectiveSpawns);
                 respectiveSpawns = new ArrayList<>();
                 respectiveSpawns.add(new Vector2(12f, 5f));
                 spawnRandom(total, scaleFactor, player, positions, respectiveSpawns);
                 respectiveSpawns = new ArrayList<>();
-                respectiveSpawns.add(new Vector2(3f, 10f));
-                respectiveSpawns.add(new Vector2(5f, 10f));
+                respectiveSpawns.add(new Vector2(11f, 9f));
+                respectiveSpawns.add(new Vector2(13f, 9f));
                 spawnRandom(total, scaleFactor, player, positions, respectiveSpawns);
-                respectiveSpawns = new ArrayList<>();
             }
             case "Storage" -> {
                 respectiveSpawns.add(new Vector2(12f, 5f));
                 respectiveSpawns = new ArrayList<>();
-                respectiveSpawns.add(new Vector2(12f, 11f));
-                respectiveSpawns.add(new Vector2(12f, 8f));
-                respectiveSpawns.add(new Vector2(8f, 8f));
+                respectiveSpawns.add(new Vector2(10f, 5f));
+                respectiveSpawns.add(new Vector2(11f, 5f));
+                respectiveSpawns.add(new Vector2(8f, 5f));
                 spawnRandom(total, scaleFactor, player, positions, respectiveSpawns);
-                respectiveSpawns = new ArrayList<>();
             }
             case "Server" -> {
-                respectiveSpawns.add(new Vector2(12f, 11f));
-                respectiveSpawns.add(new Vector2(7.6f, 4f));
-                respectiveSpawns.add(new Vector2(11f, 8f));
+                respectiveSpawns.add(new Vector2(12f, 10f));
+                respectiveSpawns.add(new Vector2(8f, 5f));
+                respectiveSpawns.add(new Vector2(11f, 7.5f));
                 spawnRandom(total, scaleFactor, player, positions, respectiveSpawns);
                 respectiveSpawns = new ArrayList<>();
-                respectiveSpawns.add(new Vector2(2f, 4f));
+                respectiveSpawns.add(new Vector2(12f, 4f));
                 spawnRandom(total, scaleFactor, player, positions, respectiveSpawns);
                 respectiveSpawns = new ArrayList<>();
-                respectiveSpawns.add(new Vector2(3f, 10f));
-                respectiveSpawns.add(new Vector2(5f, 10f));
+                respectiveSpawns.add(new Vector2(1f, 8.5f));
+                respectiveSpawns.add(new Vector2(2f, 8.5f));
                 spawnRandom(total, scaleFactor, player, positions, respectiveSpawns);
-                respectiveSpawns = new ArrayList<>();
             }
             case "Tunnel" -> {
                 respectiveSpawns.add(new Vector2(12f, 4f));
-                respectiveSpawns.add(new Vector2(3f, 4f));
+                respectiveSpawns.add(new Vector2(4.5f, 6f));
                 spawnRandom(total, scaleFactor, player, positions, respectiveSpawns);
                 respectiveSpawns = new ArrayList<>();
-                respectiveSpawns.add(new Vector2(10f, 10f));
+                respectiveSpawns.add(new Vector2(11.5f, 10f));
                 spawnRandom(total, scaleFactor, player, positions, respectiveSpawns);
                 respectiveSpawns = new ArrayList<>();
-                respectiveSpawns.add(new Vector2(4f, 10f));
+                respectiveSpawns.add(new Vector2(4f, 9.25f));
                 spawnRandom(total, scaleFactor, player, positions, respectiveSpawns);
                 respectiveSpawns = new ArrayList<>();
-                respectiveSpawns.add(new Vector2(6f, 10f));
+                respectiveSpawns.add(new Vector2(3f, 9.25f));
                 spawnRandom(total, scaleFactor, player, positions, respectiveSpawns);
-                respectiveSpawns = new ArrayList<>();
             }
             default -> {
                 // No spawns, hence not assigning any spawn positions
