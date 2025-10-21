@@ -463,9 +463,6 @@ public abstract class GameArea implements Disposable {
                 respectiveSpawns.add(new Vector2(11f, 7.5f));
                 spawnRandom(total, scaleFactor, player, positions, respectiveSpawns);
                 respectiveSpawns = new ArrayList<>();
-                respectiveSpawns.add(new Vector2(12f, 4f));
-                spawnRandom(total, scaleFactor, player, positions, respectiveSpawns);
-                respectiveSpawns = new ArrayList<>();
                 respectiveSpawns.add(new Vector2(1f, 8.5f));
                 respectiveSpawns.add(new Vector2(2f, 8.5f));
                 spawnRandom(total, scaleFactor, player, positions, respectiveSpawns);
