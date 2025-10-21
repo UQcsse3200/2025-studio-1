@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
  * Once these events are registered, the associated sound will play every time the event is triggered.
  */
 public class SoundComponent extends Component {
-    private static final Logger logger = LoggerFactory.getLogger(Component.class);
+    private static final Logger logger = LoggerFactory.getLogger(SoundComponent.class);
 
     /**
      * Registers the sound to play when the given event is triggered. Returns true if successful and false if not.
@@ -31,9 +31,7 @@ public class SoundComponent extends Component {
         }
         this.entity.getEvents().addListener(
                 event,
-                () -> {
-                    ServiceLocator.getResourceService().getAsset(sound, Sound.class).play();
-                }
+                () -> ServiceLocator.getResourceService().getAsset(sound, Sound.class).play()
         );
         return true;
     }

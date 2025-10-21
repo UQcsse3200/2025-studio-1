@@ -27,6 +27,8 @@ public class TouchAttackComponent extends Component {
     private float knockbackForce = 0f;
     private HitboxComponent hitboxComponent;
 
+    private static final String ROCKET_EXPLOSION = "rocketExplosion";
+
     /**
      * Create a component which attacks entities on collision, without knockback.
      *
@@ -97,13 +99,12 @@ public class TouchAttackComponent extends Component {
         }
     }
 
-
     private void spawnExplosion(Vector2 position) {
         TextureAtlas atlas = ServiceLocator.getResourceService()
                 .getAsset("images/rocketExplosion.atlas", TextureAtlas.class);
 
         AnimationRenderComponent animator = new AnimationRenderComponent(atlas);
-        animator.addAnimation("rocketExplosion", 0.05f, Animation.PlayMode.NORMAL);
+        animator.addAnimation("ROCKET_EXPLOSION", 0.05f, Animation.PlayMode.NORMAL);
 
         // Create the explosion entity first
         Entity explosion = new Entity();
@@ -111,7 +112,7 @@ public class TouchAttackComponent extends Component {
 
         // Add a self-removing component
         explosion.addComponent(new Component() {
-            private final int frameCount = atlas.findRegions("rocketExplosion").size;
+            private final int frameCount = atlas.findRegions("ROCKET_EXPLOSION").size;
             private final float frameDuration = 0.05f;
             private final float animationDuration = frameCount * frameDuration;
             private float elapsedTime = 0f;
@@ -130,7 +131,7 @@ public class TouchAttackComponent extends Component {
 
         ServiceLocator.getEntityService().register(explosion);
 
-        animator.startAnimation("rocketExplosion");
+        animator.startAnimation("ROCKET_EXPLOSION");
     }
 
 

@@ -13,9 +13,7 @@ import org.slf4j.LoggerFactory;
  * </p>
  */
 public class WeaponsStatsComponent extends Component {
-
     private static final Logger logger = LoggerFactory.getLogger(WeaponsStatsComponent.class);
-
 
     /**
      * Default attack cooldown (seconds).
@@ -33,7 +31,7 @@ public class WeaponsStatsComponent extends Component {
     /**
      * Base attack damage before multipliers are applied (must be non-negative).
      */
-    private int baseAttack;
+    private static int baseAttack;
     /**
      * Cooldown (in seconds) between attacks.
      */
@@ -171,15 +169,6 @@ public class WeaponsStatsComponent extends Component {
      */
     public void setProjectileTexturePath(String projectileTexturePath) {
         this.projectileTexturePath = projectileTexturePath;
-    }
-
-    /**
-     * Checks whether this weapon is allowed to deal damage.
-     *
-     * @return {@code true} if this weapon can deal damage, {@code false} otherwise
-     */
-    private boolean canAttack() {
-        return !disableDamage;
     }
 
     /**
