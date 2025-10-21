@@ -15,8 +15,6 @@ public class LightingEngine implements Disposable {
     private final RayHandler rayHandler;
     private CameraComponent camera;
 
-    private float ambientLight = AMBIENT_LIGHT;
-
     /**
      * Constructor method for the lighting engine. This is where some of the rayHandler's
      * global variables are set and can be changed.
@@ -52,8 +50,7 @@ public class LightingEngine implements Disposable {
     }
 
     public void setAmbientLight(float value) {
-        this.ambientLight = value;
-        rayHandler.setAmbientLight(value); // push immediately
+        rayHandler.setAmbientLight(value);
     }
 
     /** If your camera changes (e.g., room switch) */
@@ -62,7 +59,9 @@ public class LightingEngine implements Disposable {
     }
 
     public void render() {
-        rayHandler.setCombinedMatrix(camera.getProjectionMatrix());
+        rayHandler.setCombinedMatrix(
+                (com.badlogic.gdx.graphics.OrthographicCamera) camera.getCamera()
+        );
         rayHandler.updateAndRender();
     }
 

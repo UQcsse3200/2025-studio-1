@@ -1,7 +1,7 @@
 package com.csse3200.game.lighting;
 
 import box2dLight.RayHandler;
-import com.badlogic.gdx.math.Matrix4;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.extensions.GameExtension;
 import org.junit.jupiter.api.DisplayName;
@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.ArgumentMatchers.same;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(GameExtension.class)
@@ -20,24 +20,23 @@ class LightingEngineTest {
     void getRayHandler_notNullWhenInjected() {
         RayHandler rh = mock(RayHandler.class);
         CameraComponent cam = mock(CameraComponent.class);
-        when(cam.getProjectionMatrix()).thenReturn(new Matrix4());
+        when(cam.getCamera()).thenReturn(new OrthographicCamera());
 
         LightingEngine engine = new LightingEngine(rh, cam);
         assertNotNull(engine.getRayHandler());
     }
 
     @Test
-    @DisplayName("renders with camera matrix")
-    void render_usesCameraMatrixAndUpdates() {
+    @DisplayName("renders with camera")
+    void render_usesCameraAndUpdates() {
         RayHandler rh = mock(RayHandler.class);
         CameraComponent cam = mock(CameraComponent.class);
-        Matrix4 m = new Matrix4();
-        when(cam.getProjectionMatrix()).thenReturn(m);
+        when(cam.getCamera()).thenReturn(new OrthographicCamera());
 
         LightingEngine engine = new LightingEngine(rh, cam);
         engine.render();
 
-        verify(rh).setCombinedMatrix(same(m));
+        verify(rh).setCombinedMatrix(any(OrthographicCamera.class));
         verify(rh).updateAndRender();
         verifyNoMoreInteractions(rh);
     }
@@ -47,7 +46,7 @@ class LightingEngineTest {
     void setAmbientLight_forwardsToRayHandler() {
         RayHandler rh = mock(RayHandler.class);
         CameraComponent cam = mock(CameraComponent.class);
-        when(cam.getProjectionMatrix()).thenReturn(new Matrix4());
+        when(cam.getCamera()).thenReturn(new OrthographicCamera());
 
         LightingEngine engine = new LightingEngine(rh, cam);
         engine.setAmbientLight(0.42f);
@@ -61,21 +60,19 @@ class LightingEngineTest {
         RayHandler rh = mock(RayHandler.class);
         CameraComponent camA = mock(CameraComponent.class);
         CameraComponent camB = mock(CameraComponent.class);
-        Matrix4 mA = new Matrix4().idt();
-        Matrix4 mB = new Matrix4().translate(1, 2, 0);
-        when(camA.getProjectionMatrix()).thenReturn(mA);
-        when(camB.getProjectionMatrix()).thenReturn(mB);
+        when(camA.getCamera()).thenReturn(new OrthographicCamera());
+        when(camB.getCamera()).thenReturn(new OrthographicCamera());
 
         LightingEngine engine = new LightingEngine(rh, camA);
 
         engine.render();
-        verify(rh).setCombinedMatrix(same(mA));
+        verify(rh).setCombinedMatrix(any(OrthographicCamera.class));
         verify(rh).updateAndRender();
         clearInvocations(rh);
 
         engine.setCamera(camB);
         engine.render();
-        verify(rh).setCombinedMatrix(same(mB));
+        verify(rh).setCombinedMatrix(any(OrthographicCamera.class));
         verify(rh).updateAndRender();
     }
 
@@ -84,7 +81,7 @@ class LightingEngineTest {
     void dispose_disposesRayHandler() {
         RayHandler rh = mock(RayHandler.class);
         CameraComponent cam = mock(CameraComponent.class);
-        when(cam.getProjectionMatrix()).thenReturn(new Matrix4());
+        when(cam.getCamera()).thenReturn(new OrthographicCamera());
 
         LightingEngine engine = new LightingEngine(rh, cam);
         engine.dispose();
