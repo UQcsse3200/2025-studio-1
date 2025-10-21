@@ -1,10 +1,8 @@
 package com.csse3200.game.components.minigames;
 
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.csse3200.game.components.cards.Card;
-import com.csse3200.game.components.cards.Hand;
-import com.csse3200.game.components.cards.Rank;
-import com.csse3200.game.components.cards.Suit;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.csse3200.game.components.cards.*;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.services.GameTime;
 import com.csse3200.game.services.ResourceService;
@@ -45,6 +43,24 @@ class BlackJackGameTest {
         game = new BlackJackGame();
         entity.addComponent(game);
         game.create();
+
+        Deck fixedDeck = mock(Deck.class);
+        when(fixedDeck.drawCard()).thenReturn(
+                new Card(Suit.HEARTS, Rank.FIVE, dummyTexture),
+                new Card(Suit.CLUBS, Rank.SIX, dummyTexture),
+                new Card(Suit.DIAMONDS, Rank.SEVEN, dummyTexture),
+                new Card(Suit.SPADES, Rank.EIGHT, dummyTexture),
+                new Card(Suit.HEARTS, Rank.FIVE, dummyTexture),
+                new Card(Suit.CLUBS, Rank.SIX, dummyTexture),
+                new Card(Suit.DIAMONDS, Rank.SEVEN, dummyTexture),
+                new Card(Suit.SPADES, Rank.EIGHT, dummyTexture),
+                new Card(Suit.HEARTS, Rank.FIVE, dummyTexture),
+                new Card(Suit.CLUBS, Rank.SIX, dummyTexture),
+                new Card(Suit.DIAMONDS, Rank.SEVEN, dummyTexture),
+                new Card(Suit.SPADES, Rank.EIGHT, dummyTexture)
+        );
+        when(fixedDeck.cardsRemaining()).thenReturn(52);
+        game.setDeck(fixedDeck);
     }
 
     @AfterEach
@@ -64,7 +80,8 @@ class BlackJackGameTest {
 
         Hand current = game.getCurrentHand();
         assertEquals(2, current.getCards().size(), "Player hand should have 2 cards at start");
-        assertEquals(2, game.getDealerHand().getCards().size(), "Dealer hand should have 2 cards at start");
+        assertEquals(2, game.getDealerHand().getCards().size(), "Dealer hand should have at least " +
+                "2 cards at start");
     }
 
     @Test
