@@ -70,12 +70,22 @@ public class WhackAMoleGame {
             display.hide();
             onStop();
             uiShown = false;
-        } else {
-            resetRuntime();
-            display.prepareToPlay();
-            display.show();
-            uiShown = true;
+            return;
         }
+
+        // If no bet yet, open the betting UI first
+        if(!betPlaced) {
+            com.csse3200.game.components.minigames.BettingComponent bet =
+                    gameEntity.getComponent(com.csse3200.game.components.minigames.BettingComponent.class);
+            if (bet != null) {
+                bet.show(); // betting panel pauses the game.
+            }
+            return;
+        }
+        resetRuntime();
+        display.prepareToPlay();
+        display.show();
+        uiShown = true;
     }
 
     /**
@@ -168,14 +178,19 @@ public class WhackAMoleGame {
     }
 
     /**
-     * Record a miss; on 2nd miss show lose dialog and stop.
+     * Record a miss; on MAX_MISSES show lose dialog and close UI.
      */
     private void handleMiss() {
         misses++;
         if (misses >= MAX_MISSES) {
             onStop();
             display.resetScore();
-            display.showEnd("You Lose", "You missed " + misses + " moles.\nTry again!");
+            // When User clicks OK, on Lose dialog, hide UI.
+            display.showEnd("You Lose", "You missed " + misses + " moles.\nTry again!", () -> {
+                        display.hide();
+                        uiShown = false;
+                    }
+            );
             gameEntity.getEvents().trigger("lose");
             betPlaced = false;
         }
@@ -190,7 +205,11 @@ public class WhackAMoleGame {
         if (display.getScore() >= TARGET_SCORE) {
             onStop();
             display.resetScore();
-            display.showEnd("You Win!", "Reached " + TARGET_SCORE + " points!");
+            display.showEnd("You Win!", "Reached " + TARGET_SCORE + " points!", () -> {
+                display.hide();
+                uiShown = false;
+            }
+            );
             gameEntity.getEvents().trigger("win");
             betPlaced = false;
         }
@@ -198,8 +217,17 @@ public class WhackAMoleGame {
 
     private void onBetPlaced() {
         betPlaced = true;
+
+        // If the game UI isn't open yet, open and prep.
+        if (!uiShown) {
+            resetRuntime();
+            display.prepareToPlay();
+            display.show();
+            uiShown = true;
+        }
     }
 
+    /** Expose the in-world station entity so areas can place it. */
     /**
      * Expose the in-world station entity so areas can place it.
      */

@@ -3,7 +3,6 @@ package com.csse3200.game.areas;
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.components.CameraComponent;
-import com.csse3200.game.components.WeaponsStatsComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
 import com.csse3200.game.entities.factories.characters.NPCFactory;
@@ -49,6 +48,8 @@ class GameAreaEnemySpawningTest {
         } catch (Exception e) {
             fail("Failed to initialize areaEntities: " + e.getMessage());
         }
+
+        doNothing().when(gameArea).registerEnemy(any());
     }
 
 
@@ -149,8 +150,6 @@ class GameAreaEnemySpawningTest {
         }
     }
 
-
-
     @Test
     void testGetEnemySpawnPosition() {
         // Test different room spawn positions
@@ -185,9 +184,7 @@ class GameAreaEnemySpawningTest {
         assertTrue(researchPositions.containsKey("GrokDroid"));
         
         Map<String, ArrayList<Vector2>> shippingPositions = gameArea.getEnemySpawnPosition("Shipping");
-        assertTrue(shippingPositions.containsKey("GhostGPT"));
         assertTrue(shippingPositions.containsKey("GrokDroid"));
-        assertTrue(shippingPositions.containsKey("Vroomba"));
         
         Map<String, ArrayList<Vector2>> storagePositions = gameArea.getEnemySpawnPosition("Storage");
         assertTrue(storagePositions.containsKey("Turret"));
@@ -196,7 +193,6 @@ class GameAreaEnemySpawningTest {
         Map<String, ArrayList<Vector2>> serverPositions = gameArea.getEnemySpawnPosition("Server");
         assertTrue(serverPositions.containsKey("GhostGPT"));
         assertTrue(serverPositions.containsKey("DeepSpin"));
-        assertTrue(serverPositions.containsKey("Turret"));
         
         Map<String, ArrayList<Vector2>> tunnelPositions = gameArea.getEnemySpawnPosition("Tunnel");
         assertTrue(tunnelPositions.containsKey("GhostGPT"));
@@ -206,8 +202,7 @@ class GameAreaEnemySpawningTest {
         
         // Test default case
         Map<String, ArrayList<Vector2>> defaultPositions = gameArea.getEnemySpawnPosition("Unknown");
-        assertTrue(defaultPositions.containsKey("GhostGPT"));
-        assertTrue(defaultPositions.containsKey("GrokDroid"));
+        assertTrue(defaultPositions.isEmpty());
     }
 
     @Test
