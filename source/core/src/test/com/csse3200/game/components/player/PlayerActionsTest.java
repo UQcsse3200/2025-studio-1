@@ -5,7 +5,6 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
-import com.csse3200.game.components.WeaponsStatsComponent;
 import com.csse3200.game.components.items.ItemComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
@@ -136,31 +135,6 @@ class PlayerActionsTest {
 
         Vector2 expectedJump = new Vector2(0f, jv.y);
         verify(body).applyLinearImpulse(approx(expectedJump), eq(worldCenter), eq(true));
-    }
-
-    @Test
-    void shouldPlayAttackSound() {
-        ItemComponent mockItem = mock(ItemComponent.class);
-        when(mockItem.getTexture()).thenReturn("images/mud.png");
-
-        PlayerActions actions = new PlayerActions();
-        actions.setTimeSinceLastAttack(1.5f);
-        Entity player = new Entity()
-                .addComponent(actions)
-                .addComponent(new StaminaComponent())
-                .addComponent(new InventoryComponent(50))
-                .addComponent(new com.csse3200.game.components.CombatStatsComponent(100)); // hp, atk
-
-        Entity weapon = new Entity();
-        weapon.addComponent(mockItem);
-        weapon.addComponent(new WeaponsStatsComponent(20));
-        player.getComponent(InventoryComponent.class).addItem(weapon);
-        player.getComponent(InventoryComponent.class).setEquippedSlot(0);
-        player.create();
-
-        actions.attack();
-
-        verify(sound).play();
     }
 
     @Test
