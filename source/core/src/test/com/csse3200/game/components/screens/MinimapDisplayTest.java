@@ -28,7 +28,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(GameExtension.class)
-public class MinimapDisplayTest {
+class MinimapDisplayTest {
     private MinimapDisplay display;
     private Stage mockStage;
     private Minimap mockMinimap;
@@ -260,7 +260,7 @@ public class MinimapDisplayTest {
         texMap.put("a", null);
         setField(display, "textures", texMap);
 
-        display.dispose(); // should not throw
+        assertDoesNotThrow(()->display.dispose()); // should not throw
     }
 
     @Test
@@ -376,13 +376,13 @@ public class MinimapDisplayTest {
         TestableMinimapDisplay testDisplay = new TestableMinimapDisplay(game, mockMinimap);
         testDisplay.create();
 
-        Stage mockStage = mock(Stage.class);
-        setField(testDisplay, "stage", mockStage);
+        Stage mockStageForScroll = mock(Stage.class);
+        setField(testDisplay, "stage", mockStageForScroll);
 
         Table root = new Table();
         testDisplay.buildUI(root);
 
-        verify(mockStage).setScrollFocus(any(Table.class));
+        verify(mockStageForScroll).setScrollFocus(any(Table.class));
     }
 
     private static Map<Vector2, String> makeRooms(int count) {

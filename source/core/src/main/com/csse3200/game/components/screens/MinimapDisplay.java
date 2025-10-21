@@ -186,9 +186,8 @@ public class MinimapDisplay extends BaseScreenDisplay {
         if (panDistance < 0.0f && isTouchDragged && visibleRooms.size() >= 2) {
             return;
         }
-        if (panDistance < 0.0f && visibleRooms.size() < 3) {
-            minimap.pan(new Vector2(-panDistance, 0));
-        } else if (panDistance > 0.0f && visibleRooms.size() < 2) {
+        if ((panDistance < 0.0f && visibleRooms.size() < 3)
+                || (panDistance > 0.0f && visibleRooms.size() < 2)) {
             minimap.pan(new Vector2(-panDistance, 0));
         }
     }
