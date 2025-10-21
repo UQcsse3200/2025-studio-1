@@ -133,6 +133,4 @@ public class TouchAttackComponent extends Component {
 
         animator.startAnimation(ROCKET_EXPLOSION);
     }
-
-
 }

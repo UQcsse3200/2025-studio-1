@@ -37,6 +37,10 @@ public class WeaponsStatsComponent extends Component {
      */
     private float coolDown;
     /**
+     * Flag that disables all outgoing damage when true.
+     */
+    private boolean disableDamage;
+    /**
      * Path to the projectile's texture if this weapon fires projectiles.
      */
     private String projectileTexturePath;
