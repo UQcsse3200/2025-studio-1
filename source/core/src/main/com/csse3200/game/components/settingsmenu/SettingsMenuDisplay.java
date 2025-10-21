@@ -268,10 +268,12 @@ public class SettingsMenuDisplay extends UIComponent {
     private Table makeMenuBtns() {
         TextButton exitBtn = new TextButton("Exit", skin);
         TextButton applyBtn = new TextButton("Apply", skin);
+        TextButton controlBtn = new TextButton("Control", skin);
 
         // Label text size
         exitBtn.getLabel().setFontScale(1.5f);
         applyBtn.getLabel().setFontScale(1.5f);
+        controlBtn.getLabel().setFontScale(1.5f);
 
         // Button sizing relative to screen
         float btnW = stage.getWidth() * 0.10f;
@@ -282,6 +284,7 @@ public class SettingsMenuDisplay extends UIComponent {
         table.center();
         table.add(exitBtn).width(btnW).height(btnH).padRight(gap);
         table.add(applyBtn).width(btnW).height(btnH).padLeft(gap);
+        table.add(controlBtn).width(btnW).height(btnH).padLeft(gap);
 
         // Button actions
         exitBtn.addListener(
@@ -303,9 +306,43 @@ public class SettingsMenuDisplay extends UIComponent {
                         applyChanges();
                     }
                 });
+        controlBtn.addListener(
+                new ChangeListener() {
+                    @Override
+                    public void changed(ChangeEvent changeEvent, Actor actor) {
+                        ServiceLocator.getButtonSoundService().playClick();
+                        // This line pushes the new control screen/ui
+                        showControlsMenu();
+                    }
+                });
 
         return table;
     }
+    /**
+     * Returns the root {@link Table} of this UI component.
+     * This table contains all the UI elements for the current menu or screen.
+     */
+    public Table getRootTable() {
+        return rootTable;
+    }
+
+    /**
+     * Switches the UI from the settings menu to the controls/keybindings display.
+     * The {@code ControlDisplay} is constructed with a reference to this settings menu
+     * and the current stage, so that it can return to the settings menu when the user
+     * clicks the "Back" button.
+     */
+    private void showControlsMenu() {
+        rootTable.setVisible(false);
+        rootTable.remove();
+        ControlDisplay controlDisplay = new ControlDisplay(game, () -> {
+            rootTable.setVisible(true);
+            stage.addActor(rootTable);
+        });
+        controlDisplay.create();
+
+    }
+
 
     /**
      * Reads values from the UI controls and writes them to {@code UserSettings},

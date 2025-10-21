@@ -1,10 +1,14 @@
 package com.csse3200.game.components.screens;
 
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.csse3200.game.GdxGame;
+import com.csse3200.game.screens.MainGameScreen;
 import com.csse3200.game.services.ServiceLocator;
 
 /**
@@ -92,6 +96,12 @@ public class PauseMenuDisplay extends BaseScreenDisplay {
             ServiceLocator.getButtonSoundService().playClick();
             game.setScreen(GdxGame.ScreenType.MAIN_GAME);
         })).row();
+        panel.add(button("Control", 2f, () -> {
+            ServiceLocator.getButtonSoundService().playClick();
+            entity.dispose();
+            ServiceLocator.getEntityService().unregister(entity);
+            ((MainGameScreen) game.getScreen()).showControlsOverlay();
+        })).row();
 
         panel.add(button("Main Menu", 2f, () -> {
             ServiceLocator.getButtonSoundService().playClick();
@@ -110,6 +120,23 @@ public class PauseMenuDisplay extends BaseScreenDisplay {
         stage.setKeyboardFocus(root);
         root.setTouchable(Touchable.enabled);
 
+        final InputListener escOnce = new InputListener() {
+            /** Prevents repeated ESC events (debounce). */
+            private boolean handled = false;
+
+            @Override
+            public boolean keyDown(InputEvent event, int keycode) {
+                if (keycode == Input.Keys.ESCAPE && !handled) {
+                    handled = true;                       // first ESC only
+                    entity.getEvents().trigger("resume"); // resume game
+                    PauseMenuDisplay.markEscConsumed();    // mark ESC consumed for this frame
+                    root.removeListener(this);            // remove listener immediately
+                    return true;
+                }
+                return false;
+            }
+        };
+        root.addListener(escOnce);
     }
 
     /**
