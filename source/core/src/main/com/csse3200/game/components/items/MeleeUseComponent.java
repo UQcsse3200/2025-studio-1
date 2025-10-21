@@ -49,7 +49,7 @@ public class MeleeUseComponent extends ItemActionsComponent {
         weaponAnimation();
     }
 
-    private void weaponAnimation() {
+    void weaponAnimation() {
         if (entity.getComponent(AnimationRenderComponent.class) != null) {
             entity.getEvents().trigger("anim");
         }
