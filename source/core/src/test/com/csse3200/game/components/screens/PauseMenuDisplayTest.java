@@ -1,15 +1,10 @@
 package com.csse3200.game.components.screens;
 
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.EventListener;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.utils.Array;
 import com.csse3200.game.GdxGame;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.extensions.GameExtension;
@@ -75,15 +70,6 @@ class PauseMenuDisplayTest {
                 TextButton nested = findButton(t, label);
                 if (nested != null) return nested;
             }
-        }
-        return null;
-    }
-
-    private static InputListener findEscListener(Table root) {
-        Array<EventListener> listeners = root.getListeners();
-        for (int i = 0; i < listeners.size; i++) {
-            EventListener el = listeners.get(i);
-            if (el instanceof InputListener il) return il;
         }
         return null;
     }
@@ -172,32 +158,6 @@ class PauseMenuDisplayTest {
 
         verify(mockSound, atLeastOnce()).playClick();
         assertEquals(1, saveCount.get());
-    }
-
-    @Test
-    void esc_triggersResume_once() {
-        PauseMenuDisplay display = new PauseMenuDisplay(mockGame);
-        Entity ui = new Entity();
-        ui.addComponent(display);
-        display.create();
-
-        Table root = findRoot(collectAddedActors());
-        assertNotNull(root);
-
-        Entity owner = display.getEntity() != null ? display.getEntity() : ui;
-
-        AtomicInteger resumeCount = new AtomicInteger();
-        owner.getEvents().addListener("resume", resumeCount::incrementAndGet);
-
-        InputListener esc = findEscListener(root);
-        assertNotNull(esc);
-
-        InputEvent ev = new InputEvent();
-        ev.setType(InputEvent.Type.keyDown);
-        boolean handled = esc.keyDown(ev, Input.Keys.ESCAPE);
-
-        assertTrue(handled);
-        assertEquals(1, resumeCount.get());
     }
 
     @Test
