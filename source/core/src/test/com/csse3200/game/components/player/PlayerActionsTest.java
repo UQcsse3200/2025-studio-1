@@ -20,8 +20,7 @@ import org.mockito.InOrder;
 
 import java.lang.reflect.Field;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
@@ -73,7 +72,11 @@ class PlayerActionsTest {
         when(mockInput.isKeyPressed(Input.Keys.D)).thenReturn(true);
         actions.update();
 
-        Vector2 expectedImpulse = new Vector2(6f, 0f); // (3 - 0) * mass(2)
+        Field maxSpeedField = PlayerActions.class.getDeclaredField("MAX_SPEED");
+        maxSpeedField.setAccessible(true);
+        Vector2 maxSpeed = (Vector2) maxSpeedField.get(null);
+
+        Vector2 expectedImpulse = new Vector2(maxSpeed.x * 2f, 0f);
         verify(body).applyLinearImpulse(approx(expectedImpulse), eq(worldCenter), eq(true));
     }
 
@@ -349,6 +352,32 @@ class PlayerActionsTest {
         inOrder.verify(body).applyLinearImpulse(approx(expectedNormalImpulse), eq(worldCenter), eq(true));
     }
 
+    @Test
+    void shouldSetCrouchingWhenGrounded() throws Exception {
+        PhysicsComponent physicsComponent = mock(PhysicsComponent.class);
+        Body body = mock(Body.class);
+        when(physicsComponent.getBody()).thenReturn(body);
+        when(body.getLinearVelocity()).thenReturn(new Vector2(0f, 0f));
+
+        PlayerActions actions = new PlayerActions();
+        Entity player = new Entity()
+                .addComponent(actions)
+                .addComponent(new StaminaComponent());
+        player.create();
+
+        Field physField = PlayerActions.class.getDeclaredField("physicsComponent");
+        physField.setAccessible(true);
+        physField.set(actions, physicsComponent);
+
+        actions.crouchAttempt();
+
+        Field crouchingField = PlayerActions.class.getDeclaredField("crouching");
+        crouchingField.setAccessible(true);
+        boolean crouchingState = crouchingField.getBoolean(actions);
+
+        assertTrue(crouchingState, "Player should be crouching when grounded and crouchAttempt is called");
+    }
+
     private static Vector2 approx(Vector2 expected) {
         return org.mockito.ArgumentMatchers.argThat(v ->
                 v != null &&
@@ -357,6 +386,52 @@ class PlayerActionsTest {
         );
     }
 
+    @Test
+    void shouldNotCrouchWhileAirborne() throws Exception {
+        PhysicsComponent physicsComponent = mock(PhysicsComponent.class);
+        Body body = mock(Body.class);
+        when(physicsComponent.getBody()).thenReturn(body);
+
+        when(body.getLinearVelocity()).thenReturn(new Vector2(0f, -5f));
+
+        PlayerActions actions = new PlayerActions();
+        Entity player = new Entity()
+                .addComponent(actions)
+                .addComponent(new StaminaComponent());
+        player.create();
+
+        Field physField = PlayerActions.class.getDeclaredField("physicsComponent");
+        physField.setAccessible(true);
+        physField.set(actions, physicsComponent);
+
+        actions.crouchAttempt();
+
+        Field crouchingField = PlayerActions.class.getDeclaredField("crouching");
+        crouchingField.setAccessible(true);
+        boolean crouchingState = crouchingField.getBoolean(actions);
+
+        assertFalse(crouchingState, "Player should NOT be crouching while in the air");
+    }
+
+    @Test
+    void shouldUpgradeSpeedCorrectly() {
+        PlayerActions actions = new PlayerActions();
+
+        Vector2 oldMax = actions.getMaxSpeed().cpy();
+        Vector2 oldCrouch = actions.getCrouchSpeed().cpy();
+        Vector2 oldSprint = actions.getSprintSpeed().cpy();
+
+        actions.upgradeSpeed();
+
+        assertEquals(oldMax.x * 1.25f, actions.getMaxSpeed().x, 0.001f);
+        assertEquals(oldMax.y * 1.25f, actions.getMaxSpeed().y, 0.001f);
+
+        assertEquals(oldCrouch.x * 1.25f, actions.getCrouchSpeed().x, 0.001f);
+        assertEquals(oldCrouch.y * 1.25f, actions.getCrouchSpeed().y, 0.001f);
+
+        assertEquals(oldSprint.x * 1.25f, actions.getSprintSpeed().x, 0.001f);
+        assertEquals(oldSprint.y * 1.25f, actions.getSprintSpeed().y, 0.001f);
+    }
     @Nested
     @DisplayName("Testing inventory and equipped actions")
     class InventoryActionsTests {
@@ -369,7 +444,6 @@ class PlayerActionsTest {
             inventory = new InventoryComponent(5);
             actions = new PlayerActions();
             player = new Entity().addComponent(actions).addComponent(inventory);
-            player.create();
         }
 
         @Test

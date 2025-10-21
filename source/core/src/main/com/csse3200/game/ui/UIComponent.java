@@ -16,6 +16,9 @@ public abstract class UIComponent extends RenderComponent implements Renderable 
             new Skin(Gdx.files.internal("quantum-horizon/skin/quantum-horizon-ui.json"));
     protected Stage stage;
 
+    public static Skin getSkin() { return skin; }
+
+
     @Override
     public void create() {
         super.create();

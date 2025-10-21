@@ -157,7 +157,6 @@ public class KeyboardPlayerInputComponent extends InputComponent {
             case Keys.SHIFT_LEFT:
                 triggerStopSprintingEvent();
                 return true;
-
             case Keys.S:
                 triggerStopCrouchingEvent();
                 return true;
@@ -197,7 +196,6 @@ public class KeyboardPlayerInputComponent extends InputComponent {
     }
 
     private void triggerReloadEvent() {
-
         entity.getEvents().trigger("reload");
     }
 

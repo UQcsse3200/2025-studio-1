@@ -571,6 +571,16 @@ public abstract class GameArea implements Disposable {
     }
 
     /**
+     * used for accessing loading the wave within gamescreen
+     * from a save state
+     * @param wave to be set to
+     */
+    public void setWave(int wave) {
+        if (wave > 0) wavesManager.setWaveNumber(wave);
+    }
+
+
+    /**
      * Adds GhostGPT enemies onto the map.
      *
      * @param total       The total number of GhostGPT to be spawned.
