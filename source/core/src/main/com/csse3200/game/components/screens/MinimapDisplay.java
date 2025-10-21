@@ -19,10 +19,12 @@ import java.util.Map;
  * <p>
  * Renders a full-screen dimmer and a centered minimap image with actions:
  * <ul>
- *   <li><b>Click on a spot</b> — triggers the entity's {@code "zoom in"} event,
- *   that is, the minimap zooms in on the clicked spot.</li>
- *   <li><b>Scroll</b> — Once zoomed in, the minimap is scrollable using the mouse scroll wheel.</li>
- *   <li><b>Resume</b> — triggers the entity's {@code "resume"} event, that returns to the game.</li>
+ *   <li><b>Scroll</b> - The minimap can be zoomed in or out with the scroll wheel.</li>
+ *   <li><b>Arrow keys</b> - The minimap can be moved left or right with the left and right
+ *   arrow keys respectively</li>
+ *   <li><b>Touch Drag</b> - The minimap can be moved in either direction horizontally by
+ *   clicking on the screen and dragging.</li>
+ *   <li><b>Resume</b> - triggers the entity's {@code "resume"} event, that returns to the game.</li>
  * </ul>
  * The dimmer is non-interactive (input disabled) so button clicks reach the minimap.
  * TAB is handled once to immediately resume gameplay.
@@ -98,27 +100,23 @@ public class MinimapDisplay extends BaseScreenDisplay {
 
         minimapTable.addListener(new InputListener() {
             private float lastX;
-            private float lastY;
 
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 lastX = x;
-                lastY = y;
                 return true;
             }
 
             @Override
             public void touchDragged(InputEvent event, float x, float y, int pointer) {
                 float deltaX = x - lastX;
-                float deltaY = y - lastY;
 
-                minimap.pan(new Vector2(-deltaX, -deltaY)); // drag = pan
+                minimap.pan(new Vector2(-deltaX, 0));
 
-                minimapTable.clearChildren();
+                clampMinimapPosition(-(deltaX), true);
                 renderMinimapImages();
 
                 lastX = x;
-                lastY = y;
             }
 
             @Override
@@ -157,13 +155,41 @@ public class MinimapDisplay extends BaseScreenDisplay {
      * @param direction The direction of panning
      */
     public void pan(String direction) {
+        float panDistance = 0f;
         if (direction.equals("left")) {
-            minimap.pan(new Vector2(-(IMAGE_WIDTH * minimap.getScale()), 0));
+            panDistance = -(IMAGE_WIDTH * minimap.getScale());
+            minimap.pan(new Vector2(panDistance, 0));
         }
         if (direction.equals("right")) {
-            minimap.pan(new Vector2(IMAGE_WIDTH * minimap.getScale(), 0));
+            panDistance = IMAGE_WIDTH * minimap.getScale();
+            minimap.pan(new Vector2(panDistance, 0));
         }
+
+        clampMinimapPosition(panDistance, false);
         renderMinimapImages();
+    }
+
+    /**
+     * Clamps the minimap so that it cannot be dragged out of screen and be lost.
+     *
+     * @param panDistance    The distance by which the minimap was panned.
+     * @param isTouchDragged True if the pan was caused by dragging with mouse false otherwise
+     */
+    void clampMinimapPosition(float panDistance, boolean isTouchDragged) {
+        Map<Vector2, String> visibleRooms = minimap.render();
+        if (visibleRooms == null) {
+            return;
+        }
+        if (panDistance > 0.0f && isTouchDragged && visibleRooms.size() >= 2) {
+            return;
+        }
+        if (panDistance < 0.0f && isTouchDragged && visibleRooms.size() >= 2) {
+            return;
+        }
+        if ((panDistance < 0.0f && visibleRooms.size() < 3)
+                || (panDistance > 0.0f && visibleRooms.size() < 2)) {
+            minimap.pan(new Vector2(-panDistance, 0));
+        }
     }
 
     /**

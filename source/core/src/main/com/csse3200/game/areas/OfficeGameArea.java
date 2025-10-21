@@ -145,10 +145,14 @@ public class OfficeGameArea extends GameArea {
      * Spawn platforms
      */
     private void spawnPlatforms() {
-        float p1x = 5f, p1y = 4f;
-        float p2x = -1f, p2y = 4f;
-        float p3x = 8f, p3y = 6f;
-        float p4x = 13f, p4y = 8f;
+        float p1x = 5f;
+        float p1y = 4f;
+        float p2x = -1f;
+        float p2y = 4f;
+        float p3x = 8f;
+        float p3y = 6f;
+        float p4x = 13f;
+        float p4y = 8f;
 
         Entity platform1 = com.csse3200.game.entities.factories.system.ObstacleFactory.createOfficeElevatorPlatform();
         platform1.setPosition(p1x, p1y);

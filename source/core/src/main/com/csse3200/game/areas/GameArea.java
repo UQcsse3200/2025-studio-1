@@ -19,7 +19,6 @@ import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.components.DoorComponent;
 import com.csse3200.game.components.WeaponsStatsComponent;
 import com.csse3200.game.components.enemy.EnemyWaves;
-import com.csse3200.game.components.enemy.EnemyWavesDisplay;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.factories.ProjectileFactory;
 import com.csse3200.game.entities.factories.characters.NPCFactory;
@@ -70,6 +69,20 @@ public abstract class GameArea implements Disposable {
     private static final String GROK_DROID_RED = "GrokDroidRed";
     private static final String GROK_DROID_BLUE = "GrokDroidBlue";
     private static final String TURRET = "Turret";
+    private static final Random r = new Random();
+
+    // Area names
+    private static final String GAME_AREA = "GameArea";
+    private static final String RECEPTION = "Reception";
+    private static final String MAIN_HALL = "Mainhall";
+    private static final String SECURITY = "Security";
+    private static final String OFFICE = "Office";
+    private static final String ELEVATOR = "Elevator";
+    private static final String RESEARCH = "Research";
+    private static final String SHIPPING = "Shipping";
+    private static final String STORAGE = "Storage";
+    private static final String SERVER = "Server";
+    private static final String TUNNEL = "Tunnel";
 
     protected EnemyWaves wavesManager; // manage waves via terminal command
 
@@ -100,7 +113,7 @@ public abstract class GameArea implements Disposable {
     /**
      * Attempt to start a room transition. Returns false if one is already in progress.
      */
-    protected boolean beginTransition() {
+    protected static boolean beginTransition() {
         if (isTransitioning || ServiceLocator.isTransitioning()) return false;
         isTransitioning = true;
         ServiceLocator.setTransitioning(true);
@@ -110,7 +123,7 @@ public abstract class GameArea implements Disposable {
     /**
      * Mark the end of a room transition.
      */
-    protected void endTransition() {
+    protected static void endTransition() {
         isTransitioning = false;
         ServiceLocator.setTransitioning(false);
     }
@@ -131,7 +144,7 @@ public abstract class GameArea implements Disposable {
 
     /**
      * register an entity to the enemy entities list
-     * 
+     *
      * @param entity Entity (registered to enemies)
      */
     public void registerEnemy(Entity entity) {
@@ -156,7 +169,7 @@ public abstract class GameArea implements Disposable {
      * Adds room doors to the list.
      * This method will lock doors, so
      * it should be caleld upon room creating
-     * 
+     *
      * @param doors static array of door entities
      * @requires doors to have DoorComponent
      */
@@ -201,12 +214,17 @@ public abstract class GameArea implements Disposable {
     public void startWaves(Entity player) {
         if (wavesManager == null || wavesManager.allWavesFinished()) {
             int room = getRoomNumber();
+            if (room == -1) {
+                Gdx.app.log("GameArea", "Waves are not going to spawn in this room");
+                return;
+            }
             int maxWaves = room > 4 ? 2 : 1; // mimic original behaviour: higher rooms get 2 waves
             wavesManager = new EnemyWaves(maxWaves, this, player);
-            EnemyWavesDisplay waveDisplay = new EnemyWavesDisplay(wavesManager);
-            Gdx.app.log("GameArea", "Initializing waves: room=" + room + " maxWaves=" + maxWaves);
+//            WaveAlertDisplay waveAlertDisplay = new WaveAlertDisplay();
+//            waveAlertDisplay.display();  // example of waveAlertDisplay constructor
+            Gdx.app.log(GAME_AREA, "Initializing waves: room=" + room + " maxWaves=" + maxWaves);
+            wavesManager.startWave();
         }
-        wavesManager.startWave();
     }
 
     /**
@@ -224,18 +242,19 @@ public abstract class GameArea implements Disposable {
      * @return Room number as an int if the floor name is in the format "Floor2"
      * with 2 being any number, otherwise returns 1.
      */
-    protected int getRoomNumber() {
+    public int getRoomNumber() {
         return switch (this.toString()) {
-            case "Reception" -> 2;
-            case "Mainhall" -> 3;
-            case "Security" -> 4;
-            case "Office" -> 5;
-            case "Elevator" -> 6;
-            case "Research" -> 7;
-            case "Shipping" -> 8;
-            case "Storage" -> 9;
-            case "Server" -> 10;
-            case "Tunnel" -> 11;
+            case RECEPTION -> 2;
+            case MAIN_HALL -> 3;
+            case SECURITY -> 4;
+            case OFFICE -> 5;
+            case ELEVATOR -> 6;
+            case RESEARCH -> 7;
+            case SHIPPING -> 8;
+            case STORAGE -> 9;
+            case SERVER -> 10;
+            case TUNNEL -> 11;
+            case "Casino", "FlyingBoss", "MovingBoss", "SecretRoom", "StaticBossRoom" -> -1;
             case "GoodWinAnimation" -> 101; //Animation start from 101
             case "BadWinAnimation" -> 102;
             default -> 1;
@@ -282,54 +301,189 @@ public abstract class GameArea implements Disposable {
                 spawnDeepspin(total, scaleFactor, player, positions);
                 spawnTurret(total, scaleFactor, player, positions);
                 break;
-            case "Reception":
+            case RECEPTION:
                 spawnVroomba(total, scaleFactor, player, positions);
                 spawnGhostGPT(total, scaleFactor, player, positions);
                 break;
-            case "Mainhall":
+            case MAIN_HALL:
                 spawnVroomba(total, scaleFactor, player, positions);
                 spawnDeepspin(total, scaleFactor, player, positions);
                 break;
-            case "Security":
+            case SECURITY:
                 spawnGhostGPT(total, scaleFactor, player, positions);
                 spawnDeepspin(total, scaleFactor, player, positions);
                 break;
-            case "Office":
+            case OFFICE:
                 spawnGhostGPT(total, scaleFactor, player, positions);
                 spawnDeepspin(total, scaleFactor, player, positions);
                 spawnVroomba(total, scaleFactor, player, positions);
                 break;
-            case "Elevator":
+            case ELEVATOR:
                 spawnGhostGPT(total, scaleFactor, player, positions);
                 spawnGrokDroid(total, scaleFactor, player, positions);
                 break;
-            case "Research":
+            case RESEARCH:
                 spawnTurret(total, scaleFactor, player, positions);
                 spawnGhostGPT(total, scaleFactor, player, positions);
                 spawnGrokDroid(total, scaleFactor, player, positions);
                 break;
-            case "Shipping":
+            case SHIPPING:
                 spawnGrokDroid(total, scaleFactor, player, positions);
                 break;
-            case "Storage":
+            case STORAGE:
                 spawnTurret(total, scaleFactor, player, positions);
                 spawnGrokDroid(total, scaleFactor, player, positions);
                 break;
-            case "Server":
+            case SERVER:
                 spawnGhostGPT(total, scaleFactor, player, positions);
                 spawnDeepspin(total, scaleFactor, player, positions);
                 spawnTurret(total, scaleFactor, player, positions);
                 break;
-            case "Tunnel":
+            case TUNNEL:
                 spawnGhostGPT(total, scaleFactor, player, positions);
                 spawnGrokDroid(total, scaleFactor, player, positions);
                 spawnTurret(total, scaleFactor, player, positions);
                 spawnVroomba(total, scaleFactor, player, positions);
                 break;
             default:
-                spawnGhostGPT(total, scaleFactor, player, positions);
-                spawnGrokDroid(total, scaleFactor, player, positions);
-                break;
+                // Spawn nothing, hence empty default case.
+        }
+    }
+    /**
+     * Spawns Random enemies based on the room number given.
+     *
+     * @param roomName    The name of the current floor/room.
+     * @param total       The total number of enemies to be spawned.
+     * @param scaleFactor The scaling factor of the difficulty of the enemies to be spawned.
+     * @param player      The player {@link Entity} that is to be targeted by the enemies.
+     */
+    public void spawnRandomEnemies(String roomName, int total, float scaleFactor, Entity player) {
+        HashMap<String, ArrayList<Vector2>> positions = new HashMap<>();
+        ArrayList<Vector2> respectiveSpawns = new ArrayList<>();
+        switch (roomName) {
+            case "Forest" -> {
+                respectiveSpawns.add(new Vector2(6f, 4f));
+                spawnRandom(total, scaleFactor, player, positions, respectiveSpawns);
+                respectiveSpawns = new ArrayList<>();
+                respectiveSpawns.add(new Vector2(7f, 4f));
+                spawnRandom(total, scaleFactor, player, positions, respectiveSpawns);
+                respectiveSpawns = new ArrayList<>();
+                respectiveSpawns.add(new Vector2(8.5f, 4f));
+                spawnRandom(total, scaleFactor, player, positions, respectiveSpawns);
+                respectiveSpawns = new ArrayList<>();
+                respectiveSpawns.add(new Vector2(10f, 4f));
+                spawnRandom(total, scaleFactor, player, positions, respectiveSpawns);
+                respectiveSpawns = new ArrayList<>();
+                respectiveSpawns.add(new Vector2(12f, 4f));
+                spawnRandom(total, scaleFactor, player, positions, respectiveSpawns);
+            }
+            case RECEPTION -> {
+                respectiveSpawns.add(new Vector2(8f, 9.5f));
+                spawnRandom(total, scaleFactor, player, positions, respectiveSpawns);
+                respectiveSpawns = new ArrayList<>();
+                respectiveSpawns.add(new Vector2(1.5f, 8f));
+                spawnRandom(total, scaleFactor, player, positions, respectiveSpawns);
+                respectiveSpawns = new ArrayList<>();
+                respectiveSpawns.add(new Vector2(11.5f, 5f));
+                spawnRandom(total, scaleFactor, player, positions, respectiveSpawns);
+            }
+            case MAIN_HALL -> {
+                respectiveSpawns.add(new Vector2(12f, 9.5f));
+                spawnRandom(total, scaleFactor, player, positions, respectiveSpawns);
+                respectiveSpawns = new ArrayList<>();
+                respectiveSpawns.add(new Vector2(2f, 8.5f));
+                spawnRandom(total, scaleFactor, player, positions, respectiveSpawns);
+                respectiveSpawns = new ArrayList<>();
+                respectiveSpawns.add(new Vector2(11f, 6f));
+                spawnRandom(total, scaleFactor, player, positions, respectiveSpawns);
+                respectiveSpawns = new ArrayList<>();
+                respectiveSpawns.add(new Vector2(4f, 7f));
+                spawnRandom(total, scaleFactor, player, positions, respectiveSpawns);
+            }
+            case SECURITY -> {
+                respectiveSpawns.add(new Vector2(12f, 10f));
+                respectiveSpawns.add(new Vector2(1.75f, 6.5f));
+                spawnRandom(total, scaleFactor, player, positions, respectiveSpawns);
+                respectiveSpawns = new ArrayList<>();
+                respectiveSpawns.add(new Vector2(0.5f, 6.5f));
+                respectiveSpawns.add(new Vector2(3f, 6.5f));
+                spawnRandom(total, scaleFactor, player, positions, respectiveSpawns);
+            }
+            case OFFICE -> {
+                respectiveSpawns.add(new Vector2(12f, 4f));
+                respectiveSpawns.add(new Vector2(6f, 6.5f));
+                respectiveSpawns.add(new Vector2(8.2f, 9f));
+                respectiveSpawns.add(new Vector2(13f, 11f));
+                spawnRandom(total, scaleFactor, player, positions, respectiveSpawns);
+            }
+            case ELEVATOR -> {
+                respectiveSpawns.add(new Vector2(11f, 4f));
+                respectiveSpawns.add(new Vector2(11f, 8f));
+                spawnRandom(total, scaleFactor, player, positions, respectiveSpawns);
+                respectiveSpawns = new ArrayList<>();
+                respectiveSpawns.add(new Vector2(6f, 8f));
+                respectiveSpawns.add(new Vector2(2f, 6f));
+                spawnRandom(total, scaleFactor, player, positions, respectiveSpawns);
+            }
+            case RESEARCH -> {
+                respectiveSpawns.add(new Vector2(12f, 10.3f));
+                respectiveSpawns.add(new Vector2(2f, 6f));
+                spawnRandom(total, scaleFactor, player, positions, respectiveSpawns);
+                respectiveSpawns = new ArrayList<>();
+                respectiveSpawns.add(new Vector2(11f, 4f));
+                respectiveSpawns.add(new Vector2(3f, 6f));
+                respectiveSpawns.add(new Vector2(1f, 6f));
+                spawnRandom(total, scaleFactor, player, positions, respectiveSpawns);
+            }
+            case SHIPPING -> {
+                respectiveSpawns.add(new Vector2(12f, 9f));
+                spawnRandom(total, scaleFactor, player, positions, respectiveSpawns);
+                respectiveSpawns = new ArrayList<>();
+                respectiveSpawns.add(new Vector2(11f, 5f));
+                spawnRandom(total, scaleFactor, player, positions, respectiveSpawns);
+                respectiveSpawns = new ArrayList<>();
+                respectiveSpawns.add(new Vector2(12f, 5f));
+                spawnRandom(total, scaleFactor, player, positions, respectiveSpawns);
+                respectiveSpawns = new ArrayList<>();
+                respectiveSpawns.add(new Vector2(11f, 9f));
+                respectiveSpawns.add(new Vector2(13f, 9f));
+                spawnRandom(total, scaleFactor, player, positions, respectiveSpawns);
+            }
+            case STORAGE -> {
+                respectiveSpawns.add(new Vector2(12f, 5f));
+                respectiveSpawns = new ArrayList<>();
+                respectiveSpawns.add(new Vector2(10f, 5f));
+                respectiveSpawns.add(new Vector2(11f, 5f));
+                respectiveSpawns.add(new Vector2(8f, 5f));
+                spawnRandom(total, scaleFactor, player, positions, respectiveSpawns);
+            }
+            case SERVER -> {
+                respectiveSpawns.add(new Vector2(12f, 10f));
+                respectiveSpawns.add(new Vector2(8f, 5f));
+                respectiveSpawns.add(new Vector2(11f, 7.5f));
+                spawnRandom(total, scaleFactor, player, positions, respectiveSpawns);
+                respectiveSpawns = new ArrayList<>();
+                respectiveSpawns.add(new Vector2(1f, 8.5f));
+                respectiveSpawns.add(new Vector2(2f, 8.5f));
+                spawnRandom(total, scaleFactor, player, positions, respectiveSpawns);
+            }
+            case TUNNEL -> {
+                respectiveSpawns.add(new Vector2(12f, 4f));
+                respectiveSpawns.add(new Vector2(4.5f, 6f));
+                spawnRandom(total, scaleFactor, player, positions, respectiveSpawns);
+                respectiveSpawns = new ArrayList<>();
+                respectiveSpawns.add(new Vector2(11.5f, 10f));
+                spawnRandom(total, scaleFactor, player, positions, respectiveSpawns);
+                respectiveSpawns = new ArrayList<>();
+                respectiveSpawns.add(new Vector2(4f, 9.25f));
+                spawnRandom(total, scaleFactor, player, positions, respectiveSpawns);
+                respectiveSpawns = new ArrayList<>();
+                respectiveSpawns.add(new Vector2(3f, 9.25f));
+                spawnRandom(total, scaleFactor, player, positions, respectiveSpawns);
+            }
+            default -> {
+                // No spawns, hence not assigning any spawn positions
+            }
         }
     }
 
@@ -398,6 +552,11 @@ public abstract class GameArea implements Disposable {
                 positions.put(VROOMBA_BLUE, respectiveSpawns);
                 spawnVroombaBlue(total, scaleFactor, player, positions);
                 break;
+            case ("Random"):
+                spawnRandom(total, scaleFactor, player, positions, respectiveSpawns);
+                break;
+            default:
+                break;
         }
     }
 
@@ -411,12 +570,12 @@ public abstract class GameArea implements Disposable {
         return 0;
     }
 
-
     /**
      * Adds GhostGPT enemies onto the map.
      *
      * @param total       The total number of GhostGPT to be spawned.
      * @param scaleFactor The scale of increase in difficulty of the GhostGPT
+     * @param positions   The list of positions of where to spawn enemy
      */
     public void spawnGhostGPT(
             int total, float scaleFactor, Entity player, Map<String, ArrayList<Vector2>> positions) {
@@ -428,11 +587,13 @@ public abstract class GameArea implements Disposable {
             spawnEntity(ghostGpt);
         }
     }
+
     /**
      * Adds GhostGPTRed enemies onto the map.
      *
-     * @param total       The total number of GhostGPT to be spawned.
-     * @param scaleFactor The scale of increase in difficulty of the GhostGPT
+     * @param total       The total number of GhostGPTRed to be spawned.
+     * @param scaleFactor The scale of increase in difficulty of the GhostGPTRed
+     * @param positions   The list of positions of where to spawn enemy
      */
     public void spawnGhostGPTRed(
             int total, float scaleFactor, Entity player, Map<String, ArrayList<Vector2>> positions) {
@@ -444,11 +605,13 @@ public abstract class GameArea implements Disposable {
             spawnEntity(ghostGptRed);
         }
     }
+
     /**
      * Adds GhostGPTBlue enemies onto the map.
      *
-     * @param total       The total number of GhostGPT to be spawned.
-     * @param scaleFactor The scale of increase in difficulty of the GhostGPT
+     * @param total       The total number of GhostGPTBlue to be spawned.
+     * @param scaleFactor The scale of increase in difficulty of the GhostGPTBlue
+     * @param positions   The list of positions of where to spawn enemy
      */
     public void spawnGhostGPTBlue(
             int total, float scaleFactor, Entity player, Map<String, ArrayList<Vector2>> positions) {
@@ -460,11 +623,13 @@ public abstract class GameArea implements Disposable {
             spawnEntity(ghostGptBlue);
         }
     }
+
     /**
      * Adds DeepSpin enemies onto the map.
      *
      * @param total       The total number of DeepSpins to be spawned.
      * @param scaleFactor The scale of increase in difficulty of the DeepSpin
+     * @param positions   The list of positions of where to spawn enemy
      */
     public void spawnDeepspin(
             int total, float scaleFactor, Entity player, Map<String, ArrayList<Vector2>> positions) {
@@ -477,11 +642,13 @@ public abstract class GameArea implements Disposable {
             spawnEntity(deepSpin);
         }
     }
+
     /**
      * Adds DeepSpinRed enemies onto the map.
      *
-     * @param total       The total number of DeepSpins to be spawned.
-     * @param scaleFactor The scale of increase in difficulty of the DeepSpin
+     * @param total       The total number of DeepSpinReds to be spawned.
+     * @param scaleFactor The scale of increase in difficulty of the DeepSpinRed
+     * @param positions   The list of positions of where to spawn enemy
      */
     public void spawnDeepspinRed(
             int total, float scaleFactor, Entity player, Map<String, ArrayList<Vector2>> positions) {
@@ -494,11 +661,13 @@ public abstract class GameArea implements Disposable {
             spawnEntity(deepSpinRed);
         }
     }
+
     /**
      * Adds DeepSpinBlue enemies onto the map.
      *
-     * @param total       The total number of DeepSpins to be spawned.
-     * @param scaleFactor The scale of increase in difficulty of the DeepSpin
+     * @param total       The total number of DeepSpinBlues to be spawned.
+     * @param scaleFactor The scale of increase in difficulty of the DeepSpinBlue
+     * @param positions   The list of positions of where to spawn enemy
      */
     public void spawnDeepspinBlue(
             int total, float scaleFactor, Entity player, Map<String, ArrayList<Vector2>> positions) {
@@ -511,11 +680,13 @@ public abstract class GameArea implements Disposable {
             spawnEntity(deepSpinBlue);
         }
     }
+
     /**
      * Adds GrokDroid enemies onto the map.
      *
      * @param total       The total number of GrokDroid to be spawned.
      * @param scaleFactor The scale of increase in difficulty of the GrokDroid
+     * @param positions   The list of positions of where to spawn enemy
      */
     public void spawnGrokDroid(
             int total, float scaleFactor, Entity player, Map<String, ArrayList<Vector2>> positions) {
@@ -527,11 +698,13 @@ public abstract class GameArea implements Disposable {
             spawnEntity(grokDroid);
         }
     }
+
     /**
      * Adds GrokDroidRed enemies onto the map.
      *
-     * @param total       The total number of GrokDroid to be spawned.
-     * @param scaleFactor The scale of increase in difficulty of the GrokDroid
+     * @param total       The total number of GrokDroidRed to be spawned.
+     * @param scaleFactor The scale of increase in difficulty of the GrokDroidRed
+     * @param positions   The list of positions of where to spawn enemy
      */
     public void spawnGrokDroidRed(
             int total, float scaleFactor, Entity player, Map<String, ArrayList<Vector2>> positions) {
@@ -543,11 +716,13 @@ public abstract class GameArea implements Disposable {
             spawnEntity(grokDroidRed);
         }
     }
+
     /**
      * Adds GrokDroidBlue enemies onto the map.
      *
-     * @param total       The total number of GrokDroid to be spawned.
-     * @param scaleFactor The scale of increase in difficulty of the GrokDroid
+     * @param total       The total number of GrokDroidBlue to be spawned.
+     * @param scaleFactor The scale of increase in difficulty of the GrokDroidBlue
+     * @param positions   The list of positions of where to spawn enemy
      */
     public void spawnGrokDroidBlue(
             int total, float scaleFactor, Entity player, Map<String, ArrayList<Vector2>> positions) {
@@ -565,6 +740,7 @@ public abstract class GameArea implements Disposable {
      *
      * @param total       The total number of Vroomba to be spawned.
      * @param scaleFactor The scale of increase in difficulty of the Vroomba
+     * @param positions   The list of positions of where to spawn enemy
      */
     public void spawnVroomba(
             int total, float scaleFactor, Entity player, Map<String, ArrayList<Vector2>> positions) {
@@ -576,11 +752,13 @@ public abstract class GameArea implements Disposable {
             spawnEntity(vroombaEntity);
         }
     }
+
     /**
      * Adds VroombaRed enemies onto the map.
      *
-     * @param total       The total number of Vroomba to be spawned.
-     * @param scaleFactor The scale of increase in difficulty of the Vroomba
+     * @param total       The total number of VroombaRed to be spawned.
+     * @param scaleFactor The scale of increase in difficulty of the VroombaRed
+     * @param positions   The list of positions of where to spawn enemy
      */
     public void spawnVroombaRed(
             int total, float scaleFactor, Entity player, Map<String, ArrayList<Vector2>> positions) {
@@ -592,11 +770,13 @@ public abstract class GameArea implements Disposable {
             spawnEntity(vroombaRed);
         }
     }
+
     /**
      * Adds VroombaBlue enemies onto the map.
      *
-     * @param total       The total number of Vroomba to be spawned.
-     * @param scaleFactor The scale of increase in difficulty of the Vroomba
+     * @param total       The total number of VroombaBlue to be spawned.
+     * @param scaleFactor The scale of increase in difficulty of the VroombaBlue
+     * @param positions   The list of positions of where to spawn enemy
      */
     public void spawnVroombaBlue(
             int total, float scaleFactor, Entity player, Map<String, ArrayList<Vector2>> positions) {
@@ -608,11 +788,13 @@ public abstract class GameArea implements Disposable {
             spawnEntity(vroombaBlue);
         }
     }
+
     /**
      * Adds Turret enemies onto the map.
      *
      * @param total       The total number of Turret to be spawned.
-     * @param scaleFactor The scale of increase in difficulty of the GhostGPT
+     * @param scaleFactor The scale of increase in difficulty of the Turret
+     * @param positions   The list of positions of where to spawn enemy
      */
     public void spawnTurret(
             int total, float scaleFactor, Entity player,
@@ -624,6 +806,87 @@ public abstract class GameArea implements Disposable {
             registerEnemy(turretEntity);
             turretEntity.setPosition(pos);
             spawnEntity(turretEntity);
+        }
+    }
+    /**
+     * Spawn a random enemy on the map.
+     *
+     * @param total       The total number of enemy to be spawned.
+     * @param scaleFactor The scale of increase in difficulty of the enemy
+     * @param positions   The list of positions of where to spawn enemy
+     * @param respectiveSpawns the position of where the enemy should be spawned
+     */
+    public void spawnRandom(
+            int total, float scaleFactor, Entity player,
+            Map<String, ArrayList<Vector2>> positions,
+            ArrayList<Vector2> respectiveSpawns
+    ) {
+        int random = r.nextInt(230);
+
+        if (random <= 29) {
+            positions.put(GHOST_GPT, respectiveSpawns);
+            spawnGhostGPT(total, scaleFactor, player, positions);
+            positions.remove(GHOST_GPT, respectiveSpawns);
+        }
+        else if (random <= 59) {
+            positions.put(GROK_DROID, respectiveSpawns);
+            spawnGrokDroid(total, scaleFactor, player, positions);
+            positions.remove(GROK_DROID, respectiveSpawns);
+        }
+        else if (random <= 89) {
+            positions.put(VROOMBA, respectiveSpawns);
+            spawnVroomba(total, scaleFactor, player, positions);
+            positions.remove(VROOMBA, respectiveSpawns);
+        }
+        else if (random <= 119) {
+            positions.put(DEEP_SPIN, respectiveSpawns);
+            spawnDeepspin(total, scaleFactor, player, positions);
+            positions.remove(DEEP_SPIN, respectiveSpawns);
+        }
+        else if (random <= 149){
+            positions.put(TURRET, respectiveSpawns);
+            spawnTurret(total, scaleFactor, player, positions);
+            positions.remove(TURRET, respectiveSpawns);
+        }
+        else if (random <= 159) {
+            positions.put(GHOST_GPT_RED, respectiveSpawns);
+            spawnGhostGPTRed(total, scaleFactor, player, positions);
+            positions.remove(GHOST_GPT_RED, respectiveSpawns);
+        }
+        else if (random <= 169) {
+            positions.put(GHOST_GPT_BLUE, respectiveSpawns);
+            spawnGhostGPTBlue(total, scaleFactor, player, positions);
+            positions.remove(GHOST_GPT_BLUE, respectiveSpawns);
+        }
+        else if (random <= 179) {
+            positions.put(GROK_DROID_RED, respectiveSpawns);
+            spawnGrokDroidRed(total, scaleFactor, player, positions);
+            positions.remove(GROK_DROID_RED, respectiveSpawns);
+        }
+        else if (random <= 189) {
+            positions.put(GROK_DROID_BLUE, respectiveSpawns);
+            spawnGrokDroidBlue(total, scaleFactor, player, positions);
+            positions.remove(GROK_DROID_BLUE, respectiveSpawns);
+        }
+        else if (random <= 199) {
+            positions.put(DEEP_SPIN_RED, respectiveSpawns);
+            spawnDeepspinRed(total, scaleFactor, player, positions);
+            positions.remove(DEEP_SPIN_RED, respectiveSpawns);
+        }
+        else if (random <= 209) {
+            positions.put(DEEP_SPIN_BLUE, respectiveSpawns);
+            spawnDeepspinBlue(total, scaleFactor, player, positions);
+            positions.remove(DEEP_SPIN_BLUE, respectiveSpawns);
+        }
+        else if (random <= 219) {
+            positions.put(VROOMBA_RED, respectiveSpawns);
+            spawnVroombaRed(total, scaleFactor, player, positions);
+            positions.remove(VROOMBA_RED, respectiveSpawns);
+        }
+        else if (random <= 229) {
+            positions.put(VROOMBA_BLUE, respectiveSpawns);
+            spawnVroombaBlue(total, scaleFactor, player, positions);
+            positions.remove(VROOMBA_BLUE, respectiveSpawns);
         }
     }
 
@@ -657,7 +920,7 @@ public abstract class GameArea implements Disposable {
                 respectiveSpawns.add(new Vector2(12f, 5f));
                 positions.put(TURRET, respectiveSpawns);
             }
-            case "Reception" -> {
+            case RECEPTION -> {
                 respectiveSpawns.add(new Vector2(5.7f, 5f));
                 respectiveSpawns.add(new Vector2(1.5f, 7f));
                 positions.put(VROOMBA, respectiveSpawns);
@@ -665,7 +928,7 @@ public abstract class GameArea implements Disposable {
                 respectiveSpawns.add(new Vector2(11.5f, 10f));
                 positions.put(GHOST_GPT, respectiveSpawns);
             }
-            case "Mainhall" -> {
+            case MAIN_HALL -> {
                 respectiveSpawns.add(new Vector2(10f, 10f));
                 respectiveSpawns.add(new Vector2(2f, 10f));
                 positions.put(DEEP_SPIN, respectiveSpawns);
@@ -674,7 +937,7 @@ public abstract class GameArea implements Disposable {
                 respectiveSpawns.add(new Vector2(2f, 8f));
                 positions.put(VROOMBA, respectiveSpawns);
             }
-            case "Security" -> {
+            case SECURITY -> {
                 respectiveSpawns.add(new Vector2(12f, 10f));
                 respectiveSpawns.add(new Vector2(2f, 8f));
                 positions.put(GHOST_GPT, respectiveSpawns);
@@ -683,7 +946,7 @@ public abstract class GameArea implements Disposable {
                 respectiveSpawns.add(new Vector2(3f, 10f));
                 positions.put(DEEP_SPIN, respectiveSpawns);
             }
-            case "Office" -> {
+            case OFFICE -> {
                 respectiveSpawns.add(new Vector2(12f, 3f));
                 positions.put(GHOST_GPT, respectiveSpawns);
                 respectiveSpawns = new ArrayList<>();
@@ -694,7 +957,7 @@ public abstract class GameArea implements Disposable {
                 respectiveSpawns.add(new Vector2(2f, 10f));
                 positions.put(DEEP_SPIN, respectiveSpawns);
             }
-            case "Elevator" -> {
+            case ELEVATOR -> {
                 respectiveSpawns.add(new Vector2(13f, 4f));
                 respectiveSpawns.add(new Vector2(11f, 8f));
                 positions.put(GHOST_GPT, respectiveSpawns);
@@ -703,7 +966,7 @@ public abstract class GameArea implements Disposable {
                 respectiveSpawns.add(new Vector2(2f, 8f));
                 positions.put(GROK_DROID, respectiveSpawns);
             }
-            case "Research" -> {
+            case RESEARCH -> {
                 respectiveSpawns.add(new Vector2(12f, 11f));
                 positions.put(TURRET, respectiveSpawns);
                 respectiveSpawns = new ArrayList<>();
@@ -715,12 +978,12 @@ public abstract class GameArea implements Disposable {
                 respectiveSpawns.add(new Vector2(5f, 10f));
                 positions.put(GROK_DROID, respectiveSpawns);
             }
-            case "Shipping" -> {
+            case SHIPPING -> {
                 respectiveSpawns.add(new Vector2(3f, 10f));
                 respectiveSpawns.add(new Vector2(5f, 10f));
                 positions.put(GROK_DROID, respectiveSpawns);
             }
-            case "Storage" -> {
+            case STORAGE -> {
                 respectiveSpawns.add(new Vector2(12f, 5f));
                 positions.put(TURRET, respectiveSpawns);
                 respectiveSpawns = new ArrayList<>();
@@ -729,7 +992,7 @@ public abstract class GameArea implements Disposable {
                 respectiveSpawns.add(new Vector2(8f, 8f));
                 positions.put(GROK_DROID, respectiveSpawns);
             }
-            case "Server" -> {
+            case SERVER -> {
                 respectiveSpawns.add(new Vector2(12f, 11f));
                 respectiveSpawns.add(new Vector2(11f, 11f));
                 respectiveSpawns.add(new Vector2(11f, 8f));
@@ -739,7 +1002,7 @@ public abstract class GameArea implements Disposable {
                 respectiveSpawns.add(new Vector2(5f, 10f));
                 positions.put(DEEP_SPIN, respectiveSpawns);
             }
-            case "Tunnel" -> {
+            case TUNNEL -> {
                 respectiveSpawns.add(new Vector2(12f, 4f));
                 respectiveSpawns.add(new Vector2(12f, 4f));
                 positions.put(GHOST_GPT, respectiveSpawns);
@@ -792,24 +1055,16 @@ public abstract class GameArea implements Disposable {
     }
 
     protected Vector2 getRoomSpawnPosition(String roomName) {
-        switch (roomName) {
-            case "Floor1":
-                return randomInBounds(2f, 8f, 2f, 8f);
-            case "Floor2":
-                return randomInBounds(4f, 18f, 4f, 18f);
-            case "Floor3":
-                return randomInBounds(5f, 20f, 5f, 20f);
-            case "Floor4":
-                return randomInBounds(6f, 22f, 6f, 22f);
-            case "Floor5":
-                return randomInBounds(7f, 24f, 7f, 24f);
-            case "Floor6":
-                return randomInBounds(8f, 26f, 8f, 26f);
-            case "Floor7":
-                return randomInBounds(9f, 28f, 9f, 28f);
-            default:
-                return new Vector2(0f, 0f);
-        }
+        return switch (roomName) {
+            case "Floor1" -> randomInBounds(2f, 8f, 2f, 8f);
+            case "Floor2" -> randomInBounds(4f, 18f, 4f, 18f);
+            case "Floor3" -> randomInBounds(5f, 20f, 5f, 20f);
+            case "Floor4" -> randomInBounds(6f, 22f, 6f, 22f);
+            case "Floor5" -> randomInBounds(7f, 24f, 7f, 24f);
+            case "Floor6" -> randomInBounds(8f, 26f, 8f, 26f);
+            case "Floor7" -> randomInBounds(9f, 28f, 9f, 28f);
+            default -> new Vector2(0f, 0f);
+        };
     }
 
     private Vector2 randomInBounds(float minX, float maxX, float minY, float maxY) {
@@ -1048,6 +1303,7 @@ public abstract class GameArea implements Disposable {
             });
         });
     }
+
     /**
      * Checks if an entity is a partner NPC that should be preserved during transitions.
      *
@@ -1085,6 +1341,7 @@ public abstract class GameArea implements Disposable {
             return newPlayer;
         }
     }
+
     /**
      * Spawns decorative object doors (non-functional) at given positions.
      *
@@ -1109,7 +1366,7 @@ public abstract class GameArea implements Disposable {
 
     @Override
     public String toString() {
-        return "GameArea";
+        return GAME_AREA;
     }
 
     /**
@@ -1118,8 +1375,6 @@ public abstract class GameArea implements Disposable {
      * @return player entity
      */
     public abstract Entity getPlayer();
-
-//  public abstract Entity spawnPlayer(List<String> inventory, int CPU, int health);
 
     /**
      * Transition to another area by its name (case-insensitive), if known.
@@ -1148,7 +1403,7 @@ public abstract class GameArea implements Disposable {
             case "goodwinanimation" -> GoodWinAnimationScreen.class;
             case "badwinanimation" -> BadWinAnimationScreen.class;
             default -> {
-                Gdx.app.log("GameArea", "transitionToArea: unknown area name '" + areaName + "'");
+                Gdx.app.log(GAME_AREA, "transitionToArea: unknown area name '" + areaName + "'");
                 yield null;
             }
         };
@@ -1160,7 +1415,7 @@ public abstract class GameArea implements Disposable {
 
     /**
      * Getter method for this room's event handler.
-     * 
+     *
      * @return this room's eventHandler
      */
     public EventHandler getEvents() {

@@ -102,6 +102,7 @@ public class BallFactory {
      */
     public void spawnCue(Vector2 pos) {
         cue = createBall(pos.x, pos.y);
+        cue.setBullet(true);
         idToBody.put(0, cue);
     }
 

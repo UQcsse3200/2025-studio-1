@@ -28,7 +28,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(GameExtension.class)
-public class MinimapDisplayTest {
+class MinimapDisplayTest {
     private MinimapDisplay display;
     private Stage mockStage;
     private Minimap mockMinimap;
@@ -207,7 +207,7 @@ public class MinimapDisplayTest {
         display.pan("right");
 
         ArgumentCaptor<Vector2> captor = ArgumentCaptor.forClass(Vector2.class);
-        verify(mockMinimap).pan(captor.capture());
+        verify(mockMinimap, atLeastOnce()).pan(captor.capture());
     }
 
     @Test
@@ -260,7 +260,7 @@ public class MinimapDisplayTest {
         texMap.put("a", null);
         setField(display, "textures", texMap);
 
-        display.dispose(); // should not throw
+        assertDoesNotThrow(()->display.dispose()); // should not throw
     }
 
     @Test
@@ -297,8 +297,7 @@ public class MinimapDisplayTest {
     @Test
     void testTouchDownStoresCoordinates() throws Exception {
         GdxGame game = mock(GdxGame.class);
-        Minimap minimap = mock(Minimap.class);
-        TestableMinimapDisplay testDisplay = new TestableMinimapDisplay(game, minimap);
+        TestableMinimapDisplay testDisplay = new TestableMinimapDisplay(game, mockMinimap);
         testDisplay.create();
 
         Table root = new Table();
@@ -314,10 +313,7 @@ public class MinimapDisplayTest {
     @Test
     void testTouchDraggedPansMinimapAndRerenders() throws Exception {
         GdxGame game = mock(GdxGame.class);
-        Minimap minimap = mock(Minimap.class);
-        when(minimap.getScale()).thenReturn(1.0f);
-        when(minimap.render()).thenReturn(new HashMap<>());
-        TestableMinimapDisplay testDisplay = new TestableMinimapDisplay(game, minimap);
+        TestableMinimapDisplay testDisplay = new TestableMinimapDisplay(game, mockMinimap);
         testDisplay.create();
 
         Table root = new Table();
@@ -332,17 +328,15 @@ public class MinimapDisplayTest {
         // Drag event - should cause pan
         listener.touchDragged(event, 60f, 70f, 0);
 
-        verify(minimap, atLeastOnce()).pan(any(Vector2.class));
+        verify(mockMinimap, atLeastOnce()).pan(any(Vector2.class));
     }
 
     @Test
     void testScrolledTriggersZoom() throws Exception {
         GdxGame game = mock(GdxGame.class);
-        Minimap minimap = mock(Minimap.class);
-        when(minimap.getScale()).thenReturn(1.0f);
-        when(minimap.getCentre()).thenReturn(new Vector2(0, 0));
+        when(mockMinimap.getCentre()).thenReturn(new Vector2(0, 0));
 
-        TestableMinimapDisplay testDisplay = spy(new TestableMinimapDisplay(game, minimap));
+        TestableMinimapDisplay testDisplay = spy(new TestableMinimapDisplay(game, mockMinimap));
         testDisplay.create();
 
         Table root = new Table();
@@ -359,10 +353,7 @@ public class MinimapDisplayTest {
     @Test
     void testTouchDraggedUpdatesLastCoordinates() throws Exception {
         GdxGame game = mock(GdxGame.class);
-        Minimap minimap = mock(Minimap.class);
-        when(minimap.render()).thenReturn(new HashMap<>());
-        when(minimap.getScale()).thenReturn(1.0f);
-        TestableMinimapDisplay testDisplay = new TestableMinimapDisplay(game, minimap);
+        TestableMinimapDisplay testDisplay = new TestableMinimapDisplay(game, mockMinimap);
         testDisplay.create();
 
         Table root = new Table();
@@ -375,25 +366,97 @@ public class MinimapDisplayTest {
         listener.touchDragged(event, 20f, 30f, 0);
         listener.touchDragged(event, 40f, 60f, 0);
 
-        verify(minimap, atLeast(2)).pan(any(Vector2.class));
+        verify(mockMinimap, atLeast(2)).pan(any(Vector2.class));
     }
 
     @Test
     void testBuildUIAssignsScrollFocus() throws Exception {
         GdxGame game = mock(GdxGame.class);
-        Minimap minimap = mock(Minimap.class);
-        when(minimap.render()).thenReturn(new HashMap<>());
-        when(minimap.getScale()).thenReturn(1.0f);
 
-        TestableMinimapDisplay testDisplay = new TestableMinimapDisplay(game, minimap);
+        TestableMinimapDisplay testDisplay = new TestableMinimapDisplay(game, mockMinimap);
         testDisplay.create();
 
-        Stage mockStage = mock(Stage.class);
-        setField(testDisplay, "stage", mockStage);
+        Stage mockStageForScroll = mock(Stage.class);
+        setField(testDisplay, "stage", mockStageForScroll);
 
         Table root = new Table();
         testDisplay.buildUI(root);
 
-        verify(mockStage).setScrollFocus(any(Table.class));
+        verify(mockStageForScroll).setScrollFocus(any(Table.class));
+    }
+
+    private static Map<Vector2, String> makeRooms(int count) {
+        Map<Vector2, String> rooms = new HashMap<>();
+        for (int i = 0; i < count; i++) {
+            rooms.put(new Vector2(i, i), "room" + i);
+        }
+        return rooms;
+    }
+
+    @Test
+    void testClampPositivePanWithTouchDragged() {
+        when(mockMinimap.render()).thenReturn(makeRooms(2));
+        display.clampMinimapPosition(5.0f, true);
+        verify(mockMinimap, never()).pan(any());
+    }
+
+    @Test
+    void testClampNegativePanWithTouchDragged() {
+        when(mockMinimap.render()).thenReturn(makeRooms(2));
+        display.clampMinimapPosition(-3.0f, true);
+        verify(mockMinimap, never()).pan(any());
+    }
+
+    @Test
+    void testClampNegativePanTriggersPan() {
+        when(mockMinimap.render()).thenReturn(makeRooms(2));
+        display.clampMinimapPosition(-4.0f, false);
+
+        ArgumentCaptor<Vector2> captor = ArgumentCaptor.forClass(Vector2.class);
+        verify(mockMinimap).pan(captor.capture());
+
+        Vector2 v = captor.getValue();
+        assertEquals(4.0f, v.x, 0.0001f);
+        assertEquals(0.0f, v.y, 0.0001f);
+    }
+
+    @Test
+    void testClampPositivePanTriggersPan() {
+        when(mockMinimap.render()).thenReturn(makeRooms(1));
+        display.clampMinimapPosition(3.5f, false);
+
+        ArgumentCaptor<Vector2> captor = ArgumentCaptor.forClass(Vector2.class);
+        verify(mockMinimap).pan(captor.capture());
+
+        Vector2 v = captor.getValue();
+        assertEquals(-3.5f, v.x, 0.0001f);
+        assertEquals(0.0f, v.y, 0.0001f);
+    }
+
+    @Test
+    void testClampPanDistanceZero() {
+        when(mockMinimap.render()).thenReturn(makeRooms(1));
+        display.clampMinimapPosition(0.0f, false);
+        verify(mockMinimap, never()).pan(any());
+    }
+
+    @Test
+    void testClampNegativePanNoPan() {
+        when(mockMinimap.render()).thenReturn(makeRooms(3));
+        display.clampMinimapPosition(-2.0f, false);
+        verify(mockMinimap, never()).pan(any());
+    }
+
+    @Test
+    void testClampPositivePanNoPan() {
+        when(mockMinimap.render()).thenReturn(makeRooms(2));
+        display.clampMinimapPosition(2.0f, false);
+        verify(mockMinimap, never()).pan(any());
+    }
+
+    @Test
+    void testClampHandlesNullRooms() {
+        when(mockMinimap.render()).thenReturn(null);
+        assertDoesNotThrow(() -> display.clampMinimapPosition(1.0f, false));
     }
 }

@@ -152,7 +152,7 @@ public class MainHall extends GameArea {
         float PlatformX = 10.5f;
         float PlatformY = 7f;
         float PlatformX2 = 5f;
-        float PlatformY2 = 9f;
+        float PlatformY2 = 8f;
         float PlatformX3 = 1.5f;
         float PlatformY3 = 5f;
         float PlatformX4 = 8f;
@@ -169,17 +169,6 @@ public class MainHall extends GameArea {
         Entity Platform4 = ObstacleFactory.createplatform3();
         Platform4.setPosition(PlatformX4, PlatformY4);
         spawnEntity(Platform4);
-    }
-
-    /**
-     * spawns Sofa in bottom left
-     **/
-    private void spawnsofa() {
-        float PlatformX = 1f;
-        float PlatformY = 3f;
-        Entity sofa1 = ObstacleFactory.createMhall_sofa();
-        sofa1.setPosition(PlatformX, PlatformY);
-        spawnEntity(sofa1);
     }
 
     /**

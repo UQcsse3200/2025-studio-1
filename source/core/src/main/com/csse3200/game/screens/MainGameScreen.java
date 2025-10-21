@@ -36,6 +36,7 @@ import com.csse3200.game.session.GameSession;
 import com.csse3200.game.session.SessionManager;
 import com.csse3200.game.ui.terminal.Terminal;
 import com.csse3200.game.ui.terminal.TerminalDisplay;
+import com.csse3200.game.lighting.LightingService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -109,6 +110,10 @@ public class MainGameScreen extends ScreenAdapter {
         renderer = RenderFactory.createRenderer();
         renderer.getCamera().getEntity().setPosition(CAMERA_POSITION);
         renderer.getDebug().renderPhysicsWorld(physicsEngine.getWorld());
+
+        LightingService lightingService =
+                new LightingService(renderer.getCamera(), physicsEngine.getWorld());
+        ServiceLocator.registerLightingService(lightingService);
 
         loadAssets();
         countdownTimer = new CountdownTimerService(ServiceLocator.getTimeSource(), 240000);
@@ -305,6 +310,12 @@ public class MainGameScreen extends ScreenAdapter {
         // Preserve player entity during disposal
         Entity player = ServiceLocator.getPlayer();
         ServiceLocator.getEntityService().disposeExceptPlayer();
+
+        var ls = ServiceLocator.getLightingService();
+        if (ls != null && ls.getEngine() != null) {
+            ls.getEngine().dispose();
+        }
+
         ServiceLocator.getRenderService().dispose();
         ServiceLocator.getResourceService().dispose();
         ServiceLocator.clearExceptPlayer();

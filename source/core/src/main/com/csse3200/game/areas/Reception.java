@@ -39,6 +39,7 @@ public class Reception extends GameArea {
         spawnWallsAndDoor();
         player = spawnPlayer();
         spawnFloor();
+        spawnShopKiosk();
         spawnholoclock();
         spawnplatform2();
         spawnObjectDoors(new GridPoint2(0, 6), new GridPoint2(28, 20));
@@ -151,8 +152,8 @@ public class Reception extends GameArea {
     private void spawnplatform2() {
         float PlatformX = 5.5f;
         float PlatformY = 3f;
-        float PlatformX2 = 1f;
-        float PlatformY2 = 6f;
+        float PlatformX2 = 1.5f;
+        float PlatformY2 = 5.5f;
         float PlatformX3 = 7f;
         float PlatformY3 = 7f;
         float PlatformX4 = 12.5f;
@@ -169,15 +170,14 @@ public class Reception extends GameArea {
         Entity Platform4 = ObstacleFactory.createplatform2();
         Platform4.setPosition(PlatformX4, PlatformY4);
         spawnEntity(Platform4);
-
     }
 
     /**
      * Spawning the clock on the second platform
      **/
     private void spawnholoclock() {
-        float PlatformX = 0.8f;
-        float PlatformY = 7.45f;
+        float PlatformX = 1.3f;
+        float PlatformY = 6.95f;
         Entity clock1 = ObstacleFactory.createholoclock();
         clock1.setPosition(PlatformX, PlatformY);
         spawnEntity(clock1);
