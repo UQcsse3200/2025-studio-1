@@ -4,9 +4,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.math.Vector2;
-import com.csse3200.game.components.items.ItemComponent;
 import com.csse3200.game.entities.Entity;
-import com.csse3200.game.entities.configs.ItemTypes;
 import com.csse3200.game.input.InputComponent;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.utils.math.Vector2Utils;
@@ -114,12 +112,7 @@ public class KeyboardPlayerInputComponent extends InputComponent {
             if (item == null) {
                 return false;
             }
-            ItemComponent itemInfo = item.getComponent(ItemComponent.class);
-            if (itemInfo.getType() == ItemTypes.RANGED) {
-                entity.getEvents().trigger("shoot");
-            } else if (itemInfo.getType() == ItemTypes.MELEE) {
-                entity.getEvents().trigger("attack");
-            }
+            item.getEvents().trigger("use", entity);
             return true;
         }
         return false;

@@ -15,7 +15,7 @@ import com.csse3200.game.services.ServiceLocator;
 
 public class LaserComponent extends RenderComponent {
     private final ShapeRenderer shapeRenderer = new ShapeRenderer();
-    private final Color color = Color.RED;
+    private static final Color color = Color.RED;
     private Camera camera;
 
     public LaserComponent() {

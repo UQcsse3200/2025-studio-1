@@ -6,7 +6,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.CameraComponent;
-import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.ItemSpawnConfig;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
@@ -87,10 +86,7 @@ public class StorageGameArea extends GameArea {
             itemSpawner.spawnItems(ItemSpawnConfig.storage1map());
         }
 
-        Entity ui = new Entity();
-        ui.addComponent(new GameAreaDisplay("Storage"))
-                .addComponent(new com.csse3200.game.components.gamearea.FloorLabelDisplay("Floor 9"));
-        spawnEntity(ui);
+        displayUIEntity("Storage", "Floor 9");
     }
 
     /**
@@ -132,6 +128,11 @@ public class StorageGameArea extends GameArea {
         leftDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadShipping));
         spawnEntity(leftDoor);
 
+
+        Entity leftDoorSprite = ObstacleFactory.createDoor();
+        leftDoorSprite.setPosition(b.leftX(), leftDoorY);
+        spawnEntity(leftDoorSprite);
+
         addSolidWallRight(b, WALL_WIDTH);
 
         float rightDoorHeight = Math.max(1f, b.viewHeight() * 0.2f);
@@ -140,6 +141,11 @@ public class StorageGameArea extends GameArea {
         rightDoor.setPosition(b.rightX() - WALL_WIDTH - 0.001f, rightDoorY);
         rightDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadServer));
         spawnEntity(rightDoor);
+
+
+        Entity rightDoorSprite = ObstacleFactory.createDoor();
+        rightDoorSprite.setPosition(b.rightX() - WALL_WIDTH - 1.0f, rightDoorY);
+        spawnEntity(rightDoorSprite);
 
         if (!StorageGameArea.isCleared) registerDoors(new Entity[]{leftDoor, rightDoor});
     }

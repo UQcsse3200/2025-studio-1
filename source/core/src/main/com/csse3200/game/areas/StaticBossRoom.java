@@ -8,7 +8,6 @@ import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.components.DoorComponent;
 import com.csse3200.game.components.KeycardGateComponent;
-import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.ItemSpawnConfig;
 import com.csse3200.game.entities.factories.KeycardFactory;
@@ -19,8 +18,6 @@ import com.csse3200.game.physics.PhysicsLayer;
 import com.csse3200.game.physics.components.ColliderComponent;
 import com.csse3200.game.physics.components.HitboxComponent;
 import com.csse3200.game.services.ServiceLocator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * This is the room that holds the static Boss.
@@ -31,7 +28,6 @@ import org.slf4j.LoggerFactory;
  * Room is empty except for boss and player
  */
 public class StaticBossRoom extends GameArea {
-    private static final Logger logger = LoggerFactory.getLogger(StaticBossRoom.class);
     private static final float WALL_WIDTH = 0.1f;
     private static GridPoint2 playerSpawn = new GridPoint2(3, 10);
     private static boolean isCleared;
@@ -84,7 +80,7 @@ public class StaticBossRoom extends GameArea {
                 new Color(0.10f, 0.12f, 0.10f, 0.24f));
 
         spawnBordersAndDoors();
-        displayUI();
+        displayUIEntity("Static Boss Room", null);
 
         player = spawnPlayer();
 
@@ -99,12 +95,6 @@ public class StaticBossRoom extends GameArea {
         spawnVisibleFloor();
     }
 
-    private void displayUI() {
-        Entity ui = new Entity();
-        ui.addComponent(new GameAreaDisplay("Static Boss Room"));
-        spawnEntity(ui);
-    }
-
     private Entity spawnPlayer() {
         return spawnOrRepositionPlayer(playerSpawn);
     }
@@ -115,13 +105,12 @@ public class StaticBossRoom extends GameArea {
         Entity boss = BossFactory.createBoss3(player);
 
         // Delay keycard spawn after boss death
-        boss.getEvents().addListener("death", () -> {
-            ServiceLocator.getTimeSource().delayKeycardSpawn(0.05f, () -> {
-                Entity keycard = KeycardFactory.createKeycard(3);
-                keycard.setPosition(new Vector2(3f, 10f)); // adjust position if needed
-                spawnEntity(keycard);
-            });
-        });
+        boss.getEvents().addListener("death",
+                () -> ServiceLocator.getTimeSource().delayKeycardSpawn(0.05f, () -> {
+                    Entity keycard = KeycardFactory.createKeycard(3);
+                    keycard.setPosition(new Vector2(3f, 10f)); // adjust position if needed
+                    spawnEntity(keycard);
+                }));
 
         spawnEntityAt(boss, pos, true, true);
         registerEnemy(boss);
@@ -134,7 +123,6 @@ public class StaticBossRoom extends GameArea {
         if (cameraComponent == null) return;
 
         Bounds b = getCameraBounds(cameraComponent);
-        //  addSolidWallLeft(b, WALL_WIDTH);
         addSolidWallTop(b, WALL_WIDTH);
         addSolidWallRight(b, WALL_WIDTH);
 
@@ -146,6 +134,12 @@ public class StaticBossRoom extends GameArea {
             leftTop.setPosition(b.leftX(), leftDoorY + leftDoorHeight);
             spawnEntity(leftTop);
         }
+        
+
+        Entity leftDoorWall = ObstacleFactory.createWall(WALL_WIDTH, leftDoorHeight);
+        leftDoorWall.setPosition(b.leftX(), leftDoorY);
+        spawnEntity(leftDoorWall);
+        
         Entity leftDoor = ObstacleFactory.createDoorTrigger(WALL_WIDTH, leftDoorHeight);
         leftDoor.setPosition(b.leftX() + 0.001f, leftDoorY);
         leftDoor.addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));

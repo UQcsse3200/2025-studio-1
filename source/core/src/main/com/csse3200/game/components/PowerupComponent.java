@@ -34,6 +34,13 @@ public class PowerupComponent extends Component {
         return this.activeEffects;
     }
 
+    public boolean hasEffect(Class<? extends Effect> effect) {
+        for (Effect e : activeEffects) {
+            if (e.getClass() == effect) return true;
+        }
+        return false;
+    }
+
     /**
      * Adds an effect to the active effects
      *
@@ -52,10 +59,9 @@ public class PowerupComponent extends Component {
             if (aimbot.apply(equippedWeapon)) {
                 activeEffects.add(aimbot);
             }
-        } else if (effect instanceof DoubleProcessorsEffect doubleProcessors) {
-            if (doubleProcessors.apply(entity)) {
-                activeEffects.add(doubleProcessors);
-            }
+        } else if (effect instanceof DoubleProcessorsEffect doubleProcessors
+                && doubleProcessors.apply(entity)) {
+            activeEffects.add(doubleProcessors);
         }
     }
 
