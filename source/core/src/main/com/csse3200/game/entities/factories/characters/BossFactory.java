@@ -89,17 +89,9 @@ public class BossFactory {
                 5,
                 0.25f
         ));
-        int maxHp = robot.getComponent(CombatStatsComponent.class).getHealth();
-        int defenseHp = Math.round(maxHp * 0.30f);
 
         robot
                 .addComponent(new com.csse3200.game.components.boss.DamageReductionComponent())
-                .addComponent(new com.csse3200.game.components.boss.BossDefenseComponent(
-                        10f,
-                        1.0f,
-                        defenseHp,
-                        false
-                ))
                 .addComponent(new AttackProtectionComponent())
                 .addComponent(new AttackProtectionDisplay());
 
