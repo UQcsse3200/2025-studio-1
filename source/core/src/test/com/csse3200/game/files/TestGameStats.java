@@ -16,13 +16,4 @@ public class TestGameStats {
         public int keyCardLvl = 1;
     }
 
-    public static class onlyArgsInventory {
-        public String typeLoad = "";
-        public String itemTextureLoad = "";
-        public int stamLoad = 1;
-        public int upgradeLoad = 1;
-        public int itemCountLoad = 1;
-        public int weaponAmmoLoad = 1;
-    }
-
 }

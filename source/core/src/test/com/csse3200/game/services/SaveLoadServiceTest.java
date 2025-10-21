@@ -1,21 +1,30 @@
 package com.csse3200.game.services;
 
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.areas.GameArea;
 import com.csse3200.game.areas.difficulty.Difficulty;
 import com.csse3200.game.areas.difficulty.DifficultyType;
 import com.csse3200.game.components.AmmoStatsComponent;
+import com.csse3200.game.components.ArmourComponent;
 import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.components.Component;
+import com.csse3200.game.components.player.ArmourEquipComponent;
 import com.csse3200.game.components.player.InventoryComponent;
 import com.csse3200.game.components.player.StaminaComponent;
 import com.csse3200.game.entities.Avatar;
 import com.csse3200.game.entities.AvatarRegistry;
 import com.csse3200.game.entities.Entity;
+import com.csse3200.game.entities.configs.Armour;
+import com.csse3200.game.entities.factories.items.ArmourFactory;
 import com.csse3200.game.extensions.GameExtension;
 import com.csse3200.game.files.FileLoader;
 import com.csse3200.game.files.SaveGame;
+import com.csse3200.game.physics.PhysicsEngine;
+import com.csse3200.game.physics.PhysicsService;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.MockedStatic;
@@ -141,6 +150,56 @@ class SaveLoadServiceTest {
             Assertions.assertEquals(Float.valueOf(100), out.getPlayer().stamina);
             Assertions.assertEquals(1, out.getPlayer().ammoReserve);
         }
+    }
+
+    @Test
+    @DisplayName("loading can retrieve player data")
+    void load_getsExpectedSnapshot_withFileIO() {
+        CombatStatsComponent stats = new CombatStatsComponent(MAX_HEALTH);
+        stats.setHealth(INITIAL_HEALTH);
+
+        ResourceService resourceService = mock(ResourceService.class);
+        ServiceLocator.registerResourceService(resourceService);
+        Texture texture = mock(Texture.class);
+        when(resourceService.getAsset(anyString(), eq(Texture.class))).thenReturn(texture);
+
+        InventoryComponent inv = new InventoryComponent(INVENTORY_PROCESSES);
+        AmmoStatsComponent ammTest = new AmmoStatsComponent(INVENTORY_PROCESSES);
+        StaminaComponent stamTest = new StaminaComponent();
+        PhysicsEngine physicsEngine = mock(PhysicsEngine.class);
+        PhysicsService physicsService = new PhysicsService(physicsEngine);
+        ServiceLocator.registerPhysicsService(physicsService);
+        ArmourEquipComponent armourTest = new ArmourEquipComponent();
+
+
+        FakeEntity player = new FakeEntity();
+        player.addComponent(stats);
+        player.addComponent(inv);
+        player.addComponent(ammTest);
+        player.addComponent(stamTest);
+        player.addComponent(armourTest);
+        player.setPosition(new Vector2(POS_X, POS_Y));
+
+        Avatar playerAvatarTest = mock(Avatar.class);
+        AvatarRegistry.set(playerAvatarTest);
+
+        //test to mock
+        ServiceLocator.registerDiscoveryService(mock(DiscoveryService.class));
+        ServiceLocator.registerDifficulty(mock(Difficulty.class));
+        ServiceLocator.registerPlayer(player);
+
+        GameArea area = mock(GameArea.class);
+        ServiceLocator.registerGameArea(area);
+
+        when(area.getEntities()).thenReturn(List.of(player));
+        when(area.toString()).thenReturn(AREA_ID);
+
+        SaveLoadService service = new SaveLoadService();
+        Assertions.assertNotNull(service.load("test/files/saveFileValid.json"));
+
+        final SaveGame.GameState captured = service.load("test/files/saveFileValid.json");
+
+        Assertions.assertNotNull(captured, "Expected File");
     }
 
 }
