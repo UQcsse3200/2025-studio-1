@@ -16,12 +16,15 @@ import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.entities.factories.system.TeleporterFactory;
 import com.csse3200.game.entities.spawner.ItemSpawner;
 import com.csse3200.game.services.ServiceLocator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Server Room. Has several platforms as well as server racks sprites.
  * Is attached to Tunnel Room.
  */
 public class ServerGameArea extends GameArea {
+    private static final Logger logger = LoggerFactory.getLogger(ServerGameArea.class);
     private static final float WALL_WIDTH = 0.1f;
     private static final float WALL_HEIGHT = 0.1f;
     private static GridPoint2 playerSpawn = new GridPoint2(10, 10);
@@ -72,13 +75,12 @@ public class ServerGameArea extends GameArea {
         GenericLayout.setupTerrainWithOverlay(this, terrainFactory, TerrainType.SERVER_ROOM,
                 new Color(0.10f, 0.12f, 0.10f, 0.24f));
 
-        displayUI();
         spawnTerrain();
+        spawnBordersAndDoors();
         spawnPlatforms();
         spawnRoomObjects();
         spawnCratesAndRailing();
         spawnSpawnPads();
-        spawnBordersAndDoors();
         spawnObjectDoors(new GridPoint2(0, 7), new GridPoint2(28, 19));
         spawnTeleporter();
         spawnHealthBench();
@@ -97,12 +99,6 @@ public class ServerGameArea extends GameArea {
         spawnEntity(ui);
     }
 
-    private void displayUI() {
-        Entity ui = new Entity();
-        ui.addComponent(new GameAreaDisplay("Box Forest"))
-                .addComponent(new com.csse3200.game.components.gamearea.FloorLabelDisplay("Floor 1"));
-        spawnEntity(ui);
-    }
 
     /**
      * Getter method for the player entity
@@ -197,60 +193,12 @@ public class ServerGameArea extends GameArea {
     }
 
     /**
-     * Builds terrain for SPAWN_ROOM and wraps the visible screen with thin physics walls
-     * based on the camera viewport. Also adds a right-side door trigger that loads next level.
+     * Builds terrain for SERVER_ROOM.
      */
     private void spawnTerrain() {
         // Build the ground
         terrain = terrainFactory.createTerrain(TerrainType.SERVER_ROOM);
         spawnEntity(new Entity().addComponent(terrain));
-
-        // Build screen edges and the right-side door if a camera is available
-        if (cameraComponent != null) {
-            OrthographicCamera cam = (OrthographicCamera) cameraComponent.getCamera();
-            Vector2 camPos = cameraComponent.getEntity().getPosition();
-            float viewWidth = cam.viewportWidth;
-            float viewHeight = cam.viewportHeight;
-
-            float leftX = camPos.x - viewWidth / 2f;
-            float rightX = camPos.x + viewWidth / 2f;
-            float bottomY = camPos.y - viewHeight / 2f;
-            float topY = camPos.y + viewHeight / 2f;
-
-            // Left screen border
-            Entity left = ObstacleFactory.createWall(WALL_WIDTH, viewHeight);
-            left.setPosition(leftX, bottomY);
-            spawnEntity(left);
-
-            // Right screen border
-            Entity right = ObstacleFactory.createWall(WALL_WIDTH, viewHeight);
-            right.setPosition(rightX - WALL_WIDTH, bottomY);
-            spawnEntity(right);
-
-            // Top screen border
-            Entity top = ObstacleFactory.createWall(viewWidth, WALL_HEIGHT);
-            top.setPosition(leftX, topY - WALL_WIDTH);
-            spawnEntity(top);
-
-            // Leave a bottom gap in the middle if needed, then add a right-door trigger
-            float doorWidth = Math.max(1f, viewWidth * 0.2f);
-            float doorX = camPos.x - doorWidth / 2f;
-
-            // Bottom screen border split into two segments leaving a gap for the door
-            float leftSegmentWidth = Math.max(0f, doorX - leftX);
-            if (leftSegmentWidth > 0f) {
-                Entity bottomLeft = ObstacleFactory.createWall(leftSegmentWidth, WALL_HEIGHT);
-                bottomLeft.setPosition(leftX, bottomY);
-                spawnEntity(bottomLeft);
-            }
-            float rightSegmentStart = doorX + doorWidth;
-            float rightSegmentWidth = Math.max(0f, (leftX + viewWidth) - rightSegmentStart);
-            if (rightSegmentWidth > 0f) {
-                Entity bottomRight = ObstacleFactory.createWall(rightSegmentWidth, WALL_HEIGHT);
-                bottomRight.setPosition(rightSegmentStart, bottomY);
-                spawnEntity(bottomRight);
-            }
-        }
     }
 
     /**

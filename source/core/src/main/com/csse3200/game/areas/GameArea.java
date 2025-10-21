@@ -738,6 +738,10 @@ public abstract class GameArea implements Disposable {
                 respectiveSpawns.add(new Vector2(3f, 10f));
                 respectiveSpawns.add(new Vector2(5f, 10f));
                 positions.put(DEEP_SPIN, respectiveSpawns);
+                respectiveSpawns = new ArrayList<>();
+                respectiveSpawns.add(new Vector2(15f, 8f));
+                respectiveSpawns.add(new Vector2(18f, 12f));
+                positions.put(TURRET, respectiveSpawns);
             }
             case "Tunnel" -> {
                 respectiveSpawns.add(new Vector2(12f, 4f));
