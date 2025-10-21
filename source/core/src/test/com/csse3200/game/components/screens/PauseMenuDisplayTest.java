@@ -182,16 +182,22 @@ class PauseMenuDisplayTest {
         display.create();
 
         Table root = findRoot(collectAddedActors());
+        assertNotNull(root);
+
         AtomicInteger resumeCount = new AtomicInteger();
         display.getEntity().getEvents().addListener("resume", resumeCount::incrementAndGet);
 
         InputListener esc = findEscListener(root);
+        assertNotNull(esc);
+
         InputEvent ev = new InputEvent();
         ev.setType(InputEvent.Type.keyDown);
-        esc.keyDown(ev, Input.Keys.ESCAPE);
+        boolean handled = esc.keyDown(ev, Input.Keys.ESCAPE);
 
+        assertTrue(handled);
         assertEquals(1, resumeCount.get());
     }
+
 
     @Test
     void zIndex_isHigh() {
