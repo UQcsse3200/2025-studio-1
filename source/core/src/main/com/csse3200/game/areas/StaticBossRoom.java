@@ -184,6 +184,7 @@ public class StaticBossRoom extends GameArea {
         clearAndLoad(() -> new TunnelGameArea(terrainFactory, cameraComponent));
     }
 
+
     /**
      * Clear room, set this room's static
      * boolean isCleared variable to true

@@ -3,7 +3,6 @@ package com.csse3200.game.areas;
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.components.CameraComponent;
-import com.csse3200.game.components.WeaponsStatsComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
 import com.csse3200.game.entities.factories.characters.NPCFactory;
@@ -150,8 +149,6 @@ class GameAreaEnemySpawningTest {
             verify(mockTurret).setPosition(any(Vector2.class));
         }
     }
-
-
 
     @Test
     void testGetEnemySpawnPosition() {
