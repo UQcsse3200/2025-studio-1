@@ -687,23 +687,17 @@ public class ObstacleFactory {
     }
 
     /**
-     * Creates a research pod entity with collision.
+     * Creates a research pod entity.
      * Pods are large static obstacles in the Research Room.
      *
      * @return A static collidable research pod entity
      */
     public static Entity createResearchPod() {
         Entity pod = new Entity()
-                .addComponent(new TextureRenderComponent("foreg_sprites/Research/ResearchPod.png"))
-                .addComponent(new PhysicsComponent())
-                .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE))
-                .addComponent(new HitboxComponent().setLayer(PhysicsLayer.ALL));
-
-        pod.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
+                .addComponent(new TextureRenderComponent("foreg_sprites/Research/ResearchPod.png"));
         pod.getComponent(TextureRenderComponent.class).scaleEntity();
+        pod.getComponent(TextureRenderComponent.class).setZIndex(-99);
         pod.scaleHeight(1.6f);
-        PhysicsUtils.setScaledCollider(pod, 0.6f, 0.9f);
-        pod.getComponent(HitboxComponent.class).setAsBox(pod.getScale());
         return pod;
     }
 
