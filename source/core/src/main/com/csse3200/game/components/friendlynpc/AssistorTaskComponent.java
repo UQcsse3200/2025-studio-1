@@ -18,6 +18,7 @@ public class AssistorTaskComponent extends Component {
     public void create() {
         entity.getEvents().addListener("npcDialogueEnd", this::onDialogueEnd);
     }
+
     private void onDialogueEnd() {
         final float x = entity.getPosition().x;
         final float y = entity.getPosition().y;

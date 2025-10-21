@@ -388,13 +388,6 @@ public class BossFactory {
         };
     }
 
-    /**
-     * Create Robot with cocoon spawning capability (enhanced version)
-     *
-     * @param target The player entity that the boss will chase and attack
-     * @return Enhanced Robot entity with cocoon spawning capability
-     */
-
 
     public static class ApplyInitialBoss2Setup extends Component {
         private final float scaleK;

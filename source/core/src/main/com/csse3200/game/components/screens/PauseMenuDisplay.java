@@ -20,12 +20,22 @@ import com.csse3200.game.services.ServiceLocator;
  * ESC is handled once to immediately resume gameplay.
  */
 public class PauseMenuDisplay extends BaseScreenDisplay {
-    /** Tracks if ESC was consumed by the pause menu in the current frame. */
+    /**
+     * Tracks if ESC was consumed by the pause menu in the current frame.
+     */
     private static boolean escConsumedThisFrame = false;
 
-    public static boolean wasEscConsumedThisFrame() { return escConsumedThisFrame; }
-    public static void markEscConsumed() { escConsumedThisFrame = true; }
-    public static void resetEscConsumed() { escConsumedThisFrame = false; }
+    public static boolean wasEscConsumedThisFrame() {
+        return escConsumedThisFrame;
+    }
+
+    public static void markEscConsumed() {
+        escConsumedThisFrame = true;
+    }
+
+    public static void resetEscConsumed() {
+        escConsumedThisFrame = false;
+    }
 
     /**
      * Full-screen dimmer image. Kept as a field so we can avoid adding duplicates

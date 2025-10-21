@@ -16,9 +16,9 @@ import com.csse3200.game.services.ServiceLocator;
 /**
  * Auto companion shooter (minimal checks).
  * Assumptions:
- *  - Player always has PlayerActions and a current weapon.
- *  - Fireball bullet from ProjectileFactory always has PhysicsProjectileComponent.
- *  - Bullet size is finalized in the factory.
+ * - Player always has PlayerActions and a current weapon.
+ * - Fireball bullet from ProjectileFactory always has PhysicsProjectileComponent.
+ * - Bullet size is finalized in the factory.
  */
 public class AutoCompanionShootComponent extends Component {
     private static final float cooldown = 1f;    // shoot cooldown (s)
@@ -77,7 +77,9 @@ public class AutoCompanionShootComponent extends Component {
         return cs == null || cs.getHealth() > 0;
     }
 
-    /** Find nearest enemy within radius r (short name). */
+    /**
+     * Find nearest enemy within radius r (short name).
+     */
     private Entity findTarget(Vector2 from, float r) {
         Array<Entity> all = ServiceLocator.getEntityService().getEntities();
         float r2 = r * r, best = Float.MAX_VALUE;
@@ -85,13 +87,18 @@ public class AutoCompanionShootComponent extends Component {
         for (Entity e : all) {
             if (!isEnemy(e)) continue;
             float d2 = from.dst2(e.getCenterPosition());
-            if (d2 <= r2 && d2 < best) { best = d2; ans = e; }
+            if (d2 <= r2 && d2 < best) {
+                best = d2;
+                ans = e;
+            }
         }
         return ans;
     }
+
     public boolean isAttack() {
         return attack;
     }
+
     public void setAttack(boolean attack) {
         this.attack = attack;
     }

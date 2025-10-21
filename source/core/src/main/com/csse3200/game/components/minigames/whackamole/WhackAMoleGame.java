@@ -1,8 +1,10 @@
 package com.csse3200.game.components.minigames.whackamole;
+
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.factories.InteractableStationFactory;
 import com.csse3200.game.rendering.TextureRenderComponent;
 import com.badlogic.gdx.utils.Timer;
+
 import java.util.Random;
 
 /**
@@ -16,7 +18,7 @@ public class WhackAMoleGame {
     private static final int TARGET_SCORE = 20;
     private static final int MAX_MISSES = 2;
     private static final float SPAWN_PERIOD = 0.8f;
-    private static final float UP_DURATION  = 0.6f;
+    private static final float UP_DURATION = 0.6f;
 
     private final Entity gameEntity;
     private final WhackAMoleDisplay display;
@@ -68,12 +70,22 @@ public class WhackAMoleGame {
             display.hide();
             onStop();
             uiShown = false;
-        } else {
-            resetRuntime();
-            display.prepareToPlay();
-            display.show();
-            uiShown = true;
+            return;
         }
+
+        // If no bet yet, open the betting UI first
+        if(!betPlaced) {
+            com.csse3200.game.components.minigames.BettingComponent bet =
+                    gameEntity.getComponent(com.csse3200.game.components.minigames.BettingComponent.class);
+            if (bet != null) {
+                bet.show(); // betting panel pauses the game.
+            }
+            return;
+        }
+        resetRuntime();
+        display.prepareToPlay();
+        display.show();
+        uiShown = true;
     }
 
     /**
@@ -94,7 +106,10 @@ public class WhackAMoleGame {
         resetRuntime();
         display.resetScore();
         loopTask = com.badlogic.gdx.utils.Timer.schedule(new com.badlogic.gdx.utils.Timer.Task() {
-            @Override public void run() { startRound(); }
+            @Override
+            public void run() {
+                startRound();
+            }
         }, 0f, 0.8f);
     }
 
@@ -106,8 +121,14 @@ public class WhackAMoleGame {
      */
     private void onStop() {
         running = false;
-        if (loopTask != null) { loopTask.cancel(); loopTask = null; }
-        if (hideTask != null) { hideTask.cancel(); hideTask = null; }
+        if (loopTask != null) {
+            loopTask.cancel();
+            loopTask = null;
+        }
+        if (hideTask != null) {
+            hideTask.cancel();
+            hideTask = null;
+        }
         display.setRunning(false);
         display.hideAllMoles();
         currentIdx = -1;
@@ -121,7 +142,10 @@ public class WhackAMoleGame {
         currentIdx = -1;
         currentHit = false;
         roundToken++;
-        if (hideTask != null) { hideTask.cancel(); hideTask = null; }
+        if (hideTask != null) {
+            hideTask.cancel();
+            hideTask = null;
+        }
     }
 
     /**
@@ -142,7 +166,8 @@ public class WhackAMoleGame {
 
         if (hideTask != null) hideTask.cancel();
         hideTask = Timer.schedule(new Timer.Task() {
-            @Override public void run() {
+            @Override
+            public void run() {
                 // discard late tasks (if stopped or a new round started)
                 if (!running || tokenThisRound != roundToken) return;
 
@@ -183,9 +208,19 @@ public class WhackAMoleGame {
 
     private void onBetPlaced() {
         betPlaced = true;
+
+        // If the game UI isn't open yet, open and prep.
+        if (!uiShown) {
+            resetRuntime();
+            display.prepareToPlay();
+            display.show();
+            uiShown = true;
+        }
     }
 
-    /** Expose the in-world station entity so areas can place it. */
+    /**
+     * Expose the in-world station entity so areas can place it.
+     */
     public Entity getGameEntity() {
         return gameEntity;
     }
