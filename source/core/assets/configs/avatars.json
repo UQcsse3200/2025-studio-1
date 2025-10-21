@@ -3,8 +3,8 @@
     "id": "scout",
     "displayName": "Scout",
     "texturePath": "images/avatars/burger.png",
-    "baseHealth": 80,
-    "baseDamage": 10,
+    "baseHealth": 8000,
+    "baseDamage": 1000,
     "moveSpeed": 5.0,
     "atlas": "images/player.atlas"
   },
