@@ -306,7 +306,7 @@ implements com.badlogic.gdx.utils.Disposable</span></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns the room name corresponding to the current floor.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected int</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getRoomNumber()" class="member-name-link">getRoomNumber</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns the room number corresponding to the current floor.</div>
@@ -478,6 +478,23 @@ implements com.badlogic.gdx.utils.Disposable</span></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#spawnOrRepositionPlayer(com.badlogic.gdx.math.GridPoint2)" class="member-name-link">spawnOrRepositionPlayer</a><wbr>(com.badlogic.gdx.math.GridPoint2&nbsp;spawnPosition)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Spawns or repositions the player entity.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#spawnRandom(int,float,com.csse3200.game.entities.Entity,java.util.Map,java.util.ArrayList)" class="member-name-link">spawnRandom</a><wbr>(int&nbsp;total,
+ float&nbsp;scaleFactor,
+ <a href="../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a>&nbsp;player,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/ArrayList.html" title="class or interface in java.util" class="external-link">ArrayList</a>&lt;com.badlogic.gdx.math.Vector2&gt;&gt;&nbsp;positions,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/ArrayList.html" title="class or interface in java.util" class="external-link">ArrayList</a>&lt;com.badlogic.gdx.math.Vector2&gt;&nbsp;respectiveSpawns)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Spawn a random enemy on the map.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#spawnRandomEnemies(java.lang.String,int,float,com.csse3200.game.entities.Entity)" class="member-name-link">spawnRandomEnemies</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;roomName,
+ int&nbsp;total,
+ float&nbsp;scaleFactor,
+ <a href="../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a>&nbsp;player)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Spawns Random enemies based on the room number given.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#spawnTurret(int,float,com.csse3200.game.entities.Entity,java.util.Map)" class="member-name-link">spawnTurret</a><wbr>(int&nbsp;total,
@@ -762,7 +779,7 @@ implements com.badlogic.gdx.utils.Disposable</span></div>
 <li>
 <section class="detail" id="getRoomNumber()">
 <h3>getRoomNumber</h3>
-<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">getRoomNumber</span>()</div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">getRoomNumber</span>()</div>
 <div class="block">Returns the room number corresponding to the current floor.</div>
 <dl class="notes">
 <dt>Returns:</dt>
@@ -809,6 +826,23 @@ implements com.badlogic.gdx.utils.Disposable</span></div>
 </section>
 </li>
 <li>
+<section class="detail" id="spawnRandomEnemies(java.lang.String,int,float,com.csse3200.game.entities.Entity)">
+<h3>spawnRandomEnemies</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">spawnRandomEnemies</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;roomName,
+ int&nbsp;total,
+ float&nbsp;scaleFactor,
+ <a href="../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a>&nbsp;player)</span></div>
+<div class="block">Spawns Random enemies based on the room number given.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>roomName</code> - The name of the current floor/room.</dd>
+<dd><code>total</code> - The total number of enemies to be spawned.</dd>
+<dd><code>scaleFactor</code> - The scaling factor of the difficulty of the enemies to be spawned.</dd>
+<dd><code>player</code> - The player <a href="../entities/Entity.html" title="class in com.csse3200.game.entities"><code>Entity</code></a> that is to be targeted by the enemies.</dd>
+</dl>
+</section>
+</li>
+<li>
 <section class="detail" id="spawn(java.lang.String,java.lang.String,int,float,com.csse3200.game.entities.Entity)">
 <h3>spawn</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">spawn</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;name,
@@ -845,6 +879,7 @@ implements com.badlogic.gdx.utils.Disposable</span></div>
 <dt>Parameters:</dt>
 <dd><code>total</code> - The total number of GhostGPT to be spawned.</dd>
 <dd><code>scaleFactor</code> - The scale of increase in difficulty of the GhostGPT</dd>
+<dd><code>positions</code> - The list of positions of where to spawn enemy</dd>
 </dl>
 </section>
 </li>
@@ -858,8 +893,9 @@ implements com.badlogic.gdx.utils.Disposable</span></div>
 <div class="block">Adds GhostGPTRed enemies onto the map.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>total</code> - The total number of GhostGPT to be spawned.</dd>
-<dd><code>scaleFactor</code> - The scale of increase in difficulty of the GhostGPT</dd>
+<dd><code>total</code> - The total number of GhostGPTRed to be spawned.</dd>
+<dd><code>scaleFactor</code> - The scale of increase in difficulty of the GhostGPTRed</dd>
+<dd><code>positions</code> - The list of positions of where to spawn enemy</dd>
 </dl>
 </section>
 </li>
@@ -873,8 +909,9 @@ implements com.badlogic.gdx.utils.Disposable</span></div>
 <div class="block">Adds GhostGPTBlue enemies onto the map.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>total</code> - The total number of GhostGPT to be spawned.</dd>
-<dd><code>scaleFactor</code> - The scale of increase in difficulty of the GhostGPT</dd>
+<dd><code>total</code> - The total number of GhostGPTBlue to be spawned.</dd>
+<dd><code>scaleFactor</code> - The scale of increase in difficulty of the GhostGPTBlue</dd>
+<dd><code>positions</code> - The list of positions of where to spawn enemy</dd>
 </dl>
 </section>
 </li>
@@ -890,6 +927,7 @@ implements com.badlogic.gdx.utils.Disposable</span></div>
 <dt>Parameters:</dt>
 <dd><code>total</code> - The total number of DeepSpins to be spawned.</dd>
 <dd><code>scaleFactor</code> - The scale of increase in difficulty of the DeepSpin</dd>
+<dd><code>positions</code> - The list of positions of where to spawn enemy</dd>
 </dl>
 </section>
 </li>
@@ -903,8 +941,9 @@ implements com.badlogic.gdx.utils.Disposable</span></div>
 <div class="block">Adds DeepSpinRed enemies onto the map.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>total</code> - The total number of DeepSpins to be spawned.</dd>
-<dd><code>scaleFactor</code> - The scale of increase in difficulty of the DeepSpin</dd>
+<dd><code>total</code> - The total number of DeepSpinReds to be spawned.</dd>
+<dd><code>scaleFactor</code> - The scale of increase in difficulty of the DeepSpinRed</dd>
+<dd><code>positions</code> - The list of positions of where to spawn enemy</dd>
 </dl>
 </section>
 </li>
@@ -918,8 +957,9 @@ implements com.badlogic.gdx.utils.Disposable</span></div>
 <div class="block">Adds DeepSpinBlue enemies onto the map.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>total</code> - The total number of DeepSpins to be spawned.</dd>
-<dd><code>scaleFactor</code> - The scale of increase in difficulty of the DeepSpin</dd>
+<dd><code>total</code> - The total number of DeepSpinBlues to be spawned.</dd>
+<dd><code>scaleFactor</code> - The scale of increase in difficulty of the DeepSpinBlue</dd>
+<dd><code>positions</code> - The list of positions of where to spawn enemy</dd>
 </dl>
 </section>
 </li>
@@ -935,6 +975,7 @@ implements com.badlogic.gdx.utils.Disposable</span></div>
 <dt>Parameters:</dt>
 <dd><code>total</code> - The total number of GrokDroid to be spawned.</dd>
 <dd><code>scaleFactor</code> - The scale of increase in difficulty of the GrokDroid</dd>
+<dd><code>positions</code> - The list of positions of where to spawn enemy</dd>
 </dl>
 </section>
 </li>
@@ -948,8 +989,9 @@ implements com.badlogic.gdx.utils.Disposable</span></div>
 <div class="block">Adds GrokDroidRed enemies onto the map.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>total</code> - The total number of GrokDroid to be spawned.</dd>
-<dd><code>scaleFactor</code> - The scale of increase in difficulty of the GrokDroid</dd>
+<dd><code>total</code> - The total number of GrokDroidRed to be spawned.</dd>
+<dd><code>scaleFactor</code> - The scale of increase in difficulty of the GrokDroidRed</dd>
+<dd><code>positions</code> - The list of positions of where to spawn enemy</dd>
 </dl>
 </section>
 </li>
@@ -963,8 +1005,9 @@ implements com.badlogic.gdx.utils.Disposable</span></div>
 <div class="block">Adds GrokDroidBlue enemies onto the map.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>total</code> - The total number of GrokDroid to be spawned.</dd>
-<dd><code>scaleFactor</code> - The scale of increase in difficulty of the GrokDroid</dd>
+<dd><code>total</code> - The total number of GrokDroidBlue to be spawned.</dd>
+<dd><code>scaleFactor</code> - The scale of increase in difficulty of the GrokDroidBlue</dd>
+<dd><code>positions</code> - The list of positions of where to spawn enemy</dd>
 </dl>
 </section>
 </li>
@@ -980,6 +1023,7 @@ implements com.badlogic.gdx.utils.Disposable</span></div>
 <dt>Parameters:</dt>
 <dd><code>total</code> - The total number of Vroomba to be spawned.</dd>
 <dd><code>scaleFactor</code> - The scale of increase in difficulty of the Vroomba</dd>
+<dd><code>positions</code> - The list of positions of where to spawn enemy</dd>
 </dl>
 </section>
 </li>
@@ -993,8 +1037,9 @@ implements com.badlogic.gdx.utils.Disposable</span></div>
 <div class="block">Adds VroombaRed enemies onto the map.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>total</code> - The total number of Vroomba to be spawned.</dd>
-<dd><code>scaleFactor</code> - The scale of increase in difficulty of the Vroomba</dd>
+<dd><code>total</code> - The total number of VroombaRed to be spawned.</dd>
+<dd><code>scaleFactor</code> - The scale of increase in difficulty of the VroombaRed</dd>
+<dd><code>positions</code> - The list of positions of where to spawn enemy</dd>
 </dl>
 </section>
 </li>
@@ -1008,8 +1053,9 @@ implements com.badlogic.gdx.utils.Disposable</span></div>
 <div class="block">Adds VroombaBlue enemies onto the map.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>total</code> - The total number of Vroomba to be spawned.</dd>
-<dd><code>scaleFactor</code> - The scale of increase in difficulty of the Vroomba</dd>
+<dd><code>total</code> - The total number of VroombaBlue to be spawned.</dd>
+<dd><code>scaleFactor</code> - The scale of increase in difficulty of the VroombaBlue</dd>
+<dd><code>positions</code> - The list of positions of where to spawn enemy</dd>
 </dl>
 </section>
 </li>
@@ -1024,7 +1070,26 @@ implements com.badlogic.gdx.utils.Disposable</span></div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>total</code> - The total number of Turret to be spawned.</dd>
-<dd><code>scaleFactor</code> - The scale of increase in difficulty of the GhostGPT</dd>
+<dd><code>scaleFactor</code> - The scale of increase in difficulty of the Turret</dd>
+<dd><code>positions</code> - The list of positions of where to spawn enemy</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="spawnRandom(int,float,com.csse3200.game.entities.Entity,java.util.Map,java.util.ArrayList)">
+<h3>spawnRandom</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">spawnRandom</span><wbr><span class="parameters">(int&nbsp;total,
+ float&nbsp;scaleFactor,
+ <a href="../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a>&nbsp;player,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/ArrayList.html" title="class or interface in java.util" class="external-link">ArrayList</a>&lt;com.badlogic.gdx.math.Vector2&gt;&gt;&nbsp;positions,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/ArrayList.html" title="class or interface in java.util" class="external-link">ArrayList</a>&lt;com.badlogic.gdx.math.Vector2&gt;&nbsp;respectiveSpawns)</span></div>
+<div class="block">Spawn a random enemy on the map.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>total</code> - The total number of enemy to be spawned.</dd>
+<dd><code>scaleFactor</code> - The scale of increase in difficulty of the enemy</dd>
+<dd><code>positions</code> - The list of positions of where to spawn enemy</dd>
+<dd><code>respectiveSpawns</code> - the position of where the enemy should be spawned</dd>
 </dl>
 </section>
 </li>
