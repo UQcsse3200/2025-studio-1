@@ -5,9 +5,6 @@ import com.badlogic.gdx.math.Vector2;
 //Sprint 4 willupon this
 public class TestGameStats {
 
-    public String difficultyLoad = "";
-
-
     public static class PlayerStatTest {
         public Vector2 possLoad = new Vector2(1, 1);
         public String avatarLoad = "testAvatarTex";

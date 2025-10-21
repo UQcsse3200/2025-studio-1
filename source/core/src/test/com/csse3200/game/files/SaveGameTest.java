@@ -1,6 +1,9 @@
 package com.csse3200.game.files;
 
+import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.csse3200.game.components.AmmoStatsComponent;
 import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.components.Component;
@@ -9,31 +12,40 @@ import com.csse3200.game.components.player.StaminaComponent;
 import com.csse3200.game.entities.Avatar;
 import com.csse3200.game.entities.AvatarRegistry;
 import com.csse3200.game.entities.Entity;
+import com.csse3200.game.entities.configs.Weapons;
+import com.csse3200.game.entities.factories.items.WeaponsFactory;
 import com.csse3200.game.extensions.GameExtension;
+import com.csse3200.game.physics.PhysicsService;
+import com.csse3200.game.physics.components.PhysicsComponent;
+import com.csse3200.game.rendering.RenderService;
+import com.csse3200.game.rendering.TextureRenderComponent;
+import com.csse3200.game.services.ResourceService;
+import com.csse3200.game.services.ServiceLocator;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
+import java.security.Provider;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(GameExtension.class)
 public class SaveGameTest {
 
-//    private final String fileName = "saveFileValid.json";
     private static final SaveGame.GameState testState = new SaveGame.GameState();
-    private final SaveGame.itemInInven inventoryTest = new SaveGame.itemInInven();
+    private ArrayList<SaveGame.itemInInven> inventoryTest;
     private static SaveGame.information playerInfo = new SaveGame.information();
-//    private SaveGame.GameState testedState = SaveGame.loadGame("test/files/saveFileValid.json");
 
     private static final String AREA_ID = "Test#Area";
     private static final int MAX_HEALTH = 10;
     private static final int INITIAL_HEALTH = 1;
     private static final float POS_X = 1.0f;
     private static final float POS_Y = 1.0f;
-    private static final double FLOAT_EPS = 1e-4;
     private static final int INVENTORY_PROCESSOR = 1;
     private static final int AMMO_RESERVE = 1;
     private static final int EXPECTED_ROUND_NUMBER = 1;
@@ -78,8 +90,8 @@ public class SaveGameTest {
         }
     }
 
-    @BeforeAll
-    static void fakeGameState() {
+    @BeforeEach
+    void fakeGameState() {
         player = new FakeEntity();
         player.addComponent(new StaminaComponent());
         player.addComponent(new CombatStatsComponent(MAX_HEALTH));
@@ -88,14 +100,18 @@ public class SaveGameTest {
         player.setPosition(new Vector2(POS_X, POS_Y));
         player.getComponent(InventoryComponent.class).setKeycardLevel(keyCard);
         Avatar playerAvatarTest = new Avatar("testAvatar", "test", "testAvatarTex", 10, 5, 2, " ");
+        ServiceLocator.registerResourceService(mock(ResourceService.class));
+        ServiceLocator.registerPhysicsService(mock(PhysicsService.class));
+        ServiceLocator.registerResourceService(mock(ResourceService.class));
+        ServiceLocator.registerRenderService(mock(RenderService.class));
 
         AvatarRegistry.set(playerAvatarTest);
         player.getComponent(CombatStatsComponent.class).setHealth(INITIAL_HEALTH);
 
         InventoryComponent fakeInventory = player.getComponent(InventoryComponent.class);
 
-        testState.setLoadedInventory(fakeInventory);
 
+        testState.setLoadedInventory(fakeInventory);
         testStats = new TestGameStats.PlayerStatTest();
     }
 
@@ -115,7 +131,8 @@ public class SaveGameTest {
 
     @Test
     void inventoryGetsSetTest() {
-        // IMPLEMENT ME
+        inventoryTest = testState.getInventory();
+        assertEquals("[null, null, null, null, null]",inventoryTest.toString());
     }
 
     @Test
@@ -132,13 +149,4 @@ public class SaveGameTest {
         assertEquals(testStats.maxHealth, playerInfo.maxHealth);
     }
 
-    @Test
-    void invalidSaveFails() {
-        // IMPLEMENT ME
-    }
-
-    @Test
-    void saveFileComparitor() {
-        // IMPLEMENT ME
-    }
 }
