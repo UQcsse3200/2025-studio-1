@@ -105,6 +105,7 @@ public class MainGameScreen extends ScreenAdapter {
         ServiceLocator.registerRenderService(new RenderService());
 
         ServiceLocator.clearPlayer();
+        this.unclearAllRooms();
 
         renderer = RenderFactory.createRenderer();
         renderer.getCamera().getEntity().setPosition(CAMERA_POSITION);
@@ -146,8 +147,11 @@ public class MainGameScreen extends ScreenAdapter {
                 case "Storage" -> gameArea = StorageGameArea.load(terrainFactory, renderer.getCamera());
                 case "Shipping" -> gameArea = ShippingGameArea.load(terrainFactory, renderer.getCamera());
                 case "Server" -> gameArea = ServerGameArea.load(terrainFactory, renderer.getCamera());
+                case "Casino" -> gameArea = CasinoGameArea.load(terrainFactory, renderer.getCamera());
                 default -> gameArea = null;
             }
+
+            clearUpTo(load.getGameArea());
 
             //will instantiate all items
             if (gameArea != null) {
@@ -293,18 +297,18 @@ public class MainGameScreen extends ScreenAdapter {
     public void dispose() {
         logger.debug("Disposing main game screen");
 
-        // Dispose lighting first (safe if null)
-        var ls = ServiceLocator.getLightingService();
-        if (ls != null && ls.getEngine() != null) {
-            ls.getEngine().dispose();
-        }
-
         renderer.dispose();
         unloadAssets();
 
         // Preserve player entity during disposal
         Entity player = ServiceLocator.getPlayer();
         ServiceLocator.getEntityService().disposeExceptPlayer();
+
+        var ls = ServiceLocator.getLightingService();
+        if (ls != null && ls.getEngine() != null) {
+            ls.getEngine().dispose();
+        }
+
         ServiceLocator.getRenderService().dispose();
         ServiceLocator.getResourceService().dispose();
         ServiceLocator.clearExceptPlayer();
@@ -485,5 +489,56 @@ public class MainGameScreen extends ScreenAdapter {
         DeathScreen deathScreen = new DeathScreen(game);
         deathScreen.updateTime(getCompleteTime());
         game.setScreen(deathScreen);
+    }
+
+    /**
+     * This private helper function sets the 
+     * 'isCleared' variable to false, so that
+     * enemies will spawn in all the rooms
+     * 
+     * Should be called sometime before the game starts
+     */
+    private void unclearAllRooms() {
+        Reception.unclearRoom();
+        MainHall.unclearRoom();
+        ElevatorGameArea.unclearRoom();
+        OfficeGameArea.unclearRoom();
+        ResearchGameArea.unclearRoom();
+        SecurityGameArea.unclearRoom();
+        ServerGameArea.unclearRoom();
+        ShippingGameArea.unclearRoom();
+        StorageGameArea.unclearRoom();
+        TunnelGameArea.unclearRoom();
+        MovingBossRoom.unclearRoom();
+        StaticBossRoom.unclearRoom();
+        FlyingBossRoom.unclearRoom();
+    }
+
+    /**
+     * Clears all rooms up to specified room
+     * Should be called when loading in.
+     * 
+     * @param room room that the player will be spawned in.
+     * Clear all rooms behind it
+     */
+    private void clearUpTo(String room) {
+        String[] roomList = {"Forest", "Reception", "Mainhall",
+                "Security", "MovingBossRoom", "Office", "Elevator",
+                "Research", "FlyingBossRoom", "Shipping",
+                "Storage", "Server", "Tunnel"};
+                
+        Runnable[] runnables = {() -> {}, Reception::clearRoom,
+                MainHall::clearRoom, SecurityGameArea::clearRoom,
+                OfficeGameArea::clearRoom, ElevatorGameArea::clearRoom,
+                ResearchGameArea::clearRoom, FlyingBossRoom::clearRoom,
+                ShippingGameArea::clearRoom, StorageGameArea::clearRoom,
+                ServerGameArea::clearRoom, TunnelGameArea::clearRoom};
+                
+        int i = 0;
+        for (String eachRoom : roomList) {
+            if (eachRoom.equals(room)) return;
+            runnables[i].run();
+            i++;
+        }
     }
 }

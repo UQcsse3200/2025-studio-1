@@ -14,7 +14,6 @@ import com.csse3200.game.entities.factories.characters.NPCFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.entities.factories.system.TeleporterFactory;
 import com.csse3200.game.entities.spawner.ItemSpawner;
-import com.csse3200.game.services.ServiceLocator;
 
 /**
  * The "Storage" area of the game map. This class:
@@ -24,9 +23,8 @@ import com.csse3200.game.services.ServiceLocator;
  */
 public class StorageGameArea extends GameArea {
     private static final float WALL_WIDTH = 0.1f;
-    private static final float ROOM_DIFF_NUMBER = 8;
     private static GridPoint2 playerSpawn = new GridPoint2(4, 20);
-    private Entity player;
+    private static boolean isCleared = false;
 
     /**
      * Initialise this StorageGameArea to use the provided TerrainFactory and camera
@@ -42,6 +40,8 @@ public class StorageGameArea extends GameArea {
      */
     public StorageGameArea(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
         super(terrainFactory, cameraComponent);
+
+        this.getEvents().addListener("room cleared", StorageGameArea::clearRoom);
     }
 
     /**
@@ -85,15 +85,17 @@ public class StorageGameArea extends GameArea {
 
         spawnCeilingCones();
         spawnBordersAndDoors();
-        player = spawnPlayer();
+        Entity player = spawnPlayer();
         spawnFloor();
         spawnShipmentBoxLid();
         spawnConveyor();
-        spawnGrokDroids();
         spawnTeleporter();
 
-        ItemSpawner itemSpawner = new ItemSpawner(this);
-        itemSpawner.spawnItems(ItemSpawnConfig.storage1map());
+        if (!StorageGameArea.isCleared) {
+            startWaves(player);
+            ItemSpawner itemSpawner = new ItemSpawner(this);
+            itemSpawner.spawnItems(ItemSpawnConfig.storage1map());
+        }
 
         Entity ui = new Entity();
         ui.addComponent(new GameAreaDisplay("Storage"))
@@ -130,10 +132,10 @@ public class StorageGameArea extends GameArea {
         float lidX = 5.05f;
         float lidY = 6.05f;
 
-        Entity BoxLid = ObstacleFactory.createShipmentBoxes();
-        BoxLid.setPosition(lidX, lidY);
+        Entity boxLid = ObstacleFactory.createShipmentBoxes();
+        boxLid.setPosition(lidX, lidY);
 
-        spawnEntity(BoxLid);
+        spawnEntity(boxLid);
     }
 
     /**
@@ -143,10 +145,10 @@ public class StorageGameArea extends GameArea {
         float conveyorX = 0f;
         float conveyorY = 8f;
 
-        Entity Conveyor = ObstacleFactory.createConveyor();
-        Conveyor.setPosition(conveyorX, conveyorY);
+        Entity conveyor = ObstacleFactory.createConveyor();
+        conveyor.setPosition(conveyorX, conveyorY);
 
-        spawnEntity(Conveyor);
+        spawnEntity(conveyor);
     }
 
     private void spawnBordersAndDoors() {
@@ -170,24 +172,12 @@ public class StorageGameArea extends GameArea {
         rightDoor.setPosition(b.rightX() - WALL_WIDTH - 0.001f, rightDoorY);
         rightDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadServer));
         spawnEntity(rightDoor);
+
+        if (!StorageGameArea.isCleared) registerDoors(new Entity[]{leftDoor, rightDoor});
     }
 
     private Entity spawnPlayer() {
         return spawnOrRepositionPlayer(playerSpawn);
-    }
-
-    /**
-     * Spawn 2 high-level grok droids in the room as enemies.
-     */
-    private void spawnGrokDroids() {
-        Entity grok1 = NPCFactory.createGrokDroid(player, this,
-                ServiceLocator.getDifficulty().getRoomDifficulty(StorageGameArea.ROOM_DIFF_NUMBER));
-        GridPoint2 grok1Pos = new GridPoint2(25, 7);
-        spawnEntityAt(grok1, grok1Pos, true, false);
-        Entity grok2 = NPCFactory.createGrokDroid(player, this,
-                ServiceLocator.getDifficulty().getRoomDifficulty(StorageGameArea.ROOM_DIFF_NUMBER));
-        GridPoint2 grok2Pos = new GridPoint2(25, 7);
-        spawnEntityAt(grok2, grok2Pos, true, false);
     }
 
     /** Teleporter bottom-left */
@@ -221,5 +211,23 @@ public class StorageGameArea extends GameArea {
     public Entity getPlayer() {
         // placeholder
         return null;
+    }
+
+    /**
+     * Clear room, set this room's static
+     * boolean isCleared variable to true
+     */
+    public static void clearRoom() {
+        StorageGameArea.isCleared = true;
+        logger.debug("Storage is cleared");
+    }
+
+    /**
+     * Unclear room, set this room's static
+     * boolean isCleared variable to false
+     */
+    public static void unclearRoom() {
+        StorageGameArea.isCleared = false;
+        logger.debug("Storage is uncleared");
     }
 }

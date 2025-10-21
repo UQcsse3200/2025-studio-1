@@ -57,6 +57,7 @@ public class BettingLogic {
      * @throws IllegalArgumentException if the bet is zero, negative, or exceeds the available balance
      */
     public void placeBet(int amount) {
+        balance = inventory.getProcessor();
         if (amount <= 0) throw new IllegalArgumentException("Bet must be positive");
         if (amount > balance) throw new IllegalArgumentException("Not enough balance");
 
@@ -123,6 +124,7 @@ public class BettingLogic {
      * @throws IllegalArgumentException if the player does not have enough balance
      */
     public void doubleBet() {
+        balance = inventory.getProcessor();
         if (bet > balance) throw new IllegalArgumentException("Not enough balance");
         inventory.addProcessor(-bet);
         balance = inventory.getProcessor();
@@ -134,6 +136,7 @@ public class BettingLogic {
      * @return true if doubling is allowed, false otherwise
      */
     public boolean canDouble() {
+        balance = inventory.getProcessor();
         return bet < balance;
     }
 

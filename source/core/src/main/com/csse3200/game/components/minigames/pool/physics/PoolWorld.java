@@ -22,6 +22,7 @@ public class PoolWorld {
     public PoolWorld(World world) {
         this.world = world;
         World.setVelocityThreshold(0f);
+        world.setContinuousPhysics(true);
     }
 
     /**

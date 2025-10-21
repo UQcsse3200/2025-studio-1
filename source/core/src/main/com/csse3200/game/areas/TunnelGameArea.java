@@ -22,22 +22,22 @@ import com.csse3200.game.entities.spawner.ItemSpawner;
 import com.csse3200.game.physics.PhysicsUtils;
 import com.csse3200.game.physics.components.ColliderComponent;
 import com.csse3200.game.physics.components.PhysicsComponent;
-import com.csse3200.game.services.ServiceLocator;
 
 /**
  * Tunnel room: minimal walls with left door back to Server Room.
  */
 public class TunnelGameArea extends GameArea {
     private static final float WALL_WIDTH = 0.1f;
-    private static final float ROOM_DIFF_NUMBER = 10;
     private static GridPoint2 playerSpawn = new GridPoint2(5, 7);
-    private Entity player;
+    private static boolean isCleared = false;
 
     private DoorComponent rightDoorComp;
     public static volatile DoorComponent exposedRightDoor;
 
     public TunnelGameArea(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
         super(terrainFactory, cameraComponent);
+
+        this.getEvents().addListener("room cleared", TunnelGameArea::clearRoom);
     }
 
 
@@ -70,10 +70,9 @@ public class TunnelGameArea extends GameArea {
 
         spawnCeilingCones();
         spawnBordersAndDoors();
-        player = spawnPlayer();
+        Entity player = spawnPlayer();
         spawnPlatforms();
         spawnSpawnPads();
-        spawnGrokDroids();
         spawnTeleporter();
         spawnObjectDoors(new GridPoint2(0, 7), new GridPoint2(28, 7));
         spawnFloor();
@@ -81,8 +80,11 @@ public class TunnelGameArea extends GameArea {
         spawnSpikes();
         spawnVisibleFloor();
 
-        ItemSpawner itemSpawner = new ItemSpawner(this);
-        itemSpawner.spawnItems(ItemSpawnConfig.tunnelmap());
+        if (!TunnelGameArea.isCleared) {
+            startWaves(player);
+            ItemSpawner itemSpawner = new ItemSpawner(this);
+            itemSpawner.spawnItems(ItemSpawnConfig.tunnelmap());
+        }
 
         Entity ui = new Entity();
         ui.addComponent(new GameAreaDisplay("Tunnel"))
@@ -144,6 +146,8 @@ public class TunnelGameArea extends GameArea {
         rightDoorComp = rightDoor.getComponent(DoorComponent.class);
         rightDoorComp.setLocked(true);
         TunnelGameArea.exposedRightDoor = rightDoorComp;
+
+        if (!TunnelGameArea.isCleared) registerDoors(new Entity[]{leftDoor, rightDoor});
     }
 
     /**
@@ -193,20 +197,6 @@ public class TunnelGameArea extends GameArea {
     }
 
     /**
-     * Spawn 2 high-level grok droids in the room as enemies.
-     */
-    private void spawnGrokDroids() {
-        Entity grok1 = NPCFactory.createGrokDroid(player, this,
-                ServiceLocator.getDifficulty().getRoomDifficulty(TunnelGameArea.ROOM_DIFF_NUMBER));
-        GridPoint2 grok1Pos = new GridPoint2(25, 7);
-        spawnEntityAt(grok1, grok1Pos, true, false);
-        Entity grok2 = NPCFactory.createGrokDroid(player, this,
-                ServiceLocator.getDifficulty().getRoomDifficulty(TunnelGameArea.ROOM_DIFF_NUMBER));
-        GridPoint2 grok2Pos = new GridPoint2(25, 7);
-        spawnEntityAt(grok2, grok2Pos, true, false);
-    }
-
-    /**
      * Spawn the spikes
      */
     private void spawnSpikes() {
@@ -239,7 +229,6 @@ public class TunnelGameArea extends GameArea {
     }
 
     private void loadBossRoom() {
-        clearAndLoad(() -> new SecretRoomGameArea(terrainFactory, cameraComponent));
         StaticBossRoom.setRoomSpawn(new GridPoint2(4, 8));
         clearAndLoad(() -> new StaticBossRoom(terrainFactory, cameraComponent));
     }
@@ -306,5 +295,30 @@ public class TunnelGameArea extends GameArea {
             public void upgrade(boolean playerNear, com.csse3200.game.entities.Entity player, Label prompt) {
             }
         };
+    }
+
+    /**
+     * Clear room, set this room's static
+     * boolean isCleared variable to true
+     */
+    public static void clearRoom() {
+        TunnelGameArea.isCleared = true;
+        logger.debug("Reception is cleared");
+    }
+
+    /**
+     * Unclear room, set this room's static
+     * boolean isCleared variable to false
+     */
+    public static void unclearRoom() {
+        TunnelGameArea.isCleared = false;
+        logger.debug("Tunnel is cleared");
+    }
+
+    /**
+     * FOR TESTING PURPOSES
+     */
+    public static boolean getClearField() {
+        return TunnelGameArea.isCleared;
     }
 }

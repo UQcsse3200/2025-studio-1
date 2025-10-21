@@ -29,6 +29,7 @@ import org.slf4j.LoggerFactory;
  */
 public class MovingBossRoom extends GameArea {
     private static GridPoint2 playerSpawn = new GridPoint2(3, 10);
+    private static boolean isCleared = false;
 
     private static final Logger logger = LoggerFactory.getLogger(MovingBossRoom.class);
     private static final float WALL_WIDTH = 0.1f;
@@ -45,6 +46,8 @@ public class MovingBossRoom extends GameArea {
      */
     public MovingBossRoom(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
         super(terrainFactory, cameraComponent);
+
+        this.getEvents().addListener("room cleared", MovingBossRoom::clearRoom);
     }
 
     /**
@@ -77,13 +80,15 @@ public class MovingBossRoom extends GameArea {
 
         player = spawnPlayer();
 
-        spawnBoss();
         spawnObjectDoors(new GridPoint2(0, 6), new GridPoint2(28, 6));
         spawnAssistor();
         spawnNurse();
 
-        ItemSpawner itemSpawner = new ItemSpawner(this);
-        itemSpawner.spawnItems(ItemSpawnConfig.bossmap());
+        if (!MovingBossRoom.isCleared) {
+            spawnBoss();
+            ItemSpawner itemSpawner = new ItemSpawner(this);
+            itemSpawner.spawnItems(ItemSpawnConfig.bossmap());
+        }
 
         spawnVisibleFloor();
     }
@@ -132,6 +137,7 @@ public class MovingBossRoom extends GameArea {
         }));
 
         spawnEntityAt(boss, pos, true, true);
+        registerEnemy(boss);
     }
 
     private void spawnAssistor() {
@@ -170,6 +176,8 @@ public class MovingBossRoom extends GameArea {
             loadOffice();
         }));
         spawnEntity(rightDoor);
+
+        if (!MovingBossRoom.isCleared) registerDoors(new Entity[]{leftDoor});
     }
 
     /**
@@ -210,5 +218,30 @@ public class MovingBossRoom extends GameArea {
     @Override
     public String toString() {
         return "MovingBoss";
+    }
+
+    /**
+     * Clear room, set this room's static
+     * boolean isCleared variable to true
+     */
+    public static void clearRoom() {
+        MovingBossRoom.isCleared = true;
+        logger.debug("Moving Boss Room is cleared");
+    }
+
+    /**
+     * Unclear room, set this room's static
+     * boolean isCleared variable to false
+     */
+    public static void unclearRoom() {
+        MovingBossRoom.isCleared = false;
+        logger.debug("Moving Boss Room is uncleared");
+    }
+
+    /**
+     * FOR TESTING PURPOSES
+     */
+    public static boolean getClearField() {
+        return MovingBossRoom.isCleared;
     }
 }
