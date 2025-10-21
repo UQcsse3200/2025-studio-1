@@ -171,7 +171,6 @@ public class Reception extends GameArea {
         Entity Platform4 = ObstacleFactory.createplatform2();
         Platform4.setPosition(PlatformX4, PlatformY4);
         spawnEntity(Platform4);
-
     }
 
     /**

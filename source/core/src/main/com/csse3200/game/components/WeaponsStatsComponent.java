@@ -13,9 +13,7 @@ import org.slf4j.LoggerFactory;
  * </p>
  */
 public class WeaponsStatsComponent extends Component {
-
     private static final Logger logger = LoggerFactory.getLogger(WeaponsStatsComponent.class);
-
 
     /**
      * Default attack cooldown (seconds).
@@ -33,13 +31,13 @@ public class WeaponsStatsComponent extends Component {
     /**
      * Base attack damage before multipliers are applied (must be non-negative).
      */
-    private int baseAttack;
+    private static int baseAttack;
     /**
      * Cooldown (in seconds) between attacks.
      */
     private float coolDown;
     /**
-     * Flag that disables all outgoing damage when true.
+e    * Flag that disables all outgoing damage when true.
      */
     private boolean disableDamage;
     /**
@@ -55,7 +53,6 @@ public class WeaponsStatsComponent extends Component {
      * Default is 1.0 (no boost). Cheat codes or power-ups can increase this.
      */
     private float damageMultiplier = 1f;
-
     /**
      * Flag for if the weapon needs to make rocket bullets
      */
@@ -147,9 +144,9 @@ public class WeaponsStatsComponent extends Component {
      *
      * @param attack base attack damage (must be {@code >= 0})
      */
-    public void setBaseAttack(int attack) {
+    public static void setBaseAttack(int attack) {
         if (attack >= 0) {
-            this.baseAttack = attack;
+            baseAttack = attack;
         } else {
             logger.error("Cannot set base attack to a negative value: {}", attack);
         }
@@ -171,15 +168,6 @@ public class WeaponsStatsComponent extends Component {
      */
     public void setProjectileTexturePath(String projectileTexturePath) {
         this.projectileTexturePath = projectileTexturePath;
-    }
-
-    /**
-     * Checks whether this weapon is allowed to deal damage.
-     *
-     * @return {@code true} if this weapon can deal damage, {@code false} otherwise
-     */
-    private boolean canAttack() {
-        return !disableDamage;
     }
 
     /**
@@ -218,7 +206,7 @@ public class WeaponsStatsComponent extends Component {
     public void upgrade() {
         if (this.upgradeStage < maxUpgradeStage) {
             this.upgradeStage++;
-            this.baseAttack *= 2;
+            baseAttack *= 2;
         }
     }
 

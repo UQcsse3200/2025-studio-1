@@ -28,23 +28,23 @@ public class EnemyHealthDisplay extends Component {
     // Screen resolution info
     // These values adapt drawing to different screen resolutions, while keeping
     // the game world consistent with a base resolution of 1920x1080 (16:9).
-    private static final float screenWidth = (float) Gdx.graphics.getWidth();
-    private static final float height = (float) Gdx.graphics.getHeight();
+    private static final float SCREEN_WIDTH = Gdx.graphics.getWidth();
+    private static final float HEIGHT = Gdx.graphics.getHeight();
     // Conversion factors from world coordinates to stage coordinates.
     // These constants were empirically derived to map world positions correctly to the UI stage.
-    private static final float WORLD_TO_STAGE_X = screenWidth / 14.82837630565971f;
-    private static final float WORLD_TO_STAGE_Y = screenWidth / 1.76f / 8.5f;
+    private static final float WORLD_TO_STAGE_X = SCREEN_WIDTH / 14.82837630565971f;
+    private static final float WORLD_TO_STAGE_Y = SCREEN_WIDTH / 1.76f / 8.5f;
     protected Stage stage;
     int maxHealth;
     int currentHealth;
     ProgressBar healthBar;
     // Scale factor based on width, using 1920px as the base reference
-    float scale = screenWidth / 1920f;
+    float scale = SCREEN_WIDTH / 1920f;
     // The height of the background when scaled to fit the current screen width
     float scaledHeight = 1080f * scale;
     // Vertical offset needed when the screen is not 16:9 (letterboxing case).
     // This centers the background vertically by calculating unused space at the top/bottom.
-    float verticalScreenOffset = (height - scaledHeight) / 2;
+    float verticalScreenOffset = (HEIGHT - scaledHeight) / 2;
     // Vertical offset for positioning the health bar slightly above the enemy sprite
     private float offsetY = 0.6f;
 

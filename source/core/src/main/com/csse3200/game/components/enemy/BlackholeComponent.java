@@ -1,6 +1,5 @@
 package com.csse3200.game.components.enemy;
 
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.components.Component;
 import com.csse3200.game.entities.Entity;
@@ -41,7 +40,6 @@ public class BlackholeComponent extends Component {
 
     private void spawnBlackholeNearPlayer(Vector2 playerPos) {
         float offsetY = 2.5f;
-        int dir = MathUtils.randomBoolean() ? 1 : -1;
         float offsetX = 1f;
         Vector2 spawnPos = new Vector2(playerPos.x + offsetX, playerPos.y - offsetY);
         Entity blackhole = BossFactory.createBlackhole(spawnPos, target);
