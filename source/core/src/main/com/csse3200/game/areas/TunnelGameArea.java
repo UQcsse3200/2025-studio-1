@@ -18,6 +18,7 @@ import com.csse3200.game.entities.factories.system.TeleporterFactory;
 import com.csse3200.game.entities.spawner.ItemSpawner;
 import com.csse3200.game.physics.PhysicsUtils;
 import com.csse3200.game.physics.components.ColliderComponent;
+import com.csse3200.game.physics.components.PhysicsComponent;
 
 /**
  * Tunnel room: minimal walls with left door back to Server Room.
