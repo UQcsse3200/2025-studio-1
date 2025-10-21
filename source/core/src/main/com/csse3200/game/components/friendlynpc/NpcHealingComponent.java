@@ -149,6 +149,7 @@ public class NpcHealingComponent extends Component {
                 sfx.play(0.7f);
             }
         } catch (Exception ignored) {
+            // Safe to ignore: playing sound is optional and should not crash gameplay
         }
     }
 }
