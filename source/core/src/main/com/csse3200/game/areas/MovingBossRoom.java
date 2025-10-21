@@ -75,7 +75,6 @@ public class MovingBossRoom extends GameArea {
         spawnAssistor();
         spawnNurse();
         spawnPlatforms();
-        spawnHealthBench();
 
         ItemSpawner itemSpawner = new ItemSpawner(this);
         itemSpawner.spawnItems(ItemSpawnConfig.bossmap());
@@ -170,10 +169,7 @@ public class MovingBossRoom extends GameArea {
         GridPoint2 platform3Pos = new GridPoint2(22, 10);
         spawnEntityAt(platform3, platform3Pos, false, false);
     }
-    private void spawnHealthBench() {
-        Entity bench = InteractableStationFactory.createStation(Benches.HEALTH_BENCH);
-        spawnEntityAt(bench, new GridPoint2(25, 12), true, true);
-    }
+
     public Entity getPlayer() {
         return player;
     }

@@ -77,7 +77,6 @@ public class FlyingBossRoom extends GameArea {
         player = spawnPlayer();
 
         spawnPlatforms();
-        spawnHealthBench();
         spawnFlyingBoss();
         spawnObjectDoors(new GridPoint2(0, 7), new GridPoint2(28, 7));
 
@@ -106,10 +105,7 @@ public class FlyingBossRoom extends GameArea {
     private Entity spawnPlayer() {
         return spawnOrRepositionPlayer(playerSpawn);
     }
-    private void spawnHealthBench() {
-        Entity bench = InteractableStationFactory.createStation(Benches.HEALTH_BENCH);
-        spawnEntityAt(bench, new GridPoint2(25, 12), true, true);
-    }
+
     private void spawnFlyingBoss() {
         GridPoint2 pos = new GridPoint2(15, 20);
 

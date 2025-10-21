@@ -366,9 +366,6 @@ public class ForestGameArea extends GameArea {
         spawnTerrain();
         player = spawnPlayer();
         ServiceLocator.registerPlayer(player);
-        spawnComputerBench();
-        spawnHealthBench();
-        spawnSpeedBench();
         spawnFloor();
         spawnBottomRightDoor();
         spawnMarblePlatforms();
@@ -492,24 +489,7 @@ public class ForestGameArea extends GameArea {
         Entity officeDesk = ObstacleFactory.createOfficeDesk();
         spawnEntityAt(officeDesk, new GridPoint2(5, 11), true, false);
     }
-
-    private void spawnComputerBench() {
-        Entity bench = InteractableStationFactory.createStation(Benches.COMPUTER_BENCH);
-        spawnEntityAt(bench, new GridPoint2(2, 7), true, true);
-
-    }
-
-    private void spawnHealthBench() {
-        Entity bench = InteractableStationFactory.createStation(Benches.HEALTH_BENCH);
-        spawnEntityAt(bench, new GridPoint2(8, 7), true, true);
-    }
-
-    private void spawnSpeedBench() {
-        Entity bench = InteractableStationFactory.createStation(Benches.SPEED_BENCH);
-        spawnEntityAt(bench, new GridPoint2(25, 7), true, true);
-    }
-
-    /**
+        /**
      * Places a large door sprite at the bottom-right platform. The door uses a keycard gate:
      * when the player has key level 1, the door callback triggers and we load the next level.
      */

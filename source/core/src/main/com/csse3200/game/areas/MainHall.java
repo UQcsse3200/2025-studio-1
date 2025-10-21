@@ -8,7 +8,9 @@ import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import com.csse3200.game.entities.Entity;
+import com.csse3200.game.entities.configs.Benches;
 import com.csse3200.game.entities.configs.ItemSpawnConfig;
+import com.csse3200.game.entities.factories.InteractableStationFactory;
 import com.csse3200.game.entities.factories.characters.NPCFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.entities.spawner.ItemSpawner;
@@ -65,6 +67,7 @@ public class MainHall extends GameArea {
         spawnFloor();
         spawnEnemies();
         spawnGrokDroids();
+        spawnComputerBench();
         ItemSpawner itemSpawner = new ItemSpawner(this);
         itemSpawner.spawnItems(ItemSpawnConfig.mainHallmap());
         spawnTeleporter();
@@ -188,6 +191,11 @@ public class MainHall extends GameArea {
         Entity sofa1 = ObstacleFactory.createMhall_sofa();
         sofa1.setPosition(PlatformX, PlatformY);
         spawnEntity(sofa1);
+    }
+    private void spawnComputerBench() {
+        Entity bench = InteractableStationFactory.createStation(Benches.COMPUTER_BENCH);
+        spawnEntityAt(bench, new GridPoint2(4, 7), true, true);
+
     }
 
     /**
