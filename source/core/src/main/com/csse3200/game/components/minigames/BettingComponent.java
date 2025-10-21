@@ -327,5 +327,9 @@ public class BettingComponent extends UIComponent {
     public void hide() {
         if (root != null) root.setVisible(false);
         if (background != null) background.setVisible(false);
+        if (stage != null) {
+            stage.setKeyboardFocus(null);
+            stage.unfocusAll();
+        }
     }
 }
