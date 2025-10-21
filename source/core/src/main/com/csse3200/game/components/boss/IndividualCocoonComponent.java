@@ -27,7 +27,6 @@ public class IndividualCocoonComponent extends Component {
             System.out.println("Cocoon hit! Health: " + stats.getHealth());
         });
 
-        entity.getEvents().addListener("death", this::onCocoonDeath);
         System.out.println("Cocoon created with " + entity.getComponent(CombatStatsComponent.class).getHealth() + " health");
     }
 
