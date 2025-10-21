@@ -17,6 +17,7 @@ import com.csse3200.game.components.player.InventoryComponent;
 import com.csse3200.game.components.screens.Minimap;
 import com.csse3200.game.components.screens.MinimapDisplay;
 import com.csse3200.game.components.screens.PauseMenuDisplay;
+import com.csse3200.game.components.settingsmenu.ControlDisplay;
 import com.csse3200.game.components.teleporter.TeleporterComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
@@ -312,6 +313,24 @@ public class MainGameScreen extends ScreenAdapter {
         ResourceService resourceService = ServiceLocator.getResourceService();
         resourceService.loadTextures(mainGameTextures);
         ServiceLocator.getResourceService().loadAll();
+    }
+    private Entity controlsOverlay;
+
+    public void showControlsOverlay() {
+        Stage stage = ServiceLocator.getRenderService().getStage();
+        controlsOverlay = new Entity()
+                .addComponent(new ControlDisplay(null, this::backToPauseMenu))
+                .addComponent(new InputDecorator(stage, 100));
+        ServiceLocator.getEntityService().register(controlsOverlay);
+    }
+
+    private void backToPauseMenu() {
+        if (controlsOverlay != null) {
+            controlsOverlay.dispose();
+            ServiceLocator.getEntityService().unregister(controlsOverlay);
+            controlsOverlay = null;
+        }
+        showPauseOverlay();
     }
 
     private void unloadAssets() {
