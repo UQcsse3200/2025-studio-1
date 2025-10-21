@@ -185,7 +185,7 @@ class PauseMenuDisplayTest {
         assertNotNull(root);
 
         AtomicInteger resumeCount = new AtomicInteger();
-        display.getEntity().getEvents().addListener("resume", resumeCount::incrementAndGet);
+        ui.getEvents().addListener("resume", resumeCount::incrementAndGet);
 
         InputListener esc = findEscListener(root);
         assertNotNull(esc);
@@ -197,7 +197,6 @@ class PauseMenuDisplayTest {
         assertTrue(handled);
         assertEquals(1, resumeCount.get());
     }
-
 
     @Test
     void zIndex_isHigh() {
