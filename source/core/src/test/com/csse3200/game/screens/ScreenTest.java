@@ -1,6 +1,7 @@
 package com.csse3200.game.screens;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.csse3200.game.GdxGame;
 import com.csse3200.game.components.CameraComponent;
@@ -19,6 +20,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 
@@ -59,8 +61,12 @@ class ScreenTest {
         serviceLocatorStatic.when(ServiceLocator::getResourceService).thenReturn(mockResourceService);
         serviceLocatorStatic.when(ServiceLocator::getEntityService).thenReturn(mockEntityService);
         serviceLocatorStatic.when(ServiceLocator::clearExceptPlayer).thenAnswer(i -> null);
+
         serviceLocatorStatic.when(() -> ServiceLocator.registerRenderService(any())).thenAnswer(i -> null);
         serviceLocatorStatic.when(() -> ServiceLocator.registerTimeSource(any())).thenAnswer(i -> null);
+        serviceLocatorStatic.when(() -> ServiceLocator.registerInputService(any())).thenAnswer(i -> null);
+        serviceLocatorStatic.when(() -> ServiceLocator.registerResourceService(any())).thenAnswer(i -> null);
+        serviceLocatorStatic.when(() -> ServiceLocator.registerEntityService(any())).thenAnswer(i -> null);
     }
 
     @AfterEach
@@ -116,6 +122,44 @@ class ScreenTest {
     }
 
     @Test
+    void constructor_initializesMainMenu_withoutErrors() {
+        Texture bgTex = mock(Texture.class);
+        when(mockResourceService.getAsset("images/menu_background.png", Texture.class)).thenReturn(bgTex);
+
+        Stage mockStage = ServiceLocator.getRenderService().getStage();
+        ArgumentCaptor<Actor> actorCap = ArgumentCaptor.forClass(com.badlogic.gdx.scenes.scene2d.Actor.class);
+        EntityService mockEntityService = ServiceLocator.getEntityService();
+        ArgumentCaptor<Entity> entityCap = ArgumentCaptor.forClass(Entity.class);
+
+        MainMenuScreen mainMenu = new MainMenuScreen(mockGame);
+
+        verify(mockStage, atLeastOnce()).addActor(actorCap.capture());
+        boolean hasBgImage = actorCap.getAllValues().stream().anyMatch(a -> a instanceof com.badlogic.gdx.scenes.scene2d.ui.Image);
+        assertTrue(hasBgImage, "Main menu background Image should be added to stage");
+
+        verify(mockEntityService, atLeastOnce()).register(entityCap.capture());
+        Entity ui = entityCap.getValue();
+        assertNotNull(ui.getComponent(com.csse3200.game.components.mainmenu.MainMenuDisplay.class));
+        assertNotNull(ui.getComponent(InputDecorator.class));
+        assertNotNull(ui.getComponent(com.csse3200.game.components.mainmenu.MainMenuActions.class));
+    }
+
+    @Test
+    void constructor_initializesSettingsScreenUiAndStage_withoutErrors() {
+        Texture menuBg = mock(Texture.class);
+        when(mockResourceService.getAsset("images/menu_background.png", Texture.class)).thenReturn(menuBg);
+
+        SettingsScreen settings = new SettingsScreen(mockGame);
+
+        assertNotNull(settings.getStage(), "SettingsScreen stage should be initialized");
+
+        Entity ui = settings.createUIScreen(settings.getStage());
+        assertNotNull(ui.getComponent(InputDecorator.class), "SettingsScreen UI should have InputDecorator");
+        assertNotNull(ui.getComponent(com.csse3200.game.components.settingsmenu.SettingsMenuDisplay.class),
+                "SettingsScreen UI should have SettingsMenuDisplay");
+    }
+
+    @Test
     void updateTime_callsDeathUiDisplaySetElapsedSeconds() throws Exception {
         BaseEndScreenDisplays mockUiDisplay = mock(BaseEndScreenDisplays.class);
         DeathScreen deathScreen = new DeathScreen(mockGame);
@@ -141,5 +185,54 @@ class ScreenTest {
         winScreen.updateTime(42L);
 
         verify(mockUiDisplay).setElapsedSeconds(42L);
+    }
+
+    @Test
+    void mainMenu_render_callsEntityUpdate_andRendererRender() {
+        Texture bgTex = mock(Texture.class);
+        when(mockResourceService.getAsset("images/menu_background.png", Texture.class)).thenReturn(bgTex);
+
+        MainMenuScreen mainMenu = new MainMenuScreen(mockGame);
+
+        mainMenu.render(0.016f);
+
+        EntityService mockEntityService = ServiceLocator.getEntityService();
+        verify(mockEntityService, times(1)).update();
+        Renderer mockRenderer = RenderFactory.createRenderer();
+        verify(mockRenderer, times(1)).render();
+    }
+
+    @Test
+    void mainMenu_resize_forwardsToRenderer() {
+        Texture bgTex = mock(Texture.class);
+        when(mockResourceService.getAsset("images/menu_background.png", Texture.class)).thenReturn(bgTex);
+
+        MainMenuScreen mainMenu = new MainMenuScreen(mockGame);
+        Renderer mockRenderer = RenderFactory.createRenderer();
+
+        mainMenu.resize(1280, 720);
+
+        verify(mockRenderer, times(1)).resize(1280, 720);
+    }
+
+    @Test
+    void mainMenu_dispose_cleansServicesAndAssets() {
+        // Given
+        Texture bgTex = mock(Texture.class);
+        when(mockResourceService.getAsset("images/menu_background.png", Texture.class)).thenReturn(bgTex);
+
+        RenderService mockRenderService = ServiceLocator.getRenderService();
+        EntityService mockEntityService = ServiceLocator.getEntityService();
+        Renderer mockRenderer = RenderFactory.createRenderer(); // returns the mocked renderer from setUp()
+
+        MainMenuScreen mainMenu = new MainMenuScreen(mockGame);
+
+        mainMenu.dispose();
+
+        verify(mockRenderer, times(1)).dispose();
+        verify(mockResourceService, times(1)).unloadAssets(new String[]{"images/logo.png", "images/menu_background.png"});
+        verify(mockRenderService, times(1)).dispose();
+        verify(mockEntityService, times(1)).dispose();
+        serviceLocatorStatic.verify(ServiceLocator::clear, times(2));
     }
 }
