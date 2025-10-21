@@ -475,7 +475,7 @@ public class ForestGameArea extends GameArea {
     private void loadNextLevel() {
         // Use the safe, render-thread transition helper
         Reception.setRoomSpawn(new GridPoint2(6, 10));
-        clearAndLoad(() -> new MainHall(terrainFactory, cameraComponent));
+        clearAndLoad(() -> new Reception(terrainFactory, cameraComponent));
     }
 
     /**
