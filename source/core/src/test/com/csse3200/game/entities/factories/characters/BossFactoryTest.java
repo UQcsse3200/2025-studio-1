@@ -38,7 +38,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * BossFactory tests without extra helper files.
  * Provides an in-file TestResourceService to feed atlases/textures.
  */
-public class BossFactoryTest {
+class BossFactoryTest {
 
     // ---- Minimal in-file resource stub (no separate file) ----
     static class TestResourceService extends ResourceService {

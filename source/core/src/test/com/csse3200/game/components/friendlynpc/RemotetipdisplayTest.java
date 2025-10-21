@@ -27,7 +27,7 @@ import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
  * - We stub ResourceService to return mocked Texture and Skin so no real files/GL are touched.
  * - We mock Stage to verify addActor() and rely on the returned Table to inspect sizes.
  */
-public class RemotetipdisplayTest {
+class RemotetipdisplayTest {
 
     private Application app;
 

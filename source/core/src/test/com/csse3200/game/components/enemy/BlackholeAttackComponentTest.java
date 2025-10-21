@@ -28,7 +28,7 @@ import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
  *  - No pull when player is outside the radius
  *  - Disposal after lifetime expiration (via Gdx.app.postRunnable) and ensuring it only happens once
  */
-public class BlackholeAttackComponentTest {
+class BlackholeAttackComponentTest {
 
     /**
      * Helper: Attach the component to a mocked Entity using reflection,

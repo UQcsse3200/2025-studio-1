@@ -27,7 +27,7 @@ import static org.mockito.Mockito.*;
  *  - No duplicate events on repeated updates
  *  - Lazy component re-fetch in update() when stats/arc are initially null
  */
-public class Boss2HealthPhaseSwitcherTest {
+class Boss2HealthPhaseSwitcherTest {
 
     private static final String IDLE = "idle";
     private static final String P2 = "phase2";
