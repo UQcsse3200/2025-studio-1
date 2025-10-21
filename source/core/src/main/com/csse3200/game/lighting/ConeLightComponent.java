@@ -8,17 +8,13 @@ import com.csse3200.game.components.Component;
 import com.csse3200.game.services.ServiceLocator;
 
 public class ConeLightComponent extends Component {
-    private final int rays;
     private final Color color;
-    private final float distance;
     private final boolean xray;
     private final Vector2 offset;
     private ConeLight light;
 
-    public ConeLightComponent(int rays, Color color, float distance, float coneDegree, boolean xray, Vector2 offset) {
-        this.rays = rays;
+    public ConeLightComponent(Color color, boolean xray, Vector2 offset) {
         this.color = color;
-        this.distance = distance;
         this.xray = xray;
         this.offset = offset != null ? offset : new Vector2();
     }
@@ -28,7 +24,7 @@ public class ConeLightComponent extends Component {
         RayHandler rh = ServiceLocator.getLightingService().getEngine().getRayHandler();
         Vector2 p = entity.getPosition();
 
-        light = new ConeLight(rh, rays, color, distance, 0f, 0f,-90f, 60f);
+        light = new ConeLight(rh, 96, color, 7f, 0f, 0f, -90f, 60f);
         light.setXray(xray);
         light.setSoftnessLength(1f);
         light.setPosition(p.x + offset.x,p.y + offset.y);

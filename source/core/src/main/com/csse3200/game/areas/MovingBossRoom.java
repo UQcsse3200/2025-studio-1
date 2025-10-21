@@ -94,21 +94,19 @@ public class MovingBossRoom extends GameArea {
     private void spawnCeilingCones() {
         // Warm-ish cone spotlights from ceiling pointing straight down (-90 degrees)
         var warm = new Color(0.37f, 0.82f, 0.9f, 0.95f); // tweak alpha for brightness
-        int rays = 96;
-        float dist = 7f;    // reach of the cone
         boolean xray = true; // true = no hard shadows (so it stays “clean”)
 
         // positions above your play areas (Y slightly below top wall so the hotspot hits tables)
         spawnEntityAt(
-                LightFactory.createConeLightEntity(rays, warm, dist, -90f, xray, new Vector2(0f, 0f)),
+                LightFactory.createConeLightEntity(warm, xray, new Vector2(0f, 0f)),
                 new GridPoint2(4, 21), true, true);
 
         spawnEntityAt(
-                LightFactory.createConeLightEntity(rays, warm, dist, -90f, xray, new Vector2(0f, 0f)),
+                LightFactory.createConeLightEntity(warm, xray, new Vector2(0f, 0f)),
                 new GridPoint2(12, 21), true, true);
 
         spawnEntityAt(
-                LightFactory.createConeLightEntity(rays, warm, dist, -90f, xray, new Vector2(0f, 0f)),
+                LightFactory.createConeLightEntity(warm, xray, new Vector2(0f, 0f)),
                 new GridPoint2(20, 21), true, true);
     }
 

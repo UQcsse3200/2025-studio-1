@@ -9,8 +9,6 @@ public class LightingEngine implements Disposable {
     private final RayHandler rayHandler;
     private CameraComponent camera;
 
-    private float ambientLight = LightingDefaults.AMBIENT_LIGHT;
-
     public LightingEngine(CameraComponent camera, World world) {
         this.camera = camera;
         this.rayHandler = new RayHandler(world);
@@ -34,7 +32,6 @@ public class LightingEngine implements Disposable {
     }
 
     public void setAmbientLight(float value) {
-        this.ambientLight = value;
         rayHandler.setAmbientLight(value); // push immediately
     }
 

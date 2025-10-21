@@ -17,7 +17,6 @@ import com.csse3200.game.components.screens.BlackjackScreenDisplay;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.factories.InteractableStationFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
-import com.csse3200.game.entities.factories.LightFactory;
 import com.csse3200.game.lighting.PointLightComponent;
 import com.csse3200.game.lighting.PointLightFollowComponent;
 import com.csse3200.game.rendering.TextureRenderComponent;
