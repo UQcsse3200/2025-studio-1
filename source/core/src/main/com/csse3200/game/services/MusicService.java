@@ -6,7 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Handles background music for the menu
+ * Handles background music for the menu and game
  */
 public class MusicService {
     private static final Logger logger = LoggerFactory.getLogger(MusicService.class);
@@ -39,6 +39,12 @@ public class MusicService {
         }
     }
 
+    /**
+     * Updates the currently playing music based on the active screen
+     * Stops or starts the track depending on the screen type
+     *
+     * @param screenType The current screen of the game
+     */
     public void updateForScreen(String screenType) {
         boolean musicEnabled = UserSettings.get().isMusicEnabled();
 
@@ -68,10 +74,20 @@ public class MusicService {
         }
     }
 
+    /**
+     * Checks whether the menu music is currently playing
+     *
+     * @return true if the menu music is playing, false otherwise.
+     */
     public boolean isMenuMusicPlaying() {
         return menuMusic != null && menuMusic.isPlaying();
     }
 
+    /**
+     * Controls the menu music playback state
+     *
+     * @param play true to start playing, false to stop
+     */
     public void setMenuMusicPlaying(boolean play) {
         if (menuMusic != null) {
             if (play && !menuMusic.isPlaying()) {
@@ -82,6 +98,11 @@ public class MusicService {
         }
     }
 
+    /**
+     * Controls the forest music playback state
+     *
+     * @param play true to start playing, false to stop
+     */
     public void setForestMusicPlaying(boolean play) {
         if (forestMusic != null) {
             if (play && UserSettings.get().isMusicEnabled() && !forestMusic.isPlaying()) {
