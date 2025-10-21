@@ -16,40 +16,43 @@ class ButtonSoundServiceTest {
         boolean played = false;
         float lastVolume = 0f;
 
-        @Override public long play() { played = true; lastVolume = 1f; return 0; }
-        @Override public long play(float volume) { played = true; lastVolume = volume; return 0; }
-        @Override public long play(float volume, float pitch, float pan) {
+        @Override
+        public long play(float volume) {
             played = true;
             lastVolume = volume;
             return 0;
         }
-        @Override public long loop() { played = true; lastVolume = 1f; return 0; }
-        @Override public long loop(float volume) { played = true; lastVolume = volume; return 0; }
-        @Override public long loop(float volume, float pitch, float pan) {
-            played = true;
-            lastVolume = volume;
-            return 0; }
-        @Override public void stop() { played = false; }
-        @Override public void pause() {}
-        @Override public void resume() {}
-        @Override public void dispose() {}
-        @Override public void stop(long soundId) {}
-        @Override public void pause(long soundId) {}
-        @Override public void resume(long soundId) {}
-        @Override public void setLooping(long soundId, boolean looping) {}
-        @Override public void setPitch(long soundId, float pitch) {}
-        @Override public void setVolume(long soundId, float volume) {}
-        @Override public void setPan(long soundId, float pan, float volume) {}
+
+        @Override
+        public void stop() {
+            played = false;
+        }
+
+        @Override public long play() { return 0; }
+        @Override public long play(float volume, float pitch, float pan) { return 0; }
+        @Override public long loop() { return 0; }
+        @Override public long loop(float volume) { return 0; }
+        @Override public long loop(float volume, float pitch, float pan) { return 0; }
+        @Override public void pause() { /* not used in tests */ }
+        @Override public void resume() { /* not used in tests */ }
+        @Override public void stop(long soundId) { /* not used in tests */ }
+        @Override public void pause(long soundId) { /* not used in tests */ }
+        @Override public void resume(long soundId) { /* not used in tests */ }
+        @Override public void setLooping(long soundId, boolean looping) { /* not used in tests */ }
+        @Override public void setPitch(long soundId, float pitch) { /* not used in tests */ }
+        @Override public void setVolume(long soundId, float volume) { /* not used in tests */ }
+        @Override public void setPan(long soundId, float pan, float volume) { /* not used in tests */ }
+        @Override public void dispose() { /* not used in tests */ }
     }
 
     private static class FakeResourceService extends ResourceService {
         FakeSound clickSound = new FakeSound();
 
         @Override
-        public void loadSounds(String[] soundPaths) {}
+        public void loadSounds(String[] soundPaths) { /* no op */ }
 
         @Override
-        public void loadAll() {}
+        public void loadAll() { /* no op */ }
 
         @Override
         public <T> T getAsset(String path, Class<T> type) {
@@ -58,7 +61,7 @@ class ButtonSoundServiceTest {
         }
 
         @Override
-        public void unloadAssets(String[] assetPaths) {}
+        public void unloadAssets(String[] assetPaths) { /* no op */ }
     }
 
     private ButtonSoundService buttonSoundService;
