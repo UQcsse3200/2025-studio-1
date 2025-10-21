@@ -146,6 +146,12 @@ public class StaticBossRoom extends GameArea {
             leftTop.setPosition(b.leftX(), leftDoorY + leftDoorHeight);
             spawnEntity(leftTop);
         }
+        
+
+        Entity leftDoorWall = ObstacleFactory.createWall(WALL_WIDTH, leftDoorHeight);
+        leftDoorWall.setPosition(b.leftX(), leftDoorY);
+        spawnEntity(leftDoorWall);
+        
         Entity leftDoor = ObstacleFactory.createDoorTrigger(WALL_WIDTH, leftDoorHeight);
         leftDoor.setPosition(b.leftX() + 0.001f, leftDoorY);
         leftDoor.addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
