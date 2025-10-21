@@ -64,6 +64,7 @@ public class MovingBossRoom extends GameArea {
                 new Color(0.10f, 0.12f, 0.10f, 0.24f));
 
         spawnBordersAndDoors();
+        spawnBossAndItems();
         displayUIEntity("Moving Boss Room", null);
 
         player = spawnPlayer();
