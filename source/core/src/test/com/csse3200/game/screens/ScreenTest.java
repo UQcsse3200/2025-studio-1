@@ -87,8 +87,7 @@ class ScreenTest {
         assertNotNull(deathScreen.getStage(), "DeathScreen stage should be initialized");
         assertNotNull(deathScreen.getUiDisplay(), "DeathScreen UI display should be initialized");
 
-        TutorialScreen tutScreen = new TutorialScreen(mockGame);
-        Entity deathUi = deathScreen.createUIScreen(tutScreen.getStage());
+        Entity deathUi = deathScreen.createUIScreen(deathScreen.getStage());
         assertNotNull(deathUi.getComponent(InputDecorator.class), "DeathScreen UI should have InputDecorator");
         assertNotNull(deathUi.getComponent(BaseEndScreenDisplays.class), "DeathScreen UI should have BaseEndScreenDisplays");
     }
@@ -99,12 +98,11 @@ class ScreenTest {
         when(mockResourceService.getAsset("images/win_screen_background.png", Texture.class)).thenReturn(tutBg);
 
         WinScreen winScreen = new WinScreen(mockGame);
-        TutorialScreen tutScreen = new TutorialScreen(mockGame);
 
         assertNotNull(winScreen.getStage(), "WinScreen stage should be initialized");
         assertNotNull(winScreen.getUiDisplay(), "WinScreen UI display should be initialized");
 
-        Entity winUi = winScreen.createUIScreen(tutScreen.getStage());
+        Entity winUi = winScreen.createUIScreen(winScreen.getStage());
         assertNotNull(winUi.getComponent(InputDecorator.class), "WinScreen UI should have InputDecorator");
         assertNotNull(winUi.getComponent(BaseEndScreenDisplays.class), "WinScreen UI should have BaseEndScreenDisplays");
     }
@@ -155,7 +153,7 @@ class ScreenTest {
         EntityService mockEntityService = ServiceLocator.getEntityService();
         ArgumentCaptor<Entity> entityCap = ArgumentCaptor.forClass(Entity.class);
 
-        MainMenuScreen mainMenu = new MainMenuScreen(mockGame);
+        new MainMenuScreen(mockGame);
 
         verify(mockStage, atLeastOnce()).addActor(actorCap.capture());
         boolean hasBgImage = actorCap.getAllValues().stream().anyMatch(a -> a instanceof com.badlogic.gdx.scenes.scene2d.ui.Image);
