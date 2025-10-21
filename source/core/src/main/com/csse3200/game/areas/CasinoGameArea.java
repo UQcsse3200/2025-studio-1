@@ -126,12 +126,14 @@ public class CasinoGameArea extends GameArea {
 
     private void spawnWhackAMoleGame() {
         GridPoint2 pos = new GridPoint2(5, 7);
+
         WhackAMoleGame game = new WhackAMoleGame();
         Entity station = game.getGameEntity();
+
         InventoryComponent inv = player.getComponent(InventoryComponent.class);
         station.addComponent(new BettingComponent(2, inv));
+
         spawnEntityAt(station, pos, true, true);
-        spawnEntityAt(new WhackAMoleGame().getGameEntity(), pos, true, true);
     }
 
     private void spawnRobotFightingGame() {
