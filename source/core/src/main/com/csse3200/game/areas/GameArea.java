@@ -220,6 +220,8 @@ public abstract class GameArea implements Disposable {
             }
             int maxWaves = room > 4 ? 2 : 1; // mimic original behaviour: higher rooms get 2 waves
             wavesManager = new EnemyWaves(maxWaves, this, player);
+//            WaveAlertDisplay waveAlertDisplay = new WaveAlertDisplay();
+//            waveAlertDisplay.display();  // example of waveAlertDisplay constructor
             Gdx.app.log(GAME_AREA, "Initializing waves: room=" + room + " maxWaves=" + maxWaves);
             wavesManager.startWave();
         }
@@ -889,9 +891,7 @@ public abstract class GameArea implements Disposable {
             spawnVroombaBlue(total, scaleFactor, player, positions);
             positions.remove(VROOMBA_BLUE, respectiveSpawns);
         }
-
     }
-
 
     /**
      * Spawns the projectile used by the Ghost GPT Enemy
