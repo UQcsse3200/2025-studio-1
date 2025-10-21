@@ -51,7 +51,6 @@ public class WhackAMoleDisplay extends UIComponent {
     @Override
     public void create() {
         super.create();
-        entity.getEvents().addListener("interact", this::show); // open on interact
         hitSfx = ServiceLocator.getResourceService().getAsset("sounds/whack.mp3", Sound.class);
 
         Texture moleTex = ServiceLocator.getResourceService().getAsset("images/mole.png", Texture.class);
@@ -206,7 +205,6 @@ public class WhackAMoleDisplay extends UIComponent {
             public void changed(ChangeEvent event, Actor actor) {
                 // ensure loop stops & UI resets when closing
                 entity.getEvents().trigger("wm:stop");
-                ServiceLocator.getTimeSource().setPaused(false);
                 prepareToPlay();
                 hide();
             }
@@ -365,11 +363,20 @@ public class WhackAMoleDisplay extends UIComponent {
     /**
      * Simple end dialog (used for Win/Lose).
      */
-    public void showEnd(String title, String message) {
-        Dialog d = new Dialog(title, skin);
+    public void showEnd(String title, String message, Runnable onClose) {
+        Dialog d = new Dialog(title, skin) {
+            @Override
+            protected void result(Object object) {
+                if (onClose != null) onClose.run();  // run after OK
+            }
+        };
         d.text(message);
         d.button("OK", true);
         d.show(stage);
+    }
+
+    public void showEnd(String title, String message) {
+        showEnd(title, message, null);  // backwards compatible
     }
 
     @Override
