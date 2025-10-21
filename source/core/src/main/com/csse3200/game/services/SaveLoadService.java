@@ -50,7 +50,6 @@ public class SaveLoadService {
             savedGame = null;
         }
         return savedGame;
-
     }
 
     /**

@@ -10,8 +10,6 @@ import com.csse3200.game.entities.Avatar;
 import com.csse3200.game.entities.AvatarRegistry;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.extensions.GameExtension;
-import org.junit.Assert;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -20,17 +18,15 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.spy;
 
 @ExtendWith(GameExtension.class)
 public class SaveGameTest {
 
-    private final String fileName = "saveFileValid.json";
-    private static final SaveGame saveGame = spy(new SaveGame());
-    private static SaveGame.GameState testState = new SaveGame.GameState();
-    private SaveGame.itemInInven inventoryTest = new SaveGame.itemInInven();
+//    private final String fileName = "saveFileValid.json";
+    private static final SaveGame.GameState testState = new SaveGame.GameState();
+    private final SaveGame.itemInInven inventoryTest = new SaveGame.itemInInven();
     private static SaveGame.information playerInfo = new SaveGame.information();
-    private SaveGame.GameState testedState = SaveGame.loadGame("test/files/saveFileValid.json");
+//    private SaveGame.GameState testedState = SaveGame.loadGame("test/files/saveFileValid.json");
 
     private static final String AREA_ID = "Test#Area";
     private static final int MAX_HEALTH = 10;
@@ -96,16 +92,9 @@ public class SaveGameTest {
         AvatarRegistry.set(playerAvatarTest);
         player.getComponent(CombatStatsComponent.class).setHealth(INITIAL_HEALTH);
 
-        testState.setArea(AREA_ID);
-        testState.setArmour(Armours);
-
-        testState.setWave(EXPECTED_ROUND_NUMBER);
         InventoryComponent fakeInventory = player.getComponent(InventoryComponent.class);
 
         testState.setLoadedInventory(fakeInventory);
-
-        Areas.add(AREA_ID);
-        testState.setAreasVisited(Areas);
 
         testStats = new TestGameStats.PlayerStatTest();
     }
@@ -113,7 +102,15 @@ public class SaveGameTest {
     @Test
     @DisplayName("Test game loads valid format file")
     void gameStateReadTest() {
-        // IMPLEMENT ME
+        testState.setArmour(Armours);
+        assertEquals(Armours, testState.getArmour());
+        testState.setWave(EXPECTED_ROUND_NUMBER);
+        assertEquals(1, testState.getWave());
+        testState.setArea(AREA_ID);
+        assertEquals(AREA_ID, testState.getGameArea());
+        Areas.add(AREA_ID);
+        testState.setAreasVisited(Areas);
+        assertEquals(Areas, testState.getAreasVisited());
     }
 
     @Test
@@ -134,7 +131,6 @@ public class SaveGameTest {
         assertEquals(testStats.possLoad, playerInfo.playerPos);
         assertEquals(testStats.maxHealth, playerInfo.maxHealth);
     }
-
 
     @Test
     void invalidSaveFails() {
