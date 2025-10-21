@@ -168,7 +168,7 @@ public class MinimapDisplay extends BaseScreenDisplay {
     }
 
     /**
-     * Clamps the minimap's centre position so it stays within the visible bounds.
+     * Clamps the minimap so that it cannot be dragged out of screen and be lost.
      *
      * @param panDistance    The distance by which the minimap was panned.
      * @param isTouchDragged True if the pan was caused by dragging with mouse false otherwise
