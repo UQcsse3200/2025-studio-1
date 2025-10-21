@@ -90,6 +90,7 @@ public abstract class GameArea implements Disposable {
     protected GameArea(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
         this.terrainFactory = terrainFactory;
         this.cameraComponent = cameraComponent;
+        ServiceLocator.registerCamera(cameraComponent.getCamera());
         doorList = new ArrayList<>();
         areaEntities = new ArrayList<>();
         eventHandler = new EventHandler();
