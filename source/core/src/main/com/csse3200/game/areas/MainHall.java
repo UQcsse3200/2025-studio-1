@@ -66,10 +66,7 @@ public class MainHall extends GameArea {
 
         spawnEnemiesAndWeapons();
         spawnTeleporter();
-        Entity ui = new Entity();
-        ui.addComponent(new GameAreaDisplay("Main Hall"))
-                .addComponent(new com.csse3200.game.components.gamearea.FloorLabelDisplay("Floor 3"));
-        spawnEntity(ui);
+        displayUIEntity("Main Hall", "Floor 3");
     }
 
     public void spawnEnemiesAndWeapons() {

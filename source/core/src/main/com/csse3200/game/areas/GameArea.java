@@ -19,6 +19,7 @@ import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.components.DoorComponent;
 import com.csse3200.game.components.WeaponsStatsComponent;
 import com.csse3200.game.components.enemy.EnemyWaves;
+import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.factories.ProjectileFactory;
 import com.csse3200.game.entities.factories.characters.NPCFactory;
@@ -1071,6 +1072,20 @@ public abstract class GameArea implements Disposable {
         float x = MathUtils.random(minX, maxX);
         float y = MathUtils.random(minY, maxY);
         return new Vector2(x, y);
+    }
+
+    /**
+     * Method for displaying the UI entity.
+     * 
+     */
+    protected void displayUIEntity(String gameAreaName, String floorName) {
+        Entity ui = new Entity();
+        ui.addComponent(new GameAreaDisplay(gameAreaName));
+
+        if (floorName != null) {
+            ui.addComponent(new com.csse3200.game.components.gamearea.FloorLabelDisplay(floorName));
+        }
+        spawnEntity(ui);
     }
 
     /**

@@ -88,10 +88,7 @@ public class ShippingGameArea extends GameArea {
             itemSpawner.spawnItems(ItemSpawnConfig.shippingmap());
         }
 
-        Entity ui = new Entity();
-        ui.addComponent(new GameAreaDisplay("Shipping"))
-                .addComponent(new com.csse3200.game.components.gamearea.FloorLabelDisplay("Floor 8"));
-        spawnEntity(ui);
+        displayUIEntity("Shipping", "Floor 8");
     }
 
     /**

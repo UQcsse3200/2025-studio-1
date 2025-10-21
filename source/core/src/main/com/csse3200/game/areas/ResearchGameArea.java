@@ -60,10 +60,7 @@ public class ResearchGameArea extends GameArea {
         spawnTeleporter();
         spawnEnemiesAndWeapons();
 
-        Entity ui = new Entity();
-        ui.addComponent(new GameAreaDisplay("Research"))
-                .addComponent(new com.csse3200.game.components.gamearea.FloorLabelDisplay("Floor 7"));
-        spawnEntity(ui);
+        displayUIEntity("Research", "Floor 7");
     }
 
     private void spawnBordersAndDoors() {

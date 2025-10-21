@@ -81,7 +81,7 @@ public class StaticBossRoom extends GameArea {
                 new Color(0.10f, 0.12f, 0.10f, 0.24f));
 
         spawnBordersAndDoors();
-        displayUI();
+        displayUIEntity("Static Boss Room", null);
 
         player = spawnPlayer();
 
@@ -94,12 +94,6 @@ public class StaticBossRoom extends GameArea {
         }
 
         spawnVisibleFloor();
-    }
-
-    private void displayUI() {
-        Entity ui = new Entity();
-        ui.addComponent(new GameAreaDisplay("Static Boss Room"));
-        spawnEntity(ui);
     }
 
     private Entity spawnPlayer() {

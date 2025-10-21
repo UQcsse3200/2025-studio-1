@@ -68,10 +68,7 @@ public class OfficeGameArea extends GameArea {
             startWaves(player);
         }
 
-        Entity ui = new Entity();
-        ui.addComponent(new GameAreaDisplay("Office"))
-                .addComponent(new com.csse3200.game.components.gamearea.FloorLabelDisplay("Floor 5"));
-        spawnEntity(ui);
+        displayUIEntity("Office", "Floor 5");
     }
 
     private void spawnBordersAndDoors() {

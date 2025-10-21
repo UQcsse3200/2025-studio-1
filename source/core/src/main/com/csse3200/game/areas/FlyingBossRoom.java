@@ -67,7 +67,7 @@ public class FlyingBossRoom extends GameArea {
                 new Color(0.10f, 0.12f, 0.10f, 0.24f));
 
         spawnBordersAndDoors();
-        displayUI();
+        displayUIEntity("Flying Boss Room", null);
 
         player = spawnPlayer();
 
@@ -82,12 +82,6 @@ public class FlyingBossRoom extends GameArea {
         }
 
         spawnVisibleFloor();
-    }
-
-    private void displayUI() {
-        Entity ui = new Entity();
-        ui.addComponent(new GameAreaDisplay("Flying Boss Room"));
-        spawnEntity(ui);
     }
 
     private void spawnPlatforms() {

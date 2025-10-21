@@ -57,10 +57,7 @@ public class ElevatorGameArea extends GameArea {
             startWaves(player);
         }
 
-        Entity ui = new Entity();
-        ui.addComponent(new GameAreaDisplay("Elevator"))
-                .addComponent(new com.csse3200.game.components.gamearea.FloorLabelDisplay("Floor 6"));
-        spawnEntity(ui);
+        displayUIEntity("Elevator", "Floor 6");
     }
 
     private void spawnBordersAndDoors() {

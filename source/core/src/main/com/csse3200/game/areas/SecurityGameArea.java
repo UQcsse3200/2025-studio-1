@@ -60,10 +60,7 @@ public class SecurityGameArea extends GameArea {
         spawnSpikes2();
 
         spawnEnemiesAndWeapons();
-        Entity ui = new Entity();
-        ui.addComponent(new GameAreaDisplay("Security"))
-                .addComponent(new com.csse3200.game.components.gamearea.FloorLabelDisplay("Floor 4"));
-        spawnEntity(ui);
+        displayUIEntity("Security", "Floor 4");
     }
 
     public void spawnEnemiesAndWeapons() {

@@ -74,10 +74,7 @@ public class TunnelGameArea extends GameArea {
             itemSpawner.spawnItems(ItemSpawnConfig.tunnelmap());
         }
 
-        Entity ui = new Entity();
-        ui.addComponent(new GameAreaDisplay("Tunnel"))
-                .addComponent(new com.csse3200.game.components.gamearea.FloorLabelDisplay("Floor 11"));
-        spawnEntity(ui);
+        displayUIEntity("Tunnel", "Floor 11");
     }
 
     /**

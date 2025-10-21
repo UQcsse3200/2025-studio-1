@@ -53,10 +53,7 @@ public class Reception extends GameArea {
             itemSpawner.spawnItems(ItemSpawnConfig.receptionmap());
         }
 
-        Entity ui = new Entity();
-        ui.addComponent(new GameAreaDisplay("Reception"))
-                .addComponent(new com.csse3200.game.components.gamearea.FloorLabelDisplay("Floor 2"));
-        spawnEntity(ui);
+        displayUIEntity("Reception", "Floor 2");
     }
 
     public static Reception load(TerrainFactory terrainFactory, CameraComponent camera) {

@@ -64,7 +64,7 @@ public class MovingBossRoom extends GameArea {
                 new Color(0.10f, 0.12f, 0.10f, 0.24f));
 
         spawnBordersAndDoors();
-        displayUI();
+        displayUIEntity("Moving Boss Room", null);
 
         player = spawnPlayer();
 
@@ -81,12 +81,6 @@ public class MovingBossRoom extends GameArea {
             ItemSpawner itemSpawner = new ItemSpawner(this);
             itemSpawner.spawnItems(ItemSpawnConfig.bossmap());
         }
-    }
-
-    private void displayUI() {
-        Entity ui = new Entity();
-        ui.addComponent(new GameAreaDisplay("Moving Boss Room"));
-        spawnEntity(ui);
     }
 
     private Entity spawnPlayer() {

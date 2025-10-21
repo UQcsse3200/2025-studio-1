@@ -87,10 +87,7 @@ public class StorageGameArea extends GameArea {
             itemSpawner.spawnItems(ItemSpawnConfig.storage1map());
         }
 
-        Entity ui = new Entity();
-        ui.addComponent(new GameAreaDisplay("Storage"))
-                .addComponent(new com.csse3200.game.components.gamearea.FloorLabelDisplay("Floor 9"));
-        spawnEntity(ui);
+        displayUIEntity("Storage", "Floor 9");
     }
 
     /**
