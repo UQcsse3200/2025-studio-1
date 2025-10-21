@@ -98,27 +98,23 @@ public class MinimapDisplay extends BaseScreenDisplay {
 
         minimapTable.addListener(new InputListener() {
             private float lastX;
-            private float lastY;
 
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 lastX = x;
-                lastY = y;
                 return true;
             }
 
             @Override
             public void touchDragged(InputEvent event, float x, float y, int pointer) {
                 float deltaX = x - lastX;
-                float deltaY = y - lastY;
 
-                minimap.pan(new Vector2(-deltaX, -deltaY)); // drag = pan
+                minimap.pan(new Vector2(-deltaX, 0));
 
-                minimapTable.clearChildren();
+                clampMinimapPosition(-(deltaX), true);
                 renderMinimapImages();
 
                 lastX = x;
-                lastY = y;
             }
 
             @Override
@@ -157,13 +153,42 @@ public class MinimapDisplay extends BaseScreenDisplay {
      * @param direction The direction of panning
      */
     public void pan(String direction) {
+        float panDistance = 0f;
         if (direction.equals("left")) {
-            minimap.pan(new Vector2(-(IMAGE_WIDTH * minimap.getScale()), 0));
+            panDistance = -(IMAGE_WIDTH * minimap.getScale());
+            minimap.pan(new Vector2(panDistance, 0));
         }
         if (direction.equals("right")) {
-            minimap.pan(new Vector2(IMAGE_WIDTH * minimap.getScale(), 0));
+            panDistance = IMAGE_WIDTH * minimap.getScale();
+            minimap.pan(new Vector2(panDistance, 0));
         }
+
+        clampMinimapPosition(panDistance, false);
         renderMinimapImages();
+    }
+
+    /**
+     * Clamps the minimap's centre position so it stays within the visible bounds.
+     *
+     * @param panDistance    The distance by which the minimap was panned.
+     * @param isTouchDragged True if the pan was caused by dragging with mouse false otherwise
+     */
+    void clampMinimapPosition(float panDistance, boolean isTouchDragged) {
+        Map<Vector2, String> visibleRooms = minimap.render();
+        if (visibleRooms == null) {
+            return;
+        }
+        if (panDistance > 0.0f && isTouchDragged && visibleRooms.size() >= 2) {
+            return;
+        }
+        if (panDistance < 0.0f && isTouchDragged && visibleRooms.size() >= 2) {
+            return;
+        }
+        if (panDistance < 0.0f && visibleRooms.size() < 3) {
+            minimap.pan(new Vector2(-panDistance, 0));
+        } else if (panDistance > 0.0f && visibleRooms.size() < 2) {
+            minimap.pan(new Vector2(-panDistance, 0));
+        }
     }
 
     /**
