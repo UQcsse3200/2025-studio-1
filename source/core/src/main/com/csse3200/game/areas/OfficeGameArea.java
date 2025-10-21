@@ -5,7 +5,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.CameraComponent;
-import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.factories.system.TeleporterFactory;
 import com.csse3200.game.services.ServiceLocator;
@@ -72,16 +71,38 @@ public class OfficeGameArea extends GameArea {
             startWaves(player);
         }
 
-        Entity ui = new Entity();
-        ui.addComponent(new GameAreaDisplay("Office"))
-                .addComponent(new com.csse3200.game.components.gamearea.FloorLabelDisplay("Floor 5"));
-        spawnEntity(ui);
+        displayUIEntity("Office", "Floor 5");
     }
 
     private void spawnBordersAndDoors() {
         Bounds b = getCameraBounds(cameraComponent);
 
-        Entity leftDoor = addVerticalDoorLeft(b, WALL_WIDTH, this::loadMovingBossRoom);
+
+        float leftDoorHeight = Math.max(1f, b.viewHeight() * 0.2f);
+        float leftDoorY = (b.bottomY() + b.topY()) / 2f - leftDoorHeight / 2f;
+        float leftTopSegHeight = Math.max(0f, b.topY() - (leftDoorY + leftDoorHeight));
+        if (leftTopSegHeight > 0f) {
+            Entity leftTop = com.csse3200.game.entities.factories.system.ObstacleFactory.createWall(WALL_WIDTH, leftTopSegHeight);
+            leftTop.setPosition(b.leftX(), leftDoorY + leftDoorHeight);
+            spawnEntity(leftTop);
+        }
+        float leftBottomSegHeight = Math.max(0f, leftDoorY - b.bottomY());
+        if (leftBottomSegHeight > 0f) {
+            Entity leftBottom = com.csse3200.game.entities.factories.system.ObstacleFactory.createWall(WALL_WIDTH, leftBottomSegHeight);
+            leftBottom.setPosition(b.leftX(), b.bottomY());
+            spawnEntity(leftBottom);
+        }
+        
+
+        Entity leftDoorWall = com.csse3200.game.entities.factories.system.ObstacleFactory.createWall(WALL_WIDTH, leftDoorHeight);
+        leftDoorWall.setPosition(b.leftX(), leftDoorY);
+        spawnEntity(leftDoorWall);
+        
+        Entity leftDoor = com.csse3200.game.entities.factories.system.ObstacleFactory.createDoorTrigger(WALL_WIDTH, leftDoorHeight);
+        leftDoor.setPosition(b.leftX() + 0.001f, leftDoorY);
+        leftDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadMovingBossRoom));
+        spawnEntity(leftDoor);
+        
         // Raise the right door higher than center
         addSolidWallTop(b, WALL_WIDTH);
         addSolidWallBottom(b, WALL_WIDTH);
@@ -102,6 +123,11 @@ public class OfficeGameArea extends GameArea {
             rightBottom.setPosition(b.rightX() - WALL_WIDTH, b.bottomY());
             spawnEntity(rightBottom);
         }
+
+        Entity rightDoorWall = com.csse3200.game.entities.factories.system.ObstacleFactory.createWall(WALL_WIDTH, rightDoorHeight);
+        rightDoorWall.setPosition(b.rightX() - WALL_WIDTH, rightDoorY);
+        spawnEntity(rightDoorWall);
+        
         Entity rightDoor = com.csse3200.game.entities.factories.system.ObstacleFactory.createDoorTrigger(WALL_WIDTH, rightDoorHeight);
         rightDoor.setPosition(b.rightX() - WALL_WIDTH - 0.001f, rightDoorY);
         rightDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadElevator));

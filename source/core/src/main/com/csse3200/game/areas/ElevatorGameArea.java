@@ -6,7 +6,6 @@ import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.components.KeycardGateComponent;
-import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.entities.factories.system.TeleporterFactory;
@@ -57,10 +56,7 @@ public class ElevatorGameArea extends GameArea {
             startWaves(player);
         }
 
-        Entity ui = new Entity();
-        ui.addComponent(new GameAreaDisplay("Elevator"))
-                .addComponent(new com.csse3200.game.components.gamearea.FloorLabelDisplay("Floor 6"));
-        spawnEntity(ui);
+        displayUIEntity("Elevator", "Floor 6");
     }
 
     private void spawnBordersAndDoors() {
@@ -77,6 +73,12 @@ public class ElevatorGameArea extends GameArea {
             leftTop.setPosition(b.leftX(), leftDoorY + leftDoorHeight);
             spawnEntity(leftTop);
         }
+        
+
+        Entity leftDoorWall = ObstacleFactory.createWall(WALL_WIDTH, leftDoorHeight);
+        leftDoorWall.setPosition(b.leftX(), leftDoorY);
+        spawnEntity(leftDoorWall);
+        
         Entity leftDoor = ObstacleFactory.createDoorTrigger(WALL_WIDTH, leftDoorHeight);
         leftDoor.setPosition(b.leftX() + 0.001f, leftDoorY);
         leftDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadOffice));
@@ -98,6 +100,11 @@ public class ElevatorGameArea extends GameArea {
             rightBottom.setPosition(b.rightX() - WALL_WIDTH, b.bottomY());
             spawnEntity(rightBottom);
         }
+
+        Entity rightDoorWall = ObstacleFactory.createWall(WALL_WIDTH, rightDoorHeight);
+        rightDoorWall.setPosition(b.rightX() - WALL_WIDTH, rightDoorY);
+        spawnEntity(rightDoorWall);
+        
         Entity rightDoor = ObstacleFactory.createDoorTrigger(WALL_WIDTH, rightDoorHeight);
         rightDoor.setPosition(b.rightX() - WALL_WIDTH - 0.001f, rightDoorY);
         rightDoor.addComponent(new ColliderComponent());

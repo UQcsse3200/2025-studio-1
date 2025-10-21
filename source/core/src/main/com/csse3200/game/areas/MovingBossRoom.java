@@ -7,7 +7,6 @@ import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.components.KeycardGateComponent;
-import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.ItemSpawnConfig;
 import com.csse3200.game.entities.factories.KeycardFactory;
@@ -72,32 +71,29 @@ public class MovingBossRoom extends GameArea {
                 new Color(0.10f, 0.12f, 0.10f, 0.24f));
 
         spawnBordersAndDoors();
-        displayUI();
+        displayUIEntity("Moving Boss Room", null);
 
         player = spawnPlayer();
+        spawnBossAndItems();
 
         spawnObjectDoors(new GridPoint2(0, 6), new GridPoint2(28, 6));
 
+        spawnVisibleFloor();
+    }
+
+    public void spawnBossAndItems() {
         if (!MovingBossRoom.isCleared) {
             spawnBoss();
             ItemSpawner itemSpawner = new ItemSpawner(this);
             itemSpawner.spawnItems(ItemSpawnConfig.bossmap());
         }
-
-        spawnVisibleFloor();
-    }
-
-    private void displayUI() {
-        Entity ui = new Entity();
-        ui.addComponent(new GameAreaDisplay("Moving Boss Room"));
-        spawnEntity(ui);
     }
 
     private Entity spawnPlayer() {
         return spawnOrRepositionPlayer(playerSpawn);
     }
 
-    private void spawnBoss() {
+    public void spawnBoss() {
         GridPoint2 pos = new GridPoint2(15, 20);
 
         Entity boss = BossFactory.createRobot(player);

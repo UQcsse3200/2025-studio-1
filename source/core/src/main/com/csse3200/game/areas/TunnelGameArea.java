@@ -8,7 +8,6 @@ import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.components.DoorComponent;
-import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import com.csse3200.game.components.stations.StationComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.ItemSpawnConfig;
@@ -76,10 +75,7 @@ public class TunnelGameArea extends GameArea {
             itemSpawner.spawnItems(ItemSpawnConfig.tunnelmap());
         }
 
-        Entity ui = new Entity();
-        ui.addComponent(new GameAreaDisplay("Tunnel"))
-                .addComponent(new com.csse3200.game.components.gamearea.FloorLabelDisplay("Floor 11"));
-        spawnEntity(ui);
+        displayUIEntity("Tunnel", "Floor 11");
     }
 
     /**
@@ -98,10 +94,23 @@ public class TunnelGameArea extends GameArea {
         leftDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadServer));
         spawnEntity(leftDoor);
 
-        addSolidWallRight(b, WALL_WIDTH);
-
+        // Right wall with door: create wall segments above and below the door
         float rightDoorHeight = Math.max(1f, b.viewHeight() * 0.2f);
         float rightDoorY = b.bottomY();
+        
+
+        float rightTopSegHeight = Math.max(0f, b.topY() - (rightDoorY + rightDoorHeight));
+        if (rightTopSegHeight > 0f) {
+            Entity rightTop = ObstacleFactory.createWall(WALL_WIDTH, rightTopSegHeight);
+            rightTop.setPosition(b.rightX() - WALL_WIDTH, rightDoorY + rightDoorHeight);
+            spawnEntity(rightTop);
+        }
+        
+
+        Entity rightDoorWall = ObstacleFactory.createWall(WALL_WIDTH, rightDoorHeight);
+        rightDoorWall.setPosition(b.rightX() - WALL_WIDTH, rightDoorY);
+        spawnEntity(rightDoorWall);
+        
         Entity rightDoor = ObstacleFactory.createDoorTrigger(WALL_WIDTH, rightDoorHeight);
         rightDoor.setPosition(b.rightX() - WALL_WIDTH - 0.001f, rightDoorY);
         rightDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadBossRoom));
