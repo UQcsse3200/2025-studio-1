@@ -115,4 +115,52 @@ public class BettingLogic {
     public void onLose() {
         // Already subtracted bet, nothing more to do
     }
+
+    /**
+     * Doubles the current bet by subtracting the bet amount again
+     * from the player's inventory.
+     *
+     * @throws IllegalArgumentException if the player does not have enough balance
+     */
+    public void doubleBet() {
+        if (bet > balance) throw new IllegalArgumentException("Not enough balance");
+        inventory.addProcessor(-bet);
+        balance = inventory.getProcessor();
+    }
+
+    /**
+     * Checks if the player has enough balance to double their current bet.
+     *
+     * @return true if doubling is allowed, false otherwise
+     */
+    public boolean canDouble() {
+        return bet < balance;
+    }
+
+    /**
+     * Splits the current bet into a new bet of equal size.
+     * <p>
+     * In this simplified logic, it simply places another bet of the same amount.
+     * </p>
+     */
+    public void split() {
+        placeBet(bet);
+    }
+
+    /**
+     * Handles the double-win condition, awarding double winnings to the player's inventory.
+     */
+    public void doubleWin() {
+        int winnings = calculateWinnings();
+        inventory.addProcessor(winnings * 2);
+        balance = inventory.getProcessor();
+    }
+
+    /**
+     * Handles the double-tie condition, refunding double the bet amount to the player.
+     */
+    public void doubleTie() {
+        inventory.addProcessor(bet * 2);
+        balance = inventory.getProcessor();
+    }
 }

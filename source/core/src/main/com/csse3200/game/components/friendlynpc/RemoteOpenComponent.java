@@ -64,5 +64,3 @@ public class RemoteOpenComponent extends Component {
 }
 
 
-
-

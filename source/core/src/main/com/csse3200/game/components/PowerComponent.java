@@ -12,6 +12,7 @@ import com.csse3200.game.services.ServiceLocator;
 public class PowerComponent extends Component {
 
     Entity player;
+
     public PowerComponent(Entity player) {
         this.player = player;
     }

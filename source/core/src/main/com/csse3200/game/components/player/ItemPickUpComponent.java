@@ -107,7 +107,7 @@ public class ItemPickUpComponent extends Component {
             weapon.create();
             // The two following lines of code were generate by ChatGPT
             MagazineComponent mag = weapon.getComponent(MagazineComponent.class);
-            if (mag != null)  {
+            if (mag != null) {
                 mag.setTimeSinceLastReload(999f);
                 //copies across magazine data from dropped item
                 if (item.hasComponent(MagazineComponent.class)) {
