@@ -104,18 +104,13 @@ public class TeleporterMenuUI extends UIComponent {
         if (listTable == null) return;
         listTable.clearChildren();
         DiscoveryService ds = ServiceLocator.getDiscoveryService();
-        if (ds == null) {
-            listTable.add("Discovery unavailable").pad(4f);
-            return;
-        }
-        Set<String> discovered = ds.getDiscovered();
-        List<String> ordered = new ArrayList<>(discovered);
-        ordered.sort(String::compareTo);
 
-        if (ordered.isEmpty()) {
-            listTable.add("No destinations discovered yet").pad(4f);
-            return;
+        List<String> ordered = new ArrayList<>();
+        if (ds != null) {
+            Set<String> discovered = ds.getDiscovered();
+            ordered.addAll(discovered);
         }
+        ordered.sort(String::compareTo);
 
         for (String key : ordered) {
             final String display = capitalize(key);
@@ -162,6 +157,8 @@ public class TeleporterMenuUI extends UIComponent {
                 return "Forest";
             case "tunnel":
                 return "Tunnel";
+            case "casino":
+                return "Casino";
             default:
                 return Character.toUpperCase(k.charAt(0)) + k.substring(1);
         }

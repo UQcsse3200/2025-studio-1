@@ -12,7 +12,6 @@ import com.csse3200.game.entities.configs.ItemSpawnConfig;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.entities.factories.system.TeleporterFactory;
 import com.csse3200.game.entities.spawner.ItemSpawner;
-import com.csse3200.game.services.ServiceLocator;
 
 /**
  * Research room: futuristic laboratory with desks, pods, microscopes, and
@@ -22,11 +21,12 @@ import com.csse3200.game.services.ServiceLocator;
 public class ResearchGameArea extends GameArea {
     private static final float WALL_WIDTH = 0.1f;
     private static GridPoint2 playerSpawn = new GridPoint2(10, 10);
-    private static final float ROOM_DIFF_NUMBER = 6;
-    private Entity player;
+    private static boolean isCleared = false;
 
     public ResearchGameArea(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
         super(terrainFactory, cameraComponent);
+
+        this.getEvents().addListener("room cleared", ResearchGameArea::clearRoom);
     }
 
     public static ResearchGameArea load(TerrainFactory terrainFactory, CameraComponent camera) {
@@ -53,13 +53,16 @@ public class ResearchGameArea extends GameArea {
                 new Color(0.10f, 0.12f, 0.18f, 0.28f)); // subtle lab-themed overlay
         spawnObjectDoors(new GridPoint2(0, 6), new GridPoint2(28, 20));
         spawnBordersAndDoors();
-        player = spawnPlayer();
+        Entity player = spawnPlayer();
         spawnPlatforms();
         spawnResearchProps();
-        spawnEnemies();
         spawnTeleporter();
-        ItemSpawner itemSpawner = new ItemSpawner(this);
-        itemSpawner.spawnItems(ItemSpawnConfig.researchmap());
+
+        if (!ResearchGameArea.isCleared) {
+            startWaves(player);
+            ItemSpawner itemSpawner = new ItemSpawner(this);
+            itemSpawner.spawnItems(ItemSpawnConfig.researchmap());
+        }
 
         Entity ui = new Entity();
         ui.addComponent(new GameAreaDisplay("Research"))
@@ -85,6 +88,8 @@ public class ResearchGameArea extends GameArea {
         rightDoor.setPosition(b.rightX() - WALL_WIDTH - 0.001f, rightDoorY);
         rightDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadFlyingBossRoom));
         spawnEntity(rightDoor);
+
+        if (!ResearchGameArea.isCleared) registerDoors(new Entity[]{leftDoor, rightDoor});
     }
 
     private Entity spawnPlayer() {
@@ -145,24 +150,6 @@ public class ResearchGameArea extends GameArea {
     }
 
     /**
-     * Spawn a pair of enemies to keep Research lively.
-     */
-    private void spawnEnemies() {
-        if (player == null)
-            return;
-
-        // Vroomba near the bottom platforms
-        Entity vroomba = com.csse3200.game.entities.factories.characters.NPCFactory.createVroomba(player,
-                ServiceLocator.getDifficulty().getRoomDifficulty(ResearchGameArea.ROOM_DIFF_NUMBER));
-        spawnEntityAt(vroomba, new GridPoint2(8, 6), true, false);
-
-        // Deepspin near the top right area
-        Entity deepspin = com.csse3200.game.entities.factories.characters.NPCFactory.createDeepspin(player, this,
-                ServiceLocator.getDifficulty().getRoomDifficulty(ResearchGameArea.ROOM_DIFF_NUMBER));
-        spawnEntityAt(deepspin, new GridPoint2(24, 15), true, false);
-    }
-
-    /**
      * Teleporter bottom-left
      */
     private void spawnTeleporter() {
@@ -189,5 +176,30 @@ public class ResearchGameArea extends GameArea {
     public Entity getPlayer() {
         // placeholder
         return null;
+    }
+
+    /**
+     * Clear room, set this room's static
+     * boolean isCleared variable to true
+     */
+    public static void clearRoom() {
+        ResearchGameArea.isCleared = true;
+        logger.debug("Research is cleared");
+    }
+
+    /**
+     * Unclear room, set this room's static
+     * boolean isCleared variable to false
+     */
+    public static void unclearRoom() {
+        ResearchGameArea.isCleared = false;
+        logger.debug("Research is uncleared");
+    }
+
+    /**
+     * FOR TESTING PURPOSES
+     */
+    public static boolean getClearField() {
+        return ResearchGameArea.isCleared;
     }
 }
