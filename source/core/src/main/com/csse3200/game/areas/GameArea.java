@@ -19,6 +19,7 @@ import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.components.DoorComponent;
 import com.csse3200.game.components.WeaponsStatsComponent;
 import com.csse3200.game.components.enemy.EnemyWaves;
+import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.factories.ProjectileFactory;
 import com.csse3200.game.entities.factories.characters.NPCFactory;
@@ -89,6 +90,7 @@ public abstract class GameArea implements Disposable {
     protected GameArea(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
         this.terrainFactory = terrainFactory;
         this.cameraComponent = cameraComponent;
+        ServiceLocator.registerCamera(cameraComponent.getCamera());
         doorList = new ArrayList<>();
         areaEntities = new ArrayList<>();
         eventHandler = new EventHandler();
@@ -569,6 +571,16 @@ public abstract class GameArea implements Disposable {
         }
         return 0;
     }
+
+    /**
+     * used for accessing loading the wave within gamescreen
+     * from a save state
+     * @param wave to be set to
+     */
+    public void setWave(int wave) {
+        if (wave > 0) wavesManager.setWaveNumber(wave);
+    }
+
 
     /**
      * Adds GhostGPT enemies onto the map.
@@ -1071,6 +1083,20 @@ public abstract class GameArea implements Disposable {
         float x = MathUtils.random(minX, maxX);
         float y = MathUtils.random(minY, maxY);
         return new Vector2(x, y);
+    }
+
+    /**
+     * Method for displaying the UI entity.
+     * 
+     */
+    protected void displayUIEntity(String gameAreaName, String floorName) {
+        Entity ui = new Entity();
+        ui.addComponent(new GameAreaDisplay(gameAreaName));
+
+        if (floorName != null) {
+            ui.addComponent(new com.csse3200.game.components.gamearea.FloorLabelDisplay(floorName));
+        }
+        spawnEntity(ui);
     }
 
     /**

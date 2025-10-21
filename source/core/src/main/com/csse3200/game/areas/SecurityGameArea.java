@@ -6,7 +6,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.CameraComponent;
-import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.ItemSpawnConfig;
 import com.csse3200.game.entities.factories.characters.FriendlyNPCFactory;
@@ -19,6 +18,7 @@ import com.csse3200.game.entities.spawner.ItemSpawner;
  * Minimal generic Security room: walls, doors, and a subtle background overlay.
  */
 public class SecurityGameArea extends GameArea {
+    private Entity player;
     private static final float WALL_WIDTH = 0.1f;
     private static GridPoint2 playerSpawn = new GridPoint2(10, 10);
     private static boolean isCleared = false;
@@ -53,7 +53,7 @@ public class SecurityGameArea extends GameArea {
                 new Color(0.08f, 0.08f, 0.1f, 0.30f));
 
         spawnBordersAndDoors();
-        Entity player = spawnPlayer();
+        player = spawnPlayer();
         spawnPlatforms();
         spawnObjectDoors(new GridPoint2(0, 6), new GridPoint2(28, 19));
         spawnSecurityProps();
@@ -61,16 +61,16 @@ public class SecurityGameArea extends GameArea {
         spawnSpikes2();
         spawnNurse(player);
 
+        spawnEnemiesAndWeapons();
+        displayUIEntity("Security", "Floor 4");
+    }
+
+    public void spawnEnemiesAndWeapons() {
         if (!SecurityGameArea.isCleared) {
             startWaves(player);
             ItemSpawner itemSpawner = new ItemSpawner(this);
             itemSpawner.spawnItems(ItemSpawnConfig.securitymap());
         }
-
-        Entity ui = new Entity();
-        ui.addComponent(new GameAreaDisplay("Security"))
-                .addComponent(new com.csse3200.game.components.gamearea.FloorLabelDisplay("Floor 4"));
-        spawnEntity(ui);
     }
 
     private void spawnBordersAndDoors() {

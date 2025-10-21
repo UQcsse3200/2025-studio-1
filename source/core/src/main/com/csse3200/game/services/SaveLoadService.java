@@ -1,7 +1,10 @@
 package com.csse3200.game.services;
 
 import com.csse3200.game.areas.GameArea;
-import com.csse3200.game.components.*;
+import com.csse3200.game.components.AmmoStatsComponent;
+import com.csse3200.game.components.CombatStatsComponent;
+import com.csse3200.game.components.MagazineComponent;
+import com.csse3200.game.components.WeaponsStatsComponent;
 import com.csse3200.game.components.items.ItemComponent;
 import com.csse3200.game.components.player.ArmourEquipComponent;
 import com.csse3200.game.components.player.InventoryComponent;
@@ -22,7 +25,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.util.ArrayList;
-
 import java.util.Set;
 
 
@@ -38,8 +40,7 @@ public class SaveLoadService {
      * Load a save file from local storage and rebuild the area and the current
      * players stats.
      */
-    public static SaveGame.GameState load() {
-        String filePath = "saves" + File.separator + "slides.json";
+    public static SaveGame.GameState load(String filePath) {
         SaveGame.GameState savedGame;
         if (SaveGame.loadGame(filePath) != null) {
             savedGame = SaveGame.loadGame(filePath);
@@ -49,7 +50,6 @@ public class SaveLoadService {
             savedGame = null;
         }
         return savedGame;
-
     }
 
     /**
@@ -62,9 +62,10 @@ public class SaveLoadService {
                                   ArrayList<SaveGame.itemInInven> inventory) {
 
         ServiceLocator.getPlayer().getComponent(
-                CombatStatsComponent.class).setHealth(playerStats.currentHealth);
-        ServiceLocator.getPlayer().getComponent(
                 CombatStatsComponent.class).setMaxHealth(playerStats.maxHealth);
+        ServiceLocator.getPlayer().getComponent(
+                CombatStatsComponent.class).setHealth(playerStats.currentHealth);
+
         ServiceLocator.getPlayer().getComponent(
                 StaminaComponent.class).setStamina(playerStats.stamina);
         ServiceLocator.getPlayer().getComponent(
@@ -84,7 +85,7 @@ public class SaveLoadService {
         Entity newArmour;
         ArmourEquipComponent armourEquip =
                 ServiceLocator.getPlayer().getComponent(ArmourEquipComponent.class);
-            // sets the attachments
+        // sets the attachments
         for (Armour armour : Armour.values()) {
             if (savedArmour.contains(armour.getConfig().texturePath)) {
 
@@ -112,7 +113,7 @@ public class SaveLoadService {
 
             switch (item.type) {
                 case RANGED, MELEE -> itemEntity = getWeapon(item);
-                case CONSUMABLE -> itemEntity = getConsumable(item.texture);
+                case CONSUMABLE -> itemEntity = getConsumable(item.texture, item.count);
             }
             if (itemEntity != null) {
                 itemEntity.getComponent(ItemComponent.class).setCount(item.count);
@@ -136,17 +137,19 @@ public class SaveLoadService {
                 }
             }
         }
-        // variables
+
 
         Set<String> discovered = ServiceLocator.getDiscoveryService().getDiscovered();
         SaveGame.GameState gamestate = new SaveGame.GameState();
         ArrayList<String> armours = new ArrayList<>();
+
+        //will check that armour both exists and is not null
         if (player.hasComponent(ArmourEquipComponent.class) &&
-        player.getComponent(ArmourEquipComponent.class).currentlyEquippedArmour != null
+                player.getComponent(ArmourEquipComponent.class).currentlyEquippedArmour != null
         ) {
             Set<Entity> armourSet = player.getComponent(ArmourEquipComponent.class).currentlyEquippedArmour.keySet();
             String armourString;
-            for (Entity e: armourSet) {
+            for (Entity e : armourSet) {
                 armourString = e.getComponent(ItemComponent.class).getTexture();
                 armours.add(armourString);
             }
@@ -169,6 +172,7 @@ public class SaveLoadService {
 
     /**
      * helper method for turning items from savefile into entities
+     *
      * @param item
      * @return Weapon
      */
@@ -198,13 +202,15 @@ public class SaveLoadService {
         return weaponEntity;
     }
 
-    private static Entity getConsumable(String texture) {
+    private static Entity getConsumable(String texture, int count) {
+        Entity fromSave = null;
         for (Consumables consumable : Consumables.values()) {
             if (texture.equals(consumable.getConfig().texturePath)) {
-                return ConsumableFactory.createConsumable(consumable);
+                fromSave = ConsumableFactory.createConsumable(consumable);
+                fromSave.getComponent(ItemComponent.class).setCount(count);
             }
         }
-        return null;
+        return fromSave;
     }
 
     private static Avatar setAvatar(String texture) {
