@@ -6,8 +6,13 @@ import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.CameraComponent;
+import com.csse3200.game.components.gamearea.GameAreaDisplay;
+import com.csse3200.game.components.shop.CatalogService;
+import com.csse3200.game.components.shop.ShopDemo;
+import com.csse3200.game.components.shop.ShopManager;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.ItemSpawnConfig;
+import com.csse3200.game.entities.factories.ShopFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.entities.factories.system.TeleporterFactory;
 import com.csse3200.game.entities.spawner.ItemSpawner;
@@ -57,6 +62,7 @@ public class SecurityGameArea extends GameArea {
         spawnSecurityProps();
         spawnTeleporter();
         spawnSpikes2();
+        spawnShopKiosk();
 
         spawnEnemiesAndWeapons();
         displayUIEntity("Security", "Floor 4");
@@ -69,7 +75,12 @@ public class SecurityGameArea extends GameArea {
             itemSpawner.spawnItems(ItemSpawnConfig.securitymap());
         }
     }
-
+    private void spawnShopKiosk() {
+        CatalogService catalog = ShopDemo.makeDemoCatalog();
+        ShopManager manager = new ShopManager(catalog);
+        Entity shop = ShopFactory.createShop(this, manager, "images/VendingMachine.png"); // have as tree now as placeholder, later need to change to actual shop icon
+        spawnEntityAt(shop, new GridPoint2(26, 6), true, false);
+    }
     private void spawnBordersAndDoors() {
         if (cameraComponent == null)
             return;
@@ -130,7 +141,7 @@ public class SecurityGameArea extends GameArea {
     private void spawnSecurityProps() {
 
         /* Security System (collidable) **/
-        GridPoint2 systemPos = new GridPoint2(27, 6);
+        GridPoint2 systemPos = new GridPoint2(57, 6);
         Entity system = ObstacleFactory.createSecuritySystem();
         spawnEntityAt(system, systemPos, true, false);
 
@@ -188,8 +199,7 @@ public class SecurityGameArea extends GameArea {
 
     @Override
     public Entity getPlayer() {
-        // placeholder
-        return null;
+        return player;
     }
 
     /**

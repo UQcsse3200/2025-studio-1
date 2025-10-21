@@ -7,7 +7,9 @@ import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.entities.Entity;
+import com.csse3200.game.entities.configs.Benches;
 import com.csse3200.game.entities.configs.ItemSpawnConfig;
+import com.csse3200.game.entities.factories.InteractableStationFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.entities.factories.system.TeleporterFactory;
 import com.csse3200.game.entities.spawner.ItemSpawner;
@@ -80,6 +82,7 @@ public class ShippingGameArea extends GameArea {
         spawnShipmentCrane();
         spawnConveyor();
         spawnTeleporter();
+        spawnHealthBench();
 
         if (!ShippingGameArea.isCleared) {
             startWaves(player);
@@ -182,6 +185,10 @@ public class ShippingGameArea extends GameArea {
     private void loadFlyingBossRoom() {
         FlyingBossRoom.setRoomSpawn(new GridPoint2(24, 8));
         clearAndLoad(() -> new FlyingBossRoom(terrainFactory, cameraComponent));
+    }
+    private void spawnHealthBench() {
+        Entity bench = InteractableStationFactory.createStation(Benches.HEALTH_BENCH);
+        spawnEntityAt(bench, new GridPoint2(25, 8), true, true);
     }
 
     /**

@@ -45,6 +45,7 @@ public class Reception extends GameArea {
         spawndesk_reception();
         spawncomic_stand();
         spawnTeleporter();
+        spawnShopKiosk();
 
         if (!Reception.isCleared) {
             startWaves(player);
@@ -96,11 +97,11 @@ public class Reception extends GameArea {
         addSolidWallRight(b, WALL_WIDTH);
         addSolidWallTop(b, WALL_WIDTH);
         float leftDoorHeight = Math.max(1f, b.viewHeight() * 0.2f);
-        float leftDoorY = b.bottomY();
+        float leftDoorY = b.bottomY()-1;
         float leftTopSegHeight = Math.max(0f, b.topY() - (leftDoorY + leftDoorHeight));
         if (leftTopSegHeight > 0f) {
             Entity leftTop = ObstacleFactory.createWall(WALL_WIDTH, leftTopSegHeight);
-            leftTop.setPosition(b.leftX(), leftDoorY + leftDoorHeight + 2f);
+            leftTop.setPosition(b.leftX(), leftDoorY + leftDoorHeight);
             spawnEntity(leftTop);
         }
         Entity leftDoor = ObstacleFactory.createDoorTrigger(WALL_WIDTH, leftDoorHeight);

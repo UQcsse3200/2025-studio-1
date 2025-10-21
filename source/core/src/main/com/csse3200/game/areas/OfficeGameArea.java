@@ -6,6 +6,8 @@ import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.entities.Entity;
+import com.csse3200.game.entities.configs.Benches;
+import com.csse3200.game.entities.factories.InteractableStationFactory;
 import com.csse3200.game.entities.factories.system.TeleporterFactory;
 
 /**
@@ -62,6 +64,7 @@ public class OfficeGameArea extends GameArea {
         spawnPlatforms();
         spawnOfficeProps();
         spawnTeleporter();
+        spawnHealthBench();
 
         if (!OfficeGameArea.isCleared) {
             startWaves(player);
@@ -142,6 +145,10 @@ public class OfficeGameArea extends GameArea {
             }
         }
         return player;
+    }
+    private void spawnHealthBench() {
+        Entity bench = InteractableStationFactory.createStation(Benches.HEALTH_BENCH);
+        spawnEntityAt(bench, new GridPoint2(23, 8), true, true);
     }
 
     private void spawnOfficeProps() {
