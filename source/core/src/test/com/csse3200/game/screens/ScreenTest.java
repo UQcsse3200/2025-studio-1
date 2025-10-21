@@ -5,6 +5,8 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.csse3200.game.GdxGame;
 import com.csse3200.game.components.CameraComponent;
+import com.csse3200.game.components.difficultymenu.DifficultyMenuDisplay;
+import com.csse3200.game.components.screens.LeaderboardScreenDisplay;
 import com.csse3200.game.components.screens.TutorialScreenDisplay;
 import com.csse3200.game.components.screens.BaseEndScreenDisplays;
 import com.csse3200.game.entities.Entity;
@@ -119,6 +121,28 @@ class ScreenTest {
         Entity tutUi = tutScreen.createUIScreen(tutScreen.getStage());
         assertNotNull(tutUi.getComponent(InputDecorator.class), "TutorialScreen UI should have InputDecorator");
         assertNotNull(tutUi.getComponent(TutorialScreenDisplay.class), "TutorialScreen UI should have TutorialScreenDisplay");
+    }
+
+    @Test
+    void constructor_initializesDifficultyScreenUiAndStage_withoutErrors() {
+        DifficultyScreen difficultyScreen = new DifficultyScreen(mockGame);
+
+        assertNotNull(difficultyScreen.getStage(), "DifficultyScreen stage should be initialized");
+
+        Entity diffUi = difficultyScreen.createUIScreen(difficultyScreen.getStage());
+        assertNotNull(diffUi.getComponent(InputDecorator.class), "DifficultyScreen UI should have InputDecorator");
+        assertNotNull(diffUi.getComponent(DifficultyMenuDisplay.class), "DifficultyScreen UI should have DiffucultyMenuDisplay");
+    }
+
+    @Test
+    void constructor_initializesLeaderboardScreenUiAndStage_withoutErrors() {
+        LeaderboardScreen leaderboardScreen = new LeaderboardScreen(mockGame);
+
+        assertNotNull(leaderboardScreen.getStage(), "LeaderboardScreen stage should be initialized");
+
+        Entity leaderboardUi = leaderboardScreen.createUIScreen(leaderboardScreen.getStage());
+        assertNotNull(leaderboardUi.getComponent(InputDecorator.class), "LeaderboardScreen UI should have InputDecorator");
+        assertNotNull(leaderboardUi.getComponent(LeaderboardScreenDisplay.class), "LeaderboardScreen UI should have LeaderboardScreenDisplay");
     }
 
     @Test
