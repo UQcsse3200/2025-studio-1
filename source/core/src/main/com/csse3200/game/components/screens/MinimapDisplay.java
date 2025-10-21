@@ -19,10 +19,12 @@ import java.util.Map;
  * <p>
  * Renders a full-screen dimmer and a centered minimap image with actions:
  * <ul>
- *   <li><b>Click on a spot</b> — triggers the entity's {@code "zoom in"} event,
- *   that is, the minimap zooms in on the clicked spot.</li>
- *   <li><b>Scroll</b> — Once zoomed in, the minimap is scrollable using the mouse scroll wheel.</li>
- *   <li><b>Resume</b> — triggers the entity's {@code "resume"} event, that returns to the game.</li>
+ *   <li><b>Scroll</b> - The minimap can be zoomed in or out with the scroll wheel.</li>
+ *   <li><b>Arrow keys</b> - The minimap can be moved left or right with the left and right
+ *   arrow keys respectively</li>
+ *   <li><b>Touch Drag</b> - The minimap can be moved in either direction horizontally by
+ *   clicking on the screen and dragging.</li>
+ *   <li><b>Resume</b> - triggers the entity's {@code "resume"} event, that returns to the game.</li>
  * </ul>
  * The dimmer is non-interactive (input disabled) so button clicks reach the minimap.
  * TAB is handled once to immediately resume gameplay.
