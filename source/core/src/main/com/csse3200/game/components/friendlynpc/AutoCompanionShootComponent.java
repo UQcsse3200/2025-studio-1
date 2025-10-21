@@ -21,10 +21,10 @@ import com.csse3200.game.services.ServiceLocator;
  *  - Bullet size is finalized in the factory.
  */
 public class AutoCompanionShootComponent extends Component {
-    private static final float cooldown      = 1f;    // shoot cooldown (s)
-    private static final float range         = 7.0f;  // seek radius (m)
+    private static final float cooldown = 1f;    // shoot cooldown (s)
+    private static final float range = 7.0f;  // seek radius (m)
     private static final float scan_interval = 0.12f; // scan period (s)
-    private static final float speed         = 5f;    // bullet speed
+    private static final float speed = 5f;    // bullet speed
     private boolean attack = true;
     private float cd = 0f;
     private float scanTimer = 0f;

@@ -53,7 +53,7 @@ public class BossFactory {
         GameArea area = ServiceLocator.getGameArea();
         float room = (area != null) ? area.roomNumber() : 1f;
         if (diff != null) scale = diff.getRoomDifficulty(room);
-        int hp = (int) (500f * scale);
+        int hp = (int) (1000f * scale);
         Entity robot = new Entity()
                 .addComponent(new PhysicsComponent())
                 .addComponent(new PhysicsMovementComponent(moveSpeed))
@@ -137,7 +137,7 @@ public class BossFactory {
         GameArea area = ServiceLocator.getGameArea();
         float room = (area != null) ? area.roomNumber() : 1f;
         if (diff != null) scale = diff.getRoomDifficulty(room);
-        int hp = (int) (500f * scale);
+        int hp = (int) (1000f * scale);
          int damage = (int) (5f * scale);
         BaseEntityConfig config = configs.boss2;
         InventoryComponent playerInventory =
@@ -202,7 +202,7 @@ public class BossFactory {
         GameArea area = ServiceLocator.getGameArea();
         float room = (area != null) ? area.roomNumber() : 1f;
         if (diff != null) scale = diff.getRoomDifficulty(room);
-        int hp = (int) (500f * scale);
+        int hp = (int) (1000f * scale);
         if (target != null) {
             playerInventory = target.getComponent(InventoryComponent.class);
         }
