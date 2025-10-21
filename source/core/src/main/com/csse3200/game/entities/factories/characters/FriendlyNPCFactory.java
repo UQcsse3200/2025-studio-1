@@ -68,14 +68,8 @@ public class FriendlyNPCFactory {
      * @return A new Entity representing the Guidance NPC with dialogue, tips, and animation.
      */
     public static Entity createGuidanceNpc(Entity player, List<Vector2> waypoints) {
-        TextureAtlas atlas = ServiceLocator.getResourceService()
-                .getAsset("images/guidance_npc.atlas", TextureAtlas.class);
-
-        AnimationRenderComponent arc = new AnimationRenderComponent(atlas);
-        arc.addAnimation("robot_fire", 0.12f, Animation.PlayMode.LOOP);
-
         Entity npc = InteractableStationFactory.createBaseStation()
-                .addComponent(arc)
+                .addComponent(new TextureRenderComponent("images/guidance_friendly_npc.png"))
                 .addComponent(new HoverBobComponent(0.08f, 2.0f))
                 .addComponent(new NpcTwoOptionMenuComponent())
                 .addComponent(new NpcLeadComponent(List.of(

@@ -67,7 +67,6 @@ class FriendlyNPCFactoryTest {
         Entity player = new Entity();
         Entity npc = FriendlyNPCFactory.createGuidanceNpc(player, List.of());
 
-        assertNotNull(npc.getComponent(AnimationRenderComponent.class));
         assertNotNull(npc.getComponent(HoverBobComponent.class));
         assertNotNull(npc.getComponent(NpcTwoOptionMenuComponent.class));
         assertNotNull(npc.getComponent(NpcLeadComponent.class));
