@@ -184,14 +184,12 @@ public class StaticBossRoom extends GameArea {
         clearAndLoad(() -> new TunnelGameArea(terrainFactory, cameraComponent));
     }
 
-    @Override
-    public String toString() {
-        return "StaticBossRoom";
+
     /**
      * Clear room, set this room's static
      * boolean isCleared variable to true
      */
-    public void clearRoom() {
+    public static void clearRoom() {
         StaticBossRoom.isCleared = true;
         logger.debug("Static Boss Room is cleared");
     }
@@ -200,7 +198,7 @@ public class StaticBossRoom extends GameArea {
      * Unclear room, set this room's static
      * boolean isCleared variable to false
      */
-    public void unclearRoom() {
+    public static void unclearRoom() {
         StaticBossRoom.isCleared = false;
         logger.debug("Static Boss Room is uncleared");
     }
