@@ -19,8 +19,6 @@ import com.csse3200.game.physics.PhysicsLayer;
 import com.csse3200.game.physics.components.ColliderComponent;
 import com.csse3200.game.physics.components.HitboxComponent;
 import com.csse3200.game.services.ServiceLocator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * This is the room that holds the static Boss.
@@ -31,9 +29,9 @@ import org.slf4j.LoggerFactory;
  * Room is empty except for boss and player
  */
 public class StaticBossRoom extends GameArea {
-    private static final Logger logger = LoggerFactory.getLogger(StaticBossRoom.class);
     private static final float WALL_WIDTH = 0.1f;
     private static GridPoint2 playerSpawn = new GridPoint2(3, 10);
+    private static boolean isCleared;
     private Entity player;
 
     /**
@@ -47,6 +45,8 @@ public class StaticBossRoom extends GameArea {
      */
     public StaticBossRoom(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
         super(terrainFactory, cameraComponent);
+
+        this.getEvents().addListener("room cleared", StaticBossRoom::clearRoom);
     }
 
 
@@ -85,11 +85,13 @@ public class StaticBossRoom extends GameArea {
 
         player = spawnPlayer();
 
-        spawnBoss();
         spawnObjectDoors(new GridPoint2(0, 7), new GridPoint2(28, 7));
 
-        ItemSpawner itemSpawner = new ItemSpawner(this);
-        itemSpawner.spawnItems(ItemSpawnConfig.bossmap());
+        if (!StaticBossRoom.isCleared) {
+            spawnBoss();
+            ItemSpawner itemSpawner = new ItemSpawner(this);
+            itemSpawner.spawnItems(ItemSpawnConfig.bossmap());
+        }
 
         spawnVisibleFloor();
     }
@@ -110,15 +112,15 @@ public class StaticBossRoom extends GameArea {
         Entity boss = BossFactory.createBoss3(player);
 
         // Delay keycard spawn after boss death
-        boss.getEvents().addListener("death", () -> {
-            ServiceLocator.getTimeSource().delayKeycardSpawn(0.05f, () -> {
-                Entity keycard = KeycardFactory.createKeycard(3);
-                keycard.setPosition(new Vector2(3f, 10f)); // adjust position if needed
-                spawnEntity(keycard);
-            });
-        });
+        boss.getEvents().addListener("death",
+                () -> ServiceLocator.getTimeSource().delayKeycardSpawn(0.05f, () -> {
+                    Entity keycard = KeycardFactory.createKeycard(3);
+                    keycard.setPosition(new Vector2(3f, 10f)); // adjust position if needed
+                    spawnEntity(keycard);
+                }));
 
         spawnEntityAt(boss, pos, true, true);
+        registerEnemy(boss);
     }
 
     /**
@@ -128,7 +130,6 @@ public class StaticBossRoom extends GameArea {
         if (cameraComponent == null) return;
 
         Bounds b = getCameraBounds(cameraComponent);
-        //  addSolidWallLeft(b, WALL_WIDTH);
         addSolidWallTop(b, WALL_WIDTH);
         addSolidWallRight(b, WALL_WIDTH);
 
@@ -144,7 +145,7 @@ public class StaticBossRoom extends GameArea {
         leftDoor.setPosition(b.leftX() + 0.001f, leftDoorY);
         leftDoor.addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
         leftDoor.addComponent(new HitboxComponent().setLayer(PhysicsLayer.OBSTACLE));
-        leftDoor.addComponent(new DoorComponent(this::loadSecurity));
+        leftDoor.addComponent(new DoorComponent(this::loadTunnel));
         spawnEntity(leftDoor);
 
 
@@ -157,14 +158,15 @@ public class StaticBossRoom extends GameArea {
         rightDoor.addComponent(new KeycardGateComponent(3, () -> {
             ColliderComponent collider = rightDoor.getComponent(ColliderComponent.class);
             if (collider != null) collider.setEnabled(false);
-            loadTunnel();
+            loadSecretRoom();
         }));
         spawnEntity(rightDoor);
+
+        if (!StaticBossRoom.isCleared) registerDoors(new Entity[]{leftDoor});
     }
 
-    public void loadSecurity() {
-        SecurityGameArea.setRoomSpawn(new GridPoint2(26, 8));
-        clearAndLoad(() -> new SecurityGameArea(terrainFactory, cameraComponent));
+    public void loadSecretRoom() {
+        clearAndLoad(() -> new SecretRoomGameArea(terrainFactory, cameraComponent));
     }
 
 
@@ -175,5 +177,24 @@ public class StaticBossRoom extends GameArea {
     public void loadTunnel() {
         TunnelGameArea.setRoomSpawn(new GridPoint2(26, 8));
         clearAndLoad(() -> new TunnelGameArea(terrainFactory, cameraComponent));
+    }
+
+
+    /**
+     * Clear room, set this room's static
+     * boolean isCleared variable to true
+     */
+    public static void clearRoom() {
+        StaticBossRoom.isCleared = true;
+        logger.debug("Static Boss Room is cleared");
+    }
+
+    /**
+     * Unclear room, set this room's static
+     * boolean isCleared variable to false
+     */
+    public static void unclearRoom() {
+        StaticBossRoom.isCleared = false;
+        logger.debug("Static Boss Room is uncleared");
     }
 }

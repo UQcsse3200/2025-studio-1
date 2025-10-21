@@ -66,6 +66,9 @@ public class KeyboardPlayerInputComponent extends InputComponent {
                 return true;
 
             case Keys.SPACE:
+                if (ServiceLocator.getTimeSource().isPaused()) {
+                    return false;
+                }
                 triggerJumpEvent();
                 return true;
 
@@ -154,7 +157,6 @@ public class KeyboardPlayerInputComponent extends InputComponent {
             case Keys.SHIFT_LEFT:
                 triggerStopSprintingEvent();
                 return true;
-
             case Keys.S:
                 triggerStopCrouchingEvent();
                 return true;
@@ -194,7 +196,6 @@ public class KeyboardPlayerInputComponent extends InputComponent {
     }
 
     private void triggerReloadEvent() {
-
         entity.getEvents().trigger("reload");
     }
 

@@ -47,8 +47,12 @@ public class PhysicsProjectileComponent extends Component {
     public void update() {
         float dt = ServiceLocator.getTimeSource().getDeltaTime();
         lived += dt;
-
+        Vector2 position = entity.getCenterPosition();
         if (lived > lifetime) {
+            entity.setToRemove();
+            Body body = physicsComponent.getBody();
+            body.setLinearVelocity(new Vector2(0f, 0f));
+        } else if (position.y < 3.85 || position.y > 11.25) {
             entity.setToRemove();
             Body body = physicsComponent.getBody();
             body.setLinearVelocity(new Vector2(0f, 0f));

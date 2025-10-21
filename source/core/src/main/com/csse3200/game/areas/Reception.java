@@ -13,23 +13,23 @@ import com.csse3200.game.components.shop.ShopManager;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.ItemSpawnConfig;
 import com.csse3200.game.entities.factories.ShopFactory;
-import com.csse3200.game.entities.factories.characters.NPCFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.entities.factories.system.TeleporterFactory;
 import com.csse3200.game.entities.spawner.ItemSpawner;
-import com.csse3200.game.services.ServiceLocator;
 
 /**
  * Second floor with different background and arrow-key controls.
  */
 public class Reception extends GameArea {
     private static final float WALL_WIDTH = 0.1f;
-    private int roomDiffNumber = 2;
     private Entity player;
     private static GridPoint2 playerSpawn = new GridPoint2(8, 10);
+    private static boolean isCleared = false;
 
     public Reception(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
         super(terrainFactory, cameraComponent);
+
+        this.getEvents().addListener("room cleared", Reception::clearRoom);
     }
 
     @Override
@@ -39,21 +39,24 @@ public class Reception extends GameArea {
         spawnWallsAndDoor();
         player = spawnPlayer();
         spawnFloor();
+        spawnShopKiosk();
         spawnholoclock();
-        spawnEnemies();
         spawnplatform2();
         spawnObjectDoors(new GridPoint2(0, 6), new GridPoint2(28, 20));
         spawndesk_reception();
         spawncomic_stand();
         spawnTeleporter();
 
+        if (!Reception.isCleared) {
+            startWaves(player);
+            ItemSpawner itemSpawner = new ItemSpawner(this);
+            itemSpawner.spawnItems(ItemSpawnConfig.receptionmap());
+        }
+
         Entity ui = new Entity();
         ui.addComponent(new GameAreaDisplay("Reception"))
                 .addComponent(new com.csse3200.game.components.gamearea.FloorLabelDisplay("Floor 2"));
         spawnEntity(ui);
-        ItemSpawner itemSpawner = new ItemSpawner(this);
-        itemSpawner.spawnItems(ItemSpawnConfig.receptionmap());
-
     }
 
     public static Reception load(TerrainFactory terrainFactory, CameraComponent camera) {
@@ -104,7 +107,7 @@ public class Reception extends GameArea {
             spawnEntity(leftTop);
         }
         Entity leftDoor = ObstacleFactory.createDoorTrigger(WALL_WIDTH, leftDoorHeight);
-        leftDoor.setPosition(b.leftX() + 0.001f, leftDoorY + leftDoorHeight);
+        leftDoor.setPosition(b.leftX() + 0.001f, leftDoorY);
         leftDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadForest));
         spawnEntity(leftDoor);
 
@@ -121,10 +124,12 @@ public class Reception extends GameArea {
         rightDoor.setPosition(b.rightX() - WALL_WIDTH - 0.001f, rightDoorY + 8f);
         rightDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadBackToFloor5));
         spawnEntity(rightDoor);
+
+        if (!Reception.isCleared) registerDoors(new Entity[]{leftDoor, rightDoor});
     }
 
     private void loadForest() {
-        ForestGameArea.setRoomSpawn(new GridPoint2(24, 8));
+        ForestGameArea.setRoomSpawn(new GridPoint2(23, 8));
         clearAndLoad(() -> new ForestGameArea(terrainFactory, cameraComponent));
     }
 
@@ -137,22 +142,6 @@ public class Reception extends GameArea {
         return spawnOrRepositionPlayer(playerSpawn);
     }
 
-    private void spawnEnemies() {
-        if (player == null)
-            return;
-
-        Entity vroomba = com.csse3200.game.entities.factories.characters.NPCFactory.createVroomba(player,
-                ServiceLocator.getDifficulty().getRoomDifficulty(this.roomDiffNumber));
-        spawnEntityAt(vroomba, new GridPoint2(5, 17), true, false);
-
-    }
-
-    private void spawnGPTs() {
-        Entity ghost1 = NPCFactory.createGhostGPT(player, this, ServiceLocator.getDifficulty().getRoomDifficulty(this.roomDiffNumber));
-        GridPoint2 ghost1Pos = new GridPoint2(25, 7);
-        spawnEntityAt(ghost1, ghost1Pos, true, false);
-    }
-
     private void spawnShopKiosk() {
         CatalogService catalog = ShopDemo.makeDemoCatalog();
         ShopManager manager = new ShopManager(catalog);
@@ -163,8 +152,8 @@ public class Reception extends GameArea {
     private void spawnplatform2() {
         float PlatformX = 5.5f;
         float PlatformY = 3f;
-        float PlatformX2 = 1f;
-        float PlatformY2 = 6f;
+        float PlatformX2 = 1.5f;
+        float PlatformY2 = 5.5f;
         float PlatformX3 = 7f;
         float PlatformY3 = 7f;
         float PlatformX4 = 12.5f;
@@ -181,15 +170,14 @@ public class Reception extends GameArea {
         Entity Platform4 = ObstacleFactory.createplatform2();
         Platform4.setPosition(PlatformX4, PlatformY4);
         spawnEntity(Platform4);
-
     }
 
     /**
      * Spawning the clock on the second platform
      **/
     private void spawnholoclock() {
-        float PlatformX = 0.8f;
-        float PlatformY = 7.45f;
+        float PlatformX = 1.3f;
+        float PlatformY = 6.95f;
         Entity clock1 = ObstacleFactory.createholoclock();
         clock1.setPosition(PlatformX, PlatformY);
         spawnEntity(clock1);
@@ -245,5 +233,23 @@ public class Reception extends GameArea {
 
     public Entity getPlayer() {
         return player;
+    }
+
+    /**
+     * Clear room, set this room's static
+     * boolean isCleared variable to true
+     */
+    public static void clearRoom() {
+        Reception.isCleared = true;
+        logger.debug("Reception is cleared");
+    }
+
+    /**
+     * Unclear room, set this room's static
+     * boolean isCleared variable to false
+     */
+    public static void unclearRoom() {
+        Reception.isCleared = false;
+        logger.debug("Reception is uncleared");
     }
 }

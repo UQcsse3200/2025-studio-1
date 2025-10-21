@@ -2,8 +2,6 @@ package com.csse3200.game.components;
 
 import com.csse3200.game.components.boss.DamageReductionComponent;
 import com.csse3200.game.components.enemy.LowHealthAttackBuffComponent;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Component used to store information related to combat such as health, attack, etc. Any entities
@@ -11,9 +9,7 @@ import org.slf4j.LoggerFactory;
  * extended for more specific combat needs.
  */
 public class CombatStatsComponent extends Component {
-
-    private static final Logger logger = LoggerFactory.getLogger(CombatStatsComponent.class);
-    private final int thresholdForBuff = 20;
+    private static final int THRESHOLD_FOR_BUFF = 20;
     /**
      * Current health points (HP). Never negative.
      */
@@ -51,7 +47,7 @@ public class CombatStatsComponent extends Component {
     /**
      * Construct a combat Stats Component (Health + Attack System)
      *
-     * @param health initial health (values {@code < 0} are clamped to {@code 0})
+     * @param health              initial health (values {@code < 0} are clamped to {@code 0})
      * @param knockbackResistance The knockback resistance of this entity. Value range is [0, 1], where 0 means
      *                            0% knockback resistance, and 1 means 100% knockback resistance (not affected by
      *                            knockback at all)
@@ -95,10 +91,9 @@ public class CombatStatsComponent extends Component {
             entity.getEvents().trigger("updateHealth", this.health);
 
             // Apply attack buff on low health if the entity has that component
-            if (this.health <= thresholdForBuff && (!isDead())) {
-                if (entity.getComponent(LowHealthAttackBuffComponent.class) != null) {
-                    entity.getEvents().trigger("buff");
-                }
+            if (this.health <= THRESHOLD_FOR_BUFF && (!isDead())
+                    && entity.getComponent(LowHealthAttackBuffComponent.class) != null) {
+                entity.getEvents().trigger("buff");
             }
 
             if (prevHealth > 0 && this.health == 0) {
@@ -199,9 +194,10 @@ public class CombatStatsComponent extends Component {
 
     /**
      * Gets the knockback resistance of this entity
+     *
      * @return The knockback resistance of this entity. Value range is [0, 1], where 0 means
-     *                           0% knockback resistance, and 1 means 100% knockback resistance (not affected by
-     *                           knockback at all)
+     * 0% knockback resistance, and 1 means 100% knockback resistance (not affected by
+     * knockback at all)
      */
     public float getKnockbackResistance() {
         return knockbackResistance;

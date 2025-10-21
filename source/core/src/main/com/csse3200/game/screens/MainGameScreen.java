@@ -36,9 +36,11 @@ import com.csse3200.game.session.GameSession;
 import com.csse3200.game.session.SessionManager;
 import com.csse3200.game.ui.terminal.Terminal;
 import com.csse3200.game.ui.terminal.TerminalDisplay;
+import com.csse3200.game.lighting.LightingService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
@@ -104,10 +106,15 @@ public class MainGameScreen extends ScreenAdapter {
         ServiceLocator.registerRenderService(new RenderService());
 
         ServiceLocator.clearPlayer();
+        this.unclearAllRooms();
 
         renderer = RenderFactory.createRenderer();
         renderer.getCamera().getEntity().setPosition(CAMERA_POSITION);
         renderer.getDebug().renderPhysicsWorld(physicsEngine.getWorld());
+
+        LightingService lightingService =
+                new LightingService(renderer.getCamera(), physicsEngine.getWorld());
+        ServiceLocator.registerLightingService(lightingService);
 
         loadAssets();
         countdownTimer = new CountdownTimerService(ServiceLocator.getTimeSource(), 240000);
@@ -124,7 +131,7 @@ public class MainGameScreen extends ScreenAdapter {
 
         if (loadSaveGame) {
             logger.info("loading game from save file");
-            SaveGame.GameState load = SaveLoadService.load();
+            SaveGame.GameState load = SaveLoadService.load("saves" + File.separator + "slides.json");
             gameArea = new ForestGameArea(terrainFactory, renderer.getCamera());
             ServiceLocator.registerGameArea(gameArea);
             ForestGameArea.setRoomSpawn(new GridPoint2(3, 20));
@@ -132,8 +139,9 @@ public class MainGameScreen extends ScreenAdapter {
             //all areas in the game for loading
             switch (load.getGameArea()) {
                 case "Forest" -> gameArea = ForestGameArea.load(terrainFactory, renderer.getCamera());
-                case "Elevator" -> gameArea = ElevatorGameArea.load(terrainFactory, renderer.getCamera());
-                case "Office" -> gameArea = OfficeGameArea.load(terrainFactory, renderer.getCamera());
+                case "Elevator" ->
+                        gameArea.clearAndLoad(() -> ElevatorGameArea.load(terrainFactory, renderer.getCamera()));
+                case "Office" -> gameArea.clearAndLoad(() -> OfficeGameArea.load(terrainFactory, renderer.getCamera()));
                 case "Mainhall" -> gameArea.clearAndLoad(() -> MainHall.load(terrainFactory, renderer.getCamera()));
                 case "Reception" -> gameArea.clearAndLoad(() -> Reception.load(terrainFactory, renderer.getCamera()));
                 case "Tunnel" -> gameArea = TunnelGameArea.load(terrainFactory, renderer.getCamera());
@@ -141,8 +149,13 @@ public class MainGameScreen extends ScreenAdapter {
                 case "Storage" -> gameArea = StorageGameArea.load(terrainFactory, renderer.getCamera());
                 case "Shipping" -> gameArea = ShippingGameArea.load(terrainFactory, renderer.getCamera());
                 case "Server" -> gameArea = ServerGameArea.load(terrainFactory, renderer.getCamera());
+                case "Casino" -> gameArea = CasinoGameArea.load(terrainFactory, renderer.getCamera());
+                case "Research" ->
+                        gameArea.clearAndLoad(() -> ResearchGameArea.load(terrainFactory, renderer.getCamera()));
                 default -> gameArea = null;
             }
+
+            clearUpTo(load.getGameArea());
 
             //will instantiate all items
             if (gameArea != null) {
@@ -153,6 +166,7 @@ public class MainGameScreen extends ScreenAdapter {
                         load.getArmour(),
                         load.getInventory()
                 );
+                gameArea.setWave(load.getWave());
                 exploredAreas = load.getAreasVisited();
 
             } else {
@@ -174,6 +188,7 @@ public class MainGameScreen extends ScreenAdapter {
     /**
      * private helper method for setting multiple areas to be discovered on startup
      * such as on loading
+     *
      * @param areas Set of areas to be marked discovered
      */
     private void discover(Set<String> areas) {
@@ -258,6 +273,13 @@ public class MainGameScreen extends ScreenAdapter {
             minimap.getComponent(MinimapDisplay.class).zoomOut();
         }
 
+        if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT) && isMinimapVisible) {
+            minimap.getComponent(MinimapDisplay.class).pan("left");
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT) && isMinimapVisible) {
+            minimap.getComponent(MinimapDisplay.class).pan("right");
+        }
+
         //switch to death screen when countdown timer is up
         if (countdownTimer.isTimeUP()) {
             setDeathScreen();
@@ -294,6 +316,12 @@ public class MainGameScreen extends ScreenAdapter {
         // Preserve player entity during disposal
         Entity player = ServiceLocator.getPlayer();
         ServiceLocator.getEntityService().disposeExceptPlayer();
+
+        var ls = ServiceLocator.getLightingService();
+        if (ls != null && ls.getEngine() != null) {
+            ls.getEngine().dispose();
+        }
+
         ServiceLocator.getRenderService().dispose();
         ServiceLocator.getResourceService().dispose();
         ServiceLocator.clearExceptPlayer();
@@ -334,7 +362,9 @@ public class MainGameScreen extends ScreenAdapter {
         ServiceLocator.getEntityService().register(ui);
     }
 
-    /** Remaining time in seconds, clamped to >= 0 */
+    /**
+     * Remaining time in seconds, clamped to >= 0
+     */
     private long getRemainingSeconds() {
         long rem = countdownTimer.getRemainingMs();
         return rem > 0 ? rem / 1000 : 0;
@@ -474,5 +504,57 @@ public class MainGameScreen extends ScreenAdapter {
         DeathScreen deathScreen = new DeathScreen(game);
         deathScreen.updateTime(getCompleteTime());
         game.setScreen(deathScreen);
+    }
+
+    /**
+     * This private helper function sets the
+     * 'isCleared' variable to false, so that
+     * enemies will spawn in all the rooms
+     * <p>
+     * Should be called sometime before the game starts
+     */
+    private void unclearAllRooms() {
+        Reception.unclearRoom();
+        MainHall.unclearRoom();
+        ElevatorGameArea.unclearRoom();
+        OfficeGameArea.unclearRoom();
+        ResearchGameArea.unclearRoom();
+        SecurityGameArea.unclearRoom();
+        ServerGameArea.unclearRoom();
+        ShippingGameArea.unclearRoom();
+        StorageGameArea.unclearRoom();
+        TunnelGameArea.unclearRoom();
+        MovingBossRoom.unclearRoom();
+        StaticBossRoom.unclearRoom();
+        FlyingBossRoom.unclearRoom();
+    }
+
+    /**
+     * Clears all rooms up to specified room
+     * Should be called when loading in.
+     *
+     * @param room room that the player will be spawned in.
+     *             Clear all rooms behind it
+     */
+    private void clearUpTo(String room) {
+        String[] roomList = {"Forest", "Reception", "Mainhall",
+                "Security", "MovingBossRoom", "Office", "Elevator",
+                "Research", "FlyingBossRoom", "Shipping",
+                "Storage", "Server", "Tunnel"};
+
+        Runnable[] runnables = {() -> {
+        }, Reception::clearRoom,
+                MainHall::clearRoom, SecurityGameArea::clearRoom,
+                OfficeGameArea::clearRoom, ElevatorGameArea::clearRoom,
+                ResearchGameArea::clearRoom, FlyingBossRoom::clearRoom,
+                ShippingGameArea::clearRoom, StorageGameArea::clearRoom,
+                ServerGameArea::clearRoom, TunnelGameArea::clearRoom};
+
+        int i = 0;
+        for (String eachRoom : roomList) {
+            if (eachRoom.equals(room)) return;
+            runnables[i].run();
+            i++;
+        }
     }
 }

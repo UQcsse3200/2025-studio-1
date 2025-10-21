@@ -19,7 +19,7 @@ public class NpcHealingComponent extends Component {
     /**
      * Creates an NPC healing component
      *
-     * @param player the player entity to heal
+     * @param player     the player entity to heal
      * @param healAmount the amount of health to restore
      */
     public NpcHealingComponent(Entity player, int healAmount) {

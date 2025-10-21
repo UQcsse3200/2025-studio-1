@@ -293,7 +293,9 @@ public class PlayerInventoryDisplay extends UIComponent {
             }
         }
     }
+
     private boolean visible = false;
+
     public void toggleVisibility() {
         if (!visible) {
             // Animate in
@@ -318,6 +320,7 @@ public class PlayerInventoryDisplay extends UIComponent {
         }
         visible = !visible;
     }
+
     public void show() {
         visible = true;
         table.setVisible(true);
