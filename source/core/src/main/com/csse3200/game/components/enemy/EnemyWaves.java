@@ -25,14 +25,21 @@ public class EnemyWaves extends Component {
     private int waveNumber = 0;      // waves spawned so far
     private float scalingFactor = 1f; // difficulty scaling
     private final int baseEnemies = 3;
+    private int lastNumEnemyLeft = 0;
+    private int enemyLeft;
 
     private static final long WAVE_DELAY_MS = 5000; // delay between waves after all enemies dead
     private static final float TICK_SEC = 0.1f;     // poll cadence
+    private static final float ALERT_DURATION_SEC = 2.0f; // how long to show wave alert before spawning
 
     private Timer.Task task;
     private long waveEndTime = 0; // timestamp when last enemy of a wave died
 
     private final EventHandler eventHandler;
+
+    // UI alert shown before spawning a wave
+    private WaveAlertDisplay alertDisplay;
+    private boolean alertShowing = false;
 
     public EnemyWaves(int maxWaves, GameArea area, Entity player) {
         this.maxWaves = Math.max(1, maxWaves);
@@ -62,10 +69,9 @@ public class EnemyWaves extends Component {
                 tick();
             }
         }, TICK_SEC, TICK_SEC);
-        // If no waves spawned yet, spawn first immediately
+        // If no waves spawned yet, begin with an alert then spawn
         if (waveNumber == 0) {
-            spawnWave();
-            this.eventHandler.trigger("spawnWave");
+            showAlertThenSpawn();
         }
     }
 
@@ -76,6 +82,50 @@ public class EnemyWaves extends Component {
         waveNumber = 0;
         scalingFactor = 1f;
         waveEndTime = 0;
+        alertShowing = false;
+        alertDisplay = null;
+    }
+
+    /**
+     * Shows the pre-wave alert, waits for it to finish, then spawns the wave.
+     * If the alert cannot be shown (e.g., no stage), spawns immediately.
+     */
+    private void showAlertThenSpawn() {
+        if (waveNumber >= maxWaves) {
+            return; // nothing to spawn
+        }
+        if (alertShowing) {
+            return; // already showing alert
+        }
+        try {
+            alertDisplay = new WaveAlertDisplay();
+            alertDisplay.display();
+            alertShowing = true;
+            Timer.schedule(new Timer.Task() {
+                @Override
+                public void run() {
+                    try {
+                        if (alertDisplay != null) {
+                            alertDisplay.dispose();
+                        }
+                    } catch (Exception ignored) { }
+                    finally {
+                        alertDisplay = null;
+                        alertShowing = false;
+                    }
+                    // Guard in case session finished while alert was visible
+                    if (waveNumber < maxWaves) {
+                        spawnWave();
+                        eventHandler.trigger("spawnWave");
+                    }
+                }
+            }, ALERT_DURATION_SEC);
+        } catch (Exception e) {
+            // If anything goes wrong showing the alert, spawn immediately
+            logger.debug("Wave alert could not be shown: {}", e.getMessage());
+            spawnWave();
+            eventHandler.trigger("spawnWave");
+        }
     }
 
     /**
@@ -110,14 +160,20 @@ public class EnemyWaves extends Component {
         EntityService es = ServiceLocator.getEntityService();
         if (es == null) return;
         boolean anyAlive = false;
+        enemyLeft = 0;
         for (Entity e : es.getEntities()) {
             CombatStatsComponent stats = e.getComponent(CombatStatsComponent.class);
             if (stats == null || !isEnemy(e)) continue;
             if (stats.getHealth() > 0) {
                 anyAlive = true;
-                break;
+                enemyLeft++;
             }
         }
+        logger.info("Enemy num: {}", enemyLeft);
+        if (enemyLeft != lastNumEnemyLeft) {
+            this.eventHandler.trigger("numEnemyLeftChanged");
+        }
+        lastNumEnemyLeft = enemyLeft;
 
         long now = System.currentTimeMillis();
         if (!anyAlive) {
@@ -128,7 +184,7 @@ public class EnemyWaves extends Component {
                     logger.info("EnemyWaves: wave {} cleared; next in {} ms", waveNumber, WAVE_DELAY_MS);
                 } else if (now - waveEndTime >= WAVE_DELAY_MS) {
                     waveEndTime = 0;
-                    spawnWave();
+                    showAlertThenSpawn();
                 }
             } else {
                 // finished all waves
@@ -249,11 +305,40 @@ public class EnemyWaves extends Component {
         this.waveEndTime = waveEndTime;
     }
 
+    /**
+     * Returns the delay between enemy waves in seconds.
+     *
+     * @return wave delay duration in seconds
+     */
     public int getWaveDelayInSeconds() {
         return (int) WAVE_DELAY_MS / 1000;
     }
 
+    /**
+     * @return the {@link EventHandler} managing wave-related events
+     */
     public EventHandler getEvents() {
         return eventHandler;
     }
+
+    /**
+     * Sets the current number of enemies remaining.
+     * Primarily used for testing or manual state updates.
+     *
+     * @param enemyNum the number of enemies left
+     */
+    public void setEnemyLeft(int enemyNum) {
+        enemyLeft = enemyNum;
+    }
+
+    /**
+     * Returns the current number of enemies remaining in the wave.
+     *
+     * @return the number of enemies left
+     */
+    public int getEnemyLeft() {
+        return enemyLeft;
+    }
+
 }
+
