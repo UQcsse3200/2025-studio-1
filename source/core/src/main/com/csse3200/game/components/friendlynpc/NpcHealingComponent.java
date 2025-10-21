@@ -22,7 +22,7 @@ public class NpcHealingComponent extends Component {
     private long cooldownMillis = 0; // 0 = no cooldown
     private long lastTriggerTime = 0L;
 
-    private static final String HealPath = "sounds/healing-magic.mp3";
+    private static final String HEAL_PATH = "sounds/healing-magic.mp3";
 
     /**
      * Creates an NPC healing component (healing only, no shield)
@@ -144,7 +144,7 @@ public class NpcHealingComponent extends Component {
     private void playHealSound() {
         try {
             ResourceService rs = ServiceLocator.getResourceService();
-            Sound sfx = rs.getAsset(HealPath, Sound.class);
+            Sound sfx = rs.getAsset(HEAL_PATH, Sound.class);
             if (sfx != null) {
                 sfx.play(0.7f);
             }

@@ -16,6 +16,7 @@ import com.csse3200.game.services.ServiceLocator;
 
 public final class Remotetipdisplay{
     private Remotetipdisplay() {}
+    private static final String UI_SKIN_PATH = "uiskin.json";
     public static Table attach(Stage stage) {
         return attach(stage, 0.22f);
     }
@@ -68,10 +69,10 @@ public final class Remotetipdisplay{
     }
 
     private static Skin trySkin() {
-        if (ServiceLocator.getResourceService().containsAsset("uiskin.json", Skin.class)) {
-            return ServiceLocator.getResourceService().getAsset("uiskin.json", Skin.class);
+        if (ServiceLocator.getResourceService().containsAsset(UI_SKIN_PATH, Skin.class)) {
+            return ServiceLocator.getResourceService().getAsset(UI_SKIN_PATH, Skin.class);
         } else {
-            return new Skin(Gdx.files.internal("uiskin.json"));
+            return new Skin(Gdx.files.internal(UI_SKIN_PATH));
         }
     }
 }

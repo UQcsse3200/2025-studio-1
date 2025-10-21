@@ -1183,6 +1183,6 @@ public abstract class GameArea implements Disposable {
                             Vector2 camPos) {
     }
     public float roomNumber() {
-        return (float)getRoomNumber();
+        return getRoomNumber();
     }
 }

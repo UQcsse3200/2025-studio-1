@@ -1,63 +1,18 @@
 {
-"player": {
-	"playerPos": {
-		"x": 2.8315246,
-		"y": 3.5149999
+	"player": {
+		"playerPos": {
+			"x": 10.313381,
+			"y": 3.6149998
+		},
+		"avatar": "placeholder",
+		"ammoReserve": 1000,
+		"stamina": 140,
+		"maxStamina": 140,
+		"maxHealth": 80,
+		"currentHealth": 80,
+		"processor": 9000
 	},
-	"avatar": "images/avatars/burger.png",
-	"ammoReserve": 1030,
-	"stamina": 56.399963,
-	"maxStamina": 56.399963,
-	"maxHealth": 160,
-	"currentHealth": 105,
-	"processor": 530,
-	"keyCardLevel": 1
-},
-"gameArea": "MovingBoss",
-"loadedInventory": [
-	{
-		"type": "RANGED",
-		"ammo": 30,
-		"texture": "images/pistol.png",
-		"count": 1,
-		"upgradeStage": 1
-	},
-	{
-		"type": "MELEE",
-		"texture": "images/dagger.png",
-		"count": 1,
-		"upgradeStage": 1
-	},
-	{
-		"type": "RANGED",
-		"ammo": 50,
-		"texture": "images/rifle.png",
-		"count": 1,
-		"upgradeStage": 1
-	},
-	{
-		"type": "MELEE",
-		"texture": "images/dagger.png",
-		"count": 1,
-		"upgradeStage": 1
-	},
-	{
-		"type": "RANGED",
-		"ammo": 11,
-		"texture": "images/pistol.png",
-		"count": 1,
-		"upgradeStage": 1
-	}
-],
-"difficulty": "NORMAL",
-"areasVisited": [
-	"forest",
-	"security",
-	"movingboss",
-	"mainhall",
-	"reception"
-],
-"armour": [
-	"images/armour-assets/hood.png"z
-]
+	"gameArea": "Forest",
+	"wave": 2,
+	"loadedInventory": []
 }
