@@ -54,10 +54,10 @@ public class TipComponent extends Component {
             // Unregister and dispose safely
             try {
                 ServiceLocator.getEntityService().unregister(tip);
-            } catch (Exception ignored) {}
+            } catch (Exception ignored) { // safe guard }
             try {
                 tip.dispose();
-            } catch (Exception ignored) {}
+            } catch (Exception ignored) { // safe guard }
             tip = null;
         }
     }
