@@ -154,6 +154,11 @@ public class ShippingGameArea extends GameArea {
         leftDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadFlyingBossRoom));
         spawnEntity(leftDoor);
 
+
+        Entity leftDoorSprite = ObstacleFactory.createDoor();
+        leftDoorSprite.setPosition(b.leftX(), leftDoorY);
+        spawnEntity(leftDoorSprite);
+
         addSolidWallRight(b, WALL_WIDTH);
 
         float rightDoorHeight = Math.max(1f, b.viewHeight() * 0.2f);
@@ -162,6 +167,11 @@ public class ShippingGameArea extends GameArea {
         rightDoor.setPosition(b.rightX() - WALL_WIDTH - 0.001f, rightDoorY);
         rightDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadStorage));
         spawnEntity(rightDoor);
+
+
+        Entity rightDoorSprite = ObstacleFactory.createDoor();
+        rightDoorSprite.setPosition(b.rightX() - WALL_WIDTH - 1.0f, rightDoorY);
+        spawnEntity(rightDoorSprite);
 
         if (!ShippingGameArea.isCleared) registerDoors(new Entity[]{leftDoor, rightDoor});
     }
