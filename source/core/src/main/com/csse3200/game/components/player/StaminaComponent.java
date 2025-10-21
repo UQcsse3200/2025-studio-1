@@ -3,11 +3,10 @@ package com.csse3200.game.components.player;
 import com.badlogic.gdx.utils.Timer;
 import com.csse3200.game.components.Component;
 import com.csse3200.game.entities.AvatarRegistry;
+import com.csse3200.game.services.GameTime;
+import com.csse3200.game.services.ServiceLocator;
 
 public class StaminaComponent extends Component {
-
-    private Timer.Task task;
-
     // Stamina Constants
     private int MAX_STAMINA = 100;
     private int INITIAL_STAMINA = 100;
@@ -28,9 +27,12 @@ public class StaminaComponent extends Component {
     private long lastStaminaSpendMs = 0L;
     private int lastEmittedStamina = -1;
 
+    private GameTime time;
+    private float tickAccumulator = 0f;
+
     @Override
     public void create() {
-        startTask();
+        time = ServiceLocator.getTimeSource();
         emitChanged();
         if (AvatarRegistry.get() != null) {
             float playerSpeed = AvatarRegistry.get().moveSpeed();
@@ -48,8 +50,19 @@ public class StaminaComponent extends Component {
      */
     @Override
     public void dispose() {
-        if (task != null) {
-            task.cancel();
+    }
+
+    @Override
+    public void update() {
+        float dt = time.getDeltaTime();
+        if (dt <= 0f) {
+            return;
+        }
+
+        tickAccumulator += dt;
+        while (tickAccumulator >= TICK_SEC) {
+            tick();
+            tickAccumulator -= TICK_SEC;
         }
     }
 
@@ -81,7 +94,7 @@ public class StaminaComponent extends Component {
 
         // Update stamina values
         stamina -= amount;
-        lastStaminaSpendMs = System.currentTimeMillis();
+        lastStaminaSpendMs = time.getTime();
         emitChanged();
         return true;
     }
@@ -152,42 +165,6 @@ public class StaminaComponent extends Component {
         this.grounded = grounded;
     }
 
-    /**
-     * Starts (or restarts) the repeating stamina update task.
-     * Uses libGDX Timer so that ticks are posted onto the main render thread.
-     * If a task is already running it will be cancelled and replaced.
-     */
-    private void startTask() {
-        if (task != null) task.cancel();
-        task = Timer.schedule(new Timer.Task() {
-            @Override
-            public void run() {
-                tick();
-            }
-        }, TICK_SEC, TICK_SEC);
-    }
-
-
-    /**
-     * One stamina "tick". Called at a fixed cadence by {@link #startTask()} ()}.
-     * Checks for horizontal movement. Jumps, dashes and other special movement actions
-     * stamina changes are implemented in the handlers respectively.
-     * <p>
-     * Rules:
-     * - If {@code infiniteStamina} is enabled, keep stamina pegged at MAX and notify UI.
-     * - While sprinting and moving horizontally (and not dashing), drain stamina.
-     * - If not spending for {@code STAMINA_REGEN_DELAY_MS}, regenerate up to MAX.
-     * - UI is only notified when the integer stamina value actually changes.
-     */
-    private void tick() {
-        if (infiniteStamina) {
-            stamina = MAX_STAMINA;
-            emitChanged();
-            return;
-        }
-        checkDrainStamina();
-        regenerateStamina();
-    }
 
     /**
      * Emits a stamina change event to the UI layer, but only if the integer value
@@ -202,11 +179,22 @@ public class StaminaComponent extends Component {
         entity.getEvents().trigger("staminaChanged", curr, MAX_STAMINA);
     }
 
+    private void tick() {
+        if (infiniteStamina) {
+            stamina = MAX_STAMINA;
+            emitChanged();
+            return;
+        }
+        checkDrainStamina();
+        regenerateStamina();
+    }
+
+
     /**
      * Drains the player's stamina if they have executed a movement.
      */
     private void checkDrainStamina() {
-        final long now = System.currentTimeMillis();
+        final long now = time.getTime();
 
         final boolean draining = sprinting && moving && grounded && !dashing;
         if (draining && stamina > 0f) {
@@ -229,7 +217,7 @@ public class StaminaComponent extends Component {
      * Regenerate stamina if player is standing or walking.
      */
     private void regenerateStamina() {
-        final long now = System.currentTimeMillis();
+        final long now = time.getTime();
         if (!dashing && (now - lastStaminaSpendMs) >= REGEN_DELAY_MS) {
             // No stamina expending event occurred
             final float before = stamina;

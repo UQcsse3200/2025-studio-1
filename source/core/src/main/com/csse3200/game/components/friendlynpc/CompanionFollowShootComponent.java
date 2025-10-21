@@ -69,12 +69,15 @@ public class CompanionFollowShootComponent extends Component {
         cd = cooldown;
         entity.getEvents().trigger("fired");
     }
+
     public boolean isAttack() {
         return attack;
     }
+
     public void setAttack(boolean attack) {
         this.attack = attack;
     }
+
     public CompanionFollowShootComponent cooldown(float seconds) {
         this.cooldown = seconds;
         return this;

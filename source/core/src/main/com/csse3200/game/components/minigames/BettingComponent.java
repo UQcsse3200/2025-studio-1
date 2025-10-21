@@ -23,7 +23,7 @@ public class BettingComponent extends UIComponent {
 
     private static final float PANEL_W = 600f;
     private static final float PANEL_H = 400f;
-    private static final Color PANEL_COLOR = Color.OLIVE;
+    private static final Color PANEL_COLOR = Color.DARK_GRAY;
     private static final Color TEXT_COLOR = Color.WHITE;
 
     private final BettingLogic logic;
@@ -58,7 +58,7 @@ public class BettingComponent extends UIComponent {
         return t;
     }
 
-// === Helper methods ===
+    // === UI Initialization ===
 
     /**
      * Initializes the betting UI, sets up the layout, event listeners, and game event bindings.
@@ -176,9 +176,9 @@ public class BettingComponent extends UIComponent {
         closeBtn.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
+                ServiceLocator.getTimeSource().setPaused(false);
                 hide();
                 resultLabel.setText("Bet cancelled.");
-                ServiceLocator.getTimeSource().setPaused(false);
             }
         });
         root.add(closeBtn).width(160).height(50).padBottom(10f).row();
@@ -195,29 +195,62 @@ public class BettingComponent extends UIComponent {
         entity.getEvents().addListener("win", this::onWin);
         entity.getEvents().addListener("tie", this::onTie);
         entity.getEvents().addListener("lose", this::onLose);
+        entity.getEvents().addListener("split", this::split);
+        entity.getEvents().addListener("double", this::doubleDown);
+        entity.getEvents().addListener("doubleLose", this::doubleLose);
+        entity.getEvents().addListener("doubleWin", this::doubleWin);
+        entity.getEvents().addListener("doubleTie", this::doubleTie);
     }
 
-    /**
-     * Called when the player wins. Updates balance and displays a dialog with the winnings.
-     */
-    void onWin() {
-        logic.onWin();
-        updateBalance();
+    // === Game-specific actions ===
 
-        Dialog dialog = new Dialog("Winner!", skin);
-        dialog.text("Congratulations you won $" + (logic.calculateWinnings() - logic.getBet()));
+    void split() {
+        if (logic.canDouble()) {
+            logic.split();
+            entity.getEvents().trigger("splitSuccess");
+        } else {
+            Dialog dialog = new Dialog("Cannot split", skin);
+            dialog.text("Not enough funds");
+            dialog.button("OK");
+            ServiceLocator.getRenderService().getStage().addActor(dialog);
+            dialog.show(ServiceLocator.getRenderService().getStage());
+        }
+    }
+
+    void doubleDown() {
+        if (logic.canDouble()) {
+            logic.doubleBet();
+            entity.getEvents().trigger("doubleSuccess");
+        } else {
+            Dialog dialog = new Dialog("Cannot double", skin);
+            dialog.text("Not enough funds");
+            dialog.button("OK");
+            ServiceLocator.getRenderService().getStage().addActor(dialog);
+            dialog.show(ServiceLocator.getRenderService().getStage());
+        }
+    }
+
+    void doubleLose() {
+        updateBalance();
+        Dialog dialog = new Dialog("Double Loser!", skin);
+        dialog.text("You lost $" + (logic.getBet() * 2));
         dialog.button("OK");
         ServiceLocator.getRenderService().getStage().addActor(dialog);
         dialog.show(ServiceLocator.getRenderService().getStage());
     }
 
-    /**
-     * Called when the game results in a tie. Updates balance and shows a tie dialog.
-     */
-    void onTie() {
-        logic.onTie();
-        updateBalance();
+    void doubleWin() {
+        logic.doubleWin();
+        Dialog dialog = new Dialog("Double Winner!", skin);
+        dialog.text("Congratulations you won $" + logic.calculateWinnings());
+        dialog.button("OK");
+        ServiceLocator.getRenderService().getStage().addActor(dialog);
+        dialog.show(ServiceLocator.getRenderService().getStage());
+    }
 
+    void doubleTie() {
+        logic.doubleTie();
+        updateBalance();
         Dialog dialog = new Dialog("Tie!", skin);
         dialog.text("Tie! You get your money back!");
         dialog.button("OK");
@@ -225,13 +258,29 @@ public class BettingComponent extends UIComponent {
         dialog.show(ServiceLocator.getRenderService().getStage());
     }
 
-    /**
-     * Called when the player loses. Updates balance and shows a loss dialog.
-     */
+    void onWin() {
+        logic.onWin();
+        updateBalance();
+        Dialog dialog = new Dialog("Winner!", skin);
+        dialog.text("Congratulations you won $" + (logic.calculateWinnings() - logic.getBet()));
+        dialog.button("OK");
+        ServiceLocator.getRenderService().getStage().addActor(dialog);
+        dialog.show(ServiceLocator.getRenderService().getStage());
+    }
+
+    void onTie() {
+        logic.onTie();
+        updateBalance();
+        Dialog dialog = new Dialog("Tie!", skin);
+        dialog.text("Tie! You get your money back!");
+        dialog.button("OK");
+        ServiceLocator.getRenderService().getStage().addActor(dialog);
+        dialog.show(ServiceLocator.getRenderService().getStage());
+    }
+
     void onLose() {
         logic.onLose();
         updateBalance();
-
         Dialog dialog = new Dialog("Loser!", skin);
         dialog.text("You lost $" + logic.getBet());
         dialog.button("OK");
@@ -239,32 +288,22 @@ public class BettingComponent extends UIComponent {
         dialog.show(ServiceLocator.getRenderService().getStage());
     }
 
-    /**
-     * Adjusts the bet amount by the given delta and updates the input field.
-     *
-     * @param delta the amount to add or subtract from the current bet
-     */
+    // === UI helper methods ===
+
     private void adjustBet(int delta) {
         logic.adjustBet(delta);
         betInput.setText(String.valueOf(logic.getBet()));
     }
 
-    /**
-     * Updates the balance label with the player's current balance.
-     */
     private void updateBalance() {
         balanceLabel.setText("Balance: $" + logic.getBalance());
     }
 
-    /**
-     * The stage handles rendering for this component, so no manual drawing is needed.
-     */
     @Override
-    public void draw(SpriteBatch batch) { /* Stage handles rendering */ }
+    public void draw(SpriteBatch batch) {
+        // Stage handles rendering
+    }
 
-    /**
-     * Cleans up textures and removes UI elements from the stage.
-     */
     @Override
     public void dispose() {
         if (root != null) root.remove();

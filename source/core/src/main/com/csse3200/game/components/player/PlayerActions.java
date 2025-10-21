@@ -255,8 +255,6 @@ public class PlayerActions extends Component {
             if (isGroundJump) {
                 if (!touchingGround()) canJump = false;
                 if (physicsComponent.getBody().getLinearVelocity().y > 0f) canJump = false;
-            } else {
-                if (!stamina.trySpend(DOUBLE_JUMP_COST)) return;
             }
 
             if (canJump) {
@@ -652,7 +650,7 @@ public class PlayerActions extends Component {
         if (facingRight) {
             body.setTransform(playerPos.x + handOffsetX, playerPos.y + handOffsetY, 0f);
         } else {
-            body.setTransform(playerPos.x - handOffsetX,  playerPos.y + handOffsetY, 0f);
+            body.setTransform(playerPos.x - handOffsetX, playerPos.y + handOffsetY, 0f);
         }
     }
 
