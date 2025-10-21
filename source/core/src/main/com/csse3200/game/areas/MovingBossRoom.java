@@ -17,10 +17,7 @@ import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.entities.spawner.ItemSpawner;
 import com.csse3200.game.physics.components.ColliderComponent;
 import com.csse3200.game.services.ServiceLocator;
-import com.csse3200.game.components.gamearea.GameAreaDisplay;
-import com.csse3200.game.entities.factories.characters.FriendlyNPCFactory;
 import com.csse3200.game.services.ResourceService;
-import com.csse3200.game.services.ServiceLocator;
 
 
 import org.slf4j.Logger;

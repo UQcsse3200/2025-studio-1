@@ -14,7 +14,6 @@ import com.csse3200.game.components.boss.*;
 import com.csse3200.game.components.enemy.EnemyDeathRewardComponent;
 import com.csse3200.game.components.enemy.EnemyMudBallAttackComponent;
 import com.csse3200.game.components.enemy.EnemyMudRingSprayComponent;
-import com.csse3200.game.components.npc.BossAnimationController;
 import com.csse3200.game.components.player.InventoryComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.physics.PhysicsLayer;

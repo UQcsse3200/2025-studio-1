@@ -13,7 +13,6 @@ import com.csse3200.game.services.ServiceLocator;
  */
 public class ShieldDisplay extends Component {
     private Image icon;
-    private Stage stage;
 
     private float iconX = 6f;
     private float iconYFromTop = 22f;
@@ -25,7 +24,7 @@ public class ShieldDisplay extends Component {
     public void create() {
         ResourceService rs = ServiceLocator.getResourceService();
         RenderService render = ServiceLocator.getRenderService();
-        stage = render != null ? render.getStage() : null;
+        Stage stage = render != null ? render.getStage() : null;
 
         if (!rs.containsAsset(ICON_PATH, Texture.class)) {
             rs.loadTextures(new String[]{ICON_PATH});

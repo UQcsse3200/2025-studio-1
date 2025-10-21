@@ -18,17 +18,11 @@ import org.mockito.MockedStatic;
 import static org.mockito.Mockito.*;
 
 import com.csse3200.game.components.WeaponsStatsComponent;
-import com.csse3200.game.rendering.AnimationRenderComponent;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 import com.badlogic.gdx.Graphics;
 
-import com.csse3200.game.rendering.RenderService;
-import com.csse3200.game.rendering.Renderer;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-
-import com.csse3200.game.physics.PhysicsService;
 
 /**
  * Tests cover behavier of EnemyMudBallAttackComponent

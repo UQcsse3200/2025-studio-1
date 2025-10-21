@@ -1,13 +1,11 @@
 package com.csse3200.game.components.boss;
 
-import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.events.EventHandler;
 import com.csse3200.game.rendering.AnimationRenderComponent;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -18,7 +16,6 @@ import static org.mockito.Mockito.*;
 
 /**
  * Unit tests for {@link Boss2HealthPhaseSwitcher}.
- *
  * Covers:
  *  - Initial animation selection in create()
  *  - Stage switching by HP ratio (idle / phase2 / angry)
