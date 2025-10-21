@@ -6,7 +6,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.CameraComponent;
-import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import com.csse3200.game.components.shop.CatalogService;
 import com.csse3200.game.components.shop.ShopDemo;
 import com.csse3200.game.components.shop.ShopManager;
@@ -53,10 +52,7 @@ public class Reception extends GameArea {
             itemSpawner.spawnItems(ItemSpawnConfig.receptionmap());
         }
 
-        Entity ui = new Entity();
-        ui.addComponent(new GameAreaDisplay("Reception"))
-                .addComponent(new com.csse3200.game.components.gamearea.FloorLabelDisplay("Floor 2"));
-        spawnEntity(ui);
+        displayUIEntity("Reception", "Floor 2");
     }
 
     public static Reception load(TerrainFactory terrainFactory, CameraComponent camera) {
@@ -98,6 +94,7 @@ public class Reception extends GameArea {
         Bounds b = getCameraBounds(cameraComponent);
         addSolidWallLeft(b, WALL_WIDTH);
         addSolidWallRight(b, WALL_WIDTH);
+        addSolidWallTop(b, WALL_WIDTH);
         float leftDoorHeight = Math.max(1f, b.viewHeight() * 0.2f);
         float leftDoorY = b.bottomY();
         float leftTopSegHeight = Math.max(0f, b.topY() - (leftDoorY + leftDoorHeight));
