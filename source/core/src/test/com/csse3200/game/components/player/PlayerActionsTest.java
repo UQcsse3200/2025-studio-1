@@ -386,33 +386,32 @@ class PlayerActionsTest {
         );
     }
 
-//    @Test
-//    void shouldNotCrouchWhileAirborne() throws Exception {
-//        PhysicsComponent physicsComponent = mock(PhysicsComponent.class);
-//        Body body = mock(Body.class);
-//        when(physicsComponent.getBody()).thenReturn(body);
-//
-//        when(body.getLinearVelocity()).thenReturn(new Vector2(0f, -5f));
-//
-//        PlayerActions actions = new PlayerActions();
-//        Entity player = new Entity()
-//                .addComponent(actions)
-//                .addComponent(new StaminaComponent());
-//        player.create();
-//
-//        Field physField = PlayerActions.class.getDeclaredField("physicsComponent");
-//        physField.setAccessible(true);
-//        physField.set(actions, physicsComponent);
-//
-//        actions.crouchAttempt();
-//
-//        Field crouchingField = PlayerActions.class.getDeclaredField("crouching");
-//        crouchingField.setAccessible(true);
-//        boolean crouchingState = crouchingField.getBoolean(actions);
-//
-//        assertFalse(crouchingState, "Player should NOT be crouching while in the air");
-//    }
+    @Test
+    void shouldNotCrouchWhileAirborne() throws Exception {
+        PhysicsComponent physicsComponent = mock(PhysicsComponent.class);
+        Body body = mock(Body.class);
+        when(physicsComponent.getBody()).thenReturn(body);
 
+        when(body.getLinearVelocity()).thenReturn(new Vector2(0f, -5f));
+
+        PlayerActions actions = new PlayerActions();
+        Entity player = new Entity()
+                .addComponent(actions)
+                .addComponent(new StaminaComponent());
+        player.create();
+
+        Field physField = PlayerActions.class.getDeclaredField("physicsComponent");
+        physField.setAccessible(true);
+        physField.set(actions, physicsComponent);
+
+        actions.crouchAttempt();
+
+        Field crouchingField = PlayerActions.class.getDeclaredField("crouching");
+        crouchingField.setAccessible(true);
+        boolean crouchingState = crouchingField.getBoolean(actions);
+
+        assertFalse(crouchingState, "Player should NOT be crouching while in the air");
+    }
 
     @Test
     void shouldUpgradeSpeedCorrectly() {
