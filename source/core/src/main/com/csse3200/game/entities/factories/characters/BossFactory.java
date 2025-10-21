@@ -53,7 +53,7 @@ public class BossFactory {
         GameArea area = ServiceLocator.getGameArea();
         float room = (area != null) ? area.roomNumber() : 1f;
         if (diff != null) scale = diff.getRoomDifficulty(room)+1f;
-        int hp = (int) (1000f * scale);
+        int hp = (int) (250f * scale);
         Entity robot = new Entity()
                 .addComponent(new PhysicsComponent())
                 .addComponent(new PhysicsMovementComponent(moveSpeed))
@@ -129,7 +129,7 @@ public class BossFactory {
         GameArea area = ServiceLocator.getGameArea();
         float room = (area != null) ? area.roomNumber() : 1f;
         if (diff != null) scale = diff.getRoomDifficulty(room)+1f;
-        int hp = (int) (1000f * scale);
+        int hp = (int) (50f * scale);
          int damage = (int) (5f * scale);
         InventoryComponent playerInventory =
                 (target != null) ? target.getComponent(InventoryComponent.class) : null;
@@ -193,7 +193,7 @@ public class BossFactory {
         GameArea area = ServiceLocator.getGameArea();
         float room = (area != null) ? area.roomNumber() : 1f;
         if (diff != null) scale = diff.getRoomDifficulty(room)+1f;
-        int hp = (int) (1000f * scale);
+        int hp = (int) (250f * scale);
         if (target != null) {
             playerInventory = target.getComponent(InventoryComponent.class);
         }
@@ -260,7 +260,7 @@ public class BossFactory {
         var diff = ServiceLocator.getDifficulty();
         GameArea area = ServiceLocator.getGameArea();
         float room = (area != null) ? area.roomNumber() : 1f;
-        if (diff != null) scale = diff.getRoomDifficulty(room);
+        if (diff != null) scale = diff.getRoomDifficulty(room)+1f;
         int damage = (int) (3f * scale);
         Entity fireball = new Entity()
                 .addComponent(new PhysicsComponent())
@@ -293,7 +293,7 @@ public class BossFactory {
         var diff = ServiceLocator.getDifficulty();
         GameArea area = ServiceLocator.getGameArea();
         float room = (area != null) ? area.roomNumber() : 1f;
-        if (diff != null) scale = diff.getRoomDifficulty(room);
+        if (diff != null) scale = diff.getRoomDifficulty(room)+1f;
         int damage = (int) (3f * scale);
         Entity missle = new Entity()
                 .addComponent(new PhysicsComponent())
