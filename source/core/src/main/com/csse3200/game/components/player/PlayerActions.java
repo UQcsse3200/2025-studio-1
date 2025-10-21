@@ -255,8 +255,6 @@ public class PlayerActions extends Component {
             if (isGroundJump) {
                 if (!touchingGround()) canJump = false;
                 if (physicsComponent.getBody().getLinearVelocity().y > 0f) canJump = false;
-            } else {
-                if (!stamina.trySpend(DOUBLE_JUMP_COST)) return;
             }
 
             if (canJump) {

@@ -218,6 +218,30 @@ public class AvatarChoiceScreen extends BaseScreen {
     @Override
     public void dispose() {
         super.dispose();
-        for (Texture t : loadedTextures) t.dispose();
+        if (Gdx.input.getInputProcessor() == stage) {
+            Gdx.input.setInputProcessor(null);
+        }
+
+        // Manually loaded textures for avatar cards
+        if (loadedTextures != null) {
+            for (Texture t : loadedTextures) {
+                if (t != null) t.dispose();
+            }
+            loadedTextures.clear();
+            loadedTextures = null;
+        }
+
+        // Dispose UI skin (also frees its atlas/bitmaps)
+        if (skin != null) {
+            skin.dispose();
+            skin = null;
+        }
+
+        // Clear actors/listeners, then dispose the stage and its batch
+        if (stage != null) {
+            stage.clear();     // removes actors & listeners
+            stage.dispose();   // disposes internal Batch since we created the Stage
+            stage = null;
+        }
     }
 }
