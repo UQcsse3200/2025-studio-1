@@ -37,7 +37,7 @@ public class WeaponsStatsComponent extends Component {
      */
     private float coolDown;
     /**
-     * Flag that disables all outgoing damage when true.
+e    * Flag that disables all outgoing damage when true.
      */
     private boolean disableDamage;
     /**

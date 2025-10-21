@@ -390,9 +390,9 @@ public class ForestGameArea extends GameArea {
             float viewHeight = cam.viewportHeight;
             float leftX = camPos.x - viewWidth / 2f;
             float rightX = camPos.x + viewWidth / 2f;
-            float VERTICAL_HEIGHT_OFFSET = 9.375f;
-            float bottomY = camPos.y - VERTICAL_HEIGHT_OFFSET / 2f;
-            float topY = camPos.y + VERTICAL_HEIGHT_OFFSET / 2f;
+            float verticalHeightOffset = 9.375f;
+            float bottomY = camPos.y - verticalHeightOffset / 2f;
+            float topY = camPos.y + verticalHeightOffset / 2f;
 
             // Left screen border
             Entity left = ObstacleFactory.createWall(WALL_WIDTH, viewHeight);
