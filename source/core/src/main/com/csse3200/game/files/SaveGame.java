@@ -2,7 +2,10 @@ package com.csse3200.game.files;
 
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.areas.difficulty.DifficultyType;
-import com.csse3200.game.components.*;
+import com.csse3200.game.components.AmmoStatsComponent;
+import com.csse3200.game.components.CombatStatsComponent;
+import com.csse3200.game.components.MagazineComponent;
+import com.csse3200.game.components.WeaponsStatsComponent;
 import com.csse3200.game.components.attachments.BulletEnhancerComponent;
 import com.csse3200.game.components.attachments.LaserComponent;
 import com.csse3200.game.components.items.ItemComponent;
@@ -16,7 +19,6 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-
 import java.util.Set;
 
 
@@ -65,7 +67,7 @@ public class SaveGame {
 
         public DifficultyType getDifficulty() {
             //loops through the difficulty until the correct value is found
-            for (DifficultyType diff: DifficultyType.values()) {
+            for (DifficultyType diff : DifficultyType.values()) {
                 if (diff.toString().equals(this.difficulty)) return diff;
             }
             logger.error("couldn't read difficulty {} from" +
@@ -100,7 +102,7 @@ public class SaveGame {
 
         // saves any necessary information to do with gameArea (currently only needs to be string)
         public void setArea(String area) {
-            this.gameArea = area.toString();
+            this.gameArea = area;
         }
 
         public String getGameArea() {
@@ -172,6 +174,7 @@ public class SaveGame {
                         itemiser.Attachments.add("bullet");
                     }
                 }
+
                 inventoryFilter.add(itemiser);
             }
             return inventoryFilter;
@@ -217,7 +220,6 @@ public class SaveGame {
         public String texture;
         public int count;
         public int upgradeStage;
-        public String name;
         public ArrayList<String> Attachments;
 
         public itemInInven() {

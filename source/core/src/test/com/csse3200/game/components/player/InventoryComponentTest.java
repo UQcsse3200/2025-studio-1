@@ -35,7 +35,6 @@ class InventoryComponentTest {
     @Nested
     @DisplayName("Testing: addItem, setItem, get, getInventory, remove, isFull, isEmpty")
     class inventoryMethodsTest {
-        private final int processor = 100;
         private final int MAX_INVENTORY = 5;
         private final String texture = "images/mud.png";
         ArrayList<Entity> testInven;
@@ -47,7 +46,8 @@ class InventoryComponentTest {
             for (int idx = 0; idx < MAX_INVENTORY; idx++) {
                 testInven.add(null);
             }
-            inventory = new InventoryComponent(this.processor);
+            int processor = 100;
+            inventory = new InventoryComponent(processor);
             Entity owner = new Entity();
             owner.addComponent(inventory);
             Gdx.files = mock(Files.class);
@@ -158,6 +158,8 @@ class InventoryComponentTest {
 
         @Test
         void shouldRemoveItem() {
+            assertFalse(inventory.remove(0), "Removing doesn't work on an empty inventory");
+
             for (int idx = 0; idx < MAX_INVENTORY; idx++) {
                 inventory.addItem(ItemFactory.createItem(texture));
                 testInven.set(idx, ItemFactory.createItem(texture));
@@ -279,6 +281,12 @@ class InventoryComponentTest {
             assertEquals(thing, inventory.getCurrItem());
             assertNull(inventory.getCurrItemStats());
         }
+
+        @Test
+        void shouldntRemoveCurrItem() {
+            inventory.removeCurrItem();
+            assertEquals(0, inventory.getSize());
+        }
     }
 
     @Test
@@ -302,6 +310,14 @@ class InventoryComponentTest {
 
         inventory.setProcessor(-50);
         assertEquals(0, inventory.getProcessor());
+    }
+
+    @Test
+    void shouldSetDoubleProcessors() {
+        InventoryComponent inventory = new InventoryComponent(processor);
+        assertFalse(inventory.hasDoubleProcessors());
+        inventory.setDoubleProcessors(true);
+        assertTrue(inventory.hasDoubleProcessors());
     }
 
     @Test

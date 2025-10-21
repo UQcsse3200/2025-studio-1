@@ -9,7 +9,6 @@ import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.components.KeycardGateComponent;
-import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.ItemSpawnConfig;
 import com.csse3200.game.entities.factories.KeycardFactory;
@@ -67,7 +66,7 @@ public class FlyingBossRoom extends GameArea {
                 new Color(0.10f, 0.12f, 0.10f, 0.24f));
 
         spawnBordersAndDoors();
-        displayUI();
+        displayUIEntity("Flying Boss Room", null);
 
         player = spawnPlayer();
 
@@ -82,12 +81,6 @@ public class FlyingBossRoom extends GameArea {
         }
 
         spawnVisibleFloor();
-    }
-
-    private void displayUI() {
-        Entity ui = new Entity();
-        ui.addComponent(new GameAreaDisplay("Flying Boss Room"));
-        spawnEntity(ui);
     }
 
     private void spawnPlatforms() {
