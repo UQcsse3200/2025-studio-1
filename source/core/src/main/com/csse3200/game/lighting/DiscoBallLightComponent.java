@@ -9,7 +9,8 @@ import com.csse3200.game.services.ServiceLocator;
 
 public class DiscoBallLightComponent extends Component {
     private final int rays;
-    private final Color c1, c2;
+    private final Color c1;
+    private final Color c2;
     private final float baseDist;
     private final float pulseDist;
     private final float speed;
