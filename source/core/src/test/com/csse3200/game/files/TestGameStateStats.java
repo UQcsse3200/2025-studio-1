@@ -13,7 +13,7 @@ public class TestGameStateStats {
 
 
     public static class PlayerStatTest {
-        public Vector2 PossLoad = new Vector2(1, 1);
+        public Vector2 possLoad = new Vector2(1, 1);
         public String avatarLoad = "testAvatar";
         public int stamLoad = 1;
         public int healthLoad = 1;

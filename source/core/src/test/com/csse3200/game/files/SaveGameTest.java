@@ -1,6 +1,5 @@
 package com.csse3200.game.files;
 
-import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.components.AmmoStatsComponent;
 import com.csse3200.game.components.CombatStatsComponent;
@@ -10,17 +9,7 @@ import com.csse3200.game.components.player.StaminaComponent;
 import com.csse3200.game.entities.Avatar;
 import com.csse3200.game.entities.AvatarRegistry;
 import com.csse3200.game.entities.Entity;
-import com.csse3200.game.entities.EntityService;
-import com.csse3200.game.entities.configs.Weapons;
-import com.csse3200.game.entities.configs.weapons.WeaponConfig;
-import com.csse3200.game.entities.factories.items.ItemFactory;
-import com.csse3200.game.entities.factories.items.WeaponsFactory;
 import com.csse3200.game.extensions.GameExtension;
-import com.csse3200.game.physics.PhysicsService;
-import com.csse3200.game.rendering.RenderService;
-import com.csse3200.game.services.ResourceService;
-import com.csse3200.game.services.ServiceLocator;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -28,7 +17,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.util.*;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
 
 @ExtendWith(GameExtension.class)
 public class SaveGameTest {
@@ -89,7 +79,7 @@ public class SaveGameTest {
     }
 
     @BeforeAll
-    public static void fakeGameState() {
+    static void fakeGameState() {
 
         FakeEntity player = new FakeEntity();
         player.addComponent(new StaminaComponent());
@@ -117,27 +107,27 @@ public class SaveGameTest {
 
     @Test
     @DisplayName("Test game loads valid format file")
-    public void gameStateReadTest() {
-
+    void gameStateReadTest() {
+        // IMPLEMENT ME
     }
 
     @Test
-    public void inventoryGetsSetTest() {
-
+    void inventoryGetsSetTest() {
+        // IMPLEMENT ME
     }
 
     @Test
-    public void setPlayerInfoTest() {
-
+    void setPlayerInfoTest() {
+        // IMPLEMENT ME
     }
 
     @Test
-    public void invalidSaveFails() {
-
+    void invalidSaveFails() {
+        // IMPLEMENT ME
     }
 
     @Test
-    public void saveFileComparitor() {
-
+    void saveFileComparitor() {
+        // IMPLEMENT ME
     }
 }

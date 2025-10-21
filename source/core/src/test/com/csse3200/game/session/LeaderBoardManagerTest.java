@@ -4,9 +4,11 @@ import com.csse3200.game.records.RoundData;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Collections;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -216,7 +218,6 @@ class LeaderBoardManagerTest {
     @Test
     @DisplayName("addRound(): handles zero and negative values correctly")
     void addRound_handlesZeroAndNegativeValues() {
-        LeaderBoardManager manager = new LeaderBoardManager();
         manager.addRound(0, 0.0f);
         manager.addRound(-10, -2.5f);
 
@@ -235,7 +236,6 @@ class LeaderBoardManagerTest {
     @Test
     @DisplayName("setLeaderboard(): handles empty list without errors and stays empty after sorting")
     void setLeaderboard_withEmptyList_remainsEmptyAfterSorting() {
-        LeaderBoardManager manager = new LeaderBoardManager();
         manager.setLeaderboard(new ArrayList<>());
 
         List<RoundData> lb = manager.getLeaderBoard();
@@ -250,7 +250,6 @@ class LeaderBoardManagerTest {
     @Test
     @DisplayName("setLeaderboard(): should handle list with a single entry without modification")
     void setLeaderboard_singleEntry_noReorderingNeeded() {
-        LeaderBoardManager manager = new LeaderBoardManager();
         List<RoundData> single = new ArrayList<>();
         single.add(new RoundData(42, 1.0f)); // score = 43
 
@@ -267,7 +266,6 @@ class LeaderBoardManagerTest {
     @Test
     @DisplayName("Multiple consecutive resets should keep leaderboard empty without exceptions")
     void reset_calledMultipleTimes_noExceptions() {
-        LeaderBoardManager manager = new LeaderBoardManager();
         manager.addRound(10, 2.0f);
         manager.reset();
         manager.reset();
@@ -284,7 +282,6 @@ class LeaderBoardManagerTest {
     @Test
     @DisplayName("addRound(): maintains proper sorting when adding new top-scoring entry")
     void addRound_insertsNewHighestScoreAtTop() {
-        LeaderBoardManager manager = new LeaderBoardManager();
         manager.addRound(5, 1.0f);  // score = 6
         manager.addRound(7, 2.0f);  // score = 9
         manager.addRound(20, 5.0f); // score = 25 — new top
@@ -300,7 +297,6 @@ class LeaderBoardManagerTest {
     @Test
     @DisplayName("setLeaderboard(): handles pre-sorted input without changing order")
     void setLeaderboard_presortedList_retainsOrder() {
-        LeaderBoardManager manager = new LeaderBoardManager();
         List<RoundData> sorted = new ArrayList<>();
         sorted.add(new RoundData(10, 10.0f)); // score 20
         sorted.add(new RoundData(8, 8.0f));   // score 16
@@ -320,7 +316,6 @@ class LeaderBoardManagerTest {
     @Test
     @DisplayName("getLeaderBoard(): modifying returned list reflects in manager")
     void getLeaderBoard_modificationReflectsInManager() {
-        LeaderBoardManager manager = new LeaderBoardManager();
         List<RoundData> list = manager.getLeaderBoard();
         list.add(new RoundData(1, 1.0f));
         assertEquals(1, manager.getLeaderBoard().size(), "Changes in returned list should affect internal leaderboard");
@@ -334,11 +329,10 @@ class LeaderBoardManagerTest {
     @Test
     @DisplayName("setLeaderboard(): should not throw when called with unmodifiable list")
     void setLeaderboard_handlesUnmodifiableList() {
-        LeaderBoardManager manager = new LeaderBoardManager();
         List<RoundData> unmodifiable = Collections.singletonList(new RoundData(10, 5.0f));
 
         assertDoesNotThrow(() -> manager.setLeaderboard(unmodifiable),
-            "setLeaderboard() should handle unmodifiable lists without throwing");
+                "setLeaderboard() should handle unmodifiable lists without throwing");
         assertEquals(1, manager.getLeaderBoard().size(), "Leaderboard should contain the single entry");
     }
 
@@ -349,8 +343,6 @@ class LeaderBoardManagerTest {
     @Test
     @DisplayName("Leaderboard remains sorted after multiple setLeaderboard() calls")
     void multipleSetLeaderboard_callsMaintainSorting() {
-        LeaderBoardManager manager = new LeaderBoardManager();
-
         List<RoundData> first = new ArrayList<>();
         first.add(new RoundData(10, 10.0f)); // score 20
         first.add(new RoundData(5, 1.0f));   // score 6
@@ -373,7 +365,6 @@ class LeaderBoardManagerTest {
     @Test
     @DisplayName("reset() followed by addRound() repopulates leaderboard correctly")
     void resetThenAddRound_repopulatesSuccessfully() {
-        LeaderBoardManager manager = new LeaderBoardManager();
         manager.addRound(30, 3.0f);
         manager.reset();
 
@@ -389,7 +380,6 @@ class LeaderBoardManagerTest {
     @Test
     @DisplayName("addRound() correctly sorts when all scores are identical")
     void addRound_identicalScores_keepInsertionOrder() {
-        LeaderBoardManager manager = new LeaderBoardManager();
         manager.addRound(5, 5.0f); // score = 10
         manager.addRound(6, 4.0f); // score = 10
         manager.addRound(7, 3.0f); // score = 10
@@ -430,8 +420,7 @@ class LeaderBoardManagerTest {
         manager.addRound(5, 1.0f);
         manager.reset();
         assertDoesNotThrow(() -> manager.setLeaderboard(null),
-            "setLeaderboard(null) should safely handle null after reset");
+                "setLeaderboard(null) should safely handle null after reset");
         assertTrue(manager.getLeaderBoard().isEmpty(), "Leaderboard should remain empty after null set");
     }
-
 }

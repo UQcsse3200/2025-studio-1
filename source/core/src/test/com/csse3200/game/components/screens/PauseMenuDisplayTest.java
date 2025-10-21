@@ -16,7 +16,7 @@ import org.mockito.MockedStatic;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-public class PauseMenuDisplaytest {
+class PauseMenuDisplayTest {
 
     private static HeadlessApplication app;
     private GdxGame mockGame;
@@ -63,6 +63,7 @@ public class PauseMenuDisplaytest {
     void getZIndex_returns100() {
         assertEquals(100f, display.getZIndex());
     }
+
     @Test
     void clickplaysButtonSound() {
         display = spy(new PauseMenuDisplay(mockGame));
