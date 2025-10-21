@@ -60,7 +60,7 @@ public class PoolGame {
                 .tableSize(2.24f, 1.12f)
                 .railThickness(0.105f, 0.085f)
                 .ballRadius(0.0285f)
-                .pocketRadiusScale(2.5f)
+                .pocketRadiusScale(2f)
                 .pocketInsetScaleX(0.8f)
                 .pocketInsetScaleY(0.8f)
                 .pocketFunnelScale(0.9f)
