@@ -17,8 +17,6 @@ import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.entities.spawner.ItemSpawner;
 import com.csse3200.game.physics.components.ColliderComponent;
 import com.csse3200.game.services.ServiceLocator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * This is the room that holds the Ground Moving Boss Boss.
@@ -30,7 +28,6 @@ public class MovingBossRoom extends GameArea {
     private static GridPoint2 playerSpawn = new GridPoint2(3, 10);
     private static boolean isCleared = false;
 
-    private static final Logger logger = LoggerFactory.getLogger(MovingBossRoom.class);
     private static final float WALL_WIDTH = 0.1f;
     private Entity player;
 

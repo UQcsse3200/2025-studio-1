@@ -17,6 +17,7 @@ public class GoodWinAnimationScreen extends BadWinAnimationScreen {
         super(terrainFactory, cameraComponent);
     }
 
+    @Override
     public void create() {
         super.create();
         spawnPlayer();
@@ -27,25 +28,13 @@ public class GoodWinAnimationScreen extends BadWinAnimationScreen {
         return "GoodWinAnimation";
     }
 
-    private void ensureAssets() {
-        String[] textures = {
-                "images/WinscreenAnimationBackground.png"
-        };
-        String[] atlases = {
-                "images/player.atlas",
-                "images/explosion_2.atlas"
-        };
-        ensureAtlases(atlases);
-        ensureTextures(textures);
-    }
-
     private AnimationRenderComponent playerAnimation() {
         return createAnimation(
                 "images/player.atlas",
                 "left_run",
                 PLAYER_FRAME_DURATION,
-                Animation.PlayMode.LOOP,
-                1f);
+                Animation.PlayMode.LOOP
+        );
     }
 
     private void spawnPlayer() {

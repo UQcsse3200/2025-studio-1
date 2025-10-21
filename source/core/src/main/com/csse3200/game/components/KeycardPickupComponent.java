@@ -9,7 +9,7 @@ import com.csse3200.game.physics.components.PhysicsComponent;
 
 public class KeycardPickupComponent extends Component {
 
-    private static final String keycardPickup = "KeycardPickup";
+    private static final String KEYCARD_PICKUP = "KeycardPickup";
     private final int level;
     private boolean collected = false;
 
@@ -20,7 +20,7 @@ public class KeycardPickupComponent extends Component {
 
     @Override
     public void create() {
-        Gdx.app.log(keycardPickup, "Listener registered for collisionStart");
+        Gdx.app.log(KEYCARD_PICKUP, "Listener registered for collisionStart");
         entity.getEvents().addListener("collisionStart", this::onCollisionStart);
 
         PhysicsComponent physics = entity.getComponent(PhysicsComponent.class);
@@ -33,7 +33,7 @@ public class KeycardPickupComponent extends Component {
     }
 
     private void onCollisionStart(Fixture me, Fixture other) {
-        Gdx.app.log(keycardPickup, "Collision started with fixture: " + other);
+        Gdx.app.log(KEYCARD_PICKUP, "Collision started with fixture: " + other);
 
         if (collected) return;
         Object otherUd = other.getBody().getUserData();
@@ -42,14 +42,13 @@ public class KeycardPickupComponent extends Component {
         Entity otherEntity = ((BodyUserData) otherUd).entity;
         if (otherEntity == null) return;
 
-
-        Gdx.app.log(keycardPickup, "Collided with entity: " + otherEntity);
-        Gdx.app.log(keycardPickup, "InventoryComponent found? " + (otherEntity.getComponent(InventoryComponent.class) != null));
+        Gdx.app.log(KEYCARD_PICKUP, "Collided with entity: " + otherEntity);
+        Gdx.app.log(KEYCARD_PICKUP, "InventoryComponent found? " + (otherEntity.getComponent(InventoryComponent.class) != null));
 
         InventoryComponent inventory = otherEntity.getComponent(InventoryComponent.class);
         if (inventory != null) {
             inventory.setKeycardLevel(level);
-            Gdx.app.log(keycardPickup, "Keycard level " + level + " collected by player");
+            Gdx.app.log(KEYCARD_PICKUP, "Keycard level " + level + " collected by player");
             collected = true;
 
             Gdx.app.postRunnable(() -> entity.dispose());

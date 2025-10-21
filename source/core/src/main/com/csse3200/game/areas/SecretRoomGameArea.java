@@ -1,12 +1,10 @@
 package com.csse3200.game.areas;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.GridPoint2;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.entities.Entity;
-import com.csse3200.game.entities.factories.characters.PlayerFactory;
 
 /**
  * Secret room: A minimal area with only background, a floor,
