@@ -24,14 +24,14 @@ class MusicServiceTest {
         @Override public void setLooping(boolean looping) { this.looping = looping; }
         @Override public void setVolume(float volume) { this.volume = volume; }
 
-        @Override public void pause() {}
+        @Override public void pause() { /* not used in tests */ }
         @Override public boolean isLooping() { return looping; }
         @Override public float getVolume() { return volume; }
-        @Override public void setPan(float pan, float volume) {}
-        @Override public void setPosition(float position) {}
+        @Override public void setPan(float pan, float volume) { /* not used in tests */ }
+        @Override public void setPosition(float position) { /* not used in tests */ }
         @Override public float getPosition() { return 0; }
-        @Override public void dispose() {}
-        @Override public void setOnCompletionListener(OnCompletionListener listener) {}
+        @Override public void dispose() { /* not used in tests */ }
+        @Override public void setOnCompletionListener(OnCompletionListener listener) { /* not used in tests */ }
     }
 
     private static class FakeResourceService extends ResourceService {
@@ -39,10 +39,10 @@ class MusicServiceTest {
         private final FakeMusic forestMusic = new FakeMusic();
 
         @Override
-        public void loadMusic(String[] musicPaths) {}
+        public void loadMusic(String[] musicPaths) { /* no op */ }
 
         @Override
-        public void loadAll() {}
+        public void loadAll() { /* no op */ }
 
         @Override
         public <T> T getAsset(String path, Class<T> type) {
@@ -52,7 +52,7 @@ class MusicServiceTest {
         }
 
         @Override
-        public void unloadAssets(String[] assetPaths) {}
+        public void unloadAssets(String[] assetPaths) { /* no op */ }
     }
 
     private MusicService musicService;
