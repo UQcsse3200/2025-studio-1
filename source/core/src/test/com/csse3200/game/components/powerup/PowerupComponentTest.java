@@ -3,7 +3,6 @@ package com.csse3200.game.components.powerup;
 import com.csse3200.game.components.MagazineComponent;
 import com.csse3200.game.components.PowerupComponent;
 import com.csse3200.game.components.player.InventoryComponent;
-import com.csse3200.game.components.player.PlayerActions;
 import com.csse3200.game.effects.AimbotEffect;
 import com.csse3200.game.effects.DoubleProcessorsEffect;
 import com.csse3200.game.effects.RapidFireEffect;

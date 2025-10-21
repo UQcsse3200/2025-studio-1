@@ -167,7 +167,7 @@ public class MeleeUseComponentTest {
         melee.setEntity(mockEntity);  // <- built-in setter, no reflection
 
         // Act
-        melee.weaponAnimation();
+        melee.triggerWeaponAnimation();
 
         // Assert
         verify(mockEvents, times(1)).trigger("anim");
@@ -181,19 +181,19 @@ public class MeleeUseComponentTest {
         // Arrange: create the entity and attach the component BEFORE create()
         Entity weaponEntity = new Entity();
         WeaponsStatsComponent stats = new WeaponsStatsComponent(5);
-        MeleeUseComponent meleeUse = spy(new MeleeUseComponent());
+        MeleeUseComponent meleeUseComp = spy(new MeleeUseComponent());
 
         weaponEntity
                 .addComponent(stats)
-                .addComponent(meleeUse);
+                .addComponent(meleeUseComp);
 
         weaponEntity.create(); // <-- sets meleeUse.entity
 
         // Act
-        meleeUse.use(player);
+        meleeUseComp.use(player);
 
         // Assert: verify helper called, but no animation component exists
-        verify(meleeUse, times(1)).weaponAnimation();
+        verify(meleeUseComp, times(1)).triggerWeaponAnimation();
         Assert.assertNull(
                 weaponEntity.getComponent(com.csse3200.game.rendering.AnimationRenderComponent.class)
         );

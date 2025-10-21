@@ -1,7 +1,6 @@
 package com.csse3200.game.effects;
 
 import com.csse3200.game.components.MagazineComponent;
-import com.csse3200.game.components.player.PlayerActions;
 import com.csse3200.game.entities.Entity;
 
 public class UnlimitedAmmoEffect extends Effect {
