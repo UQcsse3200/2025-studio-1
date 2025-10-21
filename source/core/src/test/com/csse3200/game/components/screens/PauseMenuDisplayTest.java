@@ -184,8 +184,10 @@ class PauseMenuDisplayTest {
         Table root = findRoot(collectAddedActors());
         assertNotNull(root);
 
+        Entity owner = display.getEntity() != null ? display.getEntity() : ui;
+
         AtomicInteger resumeCount = new AtomicInteger();
-        ui.getEvents().addListener("resume", resumeCount::incrementAndGet);
+        owner.getEvents().addListener("resume", resumeCount::incrementAndGet);
 
         InputListener esc = findEscListener(root);
         assertNotNull(esc);
