@@ -12,6 +12,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.components.Component;
 import com.csse3200.game.services.ServiceLocator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +22,7 @@ import java.util.List;
  * Boss health bar
  */
 public class BossStatusDisplay extends Component {
+    private static final Logger log = LoggerFactory.getLogger(BossStatusDisplay.class);
 
     private static final float BAR_WIDTH = 800f;
     private static final float BAR_HEIGHT = 40f;
@@ -31,7 +34,6 @@ public class BossStatusDisplay extends Component {
     private Table table;
     private ProgressBar healthBar;
     private int maxHealth = 100;
-    private String phase = "NORMAL";
 
     public BossStatusDisplay(String bossName) {
         this.bossName = bossName;
@@ -53,10 +55,10 @@ public class BossStatusDisplay extends Component {
             entity.getEvents().addListener("death", this::onBossDeath);
 
             createHealthBar();
-            System.out.println("Simple Boss health bar created for: " + bossName);
+            log.debug("Simple Boss health bar created for: {}", bossName);
 
         } catch (Exception e) {
-            System.err.println("Failed to create boss health bar: " + e.getMessage());
+            log.error("Failed to create boss health bar: {}", e.getMessage());
         }
     }
 
@@ -68,8 +70,7 @@ public class BossStatusDisplay extends Component {
             healthBar.setValue(health);
 
             float healthPercentage = (float) health / maxHealth;
-            System.out.println("[BOSS UI] Health updated: " + health + "/" + maxHealth +
-                    " (" + (int) (healthPercentage * 100) + "%)");
+            log.debug("[BOSS UI] Health updated: {}/{} ({}%)", health, maxHealth, (int) (healthPercentage * 100));
             // Change color to red when health drops to 50% or below
             if (healthPercentage <= 0.5f) {
                 setHealthBarColor(Color.RED);
@@ -83,7 +84,7 @@ public class BossStatusDisplay extends Component {
      * Handle boss death event
      */
     public void onBossDeath() {
-        System.out.println("[BOSS UI] Boss " + bossName + " has been defeated!");
+        log.debug("[BOSS UI] Boss {} has been defeated!", bossName);
 
         if (healthBar != null) {
             healthBar.setValue(0);
@@ -97,7 +98,7 @@ public class BossStatusDisplay extends Component {
         // Get stage safely
         Stage stage = ServiceLocator.getRenderService().getStage();
         if (stage == null) {
-            System.err.println("Stage is null, cannot create health bar");
+            log.error("Stage is null, cannot create health bar");
             return;
         }
 
@@ -124,7 +125,7 @@ public class BossStatusDisplay extends Component {
         // Add to stage
         stage.addActor(table);
 
-        System.out.println("Health bar added to stage");
+        log.debug("Health bar added to stage");
     }
 
     /**
@@ -146,7 +147,6 @@ public class BossStatusDisplay extends Component {
     }
 
     public void setPhase(String phase) {
-        this.phase = phase;
         if ("FURY".equalsIgnoreCase(phase)) {
             setHealthBarColor(Color.RED);
         } else {
@@ -161,7 +161,6 @@ public class BossStatusDisplay extends Component {
         st.knobBefore.setMinHeight(BAR_HEIGHT);
         healthBar.setStyle(st);
     }
-
 
     /**
      * Create colored drawable

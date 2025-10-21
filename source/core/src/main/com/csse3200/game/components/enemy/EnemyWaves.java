@@ -24,7 +24,7 @@ public class EnemyWaves extends Component {
     private int maxWaves;      // total waves per session
     private int waveNumber = 0;      // waves spawned so far
     private float scalingFactor = 1f; // difficulty scaling
-    private final int baseEnemies = 3;
+    private static final int BASE_ENEMIES = 3;
     private int lastNumEnemyLeft = 0;
     private int enemyLeft;
 
@@ -146,7 +146,7 @@ public class EnemyWaves extends Component {
         logger.info("EnemyWaves: spawning wave {} of {} (waveScale={}, baseScale={}, effective={})", waveNumber + 1, maxWaves, scalingFactor, baseScale, effectiveScale);
 
         // Change gameArea.getRoomNumber() to any number between 2 and 7 to get different enemies.
-        gameArea.spawnRandomEnemies(gameArea.toString(), baseEnemies, effectiveScale, player);
+        gameArea.spawnRandomEnemies(gameArea.toString(), BASE_ENEMIES, effectiveScale, player);
 
         waveNumber++;
         this.eventHandler.trigger("updateWaveNumber");
@@ -339,6 +339,4 @@ public class EnemyWaves extends Component {
     public int getEnemyLeft() {
         return enemyLeft;
     }
-
 }
-

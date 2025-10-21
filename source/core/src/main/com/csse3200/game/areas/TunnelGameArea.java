@@ -29,7 +29,6 @@ public class TunnelGameArea extends GameArea {
     private static GridPoint2 playerSpawn = new GridPoint2(5, 7);
     private static boolean isCleared = false;
 
-    private DoorComponent rightDoorComp;
     public static volatile DoorComponent exposedRightDoor;
 
     public TunnelGameArea(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
@@ -37,7 +36,6 @@ public class TunnelGameArea extends GameArea {
 
         this.getEvents().addListener("room cleared", TunnelGameArea::clearRoom);
     }
-
 
     public static TunnelGameArea load(TerrainFactory terrainFactory, CameraComponent camera) {
         return (new TunnelGameArea(terrainFactory, camera));
@@ -107,7 +105,7 @@ public class TunnelGameArea extends GameArea {
         rightDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadBossRoom));
         spawnEntity(rightDoor);
 
-        rightDoorComp = rightDoor.getComponent(DoorComponent.class);
+        DoorComponent rightDoorComp = rightDoor.getComponent(DoorComponent.class);
         rightDoorComp.setLocked(true);
         TunnelGameArea.exposedRightDoor = rightDoorComp;
 
@@ -177,16 +175,6 @@ public class TunnelGameArea extends GameArea {
         spawnEntity(tp);
     }
 
-    /**
-     * Spawn entity door at the bottom left, and no door to the right
-     * as this is the last room (currently).
-     */
-    private void spawnObjectDoors() {
-        Entity leftDoor = ObstacleFactory.createDoor();
-        GridPoint2 leftDoorSpawn = new GridPoint2(0, 7);
-        spawnEntityAt(leftDoor, leftDoorSpawn, false, false);
-    }
-
     private void loadServer() {
         ServerGameArea.setRoomSpawn(new GridPoint2(25, 24));
         clearAndLoad(() -> new ServerGameArea(terrainFactory, cameraComponent));
@@ -244,12 +232,7 @@ public class TunnelGameArea extends GameArea {
      * Creates a {@link BenchConfig} used for the password terminal's hint station.
      */
     private BenchConfig makeTerminalHintConfig() {
-        return new BenchConfig() {
-            {
-                this.texturePath = null;
-                this.promptText = "Press F1 to access terminal";
-            }
-
+        BenchConfig bench = new BenchConfig() {
             @Override
             public int getPrice() {
                 return 0;
@@ -257,8 +240,14 @@ public class TunnelGameArea extends GameArea {
 
             @Override
             public void upgrade(boolean playerNear, com.csse3200.game.entities.Entity player, Label prompt) {
+                // this method was intentionally left empty
             }
         };
+
+        bench.texturePath = null;
+        bench.promptText = "Press F1 to access terminal";
+
+        return bench;
     }
 
     /**

@@ -2,6 +2,8 @@ package com.csse3200.game.components.boss;
 
 import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.components.Component;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Individual Cocoon Component - Handles behavior for individual cocoon entities
@@ -9,6 +11,7 @@ import com.csse3200.game.components.Component;
  * When destroyed, they notify the Boss defense system via death events
  */
 public class IndividualCocoonComponent extends Component {
+    private static final Logger log = LoggerFactory.getLogger(IndividualCocoonComponent.class);
 
     private boolean isDestroyed = false;
 
@@ -19,15 +22,15 @@ public class IndividualCocoonComponent extends Component {
         // Listen for cocoon death events
         entity.getEvents().addListener("death", this::onCocoonDeath);
 
-        System.out.println("White cocoon created and ready!");
+        log.debug("White cocoon created and ready!");
 
         entity.getEvents().addListener("hit", () -> {
             CombatStatsComponent stats = entity.getComponent(CombatStatsComponent.class);
-            System.out.println("Cocoon hit! Health: " + stats.getHealth());
+            log.debug("Cocoon hit! Health: {}", stats.getHealth());
         });
 
         entity.getEvents().addListener("death", this::onCocoonDeath);
-        System.out.println("Cocoon created with " + entity.getComponent(CombatStatsComponent.class).getHealth() + " health");
+        log.debug("Cocoon created with {} health", entity.getComponent(CombatStatsComponent.class).getHealth());
     }
 
     @Override
@@ -50,7 +53,7 @@ public class IndividualCocoonComponent extends Component {
         isDestroyed = true;
 
         entity.setScale(0f, 0f);
-        System.out.println("White cocoon destroyed!");
+        log.debug("White cocoon destroyed!");
         entity.getEvents().trigger("cocoonDestroyed");
 
         // The death event is automatically triggered by CombatStatsComponent
