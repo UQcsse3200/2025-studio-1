@@ -336,7 +336,10 @@ public class SettingsMenuDisplay extends UIComponent {
     private void showControlsMenu() {
         rootTable.setVisible(false);
         rootTable.remove();
-        ControlDisplay controlDisplay = new ControlDisplay(this, stage);
+        ControlDisplay controlDisplay = new ControlDisplay(game, () -> {
+            rootTable.setVisible(true);
+            stage.addActor(rootTable);
+        });
         controlDisplay.create();
 
     }

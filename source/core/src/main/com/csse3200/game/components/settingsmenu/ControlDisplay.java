@@ -1,35 +1,46 @@
 package com.csse3200.game.components.settingsmenu;
 
-
-import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
-import com.csse3200.game.ui.UIComponent;
+import com.csse3200.game.GdxGame;
+import com.csse3200.game.components.screens.BaseScreenDisplay;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 
-public class ControlDisplay extends UIComponent {
-    private Table rootTable;
-    private final SettingsMenuDisplay parentMenu;
-    private final Stage stage;
+/**
+ * Control/keybindings menu overlay, built like PauseMenuDisplay.
+ */
+public class ControlDisplay extends BaseScreenDisplay {
+    private final Runnable onBack;
 
-    public ControlDisplay(SettingsMenuDisplay parentMenu, Stage stage) {
-        this.parentMenu = parentMenu;
-        this.stage = stage;
+    /**
+     * @param game  The stage to add UI actors to.
+     * @param onBack A callback to run when the back button is pressed (e.g. set previous screen).
+     */
+    public ControlDisplay(GdxGame game, Runnable onBack) {
+        super(game);
+        this.onBack = onBack;
     }
 
     @Override
-    public void create() {
-        rootTable = new Table();
-        rootTable.setFillParent(true);
+    protected void buildUI(Table root) {
+        root.setFillParent(true);
+
+        Texture bgTexture = new Texture(Gdx.files.internal("images/menu_background.png"));
+        Image bgImage = new Image(new TextureRegionDrawable(bgTexture));
+        bgImage.setFillParent(true);
+        root.addActorAt(0, bgImage);
 
         Label title = new Label("Controls", skin, "title");
         title.setFontScale(1.5f);
         title.setAlignment(Align.center);
 
-        // Table for keybindings
         Table controlsTable = new Table();
         String[][] keybindings = {
                 {"A", "Move Left"},
@@ -58,34 +69,28 @@ public class ControlDisplay extends UIComponent {
             controlsTable.row();
         }
 
-        rootTable.add(title).expandX().top().padTop(70f);
+        root.add(title).expandX().top().padTop(70f);
+        root.row();
+        root.add(controlsTable).padTop(36f).padBottom(60f).expand();
+        root.row();
 
-        rootTable.row();
-        rootTable.add(controlsTable).padTop(36f).padBottom(60f).expand();
-        rootTable.row();
         TextButton backBtn = new TextButton("Back", skin);
         backBtn.getLabel().setFontScale(1.4f);
-        rootTable.add(backBtn).padTop(30f).expandX().center();
+        root.add(backBtn).padTop(30f).expandX().center();
 
         backBtn.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                rootTable.remove();
-                parentMenu.getRootTable().setVisible(true);
-                stage.addActor(parentMenu.getRootTable());
+                root.remove();
+                if (onBack != null) {
+                    onBack.run();
+                }
             }
         });
-
-        stage.addActor(rootTable);
-    }
-    //
-    @Override
-    protected void draw(com.badlogic.gdx.graphics.g2d.SpriteBatch batch) {
-        // draw is handled by the stage
     }
 
     @Override
-    public void update() {
-        // update is handled by the stage
+    public float getZIndex() {
+        return 100f;
     }
 }
