@@ -131,7 +131,6 @@ public class BossFactory {
         if (diff != null) scale = diff.getRoomDifficulty(room);
         int hp = (int) (1000f * scale);
          int damage = (int) (5f * scale);
-        BaseEntityConfig config = configs.boss2;
         InventoryComponent playerInventory =
                 (target != null) ? target.getComponent(InventoryComponent.class) : null;
         float patrolCenterX = 5f;

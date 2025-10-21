@@ -24,7 +24,7 @@ import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
  *  - Accumulated movement across multiple updates
  *  - Constructor copies input velocity (external mutation does not affect)
  */
-public class FireballMovementComponentTest {
+class FireballMovementComponentTest {
 
     /** Helper: attach the component to a mocked Entity without requiring the full ECS. */
     private static void attachToEntity(Object component, Entity entity) {

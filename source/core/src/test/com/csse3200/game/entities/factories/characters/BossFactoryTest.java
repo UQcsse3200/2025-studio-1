@@ -14,7 +14,6 @@ import com.csse3200.game.components.boss.*;
 import com.csse3200.game.components.enemy.EnemyDeathRewardComponent;
 import com.csse3200.game.components.enemy.EnemyMudBallAttackComponent;
 import com.csse3200.game.components.enemy.EnemyMudRingSprayComponent;
-import com.csse3200.game.components.npc.BossAnimationController;
 import com.csse3200.game.components.player.InventoryComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.physics.PhysicsLayer;
@@ -38,7 +37,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * BossFactory tests without extra helper files.
  * Provides an in-file TestResourceService to feed atlases/textures.
  */
-public class BossFactoryTest {
+class BossFactoryTest {
 
     // ---- Minimal in-file resource stub (no separate file) ----
     static class TestResourceService extends ResourceService {
