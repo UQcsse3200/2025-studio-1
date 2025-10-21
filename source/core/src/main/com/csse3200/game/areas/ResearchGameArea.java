@@ -6,7 +6,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.CameraComponent;
-import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.ItemSpawnConfig;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
@@ -23,6 +22,7 @@ import java.util.List;
  * Left door -> Elevator, Right door -> Storage.
  */
 public class ResearchGameArea extends GameArea {
+    private Entity player;
     private static final float WALL_WIDTH = 0.1f;
     private static GridPoint2 playerSpawn = new GridPoint2(10, 10);
     private static boolean isCleared = false;
@@ -73,21 +73,13 @@ public class ResearchGameArea extends GameArea {
                 new Color(0.37f, 0.82f, 0.9f, 0.8f)
         );
         spawnBordersAndDoors();
-        Entity player = spawnPlayer();
+        player = spawnPlayer();
         spawnPlatforms();
         spawnResearchProps();
         spawnTeleporter();
+        spawnEnemiesAndWeapons();
 
-        if (!ResearchGameArea.isCleared) {
-            startWaves(player);
-            ItemSpawner itemSpawner = new ItemSpawner(this);
-            itemSpawner.spawnItems(ItemSpawnConfig.researchmap());
-        }
-
-        Entity ui = new Entity();
-        ui.addComponent(new GameAreaDisplay("Research"))
-                .addComponent(new com.csse3200.game.components.gamearea.FloorLabelDisplay("Floor 7"));
-        spawnEntity(ui);
+        displayUIEntity("Research", "Floor 7");
     }
 
     private void spawnBordersAndDoors() {
@@ -96,6 +88,7 @@ public class ResearchGameArea extends GameArea {
         Bounds b = getCameraBounds(cameraComponent);
         addSolidWallLeft(b, WALL_WIDTH);
         addSolidWallTop(b, WALL_WIDTH);
+        addSolidWallRight(b, WALL_WIDTH);
         float leftDoorHeight = Math.max(1f, b.viewHeight() * 0.2f);
         float leftDoorY = b.bottomY();
         Entity leftDoor = ObstacleFactory.createDoorTrigger(WALL_WIDTH, leftDoorHeight);
@@ -110,6 +103,14 @@ public class ResearchGameArea extends GameArea {
         spawnEntity(rightDoor);
 
         if (!ResearchGameArea.isCleared) registerDoors(new Entity[]{leftDoor, rightDoor});
+    }
+
+    public void spawnEnemiesAndWeapons() {
+        if (!ResearchGameArea.isCleared) {
+            startWaves(player);
+            ItemSpawner itemSpawner = new ItemSpawner(this);
+            itemSpawner.spawnItems(ItemSpawnConfig.researchmap());
+        }
     }
 
     private Entity spawnPlayer() {

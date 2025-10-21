@@ -10,19 +10,14 @@ import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.components.KeycardGateComponent;
 import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import com.csse3200.game.components.items.ItemComponent;
-import com.csse3200.game.components.items.ItemHoldComponent;
 import com.csse3200.game.components.player.ItemPickUpComponent;
 import com.csse3200.game.components.player.PlayerEquipComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.Benches;
 import com.csse3200.game.entities.configs.ItemSpawnConfig;
-import com.csse3200.game.entities.configs.Weapons;
 import com.csse3200.game.entities.factories.InteractableStationFactory;
 import com.csse3200.game.entities.factories.KeycardFactory;
-import com.csse3200.game.entities.factories.PowerupsFactory;
-import com.csse3200.game.entities.factories.characters.BossFactory;
 import com.csse3200.game.entities.factories.characters.FriendlyNPCFactory;
-import com.csse3200.game.entities.factories.items.WeaponsFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.entities.factories.system.TeleporterFactory;
 import com.csse3200.game.entities.spawner.ItemSpawner;
@@ -37,8 +32,6 @@ import com.csse3200.game.services.ServiceLocator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static com.csse3200.game.entities.configs.Weapons.*;
-
 import java.util.List;
 
 /**
@@ -52,8 +45,6 @@ import java.util.List;
  */
 public class ForestGameArea extends GameArea {
     private static final Logger logger = LoggerFactory.getLogger(ForestGameArea.class);
-    private static final int NUM_ITEMS = 5;//this is for ItemFactory
-    // private static final int NUM_TURRETS = 1;
     private static final float WALL_WIDTH = 0.1f;
     /**
      * Files or pictures used by the game (enemy/props,etc.).
@@ -239,7 +230,10 @@ public class ForestGameArea extends GameArea {
             "images/keycard_lvl4.png",
     };
     private static final String[] forestTextureAtlases = {
-            "images/robot-2.atlas", "images/fireball.atlas", "images/blackhole.atlas", "images/Robot_1.atlas",
+            "images/robot-2.atlas",
+            "images/fireball.atlas",
+            "images/blackhole.atlas",
+            "images/Robot_1.atlas",
             "images/boss_idle.atlas",
             "images/terrain_iso_grass.atlas",
             "images/ghost.atlas",
@@ -277,14 +271,17 @@ public class ForestGameArea extends GameArea {
             "images/cards.atlas"
     };
     private static final String[] extraTextures = {
-            "foreg_sprites/extras/Spikes.png","foreg_sprites/extras/Spikes2.png"
+            "foreg_sprites/extras/Spikes.png",
+            "foreg_sprites/extras/Spikes2.png"
     };
-    private static final String[] forestSounds = {"sounds/Impact4.ogg",
+    private static final String[] forestSounds = {
+            "sounds/Impact4.ogg",
             "sounds/shot_failed.mp3",
             "sounds/reload.mp3",
             "sounds/laser_blast.mp3",
             "sounds/ammo_replenished.mp3",
-            "sounds/upgradeSound.mp3"};
+            "sounds/upgradeSound.mp3"
+    };
     private static final String[] playerSound1 = {"sounds/jump.mp3"};
     private static final String[] enemySounds = {
             "sounds/deepspinDamage.mp3",
@@ -298,17 +295,9 @@ public class ForestGameArea extends GameArea {
             "sounds/turretDamage.mp3",
             "sounds/turretDeath.mp3"
     };
-    private static GridPoint2 playerSpawn = new GridPoint2(3, 20);
-    private final float VERTICAL_HEIGHT_OFFSET = 9.375f;
-    private Entity player;
-    private Entity dagger;
-    private Entity lightsaber;
-    private Entity bullet;
-    private Entity pistol;
-    private Entity rifle;
-    private Entity rapidFirePowerup;
-    private Entity unlimitedAmmoPowerup;
 
+    private static GridPoint2 playerSpawn = new GridPoint2(3, 20);
+    private Entity player;
 
     /**
      * Initialise this ForestGameArea to use the provided TerrainFactory and camera helper.
@@ -385,13 +374,6 @@ public class ForestGameArea extends GameArea {
         spawnTeleporter();
     }
 
-    private void spawnRobots() {
-        GridPoint2 pos = new GridPoint2(8, 13);
-        Entity robot = BossFactory.createRobot(player);
-        spawnEntityAt(robot, pos, true, true);
-
-    }
-
     private void displayUI() {
         Entity ui = new Entity();
         ui.addComponent(new GameAreaDisplay("Box Forest"))
@@ -416,8 +398,9 @@ public class ForestGameArea extends GameArea {
             float viewHeight = cam.viewportHeight;
             float leftX = camPos.x - viewWidth / 2f;
             float rightX = camPos.x + viewWidth / 2f;
-            float bottomY = camPos.y - VERTICAL_HEIGHT_OFFSET / 2f;
-            float topY = camPos.y + VERTICAL_HEIGHT_OFFSET / 2f;
+            float verticalHeightOffset = 9.375f;
+            float bottomY = camPos.y - verticalHeightOffset / 2f;
+            float topY = camPos.y + verticalHeightOffset / 2f;
 
             // Left screen border
             Entity left = ObstacleFactory.createWall(WALL_WIDTH, viewHeight);
@@ -436,9 +419,8 @@ public class ForestGameArea extends GameArea {
 
             // Leave a bottom gap in the middle if needed, then add a right-door trigger
             float doorWidth = Math.max(1f, viewWidth * 0.2f);
-            float doorHeight = WALL_WIDTH;
             float doorX = camPos.x - doorWidth / 2f;
-            float doorY = bottomY + 0.001f; // slight offset to sit above border
+            // slight offset to sit above border
             float rightDoorHeight = Math.max(1f, viewHeight * 0.2f);
             float rightDoorY = camPos.y - rightDoorHeight / 2f;
 
@@ -460,7 +442,7 @@ public class ForestGameArea extends GameArea {
             // Thin sensor line on the right that loads the next level on overlap
             Entity rightDoor = ObstacleFactory.createDoorTrigger(WALL_WIDTH, rightDoorHeight);
             rightDoor.setPosition(rightX - WALL_WIDTH - 0.001f, rightDoorY);
-            rightDoor.addComponent(new com.csse3200.game.components.DoorComponent(() -> this.loadNextLevel()));
+            rightDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadNextLevel));
 
             // Left edge wall with door (used helper instead of manual split)
             Bounds b = getCameraBounds(cameraComponent);
@@ -483,19 +465,6 @@ public class ForestGameArea extends GameArea {
      */
     private void loadCasino() {
         clearAndLoad(() -> new CasinoGameArea(terrainFactory, cameraComponent));
-    }
-
-    /**
-     * Builds the upper walkway: three thin floors, a long ceiling light, and a front-facing desk.
-     */
-    private void spawnPlatforms() {
-        for (int i = 0; i < 3; i++) {
-            GridPoint2 platformPos = new GridPoint2(i * 5, 10);
-            Entity platform = ObstacleFactory.createThinFloor();
-            spawnEntityAt(platform, platformPos, true, false);
-        }
-        Entity officeDesk = ObstacleFactory.createOfficeDesk();
-        spawnEntityAt(officeDesk, new GridPoint2(5, 11), true, false);
     }
 
     private void spawnComputerBench() {
@@ -536,33 +505,8 @@ public class ForestGameArea extends GameArea {
     }
 
     /**
-     * Places the purple spawn pad on the lower floor (visual prop).
+     * Bottom-left teleporter for discovered-room travel
      */
-    private void spawnPad() {
-        GridPoint2 spawnPadPos = new GridPoint2(20, 3);
-
-        Entity spawnPad = ObstacleFactory.createPurpleSpawnPad();
-
-        spawnEntityAt(spawnPad, spawnPadPos, false, false);
-    }
-
-    /**
-     * Adds a very tall thick-floor as a background wall/divider.
-     */
-    private void spawnBigWall() {
-        GridPoint2 wallSpawn = new GridPoint2(-14, 0);
-        Entity bigWall = ObstacleFactory.createBigThickFloor();
-        spawnEntityAt(bigWall, wallSpawn, true, false);
-    }
-
-    /**
-     * Spawns several item entities at random positions in the game area.
-     * The number of items is set by NUM_ITEMS.
-     * Each item is created and placed at a random spot on the terrain.
-     */
-
-
-    /** Bottom-left teleporter for discovered-room travel */
     private void spawnTeleporter() {
         Entity tp = TeleporterFactory.createTeleporter(new Vector2(2f, 3f));
         spawnEntity(tp);
@@ -578,14 +522,6 @@ public class ForestGameArea extends GameArea {
         }
 
         return player;
-    }
-
-    private Entity spawnDagger() {
-        Entity newDagger = WeaponsFactory.createWeapon(DAGGER);
-        Vector2 newDaggerOffset = new Vector2(0.7f, 0.3f);
-        newDagger.addComponent(new ItemHoldComponent(this.player, newDaggerOffset));
-
-        return newDagger;
     }
 
     /**
@@ -635,72 +571,6 @@ public class ForestGameArea extends GameArea {
         player.getComponent(PlayerEquipComponent.class).setItem(null, null);
     }
 
-    private Entity spawnLightsaber() {
-        Entity newLightsaber = WeaponsFactory.createWeapon(LIGHTSABER);
-        Vector2 newLightsaberOffset = new Vector2(0.9f, -0.2f);
-        newLightsaber.addComponent(new ItemHoldComponent(this.player, newLightsaberOffset));
-        AnimationRenderComponent lightSaberAnimator = WeaponsFactory.createAnimation("images/lightSaber.atlas", this.player);
-        newLightsaber.addComponent(lightSaberAnimator);
-        lightSaberAnimator.startAnimation("anim");
-
-        return newLightsaber;
-    }
-
-    private Entity spawnPistol() {
-        Entity newPistol = WeaponsFactory.createWeapon(Weapons.PISTOL);
-        Vector2 newPistolOffset = new Vector2(0.45f, 0.02f);
-        newPistol.addComponent(new ItemHoldComponent(this.player, newPistolOffset));
-        return newPistol;
-    }
-
-    private Entity spawnRifle() {
-        Entity newRifle = WeaponsFactory.createWeapon(RIFLE);
-        Vector2 newRifleOffset = new Vector2(0.8f, 0.15f);
-        newRifle.addComponent(new ItemHoldComponent(this.player, newRifleOffset));
-        return newRifle;
-    }
-
-    private void spawnRapidFirePowerup() {
-        Entity newRapidFirePowerup = PowerupsFactory.createRapidFire();
-        spawnEntityAt(newRapidFirePowerup, new GridPoint2(2, 30), true, true);
-    }
-
-    private void spawnUnlimitedAmmoPowerup() {
-        Entity newUnlimitedAmmoPowerup = PowerupsFactory.createUnlimitedAmmo();
-        spawnEntityAt(newUnlimitedAmmoPowerup, new GridPoint2(2, 30), true, true);
-    }
-
-    private void spawnAimbotPowerup() {
-        Entity newAimbot = PowerupsFactory.createAimBot();
-        spawnEntityAt(newAimbot, new GridPoint2(2, 30), true, true);
-    }
-
-    private void spawnDoubleProcessorsPowerup() {
-        Entity newUnlimitedAmmoPowerup = PowerupsFactory.createDoubleProcessors();
-        spawnEntityAt(newUnlimitedAmmoPowerup, new GridPoint2(5, 20), true, true);
-    }
-
-    private void spawnnpctest() {
-        GridPoint2 pos = new GridPoint2(16, 9);
-        Entity test = FriendlyNPCFactory.createTest(player);
-        spawnEntityAt(test, pos, true, true);
-    }
-
-    private void spawnPartnerNearPlayerIfNeeded() {
-        // Check if a partner already exists in the area
-        for (Entity entity : areaEntities) {
-            if (isPartnerNPC(entity)) {
-                // Partner already exists, don't spawn a new one
-                return;
-            }
-        }
-
-        Entity partner = FriendlyNPCFactory.createPartner(player);
-
-        GridPoint2 pos = new GridPoint2(8, 9);
-        spawnEntityAt(partner, pos, true, true);
-    }
-
     private void spawnGuidanceNpc() {
         var waypoints = List.of(new Vector2(12f, 7f), new Vector2(18f, 7f), new Vector2(25f, 12f));
         Entity guide = FriendlyNPCFactory.createGuidanceNpc(player, waypoints);
@@ -710,24 +580,6 @@ public class ForestGameArea extends GameArea {
         AnimationRenderComponent arc = guide.getComponent(AnimationRenderComponent.class);
         arc.startAnimation("robot_fire");   // start anim
         guide.setScale(1.2f, 1.2f);       // pick a size you like
-    }
-
-    private void spawnBoss2() {
-        GridPoint2 pos = new GridPoint2(5, 8);
-        Entity boss2 = BossFactory.createBoss2(player);
-        spawnEntityAt(boss2, pos, true, true);
-    }
-
-    //new added boss3
-    private void spawnBoss3() {
-        GridPoint2 pos = new GridPoint2(15, 16);
-
-        Entity boss3 = BossFactory.createBoss3(player);
-        spawnEntityAt(boss3, pos, true, true);
-    }
-
-    public void spawnItem(Entity item, GridPoint2 position) {
-        spawnEntityAt(item, position, false, false);
     }
 
     // Removed area-specific dispose to avoid double disposal during transitions
@@ -784,7 +636,6 @@ public class ForestGameArea extends GameArea {
     public Entity getPlayer() {
         return player;
     }
-
 
     @Override
     public String toString() {

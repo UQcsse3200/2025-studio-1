@@ -3,6 +3,7 @@ package com.csse3200.game.services;
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.areas.GameArea;
 import com.csse3200.game.areas.difficulty.Difficulty;
+import com.csse3200.game.areas.difficulty.DifficultyType;
 import com.csse3200.game.components.AmmoStatsComponent;
 import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.components.Component;
@@ -88,7 +89,8 @@ class SaveLoadServiceTest {
         player.addComponent(ammTest);
         player.addComponent(stamTest);
         player.setPosition(new Vector2(POS_X, POS_Y));
-        Avatar playerAvatarTest = AvatarRegistry.getAll().get(1);
+
+        Avatar playerAvatarTest = mock(Avatar.class);
         AvatarRegistry.set(playerAvatarTest);
 
         //test to mock
@@ -99,10 +101,9 @@ class SaveLoadServiceTest {
         GameArea area = mock(GameArea.class);
         ServiceLocator.registerGameArea(area);
 
+
         when(area.getEntities()).thenReturn(List.of(player));
         when(area.toString()).thenReturn(AREA_ID);
-
-
 
         SaveLoadService service = new SaveLoadService();
 
@@ -127,11 +128,18 @@ class SaveLoadServiceTest {
             // Assert snapshot fields
             Assertions.assertEquals(AREA_ID, out.getGameArea());
             Assertions.assertEquals(INITIAL_HEALTH, out.getPlayer().currentHealth, "Health should originate from CombatStatsComponent");
+            Assertions.assertEquals(MAX_HEALTH, out.getPlayer().maxHealth);
             Assertions.assertEquals(POS_X, out.getPlayer().playerPos.x, FLOAT_EPS);
             Assertions.assertEquals(POS_Y, out.getPlayer().playerPos.y, FLOAT_EPS);
             Assertions.assertEquals(EXPECTED_ROUND_NUMBER, out.getWave());
-//            Assertions.assertEquals(,out.getPlayer().avatar);
+            Assertions.assertNull(out.getPlayer().avatar);
+            Assertions.assertNotNull(out.getAreasVisited(), "discovery should be instantiated");
             Assertions.assertNotNull(out.getInventory(), "inventory list should be initialized (may be empty)");
+            Assertions.assertNotNull(out.getArmour());
+            Assertions.assertEquals(DifficultyType.NORMAL, out.getDifficulty());
+            Assertions.assertEquals(0, out.getPlayer().keyCardLevel);
+            Assertions.assertEquals(Float.valueOf(100), out.getPlayer().stamina);
+            Assertions.assertEquals(1, out.getPlayer().ammoReserve);
         }
     }
 

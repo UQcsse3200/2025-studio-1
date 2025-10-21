@@ -7,6 +7,7 @@ import com.csse3200.game.entities.Entity;
 import com.csse3200.game.rendering.RenderService;
 import com.csse3200.game.services.ServiceLocator;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
@@ -26,6 +27,7 @@ class EnemyHealthDisplayTest {
     }
 
     @Test
+    @DisplayName("Test Health Display logic runs")
     void testHealthDisplayLogicRuns() {
         // Create an enemy with 10 health
         Entity enemy = new Entity().addComponent(new CombatStatsComponent(10));
@@ -71,6 +73,7 @@ class EnemyHealthDisplayTest {
     }
 
     @Test
+    @DisplayName("Test update run without crashing")
     void testUpdateRunsWithoutCrashing() {
         Entity enemy = new Entity().addComponent(new CombatStatsComponent(10));
         EnemyHealthDisplay display = createTestDisplay();
@@ -82,12 +85,14 @@ class EnemyHealthDisplayTest {
     }
 
     @Test
+    @DisplayName("Test update when entity is null")
     public void testUpdateWhenEntityNull() {
         EnemyHealthDisplay display = createTestDisplay();
         display.update();  // will print log message and return without error
     }
 
     @Test
+    @DisplayName("Test dispose when health bar is removed")
     public void testDisposeRemovesHealthBar() throws Exception {
         Entity enemy = new Entity().addComponent(new CombatStatsComponent(10));
         EnemyHealthDisplay display = createTestDisplay();

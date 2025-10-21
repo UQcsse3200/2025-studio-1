@@ -8,7 +8,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.CameraComponent;
-import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import com.csse3200.game.components.KeycardGateComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.ItemSpawnConfig;
@@ -19,8 +18,6 @@ import com.csse3200.game.entities.spawner.ItemSpawner;
 import com.csse3200.game.lighting.LightSpawner;
 import com.csse3200.game.physics.components.ColliderComponent;
 import com.csse3200.game.services.ServiceLocator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
@@ -28,13 +25,11 @@ import java.util.List;
  * This is the room that holds the Flying Boss.
  * The boss is a flying enemy that spawns at the top of the map and
  * shoots projectiles at the player.
- *
+ * <p>
  * There are two platforms that can possibly server as cover as well as a floor
  * at the bottom
  */
 public class FlyingBossRoom extends GameArea {
-    private static final Logger logger = LoggerFactory.getLogger(FlyingBossRoom.class);
-
     private static final float WALL_WIDTH = 0.1f;
     private static GridPoint2 playerSpawn = new GridPoint2(3, 10);
     private static boolean isCleared = false;
@@ -92,7 +87,7 @@ public class FlyingBossRoom extends GameArea {
         );
 
         spawnBordersAndDoors();
-        displayUI();
+        displayUIEntity("Flying Boss Room", null);
 
         player = spawnPlayer();
 
@@ -107,12 +102,6 @@ public class FlyingBossRoom extends GameArea {
         }
 
         spawnVisibleFloor();
-    }
-
-    private void displayUI() {
-        Entity ui = new Entity();
-        ui.addComponent(new GameAreaDisplay("Flying Boss Room"));
-        spawnEntity(ui);
     }
 
     private void spawnPlatforms() {
@@ -134,17 +123,17 @@ public class FlyingBossRoom extends GameArea {
 
         Entity flyingBoss = BossFactory.createBoss2(player);
 
-        flyingBoss.getEvents().addListener("death", () -> {
-            ServiceLocator.getTimeSource().delayKeycardSpawn(0.05f, () -> {
-                Entity keycard = KeycardFactory.createKeycard(3);
-                keycard.setPosition(new Vector2(3f, 5f));
-                spawnEntity(keycard);
-            });
-        });
+        flyingBoss.getEvents().addListener("death",
+                () -> ServiceLocator.getTimeSource().delayKeycardSpawn(0.05f, () -> {
+                    Entity keycard = KeycardFactory.createKeycard(3);
+                    keycard.setPosition(new Vector2(3f, 5f));
+                    spawnEntity(keycard);
+                }));
 
         spawnEntityAt(flyingBoss, pos, true, true);
         registerEnemy(flyingBoss);
     }
+
     /**
      * Spawns the borders and doors of the room.
      * Different to genericLayout as the right door is up high

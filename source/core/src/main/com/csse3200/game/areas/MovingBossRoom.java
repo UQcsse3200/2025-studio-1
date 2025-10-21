@@ -7,7 +7,6 @@ import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.components.KeycardGateComponent;
-import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.ItemSpawnConfig;
 import com.csse3200.game.entities.factories.KeycardFactory;
@@ -18,8 +17,6 @@ import com.csse3200.game.entities.spawner.ItemSpawner;
 import com.csse3200.game.lighting.LightSpawner;
 import com.csse3200.game.physics.components.ColliderComponent;
 import com.csse3200.game.services.ServiceLocator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
@@ -33,7 +30,6 @@ public class MovingBossRoom extends GameArea {
     private static GridPoint2 playerSpawn = new GridPoint2(3, 10);
     private static boolean isCleared = false;
 
-    private static final Logger logger = LoggerFactory.getLogger(MovingBossRoom.class);
     private static final float WALL_WIDTH = 0.1f;
     private Entity player;
 
@@ -87,34 +83,31 @@ public class MovingBossRoom extends GameArea {
         );
 
         spawnBordersAndDoors();
-        displayUI();
+        displayUIEntity("Moving Boss Room", null);
 
         player = spawnPlayer();
+        spawnBossAndItems();
 
         spawnObjectDoors(new GridPoint2(0, 6), new GridPoint2(28, 6));
         spawnAssistor();
         spawnNurse();
 
+        spawnVisibleFloor();
+    }
+
+    public void spawnBossAndItems() {
         if (!MovingBossRoom.isCleared) {
             spawnBoss();
             ItemSpawner itemSpawner = new ItemSpawner(this);
             itemSpawner.spawnItems(ItemSpawnConfig.bossmap());
         }
-
-        spawnVisibleFloor();
-    }
-
-    private void displayUI() {
-        Entity ui = new Entity();
-        ui.addComponent(new GameAreaDisplay("Moving Boss Room"));
-        spawnEntity(ui);
     }
 
     private Entity spawnPlayer() {
         return spawnOrRepositionPlayer(playerSpawn);
     }
 
-    private void spawnBoss() {
+    public void spawnBoss() {
         GridPoint2 pos = new GridPoint2(15, 20);
 
         Entity boss = BossFactory.createRobot(player);
