@@ -171,7 +171,7 @@ public class StaticBossRoom extends GameArea {
         return new BenchConfig() {
             {
                 this.texturePath = null;
-                this.promptText = "Password is 0000";
+                this.promptText = "Door Password is 0000";
             }
 
             @Override
