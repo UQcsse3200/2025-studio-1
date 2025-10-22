@@ -164,12 +164,12 @@ public class FlyingBossRoom extends GameArea {
     }
 
     public void loadShipping() {
-        ShippingGameArea.setRoomSpawn(new GridPoint2(4, 8));
+        ShippingGameArea.setRoomSpawn(new GridPoint2(1, 7));
         clearAndLoad(() -> new ShippingGameArea(terrainFactory, cameraComponent));
     }
 
     public void loadResearch() {
-        ResearchGameArea.setRoomSpawn(new GridPoint2(25, 24));
+        ResearchGameArea.setRoomSpawn(new GridPoint2(25, 20));
         clearAndLoad(() -> new ResearchGameArea(terrainFactory, cameraComponent));
     }
 

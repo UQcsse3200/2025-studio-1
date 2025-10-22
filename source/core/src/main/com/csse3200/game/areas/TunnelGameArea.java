@@ -187,12 +187,12 @@ public class TunnelGameArea extends GameArea {
     }
 
     private void loadServer() {
-        ServerGameArea.setRoomSpawn(new GridPoint2(25, 24));
+        ServerGameArea.setRoomSpawn(new GridPoint2(25, 20));
         clearAndLoad(() -> new ServerGameArea(terrainFactory, cameraComponent));
     }
 
     private void loadBossRoom() {
-        StaticBossRoom.setRoomSpawn(new GridPoint2(4, 8));
+        StaticBossRoom.setRoomSpawn(new GridPoint2(1, 7));
         clearAndLoad(() -> new StaticBossRoom(terrainFactory, cameraComponent));
     }
 

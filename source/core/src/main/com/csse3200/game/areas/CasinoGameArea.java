@@ -80,6 +80,8 @@ public class CasinoGameArea extends GameArea {
         spawnWhackAMoleGame();
         spawnRobotFightingGame();
         spawnPoolGame();
+
+        ForestGameArea.setRoomSpawn(new GridPoint2(-1, 8));
     }
 
     /**
