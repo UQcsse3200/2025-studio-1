@@ -265,4 +265,12 @@ public class TunnelGameArea extends GameArea {
         Entity nurse = FriendlyNPCFactory.createNurseNpc(player);
         spawnEntityAt(nurse, pos, true, true);
     }
+
+    /**
+     * FOR TESTING PURPOSES
+     */
+    public static boolean getClearField() {
+        return TunnelGameArea.isCleared;
+    }
+
 }
