@@ -34,7 +34,8 @@ public class CasinoGameArea extends GameArea {
             "images/hole.png",
             "images/pool/cue.png",
             "images/pool/cue_ball.png",
-            "images/pool/table.png"
+            "images/pool/table.png",
+            "images/clanker-royale.png"
     };
     private static final String[] CASINO_ATLAS = {
             "images/pool/balls.atlas"

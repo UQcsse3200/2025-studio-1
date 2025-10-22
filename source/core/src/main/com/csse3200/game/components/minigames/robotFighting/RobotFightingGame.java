@@ -118,7 +118,7 @@ public class RobotFightingGame {
         game.addComponent(new RobotFightingDisplay());
         InventoryComponent inventory = ServiceLocator.getPlayer().getComponent(InventoryComponent.class);
         game.addComponent(new BettingComponent(2, inventory));
-        game.addComponent(new TextureRenderComponent("images/tree.png"));
+        game.addComponent(new TextureRenderComponent("images/clanker-royale.png"));
         return game;
     }
 
