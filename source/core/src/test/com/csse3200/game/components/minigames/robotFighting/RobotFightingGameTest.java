@@ -48,29 +48,24 @@ public class RobotFightingGameTest {
 
         public void hide() { hideCalled = true; }
         public void show() { showCalled = true; }
-        public void encourageFighter(String msg) { encouraged = true; }
-        public void playExplosionEffect(Object fighter) { explosionPlayed = true; }
+        public void encourageFighter() { encouraged = true; }
+        public void playExplosionEffect() { explosionPlayed = true; }
     }
 
     /** Headless RobotFightingGame that uses dummy display and dummy entity. */
     static class HeadlessGame extends RobotFightingGame {
-        private final DummyDisplay dummyDisplay;
-        private final Entity dummyEntity;
-        private final RobotFightingText textRef;
 
         HeadlessGame(RobotFightingText text, DummyDisplay display) {
             super(text); // uses the headless constructor you added in RobotFightingGame
-            this.textRef = text;
-            this.dummyDisplay = display;
 
             // IMPORTANT: use super.getGameEntity() here (not getGameEntity())
-            this.dummyEntity = super.getGameEntity();
+            Entity dummyEntity = super.getGameEntity();
 
             // Wire only what the tests need, without touching gameDisplay
-            dummyEntity.getEvents().addListener("interact", dummyDisplay::hide);
-            dummyEntity.getEvents().addListener("betPlaced", dummyDisplay::show);
+            dummyEntity.getEvents().addListener("interact", display::hide);
+            dummyEntity.getEvents().addListener("betPlaced", display::show);
             dummyEntity.getEvents().addListener("robotFighting:encourage",
-                    () -> dummyDisplay.encourageFighter(textRef.getRandom()));
+                    display::encourageFighter);
         }
     }
 
@@ -141,7 +136,7 @@ public class RobotFightingGameTest {
 
     @Test
     void testExplosionEffectIsInvoked() {
-        display.playExplosionEffect(null);
+        display.playExplosionEffect();
         assertTrue(display.explosionPlayed, "Explosion effect should trigger.");
     }
 
