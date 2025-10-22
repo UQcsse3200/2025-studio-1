@@ -94,7 +94,8 @@ loadScripts(document, 'script');</script>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">NpcHealingComponent</span>
 <span class="extends-implements">extends <a href="../Component.html" title="class in com.csse3200.game.components">Component</a></span></div>
 <div class="block">NPC Healing Component
- Restores player health when dialogue ends</div>
+ Restores player health when dialogue ends.
+ If player is at full health, grants a temporary protection shield instead.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -118,7 +119,14 @@ loadScripts(document, 'script');</script>
 <div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(com.csse3200.game.entities.Entity,int)" class="member-name-link">NpcHealingComponent</a><wbr>(<a href="../../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a>&nbsp;player,
  int&nbsp;healAmount)</code></div>
 <div class="col-last even-row-color">
-<div class="block">Creates an NPC healing component</div>
+<div class="block">Creates an NPC healing component (healing only, no shield)</div>
+</div>
+<div class="col-constructor-name odd-row-color"><code><a href="#%3Cinit%3E(com.csse3200.game.entities.Entity,int,int,long)" class="member-name-link">NpcHealingComponent</a><wbr>(<a href="../../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a>&nbsp;player,
+ int&nbsp;healAmount,
+ int&nbsp;shieldAmount,
+ long&nbsp;shieldDurationMillis)</code></div>
+<div class="col-last odd-row-color">
+<div class="block">Creates an NPC healing component with shield option</div>
 </div>
 </div>
 </section>
@@ -169,11 +177,28 @@ loadScripts(document, 'script');</script>
 <h3>NpcHealingComponent</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">NpcHealingComponent</span><wbr><span class="parameters">(<a href="../../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a>&nbsp;player,
  int&nbsp;healAmount)</span></div>
-<div class="block">Creates an NPC healing component</div>
+<div class="block">Creates an NPC healing component (healing only, no shield)</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>player</code> - the player entity to heal</dd>
 <dd><code>healAmount</code> - the amount of health to restore</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="&lt;init&gt;(com.csse3200.game.entities.Entity,int,int,long)">
+<h3>NpcHealingComponent</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">NpcHealingComponent</span><wbr><span class="parameters">(<a href="../../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a>&nbsp;player,
+ int&nbsp;healAmount,
+ int&nbsp;shieldAmount,
+ long&nbsp;shieldDurationMillis)</span></div>
+<div class="block">Creates an NPC healing component with shield option</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>player</code> - the player entity to heal</dd>
+<dd><code>healAmount</code> - the amount of health to restore</dd>
+<dd><code>shieldAmount</code> - the amount of protection to grant when at full health</dd>
+<dd><code>shieldDurationMillis</code> - how long the shield lasts (in milliseconds)</dd>
 </dl>
 </section>
 </li>
