@@ -154,7 +154,8 @@ public class NPCFactory {
         AITaskComponent aiComponent =
                 new AITaskComponent()
                         .addTask(new GPTGroundSlowChaseTask(target, 10, 0.3f, 15f))
-                        .addTask(new GPTGroundFastChaseTask(target, 10, 1.2f, projComp, ghostGPTRed, 3f, 3f));
+                        .addTask(new GPTGroundFastChaseTask(target, 10, 1.2f, projComp, ghostGPTRed,
+                                3f, 3f, 3, 15));
 
         // Get player's inventory for reward system
         InventoryComponent playerInventory = null;
@@ -217,7 +218,8 @@ public class NPCFactory {
         AITaskComponent aiComponent =
                 new AITaskComponent()
                         .addTask(new GPTGroundSlowChaseTask(target, 10, 0.3f, 15f))
-                        .addTask(new GPTGroundFastChaseTask(target, 10, 1.2f, projComp, ghostGPTBlue, 2f, 3f));
+                        .addTask(new GPTGroundFastChaseTask(target, 10, 1.2f, projComp, ghostGPTBlue,
+                                2f, 3f, 3, 15));
 
         // Get player's inventory for reward system
         InventoryComponent playerInventory = null;

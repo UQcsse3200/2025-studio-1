@@ -124,7 +124,7 @@ class PauseMenuDisplayTest {
         restart.fire(new com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent());
 
         verify(mockSound, atLeastOnce()).playClick();
-        verify(mockGame).setScreen(GdxGame.ScreenType.MAIN_GAME);
+        verify(mockGame).setScreen(GdxGame.ScreenType.LOADING);
     }
 
     @Test

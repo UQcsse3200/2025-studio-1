@@ -15,6 +15,13 @@ import java.util.ArrayList;
 public class PickupAllCommand implements Command {
     private static final Logger logger = LoggerFactory.getLogger(PickupAllCommand.class);
 
+    /**
+     * Executes the "pickupAll" command.
+     * <p>
+     *  Finds the player entity and triggers the "pickupAll" event.
+     * @param args Optional command arguments (unused in this command)
+     * @return {@code true} if the player entity was found and event triggered, {@code false} otherwise
+     */
     @Override
     public boolean action(ArrayList<String> args) {
         Entity player = findPlayer();
@@ -28,6 +35,10 @@ public class PickupAllCommand implements Command {
         return true;
     }
 
+    /**
+     * Searches all entities for the player entity
+     * @return The player entity if found, or null otherwise
+     */
     private Entity findPlayer() {
         var es = ServiceLocator.getEntityService();
         if (es == null) {
