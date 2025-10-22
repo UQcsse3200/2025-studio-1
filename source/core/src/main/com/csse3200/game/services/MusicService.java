@@ -106,13 +106,14 @@ public class MusicService {
      */
     public void setForestMusicPlaying(boolean play) {
         if (forestMusic != null) {
-            if (play && UserSettings.get().isMusicEnabled() && !forestMusic.isPlaying()) {
+            if (play && !forestMusic.isPlaying()) {
                 forestMusic.play();
             } else if (!play && forestMusic.isPlaying()) {
                 forestMusic.stop();
             }
         }
     }
+
 
     public void dispose(ResourceService resourceService) {
         if (menuMusic != null) {

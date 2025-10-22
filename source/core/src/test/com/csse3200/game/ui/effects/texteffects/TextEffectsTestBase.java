@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.BitmapFontCache;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.Timer;
 import com.csse3200.game.extensions.GameExtension;
@@ -111,7 +112,7 @@ public abstract class TextEffectsTestBase {
         data.ascent = -8f;
         data.lineHeight = 12f;
 
-        BitmapFont font = org.mockito.Mockito.mock(BitmapFont.class, withSettings());
+        BitmapFont font = mock(BitmapFont.class, withSettings());
         when(font.getData()).thenReturn(data);
         when(font.getCapHeight()).thenReturn(data.capHeight);
         when(font.getAscent()).thenReturn(data.ascent);
@@ -119,8 +120,8 @@ public abstract class TextEffectsTestBase {
         when(font.usesIntegerPositions()).thenReturn(true);
         when(font.getColor()).thenReturn(Color.WHITE);
 
-        com.badlogic.gdx.graphics.g2d.BitmapFontCache cache =
-                mock(com.badlogic.gdx.graphics.g2d.BitmapFontCache.class, withSettings());
+        BitmapFontCache cache =
+                mock(BitmapFontCache.class, withSettings());
         when(cache.getFont()).thenReturn(font);
         when(font.newFontCache()).thenReturn(cache);
 
