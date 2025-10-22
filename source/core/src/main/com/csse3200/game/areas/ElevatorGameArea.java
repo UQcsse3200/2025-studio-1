@@ -8,6 +8,8 @@ import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.components.KeycardGateComponent;
 import com.csse3200.game.entities.Entity;
+import com.csse3200.game.entities.configs.Benches;
+import com.csse3200.game.entities.factories.InteractableStationFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.entities.factories.system.TeleporterFactory;
 import com.csse3200.game.lighting.LightSpawner;
@@ -76,6 +78,7 @@ public class ElevatorGameArea extends GameArea {
         spawnDesk();
         spawnTeleporter();
         spawnSpikes();
+        spawnSpeedBench();
 
         if (!ElevatorGameArea.isCleared) {
             startWaves(player);
@@ -173,7 +176,10 @@ public class ElevatorGameArea extends GameArea {
         desk.setPosition(12f, 3f);
         spawnEntity(desk);
     }
-
+    private void spawnSpeedBench() {
+        Entity bench = InteractableStationFactory.createStation(Benches.SPEED_BENCH);
+        spawnEntityAt(bench, new GridPoint2(25, 8), true, true);
+    }
     /**
      * Spawn a few floating platforms
      */

@@ -353,9 +353,6 @@ public class ForestGameArea extends GameArea {
         spawnTerrain();
         player = spawnPlayer();
         ServiceLocator.registerPlayer(player);
-        spawnComputerBench();
-        spawnHealthBench();
-        spawnSpeedBench();
         spawnFloor();
         spawnBottomRightDoor();
         ServiceLocator.getMusicService().setForestMusicPlaying(true);
@@ -363,14 +360,6 @@ public class ForestGameArea extends GameArea {
         itemSpawner.spawnItems(ItemSpawnConfig.forestmap());
 
         spawnGuidanceNpc();
-
-        // Place a keycard on the floor so the player can unlock the door
-        float keycardX = 3f;
-        float keycardY = 7f;
-        Entity keycard = KeycardFactory.createKeycard(1);
-        keycard.setPosition(new Vector2(keycardX, keycardY));
-        spawnEntity(keycard);
-
         spawnTeleporter();
     }
 
@@ -467,23 +456,7 @@ public class ForestGameArea extends GameArea {
         clearAndLoad(() -> new CasinoGameArea(terrainFactory, cameraComponent));
     }
 
-    private void spawnComputerBench() {
-        Entity bench = InteractableStationFactory.createStation(Benches.COMPUTER_BENCH);
-        spawnEntityAt(bench, new GridPoint2(2, 7), true, true);
-
-    }
-
-    private void spawnHealthBench() {
-        Entity bench = InteractableStationFactory.createStation(Benches.HEALTH_BENCH);
-        spawnEntityAt(bench, new GridPoint2(8, 7), true, true);
-    }
-
-    private void spawnSpeedBench() {
-        Entity bench = InteractableStationFactory.createStation(Benches.SPEED_BENCH);
-        spawnEntityAt(bench, new GridPoint2(25, 7), true, true);
-    }
-
-    /**
+        /**
      * Places a large door sprite at the bottom-right platform. The door uses a keycard gate:
      * when the player has key level 1, the door callback triggers and we load the next level.
      */
@@ -496,7 +469,7 @@ public class ForestGameArea extends GameArea {
         door.addComponent(texture);
         texture.scaleEntity();
         door.setPosition(doorX, doorY);
-        door.addComponent(new KeycardGateComponent(1, () -> {
+        door.addComponent(new KeycardGateComponent(0, () -> {
             logger.info("Bottom-right platform door unlocked — loading next level");
             loadNextLevel();
         }));

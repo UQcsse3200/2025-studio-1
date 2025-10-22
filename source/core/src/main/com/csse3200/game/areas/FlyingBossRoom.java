@@ -10,7 +10,9 @@ import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.components.KeycardGateComponent;
 import com.csse3200.game.entities.Entity;
+import com.csse3200.game.entities.configs.Benches;
 import com.csse3200.game.entities.configs.ItemSpawnConfig;
+import com.csse3200.game.entities.factories.InteractableStationFactory;
 import com.csse3200.game.entities.factories.KeycardFactory;
 import com.csse3200.game.entities.factories.characters.BossFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
@@ -92,7 +94,6 @@ public class FlyingBossRoom extends GameArea {
         player = spawnPlayer();
 
         spawnPlatforms();
-
         spawnObjectDoors(new GridPoint2(0, 7), new GridPoint2(28, 7));
 
         if (!FlyingBossRoom.isCleared) {
@@ -148,7 +149,11 @@ public class FlyingBossRoom extends GameArea {
         float leftDoorY = b.bottomY();
         Entity leftDoor = ObstacleFactory.createDoorTrigger(WALL_WIDTH, leftDoorHeight);
         leftDoor.setPosition(b.leftX() + 0.001f, leftDoorY);
-        leftDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadResearch));
+        leftDoor.addComponent(new KeycardGateComponent(2, () -> {
+            ColliderComponent collider = leftDoor.getComponent(ColliderComponent.class);
+            if (collider != null) collider.setEnabled(false);
+            loadResearch();
+        }));
         spawnEntity(leftDoor);
 
         addSolidWallRight(b, WALL_WIDTH);
@@ -157,14 +162,12 @@ public class FlyingBossRoom extends GameArea {
         float rightDoorY = b.bottomY();
         Entity rightDoor = ObstacleFactory.createDoorTrigger(WALL_WIDTH, rightDoorHeight);
         rightDoor.setPosition(b.rightX() - WALL_WIDTH - 0.001f, rightDoorY);
-        rightDoor.addComponent(new KeycardGateComponent(3, () -> {
+        rightDoor.addComponent(new KeycardGateComponent(2, () -> {
             ColliderComponent collider = rightDoor.getComponent(ColliderComponent.class);
             if (collider != null) collider.setEnabled(false);
             loadShipping();
         }));
         spawnEntity(rightDoor);
-
-        if (!FlyingBossRoom.isCleared) registerDoors(new Entity[]{leftDoor});
     }
 
     /**

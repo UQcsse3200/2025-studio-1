@@ -10,6 +10,7 @@ import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.components.DoorComponent;
 import com.csse3200.game.components.stations.StationComponent;
 import com.csse3200.game.entities.Entity;
+import com.csse3200.game.entities.configs.Benches;
 import com.csse3200.game.entities.configs.ItemSpawnConfig;
 import com.csse3200.game.entities.configs.benches.BenchConfig;
 import com.csse3200.game.entities.factories.InteractableStationFactory;
@@ -198,7 +199,10 @@ public class TunnelGameArea extends GameArea {
         GridPoint2 spikesSpawn = new GridPoint2(15, 6);
         spawnEntityAt(spikes, spikesSpawn, true, false);
     }
-
+    private void spawnHealthBench() {
+        Entity bench = InteractableStationFactory.createStation(Benches.HEALTH_BENCH);
+        spawnEntityAt(bench, new GridPoint2(25, 12), true, true);
+    }
     /**
      * Teleporter bottom-left
      */
