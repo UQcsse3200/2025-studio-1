@@ -60,10 +60,18 @@ public class DeathScreen extends BaseScreen {
                 .addComponent(new InputDecorator(stage, 10));
     }
 
+    /**
+     * Updates the elapsed time in DeathScreen UI
+     * @param second seconds the total number of seconds elapsed before defeat
+     */
     public void updateTime(long second) {
         uiDisplay.setElapsedSeconds(second);
     }
 
+    /**
+     * Return the current defeat UI display component.
+     * @return the {@link BaseEndScreenDisplays} instance used in this screen
+     */
     public BaseEndScreenDisplays getUiDisplay(){
         return uiDisplay;
     }

@@ -115,6 +115,16 @@ public abstract class BaseScreenDisplay extends UIComponent {
         return getLabel(to, text, fontScale, padBottom, small);
     }
 
+    /**
+     * Internal helper for creating and adding a label to a table with consistent styling.
+     *
+     * @param to the linked table to add label
+     * @param text text to display
+     * @param fontScale font scale for the label
+     * @param padBottom padding below the label row
+     * @param small label style to apply
+     * @return he created {@link Label}
+     */
     private Label getLabel(Table to, String text, float fontScale, float padBottom, Label.LabelStyle small) {
         Label lbl = new Label(text, small);
         lbl.setFontScale(fontScale);

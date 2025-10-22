@@ -58,6 +58,12 @@ public class CountdownTimerService {
         logger.debug("Setting CountdownTimerService with duration {} ms", duration);
     }
 
+    /**
+     * Starts the countdown timer.
+     * <p>
+     *     Resets pause state and records the current {@link GameTime}
+     * </p>
+     */
     public void startTimer(){
         this.isRunning = true;
         this.paused = false;
@@ -161,6 +167,10 @@ public class CountdownTimerService {
         return duration;
     }
 
+    /**
+     * Returns whether the timer is currently running
+     * @return @return {@code true} if the timer has been started, otherwise {@code false}
+     */
     public boolean getIsRunning(){
         return isRunning;
     }

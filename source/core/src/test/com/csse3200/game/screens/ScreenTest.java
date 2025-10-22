@@ -29,6 +29,9 @@ import org.mockito.Mockito;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+/**
+ * Unit tests for various {@link com.badlogic.gdx.Screen} implementations in the game.
+ */
 @ExtendWith(GameExtension.class)
 class ScreenTest {
 
@@ -38,6 +41,13 @@ class ScreenTest {
     private MockedStatic<RenderFactory> renderFactoryStatic;
     private MockedStatic<ServiceLocator> serviceLocatorStatic;
 
+    /**
+     * Sets up shared mocks and static stubs before each test.
+     * <p>
+     * This creates a mock {@link GdxGame}, and prepares mocked versions of the
+     * {@link RenderService}, {@link ResourceService}, and {@link EntityService}.
+     * It also mocks static accessors in {@link RenderFactory} and {@link ServiceLocator}
+     */
     @BeforeEach
     void setUp() {
         mockGame = mock(GdxGame.class);
@@ -71,12 +81,19 @@ class ScreenTest {
         serviceLocatorStatic.when(() -> ServiceLocator.registerEntityService(any())).thenAnswer(i -> null);
     }
 
+    /**
+     * Closes all static mocks after each test
+     */
     @AfterEach
     void tearDown() {
         renderFactoryStatic.close();
         serviceLocatorStatic.close();
     }
 
+    /**
+     * Tests that constructing a {@link DeathScreen} correctly initializes its stage and UI display.
+     * Ensures that the UI {@link Entity} includes {@link InputDecorator} and {@link BaseEndScreenDisplays}.
+     */
     @Test
     void constructor_initializesDeathScreenUiAndStage_withoutErrors() {
         Texture tutBg = mock(Texture.class);
@@ -92,6 +109,10 @@ class ScreenTest {
         assertNotNull(deathUi.getComponent(BaseEndScreenDisplays.class), "DeathScreen UI should have BaseEndScreenDisplays");
     }
 
+    /**
+     * Tests that constructing a {@link WinScreen} correctly initializes its stage and UI display.
+     * Ensures that the UI {@link Entity} includes {@link InputDecorator} and {@link BaseEndScreenDisplays}.
+     */
     @Test
     void constructor_initializesWinScreenUiAndStage_withoutErrors() {
         Texture tutBg = mock(Texture.class);
@@ -107,6 +128,10 @@ class ScreenTest {
         assertNotNull(winUi.getComponent(BaseEndScreenDisplays.class), "WinScreen UI should have BaseEndScreenDisplays");
     }
 
+    /**
+     * Tests that constructing a {@link TutorialScreen} correctly initializes its stage and UI display.
+     * Ensures that the UI {@link Entity} includes {@link InputDecorator} and {@link TutorialScreenDisplay}.
+     */
     @Test
     void constructor_initializesTutorialScreenUiAndStage_withoutErrors() {
         Texture tutBg = mock(Texture.class);
@@ -121,6 +146,10 @@ class ScreenTest {
         assertNotNull(tutUi.getComponent(TutorialScreenDisplay.class), "TutorialScreen UI should have TutorialScreenDisplay");
     }
 
+    /**
+     * Tests that constructing a {@link DifficultyScreen} correctly initializes its stage and UI display.
+     * Ensures that the UI {@link Entity} includes {@link InputDecorator} and {@link DifficultyMenuDisplay}.
+     */
     @Test
     void constructor_initializesDifficultyScreenUiAndStage_withoutErrors() {
         DifficultyScreen difficultyScreen = new DifficultyScreen(mockGame);
@@ -132,6 +161,10 @@ class ScreenTest {
         assertNotNull(diffUi.getComponent(DifficultyMenuDisplay.class), "DifficultyScreen UI should have DiffucultyMenuDisplay");
     }
 
+    /**
+     * Tests that constructing a {@link LeaderboardScreen} correctly initializes its stage and UI display.
+     * Ensures that the UI {@link Entity} includes {@link InputDecorator} and {@link LeaderboardScreenDisplay}.
+     */
     @Test
     void constructor_initializesLeaderboardScreenUiAndStage_withoutErrors() {
         LeaderboardScreen leaderboardScreen = new LeaderboardScreen(mockGame);
@@ -143,6 +176,10 @@ class ScreenTest {
         assertNotNull(leaderboardUi.getComponent(LeaderboardScreenDisplay.class), "LeaderboardScreen UI should have LeaderboardScreenDisplay");
     }
 
+    /**
+     * Tests that the {@link MainMenuScreen} correctly constructs its background image and UI entity.
+     * Verifies registration of expected components such as {@link com.csse3200.game.components.mainmenu.MainMenuDisplay}.
+     */
     @Test
     void constructor_initializesMainMenu_withoutErrors() {
         Texture bgTex = mock(Texture.class);
@@ -166,6 +203,10 @@ class ScreenTest {
         assertNotNull(ui.getComponent(com.csse3200.game.components.mainmenu.MainMenuActions.class));
     }
 
+    /**
+     * Tests that constructing a {@link SettingsScreen} correctly initializes its stage and UI display.
+     * Ensures that the UI {@link Entity} includes {@link InputDecorator} and {@link com.csse3200.game.components.settingsmenu.SettingsMenuDisplay}.
+     */
     @Test
     void constructor_initializesSettingsScreenUiAndStage_withoutErrors() {
         Texture menuBg = mock(Texture.class);
@@ -181,6 +222,10 @@ class ScreenTest {
                 "SettingsScreen UI should have SettingsMenuDisplay");
     }
 
+    /**
+     * Confirms that {@link DeathScreen#updateTime} updates correctly
+     * to {@link BaseEndScreenDisplays#setElapsedSeconds}.
+     */
     @Test
     void updateTime_callsDeathUiDisplaySetElapsedSeconds() throws Exception {
         BaseEndScreenDisplays mockUiDisplay = mock(BaseEndScreenDisplays.class);
@@ -195,6 +240,10 @@ class ScreenTest {
         verify(mockUiDisplay).setElapsedSeconds(42L);
     }
 
+    /**
+     * Confirms that {@link WinScreen#updateTime} updates correctly
+     * to {@link BaseEndScreenDisplays#setElapsedSeconds}.
+     */
     @Test
     void updateTime_callsWinUiDisplaySetElapsedSeconds() throws Exception {
         BaseEndScreenDisplays mockUiDisplay = mock(BaseEndScreenDisplays.class);
@@ -209,6 +258,9 @@ class ScreenTest {
         verify(mockUiDisplay).setElapsedSeconds(42L);
     }
 
+    /**
+     * Ensures the {@link MainMenuScreen#render(float)} method updates entities and triggers renderer rendering.
+     */
     @Test
     void mainMenu_render_callsEntityUpdate_andRendererRender() {
         Texture bgTex = mock(Texture.class);
@@ -224,6 +276,9 @@ class ScreenTest {
         verify(mockRenderer, times(1)).render();
     }
 
+    /**
+     * Tests that {@link MainMenuScreen#resize(int, int)} forwards resize events to the {@link Renderer}.
+     */
     @Test
     void mainMenu_resize_forwardsToRenderer() {
         Texture bgTex = mock(Texture.class);
@@ -237,6 +292,10 @@ class ScreenTest {
         verify(mockRenderer, times(1)).resize(1280, 720);
     }
 
+    /**
+     * Verifies that {@link MainMenuScreen#dispose()} properly cleans up resources,
+     * disposes of renderer and services, and clears registered services.
+     */
     @Test
     void mainMenu_dispose_cleansServicesAndAssets() {
         // Given
