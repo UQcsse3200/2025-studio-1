@@ -108,7 +108,7 @@ public class MainGameScreen extends ScreenAdapter {
         renderer.getDebug().renderPhysicsWorld(physicsEngine.getWorld());
 
         loadAssets();
-        countdownTimer = new CountdownTimerService(ServiceLocator.getTimeSource(), 240000);
+        countdownTimer = new CountdownTimerService(ServiceLocator.getTimeSource(), 2400000);
         ServiceLocator.getGlobalEvents().addListener("escape timer", () -> {
             setEscapeTimer();
             deleteUI();
@@ -171,7 +171,7 @@ public class MainGameScreen extends ScreenAdapter {
         renderer.getDebug().renderPhysicsWorld(physicsEngine.getWorld());
 
         loadAssets();
-        countdownTimer = new CountdownTimerService(ServiceLocator.getTimeSource(), 60000);
+        countdownTimer = new CountdownTimerService(ServiceLocator.getTimeSource(), 2400000);
         ServiceLocator.getGlobalEvents().addListener("escape timer", () -> {
             setEscapeTimer();
             deleteUI();
