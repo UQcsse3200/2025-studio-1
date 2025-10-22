@@ -8,9 +8,7 @@ import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.components.KeycardGateComponent;
 import com.csse3200.game.entities.Entity;
-import com.csse3200.game.entities.configs.Benches;
 import com.csse3200.game.entities.configs.ItemSpawnConfig;
-import com.csse3200.game.entities.factories.InteractableStationFactory;
 import com.csse3200.game.entities.factories.KeycardFactory;
 import com.csse3200.game.entities.factories.characters.BossFactory;
 import com.csse3200.game.entities.factories.characters.FriendlyNPCFactory;
@@ -20,8 +18,6 @@ import com.csse3200.game.lighting.LightSpawner;
 import com.csse3200.game.physics.components.ColliderComponent;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.services.ResourceService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 import java.util.List;

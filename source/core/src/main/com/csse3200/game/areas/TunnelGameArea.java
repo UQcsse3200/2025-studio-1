@@ -18,7 +18,6 @@ import com.csse3200.game.entities.factories.characters.FriendlyNPCFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.entities.factories.system.TeleporterFactory;
 import com.csse3200.game.entities.spawner.ItemSpawner;
-import com.csse3200.game.lighting.ConeLightComponent;
 import com.csse3200.game.lighting.LightSpawner;
 import com.csse3200.game.physics.PhysicsUtils;
 import com.csse3200.game.physics.components.ColliderComponent;
@@ -201,10 +200,7 @@ public class TunnelGameArea extends GameArea {
         GridPoint2 spikesSpawn = new GridPoint2(15, 6);
         spawnEntityAt(spikes, spikesSpawn, true, false);
     }
-    private void spawnHealthBench() {
-        Entity bench = InteractableStationFactory.createStation(Benches.HEALTH_BENCH);
-        spawnEntityAt(bench, new GridPoint2(25, 12), true, true);
-    }
+
     /**
      * Teleporter bottom-left
      */

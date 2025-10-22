@@ -22,8 +22,6 @@ import com.csse3200.game.utils.math.RandomUtils;
  */
 public class TerrainFactory {
     private static final GridPoint2 MAP_SIZE = new GridPoint2(30, 30);
-    private static final int TUFT_TILE_COUNT = 30;
-    private static final int ROCK_TILE_COUNT = 30;
 
     private final OrthographicCamera camera;
     private final TerrainOrientation orientation;
@@ -46,28 +44,6 @@ public class TerrainFactory {
     public TerrainFactory(CameraComponent cameraComponent, TerrainOrientation orientation) {
         this.camera = (OrthographicCamera) cameraComponent.getCamera();
         this.orientation = orientation;
-    }
-
-    private static void fillTilesAtRandom(
-            TiledMapTileLayer layer, GridPoint2 mapSize, TerrainTile tile, int amount) {
-        GridPoint2 min = new GridPoint2(0, 0);
-        GridPoint2 max = new GridPoint2(mapSize.x - 1, mapSize.y - 1);
-
-        for (int i = 0; i < amount; i++) {
-            GridPoint2 tilePos = RandomUtils.random(min, max);
-            Cell cell = layer.getCell(tilePos.x, tilePos.y);
-            cell.setTile(tile);
-        }
-    }
-
-    private static void fillTiles(TiledMapTileLayer layer, GridPoint2 mapSize, TerrainTile tile) {
-        for (int x = 0; x < mapSize.x; x++) {
-            for (int y = 0; y < mapSize.y; y++) {
-                Cell cell = new Cell();
-                cell.setTile(tile);
-                layer.setCell(x, y, cell);
-            }
-        }
     }
 
     private static void fillBackground(TiledMapTileLayer layer, GridPoint2 mapSize, TerrainTile tile) {
