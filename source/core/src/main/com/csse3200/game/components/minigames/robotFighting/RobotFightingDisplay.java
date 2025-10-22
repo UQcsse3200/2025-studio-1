@@ -59,10 +59,6 @@ public class RobotFightingDisplay extends UIComponent {
     private static final float MOTION_AMPLITUDE = 30f; // side-to-side pixel shift
     private static final float MOTION_SPEED = 2f;      // oscillation speed
 
-
-    // --- References ---
-    private final GameArea game = ServiceLocator.getGameArea();
-
     @Override
     public void create() {
         super.create();
