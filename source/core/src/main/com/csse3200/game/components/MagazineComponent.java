@@ -7,9 +7,7 @@ import com.csse3200.game.services.ServiceLocator;
 /**
  * Stores and manages a given weapon's magazine information
  */
-
 public class MagazineComponent extends Component {
-
     private final int maxAmmo;
     private int currentAmmo;
     private float timeSinceLastReload;
@@ -19,9 +17,7 @@ public class MagazineComponent extends Component {
      *
      * @param maxAmmo the maximum amount of ammunition that can be held by the weapon
      */
-
     public MagazineComponent(int maxAmmo) {
-
         this.maxAmmo = maxAmmo;
         this.currentAmmo = maxAmmo;
         this.timeSinceLastReload = 1.51f;
@@ -30,22 +26,18 @@ public class MagazineComponent extends Component {
     /**
      * Updates the reload cooldown
      */
-
+    @Override
     public void update() {
-
         float dt = ServiceLocator.getTimeSource().getDeltaTime();
         timeSinceLastReload += dt;
     }
-
 
     /**
      * Returns current amount of ammo in magazine
      *
      * @return ammo in magazine
      */
-
     public int getCurrentAmmo() {
-
         return this.currentAmmo;
     }
 
@@ -54,9 +46,7 @@ public class MagazineComponent extends Component {
      *
      * @param newAmmo ammunition to be stored in the magazine
      */
-
     public void setCurrentAmmo(int newAmmo) {
-
         this.currentAmmo = newAmmo;
     }
 
@@ -65,22 +55,18 @@ public class MagazineComponent extends Component {
      *
      * @return true if reload is successful and adds ammunition to the magazine, false otherwise
      */
-
     public boolean reload(Entity player) {
         if (currentAmmo == maxAmmo) {
-
             return false;
         }
 
         AmmoStatsComponent ammoStats = player.getComponent(AmmoStatsComponent.class);
         int ammoReserves = ammoStats.getAmmo();
         if (ammoReserves <= 0) {
-
             return false;
         }
 
         if (ammoReserves < maxAmmo) {
-
             this.setCurrentAmmo(currentAmmo + ammoReserves);
             ammoStats.setAmmo(0);
         } else {
@@ -88,7 +74,6 @@ public class MagazineComponent extends Component {
             this.setCurrentAmmo(maxAmmo);
             ammoStats.setAmmo(ammoReserves - reloadedAmmo);
         }
-
         timeSinceLastReload = 0;
         return true;
     }
@@ -98,9 +83,7 @@ public class MagazineComponent extends Component {
      *
      * @return true if the weapon is undergoing a reload, false otherwise
      */
-
     public boolean reloading() {
-
         float reloadDuration = 1.5f;
         return this.timeSinceLastReload <= reloadDuration;
     }
@@ -110,9 +93,7 @@ public class MagazineComponent extends Component {
      *
      * @param timeSinceLastReload designated time since last reload
      */
-
     public void setTimeSinceLastReload(float timeSinceLastReload) {
-
         this.timeSinceLastReload = timeSinceLastReload;
     }
 

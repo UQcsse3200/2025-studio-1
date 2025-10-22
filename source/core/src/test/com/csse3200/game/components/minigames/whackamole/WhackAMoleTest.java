@@ -41,10 +41,17 @@ class WhackAMoleGameTest {
         @Override public void prepareToPlay() { score = 0; running = false; }
         @Override public void show() { /* no-op */ }
         @Override public void hide() { hideCalled = true; }
-        @Override public void showEnd(String title, String message) {
+        @Override
+        public void showEnd(String title, String message, Runnable onClose) {
             endCalls++;
             lastEndTitle = title;
             lastEndMessage = message;
+            if (onClose != null) onClose.run();
+            hide();
+        }
+        @Override
+        public void showEnd(String title, String message) {
+            showEnd(title, message, null);
         }
     }
 

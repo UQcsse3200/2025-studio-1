@@ -3,7 +3,6 @@ package com.csse3200.game.components.powerup;
 import com.csse3200.game.components.MagazineComponent;
 import com.csse3200.game.components.PowerupComponent;
 import com.csse3200.game.components.player.InventoryComponent;
-import com.csse3200.game.components.player.PlayerActions;
 import com.csse3200.game.effects.AimbotEffect;
 import com.csse3200.game.effects.DoubleProcessorsEffect;
 import com.csse3200.game.effects.RapidFireEffect;
@@ -112,7 +111,7 @@ public class PowerupComponentTest {
         MagazineComponent magazine = new MagazineComponent(30);
         weapon.addComponent(magazine);
 
-        AimbotEffect effect = new AimbotEffect(1f, mock(PlayerActions.class));
+        AimbotEffect effect = new AimbotEffect(1f);
 
         powerupComponent.addEffect(effect);
         powerupComponent.update();
@@ -125,7 +124,7 @@ public class PowerupComponentTest {
         weapon = new Entity();
         powerupComponent.setEquippedWeapon(weapon);
 
-        AimbotEffect effect = new AimbotEffect(1f, mock(PlayerActions.class));
+        AimbotEffect effect = new AimbotEffect(1f);
 
         powerupComponent.addEffect(effect);
         powerupComponent.update();
@@ -138,7 +137,7 @@ public class PowerupComponentTest {
         MagazineComponent magazine = new MagazineComponent(30);
         weapon.addComponent(magazine);
 
-        AimbotEffect effect = new AimbotEffect(0f, mock(PlayerActions.class));
+        AimbotEffect effect = new AimbotEffect(0f);
 
         powerupComponent.addEffect(effect);
         powerupComponent.update();
@@ -152,7 +151,7 @@ public class PowerupComponentTest {
         MagazineComponent magazine = new MagazineComponent(10);
         weapon.addComponent(magazine);
 
-        UnlimitedAmmoEffect effect = new UnlimitedAmmoEffect(1f, null);
+        UnlimitedAmmoEffect effect = new UnlimitedAmmoEffect(1f);
 
         powerupComponent.addEffect(effect);
         powerupComponent.update();
@@ -166,7 +165,7 @@ public class PowerupComponentTest {
         Entity gunWithoutMagazine = new Entity();
         powerupComponent.setEquippedWeapon(gunWithoutMagazine);
 
-        UnlimitedAmmoEffect effect = new UnlimitedAmmoEffect(1f, null);
+        UnlimitedAmmoEffect effect = new UnlimitedAmmoEffect(1f);
 
         powerupComponent.addEffect(effect);
         powerupComponent.update();
@@ -179,7 +178,7 @@ public class PowerupComponentTest {
         MagazineComponent magazine = new MagazineComponent(10);
         weapon.addComponent(magazine);
 
-        UnlimitedAmmoEffect effect = new UnlimitedAmmoEffect(1f, null);
+        UnlimitedAmmoEffect effect = new UnlimitedAmmoEffect(1f);
 
         powerupComponent.addEffect(effect);
 

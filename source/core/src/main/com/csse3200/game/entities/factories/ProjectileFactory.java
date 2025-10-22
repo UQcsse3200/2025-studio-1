@@ -56,7 +56,8 @@ public class ProjectileFactory {
                 .addComponent(new HitboxComponent().setLayer(config.projectileType))
                 .addComponent(new TouchAttackComponent(config.target, 1f));
         projectile.getComponent(PhysicsComponent.class).setBodyType(BodyDef.BodyType.DynamicBody);
-
+        projectile.getComponent(HitboxComponent.class)
+                .setAsBox(new Vector2(0.2f, 0.2f));
         // Ensure the collision is only checked between the projectile and the target
         ColliderComponent collider = projectile.getComponent(ColliderComponent.class);
         collider.setLayer(config.projectileType)

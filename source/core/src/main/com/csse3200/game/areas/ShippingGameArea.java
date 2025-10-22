@@ -6,14 +6,11 @@ import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.CameraComponent;
-import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.ItemSpawnConfig;
-import com.csse3200.game.entities.factories.characters.NPCFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.entities.factories.system.TeleporterFactory;
 import com.csse3200.game.entities.spawner.ItemSpawner;
-import com.csse3200.game.services.ServiceLocator;
 
 /**
  * The "Shipping" area of the game map. This class:
@@ -23,9 +20,8 @@ import com.csse3200.game.services.ServiceLocator;
  */
 public class ShippingGameArea extends GameArea {
     private static final float WALL_WIDTH = 0.1f;
-    private static final float ROOM_DIFF_NUMBER = 7;
     private static GridPoint2 playerSpawn = new GridPoint2(10, 10);
-    private Entity player;
+    private static boolean isCleared = false;
 
     /**
      * Initialise this ShippingGameArea to use the provided TerrainFactory and
@@ -41,6 +37,8 @@ public class ShippingGameArea extends GameArea {
      */
     public ShippingGameArea(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
         super(terrainFactory, cameraComponent);
+
+        this.getEvents().addListener("room cleared", ShippingGameArea::clearRoom);
     }
 
 
@@ -76,22 +74,20 @@ public class ShippingGameArea extends GameArea {
                 new Color(0.12f, 0.12f, 0.10f, 0.26f));
 
         spawnBordersAndDoors();
-        player = spawnPlayer();
-        spawnGrokDroids();
-        spawnVroombaAndDeepspin();
+        Entity player = spawnPlayer();
         spawnFloor();
         spawnShipmentBoxLid();
         spawnShipmentCrane();
         spawnConveyor();
         spawnTeleporter();
 
-        ItemSpawner itemSpawner = new ItemSpawner(this);
-        itemSpawner.spawnItems(ItemSpawnConfig.shippingmap());
+        if (!ShippingGameArea.isCleared) {
+            startWaves(player);
+            ItemSpawner itemSpawner = new ItemSpawner(this);
+            itemSpawner.spawnItems(ItemSpawnConfig.shippingmap());
+        }
 
-        Entity ui = new Entity();
-        ui.addComponent(new GameAreaDisplay("Shipping"))
-                .addComponent(new com.csse3200.game.components.gamearea.FloorLabelDisplay("Floor 8"));
-        spawnEntity(ui);
+        displayUIEntity("Shipping", "Floor 8");
     }
 
     /**
@@ -154,6 +150,11 @@ public class ShippingGameArea extends GameArea {
         leftDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadFlyingBossRoom));
         spawnEntity(leftDoor);
 
+
+        Entity leftDoorSprite = ObstacleFactory.createDoor();
+        leftDoorSprite.setPosition(b.leftX(), leftDoorY);
+        spawnEntity(leftDoorSprite);
+
         addSolidWallRight(b, WALL_WIDTH);
 
         float rightDoorHeight = Math.max(1f, b.viewHeight() * 0.2f);
@@ -162,6 +163,13 @@ public class ShippingGameArea extends GameArea {
         rightDoor.setPosition(b.rightX() - WALL_WIDTH - 0.001f, rightDoorY);
         rightDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadStorage));
         spawnEntity(rightDoor);
+
+
+        Entity rightDoorSprite = ObstacleFactory.createDoor();
+        rightDoorSprite.setPosition(b.rightX() - WALL_WIDTH - 1.0f, rightDoorY);
+        spawnEntity(rightDoorSprite);
+
+        if (!ShippingGameArea.isCleared) registerDoors(new Entity[]{leftDoor, rightDoor});
     }
 
     private Entity spawnPlayer() {
@@ -169,41 +177,10 @@ public class ShippingGameArea extends GameArea {
     }
 
     /**
-     * Spawn 2 high-level grok droids in the room as enemies.
-     */
-    private void spawnGrokDroids() {
-        Entity grok1 = NPCFactory.createGrokDroid(player, this,
-                ServiceLocator.getDifficulty().getRoomDifficulty(ShippingGameArea.ROOM_DIFF_NUMBER));
-        GridPoint2 grok1Pos = new GridPoint2(25, 7);
-        spawnEntityAt(grok1, grok1Pos, true, false);
-        Entity grok2 = NPCFactory.createGrokDroid(player, this,
-                ServiceLocator.getDifficulty().getRoomDifficulty(ShippingGameArea.ROOM_DIFF_NUMBER));
-        GridPoint2 grok2Pos = new GridPoint2(25, 7);
-        spawnEntityAt(grok2, grok2Pos, true, false);
-    }
-
-    /**
-     * Spawn a Vroomba and a Deepspin to diversify Shipping enemies.
-     */
-    private void spawnVroombaAndDeepspin() {
-        // Vroomba on the left side floor
-        Entity vroomba = NPCFactory.createVroomba(player,
-                ServiceLocator.getDifficulty().getRoomDifficulty(ShippingGameArea.ROOM_DIFF_NUMBER));
-        GridPoint2 vPos = new GridPoint2(6, 7);
-        spawnEntityAt(vroomba, vPos, true, false);
-
-        // Deepspin on the right side near crates
-        Entity deepspin = NPCFactory.createDeepspin(player, this,
-                ServiceLocator.getDifficulty().getRoomDifficulty(ShippingGameArea.ROOM_DIFF_NUMBER));
-        GridPoint2 dPos = new GridPoint2(22, 8);
-        spawnEntityAt(deepspin, dPos, true, false);
-    }
-
-    /**
      * Clears the game area and loads the previous section (Research).
      */
     private void loadFlyingBossRoom() {
-        FlyingBossRoom.setRoomSpawn(new GridPoint2(24, 8));
+        FlyingBossRoom.setRoomSpawn(new GridPoint2(24, 7));
         clearAndLoad(() -> new FlyingBossRoom(terrainFactory, cameraComponent));
     }
 
@@ -211,7 +188,7 @@ public class ShippingGameArea extends GameArea {
      * Clears the game area and loads the next section (Storage).
      */
     private void loadStorage() {
-        StorageGameArea.setRoomSpawn(new GridPoint2(4, 20));
+        StorageGameArea.setRoomSpawn(new GridPoint2(0, 16));
         clearAndLoad(() -> new StorageGameArea(terrainFactory, cameraComponent));
     }
 
@@ -223,5 +200,23 @@ public class ShippingGameArea extends GameArea {
     public Entity getPlayer() {
         // placeholder
         return null;
+    }
+
+    /**
+     * Clear room, set this room's static
+     * boolean isCleared variable to true
+     */
+    public static void clearRoom() {
+        ShippingGameArea.isCleared = true;
+        logger.debug("Shipping is cleared");
+    }
+
+    /**
+     * Unclear room, set this room's static
+     * boolean isCleared variable to false
+     */
+    public static void unclearRoom() {
+        ShippingGameArea.isCleared = false;
+        logger.debug("Shipping is uncleared");
     }
 }

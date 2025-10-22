@@ -6,13 +6,12 @@ import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.CameraComponent;
-import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.ItemSpawnConfig;
+import com.csse3200.game.entities.factories.characters.FriendlyNPCFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.entities.factories.system.TeleporterFactory;
 import com.csse3200.game.entities.spawner.ItemSpawner;
-import com.csse3200.game.services.ServiceLocator;
 
 /**
  * Research room: futuristic laboratory with desks, pods, microscopes, and
@@ -20,13 +19,15 @@ import com.csse3200.game.services.ServiceLocator;
  * Left door -> Elevator, Right door -> Storage.
  */
 public class ResearchGameArea extends GameArea {
+    private Entity player;
     private static final float WALL_WIDTH = 0.1f;
     private static GridPoint2 playerSpawn = new GridPoint2(10, 10);
-    private static final float ROOM_DIFF_NUMBER = 6;
-    private Entity player;
+    private static boolean isCleared = false;
 
     public ResearchGameArea(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
         super(terrainFactory, cameraComponent);
+
+        this.getEvents().addListener("room cleared", ResearchGameArea::clearRoom);
     }
 
     public static ResearchGameArea load(TerrainFactory terrainFactory, CameraComponent camera) {
@@ -56,15 +57,12 @@ public class ResearchGameArea extends GameArea {
         player = spawnPlayer();
         spawnPlatforms();
         spawnResearchProps();
-        spawnEnemies();
         spawnTeleporter();
-        ItemSpawner itemSpawner = new ItemSpawner(this);
-        itemSpawner.spawnItems(ItemSpawnConfig.researchmap());
+        spawnNurse(player);
+        spawnEnemiesAndWeapons();
 
-        Entity ui = new Entity();
-        ui.addComponent(new GameAreaDisplay("Research"))
-                .addComponent(new com.csse3200.game.components.gamearea.FloorLabelDisplay("Floor 7"));
-        spawnEntity(ui);
+
+        displayUIEntity("Research", "Floor 7");
     }
 
     private void spawnBordersAndDoors() {
@@ -73,6 +71,7 @@ public class ResearchGameArea extends GameArea {
         Bounds b = getCameraBounds(cameraComponent);
         addSolidWallLeft(b, WALL_WIDTH);
         addSolidWallTop(b, WALL_WIDTH);
+        addSolidWallRight(b, WALL_WIDTH);
         float leftDoorHeight = Math.max(1f, b.viewHeight() * 0.2f);
         float leftDoorY = b.bottomY();
         Entity leftDoor = ObstacleFactory.createDoorTrigger(WALL_WIDTH, leftDoorHeight);
@@ -85,6 +84,16 @@ public class ResearchGameArea extends GameArea {
         rightDoor.setPosition(b.rightX() - WALL_WIDTH - 0.001f, rightDoorY);
         rightDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadFlyingBossRoom));
         spawnEntity(rightDoor);
+
+        if (!ResearchGameArea.isCleared) registerDoors(new Entity[]{leftDoor, rightDoor});
+    }
+
+    public void spawnEnemiesAndWeapons() {
+        if (!ResearchGameArea.isCleared) {
+            startWaves(player);
+            ItemSpawner itemSpawner = new ItemSpawner(this);
+            itemSpawner.spawnItems(ItemSpawnConfig.researchmap());
+        }
     }
 
     private Entity spawnPlayer() {
@@ -145,24 +154,6 @@ public class ResearchGameArea extends GameArea {
     }
 
     /**
-     * Spawn a pair of enemies to keep Research lively.
-     */
-    private void spawnEnemies() {
-        if (player == null)
-            return;
-
-        // Vroomba near the bottom platforms
-        Entity vroomba = com.csse3200.game.entities.factories.characters.NPCFactory.createVroomba(player,
-                ServiceLocator.getDifficulty().getRoomDifficulty(ResearchGameArea.ROOM_DIFF_NUMBER));
-        spawnEntityAt(vroomba, new GridPoint2(8, 6), true, false);
-
-        // Deepspin near the top right area
-        Entity deepspin = com.csse3200.game.entities.factories.characters.NPCFactory.createDeepspin(player, this,
-                ServiceLocator.getDifficulty().getRoomDifficulty(ResearchGameArea.ROOM_DIFF_NUMBER));
-        spawnEntityAt(deepspin, new GridPoint2(24, 15), true, false);
-    }
-
-    /**
      * Teleporter bottom-left
      */
     private void spawnTeleporter() {
@@ -171,12 +162,12 @@ public class ResearchGameArea extends GameArea {
     }
 
     private void loadElevator() {
-        ElevatorGameArea.setRoomSpawn(new GridPoint2(21, 20));
+        ElevatorGameArea.setRoomSpawn(new GridPoint2(25, 21));
         clearAndLoad(() -> new ElevatorGameArea(terrainFactory, cameraComponent));
     }
 
     private void loadFlyingBossRoom() {
-        FlyingBossRoom.setRoomSpawn(new GridPoint2(6, 8));
+        FlyingBossRoom.setRoomSpawn(new GridPoint2(1, 7));
         clearAndLoad(() -> new FlyingBossRoom(terrainFactory, cameraComponent));
     }
 
@@ -189,5 +180,37 @@ public class ResearchGameArea extends GameArea {
     public Entity getPlayer() {
         // placeholder
         return null;
+    }
+
+    /**
+     * Clear room, set this room's static
+     * boolean isCleared variable to true
+     */
+    public static void clearRoom() {
+        ResearchGameArea.isCleared = true;
+        logger.debug("Research is cleared");
+    }
+
+    /**
+     * Unclear room, set this room's static
+     * boolean isCleared variable to false
+     */
+    public static void unclearRoom() {
+        ResearchGameArea.isCleared = false;
+        logger.debug("Research is uncleared");
+    }
+
+    private void spawnNurse(Entity player) {
+        GridPoint2 pos = new GridPoint2(20, 8);
+
+        Entity nurse = FriendlyNPCFactory.createNurseNpc(player);
+        spawnEntityAt(nurse, pos, true, true);
+    }
+
+    /**
+     * FOR TESTING PURPOSES
+     */
+    public static boolean getClearField() {
+        return ResearchGameArea.isCleared;
     }
 }

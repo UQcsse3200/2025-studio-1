@@ -6,25 +6,27 @@ import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.CameraComponent;
-import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.ItemSpawnConfig;
+import com.csse3200.game.entities.factories.characters.FriendlyNPCFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.entities.factories.system.TeleporterFactory;
 import com.csse3200.game.entities.spawner.ItemSpawner;
-import com.csse3200.game.services.ServiceLocator;
+
 
 /**
  * Minimal generic Security room: walls, doors, and a subtle background overlay.
  */
 public class SecurityGameArea extends GameArea {
+    private Entity player;
     private static final float WALL_WIDTH = 0.1f;
     private static GridPoint2 playerSpawn = new GridPoint2(10, 10);
-    private static final float ROOM_DIFF_NUMBER = 2;
-    private Entity player;
+    private static boolean isCleared = false;
 
     public SecurityGameArea(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
         super(terrainFactory, cameraComponent);
+
+        this.getEvents().addListener("room cleared", SecurityGameArea::clearRoom);
     }
 
     public static SecurityGameArea load(TerrainFactory terrainFactory, CameraComponent camera) {
@@ -55,16 +57,20 @@ public class SecurityGameArea extends GameArea {
         spawnPlatforms();
         spawnObjectDoors(new GridPoint2(0, 6), new GridPoint2(28, 19));
         spawnSecurityProps();
-        spawnEnemies();
         spawnTeleporter();
         spawnSpikes2();
-        ItemSpawner itemSpawner = new ItemSpawner(this);
-        itemSpawner.spawnItems(ItemSpawnConfig.securitymap());
+        spawnNurse(player);
 
-        Entity ui = new Entity();
-        ui.addComponent(new GameAreaDisplay("Security"))
-                .addComponent(new com.csse3200.game.components.gamearea.FloorLabelDisplay("Floor 4"));
-        spawnEntity(ui);
+        spawnEnemiesAndWeapons();
+        displayUIEntity("Security", "Floor 4");
+    }
+
+    public void spawnEnemiesAndWeapons() {
+        if (!SecurityGameArea.isCleared) {
+            startWaves(player);
+            ItemSpawner itemSpawner = new ItemSpawner(this);
+            itemSpawner.spawnItems(ItemSpawnConfig.securitymap());
+        }
     }
 
     private void spawnBordersAndDoors() {
@@ -87,6 +93,8 @@ public class SecurityGameArea extends GameArea {
         rightDoor.setPosition(b.rightX() - WALL_WIDTH - 0.001f, rightDoorY);
         rightDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadMovingBossRoom));
         spawnEntity(rightDoor);
+
+        if (!SecurityGameArea.isCleared) registerDoors(new Entity[]{leftDoor, rightDoor});
     }
 
     private Entity spawnPlayer() {
@@ -159,22 +167,6 @@ public class SecurityGameArea extends GameArea {
     }
 
     /**
-     * Spawn a Vroomba and Deepspin in Security room.
-     */
-    private void spawnEnemies() {
-        if (player == null)
-            return;
-
-        Entity vroomba = com.csse3200.game.entities.factories.characters.NPCFactory.createVroomba(player,
-                ServiceLocator.getDifficulty().getRoomDifficulty(SecurityGameArea.ROOM_DIFF_NUMBER));
-        spawnEntityAt(vroomba, new GridPoint2(8, 6), true, false);
-
-        Entity deepspin = com.csse3200.game.entities.factories.characters.NPCFactory.createDeepspin(player, this,
-                ServiceLocator.getDifficulty().getRoomDifficulty(SecurityGameArea.ROOM_DIFF_NUMBER));
-        spawnEntityAt(deepspin, new GridPoint2(22, 12), true, false);
-    }
-
-    /**
      * Teleporter entity bottom-left
      */
     private void spawnTeleporter() {
@@ -183,12 +175,12 @@ public class SecurityGameArea extends GameArea {
     }
 
     private void loadBackToFloor5() {
-        MainHall.setRoomSpawn(new GridPoint2(24, 20));
+        MainHall.setRoomSpawn(new GridPoint2(25, 17));
         clearAndLoad(() -> new MainHall(terrainFactory, cameraComponent));
     }
 
     private void loadMovingBossRoom() {
-        MovingBossRoom.setRoomSpawn(new GridPoint2(6, 8));
+        MovingBossRoom.setRoomSpawn(new GridPoint2(1, 7));
         clearAndLoad(() -> new MovingBossRoom(terrainFactory, cameraComponent));
     }
 
@@ -201,5 +193,30 @@ public class SecurityGameArea extends GameArea {
     public Entity getPlayer() {
         // placeholder
         return null;
+    }
+
+    /**
+     * Clear room, set this room's static
+     * boolean isCleared variable to true
+     */
+    public static void clearRoom() {
+        SecurityGameArea.isCleared = true;
+        logger.debug("Security is cleared");
+    }
+
+    private void spawnNurse(Entity player) {
+        GridPoint2 pos = new GridPoint2(20, 8);
+
+        Entity nurse = FriendlyNPCFactory.createNurseNpc(player);
+        spawnEntityAt(nurse, pos, true, true);
+    }
+
+    /**
+     * Unclear room, set this room's static
+     * boolean isCleared variable to false
+     */
+    public static void unclearRoom() {
+        SecurityGameArea.isCleared = false;
+        logger.debug("Security is uncleared");
     }
 }

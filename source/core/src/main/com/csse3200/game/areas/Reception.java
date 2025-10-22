@@ -6,30 +6,29 @@ import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.CameraComponent;
-import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import com.csse3200.game.components.shop.CatalogService;
 import com.csse3200.game.components.shop.ShopDemo;
 import com.csse3200.game.components.shop.ShopManager;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.ItemSpawnConfig;
 import com.csse3200.game.entities.factories.ShopFactory;
-import com.csse3200.game.entities.factories.characters.NPCFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.entities.factories.system.TeleporterFactory;
 import com.csse3200.game.entities.spawner.ItemSpawner;
-import com.csse3200.game.services.ServiceLocator;
 
 /**
  * Second floor with different background and arrow-key controls.
  */
 public class Reception extends GameArea {
     private static final float WALL_WIDTH = 0.1f;
-    private int roomDiffNumber = 2;
     private Entity player;
     private static GridPoint2 playerSpawn = new GridPoint2(8, 10);
+    private static boolean isCleared = false;
 
     public Reception(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
         super(terrainFactory, cameraComponent);
+
+        this.getEvents().addListener("room cleared", Reception::clearRoom);
     }
 
     @Override
@@ -39,21 +38,21 @@ public class Reception extends GameArea {
         spawnWallsAndDoor();
         player = spawnPlayer();
         spawnFloor();
+        spawnShopKiosk();
         spawnholoclock();
-        spawnEnemies();
         spawnplatform2();
         spawnObjectDoors(new GridPoint2(0, 6), new GridPoint2(28, 20));
         spawndesk_reception();
         spawncomic_stand();
         spawnTeleporter();
 
-        Entity ui = new Entity();
-        ui.addComponent(new GameAreaDisplay("Reception"))
-                .addComponent(new com.csse3200.game.components.gamearea.FloorLabelDisplay("Floor 2"));
-        spawnEntity(ui);
-        ItemSpawner itemSpawner = new ItemSpawner(this);
-        itemSpawner.spawnItems(ItemSpawnConfig.receptionmap());
+        if (!Reception.isCleared) {
+            startWaves(player);
+            ItemSpawner itemSpawner = new ItemSpawner(this);
+            itemSpawner.spawnItems(ItemSpawnConfig.receptionmap());
+        }
 
+        displayUIEntity("Reception", "Floor 2");
     }
 
     public static Reception load(TerrainFactory terrainFactory, CameraComponent camera) {
@@ -95,6 +94,7 @@ public class Reception extends GameArea {
         Bounds b = getCameraBounds(cameraComponent);
         addSolidWallLeft(b, WALL_WIDTH);
         addSolidWallRight(b, WALL_WIDTH);
+        addSolidWallTop(b, WALL_WIDTH);
         float leftDoorHeight = Math.max(1f, b.viewHeight() * 0.2f);
         float leftDoorY = b.bottomY();
         float leftTopSegHeight = Math.max(0f, b.topY() - (leftDoorY + leftDoorHeight));
@@ -121,36 +121,22 @@ public class Reception extends GameArea {
         rightDoor.setPosition(b.rightX() - WALL_WIDTH - 0.001f, rightDoorY + 8f);
         rightDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadBackToFloor5));
         spawnEntity(rightDoor);
+
+        if (!Reception.isCleared) registerDoors(new Entity[]{leftDoor, rightDoor});
     }
 
     private void loadForest() {
-        ForestGameArea.setRoomSpawn(new GridPoint2(23, 8));
+        ForestGameArea.setRoomSpawn(new GridPoint2(23, 7));
         clearAndLoad(() -> new ForestGameArea(terrainFactory, cameraComponent));
     }
 
     private void loadBackToFloor5() {
-        MainHall.setRoomSpawn(new GridPoint2(8, 8));
+        MainHall.setRoomSpawn(new GridPoint2(1, 7));
         clearAndLoad(() -> new MainHall(terrainFactory, cameraComponent));
     }
 
     private Entity spawnPlayer() {
         return spawnOrRepositionPlayer(playerSpawn);
-    }
-
-    private void spawnEnemies() {
-        if (player == null)
-            return;
-
-        Entity vroomba = com.csse3200.game.entities.factories.characters.NPCFactory.createVroomba(player,
-                ServiceLocator.getDifficulty().getRoomDifficulty(this.roomDiffNumber));
-        spawnEntityAt(vroomba, new GridPoint2(5, 17), true, false);
-
-    }
-
-    private void spawnGPTs() {
-        Entity ghost1 = NPCFactory.createGhostGPT(player, this, ServiceLocator.getDifficulty().getRoomDifficulty(this.roomDiffNumber));
-        GridPoint2 ghost1Pos = new GridPoint2(25, 7);
-        spawnEntityAt(ghost1, ghost1Pos, true, false);
     }
 
     private void spawnShopKiosk() {
@@ -163,8 +149,8 @@ public class Reception extends GameArea {
     private void spawnplatform2() {
         float PlatformX = 5.5f;
         float PlatformY = 3f;
-        float PlatformX2 = 1f;
-        float PlatformY2 = 6f;
+        float PlatformX2 = 1.5f;
+        float PlatformY2 = 5.5f;
         float PlatformX3 = 7f;
         float PlatformY3 = 7f;
         float PlatformX4 = 12.5f;
@@ -181,15 +167,14 @@ public class Reception extends GameArea {
         Entity Platform4 = ObstacleFactory.createplatform2();
         Platform4.setPosition(PlatformX4, PlatformY4);
         spawnEntity(Platform4);
-
     }
 
     /**
      * Spawning the clock on the second platform
      **/
     private void spawnholoclock() {
-        float PlatformX = 0.8f;
-        float PlatformY = 7.45f;
+        float PlatformX = 1.3f;
+        float PlatformY = 6.95f;
         Entity clock1 = ObstacleFactory.createholoclock();
         clock1.setPosition(PlatformX, PlatformY);
         spawnEntity(clock1);
@@ -245,5 +230,23 @@ public class Reception extends GameArea {
 
     public Entity getPlayer() {
         return player;
+    }
+
+    /**
+     * Clear room, set this room's static
+     * boolean isCleared variable to true
+     */
+    public static void clearRoom() {
+        Reception.isCleared = true;
+        logger.debug("Reception is cleared");
+    }
+
+    /**
+     * Unclear room, set this room's static
+     * boolean isCleared variable to false
+     */
+    public static void unclearRoom() {
+        Reception.isCleared = false;
+        logger.debug("Reception is uncleared");
     }
 }

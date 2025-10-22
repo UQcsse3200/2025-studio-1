@@ -26,11 +26,7 @@ public class TipComponent extends Component {
 
     private void onDialogueEnd() {
         dialogueEnded = true;
-        if (tip != null) {
-            ServiceLocator.getEntityService().unregister(tip);
-            tip.dispose();
-            tip = null;
-        }
+        destroyTipIfPresent();
     }
 
     @Override
@@ -38,18 +34,36 @@ public class TipComponent extends Component {
         if (dialogueEnded) {
             return;
         }
-
         float d = npc.getPosition().dst(player.getPosition());
+
         if (d <= triggerDist && tip == null) {
             tip = FriendlyNPCFactory.createTip();
             tip.setPosition(npc.getPosition().x, npc.getPosition().y + 1f);
-            ServiceLocator.getEntityService().register(tip);
+
+            // spawn via GameArea so it is tied to the room lifecycle
+            ServiceLocator.getGameArea().spawnEntity(tip);
         }
 
         if (d > triggerDist && tip != null) {
-            ServiceLocator.getEntityService().unregister(tip);
-            tip.dispose();
+            destroyTipIfPresent();
+        }
+    }
+
+    private void destroyTipIfPresent() {
+        if (tip != null) {
+            // Unregister and dispose safely
+            try {
+                ServiceLocator.getEntityService().unregister(tip);
+            } catch (Exception ignored) { /* intentionally blank */ }
+            try {
+                tip.dispose();
+            } catch (Exception ignored) { /* intentionally blank */ }
             tip = null;
         }
+    }
+
+    @Override
+    public void dispose() {
+        destroyTipIfPresent();
     }
 }
