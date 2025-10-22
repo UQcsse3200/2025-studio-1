@@ -2,11 +2,8 @@ package com.csse3200.game.entities.configs;
 
 
 import com.badlogic.gdx.math.GridPoint2;
-import com.csse3200.game.entities.Entity;
-import com.csse3200.game.entities.factories.PowerupsFactory;
 import com.csse3200.game.entities.spawner.ItemSpawner;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

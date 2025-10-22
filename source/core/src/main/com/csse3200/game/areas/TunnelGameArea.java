@@ -10,7 +10,6 @@ import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.components.DoorComponent;
 import com.csse3200.game.components.stations.StationComponent;
 import com.csse3200.game.entities.Entity;
-import com.csse3200.game.entities.configs.Benches;
 import com.csse3200.game.entities.configs.ItemSpawnConfig;
 import com.csse3200.game.entities.configs.benches.BenchConfig;
 import com.csse3200.game.entities.factories.InteractableStationFactory;
