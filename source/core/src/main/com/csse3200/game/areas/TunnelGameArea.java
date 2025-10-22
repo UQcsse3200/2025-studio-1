@@ -8,34 +8,38 @@ import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.components.DoorComponent;
-import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import com.csse3200.game.components.stations.StationComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.ItemSpawnConfig;
 import com.csse3200.game.entities.configs.benches.BenchConfig;
 import com.csse3200.game.entities.factories.InteractableStationFactory;
-import com.csse3200.game.entities.factories.characters.NPCFactory;
+import com.csse3200.game.entities.factories.characters.FriendlyNPCFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.entities.factories.system.TeleporterFactory;
 import com.csse3200.game.entities.spawner.ItemSpawner;
+import com.csse3200.game.lighting.LightSpawner;
 import com.csse3200.game.physics.PhysicsUtils;
 import com.csse3200.game.physics.components.ColliderComponent;
 import com.csse3200.game.physics.components.PhysicsComponent;
 import com.csse3200.game.services.ServiceLocator;
+
+import java.util.List;
 
 /**
  * Tunnel room: minimal walls with left door back to Server Room.
  */
 public class TunnelGameArea extends GameArea {
     private static final float WALL_WIDTH = 0.1f;
-    private static final float ROOM_DIFF_NUMBER = 10;
     private static GridPoint2 playerSpawn = new GridPoint2(5, 7);
-    private Entity player;
+    private static boolean isCleared = false;
+
+    public static volatile DoorComponent exposedRightDoor;
 
     public TunnelGameArea(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
         super(terrainFactory, cameraComponent);
-    }
 
+        this.getEvents().addListener("room cleared", TunnelGameArea::clearRoom);
+    }
 
     public static TunnelGameArea load(TerrainFactory terrainFactory, CameraComponent camera) {
         return (new TunnelGameArea(terrainFactory, camera));
@@ -57,24 +61,42 @@ public class TunnelGameArea extends GameArea {
         GenericLayout.setupTerrainWithOverlay(this, terrainFactory, TerrainType.TUNNEL_ROOM,
                 new Color(0.08f, 0.08f, 0.12f, 0.28f));
 
+        //Checks to see if the lighting service is not null and then sets the ambient light and turns on shadows for the room.
+        var ls = ServiceLocator.getLightingService();
+        if (ls != null && ls.getEngine() != null) {
+            ls.getEngine().setAmbientLight(0.65f);
+            ls.getEngine().getRayHandler().setShadows(true);
+        }
+
+        LightSpawner.spawnCeilingCones(
+                this,
+                List.of(
+                new GridPoint2(4,21),
+                new GridPoint2(12,21),
+                new GridPoint2(20,21),
+                new GridPoint2(27,21)
+                ),
+                new Color(0.67f, 0.19f, 0.19f, 0.95f)
+        );
+
         spawnBordersAndDoors();
-        player = spawnPlayer();
+        Entity player = spawnPlayer();
         spawnPlatforms();
         spawnSpawnPads();
-        spawnGrokDroids();
         spawnTeleporter();
         spawnObjectDoors(new GridPoint2(0, 7), new GridPoint2(28, 7));
         spawnFloor();
         spawnSpikes();
         spawnVisibleFloor();
+        spawnNurse(player);
 
-        ItemSpawner itemSpawner = new ItemSpawner(this);
-        itemSpawner.spawnItems(ItemSpawnConfig.tunnelmap());
+        if (!TunnelGameArea.isCleared) {
+            startWaves(player);
+            ItemSpawner itemSpawner = new ItemSpawner(this);
+            itemSpawner.spawnItems(ItemSpawnConfig.tunnelmap());
+        }
 
-        Entity ui = new Entity();
-        ui.addComponent(new GameAreaDisplay("Tunnel"))
-                .addComponent(new com.csse3200.game.components.gamearea.FloorLabelDisplay("Floor 11"));
-        spawnEntity(ui);
+        displayUIEntity("Tunnel", "Floor 11");
     }
 
     /**
@@ -93,15 +115,33 @@ public class TunnelGameArea extends GameArea {
         leftDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadServer));
         spawnEntity(leftDoor);
 
-        addSolidWallRight(b, WALL_WIDTH);
-
+        // Right wall with door: create wall segments above and below the door
         float rightDoorHeight = Math.max(1f, b.viewHeight() * 0.2f);
         float rightDoorY = b.bottomY();
+
+
+        float rightTopSegHeight = Math.max(0f, b.topY() - (rightDoorY + rightDoorHeight));
+        if (rightTopSegHeight > 0f) {
+            Entity rightTop = ObstacleFactory.createWall(WALL_WIDTH, rightTopSegHeight);
+            rightTop.setPosition(b.rightX() - WALL_WIDTH, rightDoorY + rightDoorHeight);
+            spawnEntity(rightTop);
+        }
+
+
+        Entity rightDoorWall = ObstacleFactory.createWall(WALL_WIDTH, rightDoorHeight);
+        rightDoorWall.setPosition(b.rightX() - WALL_WIDTH, rightDoorY);
+        spawnEntity(rightDoorWall);
+
         Entity rightDoor = ObstacleFactory.createDoorTrigger(WALL_WIDTH, rightDoorHeight);
         rightDoor.setPosition(b.rightX() - WALL_WIDTH - 0.001f, rightDoorY);
         rightDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadBossRoom));
         spawnEntity(rightDoor);
 
+        DoorComponent rightDoorComp = rightDoor.getComponent(DoorComponent.class);
+        rightDoorComp.setLocked(true);
+        TunnelGameArea.exposedRightDoor = rightDoorComp;
+
+        if (!TunnelGameArea.isCleared) registerDoors(new Entity[]{leftDoor, rightDoor});
     }
 
     /**
@@ -151,20 +191,6 @@ public class TunnelGameArea extends GameArea {
     }
 
     /**
-     * Spawn 2 high-level grok droids in the room as enemies.
-     */
-    private void spawnGrokDroids() {
-        Entity grok1 = NPCFactory.createGrokDroid(player, this,
-                ServiceLocator.getDifficulty().getRoomDifficulty(TunnelGameArea.ROOM_DIFF_NUMBER));
-        GridPoint2 grok1Pos = new GridPoint2(25, 7);
-        spawnEntityAt(grok1, grok1Pos, true, false);
-        Entity grok2 = NPCFactory.createGrokDroid(player, this,
-                ServiceLocator.getDifficulty().getRoomDifficulty(TunnelGameArea.ROOM_DIFF_NUMBER));
-        GridPoint2 grok2Pos = new GridPoint2(25, 7);
-        spawnEntityAt(grok2, grok2Pos, true, false);
-    }
-
-    /**
      * Spawn the spikes
      */
     private void spawnSpikes() {
@@ -181,23 +207,13 @@ public class TunnelGameArea extends GameArea {
         spawnEntity(tp);
     }
 
-    /**
-     * Spawn entity door at the bottom left, and no door to the right
-     * as this is the last room (currently).
-     */
-    private void spawnObjectDoors() {
-        Entity leftDoor = ObstacleFactory.createDoor();
-        GridPoint2 leftDoorSpawn = new GridPoint2(0, 7);
-        spawnEntityAt(leftDoor, leftDoorSpawn, false, false);
-    }
-
     private void loadServer() {
-        ServerGameArea.setRoomSpawn(new GridPoint2(25, 24));
+        ServerGameArea.setRoomSpawn(new GridPoint2(25, 20));
         clearAndLoad(() -> new ServerGameArea(terrainFactory, cameraComponent));
     }
 
     private void loadBossRoom() {
-        StaticBossRoom.setRoomSpawn(new GridPoint2(4, 8));
+        StaticBossRoom.setRoomSpawn(new GridPoint2(1, 7));
         clearAndLoad(() -> new StaticBossRoom(terrainFactory, cameraComponent));
     }
 

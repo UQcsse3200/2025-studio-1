@@ -15,7 +15,6 @@ import com.csse3200.game.physics.components.HitboxComponent;
  * - Logs each decision for debugging when damage does not occur.
  */
 public class EnemyProjectileDamageComponent extends Component {
-    private static final String TAG = "EnemyProjectileDamage";
     private final int damage;
 
     public EnemyProjectileDamageComponent(int damage) {
@@ -32,20 +31,23 @@ public class EnemyProjectileDamageComponent extends Component {
         Entity eb = toEntity(b);
 
         // Log initial collision parameters
-
         if (ea == null || eb == null) {
             return;
         }
 
         // Identify "who am I?"
-        Entity me = (ea == entity) ? ea : (eb == entity ? eb : null);
-        if (me == null) {
+        Entity me;
+        if (ea == entity) {
+            me = ea;
+        } else if (eb  == entity) {
+            me = eb;
+        } else {
             return;
         }
+
         Entity other = (me == ea) ? eb : ea;
 
         // Log both layers
-        int meLayer = layerOf(me);
         int otherLayer = layerOf(other);
 
         // Only affect PLAYER layer
@@ -59,14 +61,11 @@ public class EnemyProjectileDamageComponent extends Component {
             return;
         }
 
-        int before = stats.getHealth();
         stats.addHealth(-damage);
         // Trigger common damage events
         other.getEvents().trigger("hit", damage);
         other.getEvents().trigger("damaged", damage);
         other.getEvents().trigger("healthChange", -damage);
-
-        int after = stats.getHealth();
 
         // Destroy projectile
         Gdx.app.postRunnable(() -> {
@@ -80,47 +79,24 @@ public class EnemyProjectileDamageComponent extends Component {
      * Converts a Fixture or Entity to an Entity; returns Entity directly if already one
      */
     private Entity toEntity(Object obj) {
-        if (obj instanceof Entity) return (Entity) obj;
+        if (obj instanceof Entity entity) return entity;
         if (obj instanceof Fixture f) {
             // Check fixture's userData
             Object u1 = f.getUserData();
-            if (u1 instanceof Entity) {
-                return (Entity) u1;
+            if (u1 instanceof Entity entity) {
+                return entity;
             }
             // check body userData
             Object u2 = f.getBody().getUserData();
-            if (u2 instanceof Entity) {
-                return (Entity) u2;
+            if (u2 instanceof Entity entity) {
+                return entity;
             }
         }
         return null;
     }
 
-    private String klass(Object o) {
-        return (o == null) ? "null" : o.getClass().getSimpleName();
-    }
-
-    private String idOf(Entity e) {
-        return (e == null) ? "null" : ("Entity#" + e.getId());
-    }
-
     private int layerOf(Entity e) {
         HitboxComponent hb = e.getComponent(HitboxComponent.class);
         return (hb == null) ? -1 : hb.getLayer();
-    }
-
-    private String layerName(int layer) {
-        switch (layer) {
-            case PhysicsLayer.PLAYER:
-                return "PLAYER";
-            case PhysicsLayer.NPC:
-                return "NPC";
-            case PhysicsLayer.OBSTACLE:
-                return "OBSTACLE";
-            case PhysicsLayer.NONE:
-                return "NONE";
-            default:
-                return "unknown(" + layer + ")";
-        }
     }
 }

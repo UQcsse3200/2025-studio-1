@@ -36,7 +36,13 @@ public class SlotsDisplay extends UIComponent {
     private TextField betInput;
     private Label resultLabel;
     private Label.LabelStyle whiteLabelStyle, winLabelStyle, loseLabelStyle;
-    private final Image[] reelImgs = new Image[3];
+
+    private ReelActor[] reelActors = new ReelActor[3];
+    private TextButton spinBtn;      // disable while spinning
+    private int spinningCount = 0;   // reels still spinning
+    private int spinningBet = 0;     // bet locked for current spin
+    private SlotSymbol[] lastTargets; // target symbols this spin
+
 
     // --- NEW: wallet powered by InventoryComponent ---
     private Wallet wallet;
@@ -51,6 +57,10 @@ public class SlotsDisplay extends UIComponent {
         pm.dispose();
         return t;
     }
+    private TextureRegionDrawable makeRegion(SlotSymbol s) {
+        Texture tex = ServiceLocator.getResourceService().getAsset(s.texturePath, Texture.class);
+        return new TextureRegionDrawable(new TextureRegion(tex));
+    }
 
     /**
      * Plug a player's inventory into the slots UI. Call this once before showing UI.
@@ -59,6 +69,80 @@ public class SlotsDisplay extends UIComponent {
         this.wallet = new DefaultInventoryWallet(inventory);
         updateBalanceLabel();
     }
+
+    private class ReelActor extends Image {
+        private final SlotSymbol[] order = SlotSymbol.values();
+        private SlotSymbol current = order[0];
+        private SlotSymbol target;
+        private float duration;
+        private float elapsed;
+        private float frameAccum;
+        private boolean spinning;
+        private int orderIdx = 0;
+        private final int indexInRow; // 0,1,2 for callbacks
+
+        // Tuning:
+        private final float maxFps = 40f; // fast at start
+        private final float minFps = 6f;  // slow at end
+
+        ReelActor(int indexInRow) {
+            super(); // important: no-arg super(), then set drawable
+            this.indexInRow = indexInRow;
+            setScaling(Scaling.fit);
+
+            // initial symbol
+            current = SlotSymbol.CHERRY;
+            setDrawable(makeRegion(current));
+            for (int i = 0; i < order.length; i++) {
+                if (order[i] == current) { orderIdx = i; break; }
+            }
+        }
+
+        void startSpin(SlotSymbol target, float durationSec) {
+            this.target = target;
+            this.duration = Math.max(0.2f, durationSec);
+            this.elapsed = 0f;
+            this.frameAccum = 0f;
+            this.spinning = true;
+
+            // avoid instant stop if starting already on target
+            if (current == target) advanceOne();
+        }
+
+        boolean isSpinning() { return spinning; }
+
+        @Override
+        public void act(float delta) {
+            super.act(delta);
+            if (!spinning) return;
+
+            elapsed += delta;
+
+            // ease-out: fast -> slow
+            float t = Math.min(1f, elapsed / duration);
+            float ease = 1f - (1f - t) * (1f - t); // quadratic ease-out
+            float fps = maxFps + (minFps - maxFps) * ease;
+            float frameInterval = 1f / fps;
+
+            frameAccum += delta;
+            if (frameAccum >= frameInterval) {
+                frameAccum -= frameInterval;
+                advanceOne();
+
+                if (t >= 1f && current == target) {
+                    spinning = false;
+                    reelStopped(indexInRow);
+                }
+            }
+        }
+
+        private void advanceOne() {
+            orderIdx = (orderIdx + 1) % order.length;
+            current = order[orderIdx];
+            setDrawable(makeRegion(current));
+        }
+    }
+
 
     @Override
     public void create() {
@@ -124,21 +208,19 @@ public class SlotsDisplay extends UIComponent {
         Label.LabelStyle whiteStyle = new Label.LabelStyle(skin.get(Label.LabelStyle.class));
         whiteStyle.fontColor = Color.WHITE;
 
-        Label.LabelStyle winStyle = new Label.LabelStyle(whiteStyle);
-        winStyle.fontColor = Color.GREEN;
-        Label.LabelStyle loseStyle = new Label.LabelStyle(whiteStyle);
-        loseStyle.fontColor = Color.RED;
+        Label.LabelStyle winStyle = new Label.LabelStyle(whiteStyle); winStyle.fontColor = Color.GREEN;
+        Label.LabelStyle loseStyle = new Label.LabelStyle(whiteStyle); loseStyle.fontColor = Color.RED;
 
         Table reels = new Table();
         for (int i = 0; i < 3; i++) {
-            Texture tex = ServiceLocator.getResourceService().getAsset("images/cherry.png", Texture.class);
-            Image img = new Image(new TextureRegionDrawable(new TextureRegion(tex)));
-            img.setScaling(Scaling.fit);
-            reelImgs[i] = img;
-            reels.add(img).size(128, 128).pad(8);
+            ReelActor reel = new ReelActor(i);
+            reel.setDrawable(makeRegion(SlotSymbol.CHERRY)); // initial symbol
+            reelActors[i] = reel;
+            reels.add(reel).size(128, 128).pad(8);
         }
         root.add(reels).padTop(12f).row();
 
+        // --- BET ROW ---
         Table betRow = new Table();
         Label betLabel = new Label("Bet:", whiteStyle);
         betInput = new TextField("", skin);
@@ -147,18 +229,8 @@ public class SlotsDisplay extends UIComponent {
 
         TextButton minusBtn = new TextButton("-10", skin);
         TextButton plusBtn = new TextButton("+10", skin);
-        minusBtn.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent e, Actor a) {
-                adjustBet(-10);
-            }
-        });
-        plusBtn.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent e, Actor a) {
-                adjustBet(10);
-            }
-        });
+        minusBtn.addListener(new ChangeListener() { @Override public void changed(ChangeEvent e, Actor a){ adjustBet(-10);} });
+        plusBtn.addListener(new ChangeListener()  { @Override public void changed(ChangeEvent e, Actor a){ adjustBet(10);}  });
 
         betRow.add(betLabel).padRight(8f);
         betRow.add(minusBtn).width(80).height(48).padRight(8f);
@@ -166,22 +238,19 @@ public class SlotsDisplay extends UIComponent {
         betRow.add(plusBtn).width(80).height(48);
         root.add(betRow).padTop(10f).row();
 
-        TextButton spinBtn = new TextButton("Spin", skin);
-        spinBtn.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent e, Actor a) {
-                onSpin();
-            }
-        });
+        // --- SPIN BUTTON: save to field so we can disable during spin ---
+        spinBtn = new TextButton("Spin", skin);
+        spinBtn.addListener(new ChangeListener() { @Override public void changed(ChangeEvent e, Actor a){ onSpin(); }});
         root.add(spinBtn).width(220f).height(64f).padTop(10f).row();
 
+        // --- RESULT LABEL ---
         resultLabel = new Label("Place a bet and spin!", whiteStyle);
-        this.winLabelStyle = winStyle;
+        this.winLabelStyle  = winStyle;
         this.loseLabelStyle = loseStyle;
         this.whiteLabelStyle = whiteStyle;
-
         root.add(resultLabel).padTop(10f).row();
     }
+
 
     private SlotSymbol[] spinRow() {
         SlotSymbol[] vals = SlotSymbol.values(), row = new SlotSymbol[3];
@@ -191,10 +260,10 @@ public class SlotsDisplay extends UIComponent {
 
     private void showRow(SlotSymbol[] row) {
         for (int i = 0; i < 3; i++) {
-            Texture tex = ServiceLocator.getResourceService().getAsset(row[i].texturePath, Texture.class);
-            reelImgs[i].setDrawable(new TextureRegionDrawable(new TextureRegion(tex)));
+            reelActors[i].setDrawable(makeRegion(row[i]));
         }
     }
+
 
     private int getPayout(SlotSymbol[] row, int bet) {
         if (row[0] == row[1] && row[1] == row[2]) return bet * row[0].tripleMult;
@@ -205,41 +274,57 @@ public class SlotsDisplay extends UIComponent {
 
     private void onSpin() {
         if (wallet == null) {
-            // Safety: if no wallet set, do nothing but inform player
             resultLabel.setStyle(loseLabelStyle);
             resultLabel.setText("No wallet connected.");
             return;
         }
 
         int bet = parseBet();
-        if (bet <= 0) {
-            resultLabel.setStyle(loseLabelStyle);
-            resultLabel.setText("Bet must be greater than 0.");
-            return;
-        }
-        if (!wallet.canSubtract(bet)) {
-            resultLabel.setStyle(loseLabelStyle);
-            resultLabel.setText("Insufficient funds.");
-            return;
-        }
+        if (bet <= 0) { resultLabel.setStyle(loseLabelStyle); resultLabel.setText("Bet must be greater than 0."); return; }
+        if (!wallet.canSubtract(bet)) { resultLabel.setStyle(loseLabelStyle); resultLabel.setText("Insufficient funds."); return; }
 
-        wallet.subtract(bet); // deduct from real balance
+        // Lock inputs during spin
+        spinBtn.setDisabled(true);
+        betInput.setDisabled(true);
+
+        // Deduct bet immediately
+        wallet.subtract(bet);
         updateBalanceLabel();
 
-        SlotSymbol[] row = spinRow();
-        showRow(row);
+        // Choose each reel's final symbol and remember bet
+        spinningBet = bet;
+        lastTargets = spinRow();
 
-        int payout = getPayout(row, bet);
-        if (payout > 0) {
-            wallet.add(payout);
-            resultLabel.setStyle(winLabelStyle);
-            resultLabel.setText("You won $" + payout + "!");
-        } else {
-            resultLabel.setStyle(loseLabelStyle);
-            resultLabel.setText("Sorry, you lost this round.");
+        // Start reels with a pleasing cadence
+        float base = 1.0f;  // first reel duration
+        float step = 0.4f;  // extra per reel -> 1.0s, 1.4s, 1.8s
+        spinningCount = 3;
+        for (int i = 0; i < 3; i++) {
+            reelActors[i].startSpin(lastTargets[i], base + i * step);
         }
-        updateBalanceLabel();
+
+        resultLabel.setStyle(whiteLabelStyle);
+        resultLabel.setText("Spinning...");
     }
+
+    private void reelStopped(int index) {
+        spinningCount--;
+        if (spinningCount <= 0) {
+            int payout = getPayout(lastTargets, spinningBet);
+            if (payout > 0) {
+                wallet.add(payout);
+                resultLabel.setStyle(winLabelStyle);
+                resultLabel.setText("You won $" + payout + "!");
+            } else {
+                resultLabel.setStyle(loseLabelStyle);
+                resultLabel.setText("Sorry, you lost this round.");
+            }
+            updateBalanceLabel();
+            spinBtn.setDisabled(false);
+            betInput.setDisabled(false);
+        }
+    }
+
 
     private void addFooter() {
         Label.LabelStyle balStyle = new Label.LabelStyle(skin.get(Label.LabelStyle.class));
@@ -393,7 +478,7 @@ public class SlotsDisplay extends UIComponent {
 
         @Override
         public int get() {
-            return inv.getProcessor();            // <-- matches BettingLogic
+            return inv.getProcessor();
         }
 
         @Override

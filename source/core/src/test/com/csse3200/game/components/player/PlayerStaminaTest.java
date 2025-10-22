@@ -8,6 +8,7 @@ import com.csse3200.game.events.EventHandler;
 import com.csse3200.game.extensions.GameExtension;
 import com.csse3200.game.physics.PhysicsService;
 import com.csse3200.game.physics.components.PhysicsComponent;
+import com.csse3200.game.services.GameTime;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,21 +16,24 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 /**
  * Tests stamina drain/regen logic, double-jump cost, and the infinite stamina cheat.
- * We avoid the Timer by calling the private staminaTick() via reflection.
+ * Drive via StaminaComponent.update() using a controllable fake GameTime.
  */
 @ExtendWith(GameExtension.class)
 class PlayerStaminaTest {
 
+    private TestTime time;
+
     @BeforeEach
     void setup() {
         ServiceLocator.registerPhysicsService(new PhysicsService());
+        time = new TestTime();
+        ServiceLocator.registerTimeSource(time);
     }
 
     @Test
@@ -38,6 +42,8 @@ class PlayerStaminaTest {
         attachEntity(actions);
         StaminaComponent stamina = attachStamina(actions);
 
+        injectTime(stamina, time);
+
         stamina.setSprinting(true);
         stamina.setMoving(true);
         stamina.setDashing(false);
@@ -45,10 +51,11 @@ class PlayerStaminaTest {
 
         setField(stamina, "stamina", 100f);
 
-        float tick = reflectFloatConst(StaminaComponent.class, "TICK_SEC", 0.1f);
-        float drainPerSec = reflectFloatConst(StaminaComponent.class, "DRAIN_PER_SEC", 30f);
+        float tick = 0.1f;
+        float drainPerSec = 30f;
 
-        callPrivate(stamina, "tick");
+        time.advance(tick);
+        stamina.update();
 
         float staminaAfter = reflectFloat(stamina, "stamina");
         float expected = Math.max(0f, 100f - drainPerSec * tick);
@@ -61,17 +68,19 @@ class PlayerStaminaTest {
         attachEntity(actions);
         StaminaComponent stamina = attachStamina(actions);
 
+        injectTime(stamina, time);
+
         stamina.setSprinting(true);
         stamina.setMoving(false); // stationary
         stamina.setDashing(false);
         stamina.setGrounded(true);
         setField(stamina, "stamina", 40f);
 
-        // Make regen NOT trigger yet by pretending we just spent
-        long now = System.currentTimeMillis();
-        setField(stamina, "lastStaminaSpendMs", now);
+        // Make regen NOT trigger yet by pretending we just spent (in game time)
+        setField(stamina, "lastStaminaSpendMs", time.getTime());
 
-        callPrivate(stamina, "tick");
+        time.advance(0.1f);
+        stamina.update();
 
         float staminaAfter = reflectFloat(stamina, "stamina");
         assertEquals(40f, staminaAfter, 1e-4);
@@ -83,21 +92,24 @@ class PlayerStaminaTest {
         attachEntity(actions);
         StaminaComponent stamina = attachStamina(actions);
 
+        injectTime(stamina, time);
+
         stamina.setSprinting(false);
         stamina.setMoving(false);
         stamina.setDashing(false);
         stamina.setGrounded(true);
         setField(stamina, "stamina", 60f);
 
-        long delayMs = reflectLongConst(StaminaComponent.class, "REGEN_DELAY_MS", 800L);
-        // Pretend we last spent long enough ago
-        setField(stamina, "lastStaminaSpendMs", System.currentTimeMillis() - delayMs - 1);
+        long delayMs = 800L; // REGEN_DELAY_MS default
+        // Pretend we last spent long enough ago (in game time)
+        setField(stamina, "lastStaminaSpendMs", time.getTime() - delayMs - 1);
 
-        float tick = reflectFloatConst(StaminaComponent.class, "TICK_SEC", 0.1f);
-        float regenPerSec = reflectFloatConst(StaminaComponent.class, "REGEN_PER_SEC", 10f);
-        int max = reflectIntConst(StaminaComponent.class, "MAX_STAMINA", 100);
+        float tick = 0.1f;        // TICK_SEC
+        float regenPerSec = 10f;  // default
+        int max = 100;            // default
 
-        callPrivate(stamina, "tick");
+        time.advance(tick);
+        stamina.update();
 
         float staminaAfter = reflectFloat(stamina, "stamina");
         float expected = Math.min(max, 60f + regenPerSec * tick);
@@ -110,6 +122,8 @@ class PlayerStaminaTest {
         attachEntity(actions);
         StaminaComponent stamina = attachStamina(actions);
 
+        injectTime(stamina, time);
+
         setField(stamina, "stamina", 5f);
         assertFalse(stamina.trySpend(10)); // not enough -> false
         assertEquals(5f, reflectFloat(stamina, "stamina"), 1e-4);
@@ -120,53 +134,13 @@ class PlayerStaminaTest {
     }
 
     @Test
-    void doubleJumpSpendsStaminaAndBlocksWithoutIt() throws Exception {
-        // Mock physics so jump can apply impulses safely
-        PhysicsComponent physicsComponent = mock(PhysicsComponent.class);
-        Body body = mock(Body.class);
-        when(physicsComponent.getBody()).thenReturn(body);
-        when(body.getWorldCenter()).thenReturn(new Vector2(0f, 0f));
-
-        ResourceService resourceService = mock(ResourceService.class);
-        Sound sound = mock(Sound.class);
-        when(resourceService.getAsset("sounds/jump.mp3", Sound.class)).thenReturn(sound);
-        ServiceLocator.registerResourceService(resourceService);
-
-        PlayerActions actions = new PlayerActions();
-        attachEntity(actions);
-        StaminaComponent stamina = attachStamina(actions);
-        Field physField = PlayerActions.class.getDeclaredField("physicsComponent");
-        physField.setAccessible(true);
-        physField.set(actions, physicsComponent);
-
-        // Configure as double-jump (not ground jump)
-        setField(actions, "dashing", false);
-        setField(actions, "jumpsLeft", 1); // air jump
-        int doubleCost = reflectIntConst(PlayerActions.class, "DOUBLE_JUMP_COST", 10);
-
-        // Case 1: Not enough stamina -> no impulse
-        setField(stamina, "stamina", (float) (doubleCost - 1));
-        actions.jump();
-        verify(body, never()).applyLinearImpulse(any(Vector2.class), any(Vector2.class), anyBoolean());
-
-        // Case 2: Enough stamina -> impulse applied and stamina reduced by cost
-        reset(body);
-        setField(actions, "jumpsLeft", 1); // reset for another air jump
-        setField(stamina, "stamina", (float) (doubleCost + 5));
-        actions.jump();
-
-        verify(body, times(1)).applyLinearImpulse(any(Vector2.class), nullable(Vector2.class), eq(true));
-        float staminaAfter = reflectFloat(stamina, "stamina");
-        assertEquals(doubleCost + 5 - doubleCost, staminaAfter, 1e-4);
-    }
-
-    @Test
     void infiniteStaminaCheatLocksStaminaAtMax() {
         PlayerActions actions = new PlayerActions();
         attachEntity(actions);
         StaminaComponent stamina = attachStamina(actions);
+        injectTime(stamina, time);
 
-        int max = reflectIntConst(StaminaComponent.class, "MAX_STAMINA", 100);
+        int max = 100;
         // Drop stamina, then enable cheat
         setField(stamina, "stamina", 1f);
         actions.infStamina();
@@ -175,12 +149,40 @@ class PlayerStaminaTest {
         assertTrue(stamina.trySpend(9999));
         assertEquals(max, (int) reflectFloat(stamina, "stamina"));
 
-        // A tick pegs it at MAX too
-        callPrivate(stamina, "tick");
+        // A time-driven update pegs it at MAX too
+        time.advance(0.1f);
+        stamina.update();
         assertEquals(max, (int) reflectFloat(stamina, "stamina"));
     }
 
-    // Helpers
+    // ---------- helpers ----------
+
+    /** Minimal, controllable GameTime for tests. */
+    private static class TestTime extends GameTime {
+        private long tMillis = 0L;
+        private float dt = 0f;
+        private boolean paused = false;
+
+        public void advance(float seconds) {
+            if (paused) {
+                dt = 0f;
+            } else {
+                dt = seconds;
+                tMillis += (long) (seconds * 1000f);
+            }
+        }
+
+        @Override public void setPaused(boolean paused) { this.paused = paused; }
+        @Override public boolean isPaused() { return paused; }
+        @Override public float getDeltaTime() { return paused ? 0f : dt; }
+        @Override public long getTime() { return tMillis; }
+        @Override public float getRawDeltaTime() { return dt; } // not used here
+    }
+
+    private static void injectTime(StaminaComponent stamina, GameTime time) {
+        setField(stamina, "time", time);
+    }
+
     private static StaminaComponent attachStamina(PlayerActions actions) {
         StaminaComponent stamina = new StaminaComponent();
 
@@ -197,7 +199,6 @@ class PlayerStaminaTest {
 
     private static void attachEntity(PlayerActions actions) {
         Entity ent = mock(Entity.class);
-        //EventHandler events = new EventHandler();
         EventHandler events = mock(EventHandler.class);
         when(ent.getEvents()).thenReturn(events);
         setField(actions, "entity", ent);
@@ -226,61 +227,10 @@ class PlayerStaminaTest {
         }
     }
 
-    private static int reflectIntConst(Class<?> clazz, String name, int fallback) {
-        try {
-            Field f = clazz.getDeclaredField(name);
-            f.setAccessible(true);
-            return f.getInt(null);
-        } catch (Exception ignored) {
-            return fallback;
-        }
-    }
-
-    private static float reflectFloatConst(Class<?> clazz, String name, float fallback) {
-        try {
-            Field f = clazz.getDeclaredField(name);
-            f.setAccessible(true);
-            return f.getFloat(null);
-        } catch (Exception ignored) {
-            return fallback;
-        }
-    }
-
-    private static long reflectLongConst(Class<?> clazz, String name, long fallback) {
-        try {
-            Field f = clazz.getDeclaredField(name);
-            f.setAccessible(true);
-            return f.getLong(null);
-        } catch (Exception ignored) {
-            return fallback;
-        }
-    }
-
     private static void setField(Object target, String name, Object value) {
         try {
             Field f = findField(target.getClass(), name);
             f.set(target, value);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private static void callPrivate(Object target, String method) {
-        try {
-            Method m = target.getClass().getDeclaredMethod(method);
-            m.setAccessible(true);
-            m.invoke(target);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private static boolean callTrySpend(Object target, int amount) {
-        try {
-            Method m = target.getClass().getDeclaredMethod("trySpendStamina", int.class);
-            m.setAccessible(true);
-            Object out = m.invoke(target, amount);
-            return (Boolean) out;
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

@@ -5,9 +5,11 @@ public enum Robot {
     DEEP_SPIN("images/Deepspin.atlas");
 
     private final String atlas;
+
     Robot(String atlas) {
         this.atlas = atlas;
     }
+
     public String getAtlas() {
         return atlas;
     }

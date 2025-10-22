@@ -14,6 +14,11 @@ import com.csse3200.game.components.DoorComponent;
 import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import com.csse3200.game.components.stations.StationComponent;
 import com.csse3200.game.entities.Entity;
+
+import com.csse3200.game.lighting.LightSpawner;
+import com.csse3200.game.services.ServiceLocator;
+
+import java.util.List;
 import com.csse3200.game.entities.configs.benches.BenchConfig;
 import com.csse3200.game.entities.factories.InteractableStationFactory;
 import com.csse3200.game.entities.factories.characters.PlayerFactory;
@@ -56,8 +61,27 @@ public class SecretRoomGameArea extends GameArea {
         });
         ensureAssets();
         // Use the Office terrain as the background of this room
-        terrain = terrainFactory.createTerrain(TerrainType.OFFICE);
-        spawnEntity(new Entity().addComponent(terrain));
+        GenericLayout.ensureGenericAssets(this);
+        GenericLayout.setupTerrainWithOverlay(this, terrainFactory, TerrainType.SECRET,
+                new Color(0.08f, 0.08f, 0.1f, 0.30f));
+
+        //Checks to see if the lighting service is not null and then sets the ambient light and turns on shadows for the room.
+        var ls = ServiceLocator.getLightingService();
+        if (ls != null && ls.getEngine() != null) {
+            ls.getEngine().setAmbientLight(0.65f);
+            ls.getEngine().getRayHandler().setShadows(true);
+        }
+
+        LightSpawner.spawnCeilingCones(
+                this,
+                List.of(
+                        new GridPoint2(4,21),
+                        new GridPoint2(12,21),
+                        new GridPoint2(20,21),
+                        new GridPoint2(27,21)
+                ),
+                new Color(0.37f, 0.82f, 0.9f, 0.8f)
+        );
 
         spawnFloor();
         spawnPlayer();
@@ -210,7 +234,7 @@ public class SecretRoomGameArea extends GameArea {
 
 
     @Override
-    protected void clearAndLoad(Supplier<GameArea> nextAreaSupplier) {
+    public void clearAndLoad(Supplier<GameArea> nextAreaSupplier) {
         if (!beginTransition()) return;
 
         for (Entity entity : areaEntities) {

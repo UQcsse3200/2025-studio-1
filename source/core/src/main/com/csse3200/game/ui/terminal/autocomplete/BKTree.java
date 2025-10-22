@@ -15,7 +15,8 @@ public class BKTree {
      */
     private static int distLE2(String a, String b) {
         // small optimization: if |len(a)-len(b)| > 2, bail early with >2
-        int la = a.length(), lb = b.length();
+        int la = a.length();
+        int lb = b.length();
         int diff = Math.abs(la - lb);
         if (diff > 2) return diff; // already > 2
         // classic DP but trimmed because la,lb are tiny (command words)
@@ -69,7 +70,8 @@ public class BKTree {
             Node n = dq.pop();
             int d = distLE2(query, n.term);
             if (d <= threshold) out.add(n.term);
-            int lo = d - threshold, hi = d + threshold;
+            int lo = d - threshold;
+            int hi = d + threshold;
             for (Map.Entry<Integer, Node> e : n.children.entrySet()) {
                 int key = e.getKey();
                 if (key >= lo && key <= hi) dq.add(e.getValue());

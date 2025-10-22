@@ -12,16 +12,16 @@ import com.csse3200.game.services.ServiceLocator;
 
 public class BadWinAnimationScreen extends GameArea {
     protected static final GridPoint2[] EXPLOSION_COORDS = new GridPoint2[]{
-            new GridPoint2(77,69),
-            new GridPoint2(54,69),
-            new GridPoint2(57,49),
-            new GridPoint2(52,24),
-            new GridPoint2(74,45),
+            new GridPoint2(77, 69),
+            new GridPoint2(54, 69),
+            new GridPoint2(57, 49),
+            new GridPoint2(52, 24),
+            new GridPoint2(74, 45),
             new GridPoint2(78, 24),
             new GridPoint2(50, 45)
     };
 
-    final protected static float EXPLOSION_FRAME_DURATION = 0.2f;
+    protected static final float EXPLOSION_FRAME_DURATION = 0.2f;
 
     public BadWinAnimationScreen(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
         super(terrainFactory, cameraComponent);
@@ -66,8 +66,8 @@ public class BadWinAnimationScreen extends GameArea {
                 "images/explosion_2.atlas",
                 "explosion_2",
                 EXPLOSION_FRAME_DURATION,
-                Animation.PlayMode.LOOP,
-                1f);
+                Animation.PlayMode.LOOP
+        );
     }
 
     protected void spawnExplosions() {
@@ -79,7 +79,7 @@ public class BadWinAnimationScreen extends GameArea {
         }
     }
 
-    protected AnimationRenderComponent createAnimation(String atlasPath, String animationName, float frameDuration, Animation.PlayMode playMode, float width) {
+    protected AnimationRenderComponent createAnimation(String atlasPath, String animationName, float frameDuration, Animation.PlayMode playMode) {
         AnimationRenderComponent animator = new AnimationRenderComponent(
                 ServiceLocator.getResourceService()
                         .getAsset(atlasPath, TextureAtlas.class));

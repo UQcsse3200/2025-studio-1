@@ -7,12 +7,14 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
 /**
  * These tests verify that the NPC healing system correctly restores player health
- * when the "npcDialogueEnd" event is triggered, and properly handles edge cases
- * such as cooldowns, null players, missing components, and dead players.
+ * when the "npcDialogueEnd" event is triggered, and grants a protection shield
+ * when the player is at full health. Tests also cover edge cases such as cooldowns,
+ * null players, missing components, and dead players.
  */
 @ExtendWith(MockitoExtension.class)
 class NpcHealingComponentTest {
@@ -29,14 +31,16 @@ class NpcHealingComponentTest {
     }
 
     /**
-     * Test that the component heals the player when the dialogue ends.
+     * Test that the component heals the player when the dialogue ends and player is not at full health.
      * Verifies that the correct amount of health is added.
      */
     @Test
-    void healsPlayer_onDialogueEnd() {
+    void healsPlayer_whenNotAtFullHealth() {
         int healAmount = 25;
         player.addComponent(combatStats);
         when(combatStats.isDead()).thenReturn(false);
+        when(combatStats.getHealth()).thenReturn(50);
+        when(combatStats.getMaxHealth()).thenReturn(100);
 
         NpcHealingComponent healing = new NpcHealingComponent(player, healAmount);
         npc.addComponent(healing);
@@ -46,16 +50,125 @@ class NpcHealingComponentTest {
 
         // The player's health should increase by the heal amount
         verify(combatStats, times(1)).addHealth(healAmount);
+        verify(combatStats, never()).addProtection(anyInt());
     }
 
     /**
-     * Test that cooldown prevents repeated healing within the cooldown period.
+     * Test that the component grants shield when player is at full health.
+     * Verifies that protection is added instead of health.
      */
     @Test
-    void respectsCooldown_onlyHealsOnceWithinCooldown() {
+    void grantsShield_whenAtFullHealth() {
+        int healAmount = 25;
+        int shieldAmount = 10;
+        player.addComponent(combatStats);
+        when(combatStats.isDead()).thenReturn(false);
+        when(combatStats.getHealth()).thenReturn(100);
+        when(combatStats.getMaxHealth()).thenReturn(100);
+
+        NpcHealingComponent healing = new NpcHealingComponent(player, healAmount, shieldAmount, 0);
+        npc.addComponent(healing);
+        npc.create();
+
+        npc.getEvents().trigger("npcDialogueEnd");
+
+        // Should grant shield, not heal
+        verify(combatStats, never()).addHealth(anyInt());
+        verify(combatStats, times(1)).addProtection(shieldAmount);
+    }
+
+    /**
+     * Test that shield is granted and removed after duration expires.
+     */
+    @Test
+    void grantsAndRemovesShield_afterDuration() throws InterruptedException {
+        int healAmount = 25;
+        int shieldAmount = 15;
+        long duration = 100; // 100ms for quick test
+
+        player.addComponent(combatStats);
+        when(combatStats.isDead()).thenReturn(false);
+        when(combatStats.getHealth()).thenReturn(100);
+        when(combatStats.getMaxHealth()).thenReturn(100);
+        when(combatStats.getEntity()).thenReturn(player);
+
+        NpcHealingComponent healing = new NpcHealingComponent(player, healAmount, shieldAmount, duration);
+        npc.addComponent(healing);
+        npc.create();
+
+        npc.getEvents().trigger("npcDialogueEnd");
+
+        // Shield should be granted
+        verify(combatStats, times(1)).addProtection(shieldAmount);
+
+        // Wait for shield removal
+        Thread.sleep(duration + 200);
+
+        // Shield should be removed (negative value)
+        verify(combatStats, times(1)).addProtection(-shieldAmount);
+    }
+
+    /**
+     * Test that no shield is granted when shield amount is 0, even at full health.
+     */
+    @Test
+    void doesNotGrantShield_whenShieldAmountIsZero() {
+        int healAmount = 25;
+        player.addComponent(combatStats);
+        when(combatStats.isDead()).thenReturn(false);
+        when(combatStats.getHealth()).thenReturn(100);
+        when(combatStats.getMaxHealth()).thenReturn(100);
+
+        NpcHealingComponent healing = new NpcHealingComponent(player, healAmount, 0, 0);
+        npc.addComponent(healing);
+        npc.create();
+
+        npc.getEvents().trigger("npcDialogueEnd");
+
+        // No shield or healing should occur
+        verify(combatStats, never()).addHealth(anyInt());
+        verify(combatStats, never()).addProtection(anyInt());
+    }
+
+    /**
+     * Test that shield with no duration is granted permanently (not removed).
+     */
+    @Test
+    void grantsShield_withoutRemoval_whenDurationIsZero() throws InterruptedException {
+        int healAmount = 25;
+        int shieldAmount = 20;
+
+        player.addComponent(combatStats);
+        when(combatStats.isDead()).thenReturn(false);
+        when(combatStats.getHealth()).thenReturn(100);
+        when(combatStats.getMaxHealth()).thenReturn(100);
+
+        NpcHealingComponent healing = new NpcHealingComponent(player, healAmount, shieldAmount, 0);
+        npc.addComponent(healing);
+        npc.create();
+
+        npc.getEvents().trigger("npcDialogueEnd");
+
+        // Shield should be granted
+        verify(combatStats, times(1)).addProtection(shieldAmount);
+
+        // Wait a bit
+        Thread.sleep(200);
+
+        // Shield should NOT be removed (only called once with positive value)
+        verify(combatStats, times(1)).addProtection(anyInt());
+    }
+
+    /**
+     * Test that cooldown prevents repeated healing/shielding within the cooldown period.
+     */
+    @Test
+    void respectsCooldown_onlyTriggersOnceWithinCooldown() {
         int healAmount = 10;
         player.addComponent(combatStats);
         when(combatStats.isDead()).thenReturn(false);
+        when(combatStats.getHealth()).thenReturn(50);
+        when(combatStats.getMaxHealth()).thenReturn(100);
 
         // Set a 1-second cooldown
         NpcHealingComponent healing = new NpcHealingComponent(player, healAmount)
@@ -72,7 +185,7 @@ class NpcHealingComponentTest {
     }
 
     /**
-     * Test that no healing occurs when the player entity is null.
+     * Test that no healing or shielding occurs when the player entity is null.
      * Ensures the component handles null safely without throwing exceptions.
      */
     @Test
@@ -86,7 +199,7 @@ class NpcHealingComponentTest {
     }
 
     /**
-     * Test that no healing occurs if the player does not have a CombatStatsComponent.
+     * Test that no healing or shielding occurs if the player does not have a CombatStatsComponent.
      */
     @Test
     void doesNothing_whenPlayerHasNoCombatStats() {
@@ -101,7 +214,7 @@ class NpcHealingComponentTest {
     }
 
     /**
-     * Test that no healing happens if the player is dead.
+     * Test that no healing or shielding happens if the player is dead.
      */
     @Test
     void doesNothing_whenPlayerIsDead() {
@@ -114,7 +227,216 @@ class NpcHealingComponentTest {
 
         npc.getEvents().trigger("npcDialogueEnd");
 
-        // Dead players should not receive healing
+        // Dead players should not receive healing or shield
         verify(combatStats, never()).addHealth(anyInt());
+        verify(combatStats, never()).addProtection(anyInt());
+    }
+
+    /**
+     * Test that healing works with both constructors (2 params and 4 params).
+     */
+    @Test
+    void worksWithBothConstructors() {
+        player.addComponent(combatStats);
+        when(combatStats.isDead()).thenReturn(false);
+        when(combatStats.getHealth()).thenReturn(50);
+        when(combatStats.getMaxHealth()).thenReturn(100);
+
+        // Test 2-parameter constructor
+        NpcHealingComponent healing1 = new NpcHealingComponent(player, 25);
+        npc.addComponent(healing1);
+        npc.create();
+        npc.getEvents().trigger("npcDialogueEnd");
+        verify(combatStats, times(1)).addHealth(25);
+
+        // Test 4-parameter constructor
+        Entity npc2 = new Entity();
+        NpcHealingComponent healing2 = new NpcHealingComponent(player, 20, 10, 1000);
+        npc2.addComponent(healing2);
+        npc2.create();
+        npc2.getEvents().trigger("npcDialogueEnd");
+        verify(combatStats, times(1)).addHealth(20);
+    }
+
+    /**
+     * Test that negative shield amount is clamped to zero.
+     */
+    @Test
+    void clampsNegativeShield_toZero() {
+        player.addComponent(combatStats);
+        when(combatStats.isDead()).thenReturn(false);
+        when(combatStats.getHealth()).thenReturn(100);
+        when(combatStats.getMaxHealth()).thenReturn(100);
+
+        // Negative shield should be clamped to 0
+        NpcHealingComponent healing = new NpcHealingComponent(player, 25, -10, 1000);
+        npc.addComponent(healing);
+        npc.create();
+
+        npc.getEvents().trigger("npcDialogueEnd");
+
+        // No shield should be granted (amount was clamped to 0)
+        verify(combatStats, never()).addProtection(anyInt());
+    }
+
+    /**
+     * Fires "shieldStart" when shield is granted
+     */
+    @Test
+    void firesShieldStart_whenShieldGranted() throws InterruptedException {
+        player.addComponent(combatStats);
+        when(combatStats.isDead()).thenReturn(false);
+        when(combatStats.getHealth()).thenReturn(100);
+        when(combatStats.getMaxHealth()).thenReturn(100);
+
+        final boolean[] started = {false};
+        npc.getEvents().addListener("shieldStart", () -> started[0] = true);
+
+        NpcHealingComponent healing = new NpcHealingComponent(player, 25, 15, 100);
+        npc.addComponent(healing);
+        npc.create();
+
+        npc.getEvents().trigger("npcDialogueEnd");
+
+        Thread.sleep(80);
+        assertTrue(started[0], "Expected 'shieldStart' to be fired");
+        verify(combatStats, atLeastOnce()).addProtection(15);
+    }
+
+
+
+    /**
+     * After duration, fires "shieldEnd" and removes protection
+     */
+    @Test
+    void firesShieldEnd_afterDuration() throws InterruptedException {
+        int shieldAmount = 10;
+        long durationMs = 50;
+
+        player.addComponent(combatStats);
+        when(combatStats.isDead()).thenReturn(false);
+        when(combatStats.getHealth()).thenReturn(100);
+        when(combatStats.getMaxHealth()).thenReturn(100);
+        when(combatStats.getEntity()).thenReturn(player);
+
+        final boolean[] ended = {false};
+        npc.getEvents().addListener("shieldEnd", () -> ended[0] = true);
+
+        NpcHealingComponent healing = new NpcHealingComponent(player, 25, shieldAmount, durationMs);
+        npc.addComponent(healing);
+        npc.create();
+
+        npc.getEvents().trigger("npcDialogueEnd");
+
+        // wait a bit longer than duration for the background thread to run
+        Thread.sleep(durationMs + 200);
+        assertTrue(ended[0], "Expected 'shieldEnd' to be fired after duration");
+        verify(combatStats, atLeastOnce()).addProtection(-shieldAmount);
+    }
+
+
+    @Test
+    void playsSound_onHealBranch() {
+        // player not full to the heal branch
+        player.addComponent(combatStats);
+        when(combatStats.isDead()).thenReturn(false);
+        when(combatStats.getHealth()).thenReturn(50);
+        when(combatStats.getMaxHealth()).thenReturn(100);
+
+        com.csse3200.game.services.ResourceService rs = mock(com.csse3200.game.services.ResourceService.class);
+        com.badlogic.gdx.audio.Sound sound = mock(com.badlogic.gdx.audio.Sound.class);
+
+        try (org.mockito.MockedStatic<com.csse3200.game.services.ServiceLocator> sl =
+                     mockStatic(com.csse3200.game.services.ServiceLocator.class)) {
+            sl.when(com.csse3200.game.services.ServiceLocator::getResourceService).thenReturn(rs);
+            when(rs.getAsset("sounds/healing-magic.mp3", com.badlogic.gdx.audio.Sound.class)).thenReturn(sound);
+
+            NpcHealingComponent c = new NpcHealingComponent(player, 25);
+            npc.addComponent(c);
+            npc.create();
+
+            npc.getEvents().trigger("npcDialogueEnd");
+
+            // overload-agnostic: accept play() or play(float)
+            boolean played = true;
+            try {
+                verify(sound, atLeastOnce()).play(anyFloat());
+            } catch (AssertionError e) {
+                played = false;
+            }
+            if (!played) {
+                verify(sound, atLeastOnce()).play();
+            }
+        }
+    }
+
+
+    @Test
+    void playsSound_onShieldBranch() {
+        // player full to the shield branch
+        player.addComponent(combatStats);
+        when(combatStats.isDead()).thenReturn(false);
+        when(combatStats.getHealth()).thenReturn(100);
+        when(combatStats.getMaxHealth()).thenReturn(100);
+
+        com.csse3200.game.services.ResourceService rs = mock(com.csse3200.game.services.ResourceService.class);
+        com.badlogic.gdx.audio.Sound sound = mock(com.badlogic.gdx.audio.Sound.class);
+
+        try (org.mockito.MockedStatic<com.csse3200.game.services.ServiceLocator> sl =
+                     mockStatic(com.csse3200.game.services.ServiceLocator.class)) {
+            sl.when(com.csse3200.game.services.ServiceLocator::getResourceService).thenReturn(rs);
+            when(rs.getAsset("sounds/healing-magic.mp3", com.badlogic.gdx.audio.Sound.class)).thenReturn(sound);
+
+            NpcHealingComponent c = new NpcHealingComponent(player, 25, 15, 0);
+            npc.addComponent(c);
+            npc.create();
+
+            npc.getEvents().trigger("npcDialogueEnd");
+
+            boolean played = true;
+            try {
+                verify(sound, atLeastOnce()).play(anyFloat());
+            } catch (AssertionError e) {
+                played = false;
+            }
+            if (!played) {
+                verify(sound, atLeastOnce()).play();
+            }
+        }
+    }
+
+    /**
+     * If the sound asset is missing (null), component should not crash and should not call play().
+     */
+    @Test
+    void noCrash_whenSoundAssetMissing() {
+        // choose either branch; here: full HP to go shield branch
+        player.addComponent(combatStats);
+        when(combatStats.isDead()).thenReturn(false);
+        when(combatStats.getHealth()).thenReturn(100);
+        when(combatStats.getMaxHealth()).thenReturn(100);
+
+        com.csse3200.game.services.ResourceService rs = mock(com.csse3200.game.services.ResourceService.class);
+        com.badlogic.gdx.audio.Sound sound = mock(com.badlogic.gdx.audio.Sound.class);
+
+        try (org.mockito.MockedStatic<com.csse3200.game.services.ServiceLocator> sl =
+                     mockStatic(com.csse3200.game.services.ServiceLocator.class)) {
+            sl.when(com.csse3200.game.services.ServiceLocator::getResourceService).thenReturn(rs);
+            // return null → simulate missing asset
+            when(rs.getAsset("sounds/healing-magic.mp3", com.badlogic.gdx.audio.Sound.class))
+                    .thenReturn(null);
+
+            NpcHealingComponent c = new NpcHealingComponent(player, 25, 10, 0);
+            npc.addComponent(c);
+            npc.create();
+
+            // should not throw
+            org.junit.jupiter.api.Assertions.assertDoesNotThrow(() -> npc.getEvents()
+                    .trigger("npcDialogueEnd"));
+
+            // and should not play any sound
+            verify(sound, never()).play();
+            verify(sound, never()).play(anyFloat());
+        }
     }
 }

@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.csse3200.game.GdxGame;
 import com.csse3200.game.areas.*;
+import com.csse3200.game.areas.difficulty.Difficulty;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.components.gamearea.PerformanceDisplay;
@@ -16,7 +17,9 @@ import com.csse3200.game.components.maingame.MainGameDisplay;
 import com.csse3200.game.components.player.InventoryComponent;
 import com.csse3200.game.components.screens.Minimap;
 import com.csse3200.game.components.screens.MinimapDisplay;
+import com.csse3200.game.components.screens.PauseEscInputComponent;
 import com.csse3200.game.components.screens.PauseMenuDisplay;
+import com.csse3200.game.components.settingsmenu.ControlDisplay;
 import com.csse3200.game.components.teleporter.TeleporterComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
@@ -34,9 +37,15 @@ import com.csse3200.game.session.GameSession;
 import com.csse3200.game.session.SessionManager;
 import com.csse3200.game.ui.terminal.Terminal;
 import com.csse3200.game.ui.terminal.TerminalDisplay;
+import com.csse3200.game.lighting.LightingService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 
 /**
@@ -52,7 +61,7 @@ public class MainGameScreen extends ScreenAdapter {
     private final GdxGame game;
     private final Renderer renderer;
     private final PhysicsEngine physicsEngine;
-    private final GameArea gameArea;
+    private GameArea gameArea;
 
     private final CountdownTimerService countdownTimer;
     private CountdownTimerService escapeTimer = null;
@@ -68,9 +77,26 @@ public class MainGameScreen extends ScreenAdapter {
     private boolean isPauseVisible = false;
     private boolean isMinimapVisible = false;
     private boolean pauseToggledThisFrame = false; // guard to avoid reopen on same ESC
+    private Entity controlsOverlay;
     private boolean animation = false;
 
-    public MainGameScreen(GdxGame game) {
+    public void showControlsOverlay() {
+        Stage stage = ServiceLocator.getRenderService().getStage();
+        controlsOverlay = new Entity()
+                .addComponent(new ControlDisplay(null, this::backToPauseMenu))
+                .addComponent(new InputDecorator(stage, 100));
+        ServiceLocator.getEntityService().register(controlsOverlay);
+    }
+
+    private void backToPauseMenu() {
+        if (controlsOverlay != null) {
+            controlsOverlay.dispose();
+            ServiceLocator.getEntityService().unregister(controlsOverlay);
+            controlsOverlay = null;
+        }
+        showPauseOverlay();
+    }
+    public MainGameScreen(GdxGame game, boolean loadSaveGame) {
         this.game = game;
 
         logger.debug("Initialising main game screen services");
@@ -82,7 +108,7 @@ public class MainGameScreen extends ScreenAdapter {
         var prev = game.getCarryOverLeaderBoard();
         if (prev != null && !prev.getLeaderBoard().isEmpty()) {
             session.getLeaderBoardManager()
-                    .setLeaderboard(new java.util.ArrayList<>(prev.getLeaderBoard()));
+                    .setLeaderboard(new ArrayList<>(prev.getLeaderBoard()));
         }
         ServiceLocator.registerLeaderBoardManager(session.getLeaderBoardManager());
 
@@ -102,10 +128,15 @@ public class MainGameScreen extends ScreenAdapter {
         ServiceLocator.registerRenderService(new RenderService());
 
         ServiceLocator.clearPlayer();
+        this.unclearAllRooms();
 
         renderer = RenderFactory.createRenderer();
         renderer.getCamera().getEntity().setPosition(CAMERA_POSITION);
         renderer.getDebug().renderPhysicsWorld(physicsEngine.getWorld());
+
+        LightingService lightingService =
+                new LightingService(renderer.getCamera(), physicsEngine.getWorld());
+        ServiceLocator.registerLightingService(lightingService);
 
         loadAssets();
         countdownTimer = new CountdownTimerService(ServiceLocator.getTimeSource(), 2400000);
@@ -123,103 +154,83 @@ public class MainGameScreen extends ScreenAdapter {
 
         logger.debug("Initialising main game screen entities");
         TerrainFactory terrainFactory = new TerrainFactory(renderer.getCamera());
-        gameArea = new ForestGameArea(terrainFactory, renderer.getCamera());
-        com.csse3200.game.services.ServiceLocator.registerGameArea(gameArea);
-        ForestGameArea.setRoomSpawn(new GridPoint2(3, 20));
-        gameArea.create();
         ServiceLocator.getGlobalEvents().addListener("round:finished", (Boolean won) -> {
             recordRoundForLeaderboard(won);
             game.setCarryOverLeaderBoard(session.getLeaderBoardManager());
         });
-        DiscoveryService dsInit = ServiceLocator.getDiscoveryService();
-        if (dsInit != null) {
-            dsInit.discover(gameArea.toString());
+
+        Set<String> exploredAreas = new HashSet<>();
+
+        if (loadSaveGame) {
+            logger.info("loading game from save file");
+            SaveGame.GameState load = ServiceLocator.getSaveLoadService().load("saves" + File.separator + "slides.json");
+            gameArea = new ForestGameArea(terrainFactory, renderer.getCamera());
+            ServiceLocator.registerGameArea(gameArea);
+            ForestGameArea.setRoomSpawn(new GridPoint2(3, 20));
+            gameArea.create();
+            //all areas in the game for loading
+            switch (load.getGameArea()) {
+                case "Forest" -> gameArea = ForestGameArea.load(terrainFactory, renderer.getCamera());
+                case "Elevator" ->
+                        gameArea.clearAndLoad(() -> ElevatorGameArea.load(terrainFactory, renderer.getCamera()));
+                case "Office" -> gameArea.clearAndLoad(() -> OfficeGameArea.load(terrainFactory, renderer.getCamera()));
+                case "Mainhall" -> gameArea.clearAndLoad(() -> MainHall.load(terrainFactory, renderer.getCamera()));
+                case "Reception" -> gameArea.clearAndLoad(() -> Reception.load(terrainFactory, renderer.getCamera()));
+                case "Tunnel" -> gameArea.clearAndLoad(() -> TunnelGameArea.load(terrainFactory, renderer.getCamera()));
+                case "Security" -> gameArea.clearAndLoad(() -> SecurityGameArea.load(terrainFactory, renderer.getCamera()));
+                case "Storage" -> gameArea.clearAndLoad(() -> StorageGameArea.load(terrainFactory, renderer.getCamera()));
+                case "Shipping" -> gameArea.clearAndLoad(() -> ShippingGameArea.load(terrainFactory, renderer.getCamera()));
+                case "Server" -> gameArea.clearAndLoad(() -> ServerGameArea.load(terrainFactory, renderer.getCamera()));
+                case "Casino" -> gameArea.clearAndLoad(() -> CasinoGameArea.load(terrainFactory, renderer.getCamera()));
+                case "Research" ->
+                        gameArea.clearAndLoad(() -> ResearchGameArea.load(terrainFactory, renderer.getCamera()));
+                default -> gameArea = null;
+            }
+
+            clearUpTo(load.getGameArea());
+
+            //will instantiate all items
+            if (gameArea != null) {
+                ServiceLocator.registerGameArea(gameArea);
+                ServiceLocator.registerDifficulty(new Difficulty(load.getDifficulty()));
+                SaveLoadService.loadPlayer(
+                        load.getPlayer(),
+                        load.getArmour(),
+                        load.getInventory()
+                );
+                gameArea.setWave(load.getWave());
+                exploredAreas = load.getAreasVisited();
+
+            } else {
+                logger.error("couldn't create Game area from file");
+            }
+
+        } else {
+
+            gameArea = new ForestGameArea(terrainFactory, renderer.getCamera());
+            ServiceLocator.registerGameArea(gameArea);
+            ForestGameArea.setRoomSpawn(new GridPoint2(3, 20));
+            gameArea.create();
+            exploredAreas.add(gameArea.toString());
         }
+        // for when loading a save game
+        discover(exploredAreas);
     }
 
-
     /**
-     * Overloaded constructor for loading the game from save file
+     * private helper method for setting multiple areas to be discovered on startup
+     * such as on loading
      *
-     * @param game     game
-     * @param Filename loaded file
+     * @param areas Set of areas to be marked discovered
      */
-    public MainGameScreen(GdxGame game, String Filename) {
-
-
-        this.game = game;
-
-
-        logger.debug("Initialising main game screen services from file load");
-        ServiceLocator.registerTimeSource(new GameTime());
-
-        PhysicsService physicsService = new PhysicsService();
-        ServiceLocator.registerPhysicsService(physicsService);
-        physicsEngine = physicsService.getPhysics();
-
-        ServiceLocator.registerInputService(new InputService());
-        ServiceLocator.registerResourceService(new ResourceService());
-        ServiceLocator.registerSaveLoadService(new SaveLoadService());
-
-        SaveGame.GameState load = SaveLoadService.load();
-
-        ServiceLocator.registerEntityService(new EntityService());
-        ServiceLocator.registerRenderService(new RenderService());
-
-        renderer = RenderFactory.createRenderer();
-        renderer.getCamera().getEntity().setPosition(CAMERA_POSITION);
-        renderer.getDebug().renderPhysicsWorld(physicsEngine.getWorld());
-
-        loadAssets();
-        countdownTimer = new CountdownTimerService(ServiceLocator.getTimeSource(), 2400000);
-        ServiceLocator.getGlobalEvents().addListener("escape timer", () -> {
-            setEscapeTimer();
-            deleteUI();
-            createUI();
-        });
-        ServiceLocator.getGlobalEvents().addListener(("animation"), () -> {
-            animation = true;
-            setEscapeTimer();
-            deleteUI();
-        });
-        createUI();
-
-        logger.debug("Initialising main game screen entities");
-        TerrainFactory terrainFactory = new TerrainFactory(renderer.getCamera());
-        GameArea areaLoad = null;
-        //cases for all current areas
-
-        switch (load.getGameArea()) {
-            case "Forest" -> areaLoad = ForestGameArea.load(terrainFactory, renderer.getCamera());
-            case "Elevator" -> areaLoad = ElevatorGameArea.load(terrainFactory, renderer.getCamera());
-            case "Office" -> areaLoad = OfficeGameArea.load(terrainFactory, renderer.getCamera());
-            case "Mainhall" -> areaLoad = MainHall.load(terrainFactory, renderer.getCamera());
-            case "Reception" -> areaLoad = Reception.load(terrainFactory, renderer.getCamera());
-            case "Tunnel" -> areaLoad = TunnelGameArea.load(terrainFactory, renderer.getCamera());
-            case "Security" -> areaLoad = SecurityGameArea.load(terrainFactory, renderer.getCamera());
-            case "Storage" -> areaLoad = StorageGameArea.load(terrainFactory, renderer.getCamera());
-            case "Shipping" -> areaLoad = ShippingGameArea.load(terrainFactory, renderer.getCamera());
-            case "Server" -> areaLoad = ServerGameArea.load(terrainFactory, renderer.getCamera());
-            case "Secret" -> areaLoad = SecretRoomGameArea.load(terrainFactory, renderer.getCamera());
-            default -> logger.error("couldn't create Game area from file");
-        }
-        ServiceLocator.getResourceService().loadAll(); // test for loading into new areas
-
-        gameArea = areaLoad;
-        DiscoveryService ds = ServiceLocator.getDiscoveryService();
-        if (ds != null && gameArea != null) {
-            ds.discover(gameArea.toString());
-        }
-        ServiceLocator.registerGameArea(gameArea);
-        gameArea.create();
-        // mark initial area as discovered
+    private void discover(Set<String> areas) {
         DiscoveryService dsInit = ServiceLocator.getDiscoveryService();
+        // mark any area of a savefile or initial area as discovered
         if (dsInit != null) {
-            dsInit.discover(gameArea.toString());
+            for (String areaString : areas) {
+                dsInit.discover(areaString);
+            }
         }
-
-        SaveLoadService.loadPlayer(load.getPlayer());
-        SaveLoadService.loadPlayerInventory(load.getInventory());
     }
 
     @Override
@@ -234,7 +245,7 @@ public class MainGameScreen extends ScreenAdapter {
                 && !ServiceLocator.isTransitioning()) {
             physicsEngine.update();
         }
-        if (!com.csse3200.game.services.ServiceLocator.isTransitioning()) {
+        if (!ServiceLocator.isTransitioning()) {
             ServiceLocator.getEntityService().update();
         }
         Entity player = gameArea.getPlayer();
@@ -314,6 +325,13 @@ public class MainGameScreen extends ScreenAdapter {
             minimap.getComponent(MinimapDisplay.class).zoomOut();
         }
 
+        if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT) && isMinimapVisible) {
+            minimap.getComponent(MinimapDisplay.class).pan("left");
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT) && isMinimapVisible) {
+            minimap.getComponent(MinimapDisplay.class).pan("right");
+        }
+
         //switch to death screen when countdown timer is up
         if (countdownTimer.isTimeUP()) {
             setDeathScreen();
@@ -359,6 +377,12 @@ public class MainGameScreen extends ScreenAdapter {
         // Preserve player entity during disposal
         Entity player = ServiceLocator.getPlayer();
         ServiceLocator.getEntityService().disposeExceptPlayer();
+
+        var ls = ServiceLocator.getLightingService();
+        if (ls != null && ls.getEngine() != null) {
+            ls.getEngine().dispose();
+        }
+
         ServiceLocator.getRenderService().dispose();
         ServiceLocator.getResourceService().dispose();
         ServiceLocator.clearExceptPlayer();
@@ -402,20 +426,20 @@ public class MainGameScreen extends ScreenAdapter {
         }
 
         if(!animation) {
-            System.out.println(ui);
             this.uis.add(ui);
             ServiceLocator.getEntityService().register(ui);
         }
     }
 
     private void deleteUI() {
-        System.out.println("hi");
         for (Entity ui : uis) {
             ui.dispose();
         }
     }
 
-    /** Remaining time in seconds, clamped to >= 0 */
+    /**
+     * Remaining time in seconds, clamped to >= 0
+     */
     private long getRemainingSeconds() {
         long rem = countdownTimer.getRemainingMs();
         return rem > 0 ? rem / 1000 : 0;
@@ -458,7 +482,7 @@ public class MainGameScreen extends ScreenAdapter {
         pauseOverlay = new Entity()
                 .addComponent(new PauseMenuDisplay(game))
                 .addComponent(new InputDecorator(stage, 100))
-                .addComponent(new com.csse3200.game.components.screens.PauseEscInputComponent(110));
+                .addComponent(new PauseEscInputComponent(110));
         pauseOverlay.getEvents().addListener("save", this::saveState);
         pauseOverlay.getEvents().addListener("resume", this::hidePauseOverlay);
         ServiceLocator.getEntityService().register(pauseOverlay);
@@ -591,5 +615,57 @@ public class MainGameScreen extends ScreenAdapter {
 
     private void setBadWin() {
         ServiceLocator.getGlobalEvents().trigger("badWin");
+    }
+
+    /**
+     * This private helper function sets the
+     * 'isCleared' variable to false, so that
+     * enemies will spawn in all the rooms
+     * <p>
+     * Should be called sometime before the game starts
+     */
+    private void unclearAllRooms() {
+        Reception.unclearRoom();
+        MainHall.unclearRoom();
+        ElevatorGameArea.unclearRoom();
+        OfficeGameArea.unclearRoom();
+        ResearchGameArea.unclearRoom();
+        SecurityGameArea.unclearRoom();
+        ServerGameArea.unclearRoom();
+        ShippingGameArea.unclearRoom();
+        StorageGameArea.unclearRoom();
+        TunnelGameArea.unclearRoom();
+        MovingBossRoom.unclearRoom();
+        StaticBossRoom.unclearRoom();
+        FlyingBossRoom.unclearRoom();
+    }
+
+    /**
+     * Clears all rooms up to specified room
+     * Should be called when loading in.
+     *
+     * @param room room that the player will be spawned in.
+     *             Clear all rooms behind it
+     */
+    private void clearUpTo(String room) {
+        String[] roomList = {"Forest", "Reception", "Mainhall",
+                "Security", "MovingBossRoom", "Office", "Elevator",
+                "Research", "FlyingBossRoom", "Shipping",
+                "Storage", "Server", "Tunnel"};
+
+        Runnable[] runnables = {() -> {
+        }, Reception::clearRoom,
+                MainHall::clearRoom, SecurityGameArea::clearRoom,
+                OfficeGameArea::clearRoom, ElevatorGameArea::clearRoom,
+                ResearchGameArea::clearRoom, FlyingBossRoom::clearRoom,
+                ShippingGameArea::clearRoom, StorageGameArea::clearRoom,
+                ServerGameArea::clearRoom, TunnelGameArea::clearRoom};
+
+        int i = 0;
+        for (String eachRoom : roomList) {
+            if (eachRoom.equals(room)) return;
+            runnables[i].run();
+            i++;
+        }
     }
 }

@@ -37,7 +37,7 @@ allprojects {
         junit5Version = '5.9.3'
         mockitoVersion = '5.2.0'
         gdxUtilsVersion = '0.13.4'
-        slf4jVersion = '1.7.36'
+        slf4jVersion = '2.0.17'
     }
 
     repositories {
@@ -90,7 +90,7 @@ project(":core") {
         api "net.dermetfan.libgdx-utils:libgdx-utils:$gdxUtilsVersion"
         api "net.dermetfan.libgdx-utils:libgdx-utils-box2d:$gdxUtilsVersion"
         api "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
-
+        api "com.badlogicgames.box2dlights:box2dlights:1.5"
 
         // Logging
         api "org.slf4j:slf4j-api:$slf4jVersion"

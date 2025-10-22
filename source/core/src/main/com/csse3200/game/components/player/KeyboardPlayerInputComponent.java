@@ -4,9 +4,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.math.Vector2;
-import com.csse3200.game.components.items.ItemComponent;
 import com.csse3200.game.entities.Entity;
-import com.csse3200.game.entities.configs.ItemTypes;
 import com.csse3200.game.input.InputComponent;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.utils.math.Vector2Utils;
@@ -66,6 +64,9 @@ public class KeyboardPlayerInputComponent extends InputComponent {
                 return true;
 
             case Keys.SPACE:
+                if (ServiceLocator.getTimeSource().isPaused()) {
+                    return false;
+                }
                 triggerJumpEvent();
                 return true;
 
@@ -111,12 +112,7 @@ public class KeyboardPlayerInputComponent extends InputComponent {
             if (item == null) {
                 return false;
             }
-            ItemComponent itemInfo = item.getComponent(ItemComponent.class);
-            if (itemInfo.getType() == ItemTypes.RANGED) {
-                entity.getEvents().trigger("shoot");
-            } else if (itemInfo.getType() == ItemTypes.MELEE) {
-                entity.getEvents().trigger("attack");
-            }
+            item.getEvents().trigger("use", entity);
             return true;
         }
         return false;
@@ -134,7 +130,6 @@ public class KeyboardPlayerInputComponent extends InputComponent {
         // Unaffected by pausing meaning checking for paused needs to be handled by "interact" event users
         if (keycode == Keys.E) {
             holding = false;
-            triggerAddItem();
             return true;
         }
 
@@ -155,7 +150,6 @@ public class KeyboardPlayerInputComponent extends InputComponent {
             case Keys.SHIFT_LEFT:
                 triggerStopSprintingEvent();
                 return true;
-
             case Keys.S:
                 triggerStopCrouchingEvent();
                 return true;
@@ -195,7 +189,6 @@ public class KeyboardPlayerInputComponent extends InputComponent {
     }
 
     private void triggerReloadEvent() {
-
         entity.getEvents().trigger("reload");
     }
 
@@ -236,14 +229,6 @@ public class KeyboardPlayerInputComponent extends InputComponent {
 
     private void triggerDashEvent() {
         entity.getEvents().trigger("dashAttempt");
-    }
-
-    /**
-     * Triggers an item pickup request.
-     */
-    private void triggerAddItem() {
-        System.out.println("Pick up event triggered");
-        entity.getEvents().trigger("pick up");
     }
 
     /**

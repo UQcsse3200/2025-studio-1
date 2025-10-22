@@ -3,23 +3,14 @@ package com.csse3200.game.components.player;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Timer;
 import com.csse3200.game.components.*;
 import com.csse3200.game.effects.AimbotEffect;
 import com.csse3200.game.effects.UnlimitedAmmoEffect;
 import com.csse3200.game.entities.Entity;
-import com.csse3200.game.entities.factories.ProjectileFactory;
-import com.csse3200.game.physics.PhysicsLayer;
-import com.csse3200.game.physics.components.HitboxComponent;
-import com.csse3200.game.physics.components.HomingPhysicsComponent;
 import com.csse3200.game.physics.components.PhysicsComponent;
-import com.csse3200.game.physics.components.PhysicsProjectileComponent;
-import com.csse3200.game.rendering.AnimationRenderComponent;
 import com.csse3200.game.rendering.TextureRenderComponent;
 import com.csse3200.game.services.ServiceLocator;
 
@@ -35,12 +26,11 @@ public class PlayerActions extends Component {
     private static final Vector2 MAX_SPEED = new Vector2(3f, 3f);
     private static final Vector2 CROUCH_SPEED = new Vector2(1.5f, 3f);
     private static final Vector2 SPRINT_SPEED = new Vector2(7f, 3f);
-    private static final Vector2 JUMP_VELOCITY = new Vector2(0f, 15f);
+    private static final Vector2 JUMP_VELOCITY = new Vector2(0f, 8f);
     private static final Vector2 DASH_SPEED = new Vector2(20f, 9.8f);
     private static final float DASH_DURATION = 0.1f;
     // Stamina Costs
     private static final int DASH_COST = 30;
-    private static final int DOUBLE_JUMP_COST = 10;
     private static final int SPRINT_COST = 1;
     // Jumping Limits
     private static final int MAX_JUMPS = 2;
@@ -67,15 +57,13 @@ public class PlayerActions extends Component {
     private boolean crouching = false;
     private boolean grounded = true;
     // Effects
-    private final UnlimitedAmmoEffect unlimitedAmmoEffect = new UnlimitedAmmoEffect(10f, this);
-    private final AimbotEffect aimbotEffect = new AimbotEffect(10f, this);
+    private final UnlimitedAmmoEffect unlimitedAmmoEffect = new UnlimitedAmmoEffect(10f);
+    private final AimbotEffect aimbotEffect = new AimbotEffect(10f);
     // Ability cooldowns / counters
     private int dashCooldown = 0;
     private int jumpsLeft = MAX_JUMPS;
-    // Tracks time since last attack for cooldown purposes
-    private float timeSinceLastAttack = 0;
-    private float timesinceLastReload = 0;
-    private Camera camera;
+    // Tracks time since last reload for cooldown purposes
+    private float timeSinceLastReload = 0;
 
     /**
      * Initializes the component by setting required components and
@@ -89,9 +77,6 @@ public class PlayerActions extends Component {
         // Add event listeners
         entity.getEvents().addListener("walk", this::walk);
         entity.getEvents().addListener("walkStop", this::stopWalking);
-        entity.getEvents().addListener("attack", this::attack);
-        entity.getEvents().addListener("attack", this::weaponAnimation);
-        entity.getEvents().addListener("shoot", this::shoot);
         entity.getEvents().addListener("jumpAttempt", this::jump);
         entity.getEvents().addListener("sprintAttempt", this::sprintAttempt);
         entity.getEvents().addListener("dashAttempt", this::dash);
@@ -99,16 +84,7 @@ public class PlayerActions extends Component {
         entity.getEvents().addListener("crouchStop", () -> crouching = false);
         entity.getEvents().addListener("sprintStart", this::startSprinting);
         entity.getEvents().addListener("sprintStop", this::stopSprinting);
-        // Find camera from any entity with CameraComponent
         entity.getEvents().addListener("reload", this::reload);
-        Array<Entity> entities = ServiceLocator.getEntityService().getEntities();
-        for (Entity entity : entities) {
-            if (entity.getComponent(CameraComponent.class) != null) {
-                camera = entity.getComponent(CameraComponent.class).getCamera();
-
-            }
-        }
-
     }
 
     /**
@@ -141,9 +117,7 @@ public class PlayerActions extends Component {
             updateMidair();
         }
 
-
-        timeSinceLastAttack += ServiceLocator.getTimeSource().getDeltaTime();
-        timesinceLastReload += ServiceLocator.getTimeSource().getDeltaTime();
+        timeSinceLastReload += ServiceLocator.getTimeSource().getDeltaTime();
     }
 
     /**
@@ -260,8 +234,6 @@ public class PlayerActions extends Component {
             if (isGroundJump) {
                 if (!touchingGround()) canJump = false;
                 if (physicsComponent.getBody().getLinearVelocity().y > 0f) canJump = false;
-            } else {
-                if (!stamina.trySpend(DOUBLE_JUMP_COST)) return;
             }
 
             if (canJump) {
@@ -394,128 +366,12 @@ public class PlayerActions extends Component {
         stamina.setInfiniteStamina(true);
     }
 
-    /**
-     * Fires a projectile towards the mouse cursor.
-     */
-    void shoot() {
-        if (ServiceLocator.getTimeSource().isPaused() || timesinceLastReload < 1.5f) return;
-
-        InventoryComponent inventory = entity.getComponent(InventoryComponent.class);
-        Entity gun = inventory.getCurrSlot();
-        if (gun == null) {
-            return;
-        }
-        WeaponsStatsComponent gunStats = gun.getComponent(WeaponsStatsComponent.class);
-        if (gunStats == null) {
-            return;
-        }
-        MagazineComponent mag = gun.getComponent(MagazineComponent.class);
-
-        if (mag == null) {
-            return;
-        }
-        // Check for cooldown, defaulting to zero if no current weapon
-        mag.update();
-        float coolDown = gunStats.getCoolDown();
-        if (this.timeSinceLastAttack < coolDown) {
-            return;
-        }
-
-        if (mag.getCurrentAmmo() <= 0) {
-            Sound attackSound = ServiceLocator.getResourceService().getAsset("sounds/shot_failed.mp3", Sound.class);
-            attackSound.play();
-            return;
-        }
-
-        Sound attackSound = ServiceLocator.getResourceService().getAsset("sounds/laser_blast.mp3", Sound.class);
-        attackSound.play();
-        Entity bullet;
-        if (aimbotEffect != null && aimbotEffect.isActive()) {
-            bullet = ProjectileFactory.createPistolBullet(gunStats, true);
-        } else {
-            bullet = ProjectileFactory.createPistolBullet(gunStats, false);
-        }
-        Vector2 origin = new Vector2(entity.getCenterPosition());
-        bullet.setPosition(new Vector2(origin.x - bullet.getScale().x / 2f,
-                origin.y - bullet.getScale().y / 2f));
-        com.csse3200.game.areas.GameArea area = ServiceLocator.getGameArea();
-        if (area != null) {
-            area.spawnEntity(bullet);
-        } else {
-            ServiceLocator.getEntityService().register(bullet);
-        }
-        PhysicsProjectileComponent projectilePhysics;
-        if (bullet.hasComponent(HomingPhysicsComponent.class)) {
-            projectilePhysics = bullet.getComponent(HomingPhysicsComponent.class);
-        } else {
-            projectilePhysics = bullet.getComponent(PhysicsProjectileComponent.class);
-        }
-        Vector3 destination = camera.unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
-        Vector2 world = new Vector2(destination.x, destination.y);
-        Vector2 dir = new Vector2(destination.x - origin.x, destination.y - origin.y);
-        if (dir.len2() != 0f) dir.nor();
-        entity.getEvents().trigger("player_shoot_order", world, dir);
-        projectilePhysics.fire(new Vector2(destination.x - origin.x, destination.y - origin.y), 5);
-
-        if (unlimitedAmmoEffect != null && unlimitedAmmoEffect.isActive()) {
-//            unlimitedAmmoEffect.apply(gun);  // dont call every shot
-        } else {
-            mag.setCurrentAmmo(mag.getCurrentAmmo() - 1);
-        }
-//        mag.setCurrentAmmo(mag.getCurrentAmmo() - 1);
-
-        timeSinceLastAttack = 0;
-    }
-
     public UnlimitedAmmoEffect getUnlimitedAmmoEffect() {
         return unlimitedAmmoEffect;
     }
 
     public AimbotEffect getAimbotEffect() {
         return aimbotEffect;
-    }
-
-    /**
-     * Performs a melee attack against nearby enemies.
-     */
-    void attack() {
-        if (ServiceLocator.getTimeSource().isPaused()) return;
-        InventoryComponent inventory = entity.getComponent(InventoryComponent.class);
-        Entity melee = inventory.getCurrSlot();
-        if (melee == null) {
-            return;
-        }
-        WeaponsStatsComponent meleeStats = melee.getComponent(WeaponsStatsComponent.class);
-        if (meleeStats == null) {
-            return;
-        }
-        float coolDown = meleeStats != null ? meleeStats.getCoolDown() : 0;
-        if (this.timeSinceLastAttack < coolDown) {
-            return;
-        }
-        Sound attackSound = ServiceLocator.getResourceService().getAsset("sounds/Impact4.ogg", Sound.class);
-        attackSound.play();
-
-        float attackRange = 3f;
-
-        for (Entity enemy : ServiceLocator.getEntityService().getEntities()) {
-            if (enemy != entity) {
-                CombatStatsComponent enemyStats = enemy.getComponent(CombatStatsComponent.class);
-                WeaponsStatsComponent attackStats = entity.getComponent(WeaponsStatsComponent.class);
-                HitboxComponent enemyHitBox = enemy.getComponent(HitboxComponent.class);
-
-                if (enemyStats != null && attackStats != null && enemyHitBox != null) {
-                    if (enemyHitBox.getLayer() == PhysicsLayer.NPC) {
-                        float distance = enemy.getCenterPosition().dst(entity.getCenterPosition());
-                        if (distance <= attackRange) {
-                            enemyStats.takeDamage(attackStats.getBaseAttack());
-                        }
-                    }
-                }
-            }
-        }
-
-        timeSinceLastAttack = 0;
     }
 
     public WeaponsStatsComponent getCurrentWeaponStats() {
@@ -565,8 +421,6 @@ public class PlayerActions extends Component {
      * Makes player reload their equipped weapon
      */
     void reload() {
-
-
         InventoryComponent inventory = entity.getComponent(InventoryComponent.class);
         Entity gun = inventory.getCurrSlot();
 
@@ -574,7 +428,7 @@ public class PlayerActions extends Component {
             MagazineComponent mag = gun.getComponent(MagazineComponent.class);
             if (mag != null) {
 
-                if (timesinceLastReload <= 1.5f) {
+                if (timeSinceLastReload <= 1.5f) {
 
                     return;
                 }
@@ -588,16 +442,13 @@ public class PlayerActions extends Component {
                 }
 
                 reloadSound.play();
-                timesinceLastReload = 0f;
+                timeSinceLastReload = 0f;
+                entity.getEvents().trigger("after reload");
             }
         }
     }
 
-    void weaponAnimation() {
-        if (entity.getComponent(AnimationRenderComponent.class) != null) {
-            entity.getEvents().trigger("anim");
-        }
-    }
+
 
     public void equipWeapon(Entity weapon) {
         if (currentWeapon != null) {
@@ -662,24 +513,6 @@ public class PlayerActions extends Component {
         } else {
             body.setTransform(playerPos.x - handOffsetX, playerPos.y + handOffsetY, 0f);
         }
-    }
-
-    /**
-     * Sets time since last attack, used for testing
-     *
-     * @param timeSinceLastAttack time since last attack
-     */
-    public void setTimeSinceLastAttack(float timeSinceLastAttack) {
-        this.timeSinceLastAttack = timeSinceLastAttack;
-    }
-
-    /**
-     * Sets the camera, used for testing
-     *
-     * @param camera camera
-     */
-    public void setCamera(Camera camera) {
-        this.camera = camera;
     }
 
     public boolean isFacingRight() {

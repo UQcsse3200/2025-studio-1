@@ -102,17 +102,32 @@ public class SettingsMenuDisplay extends UIComponent {
         // Get current values
         UserSettings.Settings settings = UserSettings.get();
 
+        TextField.TextFieldStyle style = new TextField.TextFieldStyle(skin.get(TextField.TextFieldStyle.class));
+        style.font.getData().setScale(1.5f);
+
+
         // Create components
         Label fpsLabel = new Label("FPS Cap:", skin, STYLE_WHITE);
-        fpsText = new TextField(Integer.toString(settings.fps), skin);
+        fpsText = new TextField(Integer.toString(settings.fps), style);
 
         Label fullScreenLabel = new Label("Fullscreen:", skin, STYLE_WHITE);
         fullScreenCheck = new CheckBox("", skin);
         fullScreenCheck.setChecked(settings.fullscreen);
+        Label fullScreenState = new Label(settings.fullscreen ? "ON" : "OFF", skin, STYLE_WHITE);
+        HorizontalGroup fullScreenCheckGroup = new HorizontalGroup();
+        fullScreenCheckGroup.space(15f);
+        fullScreenCheckGroup.addActor(fullScreenCheck);
+        fullScreenCheckGroup.addActor(fullScreenState);
 
         Label vsyncLabel = new Label("VSync:", skin, STYLE_WHITE);
         vsyncCheck = new CheckBox("", skin);
         vsyncCheck.setChecked(settings.vsync);
+        Label vsyncCheckState = new Label(settings.vsync ? "ON" : "OFF", skin, STYLE_WHITE);
+        HorizontalGroup vsyncCheckGroup = new HorizontalGroup();
+        vsyncCheckGroup.space(15f);
+        vsyncCheckGroup.addActor(vsyncCheck);
+        vsyncCheckGroup.addActor(vsyncCheckState);
+
 
         Label uiScaleLabel = new Label("ui Scale (Unused):", skin, STYLE_WHITE);
         uiScaleSlider = new Slider(0.2f, 2f, 0.1f, false, skin);
@@ -128,6 +143,20 @@ public class SettingsMenuDisplay extends UIComponent {
         Label musicLabel = new Label("Music:", skin, STYLE_WHITE);
         musicCheck = new CheckBox("", skin);
         musicCheck.setChecked(settings.isMusicEnabled());
+        Label musicStateLabel = new Label(musicCheck.isChecked() ? "ON" : "OFF", skin, STYLE_WHITE);
+        HorizontalGroup musicCheckGroup = new HorizontalGroup();
+        musicCheckGroup.space(15f);
+        musicCheckGroup.addActor(musicCheck);
+        musicCheckGroup.addActor(musicStateLabel);
+
+        //Enlarge label text
+        fpsLabel.setFontScale(2f);
+        fullScreenLabel.setFontScale(2f);
+        vsyncLabel.setFontScale(2f);
+        uiScaleLabel.setFontScale(2f);
+        displayModeLabel.setFontScale(2f);
+        musicLabel.setFontScale(2f);
+
 
         // Layout table
         Table table = new Table();
@@ -137,11 +166,11 @@ public class SettingsMenuDisplay extends UIComponent {
 
         table.row().padTop(10f);
         table.add(fullScreenLabel).right().padRight(15f);
-        table.add(fullScreenCheck).left();
+        table.add(fullScreenCheckGroup).left();
 
         table.row().padTop(10f);
         table.add(vsyncLabel).right().padRight(15f);
-        table.add(vsyncCheck).left();
+        table.add(vsyncCheckGroup).left();
 
         table.row().padTop(10f);
         Table uiScaleTable = new Table();
@@ -157,7 +186,7 @@ public class SettingsMenuDisplay extends UIComponent {
 
         table.row().padTop(10f);
         table.add(musicLabel).right().padRight(15f);
-        table.add(musicCheck).left();
+        table.add(musicCheckGroup).left();
 
         // Events on inputs
         uiScaleSlider.addListener(
@@ -171,11 +200,27 @@ public class SettingsMenuDisplay extends UIComponent {
                 (Event event) -> {
                     settings.setMusicEnabled(musicCheck.isChecked());
                     UserSettings.set(settings, true);
+                    musicStateLabel.setText(musicCheck.isChecked() ? "ON" : "OFF");
                     return true;
                 });
 
+        fullScreenCheck.addListener(event -> {
+            boolean checked = fullScreenCheck.isChecked();
+            fullScreenState.setText(checked ? "ON" : "OFF");
+            return true;
+        });
+
+
+        vsyncCheck.addListener(event -> {
+            boolean checked = vsyncCheck.isChecked();
+            fullScreenState.setText(checked ? "ON" : "OFF");
+            return true;
+        });
+
+
         return table;
     }
+
 
     /**
      * Returns the display mode from the provided list that matches the current system mode,
@@ -223,10 +268,12 @@ public class SettingsMenuDisplay extends UIComponent {
     private Table makeMenuBtns() {
         TextButton exitBtn = new TextButton("Exit", skin);
         TextButton applyBtn = new TextButton("Apply", skin);
+        TextButton controlBtn = new TextButton("Control", skin);
 
         // Label text size
         exitBtn.getLabel().setFontScale(1.5f);
         applyBtn.getLabel().setFontScale(1.5f);
+        controlBtn.getLabel().setFontScale(1.5f);
 
         // Button sizing relative to screen
         float btnW = stage.getWidth() * 0.10f;
@@ -237,6 +284,7 @@ public class SettingsMenuDisplay extends UIComponent {
         table.center();
         table.add(exitBtn).width(btnW).height(btnH).padRight(gap);
         table.add(applyBtn).width(btnW).height(btnH).padLeft(gap);
+        table.add(controlBtn).width(btnW).height(btnH).padLeft(gap);
 
         // Button actions
         exitBtn.addListener(
@@ -258,9 +306,44 @@ public class SettingsMenuDisplay extends UIComponent {
                         applyChanges();
                     }
                 });
+        controlBtn.addListener(
+                new ChangeListener() {
+                    @Override
+                    public void changed(ChangeEvent changeEvent, Actor actor) {
+                        ServiceLocator.getButtonSoundService().playClick();
+                        // This line pushes the new control screen/ui
+                        showControlsMenu();
+                    }
+                });
 
         return table;
     }
+
+    /**
+     * Returns the root {@link Table} of this UI component.
+     * This table contains all the UI elements for the current menu or screen.
+     */
+    public Table getRootTable() {
+        return rootTable;
+    }
+
+    /**
+     * Switches the UI from the settings menu to the controls/keybindings display.
+     * The {@code ControlDisplay} is constructed with a reference to this settings menu
+     * and the current stage, so that it can return to the settings menu when the user
+     * clicks the "Back" button.
+     */
+    private void showControlsMenu() {
+        rootTable.setVisible(false);
+        rootTable.remove();
+        ControlDisplay controlDisplay = new ControlDisplay(game, () -> {
+            rootTable.setVisible(true);
+            stage.addActor(rootTable);
+        });
+        controlDisplay.create();
+
+    }
+
 
     /**
      * Reads values from the UI controls and writes them to {@code UserSettings},
@@ -281,6 +364,7 @@ public class SettingsMenuDisplay extends UIComponent {
 
         UserSettings.set(settings, true);
         ServiceLocator.getMusicService().setMenuMusicPlaying(musicCheck.isChecked());
+        ServiceLocator.getMusicService().setForestMusicPlaying(musicCheck.isChecked());
     }
 
     /**

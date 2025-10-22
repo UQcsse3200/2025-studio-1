@@ -10,6 +10,7 @@ import com.csse3200.game.GdxGame;
 import com.csse3200.game.extensions.GameExtension;
 import com.csse3200.game.input.InputService;
 import com.csse3200.game.rendering.RenderService;
+import com.csse3200.game.services.ButtonSoundService;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
 import org.junit.jupiter.api.Assertions;
@@ -28,6 +29,7 @@ class TutorialScreenDisplayTest {
     private GdxGame mockGame;
     private TutorialScreenDisplay display;
     private Stage stage;
+    private ButtonSoundService mockSoundService;
 
     @BeforeEach
     void createConditions() {
@@ -42,12 +44,34 @@ class TutorialScreenDisplayTest {
         ServiceLocator.registerInputService(new InputService());
 
         mockGame = mock(GdxGame.class);
+        mockSoundService = mock(ButtonSoundService.class);
+        ServiceLocator.registerButtonSoundService(mockSoundService);
 
         TutorialStep step1 = new TutorialStep("Title 1", "Descition 1", null);
         TutorialStep step2 = new TutorialStep("Title 2", "Descition 2", null);
 
         display = new TutorialScreenDisplay(mockGame, List.of(step1, step2));
         display.create();
+    }
+
+    private Table captureRoot() {
+        ArgumentCaptor<Table> cap = ArgumentCaptor.forClass(Table.class);
+        verify(stage, atLeastOnce()).addActor(cap.capture());
+        return cap.getValue();
+    }
+
+    private static ImageButton[] findPrevNext(Table root) {
+        for (Actor a : root.getChildren()) {
+            if (a instanceof Table animRow) {
+                ImageButton prev = null, next = null;
+                if (animRow.getChildren().size >= 2) {
+                    if (animRow.getChildren().first() instanceof ImageButton ib) prev = ib;
+                    if (animRow.getChildren().peek()  instanceof ImageButton ib) next = ib;
+                }
+                if (prev != null && next != null) return new ImageButton[]{prev, next};
+            }
+        }
+        return new ImageButton[]{null, null};
     }
 
     @Test
@@ -135,5 +159,69 @@ class TutorialScreenDisplayTest {
         assertTrue(hasNextButton);
     }
 
+    @Test
+    void testShowStepWithClipLoadsAnimation() {
+        TutorialClip mockClip = mock(TutorialClip.class);
+        TutorialStep stepWithClip = new TutorialStep("Title", "Description", mockClip);
+        TutorialScreenDisplay displayWithClip = new TutorialScreenDisplay(mockGame, List.of(stepWithClip));
 
+        displayWithClip.create();
+
+        assertDoesNotThrow(() -> displayWithClip.showStep(0));
+    }
+
+    @Test
+    void BadClip_hitsCatch_andShowsFallback() {
+        TutorialClip bad = new TutorialClip("images/does_not_exist", "frame_%04d.png", 3, 12f, true);
+        TutorialStep s1 = new TutorialStep("HasBadClip", "Desc", bad);
+
+        TutorialScreenDisplay display = new TutorialScreenDisplay(mockGame, List.of(s1));
+        display.create();
+        Table root = captureRoot();
+
+        display.showStep(0);
+
+        boolean foundFallback = false;
+        for (Actor a : root.getChildren()) {
+            if (a instanceof Table t) {
+                for (Actor b : t.getChildren()) {
+                    if (b instanceof Label l && "Demo unavailable".contentEquals(l.getText())) {
+                        foundFallback = true;
+                    }
+                }
+            }
+        }
+        assertTrue(foundFallback);
+    }
+
+    @Test
+    void prevAndNext_buttons_playClickSound() {
+        TutorialStep s1 = new TutorialStep("A", "B", null);
+        TutorialStep s2 = new TutorialStep("C", "D", null);
+        TutorialScreenDisplay display = new TutorialScreenDisplay(mockGame, List.of(s1, s2));
+
+        display.create();
+        Table root = captureRoot();
+
+        // Click Next
+        ImageButton[] nav = findPrevNext(root);
+        assertNotNull(nav[1]);
+        nav[1].fire(new com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent());
+        verify(mockSoundService, atLeastOnce()).playClick();
+
+        Table root2 = captureRoot();
+        ImageButton[] nav2 = findPrevNext(root2);
+        assertNotNull(nav2[0]);
+
+        // Click Prev
+        nav2[0].fire(new com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent());
+        verify(mockSoundService, atLeast(2)).playClick();
+    }
+
+    @Test
+    void disposeRunsWithoutException() {
+        var display = new TutorialScreenDisplay(mockGame, List.of(new TutorialStep("T","D", null)));
+        display.create();
+        assertDoesNotThrow(display::dispose);
+    }
 }

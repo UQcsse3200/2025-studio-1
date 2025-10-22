@@ -22,6 +22,7 @@ public class KeycardGateComponent extends Component {
     private final int requiredLevel;
     private final Runnable onUnlock;
     private boolean unlocked = false;
+
     public KeycardGateComponent(int requiredLevel, Runnable onUnlock) {
         this.requiredLevel = requiredLevel;
         this.onUnlock = onUnlock;
@@ -57,11 +58,10 @@ public class KeycardGateComponent extends Component {
         if (meEntity != this.entity) return;
 
         // === cheat bypass ===
-        String keycardGate = "KeycardGate";
         if (GLOBAL_OVERRIDE) {
             if (!unlocked) {
                 unlock();
-                Gdx.app.log(keycardGate, "Override enabled: gate unlocked (bypassing level " + requiredLevel + ")");
+                Gdx.app.log("KeycardGate", "Override enabled: gate unlocked (bypassing level " + requiredLevel + ")");
                 if (onUnlock != null) {
                     Gdx.app.postRunnable(onUnlock);
                 }
@@ -70,6 +70,16 @@ public class KeycardGateComponent extends Component {
         }
 
         // === normal keycard check ===
+        keycardCheck(otherEntity, "KeycardGate");
+    }
+
+    /**
+     * A helper method for the onCOllisionStart method
+     *
+     * @param otherEntity The other entity whose hitbox is currently colliding
+     * @param keycardGate The string "KeycardGate"
+     */
+    private void keycardCheck(Entity otherEntity, String keycardGate) {
         InventoryComponent inventory = otherEntity.getComponent(InventoryComponent.class);
         if (inventory != null) {
             int level = inventory.getKeycardLevel();

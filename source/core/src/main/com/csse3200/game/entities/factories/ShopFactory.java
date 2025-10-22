@@ -1,7 +1,7 @@
 package com.csse3200.game.entities.factories;
 
 import com.csse3200.game.areas.ForestGameArea;
-import com.csse3200.game.areas.Reception;
+import com.csse3200.game.areas.GameArea;
 import com.csse3200.game.components.screens.ShopScreenDisplay;
 import com.csse3200.game.components.shop.ShopManager;
 import com.csse3200.game.entities.Entity;
@@ -12,7 +12,7 @@ public final class ShopFactory {
         throw new IllegalStateException("Instantiating static util class");
     }
 
-    public static Entity createShop(Reception area,
+    public static Entity createShop(GameArea area,
                                     ShopManager manager,
                                     String kioskTexture) {
 

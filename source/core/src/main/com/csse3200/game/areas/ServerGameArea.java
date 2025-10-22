@@ -12,11 +12,13 @@ import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.Benches;
 import com.csse3200.game.entities.configs.ItemSpawnConfig;
 import com.csse3200.game.entities.factories.InteractableStationFactory;
-import com.csse3200.game.entities.factories.characters.NPCFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.entities.factories.system.TeleporterFactory;
 import com.csse3200.game.entities.spawner.ItemSpawner;
+import com.csse3200.game.lighting.LightSpawner;
 import com.csse3200.game.services.ServiceLocator;
+
+import java.util.List;
 
 /**
  * Server Room. Has several platforms as well as server racks sprites.
@@ -25,9 +27,9 @@ import com.csse3200.game.services.ServiceLocator;
 public class ServerGameArea extends GameArea {
     private static final float WALL_WIDTH = 0.1f;
     private static final float WALL_HEIGHT = 0.1f;
-    private static final float ROOM_DIFF_NUMBER = 9;
     private static GridPoint2 playerSpawn = new GridPoint2(10, 10);
     private Entity player;
+    private static boolean isCleared = false;
 
     /**
      * Constructor for the Server Room, simples calls GameArea constructor.
@@ -37,6 +39,8 @@ public class ServerGameArea extends GameArea {
      */
     public ServerGameArea(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
         super(terrainFactory, cameraComponent);
+
+        this.getEvents().addListener("room cleared", ServerGameArea::clearRoom);
     }
 
 
@@ -71,6 +75,23 @@ public class ServerGameArea extends GameArea {
         GenericLayout.setupTerrainWithOverlay(this, terrainFactory, TerrainType.SERVER_ROOM,
                 new Color(0.10f, 0.12f, 0.10f, 0.24f));
 
+        //Checks to see if the lighting service is not null and then sets the ambient light and turns on shadows for the room.
+        var ls = ServiceLocator.getLightingService();
+        if (ls != null && ls.getEngine() != null) {
+            ls.getEngine().setAmbientLight(0.65f);
+            ls.getEngine().getRayHandler().setShadows(true);
+        }
+
+        LightSpawner.spawnCeilingCones(
+                this,
+                List.of(
+                        new GridPoint2(4,21),
+                        new GridPoint2(12,21),
+                        new GridPoint2(20,21)
+                ),
+                new Color(0.37f, 0.82f, 0.9f, 0.8f)
+        );
+
         displayUI();
         spawnTerrain();
         spawnPlatforms();
@@ -82,17 +103,15 @@ public class ServerGameArea extends GameArea {
         spawnTeleporter();
         spawnHealthBench();
         spawnVisibleFloor();
-
         player = spawnPlayer();
-        spawnGPTs();
 
-        ItemSpawner itemSpawner = new ItemSpawner(this);
-        itemSpawner.spawnItems(ItemSpawnConfig.servermap());
+        if (!ServerGameArea.isCleared) {
+            startWaves(player);
+            ItemSpawner itemSpawner = new ItemSpawner(this);
+            itemSpawner.spawnItems(ItemSpawnConfig.servermap());
+        }
 
-        Entity ui = new Entity();
-        ui.addComponent(new GameAreaDisplay("Server"))
-                .addComponent(new com.csse3200.game.components.gamearea.FloorLabelDisplay("Floor 10"));
-        spawnEntity(ui);
+        displayUIEntity("Server", "Floor 10");
     }
 
     private void displayUI() {
@@ -195,18 +214,6 @@ public class ServerGameArea extends GameArea {
     }
 
     /**
-     * Spawn 2 high-level GPTs in the room as enemies.
-     */
-    private void spawnGPTs() {
-        Entity ghost1 = NPCFactory.createGhostGPT(player, this, ServiceLocator.getDifficulty().getRoomDifficulty(ServerGameArea.ROOM_DIFF_NUMBER));
-        GridPoint2 ghost1Pos = new GridPoint2(25, 20);
-        spawnEntityAt(ghost1, ghost1Pos, true, false);
-        Entity ghost2 = NPCFactory.createGhostGPT(player, this, ServiceLocator.getDifficulty().getRoomDifficulty(ServerGameArea.ROOM_DIFF_NUMBER));
-        GridPoint2 ghost2Pos = new GridPoint2(25, 20);
-        spawnEntityAt(ghost2, ghost2Pos, true, false);
-    }
-
-    /**
      * Builds terrain for SPAWN_ROOM and wraps the visible screen with thin physics walls
      * based on the camera viewport. Also adds a right-side door trigger that loads next level.
      */
@@ -298,6 +305,8 @@ public class ServerGameArea extends GameArea {
         rightDoor.setPosition(b.rightX() - WALL_WIDTH - 0.001f, rightDoorY);
         rightDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadTunnel));
         spawnEntity(rightDoor);
+
+        if (!ServerGameArea.isCleared) registerDoors(new Entity[]{rightDoor, leftDoor});
     }
 
     private void loadTunnel() {
@@ -321,5 +330,30 @@ public class ServerGameArea extends GameArea {
     @Override
     public String toString() {
         return "Server";
+    }
+
+    /**
+     * Clear room, set this room's static
+     * boolean isCleared variable to true
+     */
+    public static void clearRoom() {
+        ServerGameArea.isCleared = true;
+        logger.debug("Server is cleared");
+    }
+
+    /**
+     * Unclear room, set this room's static
+     * boolean isCleared variable to false
+     */
+    public static void unclearRoom() {
+        ServerGameArea.isCleared = false;
+        logger.debug("Server is uncleared");
+    }
+
+    /**
+     * FOR TESTING PURPOSES
+     */
+    public static boolean getClearField() {
+        return ServerGameArea.isCleared;
     }
 }

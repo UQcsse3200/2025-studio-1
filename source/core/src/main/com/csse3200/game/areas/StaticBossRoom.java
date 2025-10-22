@@ -7,6 +7,7 @@ import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.components.DoorComponent;
+import com.csse3200.game.components.KeycardGateComponent;
 import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.ItemSpawnConfig;
@@ -14,12 +15,13 @@ import com.csse3200.game.entities.factories.KeycardFactory;
 import com.csse3200.game.entities.factories.characters.BossFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.entities.spawner.ItemSpawner;
+import com.csse3200.game.lighting.LightSpawner;
 import com.csse3200.game.physics.PhysicsLayer;
 import com.csse3200.game.physics.components.ColliderComponent;
 import com.csse3200.game.physics.components.HitboxComponent;
 import com.csse3200.game.services.ServiceLocator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import java.util.List;
 
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 
@@ -39,9 +41,9 @@ import com.csse3200.game.physics.components.PhysicsComponent;
  * Room is empty except for boss and player
  */
 public class StaticBossRoom extends GameArea {
-    private static final Logger logger = LoggerFactory.getLogger(StaticBossRoom.class);
     private static final float WALL_WIDTH = 0.1f;
     private static GridPoint2 playerSpawn = new GridPoint2(3, 10);
+    private static boolean isCleared;
     private Entity player;
 
     private DoorComponent rightDoorComp;
@@ -58,6 +60,8 @@ public class StaticBossRoom extends GameArea {
      */
     public StaticBossRoom(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
         super(terrainFactory, cameraComponent);
+
+        this.getEvents().addListener("room cleared", StaticBossRoom::clearRoom);
     }
 
 
@@ -91,8 +95,25 @@ public class StaticBossRoom extends GameArea {
         GenericLayout.setupTerrainWithOverlay(this, terrainFactory, TerrainType.SERVER_ROOM,
                 new Color(0.10f, 0.12f, 0.10f, 0.24f));
 
+        //Checks to see if the lighting service is not null and then sets the ambient light and turns on shadows for the room.
+        var ls = ServiceLocator.getLightingService();
+        if (ls != null && ls.getEngine() != null) {
+            ls.getEngine().setAmbientLight(0.65f);
+            ls.getEngine().getRayHandler().setShadows(true);
+        }
+
+        LightSpawner.spawnCeilingCones(
+                this,
+                List.of(
+                        new GridPoint2(4,21),
+                        new GridPoint2(12,21),
+                        new GridPoint2(20,21)
+                ),
+                new Color(0.37f, 0.82f, 0.9f, 0.8f)
+        );
+
         spawnBordersAndDoors();
-        displayUI();
+        displayUIEntity("Static Boss Room", null);
 
         player = spawnPlayer();
 
@@ -100,16 +121,14 @@ public class StaticBossRoom extends GameArea {
         spawnPasswordTerminal(new GridPoint2(14, 7));
         spawnObjectDoors(new GridPoint2(0, 7), new GridPoint2(28, 7));
 
-        ItemSpawner itemSpawner = new ItemSpawner(this);
-        itemSpawner.spawnItems(ItemSpawnConfig.bossmap());
+        if (!StaticBossRoom.isCleared) {
+            spawnBoss();
+            ItemSpawner itemSpawner = new ItemSpawner(this);
+            itemSpawner.spawnItems(ItemSpawnConfig.bossmap());
+        }
 
+        spawnPlatforms();
         spawnVisibleFloor();
-    }
-
-    private void displayUI() {
-        Entity ui = new Entity();
-        ui.addComponent(new GameAreaDisplay("Static Boss Room"));
-        spawnEntity(ui);
     }
 
     private Entity spawnPlayer() {
@@ -133,20 +152,17 @@ public class StaticBossRoom extends GameArea {
         });
 
         spawnEntityAt(boss, pos, true, true);
+        registerEnemy(boss);
     }
 
     /**
-     * Adds an interactable orange button in the room.
-     * When the player approaches the button, a prompt will appear saying
-     * <b>"Press E to destroy the factory"</b>. When the player presses E,
-     * the {@link #makeTextConfig()} logic is executed — unlocking the right door.
+     * Adds a text prompt where the player collects the keycard
+     * which tells the player the password
      *
      * @param pos The grid position to spawn the button at.
      */
     private void addWinText(Vector2 pos) {
         Entity text = InteractableStationFactory.createBaseStation();
-        //text.addComponent(new TextureRenderComponent("images/OrangeButton.png"));
-        //text.getComponent(TextureRenderComponent.class).scaleEntity();
         text.scaleHeight(2f);
         PhysicsUtils.setScaledCollider(text, 1.2f, 1.2f);
         text.getComponent(ColliderComponent.class)
@@ -192,7 +208,6 @@ public class StaticBossRoom extends GameArea {
         if (cameraComponent == null) return;
 
         Bounds b = getCameraBounds(cameraComponent);
-        //  addSolidWallLeft(b, WALL_WIDTH);
         addSolidWallTop(b, WALL_WIDTH);
         addSolidWallRight(b, WALL_WIDTH);
 
@@ -204,11 +219,17 @@ public class StaticBossRoom extends GameArea {
             leftTop.setPosition(b.leftX(), leftDoorY + leftDoorHeight);
             spawnEntity(leftTop);
         }
+
+
+        Entity leftDoorWall = ObstacleFactory.createWall(WALL_WIDTH, leftDoorHeight);
+        leftDoorWall.setPosition(b.leftX(), leftDoorY);
+        spawnEntity(leftDoorWall);
+
         Entity leftDoor = ObstacleFactory.createDoorTrigger(WALL_WIDTH, leftDoorHeight);
         leftDoor.setPosition(b.leftX() + 0.001f, leftDoorY);
         leftDoor.addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
         leftDoor.addComponent(new HitboxComponent().setLayer(PhysicsLayer.OBSTACLE));
-        leftDoor.addComponent(new DoorComponent(this::loadSecurity));
+        leftDoor.addComponent(new DoorComponent(this::loadTunnel));
         spawnEntity(leftDoor);
 
 
@@ -220,14 +241,24 @@ public class StaticBossRoom extends GameArea {
         DoorComponent doorComp = new DoorComponent(this::loadSecretRoom);
         doorComp.setLocked(true);
         rightDoor.addComponent(doorComp);
+        rightDoor.addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
+        rightDoor.addComponent(new HitboxComponent().setLayer(PhysicsLayer.OBSTACLE));
         spawnEntity(rightDoor);
         this.rightDoorComp = doorComp;
         StaticBossRoom.exposedRightDoor = doorComp;
     }
+    private void spawnPlatforms() {
+        Entity platform1 = ObstacleFactory.createThinFloor();
+        GridPoint2 platform1Pos = new GridPoint2(4, 10);
+        spawnEntityAt(platform1, platform1Pos, false, false);
 
-    public void loadSecurity() {
-        SecurityGameArea.setRoomSpawn(new GridPoint2(26, 8));
-        clearAndLoad(() -> new SecurityGameArea(terrainFactory, cameraComponent));
+        Entity platform3 = ObstacleFactory.createThinFloor();
+        GridPoint2 platform3Pos = new GridPoint2(22, 10);
+        spawnEntityAt(platform3, platform3Pos, false, false);
+    }
+
+    public void loadSecretRoom() {
+        clearAndLoad(() -> new SecretRoomGameArea(terrainFactory, cameraComponent));
     }
 
 
@@ -236,12 +267,8 @@ public class StaticBossRoom extends GameArea {
     }
 
     public void loadTunnel() {
-        TunnelGameArea.setRoomSpawn(new GridPoint2(26, 8));
+        TunnelGameArea.setRoomSpawn(new GridPoint2(25, 7));
         clearAndLoad(() -> new TunnelGameArea(terrainFactory, cameraComponent));
-    }
-
-    private void loadSecretRoom() {
-        clearAndLoad(() -> new SecretRoomGameArea(terrainFactory, cameraComponent));
     }
 
     /**
@@ -284,5 +311,23 @@ public class StaticBossRoom extends GameArea {
             public void upgrade(boolean playerNear, com.csse3200.game.entities.Entity player, Label prompt) {
             }
         };
+    }
+
+    /**
+     * Clear room, set this room's static
+     * boolean isCleared variable to true
+     */
+    public static void clearRoom() {
+        StaticBossRoom.isCleared = true;
+        logger.debug("Static Boss Room is cleared");
+    }
+
+    /**
+     * Unclear room, set this room's static
+     * boolean isCleared variable to false
+     */
+    public static void unclearRoom() {
+        StaticBossRoom.isCleared = false;
+        logger.debug("Static Boss Room is uncleared");
     }
 }
