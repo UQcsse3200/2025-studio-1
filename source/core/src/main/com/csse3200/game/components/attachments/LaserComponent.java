@@ -9,6 +9,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import com.csse3200.game.components.CameraComponent;
+import com.csse3200.game.components.player.InventoryComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.rendering.RenderComponent;
 import com.csse3200.game.services.ServiceLocator;
@@ -29,13 +30,24 @@ public class LaserComponent extends RenderComponent {
 
     @Override
     public void draw(SpriteBatch batch) {
-        Vector2 gunPos = entity.getPosition();
-        gunPos.y += 0.35f;
-        gunPos.x += 1f;
+        Entity player = ServiceLocator.getPlayer();
+        if (player == null) {
+            return;
+        }
+        InventoryComponent playerInv = player.getComponent(InventoryComponent.class);
+        if (playerInv.get(playerInv.getEquippedSlot()) == null) {
+            return;
+        }
+
+        if (!playerInv.get(playerInv.getEquippedSlot()).hasComponent(LaserComponent.class)) {
+            return;
+        }
+        Vector2 gunPos = new Vector2(ServiceLocator.getPlayer().getCenterPosition());
+        gunPos.y -= 0.42f;
+        gunPos.x += 0.5f;
         Vector3 end = camera.unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
         batch.end();
-
-        shapeRenderer.setProjectionMatrix(batch.getProjectionMatrix());
+        shapeRenderer.setProjectionMatrix(camera.combined);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
         shapeRenderer.setColor(color);
         shapeRenderer.line(gunPos, new Vector2(end.x, end.y));
@@ -43,4 +55,5 @@ public class LaserComponent extends RenderComponent {
 
         batch.begin();
     }
+
 }
