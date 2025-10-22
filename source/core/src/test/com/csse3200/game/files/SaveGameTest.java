@@ -1,9 +1,7 @@
 package com.csse3200.game.files;
 
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.csse3200.game.components.AmmoStatsComponent;
 import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.components.Component;
@@ -18,21 +16,18 @@ import com.csse3200.game.entities.factories.items.WeaponsFactory;
 import com.csse3200.game.extensions.GameExtension;
 import com.csse3200.game.physics.PhysicsEngine;
 import com.csse3200.game.physics.PhysicsService;
-import com.csse3200.game.physics.components.PhysicsComponent;
 import com.csse3200.game.rendering.RenderService;
-import com.csse3200.game.rendering.TextureRenderComponent;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import java.security.Provider;
 import java.util.*;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
@@ -104,6 +99,7 @@ public class SaveGameTest {
         player.setPosition(new Vector2(POS_X, POS_Y));
         player.getComponent(InventoryComponent.class).setKeycardLevel(keyCard);
         Avatar playerAvatarTest = new Avatar("testAvatar", "test", "testAvatarTex", 10, 5, 2, " ");
+
         ServiceLocator.registerResourceService(mock(ResourceService.class));
         ServiceLocator.registerPhysicsService(mock(PhysicsService.class));
         ServiceLocator.registerResourceService(mock(ResourceService.class));
@@ -147,12 +143,11 @@ public class SaveGameTest {
     @Test
     void inventoryGetsSetTest() {
         inventoryTest = testState.getInventory();
-        assertEquals("[null, null, null, null, null]",inventoryTest.toString());
+        assertEquals("[null, null, null, null, null]", inventoryTest.toString());
     }
 
     @Test
-    void
-    inventoryNotEmptyTest() {
+    void inventoryNotEmptyTest() {
         InventoryComponent nonEmptyInv = player.getComponent(InventoryComponent.class);
         Entity weapon = WeaponsFactory.createWeapon(Weapons.DAGGER);
         nonEmptyInv.addItem(weapon);
@@ -169,12 +164,12 @@ public class SaveGameTest {
     void getPlayerInfoTest() {
         testState.setPlayer(player);
         playerInfo = testState.getPlayer();
-        assertEquals( testStats.avatarLoad, playerInfo.avatar);
+        assertEquals(testStats.avatarLoad, playerInfo.avatar);
         assertEquals(testStats.stamLoad, playerInfo.maxStamina);
         assertEquals(testStats.ammoLoad, playerInfo.ammoReserve);
-        assertEquals( testStats.processorLoad, playerInfo.processor);
+        assertEquals(testStats.processorLoad, playerInfo.processor);
         assertEquals(testStats.keyCardLvl, playerInfo.keyCardLevel);
-        assertEquals( testStats.healthLoad, playerInfo.currentHealth);
+        assertEquals(testStats.healthLoad, playerInfo.currentHealth);
         assertEquals(testStats.possLoad, playerInfo.playerPos);
         assertEquals(testStats.maxHealth, playerInfo.maxHealth);
     }
