@@ -91,10 +91,47 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">RadixTrie</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
-<div class="block">Compressed (radix) trie with per-node cached top-5 completions.
- Insert all command names once; suggestions are then O(m + k) where:
- - m = prefix traversal, k = number of edges inspected on the path.
- Returns at most 5 suggestions in lexicographic order.</div>
+<div class="block"><p><strong>RadixTrie</strong> is a compressed (radix) trie for command-name autocompletion.
+ Each node caches the lexicographically smallest 5 full-word completions in its
+ subtree, enabling <a href="#suggestTopK(java.lang.String)"><code>suggestTopK(String)</code></a> to run in <em>O(m)</em> time, where
+ <code>m</code> is the length of the query prefix.</p>
+
+ <h2 id="features-heading">Features</h2>
+ <ul>
+   <li>Compressed edges (radix) for memory efficiency and fewer pointer traversals.</li>
+   <li>Per-node <em>top-K</em> cache (K = 5) for fast suggestions without DFS.</li>
+   <li>Deterministic, lexicographic ordering of suggestions using <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html#compareTo(java.lang.String)" title="class or interface in java.lang" class="external-link"><code>String.compareTo(String)</code></a>.</li>
+   <li>Duplicate inserts are ignored; null/empty inputs are safely ignored.</li>
+ </ul>
+
+ <h2 id="complexity-heading">Complexity</h2>
+ <ul>
+   <li><b>Insertion:</b> Amortized O(L · log B) where L is word length and B is the
+       bucket size (edges that share the same first character). Buckets stay sorted.</li>
+   <li><b>Query:</b> O(m) traversal to the prefix locus, then O(1) to return the cached list.</li>
+ </ul>
+
+ <h2 id="thread-safety-heading">Thread safety</h2>
+ <p>Instances are <strong>not</strong> thread-safe. If you share a trie across threads,
+ synchronize externally around mutations and queries.</p>
+
+ <h2 id="case-behavior-heading">Case behavior</h2>
+ <p>Traversal is case-sensitive. By default, <a href="#suggestTopK(java.lang.String)"><code>suggestTopK(String)</code></a> also performs a
+ <em>first-letter case fallback</em> (e.g., the query <code>"he"</code> also considers <code>"He"</code>).
+ Results remain strictly lexicographic by <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html#compareTo(java.lang.String)" title="class or interface in java.lang" class="external-link"><code>String.compareTo(String)</code></a>. If you prefer purely
+ case-sensitive behavior, remove the wrapper logic and call <code>suggestOneCase(String)</code>.</p>
+
+ <h2 id="example-heading">Example</h2>
+ <pre><code>
+ RadixTrie trie = new RadixTrie();
+ trie.insertAll(List.of("help", "heal", "heap", "hello", "helm"));
+ List&lt;String&gt; top = trie.suggestTopK("he");
+ // =&gt; ["heal", "heap", "hello", "helm", "help"]
+ </code></pre></div>
+<dl class="notes">
+<dt>Since:</dt>
+<dd>1.0</dd>
+</dl>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -124,13 +161,24 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#clear()" class="member-name-link">clear</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Removes all entries from this trie.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#insert(java.lang.String)" class="member-name-link">insert</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;word)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#suggestTopK(java.lang.String)" class="member-name-link">suggestTopK</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;prefix)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Inserts a single word into the trie.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#insertAll(java.util.Collection)" class="member-name-link">insertAll</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;words)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Inserts all words from the given collection.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#suggestTopK(java.lang.String)" class="member-name-link">suggestTopK</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;prefix)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Returns up to 5 lexicographically smallest completions for the given <code>prefix</code>.</div>
+</div>
 </div>
 </div>
 </div>
@@ -166,18 +214,71 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="clear()">
 <h3>clear</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">clear</span>()</div>
+<div class="block">Removes all entries from this trie.
+ <p>The root node object is preserved (to avoid allocation churn), but its state,
+ children, and caches are cleared.</p></div>
+<dl class="notes">
+<dt>Since:</dt>
+<dd>1.0</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="insertAll(java.util.Collection)">
+<h3>insertAll</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">insertAll</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;words)</span></div>
+<div class="block">Inserts all words from the given collection.
+ <ul>
+   <li>Null collections are ignored.</li>
+   <li>Null or empty strings in the collection are ignored.</li>
+   <li>Duplicate words have no effect beyond the first insertion.</li>
+ </ul></div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>words</code> - collection of words to insert (may be null)</dd>
+<dt>Since:</dt>
+<dd>1.0</dd>
+</dl>
 </section>
 </li>
 <li>
 <section class="detail" id="insert(java.lang.String)">
 <h3>insert</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">insert</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;word)</span></div>
+<div class="block">Inserts a single word into the trie.
+ <ul>
+   <li>If <code>word</code> is null or empty, the call is a no-op.</li>
+   <li>If <code>word</code> already exists, the call is a no-op.</li>
+ </ul></div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>word</code> - the word to insert (full completion string)</dd>
+<dt>Since:</dt>
+<dd>1.0</dd>
+</dl>
 </section>
 </li>
 <li>
 <section class="detail" id="suggestTopK(java.lang.String)">
 <h3>suggestTopK</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</span>&nbsp;<span class="element-name">suggestTopK</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;prefix)</span></div>
+<div class="block">Returns up to 5 lexicographically smallest completions for the given <code>prefix</code>.
+ <ul>
+   <li>If <code>prefix</code> is <code>null</code> or empty, returns the global top-K from the root.</li>
+   <li>If the prefix does not exist in the trie, returns an empty list.</li>
+   <li>The returned list is unmodifiable and reflects the trie's state at call time.</li>
+ </ul>
+
+ <p>O(m) where m is the prefix length: this method walks the compressed path and then
+ returns a precomputed cache. It also performs a first-letter case fallback (see “Case behavior”).</p></div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>prefix</code> - the prefix to complete (may be null or empty)</dd>
+<dt>Returns:</dt>
+<dd>an unmodifiable list containing at most 5 suggestions in lexicographic order</dd>
+<dt>Since:</dt>
+<dd>1.0</dd>
+</dl>
 </section>
 </li>
 </ul>

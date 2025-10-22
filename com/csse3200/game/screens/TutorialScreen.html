@@ -131,13 +131,14 @@ loadScripts(document, 'script');</script>
 </div>
 <div class="col-first even-row-color"><code>protected final <a href="../GdxGame.html" title="class in com.csse3200.game">GdxGame</a></code></div>
 <div class="col-second even-row-color"><code><a href="#game" class="member-name-link">game</a></code></div>
-<div class="col-last even-row-color">
-<div class="block">Game instance for navigation and context.</div>
-</div>
+<div class="col-last even-row-color">&nbsp;</div>
 <div class="col-first odd-row-color"><code>protected final <a href="../rendering/Renderer.html" title="class in com.csse3200.game.rendering">Renderer</a></code></div>
 <div class="col-second odd-row-color"><code><a href="#renderer" class="member-name-link">renderer</a></code></div>
-<div class="col-last odd-row-color">
-<div class="block">Renderer responsible for drawing.</div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code>protected final com.badlogic.gdx.scenes.scene2d.Stage</code></div>
+<div class="col-second even-row-color"><code><a href="#stage" class="member-name-link">stage</a></code></div>
+<div class="col-last even-row-color">
+<div class="block">Non-null UI stage guaranteed; also pushed into RenderService when possible.</div>
 </div>
 </div>
 </section>
@@ -174,13 +175,18 @@ loadScripts(document, 'script');</script>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#dispose()" class="member-name-link">dispose</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#render(float)" class="member-name-link">render</a><wbr>(float&nbsp;delta)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected com.badlogic.gdx.scenes.scene2d.Stage</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getStage()" class="member-name-link">getStage</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Expose the stage to subclasses if needed.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#resize(int,int)" class="member-name-link">resize</a><wbr>(int&nbsp;width,
- int&nbsp;height)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#render(float)" class="member-name-link">render</a><wbr>(float&nbsp;delta)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#resize(int,int)" class="member-name-link">resize</a><wbr>(int&nbsp;width,
+ int&nbsp;height)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
 </div>
@@ -242,14 +248,19 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="game">
 <h3>game</h3>
 <div class="member-signature"><span class="modifiers">protected final</span>&nbsp;<span class="return-type"><a href="../GdxGame.html" title="class in com.csse3200.game">GdxGame</a></span>&nbsp;<span class="element-name">game</span></div>
-<div class="block">Game instance for navigation and context.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="renderer">
 <h3>renderer</h3>
 <div class="member-signature"><span class="modifiers">protected final</span>&nbsp;<span class="return-type"><a href="../rendering/Renderer.html" title="class in com.csse3200.game.rendering">Renderer</a></span>&nbsp;<span class="element-name">renderer</span></div>
-<div class="block">Renderer responsible for drawing.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="stage">
+<h3>stage</h3>
+<div class="member-signature"><span class="modifiers">protected final</span>&nbsp;<span class="return-type">com.badlogic.gdx.scenes.scene2d.Stage</span>&nbsp;<span class="element-name">stage</span></div>
+<div class="block">Non-null UI stage guaranteed; also pushed into RenderService when possible.</div>
 </section>
 </li>
 </ul>
@@ -291,6 +302,13 @@ loadScripts(document, 'script');</script>
 <dt>Returns:</dt>
 <dd>the UI <a href="../entities/Entity.html" title="class in com.csse3200.game.entities"><code>Entity</code></a> for the win screen</dd>
 </dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getStage()">
+<h3>getStage</h3>
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">com.badlogic.gdx.scenes.scene2d.Stage</span>&nbsp;<span class="element-name">getStage</span>()</div>
+<div class="block">Expose the stage to subclasses if needed.</div>
 </section>
 </li>
 <li>
