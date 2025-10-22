@@ -6,7 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Handles background music for the menu
+ * Handles background music for the menu and game
  */
 public class MusicService {
     private static final Logger logger = LoggerFactory.getLogger(MusicService.class);
@@ -39,13 +39,20 @@ public class MusicService {
         }
     }
 
+    /**
+     * Updates the currently playing music based on the active screen
+     * Stops or starts the track depending on the screen type
+     *
+     * @param screenType The current screen of the game
+     */
     public void updateForScreen(String screenType) {
         boolean musicEnabled = UserSettings.get().isMusicEnabled();
 
         boolean stopMusic = screenType.equals("MAIN_GAME")
                 || screenType.equals("DEATH_SCREEN")
                 || screenType.equals("WIN_SCREEN")
-                || screenType.equals("LEADERBOARD");
+                || screenType.equals("LEADERBOARD")
+                || screenType.equals("LOADING");
 
         if (menuMusic != null) {
             if (stopMusic && menuMusic.isPlaying()) {
@@ -68,10 +75,20 @@ public class MusicService {
         }
     }
 
+    /**
+     * Checks whether the menu music is currently playing
+     *
+     * @return true if the menu music is playing, false otherwise.
+     */
     public boolean isMenuMusicPlaying() {
         return menuMusic != null && menuMusic.isPlaying();
     }
 
+    /**
+     * Controls the menu music playback state
+     *
+     * @param play true to start playing, false to stop
+     */
     public void setMenuMusicPlaying(boolean play) {
         if (menuMusic != null) {
             if (play && !menuMusic.isPlaying()) {
@@ -82,18 +99,17 @@ public class MusicService {
         }
     }
 
-    public void playForestMusic() {
-        if (forestMusic != null && UserSettings.get().isMusicEnabled() && !forestMusic.isPlaying()) {
-            forestMusic.play();
-        }
-    }
-
-    public void resetForestMusic() {
+    /**
+     * Controls the forest music playback state
+     *
+     * @param play true to start playing, false to stop
+     */
+    public void setForestMusicPlaying(boolean play) {
         if (forestMusic != null) {
-            forestMusic.stop();
-            forestMusic.setPosition(0);
-            if (UserSettings.get().isMusicEnabled()) {
+            if (play && UserSettings.get().isMusicEnabled() && !forestMusic.isPlaying()) {
                 forestMusic.play();
+            } else if (!play && forestMusic.isPlaying()) {
+                forestMusic.stop();
             }
         }
     }

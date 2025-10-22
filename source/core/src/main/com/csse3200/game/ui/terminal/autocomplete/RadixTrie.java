@@ -41,8 +41,6 @@ import java.util.*;
  * // => ["heal", "heap", "hello", "helm", "help"]
  * }</pre>
  *
- * @implNote The node-level cache stores full words (not suffixes). During splits, caches are
- * seeded from existing children so previously inserted words remain visible.
  * @since 1.0
  */
 public class RadixTrie {

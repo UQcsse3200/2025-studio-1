@@ -19,11 +19,12 @@ public class DoubleProcessorsEffect extends Effect {
         InventoryComponent inventory = entity.getComponent(InventoryComponent.class);
         if (inventory != null) {
             inventory.setDoubleProcessors(true);
+            this.active = true;
+            this.elapsed = 0f;
+            return true;
         }
 
-        this.active = true;
-        this.elapsed = 0f;
-        return true;
+        return false;
     }
 
     public void update(float dt) {

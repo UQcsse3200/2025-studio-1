@@ -8,34 +8,31 @@ import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.CameraComponent;
-import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import com.csse3200.game.components.KeycardGateComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.ItemSpawnConfig;
 import com.csse3200.game.entities.factories.KeycardFactory;
 import com.csse3200.game.entities.factories.characters.BossFactory;
-import com.csse3200.game.entities.factories.characters.PlayerFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.entities.spawner.ItemSpawner;
+import com.csse3200.game.lighting.LightSpawner;
 import com.csse3200.game.physics.components.ColliderComponent;
 import com.csse3200.game.services.ServiceLocator;
-import com.csse3200.game.components.gamearea.GameAreaDisplay;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import java.util.List;
 
 /**
  * This is the room that holds the Flying Boss.
  * The boss is a flying enemy that spawns at the top of the map and
  * shoots projectiles at the player.
- *
+ * <p>
  * There are two platforms that can possibly server as cover as well as a floor
  * at the bottom
  */
 public class FlyingBossRoom extends GameArea {
-    private static final Logger logger = LoggerFactory.getLogger(FlyingBossRoom.class);
-
     private static final float WALL_WIDTH = 0.1f;
     private static GridPoint2 playerSpawn = new GridPoint2(3, 10);
+    private static boolean isCleared = false;
     private Entity player;
 
     /**
@@ -49,6 +46,8 @@ public class FlyingBossRoom extends GameArea {
      */
     public FlyingBossRoom(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
         super(terrainFactory, cameraComponent);
+
+        this.getEvents().addListener("room cleared", FlyingBossRoom::clearRoom);
     }
 
     /**
@@ -69,26 +68,39 @@ public class FlyingBossRoom extends GameArea {
         GenericLayout.setupTerrainWithOverlay(this, terrainFactory, TerrainType.SERVER_ROOM,
                 new Color(0.10f, 0.12f, 0.10f, 0.24f));
 
+        //Checks to see if the lighting service is not null and then sets the ambient light and turns on shadows for the room.
+        var ls = ServiceLocator.getLightingService();
+        if (ls != null && ls.getEngine() != null) {
+            ls.getEngine().setAmbientLight(0.65f);
+            ls.getEngine().getRayHandler().setShadows(true);
+        }
+
+        LightSpawner.spawnCeilingCones(
+                this,
+                List.of(
+                        new GridPoint2(4,21),
+                        new GridPoint2(12,21),
+                        new GridPoint2(20,21),
+                        new GridPoint2(27,21)
+                ),
+                new Color(0.37f, 0.82f, 0.9f, 0.80f)
+        );
+
         spawnBordersAndDoors();
-        displayUI();
+        displayUIEntity("Flying Boss Room", null);
 
         player = spawnPlayer();
 
         spawnPlatforms();
-
-        spawnFlyingBoss();
         spawnObjectDoors(new GridPoint2(0, 7), new GridPoint2(28, 7));
 
-        ItemSpawner itemSpawner = new ItemSpawner(this);
-        itemSpawner.spawnItems(ItemSpawnConfig.bossmap());
+        if (!FlyingBossRoom.isCleared) {
+            spawnFlyingBoss();
+            ItemSpawner itemSpawner = new ItemSpawner(this);
+            itemSpawner.spawnItems(ItemSpawnConfig.bossmap());
+        }
 
         spawnVisibleFloor();
-    }
-
-    private void displayUI() {
-        Entity ui = new Entity();
-        ui.addComponent(new GameAreaDisplay("Flying Boss Room"));
-        spawnEntity(ui);
     }
 
     private void spawnPlatforms() {
@@ -110,16 +122,17 @@ public class FlyingBossRoom extends GameArea {
 
         Entity flyingBoss = BossFactory.createBoss2(player);
 
-        flyingBoss.getEvents().addListener("death", () -> {
-            ServiceLocator.getTimeSource().delayKeycardSpawn(0.05f, () -> {
-                Entity keycard = KeycardFactory.createKeycard(3);
-                keycard.setPosition(new Vector2(3f, 5f));
-                spawnEntity(keycard);
-            });
-        });
+        flyingBoss.getEvents().addListener("death",
+                () -> ServiceLocator.getTimeSource().delayKeycardSpawn(0.05f, () -> {
+                    Entity keycard = KeycardFactory.createKeycard(3);
+                    keycard.setPosition(new Vector2(3f, 5f));
+                    spawnEntity(keycard);
+                }));
 
         spawnEntityAt(flyingBoss, pos, true, true);
+        registerEnemy(flyingBoss);
     }
+
     /**
      * Spawns the borders and doors of the room.
      * Different to genericLayout as the right door is up high
@@ -134,7 +147,11 @@ public class FlyingBossRoom extends GameArea {
         float leftDoorY = b.bottomY();
         Entity leftDoor = ObstacleFactory.createDoorTrigger(WALL_WIDTH, leftDoorHeight);
         leftDoor.setPosition(b.leftX() + 0.001f, leftDoorY);
-        leftDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadResearch));
+        leftDoor.addComponent(new KeycardGateComponent(2, () -> {
+            ColliderComponent collider = leftDoor.getComponent(ColliderComponent.class);
+            if (collider != null) collider.setEnabled(false);
+            loadResearch();
+        }));
         spawnEntity(leftDoor);
 
         addSolidWallRight(b, WALL_WIDTH);
@@ -143,13 +160,12 @@ public class FlyingBossRoom extends GameArea {
         float rightDoorY = b.bottomY();
         Entity rightDoor = ObstacleFactory.createDoorTrigger(WALL_WIDTH, rightDoorHeight);
         rightDoor.setPosition(b.rightX() - WALL_WIDTH - 0.001f, rightDoorY);
-        rightDoor.addComponent(new KeycardGateComponent(3, () -> {
+        rightDoor.addComponent(new KeycardGateComponent(2, () -> {
             ColliderComponent collider = rightDoor.getComponent(ColliderComponent.class);
             if (collider != null) collider.setEnabled(false);
             loadShipping();
         }));
         spawnEntity(rightDoor);
-
     }
 
     /**
@@ -170,18 +186,36 @@ public class FlyingBossRoom extends GameArea {
     }
 
     public void loadShipping() {
-        ShippingGameArea.setRoomSpawn(new GridPoint2(4, 8));
+        ShippingGameArea.setRoomSpawn(new GridPoint2(1, 7));
         clearAndLoad(() -> new ShippingGameArea(terrainFactory, cameraComponent));
     }
 
     public void loadResearch() {
-        ResearchGameArea.setRoomSpawn(new GridPoint2(25, 24));
+        ResearchGameArea.setRoomSpawn(new GridPoint2(25, 20));
         clearAndLoad(() -> new ResearchGameArea(terrainFactory, cameraComponent));
     }
 
     @Override
     public String toString() {
         return "FlyingBoss";
+    }
+
+    /**
+     * Clear room, set this room's static
+     * boolean isCleared variable to true
+     */
+    public static void clearRoom() {
+        FlyingBossRoom.isCleared = true;
+        logger.debug("Flying Boss Room is cleared");
+    }
+
+    /**
+     * Unclear room, set this room's static
+     * boolean isCleared variable to false
+     */
+    public static void unclearRoom() {
+        FlyingBossRoom.isCleared = false;
+        logger.debug("Flying Boss Room is uncleared");
     }
 }
 

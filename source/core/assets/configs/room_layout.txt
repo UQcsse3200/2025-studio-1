@@ -13,3 +13,4 @@ Storage, 10, 0
 Server, 11, 0
 Tunnel, 12, 0
 StaticBoss, 13, 0
+SecretRoom, 14, 0

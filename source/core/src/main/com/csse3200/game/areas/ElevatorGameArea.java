@@ -1,29 +1,41 @@
 package com.csse3200.game.areas;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.components.KeycardGateComponent;
-import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import com.csse3200.game.entities.Entity;
+import com.csse3200.game.entities.configs.Benches;
+import com.csse3200.game.entities.factories.InteractableStationFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.entities.factories.system.TeleporterFactory;
+import com.csse3200.game.lighting.LightSpawner;
 import com.csse3200.game.physics.PhysicsLayer;
+import com.csse3200.game.physics.PhysicsUtils;
 import com.csse3200.game.physics.components.ColliderComponent;
 import com.csse3200.game.physics.components.HitboxComponent;
+import com.csse3200.game.physics.components.PhysicsComponent;
 import com.csse3200.game.rendering.TextureRenderComponent;
+import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+import com.csse3200.game.services.ServiceLocator;
+
+import java.util.List;
 
 /**
  * Elevator room: minimal walls and two doors (left--Office, right--Research).
  **/
 public class ElevatorGameArea extends GameArea {
     private static final float WALL_WIDTH = 0.1f;
+    private static boolean isCleared = false;
     private static GridPoint2 playerSpawn = new GridPoint2(10, 10);
 
     public ElevatorGameArea(TerrainFactory terrainFactory, CameraComponent cameraComponent) {
         super(terrainFactory, cameraComponent);
+
+        this.getEvents().addListener("room cleared", ElevatorGameArea::clearRoom);
     }
 
     public static ElevatorGameArea load(TerrainFactory terrainFactory, CameraComponent camera) {
@@ -36,20 +48,43 @@ public class ElevatorGameArea extends GameArea {
         /** Ensure the thin floor texture is available for the elevator room **/
         ensureTextures(new String[]{"foreg_sprites/general/ThinFloor3.png", "images/Elevator background.png", "images/keycard_lvl2.png", "images/KeycardDoor.png", "images/Office and elevator/Office platform.png", "images/Office and elevator/Office desk.png"});
         /** Use the dedicated elevator background **/
-        terrain = terrainFactory.createTerrain(TerrainType.ELEVATOR);
-        spawnEntity(new Entity().addComponent(terrain));
+        GenericLayout.ensureGenericAssets(this);
+        GenericLayout.setupTerrainWithOverlay(this, terrainFactory, TerrainType.ELEVATOR,
+                new Color(0.08f, 0.08f, 0.1f, 0.30f));
+
+        //Checks to see if the lighting service is not null and then sets the ambient light and turns on shadows for the room.
+        var ls = ServiceLocator.getLightingService();
+        if (ls != null && ls.getEngine() != null) {
+            ls.getEngine().setAmbientLight(0.65f);
+            ls.getEngine().getRayHandler().setShadows(true);
+        }
+
+        LightSpawner.spawnCeilingCones(
+                this,
+                List.of(
+                        new GridPoint2(4,21),
+                        new GridPoint2(12,21),
+                        new GridPoint2(20,21),
+                        new GridPoint2(27,21)
+                ),
+                new Color(0.37f, 0.82f, 0.9f, 0.80f)
+        );
+
         spawnBordersAndDoors();
-        spawnPlayer();
+        Entity player = spawnPlayer();
         spawnObjectDoors(new GridPoint2(0, 6), new GridPoint2(28, 19));
         spawnFloor();
         spawnPlatforms();
         spawnDesk();
         spawnTeleporter();
+        spawnSpikes();
+        spawnSpeedBench();
 
-        Entity ui = new Entity();
-        ui.addComponent(new GameAreaDisplay("Elevator"))
-                .addComponent(new com.csse3200.game.components.gamearea.FloorLabelDisplay("Floor 6"));
-        spawnEntity(ui);
+        if (!ElevatorGameArea.isCleared) {
+            startWaves(player);
+        }
+
+        displayUIEntity("Elevator", "Floor 6");
     }
 
     private void spawnBordersAndDoors() {
@@ -66,6 +101,12 @@ public class ElevatorGameArea extends GameArea {
             leftTop.setPosition(b.leftX(), leftDoorY + leftDoorHeight);
             spawnEntity(leftTop);
         }
+        
+
+        Entity leftDoorWall = ObstacleFactory.createWall(WALL_WIDTH, leftDoorHeight);
+        leftDoorWall.setPosition(b.leftX(), leftDoorY);
+        spawnEntity(leftDoorWall);
+        
         Entity leftDoor = ObstacleFactory.createDoorTrigger(WALL_WIDTH, leftDoorHeight);
         leftDoor.setPosition(b.leftX() + 0.001f, leftDoorY);
         leftDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadOffice));
@@ -80,6 +121,18 @@ public class ElevatorGameArea extends GameArea {
             rightTop.setPosition(b.rightX() - WALL_WIDTH, rightDoorY + rightDoorHeight);
             spawnEntity(rightTop);
         }
+        // Add right wall below the door
+        float rightBottomSegHeight = Math.max(0f, rightDoorY - b.bottomY());
+        if (rightBottomSegHeight > 0f) {
+            Entity rightBottom = ObstacleFactory.createWall(WALL_WIDTH, rightBottomSegHeight);
+            rightBottom.setPosition(b.rightX() - WALL_WIDTH, b.bottomY());
+            spawnEntity(rightBottom);
+        }
+
+        Entity rightDoorWall = ObstacleFactory.createWall(WALL_WIDTH, rightDoorHeight);
+        rightDoorWall.setPosition(b.rightX() - WALL_WIDTH, rightDoorY);
+        spawnEntity(rightDoorWall);
+        
         Entity rightDoor = ObstacleFactory.createDoorTrigger(WALL_WIDTH, rightDoorHeight);
         rightDoor.setPosition(b.rightX() - WALL_WIDTH - 0.001f, rightDoorY);
         rightDoor.addComponent(new ColliderComponent());
@@ -92,10 +145,19 @@ public class ElevatorGameArea extends GameArea {
         }));
         spawnEntity(rightDoor);
 
+        if (!ElevatorGameArea.isCleared) registerDoors(new Entity[]{leftDoor});
     }
 
     private Entity spawnPlayer() {
-        return spawnOrRepositionPlayer(playerSpawn);
+        Entity player = spawnOrRepositionPlayer(playerSpawn);
+        // Set higher z-index to ensure player renders in front of sprites
+        if (player != null) {
+            var renderComponent = player.getComponent(com.csse3200.game.rendering.AnimationRenderComponent.class);
+            if (renderComponent != null) {
+                renderComponent.setZIndex(10f); // Higher z-index to render in front
+            }
+        }
+        return player;
     }
 
     /**
@@ -103,21 +165,32 @@ public class ElevatorGameArea extends GameArea {
      */
     private void spawnDesk() {
         Entity desk = new Entity()
-                .addComponent(new TextureRenderComponent("images/Office and elevator/Office desk.png"));
+                .addComponent(new TextureRenderComponent("images/Office and elevator/Office desk.png"))
+                .addComponent(new PhysicsComponent())
+                .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
+
+        desk.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
         desk.getComponent(TextureRenderComponent.class).scaleEntity();
         desk.scaleHeight(3.0f);
-        desk.setPosition(7f, 3f);
+        PhysicsUtils.setScaledCollider(desk, 0.8f, 0.6f);
+        desk.setPosition(12f, 3f);
         spawnEntity(desk);
     }
-
+    private void spawnSpeedBench() {
+        Entity bench = InteractableStationFactory.createStation(Benches.SPEED_BENCH);
+        spawnEntityAt(bench, new GridPoint2(25, 8), true, true);
+    }
     /**
      * Spawn a few floating platforms
      */
     private void spawnPlatforms() {
-        float p1x = 1f, p1y = 4f;
+        float p1x = 1f;
+        float p1y = 4f;
         // teleporter will be at (0.5,3f) below first platform
-        float p2x = 5f, p2y = 6f;
-        float p3x = 10f, p3y = 6f;
+        float p2x = 5f;
+        float p2y = 6f;
+        float p3x = 10f;
+        float p3y = 6f;
 
         Entity plat1 = com.csse3200.game.entities.factories.system.ObstacleFactory.createElevatorPlatform();
         plat1.setPosition(p1x, p1y);
@@ -138,13 +211,27 @@ public class ElevatorGameArea extends GameArea {
         spawnEntity(tp);
     }
 
+    /**
+     * Spawn spikes around the elevator area to create challenging obstacles
+     */
+    private void spawnSpikes() {
+        // Two spikes near the platforms
+        Entity spikes1 = ObstacleFactory.createSpikes2();
+        spikes1.setPosition(9.3f, 3.2f);
+        spawnEntity(spikes1);
+
+        Entity spikes2 = ObstacleFactory.createSpikes2();
+        spikes2.setPosition(7.4f, 3.2f);
+        spawnEntity(spikes2);
+    }
+
     private void loadOffice() {
-        OfficeGameArea.setRoomSpawn(new GridPoint2(24, 22));
+        OfficeGameArea.setRoomSpawn(new GridPoint2(25, 20));
         clearAndLoad(() -> new OfficeGameArea(terrainFactory, cameraComponent));
     }
 
     private void loadResearch() {
-        ResearchGameArea.setRoomSpawn(new GridPoint2(6, 8));
+        ResearchGameArea.setRoomSpawn(new GridPoint2(1, 7));
         clearAndLoad(() -> new ResearchGameArea(terrainFactory, cameraComponent));
     }
 
@@ -183,5 +270,23 @@ public class ElevatorGameArea extends GameArea {
     public Entity getPlayer() {
         // placeholder for errors
         return null;
+    }
+
+    /**
+     * Clear room, set this room's static
+     * boolean isCleared variable to true
+     */
+    public static void clearRoom() {
+        ElevatorGameArea.isCleared = true;
+        logger.debug("Elevator is cleared");
+    }
+
+    /**
+     * Unclear room, set this room's static
+     * boolean isCleared variable to false
+     */
+    public static void unclearRoom() {
+        ElevatorGameArea.isCleared = false;
+        logger.debug("Elevator is uncleared");
     }
 }

@@ -11,14 +11,41 @@ public class PowerupComponent extends Component {
     private final List<Effect> activeEffects = new ArrayList<>();
     private Entity equippedWeapon;
 
+    /**
+     * @return the equipped weapon
+     */
     public Entity getEquippedWeapon() {
         return equippedWeapon;
     }
 
+    /**
+     * Sets the equipped weapon
+     *
+     * @param weapon the weapon
+     */
     public void setEquippedWeapon(Entity weapon) {
         this.equippedWeapon = weapon;
     }
 
+    /**
+     * @return the active effects
+     */
+    public List<Effect> getEffects() {
+        return this.activeEffects;
+    }
+
+    public boolean hasEffect(Class<? extends Effect> effect) {
+        for (Effect e : activeEffects) {
+            if (e.getClass() == effect) return true;
+        }
+        return false;
+    }
+
+    /**
+     * Adds an effect to the active effects
+     *
+     * @param effect the effect
+     */
     public void addEffect(Effect effect) {
         if (effect instanceof RapidFireEffect rapidfire && equippedWeapon != null) {
             if (rapidfire.apply(equippedWeapon)) {
@@ -32,10 +59,9 @@ public class PowerupComponent extends Component {
             if (aimbot.apply(equippedWeapon)) {
                 activeEffects.add(aimbot);
             }
-        } else if (effect instanceof DoubleProcessorsEffect doubleProcessors) {
-            if (doubleProcessors.apply(entity)) {
-                activeEffects.add(doubleProcessors);
-            }
+        } else if (effect instanceof DoubleProcessorsEffect doubleProcessors
+                && doubleProcessors.apply(entity)) {
+            activeEffects.add(doubleProcessors);
         }
     }
 

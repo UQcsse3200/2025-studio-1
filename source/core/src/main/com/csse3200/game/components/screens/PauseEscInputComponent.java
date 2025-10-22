@@ -13,7 +13,7 @@ public class PauseEscInputComponent extends InputComponent {
     }
 
     @Override
-    protected boolean keyPressed(int keycode) {
+    public boolean keyPressed(int keycode) {
         if (keycode == Input.Keys.ESCAPE) {
             // Trigger the pause overlay's resume/hide
             if (entity != null) {
@@ -26,7 +26,7 @@ public class PauseEscInputComponent extends InputComponent {
     }
 
     @Override
-    protected boolean keyReleased(int keycode) {
+    public boolean keyReleased(int keycode) {
         return false;
     }
 }

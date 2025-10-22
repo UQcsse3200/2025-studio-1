@@ -40,7 +40,7 @@ public class AttackProtectionDisplay extends Component {
     private Table table;
     private ProgressBar bar;
 
-    private int lasthealth = Integer.MIN_VALUE;
+    private int lastHealth = Integer.MIN_VALUE;
     private int hits = 0;
     private float timer = 0f;
 
@@ -49,7 +49,7 @@ public class AttackProtectionDisplay extends Component {
         super.create();
 
         CombatStatsComponent combat = entity.getComponent(CombatStatsComponent.class);
-        if (combat != null) lasthealth = combat.getHealth();
+        if (combat != null) lastHealth = combat.getHealth();
 
         entity.getEvents().addListener("updateHealth", this::onhealth);
 
@@ -80,25 +80,22 @@ public class AttackProtectionDisplay extends Component {
     }
 
     private void onhealth(int cur) {
-        if (lasthealth == Integer.MIN_VALUE) {
-            lasthealth = cur;
+        if (lastHealth == Integer.MIN_VALUE) {
+            lastHealth = cur;
             return;
         }
 
-        if (cur < lasthealth) {
-            if (timer <= 0f) {
-                float next = (bar != null ? bar.getValue() : 1f) - STEP;
-                if (next < 0f) next = 0f;
-                setvalue(next);
+        if (cur < lastHealth && timer <= 0f) {
+            float next = (bar != null ? bar.getValue() : 1f) - STEP;
+            if (next < 0f) next = 0f;
+            setvalue(next);
 
-                hits++;
-                if (hits >= 6) {
-                    timer = DELAY;
-                }
+            hits++;
+            if (hits >= 6) {
+                timer = DELAY;
             }
         }
-
-        lasthealth = cur;
+        lastHealth = cur;
     }
 
     @Override

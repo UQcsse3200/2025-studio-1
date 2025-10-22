@@ -26,6 +26,11 @@ public record EndScreenCommand(
 ) implements Command {
     private static final Logger logger = LoggerFactory.getLogger(EndScreenCommand.class);
 
+    /**
+     * Execute the end screen command
+     * @param args Optional command arguments (unused in this command)
+     * @return {@code true} if the screen transition was successful, {@code false} otherwise
+     */
     @Override
     public boolean action(ArrayList<String> args) {
         logger.info("Switching to {}", screenType);
@@ -49,6 +54,10 @@ public record EndScreenCommand(
         }
     }
 
+    /**
+     * Applies the calculated elapse time to the current end screen
+     * @param elapsedSeconds The total number of seconds that have passed in the game
+     */
     private void applyElapsedToCurrent(long elapsedSeconds) {
         try {
             Screen current = game.getScreen();

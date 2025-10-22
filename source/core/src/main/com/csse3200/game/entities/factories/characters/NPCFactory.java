@@ -27,8 +27,6 @@ import com.csse3200.game.physics.components.PhysicsMovementComponent;
 import com.csse3200.game.rendering.AnimationRenderComponent;
 import com.csse3200.game.services.ServiceLocator;
 
-import java.io.IOException;
-
 /**
  * Factory to create non-playable character (NPC) entities with predefined components.
  *
@@ -42,6 +40,9 @@ import java.io.IOException;
 public class NPCFactory {
     private static final NPCConfigs configs =
             FileLoader.readClass(NPCConfigs.class, "configs/NPCs.json");
+
+    private static final int BASE_DEATH_REWARD = 100;
+    private static final int VARIANT_DEATH_REWARD = 150;
 
     private NPCFactory() {
         throw new IllegalStateException("Instantiating static util class");
@@ -106,7 +107,7 @@ public class NPCFactory {
                 .addComponent(animator)
                 .addComponent(new GhostAnimationController())
                 .addComponent(new LowHealthAttackBuffComponent(10, ghostGPTStats))
-                .addComponent(new EnemyDeathRewardComponent(100, playerInventory)) // Add reward + particles
+                .addComponent(new EnemyDeathRewardComponent(BASE_DEATH_REWARD, playerInventory)) // Add reward + particles
                 .addComponent(new DeathParticleSpawnerComponent("explosion_2"))
                 .addComponent(aiComponent)
                 .addComponent(projComp) // Add the ability to fire projectiles
@@ -141,14 +142,20 @@ public class NPCFactory {
         animator.setDisposeAtlas(false);
         animator.addAnimation("angry_float", 0.1f, Animation.PlayMode.LOOP);
         animator.addAnimation("float", 0.1f, Animation.PlayMode.LOOP);
+        animator.addAnimation("damage_taken", 0.1f, Animation.PlayMode.NORMAL);
 
+        SoundComponent soundComponent = new SoundComponent();
+        ghostGPTRed.addComponent(soundComponent);
+        soundComponent.registerSound("damageTaken", "sounds/GPTDamage.mp3");
+        soundComponent.registerSound("death", "sounds/GPTDeath.mp3");
 
         ProjectileLauncherComponent projComp = new ProjectileLauncherComponent(area, target, Projectiles.GHOSTGPT_LASER);
         // Use ground chase tasks for gravity-based movement
         AITaskComponent aiComponent =
                 new AITaskComponent()
                         .addTask(new GPTGroundSlowChaseTask(target, 10, 0.3f, 15f))
-                        .addTask(new GPTGroundFastChaseTask(target, 10, 1.2f, projComp, ghostGPTRed, 3f, 3f));
+                        .addTask(new GPTGroundFastChaseTask(target, 10, 1.2f, projComp, ghostGPTRed,
+                                3f, 3f, 3, 15));
 
         // Get player's inventory for reward system
         InventoryComponent playerInventory = null;
@@ -164,7 +171,7 @@ public class NPCFactory {
                 .addComponent(animator)
                 .addComponent(new GhostAnimationController())
                 .addComponent(new LowHealthAttackBuffComponent(10, ghostGPTRedStats))
-                .addComponent(new EnemyDeathRewardComponent(30, playerInventory)) // Add reward + particles
+                .addComponent(new EnemyDeathRewardComponent(VARIANT_DEATH_REWARD, playerInventory)) // Add reward + particles
                 .addComponent(new DeathParticleSpawnerComponent("explosion_2"))
                 .addComponent(aiComponent)
                 .addComponent(projComp) // Add the ability to fire projectiles
@@ -199,14 +206,20 @@ public class NPCFactory {
         animator.setDisposeAtlas(false);
         animator.addAnimation("angry_float", 0.1f, Animation.PlayMode.LOOP);
         animator.addAnimation("float", 0.1f, Animation.PlayMode.LOOP);
+        animator.addAnimation("damage_taken", 0.1f, Animation.PlayMode.NORMAL);
 
+        SoundComponent soundComponent = new SoundComponent();
+        ghostGPTBlue.addComponent(soundComponent);
+        soundComponent.registerSound("damageTaken", "sounds/GPTDamage.mp3");
+        soundComponent.registerSound("death", "sounds/GPTDeath.mp3");
 
         ProjectileLauncherComponent projComp = new ProjectileLauncherComponent(area, target, Projectiles.GHOSTGPT_LASER);
         // Use ground chase tasks for gravity-based movement
         AITaskComponent aiComponent =
                 new AITaskComponent()
                         .addTask(new GPTGroundSlowChaseTask(target, 10, 0.3f, 15f))
-                        .addTask(new GPTGroundFastChaseTask(target, 10, 1.2f, projComp, ghostGPTBlue, 2f, 3f));
+                        .addTask(new GPTGroundFastChaseTask(target, 10, 1.2f, projComp, ghostGPTBlue,
+                                2f, 3f, 3, 15));
 
         // Get player's inventory for reward system
         InventoryComponent playerInventory = null;
@@ -222,7 +235,7 @@ public class NPCFactory {
                 .addComponent(animator)
                 .addComponent(new GhostAnimationController())
                 .addComponent(new LowHealthAttackBuffComponent(10, ghostGPTBlueStats))
-                .addComponent(new EnemyDeathRewardComponent(30, playerInventory)) // Add reward + particles
+                .addComponent(new EnemyDeathRewardComponent(VARIANT_DEATH_REWARD, playerInventory)) // Add reward + particles
                 .addComponent(new DeathParticleSpawnerComponent("explosion_2"))
                 .addComponent(aiComponent)
                 .addComponent(projComp) // Add the ability to fire projectiles
@@ -306,7 +319,7 @@ public class NPCFactory {
                 .addComponent(animator)
                 .addComponent(new GhostAnimationController())
                 .addComponent(new LowHealthAttackBuffComponent(10, deepspinAttack))
-                .addComponent(new EnemyDeathRewardComponent(15, playerInventory)) // Add reward + particles
+                .addComponent(new EnemyDeathRewardComponent(BASE_DEATH_REWARD, playerInventory)) // Add reward + particles
                 .addComponent(new DeathParticleSpawnerComponent("explosion_2"))
                 .addComponent(aiComponent)
                 .addComponent(new EnemyHealthDisplay())
@@ -363,7 +376,7 @@ public class NPCFactory {
                 .addComponent(animator)
                 .addComponent(new GhostAnimationController())
                 .addComponent(new LowHealthAttackBuffComponent(10, deepspinRedAttack))
-                .addComponent(new EnemyDeathRewardComponent(30, playerInventory)) // Add reward + particles
+                .addComponent(new EnemyDeathRewardComponent(VARIANT_DEATH_REWARD, playerInventory)) // Add reward + particles
                 .addComponent(new DeathParticleSpawnerComponent("explosion_2"))
                 .addComponent(aiComponent)
                 .addComponent(new EnemyHealthDisplay())
@@ -420,7 +433,7 @@ public class NPCFactory {
                 .addComponent(animator)
                 .addComponent(new GhostAnimationController())
                 .addComponent(new LowHealthAttackBuffComponent(10, deepspinBlueAttack))
-                .addComponent(new EnemyDeathRewardComponent(30, playerInventory)) // Add reward + particles
+                .addComponent(new EnemyDeathRewardComponent(VARIANT_DEATH_REWARD, playerInventory)) // Add reward + particles
                 .addComponent(new DeathParticleSpawnerComponent("explosion_2"))
                 .addComponent(aiComponent)
                 .addComponent(new EnemyHealthDisplay())
@@ -477,7 +490,7 @@ public class NPCFactory {
                 .addComponent(animator)
                 .addComponent(new GhostAnimationController())
                 .addComponent(new LowHealthAttackBuffComponent(10, grokDroidWeapon))
-                .addComponent(new EnemyDeathRewardComponent(15, playerInventory)) // Add reward + particles
+                .addComponent(new EnemyDeathRewardComponent(BASE_DEATH_REWARD, playerInventory)) // Add reward + particles
                 .addComponent(new DeathParticleSpawnerComponent("explosion_2"))
                 .addComponent(aiComponent)
                 .addComponent(new EnemyHealthDisplay(0.3f))
@@ -506,6 +519,13 @@ public class NPCFactory {
         animator.setDisposeAtlas(false);
         animator.addAnimation("angry_float", 0.1f, Animation.PlayMode.LOOP);
         animator.addAnimation("float", 0.1f, Animation.PlayMode.LOOP);
+        animator.addAnimation("damage_taken", 0.1f, Animation.PlayMode.NORMAL);
+
+        SoundComponent soundComponent = new SoundComponent();
+        grokDroidRed.addComponent(soundComponent);
+
+        soundComponent.registerSound("damageTaken", "sounds/grokDamage.mp3");
+        soundComponent.registerSound("death", "sounds/grokDeath.mp3");
 
         AITaskComponent aiComponent =
                 new AITaskComponent()
@@ -527,7 +547,7 @@ public class NPCFactory {
                 .addComponent(animator)
                 .addComponent(new GhostAnimationController())
                 .addComponent(new LowHealthAttackBuffComponent(10, grokDroidRedWeapon))
-                .addComponent(new EnemyDeathRewardComponent(30, playerInventory)) // Add reward + particles
+                .addComponent(new EnemyDeathRewardComponent(VARIANT_DEATH_REWARD, playerInventory)) // Add reward + particles
                 .addComponent(new DeathParticleSpawnerComponent("explosion_2"))
                 .addComponent(aiComponent)
                 .addComponent(new EnemyHealthDisplay(0.3f))
@@ -556,6 +576,13 @@ public class NPCFactory {
         animator.setDisposeAtlas(false);
         animator.addAnimation("angry_float", 0.1f, Animation.PlayMode.LOOP);
         animator.addAnimation("float", 0.1f, Animation.PlayMode.LOOP);
+        animator.addAnimation("damage_taken", 0.1f, Animation.PlayMode.NORMAL);
+
+        SoundComponent soundComponent = new SoundComponent();
+        grokDroidBlue.addComponent(soundComponent);
+
+        soundComponent.registerSound("damageTaken", "sounds/grokDamage.mp3");
+        soundComponent.registerSound("death", "sounds/grokDeath.mp3");
 
         AITaskComponent aiComponent =
                 new AITaskComponent()
@@ -577,7 +604,7 @@ public class NPCFactory {
                 .addComponent(animator)
                 .addComponent(new GhostAnimationController())
                 .addComponent(new LowHealthAttackBuffComponent(10, grokDroidBlueWeapon))
-                .addComponent(new EnemyDeathRewardComponent(30, playerInventory)) // Add reward + particles
+                .addComponent(new EnemyDeathRewardComponent(VARIANT_DEATH_REWARD, playerInventory)) // Add reward + particles
                 .addComponent(new DeathParticleSpawnerComponent("explosion_2"))
                 .addComponent(aiComponent)
                 .addComponent(new EnemyHealthDisplay(0.3f))
@@ -642,7 +669,7 @@ public class NPCFactory {
                 .addComponent(new WeaponsStatsComponent((int) (config.baseAttack * scalingFactor)))
                 .addComponent(animator)
                 .addComponent(new GhostAnimationController())
-                .addComponent(new EnemyDeathRewardComponent(15, playerInventory))
+                .addComponent(new EnemyDeathRewardComponent(BASE_DEATH_REWARD, playerInventory))
                 .addComponent(new DeathParticleSpawnerComponent("explosion_2"))
                 .addComponent(new VroombaSuicideComponent(target, triggerRadius, damageRadius, boomDamage, fuseSeconds))
                 .addComponent(aiComponent)
@@ -707,7 +734,7 @@ public class NPCFactory {
                 .addComponent(new WeaponsStatsComponent((int) (config.baseAttack * scalingFactor)))
                 .addComponent(animator)
                 .addComponent(new GhostAnimationController())
-                .addComponent(new EnemyDeathRewardComponent(30, playerInventory))
+                .addComponent(new EnemyDeathRewardComponent(VARIANT_DEATH_REWARD, playerInventory))
                 .addComponent(new DeathParticleSpawnerComponent("explosion_2"))
                 .addComponent(new VroombaSuicideComponent(target, triggerRadius, damageRadius, boomDamage, fuseSeconds))
                 .addComponent(aiComponent)
@@ -772,7 +799,7 @@ public class NPCFactory {
                 .addComponent(new WeaponsStatsComponent((int) (config.baseAttack * scalingFactor)))
                 .addComponent(animator)
                 .addComponent(new GhostAnimationController())
-                .addComponent(new EnemyDeathRewardComponent(30, playerInventory))
+                .addComponent(new EnemyDeathRewardComponent(VARIANT_DEATH_REWARD, playerInventory))
                 .addComponent(new DeathParticleSpawnerComponent("explosion_2"))
                 .addComponent(new VroombaSuicideComponent(target, triggerRadius, damageRadius, boomDamage, fuseSeconds))
                 .addComponent(aiComponent)
@@ -837,7 +864,7 @@ public class NPCFactory {
                 .addComponent(animator)
                 .addComponent(new GhostAnimationController())
                 .addComponent(new LowHealthAttackBuffComponent(10, turretStats))
-                .addComponent(new EnemyDeathRewardComponent(15, playerInventory)) // Add reward + particles
+                .addComponent(new EnemyDeathRewardComponent(BASE_DEATH_REWARD, playerInventory)) // Add reward + particles
                 .addComponent(new DeathParticleSpawnerComponent("explosion_2"))
                 .addComponent(aiComponent)
                 .addComponent(projComp) // Add the ability to fire projectiles

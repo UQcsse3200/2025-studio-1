@@ -27,6 +27,8 @@ public class TouchAttackComponent extends Component {
     private float knockbackForce = 0f;
     private HitboxComponent hitboxComponent;
 
+    private static final String ROCKET_EXPLOSION = "rocketExplosion";
+
     /**
      * Create a component which attacks entities on collision, without knockback.
      *
@@ -65,24 +67,26 @@ public class TouchAttackComponent extends Component {
         }
 
         // Try to attack target.
-        Entity target = ((BodyUserData) other.getBody().getUserData()).entity;
-        Entity attacker = ((BodyUserData) me.getBody().getUserData()).entity;
+        if (!PhysicsLayer.contains(PhysicsLayer.OBSTACLE, other.getFilterData().categoryBits)) {
+            Entity target = ((BodyUserData) other.getBody().getUserData()).entity;
+            Entity attacker = ((BodyUserData) me.getBody().getUserData()).entity;
 
-        CombatStatsComponent targetStats = target.getComponent(CombatStatsComponent.class);
-        WeaponsStatsComponent attackerWeapon = attacker.getComponent(WeaponsStatsComponent.class);
+            CombatStatsComponent targetStats = target.getComponent(CombatStatsComponent.class);
+            WeaponsStatsComponent attackerWeapon = attacker.getComponent(WeaponsStatsComponent.class);
 
-        if (targetStats != null && attackerWeapon != null) {
-            targetStats.takeDamage(attackerWeapon.getBaseAttack());
-        }
+            if (targetStats != null && attackerWeapon != null) {
+                targetStats.takeDamage(attackerWeapon.getBaseAttack());
+            }
 
-        // Apply knockback (if knockback resistance is not 100%)
-        PhysicsComponent physicsComponent = target.getComponent(PhysicsComponent.class);
-        if (targetStats != null && targetStats.getKnockbackResistance() != 1f
-                && physicsComponent != null && knockbackForce > 0f) {
-            Body targetBody = physicsComponent.getBody();
-            Vector2 direction = target.getCenterPosition().sub(entity.getCenterPosition());
-            Vector2 impulse = direction.setLength(knockbackForce * (1 - targetStats.getKnockbackResistance()));
-            targetBody.applyLinearImpulse(impulse, targetBody.getWorldCenter(), true);
+            // Apply knockback (if knockback resistance is not 100%)
+            PhysicsComponent physicsComponent = target.getComponent(PhysicsComponent.class);
+            if (targetStats != null && targetStats.getKnockbackResistance() != 1f
+                    && physicsComponent != null && knockbackForce > 0f) {
+                Body targetBody = physicsComponent.getBody();
+                Vector2 direction = target.getCenterPosition().sub(entity.getCenterPosition());
+                Vector2 impulse = direction.setLength(knockbackForce * (1 - targetStats.getKnockbackResistance()));
+                targetBody.applyLinearImpulse(impulse, targetBody.getWorldCenter(), true);
+            }
         }
 
         //disposes entity if it is a projectile
@@ -95,13 +99,12 @@ public class TouchAttackComponent extends Component {
         }
     }
 
-
     private void spawnExplosion(Vector2 position) {
         TextureAtlas atlas = ServiceLocator.getResourceService()
                 .getAsset("images/rocketExplosion.atlas", TextureAtlas.class);
 
         AnimationRenderComponent animator = new AnimationRenderComponent(atlas);
-        animator.addAnimation("rocketExplosion", 0.05f, Animation.PlayMode.NORMAL);
+        animator.addAnimation(ROCKET_EXPLOSION, 0.05f, Animation.PlayMode.NORMAL);
 
         // Create the explosion entity first
         Entity explosion = new Entity();
@@ -109,7 +112,7 @@ public class TouchAttackComponent extends Component {
 
         // Add a self-removing component
         explosion.addComponent(new Component() {
-            private final int frameCount = atlas.findRegions("rocketExplosion").size;
+            private final int frameCount = atlas.findRegions(ROCKET_EXPLOSION).size;
             private final float frameDuration = 0.05f;
             private final float animationDuration = frameCount * frameDuration;
             private float elapsedTime = 0f;
@@ -128,8 +131,6 @@ public class TouchAttackComponent extends Component {
 
         ServiceLocator.getEntityService().register(explosion);
 
-        animator.startAnimation("rocketExplosion");
+        animator.startAnimation(ROCKET_EXPLOSION);
     }
-
-
 }

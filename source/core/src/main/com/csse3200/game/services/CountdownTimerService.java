@@ -41,6 +41,8 @@ public class CountdownTimerService {
      */
     private boolean paused;
 
+    private boolean isRunning;
+
     /**
      * Creates a new countdown timer
      *
@@ -50,10 +52,23 @@ public class CountdownTimerService {
     public CountdownTimerService(GameTime gameTime, long durationMS) {
         this.gameTime = gameTime;
         this.duration = durationMS;
-        this.startTime = gameTime.getTime();
         this.paused = false;
         this.pauseTime = 0;
+        this.isRunning = false;
         logger.debug("Setting CountdownTimerService with duration {} ms", duration);
+    }
+
+    /**
+     * Starts the countdown timer.
+     * <p>
+     *     Resets pause state and records the current {@link GameTime}
+     * </p>
+     */
+    public void startTimer(){
+        this.isRunning = true;
+        this.paused = false;
+        this.startTime = gameTime.getTime();
+        logger.debug("Countdown timer started at {} ms", startTime);
     }
 
     /**
@@ -67,16 +82,14 @@ public class CountdownTimerService {
      * @return the remaining game time in ms, minimum 0
      */
     public long getRemainingMs() {
-        long remaining;
-        if (isPaused()) {
-            long elapsed = pauseTime - startTime;
-            remaining = duration - elapsed;
-            logger.debug("Timer paused: elapsed time {} ms, remaining time {} ms", elapsed, remaining);
-        } else {
-            long elapsed = gameTime.getTime() - startTime;
-            remaining = duration - elapsed;
-            logger.debug("Timer runnign: elapsed time {} ms, remaining time {} ms", elapsed, remaining);
+        if (!getIsRunning()) {
+            return duration;
         }
+        long elapsed = paused
+                ? pauseTime - startTime
+                : gameTime.getTime() - startTime;
+
+        long remaining = duration - elapsed;
         return Math.max(0, remaining);
     }
 
@@ -98,13 +111,17 @@ public class CountdownTimerService {
      * </p>
      */
     public void pause() {
-        if (!isPaused()) {
+        if (!getIsRunning()) {
+            logger.debug("Attempted to pause but timer is not running");
+            return;
+        } else if (isPaused()){
+            logger.debug("Called Pause but timer is already paused");
+            return;
+        }
             paused = true;
             pauseTime = gameTime.getTime();
             logger.debug("Paused Countdown Timer at: {}ms", pauseTime);
-        } else {
-            logger.debug("Called Pause but timer is already paused");
-        }
+
     }
 
     /**
@@ -115,14 +132,19 @@ public class CountdownTimerService {
      * </p>
      */
     public void resume() {
-        if (paused) {
-            long pausedDuration = gameTime.getTime() - pauseTime;
-            startTime += pausedDuration;
-            paused = false;
-            logger.debug("Resume Countdown, paused duration: {}ms, new start time: {}ms", pausedDuration, startTime);
-        } else {
+        if (!getIsRunning()) {
+            logger.debug("Attempted to resume but timer is not running");
+            return;
+        } else if (!isPaused()) {
             logger.debug("Called Resume but timer is already running");
+            return;
         }
+
+        long pausedDuration = gameTime.getTime() - pauseTime;
+        startTime += pausedDuration;
+        paused = false;
+        logger.debug("Resume Countdown, paused duration: {}ms, new start time: {}ms", pausedDuration, startTime);
+
     }
 
     /**
@@ -143,5 +165,13 @@ public class CountdownTimerService {
     public long getDuration() {
         logger.debug("Countdown Timer duration: {}", duration);
         return duration;
+    }
+
+    /**
+     * Returns whether the timer is currently running
+     * @return @return {@code true} if the timer has been started, otherwise {@code false}
+     */
+    public boolean getIsRunning(){
+        return isRunning;
     }
 }

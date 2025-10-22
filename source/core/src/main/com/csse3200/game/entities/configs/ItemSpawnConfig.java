@@ -4,7 +4,6 @@ package com.csse3200.game.entities.configs;
 import com.badlogic.gdx.math.GridPoint2;
 import com.csse3200.game.entities.spawner.ItemSpawner;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,34 +22,32 @@ public class ItemSpawnConfig {
      */
     // Forest Map
     public static Map<String, List<ItemSpawner.ItemSpawnInfo>> forestmap() {
+        
         Map<String, List<ItemSpawner.ItemSpawnInfo>> config = new HashMap<>();
+        
         //Armour
         config.put(Armour.CHESTPLATE.name(), List.of(
                 new ItemSpawner.ItemSpawnInfo(new GridPoint2(4, 7), 1)
         ));
 
-        config.put(Armour.HOOD.name(), List.of(
-                new ItemSpawner.ItemSpawnInfo(new GridPoint2(10, 10), 1)
+        config.put(Weapons.LIGHTSABER.name(), List.of(
+                new ItemSpawner.ItemSpawnInfo(new GridPoint2(18, 7), 1)
         ));
 
-        // Weapons
-        config.put(Weapons.DAGGER.name(), Arrays.asList(
-                new ItemSpawner.ItemSpawnInfo(new GridPoint2(9, 7), 1),
-                new ItemSpawner.ItemSpawnInfo(new GridPoint2(5, 15), 1)
+        //Powerups
+        config.put("aimbot", List.of(
+                new ItemSpawner.ItemSpawnInfo(new GridPoint2(5, 13), 1)
         ));
-        config.put(Weapons.PISTOL.name(), Arrays.asList(
-                new ItemSpawner.ItemSpawnInfo(new GridPoint2(2, 8), 1),
-                new ItemSpawner.ItemSpawnInfo(new GridPoint2(11, 12), 1)
+        config.put("unlimitedammo", List.of(
+                new ItemSpawner.ItemSpawnInfo(new GridPoint2(22, 13), 1)
         ));
-        config.put(Weapons.RIFLE.name(), List.of(
-                new ItemSpawner.ItemSpawnInfo(new GridPoint2(16, 9), 1)
+        config.put("rapidfire", List.of(
+                new ItemSpawner.ItemSpawnInfo(new GridPoint2(11, 17), 1)
         ));
-        config.put(Weapons.LIGHTSABER.name(), List.of(
-                new ItemSpawner.ItemSpawnInfo(new GridPoint2(14, 7), 1)
+        config.put("doubleprocessors", List.of(
+                new ItemSpawner.ItemSpawnInfo(new GridPoint2(16, 17), 1)
         ));
-        config.put(Weapons.LAUNCHER.name(), List.of(
-                new ItemSpawner.ItemSpawnInfo(new GridPoint2(14, 14), 1)
-        ));
+
 
         return config;
     }
@@ -64,7 +61,8 @@ public class ItemSpawnConfig {
     public static Map<String, List<ItemSpawner.ItemSpawnInfo>> shippingmap() {
         Map<String, List<ItemSpawner.ItemSpawnInfo>> config = new HashMap<>();
 
-        config.put(Weapons.RIFLE.name(), List.of(
+        //Armour
+        config.put(Armour.CHESTPLATE.name(), List.of(
                 new ItemSpawner.ItemSpawnInfo(new GridPoint2(5, 7), 1)
         ));
 
@@ -93,7 +91,7 @@ public class ItemSpawnConfig {
     public static Map<String, List<ItemSpawner.ItemSpawnInfo>> servermap() {
         Map<String, List<ItemSpawner.ItemSpawnInfo>> config = new HashMap<>();
 
-        config.put(Weapons.RIFLE.name(), List.of(
+        config.put(Weapons.LAUNCHER.name(), List.of(
                 new ItemSpawner.ItemSpawnInfo(new GridPoint2(25, 16), 1)
         ));
 
@@ -119,16 +117,12 @@ public class ItemSpawnConfig {
     public static Map<String, List<ItemSpawner.ItemSpawnInfo>> researchmap() {
         Map<String, List<ItemSpawner.ItemSpawnInfo>> config = new HashMap<>();
 
-        config.put(Weapons.PISTOL.name(), List.of(
-                new ItemSpawner.ItemSpawnInfo(new GridPoint2(1, 12), 1)
-        ));
         config.put(Weapons.RIFLE.name(), List.of(
                 new ItemSpawner.ItemSpawnInfo(new GridPoint2(25, 16), 1)
         ));
-        config.put(Weapons.LIGHTSABER.name(), List.of(
+        config.put(Armour.HOOD.name(), List.of(
                 new ItemSpawner.ItemSpawnInfo(new GridPoint2(22, 6), 1)
         ));
-
 
         return config;
     }
@@ -138,6 +132,11 @@ public class ItemSpawnConfig {
         config.put(Weapons.PISTOL.name(), List.of(
                 new ItemSpawner.ItemSpawnInfo(new GridPoint2(7, 7), 1)
         ));
+
+        config.put("rapidfire", List.of(
+                new ItemSpawner.ItemSpawnInfo(new GridPoint2(5, 15), 1)
+        ));
+
         return config;
     }
     /**
@@ -170,7 +169,16 @@ public class ItemSpawnConfig {
         config.put(Weapons.RIFLE.name(), List.of(
                 new ItemSpawner.ItemSpawnInfo(new GridPoint2(7, 7), 1)
         ));
-           return config;
+
+        config.put("doubleprocessors", List.of(
+                new ItemSpawner.ItemSpawnInfo(new GridPoint2(9, 13), 1)
+        ));
+
+        config.put("unlimitedammo", List.of(
+                new ItemSpawner.ItemSpawnInfo(new GridPoint2(13, 20), 1)
+        ));
+
+        return config;
     }
 
     /**
@@ -179,13 +187,16 @@ public class ItemSpawnConfig {
     public static Map<String, List<ItemSpawner.ItemSpawnInfo>> securitymap() {
         Map<String, List<ItemSpawner.ItemSpawnInfo>> config = new HashMap<>();
 
-        config.put(Weapons.PISTOL.name(), List.of(
+        config.put(Weapons.DAGGER.name(), List.of(
                 new ItemSpawner.ItemSpawnInfo(new GridPoint2(0, 12), 1)
         ));
-        config.put(Weapons.LIGHTSABER.name(), List.of(
+        config.put(Weapons.RIFLE.name(), List.of(
                 new ItemSpawner.ItemSpawnInfo(new GridPoint2(22, 6), 1)
         ));
 
+        config.put("aimbot", List.of(
+                new ItemSpawner.ItemSpawnInfo(new GridPoint2(18, 15), 1)
+        ));
 
         return config;
     }
@@ -198,6 +209,14 @@ public class ItemSpawnConfig {
 
         config.put(Weapons.RIFLE.name(), List.of(
                 new ItemSpawner.ItemSpawnInfo(new GridPoint2(5, 7), 1)
+        ));
+
+        config.put("rapidfire", List.of(
+                new ItemSpawner.ItemSpawnInfo(new GridPoint2(13, 7), 1)
+        ));
+
+        config.put("unlimitedammo", List.of(
+                new ItemSpawner.ItemSpawnInfo(new GridPoint2(21, 7), 1)
         ));
 
         return config;

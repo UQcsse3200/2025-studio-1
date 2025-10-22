@@ -1,6 +1,8 @@
 package com.csse3200.game.components.minigames.robotFighting;
 
 import com.badlogic.gdx.utils.Timer;
+import com.csse3200.game.components.minigames.BettingComponent;
+import com.csse3200.game.components.player.InventoryComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.factories.InteractableStationFactory;
 import com.csse3200.game.files.FileLoader;
@@ -46,8 +48,6 @@ public class RobotFightingGame {
 
     /** Whether the game UI is currently visible to the player. */
     private boolean gameDisplayed = false;
-    /** The player’s selected robot. */
-    private Robot selectedRobot = null;
     /** Current HP for the player’s fighter. */
     private int chosenFighterHp = 100;
     /** Current HP for the opposing fighter. */
@@ -68,31 +68,20 @@ public class RobotFightingGame {
         gameEntity = initGameEntity();
         gameDisplay = gameEntity.getComponent(RobotFightingDisplay.class);
 
+
         gameEntity.getEvents().addListener("interact", this::handleInteract);
-        gameEntity.getEvents().addListener("robotFighting:choose", this::selectFighter);
+        gameEntity.getEvents().addListener("betPlaced", this::startGame);
         gameEntity.getEvents().addListener("robotFighting:startFight", this::startFight);
         gameEntity.getEvents().addListener("robotFighting:encourage", this::encourageFighter);
     }
 
     /**
-     * Alternate constructor used for testing.
-     * <p>
-     * Accepts a custom {@link RobotFightingText} to bypass {@link FileLoader}
-     * and avoid external asset loading.
-     * </p>
-     *
-     * @param customText Preloaded text data containing encouragement strings.
+     * Testing constructor that skips LibGDX or entity initialization.
      */
-    public RobotFightingGame(RobotFightingText customText) {
-        this.encouragingMessages = customText;
-
-        gameEntity = initGameEntity();
-        gameDisplay = gameEntity.getComponent(RobotFightingDisplay.class);
-
-        gameEntity.getEvents().addListener("interact", this::handleInteract);
-        gameEntity.getEvents().addListener("robotFighting:choose", this::selectFighter);
-        gameEntity.getEvents().addListener("robotFighting:startFight", this::startFight);
-        gameEntity.getEvents().addListener("robotFighting:encourage", this::encourageFighter);
+    protected RobotFightingGame(RobotFightingText text) {
+        this.encouragingMessages = text;
+        this.gameEntity = new Entity();
+        this.gameDisplay = null;
     }
 
     /**
@@ -101,14 +90,16 @@ public class RobotFightingGame {
      * When visible, the game is paused; when hidden, gameplay resumes.
      * </p>
      */
-    private void handleInteract() {
+    void handleInteract() {
         if (gameDisplayed) {
             gameDisplay.hide();
-            ServiceLocator.getTimeSource().setPaused(false);
             gameDisplayed = false;
-        } else {
+        }
+    }
+
+    void startGame() {
+        if (!gameDisplayed) {
             gameDisplay.show();
-            ServiceLocator.getTimeSource().setPaused(true);
             gameDisplayed = true;
         }
     }
@@ -125,17 +116,10 @@ public class RobotFightingGame {
     protected Entity initGameEntity() {
         Entity game = InteractableStationFactory.createBaseStation();
         game.addComponent(new RobotFightingDisplay());
-        game.addComponent(new TextureRenderComponent("images/tree.png"));
+        InventoryComponent inventory = ServiceLocator.getPlayer().getComponent(InventoryComponent.class);
+        game.addComponent(new BettingComponent(2, inventory));
+        game.addComponent(new TextureRenderComponent("images/clanker-royale.png"));
         return game;
-    }
-
-    /**
-     * Stores the player’s chosen robot type for the fight.
-     *
-     * @param fighter the selected {@link Robot}.
-     */
-    private void selectFighter(Robot fighter) {
-        selectedRobot = fighter;
     }
 
     /**
@@ -168,7 +152,7 @@ public class RobotFightingGame {
 
                 gameDisplay.playAttackAnimation(attacked);
 
-                int damage = (int) (Math.random() * 10 * encourageMult + 5);
+                int damage = (int) (Math.random() * 5 * encourageMult + 8);
                 otherFighterHp -= damage;
                 gameDisplay.setHealthFighter(attacked, otherFighterHp);
             }
@@ -205,15 +189,15 @@ public class RobotFightingGame {
      * The closer it gets to 2, the smaller the increase.
      * </p>
      */
-    private void encourageFighter() {
+    void encourageFighter() {
         gameDisplay.encourageFighter(encouragingMessages.getRandom());
         boolean successfulEncourage = Math.random() < 0.5;
 
         if (!successfulEncourage) return;
 
         double baseStrength = 0.1 + Math.random() * 0.2;
-        encourageMult += (2 - encourageMult) * baseStrength;
-        encourageMult = Math.min(encourageMult, 2);
+        encourageMult += (1.5 - encourageMult) * baseStrength;
+        encourageMult = Math.min(encourageMult, 1.5);
     }
 
     /**
@@ -238,13 +222,30 @@ public class RobotFightingGame {
     private void determineWinner() {
         if (chosenFighterHp <= 0) {
             if (otherFighterHp <= 0) {
-                gameDisplay.fightOver("drew");
+                gameDisplay.playExplosionEffect(gameDisplay.getChosenActor());
+                gameDisplay.playExplosionEffect(gameDisplay.getOtherActor(gameDisplay.getChosenActor()));
             } else {
-                gameDisplay.fightOver("lost");
+                gameDisplay.playExplosionEffect(gameDisplay.getOtherActor(gameDisplay.getChosenActor()));
             }
         } else {
-            gameDisplay.fightOver("won");
+            gameDisplay.playExplosionEffect(gameDisplay.getChosenActor());
         }
+
+        Timer.schedule(new Timer.Task() {
+            @Override
+            public void run() {
+                if (chosenFighterHp <= 0) {
+                    if (otherFighterHp <= 0) {
+                        gameEntity.getEvents().trigger("draw");
+                    } else {
+                        gameEntity.getEvents().trigger("lose");
+                    }
+                } else {
+                    gameEntity.getEvents().trigger("win");
+                }
+                gameEntity.getEvents().trigger("interact");
+            }
+        }, 1f);
     }
 
     /**

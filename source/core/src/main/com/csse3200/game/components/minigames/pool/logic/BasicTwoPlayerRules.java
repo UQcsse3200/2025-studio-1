@@ -81,6 +81,7 @@ public class BasicTwoPlayerRules implements RuleSet {
     @Override
     public void onShoot(Body cue, float dx, float dy, float power) {
         if (cue == null) return;
+        if (shotActive) return;
         if (Math.abs(dx) < 1e-4 && Math.abs(dy) < 1e-4) return;
 
         float p = MathUtils.clamp(power, 0f, 1f);
