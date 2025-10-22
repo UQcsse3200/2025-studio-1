@@ -1,5 +1,6 @@
 package com.csse3200.game.areas;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.areas.terrain.TerrainFactory;
@@ -7,8 +8,11 @@ import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.components.KeycardGateComponent;
 import com.csse3200.game.entities.Entity;
+import com.csse3200.game.entities.configs.Benches;
+import com.csse3200.game.entities.factories.InteractableStationFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.entities.factories.system.TeleporterFactory;
+import com.csse3200.game.lighting.LightSpawner;
 import com.csse3200.game.physics.PhysicsLayer;
 import com.csse3200.game.physics.PhysicsUtils;
 import com.csse3200.game.physics.components.ColliderComponent;
@@ -16,6 +20,9 @@ import com.csse3200.game.physics.components.HitboxComponent;
 import com.csse3200.game.physics.components.PhysicsComponent;
 import com.csse3200.game.rendering.TextureRenderComponent;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+import com.csse3200.game.services.ServiceLocator;
+
+import java.util.List;
 
 /**
  * Elevator room: minimal walls and two doors (left--Office, right--Research).
@@ -41,8 +48,28 @@ public class ElevatorGameArea extends GameArea {
         /** Ensure the thin floor texture is available for the elevator room **/
         ensureTextures(new String[]{"foreg_sprites/general/ThinFloor3.png", "images/Elevator background.png", "images/keycard_lvl2.png", "images/KeycardDoor.png", "images/Office and elevator/Office platform.png", "images/Office and elevator/Office desk.png"});
         /** Use the dedicated elevator background **/
-        terrain = terrainFactory.createTerrain(TerrainType.ELEVATOR);
-        spawnEntity(new Entity().addComponent(terrain));
+        GenericLayout.ensureGenericAssets(this);
+        GenericLayout.setupTerrainWithOverlay(this, terrainFactory, TerrainType.ELEVATOR,
+                new Color(0.08f, 0.08f, 0.1f, 0.30f));
+
+        //Checks to see if the lighting service is not null and then sets the ambient light and turns on shadows for the room.
+        var ls = ServiceLocator.getLightingService();
+        if (ls != null && ls.getEngine() != null) {
+            ls.getEngine().setAmbientLight(0.65f);
+            ls.getEngine().getRayHandler().setShadows(true);
+        }
+
+        LightSpawner.spawnCeilingCones(
+                this,
+                List.of(
+                        new GridPoint2(4,21),
+                        new GridPoint2(12,21),
+                        new GridPoint2(20,21),
+                        new GridPoint2(27,21)
+                ),
+                new Color(0.37f, 0.82f, 0.9f, 0.80f)
+        );
+
         spawnBordersAndDoors();
         Entity player = spawnPlayer();
         spawnObjectDoors(new GridPoint2(0, 6), new GridPoint2(28, 19));
@@ -51,6 +78,7 @@ public class ElevatorGameArea extends GameArea {
         spawnDesk();
         spawnTeleporter();
         spawnSpikes();
+        spawnSpeedBench();
 
         if (!ElevatorGameArea.isCleared) {
             startWaves(player);
@@ -140,7 +168,7 @@ public class ElevatorGameArea extends GameArea {
                 .addComponent(new TextureRenderComponent("images/Office and elevator/Office desk.png"))
                 .addComponent(new PhysicsComponent())
                 .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
-        
+
         desk.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
         desk.getComponent(TextureRenderComponent.class).scaleEntity();
         desk.scaleHeight(3.0f);
@@ -148,7 +176,10 @@ public class ElevatorGameArea extends GameArea {
         desk.setPosition(12f, 3f);
         spawnEntity(desk);
     }
-
+    private void spawnSpeedBench() {
+        Entity bench = InteractableStationFactory.createStation(Benches.SPEED_BENCH);
+        spawnEntityAt(bench, new GridPoint2(25, 8), true, true);
+    }
     /**
      * Spawn a few floating platforms
      */

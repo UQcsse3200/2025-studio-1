@@ -15,6 +15,7 @@ import com.csse3200.game.entities.factories.ShopFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.entities.factories.system.TeleporterFactory;
 import com.csse3200.game.entities.spawner.ItemSpawner;
+import com.csse3200.game.services.ServiceLocator;
 
 /**
  * Second floor with different background and arrow-key controls.
@@ -33,8 +34,18 @@ public class Reception extends GameArea {
 
     @Override
     public void create() {
+        GenericLayout.ensureGenericAssets(this);
+        GenericLayout.setupTerrainWithOverlay(this, terrainFactory, TerrainType.LOBBY,
+                new Color(0.08f, 0.08f, 0.1f, 0.30f));
+
         ensureAssets();
-        spawnTerrain();
+
+        var ls = ServiceLocator.getLightingService();
+        if (ls != null && ls.getEngine() != null) {
+            ls.getEngine().setAmbientLight(0.65f);
+            ls.getEngine().getRayHandler().setShadows(true);
+        }
+
         spawnWallsAndDoor();
         player = spawnPlayer();
         spawnFloor();
@@ -45,6 +56,7 @@ public class Reception extends GameArea {
         spawndesk_reception();
         spawncomic_stand();
         spawnTeleporter();
+        spawnShopKiosk();
 
         if (!Reception.isCleared) {
             startWaves(player);
@@ -85,10 +97,6 @@ public class Reception extends GameArea {
         ensurePlayerAtlas();
     }
 
-    private void spawnTerrain() {
-        setupTerrainWithOverlay(terrainFactory, TerrainType.LOBBY, new Color(0.1f, 0.1f, 0.2f, 0.25f));
-    }
-
     private void spawnWallsAndDoor() {
         if (cameraComponent == null) return;
         Bounds b = getCameraBounds(cameraComponent);
@@ -96,11 +104,11 @@ public class Reception extends GameArea {
         addSolidWallRight(b, WALL_WIDTH);
         addSolidWallTop(b, WALL_WIDTH);
         float leftDoorHeight = Math.max(1f, b.viewHeight() * 0.2f);
-        float leftDoorY = b.bottomY();
+        float leftDoorY = b.bottomY()-1;
         float leftTopSegHeight = Math.max(0f, b.topY() - (leftDoorY + leftDoorHeight));
         if (leftTopSegHeight > 0f) {
             Entity leftTop = ObstacleFactory.createWall(WALL_WIDTH, leftTopSegHeight);
-            leftTop.setPosition(b.leftX(), leftDoorY + leftDoorHeight + 2f);
+            leftTop.setPosition(b.leftX(), leftDoorY + leftDoorHeight);
             spawnEntity(leftTop);
         }
         Entity leftDoor = ObstacleFactory.createDoorTrigger(WALL_WIDTH, leftDoorHeight);

@@ -17,9 +17,13 @@ import com.csse3200.game.entities.factories.characters.FriendlyNPCFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.entities.factories.system.TeleporterFactory;
 import com.csse3200.game.entities.spawner.ItemSpawner;
+import com.csse3200.game.lighting.LightSpawner;
 import com.csse3200.game.physics.PhysicsUtils;
 import com.csse3200.game.physics.components.ColliderComponent;
 import com.csse3200.game.physics.components.PhysicsComponent;
+import com.csse3200.game.services.ServiceLocator;
+
+import java.util.List;
 
 /**
  * Tunnel room: minimal walls with left door back to Server Room.
@@ -56,6 +60,24 @@ public class TunnelGameArea extends GameArea {
         GenericLayout.ensureGenericAssets(this);
         GenericLayout.setupTerrainWithOverlay(this, terrainFactory, TerrainType.TUNNEL_ROOM,
                 new Color(0.08f, 0.08f, 0.12f, 0.28f));
+
+        //Checks to see if the lighting service is not null and then sets the ambient light and turns on shadows for the room.
+        var ls = ServiceLocator.getLightingService();
+        if (ls != null && ls.getEngine() != null) {
+            ls.getEngine().setAmbientLight(0.65f);
+            ls.getEngine().getRayHandler().setShadows(true);
+        }
+
+        LightSpawner.spawnCeilingCones(
+                this,
+                List.of(
+                new GridPoint2(4,21),
+                new GridPoint2(12,21),
+                new GridPoint2(20,21),
+                new GridPoint2(27,21)
+                ),
+                new Color(0.67f, 0.19f, 0.19f, 0.95f)
+        );
 
         spawnBordersAndDoors();
         Entity player = spawnPlayer();

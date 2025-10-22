@@ -14,12 +14,13 @@ import com.csse3200.game.entities.factories.characters.BossFactory;
 import com.csse3200.game.entities.factories.characters.FriendlyNPCFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.entities.spawner.ItemSpawner;
+import com.csse3200.game.lighting.LightSpawner;
 import com.csse3200.game.physics.components.ColliderComponent;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.services.ResourceService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+
+import java.util.List;
 
 /**
  * This is the room that holds the Ground Moving Boss Boss.
@@ -70,6 +71,23 @@ public class MovingBossRoom extends GameArea {
         GenericLayout.setupTerrainWithOverlay(this, terrainFactory, TerrainType.SERVER_ROOM,
                 new Color(0.10f, 0.12f, 0.10f, 0.24f));
 
+        //Checks to see if the lighting service is not null and then sets the ambient light and turns on shadows for the room.
+        var ls = ServiceLocator.getLightingService();
+        if (ls != null && ls.getEngine() != null) {
+            ls.getEngine().setAmbientLight(0.65f);
+            ls.getEngine().getRayHandler().setShadows(true);
+        }
+
+        LightSpawner.spawnCeilingCones(
+                this,
+                List.of(
+                        new GridPoint2(4,21),
+                        new GridPoint2(12,21),
+                        new GridPoint2(20,21)
+                ),
+                new Color(0.37f, 0.82f, 0.9f, 0.8f)
+        );
+
         spawnBordersAndDoors();
         displayUIEntity("Moving Boss Room", null);
 
@@ -77,6 +95,9 @@ public class MovingBossRoom extends GameArea {
         spawnBossAndItems();
 
         spawnObjectDoors(new GridPoint2(0, 6), new GridPoint2(28, 6));
+        spawnAssistor();
+        spawnNurse();
+        spawnPlatforms();
 
         spawnVisibleFloor();
     }
@@ -99,7 +120,7 @@ public class MovingBossRoom extends GameArea {
         Entity boss = BossFactory.createRobot(player);
 
         boss.getEvents().addListener("death", () -> ServiceLocator.getTimeSource().delayKeycardSpawn(0.05f, () -> {
-            Entity keycard = KeycardFactory.createKeycard(2);
+            Entity keycard = KeycardFactory.createKeycard(1);
             keycard.setPosition(new Vector2(3f, 7f));
             spawnEntity(keycard);
         }));
@@ -108,7 +129,12 @@ public class MovingBossRoom extends GameArea {
         registerEnemy(boss);
     }
 
+    private void spawnAssistor() {
+        GridPoint2 pos = new GridPoint2(7, 8);
 
+        Entity assistor = FriendlyNPCFactory.createAssisterNpc(player);
+        spawnEntityAt(assistor, pos, true, true);
+    }
 
     /**
      * Spawns the borders and doors of the room.
@@ -124,7 +150,11 @@ public class MovingBossRoom extends GameArea {
         float leftDoorY = b.bottomY();
         Entity leftDoor = ObstacleFactory.createDoorTrigger(WALL_WIDTH, leftDoorHeight);
         leftDoor.setPosition(b.leftX() + 0.001f, leftDoorY);
-        leftDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadSecurity));
+        leftDoor.addComponent(new KeycardGateComponent(1, () -> {
+            ColliderComponent collider = leftDoor.getComponent(ColliderComponent.class);
+            if (collider != null) collider.setEnabled(false);
+            loadSecurity();
+        }));
         spawnEntity(leftDoor);
 
         addSolidWallRight(b, WALL_WIDTH);
@@ -133,14 +163,12 @@ public class MovingBossRoom extends GameArea {
         float rightDoorY = b.bottomY();
         Entity rightDoor = ObstacleFactory.createDoorTrigger(WALL_WIDTH, rightDoorHeight);
         rightDoor.setPosition(b.rightX() - WALL_WIDTH - 0.001f, rightDoorY);
-        rightDoor.addComponent(new KeycardGateComponent(2, () -> {
+        rightDoor.addComponent(new KeycardGateComponent(1, () -> {
             ColliderComponent collider = rightDoor.getComponent(ColliderComponent.class);
             if (collider != null) collider.setEnabled(false);
             loadOffice();
         }));
         spawnEntity(rightDoor);
-
-        if (!MovingBossRoom.isCleared) registerDoors(new Entity[]{leftDoor});
     }
 
     /**
@@ -154,6 +182,15 @@ public class MovingBossRoom extends GameArea {
             return;
         }
         MovingBossRoom.playerSpawn = newSpawn;
+    }
+    private void spawnPlatforms() {
+        Entity platform1 = ObstacleFactory.createThinFloor();
+        GridPoint2 platform1Pos = new GridPoint2(4, 10);
+        spawnEntityAt(platform1, platform1Pos, false, false);
+
+        Entity platform3 = ObstacleFactory.createThinFloor();
+        GridPoint2 platform3Pos = new GridPoint2(22, 10);
+        spawnEntityAt(platform3, platform3Pos, false, false);
     }
 
     public Entity getPlayer() {

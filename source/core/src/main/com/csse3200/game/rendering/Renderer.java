@@ -106,11 +106,7 @@ public class Renderer implements Disposable {
 
         LightingService ls = ServiceLocator.getLightingService();
         if (ls != null && ls.getEngine() != null) {
-            // Only render lights in rooms that actually spawn lights
-            var area = ServiceLocator.getGameArea();
-            if (area instanceof com.csse3200.game.areas.CasinoGameArea) {
-                ls.getEngine().render();
-            }
+            ls.getEngine().render();
         }
 
         debugRenderer.render(projMatrix);

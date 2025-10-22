@@ -19,6 +19,7 @@ import com.csse3200.game.components.screens.Minimap;
 import com.csse3200.game.components.screens.MinimapDisplay;
 import com.csse3200.game.components.screens.PauseEscInputComponent;
 import com.csse3200.game.components.screens.PauseMenuDisplay;
+import com.csse3200.game.components.settingsmenu.ControlDisplay;
 import com.csse3200.game.components.teleporter.TeleporterComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
@@ -73,7 +74,24 @@ public class MainGameScreen extends ScreenAdapter {
     private boolean isPauseVisible = false;
     private boolean isMinimapVisible = false;
     private boolean pauseToggledThisFrame = false; // guard to avoid reopen on same ESC
+    private Entity controlsOverlay;
 
+    public void showControlsOverlay() {
+        Stage stage = ServiceLocator.getRenderService().getStage();
+        controlsOverlay = new Entity()
+                .addComponent(new ControlDisplay(null, this::backToPauseMenu))
+                .addComponent(new InputDecorator(stage, 100));
+        ServiceLocator.getEntityService().register(controlsOverlay);
+    }
+
+    private void backToPauseMenu() {
+        if (controlsOverlay != null) {
+            controlsOverlay.dispose();
+            ServiceLocator.getEntityService().unregister(controlsOverlay);
+            controlsOverlay = null;
+        }
+        showPauseOverlay();
+    }
     public MainGameScreen(GdxGame game, boolean loadSaveGame) {
         this.game = game;
 

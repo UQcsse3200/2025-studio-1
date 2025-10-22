@@ -5,6 +5,7 @@ import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.csse3200.game.GdxGame;
+import com.csse3200.game.screens.MainGameScreen;
 import com.csse3200.game.services.ServiceLocator;
 
 /**
@@ -96,6 +97,12 @@ public class PauseMenuDisplay extends BaseScreenDisplay {
         panel.add(button("Main Menu", 2f, () -> {
             ServiceLocator.getButtonSoundService().playClick();
             backMainMenu();
+        })).row();
+        panel.add(button("Control", 2f, () -> {
+            ServiceLocator.getButtonSoundService().playClick();
+            entity.dispose();
+            ServiceLocator.getEntityService().unregister(entity);
+            ((MainGameScreen) game.getScreen()).showControlsOverlay();
         })).row();
 
         panel.add(button("Save", 1.8f, () -> {

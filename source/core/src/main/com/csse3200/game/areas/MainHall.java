@@ -11,7 +11,11 @@ import com.csse3200.game.entities.configs.ItemSpawnConfig;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.entities.spawner.ItemSpawner;
 import com.csse3200.game.entities.factories.system.TeleporterFactory;
+import com.csse3200.game.lighting.LightSpawner;
 import com.csse3200.game.rendering.SolidColorRenderComponent;
+import com.csse3200.game.services.ServiceLocator;
+
+import java.util.List;
 
 /**
  * Room 5 with its own background styling.
@@ -47,9 +51,30 @@ public class MainHall extends GameArea {
 
     @Override
     public void create() {
+        GenericLayout.ensureGenericAssets(this);
+        GenericLayout.setupTerrainWithOverlay(this, terrainFactory, TerrainType.MAIN_HALL,
+                new Color(0.08f, 0.08f, 0.1f, 0.30f));
+
         ensureAssets();
-        terrain = terrainFactory.createTerrain(TerrainType.MAIN_HALL);
-        spawnEntity(new Entity().addComponent(terrain));
+
+        //Checks to see if the lighting service is not null and then sets the ambient light and turns on shadows for the room.
+        var ls = ServiceLocator.getLightingService();
+        if (ls != null && ls.getEngine() != null) {
+            ls.getEngine().setAmbientLight(0.65f);
+            ls.getEngine().getRayHandler().setShadows(true);
+        }
+
+        LightSpawner.spawnCeilingCones(
+                this,
+                List.of(
+                        new GridPoint2(4,21),
+                        new GridPoint2(12,21),
+                        new GridPoint2(20,21),
+                        new GridPoint2(27,21)
+                ),
+                new Color(0.37f, 0.82f, 0.9f, 0.8f)
+        );
+
         Entity overlay = new Entity();
         overlay.setScale(1000f, 1000f);
         overlay.setPosition(-500f, -500f);

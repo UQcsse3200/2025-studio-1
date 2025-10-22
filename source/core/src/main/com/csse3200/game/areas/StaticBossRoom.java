@@ -14,10 +14,13 @@ import com.csse3200.game.entities.factories.KeycardFactory;
 import com.csse3200.game.entities.factories.characters.BossFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.entities.spawner.ItemSpawner;
+import com.csse3200.game.lighting.LightSpawner;
 import com.csse3200.game.physics.PhysicsLayer;
 import com.csse3200.game.physics.components.ColliderComponent;
 import com.csse3200.game.physics.components.HitboxComponent;
 import com.csse3200.game.services.ServiceLocator;
+
+import java.util.List;
 
 /**
  * This is the room that holds the static Boss.
@@ -79,6 +82,23 @@ public class StaticBossRoom extends GameArea {
         GenericLayout.setupTerrainWithOverlay(this, terrainFactory, TerrainType.SERVER_ROOM,
                 new Color(0.10f, 0.12f, 0.10f, 0.24f));
 
+        //Checks to see if the lighting service is not null and then sets the ambient light and turns on shadows for the room.
+        var ls = ServiceLocator.getLightingService();
+        if (ls != null && ls.getEngine() != null) {
+            ls.getEngine().setAmbientLight(0.65f);
+            ls.getEngine().getRayHandler().setShadows(true);
+        }
+
+        LightSpawner.spawnCeilingCones(
+                this,
+                List.of(
+                        new GridPoint2(4,21),
+                        new GridPoint2(12,21),
+                        new GridPoint2(20,21)
+                ),
+                new Color(0.37f, 0.82f, 0.9f, 0.8f)
+        );
+
         spawnBordersAndDoors();
         displayUIEntity("Static Boss Room", null);
 
@@ -92,6 +112,7 @@ public class StaticBossRoom extends GameArea {
             itemSpawner.spawnItems(ItemSpawnConfig.bossmap());
         }
 
+        spawnPlatforms();
         spawnVisibleFloor();
     }
 
@@ -160,8 +181,15 @@ public class StaticBossRoom extends GameArea {
             loadSecretRoom();
         }));
         spawnEntity(rightDoor);
+    }
+    private void spawnPlatforms() {
+        Entity platform1 = ObstacleFactory.createThinFloor();
+        GridPoint2 platform1Pos = new GridPoint2(4, 10);
+        spawnEntityAt(platform1, platform1Pos, false, false);
 
-        if (!StaticBossRoom.isCleared) registerDoors(new Entity[]{leftDoor});
+        Entity platform3 = ObstacleFactory.createThinFloor();
+        GridPoint2 platform3Pos = new GridPoint2(22, 10);
+        spawnEntityAt(platform3, platform3Pos, false, false);
     }
 
     public void loadSecretRoom() {

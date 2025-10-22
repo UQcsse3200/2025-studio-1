@@ -11,6 +11,10 @@ import com.csse3200.game.entities.configs.ItemSpawnConfig;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.entities.factories.system.TeleporterFactory;
 import com.csse3200.game.entities.spawner.ItemSpawner;
+import com.csse3200.game.lighting.LightSpawner;
+import com.csse3200.game.services.ServiceLocator;
+
+import java.util.List;
 
 /**
  * The "Storage" area of the game map. This class:
@@ -73,6 +77,22 @@ public class StorageGameArea extends GameArea {
         GenericLayout.setupTerrainWithOverlay(this, terrainFactory, TerrainType.STORAGE,
                 new Color(0.12f, 0.12f, 0.10f, 0.26f));
 
+        //Checks to see if the lighting service is not null and then sets the ambient light and turns on shadows for the room.
+        var ls = ServiceLocator.getLightingService();
+        if (ls != null && ls.getEngine() != null) {
+            ls.getEngine().setAmbientLight(0.65f);
+            ls.getEngine().getRayHandler().setShadows(true);
+        }
+
+        LightSpawner.spawnCeilingCones(
+                this,
+                List.of(
+                        new GridPoint2(4,21),
+                        new GridPoint2(20,21),
+                        new GridPoint2(27,21)
+                ),
+                new Color(0.37f, 0.82f, 0.9f, 0.8f)
+        );
         spawnBordersAndDoors();
         Entity player = spawnPlayer();
         spawnFloor();

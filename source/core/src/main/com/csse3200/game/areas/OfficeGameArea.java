@@ -1,13 +1,18 @@
 package com.csse3200.game.areas;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.entities.Entity;
+import com.csse3200.game.entities.configs.Benches;
+import com.csse3200.game.entities.factories.InteractableStationFactory;
 import com.csse3200.game.entities.factories.system.TeleporterFactory;
+import com.csse3200.game.lighting.LightSpawner;
 import com.csse3200.game.services.ServiceLocator;
+import java.util.List;
 import com.csse3200.game.entities.factories.characters.FriendlyNPCFactory;
 
 
@@ -47,6 +52,8 @@ public class OfficeGameArea extends GameArea {
     @Override
     public void create() {
         GenericLayout.ensureGenericAssets(this);
+        GenericLayout.setupTerrainWithOverlay(this, terrainFactory, TerrainType.OFFICE,
+                new Color(0.08f, 0.08f, 0.1f, 0.30f));
         ensureTextures(new String[]{
                 "images/Office and elevator/Office Background.png",
                 "images/Office and elevator/Office stuff.png",
@@ -54,9 +61,24 @@ public class OfficeGameArea extends GameArea {
                 "foreg_sprites/general/ThinFloor3.png",
                 "images/Office and elevator/Platform for elevator.png"
         });
-        // Use dedicated office background
-        terrain = terrainFactory.createTerrain(TerrainType.OFFICE);
-        spawnEntity(new Entity().addComponent(terrain));
+
+        //Checks to see if the lighting service is not null and then sets the ambient light and turns on shadows for the room.
+        var ls = ServiceLocator.getLightingService();
+        if (ls != null && ls.getEngine() != null) {
+            ls.getEngine().setAmbientLight(0.65f);
+            ls.getEngine().getRayHandler().setShadows(true);
+        }
+
+        LightSpawner.spawnCeilingCones(
+                this,
+                List.of(
+                        new GridPoint2(4,21),
+                        new GridPoint2(12,21),
+                        new GridPoint2(20,21),
+                        new GridPoint2(27,21)
+                ),
+                new Color(0.37f, 0.82f, 0.9f, 0.8f)
+        );
 
         spawnBordersAndDoors();
         Entity player = spawnPlayer();
@@ -66,6 +88,7 @@ public class OfficeGameArea extends GameArea {
         spawnOfficeProps();
         spawnTeleporter();
         spawnAssistor();
+        spawnHealthBench();
 
         if (!OfficeGameArea.isCleared) {
             startWaves(player);
@@ -146,6 +169,10 @@ public class OfficeGameArea extends GameArea {
             }
         }
         return player;
+    }
+    private void spawnHealthBench() {
+        Entity bench = InteractableStationFactory.createStation(Benches.HEALTH_BENCH);
+        spawnEntityAt(bench, new GridPoint2(23, 8), true, true);
     }
 
     private void spawnOfficeProps() {

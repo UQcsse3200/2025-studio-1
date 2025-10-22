@@ -1,10 +1,16 @@
 package com.csse3200.game.areas;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.GridPoint2;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.entities.Entity;
+
+import com.csse3200.game.lighting.LightSpawner;
+import com.csse3200.game.services.ServiceLocator;
+
+import java.util.List;
 
 /**
  * Secret room: A minimal area with only background, a floor,
@@ -27,9 +33,27 @@ public class SecretRoomGameArea extends GameArea {
         });
 
         // Use the Office terrain as the background of this room
-        terrain = terrainFactory.createTerrain(TerrainType.OFFICE);
-        spawnEntity(new Entity().addComponent(terrain));
+        GenericLayout.ensureGenericAssets(this);
+        GenericLayout.setupTerrainWithOverlay(this, terrainFactory, TerrainType.SECRET,
+                new Color(0.08f, 0.08f, 0.1f, 0.30f));
 
+        //Checks to see if the lighting service is not null and then sets the ambient light and turns on shadows for the room.
+        var ls = ServiceLocator.getLightingService();
+        if (ls != null && ls.getEngine() != null) {
+            ls.getEngine().setAmbientLight(0.65f);
+            ls.getEngine().getRayHandler().setShadows(true);
+        }
+
+        LightSpawner.spawnCeilingCones(
+                this,
+                List.of(
+                        new GridPoint2(4,21),
+                        new GridPoint2(12,21),
+                        new GridPoint2(20,21),
+                        new GridPoint2(27,21)
+                ),
+                new Color(0.37f, 0.82f, 0.9f, 0.8f)
+        );
 
         spawnFloor();
         spawnPlayer();
