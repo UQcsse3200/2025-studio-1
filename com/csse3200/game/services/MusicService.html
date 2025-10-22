@@ -91,7 +91,7 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">MusicService</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
-<div class="block">Handles background music for the menu</div>
+<div class="block">Handles background music for the menu and game</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -124,19 +124,28 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isMenuMusicPlaying()" class="member-name-link">isMenuMusicPlaying</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Checks whether the menu music is currently playing</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#load(com.csse3200.game.services.ResourceService)" class="member-name-link">load</a><wbr>(<a href="ResourceService.html" title="class in com.csse3200.game.services">ResourceService</a>&nbsp;resourceService)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setForestMusicPlaying(boolean)" class="member-name-link">setForestMusicPlaying</a><wbr>(boolean&nbsp;play)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Controls the forest music playback state</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setMenuMusicPlaying(boolean)" class="member-name-link">setMenuMusicPlaying</a><wbr>(boolean&nbsp;play)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Controls the menu music playback state</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#updateForScreen(java.lang.String)" class="member-name-link">updateForScreen</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;screenType)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Updates the currently playing music based on the active screen
+ Stops or starts the track depending on the screen type</div>
+</div>
 </div>
 </div>
 </div>
@@ -178,24 +187,45 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="updateForScreen(java.lang.String)">
 <h3>updateForScreen</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">updateForScreen</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;screenType)</span></div>
+<div class="block">Updates the currently playing music based on the active screen
+ Stops or starts the track depending on the screen type</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>screenType</code> - The current screen of the game</dd>
+</dl>
 </section>
 </li>
 <li>
 <section class="detail" id="isMenuMusicPlaying()">
 <h3>isMenuMusicPlaying</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isMenuMusicPlaying</span>()</div>
+<div class="block">Checks whether the menu music is currently playing</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>true if the menu music is playing, false otherwise.</dd>
+</dl>
 </section>
 </li>
 <li>
 <section class="detail" id="setMenuMusicPlaying(boolean)">
 <h3>setMenuMusicPlaying</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setMenuMusicPlaying</span><wbr><span class="parameters">(boolean&nbsp;play)</span></div>
+<div class="block">Controls the menu music playback state</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>play</code> - true to start playing, false to stop</dd>
+</dl>
 </section>
 </li>
 <li>
 <section class="detail" id="setForestMusicPlaying(boolean)">
 <h3>setForestMusicPlaying</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setForestMusicPlaying</span><wbr><span class="parameters">(boolean&nbsp;play)</span></div>
+<div class="block">Controls the forest music playback state</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>play</code> - true to start playing, false to stop</dd>
+</dl>
 </section>
 </li>
 <li>
