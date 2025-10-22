@@ -583,7 +583,7 @@ public class RobotFightingDisplay extends UIComponent {
 
         // Create the animated actor
         AnimatedImage fighter = new AnimatedImage(animation);
-        fighter.setSize((float) 250, (float) 250);
+        fighter.setSize(250, 250);
         fighter.setPosition(x, y);
 
         // Add a simple fade-in effect

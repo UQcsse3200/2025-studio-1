@@ -71,7 +71,6 @@ public class RobotFightingGame {
 
         gameEntity.getEvents().addListener("interact", this::handleInteract);
         gameEntity.getEvents().addListener("betPlaced", this::startGame);
-        gameEntity.getEvents().addListener("robotFighting:choose", this::selectFighter);
         gameEntity.getEvents().addListener("robotFighting:startFight", this::startFight);
         gameEntity.getEvents().addListener("robotFighting:encourage", this::encourageFighter);
     }
@@ -121,14 +120,6 @@ public class RobotFightingGame {
         game.addComponent(new BettingComponent(2, inventory));
         game.addComponent(new TextureRenderComponent("images/tree.png"));
         return game;
-    }
-
-    /**
-     * Stores the player’s chosen robot type for the fight.
-     *
-     * @param fighter the selected {@link Robot}.
-     */
-    private void selectFighter(Robot fighter) {
     }
 
     /**

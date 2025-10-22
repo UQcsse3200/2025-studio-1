@@ -32,12 +32,12 @@ class WhackAMoleGameTest {
         if (Gdx.app == null) {
             HeadlessApplicationConfiguration config = new HeadlessApplicationConfiguration();
             new HeadlessApplication(new ApplicationListener() {
-                @Override public void create() {}
-                @Override public void resize(int width, int height) {}
-                @Override public void render() {}
-                @Override public void pause() {}
-                @Override public void resume() {}
-                @Override public void dispose() {}
+                @Override public void create() {/* no-op */}
+                @Override public void resize(int width, int height) {/* no-op */}
+                @Override public void render() {/* no-op */}
+                @Override public void pause() {/* no-op */}
+                @Override public void resume() {/* no-op */}
+                @Override public void dispose() {/* no-op */}
             }, config);
 
             Gdx.files = new HeadlessFiles();  // fixes Gdx.files
