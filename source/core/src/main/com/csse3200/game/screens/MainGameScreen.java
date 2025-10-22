@@ -37,7 +37,8 @@ import com.csse3200.game.ui.terminal.TerminalDisplay;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Objects;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -58,7 +59,7 @@ public class MainGameScreen extends ScreenAdapter {
     private final CountdownTimerService countdownTimer;
     private CountdownTimerService escapeTimer = null;
 
-    private Entity ui;
+    private ArrayList<Entity> uis = new ArrayList<>();
 
     //Leaderboard & Session fields
     private GameSession session;
@@ -114,6 +115,11 @@ public class MainGameScreen extends ScreenAdapter {
             setEscapeTimer();
             deleteUI();
             createUI();
+        });
+        ServiceLocator.getGlobalEvents().addListener(("animation"), () -> {
+            hasWon = true;
+            setEscapeTimer();
+            deleteUI();
         });
         createUI();
 
@@ -172,6 +178,11 @@ public class MainGameScreen extends ScreenAdapter {
             setEscapeTimer();
             deleteUI();
             createUI();
+        });
+        ServiceLocator.getGlobalEvents().addListener(("animation"), () -> {
+            hasWon = true;
+            setEscapeTimer();
+            deleteUI();
         });
         createUI();
 
@@ -388,15 +399,18 @@ public class MainGameScreen extends ScreenAdapter {
             ui.addComponent(new MainGameDisplay(escapeTimer));
         }
 
-//        if(!Objects.equals(gameArea.toString(), "BadWinAnimation") &&
-//                !Objects.equals(gameArea.toString(), "GoodWinAnimation")) {
-        this.ui = ui;
-        ServiceLocator.getEntityService().register(ui);
-//        }
+        if(!hasWon) {
+            System.out.println(ui);
+            this.uis.add(ui);
+            ServiceLocator.getEntityService().register(ui);
+        }
     }
 
     private void deleteUI() {
-        ServiceLocator.getEntityService().unregister(ui);
+        System.out.println("hi");
+        for (Entity ui : uis) {
+            ui.dispose();
+        }
     }
 
     /** Remaining time in seconds, clamped to >= 0 */
