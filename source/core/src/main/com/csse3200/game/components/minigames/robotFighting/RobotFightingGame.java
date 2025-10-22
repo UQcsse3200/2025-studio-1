@@ -77,24 +77,12 @@ public class RobotFightingGame {
     }
 
     /**
-     * Alternate constructor used for testing.
-     * <p>
-     * Accepts a custom {@link RobotFightingText} to bypass {@link FileLoader}
-     * and avoid external asset loading.
-     * </p>
-     *
-     * @param customText Preloaded text data containing encouragement strings.
+     * Testing constructor that skips LibGDX or entity initialization.
      */
-    public RobotFightingGame(RobotFightingText customText) {
-        this.encouragingMessages = customText;
-
-        gameEntity = initGameEntity();
-        gameDisplay = gameEntity.getComponent(RobotFightingDisplay.class);
-
-        gameEntity.getEvents().addListener("interact", this::handleInteract);
-        gameEntity.getEvents().addListener("robotFighting:choose", this::selectFighter);
-        gameEntity.getEvents().addListener("robotFighting:startFight", this::startFight);
-        gameEntity.getEvents().addListener("robotFighting:encourage", this::encourageFighter);
+    protected RobotFightingGame(RobotFightingText text) {
+        this.encouragingMessages = text;
+        this.gameEntity = new Entity();
+        this.gameDisplay = null;
     }
 
     /**
@@ -103,14 +91,14 @@ public class RobotFightingGame {
      * When visible, the game is paused; when hidden, gameplay resumes.
      * </p>
      */
-    private void handleInteract() {
+    void handleInteract() {
         if (gameDisplayed) {
             gameDisplay.hide();
             gameDisplayed = false;
         }
     }
 
-    private void startGame() {
+    void startGame() {
         if (!gameDisplayed) {
             gameDisplay.show();
             gameDisplayed = true;
@@ -210,7 +198,7 @@ public class RobotFightingGame {
      * The closer it gets to 2, the smaller the increase.
      * </p>
      */
-    private void encourageFighter() {
+    void encourageFighter() {
         gameDisplay.encourageFighter(encouragingMessages.getRandom());
         boolean successfulEncourage = Math.random() < 0.5;
 

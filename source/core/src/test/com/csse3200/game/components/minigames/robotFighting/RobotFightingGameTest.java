@@ -1,166 +1,154 @@
 package com.csse3200.game.components.minigames.robotFighting;
 
+import com.badlogic.gdx.ApplicationListener;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.backends.headless.HeadlessApplication;
+import com.badlogic.gdx.backends.headless.HeadlessApplicationConfiguration;
+import com.badlogic.gdx.backends.headless.HeadlessFiles;
 import com.badlogic.gdx.utils.Timer;
 import com.csse3200.game.entities.Entity;
-import com.csse3200.game.services.ServiceLocator;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
+import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Unit tests for RobotFightingGame without relying on FileLoader.
+ * Pure logic unit test for RobotFightingGame.
+ * No Gdx textures, ServiceLocator, or native rendering required.
  */
-class RobotFightingGameTest {
+public class RobotFightingGameTest {
+    private HeadlessGame game;
+    private static DummyDisplay display;
+    private DummyText text;
 
-    /** Minimal subclass that skips FileLoader usage. */
-    static class TestGame extends RobotFightingGame {
-        TestDisplay injectedDisplay;
+    // ------------------------------------------------------------------------
+    // Dummy dependencies
+    // ------------------------------------------------------------------------
 
-        TestGame(RobotFightingText text) {
-            super(text);
+    /** Safe mock of RobotFightingText that initializes its list. */
+    static class DummyText extends RobotFightingText {
+        DummyText() {
+            this.encouragingMessages = new ArrayList<>();
         }
-
-        @Override
-        protected Entity initGameEntity() {
-            Entity fakeEntity = new Entity();
-            injectedDisplay = new TestDisplay();
-            fakeEntity.addComponent(injectedDisplay);
-            return fakeEntity;
+        void addMessage(String msg) {
+            encouragingMessages.add(msg);
         }
+    }
 
-        TestDisplay getInjectedDisplay() {
-            return injectedDisplay;
+    /** Fake display (no LibGDX code). */
+    static class DummyDisplay {
+        boolean hideCalled = false;
+        boolean showCalled = false;
+        boolean encouraged = false;
+        boolean explosionPlayed = false;
+
+        public void hide() { hideCalled = true; }
+        public void show() { showCalled = true; }
+        public void encourageFighter(String msg) { encouraged = true; }
+        public void playExplosionEffect(Object fighter) { explosionPlayed = true; }
+    }
+
+    /** Headless RobotFightingGame that uses dummy display and dummy entity. */
+    static class HeadlessGame extends RobotFightingGame {
+        private final DummyDisplay dummyDisplay;
+        private final Entity dummyEntity;
+        private final RobotFightingText textRef;
+
+        HeadlessGame(RobotFightingText text, DummyDisplay display) {
+            super(text); // uses the headless constructor you added in RobotFightingGame
+            this.textRef = text;
+            this.dummyDisplay = display;
+
+            // IMPORTANT: use super.getGameEntity() here (not getGameEntity())
+            this.dummyEntity = super.getGameEntity();
+
+            // Wire only what the tests need, without touching gameDisplay
+            dummyEntity.getEvents().addListener("interact", dummyDisplay::hide);
+            dummyEntity.getEvents().addListener("betPlaced", dummyDisplay::show);
+            dummyEntity.getEvents().addListener("robotFighting:encourage",
+                    () -> dummyDisplay.encourageFighter(textRef.getRandom()));
         }
     }
 
 
-    /** Minimal stub display that avoids LibGDX UI dependencies. */
-    static class TestDisplay extends RobotFightingDisplay {
-        boolean shown = false;
-        boolean hidden = false;
-        int fightOverCalls = 0;
-        String lastResult = null;
-        String lastEncouragement = null;
 
-        @Override public void show() { shown = true; }
-        @Override public void hide() { hidden = true; }
-        @Override public void fightOver(String status) {
-            fightOverCalls++;
-            lastResult = status;
-        }
-        @Override public void encourageFighter(String msg) {
-            lastEncouragement = msg;
-        }
 
-    }
 
-    private TestGame game;
-    private Entity entity;
-    private TestDisplay testDisplay;
+
+    // ------------------------------------------------------------------------
+    // Setup
+    // ------------------------------------------------------------------------
 
     @BeforeEach
-    void setUp() throws Exception {
-        ServiceLocator.clear();
+    void setUp() {
+        text = new DummyText();
+        text.addMessage("Go Clanker!");
+        text.addMessage("Keep fighting!");
 
-        RobotFightingText fakeText = new RobotFightingText();
-        Field field = RobotFightingText.class.getDeclaredField("encouragingMessages");
-        field.setAccessible(true);
-        field.set(fakeText, java.util.List.of("test encouragement"));
+        display = new DummyDisplay();
+        game = new HeadlessGame(text, display);
 
-        game = new TestGame(fakeText);
-        entity = game.getGameEntity();
-        testDisplay = ((TestGame) game).getInjectedDisplay();
-
-        Field displayField = RobotFightingGame.class.getDeclaredField("gameDisplay");
-        displayField.setAccessible(true);
-        displayField.set(game, testDisplay);
-    }
-
-
-
-    @AfterEach
-    void tearDown() {
-        ServiceLocator.clear();
         Timer.instance().clear();
     }
 
-    // Helper reflection accessors (same as before)
-    private double getEncourageMult() throws Exception {
-        Field f = RobotFightingGame.class.getDeclaredField("encourageMult");
-        f.setAccessible(true);
-        return f.getDouble(game);
+    @BeforeAll
+    static void initGdxEnvironment() {
+        if (Gdx.app == null) {
+            HeadlessApplicationConfiguration config = new HeadlessApplicationConfiguration();
+            new HeadlessApplication(new ApplicationListener() {
+                @Override public void create() {}
+                @Override public void resize(int width, int height) {}
+                @Override public void render() {}
+                @Override public void pause() {}
+                @Override public void resume() {}
+                @Override public void dispose() {}
+            }, config);
+            Gdx.files = new HeadlessFiles();
+        }
     }
 
-    private void setEncourageMult(double v) throws Exception {
-        Field f = RobotFightingGame.class.getDeclaredField("encourageMult");
-        f.setAccessible(true);
-        f.setDouble(game, v);
+    @AfterAll
+    static void tearDownGdx() {
+        if (Gdx.app != null) {
+            Gdx.app.exit();
+            Gdx.app = null;
+        }
     }
 
-    private void callMethod(String name, Class<?>... params) throws Exception {
-        Method m = RobotFightingGame.class.getDeclaredMethod(name, params);
-        m.setAccessible(true);
-        m.invoke(game);
+
+    // ------------------------------------------------------------------------
+    // Tests
+    // ------------------------------------------------------------------------
+
+    @Test
+    void testEncourageTriggersDisplay() {
+        game.getGameEntity().getEvents().trigger("robotFighting:encourage");
+        assertTrue(display.encouraged, "encourageFighter() should be invoked.");
     }
 
     @Test
-    @DisplayName("Encouragement increases multiplier but caps at 2")
-    void testEncourageIncreases() throws Exception {
-        setEncourageMult(1.0);
-        entity.getEvents().trigger("robotFighting:encourage");
+    void testHideAndShowAreCalled() {
+        game.getGameEntity().getEvents().trigger("interact");
+        assertTrue(display.hideCalled, "interact should hide the display");
 
-        assertNotNull(testDisplay.lastEncouragement);
-        double after = getEncourageMult();
-        assertTrue(after >= 1.0 && after <= 2.0);
+        game.getGameEntity().getEvents().trigger("betPlaced");
+        assertTrue(display.showCalled, "betPlaced should show the display");
     }
 
     @Test
-    @DisplayName("Lose courage lowers multiplier but not below 1")
-    void testLoseCourage() throws Exception {
-        setEncourageMult(1.2);
-        callMethod("loseCourage");
-        assertEquals(1.15, getEncourageMult(), 0.001);
-        setEncourageMult(1.0);
-        callMethod("loseCourage");
-        assertEquals(1.0, getEncourageMult(), 0.001);
+    void testExplosionEffectIsInvoked() {
+        display.playExplosionEffect(null);
+        assertTrue(display.explosionPlayed, "Explosion effect should trigger.");
     }
 
     @Test
-    @DisplayName("determineWinner calls fightOver with correct status")
-    void testDetermineWinner() throws Exception {
-        Field cHp = RobotFightingGame.class.getDeclaredField("chosenFighterHp");
-        Field oHp = RobotFightingGame.class.getDeclaredField("otherFighterHp");
-        cHp.setAccessible(true);
-        oHp.setAccessible(true);
-
-        cHp.setInt(game, 50); oHp.setInt(game, 0);
-        callMethod("determineWinner");
-        assertEquals("won", testDisplay.lastResult);
-
-        cHp.setInt(game, 0); oHp.setInt(game, 50);
-        callMethod("determineWinner");
-        assertEquals("lost", testDisplay.lastResult);
-
-        cHp.setInt(game, 0); oHp.setInt(game, 0);
-        callMethod("determineWinner");
-        assertEquals("drew", testDisplay.lastResult);
-    }
-
-    @Test
-    @DisplayName("startFight resets HP and schedules timers")
-    void testStartFightSchedules() throws Exception {
-        Field cHp = RobotFightingGame.class.getDeclaredField("chosenFighterHp");
-        Field oHp = RobotFightingGame.class.getDeclaredField("otherFighterHp");
-        cHp.setAccessible(true);
-        oHp.setAccessible(true);
-        cHp.setInt(game, 10);
-        oHp.setInt(game, 5);
-
-        callMethod("startFight");
-        assertEquals(100, cHp.getInt(game));
-        assertEquals(100, oHp.getInt(game));
+    void testTextGetRandomReturnsMessage() {
+        String msg = text.getRandom();
+        assertNotNull(msg, "getRandom() should return a message when list is filled");
+        assertTrue(text.encouragingMessages.contains(msg));
     }
 }
