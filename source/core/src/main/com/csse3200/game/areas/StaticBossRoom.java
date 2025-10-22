@@ -7,7 +7,6 @@ import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.components.DoorComponent;
-import com.csse3200.game.components.KeycardGateComponent;
 import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.ItemSpawnConfig;
@@ -128,10 +127,62 @@ public class StaticBossRoom extends GameArea {
                 Entity keycard = KeycardFactory.createKeycard(3);
                 keycard.setPosition(new Vector2(3f, 10f)); // adjust position if needed
                 spawnEntity(keycard);
+
+                addWinText(new Vector2(2.5f, 3.5f));
             });
         });
 
         spawnEntityAt(boss, pos, true, true);
+    }
+
+    /**
+     * Adds an interactable orange button in the room.
+     * When the player approaches the button, a prompt will appear saying
+     * <b>"Press E to destroy the factory"</b>. When the player presses E,
+     * the {@link #makeTextConfig()} logic is executed — unlocking the right door.
+     *
+     * @param pos The grid position to spawn the button at.
+     */
+    private void addWinText(Vector2 pos) {
+        Entity text = InteractableStationFactory.createBaseStation();
+        //text.addComponent(new TextureRenderComponent("images/OrangeButton.png"));
+        //text.getComponent(TextureRenderComponent.class).scaleEntity();
+        text.scaleHeight(2f);
+        PhysicsUtils.setScaledCollider(text, 1.2f, 1.2f);
+        text.getComponent(ColliderComponent.class)
+                .setAsBoxAligned(new Vector2(1.2f, 1.2f),
+                        PhysicsComponent.AlignX.CENTER,
+                        PhysicsComponent.AlignY.CENTER);
+        text.addComponent(new StationComponent(makeTextConfig()));
+
+        spawnEntity(text);
+        text.setPosition(pos);
+    }
+
+    /**
+     * Creates a {@link BenchConfig} used for the button hint station.
+     * - Displays "Password is 0000" when near.<br>
+     * When the player presses E, it unlocks the right exit door and updates the prompt message.<br>
+     * If the player is too far, it instructs them to move closer.
+     *
+     * @return The configuration used by the button's {@link StationComponent}.
+     */
+    private BenchConfig makeTextConfig() {
+        return new BenchConfig() {
+            {
+                this.texturePath = null;
+                this.promptText = "Password is 0000";
+            }
+
+            @Override
+            public int getPrice() {
+                return 0;
+            }
+
+            @Override
+            public void upgrade(boolean playerNear, com.csse3200.game.entities.Entity player, Label prompt) {
+            }
+        };
     }
 
     /**
