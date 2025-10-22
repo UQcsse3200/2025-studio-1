@@ -36,9 +36,7 @@ import com.csse3200.game.ui.terminal.Terminal;
 import com.csse3200.game.ui.terminal.TerminalDisplay;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.util.ArrayList;
-import java.util.List;
 
 
 /**
@@ -70,7 +68,7 @@ public class MainGameScreen extends ScreenAdapter {
     private boolean isPauseVisible = false;
     private boolean isMinimapVisible = false;
     private boolean pauseToggledThisFrame = false; // guard to avoid reopen on same ESC
-    private boolean hasWon = false;
+    private boolean animation = false;
 
     public MainGameScreen(GdxGame game) {
         this.game = game;
@@ -117,7 +115,7 @@ public class MainGameScreen extends ScreenAdapter {
             createUI();
         });
         ServiceLocator.getGlobalEvents().addListener(("animation"), () -> {
-            hasWon = true;
+            animation = true;
             setEscapeTimer();
             deleteUI();
         });
@@ -180,7 +178,7 @@ public class MainGameScreen extends ScreenAdapter {
             createUI();
         });
         ServiceLocator.getGlobalEvents().addListener(("animation"), () -> {
-            hasWon = true;
+            animation = true;
             setEscapeTimer();
             deleteUI();
         });
@@ -321,9 +319,13 @@ public class MainGameScreen extends ScreenAdapter {
             setDeathScreen();
         }
 
-        // Switch to win screen if the escape sequence is running and the escape timer runs out
+        // Switch to win screen if the escape sequence is runnaing and the escape timer runs out
         if (escapeTimer != null && escapeTimer.isTimeUP()) {
-            setWinScreen();
+            if (animation) {
+                setWinScreen();
+            } else {
+                setBadWin();
+            }
         }
 
         // Reset per-frame guards/flags for the next frame
@@ -399,7 +401,7 @@ public class MainGameScreen extends ScreenAdapter {
             ui.addComponent(new MainGameDisplay(escapeTimer));
         }
 
-        if(!hasWon) {
+        if(!animation) {
             System.out.println(ui);
             this.uis.add(ui);
             ServiceLocator.getEntityService().register(ui);
@@ -585,5 +587,9 @@ public class MainGameScreen extends ScreenAdapter {
         WinScreen winScreen = new WinScreen(game);
         winScreen.updateTime(getCompleteTime());
         game.setScreen(winScreen);
+    }
+
+    private void setBadWin() {
+        ServiceLocator.getGlobalEvents().trigger("badWin");
     }
 }

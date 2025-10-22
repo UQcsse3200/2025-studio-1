@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.csse3200.game.areas.cutscenes.BadWinAnimationScreen;
 import com.csse3200.game.areas.cutscenes.GoodWinAnimationScreen;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
@@ -63,6 +64,8 @@ public class SecretRoomGameArea extends GameArea {
         spawnBorders();
         spawnRightLockedDoor();
         addOrangeImageButton(new GridPoint2(14, 7));
+
+        ServiceLocator.getGlobalEvents().addListener("badWin", this::loadBadWin);
     }
 
     private void ensureAssets() {
@@ -243,6 +246,10 @@ public class SecretRoomGameArea extends GameArea {
 
     private void loadWin() {
         clearAndLoad(() -> new GoodWinAnimationScreen(terrainFactory, cameraComponent));
+    }
+
+    private void loadBadWin() {
+        clearAndLoad(() -> new BadWinAnimationScreen(terrainFactory, cameraComponent));
     }
 }
 
