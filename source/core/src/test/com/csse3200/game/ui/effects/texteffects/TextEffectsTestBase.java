@@ -26,8 +26,7 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.CALLS_REAL_METHODS;
-import static org.mockito.Mockito.mockStatic;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(GameExtension.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -112,18 +111,18 @@ public abstract class TextEffectsTestBase {
         data.ascent = -8f;
         data.lineHeight = 12f;
 
-        BitmapFont font = org.mockito.Mockito.mock(BitmapFont.class, org.mockito.Mockito.withSettings());
-        org.mockito.Mockito.when(font.getData()).thenReturn(data);
-        org.mockito.Mockito.when(font.getCapHeight()).thenReturn(data.capHeight);
-        org.mockito.Mockito.when(font.getAscent()).thenReturn(data.ascent);
-        org.mockito.Mockito.when(font.getLineHeight()).thenReturn(data.lineHeight);
-        org.mockito.Mockito.when(font.usesIntegerPositions()).thenReturn(true);
-        org.mockito.Mockito.when(font.getColor()).thenReturn(Color.WHITE);
+        BitmapFont font = org.mockito.Mockito.mock(BitmapFont.class, withSettings());
+        when(font.getData()).thenReturn(data);
+        when(font.getCapHeight()).thenReturn(data.capHeight);
+        when(font.getAscent()).thenReturn(data.ascent);
+        when(font.getLineHeight()).thenReturn(data.lineHeight);
+        when(font.usesIntegerPositions()).thenReturn(true);
+        when(font.getColor()).thenReturn(Color.WHITE);
 
         com.badlogic.gdx.graphics.g2d.BitmapFontCache cache =
-                org.mockito.Mockito.mock(com.badlogic.gdx.graphics.g2d.BitmapFontCache.class, org.mockito.Mockito.withSettings());
-        org.mockito.Mockito.when(cache.getFont()).thenReturn(font);
-        org.mockito.Mockito.when(font.newFontCache()).thenReturn(cache);
+                mock(com.badlogic.gdx.graphics.g2d.BitmapFontCache.class, withSettings());
+        when(cache.getFont()).thenReturn(font);
+        when(font.newFontCache()).thenReturn(cache);
 
         Label.LabelStyle style = new Label.LabelStyle(font, Color.WHITE);
         Label lbl = new Label("", style);
