@@ -33,6 +33,26 @@ public class GPTGroundFastChaseTask extends GPTGroundChaseTask {
         this.jumpImpulse = 15f; // slightly stronger jump
     }
 
+    /**
+     * Fast chase with projectile support + variant behaviour
+     */
+    public GPTGroundFastChaseTask(Entity target, int priority, float speed,
+                                  ProjectileLauncherComponent projectileLauncher, Entity shooter,
+                                  float firingCooldown, float currentCooldown, int burstAmount,
+                                  float angleDifferences) {
+        super(target, priority, speed);
+        this.projectileLauncher = projectileLauncher;
+        this.shooter = shooter;
+        this.firingCooldown = firingCooldown;
+        this.currentCooldown = currentCooldown;
+        this.jumpCooldown = 0.9f;
+        this.obstacleCheckDistance = 0.7f; // look a tad further ahead
+        this.jumpImpulse = 15f; // slightly stronger jump
+        this.burstAmount = burstAmount;
+        this.angleDifferencesInBurst = angleDifferences;
+        this.isVariant = true;
+    }
+
     @Override
     protected void triggerStartEvent() {
         owner.getEntity().getEvents().trigger("chaseStart");
@@ -52,8 +72,15 @@ public class GPTGroundFastChaseTask extends GPTGroundChaseTask {
             currentCooldown %= firingCooldown;
             Vector2 dirToFire = new Vector2(target.getPosition().x - shooter.getPosition().x,
                     target.getPosition().y - shooter.getPosition().y);
-            projectileLauncher.fireProjectile(dirToFire,
-                    new Vector2(0.2f, 0.8f), new Vector2(0.5f, 0.5f));
+
+            // If a variant, fire more projectiles!
+            if (isVariant) {
+                projectileLauncher.fireProjectileMultishot(burstAmount, angleDifferencesInBurst, dirToFire,
+                        new Vector2(0.2f, 0.8f), new Vector2(0.5f, 0.5f));
+            } else {
+                projectileLauncher.fireProjectile(dirToFire,
+                        new Vector2(0.2f, 0.8f), new Vector2(0.5f, 0.5f));
+            }
         }
     }
 
