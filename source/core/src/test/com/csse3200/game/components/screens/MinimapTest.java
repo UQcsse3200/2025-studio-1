@@ -21,7 +21,10 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Path;
 
+import java.sql.Array;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Vector;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -160,6 +163,25 @@ class MinimapTest {
         assertEquals(2, minimap.getScale());
         correctPosition = new Vector2(620, 360);
         assertTrue(render.containsKey(correctPosition), "Map should zoom in by 2x.");
+    }
+
+    @Test
+    void testConstructor_WithListOfRooms() {
+        Map<Vector2, String> grid = new HashMap<>();
+        grid.put(new Vector2(0, 0), "Room1");
+        grid.put(new Vector2(1, 0), "Room2");
+
+        minimap = new Minimap(720, 1080, grid);
+
+        when(gameArea.toString()).thenReturn("Room1");
+        when(discoveryService.isDiscovered("Room1")).thenReturn(true);
+        when(discoveryService.isDiscovered("Room2")).thenReturn(true);
+        minimap.open();
+        minimap.zoom(-50);
+        Map<Vector2, String> render = minimap.render();
+
+        assertTrue(render.containsValue("images/minimap-images/Room1.png"));
+        assertTrue(render.containsValue("images/minimap-images/Room1.png"));
     }
 
     @Test
