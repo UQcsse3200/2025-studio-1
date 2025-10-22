@@ -258,4 +258,11 @@ public class TunnelGameArea extends GameArea {
         TunnelGameArea.isCleared = false;
         logger.debug("Tunnel is uncleared");
     }
+
+    private void spawnNurse(Entity player) {
+        GridPoint2 pos = new GridPoint2(20, 8);
+
+        Entity nurse = FriendlyNPCFactory.createNurseNpc(player);
+        spawnEntityAt(nurse, pos, true, true);
+    }
 }
