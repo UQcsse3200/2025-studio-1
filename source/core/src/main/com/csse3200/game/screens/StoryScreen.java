@@ -20,7 +20,7 @@ import com.csse3200.game.GdxGame;
  *     Displays multiple lines of story text with a typing effect
  *     and allows the player to progress through the dialogue or skip it entirely.
  * </p>
- * <h3>Controls:</h3>
+ * <p><b>Controls:</b></p>
  *  <ul>
  *  <li><b>SPACE</b> — Advance dialogue or reveal the full line</li>
  *  <li><b>ESC</b> — Skip story and start the game immediately</li>
