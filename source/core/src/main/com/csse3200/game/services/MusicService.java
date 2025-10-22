@@ -51,7 +51,8 @@ public class MusicService {
         boolean stopMusic = screenType.equals("MAIN_GAME")
                 || screenType.equals("DEATH_SCREEN")
                 || screenType.equals("WIN_SCREEN")
-                || screenType.equals("LEADERBOARD");
+                || screenType.equals("LEADERBOARD")
+                || screenType.equals("LOADING");
 
         if (menuMusic != null) {
             if (stopMusic && menuMusic.isPlaying()) {

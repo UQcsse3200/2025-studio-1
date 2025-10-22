@@ -62,7 +62,7 @@ public class StoryScreenTest {
         endStory.setAccessible(true);
         endStory.invoke(screen);
 
-        Mockito.verify(mockGame).setScreen(GdxGame.ScreenType.MAIN_GAME);
+        Mockito.verify(mockGame).setScreen(GdxGame.ScreenType.LOADING);
     }
 
     @Test
