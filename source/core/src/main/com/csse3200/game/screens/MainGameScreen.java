@@ -139,7 +139,7 @@ public class MainGameScreen extends ScreenAdapter {
         ServiceLocator.registerLightingService(lightingService);
 
         loadAssets();
-        countdownTimer = new CountdownTimerService(ServiceLocator.getTimeSource(), 2400000);
+        countdownTimer = new CountdownTimerService(ServiceLocator.getTimeSource(), 900000);
         ServiceLocator.getGlobalEvents().addListener("escape timer", () -> {
             setEscapeTimer();
             deleteUI();
