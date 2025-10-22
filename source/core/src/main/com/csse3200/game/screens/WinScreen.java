@@ -64,5 +64,9 @@ public class WinScreen extends BaseScreen {
     public void updateTime(long second) {
         uiDisplay.setElapsedSeconds(second);
     }
+
+    public BaseEndScreenDisplays getUiDisplay(){
+        return uiDisplay;
+    }
 }
 

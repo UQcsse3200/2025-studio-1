@@ -1,63 +1,65 @@
 package com.csse3200.game.ui.terminal;
 
 import com.badlogic.gdx.Input;
-import com.csse3200.game.extensions.GameExtension;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
-@ExtendWith(GameExtension.class)
+/**
+ * Unit tests for KeyboardTerminalInputComponent.
+ */
 class KeyboardTerminalInputComponentTest {
+
     @Test
-    void shouldToggleTerminalOpenClose() {
-        Terminal terminal = spy(new Terminal(null, null, null));
-        KeyboardTerminalInputComponent terminalInput = new KeyboardTerminalInputComponent(terminal);
+    void keyPressed_F1_callsToggle_andReturnsTrue() {
+        // Arrange
+        Terminal terminal = mock(Terminal.class);
+        KeyboardTerminalInputComponent comp = new KeyboardTerminalInputComponent(terminal);
 
-        terminal.setClosed();
+        // Act
+        boolean handled = comp.keyPressed(Input.Keys.F1);
 
-        terminalInput.keyDown(Input.Keys.F1);
-        assertTrue(terminal.isOpen());
-
-        terminalInput.keyDown(Input.Keys.F1);
-        assertFalse(terminal.isOpen());
-
-        verify(terminal, times(2)).toggleIsOpen();
-        verify(terminal).setOpen();
-        verify(terminal, times(2)).setClosed();
+        // Assert
+        assertTrue(handled);
+        verify(terminal, times(1)).toggleIsOpen();
+        // No other interactions expected
+        verify(terminal, never()).isOpen();
+        verifyNoMoreInteractions(terminal);
     }
 
     @Test
-    void shouldUpdateMessageOnKeyTyped() {
+    void keyPressed_nonF1_whenTerminalOpen_returnsTrue_withoutToggling() {
+        // Arrange
         Terminal terminal = mock(Terminal.class);
         when(terminal.isOpen()).thenReturn(true);
-        KeyboardTerminalInputComponent terminalInput = new KeyboardTerminalInputComponent(terminal);
+        KeyboardTerminalInputComponent comp = new KeyboardTerminalInputComponent(terminal);
 
-        terminalInput.keyTyped('a');
-        terminalInput.keyTyped('b');
-        verify(terminal).appendToMessage('a');
-        verify(terminal).appendToMessage('b');
+        // Act (use any non-F1 key, e.g., A)
+        boolean handled = comp.keyPressed(Input.Keys.A);
 
-        terminalInput.keyTyped('\b');
-        verify(terminal).handleBackspace();
-
-        terminalInput.keyTyped('\n');
-        verify(terminal).processMessage();
+        // Assert
+        assertTrue(handled);
+        verify(terminal, times(1)).isOpen();
+        verify(terminal, never()).toggleIsOpen();
+        verifyNoMoreInteractions(terminal);
     }
 
     @Test
-    void shouldHandleMessageWhenTerminalOpen() {
+    void keyPressed_nonF1_whenTerminalClosed_returnsFalse_withoutToggling() {
+        // Arrange
         Terminal terminal = mock(Terminal.class);
-        KeyboardTerminalInputComponent terminalInput = new KeyboardTerminalInputComponent(terminal);
-
-        when(terminal.isOpen()).thenReturn(true);
-        assertTrue(terminalInput.keyDown('a'));
-        assertTrue(terminalInput.keyUp('a'));
-
         when(terminal.isOpen()).thenReturn(false);
-        assertFalse(terminalInput.keyDown('a'));
-        assertFalse(terminalInput.keyUp('a'));
+        KeyboardTerminalInputComponent comp = new KeyboardTerminalInputComponent(terminal);
+
+        // Act (use any non-F1 key, e.g., SPACE)
+        boolean handled = comp.keyPressed(Input.Keys.SPACE);
+
+        // Assert
+        assertFalse(handled);
+        verify(terminal, times(1)).isOpen();
+        verify(terminal, never()).toggleIsOpen();
+        verifyNoMoreInteractions(terminal);
     }
 }

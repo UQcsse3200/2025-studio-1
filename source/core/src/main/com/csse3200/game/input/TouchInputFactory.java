@@ -27,6 +27,6 @@ public class TouchInputFactory extends InputFactory {
     @Override
     public InputComponent createForTerminal() {
         logger.debug("Creating terminal input handler");
-        return new TouchTerminalInputComponent();
+        return new TouchTerminalInputComponent(null);
     }
 }

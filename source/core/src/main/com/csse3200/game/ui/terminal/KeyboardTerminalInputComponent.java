@@ -13,10 +13,6 @@ import com.badlogic.gdx.InputProcessor;
 public class KeyboardTerminalInputComponent extends BaseTerminalInputComponent {
     private static final int TOGGLE_OPEN_KEY = Input.Keys.F1;
 
-    public KeyboardTerminalInputComponent() {
-        super();
-    }
-
     public KeyboardTerminalInputComponent(Terminal terminal) {
         super(terminal);
     }
