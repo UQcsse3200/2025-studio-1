@@ -128,11 +128,13 @@ public class ForestGameArea extends GameArea {
             "images/nurse_npc.png",
             "images/partner.png",
             "images/remote.png",
+            "images/remotetip.png",
             "images/Assistor.png",
             "images/laserbullet.png",
             "images/armour-assets/chestplate.png",
             "images/armour-assets/hood.png",
-            "images/blackjack_table.png"
+            "images/blackjack_table.png",
+            "images/guidance_friendly_npc.png"
     };
     private static final String[] backgroundTextures = {
             "backgrounds/Reception.png",
@@ -366,6 +368,7 @@ public class ForestGameArea extends GameArea {
         spawnTeleporter();
     }
 
+
     private void displayUI() {
         Entity ui = new Entity();
         ui.addComponent(new GameAreaDisplay("Box Forest"))
@@ -567,11 +570,10 @@ public class ForestGameArea extends GameArea {
         var waypoints = List.of(new Vector2(12f, 7f), new Vector2(18f, 7f), new Vector2(25f, 12f));
         Entity guide = FriendlyNPCFactory.createGuidanceNpc(player, waypoints);
 
-        spawnEntityAt(guide, new GridPoint2((int) player.getPosition().x + 2, (int) player.getPosition().y), true, true);
+        // Spawn at a fixed tile position
+        spawnEntityAt(guide, new GridPoint2(2, 9), true, true);
 
-        AnimationRenderComponent arc = guide.getComponent(AnimationRenderComponent.class);
-        arc.startAnimation("robot_fire");   // start anim
-        guide.setScale(1.2f, 1.2f);       // pick a size you like
+        guide.setScale(1.8f, 1.8f);
     }
 
     // Removed area-specific dispose to avoid double disposal during transitions

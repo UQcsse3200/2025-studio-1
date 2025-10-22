@@ -16,6 +16,10 @@ import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.entities.spawner.ItemSpawner;
 import com.csse3200.game.physics.components.ColliderComponent;
 import com.csse3200.game.services.ServiceLocator;
+import com.csse3200.game.services.ResourceService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 /**
  * This is the room that holds the Ground Moving Boss Boss.
@@ -58,6 +62,10 @@ public class MovingBossRoom extends GameArea {
     public void create() {
         ServiceLocator.registerGameArea(this);
 
+        ResourceService rs = ServiceLocator.getResourceService();
+        rs.loadSounds(new String[] { "sounds/healing-magic.mp3" });
+        rs.loadAll();
+
         GenericLayout.ensureGenericAssets(this);
         GenericLayout.setupTerrainWithOverlay(this, terrainFactory, TerrainType.SERVER_ROOM,
                 new Color(0.10f, 0.12f, 0.10f, 0.24f));
@@ -69,8 +77,6 @@ public class MovingBossRoom extends GameArea {
         spawnBossAndItems();
 
         spawnObjectDoors(new GridPoint2(0, 6), new GridPoint2(28, 6));
-        spawnAssistor();
-        spawnNurse();
 
         spawnVisibleFloor();
     }
@@ -102,12 +108,7 @@ public class MovingBossRoom extends GameArea {
         registerEnemy(boss);
     }
 
-    private void spawnAssistor() {
-        GridPoint2 pos = new GridPoint2(7, 8);
 
-        Entity assistor = FriendlyNPCFactory.createAssisterNpc(player);
-        spawnEntityAt(assistor, pos, true, true);
-    }
 
     /**
      * Spawns the borders and doors of the room.
@@ -171,7 +172,7 @@ public class MovingBossRoom extends GameArea {
 
 
     private void spawnNurse() {
-        GridPoint2 pos = new GridPoint2(20, 8); // 在地图右侧,与Assistor对称
+        GridPoint2 pos = new GridPoint2(20, 8);
 
         Entity nurse = FriendlyNPCFactory.createNurseNpc(player);
         spawnEntityAt(nurse, pos, true, true);

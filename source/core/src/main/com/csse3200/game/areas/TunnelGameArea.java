@@ -13,6 +13,7 @@ import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.ItemSpawnConfig;
 import com.csse3200.game.entities.configs.benches.BenchConfig;
 import com.csse3200.game.entities.factories.InteractableStationFactory;
+import com.csse3200.game.entities.factories.characters.FriendlyNPCFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.entities.factories.system.TeleporterFactory;
 import com.csse3200.game.entities.spawner.ItemSpawner;
@@ -66,6 +67,7 @@ public class TunnelGameArea extends GameArea {
         spawnPasswordTerminal(new GridPoint2(22, 17));
         spawnSpikes();
         spawnVisibleFloor();
+        spawnNurse(player);
 
         if (!TunnelGameArea.isCleared) {
             startWaves(player);
@@ -275,6 +277,13 @@ public class TunnelGameArea extends GameArea {
     public static void unclearRoom() {
         TunnelGameArea.isCleared = false;
         logger.debug("Tunnel is cleared");
+    }
+
+    private void spawnNurse(Entity player) {
+        GridPoint2 pos = new GridPoint2(20, 8);
+
+        Entity nurse = FriendlyNPCFactory.createNurseNpc(player);
+        spawnEntityAt(nurse, pos, true, true);
     }
 
     /**

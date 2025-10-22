@@ -2,6 +2,7 @@ package com.csse3200.game.components.boss;
 
 import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.components.Component;
+import com.badlogic.gdx.Gdx;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,8 +30,12 @@ public class IndividualCocoonComponent extends Component {
             log.debug("Cocoon hit! Health: {}", stats.getHealth());
         });
 
+
+        System.out.println("Cocoon created with " + entity.getComponent(CombatStatsComponent.class).getHealth() + " health");
+
         entity.getEvents().addListener("death", this::onCocoonDeath);
         log.debug("Cocoon created with {} health", entity.getComponent(CombatStatsComponent.class).getHealth());
+
     }
 
     @Override
@@ -49,13 +54,22 @@ public class IndividualCocoonComponent extends Component {
      */
     private void onCocoonDeath() {
         if (isDestroyed) return;
-
         isDestroyed = true;
+
+        System.out.println("White cocoon destroyed!");
+
 
         entity.setScale(0f, 0f);
         log.debug("White cocoon destroyed!");
-        entity.getEvents().trigger("cocoonDestroyed");
 
+        entity.getEvents().trigger("cocoonDestroyed");
+        Gdx.app.postRunnable(() -> {
+            try {
+                entity.dispose();
+            } catch (Exception ignored) {
+                // Safe to ignore disposal errors
+            }
+        });
         // The death event is automatically triggered by CombatStatsComponent
         // and caught by the CocoonSpawnerComponent through the death listener
     }
