@@ -85,10 +85,10 @@ class ControlDisplayTest {
                 break;
             }
         assertNotNull(controls, "controls table present");
-        assertEquals(18, controls.getChildren().size, "9 rows × (label+button)");
+        assertEquals(22, controls.getChildren().size, "11 rows × (label+button)");
 
         // Buttons disabled, keys as expected
-        Set<String> expectedKeys = Set.of("A", "D", "S", "Space", "Spacex2", "I", "E", "R", "Tab");
+        Set<String> expectedKeys = Set.of("A", "D", "S", "Space", "Spacex2", "I", "E", "R", "Tab","LMB","Q");
         int btns = 0;
         for (Actor a : controls.getChildren()) {
             if (a instanceof TextButton tb) {
@@ -97,7 +97,7 @@ class ControlDisplayTest {
                 assertTrue(expectedKeys.contains(tb.getText().toString()));
             }
         }
-        assertEquals(9, btns);
+        assertEquals(11, btns);
 
         // Back button fires callback
         TextButton back = null;

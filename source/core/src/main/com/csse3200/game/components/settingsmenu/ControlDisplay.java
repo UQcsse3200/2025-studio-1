@@ -51,7 +51,9 @@ public class ControlDisplay extends BaseScreenDisplay {
                 {"I", "Inventory"},
                 {"E", "Pick Item"},
                 {"R", "Drop Item"},
-                {"Tab", "Open Mini-map"}
+                {"Tab", "Open Mini-map"},
+                {"LMB", "Fire Weapon"},
+                {"Q", "Reload"}
         };
 
         for (String[] pair : keybindings) {
