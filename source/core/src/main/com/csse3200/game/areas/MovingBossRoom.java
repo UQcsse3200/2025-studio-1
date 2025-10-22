@@ -19,6 +19,10 @@ import com.csse3200.game.entities.spawner.ItemSpawner;
 import com.csse3200.game.lighting.LightSpawner;
 import com.csse3200.game.physics.components.ColliderComponent;
 import com.csse3200.game.services.ServiceLocator;
+import com.csse3200.game.services.ResourceService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 import java.util.List;
 
@@ -62,6 +66,10 @@ public class MovingBossRoom extends GameArea {
     @Override
     public void create() {
         ServiceLocator.registerGameArea(this);
+
+        ResourceService rs = ServiceLocator.getResourceService();
+        rs.loadSounds(new String[] { "sounds/healing-magic.mp3" });
+        rs.loadAll();
 
         GenericLayout.ensureGenericAssets(this);
         GenericLayout.setupTerrainWithOverlay(this, terrainFactory, TerrainType.SERVER_ROOM,
@@ -194,18 +202,18 @@ public class MovingBossRoom extends GameArea {
     }
 
     public void loadSecurity() {
-        SecurityGameArea.setRoomSpawn(new GridPoint2(24, 22));
+        SecurityGameArea.setRoomSpawn(new GridPoint2(25, 18));
         clearAndLoad(() -> new SecurityGameArea(terrainFactory, cameraComponent));
     }
 
     public void loadOffice() {
-        OfficeGameArea.setRoomSpawn(new GridPoint2(2, 14));
+        OfficeGameArea.setRoomSpawn(new GridPoint2(1, 14));
         clearAndLoad(() -> new OfficeGameArea(terrainFactory, cameraComponent));
     }
 
 
     private void spawnNurse() {
-        GridPoint2 pos = new GridPoint2(20, 8); // 在地图右侧,与Assistor对称
+        GridPoint2 pos = new GridPoint2(20, 8);
 
         Entity nurse = FriendlyNPCFactory.createNurseNpc(player);
         spawnEntityAt(nurse, pos, true, true);

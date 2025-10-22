@@ -6,13 +6,13 @@ import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.CameraComponent;
-import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import com.csse3200.game.components.shop.CatalogService;
 import com.csse3200.game.components.shop.ShopDemo;
 import com.csse3200.game.components.shop.ShopManager;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.ItemSpawnConfig;
 import com.csse3200.game.entities.factories.ShopFactory;
+import com.csse3200.game.entities.factories.characters.FriendlyNPCFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.entities.factories.system.TeleporterFactory;
 import com.csse3200.game.entities.spawner.ItemSpawner;
@@ -82,8 +82,10 @@ public class ResearchGameArea extends GameArea {
         spawnPlatforms();
         spawnResearchProps();
         spawnTeleporter();
+        spawnNurse(player);
         spawnEnemiesAndWeapons();
         spawnShopKiosk();
+
 
         displayUIEntity("Research", "Floor 7");
     }
@@ -191,12 +193,12 @@ public class ResearchGameArea extends GameArea {
     }
 
     private void loadElevator() {
-        ElevatorGameArea.setRoomSpawn(new GridPoint2(21, 20));
+        ElevatorGameArea.setRoomSpawn(new GridPoint2(25, 21));
         clearAndLoad(() -> new ElevatorGameArea(terrainFactory, cameraComponent));
     }
 
     private void loadFlyingBossRoom() {
-        FlyingBossRoom.setRoomSpawn(new GridPoint2(6, 8));
+        FlyingBossRoom.setRoomSpawn(new GridPoint2(1, 7));
         clearAndLoad(() -> new FlyingBossRoom(terrainFactory, cameraComponent));
     }
 
@@ -226,6 +228,13 @@ public class ResearchGameArea extends GameArea {
     public static void unclearRoom() {
         ResearchGameArea.isCleared = false;
         logger.debug("Research is uncleared");
+    }
+
+    private void spawnNurse(Entity player) {
+        GridPoint2 pos = new GridPoint2(20, 8);
+
+        Entity nurse = FriendlyNPCFactory.createNurseNpc(player);
+        spawnEntityAt(nurse, pos, true, true);
     }
 
     /**

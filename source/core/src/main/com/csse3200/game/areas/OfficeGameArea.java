@@ -12,8 +12,9 @@ import com.csse3200.game.entities.factories.InteractableStationFactory;
 import com.csse3200.game.entities.factories.system.TeleporterFactory;
 import com.csse3200.game.lighting.LightSpawner;
 import com.csse3200.game.services.ServiceLocator;
-
 import java.util.List;
+import com.csse3200.game.entities.factories.characters.FriendlyNPCFactory;
+
 
 /**
  * Office room: minimal walls and two doors (left--Security, right--Elevator).
@@ -86,6 +87,7 @@ public class OfficeGameArea extends GameArea {
         spawnPlatforms();
         spawnOfficeProps();
         spawnTeleporter();
+        spawnAssistor();
         spawnHealthBench();
 
         if (!OfficeGameArea.isCleared) {
@@ -239,13 +241,24 @@ public class OfficeGameArea extends GameArea {
         }
     }
 
+    /**
+     * Spawn 3 enemies in the office room
+     */
+    private void spawnAssistor() {
+        Entity player = ServiceLocator.getPlayer();
+        GridPoint2 pos = new GridPoint2(3, 8);
+
+        Entity assistor = FriendlyNPCFactory.createAssisterNpc(player);
+        spawnEntityAt(assistor, pos, true, true);
+    }
+
     private void loadMovingBossRoom() {
-        MovingBossRoom.setRoomSpawn(new GridPoint2(24, 8));
+        MovingBossRoom.setRoomSpawn(new GridPoint2(25, 7));
         clearAndLoad(() -> new MovingBossRoom(terrainFactory, cameraComponent));
     }
 
     private void loadElevator() {
-        ElevatorGameArea.setRoomSpawn(new GridPoint2(6, 8));
+        ElevatorGameArea.setRoomSpawn(new GridPoint2(1, 7));
         clearAndLoad(() -> new ElevatorGameArea(terrainFactory, cameraComponent));
     }
 

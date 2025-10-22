@@ -149,7 +149,7 @@ public class MainGameScreen extends ScreenAdapter {
 
         if (loadSaveGame) {
             logger.info("loading game from save file");
-            SaveGame.GameState load = SaveLoadService.load("saves" + File.separator + "slides.json");
+            SaveGame.GameState load = ServiceLocator.getSaveLoadService().load("saves" + File.separator + "slides.json");
             gameArea = new ForestGameArea(terrainFactory, renderer.getCamera());
             ServiceLocator.registerGameArea(gameArea);
             ForestGameArea.setRoomSpawn(new GridPoint2(3, 20));
@@ -162,12 +162,12 @@ public class MainGameScreen extends ScreenAdapter {
                 case "Office" -> gameArea.clearAndLoad(() -> OfficeGameArea.load(terrainFactory, renderer.getCamera()));
                 case "Mainhall" -> gameArea.clearAndLoad(() -> MainHall.load(terrainFactory, renderer.getCamera()));
                 case "Reception" -> gameArea.clearAndLoad(() -> Reception.load(terrainFactory, renderer.getCamera()));
-                case "Tunnel" -> gameArea = TunnelGameArea.load(terrainFactory, renderer.getCamera());
-                case "Security" -> gameArea = SecurityGameArea.load(terrainFactory, renderer.getCamera());
-                case "Storage" -> gameArea = StorageGameArea.load(terrainFactory, renderer.getCamera());
-                case "Shipping" -> gameArea = ShippingGameArea.load(terrainFactory, renderer.getCamera());
-                case "Server" -> gameArea = ServerGameArea.load(terrainFactory, renderer.getCamera());
-                case "Casino" -> gameArea = CasinoGameArea.load(terrainFactory, renderer.getCamera());
+                case "Tunnel" -> gameArea.clearAndLoad(() -> TunnelGameArea.load(terrainFactory, renderer.getCamera()));
+                case "Security" -> gameArea.clearAndLoad(() -> SecurityGameArea.load(terrainFactory, renderer.getCamera()));
+                case "Storage" -> gameArea.clearAndLoad(() -> StorageGameArea.load(terrainFactory, renderer.getCamera()));
+                case "Shipping" -> gameArea.clearAndLoad(() -> ShippingGameArea.load(terrainFactory, renderer.getCamera()));
+                case "Server" -> gameArea.clearAndLoad(() -> ServerGameArea.load(terrainFactory, renderer.getCamera()));
+                case "Casino" -> gameArea.clearAndLoad(() -> CasinoGameArea.load(terrainFactory, renderer.getCamera()));
                 case "Research" ->
                         gameArea.clearAndLoad(() -> ResearchGameArea.load(terrainFactory, renderer.getCamera()));
                 default -> gameArea = null;

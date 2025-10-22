@@ -333,3 +333,6 @@ Ling Fang, The partner component control logic is written by myself
 the remote picture is always big by fixed with talking with ai to fix it
 
 LingFang talking with ai the laser "NPC" how can I use to talk with ai.
+
+LingFang talking with ai the laser "NPC" how can I use to talk with 2d lock bug 
+in assistor npc task conponent.           

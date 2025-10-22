@@ -1,78 +1,177 @@
 package com.csse3200.game.components.screens;
 
-import com.badlogic.gdx.ApplicationAdapter;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.backends.headless.HeadlessApplication;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.csse3200.game.GdxGame;
+import com.csse3200.game.entities.Entity;
+import com.csse3200.game.extensions.GameExtension;
+import com.csse3200.game.input.InputService;
+import com.csse3200.game.rendering.RenderService;
 import com.csse3200.game.services.ButtonSoundService;
+import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
-import org.junit.jupiter.api.*;
-import org.mockito.MockedStatic;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+@ExtendWith(GameExtension.class)
 class PauseMenuDisplayTest {
 
-    private static HeadlessApplication app;
+    private Stage stage;
     private GdxGame mockGame;
-    private PauseMenuDisplay display;
-    private ButtonSoundService mockButtonSound;
-    private MockedStatic<ServiceLocator> serviceLocatorStatic;
+    private ButtonSoundService mockSound;
+    private RenderService renderService;
 
-    @BeforeAll
-    static void startHeadless() {
-        app = new HeadlessApplication(new ApplicationAdapter() {}); // starts a headless application
-        Gdx.gl20 = mock(GL20.class);
-        Gdx.gl = Gdx.gl20;
-    }
-
-    @AfterAll
-    static void stopHeadless() {
-        if (app != null) app.exit();      // exits the headless application after all tests
-    }
+    private final ArgumentCaptor<Actor> addActorCaptor = ArgumentCaptor.forClass(Actor.class);
 
     @BeforeEach
     void setup() {
+        ServiceLocator.registerResourceService(new ResourceService());
+        ServiceLocator.getResourceService().loadAll();
+
+        stage = mock(Stage.class);
+        renderService = new RenderService();
+        renderService.setStage(stage);
+        ServiceLocator.registerRenderService(renderService);
+        ServiceLocator.registerInputService(new InputService());
+
         mockGame = mock(GdxGame.class);
-        mockButtonSound = mock(ButtonSoundService.class);
+        mockSound = mock(ButtonSoundService.class);
+        ServiceLocator.registerButtonSoundService(mockSound);
 
-        serviceLocatorStatic = mockStatic(ServiceLocator.class);
-        serviceLocatorStatic.when(ServiceLocator::getButtonSoundService).thenReturn(mockButtonSound);
-
-        display = spy(new PauseMenuDisplay(mockGame));
-
-        doAnswer(inv -> {
-            String label = inv.getArgument(0, String.class);
-            TextButton.TextButtonStyle style = new TextButton.TextButtonStyle();
-            style.font = new BitmapFont();
-            return new TextButton(label, style);
-        }).when(display).button(anyString(), anyFloat(), any());
+        PauseMenuDisplay.resetEscConsumed();
     }
 
-    @AfterEach
-    void tearDown() {
-        if (serviceLocatorStatic != null) serviceLocatorStatic.close();
+    private List<Actor> collectAddedActors() {
+        verify(stage, atLeastOnce()).addActor(addActorCaptor.capture());
+        return new ArrayList<>(addActorCaptor.getAllValues());
+    }
+
+    private static Table findRoot(List<Actor> added) {
+        for (Actor a : added) if (a instanceof Table t) return t;
+        return null;
+    }
+
+    private static TextButton findButton(Table root, String label) {
+        for (Actor a : root.getChildren()) {
+            if (a instanceof TextButton tb && label.equals(tb.getText().toString())) return tb;
+            if (a instanceof Table t) {
+                TextButton nested = findButton(t, label);
+                if (nested != null) return nested;
+            }
+        }
+        return null;
     }
 
     @Test
-    void getZIndex_returns100() {
-        assertEquals(100f, display.getZIndex());
+    void build_addsDimmer_andButtons_exist() {
+        PauseMenuDisplay display = new PauseMenuDisplay(mockGame);
+        Entity ui = new Entity(); ui.addComponent(display); display.create();
+
+        List<Actor> added = collectAddedActors();
+        assertTrue(added.stream().anyMatch(a -> a instanceof Image));
+
+        Table root = findRoot(added);
+        assertNotNull(root);
+        assertNotNull(findButton(root, "Resume"));
+        assertNotNull(findButton(root, "Restart"));
+        assertNotNull(findButton(root, "Main Menu"));
+        assertNotNull(findButton(root, "Save"));
     }
 
     @Test
-    void clickplaysButtonSound() {
-        display = spy(new PauseMenuDisplay(mockGame));
+    void resumeButton_triggersResume_and_playsClick() {
+        PauseMenuDisplay display = new PauseMenuDisplay(mockGame);
+        Entity ui = new Entity();
+        ui.addComponent(display);
+        display.create();
 
-        Runnable buttonAction = () -> ServiceLocator.getButtonSoundService().playClick();
-        buttonAction.run();
+        Table root = findRoot(collectAddedActors());
+        assertNotNull(root);
 
-        verify(mockButtonSound, times(1)).playClick();
+        AtomicInteger resumeCount = new AtomicInteger();
+        display.getEntity().getEvents().addListener("resume", resumeCount::incrementAndGet);
+
+        TextButton resume = findButton(root, "Resume");
+        assertNotNull(resume);
+        resume.fire(new com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent());
+
+        verify(mockSound, atLeastOnce()).playClick();
+        assertEquals(1, resumeCount.get());
+    }
+
+    @Test
+    void restartButton_switchesToMainGame_and_playsClick() {
+        PauseMenuDisplay display = new PauseMenuDisplay(mockGame);
+        Entity ui = new Entity();
+        ui.addComponent(display);
+        display.create();
+
+        Table root = findRoot(collectAddedActors());
+        TextButton restart = findButton(root, "Restart");
+        assertNotNull(restart);
+        restart.fire(new com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent());
+
+        verify(mockSound, atLeastOnce()).playClick();
+        verify(mockGame).setScreen(GdxGame.ScreenType.MAIN_GAME);
+    }
+
+    @Test
+    void mainMenuButton_switchesToMainMenu_and_playsClick() {
+        PauseMenuDisplay display = new PauseMenuDisplay(mockGame);
+        Entity ui = new Entity();
+        ui.addComponent(display);
+        display.create();
+
+        Table root = findRoot(collectAddedActors());
+        TextButton mainMenu = findButton(root, "Main Menu");
+        assertNotNull(mainMenu);
+        mainMenu.fire(new com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent());
+
+        verify(mockSound, atLeastOnce()).playClick();
+        verify(mockGame).setScreen(GdxGame.ScreenType.MAIN_MENU);
+    }
+
+    @Test
+    void saveButton_triggersSave_andPlaysClick() {
+        PauseMenuDisplay display = new PauseMenuDisplay(mockGame);
+        Entity ui = new Entity(); ui.addComponent(display); display.create();
+
+        Table root = findRoot(collectAddedActors());
+        TextButton save = findButton(root, "Save");
+
+        AtomicInteger saveCount = new AtomicInteger();
+        display.getEntity().getEvents().addListener("save", saveCount::incrementAndGet);
+
+        save.fire(new com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent());
+
+        verify(mockSound, atLeastOnce()).playClick();
+        assertEquals(1, saveCount.get());
+    }
+
+    @Test
+    void zIndex_isHigh() {
+        PauseMenuDisplay display = new PauseMenuDisplay(mockGame);
+        assertEquals(100f, display.getZIndex(), 0.0001f);
+    }
+
+    @Test
+    void dispose_runsWithoutException() {
+        PauseMenuDisplay display = new PauseMenuDisplay(mockGame);
+        Entity ui = new Entity();
+        ui.addComponent(display);
+        display.create();
+        assertDoesNotThrow(display::dispose);
     }
 }
-
-

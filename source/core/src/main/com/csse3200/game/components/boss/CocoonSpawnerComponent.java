@@ -30,7 +30,6 @@ public class CocoonSpawnerComponent extends Component {
 
     /**
      * Constructor
-     *
      * @param healthThreshold Health percentage threshold to spawn cocoons (0.0-1.0)
      * @param cocoonPositions Array of spawn positions for cocoons
      */
@@ -119,7 +118,7 @@ public class CocoonSpawnerComponent extends Component {
     private Entity createCocoonEntity(Vector2 position) {
         Entity cocoon = new Entity()
                 .addComponent(new com.csse3200.game.physics.components.PhysicsComponent())
-                .addComponent(new com.csse3200.game.physics.components.ColliderComponent())
+                .addComponent(new com.csse3200.game.physics.components.ColliderComponent().setSensor(true))
                 .addComponent(new com.csse3200.game.physics.components.HitboxComponent().setLayer(com.csse3200.game.physics.PhysicsLayer.NPC))
                 .addComponent(new CombatStatsComponent(20)) // Cocoon's health
                 .addComponent(new com.csse3200.game.rendering.TextureRenderComponent("images/white_cocoon.png"))
@@ -137,7 +136,6 @@ public class CocoonSpawnerComponent extends Component {
 
         cocoon.getComponent(com.csse3200.game.physics.components.PhysicsComponent.class)
                 .setBodyType(BodyDef.BodyType.StaticBody);
-
         return cocoon;
     }
 

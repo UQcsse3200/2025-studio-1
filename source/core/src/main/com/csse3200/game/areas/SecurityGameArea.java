@@ -13,6 +13,7 @@ import com.csse3200.game.components.shop.ShopManager;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.ItemSpawnConfig;
 import com.csse3200.game.entities.factories.ShopFactory;
+import com.csse3200.game.entities.factories.characters.FriendlyNPCFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.entities.factories.system.TeleporterFactory;
 import com.csse3200.game.entities.spawner.ItemSpawner;
@@ -20,6 +21,7 @@ import com.csse3200.game.lighting.LightSpawner;
 import com.csse3200.game.services.ServiceLocator;
 
 import java.util.List;
+
 
 /**
  * Minimal generic Security room: walls, doors, and a subtle background overlay.
@@ -82,6 +84,7 @@ public class SecurityGameArea extends GameArea {
         spawnSecurityProps();
         spawnTeleporter();
         spawnSpikes2();
+        spawnNurse(player);
         spawnShopKiosk();
 
         spawnEnemiesAndWeapons();
@@ -203,12 +206,12 @@ public class SecurityGameArea extends GameArea {
     }
 
     private void loadBackToFloor5() {
-        MainHall.setRoomSpawn(new GridPoint2(24, 20));
+        MainHall.setRoomSpawn(new GridPoint2(25, 17));
         clearAndLoad(() -> new MainHall(terrainFactory, cameraComponent));
     }
 
     private void loadMovingBossRoom() {
-        MovingBossRoom.setRoomSpawn(new GridPoint2(6, 8));
+        MovingBossRoom.setRoomSpawn(new GridPoint2(1, 7));
         clearAndLoad(() -> new MovingBossRoom(terrainFactory, cameraComponent));
     }
 
@@ -229,6 +232,13 @@ public class SecurityGameArea extends GameArea {
     public static void clearRoom() {
         SecurityGameArea.isCleared = true;
         logger.debug("Security is cleared");
+    }
+
+    private void spawnNurse(Entity player) {
+        GridPoint2 pos = new GridPoint2(20, 8);
+
+        Entity nurse = FriendlyNPCFactory.createNurseNpc(player);
+        spawnEntityAt(nurse, pos, true, true);
     }
 
     /**

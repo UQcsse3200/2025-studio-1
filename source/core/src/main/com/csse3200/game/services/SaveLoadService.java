@@ -40,7 +40,7 @@ public class SaveLoadService {
      * Load a save file from local storage and rebuild the area and the current
      * players stats.
      */
-    public static SaveGame.GameState load(String filePath) {
+    public SaveGame.GameState load(String filePath) {
         SaveGame.GameState savedGame;
         if (SaveGame.loadGame(filePath) != null) {
             savedGame = SaveGame.loadGame(filePath);

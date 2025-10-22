@@ -7,6 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Scaling;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.csse3200.game.GdxGame;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
@@ -20,6 +21,9 @@ import com.csse3200.game.services.ServiceLocator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Arrays;
+import java.util.Objects;
+
 /**
  * Generic base for UI-driven screens (menus, win/lose, settings, etc.).
  * Centralises:
@@ -32,25 +36,20 @@ import org.slf4j.LoggerFactory;
  * Subclasses override {@link #createUIScreen(Stage)} to provide their UI entity.
  */
 abstract class BaseScreen extends ScreenAdapter {
-    /**
-     * Logger for lifecycle and debugging events.
-     */
     private static final Logger logger = LoggerFactory.getLogger(BaseScreen.class);
 
-    /**
-     * Game instance for navigation and context.
-     */
     protected final GdxGame game;
-
-    /**
-     * Renderer responsible for drawing.
-     */
     protected final Renderer renderer;
+    /**
+     * Non-null UI stage guaranteed; also pushed into RenderService when possible.
+     */
+    protected final Stage stage;
 
     /**
-     * Optional background textures to load and draw (may be empty).
+     * Optional background textures to load and draw (might be empty).
      */
     private final String[] backgroundTextures;
+    private final boolean hasBackground;
 
     /**
      * Constructs a BaseScreen, registers services, creates a renderer,
@@ -60,19 +59,25 @@ abstract class BaseScreen extends ScreenAdapter {
      * @param backgroundTextures optional list of texture paths for the background (can be empty)
      */
     protected BaseScreen(GdxGame game, String... backgroundTextures) {
-        this.game = game;
-        this.backgroundTextures = backgroundTextures != null ? backgroundTextures : new String[0];
+        this.game = Objects.requireNonNull(game, "game");
+        this.backgroundTextures = backgroundTextures != null
+                ? Arrays.copyOf(backgroundTextures, backgroundTextures.length)
+                : new String[0];
+        this.hasBackground = this.backgroundTextures.length > 0;
 
-        logger.debug("Initialising {} services", getClass().getSimpleName());
+        logger.atDebug().log("Initialising {} services", getClass().getSimpleName());
         ServiceLocator.registerInputService(new InputService());
         ServiceLocator.registerResourceService(new ResourceService());
         ServiceLocator.registerEntityService(new EntityService());
         ServiceLocator.registerRenderService(new RenderService());
         ServiceLocator.registerTimeSource(new GameTime());
 
-        renderer = RenderFactory.createRenderer();
-        logger.debug("{} renderer created", getClass().getSimpleName());
+        this.renderer = RenderFactory.createRenderer();
+        this.stage = ensureStage(); // make tests and headless envs happy
+
+        // Keep existing behaviour: set initial camera position
         renderer.getCamera().getEntity().setPosition(5f, 5f);
+        logger.atDebug().log("{} renderer created", getClass().getSimpleName());
 
         loadAssets();
         createUI();
@@ -86,37 +91,56 @@ abstract class BaseScreen extends ScreenAdapter {
      */
     protected abstract Entity createUIScreen(Stage stage);
 
+    /**
+     * Expose the stage to subclasses if needed.
+     */
+    protected Stage getStage() {
+        return stage;
+    }
+
     @Override
     public void render(float delta) {
-        logger.debug("Rendering {} frame", getClass().getSimpleName());
+        logger.atDebug().log("Rendering {} frame", getClass().getSimpleName());
         ServiceLocator.getEntityService().update();
         renderer.render();
     }
 
     @Override
     public void resize(int width, int height) {
-        logger.debug("Resizing {} to {}x{}", getClass().getSimpleName(), width, height);
+        logger.atDebug().log("Resizing {} to {}x{}", getClass().getSimpleName(), width, height);
         renderer.resize(width, height);
     }
 
     @Override
     public void dispose() {
-        logger.debug("Disposing {}", getClass().getSimpleName());
-        renderer.dispose();
+        logger.atDebug().log("Disposing {}", getClass().getSimpleName());
+        try {
+            renderer.dispose();
+        } catch (Exception e) {
+            logger.atDebug().setCause(e).log("Renderer dispose failed");
+        }
         unloadAssets();
-        ServiceLocator.getRenderService().dispose();
-        ServiceLocator.getEntityService().disposeExceptPlayer();
+        try {
+            ServiceLocator.getRenderService().dispose();
+        } catch (Exception e) {
+            logger.atDebug().setCause(e).log("RenderService dispose failed");
+        }
+        try {
+            ServiceLocator.getEntityService().disposeExceptPlayer();
+        } catch (Exception e) {
+            logger.atDebug().setCause(e).log("EntityService dispose failed");
+        }
         ServiceLocator.clearExceptPlayer();
-        logger.debug("{} services cleared", getClass().getSimpleName());
+        logger.atDebug().log("{} services cleared", getClass().getSimpleName());
     }
 
     /**
      * Loads optional background textures if provided.
      */
     private void loadAssets() {
-        if (backgroundTextures.length == 0) return;
-        logger.debug("Loading {} assets", getClass().getSimpleName());
-        ResourceService resourceService = ServiceLocator.getResourceService();
+        if (!hasBackground) return;
+        logger.atDebug().log("Loading {} assets", getClass().getSimpleName());
+        var resourceService = ServiceLocator.getResourceService();
         resourceService.loadTextures(backgroundTextures);
         resourceService.loadAll();
     }
@@ -125,9 +149,9 @@ abstract class BaseScreen extends ScreenAdapter {
      * Unloads optional background textures if provided.
      */
     private void unloadAssets() {
-        if (backgroundTextures.length == 0) return;
-        logger.debug("Unloading {} assets", getClass().getSimpleName());
-        ResourceService resourceService = ServiceLocator.getResourceService();
+        if (!hasBackground) return;
+        logger.atDebug().log("Unloading {} assets", getClass().getSimpleName());
+        var resourceService = ServiceLocator.getResourceService();
         resourceService.unloadAssets(backgroundTextures);
     }
 
@@ -135,21 +159,46 @@ abstract class BaseScreen extends ScreenAdapter {
      * Creates background image (if textures provided) and registers the UI entity.
      */
     private void createUI() {
-        logger.debug("Creating {} UI", getClass().getSimpleName());
-        Stage stage = ServiceLocator.getRenderService().getStage();
+        logger.atDebug().log("Creating {} UI", getClass().getSimpleName());
 
-        if (backgroundTextures.length > 0) {
-            // Use the first texture as the background.
-            Texture bgTex = ServiceLocator.getResourceService()
-                    .getAsset(backgroundTextures[0], Texture.class);
-            Image bg = new Image(new TextureRegionDrawable(new TextureRegion(bgTex)));
-            bg.setFillParent(true);
-            bg.setScaling(Scaling.fill);
-            stage.addActor(bg);
+        if (hasBackground) {
+            var resourceService = ServiceLocator.getResourceService();
+            Texture bgTex = resourceService.getAsset(backgroundTextures[0], Texture.class);
+            if (bgTex != null) {
+                var bg = new Image(new TextureRegionDrawable(new TextureRegion(bgTex)));
+                bg.setFillParent(true);
+                bg.setScaling(Scaling.fill);
+                stage.addActor(bg);
+            } else {
+                logger.atWarn().addArgument(backgroundTextures[0])
+                        .log("Background texture {} was not loaded");
+            }
         }
 
-        Entity ui = createUIScreen(stage);
+        var ui = createUIScreen(stage);
         ServiceLocator.getEntityService().register(ui);
-        logger.debug("{} UI created and registered", getClass().getSimpleName());
+        logger.atDebug().log("{} UI created and registered", getClass().getSimpleName());
+    }
+
+    /**
+     * Ensures a non-null Stage. If RenderService does not yet have one,
+     * create a Stage and try to bind it back to RenderService.
+     */
+    private Stage ensureStage() {
+        var renderService = ServiceLocator.getRenderService();
+        Stage s = renderService.getStage();
+        if (s == null) {
+            logger.atDebug().log("RenderService stage is null; creating a ScreenViewport-backed Stage");
+            s = new Stage(new ScreenViewport());
+            try {
+                // If available, bind the stage so the Renderer uses the same instance.
+                renderService.setStage(s);
+            } catch (Exception e) {
+                // Some test doubles may not expose setStage; local field still satisfies UI/tests.
+                logger.atDebug().setCause(e)
+                        .log("RenderService#setStage unavailable; using local Stage fallback");
+            }
+        }
+        return s;
     }
 }

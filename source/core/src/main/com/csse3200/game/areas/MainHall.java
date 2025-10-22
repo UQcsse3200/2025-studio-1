@@ -157,12 +157,12 @@ public class MainHall extends GameArea {
     }
 
     private void loadBackToFloor2() {
-        Reception.setRoomSpawn(new GridPoint2(24, 24));
+        Reception.setRoomSpawn(new GridPoint2(25, 20));
         clearAndLoad(() -> new Reception(terrainFactory, cameraComponent));
     }
 
     private void loadSecurity() {
-        SecurityGameArea.setRoomSpawn(new GridPoint2(6, 8));
+        SecurityGameArea.setRoomSpawn(new GridPoint2(1, 7));
         clearAndLoad(() -> new SecurityGameArea(terrainFactory, cameraComponent));
     }
 

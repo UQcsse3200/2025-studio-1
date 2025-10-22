@@ -11,10 +11,6 @@ import com.badlogic.gdx.InputProcessor;
  */
 public class TouchTerminalInputComponent extends BaseTerminalInputComponent {
 
-    public TouchTerminalInputComponent() {
-        super();
-    }
-
     public TouchTerminalInputComponent(Terminal terminal) {
         super(terminal);
     }

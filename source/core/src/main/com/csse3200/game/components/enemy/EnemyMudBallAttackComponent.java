@@ -1,6 +1,7 @@
 package com.csse3200.game.components.enemy;
 
 import com.badlogic.gdx.Gdx;
+import com.csse3200.game.areas.GameArea;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
@@ -117,7 +118,12 @@ public class EnemyMudBallAttackComponent extends Component {
     }
 
     private void spawnProjectile(Vector2 start, Vector2 velocity) {
-        int dmg = 10;
+        float scale = 1f;
+        var diff = ServiceLocator.getDifficulty();
+        GameArea area = ServiceLocator.getGameArea();
+        float room = (area != null) ? area.roomNumber() : 1f;
+        if (diff != null) scale = diff.getRoomDifficulty(room)+1f;
+        int dmg = (int) (scale * 5f);
         WeaponsStatsComponent bossStats = entity.getComponent(WeaponsStatsComponent.class);
         if (bossStats != null) dmg = bossStats.getBaseAttack();
 
@@ -138,7 +144,7 @@ public class EnemyMudBallAttackComponent extends Component {
                 .addComponent(new HitboxComponent().setLayer(PhysicsLayer.ENEMY_PROJECTILE))
                 .addComponent(new EnemyProjectileMovementComponent(velocity, life))
                 .addComponent(new CombatStatsComponent(1))
-                .addComponent(new WeaponsStatsComponent(dmg / 3))
+                .addComponent(new WeaponsStatsComponent(dmg))
                 .addComponent(new TouchAttackComponent(PhysicsLayer.PLAYER, 0f));
 
         AnimationRenderComponent arc = new AnimationRenderComponent(atlas);
