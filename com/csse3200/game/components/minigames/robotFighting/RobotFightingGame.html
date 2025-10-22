@@ -123,16 +123,19 @@ loadScripts(document, 'script');</script>
 <section class="constructor-summary" id="constructor-summary">
 <h2>Constructor Summary</h2>
 <div class="caption"><span>Constructors</span></div>
-<div class="summary-table two-column-summary">
-<div class="table-header col-first">Constructor</div>
+<div class="summary-table three-column-summary">
+<div class="table-header col-first">Modifier</div>
+<div class="table-header col-second">Constructor</div>
 <div class="table-header col-last">Description</div>
+<div class="col-first even-row-color"><code>&nbsp;</code></div>
 <div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E()" class="member-name-link">RobotFightingGame</a>()</code></div>
 <div class="col-last even-row-color">
 <div class="block">Default constructor for production use.</div>
 </div>
-<div class="col-constructor-name odd-row-color"><code><a href="#%3Cinit%3E(com.csse3200.game.components.minigames.robotFighting.RobotFightingText)" class="member-name-link">RobotFightingGame</a><wbr>(<a href="RobotFightingText.html" title="class in com.csse3200.game.components.minigames.robotFighting">RobotFightingText</a>&nbsp;customText)</code></div>
+<div class="col-first odd-row-color"><code>protected </code></div>
+<div class="col-constructor-name odd-row-color"><code><a href="#%3Cinit%3E(com.csse3200.game.components.minigames.robotFighting.RobotFightingText)" class="member-name-link">RobotFightingGame</a><wbr>(<a href="RobotFightingText.html" title="class in com.csse3200.game.components.minigames.robotFighting">RobotFightingText</a>&nbsp;text)</code></div>
 <div class="col-last odd-row-color">
-<div class="block">Alternate constructor used for testing.</div>
+<div class="block">Testing constructor that skips LibGDX or entity initialization.</div>
 </div>
 </div>
 </section>
@@ -189,16 +192,8 @@ loadScripts(document, 'script');</script>
 <li>
 <section class="detail" id="&lt;init&gt;(com.csse3200.game.components.minigames.robotFighting.RobotFightingText)">
 <h3>RobotFightingGame</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">RobotFightingGame</span><wbr><span class="parameters">(<a href="RobotFightingText.html" title="class in com.csse3200.game.components.minigames.robotFighting">RobotFightingText</a>&nbsp;customText)</span></div>
-<div class="block">Alternate constructor used for testing.
- <p>
- Accepts a custom <a href="RobotFightingText.html" title="class in com.csse3200.game.components.minigames.robotFighting"><code>RobotFightingText</code></a> to bypass <a href="../../../files/FileLoader.html" title="class in com.csse3200.game.files"><code>FileLoader</code></a>
- and avoid external asset loading.
- </p></div>
-<dl class="notes">
-<dt>Parameters:</dt>
-<dd><code>customText</code> - Preloaded text data containing encouragement strings.</dd>
-</dl>
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="element-name">RobotFightingGame</span><wbr><span class="parameters">(<a href="RobotFightingText.html" title="class in com.csse3200.game.components.minigames.robotFighting">RobotFightingText</a>&nbsp;text)</span></div>
+<div class="block">Testing constructor that skips LibGDX or entity initialization.</div>
 </section>
 </li>
 </ul>

@@ -102,7 +102,7 @@ loadScripts(document, 'script');</script>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">RobotFightingDisplay</span>
 <span class="extends-implements">extends <a href="../../../ui/UIComponent.html" title="class in com.csse3200.game.ui">UIComponent</a></span></div>
 <div class="block">Display class for the "Clanker Royale" minigame.
- Handles UI transitions: welcome → betting → main game.</div>
+ Handles UI transitions: welcome → main game.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -162,31 +162,29 @@ loadScripts(document, 'script');</script>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Displays an encouragement message in the narrator label.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#fightOver(java.lang.String)" class="member-name-link">fightOver</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;status)</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.badlogic.gdx.scenes.scene2d.Actor</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getChosenActor()" class="member-name-link">getChosenActor</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Handles end-of-fight logic and displays the final outcome.</div>
-</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.badlogic.gdx.scenes.scene2d.Actor</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getChosenActor()" class="member-name-link">getChosenActor</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns the actor representing the currently selected fighter.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.badlogic.gdx.scenes.scene2d.Actor</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getOtherActor(com.badlogic.gdx.scenes.scene2d.Actor)" class="member-name-link">getOtherActor</a><wbr>(com.badlogic.gdx.scenes.scene2d.Actor&nbsp;fighter)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.badlogic.gdx.scenes.scene2d.Actor</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getOtherActor(com.badlogic.gdx.scenes.scene2d.Actor)" class="member-name-link">getOtherActor</a><wbr>(com.badlogic.gdx.scenes.scene2d.Actor&nbsp;fighter)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns the opponent actor opposite of the provided fighter.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#hide()" class="member-name-link">hide</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#hide()" class="member-name-link">hide</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Hides all panels and disables the UI.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#playAttackAnimation(com.badlogic.gdx.scenes.scene2d.Actor)" class="member-name-link">playAttackAnimation</a><wbr>(com.badlogic.gdx.scenes.scene2d.Actor&nbsp;fighter)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#playAttackAnimation(com.badlogic.gdx.scenes.scene2d.Actor)" class="member-name-link">playAttackAnimation</a><wbr>(com.badlogic.gdx.scenes.scene2d.Actor&nbsp;fighter)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Plays the fighter's attack animation and triggers a hit effect.</div>
 </div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#playExplosionEffect(com.badlogic.gdx.scenes.scene2d.Actor)" class="member-name-link">playExplosionEffect</a><wbr>(com.badlogic.gdx.scenes.scene2d.Actor&nbsp;fighter)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setHealthFighter(com.badlogic.gdx.scenes.scene2d.Actor,float)" class="member-name-link">setHealthFighter</a><wbr>(com.badlogic.gdx.scenes.scene2d.Actor&nbsp;fighter,
  float&nbsp;healthPercent)</code></div>
@@ -256,17 +254,6 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="fightOver(java.lang.String)">
-<h3>fightOver</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">fightOver</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;status)</span></div>
-<div class="block">Handles end-of-fight logic and displays the final outcome.</div>
-<dl class="notes">
-<dt>Parameters:</dt>
-<dd><code>status</code> - fight result ("won", "lost", or "drew")</dd>
-</dl>
-</section>
-</li>
-<li>
 <section class="detail" id="playAttackAnimation(com.badlogic.gdx.scenes.scene2d.Actor)">
 <h3>playAttackAnimation</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">playAttackAnimation</span><wbr><span class="parameters">(com.badlogic.gdx.scenes.scene2d.Actor&nbsp;fighter)</span></div>
@@ -293,6 +280,12 @@ loadScripts(document, 'script');</script>
 <dt>Parameters:</dt>
 <dd><code>encouragingMessage</code> - text to show on screen</dd>
 </dl>
+</section>
+</li>
+<li>
+<section class="detail" id="playExplosionEffect(com.badlogic.gdx.scenes.scene2d.Actor)">
+<h3>playExplosionEffect</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">playExplosionEffect</span><wbr><span class="parameters">(com.badlogic.gdx.scenes.scene2d.Actor&nbsp;fighter)</span></div>
 </section>
 </li>
 <li>
