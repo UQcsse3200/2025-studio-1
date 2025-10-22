@@ -14,8 +14,24 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.csse3200.game.GdxGame;
 
+/**
+ * A story screen shown before the gam starts
+ * <p>
+ *     Displays multiple lines of story text with a typing effect
+ *     and allows the player to progress through the dialogue or skip it entirely.
+ * </p>
+ * <h3>Controls:</h3>
+ *  <ul>
+ *  <li><b>SPACE</b> — Advance dialogue or reveal the full line</li>
+ *  <li><b>ESC</b> — Skip story and start the game immediately</li>
+ *  </ul>
+ */
 public class StoryScreen extends ScreenAdapter {
+
+    /** Reference to the main game instance*/
     private final GdxGame game;
+
+    /** Narrative text lines displayed sequentially*/
     private final String[] storyLines = {
             "In the not so far future, robotic companions have become a fully realised reality.",
             "Ranging from simple janitors to full blown military application - their use is seen on a global scale.",
@@ -26,20 +42,46 @@ public class StoryScreen extends ScreenAdapter {
             "a lone operative has infiltrated the plant and must now navigate its chaotic twists and turns to shut" +
                     " down the artificial menace."
     };
+
+    /** Time delay between each character for the typing effect. */
     private final float typeSpeed = 0.03f;
+
+    /** LibGDX Stage for managing actors and UI layout. */
     private Stage stage;
+
+    /** Skin used for UI styling. */
     private Skin skin;
+
+    /** Label used to display story text. */
     private Label dialogueLabel;
+
+    /** Background texture image. */
     private Texture bgTexture;
+
+    /** Index of the current story line being displayed. */
     private int currentLine = 0;
+
+    /** Timer used to control character typing speed. */
     private float typeTimer = 0f;
+
+    /** Index of the next character to display in the current line. */
     private int charIndex = 0;
+
+    /** Flag indicating if the typing animation is in progress. */
     private boolean typing;
 
+    /**
+     * Constructs a new Story Screen
+     * @param game the {@link GdxGame} instance used for screen transitions
+     */
     public StoryScreen(GdxGame game) {
         this.game = game;
     }
 
+    /**
+     * Initialises the {@link Stage}, UI skin, background, and dialogue labels.
+     * Begins the story by typing out the first line.
+     */
     @Override
     public void show() {
         stage = new Stage(new ScreenViewport());
