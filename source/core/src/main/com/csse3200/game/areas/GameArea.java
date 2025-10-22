@@ -1092,7 +1092,7 @@ public abstract class GameArea implements Disposable {
 
     /**
      * Method for displaying the UI entity.
-     * 
+     *
      */
     protected void displayUIEntity(String gameAreaName, String floorName) {
         Entity ui = new Entity();
@@ -1431,6 +1431,7 @@ public abstract class GameArea implements Disposable {
             case "server" -> ServerGameArea.class;
             case "research" -> ResearchGameArea.class;
             case "casino" -> CasinoGameArea.class;
+            case "secretroom" -> SecretRoomGameArea.class;
             case "goodwinanimation" -> GoodWinAnimationScreen.class;
             case "badwinanimation" -> BadWinAnimationScreen.class;
             default -> {

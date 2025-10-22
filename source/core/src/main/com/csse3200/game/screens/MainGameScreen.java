@@ -40,6 +40,7 @@ import com.csse3200.game.ui.terminal.Terminal;
 import com.csse3200.game.ui.terminal.TerminalDisplay;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import java.util.ArrayList;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -62,8 +63,10 @@ public class MainGameScreen extends ScreenAdapter {
     private final PhysicsEngine physicsEngine;
     private GameArea gameArea;
 
-    private CountdownTimerService countdownTimer;
+    private final CountdownTimerService countdownTimer;
+    private CountdownTimerService escapeTimer = null;
 
+    private ArrayList<Entity> uis = new ArrayList<>();
 
     //Leaderboard & Session fields
     private GameSession session;
@@ -75,6 +78,7 @@ public class MainGameScreen extends ScreenAdapter {
     private boolean isMinimapVisible = false;
     private boolean pauseToggledThisFrame = false; // guard to avoid reopen on same ESC
     private Entity controlsOverlay;
+    private boolean animation = false;
 
     public MainGameScreen(GdxGame game, boolean loadSaveGame) {
         this.game = game;
@@ -119,7 +123,17 @@ public class MainGameScreen extends ScreenAdapter {
         ServiceLocator.registerLightingService(lightingService);
 
         loadAssets();
-        countdownTimer = new CountdownTimerService(ServiceLocator.getTimeSource(), 240000);
+        countdownTimer = new CountdownTimerService(ServiceLocator.getTimeSource(), 900000);
+        ServiceLocator.getGlobalEvents().addListener("escape timer", () -> {
+            setEscapeTimer();
+            deleteUI();
+            createUI();
+        });
+        ServiceLocator.getGlobalEvents().addListener(("animation"), () -> {
+            animation = true;
+            setEscapeTimer();
+            deleteUI();
+        });
         createUI();
 
         logger.debug("Initialising main game screen entities");
@@ -260,30 +274,50 @@ public class MainGameScreen extends ScreenAdapter {
                 // Close minimap first if it was open at the start of this frame
                 hideMinimapOverlay();
                 if (!isPauseVisible) {
-                    countdownTimer.resume();
+                    if (escapeTimer == null) {
+                        countdownTimer.resume();
+                    } else {
+                        escapeTimer.resume();
+                    }
                 }
             } else if (preIsPauseVisible) {
                 // If pause menu was open at the start of this frame, close it
                 hidePauseOverlay();
                 if (!isMinimapVisible) {
-                    countdownTimer.resume();
+                    if (escapeTimer == null) {
+                        countdownTimer.resume();
+                    } else {
+                        escapeTimer.resume();
+                    }
                 }
             } else {
                 // Otherwise, open pause menu
                 showPauseOverlay();
-                countdownTimer.pause();
+                if (escapeTimer == null) {
+                    countdownTimer.pause();
+                } else {
+                    escapeTimer.pause();
+                }
             }
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.TAB)) {
             if (!isMinimapVisible) {
                 if (!isPauseVisible) {
                     showMinimapOverlay();
-                    countdownTimer.pause();
+                    if (escapeTimer == null) {
+                        countdownTimer.pause();
+                    } else {
+                        escapeTimer.pause();
+                    }
                 }
             } else {
                 hideMinimapOverlay();
                 if (!isPauseVisible) {
-                    countdownTimer.resume();
+                    if (escapeTimer == null) {
+                        countdownTimer.resume();
+                    } else {
+                        escapeTimer.resume();
+                    }
                 }
             }
         }
@@ -305,6 +339,15 @@ public class MainGameScreen extends ScreenAdapter {
         //switch to death screen when countdown timer is up
         if (countdownTimer.isTimeUP()) {
             setDeathScreen();
+        }
+
+        // Switch to win screen if the escape sequence is runnaing and the escape timer runs out
+        if (escapeTimer != null && escapeTimer.isTimeUP()) {
+            if (animation) {
+                setWinScreen();
+            } else {
+                setBadWin();
+            }
         }
 
         // Reset per-frame guards/flags for the next frame
@@ -376,12 +419,26 @@ public class MainGameScreen extends ScreenAdapter {
         ui.addComponent(new InputDecorator(stage, 10))
                 .addComponent(new PerformanceDisplay())
                 .addComponent(new MainGameActions(this.game))
-                .addComponent(new MainGameDisplay(countdownTimer))
                 .addComponent(new Terminal(null, this.game, countdownTimer))
                 .addComponent(inputComponent)
                 .addComponent(new TerminalDisplay(this.game));
 
-        ServiceLocator.getEntityService().register(ui);
+        if (escapeTimer == null) {
+            ui.addComponent(new MainGameDisplay(countdownTimer));
+        } else {
+            ui.addComponent(new MainGameDisplay(escapeTimer));
+        }
+
+        if(!animation) {
+            this.uis.add(ui);
+            ServiceLocator.getEntityService().register(ui);
+        }
+    }
+
+    private void deleteUI() {
+        for (Entity ui : uis) {
+            ui.dispose();
+        }
     }
 
     /**
@@ -434,8 +491,14 @@ public class MainGameScreen extends ScreenAdapter {
         pauseOverlay.getEvents().addListener("resume", this::hidePauseOverlay);
         ServiceLocator.getEntityService().register(pauseOverlay);
         ServiceLocator.getTimeSource().setPaused(true);
-        if (!countdownTimer.isPaused()) {
-            countdownTimer.pause();
+        if (escapeTimer == null) {
+            if (!countdownTimer.isPaused()) {
+                countdownTimer.pause();
+            }
+        } else {
+            if (!escapeTimer.isPaused()) {
+                escapeTimer.pause();
+            }
         }
         isPauseVisible = true;
         pauseToggledThisFrame = true;
@@ -458,8 +521,14 @@ public class MainGameScreen extends ScreenAdapter {
         // Only unpause/resume if minimap is not visible
         if (!isMinimapVisible) {
             ServiceLocator.getTimeSource().setPaused(false);
-            if (countdownTimer.isPaused()) {
-                countdownTimer.resume();
+            if (escapeTimer == null) {
+                if (countdownTimer.isPaused()) {
+                    countdownTimer.resume();
+                }
+            } else {
+                if (escapeTimer.isPaused()) {
+                    escapeTimer.resume();
+                }
             }
         }
 
@@ -503,6 +572,11 @@ public class MainGameScreen extends ScreenAdapter {
         isMinimapVisible = false;
     }
 
+    private void setEscapeTimer () {
+        escapeTimer = new CountdownTimerService(ServiceLocator.getTimeSource(), 5000);
+        countdownTimer.pause();
+    }
+
 
     /**
      * Calculates the total elapsed time of the countdown timer in second
@@ -526,6 +600,25 @@ public class MainGameScreen extends ScreenAdapter {
         DeathScreen deathScreen = new DeathScreen(game);
         deathScreen.updateTime(getCompleteTime());
         game.setScreen(deathScreen);
+    }
+
+    /**
+            * Sets the game's screen to win screen
+            *
+            * <p>
+     * Updates the win screen with the elapsed time before switching.
+            * </p>
+            */
+    private void setWinScreen() {
+        ServiceLocator.getGlobalEvents().trigger("round:finished", true);
+        game.setCarryOverLeaderBoard(session.getLeaderBoardManager());
+        WinScreen winScreen = new WinScreen(game);
+        winScreen.updateTime(getCompleteTime());
+        game.setScreen(winScreen);
+    }
+
+    private void setBadWin() {
+        ServiceLocator.getGlobalEvents().trigger("badWin");
     }
 
     /**

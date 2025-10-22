@@ -86,7 +86,6 @@ public class TunnelGameArea extends GameArea {
         spawnTeleporter();
         spawnObjectDoors(new GridPoint2(0, 7), new GridPoint2(28, 7));
         spawnFloor();
-        spawnPasswordTerminal(new GridPoint2(22, 17));
         spawnSpikes();
         spawnVisibleFloor();
         spawnNurse(player);
@@ -119,7 +118,7 @@ public class TunnelGameArea extends GameArea {
         // Right wall with door: create wall segments above and below the door
         float rightDoorHeight = Math.max(1f, b.viewHeight() * 0.2f);
         float rightDoorY = b.bottomY();
-        
+
 
         float rightTopSegHeight = Math.max(0f, b.topY() - (rightDoorY + rightDoorHeight));
         if (rightTopSegHeight > 0f) {
@@ -127,12 +126,12 @@ public class TunnelGameArea extends GameArea {
             rightTop.setPosition(b.rightX() - WALL_WIDTH, rightDoorY + rightDoorHeight);
             spawnEntity(rightTop);
         }
-        
+
 
         Entity rightDoorWall = ObstacleFactory.createWall(WALL_WIDTH, rightDoorHeight);
         rightDoorWall.setPosition(b.rightX() - WALL_WIDTH, rightDoorY);
         spawnEntity(rightDoorWall);
-        
+
         Entity rightDoor = ObstacleFactory.createDoorTrigger(WALL_WIDTH, rightDoorHeight);
         rightDoor.setPosition(b.rightX() - WALL_WIDTH - 0.001f, rightDoorY);
         rightDoor.addComponent(new com.csse3200.game.components.DoorComponent(this::loadBossRoom));
@@ -243,53 +242,12 @@ public class TunnelGameArea extends GameArea {
     }
 
     /**
-     * Spawns a password terminal and a nearby hint station in the given position.
-     */
-    private void spawnPasswordTerminal(GridPoint2 pos) {
-        Entity terminal = ObstacleFactory.createSecuritySystem();
-        spawnEntityAt(terminal, pos, true, false);
-
-        Entity hintStation = InteractableStationFactory.createBaseStation();
-        hintStation.addComponent(new StationComponent(makeTerminalHintConfig()));
-
-        PhysicsUtils.setScaledCollider(hintStation, 2.5f, 1.5f);
-        hintStation.getComponent(ColliderComponent.class)
-                .setAsBoxAligned(new Vector2(2.5f, 1.5f),
-                        PhysicsComponent.AlignX.CENTER, PhysicsComponent.AlignY.CENTER);
-
-        GridPoint2 hintPos = new GridPoint2(pos.x, pos.y + 2);
-        spawnEntityAt(hintStation, hintPos, true, false);
-    }
-
-    /**
-     * Creates a {@link BenchConfig} used for the password terminal's hint station.
-     */
-    private BenchConfig makeTerminalHintConfig() {
-        BenchConfig bench = new BenchConfig() {
-            @Override
-            public int getPrice() {
-                return 0;
-            }
-
-            @Override
-            public void upgrade(boolean playerNear, com.csse3200.game.entities.Entity player, Label prompt) {
-                // this method was intentionally left empty
-            }
-        };
-
-        bench.texturePath = null;
-        bench.promptText = "Press F1 to access terminal";
-
-        return bench;
-    }
-
-    /**
      * Clear room, set this room's static
      * boolean isCleared variable to true
      */
     public static void clearRoom() {
         TunnelGameArea.isCleared = true;
-        logger.debug("Reception is cleared");
+        logger.debug("Tunnel is cleared");
     }
 
     /**
@@ -298,7 +256,7 @@ public class TunnelGameArea extends GameArea {
      */
     public static void unclearRoom() {
         TunnelGameArea.isCleared = false;
-        logger.debug("Tunnel is cleared");
+        logger.debug("Tunnel is uncleared");
     }
 
     private void spawnNurse(Entity player) {
@@ -314,4 +272,5 @@ public class TunnelGameArea extends GameArea {
     public static boolean getClearField() {
         return TunnelGameArea.isCleared;
     }
+
 }

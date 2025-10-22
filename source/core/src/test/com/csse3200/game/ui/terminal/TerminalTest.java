@@ -1,6 +1,7 @@
 package com.csse3200.game.ui.terminal;
 
 import com.csse3200.game.GdxGame;
+import com.csse3200.game.areas.StaticBossRoom;
 import com.csse3200.game.areas.TunnelGameArea;
 import com.csse3200.game.components.DoorComponent;
 import com.csse3200.game.extensions.GameExtension;
@@ -498,7 +499,7 @@ class TerminalTest {
 
     @Test
     void processMessage_unlocksDoor_whenPasswordCorrectAndDoorPresent() {
-        TunnelGameArea.exposedRightDoor = door;
+        StaticBossRoom.exposedRightDoor = door;
 
         setEntered("0000");
         boolean ok = terminal.processMessage();
@@ -510,7 +511,7 @@ class TerminalTest {
 
     @Test
     void processMessage_trimsInput_beforeCheckingPassword() {
-        TunnelGameArea.exposedRightDoor = door;
+        StaticBossRoom.exposedRightDoor = door;
 
         setEntered("   0000   ");
         boolean ok = terminal.processMessage();
@@ -522,7 +523,7 @@ class TerminalTest {
 
     @Test
     void processMessage_returnsFalse_whenPasswordCorrectButDoorIsNull() {
-        TunnelGameArea.exposedRightDoor = null;
+        StaticBossRoom.exposedRightDoor = null;
 
         setEntered("0000");
         boolean ok = terminal.processMessage();
@@ -533,7 +534,7 @@ class TerminalTest {
 
     @Test
     void processMessage_requiresExactMatch_forPassword() {
-        TunnelGameArea.exposedRightDoor = door;
+        StaticBossRoom.exposedRightDoor = door;
 
         setEntered("0000 open");
         boolean ok = terminal.processMessage();
@@ -545,7 +546,7 @@ class TerminalTest {
 
     @Test
     void processMessage_unknownCommand_returnsFalse_andKeepsMessage() {
-        TunnelGameArea.exposedRightDoor = door; // presence shouldn't matter here
+        StaticBossRoom.exposedRightDoor = door; // presence shouldn't matter here
 
         setEntered("foo bar baz");
         boolean ok = terminal.processMessage();

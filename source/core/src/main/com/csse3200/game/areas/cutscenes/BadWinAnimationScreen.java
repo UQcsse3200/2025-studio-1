@@ -28,6 +28,7 @@ public class BadWinAnimationScreen extends GameArea {
     }
 
     public void create() {
+        ServiceLocator.getGlobalEvents().trigger("animation");
         ensureAssets();
         terrain = terrainFactory.createTerrain(TerrainFactory.TerrainType.WIN_SCREEN);
         spawnEntity(new Entity().addComponent(terrain));
