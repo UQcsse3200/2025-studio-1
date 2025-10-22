@@ -141,20 +141,9 @@ public class RobotFightingGame {
         Timer.schedule(new Timer.Task() {
             @Override
             public void run() {
-                if (chosenFighterHp <= 0 || otherFighterHp <= 0) {
+                if (!handleChosenFighter()) {
                     cancel();
-                    determineWinner();
-                    return;
                 }
-
-                Actor attacked = gameDisplay.getOtherActor(gameDisplay.getChosenActor());
-                if (attacked == null) return;
-
-                gameDisplay.playAttackAnimation(attacked);
-
-                int damage = (int) (Math.random() * 5 * encourageMult + 8);
-                otherFighterHp -= damage;
-                gameDisplay.setHealthFighter(attacked, otherFighterHp);
             }
         }, 1f, 1.5f + (float) Math.random());
 
@@ -162,23 +151,46 @@ public class RobotFightingGame {
         Timer.schedule(new Timer.Task() {
             @Override
             public void run() {
-                if (chosenFighterHp <= 0 || otherFighterHp <= 0) {
+                if (!handleOtherFighter()) {
                     cancel();
-                    return;
                 }
-
-                Actor attacked = gameDisplay.getChosenActor();
-                if (attacked == null) return;
-
-                gameDisplay.playAttackAnimation(attacked);
-
-                int damage = (int) (Math.random() * 5 + 10);
-                chosenFighterHp -= damage;
-                gameDisplay.setHealthFighter(attacked, chosenFighterHp);
-
-                loseCourage();
             }
         }, 1.3f, 1.5f + (float) Math.random());
+    }
+
+    boolean handleChosenFighter() {
+        if (chosenFighterHp <= 0 || otherFighterHp <= 0) {
+            determineWinner();
+            return false;
+        }
+
+        Actor attacked = gameDisplay.getOtherActor(gameDisplay.getChosenActor());
+        if (attacked == null) return false;
+
+        gameDisplay.playAttackAnimation(attacked);
+
+        int damage = (int) (Math.random() * 5 * encourageMult + 8);
+        otherFighterHp -= damage;
+        gameDisplay.setHealthFighter(attacked, otherFighterHp);
+        return true;
+    }
+
+    boolean handleOtherFighter() {
+        if (chosenFighterHp <= 0 || otherFighterHp <= 0) {
+            return false;
+        }
+
+        Actor attacked = gameDisplay.getChosenActor();
+        if (attacked == null) return false;
+
+        gameDisplay.playAttackAnimation(attacked);
+
+        int damage = (int) (Math.random() * 5 + 10);
+        chosenFighterHp -= damage;
+        gameDisplay.setHealthFighter(attacked, chosenFighterHp);
+
+        loseCourage();
+        return true;
     }
 
     /**
@@ -234,16 +246,7 @@ public class RobotFightingGame {
         Timer.schedule(new Timer.Task() {
             @Override
             public void run() {
-                if (chosenFighterHp <= 0) {
-                    if (otherFighterHp <= 0) {
-                        gameEntity.getEvents().trigger("draw");
-                    } else {
-                        gameEntity.getEvents().trigger("lose");
-                    }
-                } else {
-                    gameEntity.getEvents().trigger("win");
-                }
-                gameEntity.getEvents().trigger("interact");
+                determineWinnerImmediate();
             }
         }, 1f);
     }
@@ -258,5 +261,19 @@ public class RobotFightingGame {
      */
     public Entity getGameEntity() {
         return gameEntity;
+    }
+
+    // in RobotFightingGame.java
+    protected void determineWinnerImmediate() {
+        if (chosenFighterHp <= 0) {
+            if (otherFighterHp <= 0) {
+                gameEntity.getEvents().trigger("draw");
+            } else {
+                gameEntity.getEvents().trigger("lose");
+            }
+        } else {
+            gameEntity.getEvents().trigger("win");
+        }
+        gameEntity.getEvents().trigger("interact");
     }
 }
