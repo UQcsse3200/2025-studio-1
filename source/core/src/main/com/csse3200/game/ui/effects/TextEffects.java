@@ -334,7 +334,7 @@ public class TextEffects {
         return switch (origin) {
             case LEFT -> 0;
             case RIGHT -> Math.max(0, n - 1);
-            case MIDDLE -> Math.max(0, (n - 1) / 2);
+            default -> Math.max(0, (n - 1) / 2);
         };
     }
 
@@ -896,7 +896,7 @@ public class TextEffects {
     public void strobe(Label label, String hexA, String hexB, float hz, float durationSec) {
         cancel();
         enableMarkup(label);
-        if (basePlain == null || basePlain.isEmpty()) refreshBases(label, null);
+        ensureBasePlain(label);
         final String text = basePlain;
 
         final String a = sanitizeHex(hexA, "00ff00");  // default green if bad
@@ -926,7 +926,7 @@ public class TextEffects {
     public void pulseBetween(Label label, String hexA, String hexB, float hz) {
         cancel();
         enableMarkup(label);
-        if (basePlain == null || basePlain.isEmpty()) refreshBases(label, null);
+        ensureBasePlain(label);
         final String base = basePlain;
 
         final String A = sanitizeHex(hexA, FFFFFF);
@@ -962,7 +962,7 @@ public class TextEffects {
     public void sparkle(Label label, float density, float hz, float durationSec) {
         cancel();
         enableMarkup(label);
-        if (basePlain == null || basePlain.isEmpty()) refreshBases(label, null);
+        ensureBasePlain(label);
 
         final char[] chars = basePlain.toCharArray();
         final int n = chars.length;
@@ -1001,7 +1001,7 @@ public class TextEffects {
     public void sweepRainbow(Label label, float bandHz, float perCharShiftDeg, float travelHz) {
         cancel();
         enableMarkup(label);
-        if (basePlain == null || basePlain.isEmpty()) refreshBases(label, null);
+        ensureBasePlain(label);
 
         final char[] chars = basePlain.toCharArray();
         final int n = chars.length;
@@ -1030,17 +1030,26 @@ public class TextEffects {
         }, 0f, 1f / fps);
     }
 
+    private void ensureBasePlain(Label label) {
+        // keep the condition on its own line for line mapping
+        boolean needRefresh = (basePlain == null || basePlain.isEmpty());
+        if (needRefresh) {
+            refreshBases(label, null);
+        }
+    }
+
     /**
      * Strobe by toggling the LabelStyle's fontColor (bypasses markup entirely).
      */
     public void strobeDirect(Label label, Color a, Color b, float hz, float durationSec) {
         cancel();
-        ensureOwnStyle(label);
 
+        ensureBasePlain(label);
+        ensureOwnStyle(label);
         final Label.LabelStyle style = label.getStyle();
-        if (style == null) return;
-        // Make sure label tint doesn't multiply our chosen color
-        label.setColor(Color.WHITE);
+        if (style == null) return;              // early exit still ok now — basePlain is set
+
+        label.setColor(Color.WHITE);            // avoid tint multiplying our color
 
         final float interval = 1f / Math.max(0.1f, hz) / 2f; // A,B,A,B...
         final int totalTicks = Math.max(1, Math.round(durationSec / interval));
@@ -1050,10 +1059,9 @@ public class TextEffects {
             @Override
             public void run() {
                 style.fontColor = (tick[0] % 2 == 0) ? a : b;
-                label.invalidateHierarchy(); // force redraw with new color
+                label.invalidateHierarchy();
                 tick[0]++;
                 if (tick[0] >= totalTicks) {
-                    // leave it on 'b' (usually white) at the end
                     style.fontColor = b;
                     label.invalidateHierarchy();
                     cancel();
@@ -1064,19 +1072,19 @@ public class TextEffects {
 
     private record TypingInit(String text, float interval, StringBuilder buf, int[] idx) {
 
-        @Override
+        private static boolean idxEquals(int[] a, int[] b) {
+            return java.util.Arrays.equals(a, b);
+        }
+
         public boolean equals(Object o) {
             if (o == this) return true;
+            if (!(o instanceof TypingInit(String t, float itv, StringBuilder b, int[] idx2))) return false;
 
-            // record pattern: destructure 'o' into its components
-            if (!(o instanceof TypingInit(String t, float itv, StringBuilder b, int[] idx2))) {
-                return false;
-            }
+            boolean sameInterval = Float.compare(this.interval, itv) == 0;
+            boolean sameText = java.util.Objects.equals(this.text, t);
+            boolean sameBuf = this.buf == b;
 
-            return Float.compare(this.interval, itv) == 0
-                    && java.util.Objects.equals(this.text, t)
-                    && this.buf == b
-                    && java.util.Arrays.equals(this.idx, idx2);
+            return sameInterval && sameText && sameBuf && idxEquals(this.idx, idx2);
         }
 
 
@@ -1404,14 +1412,8 @@ public class TextEffects {
             return true;
         }
 
-        private static final class Visual {
-            final boolean rainbow;
-            final float rhz;
-            final float rshift;
-            final String flashHexA;
-            final String flashHexB;
-
-            Visual(boolean rainbow, float rhz, float rshift, String flashHexA, String flashHexB) {
+        private record Visual(boolean rainbow, float rhz, float rshift, String flashHexA, String flashHexB) {
+            private Visual(boolean rainbow, float rhz, float rshift, String flashHexA, String flashHexB) {
                 this.rainbow = rainbow;
                 this.rhz = rhz;
                 this.rshift = rshift;
@@ -1424,16 +1426,7 @@ public class TextEffects {
             }
         }
 
-        private static final class BlastExtras {
-            final int[] flashLeft;
-            final int[] overshootLeft;
-            final int[] postLockHold;
-
-            BlastExtras(int[] flashLeft, int[] overshootLeft, int[] postLockHold) {
-                this.flashLeft = flashLeft;
-                this.overshootLeft = overshootLeft;
-                this.postLockHold = postLockHold;
-            }
+        private record BlastExtras(int[] flashLeft, int[] overshootLeft, int[] postLockHold) {
         }
     }
 }

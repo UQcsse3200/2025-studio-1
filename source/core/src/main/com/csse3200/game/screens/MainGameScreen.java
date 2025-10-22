@@ -28,6 +28,7 @@ import com.csse3200.game.files.SaveGame;
 import com.csse3200.game.input.InputComponent;
 import com.csse3200.game.input.InputDecorator;
 import com.csse3200.game.input.InputService;
+import com.csse3200.game.lighting.LightingService;
 import com.csse3200.game.physics.PhysicsEngine;
 import com.csse3200.game.physics.PhysicsService;
 import com.csse3200.game.rendering.RenderService;
@@ -37,7 +38,6 @@ import com.csse3200.game.session.GameSession;
 import com.csse3200.game.session.SessionManager;
 import com.csse3200.game.ui.terminal.Terminal;
 import com.csse3200.game.ui.terminal.TerminalDisplay;
-import com.csse3200.game.lighting.LightingService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -76,22 +76,6 @@ public class MainGameScreen extends ScreenAdapter {
     private boolean pauseToggledThisFrame = false; // guard to avoid reopen on same ESC
     private Entity controlsOverlay;
 
-    public void showControlsOverlay() {
-        Stage stage = ServiceLocator.getRenderService().getStage();
-        controlsOverlay = new Entity()
-                .addComponent(new ControlDisplay(null, this::backToPauseMenu))
-                .addComponent(new InputDecorator(stage, 100));
-        ServiceLocator.getEntityService().register(controlsOverlay);
-    }
-
-    private void backToPauseMenu() {
-        if (controlsOverlay != null) {
-            controlsOverlay.dispose();
-            ServiceLocator.getEntityService().unregister(controlsOverlay);
-            controlsOverlay = null;
-        }
-        showPauseOverlay();
-    }
     public MainGameScreen(GdxGame game, boolean loadSaveGame) {
         this.game = game;
 
@@ -163,9 +147,12 @@ public class MainGameScreen extends ScreenAdapter {
                 case "Mainhall" -> gameArea.clearAndLoad(() -> MainHall.load(terrainFactory, renderer.getCamera()));
                 case "Reception" -> gameArea.clearAndLoad(() -> Reception.load(terrainFactory, renderer.getCamera()));
                 case "Tunnel" -> gameArea.clearAndLoad(() -> TunnelGameArea.load(terrainFactory, renderer.getCamera()));
-                case "Security" -> gameArea.clearAndLoad(() -> SecurityGameArea.load(terrainFactory, renderer.getCamera()));
-                case "Storage" -> gameArea.clearAndLoad(() -> StorageGameArea.load(terrainFactory, renderer.getCamera()));
-                case "Shipping" -> gameArea.clearAndLoad(() -> ShippingGameArea.load(terrainFactory, renderer.getCamera()));
+                case "Security" ->
+                        gameArea.clearAndLoad(() -> SecurityGameArea.load(terrainFactory, renderer.getCamera()));
+                case "Storage" ->
+                        gameArea.clearAndLoad(() -> StorageGameArea.load(terrainFactory, renderer.getCamera()));
+                case "Shipping" ->
+                        gameArea.clearAndLoad(() -> ShippingGameArea.load(terrainFactory, renderer.getCamera()));
                 case "Server" -> gameArea.clearAndLoad(() -> ServerGameArea.load(terrainFactory, renderer.getCamera()));
                 case "Casino" -> gameArea.clearAndLoad(() -> CasinoGameArea.load(terrainFactory, renderer.getCamera()));
                 case "Research" ->
@@ -201,6 +188,23 @@ public class MainGameScreen extends ScreenAdapter {
         }
         // for when loading a save game
         discover(exploredAreas);
+    }
+
+    public void showControlsOverlay() {
+        Stage stage = ServiceLocator.getRenderService().getStage();
+        controlsOverlay = new Entity()
+                .addComponent(new ControlDisplay(null, this::backToPauseMenu))
+                .addComponent(new InputDecorator(stage, 100));
+        ServiceLocator.getEntityService().register(controlsOverlay);
+    }
+
+    private void backToPauseMenu() {
+        if (controlsOverlay != null) {
+            controlsOverlay.dispose();
+            ServiceLocator.getEntityService().unregister(controlsOverlay);
+            controlsOverlay = null;
+        }
+        showPauseOverlay();
     }
 
     /**
