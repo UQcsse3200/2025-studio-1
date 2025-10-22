@@ -124,6 +124,12 @@ implements <a href="../../ai/tasks/PriorityTask.html" title="interface in com.cs
 <div class="table-header col-second">Field</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color"><code>protected float</code></div>
+<div class="col-second even-row-color"><code><a href="#angleDifferencesInBurst" class="member-name-link">angleDifferencesInBurst</a></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code>protected int</code></div>
+<div class="col-second odd-row-color"><code><a href="#burstAmount" class="member-name-link">burstAmount</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code>protected float</code></div>
 <div class="col-second even-row-color"><code><a href="#currentCooldown" class="member-name-link">currentCooldown</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 <div class="col-first odd-row-color"><code>protected <a href="../../rendering/DebugRenderer.html" title="class in com.csse3200.game.rendering">DebugRenderer</a></code></div>
@@ -135,45 +141,48 @@ implements <a href="../../ai/tasks/PriorityTask.html" title="interface in com.cs
 <div class="col-first odd-row-color"><code>protected <a href="../../physics/raycast/RaycastHit.html" title="class in com.csse3200.game.physics.raycast">RaycastHit</a></code></div>
 <div class="col-second odd-row-color"><code><a href="#hit" class="member-name-link">hit</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code>protected boolean</code></div>
+<div class="col-second even-row-color"><code><a href="#isVariant" class="member-name-link">isVariant</a></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code>protected float</code></div>
+<div class="col-second odd-row-color"><code><a href="#jumpCooldown" class="member-name-link">jumpCooldown</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code>protected <a href="../../physics/raycast/RaycastHit.html" title="class in com.csse3200.game.physics.raycast">RaycastHit</a></code></div>
+<div class="col-second even-row-color"><code><a href="#jumpHit" class="member-name-link">jumpHit</a></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code>protected float</code></div>
+<div class="col-second odd-row-color"><code><a href="#jumpImpulse" class="member-name-link">jumpImpulse</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
 <div class="col-first even-row-color"><code>protected float</code></div>
-<div class="col-second even-row-color"><code><a href="#jumpCooldown" class="member-name-link">jumpCooldown</a></code></div>
+<div class="col-second even-row-color"><code><a href="#obstacleCheckDistance" class="member-name-link">obstacleCheckDistance</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code>protected <a href="../../physics/raycast/RaycastHit.html" title="class in com.csse3200.game.physics.raycast">RaycastHit</a></code></div>
-<div class="col-second odd-row-color"><code><a href="#jumpHit" class="member-name-link">jumpHit</a></code></div>
+<div class="col-first odd-row-color"><code>protected <a href="../../physics/PhysicsEngine.html" title="class in com.csse3200.game.physics">PhysicsEngine</a></code></div>
+<div class="col-second odd-row-color"><code><a href="#physics" class="member-name-link">physics</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code>protected <a href="../../physics/components/PhysicsComponent.html" title="class in com.csse3200.game.physics.components">PhysicsComponent</a></code></div>
+<div class="col-second even-row-color"><code><a href="#physicsComponent" class="member-name-link">physicsComponent</a></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code>protected int</code></div>
+<div class="col-second odd-row-color"><code><a href="#priority" class="member-name-link">priority</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code>protected <a href="../enemy/ProjectileLauncherComponent.html" title="class in com.csse3200.game.components.enemy">ProjectileLauncherComponent</a></code></div>
+<div class="col-second even-row-color"><code><a href="#projectileLauncher" class="member-name-link">projectileLauncher</a></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code>protected <a href="../../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a></code></div>
+<div class="col-second odd-row-color"><code><a href="#shooter" class="member-name-link">shooter</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
 <div class="col-first even-row-color"><code>protected float</code></div>
-<div class="col-second even-row-color"><code><a href="#jumpImpulse" class="member-name-link">jumpImpulse</a></code></div>
+<div class="col-second even-row-color"><code><a href="#speedX" class="member-name-link">speedX</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code>protected float</code></div>
-<div class="col-second odd-row-color"><code><a href="#obstacleCheckDistance" class="member-name-link">obstacleCheckDistance</a></code></div>
+<div class="col-first odd-row-color"><code>protected <a href="../../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a></code></div>
+<div class="col-second odd-row-color"><code><a href="#target" class="member-name-link">target</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code>protected <a href="../../physics/PhysicsEngine.html" title="class in com.csse3200.game.physics">PhysicsEngine</a></code></div>
-<div class="col-second even-row-color"><code><a href="#physics" class="member-name-link">physics</a></code></div>
+<div class="col-first even-row-color"><code>protected float</code></div>
+<div class="col-second even-row-color"><code><a href="#timeSinceLastJump" class="member-name-link">timeSinceLastJump</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code>protected <a href="../../physics/components/PhysicsComponent.html" title="class in com.csse3200.game.physics.components">PhysicsComponent</a></code></div>
-<div class="col-second odd-row-color"><code><a href="#physicsComponent" class="member-name-link">physicsComponent</a></code></div>
+<div class="col-first odd-row-color"><code>protected <a href="../../services/GameTime.html" title="class in com.csse3200.game.services">GameTime</a></code></div>
+<div class="col-second odd-row-color"><code><a href="#timeSource" class="member-name-link">timeSource</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code>protected int</code></div>
-<div class="col-second even-row-color"><code><a href="#priority" class="member-name-link">priority</a></code></div>
-<div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code>protected <a href="../enemy/ProjectileLauncherComponent.html" title="class in com.csse3200.game.components.enemy">ProjectileLauncherComponent</a></code></div>
-<div class="col-second odd-row-color"><code><a href="#projectileLauncher" class="member-name-link">projectileLauncher</a></code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code>protected <a href="../../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a></code></div>
-<div class="col-second even-row-color"><code><a href="#shooter" class="member-name-link">shooter</a></code></div>
-<div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code>protected float</code></div>
-<div class="col-second odd-row-color"><code><a href="#speedX" class="member-name-link">speedX</a></code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code>protected <a href="../../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a></code></div>
-<div class="col-second even-row-color"><code><a href="#target" class="member-name-link">target</a></code></div>
-<div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code>protected float</code></div>
-<div class="col-second odd-row-color"><code><a href="#timeSinceLastJump" class="member-name-link">timeSinceLastJump</a></code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code>protected <a href="../../services/GameTime.html" title="class in com.csse3200.game.services">GameTime</a></code></div>
-<div class="col-second even-row-color"><code><a href="#timeSource" class="member-name-link">timeSource</a></code></div>
-<div class="col-last even-row-color">&nbsp;</div>
 </div>
 <div class="inherited-list">
 <h3 id="fields-inherited-from-class-com.csse3200.game.ai.tasks.DefaultTask">Fields inherited from class&nbsp;com.csse3200.game.ai.tasks.<a href="../../ai/tasks/DefaultTask.html" title="class in com.csse3200.game.ai.tasks">DefaultTask</a></h3>
@@ -358,6 +367,24 @@ implements <a href="../../ai/tasks/PriorityTask.html" title="interface in com.cs
 <section class="detail" id="timeSinceLastJump">
 <h3>timeSinceLastJump</h3>
 <div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">timeSinceLastJump</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="isVariant">
+<h3>isVariant</h3>
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isVariant</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="burstAmount">
+<h3>burstAmount</h3>
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">burstAmount</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="angleDifferencesInBurst">
+<h3>angleDifferencesInBurst</h3>
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">angleDifferencesInBurst</span></div>
 </section>
 </li>
 </ul>
