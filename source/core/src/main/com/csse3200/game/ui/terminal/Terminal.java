@@ -3,6 +3,7 @@ package com.csse3200.game.ui.terminal;
 import com.csse3200.game.GdxGame;
 import com.csse3200.game.components.Component;
 import com.csse3200.game.services.CountdownTimerService;
+import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.terminal.autocomplete.BKTree;
 import com.csse3200.game.ui.terminal.autocomplete.RadixTrie;
 import com.csse3200.game.ui.terminal.commands.*;
@@ -160,6 +161,7 @@ public class Terminal extends Component {
             if (StaticBossRoom.exposedRightDoor != null) {
                 StaticBossRoom.exposedRightDoor.setLocked(false);
                 setEnteredMessage("");
+                ServiceLocator.getGlobalEvents().trigger("unlock");
                 return true;
             }
         }

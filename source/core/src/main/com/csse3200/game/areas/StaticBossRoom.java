@@ -271,6 +271,8 @@ public class StaticBossRoom extends GameArea {
             {
                 this.texturePath = null;
                 this.promptText = "Press F1 to access terminal";
+                ServiceLocator.getGlobalEvents().addListener("unlock",
+                        () -> {promptText = "Correct Password! Door Unlocked!";});
             }
 
             @Override
