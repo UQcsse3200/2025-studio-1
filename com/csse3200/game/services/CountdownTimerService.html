@@ -133,7 +133,9 @@ loadScripts(document, 'script');</script>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getIsRunning()" class="member-name-link">getIsRunning</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Returns whether the timer is currently running</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>long</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getRemainingMs()" class="member-name-link">getRemainingMs</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
@@ -161,7 +163,9 @@ loadScripts(document, 'script');</script>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#startTimer()" class="member-name-link">startTimer</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Starts the countdown timer.</div>
+</div>
 </div>
 </div>
 </div>
@@ -204,6 +208,10 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="startTimer()">
 <h3>startTimer</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">startTimer</span>()</div>
+<div class="block">Starts the countdown timer.
+ <p>
+     Resets pause state and records the current <a href="GameTime.html" title="class in com.csse3200.game.services"><code>GameTime</code></a>
+ </p></div>
 </section>
 </li>
 <li>
@@ -281,6 +289,11 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="getIsRunning()">
 <h3>getIsRunning</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">getIsRunning</span>()</div>
+<div class="block">Returns whether the timer is currently running</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>@return <code>true</code> if the timer has been started, otherwise <code>false</code></dd>
+</dl>
 </section>
 </li>
 </ul>

@@ -196,20 +196,26 @@ loadScripts(document, 'script');</script>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#dispose()" class="member-name-link">dispose</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Removes the root table from the stage and disposes any helper-created textures.</div>
+<div class="block">Releases all text effects and timers.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected float</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#infoFontScale()" class="member-name-link">infoFontScale</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setElapsedSeconds(long)" class="member-name-link">setElapsedSeconds</a><wbr>(long&nbsp;seconds)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Sets the elapsed time label from seconds</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setElapsedText(java.lang.String)" class="member-name-link">setElapsedText</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;mmss)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Sets the elapsed time label from a preformatted string</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setRound(int)" class="member-name-link">setRound</a><wbr>(int&nbsp;round)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Sets the round number label</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected float</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#titleFontScale()" class="member-name-link">titleFontScale</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
@@ -355,6 +361,12 @@ loadScripts(document, 'script');</script>
 <h3>withLeaderboard</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="BaseEndScreenDisplays.html" title="class in com.csse3200.game.components.screens">BaseEndScreenDisplays</a></span>&nbsp;<span class="element-name">withLeaderboard</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Runnable.html" title="class or interface in java.lang" class="external-link">Runnable</a>&nbsp;leaderboardAction)</span></div>
 <div class="block">Allow chaining a Leaderboard button</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>leaderboardAction</code> - the action to execute when the leaderboard button is clicked</dd>
+<dt>Returns:</dt>
+<dd>this instance for method chaining</dd>
+</dl>
 </section>
 </li>
 <li>
@@ -378,28 +390,40 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="setRound(int)">
 <h3>setRound</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setRound</span><wbr><span class="parameters">(int&nbsp;round)</span></div>
+<div class="block">Sets the round number label</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>round</code> - the current round number</dd>
+</dl>
 </section>
 </li>
 <li>
 <section class="detail" id="setElapsedSeconds(long)">
 <h3>setElapsedSeconds</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setElapsedSeconds</span><wbr><span class="parameters">(long&nbsp;seconds)</span></div>
+<div class="block">Sets the elapsed time label from seconds</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>seconds</code> - the number of elapsed seconds</dd>
+</dl>
 </section>
 </li>
 <li>
 <section class="detail" id="setElapsedText(java.lang.String)">
 <h3>setElapsedText</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setElapsedText</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;mmss)</span></div>
+<div class="block">Sets the elapsed time label from a preformatted string</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>mmss</code> - formatted time string in <code>mm:ss</code></dd>
+</dl>
 </section>
 </li>
 <li>
 <section class="detail" id="dispose()">
 <h3>dispose</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">dispose</span>()</div>
-<div class="block"><span class="description-from-type-label">Description copied from class:&nbsp;<code><a href="BaseScreenDisplay.html#dispose()">BaseScreenDisplay</a></code></span></div>
-<div class="block">Removes the root table from the stage and disposes any helper-created textures.
- Subclasses overriding this should remove any actors that reference textures
- before calling <code>super.dispose()</code> to avoid rendering disposed resources.</div>
+<div class="block">Releases all text effects and timers.</div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code>dispose</code>&nbsp;in interface&nbsp;<code>com.badlogic.gdx.utils.Disposable</code></dd>

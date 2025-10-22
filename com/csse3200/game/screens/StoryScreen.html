@@ -97,6 +97,16 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">StoryScreen</span>
 <span class="extends-implements">extends com.badlogic.gdx.ScreenAdapter</span></div>
+<div class="block">A story screen shown before the gam starts
+ <p>
+     Displays multiple lines of story text with a typing effect
+     and allows the player to progress through the dialogue or skip it entirely.
+ </p>
+ <p><b>Controls:</b></p>
+  <ul>
+  <li><b>SPACE</b> — Advance dialogue or reveal the full line</li>
+  <li><b>ESC</b> — Skip story and start the game immediately</li>
+  </ul></div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -109,7 +119,9 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
 <div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(com.csse3200.game.GdxGame)" class="member-name-link">StoryScreen</a><wbr>(<a href="../GdxGame.html" title="class in com.csse3200.game">GdxGame</a>&nbsp;game)</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">Constructs a new Story Screen</div>
+</div>
 </div>
 </section>
 </li>
@@ -136,7 +148,9 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#show()" class="member-name-link">show</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Initialises the <code>Stage</code>, UI skin, background, and dialogue labels.</div>
+</div>
 </div>
 </div>
 </div>
@@ -161,6 +175,11 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="&lt;init&gt;(com.csse3200.game.GdxGame)">
 <h3>StoryScreen</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">StoryScreen</span><wbr><span class="parameters">(<a href="../GdxGame.html" title="class in com.csse3200.game">GdxGame</a>&nbsp;game)</span></div>
+<div class="block">Constructs a new Story Screen</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>game</code> - the <a href="../GdxGame.html" title="class in com.csse3200.game"><code>GdxGame</code></a> instance used for screen transitions</dd>
+</dl>
 </section>
 </li>
 </ul>
@@ -175,6 +194,8 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="show()">
 <h3>show</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">show</span>()</div>
+<div class="block">Initialises the <code>Stage</code>, UI skin, background, and dialogue labels.
+ Begins the story by typing out the first line.</div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code>show</code>&nbsp;in interface&nbsp;<code>com.badlogic.gdx.Screen</code></dd>
