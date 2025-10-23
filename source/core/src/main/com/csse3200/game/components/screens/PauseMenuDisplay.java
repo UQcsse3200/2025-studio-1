@@ -1,6 +1,9 @@
 package com.csse3200.game.components.screens;
 
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -8,19 +11,12 @@ import com.csse3200.game.GdxGame;
 import com.csse3200.game.screens.MainGameScreen;
 import com.csse3200.game.services.ServiceLocator;
 
-/**
- * Pause menu overlay shown above the main game and HUD.
- * <p>
- * Renders a full-screen dimmer and a centered panel with actions:
- * <ul>
- *   <li><b>Resume</b> — triggers the entity's {@code "resume"} event</li>
- *   <li><b>Restart</b> — switches to {@link GdxGame.ScreenType#MAIN_GAME}</li>
- *   <li><b>Main Menu</b> — returns to {@link GdxGame.ScreenType#MAIN_MENU}</li>
- * </ul>
- * The dimmer is non-interactive (input disabled) so button clicks reach the menu.
- * ESC is handled once to immediately resume gameplay.
- */
 public class PauseMenuDisplay extends BaseScreenDisplay {
+    /**
+     * Full-screen dimmer image. Kept as a field so we can avoid adding duplicates
+     * when the pause overlay is opened multiple times and to remove it in {@link #dispose()}.
+     */
+    private final boolean hideSome;
     /**
      * Tracks if ESC was consumed by the pause menu in the current frame.
      */
@@ -48,9 +44,11 @@ public class PauseMenuDisplay extends BaseScreenDisplay {
      * Creates a new pause menu overlay bound to the given game instance.
      *
      * @param game game instance used for screen navigation actions
+     * @param hideSome hide some buttons flag
      */
-    public PauseMenuDisplay(GdxGame game) {
+    public PauseMenuDisplay(GdxGame game, boolean hideSome) {
         super(game);
+        this.hideSome = hideSome;
     }
 
     /**
@@ -70,7 +68,7 @@ public class PauseMenuDisplay extends BaseScreenDisplay {
         if (dimmer == null) {
             dimmer = new Image(skin.newDrawable("white", new Color(0, 0, 0, 0.6f)));
             dimmer.setFillParent(true);
-            dimmer.setTouchable(Touchable.disabled); // let events reach the menu
+            dimmer.setTouchable(Touchable.disabled);
         }
         // Ensure only one instance on stage
         if (dimmer.getStage() == null) stage.addActor(dimmer);
@@ -84,15 +82,19 @@ public class PauseMenuDisplay extends BaseScreenDisplay {
         // Buttons
         Table panel = new Table();
         panel.defaults().pad(10f);
+
         panel.add(button("Resume", 1.8f, () -> {
             ServiceLocator.getButtonSoundService().playClick();
             entity.getEvents().trigger("resume");
         })).row();
 
-        panel.add(button("Restart", 2f, () -> {
-            ServiceLocator.getButtonSoundService().playClick();
-            game.setScreen(GdxGame.ScreenType.LOADING);
-        })).row();
+        // Only add Restart if enabled
+        if (hideSome) {
+            panel.add(button("Restart", 2f, () -> {
+                ServiceLocator.getButtonSoundService().playClick();
+                game.setScreen(GdxGame.ScreenType.LOADING);
+            })).row();
+        }
 
         panel.add(button("Main Menu", 2f, () -> {
             ServiceLocator.getButtonSoundService().playClick();
@@ -105,11 +107,13 @@ public class PauseMenuDisplay extends BaseScreenDisplay {
             ((MainGameScreen) game.getScreen()).showControlsOverlay();
         })).row();
 
-        panel.add(button("Save", 1.8f, () -> {
-            ServiceLocator.getButtonSoundService().playClick();
-            entity.getEvents().trigger("save");
-            backMainMenu();
-        })).row();
+        if (hideSome) {
+            panel.add(button("Save", 1.8f, () -> {
+                ServiceLocator.getButtonSoundService().playClick();
+                entity.getEvents().trigger("save");
+                backMainMenu();
+            })).row();
+        }
 
         root.add(panel).center().expandX().row();
 

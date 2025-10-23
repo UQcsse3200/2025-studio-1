@@ -2,10 +2,12 @@ package com.csse3200.game.components.minigames.pool.physics;
 
 import com.badlogic.gdx.math.Vector2;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class TableSpaceTest {
-    private TableConfig cfg = TableConfig.builder()
+    private final TableConfig cfg = TableConfig.builder()
             .tableSize(2.24f, 1.12f)
             .railThickness(0.105f, 0.085f)
             .ballRadius(0.0285f)

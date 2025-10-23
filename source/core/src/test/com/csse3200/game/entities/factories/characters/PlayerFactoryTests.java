@@ -22,10 +22,16 @@ import com.csse3200.game.physics.components.PhysicsComponent;
 import com.csse3200.game.rendering.AnimationRenderComponent;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.MockedConstruction;
 import org.mockito.MockedStatic;
+
+import java.util.Optional;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
@@ -36,6 +42,7 @@ public class PlayerFactoryTests {
     MockedStatic<FileLoader> mocked;
     MockedStatic<PhysicsUtils> physicsUtilsMock;
     EntityService entityService;
+
     @BeforeEach
     void setup() {
         mocked = mockStatic(FileLoader.class);
@@ -81,13 +88,13 @@ public class PlayerFactoryTests {
 
     @Test
     void safeLoadWhenNoConfig() {
-        mocked.when(() -> FileLoader.readClass(PlayerConfig.class, "configs/player.json"))
+        mocked.when(() -> FileLoader.read(PlayerConfig.class, "configs/player.json", FileLoader.Location.LOCAL))
                 .thenReturn(null);
 
         PlayerConfig cfg = PlayerFactory.getStats();
-        assertEquals(0, cfg.gold);
-        assertEquals(100, cfg.health);
-        assertEquals(10, cfg.baseAttack);
+        Assertions.assertEquals(0, cfg.gold);
+        Assertions.assertEquals(100, cfg.health);
+        Assertions.assertEquals(10, cfg.baseAttack);
     }
 
     @Test
@@ -97,15 +104,19 @@ public class PlayerFactoryTests {
         mockConfig.health = 80;
         mockConfig.baseAttack = 15;
 
-        mocked.when(() -> FileLoader.readClass(PlayerConfig.class, "configs/player.json"))
-                .thenReturn(mockConfig);
+        mocked.when(() ->
+                FileLoader.read(
+                        eq(PlayerConfig.class),
+                        anyString(),
+                        any(FileLoader.Location.class)
+                )
+        ).thenReturn(Optional.of(mockConfig));
 
         PlayerConfig cfg = PlayerFactory.getStats();
         assertEquals(50, cfg.gold);
         assertEquals(80, cfg.health);
         assertEquals(15, cfg.baseAttack);
     }
-
 
     @Test
     void createPlayerTest() {
@@ -238,7 +249,6 @@ public class PlayerFactoryTests {
             verify(animator).startAnimation("right_stand");
         }
     }
-
 
 
     @AfterEach

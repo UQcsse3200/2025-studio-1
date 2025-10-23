@@ -68,7 +68,6 @@ class RenderComponentTest {
         RenderComponent component = new RenderComponent() {
             @Override
             protected void draw(SpriteBatch batch) {
-                return;
             }
         };
 
@@ -81,7 +80,6 @@ class RenderComponentTest {
         RenderComponent component = new RenderComponent() {
             @Override
             protected void draw(SpriteBatch batch) {
-                return;
             }
         };
 

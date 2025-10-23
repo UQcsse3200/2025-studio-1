@@ -1,5 +1,6 @@
 package com.csse3200.game.components.minigames.robotFighting;
 
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.Timer;
 import com.csse3200.game.components.minigames.BettingComponent;
 import com.csse3200.game.components.player.InventoryComponent;
@@ -8,9 +9,6 @@ import com.csse3200.game.entities.factories.InteractableStationFactory;
 import com.csse3200.game.files.FileLoader;
 import com.csse3200.game.rendering.TextureRenderComponent;
 import com.csse3200.game.services.ServiceLocator;
-import com.badlogic.gdx.scenes.scene2d.Actor;
-
-import java.awt.*;
 
 /**
  * Core logic class for the "Clanker Royale" (Robot Fighting) minigame.
@@ -63,7 +61,9 @@ public class RobotFightingGame {
      * </p>
      */
     public RobotFightingGame() {
-        encouragingMessages = FileLoader.readClass(RobotFightingText.class, "games/robot-fighting.json");
+        encouragingMessages = FileLoader
+                .read(RobotFightingText.class, "games/robot-fighting.json", FileLoader.Location.INTERNAL)
+                .orElseGet(RobotFightingText::new);
 
         gameEntity = initGameEntity();
         gameDisplay = gameEntity.getComponent(RobotFightingDisplay.class);

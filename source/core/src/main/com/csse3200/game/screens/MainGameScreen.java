@@ -45,6 +45,7 @@ import java.util.ArrayList;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 
@@ -176,9 +177,17 @@ public class MainGameScreen extends ScreenAdapter {
 
             clearUpTo(load.getGameArea());
 
-            //will instantiate all items
-            if (gameArea != null) {
-                ServiceLocator.registerGameArea(gameArea);
+                // If we replaced the area, ensure the service locator points to it
+                if (gameArea != null) {
+                    ServiceLocator.registerGameArea(gameArea);
+                } else {
+                    logger.warn("Loaded area was null; keeping default Forest.");
+                }
+
+                // Clear rooms up to the saved area
+                clearUpTo(load.getGameArea());
+
+                // Restore difficulty + player state
                 ServiceLocator.registerDifficulty(new Difficulty(load.getDifficulty()));
                 SaveLoadService.loadPlayer(
                         load.getPlayer(),
@@ -187,19 +196,19 @@ public class MainGameScreen extends ScreenAdapter {
                 );
                 gameArea.setWave(load.getWave());
                 exploredAreas = load.getAreasVisited();
-
             } else {
-                logger.error("couldn't create Game area from file");
+                logger.warn("Save not found or failed to load; starting a new Forest run.");
+                exploredAreas.add(gameArea.toString());
             }
-
         } else {
-
+            // New game path
             gameArea = new ForestGameArea(terrainFactory, renderer.getCamera());
             ServiceLocator.registerGameArea(gameArea);
             ForestGameArea.setRoomSpawn(new GridPoint2(3, 20));
             gameArea.create();
             exploredAreas.add(gameArea.toString());
         }
+
         // for when loading a save game
         discover(exploredAreas);
     }
@@ -484,9 +493,9 @@ public class MainGameScreen extends ScreenAdapter {
         logger.info("Showing pause overlay");
         Stage stage = ServiceLocator.getRenderService().getStage();
         pauseOverlay = new Entity()
-                .addComponent(new PauseMenuDisplay(game))
-                .addComponent(new InputDecorator(stage, 100))
-                .addComponent(new PauseEscInputComponent(110));
+                .addComponent(new PauseMenuDisplay(game, true))
+                .addComponent(new PauseEscInputComponent(110))
+                .addComponent(new InputDecorator(stage, 100));
         pauseOverlay.getEvents().addListener("save", this::saveState);
         pauseOverlay.getEvents().addListener("resume", this::hidePauseOverlay);
         ServiceLocator.getEntityService().register(pauseOverlay);

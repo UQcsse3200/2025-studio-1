@@ -57,15 +57,15 @@ public class PlayerFactory {
     }
 
     private static PlayerConfig safeLoadPlayerConfig() {
-        PlayerConfig cfg = FileLoader.readClass(PlayerConfig.class, "configs/player.json");
-        if (cfg == null) {
-            System.out.println("ITS NULL?");
-            cfg = new PlayerConfig();
-            cfg.gold = 0;
-            cfg.health = 100;
-            cfg.baseAttack = 10;
-        }
-        return cfg;
+        String path = "configs/player.json";
+        return FileLoader.read(PlayerConfig.class, path, FileLoader.Location.INTERNAL)
+                .orElseGet(() -> {
+                    PlayerConfig cfg = new PlayerConfig();
+                    cfg.gold = 0;
+                    cfg.health = 100;
+                    cfg.baseAttack = 10;
+                    return cfg;
+                });
     }
 
     /**
@@ -107,6 +107,7 @@ public class PlayerFactory {
                         .addComponent(new PlayerAnimationController())
                         .addComponent(new PlayerEquipComponent())
                         .addComponent(new ArmourEquipComponent())
+                        .addComponent(new PlayerActionValidator())
                         .addComponent(new InteractComponent().setLayer(PhysicsLayer.DEFAULT));
         // Ensure global player reference is up-to-date for transitions
         ServiceLocator.registerPlayer(player);

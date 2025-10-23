@@ -1,0 +1,130 @@
+{
+  "textures": {
+    "forestGameTextures": {
+      "marblePlatform": "images/MarblePlatform.png",
+      "keycardDoor": "images/KeycardDoor.png",
+      "crate": "foreg_sprites/office/Crate.png",
+      "spawnPadPurple": "foreg_sprites/spawn_pads/SpawnPadPurple.png"
+    },
+    "futuristicTextures": {
+      "securityCamera": "foreg_sprites/futuristic/SecurityCamera3.png",
+      "energyPod": "foreg_sprites/futuristic/EnergyPod.png",
+      "crateGreen": "foreg_sprites/futuristic/storage_crate_green2.png",
+      "crateDark": "foreg_sprites/futuristic/storage_crate_dark2.png"
+    }
+  },
+  "entities": [
+    {
+      "name": "Bench_Computer",
+      "type": "bench:computer",
+      "location": {
+        "x": 2,
+        "y": 7
+      }
+    },
+    {
+      "name": "Bench_Health",
+      "type": "bench:health",
+      "location": {
+        "x": 8,
+        "y": 7
+      }
+    },
+    {
+      "name": "Bench_Speed",
+      "type": "bench:speed",
+      "location": {
+        "x": 25,
+        "y": 7
+      }
+    },
+    {
+      "name": "Platform_A",
+      "type": "prop:marblePlatform",
+      "location": {
+        "x": 2,
+        "y": 6
+      }
+    },
+    {
+      "name": "Platform_B",
+      "type": "prop:marblePlatform",
+      "location": {
+        "x": 5,
+        "y": 8
+      }
+    },
+    {
+      "name": "Platform_C",
+      "type": "prop:marblePlatform",
+      "location": {
+        "x": 8,
+        "y": 8
+      }
+    },
+    {
+      "name": "Platform_D",
+      "type": "prop:marblePlatform",
+      "location": {
+        "x": 11,
+        "y": 6
+      }
+    },
+    {
+      "name": "Keycard_L1",
+      "type": "item:keycard:1",
+      "location": {
+        "x": 3,
+        "y": 7
+      }
+    },
+    {
+      "name": "TP_Main",
+      "type": "teleporter",
+      "location": {
+        "x": 2,
+        "y": 3
+      }
+    },
+    {
+      "name": "E_Ghost_A",
+      "type": "enemy:GhostGPT",
+      "location": {
+        "x": 11,
+        "y": 10
+      }
+    },
+    {
+      "name": "E_Ghost_Red",
+      "type": "enemy:GhostGPTRed",
+      "location": {
+        "x": 7,
+        "y": 11
+      }
+    },
+    {
+      "name": "E_Deep_A",
+      "type": "enemy:DeepSpin",
+      "location": {
+        "x": 2,
+        "y": 10
+      }
+    },
+    {
+      "name": "E_Vroom_A",
+      "type": "enemy:Vroomba",
+      "location": {
+        "x": 5,
+        "y": 5
+      }
+    },
+    {
+      "name": "E_Turret_A",
+      "type": "enemy:Turret",
+      "location": {
+        "x": 12,
+        "y": 5
+      }
+    }
+  ]
+}

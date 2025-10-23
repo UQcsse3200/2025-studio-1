@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.Optional;
 
 
 /**
@@ -30,12 +31,12 @@ import java.util.Set;
 public class SaveGame {
     private static final Logger logger = LoggerFactory.getLogger(SaveGame.class);
 
-    public static GameState loadGame(String fileName) {
-        return FileLoader.readClass(GameState.class, fileName, FileLoader.Location.LOCAL);
+    public static Optional<GameState> loadGame(String fileName) {
+        return FileLoader.readGameState(fileName, FileLoader.Location.LOCAL);
     }
 
     public static void saveGame(GameState gameState, String fileName) {
-        FileLoader.writeClass(gameState, fileName, FileLoader.Location.LOCAL);
+        FileLoader.write(gameState, fileName, FileLoader.Location.LOCAL, true);
     }
 
     /**

@@ -1,0 +1,8 @@
+{
+  "textures": {
+    "uiTextures": {
+      "blanky": "   ",
+      "kept":   "ui/button.png"
+    }
+  }
+}

@@ -232,6 +232,14 @@ public class KeyboardPlayerInputComponent extends InputComponent {
     }
 
     /**
+     * Triggers an item pickup request.
+     */
+    private void triggerAddItem() {
+        logger.info("Pick up event triggered");
+        entity.getEvents().trigger("pick up");
+    }
+
+    /**
      * Triggers a change in the currently focused inventory slot.
      */
     private void triggerSelectItem() {

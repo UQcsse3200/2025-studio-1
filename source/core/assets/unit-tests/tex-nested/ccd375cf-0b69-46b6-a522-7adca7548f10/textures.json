@@ -1,0 +1,12 @@
+{
+  "textures": {
+    "uiTextures": {
+      "button": "ui/button.png",
+      "label":  "ui/label.png",
+      "blank":  "   "
+    }
+  },
+  "legacyTextures": {
+    "grass": "world/grass.png"
+  }
+}

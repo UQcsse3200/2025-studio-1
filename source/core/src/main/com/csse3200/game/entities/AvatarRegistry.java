@@ -62,4 +62,16 @@ public class AvatarRegistry {
     public static Avatar get() {
         return current;
     }
+
+    public static Avatar byId(String id) {
+        if (id == null || id.isBlank()) return null;
+        for (Avatar a : getAll()) {
+            // If Avatar is a record, this is a.id(); if it's a POJO, change to a.getId()
+            if (id.equals(a.id())) {
+                return a;
+            }
+        }
+        return null;
+    }
+
 }

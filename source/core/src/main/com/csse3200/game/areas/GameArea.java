@@ -23,6 +23,7 @@ import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.factories.ProjectileFactory;
 import com.csse3200.game.entities.factories.characters.NPCFactory;
+import com.csse3200.game.entities.factories.characters.PlayerFactory;
 import com.csse3200.game.entities.factories.system.ObstacleFactory;
 import com.csse3200.game.physics.components.PhysicsProjectileComponent;
 import com.csse3200.game.rendering.SolidColorRenderComponent;
@@ -272,7 +273,39 @@ public abstract class GameArea implements Disposable {
         return ServiceLocator.getDifficulty().getRoomDifficulty(getRoomNumber());
     }
 
-    protected void spawnEntityAt(
+    void spawnEnemyVariant(String variantLower, GridPoint2 grid) {
+        float scale = getBaseDifficultyScale();
+
+        Entity p = ServiceLocator.getPlayer();
+
+        Entity e = switch (variantLower) {
+            case "ghostgpt" -> NPCFactory.createGhostGPT(p, this, scale);
+            case "ghostgptred" -> NPCFactory.createGhostGPTRed(p, this, scale);
+            case "ghostgptblue" -> NPCFactory.createGhostGPTBlue(p, this, scale);
+
+            case "deepspin" -> NPCFactory.createDeepspin(p, this, scale);
+            case "deepspinred" -> NPCFactory.createDeepspinRed(p, this, scale);
+            case "deepspinblue" -> NPCFactory.createDeepspinBlue(p, this, scale);
+
+            case "vroomba" -> NPCFactory.createVroomba(p, scale);
+            case "vroombared" -> NPCFactory.createVroombaRed(p, scale);
+            case "vroombablue" -> NPCFactory.createVroombaBlue(p, scale);
+
+            case "grokdroid" -> NPCFactory.createGrokDroid(p, this, scale);
+            case "grokdroidred" -> NPCFactory.createGrokDroidRed(p, this, scale);
+            case "grokdroidblue" -> NPCFactory.createGrokDroidBlue(p, this, scale);
+
+            case "turret" -> NPCFactory.createTurret(p, this, scale);
+            default -> {
+                System.out.println("Unknown enemy subtype '{}' at {}" + variantLower + " " + grid);
+                yield NPCFactory.createGhostGPT(p, this, scale);
+            }
+        };
+
+        spawnEntityAt(e, grid, true, true);
+    }
+
+    public void spawnEntityAt(
             Entity entity, GridPoint2 tilePos, boolean centerX, boolean centerY) {
         Vector2 worldPos = terrain.tileToWorldPosition(tilePos);
         float tileSize = terrain.getTileSize();
@@ -1343,7 +1376,7 @@ public abstract class GameArea implements Disposable {
      */
     protected boolean isPartnerNPC(Entity entity) {
         if (entity == null) return false;
-        
+
         // Check if entity has CompanionFollowShootComponent (partner NPCs have this)
         return entity.getComponent(com.csse3200.game.components.friendlynpc.CompanionFollowShootComponent.class) != null;
     }
@@ -1355,7 +1388,7 @@ public abstract class GameArea implements Disposable {
      * @param spawnPosition The position to spawn/reposition the player
      * @return The player entity (either existing or newly created)
      */
-    protected Entity spawnOrRepositionPlayer(GridPoint2 spawnPosition) {
+    public Entity spawnOrRepositionPlayer(GridPoint2 spawnPosition) {
         Entity existingPlayer = ServiceLocator.getPlayer();
 
         if (existingPlayer != null) {

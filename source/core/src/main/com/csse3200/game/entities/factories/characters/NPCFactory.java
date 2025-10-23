@@ -39,7 +39,8 @@ import com.csse3200.game.services.ServiceLocator;
  */
 public class NPCFactory {
     private static final NPCConfigs configs =
-            FileLoader.readClass(NPCConfigs.class, "configs/NPCs.json");
+            FileLoader.read(NPCConfigs.class, "configs/NPCs.json", FileLoader.Location.INTERNAL)
+                    .orElseGet(NPCConfigs::new);
 
     private static final int BASE_DEATH_REWARD = 100;
     private static final int VARIANT_DEATH_REWARD = 150;
@@ -117,6 +118,7 @@ public class NPCFactory {
 
         return ghostGPT;
     }
+
     /**
      * Creates GhostGPTRed enemy type
      *
@@ -181,6 +183,7 @@ public class NPCFactory {
 
         return ghostGPTRed;
     }
+
     /**
      * Creates GhostGPTBlue enemy type
      *
@@ -329,6 +332,7 @@ public class NPCFactory {
 
         return deepspin;
     }
+
     /**
      * Creates DeepspinRed enemy type
      *
@@ -386,6 +390,7 @@ public class NPCFactory {
 
         return deepspinRed;
     }
+
     /**
      * Creates DeepspinBlue enemy type
      *
@@ -443,6 +448,7 @@ public class NPCFactory {
 
         return deepspinBlue;
     }
+
     /**
      * Creates GrokDroid enemy type
      *
@@ -500,6 +506,7 @@ public class NPCFactory {
 
         return grokDroid;
     }
+
     /**
      * Creates GrokDroidRed enemy type
      *
@@ -557,6 +564,7 @@ public class NPCFactory {
 
         return grokDroidRed;
     }
+
     /**
      * Creates GrokDroidBlue enemy type
      *
@@ -614,6 +622,7 @@ public class NPCFactory {
 
         return grokDroidBlue;
     }
+
     /**
      * Creates a Vroomba entity.
      *
@@ -679,6 +688,7 @@ public class NPCFactory {
 
         return vroomba;
     }
+
     /**
      * Creates a VroombaRed entity.
      *
@@ -744,6 +754,7 @@ public class NPCFactory {
 
         return vroombaRed;
     }
+
     /**
      * Creates a VroombaBlue entity.
      *
@@ -809,6 +820,7 @@ public class NPCFactory {
 
         return vroombaBlue;
     }
+
     /**
      * Creates Turret enemy type
      *

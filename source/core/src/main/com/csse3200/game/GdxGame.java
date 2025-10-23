@@ -10,6 +10,7 @@ import com.csse3200.game.services.MusicService;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.session.LeaderBoardManager;
+import com.csse3200.game.tutorial.TutorialGameScreen;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
