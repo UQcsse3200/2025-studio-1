@@ -1,8 +1,8 @@
 # Clash of Clankers
 
-[![Build and Release](https://github.com/UQcsse3200/2025-studio-1/actions/workflows/game_release.yaml/badge.svg)](https://github.com/UQcsse3200/2025-studio-1/actions/workflows/game_release.yaml)
+[![Build and Release](https://github.com/UQcsse3200/2025-studio-1/actions/workflows/game_release.yaml/badge.svg?branch=main)](https://github.com/UQcsse3200/2025-studio-1/actions/workflows/game_release.yaml)
 [![Game Unit Tests](https://github.com/UQcsse3200/2025-studio-1/actions/workflows/game_tests.yaml/badge.svg?branch=main)](https://github.com/UQcsse3200/2025-studio-1/actions/workflows/game_tests.yaml)
-[![Javadoc Test Build](https://github.com/UQcsse3200/2025-studio-1/actions/workflows/javadoc_build.yaml/badge.svg)](https://github.com/UQcsse3200/2025-studio-1/actions/workflows/javadoc_build.yaml)
+[![Javadoc Test Build](https://github.com/UQcsse3200/2025-studio-1/actions/workflows/javadoc_build.yaml/badge.svg?branch=main)](https://github.com/UQcsse3200/2025-studio-1/actions/workflows/javadoc_build.yaml)
 
 ## About the Project
 
